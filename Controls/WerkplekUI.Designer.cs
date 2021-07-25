@@ -35,6 +35,7 @@ namespace Controls
             this.xwerknaamc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xomschrijvingc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xartikelnrc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.xprodnrc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xaantalpersc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xtijdgestartc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xtijdgewerktc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -60,7 +61,6 @@ namespace Controls
             this.notitieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
-            this.xprodnrc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.xwerkpleklist)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -177,6 +177,13 @@ namespace Controls
             this.xartikelnrc.ToolTipText = "Product artikel nummer.";
             this.xartikelnrc.Width = 120;
             this.xartikelnrc.WordWrap = true;
+            // 
+            // xprodnrc
+            // 
+            this.xprodnrc.AspectName = "ProductieNr";
+            this.xprodnrc.Text = "ProductieNr";
+            this.xprodnrc.ToolTipText = "Productie nummer";
+            this.xprodnrc.Width = 100;
             // 
             // xaantalpersc
             // 
@@ -307,47 +314,43 @@ namespace Controls
             this.toolStripSeparator2,
             this.notitieToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(209, 288);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(193, 176);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // openProductieToolStripMenuItem
             // 
             this.openProductieToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.New_Window_36860;
-            this.openProductieToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.openProductieToolStripMenuItem.Name = "openProductieToolStripMenuItem";
-            this.openProductieToolStripMenuItem.Size = new System.Drawing.Size(208, 38);
+            this.openProductieToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.openProductieToolStripMenuItem.Text = "&Open Productie";
             this.openProductieToolStripMenuItem.Click += new System.EventHandler(this.openProductieToolStripMenuItem_Click);
             // 
             // openWerkplekToolStripMenuItem
             // 
             this.openWerkplekToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.iconfinder_technologymachineelectronic32_32;
-            this.openWerkplekToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.openWerkplekToolStripMenuItem.Name = "openWerkplekToolStripMenuItem";
-            this.openWerkplekToolStripMenuItem.Size = new System.Drawing.Size(208, 38);
+            this.openWerkplekToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.openWerkplekToolStripMenuItem.Text = "&Open Indeling";
             this.openWerkplekToolStripMenuItem.Click += new System.EventHandler(this.openWerkplekToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(205, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(189, 6);
             // 
             // storingenToolStripMenuItem
             // 
             this.storingenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.onderhoud32_32;
-            this.storingenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.storingenToolStripMenuItem.Name = "storingenToolStripMenuItem";
-            this.storingenToolStripMenuItem.Size = new System.Drawing.Size(208, 38);
+            this.storingenToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.storingenToolStripMenuItem.Text = "&Onderbrekeningen";
             this.storingenToolStripMenuItem.Click += new System.EventHandler(this.storingenToolStripMenuItem_Click);
             // 
             // xafkeurstoolstrip
             // 
             this.xafkeurstoolstrip.Image = global::ProductieManager.Properties.Resources.bin_icon_icons_com_32x32;
-            this.xafkeurstoolstrip.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xafkeurstoolstrip.Name = "xafkeurstoolstrip";
-            this.xafkeurstoolstrip.Size = new System.Drawing.Size(208, 38);
+            this.xafkeurstoolstrip.Size = new System.Drawing.Size(192, 22);
             this.xafkeurstoolstrip.Text = "&Afkeur";
             this.xafkeurstoolstrip.ToolTipText = "Vul in product afkeur";
             this.xafkeurstoolstrip.Click += new System.EventHandler(this.xafkeurstoolstrip_Click);
@@ -355,37 +358,34 @@ namespace Controls
             // werkTijdToolStripMenuItem
             // 
             this.werkTijdToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.business_color_progress_icon_icons_com_53437;
-            this.werkTijdToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.werkTijdToolStripMenuItem.Name = "werkTijdToolStripMenuItem";
-            this.werkTijdToolStripMenuItem.Size = new System.Drawing.Size(208, 38);
+            this.werkTijdToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.werkTijdToolStripMenuItem.Text = "&Werk Tijden";
             this.werkTijdToolStripMenuItem.Click += new System.EventHandler(this.werkTijdToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(205, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(189, 6);
             // 
             // wijzigAantalGemaaktToolStripMenuItem
             // 
             this.wijzigAantalGemaaktToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Count_tool_34564;
-            this.wijzigAantalGemaaktToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.wijzigAantalGemaaktToolStripMenuItem.Name = "wijzigAantalGemaaktToolStripMenuItem";
-            this.wijzigAantalGemaaktToolStripMenuItem.Size = new System.Drawing.Size(208, 38);
+            this.wijzigAantalGemaaktToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.wijzigAantalGemaaktToolStripMenuItem.Text = "&Wijzig Aantal gemaakt";
             this.wijzigAantalGemaaktToolStripMenuItem.Click += new System.EventHandler(this.wijzigAantalGemaaktToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(205, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(189, 6);
             // 
             // notitieToolStripMenuItem
             // 
             this.notitieToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Note_34576_32x32;
-            this.notitieToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.notitieToolStripMenuItem.Name = "notitieToolStripMenuItem";
-            this.notitieToolStripMenuItem.Size = new System.Drawing.Size(208, 38);
+            this.notitieToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.notitieToolStripMenuItem.Text = "&Notitie";
             this.notitieToolStripMenuItem.Click += new System.EventHandler(this.notitieToolStripMenuItem_Click);
             // 
@@ -403,13 +403,6 @@ namespace Controls
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(977, 580);
             this.panel2.TabIndex = 2;
-            // 
-            // xprodnrc
-            // 
-            this.xprodnrc.AspectName = "ProductieNr";
-            this.xprodnrc.Text = "ProductieNr";
-            this.xprodnrc.ToolTipText = "Productie nummer";
-            this.xprodnrc.Width = 100;
             // 
             // WerkPlekkenUI
             // 

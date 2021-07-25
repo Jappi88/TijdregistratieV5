@@ -587,55 +587,51 @@ namespace Controls
             this.vouwAllGroepenToolStripMenuItem,
             this.ontvouwAlleGroepenToolStripMenuItem});
             this.xproductieLijstcontext.Name = "contextMenuStrip1";
-            this.xproductieLijstcontext.Size = new System.Drawing.Size(285, 796);
+            this.xproductieLijstcontext.Size = new System.Drawing.Size(269, 470);
             // 
             // xopenProductieToolStripMenuItem
             // 
             this.xopenProductieToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.New_Window_36860;
-            this.xopenProductieToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xopenProductieToolStripMenuItem.Name = "xopenProductieToolStripMenuItem";
             this.xopenProductieToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.xopenProductieToolStripMenuItem.Size = new System.Drawing.Size(284, 38);
+            this.xopenProductieToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.xopenProductieToolStripMenuItem.Text = "Open Productie";
             this.xopenProductieToolStripMenuItem.Click += new System.EventHandler(this.xopenproductieb_Click);
             // 
             // toolStripSeparator13
             // 
             this.toolStripSeparator13.Name = "toolStripSeparator13";
-            this.toolStripSeparator13.Size = new System.Drawing.Size(281, 6);
+            this.toolStripSeparator13.Size = new System.Drawing.Size(265, 6);
             // 
             // xtoolstripstart
             // 
             this.xtoolstripstart.Image = global::ProductieManager.Properties.Resources.play_button_icon_icons_com_60615;
-            this.xtoolstripstart.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xtoolstripstart.Name = "xtoolstripstart";
             this.xtoolstripstart.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
-            this.xtoolstripstart.Size = new System.Drawing.Size(284, 38);
+            this.xtoolstripstart.Size = new System.Drawing.Size(268, 22);
             this.xtoolstripstart.Text = "Start Productie";
             this.xtoolstripstart.Click += new System.EventHandler(this.xstartb_Click);
             // 
             // xtoolstripstop
             // 
             this.xtoolstripstop.Image = global::ProductieManager.Properties.Resources.stop_red256_24890;
-            this.xtoolstripstop.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xtoolstripstop.Name = "xtoolstripstop";
             this.xtoolstripstop.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.xtoolstripstop.Size = new System.Drawing.Size(284, 38);
+            this.xtoolstripstop.Size = new System.Drawing.Size(268, 22);
             this.xtoolstripstop.Text = "Stop Productie";
             this.xtoolstripstop.Click += new System.EventHandler(this.xstopb_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(281, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(265, 6);
             // 
             // productieToolStripMenuItem
             // 
             this.productieToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.document_edit_icon_icons_com_52428;
-            this.productieToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.productieToolStripMenuItem.Name = "productieToolStripMenuItem";
             this.productieToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
-            this.productieToolStripMenuItem.Size = new System.Drawing.Size(284, 38);
+            this.productieToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.productieToolStripMenuItem.Text = "&Wijzig Productie";
             this.productieToolStripMenuItem.Click += new System.EventHandler(this.xwijzigformb_Click);
             // 
@@ -647,79 +643,71 @@ namespace Controls
             this.xbewaantalGemaaktToolStripMenuItem,
             this.xbewnotitieToolStripMenuItem});
             this.xwijzigToolStripMenuItem1.Image = global::ProductieManager.Properties.Resources.edit__52382;
-            this.xwijzigToolStripMenuItem1.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xwijzigToolStripMenuItem1.Name = "xwijzigToolStripMenuItem1";
-            this.xwijzigToolStripMenuItem1.Size = new System.Drawing.Size(284, 38);
+            this.xwijzigToolStripMenuItem1.Size = new System.Drawing.Size(268, 22);
             this.xwijzigToolStripMenuItem1.Text = "Wijzig";
             // 
             // xbewleverDatumToolStripMenuItem1
             // 
             this.xbewleverDatumToolStripMenuItem1.Image = global::ProductieManager.Properties.Resources.systemtime_778_32_32;
-            this.xbewleverDatumToolStripMenuItem1.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xbewleverDatumToolStripMenuItem1.Name = "xbewleverDatumToolStripMenuItem1";
-            this.xbewleverDatumToolStripMenuItem1.Size = new System.Drawing.Size(196, 38);
+            this.xbewleverDatumToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.xbewleverDatumToolStripMenuItem1.Text = "&LeverDatum";
             this.xbewleverDatumToolStripMenuItem1.Click += new System.EventHandler(this.xbewleverDatumToolStripMenuItem1_Click);
             // 
             // aantalToolStripMenuItem1
             // 
             this.aantalToolStripMenuItem1.Image = global::ProductieManager.Properties.Resources.hashtag_icon_152828_32_32;
-            this.aantalToolStripMenuItem1.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.aantalToolStripMenuItem1.Name = "aantalToolStripMenuItem1";
-            this.aantalToolStripMenuItem1.Size = new System.Drawing.Size(196, 38);
+            this.aantalToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.aantalToolStripMenuItem1.Text = "&Aantal";
             this.aantalToolStripMenuItem1.Click += new System.EventHandler(this.aantalToolStripMenuItem1_Click);
             // 
             // xbewaantalGemaaktToolStripMenuItem
             // 
             this.xbewaantalGemaaktToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Count_tool_34564;
-            this.xbewaantalGemaaktToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xbewaantalGemaaktToolStripMenuItem.Name = "xbewaantalGemaaktToolStripMenuItem";
-            this.xbewaantalGemaaktToolStripMenuItem.Size = new System.Drawing.Size(196, 38);
+            this.xbewaantalGemaaktToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.xbewaantalGemaaktToolStripMenuItem.Text = "&Aantal Gemaakt";
             this.xbewaantalGemaaktToolStripMenuItem.Click += new System.EventHandler(this.xbewaantalGemaaktToolStripMenuItem_Click);
             // 
             // xbewnotitieToolStripMenuItem
             // 
             this.xbewnotitieToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Note_34576_32x32;
-            this.xbewnotitieToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xbewnotitieToolStripMenuItem.Name = "xbewnotitieToolStripMenuItem";
-            this.xbewnotitieToolStripMenuItem.Size = new System.Drawing.Size(196, 38);
+            this.xbewnotitieToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.xbewnotitieToolStripMenuItem.Text = "&Notitie";
             this.xbewnotitieToolStripMenuItem.Click += new System.EventHandler(this.xbewnotitieToolStripMenuItem_Click);
             // 
             // xtoolstripaanbevolenpersonen
             // 
             this.xtoolstripaanbevolenpersonen.Image = global::ProductieManager.Properties.Resources.ic_thumb_up_128_28824;
-            this.xtoolstripaanbevolenpersonen.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xtoolstripaanbevolenpersonen.Name = "xtoolstripaanbevolenpersonen";
-            this.xtoolstripaanbevolenpersonen.Size = new System.Drawing.Size(284, 38);
+            this.xtoolstripaanbevolenpersonen.Size = new System.Drawing.Size(268, 22);
             this.xtoolstripaanbevolenpersonen.Text = "Aanbevolen Personen";
             this.xtoolstripaanbevolenpersonen.Click += new System.EventHandler(this.xaanbevolenpersb_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(281, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(265, 6);
             // 
             // benodigdeMaterialenToolStripMenuItem
             // 
             this.benodigdeMaterialenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Box_1_35524;
-            this.benodigdeMaterialenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.benodigdeMaterialenToolStripMenuItem.Name = "benodigdeMaterialenToolStripMenuItem";
             this.benodigdeMaterialenToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
-            this.benodigdeMaterialenToolStripMenuItem.Size = new System.Drawing.Size(284, 38);
+            this.benodigdeMaterialenToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.benodigdeMaterialenToolStripMenuItem.Text = "&Materialen";
             this.benodigdeMaterialenToolStripMenuItem.Click += new System.EventHandler(this.xmaterialenb_Click);
             // 
             // xafkeurstoolstrip
             // 
             this.xafkeurstoolstrip.Image = global::ProductieManager.Properties.Resources.bin_icon_icons_com_32x32;
-            this.xafkeurstoolstrip.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xafkeurstoolstrip.Name = "xafkeurstoolstrip";
             this.xafkeurstoolstrip.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.A)));
-            this.xafkeurstoolstrip.Size = new System.Drawing.Size(284, 38);
+            this.xafkeurstoolstrip.Size = new System.Drawing.Size(268, 22);
             this.xafkeurstoolstrip.Text = "Afkeur";
             this.xafkeurstoolstrip.ToolTipText = "Vul in product afkeur";
             this.xafkeurstoolstrip.Click += new System.EventHandler(this.xafkeurb_Click);
@@ -727,16 +715,15 @@ namespace Controls
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(281, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(265, 6);
             // 
             // xtoolstripbehwerkplekken
             // 
             this.xtoolstripbehwerkplekken.Image = global::ProductieManager.Properties.Resources.iconfinder_technologymachineelectronic32_32;
-            this.xtoolstripbehwerkplekken.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xtoolstripbehwerkplekken.Name = "xtoolstripbehwerkplekken";
             this.xtoolstripbehwerkplekken.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.W)));
-            this.xtoolstripbehwerkplekken.Size = new System.Drawing.Size(284, 38);
+            this.xtoolstripbehwerkplekken.Size = new System.Drawing.Size(268, 22);
             this.xtoolstripbehwerkplekken.Text = "Beheer Werkplekken";
             this.xtoolstripbehwerkplekken.ToolTipText = "Bekijk en beheer de personeel";
             this.xtoolstripbehwerkplekken.Click += new System.EventHandler(this.xwerkplekkenb_Click);
@@ -744,37 +731,34 @@ namespace Controls
             // xonderbrekingtoolstripbutton
             // 
             this.xonderbrekingtoolstripbutton.Image = global::ProductieManager.Properties.Resources.onderhoud32_32;
-            this.xonderbrekingtoolstripbutton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xonderbrekingtoolstripbutton.Name = "xonderbrekingtoolstripbutton";
             this.xonderbrekingtoolstripbutton.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.xonderbrekingtoolstripbutton.Size = new System.Drawing.Size(284, 38);
+            this.xonderbrekingtoolstripbutton.Size = new System.Drawing.Size(268, 22);
             this.xonderbrekingtoolstripbutton.Text = "&Onderbrekeningen";
             this.xonderbrekingtoolstripbutton.Click += new System.EventHandler(this.xonderbrekingb_Click);
             // 
             // xtoolstripbehwerktijden
             // 
             this.xtoolstripbehwerktijden.Image = global::ProductieManager.Properties.Resources.business_color_progress_icon_icons_com_53437;
-            this.xtoolstripbehwerktijden.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xtoolstripbehwerktijden.Name = "xtoolstripbehwerktijden";
             this.xtoolstripbehwerktijden.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.T)));
-            this.xtoolstripbehwerktijden.Size = new System.Drawing.Size(284, 38);
+            this.xtoolstripbehwerktijden.Size = new System.Drawing.Size(268, 22);
             this.xtoolstripbehwerktijden.Text = "&Werk Tijden";
             this.xtoolstripbehwerktijden.Click += new System.EventHandler(this.xwerktijdenb_Click);
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(281, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(265, 6);
             // 
             // xmeldGereedToolStripMenuItem1
             // 
             this.xmeldGereedToolStripMenuItem1.Image = global::ProductieManager.Properties.Resources.check_1582;
-            this.xmeldGereedToolStripMenuItem1.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xmeldGereedToolStripMenuItem1.Name = "xmeldGereedToolStripMenuItem1";
             this.xmeldGereedToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.G)));
-            this.xmeldGereedToolStripMenuItem1.Size = new System.Drawing.Size(284, 38);
+            this.xmeldGereedToolStripMenuItem1.Size = new System.Drawing.Size(268, 22);
             this.xmeldGereedToolStripMenuItem1.Text = "Meld Gereed";
             this.xmeldGereedToolStripMenuItem1.ToolTipText = "Meld Bewerking Gereed";
             this.xmeldGereedToolStripMenuItem1.Click += new System.EventHandler(this.xmeldgereedb_Click);
@@ -782,84 +766,77 @@ namespace Controls
             // xdeelGereedmeldingenToolStripMenuItem
             // 
             this.xdeelGereedmeldingenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.ic_done_all_128_28243;
-            this.xdeelGereedmeldingenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xdeelGereedmeldingenToolStripMenuItem.Name = "xdeelGereedmeldingenToolStripMenuItem";
             this.xdeelGereedmeldingenToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.D)));
-            this.xdeelGereedmeldingenToolStripMenuItem.Size = new System.Drawing.Size(284, 38);
+            this.xdeelGereedmeldingenToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.xdeelGereedmeldingenToolStripMenuItem.Text = "Deel Gereedmeldingen";
             this.xdeelGereedmeldingenToolStripMenuItem.Click += new System.EventHandler(this.xdeelgereedmeldingenb_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(281, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(265, 6);
             // 
             // xverwijdertoolstrip
             // 
             this.xverwijdertoolstrip.Image = ((System.Drawing.Image)(resources.GetObject("xverwijdertoolstrip.Image")));
-            this.xverwijdertoolstrip.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xverwijdertoolstrip.Name = "xverwijdertoolstrip";
             this.xverwijdertoolstrip.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.xverwijdertoolstrip.Size = new System.Drawing.Size(284, 38);
+            this.xverwijdertoolstrip.Size = new System.Drawing.Size(268, 22);
             this.xverwijdertoolstrip.Text = "&Verwijder";
             this.xverwijdertoolstrip.Click += new System.EventHandler(this.xverwijderb_Click);
             // 
             // xzetterugtoolstrip
             // 
             this.xzetterugtoolstrip.Image = ((System.Drawing.Image)(resources.GetObject("xzetterugtoolstrip.Image")));
-            this.xzetterugtoolstrip.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xzetterugtoolstrip.Name = "xzetterugtoolstrip";
             this.xzetterugtoolstrip.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.xzetterugtoolstrip.Size = new System.Drawing.Size(284, 38);
+            this.xzetterugtoolstrip.Size = new System.Drawing.Size(268, 22);
             this.xzetterugtoolstrip.Text = "&Terug Zetten";
             this.xzetterugtoolstrip.Click += new System.EventHandler(this.xzetterugb_Click);
             // 
             // toolStripSeparator12
             // 
             this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(281, 6);
+            this.toolStripSeparator12.Size = new System.Drawing.Size(265, 6);
             // 
             // exportExcelToolStripMenuItem
             // 
             this.exportExcelToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.microsoft_excel_22733;
-            this.exportExcelToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.exportExcelToolStripMenuItem.Name = "exportExcelToolStripMenuItem";
             this.exportExcelToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
-            this.exportExcelToolStripMenuItem.Size = new System.Drawing.Size(284, 38);
+            this.exportExcelToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.exportExcelToolStripMenuItem.Text = "Export Als Excel";
             this.exportExcelToolStripMenuItem.Click += new System.EventHandler(this.xexportexcel_Click);
             // 
             // xshowproductieinfo
             // 
             this.xshowproductieinfo.Image = global::ProductieManager.Properties.Resources.microsoft_info_22732_32_32;
-            this.xshowproductieinfo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xshowproductieinfo.Name = "xshowproductieinfo";
             this.xshowproductieinfo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-            this.xshowproductieinfo.Size = new System.Drawing.Size(284, 38);
+            this.xshowproductieinfo.Size = new System.Drawing.Size(268, 22);
             this.xshowproductieinfo.Text = "Productie Info";
             this.xshowproductieinfo.Click += new System.EventHandler(this.xproductieInfob_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(281, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(265, 6);
             // 
             // vouwAllGroepenToolStripMenuItem
             // 
             this.vouwAllGroepenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.icons8_collapse_32;
-            this.vouwAllGroepenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.vouwAllGroepenToolStripMenuItem.Name = "vouwAllGroepenToolStripMenuItem";
-            this.vouwAllGroepenToolStripMenuItem.Size = new System.Drawing.Size(284, 38);
+            this.vouwAllGroepenToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.vouwAllGroepenToolStripMenuItem.Text = "Vouw All Groepen";
             this.vouwAllGroepenToolStripMenuItem.Click += new System.EventHandler(this.vouwAllGroepenToolStripMenuItem_Click);
             // 
             // ontvouwAlleGroepenToolStripMenuItem
             // 
             this.ontvouwAlleGroepenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.icons8_expand_32;
-            this.ontvouwAlleGroepenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ontvouwAlleGroepenToolStripMenuItem.Name = "ontvouwAlleGroepenToolStripMenuItem";
-            this.ontvouwAlleGroepenToolStripMenuItem.Size = new System.Drawing.Size(284, 38);
+            this.ontvouwAlleGroepenToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.ontvouwAlleGroepenToolStripMenuItem.Text = "Ontvouw Alle Groepen";
             this.ontvouwAlleGroepenToolStripMenuItem.Click += new System.EventHandler(this.ontvouwAlleGroepenToolStripMenuItem_Click);
             // 
