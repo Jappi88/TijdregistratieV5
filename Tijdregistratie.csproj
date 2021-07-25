@@ -1,0 +1,1405 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4B27838D-6F2D-44AE-B933-7B4F49CB3F7A}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>ProductieManager</RootNamespace>
+    <AssemblyName>ProductieManager</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Unc</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Background</UpdateMode>
+    <UpdateInterval>1</UpdateInterval>
+    <UpdateIntervalUnits>Hours</UpdateIntervalUnits>
+    <UpdatePeriodically>true</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>false</MapFileExtensions>
+    <InstallUrl>\\Server\ProductieManager\</InstallUrl>
+    <TargetCulture>nl-NL</TargetCulture>
+    <ProductName>Productie Manager</ProductName>
+    <PublisherName>Ihab</PublisherName>
+    <SuiteName>Productie Manager</SuiteName>
+    <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
+    <WebPage>publish.htm</WebPage>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>3.0.1.0</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>9.0</LangVersion>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>
+    </DocumentationFile>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>9.0</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>ProductieManager.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>logo-vanderValk.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>DE553A3E1F1561DA6BA4B17C6C55DA8D28DCE6BB</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="CircularProgressBar, Version=2.8.0.16, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
+      <HintPath>packages\CircularProgressBar.2.8.0.16\lib\net40\CircularProgressBar.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HtmlRenderer, Version=1.4.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Downloads\HTML-Renderer-1.4.14.0\HTML-Renderer-1.4.14.0\Source\HtmlRenderer\bin\DebugNet20\HtmlRenderer.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.3.2.10, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>packages\SharpZipLib.1.3.2\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.2, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>packages\iTextSharp.5.5.13.2\lib\itextsharp.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="LiveCharts.WinForms, Version=0.9.7.1, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>packages\LiveCharts.WinForms.0.9.7.1\lib\net45\LiveCharts.WinForms.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="LiveCharts.Wpf, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework.Design, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework.Fonts, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.Fonts.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="NPOI, Version=2.5.2.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>packages\NPOI.2.5.2\lib\net45\NPOI.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.5.2.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>packages\NPOI.2.5.2\lib\net45\NPOI.OOXML.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.5.2.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>packages\NPOI.2.5.2\lib\net45\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.5.2.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>packages\NPOI.2.5.2\lib\net45\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL">
+      <HintPath>packages\ObjectListView.Official.2.9.1\lib\net20\ObjectListView.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="SimpleTCP, Version=1.0.24.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\SimpleTCP.1.0.24\lib\net45\SimpleTCP.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=3.0.6.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>packages\DockPanelSuite.3.0.6\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="WinFormAnimation, Version=1.6.0.4, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
+      <HintPath>packages\WinFormAnimation.1.6.0.4\lib\net40\WinFormAnimation.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controls\AfkeurEntryUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\AfkeurEntryUI.Designer.cs">
+      <DependentUpon>AfkeurEntryUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ChartView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ChartView.Designer.cs">
+      <DependentUpon>ChartView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FilterEntryEditorUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FilterEntryEditorUI.Designer.cs">
+      <DependentUpon>FilterEntryEditorUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\GereedMeldingenUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\GereedMeldingenUI.Designer.cs">
+      <DependentUpon>GereedMeldingenUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainMenu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MainMenu.Designer.cs">
+      <DependentUpon>MainMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MateriaalUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MateriaalUI.Designer.cs">
+      <DependentUpon>MateriaalUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NotificationUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\NotificationUI.Designer.cs">
+      <DependentUpon>NotificationUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ProductieListControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ProductieListControl.Designer.cs">
+      <DependentUpon>ProductieListControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ProgressWait.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ProgressWait.Designer.cs">
+      <DependentUpon>ProgressWait.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RealtimeLog.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RealtimeLog.Designer.cs">
+      <DependentUpon>RealtimeLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RecentGereedMeldingenUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RecentGereedMeldingenUI.Designer.cs">
+      <DependentUpon>RecentGereedMeldingenUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RoosterUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RoosterUI.Designer.cs">
+      <DependentUpon>RoosterUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RoundedButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\RoundedButton.Designer.cs">
+      <DependentUpon>RoundedButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\WerkPlekStoringen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\WerkPlekStoringen.Designer.cs">
+      <DependentUpon>WerkPlekStoringen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PersoonVaardigheden.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PersoonVaardigheden.Designer.cs">
+      <DependentUpon>PersoonVaardigheden.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ProductieForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ProductieForm.Designer.cs">
+      <DependentUpon>ProductieForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ProductieView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ProductieView.Designer.cs">
+      <DependentUpon>ProductieView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TakenManager.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\TakenManager.Designer.cs">
+      <DependentUpon>TakenManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\WerkplekUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\WerkplekUI.Designer.cs">
+      <DependentUpon>WerkplekUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AanbevolenPersonenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AanbevolenPersonenForm.Designer.cs">
+      <DependentUpon>AanbevolenPersonenForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AantalChanger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AantalChanger.Designer.cs">
+      <DependentUpon>AantalChanger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AantalGemaaktUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AantalGemaaktUI.Designer.cs">
+      <DependentUpon>AantalGemaaktUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AboutBox1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AboutBox1.Designer.cs">
+      <DependentUpon>AboutBox1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AddExtraTijdForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AddExtraTijdForm.Designer.cs">
+      <DependentUpon>AddExtraTijdForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AfkeurForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AfkeurForm.Designer.cs">
+      <DependentUpon>AfkeurForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AlleNotitiesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AlleNotitiesForm.Designer.cs">
+      <DependentUpon>AlleNotitiesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ChatForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChatForm.Designer.cs">
+      <DependentUpon>ChatForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EditCriteriaForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EditCriteriaForm.Designer.cs">
+      <DependentUpon>EditCriteriaForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FilterEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FilterEditor.Designer.cs">
+      <DependentUpon>FilterEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LijstWeergaveForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LijstWeergaveForm.designer.cs">
+      <DependentUpon>LijstWeergaveForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MateriaalVerbruikForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MateriaalVerbruikForm.Designer.cs">
+      <DependentUpon>MateriaalVerbruikForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\NewFilterEntry.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NewFilterEntry.Designer.cs">
+      <DependentUpon>NewFilterEntry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\NotitieForms.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NotitieForms.Designer.cs">
+      <DependentUpon>NotitieForms.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CreateExcelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CreateExcelForm.Designer.cs">
+      <DependentUpon>CreateExcelForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DeelsGereedForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DeelsGereedForm.Designer.cs">
+      <DependentUpon>DeelsGereedForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DeelsGereedMeldingenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DeelsGereedMeldingenForm.Designer.cs">
+      <DependentUpon>DeelsGereedMeldingenForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EmailClientsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EmailClientsForm.Designer.cs">
+      <DependentUpon>EmailClientsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\NewEmailClientForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NewEmailClientForm.Designer.cs">
+      <DependentUpon>NewEmailClientForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\NiewProductieForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NiewProductieForm.Designer.cs">
+      <DependentUpon>NiewProductieForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PersoneelTakenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PersoneelTakenForm.Designer.cs">
+      <DependentUpon>PersoneelTakenForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ProductieInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ProductieInfoForm.Designer.cs">
+      <DependentUpon>ProductieInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\RoosterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\RoosterForm.Designer.cs">
+      <DependentUpon>RoosterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AddPersoneel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AddPersoneel.Designer.cs">
+      <DependentUpon>AddPersoneel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AfsluitPromp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AfsluitPromp.Designer.cs">
+      <DependentUpon>AfsluitPromp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AlleKlusjes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AlleKlusjes.Designer.cs">
+      <DependentUpon>AlleKlusjes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AlleStoringen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AlleStoringen.Designer.cs">
+      <DependentUpon>AlleStoringen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AlleVaardigheden.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AlleVaardigheden.Designer.cs">
+      <DependentUpon>AlleVaardigheden.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BewerkingChooser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BewerkingChooser.Designer.cs">
+      <DependentUpon>BewerkingChooser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CreateAccount.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CreateAccount.Designer.cs">
+      <DependentUpon>CreateAccount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DatumChanger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DatumChanger.Designer.cs">
+      <DependentUpon>DatumChanger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DbBewerkingChanger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DbBewerkingChanger.Designer.cs">
+      <DependentUpon>DbBewerkingChanger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DbPathChooser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DbPathChooser.Designer.cs">
+      <DependentUpon>DbPathChooser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DbUpdater.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DbUpdater.Designer.cs">
+      <DependentUpon>DbUpdater.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\GereedMelder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GereedMelder.Designer.cs">
+      <DependentUpon>GereedMelder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LogForm.Designer.cs">
+      <DependentUpon>LogForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LogIn.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LogIn.Designer.cs">
+      <DependentUpon>LogIn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MateriaalForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MateriaalForm.Designer.cs">
+      <DependentUpon>MateriaalForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MessageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MessageForm.Designer.cs">
+      <DependentUpon>MessageForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\NewStoringForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NewStoringForm.Designer.cs">
+      <DependentUpon>NewStoringForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\NieuwKlusForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NieuwKlusForm.Designer.cs">
+      <DependentUpon>NieuwKlusForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Opties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Opties.Designer.cs">
+      <DependentUpon>Opties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PasswordChanger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PasswordChanger.Designer.cs">
+      <DependentUpon>PasswordChanger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PersoneelsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PersoneelsForm.Designer.cs">
+      <DependentUpon>PersoneelsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ScreenImageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ScreenImageForm.designer.cs">
+      <DependentUpon>ScreenImageForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SelectScreenImage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SelectScreenImage.designer.cs">
+      <DependentUpon>SelectScreenImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SendEmailForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SendEmailForm.Designer.cs">
+      <DependentUpon>SendEmailForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SpeciaalWerkRoostersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SpeciaalWerkRoostersForm.Designer.cs">
+      <DependentUpon>SpeciaalWerkRoostersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UpdateProducties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UpdateProducties.Designer.cs">
+      <DependentUpon>UpdateProducties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\RangeCalculatorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\RangeCalculatorForm.Designer.cs">
+      <DependentUpon>RangeCalculatorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SplashScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SplashScreen.Designer.cs">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StoringForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\StoringForm.Designer.cs">
+      <DependentUpon>StoringForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TextFieldEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TextFieldEditor.Designer.cs">
+      <DependentUpon>TextFieldEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UserAccounts.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UserAccounts.Designer.cs">
+      <DependentUpon>UserAccounts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\VaardighedenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VaardighedenForm.Designer.cs">
+      <DependentUpon>VaardighedenForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ViewChartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ViewChartForm.Designer.cs">
+      <DependentUpon>ViewChartForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\VrijeTijdForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VrijeTijdForm.Designer.cs">
+      <DependentUpon>VrijeTijdForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\WerkPlekChooser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WerkPlekChooser.Designer.cs">
+      <DependentUpon>WerkPlekChooser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\WerktijdChanger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WerktijdChanger.Designer.cs">
+      <DependentUpon>WerktijdChanger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\WijzigProductie.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WijzigProductie.Designer.cs">
+      <DependentUpon>WijzigProductie.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mainform.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Mainform.Designer.cs">
+      <DependentUpon>Mainform.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Indeling.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Indeling.Designer.cs">
+      <DependentUpon>Indeling.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Producties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Producties.Designer.cs">
+      <DependentUpon>Producties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StartProductie.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\StartProductie.Designer.cs">
+      <DependentUpon>StartProductie.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Rpm\Connection\Broadcaster.cs" />
+    <Compile Include="Rpm\Connection\ClientInfo.cs" />
+    <Compile Include="Rpm\Connection\Enumarations.cs" />
+    <Compile Include="Rpm\Connection\Handlers.cs" />
+    <Compile Include="Rpm\Connection\RequestMessage.cs" />
+    <Compile Include="Rpm\Connection\RespondMessage.cs" />
+    <Compile Include="Rpm\Connection\ValueContainer.cs" />
+    <Compile Include="Rpm\Controls\Form_Alert.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Rpm\Controls\Form_Alert.designer.cs">
+      <DependentUpon>Form_Alert.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Rpm\Controls\ImageCombineForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Rpm\Controls\ImageCombineForm.Designer.cs">
+      <DependentUpon>ImageCombineForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Rpm\Mailing\EmailClient.cs" />
+    <Compile Include="Rpm\Mailing\EmailRespond.cs" />
+    <Compile Include="Rpm\Mailing\InkomendAdres.cs" />
+    <Compile Include="Rpm\Mailing\RemoteMessage.cs" />
+    <Compile Include="Rpm\Mailing\RemoteProductie.cs" />
+    <Compile Include="Rpm\Mailing\UitgaandAdres.cs" />
+    <Compile Include="Rpm\Mailing\WeekOverzicht.cs" />
+    <Compile Include="Rpm\Misc\AssemblyInfo.cs" />
+    <Compile Include="Rpm\Misc\BootLoader.cs" />
+    <Compile Include="Rpm\Misc\CpuID.cs" />
+    <Compile Include="Rpm\Misc\Crc32.cs" />
+    <Compile Include="Rpm\Misc\ExcelColumnEntry.cs" />
+    <Compile Include="Rpm\Misc\ExcelRegelEntry.cs" />
+    <Compile Include="Rpm\Misc\ExcelWorkbook.cs" />
+    <Compile Include="Rpm\Misc\Filter.cs" />
+    <Compile Include="Rpm\Misc\FilterEntry.cs" />
+    <Compile Include="Rpm\Misc\FingerPrint.cs" />
+    <Compile Include="Rpm\Misc\Functions.cs" />
+    <Compile Include="Rpm\Misc\GraphicsExtension.cs" />
+    <Compile Include="Rpm\Misc\LogEntry.cs" />
+    <Compile Include="Rpm\Misc\Logger.cs" />
+    <Compile Include="Rpm\Misc\Notifications.cs" />
+    <Compile Include="Rpm\Misc\ObjectExtensions.cs" />
+    <Compile Include="Rpm\Misc\RpmPacket.cs" />
+    <Compile Include="Rpm\Misc\SafeProxy.cs" />
+    <Compile Include="Rpm\Misc\Shaping.cs" />
+    <Compile Include="Rpm\Misc\SharedFolders.cs" />
+    <Compile Include="Rpm\Misc\StickyWindow.cs" />
+    <Compile Include="Rpm\Misc\WeekRange.cs" />
+    <Compile Include="Rpm\Misc\WindowService.cs" />
+    <Compile Include="Rpm\Productie\Bewerking.cs" />
+    <Compile Include="Rpm\Productie\DeelsGereedMelding.cs" />
+    <Compile Include="Rpm\Productie\ExtraTijd.cs" />
+    <Compile Include="Rpm\Productie\IProductieBase.cs" />
+    <Compile Include="Rpm\Productie\Klus.cs" />
+    <Compile Include="Rpm\Productie\Manager.cs" />
+    <Compile Include="Rpm\Productie\Materiaal.cs" />
+    <Compile Include="Rpm\Productie\MateriaalBeheer.cs" />
+    <Compile Include="Rpm\Productie\MateriaalEntryInfo.cs" />
+    <Compile Include="Rpm\Productie\NotitieEntry.cs" />
+    <Compile Include="Rpm\Productie\Personeel.cs" />
+    <Compile Include="Rpm\Productie\PersoneelTaak.cs" />
+    <Compile Include="Rpm\Productie\PersoneelTaakEntry.cs" />
+    <Compile Include="Rpm\Productie\PersoneelTaken.cs" />
+    <Compile Include="Rpm\Productie\ProductieFormulier.cs" />
+    <Compile Include="Rpm\Productie\ProductieProvider.cs" />
+    <Compile Include="Rpm\Productie\Queues.cs" />
+    <Compile Include="Rpm\Productie\Rooster.cs" />
+    <Compile Include="Rpm\Productie\SkillEntry.cs" />
+    <Compile Include="Rpm\Productie\SkillTree.cs" />
+    <Compile Include="Rpm\Productie\Storing.cs" />
+    <Compile Include="Rpm\Productie\Taak.cs" />
+    <Compile Include="Rpm\Productie\TaakBeheer.cs" />
+    <Compile Include="Rpm\Productie\TakenLijst.cs" />
+    <Compile Include="Rpm\Productie\TaskManager.cs" />
+    <Compile Include="Rpm\Productie\TijdEntry.cs" />
+    <Compile Include="Rpm\Productie\UrenLijst.cs" />
+    <Compile Include="Rpm\Productie\Werk.cs" />
+    <Compile Include="Rpm\Productie\WerkPlek.cs" />
+    <Compile Include="Rpm\Productie\Werktijd.cs" />
+    <Compile Include="Rpm\Settings\DatabaseUpdateEntry.cs" />
+    <Compile Include="Rpm\Settings\LastFormScreenInfo.cs" />
+    <Compile Include="Rpm\Settings\UserAccount.cs" />
+    <Compile Include="Rpm\Settings\UserSettings.cs" />
+    <Compile Include="Rpm\SqlLite\BackupInfo.cs" />
+    <Compile Include="Rpm\SqlLite\BewerkingEntry.cs" />
+    <Compile Include="Rpm\SqlLite\BewerkingLijst.cs" />
+    <Compile Include="Rpm\SqlLite\DatabaseInstance.cs" />
+    <Compile Include="Rpm\SqlLite\DatabaseUpdater.cs" />
+    <Compile Include="Rpm\SqlLite\DbType.cs" />
+    <Compile Include="Rpm\SqlLite\DbVersion.cs" />
+    <Compile Include="Rpm\SqlLite\IDbCollection.cs" />
+    <Compile Include="Rpm\SqlLite\LocalDatabase.cs" />
+    <Compile Include="Rpm\SqlLite\MultipleFileDb.cs" />
+    <Compile Include="Rpm\SqlLite\SqlDatabase.cs" />
+    <Compile Include="Rpm\SqlLite\SqlDatabaseEntry.cs" />
+    <Compile Include="Rpm\SqlLite\SqlDataEntry.cs" />
+    <Compile Include="Rpm\SqlLite\UserChange.cs" />
+    <Compile Include="Rpm\Various\Comparer.cs" />
+    <Compile Include="Rpm\Various\Delegates.cs" />
+    <Compile Include="Rpm\Various\Enums.cs" />
+    <Compile Include="Rpm\Various\ProductieChat.cs" />
+    <Compile Include="Rpm\Various\ProductieChatEntry.cs" />
+    <Compile Include="Rpm\Various\UserChat.cs" />
+    <Compile Include="Rpm\ViewModels\PersoneelModel.cs" />
+    <Compile Include="Rpm\ViewModels\SettingModel.cs" />
+    <Compile Include="Rpm\ViewModels\TaakModel.cs" />
+    <Compile Include="Rpm\ViewModels\VrijeTijdModel.cs" />
+    <Compile Include="Rpm\ViewModels\WerkPlekModel.cs" />
+    <Compile Include="Various\DockContentEntry.cs" />
+    <Compile Include="Various\DockNestedPaneEntry.cs" />
+    <Compile Include="Various\DockPaneContentEntry.cs" />
+    <Compile Include="Various\DockPaneEntry.cs" />
+    <Compile Include="Various\DockStateInfo.cs" />
+    <Compile Include="Various\DockWindowEntry.cs" />
+    <Compile Include="Various\MenuButton.cs" />
+    <Compile Include="Various\Tools.cs" />
+    <EmbeddedResource Include="Controls\AfkeurEntryUI.resx">
+      <DependentUpon>AfkeurEntryUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ChartView.resx">
+      <DependentUpon>ChartView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FilterEntryEditorUI.resx">
+      <DependentUpon>FilterEntryEditorUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\GereedMeldingenUI.resx">
+      <DependentUpon>GereedMeldingenUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MainMenu.resx">
+      <DependentUpon>MainMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MateriaalUI.resx">
+      <DependentUpon>MateriaalUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\NotificationUI.resx">
+      <DependentUpon>NotificationUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ProductieListControl.resx">
+      <DependentUpon>ProductieListControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ProgressWait.resx">
+      <DependentUpon>ProgressWait.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\RealtimeLog.resx">
+      <DependentUpon>RealtimeLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\RecentGereedMeldingenUI.resx">
+      <DependentUpon>RecentGereedMeldingenUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\RoosterUI.resx">
+      <DependentUpon>RoosterUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\WerkPlekStoringen.resx">
+      <DependentUpon>WerkPlekStoringen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PersoonVaardigheden.resx">
+      <DependentUpon>PersoonVaardigheden.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ProductieForm.resx">
+      <DependentUpon>ProductieForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ProductieView.resx">
+      <DependentUpon>ProductieView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TakenManager.resx">
+      <DependentUpon>TakenManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\WerkplekUI.resx">
+      <DependentUpon>WerkplekUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AanbevolenPersonenForm.resx">
+      <DependentUpon>AanbevolenPersonenForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AantalChanger.resx">
+      <DependentUpon>AantalChanger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AantalGemaaktUI.resx">
+      <DependentUpon>AantalGemaaktUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AboutBox1.resx">
+      <DependentUpon>AboutBox1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AddExtraTijdForm.resx">
+      <DependentUpon>AddExtraTijdForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AfkeurForm.resx">
+      <DependentUpon>AfkeurForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AlleNotitiesForm.resx">
+      <DependentUpon>AlleNotitiesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ChatForm.resx">
+      <DependentUpon>ChatForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EditCriteriaForm.resx">
+      <DependentUpon>EditCriteriaForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FilterEditor.resx">
+      <DependentUpon>FilterEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LijstWeergaveForm.resx">
+      <DependentUpon>LijstWeergaveForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MateriaalVerbruikForm.resx">
+      <DependentUpon>MateriaalVerbruikForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NewFilterEntry.resx">
+      <DependentUpon>NewFilterEntry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NotitieForms.resx">
+      <DependentUpon>NotitieForms.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CreateExcelForm.resx">
+      <DependentUpon>CreateExcelForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DeelsGereedForm.resx">
+      <DependentUpon>DeelsGereedForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DeelsGereedMeldingenForm.resx">
+      <DependentUpon>DeelsGereedMeldingenForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EmailClientsForm.resx">
+      <DependentUpon>EmailClientsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NewEmailClientForm.resx">
+      <DependentUpon>NewEmailClientForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NiewProductieForm.resx">
+      <DependentUpon>NiewProductieForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PersoneelTakenForm.resx">
+      <DependentUpon>PersoneelTakenForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ProductieInfoForm.resx">
+      <DependentUpon>ProductieInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\RoosterForm.resx">
+      <DependentUpon>RoosterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AddPersoneel.resx">
+      <DependentUpon>AddPersoneel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AfsluitPromp.resx">
+      <DependentUpon>AfsluitPromp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AlleKlusjes.resx">
+      <DependentUpon>AlleKlusjes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AlleStoringen.resx">
+      <DependentUpon>AlleStoringen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AlleVaardigheden.resx">
+      <DependentUpon>AlleVaardigheden.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BewerkingChooser.resx">
+      <DependentUpon>BewerkingChooser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CreateAccount.resx">
+      <DependentUpon>CreateAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DatumChanger.resx">
+      <DependentUpon>DatumChanger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DbBewerkingChanger.resx">
+      <DependentUpon>DbBewerkingChanger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DbPathChooser.resx">
+      <DependentUpon>DbPathChooser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DbUpdater.resx">
+      <DependentUpon>DbUpdater.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GereedMelder.resx">
+      <DependentUpon>GereedMelder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LogForm.resx">
+      <DependentUpon>LogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LogIn.resx">
+      <DependentUpon>LogIn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MateriaalForm.resx">
+      <DependentUpon>MateriaalForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MessageForm.resx">
+      <DependentUpon>MessageForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NewStoringForm.resx">
+      <DependentUpon>NewStoringForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NieuwKlusForm.resx">
+      <DependentUpon>NieuwKlusForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Opties.resx">
+      <DependentUpon>Opties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PasswordChanger.resx">
+      <DependentUpon>PasswordChanger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PersoneelsForm.resx">
+      <DependentUpon>PersoneelsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ScreenImageForm.resx">
+      <DependentUpon>ScreenImageForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SelectScreenImage.resx">
+      <DependentUpon>SelectScreenImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SendEmailForm.resx">
+      <DependentUpon>SendEmailForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SpeciaalWerkRoostersForm.resx">
+      <DependentUpon>SpeciaalWerkRoostersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UpdateProducties.resx">
+      <DependentUpon>UpdateProducties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\RangeCalculatorForm.resx">
+      <DependentUpon>RangeCalculatorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SplashScreen.resx">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StoringForm.resx">
+      <DependentUpon>StoringForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TextFieldEditor.resx">
+      <DependentUpon>TextFieldEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserAccounts.resx">
+      <DependentUpon>UserAccounts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VaardighedenForm.resx">
+      <DependentUpon>VaardighedenForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ViewChartForm.nl-NL.resx">
+      <DependentUpon>ViewChartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ViewChartForm.resx">
+      <DependentUpon>ViewChartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VrijeTijdForm.resx">
+      <DependentUpon>VrijeTijdForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WerkPlekChooser.resx">
+      <DependentUpon>WerkPlekChooser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WerktijdChanger.resx">
+      <DependentUpon>WerktijdChanger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WijzigProductie.resx">
+      <DependentUpon>WijzigProductie.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mainform.resx">
+      <DependentUpon>Mainform.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Indeling.resx">
+      <DependentUpon>Indeling.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Producties.resx">
+      <DependentUpon>Producties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StartProductie.resx">
+      <DependentUpon>StartProductie.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Rpm\Controls\Form_Alert.resx">
+      <DependentUpon>Form_Alert.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include=".editorconfig" />
+    <None Include="bin\Debug\ProductieManager.exe.config" />
+    <None Include="bin\Release\ProductieManager.zip" />
+    <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="RPMLicense.snk" />
+    <EmbeddedResource Include="Rpm\Controls\ImageCombineForm.resx">
+      <DependentUpon>ImageCombineForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Rpm\Files\PersoneelDb.db" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\form_85828.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\document_114447.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\systemsoftwareupdate_94333 %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add_insert_plus_1588.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\check_ok_accept_apply_1582.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete_delete_exit_1577.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit_icon-icons.com_52382.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\infosign_83743.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\page_document_16748.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Warning_36828.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8_cancel_25px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\success.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\noatun_play_start_arrow_6048.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Count-tool_34564.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\play-button_icon-icons.com_60615 %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stop-red_37107.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\notification-warning_114460.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\equaliser_106680 %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\simpleccsm_103799.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ccsm_103993.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\New_Window_36860.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Login_37128 %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Logout_37127 %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user_add_12818.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\users_12820.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete_delete_deleteusers_delete_male_user_maleclient_2348.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\open-file256_25211.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\new-file_40454.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\file_sync_outline_icon_139576.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo-vanderValk.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\code_html_link_share_icon_123633.png" />
+    <None Include="Resources\ic_thumb_up_128_28824.png" />
+    <None Include="Resources\group_disable_32x32.png" />
+    <None Include="Resources\group_Enable_32x32.png" />
+    <None Include="Resources\graph-9_icon-icons.com_58019_32x32.png" />
+    <None Include="Resources\search_icon_32x32.png" />
+    <None Include="Resources\bin_icon-icons.com_32x32.png" />
+    <None Include="Resources\3605318-bolt-bolts-construction-rivet-screw-screws_128x128.png" />
+    <None Include="Resources\3605318-bolt-bolts-construction-rivet-screw-screws_1078702.png" />
+    <None Include="Resources\3605318-bolt-bolts-construction-rivet-screw-screws_1078701.png" />
+    <None Include="Resources\3605318-bolt-bolts-construction-rivet-screw-screws_107870.png" />
+    <None Include="Resources\filter_filters_navigation_32x32.png" />
+    <None Include="Resources\filter_icon-icons.com_70971.png" />
+    <None Include="Resources\arrow_up_16741_32x32.png" />
+    <None Include="Resources\arrow_down_16740_32x32.png" />
+    <None Include="Resources\arrow_right_16742_32x32.png" />
+    <None Include="Resources\conversation_chat_32x321.png" />
+    <None Include="Resources\chat_messages_143951.png" />
+    <None Include="Resources\conversation_chat_32x32.png" />
+    <None Include="Resources\profile_picture_32x32.png" />
+    <None Include="Resources\message_send_32x32.png" />
+    <None Include="Resources\offline_32x32.png" />
+    <None Include="Resources\Online_32.png" />
+    <None Include="Resources\icons8_Menu_Vertical_32.png" />
+    <None Include="Resources\ic_send_128_28719.png" />
+    <None Include="Resources\MsgSent_32.png" />
+    <None Include="Resources\MsgRead_32.png" />
+    <None Include="Resources\MsgDelivered_32.png" />
+    <None Include="Resources\avatardefault_92824.png" />
+    <None Include="Resources\chat_messages_14395.png" />
+    <None Include="Resources\education_school_memo_pad_notes_reminder_task_icon_133450.png" />
+    <None Include="Resources\texteditor_note_notes_pencil_detext_9967_32x32.png" />
+    <None Include="Resources\texteditor_note_notes_pencil_detext_9967_128x128.png" />
+    <None Include="Resources\cloudrefresh_icon-icons.com_54403_32x32.png" />
+    <None Include="Resources\web_database_21013_32x32.png" />
+    <None Include="Resources\load_database_32x32.png" />
+    <None Include="Resources\microsoft_excel_22733_128x128.png" />
+    <None Include="Resources\microsoft_excel_22733.png" />
+    <None Include="Resources\tasks_23349_48x48.png" />
+    <None Include="Resources\user_rotation_102346_32x32.png" />
+    <None Include="Resources\notification-done_1144611.png" />
+    <None Include="Resources\ic_done_128_28244.png" />
+    <None Include="Resources\notification-done_114461.png" />
+    <None Include="Resources\ic_done_all_128_28243.png" />
+    <None Include="Resources\email_send_32x32.png" />
+    <None Include="Resources\user_customer_person_32x32.png" />
+    <None Include="Resources\email_18961.png" />
+    <None Include="Resources\email_18961_128x128.png" />
+    <None Include="Resources\text_edit_14943.png" />
+    <None Include="Resources\Note_34576_32x32.png" />
+    <None Include="Resources\window_16756_32x32.png" />
+    <None Include="Resources\page_document_16748_128_128.png" />
+    <None Include="Resources\lightning_weather_storm_2781.png" />
+    <None Include="Resources\new_icon_128_128.png" />
+    <None Include="Resources\file_type_pdf_icon_130274.png" />
+    <None Include="Resources\repair_32_32.png" />
+    <None Include="Resources\Statics_Icon_32_32.png" />
+    <None Include="Resources\user_icon-icons.com_57997.png" />
+    <None Include="Resources\user_2078_64_64.png" />
+    <None Include="Resources\user_64_64.png" />
+    <None Include="Resources\ios-8-Message-icon_64_64.png" />
+    <EmbeddedResource Include="Rpm\Files\SoortStilstanden.txt" />
+    <EmbeddedResource Include="Rpm\Files\BewerkingenV2.txt" />
+    <None Include="Resources\hashtag_icon_152828_32_32.png" />
+    <None Include="Resources\hashtag_icon_152828.png" />
+    <None Include="Resources\systemtime_778_32_32.png" />
+    <None Include="Resources\microsoft_info_22732_32_32.png" />
+    <None Include="Resources\microsoft_info_22732.png" />
+    <None Include="Resources\rooster_128_128.png" />
+    <None Include="Resources\schedule_32_32.png" />
+    <None Include="Resources\Time_machine__40675_128_128.png" />
+    <None Include="Resources\Time_machine__40675.png" />
+    <None Include="Resources\task_update_folder_progress_icon_142270.png" />
+    <None Include="Resources\exit_close_error_15565.png" />
+    <None Include="Resources\exclamation_warning_15590 %281%29.png" />
+    <None Include="Resources\help_question_1566.png" />
+    <None Include="Resources\Private-80_icon-icons.com_57286.png" />
+    <None Include="Resources\icons8-subtract-32.png" />
+    <None Include="Resources\icons8-delete-321.png" />
+    <None Include="Resources\icons8-minimize-window-321.png" />
+    <None Include="Resources\information_info_1565.png" />
+    <None Include="Resources\window_minimize_icon_181229.png" />
+    <None Include="Resources\cancel_closeicon_123217.png" />
+    <None Include="Resources\list_992_32_32.png" />
+    <None Include="Resources\Apps-menu-editor-icon_31767.png" />
+    <None Include="Resources\businessapplication_edit_male_user.png" />
+    <None Include="Resources\business-color_progress_128_128.png" />
+    <None Include="Resources\taskboardlinear_106203.png" />
+    <None Include="Resources\download_database_21022_128_128.png" />
+    <None Include="Resources\download_database_21022.png" />
+    <None Include="Resources\Menu_icon_2_icon-icons.com_71856.png" />
+    <None Include="Resources\FocusEye_Img_32_32.png" />
+    <None Include="Resources\FocusEye_Img_32_32.ico" />
+    <None Include="Resources\refresh_arrow_1546.png" />
+    <None Include="Resources\FocusEye_img_128_128.png" />
+    <None Include="Resources\infolog.png" />
+    <None Include="Resources\succeslog.png" />
+    <None Include="Resources\errorlog.png" />
+    <None Include="Resources\activitylogmanager_104624.png" />
+    <None Include="Resources\4137161-building-construction-industry-setting_114090 %281%29.png" />
+    <None Include="Resources\onderhoud32_321.png" />
+    <None Include="Resources\iconfinder-technology.png" />
+    <None Include="Resources\onderhoud32_32.png" />
+    <None Include="Resources\onderhoud128_128.png" />
+    <None Include="Resources\clipart2598861.png" />
+    <None Include="Resources\transparent-repair-icon_128_128.png" />
+    <None Include="Resources\add_icon-icons.com_52393.png" />
+    <None Include="Resources\AddStoring_32_32.png" />
+    <None Include="Resources\transparent-repair-icon_32_32.png" />
+    <None Include="Resources\iconfinder-technologymachineelectronic32_32.png" />
+    <None Include="Resources\businessapplication_database_Accept.png" />
+    <None Include="Resources\cancel_stop_exit_1583.png" />
+    <None Include="Resources\external_3431.png" />
+    <None Include="Resources\internal_3430.png" />
+    <None Include="Resources\key-skills.png" />
+    <None Include="Resources\diskette_save_saveas_1514.png" />
+    <None Include="Resources\new_25355.png" />
+    <None Include="Resources\arrow_right_15600.png" />
+    <None Include="Resources\Updater.exe" />
+    <None Include="Resources\internet_lock_locked_padlock_password_secure_security_icon_127100 %281%29.png" />
+    <None Include="Resources\3844441-eye-see-show-view-watch_110305.png" />
+    <None Include="Resources\3844443-disable-eye-inactive-see-show-view-watch_110296.png" />
+    <None Include="Resources\internet_lock_locked_padlock_password_secure_security_icon_127100.png" />
+    <None Include="Resources\file-complete256_25223.png" />
+    <None Include="Resources\iconfinder-beach-sea-summer-chill-holiday-vacation-icon-4602018_122097.png" />
+    <None Include="Resources\hardworker4x_86997.png" />
+    <None Include="Resources\user_customer_person_13976.png" />
+    <None Include="Resources\document-edit_icon-icons.com_52428.png" />
+    <None Include="Resources\systemtime_778.png" />
+    <None Include="Resources\Count-tool_34564 %281%29.png" />
+    <None Include="Resources\operation.png" />
+    <None Include="Resources\next_window_16720.png" />
+    <None Include="Resources\1486504338-check-check-marks-list-checklist-documents-todo-list_81298.png" />
+    <None Include="Resources\Box_1_35524.png" />
+    <None Include="Resources\pngegg %281%291.png" />
+    <None Include="Resources\pngegg %281%29.png" />
+    <None Include="Resources\taskboardhd_106120 %281%29.png" />
+    <None Include="Resources\bluewarningexclamationmark_azul_advertenci_12454 %281%29.png" />
+    <None Include="Resources\bluewarningexclamationmark_azul_advertenci_12454.png" />
+    <None Include="Resources\exclamation_warning_15590.png" />
+    <None Include="Resources\emblemimportant_103451.png" />
+    <None Include="Resources\taskboardflat_106022.png" />
+    <None Include="Resources\business-color_progress_icon-icons.com_53437.png" />
+    <None Include="Resources\VdV_Logos.jpg" />
+    <None Include="Resources\arrow_left_15601.png" />
+    <None Include="Resources\4137161-building-construction-industry-setting_114090.png" />
+    <None Include="Resources\stop-red256_24890 %281%29.png" />
+    <None Include="Resources\filter_list_21446.png" />
+    <None Include="Resources\icons8-expand-32.png" />
+    <None Include="Resources\icons8-collapse-32.png" />
+    <None Include="Resources\info_15260.png" />
+    <None Include="Resources\get_info_13806.png" />
+    <None Include="Resources\undoarrow_undo_1534.png" />
+    <None Include="Resources\ic_info_outline_128_28513.png" />
+    <Content Include="bin\Debug\nl-NL\ProductieManager.resources.dll" />
+    <Content Include="bin\Debug\ProductieManager.exe" />
+    <Content Include="bin\Debug\ProductieManager.pdb" />
+    <Content Include="logo-vanderValk.ico" />
+    <None Include="Resources\van der valk solar logo.png" />
+    <None Include="Resources\logo-vanderValk1.png" />
+    <None Include="Resources\icons8-delete-32.png" />
+    <None Include="Resources\icons8-minimize-window-32.png" />
+    <None Include="Resources\icons8-all-out-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AutoUpdater.NET\AutoUpdater.NET.csproj">
+      <Project>{fb9e7e6b-b19f-4f37-a708-2996190cef13}</Project>
+      <Name>AutoUpdater.NET</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LiteDB\LiteDB.csproj">
+      <Project>{72133687-a253-45bf-a6ae-bf18140401c9}</Project>
+      <Name>LiteDB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpSerializer-master\SharpSerializer\SharpSerializer.csproj">
+      <Project>{243aec14-8673-4284-9499-ee35d3e5637c}</Project>
+      <Name>SharpSerializer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- Code to merge the assemblies into one:setup.exe -->
+</Project>

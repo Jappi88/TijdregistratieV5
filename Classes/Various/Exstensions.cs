@@ -1,0 +1,14 @@
+﻿using System.Reflection;
+using System.Windows.Forms;
+
+namespace ProductieManager.Classes.Various
+{
+    public static class Extensions
+    {
+        public static void DoubleBuffered(this Control control, bool enabled)
+        {
+            var prop = control.GetType().GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
+            prop.SetValue(control, enabled, null);
+        }
+    }
+}

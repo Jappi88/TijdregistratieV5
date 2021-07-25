@@ -1,0 +1,71 @@
+﻿[Hal1]
+Opdrukkerfabricage hal 1:0
+Knippen schoor (Ter H):0
+Gedraaide lip Opdr (Ter H):0
+Montage support:0
+
+[TD Ruimte]
+Draaien / Frezen:0
+Knippen (plaatschaar):0
+
+[Hal2]
+Opdrukkerfabricage hal 2:0
+Opdrukkerhaakjes stansen:0
+
+[BM1,BM2]
+Opdrukkers Buigen:0
+[MpsBundel,Hal5]
+Zagen Aluminium:0
+
+[V.Dulst1 Klemrail]
+Ponsen en zagen klemrail:0
+
+[v.Dulst2]
+Ponsen+zagen (v.Dulst Alu):0
+
+[Aps]
+Ponsen+zagen (APS):0
+[MPS1,MPS2,MPS3]
+Ponsen+zagen (MPS):0
+
+[Ponsplein]
+Ponsen cabrio/twinrail:0
+Ponsen Uni:0
+Ponsen C-rail:0
+Ponsen Valkpro Console:0
+Tappen koppelstrip:0
+Spanbus verjongen/ponsen:0
+Buigen rolbeugel:0
+Ponsen Muller 80T:0
+Ponsen Muller 100T:0
+Ponsen (Ter Hart):0
+Boren (2-spilmachine):0
+Boren handmatig:0
+tappen handmatig:0
+Dakhaken buigen:0
+Slotbouten persen:0
+
+[MetaalBewerking H3]
+Zagen Staal:0
+Lassen assen:0
+Lassen diverse:0
+Verjongen (Finn Power):1
+Ponsen st. assen:1
+Verjongen+ponsen (Finn P):1
+Verjongen + pons (27/32/38):0
+
+[Hal5]
+Profiel rubberen:0
+Zagen hout:0
+
+[Hal8]
+Doekbewerking ValkScreenVision:0
+
+[Hal9]
+Ponsen Alu Solardrager:0
+Verpakken (intern):1
+
+[Tafel1,Tafel2,Tafel3,Tafel4,MobielTafel1,MobielTafel2,Tafel8.1,Tafel8.2,Tafel8.3,Tafel8.4,Tafel Extern]
+Montage:1
+Vetten:0
+Inpersen asjes:0
