@@ -668,11 +668,11 @@ namespace Rpm.Productie
                                                             //    xmat.Locatie = xvalue;
                                                             //}
                                                             bool valid = false;
-                                                            if (length < 8)
+                                                            if (length < 9)
                                                             {
                                                                 valid = true;
                                                                 foreach (var xchar in xvalue)
-                                                                    if (!char.IsUpper(xchar) || !char.IsDigit(xchar) || xchar != '-' || xchar != '.')
+                                                                    if (!char.IsUpper(xchar) && !char.IsDigit(xchar) && xchar != '-' && xchar != '.')
                                                                     {
                                                                         valid = false;
                                                                         break;
