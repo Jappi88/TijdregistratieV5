@@ -126,10 +126,42 @@ namespace Forms
                 var flag = true;
 
                 if (ShowFilter.VanafCheck)
-                    flag &= bew.LastChanged != null && bew.LastChanged.TimeChanged >= ShowFilter.VanafTime;
+                {
+                    switch (bew.State)
+                    {
+                        case ProductieState.Gestopt:
+                            flag &= bew.TijdGestopt.IsDefault() ? bew.DatumToegevoegd >= ShowFilter.VanafTime : bew.TijdGestopt >= ShowFilter.VanafTime;
+                            break;
+                        case ProductieState.Gestart:
+                            flag &= bew.GestartOp() >= ShowFilter.VanafTime;
+                            break;
+                        case ProductieState.Gereed:
+                            flag &= bew.DatumGereed >= ShowFilter.VanafTime;
+                            break;
+                        case ProductieState.Verwijderd:
+                            flag &= bew.DatumVerwijderd >= ShowFilter.VanafTime;
+                            break;
+                    }
+                        
+                }
 
                 if (ShowFilter.TotCheck)
-                    flag &= bew.LastChanged != null && bew.LastChanged.TimeChanged <= ShowFilter.TotTime;
+                    switch (bew.State)
+                    {
+                        case ProductieState.Gestopt:
+                            flag &= bew.TijdGestopt.IsDefault() ? bew.DatumToegevoegd <= ShowFilter.TotTime : bew.TijdGestopt <= ShowFilter.TotTime;
+                            break;
+                        case ProductieState.Gestart:
+                            flag &= bew.GestartOp() <= ShowFilter.TotTime;
+                            break;
+                        case ProductieState.Gereed:
+                            flag &= bew.DatumGereed <= ShowFilter.TotTime;
+                            break;
+                        case ProductieState.Verwijderd:
+                            flag &= bew.DatumVerwijderd <= ShowFilter.TotTime;
+                            break;
+                    }
+
                 if (!flag)
                     return false;
 

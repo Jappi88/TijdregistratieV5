@@ -285,11 +285,17 @@ namespace Rpm.SqlLite
                 if (IsDisposed)
                     return new List<ProductieFormulier>();
                 var prods = new List<ProductieFormulier>();
-                if (ProductieFormulieren != null) prods = await ProductieFormulieren.FindAll(bereik.Start, bereik.Stop,validhandler);
+                if (ProductieFormulieren != null)
+                    if (bereik != null)
+                        prods = await ProductieFormulieren.FindAll(bereik.Start, bereik.Stop, validhandler);
+                else prods = await ProductieFormulieren.FindAll(validhandler);
 
                 if (incgereed && GereedFormulieren != null)
                 {
-                    var xprods = await GereedFormulieren.FindAll(bereik.Start, bereik.Stop, validhandler);
+                    var xprods = new List<ProductieFormulier>();
+                    if (bereik != null)
+                        xprods = await GereedFormulieren.FindAll(bereik.Start, bereik.Stop, validhandler);
+                    else xprods = await GereedFormulieren.FindAll(validhandler);
                     if (xprods.Count > 0)
                         prods.AddRange(xprods);
                 }
@@ -307,11 +313,16 @@ namespace Rpm.SqlLite
                     return new List<Bewerking>();
                 var prods = new List<ProductieFormulier>();
                 if (ProductieFormulieren != null)
-                    prods = await ProductieFormulieren.FindAll(bereik.Start, bereik.Stop, validhandler);
+                    if (bereik != null)
+                        prods = await ProductieFormulieren.FindAll(bereik.Start, bereik.Stop, validhandler);
+                    else prods = await ProductieFormulieren.FindAll(validhandler);
 
                 if ((state == ViewState.Alles || state == ViewState.Gereed) && GereedFormulieren != null)
                 {
-                    var xprods = await GereedFormulieren.FindAll(bereik.Start, bereik.Stop, validhandler);
+                    var xprods = new List<ProductieFormulier>();
+                    if (bereik != null)
+                        xprods = await GereedFormulieren.FindAll(bereik.Start, bereik.Stop, validhandler);
+                    else xprods = await GereedFormulieren.FindAll(validhandler);
                     if (xprods.Count > 0)
                         prods.AddRange(xprods);
                 }
@@ -326,7 +337,7 @@ namespace Rpm.SqlLite
                         {
                             if (filter && !bw.IsAllowed(null,state))
                                 continue;
-                            // if (validhandler != null && !validhandler.Invoke(bw, null)) continue;
+                            if (validhandler != null && !validhandler.Invoke(bw, null)) continue;
                             bws.Add(bw);
                         }
                 }

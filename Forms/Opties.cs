@@ -38,7 +38,7 @@ namespace Forms
             imageList1.Images.Add(Resources.industry_setting_114090.CombineImage(Resources.check_1582, 2));
             xoptielist.Groups.Clear();
             xfiltertype.SelectedIndex = 0;
-            if (Manager.Opties == null && !Manager.LoadSettings(this,true))
+            if (Manager.Opties == null && !Manager.LoadSettings(this,true).Result)
                 return;
             Manager.DefaultSettings ??= UserSettings.GetDefaultSettings();
         }
@@ -382,7 +382,8 @@ namespace Forms
 
                 xs.Notities = _LoadedOpties.Notities;
 
-                xs.LastRecentGereedTime = _LoadedOpties.LastRecentGereedTime;
+                xs.LastGereedStart = _LoadedOpties.LastGereedStart;
+                xs.LastGereedStop = _LoadedOpties.LastGereedStop;
                 //Listview View states
                 xs._viewproddata = _LoadedOpties._viewproddata;
                 xs._viewbewdata = _LoadedOpties._viewbewdata;

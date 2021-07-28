@@ -14,18 +14,19 @@ namespace Controls
     {
         public bool IsLoaded { get; private set; }
         public bool IsSyncing { get; private set; }
-        TimeSpan _TijdTerug = TimeSpan.FromDays(1);
-        public TimeSpan TijdTerug
-        {
-            get => _TijdTerug;
-            set
-            {
-                _TijdTerug = value;
-                UpdateTime();
-            } 
-        }
+        //TimeSpan _TijdTerug = TimeSpan.FromDays(1);
+        //public TimeSpan TijdTerug
+        //{
+        //    get => _TijdTerug;
+        //    set
+        //    {
+        //        _TijdTerug = value;
+        //        UpdateTime();
+        //    } 
+        //}
 
-        public int SyncInterval { get; set; } = 10000;//10 seconden
+
+        public int SyncInterval { get; set; } = 10000;//3 min
         private bool _Enablesync;
         public bool EnableSync
         {
@@ -55,22 +56,49 @@ namespace Controls
             OnItemCountChanged();
         }
 
+        private void UpdateTijdPeriode(bool change)
+        {
+            if (InvokeRequired)
+                this.Invoke(new MethodInvoker(()=> xUpdateTijdPeriode(change)));
+            else xUpdateTijdPeriode(change);
+        }
+
+        private void xUpdateTijdPeriode(bool change)
+        {
+            if (Manager.Opties != null)
+            {
+                if (Manager.Opties.LastGereedStart.IsDefault())
+                {
+                    Manager.Opties.LastGereedStart = DateTime.Now.Subtract(TimeSpan.FromDays(1));
+                    change = true;
+                }
+                if(change)
+                    xvanafgereed.SetValue(Manager.Opties.LastGereedStart);
+                if (Manager.Opties.LastGereedStop.IsDefault())
+                {
+                    xtotgereed.SetValue(DateTime.Now);
+                    xtotgereed.Checked = false;
+                }
+                else if(change)
+                {
+                    xtotgereed.SetValue(Manager.Opties.LastGereedStop);
+                    xtotgereed.Checked = true;
+                }
+                Bereik = new TijdEntry()
+                { Start = Manager.Opties.LastGereedStart, Stop = xtotgereed.Value };
+            }
+        }
+
         public void LoadBewerkingen()
         {
             if (IsLoaded) return;
             productieListControl1.DetachEvents();
-            if (Manager.Opties != null)
-            {
-                TijdTerug = Manager.Opties.LastRecentGereedTime;
-                xdagenvalue.SetValue((decimal)Manager.Opties.LastRecentGereedTime.TotalDays);
-            }
+            UpdateTijdPeriode(true);
             Manager.OnSettingsChanged -= Manager_OnSettingsChanged;
-            InitRecenteGereedmeldingen();
-            productieListControl1.InitEvents();
-            if (EnableSync)
-                SyncBewerkingen();
-            
             Manager.OnSettingsChanged += Manager_OnSettingsChanged;
+            InitRecenteGereedmeldingen();
+            productieListControl1.InitEvents();           
+            
         }
 
         private void Manager_OnSettingsChanged(object instance, Rpm.Settings.UserSettings settings, bool reinit)
@@ -81,9 +109,8 @@ namespace Controls
                 {
                     this.BeginInvoke(new MethodInvoker(() =>
                     {
-                        bool changed = TijdTerug != settings.LastRecentGereedTime;
-                        _TijdTerug = settings.LastRecentGereedTime;
-                        xdagenvalue.SetValue((decimal)Manager.Opties.LastRecentGereedTime.TotalDays);
+                        bool changed = Bereik.Start != settings.LastGereedStart || (!settings.LastGereedStop.IsDefault() && settings.LastGereedStop != Bereik.Stop);
+                        UpdateTijdPeriode(true);
                         //var dt = DateTime.Now;
                         //xhourvalue.SetValue(new DateTime(dt.Year, dt.Month, dt.Day, settings.LastRecentGereedTime.Hours,
                         //    settings.LastRecentGereedTime.Minutes, 0));
@@ -112,41 +139,67 @@ namespace Controls
             IsSyncing = true;
             Task.Run(() =>
             {
-                this.BeginInvoke(new MethodInvoker(async () =>
+                //this.BeginInvoke(new MethodInvoker(async () =>
+                //{
+                while (IsSyncing && EnableSync && !IsDisposed && IsLoaded)
                 {
-                    while (IsSyncing && EnableSync && !IsDisposed && IsLoaded)
+                    try
                     {
-                        try
-                        {
-                            UpdateTime();
-                            //var bewerkingen = await Manager.Database.GetBewerkingen(ViewState.Gereed, true, Bereik, IsAllowed);
+                        Task.Delay(SyncInterval).Wait();
+                        if (_iswaiting) continue;
+                        InitRecenteGereedmeldingen();
+                        //var prods = await Manager.Database.GetAllProducties(true, true, null, IsAllowed);
+                        //if (prods != null && prods.Any())
+                        //{
+                        //    for (int i = 0; i < prods.Count; i++)
+                        //    {
+                        //        productieListControl1.UpdateBewerking(prods[i], null, null, null);
+                        //        if (!IsSyncing || !EnableSync || IsDisposed || !IsLoaded) break;
+                        //    }
+                        //}
+                        //var xbws = productieListControl1.ProductieLijst.Objects?.Cast<Bewerking>().ToList();
+                        //if (xbws != null && xbws.Count > 0)
+                        //{
+                        //    var states = productieListControl1.GetCurrentViewStates();
+                        //    for (int i = 0; i < xbws.Count; i++)
+                        //    {
+                        //        productieListControl1.UpdateBewerking(xbws[i]?.Parent, xbws, states, null);
+                        //        if (!IsSyncing || !EnableSync || IsDisposed || !IsLoaded) break;
+                        //    }
+                        //}
 
-                            var xbws = productieListControl1.ProductieLijst.Objects?.Cast<Bewerking>().ToList();
-                            if (xbws != null && xbws.Count > 0)
-                            {
-                                var states = productieListControl1.GetCurrentViewStates();
-                                for (int i = 0; i < xbws.Count; i++)
-                                {
-                                    productieListControl1.UpdateBewerking(xbws[i]?.Parent, xbws, states, null);
-                                    if (!IsSyncing || !EnableSync || IsDisposed || !IsLoaded) break;
-                                }
-                            }
-
-                            await Task.Delay(SyncInterval);
-                            if (!IsSyncing || !EnableSync || IsDisposed || !IsLoaded) break;
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e);
-                        }
+                       
+                        if (!IsSyncing || !EnableSync || IsDisposed || !IsLoaded) break;
                     }
-                }));
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+                //}));
             });
         }
 
         private void UpdateTime()
         {
-            Bereik = new TijdEntry(DateTime.Now.Subtract(TijdTerug), DateTime.Now, null);
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(xUpdateTime));
+            else xUpdateTime();
+        }
+
+        private void xUpdateTime()
+        {
+            var dt = DateTime.Now;
+            if (xtotgereed.Checked)
+                dt = xtotgereed.Value;
+            Bereik = new TijdEntry(xvanafgereed.Value, dt, null);
+            if(Manager.Opties != null)
+            {
+                Manager.Opties.LastGereedStart = xvanafgereed.Value;
+                if (xtotgereed.Checked)
+                    Manager.Opties.LastGereedStop = xtotgereed.Value;
+                else Manager.Opties.LastGereedStop = new DateTime();
+            }
         }
 
         private Task InitRecenteGereedmeldingen()
@@ -154,13 +207,20 @@ namespace Controls
             return Task.Run(async () =>
             {
                 if (_iswaiting) return;
-                UpdateTime();
-                DoWait();
-                var bewerkingen = await Manager.Database.GetBewerkingen(ViewState.Gereed, true, Bereik, IsAllowed);
-                productieListControl1.InitProductie(bewerkingen, true);
-                SyncBewerkingen();
+                try
+                {
+                    DoWait();
+                    var bewerkingen = await Manager.Database.GetBewerkingen(ViewState.Gereed, true, null, IsAllowed);
+                    productieListControl1.InitProductie(bewerkingen, true);
+                    IsLoaded = true;                   
+                }
+                catch (Exception e)
+                {
+
+                }
+                if (EnableSync)
+                    SyncBewerkingen();
                 StopWait();
-                IsLoaded = true;
             });
         }
 
@@ -176,10 +236,12 @@ namespace Controls
                 int xcur = cur++;
                 xstatus.Invoke(new MethodInvoker(() =>
                 {
-                    xstatus.Text = value.PadRight(value.Length + xcur,'.');
+                    xstatus.Text = value.PadRight(value.Length + xcur, '.');
                     xstatus.Invalidate();
                 }));
-                await Task.Delay(400);
+                await Task.Delay(350);
+                if (cur > 5)
+                    cur = 0;
             }
 
             _iswaiting = false;
@@ -193,7 +255,7 @@ namespace Controls
 
         private bool IsAllowed(object value, string filter)
         {
-            UpdateTime();
+            UpdateTijdPeriode(false);
             if (value is ProductieFormulier form)
             {
                 if (form.Bewerkingen == null || form.Bewerkingen.Length == 0) return false;
@@ -220,8 +282,9 @@ namespace Controls
                 var bws = productieListControl1.Bewerkingen;
                 int count = bws?.Count ?? 0;
                 var x1 = count == 1 ? "Gereedmelding" : "Gereedmeldingen";
-                var uur = TijdTerug.Hours;
-                var dagen = (int) TijdTerug.TotalDays;
+                var tijd = Bereik.Stop - Bereik.Start;
+                var uur = tijd.Hours;
+                var dagen = (int)tijd.TotalDays;
                 var weken = dagen >= 7 ? (int)(dagen / 7) : 0;
                 dagen = dagen - (weken * 7);
                 var weekt = weken == 1 ? "week" : "weken";
@@ -259,20 +322,10 @@ namespace Controls
 
         private async void xupdatetijdb_Click(object sender, EventArgs e)
         {
-           // var tijd = xhourvalue.Value.TimeOfDay;
-           var tijd = TimeSpan.FromDays((double) xdagenvalue.Value);
-            if (Manager.Opties != null)
-            {
-                double days = Math.Round(tijd.TotalDays, 2);
-                string x1 = days <= 1.00d ? "dag" : "dagen";
-                Manager.Opties.LastRecentGereedTime = tijd;
-                await Manager.Opties.Save($"Recente gereedmeldingen periode gewijzigd naar {days} {x1}",false,true);
-            }
-            else
-            {
-                _TijdTerug = tijd;
-                await InitRecenteGereedmeldingen();
-            }
+            // var tijd = xhourvalue.Value.TimeOfDay;
+            UpdateTime();
+            UpdateTijdPeriode(true);
+            await InitRecenteGereedmeldingen();
         }
     }
 }

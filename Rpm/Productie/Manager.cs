@@ -171,7 +171,7 @@ namespace Rpm.Productie
                 if (autologin)
                     await AutoLogin(this);
                 if (Opties == null || loadsettings)
-                    LoadSettings(this, raiseManagerLoadingEvents);
+                    await LoadSettings(this, raiseManagerLoadingEvents);
                 //await Database.UpdateUserActivity(false);
                 DbUpdater.UpdateStartupDbs();
                 //Server.StartSync();
@@ -302,7 +302,7 @@ namespace Rpm.Productie
             });
         }
 
-        public static bool LoadSettings(object sender, bool raiseEvent)
+        public static async Task<bool> LoadSettings(object sender, bool raiseEvent)
         {
             if (Database.IsDisposed) return false;
             var os = SystemID;
@@ -318,15 +318,15 @@ namespace Rpm.Productie
                 //    return false;
                 try
                 {
-                    var xt = Database.GetSetting(id).Result;
+                    var xt = await Database.GetSetting(id);
                     if (xt == null)
                     {
-                        xt = Database.GetAllSettings().Result.FirstOrDefault(x=> x.Username.ToLower().StartsWith(name.ToLower()));
+                        xt = (await Database.GetAllSettings()).FirstOrDefault(x=> x.Username.ToLower().StartsWith(name.ToLower()));
                         if (xt != null)
                         {
-                            Database.DeleteSettings($"{xt.Username}[{xt.SystemID}]", false);
+                            await Database.DeleteSettings($"{xt.Username}[{xt.SystemID}]", false);
                             xt.SystemID = os;
-                            xt.Save(null, false, false, false);
+                            await xt.Save(null, false, false, false);
                         }
                     }
 
@@ -339,7 +339,7 @@ namespace Rpm.Productie
                 if (Opties == null)
                 {
                     var opties = new UserSettings {Username = name};
-                    Database.UpSert(opties).Wait();
+                    await Database.UpSert(opties);
                     Opties = opties;
                 }
 
@@ -1299,9 +1299,9 @@ namespace Rpm.Productie
             //start sync timer
         }
 
-        public static void LoginChanged(object sender)
+        public static async void LoginChanged(object sender)
         {
-            LoadSettings(sender,true);
+            await LoadSettings(sender,true);
             if (LogedInGebruiker == null)
                 ProductieChat?.LogOut();
             else

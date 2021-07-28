@@ -454,7 +454,7 @@ namespace Controls
         {
             if (_loadingproductielist || Manager.Opties == null || !CanLoad) return;
             _loadingproductielist = true;
-            this.BeginInvoke(new MethodInvoker(async() =>
+            this.Invoke(new MethodInvoker(async() =>
             {
                 ProductieLijst.BeginUpdate();
                 try

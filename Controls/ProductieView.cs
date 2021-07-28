@@ -93,7 +93,7 @@ namespace Controls
                 xproductieListControl1.InitProductie(false, true, false, false);
                 xbewerkingListControl.InitProductie(true, true, false, false);
                 werkPlekkenUI1.InitUI(_manager);
-                recentGereedMeldingenUI1.LoadBewerkingen();
+                //recentGereedMeldingenUI1.LoadBewerkingen();
                 InitEvents();
                 await _manager.Load(path, autologin, true,true);
                 // _manager.StartMonitor();

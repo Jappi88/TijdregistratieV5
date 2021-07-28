@@ -111,7 +111,6 @@ namespace Rpm.Settings
             ToonLogNotificatie = true;
             //Gebruiker Info
             //Weergave
-            LastRecentGereedTime = TimeSpan.FromDays(1);
             PersoneelAfdelingFilter = "";
             ProductieWeergaveFilters = new ViewState[] { };
             _viewbewdata = new byte[] { };
@@ -269,7 +268,11 @@ namespace Rpm.Settings
         public byte[] _viewpersoneeldata { get; set; }
         public byte[] _viewallenotitiesdata { get; set; }
 
+        [ExcludeFromSerialization]
         public TimeSpan LastRecentGereedTime { get; set; }
+        public  DateTime LastGereedStart { get; set; }
+        public DateTime LastGereedStop { get; set; }
+
         public Dictionary<string,LastFormScreenInfo> LastFormInfo { get; set; }
 
         [BsonIgnore]
