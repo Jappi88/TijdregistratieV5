@@ -97,6 +97,8 @@ namespace Rpm.Settings
             VerzendAdres = new List<UitgaandAdres>();
             OntvangAdres = new List<InkomendAdres>();
             SyncInterval = 10000;
+            GereedSyncInterval = 300000;
+            AutoGereedSync = true;
             MailSyncInterval = 60000;
             SyncLocaties = new[] {Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)};
             VerwijderVerwerkteBestanden = false;
@@ -366,6 +368,8 @@ namespace Rpm.Settings
         public List<UitgaandAdres> VerzendAdres { get; set; }
         public List<InkomendAdres> OntvangAdres { get; set; }
         public int SyncInterval { get; set; }
+        public int GereedSyncInterval { get; set; }
+        public bool AutoGereedSync { get; set; }
         public int MailSyncInterval { get; set; }
         public string[] SyncLocaties { get; set; }
         public bool VerwijderVerwerkteBestanden { get; set; }

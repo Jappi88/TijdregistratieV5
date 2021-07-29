@@ -171,7 +171,8 @@ namespace Forms
                 UpdateOptieList();
                 xenablesync.Checked = x.GebruikLocalSync;
                 xsyncinterval.Value = x.SyncInterval < 5000 ? 10000 : x.SyncInterval;
-
+                xenablegreedsync.Checked = x.AutoGereedSync;
+                xgereedsyncinterval.SetValue(x.GereedSyncInterval / 60000);
                 SetEmailFields(x);
                 xlocatielist.Items.Clear();
                 if (x.SyncLocaties != null)
@@ -337,6 +338,8 @@ namespace Forms
            
             xs.GebruikLocalSync = xenablesync.Checked;
             xs.SyncInterval = (int) xsyncinterval.Value;
+            xs.AutoGereedSync = xenablegreedsync.Checked;
+            xs.GereedSyncInterval = (int)(xgereedsyncinterval.Value * 60000);
             xs.VerzendAdres = GetUitgaandadreses();
            // xs.OntvangAdres = GetInkomendadreses();
             xs.SyncLocaties = xlocatielist.Items.Cast<ListViewItem>().Select(t => t.Text).ToArray();
@@ -1323,7 +1326,7 @@ namespace Forms
 
         private void xenablesync_CheckedChanged(object sender, EventArgs e)
         {
-            xsyncinterval.Enabled = xenablesync.Checked;
+            xproductiesyncgroup.Enabled = xenablesync.Checked;
         }
 
         private void xdblocatie_TextChanged(object sender, EventArgs e)
@@ -1345,6 +1348,11 @@ namespace Forms
         private void xcreatebackup_CheckedChanged(object sender, EventArgs e)
         {
             xbackupgroup.Enabled = xcreatebackup.Checked;
+        }
+
+        private void xenablegreedsync_CheckedChanged(object sender, EventArgs e)
+        {
+            xgereedproductiesyncgroup.Enabled = xenablegreedsync.Checked;
         }
     }
 }

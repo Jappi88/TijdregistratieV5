@@ -1089,6 +1089,7 @@ namespace Rpm.Productie
                                 StringComparison.CurrentCultureIgnoreCase) &&
                             !Directory.Exists(AppRootPath + "\\RPM_Data"))
                         {
+                            LogOut(this);
                             Application.Restart();
                             return;
                         }
@@ -1100,6 +1101,7 @@ namespace Rpm.Productie
                             {
                                 if (Directory.Exists(DefaultSettings.MainDB.UpdatePath))
                                 {
+                                    LogOut(this);
                                     Application.Restart();
                                 }
                             }

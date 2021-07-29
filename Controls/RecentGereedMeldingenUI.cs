@@ -25,8 +25,8 @@ namespace Controls
         //    } 
         //}
 
-
-        public int SyncInterval { get; set; } = 10000;//3 min
+        private DateTime _LastSynced;
+        public int SyncInterval { get; set; } = 300000;//5 min
         private bool _Enablesync;
         public bool EnableSync
         {
@@ -109,6 +109,8 @@ namespace Controls
                 {
                     this.BeginInvoke(new MethodInvoker(() =>
                     {
+                        SyncInterval = settings.SyncInterval;
+                        EnableSync = settings.AutoGereedSync;
                         bool changed = Bereik.Start != settings.LastGereedStart || (!settings.LastGereedStop.IsDefault() && settings.LastGereedStop != Bereik.Stop);
                         UpdateTijdPeriode(true);
                         //var dt = DateTime.Now;
@@ -128,7 +130,7 @@ namespace Controls
         public void StopView()
         {
             productieListControl1.DetachEvents();
-            productieListControl1.InitProductie(new List<Bewerking>(),true);
+            productieListControl1.InitProductie(new List<Bewerking>(),false,true);
             IsSyncing = false;
             IsLoaded = false;
         }
@@ -139,44 +141,21 @@ namespace Controls
             IsSyncing = true;
             Task.Run(() =>
             {
-                //this.BeginInvoke(new MethodInvoker(async () =>
-                //{
+              
                 while (IsSyncing && EnableSync && !IsDisposed && IsLoaded)
                 {
                     try
                     {
                         Task.Delay(SyncInterval).Wait();
-                        if (_iswaiting) continue;
-                        InitRecenteGereedmeldingen();
-                        //var prods = await Manager.Database.GetAllProducties(true, true, null, IsAllowed);
-                        //if (prods != null && prods.Any())
-                        //{
-                        //    for (int i = 0; i < prods.Count; i++)
-                        //    {
-                        //        productieListControl1.UpdateBewerking(prods[i], null, null, null);
-                        //        if (!IsSyncing || !EnableSync || IsDisposed || !IsLoaded) break;
-                        //    }
-                        //}
-                        //var xbws = productieListControl1.ProductieLijst.Objects?.Cast<Bewerking>().ToList();
-                        //if (xbws != null && xbws.Count > 0)
-                        //{
-                        //    var states = productieListControl1.GetCurrentViewStates();
-                        //    for (int i = 0; i < xbws.Count; i++)
-                        //    {
-                        //        productieListControl1.UpdateBewerking(xbws[i]?.Parent, xbws, states, null);
-                        //        if (!IsSyncing || !EnableSync || IsDisposed || !IsLoaded) break;
-                        //    }
-                        //}
-
-                       
                         if (!IsSyncing || !EnableSync || IsDisposed || !IsLoaded) break;
+                        if (_iswaiting || _LastSynced.AddMilliseconds(SyncInterval) >= DateTime.Now) continue;
+                        InitRecenteGereedmeldingen();
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(e);
                     }
                 }
-                //}));
             });
         }
 
@@ -210,8 +189,22 @@ namespace Controls
                 try
                 {
                     DoWait();
-                    var bewerkingen = await Manager.Database.GetBewerkingen(ViewState.Gereed, true, null, IsAllowed);
-                    productieListControl1.InitProductie(bewerkingen, true);
+                    var xprodids = await Manager.GetAllProductieIDs(true);
+                    var xbws = new List<Bewerking>();
+                    for(int i = 0; i < xprodids.Count; i++)
+                    {
+                        var id = xprodids[i];
+                        if (string.IsNullOrEmpty(id)) continue;
+                        var prod = await Manager.Database.GetProductie(id);
+                        if (prod?.Bewerkingen == null) continue;
+                        foreach(var bw in  prod.Bewerkingen)
+                        {
+                            if (IsAllowed(bw, null))
+                                xbws.Add(bw);
+                        }
+                    }
+                    productieListControl1.InitProductie(xbws,true, true);
+                    _LastSynced = DateTime.Now;
                     IsLoaded = true;                   
                 }
                 catch (Exception e)

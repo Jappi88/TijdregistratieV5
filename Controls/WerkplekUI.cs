@@ -181,12 +181,13 @@ namespace Controls
                                         var xplek = xwerkplekken.FirstOrDefault(x => x.Equals(plek));
                                         if (xplek == null && bewerking.State == ProductieState.Gestart && valid)
                                         {
+                                            xwerkpleklist.BeginUpdate();
                                             xwerkpleklist.AddObject(plek);
-
                                             changed = true;
                                         }
                                         else if (xplek != null && (bewerking.State != ProductieState.Gestart || !valid))
                                         {
+                                            xwerkpleklist.BeginUpdate();
                                             xwerkpleklist.RemoveObject(xplek);
                                             formplekken.Remove(xplek);
                                             changed = true;
@@ -200,11 +201,14 @@ namespace Controls
                                 }
 
                             if (formplekken.Count > 0)
+                            {
+                                xwerkpleklist.BeginUpdate();
                                 foreach (var formplek in formplekken)
                                 {
                                     xwerkpleklist.RemoveObject(formplek);
                                     changed = true;
                                 }
+                            }
                         }
 
                         if (xwerkpleklist.Items.Count > 0 && checkall)
@@ -233,6 +237,7 @@ namespace Controls
                                 x.Werk.WerkPlekken.All(w => !w.Equals(x))).ToArray();
                             if (plekken?.Length > 0)
                             {
+                                xwerkpleklist.BeginUpdate();
                                 xwerkpleklist.RemoveObjects(plekken);
                                 changed = true;
                             }
@@ -244,6 +249,7 @@ namespace Controls
                     catch
                     {
                     }
+                    finally { xwerkpleklist.EndUpdate();}
             }));
         }
 

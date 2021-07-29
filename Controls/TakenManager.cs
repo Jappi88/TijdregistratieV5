@@ -161,6 +161,7 @@ namespace Controls
                     StringComparison.CurrentCultureIgnoreCase)).ToList();
                 if (toremove.Count > 0)
                 {
+                    xtakenlijst.BeginUpdate();
                     xtakenlijst.RemoveObjects(toremove);
                     xtakenlijst.Sort();
                     return true;
@@ -175,6 +176,7 @@ namespace Controls
                 Console.WriteLine(ex.Message);
                 return false;
             }
+            finally { xtakenlijst.EndUpdate(); }
         }
 
         public void UpdateFormulier(ProductieFormulier formulier)
@@ -202,7 +204,6 @@ namespace Controls
                             {
                                 xtakenlijst.BeginUpdate();
                                 xtakenlijst.RemoveObjects(toremove);
-                                xtakenlijst.EndUpdate();
                                 changed = true;
                             }
                         }
@@ -221,7 +222,6 @@ namespace Controls
                                 }
                                 xtakenlijst.BeginUpdate();
                                 xtakenlijst.RemoveObjects(xremove);
-                                xtakenlijst.EndUpdate();
                                 
                             }
                             foreach (var t in taken)
@@ -237,7 +237,6 @@ namespace Controls
                                     {
                                         xtakenlijst.BeginUpdate();
                                         xtakenlijst.AddObject(t);
-                                        xtakenlijst.EndUpdate();
                                         changed = true;
                                     }
                                 }
@@ -249,7 +248,6 @@ namespace Controls
                                     {
                                         xtakenlijst.BeginUpdate();
                                         xtakenlijst.RemoveObject(t);
-                                        xtakenlijst.EndUpdate();
                                         changed = true;
                                     }
                                 }
@@ -267,6 +265,7 @@ namespace Controls
                     {
                         Console.WriteLine(e);
                     }
+                    finally { xtakenlijst.EndUpdate(); }
                 }));
             }
             catch (Exception e)
@@ -280,7 +279,7 @@ namespace Controls
             try
             {
                 if (this.IsDisposed || this.Disposing) return;
-                this.BeginInvoke(new MethodInvoker(() =>
+                this.Invoke(new MethodInvoker(() =>
                 {
                     try
                     {
@@ -301,7 +300,6 @@ namespace Controls
                             var items = Taken.Where(IsAllowed).ToList();
                             xtakenlijst.SetObjects(items);
                             xtakenlijst.Sort();
-                            xtakenlijst.EndUpdate();
                             xnexttaak.Enabled = xtakenlijst.Items.Count > 0;
                             UpdateTakenViewState(
                                 xtakenlijst.Items.Count > items.Count && Manager.Opties.ToonLijstNaNieuweTaak, false);
@@ -312,6 +310,7 @@ namespace Controls
                     catch (Exception e)
                     {
                     }
+                    finally { xtakenlijst.EndUpdate(); }
 
                 }));
             }
@@ -332,7 +331,6 @@ namespace Controls
                 xtakenlijst.BeginUpdate();
                 xtakenlijst.SetObjects(xtaken);
                 xtakenlijst.Sort();
-                xtakenlijst.EndUpdate();
                 xnexttaak.Enabled = xtakenlijst.Items.Count > 0;
                 UpdateTakenViewState(xtakenlijst.Items.Count > count && Manager.Opties.ToonLijstNaNieuweTaak, false);
                 xtakenlijst.SelectedObject = xselected;
@@ -343,6 +341,7 @@ namespace Controls
             {
                 Console.WriteLine(e);
             }
+            finally { xtakenlijst.EndUpdate(); }
         }
 
 

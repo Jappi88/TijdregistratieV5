@@ -66,7 +66,7 @@ namespace ProductieManager
             _updatechecker.Tick += _updatechecker_Tick;
             _updatechecker.Start();
             Hide();
-            productieView1.OnLoginChanged += ProductieView1_OnLoginChanged;
+            Manager.OnSettingsChanged += ProductieView1_OnSettingsChanged;
             Manager.OnManagerLoaded += _manager_OnManagerLoaded;
             Manager.OnRemoteMessage += _manager_OnRemoteMessage;
             
@@ -281,7 +281,7 @@ namespace ProductieManager
             }
         }
 
-        private void ProductieView1_OnLoginChanged(UserAccount user, object instance)
+        private void ProductieView1_OnSettingsChanged(object instance,UserSettings user, bool reinit)
         {
             BeginInvoke(new Action(UpdateTitle));
         }

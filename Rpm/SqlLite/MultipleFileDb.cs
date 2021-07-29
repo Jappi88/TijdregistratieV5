@@ -353,10 +353,9 @@ namespace Rpm.SqlLite
                 try
                 {
                     if (string.IsNullOrEmpty(filepath)) return false;
-                    string tmp = Manager.TempPath + "\\" + System.IO.Path.GetRandomFileName();
-
-                    using var fs = new FileStream(tmp, FileMode.OpenOrCreate, FileAccess.ReadWrite,
-                        FileShare.None);
+                    //string tmp = Manager.TempPath + "\\" + System.IO.Path.GetRandomFileName();
+                    byte[] bytes = null;
+                    using var fs = new MemoryStream();
                     {
                         RpmPacket packet = CreatePacketFromObject(data);
                         var ser = new SharpSerializer(true);
@@ -364,22 +363,24 @@ namespace Rpm.SqlLite
                             ser.Serialize(packet, fs);
 
                         ser.Serialize(data, fs);
+                        bytes = fs.ToArray();
                         fs.Close();
                     }
+                    if (bytes == null) return false;
                     for (int i = 0; i < 10; i++)
                     {
                         try
                         {
-                            //using (var xs = new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.ReadWrite,
-                            //    FileShare.Read))
-                            //{
-                            //    fs.CopyTo(xs);
-                            //    xs.Flush();
-                            //    xs.Close();
-                            //}
+                            using (var xs = new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.ReadWrite,
+                                FileShare.Read))
+                            {
+                                xs.Write(bytes, 0, bytes.Length);
+                                xs.Flush();
+                                xs.Close();
+                            }
 
-                            File.Copy(tmp, filepath, true);
-                            File.Delete(tmp);
+                            //File.Copy(tmp, filepath, true);
+                            //File.Delete(tmp);
                             return true;
                         }
                         catch (Exception e)
@@ -387,7 +388,7 @@ namespace Rpm.SqlLite
                             Console.WriteLine(e);
                         }
                     }
-
+                    bytes = null;
                     //OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Changed,
                     //    System.IO.Path.GetDirectoryName(filepath) ?? string.Empty, System.IO.Path.GetFileName(filepath)));
                     return false;

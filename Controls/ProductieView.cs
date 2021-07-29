@@ -90,8 +90,8 @@ namespace Controls
                 await _manager.Load(path, false, false,false);
                 CheckForUpdateDatabase();
                 takenManager1.InitManager();
-                xproductieListControl1.InitProductie(false, true, false, false);
-                xbewerkingListControl.InitProductie(true, true, false, false);
+                xproductieListControl1.InitProductie(false, true, false,true, false);
+                xbewerkingListControl.InitProductie(true, true, false,true, false);
                 werkPlekkenUI1.InitUI(_manager);
                 //recentGereedMeldingenUI1.LoadBewerkingen();
                 InitEvents();
@@ -326,7 +326,7 @@ namespace Controls
             {
                 BeginInvoke(new Action(() =>
                 {
-                    if (this.IsDisposed) return;
+                    if (this.IsDisposed || this.Disposing) return;
                     xloginb.Image = user != null ? Resources.Logout_37127__1_ : Resources.Login_37128__1_;
                     CheckForSpecialRooster(false);
                     OnLoginChanged?.Invoke(user, instance);
@@ -1203,8 +1203,15 @@ namespace Controls
                 return;
             if (Manager.LogedInGebruiker != null && Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieBasis)
             {
-                var prs = await Manager.GetProducties(ViewState.Gestart, true, true,false);
-                foreach (var v in prs) ShowProductieForm(v,true);
+                var prs = await Manager.GetAllProductieIDs(false);
+                foreach (var v in prs)
+                {
+                    var prod = await Manager.Database.GetProductie(v);
+                    if (prod?.Bewerkingen == null || prod.Bewerkingen.Length == 0) continue;
+                    var xs = prod.Bewerkingen.FirstOrDefault(x => x.State == ProductieState.Gestart);
+                    if (xs == null) continue;
+                    ShowProductieForm(prod, true, xs);
+                }
             }
         }
 

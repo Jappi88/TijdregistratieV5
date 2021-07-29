@@ -257,7 +257,7 @@ namespace Forms
                         SetProgressLabelText($"Producties laden ({perc:0.0%})...");
                     }
                     if (IsDisposed) return -1;
-                    productieListControl1.InitProductie(loaded,true);
+                    productieListControl1.InitProductie(loaded,true,true);
                 }
                 else
                     return -1;

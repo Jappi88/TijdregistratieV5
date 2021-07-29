@@ -189,7 +189,7 @@ namespace ProductieManager.Rpm.Productie
                                 string.Equals(x.GestartDoor, Manager.Opties.Username,
                                     StringComparison.CurrentCultureIgnoreCase));
                             invoke = false;
-                            await prod.UpdateForm(true, false, null, "", save, false);
+                            await prod.UpdateForm(true, false, null, "", false, false);
                         }
                         UpdateProductie(prod, invoke);
                     }

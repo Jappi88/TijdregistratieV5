@@ -86,36 +86,38 @@ namespace Controls
         /// <param name="producties">De producties om te laden</param>
         /// <param name="bewerkingen">Laad alleen de bewerkingen</param>
         /// <param name="filter">Filter producties</param>
-        public void InitProductie(List<ProductieFormulier> producties, bool bewerkingen, bool loadproducties)
+        public void InitProductie(List<ProductieFormulier> producties, bool bewerkingen,bool initlist, bool loadproducties)
         {
             Producties = producties;
-            InitProductie(bewerkingen, false, true, loadproducties);
+            InitProductie(bewerkingen, false, true,initlist, loadproducties);
         }
 
-        public void InitProductie(List<Bewerking> bewerkingen, bool loadproducties)
+        public void InitProductie(List<Bewerking> bewerkingen, bool initlist, bool loadproducties)
         {
             Bewerkingen = bewerkingen;
-            InitProductie(true, false, true, loadproducties);
+            InitProductie(true, false, true,initlist, loadproducties);
         }
 
-        public void InitProductie(bool bewerkingen, bool enablefilter, bool customlist, bool loadproducties)
+        public void InitProductie(bool bewerkingen, bool enablefilter, bool customlist,bool initlist, bool loadproducties)
         {
             EnableEntryFiltering = enablefilter;
             CustomList = customlist;
             IsBewerkingView = bewerkingen;
-            try
+            if (initlist)
             {
-                this.BeginInvoke(new MethodInvoker(() =>
+                try
                 {
-                    InitImageList();
-                    InitColumns();
-                }));
+                    this.BeginInvoke(new MethodInvoker(() =>
+                    {
+                        InitImageList();
+                        InitColumns();
+                    }));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-
             if (loadproducties)
                 UpdateProductieList();
         }
@@ -473,7 +475,6 @@ namespace Controls
                         var xprods = CustomList && Producties != null
                             ? Producties.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(filter)).ToList()
                             : await Manager.GetProducties(states, true, !IsBewerkingView, true);
-
                         if (!CanLoad) return;
                         if (ValidHandler != null)
                             xprods = xprods.Where(x => ValidHandler.Invoke(x, filter))
@@ -777,7 +778,7 @@ namespace Controls
             {
                 BeginInvoke(new Action(() =>
                 {
-                    if (IsDisposed) return;
+                    if (IsDisposed || Disposing) return;
                     SetButtonEnable();
                 }));
             }
