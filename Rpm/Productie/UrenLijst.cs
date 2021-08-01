@@ -63,9 +63,14 @@ namespace Rpm.Productie
             if (Uren != null && Uren.Count > 0)
             {
                 if (WerkRooster != null && WerkRooster.IsCustom() && Uren.Any(x => x.InUse && (x.WerkRooster == null || !x.WerkRooster.IsCustom() || !x.WerkRooster.SameTijden(WerkRooster))))
-                {
-                    SetStop();
-                    SetStart();
+                {  
+                    var xtime = DateTime.Now;
+                    var xstart = xtime.TimeOfDay >= WerkRooster.StartWerkdag && xtime.TimeOfDay <= WerkRooster.EindWerkdag ? WerkRooster.StartWerkdag : xtime.TimeOfDay;
+                    var xstop = xtime.TimeOfDay >= WerkRooster.EindWerkdag ? WerkRooster.EindWerkdag : xtime.TimeOfDay;
+                    var xstartdate = new DateTime(xtime.Year, xtime.Month, xtime.Day, xstart.Hours, xstart.Minutes, 0);
+                    var xenddate = new DateTime(xtime.Year, xtime.Month, xtime.Day, xstop.Hours, xstop.Minutes, 0);
+                    SetStop(xenddate);
+                    SetStart(xstartdate,xenddate);
                 }
 
                 if (SpecialeRoosters == null)
@@ -83,7 +88,7 @@ namespace Rpm.Productie
                     }
 
                     if (!uur.InUse && onlyactive) continue;
-                    uur.WerkRooster = WerkRooster;
+                    uur.WerkRooster ??= WerkRooster;
                 }
             }
 
@@ -108,8 +113,9 @@ namespace Rpm.Productie
         public TijdEntry Add(TijdEntry entry, ref bool isnew, bool reorder = true)
         {
             var changed = false;
+            var rooster = WerkRooster == null || !WerkRooster.IsCustom() ? Manager.Opties?.GetWerkRooster() : WerkRooster;
             if (entry.WerkRooster == null || !entry.WerkRooster.IsCustom())
-                entry.WerkRooster = WerkRooster;
+                entry.WerkRooster = rooster;
             if (Uren.Count == 0)
             {
                 Uren.Add(entry);
@@ -141,7 +147,7 @@ namespace Rpm.Productie
                 if (xent.WerkRooster == null || !xent.WerkRooster.IsCustom())
                     if (entry.WerkRooster != null && entry.WerkRooster.IsCustom())
                         xent.WerkRooster = entry.WerkRooster;
-                    else xent.WerkRooster = WerkRooster;
+                    else xent.WerkRooster = rooster;
                 if (!xent.InUse && entry.InUse)
                 {
                     Uren.ForEach(x => x.InUse = false);
@@ -165,7 +171,7 @@ namespace Rpm.Productie
                         if (xent.WerkRooster == null || !xent.WerkRooster.IsCustom())
                             if (entry.WerkRooster != null && entry.WerkRooster.IsCustom())
                                 xent.WerkRooster = entry.WerkRooster;
-                            else xent.WerkRooster = WerkRooster;
+                            else xent.WerkRooster = rooster;
                         if (!xent.InUse && entry.InUse)
                         {
                             Uren.ForEach(x => x.InUse = false);
@@ -193,7 +199,7 @@ namespace Rpm.Productie
                         if (xent.WerkRooster == null || !xent.WerkRooster.IsCustom())
                             if (entry.WerkRooster != null && entry.WerkRooster.IsCustom())
                                 xent.WerkRooster = entry.WerkRooster;
-                            else xent.WerkRooster = WerkRooster;
+                            else xent.WerkRooster = rooster;
                         if (!xent.InUse && entry.InUse)
                         {
                             Uren.ForEach(x => x.InUse = false);
@@ -461,8 +467,14 @@ namespace Rpm.Productie
 
         public void SetStop()
         {
+            SetStop(DateTime.Now);
+        }
+        
+        public void SetStop(DateTime stop)
+        {
             var lastkey = GetInUseEntry(true);
-            lastkey.Stop = DateTime.Now;
+
+            lastkey.Stop = stop;
             lastkey.InUse = false;
             RemoveAllEmpty();
         }
@@ -471,6 +483,12 @@ namespace Rpm.Productie
         {
             UpdateTijdGewerkt(DateTime.Now, DateTime.Now, true);
         }
+
+        public void SetStart(DateTime start, DateTime stop)
+        {
+            UpdateTijdGewerkt(start, stop, true);
+        }
+
 
         public DateTime GetLastStop(List<TijdEntry> uren)
         {

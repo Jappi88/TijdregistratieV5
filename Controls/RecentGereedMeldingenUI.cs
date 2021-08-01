@@ -109,7 +109,7 @@ namespace Controls
                 {
                     this.BeginInvoke(new MethodInvoker(() =>
                     {
-                        SyncInterval = settings.SyncInterval;
+                        SyncInterval = settings.GereedSyncInterval;
                         EnableSync = settings.AutoGereedSync;
                         bool changed = Bereik.Start != settings.LastGereedStart || (!settings.LastGereedStop.IsDefault() && settings.LastGereedStop != Bereik.Stop);
                         UpdateTijdPeriode(true);
@@ -139,17 +139,21 @@ namespace Controls
         {
             if (IsSyncing || !EnableSync || IsDisposed || !IsLoaded) return;
             IsSyncing = true;
-            Task.Run(() =>
+            Task.Run(async () =>
             {
               
                 while (IsSyncing && EnableSync && !IsDisposed && IsLoaded)
                 {
                     try
                     {
-                        Task.Delay(SyncInterval).Wait();
+                        
                         if (!IsSyncing || !EnableSync || IsDisposed || !IsLoaded) break;
-                        if (_iswaiting || _LastSynced.AddMilliseconds(SyncInterval) >= DateTime.Now) continue;
-                        InitRecenteGereedmeldingen();
+                        if (_iswaiting || _LastSynced.AddMilliseconds(SyncInterval) >= DateTime.Now)
+                        {
+                            await Task.Delay(SyncInterval);
+                            continue;
+                        }
+                        await InitRecenteGereedmeldingen();
                     }
                     catch (Exception e)
                     {
@@ -275,8 +279,10 @@ namespace Controls
                 var bws = productieListControl1.Bewerkingen;
                 int count = bws?.Count ?? 0;
                 var x1 = count == 1 ? "Gereedmelding" : "Gereedmeldingen";
-                var tijd = Bereik.Stop - Bereik.Start;
+                var tijd = Bereik.Stop < Bereik.Start? new TimeSpan() : Bereik.Stop - Bereik.Start;
                 var uur = tijd.Hours;
+                var min = tijd.Minutes;
+                var sec = tijd.Seconds;
                 var dagen = (int)tijd.TotalDays;
                 var weken = dagen >= 7 ? (int)(dagen / 7) : 0;
                 dagen = dagen - (weken * 7);
@@ -287,8 +293,13 @@ namespace Controls
                     xvals.Add($"{weken} {weekt}");
                 if (dagen > 0)
                     xvals.Add($"{dagen} {dagt}");
-                if(uur > 0 || xvals.Count == 0)
+                if(uur > 0)
                         xvals.Add($"{uur} uur");
+                if (min > 0)
+                    xvals.Add($"{min} {(min == 1? "minuut" : "minuten")}");
+                if (sec > 0 || xvals.Count == 0)
+                    xvals.Add($"{sec} seconden");
+
                 var xmsg = $"{count} {x1} van de afgelopen ";
                 for (int i = 0; i < xvals.Count; i++)
                 {

@@ -675,7 +675,6 @@ namespace Rpm.Productie
             Paraaf = paraaf;
             State = ProductieState.Gereed;
             AantalGemaakt = aantal;
-
             var personen = GetPersoneel();
             foreach (var per in personen)
                 if (per.IngezetAanKlus(this, false, out var klusjes))

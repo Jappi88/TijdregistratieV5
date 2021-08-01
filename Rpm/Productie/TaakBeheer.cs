@@ -57,7 +57,7 @@ namespace Rpm.Productie
                     //tijdvoorstart = Werktijd.AantalWerkdagen(tijdvoorstart.Add(tijdnodig), null);
 
                     foreach (var b in bws)
-                        if (b.State != ProductieState.Gestart)
+                        if (b.State != ProductieState.Gestart && b.TotaalGemaakt < b.Aantal)
                         {
                             var realrooster = Manager.Opties.GetWerkRooster();
                             var rooster = realrooster;
@@ -74,7 +74,7 @@ namespace Rpm.Productie
 
                 //taak geven als de productie klaar gezet moet worden
                 if (Manager.Opties.TaakVoorKlaarZet && !form.TeLaat && form.State == ProductieState.Gestopt &&
-                    form.Materialen.Any(x => !x.IsKlaarGezet))
+                    form.Materialen.Any(x => !x.IsKlaarGezet) && form.TotaalGemaakt < form.Aantal)
                 {
                     //ff kijken of de taak wel gestart moet worden, en of het tijd is om de taak wel te geven
                     var tijdvoorstart = TimeSpan.FromMinutes(Manager.Opties.MinVoorStart);

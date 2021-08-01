@@ -617,12 +617,17 @@ namespace Rpm.Misc
                 var b = bew;
                 if (b != null)
                 {
-                    var wpchooser = new WerkPlekChooser(bew.WerkPlekken)
+                    WerkPlek wp = null;
+                    if (bew.WerkPlekken != null && bew.WerkPlekken.Count > 1)
                     {
-                        Title = "Kies een werkplek om een rooster van te wijzigen"
-                    };
-                    if (wpchooser.ShowDialog() == DialogResult.Cancel) return;
-                    var wp = wpchooser.Selected;
+                        var wpchooser = new WerkPlekChooser(bew.WerkPlekken)
+                        {
+                            Title = "Kies een werkplek om een rooster van te wijzigen"
+                        };
+                        if (wpchooser.ShowDialog() == DialogResult.Cancel) return;
+                        wp = wpchooser.Selected;
+                    }
+                    else wp = bew.WerkPlekken?.FirstOrDefault();
                     if (wp == null) return;
                     var roosterform = new RoosterForm(wp.Tijden._rooster,
                         "Kies een rooster voor al je werkzaamheden");
@@ -645,11 +650,13 @@ namespace Rpm.Misc
                             }
                         }
                         wp.Tijden._rooster = roosterform.WerkRooster;
+                        wp.UpdateWerkRooster(true, true, true, true, true);
                         var xchange = wp.Tijden._rooster != null && wp.Tijden._rooster.IsCustom()
                             ? "eigen rooster"
                             : "standaard rooster";
                         await b.UpdateBewerking(null,
                             $"{Manager.Opties.Username} heeft voor een {xchange} gekozen voor {wp.Path}", true, true);
+                        
                     }
                 }
             }

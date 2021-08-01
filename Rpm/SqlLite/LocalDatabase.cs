@@ -2356,8 +2356,8 @@ namespace Rpm.SqlLite
                             foreach (var klus in klusjes)
                             {
                                 var pair = klus.GetWerk();
-                                var prod = pair.Formulier;
-                                var bew = pair.Bewerking;
+                                var prod = pair?.Formulier;
+                                var bew = pair?.Bewerking;
                                 if (prod == null || bew == null)
                                 {
                                     user.Klusjes.Remove(klus);
