@@ -232,7 +232,8 @@ namespace Forms
             {
                 var naam = "";
                 var dg = new TextFieldEditor {Title = "Vul in de naam van de database"};
-                if (dg.ShowDialog() == DialogResult.OK) naam = dg.SelectedText;
+                if (dg.ShowDialog() != DialogResult.OK) return;
+                naam = dg.SelectedText;
                 DefaultSettings.DbUpdateEntries.Add(new DatabaseUpdateEntry {Naam = naam, UpdatePath = xpath.Text});
                 var selected = xdbentrylist.SelectedObject;
                 xdbentrylist.SetObjects(DefaultSettings.DbUpdateEntries);

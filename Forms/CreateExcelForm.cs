@@ -72,7 +72,7 @@ namespace ProductieManager.Forms
             {
                 Title = "creëer Productie Overzicht",
                 Filter = "Xlsx Bestand|*.Xlsx",
-                FileName = DateTime.Now.ToString("g").Replace(" ","_").Replace("/","").Replace("-","_").Replace(":","")
+                FileName = "ProductieOverzicht_" + DateTime.Now.ToString("g").Replace(" ","_").Replace("/","").Replace("-","_").Replace(":","")
             };
             if (ofd.ShowDialog() == DialogResult.OK)
             {

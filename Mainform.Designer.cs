@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Mainform));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.productieView1 = new Controls.ProductieView();
             this.panel3 = new System.Windows.Forms.Panel();
             this.xstatuslabel = new System.Windows.Forms.Label();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
@@ -40,6 +39,8 @@
             this.openenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.sluitenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.productieView1 = new Controls.ProductieView();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -56,16 +57,6 @@
             this.panel1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel1.Size = new System.Drawing.Size(1049, 542);
             this.panel1.TabIndex = 4;
-            // 
-            // productieView1
-            // 
-            this.productieView1.BackColor = System.Drawing.Color.White;
-            this.productieView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.productieView1.Location = new System.Drawing.Point(4, 5);
-            this.productieView1.Name = "productieView1";
-            this.productieView1.ShowUnreadMessage = false;
-            this.productieView1.Size = new System.Drawing.Size(1041, 532);
-            this.productieView1.TabIndex = 0;
             // 
             // panel3
             // 
@@ -153,6 +144,25 @@
             this.sluitenToolStripMenuItem.Text = "&Sluiten";
             this.sluitenToolStripMenuItem.Click += new System.EventHandler(this.sluitenToolStripMenuItem_Click);
             // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.notifyIcon1.BalloonTipText = "ProductieManager draait op de achtergrond...";
+            this.notifyIcon1.BalloonTipTitle = "ProductieManager";
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "ProductieManager draait op de achtergrond...";
+            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            // 
+            // productieView1
+            // 
+            this.productieView1.BackColor = System.Drawing.Color.White;
+            this.productieView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieView1.Location = new System.Drawing.Point(4, 5);
+            this.productieView1.Name = "productieView1";
+            this.productieView1.ShowUnreadMessage = false;
+            this.productieView1.Size = new System.Drawing.Size(1041, 532);
+            this.productieView1.TabIndex = 0;
+            // 
             // Mainform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -171,6 +181,7 @@
             this.Text = "Productie Manager";
             this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Mainform_FormClosing);
+            this.Resize += new System.EventHandler(this.Mainform_Resize);
             this.panel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
@@ -190,6 +201,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem sluitenToolStripMenuItem;
         private System.Windows.Forms.Label xstatuslabel;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
     }
 }
 

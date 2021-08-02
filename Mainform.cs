@@ -403,5 +403,23 @@ namespace ProductieManager
         }
 
         #endregion IMain Interface
+
+        private void Mainform_Resize(object sender, EventArgs e)
+        {
+            if(this.WindowState == FormWindowState.Minimized && Manager.Opties != null && Manager.Opties.MinimizeToTray)
+            {
+                this.Hide();
+                notifyIcon1.Visible = true;
+                notifyIcon1.Text = $"ProductieManager Versie {Application.ProductVersion}";
+                notifyIcon1.ShowBalloonTip(5000);
+            }
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Show();
+            this.WindowState = FormWindowState.Normal;
+            notifyIcon1.Visible = false;
+        }
     }
 }

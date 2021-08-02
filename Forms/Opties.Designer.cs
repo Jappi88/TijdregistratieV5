@@ -1196,7 +1196,7 @@
             this.metroTabPage1.HorizontalScrollbarSize = 10;
             this.metroTabPage1.Location = new System.Drawing.Point(4, 35);
             this.metroTabPage1.Name = "metroTabPage1";
-            this.metroTabPage1.Size = new System.Drawing.Size(618, 327);
+            this.metroTabPage1.Size = new System.Drawing.Size(618, 330);
             this.metroTabPage1.TabIndex = 0;
             this.metroTabPage1.Text = "Sync Folders";
             this.metroTabPage1.ToolTipText = "Folders voor het kijken naar eventuele nieuwe productie formulieren";
@@ -1215,7 +1215,7 @@
             this.groupBox10.Location = new System.Drawing.Point(0, 0);
             this.groupBox10.Margin = new System.Windows.Forms.Padding(5);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(618, 327);
+            this.groupBox10.Size = new System.Drawing.Size(618, 330);
             this.groupBox10.TabIndex = 18;
             this.groupBox10.TabStop = false;
             // 
@@ -1231,7 +1231,7 @@
             this.xlocatielist.HideSelection = false;
             this.xlocatielist.Location = new System.Drawing.Point(3, 81);
             this.xlocatielist.Name = "xlocatielist";
-            this.xlocatielist.Size = new System.Drawing.Size(612, 243);
+            this.xlocatielist.Size = new System.Drawing.Size(612, 246);
             this.xlocatielist.TabIndex = 1;
             this.toolTip1.SetToolTip(this.xlocatielist, "Lijst voor alle locaties waar moet gekeken worden voor nieuwe producties");
             this.xlocatielist.UseCompatibleStateImageBehavior = false;
@@ -2173,7 +2173,7 @@
             this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl1.Location = new System.Drawing.Point(10, 60);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 0;
+            this.metroTabControl1.SelectedIndex = 4;
             this.metroTabControl1.ShowToolTips = true;
             this.metroTabControl1.Size = new System.Drawing.Size(640, 432);
             this.metroTabControl1.TabIndex = 1;
@@ -2389,9 +2389,9 @@
             // xmisctabpage
             // 
             this.xmisctabpage.Controls.Add(this.metroPanel5);
-            this.xmisctabpage.Location = new System.Drawing.Point(4, 35);
+            this.xmisctabpage.Location = new System.Drawing.Point(4, 38);
             this.xmisctabpage.Name = "xmisctabpage";
-            this.xmisctabpage.Size = new System.Drawing.Size(632, 393);
+            this.xmisctabpage.Size = new System.Drawing.Size(632, 390);
             this.xmisctabpage.TabIndex = 4;
             this.xmisctabpage.Text = "Misc";
             this.xmisctabpage.ToolTipText = "Verschillende soort instellingen";
@@ -2418,7 +2418,7 @@
             this.metroPanel5.HorizontalScrollbarSize = 10;
             this.metroPanel5.Location = new System.Drawing.Point(0, 0);
             this.metroPanel5.Name = "metroPanel5";
-            this.metroPanel5.Size = new System.Drawing.Size(632, 393);
+            this.metroPanel5.Size = new System.Drawing.Size(632, 390);
             this.metroPanel5.TabIndex = 7;
             this.metroPanel5.VerticalScrollbar = true;
             this.metroPanel5.VerticalScrollbarBarColor = true;
