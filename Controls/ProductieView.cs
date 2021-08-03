@@ -81,10 +81,12 @@ namespace Controls
         {
             try
             {
-                if (_manager == null)
+                //if (_manager == null)
+               
+                _manager?.Dispose();
                     _manager = new Manager(true);
                 _manager.InitManager();
-              
+               DetachEvents();
                 //BeginInvoke(new MethodInvoker(() => _manager.Load()));
                 //BeginInvoke(new MethodInvoker(_manager.StartMonitor));
                 await _manager.Load(path, false, false,false);
@@ -94,6 +96,7 @@ namespace Controls
                 xbewerkingListControl.InitProductie(true, true, false,true, false);
                 werkPlekkenUI1.InitUI(_manager);
                 //recentGereedMeldingenUI1.LoadBewerkingen();
+               
                 InitEvents();
                 await _manager.Load(path, autologin, true,true);
                 // _manager.StartMonitor();

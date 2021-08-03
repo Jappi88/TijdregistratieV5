@@ -1344,7 +1344,7 @@ namespace Controls
             }
             catch (Exception exception)
             {
-                XMessageBox.Show(exception.Message, "Geen Aanbevelingen");
+                XMessageBox.Show("Er zijn geen aanbevelingen", "Geen Aanbevelingen");
             }
         }
 

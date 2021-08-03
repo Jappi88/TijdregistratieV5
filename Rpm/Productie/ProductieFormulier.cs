@@ -1254,6 +1254,7 @@ namespace Rpm.Productie
 
         public DateTime VerwachtDatumGereed()
         {
+            if (State == ProductieState.Gereed) return DatumGereed;
             int aantal;
             if (TotaalGemaakt > Aantal)
                 aantal = 0;

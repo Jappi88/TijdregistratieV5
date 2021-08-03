@@ -29,6 +29,7 @@ namespace Rpm.Productie
         public static LocalDatabase Database { get; private set; }
         public static DatabaseUpdater DbUpdater { get; private set; }
         public static ProductieProvider ProductieProvider { get; private set; }
+        
         //public static SqlDatabase Server { get; private set; }
         private List<FileSystemWatcher> _fileWatchers = new();
         private readonly TaskQueues _tasks = new();
@@ -148,6 +149,7 @@ namespace Rpm.Productie
                 }
 
                 LoadPath(path);
+                
                 // LocalConnection = new LocalService();
                 //Server = new SqlDatabase();
                 Database = new LocalDatabase(this, SystemID, DbPath, true)
@@ -187,6 +189,7 @@ namespace Rpm.Productie
                 return false;
             }
         }
+
         #endregion Manager Init
 
 
@@ -632,7 +635,7 @@ namespace Rpm.Productie
                                 // pdffile.CleanupFilePath(ProductieFormPath, prod.ProductieNr, false,false);
                             }
 
-                            if (delete && Opties != null && Opties.VerwijderVerwerkteBestanden && File.Exists(pdffile))
+                            if (msg.Action == MessageAction.NieweProductie && delete && Opties != null && Opties.VerwijderVerwerkteBestanden && File.Exists(pdffile))
                             {
                                 try
                                 {
@@ -942,6 +945,7 @@ namespace Rpm.Productie
                         var sw = new FileSystemWatcher(s);
                         sw.EnableRaisingEvents = true;
                         sw.Changed += Sw_Created;
+                        sw.Created += Sw_Created;
                         sw.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName |
                                           NotifyFilters.LastWrite | NotifyFilters.CreationTime;
                         sw.Filter = "*.pdf";
@@ -1075,51 +1079,51 @@ namespace Rpm.Productie
             isbusy = false;
         }
         //deze fixen|!!!
-        private async void _syncTimer_Tick(object sender, EventArgs e)
+        private void _syncTimer_Tick(object sender, EventArgs e)
         {
             _syncTimer.Stop();
             //Even checken of we geladen zijn in de goede database.
-            await Task.Run(() =>
-            {
-                try
-                {
-                    if (DefaultSettings.MainDB != null)
-                    {
-                        if (string.Equals(AppRootPath, DefaultSettings.MainDB.RootPath,
-                                StringComparison.CurrentCultureIgnoreCase) &&
-                            !Directory.Exists(AppRootPath + "\\RPM_Data"))
-                        {
-                            LogOut(this);
-                            Application.Restart();
-                            return;
-                        }
+            //await Task.Run(() =>
+            //{
+                //try
+                //{
+                //    if (DefaultSettings.MainDB != null)
+                //    {
+                //        if (string.Equals(AppRootPath, DefaultSettings.MainDB.RootPath,
+                //                StringComparison.CurrentCultureIgnoreCase) &&
+                //            !Directory.Exists(AppRootPath + "\\RPM_Data"))
+                //        {
+                //            LogOut(this);
+                //            Application.Restart();
+                //            return;
+                //        }
 
-                        if (!string.Equals(AppRootPath, DefaultSettings.MainDB.RootPath,
-                            StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            try
-                            {
-                                if (Directory.Exists(DefaultSettings.MainDB.UpdatePath))
-                                {
-                                    LogOut(this);
-                                    Application.Restart();
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                //Console.WriteLine(e);
-                            }
-                        }
-                    }
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception);
-                }
+                //        if (!string.Equals(AppRootPath, DefaultSettings.MainDB.RootPath,
+                //            StringComparison.CurrentCultureIgnoreCase))
+                //        {
+                //            try
+                //            {
+                //                if (Directory.Exists(DefaultSettings.MainDB.UpdatePath))
+                //                {
+                //                    LogOut(this);
+                //                    Application.Restart();
+                //                }
+                //            }
+                //            catch (Exception e)
+                //            {
+                //                //Console.WriteLine(e);
+                //            }
+                //        }
+                //    }
+                //}
+                //catch (Exception exception)
+                //{
+                //    Console.WriteLine(exception);
+                //}
 
                 
 
-            });
+            //});
             //laten we controleren naar de instellingen en daar na handelen
             try
             {

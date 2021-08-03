@@ -806,10 +806,11 @@ namespace Rpm.Productie
 
         public DateTime VerwachtDatumGereed()
         {
+            if (State == ProductieState.Gereed) return DatumGereed;
             var tijd = TijdOver();
             //tijd /= GetPersoneel().AantalPersTijdMultiplier();
             var rooster = Manager.Opties?.GetWerkRooster();
-            if (tijd == 0 || double.IsNaN(tijd) || double.IsInfinity(tijd))
+            if (TotaalGemaakt >= Aantal || tijd == 0 || double.IsNaN(tijd) || double.IsInfinity(tijd))
                 return Werktijd.EerstVolgendeWerkdag(DateTime.Now,  ref rooster,rooster,Tijden?.SpecialeRoosters);
             return Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(tijd),
                 rooster,Tijden?.SpecialeRoosters);

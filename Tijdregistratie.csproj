@@ -61,7 +61,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -801,6 +801,7 @@
     <Compile Include="Rpm\SqlLite\BewerkingLijst.cs" />
     <Compile Include="Rpm\SqlLite\DatabaseInstance.cs" />
     <Compile Include="Rpm\SqlLite\DatabaseUpdater.cs" />
+    <Compile Include="Rpm\SqlLite\PathWatcher.cs" />
     <Compile Include="Rpm\SqlLite\DbType.cs" />
     <Compile Include="Rpm\SqlLite\DbVersion.cs" />
     <Compile Include="Rpm\SqlLite\IDbCollection.cs" />

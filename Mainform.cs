@@ -26,6 +26,7 @@ namespace ProductieManager
     public partial class Mainform : Form
     {
         private string _BootDir;
+        private PathWatcher _DbWatcher;
         public string MainAppTitle
         {
             get => this.Text;
@@ -78,6 +79,55 @@ namespace ProductieManager
             Shown += Mainform_Shown;
             _splash.Shown += _splash_Shown;
             _splash.Show();
+            _DbWatcher = new PathWatcher();
+            _DbWatcher.PathLocationFound += _DbWatcher_PathLocationFound;
+            _DbWatcher.PathLocationLost += _DbWatcher_PathLocationLost;
+        }
+
+        private void _DbWatcher_PathLocationLost(object sender, EventArgs e)
+        {
+            _DbWatcher?.Stop();
+            Dictionary<string, DialogResult> xbtns = new Dictionary<string, DialogResult>();
+            xbtns.Add("Blijf Offline", DialogResult.Cancel);
+            xbtns.Add("Herstart", DialogResult.OK);
+            xbtns.Add("Kies DB", DialogResult.Yes);
+            this.Invoke(new MethodInvoker(() =>
+            {
+                try
+                {
+                    var xrslt = XMessageBox.Show("Oorspronkelijke database kan niet geladen worden!\n\n" +
+                        "Kies 'Offline' als je gewoon op de standaard database wilt werken.\n" +
+                        "Kies 'Herstart' als je de ProductieManager opnieuw wilt opstarten.\n" +
+                        "Kies anders voor een andere database.", "Database niet gevonden!",
+                        MessageBoxIcon.Exclamation, null, xbtns);
+                    if (xrslt == DialogResult.OK) { Application.Restart(); return; }
+                    if (xrslt == DialogResult.Yes)
+                    {
+                        DbPathChooser ps = new DbPathChooser();
+                        if (ps.ShowDialog() == DialogResult.OK)
+                        {
+                            Manager.DefaultSettings.MainDB.RootPath = ps.SelectedPath;
+                            Application.Restart();
+                            return;
+                        }
+                    }
+                    productieView1.LoadManager(Manager.DefaultSettings.TempMainDB.RootPath, true);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }));
+            _DbWatcher?.Start();
+        }
+
+        private void _DbWatcher_PathLocationFound(object sender, EventArgs e)
+        {
+            try
+            {
+                Application.Restart();
+            }
+            catch (Exception ex) { };
         }
 
         private Task InitBootDir(string path = null)
@@ -190,7 +240,7 @@ namespace ProductieManager
                 if (_splash.CanClose)
                     _splash.Close();
                 else _splash.CanClose = true;
-           
+            _DbWatcher.WatchPath(Manager.DefaultSettings.MainDB.UpdatePath, false, true);
         }
 
         private void _splash_Shown(object sender, EventArgs e)
