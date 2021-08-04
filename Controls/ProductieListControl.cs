@@ -313,9 +313,13 @@ namespace Controls
                 c.AspectGetter = y =>
                 {
                     if (y is Bewerking bw)
-                        return bw.LaatstAantalUpdate.ToString(8, "over {0} {1}", "{0} {1} geleden");
+                    {
+                        return bw.LaatstAantalUpdate.ToString(8, "over {0} {1}", "{0} {1} geleden",false);
+                    }
                     if (y is ProductieFormulier pr)
-                        return pr.LaatstAantalUpdate.ToString(8, "over {0} {1}", "{0} {1} geleden");
+                    {
+                        return pr.LaatstAantalUpdate.ToString(8, "over {0} {1}", "{0} {1} geleden",false);
+                    }
                     return "N.V.T.";
                 };
             }
@@ -343,9 +347,9 @@ namespace Controls
                 c.AspectGetter = y =>
                 {
                     if (y is Bewerking bw)
-                        return bw.VerwachtLeverDatum.ToString(8, "over {0} {1}", "{0} {1} te laat");
+                        return bw.VerwachtLeverDatum.ToString(8, "over {0} {1}", "{0} {1} geleden",false);
                     if (y is ProductieFormulier pr)
-                        return pr.VerwachtLeverDatum.ToString(8, "over {0} {1}", "{0} {1} te laat");
+                        return pr.VerwachtLeverDatum.ToString(8, "over {0} {1}", "{0} {1} geleden",false);
                     return "N.V.T.";
                 };
             }
@@ -355,9 +359,9 @@ namespace Controls
                 c.AspectGetter = y =>
                 {
                     if (y is Bewerking bw)
-                        return bw.LeverDatum.ToString(8, "over {0} {1}", "{0} {1} te laat");
+                        return bw.LeverDatum.ToString(8, "over {0} {1}", "{0} {1} geleden",false);
                     if (y is ProductieFormulier pr)
-                        return pr.LeverDatum.ToString(8, "over {0} {1}", "{0} {1} te laat");
+                        return pr.LeverDatum.ToString(8, "over {0} {1}", "{0} {1} geleden",false);
                     return "N.V.T.";
                 };
             }

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Windows.Forms;
 using Rpm.Various;
 
 namespace Rpm.Productie
@@ -228,6 +231,7 @@ namespace Rpm.Productie
                 return Bewerking.Path;
             if (Formulier != null)
                 return Formulier.ProductieNr;
+            if (Persoon != null) return Persoon.PersoneelNaam;
             return Enum.GetName(typeof(AktieType), Type);
         }
 

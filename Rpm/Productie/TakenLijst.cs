@@ -189,7 +189,7 @@ namespace Rpm.Productie
 
             string xvalue = werkplek.LaatstAantalUpdate.IsDefault()
                 ? "nog niet"
-                : werkplek.LaatstAantalUpdate.ToString(double.MaxValue, "{0} {1}", "{0} {1} voor het laatst");
+                : Math.Round((DateTime.Now - werkplek.LaatstAantalUpdate).TotalHours,2) + " uur voor het laatst";
             t.Beschrijving = $"Je hebt {xvalue} gecontroleerd.\r\n " +
                              $"Het is nu weer tijd om te controleren.";
             return t;

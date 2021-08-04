@@ -1565,17 +1565,17 @@ namespace Rpm.Misc
         /// <param name="telaatformat">te laat string formaat waarvan de eerste oject de tijd is en de tweede de soort tijd (min,sec of uren)</param>
         /// <param name="tevroegformat"></param>
         /// <returns></returns>
-        public static string ToString(this DateTime time, double maxuren, string telaatformat, string tevroegformat)
+        public static string ToString(this DateTime time, double maxuren, string telaatformat, string tevroegformat, bool alleenwerktijd)
         {
             if (time.IsDefault()) return "Geen Tijd";
             bool islater = time > DateTime.Now;
             if (islater)
             {
-                var tg = Werktijd.WerkTijdNodigTotLeverdatum(time, DateTime.Now);
+                var tg = alleenwerktijd?Werktijd.WerkTijdNodigTotLeverdatum(time, DateTime.Now) : (time - DateTime.Now);
                 double urenlater = Math.Round(tg.TotalHours,2);
                 double minlater = Math.Round(tg.TotalMinutes, 2);
-                double seclater = Math.Round(tg.TotalSeconds, 2);
-                if (urenlater == 0) return "nu";
+                double seclater = Math.Round(tg.TotalSeconds, 0);
+                if (seclater == 0) return "nu";
                 if (seclater < 60)
                     return string.Format(telaatformat, new object[] { seclater, "seconden" });
                 if (minlater < 60)
@@ -1585,11 +1585,11 @@ namespace Rpm.Misc
             }
             else
             {
-                var tg = Werktijd.TijdGewerkt(time, DateTime.Now, null, null);
+                var tg = alleenwerktijd ? Werktijd.TijdGewerkt(time, DateTime.Now, null, null) : (DateTime.Now - time);
                 double ureneerder = Math.Round(tg.TotalHours, 2);
                 double mineerder = Math.Round(tg.TotalMinutes, 2);
-                double seceerder = Math.Round(tg.TotalSeconds, 2);
-                if (ureneerder == 0) return "nu";
+                double seceerder = Math.Round(tg.TotalSeconds, 0);
+                if (seceerder == 0) return "nu";
                 if (seceerder < 60)
                     return string.Format(tevroegformat, new object[] { seceerder, "seconden" });
                 if (mineerder < 60)
