@@ -113,7 +113,6 @@ namespace Controls
             this.xwijzigformb = new System.Windows.Forms.Button();
             this.xwerkplekkenb = new System.Windows.Forms.Button();
             this.xdeelgereedmeldingenb = new System.Windows.Forms.Button();
-            this.panel10 = new System.Windows.Forms.Panel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.xfiltercontainer = new System.Windows.Forms.ToolStripSplitButton();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -133,7 +132,6 @@ namespace Controls
             this.panel3.SuspendLayout();
             this.xfiltersStrip.SuspendLayout();
             this.panel7.SuspendLayout();
-            this.panel10.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -651,7 +649,7 @@ namespace Controls
             // 
             this.xbewleverDatumToolStripMenuItem1.Image = global::ProductieManager.Properties.Resources.systemtime_778_32_32;
             this.xbewleverDatumToolStripMenuItem1.Name = "xbewleverDatumToolStripMenuItem1";
-            this.xbewleverDatumToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.xbewleverDatumToolStripMenuItem1.Size = new System.Drawing.Size(158, 22);
             this.xbewleverDatumToolStripMenuItem1.Text = "&LeverDatum";
             this.xbewleverDatumToolStripMenuItem1.Click += new System.EventHandler(this.xbewleverDatumToolStripMenuItem1_Click);
             // 
@@ -659,7 +657,7 @@ namespace Controls
             // 
             this.aantalToolStripMenuItem1.Image = global::ProductieManager.Properties.Resources.hashtag_icon_152828_32_32;
             this.aantalToolStripMenuItem1.Name = "aantalToolStripMenuItem1";
-            this.aantalToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.aantalToolStripMenuItem1.Size = new System.Drawing.Size(158, 22);
             this.aantalToolStripMenuItem1.Text = "&Aantal";
             this.aantalToolStripMenuItem1.Click += new System.EventHandler(this.aantalToolStripMenuItem1_Click);
             // 
@@ -667,7 +665,7 @@ namespace Controls
             // 
             this.xbewaantalGemaaktToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Count_tool_34564;
             this.xbewaantalGemaaktToolStripMenuItem.Name = "xbewaantalGemaaktToolStripMenuItem";
-            this.xbewaantalGemaaktToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.xbewaantalGemaaktToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.xbewaantalGemaaktToolStripMenuItem.Text = "&Aantal Gemaakt";
             this.xbewaantalGemaaktToolStripMenuItem.Click += new System.EventHandler(this.xbewaantalGemaaktToolStripMenuItem_Click);
             // 
@@ -675,7 +673,7 @@ namespace Controls
             // 
             this.xbewnotitieToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Note_34576_32x32;
             this.xbewnotitieToolStripMenuItem.Name = "xbewnotitieToolStripMenuItem";
-            this.xbewnotitieToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.xbewnotitieToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.xbewnotitieToolStripMenuItem.Text = "&Notitie";
             this.xbewnotitieToolStripMenuItem.Click += new System.EventHandler(this.xbewnotitieToolStripMenuItem_Click);
             // 
@@ -940,6 +938,7 @@ namespace Controls
             // 
             this.panel7.AutoScroll = true;
             this.panel7.BackColor = System.Drawing.Color.Transparent;
+            this.panel7.Controls.Add(this.toolStrip1);
             this.panel7.Controls.Add(this.xzetterugb);
             this.panel7.Controls.Add(this.xverwijderb);
             this.panel7.Controls.Add(this.xproductieInfob);
@@ -953,7 +952,6 @@ namespace Controls
             this.panel7.Controls.Add(this.xwijzigformb);
             this.panel7.Controls.Add(this.xwerkplekkenb);
             this.panel7.Controls.Add(this.xdeelgereedmeldingenb);
-            this.panel7.Controls.Add(this.panel10);
             this.panel7.Controls.Add(this.xmeldgereedb);
             this.panel7.Controls.Add(this.xopenproductieb);
             this.panel7.Controls.Add(this.xstopb);
@@ -1159,26 +1157,18 @@ namespace Controls
             this.xdeelgereedmeldingenb.UseVisualStyleBackColor = true;
             this.xdeelgereedmeldingenb.Click += new System.EventHandler(this.xdeelgereedmeldingenb_Click);
             // 
-            // panel10
-            // 
-            this.panel10.Controls.Add(this.toolStrip1);
-            this.panel10.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel10.Location = new System.Drawing.Point(869, 0);
-            this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(91, 60);
-            this.panel10.TabIndex = 19;
-            // 
             // toolStrip1
             // 
+            this.toolStrip1.AutoSize = false;
             this.toolStrip1.BackColor = System.Drawing.Color.White;
             this.toolStrip1.CanOverflow = false;
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Right;
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.xfiltercontainer});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Location = new System.Drawing.Point(867, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(91, 60);
+            this.toolStrip1.Size = new System.Drawing.Size(93, 60);
             this.toolStrip1.TabIndex = 0;
             // 
             // xfiltercontainer
@@ -1195,7 +1185,7 @@ namespace Controls
             this.xfiltercontainer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xfiltercontainer.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xfiltercontainer.Name = "xfiltercontainer";
-            this.xfiltercontainer.Size = new System.Drawing.Size(90, 57);
+            this.xfiltercontainer.Size = new System.Drawing.Size(91, 36);
             this.xfiltercontainer.Text = "Filters";
             this.xfiltercontainer.ToolTipText = "Kies productie filter";
             this.xfiltercontainer.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.xfiltercontainer_ItemClicked);
@@ -1206,7 +1196,7 @@ namespace Controls
             this.toolStripMenuItem1.Image = global::ProductieManager.Properties.Resources.play_button_icon_icons_com_60615;
             this.toolStripMenuItem1.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(145, 38);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(196, 38);
             this.toolStripMenuItem1.Tag = "1";
             this.toolStripMenuItem1.Text = "Gestart";
             // 
@@ -1215,7 +1205,7 @@ namespace Controls
             this.toolStripMenuItem2.Image = global::ProductieManager.Properties.Resources.stop_red256_24890;
             this.toolStripMenuItem2.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(145, 38);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(196, 38);
             this.toolStripMenuItem2.Tag = "0";
             this.toolStripMenuItem2.Text = "Gestopt";
             // 
@@ -1224,7 +1214,7 @@ namespace Controls
             this.toolStripMenuItem3.Image = global::ProductieManager.Properties.Resources.business_color_progress_icon_icons_com_53437;
             this.toolStripMenuItem3.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(145, 38);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(196, 38);
             this.toolStripMenuItem3.Tag = "4";
             this.toolStripMenuItem3.Text = "Te Laat";
             // 
@@ -1233,7 +1223,7 @@ namespace Controls
             this.toolStripMenuItem4.Image = global::ProductieManager.Properties.Resources.new_25355;
             this.toolStripMenuItem4.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(145, 38);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(196, 38);
             this.toolStripMenuItem4.Tag = "5";
             this.toolStripMenuItem4.Text = "Nieuw";
             // 
@@ -1242,7 +1232,7 @@ namespace Controls
             this.toolStripMenuItem5.Image = global::ProductieManager.Properties.Resources.check_1582;
             this.toolStripMenuItem5.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(145, 38);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(196, 38);
             this.toolStripMenuItem5.Tag = "2";
             this.toolStripMenuItem5.Text = "Gereed";
             // 
@@ -1251,7 +1241,7 @@ namespace Controls
             this.toolStripMenuItem6.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.toolStripMenuItem6.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(145, 38);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(196, 38);
             this.toolStripMenuItem6.Tag = "3";
             this.toolStripMenuItem6.Text = "Verwijderd";
             // 
@@ -1338,8 +1328,6 @@ namespace Controls
             this.xfiltersStrip.ResumeLayout(false);
             this.xfiltersStrip.PerformLayout();
             this.panel7.ResumeLayout(false);
-            this.panel10.ResumeLayout(false);
-            this.panel10.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -1358,7 +1346,6 @@ namespace Controls
         private System.Windows.Forms.Button xwijzigformb;
         private System.Windows.Forms.Button xwerkplekkenb;
         private System.Windows.Forms.Button xdeelgereedmeldingenb;
-        private System.Windows.Forms.Panel panel10;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripSplitButton xfiltercontainer;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;

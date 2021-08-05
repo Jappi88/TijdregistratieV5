@@ -1052,10 +1052,6 @@ namespace Controls
 
                                     werk?.StartProductie(true, initnew);
                                 }
-                                else
-                                {
-                                    werk?.StopProductie(true);
-                                }
                             }
                         }));
                     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
+using ProductieManager.Properties;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
@@ -86,35 +87,44 @@ namespace Controls
             productieListControl1.DetachEvents();
             UpdateTijdPeriode(true);
             Manager.OnSettingsChanged -= Manager_OnSettingsChanged;
-            Manager.OnSettingsChanged += Manager_OnSettingsChanged;
+            Manager.OnSettingsChanged += Manager_OnSettingsChanged; 
+            Manager.FilterChanged -= Manager_FilterChanged;
+            Manager.FilterChanged += Manager_FilterChanged;
             InitRecenteGereedmeldingen();
             productieListControl1.InitEvents();           
             
         }
 
+        private void Manager_FilterChanged(object sender, EventArgs e)
+        {
+            UpdateGereedProducties();
+        }
+
         private void Manager_OnSettingsChanged(object instance, Rpm.Settings.UserSettings settings, bool reinit)
         {
-            if (settings != null)
+            UpdateGereedProducties();
+        }
+
+        private void UpdateGereedProducties()
+        {
+            try
             {
-                try
-                {
-                    this.BeginInvoke(new MethodInvoker(() =>
-                    {
-                        SyncInterval = settings.GereedSyncInterval;
-                        EnableSync = settings.AutoGereedSync;
-                        bool changed = Bereik.Start != settings.LastGereedStart || (!settings.LastGereedStop.IsDefault() && settings.LastGereedStop != Bereik.Stop);
-                        UpdateTijdPeriode(true);
-                        //var dt = DateTime.Now;
-                        //xhourvalue.SetValue(new DateTime(dt.Year, dt.Month, dt.Day, settings.LastRecentGereedTime.Hours,
-                        //    settings.LastRecentGereedTime.Minutes, 0));
-                        if (changed)
-                            InitRecenteGereedmeldingen();
-                    }));
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
+                this.BeginInvoke(new MethodInvoker(() =>
+                            {
+                                SyncInterval = Manager.Opties.GereedSyncInterval;
+                                EnableSync = Manager.Opties.AutoGereedSync;
+                                //bool changed = Bereik.Start != Manager.Opties.LastGereedStart || (!Manager.Opties.LastGereedStop.IsDefault() && Manager.Opties.LastGereedStop != Bereik.Stop);
+                                UpdateTijdPeriode(true);
+                                //var dt = DateTime.Now;
+                                //xhourvalue.SetValue(new DateTime(dt.Year, dt.Month, dt.Day, settings.LastRecentGereedTime.Hours,
+                                //    settings.LastRecentGereedTime.Minutes, 0));
+                                //if (changed)
+                                InitRecenteGereedmeldingen();
+                            }));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 

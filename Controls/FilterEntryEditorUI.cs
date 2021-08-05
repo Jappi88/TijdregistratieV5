@@ -165,28 +165,31 @@ namespace Controls
 
         private void UpdateCriterias()
         {
-            if (_UseOperand) return;
-            bool first = true;
-            var xfilters = xcriterialijst.Objects.Cast<FilterEntry>().ToList();
-            var filters = new List<FilterEntry>();
-            foreach (var entry in xfilters)
+            if (!_UseOperand)
             {
-                if (first)
+                bool first = true;
+                var xfilters = xcriterialijst.Objects.Cast<FilterEntry>().ToList();
+                var filters = new List<FilterEntry>();
+                foreach (var entry in xfilters)
                 {
-                    entry.OperandType = Operand.ALS;
-                    first = false;
-                }
-                else if (entry.OperandType == Operand.ALS)
-                {
-                    if (entry.OldOperandType == Operand.ALS)
-                        entry.OperandType = Operand.OF;
-                    else entry.OperandType = entry.OldOperandType;
-                }
+                    if (first)
+                    {
+                        entry.OperandType = Operand.ALS;
+                        first = false;
+                    }
+                    else if (entry.OperandType == Operand.ALS)
+                    {
+                        if (entry.OldOperandType == Operand.ALS)
+                            entry.OperandType = Operand.OF;
+                        else entry.OperandType = entry.OldOperandType;
+                    }
 
-                xcriterialijst.RefreshObject(entry);
-                filters.Add(entry);
+                    xcriterialijst.RefreshObject(entry);
+                    filters.Add(entry);
+                }
+                InitCriterias(filters);
             }
-            InitCriterias(filters);
+            else UpdateHtmlCriteria();
         }
 
         private void UpdateHtmlCriteria()

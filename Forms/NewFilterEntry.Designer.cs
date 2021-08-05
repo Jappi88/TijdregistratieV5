@@ -42,9 +42,9 @@ namespace ProductieManager.Forms
             this.xdatevalue = new MetroFramework.Controls.MetroDateTime();
             this.xcombovalue = new MetroFramework.Controls.MetroComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.xcriteriahtml = new HtmlRenderer.HtmlPanel();
             this.xvoorwaardenb = new System.Windows.Forms.Button();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.metroPanel1.SuspendLayout();
             this.xvaluepanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xdecimalvalue)).BeginInit();
@@ -250,16 +250,6 @@ namespace ProductieManager.Forms
             this.panel1.Size = new System.Drawing.Size(450, 95);
             this.panel1.TabIndex = 9;
             // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.xok);
-            this.panel2.Controls.Add(this.xannuleren);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(20, 337);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(450, 43);
-            this.panel2.TabIndex = 10;
-            // 
             // xcriteriahtml
             // 
             this.xcriteriahtml.AutoScroll = true;
@@ -291,6 +281,16 @@ namespace ProductieManager.Forms
             this.xvoorwaardenb.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.xvoorwaardenb.UseVisualStyleBackColor = true;
             this.xvoorwaardenb.Click += new System.EventHandler(this.xvoorwaardenb_Click);
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.xok);
+            this.panel2.Controls.Add(this.xannuleren);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(20, 337);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(450, 43);
+            this.panel2.TabIndex = 10;
             // 
             // NewFilterEntry
             // 

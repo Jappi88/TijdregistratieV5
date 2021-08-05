@@ -171,5 +171,10 @@ namespace ProductieManager.Forms
         {
             DialogResult = DialogResult.Cancel;
         }
+
+        private void filterEntryEditorUI1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
