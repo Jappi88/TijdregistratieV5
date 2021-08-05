@@ -1474,8 +1474,9 @@ namespace Controls
                 {
                     var items = xproductieLijst.SelectedObjects?.Cast<Bewerking>().ToList();
                     if (items == null || items.Count == 0) return;
-                    var datum = items.FirstOrDefault()?.LeverDatum ?? DateTime.Now;
-                    string x1 = items.Count == 1 ? items[0].Omschrijving : $"{items.Count} producties";
+                    var item = items.FirstOrDefault();
+                    var datum = item?.LeverDatum ?? DateTime.Now;
+                    string x1 = items.Count == 1 && item != null ? $"[{item.ProductieNr}|{ item.ArtikelNr}] { item.Naam}\n\n{item.Omschrijving}" : $"{items.Count} producties";
                     string msg = $"Wijzig leverdatum voor {x1}.";
                     var dc = new DatumChanger();
                     if (dc.ShowDialog(datum, msg) == DialogResult.OK)
