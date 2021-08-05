@@ -618,7 +618,7 @@ namespace Rpm.Productie
                                 msg = new RemoteMessage($"[{prod.ProductieNr}, {prod.AantalGemaakt}] is gefilterd!",
                                     MessageAction.AlgemeneMelding, MsgType.Info);
                             rms.Add(msg);
-                            if (msg.Action == MessageAction.NieweProductie)
+                            if (msg.Action == MessageAction.NieweProductie || msg.Action == MessageAction.ProductieWijziging)
                             {
                                 try
                                 {
