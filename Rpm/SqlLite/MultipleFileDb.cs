@@ -372,7 +372,7 @@ namespace Rpm.SqlLite
                         try
                         {
                             using (var xs = new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.ReadWrite,
-                                FileShare.Read))
+                                FileShare.None))
                             {
                                 xs.Write(bytes, 0, bytes.Length);
                                 xs.Flush();
@@ -421,7 +421,8 @@ namespace Rpm.SqlLite
                             return xent;
                         if (packet == null || string.IsNullOrEmpty(criteria) ||
                             packet.ContainsCriteria(criteria, fullmatch))
-                            xent = (T) ser.Deserialize(fs);
+                            xent = (T)ser.Deserialize(fs);
+
                         fs.Close();
                         return xent;
                     }

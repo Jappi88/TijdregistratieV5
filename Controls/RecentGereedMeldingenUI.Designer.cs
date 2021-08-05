@@ -37,8 +37,8 @@ namespace Controls
             this.xupdatetijdb = new System.Windows.Forms.Button();
             this.xtotgereed = new System.Windows.Forms.DateTimePicker();
             this.xvanafgereed = new System.Windows.Forms.DateTimePicker();
-            this.productieListControl1 = new Controls.ProductieListControl();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.productieListControl1 = new Controls.ProductieListControl();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
@@ -119,8 +119,13 @@ namespace Controls
             this.xvanafgereed.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.xvanafgereed.Location = new System.Drawing.Point(53, 9);
             this.xvanafgereed.Name = "xvanafgereed";
+            this.xvanafgereed.ShowCheckBox = true;
             this.xvanafgereed.Size = new System.Drawing.Size(225, 25);
             this.xvanafgereed.TabIndex = 6;
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
             // productieListControl1
             // 
@@ -139,10 +144,6 @@ namespace Controls
             this.productieListControl1.Size = new System.Drawing.Size(1098, 564);
             this.productieListControl1.TabIndex = 1;
             this.productieListControl1.ValidHandler = null;
-            // 
-            // toolTip1
-            // 
-            this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
             // RecentGereedMeldingenUI
             // 

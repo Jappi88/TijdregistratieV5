@@ -84,7 +84,7 @@ namespace Controls
                 //if (_manager == null)
                
                 _manager?.Dispose();
-                    _manager = new Manager(true);
+                _manager = new Manager(true);
                 _manager.InitManager();
                DetachEvents();
                 //BeginInvoke(new MethodInvoker(() => _manager.Load()));
@@ -92,8 +92,8 @@ namespace Controls
                 await _manager.Load(path, false, false,false);
                 CheckForUpdateDatabase();
                 takenManager1.InitManager();
-                xproductieListControl1.InitProductie(false, true, false,true, false);
-                xbewerkingListControl.InitProductie(true, true, false,true, false);
+                xproductieListControl1.InitProductie(false, true, true,true, false,false);
+                xbewerkingListControl.InitProductie(true, true, true,true, false,false);
                 werkPlekkenUI1.InitUI(_manager);
                 //recentGereedMeldingenUI1.LoadBewerkingen();
                

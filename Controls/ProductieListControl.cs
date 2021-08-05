@@ -58,6 +58,7 @@ namespace Controls
         public IsValidHandler ValidHandler { get; set; }
         public bool IsBewerkingView { get; set; }
         public bool CanLoad { get; set; }
+        public bool IsLoaded { get; private set; }
         public bool EnableEntryFiltering
         {
             get => _enableEntryFilter;
@@ -86,19 +87,19 @@ namespace Controls
         /// <param name="producties">De producties om te laden</param>
         /// <param name="bewerkingen">Laad alleen de bewerkingen</param>
         /// <param name="filter">Filter producties</param>
-        public void InitProductie(List<ProductieFormulier> producties, bool bewerkingen,bool initlist, bool loadproducties)
+        public void InitProductie(List<ProductieFormulier> producties, bool bewerkingen,bool initlist, bool loadproducties, bool reload)
         {
             Producties = producties;
-            InitProductie(bewerkingen, false, true,initlist, loadproducties);
+            InitProductie(bewerkingen, false, true,initlist, loadproducties, reload);
         }
 
-        public void InitProductie(List<Bewerking> bewerkingen, bool initlist, bool loadproducties)
+        public void InitProductie(List<Bewerking> bewerkingen, bool initlist, bool loadproducties, bool reload)
         {
             Bewerkingen = bewerkingen;
-            InitProductie(true, false, true,initlist, loadproducties);
+            InitProductie(true, false, true,initlist, loadproducties, reload);
         }
 
-        public void InitProductie(bool bewerkingen, bool enablefilter, bool customlist,bool initlist, bool loadproducties)
+        public void InitProductie(bool bewerkingen, bool enablefilter, bool customlist,bool initlist, bool loadproducties, bool reload)
         {
             EnableEntryFiltering = enablefilter;
             CustomList = customlist;
@@ -111,6 +112,7 @@ namespace Controls
                     {
                         InitImageList();
                         InitColumns();
+                        IsLoaded = true;
                     }));
                 }
                 catch (Exception e)
@@ -119,7 +121,7 @@ namespace Controls
                 }
             }
             if (loadproducties)
-                UpdateProductieList();
+                UpdateProductieList(reload);
         }
 
         private void SetButtonEnable()
@@ -200,8 +202,8 @@ namespace Controls
             //Manager.OnLoginChanged += _manager_OnLoginChanged;
             //Manager.DbUpdater.DbEntryUpdated += DbUpdater_DbEntryUpdated;
             Manager.OnBewerkingDeleted += _manager_OnBewerkingDeleted;
-            Manager.OnDbBeginUpdate += Manager_OnDbBeginUpdate;
-            Manager.OnDbEndUpdate += Manager_OnDbEndUpdate;
+            //Manager.OnDbBeginUpdate += Manager_OnDbBeginUpdate;
+           // Manager.OnDbEndUpdate += Manager_OnDbEndUpdate;
             Manager.OnManagerLoaded += _manager_OnManagerLoaded;
             Manager.FilterChanged += Manager_FilterChanged;
         }
@@ -233,7 +235,7 @@ namespace Controls
 
         private bool _iswaiting;
 
-        private void SetWaitUI()
+        public void SetWaitUI()
         {
             if (_iswaiting) return;
             _iswaiting = true;
@@ -276,6 +278,11 @@ namespace Controls
 
                 xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
             });
+        }
+
+        public void StopWait()
+        {
+            _iswaiting = false;
         }
 
         private void InitColumns()
@@ -456,12 +463,13 @@ namespace Controls
 
         private bool _loadingproductielist;
 
-        public void UpdateProductieList()
+        public void UpdateProductieList(bool reload)
         {
             if (_loadingproductielist || Manager.Opties == null || !CanLoad) return;
             _loadingproductielist = true;
             this.Invoke(new MethodInvoker(async() =>
             {
+                SetWaitUI();
                 ProductieLijst.BeginUpdate();
                 try
                 {
@@ -476,9 +484,9 @@ namespace Controls
 
                     if (!IsBewerkingView)
                     {
-                        var xprods = CustomList && Producties != null
+                        var xprods = !reload && CustomList && Producties != null
                             ? Producties.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(filter)).ToList()
-                            : await Manager.GetProducties(states, true, !IsBewerkingView, true);
+                            : Producties = await Manager.GetProducties(states, true, !IsBewerkingView, true);
                         if (!CanLoad) return;
                         if (ValidHandler != null)
                             xprods = xprods.Where(x => ValidHandler.Invoke(x, filter))
@@ -489,9 +497,9 @@ namespace Controls
                     }
                     else
                     {
-                        var bws = CustomList && Bewerkingen != null
+                        var bws = !reload && CustomList && Bewerkingen != null
                             ? Bewerkingen.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(filter)).ToList()
-                            : (await Manager.GetBewerkingen(states, true, true));
+                            : Bewerkingen = (await Manager.GetBewerkingen(states, true, true));
                         if (!CanLoad) return;
                         if (ValidHandler != null)
                             bws = bws.Where(x => ValidHandler.Invoke(x, filter))
@@ -530,6 +538,7 @@ namespace Controls
                 }
 
                 _loadingproductielist = false;
+                StopWait();
             }));
         }
 
@@ -749,7 +758,7 @@ namespace Controls
                 BeginInvoke(new MethodInvoker(() =>
                 {
                     InitFilterStrips();
-                    UpdateProductieList();
+                    UpdateProductieList(true);
                 }));
             }
             catch (Exception exception)
@@ -767,7 +776,7 @@ namespace Controls
                 {
                     if (IsDisposed) return;
                     InitFilterStrips();
-                    UpdateProductieList();
+                    UpdateProductieList(true);
                 }));
             }
             catch (Exception e)
@@ -794,7 +803,7 @@ namespace Controls
 
         private void _manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
         {
-            if (IsDisposed || Disposing) return;
+            if (IsDisposed || Disposing || !IsLoaded) return;
             try
             {
                 BeginInvoke(new MethodInvoker(() => UpdateFormulier(changedform)));
@@ -807,7 +816,7 @@ namespace Controls
 
         private void _manager_OnBewerkingDeleted(object sender, Bewerking bew, string change)
         {
-            if (IsDisposed || Disposing || !IsBewerkingView) return;
+            if (IsDisposed || Disposing || !IsBewerkingView || !IsLoaded) return;
             try
             {
                 BeginInvoke(new Action(() =>
@@ -844,7 +853,7 @@ namespace Controls
 
         private void Manager_OnFormulierDeleted(object sender, string id)
         {
-            if (IsDisposed || Disposing || string.IsNullOrEmpty(id)) return;
+            if (IsDisposed || Disposing ||!IsLoaded || string.IsNullOrEmpty(id)) return;
             DeleteID(id);
         }
 
@@ -854,7 +863,7 @@ namespace Controls
 
         private void xsearchbox_TextChanged(object sender, EventArgs e)
         {
-            if (xsearch.Text.ToLower().Trim() != "zoeken...") UpdateProductieList();
+            if (xsearch.Text.ToLower().Trim() != "zoeken...") UpdateProductieList(false);
         }
 
         private void xsearch_Enter(object sender, EventArgs e)
@@ -1752,7 +1761,7 @@ namespace Controls
             if (e.ClickedItem is ToolStripMenuItem b)
             {
                 b.Checked = !b.Checked;
-                UpdateProductieList();
+                UpdateProductieList(true);
             }
         }
 

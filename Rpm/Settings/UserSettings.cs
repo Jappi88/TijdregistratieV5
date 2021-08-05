@@ -272,7 +272,9 @@ namespace Rpm.Settings
 
         [ExcludeFromSerialization]
         public TimeSpan LastRecentGereedTime { get; set; }
+        public bool UseLastGereedStart { get; set; }
         public  DateTime LastGereedStart { get; set; }
+        public bool UseLastGereedStop { get; set; }
         public DateTime LastGereedStop { get; set; }
 
         public Dictionary<string,LastFormScreenInfo> LastFormInfo { get; set; }

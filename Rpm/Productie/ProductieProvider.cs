@@ -23,104 +23,8 @@ namespace ProductieManager.Rpm.Productie
         }
 
         private static readonly object _locker = new object();
-        public List<ProductieFormulier> Producties { get; private set; } = new List<ProductieFormulier>();
-        public LoadedType Type { get; private set; }
-        public bool IsLoaded { get; private set; }
-        public bool IsLoadedSyncing { get; private set; }
         public bool IsProductiesSyncing { get; private set; }
-        public int SyncInterval { get; set; } = 20000; //10 seconden
         public List<IProductieBase> ExcludeProducties { get; set; } = new List<IProductieBase>();
-        public ProductieProvider()
-        {
-            Manager.OnFormulierChanged += Manager_OnFormulierChanged;
-            Manager.OnFormulierDeleted += Manager_OnFormulierDeleted;
-        }
-
-        private void Manager_OnFormulierDeleted(object sender, string id)
-        {
-            if (!IsLoaded || Producties.Count == 0) return;
-            int removed = Producties.RemoveAll(x => string.Equals(x.ProductieNr, id, StringComparison.CurrentCultureIgnoreCase));
-        }
-
-        private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
-        {
-           UpdateProductie(changedform,false);
-        }
-
-        public void UpdateProductie(ProductieFormulier productie, bool raisechangedevent)
-        {
-            lock (_locker)
-            {
-                if (!IsLoaded || productie == null) return;
-               
-                if (productie.State == ProductieState.Gereed && Type == LoadedType.Producties)
-                {
-                    int removed = Producties.RemoveAll(x =>
-                        string.Equals(x.ProductieNr, productie.ProductieNr, StringComparison.CurrentCultureIgnoreCase));
-                    if (removed > 0)
-                        Manager.FormulierDeleted(this, productie.ProductieNr);
-                    return;
-                }
-
-                var index = Producties.IndexOf(productie);
-                if (index > -1)
-                    Producties[index] = productie;
-                else
-                    Producties.Add(productie);
-                if (raisechangedevent)
-                    Manager.FormulierChanged(this, productie);
-            }
-        }
-
-        public void StartSyncLoadedProducties()
-        {
-            if (IsLoadedSyncing) return;
-            IsLoadedSyncing = true;
-            Task.Run(async () =>
-            {
-                while (IsLoadedSyncing && Producties.Count > 0)
-                {
-                    try
-                    {
-                        for (int i = 0; i < Producties.Count; i++)
-                        {
-                            if (!IsLoadedSyncing) break;
-                            var prod = Producties[i];
-                            if (prod == null || string.IsNullOrEmpty(prod.ProductieNr))
-                            {
-                                Producties.RemoveAt(i--);
-                                continue;
-                            }
-
-                            string id = prod.ProductieNr;
-                            prod = await Manager.Database.GetProductie(id);
-                            if (prod == null) continue;
-                            if (string.IsNullOrEmpty(prod.ProductieNr) ||
-                                (prod.State == ProductieState.Gereed && Type == LoadedType.Producties))
-                            {
-                                Producties.RemoveAt(i--);
-                                Manager.FormulierDeleted(this, id);
-                                continue;
-                            }
-
-                            var index = Producties.IndexOf(prod);
-                            if (index > -1)
-                                Producties[index] = prod;
-                            else
-                                Producties.Add(prod);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
-
-                    await Task.Delay(SyncInterval);
-                }
-
-                IsLoadedSyncing = false;
-            });
-        }
 
         public void StartSyncProducties()
         {
@@ -130,13 +34,15 @@ namespace ProductieManager.Rpm.Productie
             {
                 while (IsProductiesSyncing)
                 {
-                    UpdateProducties();
-                    await Task.Delay(SyncInterval);
+                    if (Manager.Opties.GebruikLocalSync || Manager.Opties.GebruikTaken)
+                        UpdateProducties();
+                    await Task.Delay(Manager.Opties.SyncInterval);
                 }
 
                 IsProductiesSyncing = false;
             });
         }
+
 
         public void AddToExclude(IProductieBase productie)
         {
@@ -171,27 +77,26 @@ namespace ProductieManager.Rpm.Productie
             {
                 try
                 {
-                    var forms = await Manager.GetAllProductieIDs(false);
-                    for (int i = 0; i < forms.Count; i++)
+                    if (Manager.Opties.GebruikLocalSync || Manager.Opties.GebruikTaken)
                     {
-                        if (!IsProductiesSyncing) break;
-                        var prod = await Manager.Database.GetProductie(forms[i]);
-                        if (prod == null || !prod.IsAllowed(null) || IsExcluded(prod)) 
-                            continue;
-                        if (prod.State == ProductieState.Verwijderd ||
-                            prod.State == ProductieState.Gereed)
-                            continue;
-                        bool invoke = true;
-                        if (Manager.Opties.GebruikLocalSync || Manager.Opties.GebruikTaken)
+                        var forms = await Manager.GetAllProductieIDs(false);
+                        for (int i = 0; i < forms.Count; i++)
                         {
+                            if (!IsProductiesSyncing || (!Manager.Opties.GebruikLocalSync && !Manager.Opties.GebruikTaken)) break;
+                            var prod = await Manager.Database.GetProductie(forms[i]);
+                            if (prod == null || !prod.IsAllowed(null) || IsExcluded(prod))
+                                continue;
+                            if (prod.State == ProductieState.Verwijderd ||
+                                prod.State == ProductieState.Gereed)
+                                continue;
+                            // bool invoke = true;
+
                             //opslaan als de productie voor het laatst is gestart door de huidige gebruiker.
                             bool save = prod.Bewerkingen != null && prod.Bewerkingen.Any(x =>
                                 string.Equals(x.GestartDoor, Manager.Opties.Username,
                                     StringComparison.CurrentCultureIgnoreCase));
-                            invoke = false;
                             await prod.UpdateForm(true, false, null, "", false, false);
                         }
-                        UpdateProductie(prod, invoke);
                     }
                 }
                 catch (Exception e)
@@ -205,7 +110,7 @@ namespace ProductieManager.Rpm.Productie
 
         public void StopSync()
         {
-            IsLoadedSyncing = false;
+            IsProductiesSyncing = false;
         }
 
         /// <summary>
@@ -217,46 +122,15 @@ namespace ProductieManager.Rpm.Productie
         /// <param name="incform">true als de productie ook die aangegeven status moet zijn, false je alleen wilt verkrijgen op basis van een geldige bewerking</param>
         /// <param name="loaddb">true als je de producties als standaard wilt laden.</param>
         /// <returns></returns>
-        public async Task<List<ProductieFormulier>> GetProducties(LoadedType type, ViewState[] states, bool filter, bool incform, bool loaddb)
+        public async Task<List<ProductieFormulier>> GetProducties(LoadedType type, ViewState[] states, bool filter, bool incform)
         {
-            if (Type == type && IsLoaded)
-                return Producties;
-            var prods = new List<ProductieFormulier>();
-            if (IsLoaded && Type == LoadedType.Alles && (type == LoadedType.Gereed || (type == LoadedType.Producties && states.Any(x=> x == ViewState.Gereed))))
-            {
-                
-                for (int i = 0; i < Producties.Count; i++)
-                {
-                    var prod = Producties[i];
-                    if (type == LoadedType.Producties && prod.State == ProductieState.Gereed) continue;
-                    if (filter && !prod.IsAllowed(null, states, incform)) continue;
-                    prods.Add(prod);
-                }
-            }
-            else
-            {
-                prods = await GetProducties(type, filter, loaddb);
-            }
-            
-            
-            return prods;
+            return await GetProducties(type, filter);
         }
 
-        public async Task<List<Bewerking>> GetBewerkingen(LoadedType type, ViewState[] states, bool filter, bool loaddb)
+        public async Task<List<Bewerking>> GetBewerkingen(LoadedType type, ViewState[] states, bool filter)
         {
-            List<Bewerking> bws;
-
-            if (IsLoaded && Type == LoadedType.Alles && (type == LoadedType.Gereed || (type == LoadedType.Producties && states.Any(x => x == ViewState.Gereed))))
-            {
-                bws = GetBewerkingen(Producties, type, states, filter);
-            }
-            else
-            {
-                var prods = await GetProducties(type, false, loaddb);
-                bws = GetBewerkingen(prods, type, states, filter);
-            }
-
-
+            var prods = await GetProducties(type, false);
+            var bws = GetBewerkingen(prods, type, states, filter);
             return bws;
         }
 
@@ -278,49 +152,34 @@ namespace ProductieManager.Rpm.Productie
             return bws;
         }
 
-        private async Task<List<ProductieFormulier>> GetProducties(LoadedType type, bool filter, bool loaddb)
+        private async Task<List<ProductieFormulier>> GetProducties(LoadedType type, bool filter)
         {
             var prods = new List<ProductieFormulier>();
-            if (loaddb)
-                Manager.DbBeginUpdate();
+            //Manager.DbBeginUpdate();
             try
             {
-                if (!IsLoaded || type != Type)
+                switch (type)
                 {
-                    switch (type)
-                    {
-                        case LoadedType.Alles:
-                            //prods = await Manager.Database.GetAllProducties(true, filter,null);
-                           // break;
-                        case LoadedType.Gereed:
-                          //  IsValidHandler validhandler = filter ? Functions.IsAllowed : null;
-                            prods = await Manager.Database.GetAllProducties(true,filter, null);
-                            break;
-                        case LoadedType.Producties:
-                            prods = await Manager.Database.GetAllProducties(false, filter,null);
-                            break;
-                        case LoadedType.None:
-                            prods = new List<ProductieFormulier>();
-                            break;
-                    }
-
-                    if (loaddb)
-                    {
-                        Type = type;
-                        Producties = prods;
-                        IsLoaded = true;
-                        StartSyncLoadedProducties();
-                    }
+                    case LoadedType.Alles:
+                    //prods = await Manager.Database.GetAllProducties(true, filter,null);
+                    // break;
+                    case LoadedType.Gereed:
+                        //  IsValidHandler validhandler = filter ? Functions.IsAllowed : null;
+                        prods = await Manager.Database.GetAllProducties(true, filter, null);
+                        break;
+                    case LoadedType.Producties:
+                        prods = await Manager.Database.GetAllProducties(false, filter, null);
+                        break;
+                    case LoadedType.None:
+                        prods = new List<ProductieFormulier>();
+                        break;
                 }
-                else prods = Producties;
 
             }
             catch
             {
             }
-
-            if (loaddb)
-                Manager.DbEndUpdate();
+            //Manager.DbEndUpdate();
             return prods;
         }
 
@@ -333,11 +192,7 @@ namespace ProductieManager.Rpm.Productie
 
         public void Dispose()
         {
-            Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
-            Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
-            IsLoaded = false;
-            Type = LoadedType.None;
-            Producties.Clear();
+            StopSync();
             Dispose(true);
             GC.SuppressFinalize(this);
         }

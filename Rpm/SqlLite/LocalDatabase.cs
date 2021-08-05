@@ -408,6 +408,8 @@ namespace Rpm.SqlLite
                 {
                     form.ExcludeFromUpdate();
                     form.LastChanged = form.LastChanged.UpdateChange(change, DbType.Producties);
+                    if (RaiseEventWhenChanged)
+                        Manager.FormulierChanged(this, form);
                     if (ProductieFormulieren != null && form.Bewerkingen.All(x => x.State == ProductieState.Gereed))
                     {
                         GereedFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
@@ -415,9 +417,6 @@ namespace Rpm.SqlLite
                         {
                             await UpdateChange(form.LastChanged, form, RespondType.Update, DbType.GereedProducties,
                                 showmessage);
-                            if (RaiseEventWhenChanged)
-                                Manager.FormulierChanged(this, form);
-
                             if (await ProductieFormulieren.Exists(id))
                             {
                                 ProductieFormulieren.RaiseEventWhenDeleted = !RaiseEventWhenDeleted;
@@ -439,8 +438,7 @@ namespace Rpm.SqlLite
                         {
                             await UpdateChange(form.LastChanged, form, RespondType.Update, DbType.Producties,
                                 showmessage);
-                            if (RaiseEventWhenChanged)
-                                Manager.FormulierChanged(this, form);
+                           
 
                             if (GereedFormulieren != null && await GereedFormulieren.Exists(id))
                             {

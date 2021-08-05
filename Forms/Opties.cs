@@ -384,8 +384,9 @@ namespace Forms
                 xs.ProductieWeergaveFilters = _LoadedOpties.ProductieWeergaveFilters;
 
                 xs.Notities = _LoadedOpties.Notities;
-
+                xs.UseLastGereedStart = _LoadedOpties.UseLastGereedStart;
                 xs.LastGereedStart = _LoadedOpties.LastGereedStart;
+                xs.UseLastGereedStop = _LoadedOpties.UseLastGereedStop;
                 xs.LastGereedStop = _LoadedOpties.LastGereedStop;
                 //Listview View states
                 xs._viewproddata = _LoadedOpties._viewproddata;

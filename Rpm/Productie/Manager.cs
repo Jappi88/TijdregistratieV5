@@ -477,7 +477,7 @@ namespace Rpm.Productie
                         : ProductieProvider.LoadedType.Producties;
                 }
 
-                var xitems = await ProductieProvider.GetProducties(type, states, filter,incform,loaddb);
+                var xitems = await ProductieProvider.GetProducties(type, states, filter,incform);
                 return xitems;
             });
         }
@@ -497,7 +497,7 @@ namespace Rpm.Productie
                         : ProductieProvider.LoadedType.Producties;
                 }
 
-                var xitems = await ProductieProvider.GetBewerkingen(type, states, filter, loaddb);
+                var xitems = await ProductieProvider.GetBewerkingen(type, states, filter);
                 return xitems;
             });
         }
@@ -1449,8 +1449,11 @@ namespace Rpm.Productie
             _fileWatchers?.ForEach(x => x.Dispose());
             _syncTimer?.Stop();
             _syncTimer?.Dispose();
+            _syncTimer = null;
             Database?.Dispose();
+            Database = null;
             ProductieProvider?.Dispose();
+            ProductieProvider = null;
             Dispose(true);
             GC.SuppressFinalize(this);
         }

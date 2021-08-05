@@ -65,28 +65,19 @@ namespace Controls
 
         private void xUpdateTijdPeriode(bool change)
         {
-            if (Manager.Opties != null)
+            if (Manager.Opties != null && change)
             {
                 if (Manager.Opties.LastGereedStart.IsDefault())
                 {
                     Manager.Opties.LastGereedStart = DateTime.Now.Subtract(TimeSpan.FromDays(1));
-                    change = true;
                 }
-                if(change)
-                    xvanafgereed.SetValue(Manager.Opties.LastGereedStart);
-                if (Manager.Opties.LastGereedStop.IsDefault())
-                {
-                    xtotgereed.SetValue(DateTime.Now);
-                    xtotgereed.Checked = false;
-                }
-                else if(change)
-                {
-                    xtotgereed.SetValue(Manager.Opties.LastGereedStop);
-                    xtotgereed.Checked = true;
-                }
-                Bereik = new TijdEntry()
-                { Start = Manager.Opties.LastGereedStart, Stop = xtotgereed.Value };
+                xvanafgereed.SetValue(Manager.Opties.LastGereedStart);
+                xtotgereed.SetValue(Manager.Opties.LastGereedStop);
+                xvanafgereed.Checked = Manager.Opties.UseLastGereedStart;
+                xtotgereed.Checked = Manager.Opties.UseLastGereedStop;
             }
+            Bereik = new TijdEntry()
+            { Start = Manager.Opties.LastGereedStart, Stop = xtotgereed.Value };
         }
 
         public void LoadBewerkingen()
@@ -130,7 +121,7 @@ namespace Controls
         public void StopView()
         {
             productieListControl1.DetachEvents();
-            productieListControl1.InitProductie(new List<Bewerking>(),false,true);
+            productieListControl1.InitProductie(new List<Bewerking>(),false,true,false);
             IsSyncing = false;
             IsLoaded = false;
         }
@@ -172,15 +163,20 @@ namespace Controls
 
         private void xUpdateTime()
         {
-            var dt = DateTime.Now;
+            var xstop = DateTime.Now;
             if (xtotgereed.Checked)
-                dt = xtotgereed.Value;
-            Bereik = new TijdEntry(xvanafgereed.Value, dt, null);
-            if(Manager.Opties != null)
+                xstop = xtotgereed.Value;
+            var xstart = DateTime.Now.Subtract(TimeSpan.FromDays(1));
+            if (xvanafgereed.Checked)
+                xstart = xvanafgereed.Value;
+            Bereik = new TijdEntry(xstart, xstop, null);
+            if (Manager.Opties != null)
             {
-                Manager.Opties.LastGereedStart = xvanafgereed.Value;
+                Manager.Opties.UseLastGereedStart = xvanafgereed.Checked;
+                Manager.Opties.UseLastGereedStop = xtotgereed.Checked;
+                Manager.Opties.LastGereedStart = xstart;
                 if (xtotgereed.Checked)
-                    Manager.Opties.LastGereedStop = xtotgereed.Value;
+                    Manager.Opties.LastGereedStop = xstop;
                 else Manager.Opties.LastGereedStop = new DateTime();
             }
         }
@@ -193,7 +189,9 @@ namespace Controls
                 try
                 {
                     DoWait();
+                    //productieListControl1.SetWaitUI();
                     var xprodids = await Manager.GetAllProductieIDs(true);
+                    productieListControl1.ValidHandler = IsAllowed;
                     var xbws = new List<Bewerking>();
                     for(int i = 0; i < xprodids.Count; i++)
                     {
@@ -207,7 +205,7 @@ namespace Controls
                                 xbws.Add(bw);
                         }
                     }
-                    productieListControl1.InitProductie(xbws,true, true);
+                    productieListControl1.InitProductie(xbws,true, true,false);
                     _LastSynced = DateTime.Now;
                     IsLoaded = true;                   
                 }
@@ -218,6 +216,7 @@ namespace Controls
                 if (EnableSync)
                     SyncBewerkingen();
                 StopWait();
+                //productieListControl1.StopWait();
             });
         }
 
