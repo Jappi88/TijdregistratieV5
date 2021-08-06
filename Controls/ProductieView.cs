@@ -18,6 +18,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Various;
 
@@ -56,6 +57,8 @@ namespace Controls
         private readonly Timer _specialRoosterWatcher;
         public static Manager _manager;
 
+        public int ProductieRefreshInterval { get; set; } = 10000;// 10 sec
+        public bool ProductieSyncEnabled { get; set; }
         //private PersoneelsForm _persform;
         //private LogForm _logform;
         //private AlleStoringen _storingen;
@@ -355,7 +358,7 @@ namespace Controls
                     CheckForSpecialRooster(true);
                     LoadStartedProducties();
                     LoadProductieLogs();
-                    //RunProductieRefresh();
+                    RunProductieRefresh();
                     //UpdateAllLists();
                     _specialRoosterWatcher?.Start();
                 }));
@@ -1045,6 +1048,37 @@ namespace Controls
         #endregion Control Events
 
         #region Methods
+        public Task RunProductieRefresh()
+        {
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    while (ProductieSyncEnabled && !IsDisposed && !Disposing)
+                    {
+                        await Task.Delay(ProductieRefreshInterval);
+                        if (!ProductieSyncEnabled || IsDisposed || Disposing) break;
+                        this.BeginInvoke(new MethodInvoker(xUpdateList));
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            });
+        }
+
+        private void xUpdateList()
+        {
+            try
+            {
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         private void CheckForSpecialRooster(bool prompchange)
         {
             if (Manager.Opties == null || Manager.LogedInGebruiker == null ||
@@ -1182,7 +1216,6 @@ namespace Controls
             }
         }
         
-
         public static void CheckForUpdateDatabase()
         {
             var opties = Manager.DefaultSettings ?? UserSettings.GetDefaultSettings();
