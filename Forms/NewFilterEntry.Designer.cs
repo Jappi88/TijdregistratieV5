@@ -222,7 +222,7 @@ namespace ProductieManager.Forms
             // 
             this.xdatevalue.Dock = System.Windows.Forms.DockStyle.Top;
             this.xdatevalue.Location = new System.Drawing.Point(0, 58);
-            this.xdatevalue.MinimumSize = new System.Drawing.Size(0, 29);
+            this.xdatevalue.MinimumSize = new System.Drawing.Size(4, 29);
             this.xdatevalue.Name = "xdatevalue";
             this.xdatevalue.Size = new System.Drawing.Size(450, 29);
             this.xdatevalue.TabIndex = 8;

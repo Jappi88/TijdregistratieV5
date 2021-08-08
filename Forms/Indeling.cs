@@ -768,7 +768,7 @@ namespace Forms
                 try
                 {
                     var bw = GetCurrentBewerking();
-                    Formulier = changedform;
+                    Formulier = changedform.CreateCopy();
                     for (int i = 0; i < Formulier.Bewerkingen.Length; i++)
                     {
                         if (string.Equals(bw.Naam, Formulier.Bewerkingen[i].Naam,
@@ -848,61 +848,61 @@ namespace Forms
         private void xtijdgestart_ValueChanged(object sender, EventArgs e)
         {
             if (xshiftlist.SelectedObjects.Count > 0)
-                if(xtijdgestart.Value > DateTime.Now)
-                    XMessageBox.Show(
-                        "Ben je helderziend ofzo?\n\n" +
-                        $"Je kan een start of stop tijd niet later zetten dan dat het nu is ({DateTime.Now})",
-                        "Waarschuwing",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                else
+                //if(xtijdgestart.Value > DateTime.Now)
+                //    XMessageBox.Show(
+                //        "Ben je helderziend ofzo?\n\n" +
+                //        $"Je kan een start of stop tijd niet later zetten dan dat het nu is ({DateTime.Now})",
+                //        "Waarschuwing",
+                //        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                //else
+                //{
+                foreach (var per in xshiftlist.SelectedObjects.Cast<Personeel>())
                 {
-                    foreach (var per in xshiftlist.SelectedObjects.Cast<Personeel>())
+                    var klus = GetCurrentKlus(per, true);
+                    if (klus != null)
                     {
-                        var klus = GetCurrentKlus(per, true);
-                        if (klus != null)
-                        {
-                            var xent = klus.GetAvailibleTijdEntry();
-                            xent.Start = xtijdgestart.Value;
-                            xent.Stop = xtijdgestopt.Value;
-                            xent.InUse = Bewerking.State == ProductieState.Gestart;
-                            klus.UpdateTijdGewerkt(xent);
+                        var xent = klus.GetAvailibleTijdEntry();
+                        xent.Start = xtijdgestart.Value;
+                        xent.Stop = xtijdgestopt.Value;
+                        xent.InUse = Bewerking.State == ProductieState.Gestart;
+                        klus.UpdateTijdGewerkt(xent);
 
-                            xshiftlist.RefreshObject(per);
-                            if (Bewerking != null)
-                                xwerkplekken.RefreshObjects(Bewerking.WerkPlekken);
-                        }
+                        xshiftlist.RefreshObject(per);
+                        if (Bewerking != null)
+                            xwerkplekken.RefreshObjects(Bewerking.WerkPlekken);
                     }
                 }
+            //}
         }
 
         private void xtijdgestopt_ValueChanged(object sender, EventArgs e)
         {
             if (xshiftlist.SelectedObjects.Count > 0)
-                if (xtijdgestopt.Value > DateTime.Now)
-                    XMessageBox.Show(
-                        "Ben je helderziend ofzo?\n\n" +
-                        $"Je kan een start of stop tijd niet later zetten dan dat het nu is ({DateTime.Now})",
-                        "Waarschuwing",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                else
+                //if (xtijdgestopt.Value > DateTime.Now)
+                //    XMessageBox.Show(
+                //        "Ben je helderziend ofzo?\n\n" +
+                //        $"Je kan een start of stop tijd niet later zetten dan dat het nu is ({DateTime.Now})",
+                //        "Waarschuwing",
+                //        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                //else
+                //{
+                foreach (var per in xshiftlist.SelectedObjects.Cast<Personeel>())
                 {
-                    foreach (var per in xshiftlist.SelectedObjects.Cast<Personeel>())
+                    var klus = GetCurrentKlus(per, true);
+                    if (klus != null)
                     {
-                        var klus = GetCurrentKlus(per, true);
-                        if (klus != null)
-                        {
-                            var xent = klus.GetAvailibleTijdEntry();
-                            xent.Start = xtijdgestart.Value;
-                            xent.Stop = xtijdgestopt.Value;
-                            xent.InUse = Bewerking.State == ProductieState.Gestart;
-                            klus.UpdateTijdGewerkt(xent);
+                        var xent = klus.GetAvailibleTijdEntry();
+                        xent.Start = xtijdgestart.Value;
+                        xent.Stop = xtijdgestopt.Value;
+                        xent.InUse = Bewerking.State == ProductieState.Gestart;
+                        klus.UpdateTijdGewerkt(xent);
 
-                            xshiftlist.RefreshObject(per);
-                            if (Bewerking != null)
-                                xwerkplekken.RefreshObjects(Bewerking.WerkPlekken);
-                        }
+                        xshiftlist.RefreshObject(per);
+                        if (Bewerking != null)
+                            xwerkplekken.RefreshObjects(Bewerking.WerkPlekken);
                     }
                 }
+            // }
         }
 
         private void xedituser_Click(object sender, EventArgs e)

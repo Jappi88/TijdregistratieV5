@@ -907,7 +907,7 @@ namespace Rpm.Productie
 
         public async Task<bool> UpdateForm(bool updatebewerking, bool updategemiddeld,
             List<ProductieFormulier> formulieren = null, string change = "Update Formulier",
-            bool save = true, bool showmessage = true)
+            bool save = true, bool showmessage = true, bool raiseevent = true)
         {
 
             try
@@ -964,9 +964,10 @@ namespace Rpm.Productie
 
                 if (save)
                     await Manager.Database.UpSert(this, change,showmessage);
-                else
+                else if(raiseevent)
                     Manager.FormulierChanged(this, this);
-                FormulierChanged(this);
+                if (raiseevent)
+                    FormulierChanged(this);
                 return true;
             }
             catch

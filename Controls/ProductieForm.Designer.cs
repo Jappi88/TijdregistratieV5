@@ -418,7 +418,7 @@
             menuButton9.CombineImage = null;
             menuButton9.CombineScale = 1.5D;
             menuButton9.ContextMenu = null;
-            menuButton9.Enabled = false;
+            menuButton9.Enabled = true;
             menuButton9.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton9.Image")));
             menuButton9.ImageSize = new System.Drawing.Size(32, 32);
             menuButton9.Index = 8;

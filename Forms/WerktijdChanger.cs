@@ -183,25 +183,25 @@ namespace Forms
             }
 
 
-            if (stop > DateTime.Now || start > DateTime.Now)
-            {
-                XMessageBox.Show(
-                    "Ben je helderziend ofzo?\n\n" +
-                    $"Je kan een start of stop tijd niet later zetten dan dat het nu is ({DateTime.Now})",
-                    "Waarschuwing",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
+            //if (stop > DateTime.Now || start > DateTime.Now)
+            //{
+            //    XMessageBox.Show(
+            //        "Ben je helderziend ofzo?\n\n" +
+            //        $"Je kan een start of stop tijd niet later zetten dan dat het nu is ({DateTime.Now})",
+            //        "Waarschuwing",
+            //        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    return false;
+            //}
 
             var wt = tijden??GetWerkTijden();
-            if (wt.Any(x => start > x.Start && stop < x.Stop))
-            {
-                XMessageBox.Show(
-                    "Het is niet mogelijk om een tijd toe te voegen waar al reeds in wordt gewerkt!\nVul in een tijd dat voor of na een bestaande tijdframe zit.",
-                    "Reeds Gewerkt",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
+            //if (wt.Any(x => start > x.Start && stop < x.Stop))
+            //{
+            //    XMessageBox.Show(
+            //        "Het is niet mogelijk om een tijd toe te voegen waar al reeds in wordt gewerkt!\nVul in een tijd dat voor of na een bestaande tijdframe zit.",
+            //        "Reeds Gewerkt",
+            //        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    return false;
+            //}
 
             return AddWerkTijd(start, stop,wt, isactief,rooster);
         }

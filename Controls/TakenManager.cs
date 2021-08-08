@@ -39,6 +39,7 @@ namespace Controls
 
         public void InitManager()
         {
+            imageList1.Images.Clear();
             imageList1.Images.Add(
                 Resources.taskboardflat_106022.CombineImage(Resources.exclamation_warning_15590, 2.5));
             imageList1.Images.Add(Resources.taskboardflat_106022.CombineImage(Resources.Warning_36828, 2.5));
@@ -49,9 +50,22 @@ namespace Controls
             x.ImageGetter = ImageGetter;
             x.GroupKeyGetter = GroupGetter;
             UpdateTakenViewState(false,false);
+            DetachEvents();
+            InitEvents();
+        }
+
+        public void InitEvents()
+        {
             Manager.OnFormulierChanged += Manager_OnFormulierChanged;
             Manager.OnFormulierDeleted += Manager_OnFormulierDeleted;
             Manager.OnSettingsChanged += Manager_OnSettingsChanged;
+        }
+        
+        public void DetachEvents()
+        {
+            Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
+            Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
+            Manager.OnSettingsChanged -= Manager_OnSettingsChanged;
         }
 
         private void Manager_OnSettingsChanged(object instance, Rpm.Settings.UserSettings settings, bool reinit)
@@ -196,7 +210,7 @@ namespace Controls
                         bool changed = false;
                         if (taken == null || taken.Length == 0)
                         {
-                            Taken.RemoveAll(x => string.Equals(x.ProductieNr, formulier.ProductieNr,
+                            Taken.RemoveAll(x => x == null || string.Equals(x.ProductieNr, formulier.ProductieNr,
                                 StringComparison.CurrentCultureIgnoreCase));
                             var toremove = takenlijst.Where(x => string.Equals(x.ProductieNr, formulier.ProductieNr,
                                 StringComparison.CurrentCultureIgnoreCase)).ToList();
@@ -209,9 +223,9 @@ namespace Controls
                         }
                         else
                         {
-                            var xremove = Taken.Where(x =>
-                                    string.Equals(x.ProductieNr, formulier.ProductieNr,
-                                        StringComparison.CurrentCultureIgnoreCase) && !taken.Any(t => t.Equals(x)))
+                            var xremove = Taken.Where(x => x == null || 
+                                    (string.Equals(x.ProductieNr, formulier.ProductieNr,
+                                        StringComparison.CurrentCultureIgnoreCase) && !taken.Any(t => t != null && t.Equals(x))))
                                 .ToArray();
                             if (xremove.Length > 0)
                             {
@@ -226,6 +240,7 @@ namespace Controls
                             }
                             foreach (var t in taken)
                             {
+                                if (t == null) continue;
                                 int index = -1;
                                 if ((index = Taken.IndexOf(t)) < 0)
                                     Taken.Add(t);

@@ -85,10 +85,13 @@ namespace Controls
             try
             {
                 //if (_manager == null)
-               
-                _manager?.Dispose();
-                _manager = new Manager(true);
-                _manager.InitManager();
+
+                // _manager?.Dispose();
+                if (_manager == null)
+                {
+                    _manager = new Manager(true);
+                    _manager.InitManager();
+                }
                DetachEvents();
                 //BeginInvoke(new MethodInvoker(() => _manager.Load()));
                 //BeginInvoke(new MethodInvoker(_manager.StartMonitor));
@@ -152,7 +155,7 @@ namespace Controls
         {
             try
             {
-                this.BeginInvoke(new MethodInvoker(werkPlekkenUI1.LoadPlekken));
+                this.BeginInvoke(new MethodInvoker(()=> werkPlekkenUI1.LoadPlekken(true)));
                 this.BeginInvoke(new MethodInvoker(recentGereedMeldingenUI1.LoadBewerkingen));
             }
             catch (Exception exception)
@@ -305,7 +308,7 @@ namespace Controls
 
                         //LoadFilter();
                         _manager.SetSettings(settings);
-                        werkPlekkenUI1.LoadPlekken();
+                        werkPlekkenUI1.LoadPlekken(true);
                         CheckForSpecialRooster(false);
                         recentGereedMeldingenUI1.LoadBewerkingen();
                         //Manager.Taken?.StartBeheer();

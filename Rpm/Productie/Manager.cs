@@ -508,14 +508,33 @@ namespace Rpm.Productie
             {
                 if (Database.IsDisposed || Database?.ProductieFormulieren == null)
                     return new List<string>();
-                var xitems = await Database.ProductieFormulieren.GetAllIDs();
+                List<string> xreturn = new List<string>();
+                try
+                {
+                    var xitems = await Database.ProductieFormulieren.GetAllIDs();
+                    if (xitems != null && xitems.Count > 0)
+                        xreturn.AddRange(xitems);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
                 if (incgereed)
                 {
-                    var gereed = await Database.GereedFormulieren.GetAllIDs();
-                    if (gereed.Count > 0)
-                        xitems.AddRange(gereed);
+                    try
+                    {
+                        var gereed = await Database.GereedFormulieren.GetAllIDs();
+                        if (gereed != null && gereed.Count > 0)
+                            xreturn.AddRange(gereed);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+
                 }
-                return xitems;
+                return xreturn;
             });
         }
 

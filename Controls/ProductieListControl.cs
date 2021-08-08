@@ -11,10 +11,12 @@ using MetroFramework.Controls;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
+using ProductieManager.Rpm.Productie;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.Various;
+using static Forms.RangeCalculatorForm;
 
 namespace Controls
 {
@@ -68,7 +70,8 @@ namespace Controls
                 xfiltertoolstrip.Visible = value;
             }
         }
-
+        public bool IsSyncing { get; private set;  }
+        public int SyncInterval { get; set; } = 180000; // 3min
         public bool EnableFiltering
         {
             get => _enableFilter;
@@ -78,7 +81,7 @@ namespace Controls
                 xfiltercontainer.Visible = value;
             }
         }
-
+        public bool EnableSync { get; set; }
         #region Init Methods
 
         /// <summary>
@@ -463,13 +466,37 @@ namespace Controls
 
         private bool _loadingproductielist;
 
-        public void UpdateProductieList(bool reload)
+        public void StartSync()
+        {
+            if (IsSyncing || Disposing || IsDisposed) return;
+            IsSyncing = true;
+            Task.Factory.StartNew(async () =>
+            {
+                try
+                {
+                    while(EnableSync && IsSyncing && !IsDisposed && !Disposing)
+                    {
+                        await Task.Delay(SyncInterval);
+                        if (!EnableSync || !IsSyncing || IsDisposed || Disposing) break;
+                        if (!_loadingproductielist)
+                            UpdateProductieList(true,false);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            });
+        }
+
+        public void UpdateProductieList(bool reload, bool showwaitui = true)
         {
             if (_loadingproductielist || Manager.Opties == null || !CanLoad) return;
             _loadingproductielist = true;
             this.Invoke(new MethodInvoker(async() =>
             {
-                SetWaitUI();
+                if (showwaitui)
+                    SetWaitUI();
                 ProductieLijst.BeginUpdate();
                 try
                 {
@@ -538,6 +565,8 @@ namespace Controls
                 }
 
                 _loadingproductielist = false;
+                if (EnableSync)
+                    StartSync();
                 StopWait();
             }));
         }
@@ -634,6 +663,90 @@ namespace Controls
             {
                 ProductieLijst.EndUpdate();
             }
+        }
+
+        private bool _IsUpdating;
+        public Task UpdateList(bool onlywhilesyncing)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                if (_IsUpdating) return;
+                _IsUpdating = true;
+                try
+                {
+                    this.BeginInvoke(new Action(async () =>
+                    {
+                        var states = GetCurrentViewStates();
+                        if (Producties != null && Producties.Count > 0)
+                        {
+                            for (int i = 0; i < Producties.Count; i++)
+                            {
+                                var prod = Producties[i];
+                                var xprod = await Manager.Database.GetProductie(prod.ProductieNr);
+                                if (onlywhilesyncing && !IsSyncing) break;
+                                if (IsDisposed || Disposing) break;
+                                bool valid = xprod != null;
+                                if (valid)
+                                {
+                                    if (ValidHandler != null)
+                                        valid = states.Any(xprod.IsValidState) && ValidHandler.Invoke(xprod, null);
+                                    else valid = states.Any(x => xprod.IsValidState(x)) && xprod.IsAllowed(null);
+                                }
+                                if (!valid)
+                                {
+                                    Producties.RemoveAt(i--);
+                                    ProductieLijst.BeginUpdate();
+                                    ProductieLijst.RemoveObject(prod);
+                                    ProductieLijst.EndUpdate();
+                                }
+                                else
+                                {
+                                    await xprod.UpdateForm(true, false, null, "", false, false, false);
+                                    Producties[i] = xprod;
+                                    ProductieLijst.RefreshObject(xprod);
+                                }
+                            }
+                        }
+                        if (Bewerkingen != null && Bewerkingen.Count > 0)
+                        {
+                            for (int i = 0; i < Bewerkingen.Count; i++)
+                            {
+                                var bew = Bewerkingen[i];
+                                var xbew = Werk.FromPath(bew.Path)?.Bewerking;
+                                if (onlywhilesyncing && !IsSyncing) break;
+                                if (IsDisposed || Disposing) break;
+                                bool valid = xbew != null;
+                                if (valid)
+                                {
+                                    if (ValidHandler != null)
+                                        valid = states.Any(xbew.IsValidState) && ValidHandler.Invoke(xbew, null);
+                                    else valid = states.Any(x => xbew.IsValidState(x)) && xbew.IsAllowed(null);
+                                }
+                                if (!valid)
+                                {
+                                    Bewerkingen.RemoveAt(i--);
+                                    ProductieLijst.BeginUpdate();
+                                    ProductieLijst.RemoveObject(bew);
+                                    ProductieLijst.EndUpdate();
+                                }
+                                else
+                                {
+                                    await xbew.Parent.UpdateForm(true, false, null, "", false, false, false);
+                                    Bewerkingen[i] = xbew;
+                                    ProductieLijst.RefreshObject(xbew);
+                                }
+                            }
+                        }
+                    }));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                _IsUpdating = false;
+
+            });
+
         }
 
         public bool UpdateBewerking(ProductieFormulier form, List<Bewerking> bewerkingen, ViewState[] states,
@@ -1833,7 +1946,7 @@ namespace Controls
                 return;
             }
 
-            if (e.ClickedItem.Tag is Filter filter)
+            if (e.ClickedItem.Tag is Rpm.Misc.Filter filter)
             {
                 filter.Enabled = true;
                 Manager.OnFilterChanged(this);
@@ -1846,7 +1959,7 @@ namespace Controls
             }
         }
 
-        private bool AddFilterToolstripItem(Filter filter, bool docheck)
+        private bool AddFilterToolstripItem(Rpm.Misc.Filter filter, bool docheck)
         {
             if (filter.Enabled && docheck) return false;
             var ts = new ToolStripMenuItem(filter.Name) {Image = Resources.delete_1577, Tag = filter};
@@ -1857,7 +1970,7 @@ namespace Controls
 
         private void Ts_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripItem {Tag: Filter filter} ts)
+            if (sender is ToolStripItem {Tag: Rpm.Misc.Filter filter } ts)
             {
                 filter.Enabled = false;
                 Manager.OnFilterChanged(this);

@@ -134,6 +134,7 @@ namespace Controls
             this.productieListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.productieListControl1.EnableEntryFiltering = false;
             this.productieListControl1.EnableFiltering = false;
+            this.productieListControl1.EnableSync = false;
             this.productieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.productieListControl1.IsBewerkingView = true;
             this.productieListControl1.Location = new System.Drawing.Point(0, 64);
@@ -142,6 +143,7 @@ namespace Controls
             this.productieListControl1.RemoveCustomItemIfNotValid = false;
             this.productieListControl1.SelectedItem = null;
             this.productieListControl1.Size = new System.Drawing.Size(1098, 564);
+            this.productieListControl1.SyncInterval = 30000;
             this.productieListControl1.TabIndex = 1;
             this.productieListControl1.ValidHandler = null;
             // 

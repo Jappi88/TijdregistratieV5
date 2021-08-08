@@ -273,12 +273,12 @@ namespace Rpm.Productie
 
         public Werk GetWerk()
         {
-            return ProductieManager.Rpm.Productie.Werk.FromPath(Path);
+            return Productie.Werk.FromPath(Path);
         }
 
         public Werk GetWerk(ProductieFormulier form)
         {
-            return ProductieManager.Rpm.Productie.Werk.FromPath(Path,form);
+            return Productie.Werk.FromPath(Path,form);
         }
 
         private Task<WerkPlek> GetWerkPlek(bool createnew)

@@ -255,7 +255,7 @@ namespace Controls
                         //        new Font("Segoe UI", 16, FontStyle.Bold), Brushes.Red);
                         xstoring.Image = img;
                     }
-                    mainMenu1.Enable("xwerktijden", !b.IsBemand);
+                    //mainMenu1.Enable("xwerktijden", !b.IsBemand);
                     mainMenu1.Enable("xopenpdf", b?.Parent != null && b.Parent.ContainsProductiePdf());
                     switch (b.State)
                     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using Rpm.Productie;
 
-namespace ProductieManager.Rpm.Productie
+namespace Rpm.Productie
 {
     public class Werk
     {
@@ -19,7 +19,7 @@ namespace ProductieManager.Rpm.Productie
                 if (string.IsNullOrEmpty(path)) throw new Exception("Werk locatie kan niet leeg zijn!");
                 string[] xpaths = path.Split('\\');
                 if (xpaths.Length == 0) throw new Exception("Werk locatie kan niet leeg zijn!");
-                var prod = parent??Manager.Database.GetProductie(xpaths[0]).Result;
+                var prod = parent ?? Manager.Database.GetProductie(xpaths[0]).Result;
                 if (prod == null)
                     return null;
                 werk.Formulier = prod;
