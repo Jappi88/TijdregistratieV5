@@ -164,6 +164,7 @@
             this.xsyncinterval = new System.Windows.Forms.NumericUpDown();
             this.xsluitaftijd = new System.Windows.Forms.DateTimePicker();
             this.xgereedsyncinterval = new System.Windows.Forms.NumericUpDown();
+            this.xproductielijstsyncinterval = new System.Windows.Forms.NumericUpDown();
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
             this.xroostertab = new System.Windows.Forms.TabPage();
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
@@ -173,6 +174,10 @@
             this.metroPanel3 = new MetroFramework.Controls.MetroPanel();
             this.xsynctabpage = new MetroFramework.Controls.MetroTabPage();
             this.panel9 = new System.Windows.Forms.Panel();
+            this.xenableproductielijstsync = new System.Windows.Forms.CheckBox();
+            this.xproductielijstsyncgroup = new System.Windows.Forms.GroupBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
             this.xenablegreedsync = new System.Windows.Forms.CheckBox();
             this.xgereedproductiesyncgroup = new System.Windows.Forms.GroupBox();
             this.label17 = new System.Windows.Forms.Label();
@@ -229,6 +234,7 @@
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xsyncinterval)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xgereedsyncinterval)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xproductielijstsyncinterval)).BeginInit();
             this.metroTabControl1.SuspendLayout();
             this.xroostertab.SuspendLayout();
             this.metroPanel1.SuspendLayout();
@@ -238,6 +244,7 @@
             this.metroPanel3.SuspendLayout();
             this.xsynctabpage.SuspendLayout();
             this.panel9.SuspendLayout();
+            this.xproductielijstsyncgroup.SuspendLayout();
             this.xgereedproductiesyncgroup.SuspendLayout();
             this.xproductiesyncgroup.SuspendLayout();
             this.xmisctabpage.SuspendLayout();
@@ -2161,6 +2168,30 @@
             0,
             0});
             // 
+            // xproductielijstsyncinterval
+            // 
+            this.xproductielijstsyncinterval.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xproductielijstsyncinterval.Location = new System.Drawing.Point(121, 24);
+            this.xproductielijstsyncinterval.Maximum = new decimal(new int[] {
+            99999999,
+            0,
+            0,
+            0});
+            this.xproductielijstsyncinterval.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.xproductielijstsyncinterval.Name = "xproductielijstsyncinterval";
+            this.xproductielijstsyncinterval.Size = new System.Drawing.Size(97, 25);
+            this.xproductielijstsyncinterval.TabIndex = 35;
+            this.toolTip1.SetToolTip(this.xproductielijstsyncinterval, "Vul  in de interval in miliseconde om de hoeveel gesynct moet worden.");
+            this.xproductielijstsyncinterval.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
             // metroTabControl1
             // 
             this.metroTabControl1.Controls.Add(this.xroostertab);
@@ -2173,7 +2204,7 @@
             this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl1.Location = new System.Drawing.Point(10, 60);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 4;
+            this.metroTabControl1.SelectedIndex = 3;
             this.metroTabControl1.ShowToolTips = true;
             this.metroTabControl1.Size = new System.Drawing.Size(640, 432);
             this.metroTabControl1.TabIndex = 1;
@@ -2261,9 +2292,9 @@
             this.xsynctabpage.HorizontalScrollbarBarColor = true;
             this.xsynctabpage.HorizontalScrollbarHighlightOnWheel = false;
             this.xsynctabpage.HorizontalScrollbarSize = 10;
-            this.xsynctabpage.Location = new System.Drawing.Point(4, 35);
+            this.xsynctabpage.Location = new System.Drawing.Point(4, 38);
             this.xsynctabpage.Name = "xsynctabpage";
-            this.xsynctabpage.Size = new System.Drawing.Size(632, 393);
+            this.xsynctabpage.Size = new System.Drawing.Size(632, 390);
             this.xsynctabpage.TabIndex = 6;
             this.xsynctabpage.Text = "Sync";
             this.xsynctabpage.VerticalScrollbarBarColor = true;
@@ -2274,6 +2305,8 @@
             // 
             this.panel9.AutoScroll = true;
             this.panel9.BackColor = System.Drawing.Color.Transparent;
+            this.panel9.Controls.Add(this.xenableproductielijstsync);
+            this.panel9.Controls.Add(this.xproductielijstsyncgroup);
             this.panel9.Controls.Add(this.xenablegreedsync);
             this.panel9.Controls.Add(this.xgereedproductiesyncgroup);
             this.panel9.Controls.Add(this.xenablesync);
@@ -2281,8 +2314,59 @@
             this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel9.Location = new System.Drawing.Point(0, 0);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(632, 393);
+            this.panel9.Size = new System.Drawing.Size(632, 390);
             this.panel9.TabIndex = 43;
+            // 
+            // xenableproductielijstsync
+            // 
+            this.xenableproductielijstsync.AutoSize = true;
+            this.xenableproductielijstsync.BackColor = System.Drawing.Color.Transparent;
+            this.xenableproductielijstsync.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xenableproductielijstsync.Location = new System.Drawing.Point(16, 202);
+            this.xenableproductielijstsync.Name = "xenableproductielijstsync";
+            this.xenableproductielijstsync.Size = new System.Drawing.Size(223, 21);
+            this.xenableproductielijstsync.TabIndex = 43;
+            this.xenableproductielijstsync.Text = "Automatisch Productielijst Sync";
+            this.xenableproductielijstsync.UseVisualStyleBackColor = false;
+            this.xenableproductielijstsync.CheckedChanged += new System.EventHandler(this.xenableproductielijstsync_CheckedChanged);
+            // 
+            // xproductielijstsyncgroup
+            // 
+            this.xproductielijstsyncgroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xproductielijstsyncgroup.Controls.Add(this.label19);
+            this.xproductielijstsyncgroup.Controls.Add(this.label20);
+            this.xproductielijstsyncgroup.Controls.Add(this.xproductielijstsyncinterval);
+            this.xproductielijstsyncgroup.Enabled = false;
+            this.xproductielijstsyncgroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xproductielijstsyncgroup.Location = new System.Drawing.Point(3, 229);
+            this.xproductielijstsyncgroup.Name = "xproductielijstsyncgroup";
+            this.xproductielijstsyncgroup.Size = new System.Drawing.Size(626, 57);
+            this.xproductielijstsyncgroup.TabIndex = 44;
+            this.xproductielijstsyncgroup.TabStop = false;
+            this.xproductielijstsyncgroup.Text = "Productielijst Synchronisatie";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.BackColor = System.Drawing.Color.Transparent;
+            this.label19.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(10, 26);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(109, 17);
+            this.label19.TabIndex = 34;
+            this.label19.Text = "Sync Interval(min)";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.BackColor = System.Drawing.Color.Transparent;
+            this.label20.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(224, 26);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(37, 17);
+            this.label20.TabIndex = 36;
+            this.label20.Text = "(min)";
             // 
             // xenablegreedsync
             // 
@@ -2318,7 +2402,7 @@
             this.label17.AutoSize = true;
             this.label17.BackColor = System.Drawing.Color.Transparent;
             this.label17.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(10, 26);
+            this.label17.Location = new System.Drawing.Point(7, 26);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(109, 17);
             this.label17.TabIndex = 34;
@@ -2389,9 +2473,9 @@
             // xmisctabpage
             // 
             this.xmisctabpage.Controls.Add(this.metroPanel5);
-            this.xmisctabpage.Location = new System.Drawing.Point(4, 38);
+            this.xmisctabpage.Location = new System.Drawing.Point(4, 35);
             this.xmisctabpage.Name = "xmisctabpage";
-            this.xmisctabpage.Size = new System.Drawing.Size(632, 390);
+            this.xmisctabpage.Size = new System.Drawing.Size(632, 393);
             this.xmisctabpage.TabIndex = 4;
             this.xmisctabpage.Text = "Misc";
             this.xmisctabpage.ToolTipText = "Verschillende soort instellingen";
@@ -2418,7 +2502,7 @@
             this.metroPanel5.HorizontalScrollbarSize = 10;
             this.metroPanel5.Location = new System.Drawing.Point(0, 0);
             this.metroPanel5.Name = "metroPanel5";
-            this.metroPanel5.Size = new System.Drawing.Size(632, 390);
+            this.metroPanel5.Size = new System.Drawing.Size(632, 393);
             this.metroPanel5.TabIndex = 7;
             this.metroPanel5.VerticalScrollbar = true;
             this.metroPanel5.VerticalScrollbarBarColor = true;
@@ -2558,6 +2642,7 @@
             this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xsyncinterval)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xgereedsyncinterval)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xproductielijstsyncinterval)).EndInit();
             this.metroTabControl1.ResumeLayout(false);
             this.xroostertab.ResumeLayout(false);
             this.metroPanel1.ResumeLayout(false);
@@ -2568,6 +2653,8 @@
             this.xsynctabpage.ResumeLayout(false);
             this.panel9.ResumeLayout(false);
             this.panel9.PerformLayout();
+            this.xproductielijstsyncgroup.ResumeLayout(false);
+            this.xproductielijstsyncgroup.PerformLayout();
             this.xgereedproductiesyncgroup.ResumeLayout(false);
             this.xgereedproductiesyncgroup.PerformLayout();
             this.xproductiesyncgroup.ResumeLayout(false);
@@ -2741,5 +2828,10 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.NumericUpDown xgereedsyncinterval;
+        private System.Windows.Forms.CheckBox xenableproductielijstsync;
+        private System.Windows.Forms.GroupBox xproductielijstsyncgroup;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.NumericUpDown xproductielijstsyncinterval;
     }
 }

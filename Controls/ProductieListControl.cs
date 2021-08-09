@@ -71,7 +71,6 @@ namespace Controls
             }
         }
         public bool IsSyncing { get; private set;  }
-        public int SyncInterval { get; set; } = 180000; // 3min
         public bool EnableFiltering
         {
             get => _enableFilter;
@@ -468,16 +467,16 @@ namespace Controls
 
         public void StartSync()
         {
-            if (IsSyncing || Disposing || IsDisposed) return;
+            if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || IsSyncing || Disposing || IsDisposed) return;
             IsSyncing = true;
             Task.Factory.StartNew(async () =>
             {
                 try
                 {
-                    while(EnableSync && IsSyncing && !IsDisposed && !Disposing)
+                    while(EnableSync && Manager.Opties.AutoProductieLijstSync && IsSyncing && !IsDisposed && !Disposing)
                     {
-                        await Task.Delay(SyncInterval);
-                        if (!EnableSync || !IsSyncing || IsDisposed || Disposing) break;
+                        await Task.Delay(Manager.Opties.ProductieLijstSyncInterval);
+                        if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || !IsSyncing || IsDisposed || Disposing) break;
                         if (!_loadingproductielist)
                             UpdateProductieList(true,false);
                     }

@@ -35,7 +35,6 @@ namespace Controls
 
         public Manager PManager { get; private set; }
         public bool IsSyncing { get; private set; }
-        public int SyncInterval { get; set; } = 30000;
         public bool EnableSync { get; set; }
         public void InitUI(Manager manager)
         {
@@ -176,7 +175,7 @@ namespace Controls
             {
             }
             _IsLoading = false;
-            if (EnableSync && !IsSyncing && startsync)
+            if (EnableSync && Manager.Opties.AutoProductieLijstSync && !IsSyncing && startsync)
                 StartSync();
             if (changed)
                 PlekkenChanged();
@@ -248,14 +247,14 @@ namespace Controls
         #region Syncing
         public void StartSync()
         {
-            if (!EnableSync || IsSyncing || Disposing || IsDisposed) return;
+            if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || IsSyncing || Disposing || IsDisposed) return;
             IsSyncing = true;
             Task.Factory.StartNew(async () =>
             {
-                while(EnableSync && IsSyncing && !Disposing && !IsDisposed)
+                while(EnableSync && Manager.Opties.AutoProductieLijstSync && IsSyncing && !Disposing && !IsDisposed)
                 {
-                    await Task.Delay(SyncInterval);
-                    if (!EnableSync || !IsSyncing || IsDisposed || Disposing) break;
+                    await Task.Delay(Manager.Opties.ProductieLijstSyncInterval);
+                    if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || !IsSyncing || IsDisposed || Disposing) break;
                     LoadPlekken(false);
                 }
             });
@@ -276,26 +275,31 @@ namespace Controls
                     if (xwerkpleklist.Items.Count > 0)
                     {
                         var xwerkplekken = xwerkpleklist.Objects?.Cast<WerkPlek>().ToList();
-
-                        for (int i = 0; i < xwerkplekken.Count; i++)
+                        if (xwerkplekken != null)
                         {
-                            var wp = xwerkplekken[i];
-                            var werk = Werk.FromPath(wp.Path);
-                            if (!IsSyncing || Disposing || IsDisposed) return changed;
-                            if (werk?.Plek == null || !werk.Bewerking.IsAllowed(null) || werk.Bewerking.State != ProductieState.Gestart ||
-                            !werk.Plek.Personen.Any(personeel => personeel.WerktAanKlus(werk.Bewerking, out _)))
+                            for (int i = 0; i < xwerkplekken.Count; i++)
                             {
-                                xwerkpleklist.BeginUpdate();
-                                xwerkpleklist.RemoveObject(wp);
-                                xwerkpleklist.EndUpdate();
-                                changed = true;
-                                continue;
+                                var wp = xwerkplekken[i];
+                                var werk = Werk.FromPath(wp.Path);
+                                if (!IsSyncing || Disposing || IsDisposed) return changed;
+                                if (werk?.Plek == null || !werk.Bewerking.IsAllowed(null) ||
+                                    werk.Bewerking.State != ProductieState.Gestart ||
+                                    !werk.Plek.Personen.Any(personeel => personeel.WerktAanKlus(werk.Bewerking, out _)))
+                                {
+                                    xwerkpleklist.BeginUpdate();
+                                    xwerkpleklist.RemoveObject(wp);
+                                    xwerkpleklist.EndUpdate();
+                                    changed = true;
+                                    continue;
+                                }
+
+                                await werk.Formulier.UpdateForm(true, false, null, "", false, false, false);
+                                xwerkpleklist.RefreshObject(werk.Plek);
                             }
-                            await werk.Formulier.UpdateForm(true, false, null, "", false,false, false);
-                            xwerkpleklist.RefreshObject(werk.Plek);
+
+                            if (changed)
+                                PlekkenChanged();
                         }
-                        if (changed)
-                            PlekkenChanged();
                     }
                     return changed;
                 }

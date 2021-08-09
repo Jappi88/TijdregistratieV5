@@ -143,7 +143,6 @@ namespace Controls
             this.productieListControl1.RemoveCustomItemIfNotValid = false;
             this.productieListControl1.SelectedItem = null;
             this.productieListControl1.Size = new System.Drawing.Size(1098, 564);
-            this.productieListControl1.SyncInterval = 30000;
             this.productieListControl1.TabIndex = 1;
             this.productieListControl1.ValidHandler = null;
             // 
