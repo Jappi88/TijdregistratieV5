@@ -497,7 +497,7 @@ namespace Controls
             {
                 if (showwaitui)
                     SetWaitUI();
-                ProductieLijst.BeginUpdate();
+                
                 try
                 {
                     var selected1 = ProductieLijst.SelectedObject;
@@ -507,7 +507,7 @@ namespace Controls
                     // Manager.Opties.ProductieWeergaveFilters = GetCurrentProductieViewStates();
                     var states = GetCurrentViewStates();
                     var filter = xsearch.Text.ToLower() == "zoeken..." ? "" : xsearch.Text;
-
+                    int xlistcount = xproductieLijst.Items.Count;
 
                     if (!IsBewerkingView)
                     {
@@ -520,7 +520,9 @@ namespace Controls
                                 .ToList();
                         else
                             xprods = xprods.Where(x => x.IsAllowed(filter, states, true)).ToList();
+                        ProductieLijst.BeginUpdate();
                         ProductieLijst.SetObjects(xprods);
+                        ProductieLijst.EndUpdate();
                     }
                     else
                     {
@@ -533,8 +535,9 @@ namespace Controls
                                 .ToList();
                         else
                             bws = bws.Where(x => x.IsAllowed(filter)).ToList();
-
+                        ProductieLijst.BeginUpdate();
                         ProductieLijst.SetObjects(bws);
+                        ProductieLijst.EndUpdate();
                     }
 
                     var xgroups = ProductieLijst.Groups.Cast<ListViewGroup>().ToList();
@@ -552,16 +555,14 @@ namespace Controls
 
                     ProductieLijst.SelectedObject = selected1;
                     ProductieLijst.SelectedItem?.EnsureVisible();
+                    ProductieLijst.EndUpdate();
                     SetButtonEnable();
-                    OnItemCountChanged();
+                    if (xlistcount != xproductieLijst.Items.Count)
+                        OnItemCountChanged();
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
-                }
-                finally
-                {
-                    ProductieLijst.EndUpdate();
                 }
 
                 _loadingproductielist = false;
