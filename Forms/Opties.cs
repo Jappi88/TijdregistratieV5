@@ -32,6 +32,8 @@ namespace Forms
         {
             InitializeComponent();
             // _stickyWindow = new StickyWindow(this);
+            metroTabControl1.SelectedIndex = 0;
+            metroTabControl2.SelectedIndex = 1;
             ((OLVColumn) xoptielist.Columns[0]).GroupKeyGetter = GroupName;
             ((OLVColumn) xoptielist.Columns[0]).ImageGetter = ImageGetter;
             imageList1.Images.Add(Resources.industry_setting_114090);
@@ -42,6 +44,7 @@ namespace Forms
                 return;
             Manager.DefaultSettings ??= UserSettings.GetDefaultSettings();
         }
+
 
         private string GroupName(object item)
         {
@@ -173,6 +176,8 @@ namespace Forms
                 xsyncinterval.Value = x.SyncInterval < 5000 ? 10000 : x.SyncInterval;
                 xenablegreedsync.Checked = x.AutoGereedSync;
                 xgereedsyncinterval.SetValue(x.GereedSyncInterval / 60000);
+                xproductielijstsyncinterval.SetValue(x.ProductieLijstSyncInterval / 60000);
+                xenableproductielijstsync.Checked = x.AutoProductieLijstSync;
                 SetEmailFields(x);
                 xlocatielist.Items.Clear();
                 if (x.SyncLocaties != null)
@@ -340,6 +345,8 @@ namespace Forms
             xs.SyncInterval = (int) xsyncinterval.Value;
             xs.AutoGereedSync = xenablegreedsync.Checked;
             xs.GereedSyncInterval = (int)(xgereedsyncinterval.Value * 60000);
+            xs.ProductieLijstSyncInterval = (int)(xproductielijstsyncinterval.Value * 60000);
+            xs.AutoProductieLijstSync = xenableproductielijstsync.Checked;
             xs.VerzendAdres = GetUitgaandadreses();
            // xs.OntvangAdres = GetInkomendadreses();
             xs.SyncLocaties = xlocatielist.Items.Cast<ListViewItem>().Select(t => t.Text).ToArray();
@@ -1354,6 +1361,11 @@ namespace Forms
         private void xenablegreedsync_CheckedChanged(object sender, EventArgs e)
         {
             xgereedproductiesyncgroup.Enabled = xenablegreedsync.Checked;
+        }
+
+        private void xenableproductielijstsync_CheckedChanged(object sender, EventArgs e)
+        {
+            xproductielijstsyncgroup.Enabled = xenableproductielijstsync.Checked;
         }
     }
 }

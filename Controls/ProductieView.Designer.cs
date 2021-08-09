@@ -525,7 +525,6 @@ namespace Controls
             this.xproductieListControl1.RemoveCustomItemIfNotValid = false;
             this.xproductieListControl1.SelectedItem = null;
             this.xproductieListControl1.Size = new System.Drawing.Size(1055, 412);
-            this.xproductieListControl1.SyncInterval = 180000;
             this.xproductieListControl1.TabIndex = 2;
             this.xproductieListControl1.ValidHandler = null;
             // 
@@ -562,7 +561,6 @@ namespace Controls
             this.xbewerkingListControl.RemoveCustomItemIfNotValid = false;
             this.xbewerkingListControl.SelectedItem = null;
             this.xbewerkingListControl.Size = new System.Drawing.Size(1055, 412);
-            this.xbewerkingListControl.SyncInterval = 180000;
             this.xbewerkingListControl.TabIndex = 2;
             this.xbewerkingListControl.ValidHandler = null;
             // 
@@ -593,7 +591,6 @@ namespace Controls
             this.werkPlekkenUI1.Name = "werkPlekkenUI1";
             this.werkPlekkenUI1.SelectedWerkplek = null;
             this.werkPlekkenUI1.Size = new System.Drawing.Size(1051, 410);
-            this.werkPlekkenUI1.SyncInterval = 30000;
             this.werkPlekkenUI1.TabIndex = 0;
             this.werkPlekkenUI1.WerkPlekClicked += new System.EventHandler(this.werkPlekkenUI1_WerkPlekClicked);
             // 
