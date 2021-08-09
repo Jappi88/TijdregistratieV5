@@ -1712,5 +1712,12 @@ namespace Controls
         }
 
         #endregion Taken Lijst
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            var prodform = new ProductieOverzichtForm();
+            prodform.ShowDialog();
+            
+        }
     }
 }

@@ -314,7 +314,7 @@ namespace Controls
             this.toolStripSeparator2,
             this.notitieToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(193, 176);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(193, 198);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // openProductieToolStripMenuItem
@@ -330,7 +330,7 @@ namespace Controls
             this.openWerkplekToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.iconfinder_technologymachineelectronic32_32;
             this.openWerkplekToolStripMenuItem.Name = "openWerkplekToolStripMenuItem";
             this.openWerkplekToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
-            this.openWerkplekToolStripMenuItem.Text = "&Open Indeling";
+            this.openWerkplekToolStripMenuItem.Text = "&Beheer Indeling";
             this.openWerkplekToolStripMenuItem.Click += new System.EventHandler(this.openWerkplekToolStripMenuItem_Click);
             // 
             // toolStripSeparator3

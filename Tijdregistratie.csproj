@@ -275,6 +275,12 @@
     <Compile Include="Controls\RoundedButton.Designer.cs">
       <DependentUpon>RoundedButton.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\WerkPlekInfoUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\WerkPlekInfoUI.Designer.cs">
+      <DependentUpon>WerkPlekInfoUI.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\WerkPlekStoringen.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -442,6 +448,12 @@
     </Compile>
     <Compile Include="Forms\ProductieInfoForm.Designer.cs">
       <DependentUpon>ProductieInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ProductieOverzichtForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ProductieOverzichtForm.Designer.cs">
+      <DependentUpon>ProductieOverzichtForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\RoosterForm.cs">
       <SubType>Form</SubType>
@@ -855,6 +867,9 @@
     <EmbeddedResource Include="Controls\RoosterUI.resx">
       <DependentUpon>RoosterUI.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\WerkPlekInfoUI.resx">
+      <DependentUpon>WerkPlekInfoUI.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\WerkPlekStoringen.resx">
       <DependentUpon>WerkPlekStoringen.cs</DependentUpon>
     </EmbeddedResource>
@@ -939,6 +954,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ProductieInfoForm.resx">
       <DependentUpon>ProductieInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ProductieOverzichtForm.resx">
+      <DependentUpon>ProductieOverzichtForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\RoosterForm.resx">
       <DependentUpon>RoosterForm.cs</DependentUpon>
@@ -1200,6 +1218,8 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\list_icon-icons.com_60651.png" />
+    <None Include="Resources\arrow_right_64x64.png" />
     <None Include="Resources\code_html_link_share_icon_123633.png" />
     <None Include="Resources\ic_thumb_up_128_28824.png" />
     <None Include="Resources\group_disable_32x32.png" />

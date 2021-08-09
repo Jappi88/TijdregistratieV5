@@ -97,7 +97,7 @@ namespace ProductieManager.Forms
                     bool valid = false;
                     this.Invoke(new MethodInvoker(() => valid = !this.IsDisposed));
                     if (!valid) return;
-                    xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = true; }));
+                    this.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = true; }));
                     var cur = 0;
                     var xwv = "Aanbevelingen Zoeken.";
                     //var xcurvalue = xwv;
@@ -107,7 +107,7 @@ namespace ProductieManager.Forms
                         if (cur > 5) cur = 0;
                         var curvalue = xwv.PadRight(xwv.Length + cur, '.');
                         //xcurvalue = curvalue;
-                        xloadinglabel.BeginInvoke(new MethodInvoker(() =>
+                        this.BeginInvoke(new MethodInvoker(() =>
                         {
                             xloadinglabel.Text = curvalue;
                             xloadinglabel.Invalidate();
@@ -126,7 +126,7 @@ namespace ProductieManager.Forms
                 {
                 }
 
-                xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
+                this.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
             });
         }
 
