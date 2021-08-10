@@ -1274,7 +1274,7 @@ namespace Controls
         private XMessageBox _unreadMessages;
         public void UpdateUnreadMessages(UserChat user)
         {
-            this.BeginInvoke(new MethodInvoker(() =>
+            this.Invoke(new MethodInvoker(() =>
             {
                 try
                 {
@@ -1295,6 +1295,7 @@ namespace Controls
                         //if (user != null)
                         //    _chatform.SelectedUser(user);
                         _chatform.Show();
+                        _chatform.BringToFront();
                         _chatform.Focus();
                     }
                     else if(unread.Count > 0 && ShowUnreadMessage)

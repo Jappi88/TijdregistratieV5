@@ -88,8 +88,8 @@ namespace ProductieManager
         {
             _DbWatcher?.Stop();
             Dictionary<string, DialogResult> xbtns = new Dictionary<string, DialogResult>();
-            xbtns.Add("Blijf Offline", DialogResult.Cancel);
             xbtns.Add("Herstart", DialogResult.OK);
+            xbtns.Add("Ga Offline", DialogResult.Cancel);
             xbtns.Add("Afsluiten", DialogResult.No);
             xbtns.Add("Kies DB", DialogResult.Yes);
             this.Invoke(new MethodInvoker(() =>
@@ -97,9 +97,9 @@ namespace ProductieManager
                 try
                 {
                     var xrslt = XMessageBox.Show("Oorspronkelijke database kan niet geladen worden!\n\n" +
-                        "Kies 'Offline' als je gewoon op de standaard database wilt werken.\n" +
-                        "Kies 'Herstart' als je de ProductieManager opnieuw wilt opstarten.\n" +
-                        "Kies anders voor een andere database of sluit de ProductieManager af.", "Database niet gevonden!",                        MessageBoxIcon.Exclamation, null, xbtns);
+                        " * Kies 'Herstart' als je de ProductieManager opnieuw wilt opstarten.\n" +
+                        " * Kies 'Offline' als je gewoon op de standaard database wilt werken.\n" +
+                        " * Kies anders voor een andere database of sluit de ProductieManager af.", "Database niet gevonden!",                        MessageBoxIcon.Exclamation, null, xbtns);
                     if (xrslt == DialogResult.OK) { Application.Restart(); return; }
                     if (xrslt == DialogResult.No) { this.Close(); return; }
                     if (xrslt == DialogResult.Yes)

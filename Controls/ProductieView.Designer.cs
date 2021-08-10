@@ -329,13 +329,11 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.recentGereedMeldingenUI1.BackColor = System.Drawing.Color.White;
-            this.recentGereedMeldingenUI1.EnableSync = true;
             this.recentGereedMeldingenUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.recentGereedMeldingenUI1.Location = new System.Drawing.Point(2, 4);
             this.recentGereedMeldingenUI1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.recentGereedMeldingenUI1.Name = "recentGereedMeldingenUI1";
             this.recentGereedMeldingenUI1.Size = new System.Drawing.Size(1056, 420);
-            this.recentGereedMeldingenUI1.SyncInterval = 30000;
             this.recentGereedMeldingenUI1.TabIndex = 2;
             // 
             // takenManager1

@@ -27,18 +27,17 @@ namespace Controls
         //}
 
         private DateTime _LastSynced;
-        public int SyncInterval { get; set; } = 300000;//5 min
-        private bool _Enablesync;
-        public bool EnableSync
-        {
-            get => _Enablesync;
-            set
-            {
-                _Enablesync = value;
-                if(value)
-                    SyncBewerkingen();
-            }
-        }
+       // public int SyncInterval { get; set; } = 300000;//5 min
+        //public bool EnableSync
+        //{
+        //    get => _Enablesync;
+        //    set
+        //    {
+        //        _Enablesync = value;
+        //        if(value)
+        //            SyncBewerkingen();
+        //    }
+        //}
 
         public ObjectListView ProductieLijst => productieListControl1.ProductieLijst;
 
@@ -111,8 +110,7 @@ namespace Controls
             {
                 this.BeginInvoke(new MethodInvoker(() =>
                             {
-                                SyncInterval = Manager.Opties.GereedSyncInterval;
-                                EnableSync = Manager.Opties.AutoGereedSync;
+                                //EnableSync = Manager.Opties.AutoGereedSync;
                                 //bool changed = Bereik.Start != Manager.Opties.LastGereedStart || (!Manager.Opties.LastGereedStop.IsDefault() && Manager.Opties.LastGereedStop != Bereik.Stop);
                                 UpdateTijdPeriode(true);
                                 //var dt = DateTime.Now;
@@ -138,23 +136,24 @@ namespace Controls
 
         private void SyncBewerkingen()
         {
-            if (IsSyncing || !EnableSync || IsDisposed || !IsLoaded) return;
+            if (IsSyncing || Manager.Opties == null || !Manager.Opties.AutoGereedSync|| IsDisposed || !IsLoaded) return;
             IsSyncing = true;
             Task.Run(async () =>
             {
               
-                while (IsSyncing && EnableSync && !IsDisposed && IsLoaded)
+                while (IsSyncing && Manager.Opties != null && Manager.Opties.AutoGereedSync && !IsDisposed && IsLoaded)
                 {
                     try
                     {
-                        
-                        if (!IsSyncing || !EnableSync || IsDisposed || !IsLoaded) break;
-                        if (_iswaiting || _LastSynced.AddMilliseconds(SyncInterval) >= DateTime.Now)
+                        if (_LastSynced.AddMilliseconds(Manager.Opties.GereedSyncInterval) > DateTime.Now)
                         {
-                            await Task.Delay(SyncInterval);
-                            continue;
+                            await Task.Delay(Manager.Opties.GereedSyncInterval);
+
+                            if (!IsSyncing || !Manager.Opties.AutoGereedSync || IsDisposed || Disposing || !IsLoaded) break;
+
+                           
                         }
-                        await InitRecenteGereedmeldingen();
+                        else await InitRecenteGereedmeldingen();
                     }
                     catch (Exception e)
                     {
@@ -216,16 +215,17 @@ namespace Controls
                         }
                     }
                     productieListControl1.InitProductie(xbws,true, true,false);
-                    _LastSynced = DateTime.Now;
+                    
                     IsLoaded = true;                   
                 }
                 catch (Exception e)
                 {
 
                 }
-                if (EnableSync)
+                if (Manager.Opties.AutoGereedSync)
                     SyncBewerkingen();
                 StopWait();
+                _LastSynced = DateTime.Now;
                 //productieListControl1.StopWait();
             });
         }

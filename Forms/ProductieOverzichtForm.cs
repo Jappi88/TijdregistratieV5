@@ -122,21 +122,38 @@ namespace ProductieManager.Forms
             return plekken;
         }
 
-        public async void InitOverzicht()
+        public int IsSameProduct(string artikelnr1, string artikelnr2)
         {
-
-            await Task.Factory.StartNew(async () =>
+            if (artikelnr1 == null && artikelnr2 == null) return 0;
+            if (artikelnr1 == null || artikelnr2 == null) return 0;
+            if (string.Equals(artikelnr1, artikelnr2, StringComparison.CurrentCultureIgnoreCase))
+                return artikelnr2.Length;
+            //kijk voor de aantal overeengekomen getallen.
+            int xgelijk = 0;
+            for(int i = 0; i < artikelnr2.Length; i++)
             {
+                if (i >= artikelnr1.Length) break;
+                if (artikelnr1.ToLower()[i] == artikelnr2.ToLower()[i])
+                    xgelijk++;
+                else break;
+            }
+            return xgelijk;
+        }
+
+        public struct WerkVolgorde
+        {
+            public string Name;
+            public Bewerking Huidig;
+            public Bewerking Volgende;
+        }
+
+        public Task<List<WerkVolgorde>> GetOverzicht()
+        {
+            return Task.Run(async () =>
+            {
+                var xreturn = new List<WerkVolgorde>();
                 try
                 {
-                    if (this.IsDisposed || this.Disposing || Manager.Opties == null) return;
-                    StartWaitUI();
-                    this.Invoke(new Action(() =>
-                    {
-                        xcontrolpanel.SuspendLayout();
-                        xcontrolpanel.Controls.Clear();
-                    }));
-
                     List<string> plekken = GetWerkplekken();
                     var bws = await Manager.GetBewerkingen(new ViewState[] { ViewState.Gestopt, ViewState.Gestart }, true, false);
                     var gestart = bws.Where(x => x.State == ProductieState.Gestart).ToList();
@@ -155,26 +172,23 @@ namespace ProductieManager.Forms
                                     var xbws = GetBewerkingByWerkplek(bws, wp.Naam);
                                     if (xbws.Count == 0) continue;
                                     plekken.Remove(wp.Naam);
-                                    var volgende = !string.IsNullOrEmpty(wp.ArtikelNr) ? xbws.FirstOrDefault(x => x.ArtikelNr != null &&
-                                      (x.ArtikelNr.ToLower().StartsWith(wp.ArtikelNr.ToLower()) ||
-                                      wp.ArtikelNr.ToLower().StartsWith(x.ArtikelNr.ToLower()))) ?? xbws[xbws.Count - 1] : xbws[xbws.Count - 1];
-                                    this.Invoke(new Action(() =>
-                                    {
-                                        var xui = new WerkPlekInfoUI();
-                                        xui.Init(wp.Naam, bw, volgende);
-                                        xui.Dock = DockStyle.Top;
-                                        xcontrolpanel.Controls.Add(xui);
-                                        xui.BringToFront();
-                                    }));
+                                    Bewerking volgende = xbws.FirstOrDefault(x=> x.VerwachtDatumGereed() > x.LeverDatum ||
+                                    string.Equals(x.ArtikelNr, wp.ArtikelNr, StringComparison.CurrentCultureIgnoreCase) ||
+                                    IsSameProduct(x.ArtikelNr,wp.ArtikelNr) > 4);
+                                    volgende ??= xbws[xbws.Count - 1];
+                                    xreturn.Add(new WerkVolgorde() { Name = wp.Naam, Huidig = bw, Volgende = volgende });
                                     xremove.Add(volgende);
+                                    if (!string.IsNullOrEmpty(volgende.ArtikelNr))
+                                    {
+                                        bws.RemoveAll(x => !string.IsNullOrEmpty(x.ArtikelNr) &&
+                                        string.Equals(x.ArtikelNr, volgende.ArtikelNr, StringComparison.CurrentCultureIgnoreCase));
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
                                     Console.WriteLine(ex.Message);
                                 }
                             }
-                            foreach (var xrem in xremove)
-                                bws.Remove(xrem);
                         }
                     }
 
@@ -182,37 +196,64 @@ namespace ProductieManager.Forms
                     {
                         if (plekken.Count > 0 && bws.Count > 0)
                         {
+                            var xtmp = new List<WerkVolgorde>();
                             foreach (var plek in plekken)
                             {
                                 if (bws.Count == 0) break;
                                 var xbws = GetBewerkingByWerkplek(bws, plek);
                                 if (xbws.Count == 0) continue;
                                 var volgende = xbws[xbws.Count - 1];
-                                this.Invoke(new Action(() =>
-                                {
-                                    var xui = new WerkPlekInfoUI();
-                                    xui.Init(plek, null, volgende);
-                                    xui.Dock = DockStyle.Top;
-                                    wpuis.Add(xui);
-                                }));
                                 bws.Remove(volgende);
+                                if (!string.IsNullOrEmpty(volgende.ArtikelNr))
+                                {
+                                    bws.RemoveAll(x => !string.IsNullOrEmpty(x.ArtikelNr) &&
+                                    string.Equals(x.ArtikelNr, volgende.ArtikelNr, StringComparison.CurrentCultureIgnoreCase));
+                                }
+                                xtmp.Add(new WerkVolgorde() { Name = plek, Huidig = null, Volgende = volgende });
                             }
+                            if(xtmp.Count > 0)
+                                xreturn.AddRange(xtmp.OrderBy(x => x.Name));
                         }
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
                     }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+                return xreturn;
+            });
+        }
 
+        public async void InitOverzicht()
+        {
+
+            await Task.Factory.StartNew(async () =>
+            {
+                try
+                {
+                    if (this.IsDisposed || this.Disposing || Manager.Opties == null) return;
+                    StartWaitUI();
                     this.Invoke(new Action(() =>
                     {
-                        if (wpuis.Count > 0)
+                        xcontrolpanel.SuspendLayout();
+                        xcontrolpanel.Controls.Clear();
+                    }));
+
+                    var items = await GetOverzicht();
+                    if (items.Count == 0) return;
+                    this.Invoke(new Action(() =>
+                    {
+                        foreach (var x in items)
                         {
-                            foreach (var x in wpuis.OrderBy(x => x.Werkplek).Reverse().ToArray())
-                            {
-                                xcontrolpanel.Controls.Add(x);
-                                x.BringToFront();
-                            }
+                            var ui = new WerkPlekInfoUI();
+                            ui.Dock = DockStyle.Top;
+                            ui.Init(x.Name, x.Huidig, x.Volgende);
+                            xcontrolpanel.Controls.Add(ui);
+                            ui.BringToFront();
                         }
                         xcontrolpanel.ResumeLayout(true);
                     }));
