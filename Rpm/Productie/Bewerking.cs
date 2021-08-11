@@ -699,12 +699,12 @@ namespace Rpm.Productie
             if (sendmail)
                 RemoteProductie.RespondByEmail(this, change);
 
-            //count = 0;
-            //var parent = Parent;
-            //if (parent.Bewerkingen != null)
-            //    count = parent.Bewerkingen.Count(t => t.State != ProductieState.Gereed);
-            //if (count == 0)
-            //    await parent.MeldGereed(aantal, paraaf, notitie, true);
+            var xcount = 0;
+            var parent = Parent;
+            if (parent.Bewerkingen != null)
+                xcount = parent.Bewerkingen.Count(t => t.State != ProductieState.Gereed);
+            if (xcount == 0)
+                await parent.MeldGereed(aantal, paraaf, notitie, false);
             //else
             //{
             //    if (sendmail)

@@ -844,7 +844,7 @@ namespace Rpm.Productie
                             foreach (var b in form.Bewerkingen)
                                 await b.UpdateBewerking(forms, null, false);
                         await form.UpdateForm(false, false, null, 
-                            $"[{form.ProductieNr}|{form.ArtikelNr}]{change}\nDoorlooptijd opnieuw berekend", showmessage, raiseevent);
+                            $"[{form.ProductieNr}|{form.ArtikelNr}]{change}\nDoorlooptijd opnieuw berekend",true, showmessage, raiseevent);
                     }
                     catch (Exception ex)
                     {
@@ -1098,7 +1098,7 @@ namespace Rpm.Productie
         {
             try
             {
-                if (State == ProductieState.Gereed) return true;
+                //if (State == ProductieState.Gereed) return true;
                 if (State == ProductieState.Verwijderd)
                     throw new Exception(
                         "Productie is verwijderd en kan daarom niet gereed gemeld worden.\nVoeg de productie opnieuw toe, en probeer het opnieuw.");

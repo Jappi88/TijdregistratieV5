@@ -111,7 +111,7 @@ namespace Forms
                         {
                             if (!IsBussy || IsDisposed || Disposing)
                                 break;
-                            await form.UpdateForm(true, true, forms,null,false,true);
+                            await form.UpdateForm(true, true, forms,null,true,false,true);
                             count++;
                             DoProgress($"Updating productie '{form.ProductieNr}'", count, forms.Count);
                         }

@@ -77,7 +77,7 @@ namespace Controls
                 xtotgereed.Checked = Manager.Opties.UseLastGereedStop;
             }
             Bereik = new TijdEntry()
-            { Start = Manager.Opties.LastGereedStart, Stop = xtotgereed.Value };
+            { Start = Manager.Opties.LastGereedStart, Stop = xtotgereed.Checked ? xtotgereed.Value : DateTime.Now };
         }
 
         public void LoadBewerkingen()
@@ -272,7 +272,7 @@ namespace Controls
                 if (string.IsNullOrEmpty(bew.ProductieNr) ||
                     bew.State != ProductieState.Gereed || !bew.IsAllowed(filter)) return false;
                 
-                if ((bew.DatumGereed < Bereik.Start || bew.DatumGereed > Bereik.Stop)) return false;
+                if ((bew.DatumGereed <= Bereik.Start || bew.DatumGereed >= Bereik.Stop)) return false;
                 return true;
             }
 

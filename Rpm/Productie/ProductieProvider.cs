@@ -95,7 +95,7 @@ namespace ProductieManager.Rpm.Productie
                             bool save = prod.Bewerkingen != null && prod.Bewerkingen.Any(x =>
                                 string.Equals(x.GestartDoor, Manager.Opties.Username,
                                     StringComparison.CurrentCultureIgnoreCase));
-                            await prod.UpdateForm(true, false, null, "", false, false);
+                            await prod.UpdateForm(true, false, null, "",false, false, true);
                         }
                     }
                 }

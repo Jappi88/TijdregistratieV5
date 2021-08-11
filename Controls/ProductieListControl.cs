@@ -600,7 +600,13 @@ namespace Controls
                     {
                         ProductieLijst.BeginUpdate();
                         ProductieLijst.AddObject(form);
-                        Producties?.Add(form);
+                        if (Producties != null)
+                        {
+                            var index = Producties.IndexOf(form);
+                            if (index > -1)
+                                Producties[index] = form;
+                            else Producties.Add(form);
+                        }
                         changed = true;
                         ProductieLijst.EndUpdate();
                     }
@@ -643,10 +649,11 @@ namespace Controls
                 }
                 else
                 {
-                    this.BeginInvoke(new Action(() =>
-                    {
-                        changed = UpdateBewerking(form, null, states, filter);
-                    }));
+                    //this.Invoke(new Action(() =>
+                    //{
+                    //    changed = UpdateBewerking(form, null, states, filter);
+                    //}));
+                    changed = UpdateBewerking(form, null, states, filter);
                 }
 
                 if (changed)
@@ -776,7 +783,14 @@ namespace Controls
                         {
                             ProductieLijst.BeginUpdate();
                             ProductieLijst.AddObject(b);
-                            Bewerkingen?.Add(b);
+                            if(Bewerkingen != null)
+                            {
+                                var index = Bewerkingen.IndexOf(b);
+                                if (index > -1)
+                                    Bewerkingen[index] = b;
+                                else Bewerkingen.Add(b);
+                            }
+                            
                             changed = true;
                             ProductieLijst.EndUpdate();
                         }
@@ -919,7 +933,7 @@ namespace Controls
             if (IsDisposed || Disposing || !IsLoaded) return;
             try
             {
-                BeginInvoke(new MethodInvoker(() => UpdateFormulier(changedform)));
+                BeginInvoke(new Action(() => UpdateFormulier(changedform)));
             }
             catch (Exception e)
             {
