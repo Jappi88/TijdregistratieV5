@@ -158,13 +158,11 @@ namespace ProductieManager.Forms
                     var bws = await Manager.GetBewerkingen(new ViewState[] { ViewState.Gestopt, ViewState.Gestart }, true, false);
                     var gestart = bws.Where(x => x.State == ProductieState.Gestart).ToList();
                     bws = bws.Where(x => x.State == ProductieState.Gestopt).ToList();
-                    List<WerkPlekInfoUI> wpuis = new List<WerkPlekInfoUI>();
+                    List<Bewerking> xremove = new List<Bewerking>();
                     if (gestart.Count > 0)
                     {
-
                         foreach (var bw in gestart)
                         {
-                            List<Bewerking> xremove = new List<Bewerking>();
                             foreach (var wp in bw.WerkPlekken)
                             {
                                 try
@@ -172,22 +170,31 @@ namespace ProductieManager.Forms
                                     var xbws = GetBewerkingByWerkplek(bws, wp.Naam);
                                     if (xbws.Count == 0) continue;
                                     plekken.Remove(wp.Naam);
-                                    Bewerking volgende = xbws.FirstOrDefault(x=> x.VerwachtDatumGereed() > x.LeverDatum ||
-                                    string.Equals(x.ArtikelNr, wp.ArtikelNr, StringComparison.CurrentCultureIgnoreCase) ||
-                                    IsSameProduct(x.ArtikelNr,wp.ArtikelNr) > 4);
+                                    Bewerking volgende = xbws.FirstOrDefault(x =>
+                                        x.VerwachtDatumGereed() > x.LeverDatum ||
+                                        string.Equals(x.ArtikelNr, wp.ArtikelNr,
+                                            StringComparison.CurrentCultureIgnoreCase) ||
+                                        IsSameProduct(x.ArtikelNr, wp.ArtikelNr) > 4);
                                     volgende ??= xbws[xbws.Count - 1];
-                                    xreturn.Add(new WerkVolgorde() { Name = wp.Naam, Huidig = bw, Volgende = volgende });
+                                    xreturn.Add(new WerkVolgorde() {Name = wp.Naam, Huidig = bw, Volgende = volgende});
                                     xremove.Add(volgende);
-                                    if (!string.IsNullOrEmpty(volgende.ArtikelNr))
-                                    {
-                                        bws.RemoveAll(x => !string.IsNullOrEmpty(x.ArtikelNr) &&
-                                        string.Equals(x.ArtikelNr, volgende.ArtikelNr, StringComparison.CurrentCultureIgnoreCase));
-                                    }
+
                                 }
                                 catch (Exception ex)
                                 {
                                     Console.WriteLine(ex.Message);
                                 }
+                            }
+
+                            foreach (var xrem in xremove)
+                            {
+                                bws.RemoveAll(x =>
+                                    string.IsNullOrEmpty(x.ArtikelNr) || string.IsNullOrEmpty(x.ProductieNr) ||
+                                    string.Equals(x.ArtikelNr, xrem.ArtikelNr,
+                                        StringComparison.CurrentCultureIgnoreCase) ||
+                                    string.Equals(x.ProductieNr, xrem.ProductieNr,
+                                        StringComparison.CurrentCultureIgnoreCase)
+                                );
                             }
                         }
                     }
@@ -206,8 +213,10 @@ namespace ProductieManager.Forms
                                 bws.Remove(volgende);
                                 if (!string.IsNullOrEmpty(volgende.ArtikelNr))
                                 {
-                                    bws.RemoveAll(x => !string.IsNullOrEmpty(x.ArtikelNr) &&
-                                    string.Equals(x.ArtikelNr, volgende.ArtikelNr, StringComparison.CurrentCultureIgnoreCase));
+                                    bws.RemoveAll(x => string.IsNullOrEmpty(x.ArtikelNr) || string.IsNullOrEmpty(x.ProductieNr) ||
+                                    string.Equals(x.ArtikelNr, volgende.ArtikelNr, StringComparison.CurrentCultureIgnoreCase) ||
+                                    string.Equals(x.ProductieNr, volgende.ProductieNr,
+                                        StringComparison.CurrentCultureIgnoreCase));
                                 }
                                 xtmp.Add(new WerkVolgorde() { Name = plek, Huidig = null, Volgende = volgende });
                             }

@@ -373,10 +373,12 @@ namespace Rpm.Misc
             if (filters != null && filters.Count > 0)
             {
                 foreach (var xf in filters)
-                    if (!xf.IsAllowed(bew))
-                        return false;
+                    if (xf.Enabled && xf.IsAllowed(bew))
+                        return true;
+                if (filters.Any(x => x.Enabled))
+                    return false;
             }
-            if (valid) return xreturn;
+            //if (valid) return xreturn;
             if (Manager.Opties.ToonAlles)
                 return true;
 
