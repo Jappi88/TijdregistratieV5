@@ -10,7 +10,9 @@ namespace Rpm.Various
         GelijkAan,
         Bevat,
         Lager,
+        LagerOfGelijkAan,
         Hoger,
+        HogerOfGelijkAan,
         NietGelijkAan,
         BevatNiet
     }

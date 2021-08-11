@@ -104,8 +104,7 @@ namespace Rpm.Productie
                         {
                             Werkplek.Note = entry?.CreateCopy();
                             if (save && Werkplek.Werk != null)
-                                await Werkplek.Werk.UpdateBewerking(null, $"Notitie aangepast voor {Path}", true,
-                                    false);
+                                await Werkplek.Werk.UpdateBewerking(null, $"Notitie aangepast voor {Path}", true);
 
                         }
                         break;

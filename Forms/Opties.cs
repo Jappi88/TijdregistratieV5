@@ -444,6 +444,7 @@ namespace Forms
 
         private bool SaveAndClose()
         {
+            Manager.OnSettingsChanged -= _manager_OnSettingsChanged;
             SetSettings();
             if (_locatieGewijzigd)
             {
@@ -645,11 +646,6 @@ namespace Forms
         private void xweergavelijst_SelectedIndexChanged(object sender, EventArgs e)
         {
             xremoveweergaveb.Enabled = xweergavelijst.SelectedItems.Count > 0;
-        }
-
-        private void Opties_FormClosing(object sender, FormClosedEventArgs e)
-        {
-          
         }
 
         private void Opties_Shown(object sender, EventArgs e)

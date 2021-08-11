@@ -87,138 +87,195 @@ namespace Rpm.Misc
                 if (valueA == null || valueB == null) return false;
                 var xtype = valueB.GetType();
                 bool xisfilter = false;
-                    switch (valueB)
-                    {
-                        case string xvalue:
-                            if (valueA is not string value0) return false;
-                            switch (type)
-                            {
-                                case FilterType.GelijkAan:
-                                    xisfilter = string.Equals(xvalue, value0,
-                                        StringComparison.CurrentCultureIgnoreCase);
-                                    break;
-                                case FilterType.Bevat:
-                                    xisfilter = xvalue.ToLower().Contains(value0.ToLower());
-                                    break;
-                                case FilterType.Lager:
-                                    if (int.TryParse(value0, out var valueint) && int.TryParse(xvalue, out var xvalueint))
-                                        xisfilter = xvalueint < valueint;
-                                    break;
-                                case FilterType.Hoger:
-                                    if (int.TryParse(value0, out var valueint1) && int.TryParse(xvalue, out var xvalueint1))
-                                        xisfilter = xvalueint1 > valueint1;
-                                    break;
-                                case FilterType.NietGelijkAan:
-                                    xisfilter = !string.Equals(xvalue, value0,
-                                        StringComparison.CurrentCultureIgnoreCase);
-                                    break;
-                                case FilterType.BevatNiet:
-                                    xisfilter = !xvalue.ToLower().Contains(value0.ToLower());
-                                    break;
-                            }
-                            break;
-                        case int xvalue:
+                switch (valueB)
+                {
+                    case string xvalue:
+                        if (valueA is not string value0) return false;
+                        switch (type)
+                        {
+                            case FilterType.GelijkAan:
+                                xisfilter = string.Equals(xvalue, value0,
+                                    StringComparison.CurrentCultureIgnoreCase);
+                                break;
+                            case FilterType.Bevat:
+                                xisfilter = xvalue.ToLower().Contains(value0.ToLower());
+                                break;
+                            case FilterType.Lager:
+                                if (int.TryParse(value0, out var valueint) && int.TryParse(xvalue, out var xvalueint))
+                                    xisfilter = xvalueint < valueint;
+                                break;
+                            case FilterType.LagerOfGelijkAan:
+                                if (int.TryParse(value0, out var valueint2) && int.TryParse(xvalue, out var xvalueint2))
+                                    xisfilter = xvalueint2 <= valueint2;
+                                break;
+                            case FilterType.Hoger:
+                                if (int.TryParse(value0, out var valueint1) && int.TryParse(xvalue, out var xvalueint1))
+                                    xisfilter = xvalueint1 > valueint1;
+                                break;
+                            case FilterType.HogerOfGelijkAan:
+                                if (int.TryParse(value0, out var valueint3) && int.TryParse(xvalue, out var xvalueint3))
+                                    xisfilter = xvalueint3 >= valueint3;
+                                break;
+                            case FilterType.NietGelijkAan:
+                                xisfilter = !string.Equals(xvalue, value0,
+                                    StringComparison.CurrentCultureIgnoreCase);
+                                break;
+                            case FilterType.BevatNiet:
+                                xisfilter = !xvalue.ToLower().Contains(value0.ToLower());
+                                break;
+                        }
+                        break;
+                    case int xvalue:
                         if (!int.TryParse(valueA.ToString(), out var value1)) return false;
                         switch (type)
-                            {
-                                case FilterType.GelijkAan:
-                                    xisfilter = value1 == xvalue;
-                                    break;
-                                case FilterType.Bevat:
-                                    xisfilter = xvalue.ToString().Contains(value1.ToString());
-                                    break;
-                                case FilterType.Lager:
-                                    xisfilter = xvalue < value1;
-                                    break;
-                                case FilterType.Hoger:
-                                    xisfilter = xvalue > value1;
-                                    break;
-                                case FilterType.NietGelijkAan:
-                                    xisfilter = value1 != xvalue;
-                                    break;
-                                case FilterType.BevatNiet:
-                                    xisfilter = !xvalue.ToString().Contains(value1.ToString());
-                                    break;
-                            }
-                            break;
-                        case double xvalue:
-                            if (!double.TryParse(valueA.ToString(), out var xdouble)) return false;
-                            switch (type)
-                            {
-                                case FilterType.GelijkAan:
-                                    xisfilter = xdouble == xvalue;
-                                    break;
-                                case FilterType.Bevat:
-                                    xisfilter = xvalue.ToString().Contains(xdouble.ToString());
-                                    break;
-                                case FilterType.Lager:
-                                    xisfilter = xvalue < xdouble;
-                                    break;
-                                case FilterType.Hoger:
-                                    xisfilter = xvalue > xdouble;
-                                    break;
-                                case FilterType.NietGelijkAan:
-                                    xisfilter = xdouble != xvalue;
-                                    break;
-                                case FilterType.BevatNiet:
-                                    xisfilter = !xvalue.ToString().Contains(xdouble.ToString());
-                                    break;
-                            }
-                            break;
-                    case DateTime xvalue:
-                            if (valueA is not DateTime value2) return false;
-                            switch (type)
-                            {
-                                case FilterType.GelijkAan:
-                                    xisfilter = value2 == xvalue;
-                                    break;
-                                case FilterType.Bevat:
-                                    xisfilter = xvalue.ToString().Contains(value2.ToString());
-                                    break;
-                                case FilterType.Lager:
-                                    xisfilter = xvalue < value2;
-                                    break;
-                                case FilterType.Hoger:
-                                    xisfilter = xvalue > value2;
-                                    break;
-                                case FilterType.NietGelijkAan:
-                                    xisfilter = value2 != xvalue;
-                                    break;
-                                case FilterType.BevatNiet:
-                                    xisfilter = !xvalue.ToString().Contains(value2.ToString());
-                                    break;
-                            }
-                            break;
-                        case Enum xvalue:
-                            if (valueA is not Enum value3) return false;
-                            string xvalueenum = Enum.GetName(xvalue.GetType(), xvalue);
-                            string valueenum = Enum.GetName(value3.GetType(), value3);
-                            xisfilter = ContainsFilter(valueenum, xvalueenum, type);
-                            break;
-                        case bool xvalue:
-                            if (valueA is not bool value4) return false;
-                            switch (type)
-                            {
-                                case FilterType.GelijkAan:
-                                    xisfilter = value4 == xvalue;
-                                    break;
-                                case FilterType.Bevat:
-                                    xisfilter = xvalue.ToString().Contains(value4.ToString());
-                                    break;
-                                case FilterType.Lager:
-                                    xisfilter = value4 != xvalue;
-                                    break;
-                                case FilterType.Hoger:
-                                    xisfilter = value4 != xvalue;
+                        {
+                            case FilterType.GelijkAan:
+                                xisfilter = value1 == xvalue;
                                 break;
-                                case FilterType.NietGelijkAan:
-                                    xisfilter = value4 != xvalue;
-                                    break;
-                                case FilterType.BevatNiet:
-                                    xisfilter = !xvalue.ToString().Contains(value4.ToString());
-                                    break;
-                            }
-                            break;
+                            case FilterType.Bevat:
+                                xisfilter = xvalue.ToString().Contains(value1.ToString());
+                                break;
+                            case FilterType.Lager:
+                                xisfilter = xvalue < value1;
+                                break;
+                            case FilterType.LagerOfGelijkAan:
+                                xisfilter = xvalue <= value1;
+                                break;
+                            case FilterType.Hoger:
+                                xisfilter = xvalue > value1;
+                                break;
+                            case FilterType.HogerOfGelijkAan:
+                                xisfilter = xvalue >= value1;
+                                break;
+                            case FilterType.NietGelijkAan:
+                                xisfilter = value1 != xvalue;
+                                break;
+                            case FilterType.BevatNiet:
+                                xisfilter = !xvalue.ToString().Contains(value1.ToString());
+                                break;
+                        }
+                        break;
+                    case double xvalue:
+                        if (!double.TryParse(valueA.ToString(), out var xdouble)) return false;
+                        switch (type)
+                        {
+                            case FilterType.GelijkAan:
+                                xisfilter = xdouble == xvalue;
+                                break;
+                            case FilterType.Bevat:
+                                xisfilter = xvalue.ToString().Contains(xdouble.ToString());
+                                break;
+                            case FilterType.Lager:
+                                xisfilter = xvalue < xdouble;
+                                break;
+                            case FilterType.LagerOfGelijkAan:
+                                xisfilter = xvalue <= xdouble;
+                                break;
+                            case FilterType.Hoger:
+                                xisfilter = xvalue > xdouble;
+                                break;
+                            case FilterType.HogerOfGelijkAan:
+                                xisfilter = xvalue >= xdouble;
+                                break;
+                            case FilterType.NietGelijkAan:
+                                xisfilter = xdouble != xvalue;
+                                break;
+                            case FilterType.BevatNiet:
+                                xisfilter = !xvalue.ToString().Contains(xdouble.ToString());
+                                break;
+                        }
+                        break;
+                    case decimal xvalue:
+                        if (!decimal.TryParse(valueA.ToString(), out var xdecimal)) return false;
+                        switch (type)
+                        {
+                            case FilterType.GelijkAan:
+                                xisfilter = xdecimal == xvalue;
+                                break;
+                            case FilterType.Bevat:
+                                xisfilter = xvalue.ToString().Contains(xdecimal.ToString());
+                                break;
+                            case FilterType.Lager:
+                                xisfilter = xvalue < xdecimal;
+                                break;
+                            case FilterType.LagerOfGelijkAan:
+                                xisfilter = xvalue <= xdecimal;
+                                break;
+                            case FilterType.Hoger:
+                                xisfilter = xvalue > xdecimal;
+                                break;
+                            case FilterType.HogerOfGelijkAan:
+                                xisfilter = xvalue >= xdecimal;
+                                break;
+                            case FilterType.NietGelijkAan:
+                                xisfilter = xdecimal != xvalue;
+                                break;
+                            case FilterType.BevatNiet:
+                                xisfilter = !xvalue.ToString().Contains(xdecimal.ToString());
+                                break;
+                        }
+                        break;
+                    case DateTime xvalue:
+                        if (valueA is not DateTime value2) return false;
+                        switch (type)
+                        {
+                            case FilterType.GelijkAan:
+                                xisfilter = value2 == xvalue;
+                                break;
+                            case FilterType.Bevat:
+                                xisfilter = xvalue.ToString().Contains(value2.ToString());
+                                break;
+                            case FilterType.Lager:
+                                xisfilter = xvalue < value2;
+                                break;
+                            case FilterType.LagerOfGelijkAan:
+                                xisfilter = xvalue <= value2;
+                                break;
+                            case FilterType.Hoger:
+                                xisfilter = xvalue > value2;
+                                break;
+                            case FilterType.HogerOfGelijkAan:
+                                xisfilter = xvalue >= value2;
+                                break;
+                            case FilterType.NietGelijkAan:
+                                xisfilter = value2 != xvalue;
+                                break;
+                            case FilterType.BevatNiet:
+                                xisfilter = !xvalue.ToString().Contains(value2.ToString());
+                                break;
+                        }
+                        break;
+                    case Enum xvalue:
+                        if (valueA is not Enum value3) return false;
+                        string xvalueenum = Enum.GetName(xvalue.GetType(), xvalue);
+                        string valueenum = Enum.GetName(value3.GetType(), value3);
+                        xisfilter = ContainsFilter(valueenum, xvalueenum, type);
+                        break;
+                    case bool xvalue:
+                        if (valueA is not bool value4) return false;
+                        switch (type)
+                        {
+                            case FilterType.GelijkAan:
+                                xisfilter = value4 == xvalue;
+                                break;
+                            case FilterType.Bevat:
+                                xisfilter = xvalue.ToString().Contains(value4.ToString());
+                                break;
+                            case FilterType.LagerOfGelijkAan:
+                            case FilterType.HogerOfGelijkAan:
+                            case FilterType.Lager:
+                            case FilterType.Hoger:
+                                xisfilter = value4 != xvalue;
+                                break;
+                            
+                            case FilterType.NietGelijkAan:
+                                xisfilter = value4 != xvalue;
+                                break;
+                            case FilterType.BevatNiet:
+                                xisfilter = !xvalue.ToString().Contains(value4.ToString());
+                                break;
+                        }
+                        break;
                 }
                 return xisfilter;
             }

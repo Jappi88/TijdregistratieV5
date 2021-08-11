@@ -819,52 +819,37 @@ namespace Rpm.Productie
             });
         }
 
-        public static Task<ProductieFormulier> UpdateDoorloopTijd(ProductieFormulier form)
+        public static Task<ProductieFormulier> UpdateDoorloopTijd(List<ProductieFormulier> forms, ProductieFormulier form,string change, bool showmessage, bool raiseevent)
         {
             return Task.Run(async () =>
             {
                 if (form != null)
                 {
-                    form.GemiddeldPerUur = form.ActueelPerUur;
-                    if (form.ActueelPerUur > 0 && form.Aantal > 0)
-                        form.GemiddeldDoorlooptijd = Math.Round(form.Aantal / form.ActueelPerUur,2);
-                    var olds = await Manager.Database.GetProducties(form.ArtikelNr, true, ProductieState.Gereed, true);
-
-                    if (olds.Count > 0)
+                    try
                     {
-                        form.Geproduceerd = olds.Count;
-                        var peruur = olds.Sum(x => x.ActueelPerUur) / olds.Count;
-                        if (peruur > 0) form.GemiddeldPerUur = (int) peruur;
+                        form.GemiddeldPerUur = form.ActueelPerUur;
+                        if (form.ActueelPerUur > 0 && form.Aantal > 0)
+                            form.GemiddeldDoorlooptijd = Math.Round(form.Aantal / form.ActueelPerUur, 2);
+                        if (forms != null)
+                            forms = form.ArtikelNr != null ? forms.Where(x => x.ArtikelNr != null &&
+                            string.Equals(x.ArtikelNr, form.ArtikelNr, StringComparison.CurrentCultureIgnoreCase)).ToList() : new List<ProductieFormulier>();
+                        else forms = await Manager.Database.GetProducties(form.ArtikelNr, true, ProductieState.Gereed, true);
+
+                        form.Geproduceerd = forms.Count;
+                        var peruur = forms.Sum(x => x.ActueelPerUur > 0? x.ActueelPerUur : x.PerUur) / forms.Count;
+                        if (peruur > 0) form.GemiddeldPerUur = (int)peruur;
                         if (peruur > 0 && form.Aantal > 0)
-                            form.GemiddeldDoorlooptijd = Math.Round(form.Aantal / peruur,2);
+                            form.GemiddeldDoorlooptijd = Math.Round((form.TotaalGemaakt > form.Aantal?form.TotaalGemaakt : form.Aantal) / peruur, 2);
                         if (form.Bewerkingen != null && form.Bewerkingen.Length > 0)
                             foreach (var b in form.Bewerkingen)
-                            {
-                                peruur = 0;
-                                var count = 0;
-                                foreach (var p in olds)
-                                    if (p.Bewerkingen != null && p.Bewerkingen.Length > 0)
-                                    {
-                                        var bws = p.Bewerkingen.Where(x =>
-                                            string.Equals(x.Naam, b.Naam, StringComparison.CurrentCultureIgnoreCase) &&
-                                            x.ActueelPerUur > 0).ToArray();
-                                        if (bws.Length > 0)
-                                        {
-                                            count += bws.Length;
-                                            peruur += bws.Sum(x => x.ActueelPerUur);
-                                        }
-                                    }
-
-                                if (count > 0 && peruur > 0)
-                                {
-                                    b.GemiddeldPerUur = Math.Round(peruur / count, 0);
-                                    if (b.Aantal > 0)
-                                        b.GemiddeldDoorlooptijd = Math.Round(b.Aantal / b.GemiddeldPerUur, 2);
-                                }
-                            }
+                                await b.UpdateBewerking(forms, null, false);
+                        await form.UpdateForm(false, false, null, 
+                            $"[{form.ProductieNr}|{form.ArtikelNr}]{change}\nDoorlooptijd opnieuw berekend", showmessage, raiseevent);
                     }
-
-                    form.VerwachtLeverDatum = form.VerwachtDatumGereed();
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
 
                 return form;
@@ -914,61 +899,49 @@ namespace Rpm.Productie
             {
                 var forms = formulieren;
                 double peruur = 0;
-                if (forms == null && updategemiddeld)
-                    forms = await Manager.Database.GetAllProducties(true,false,null);
-                if (forms?.Count > 0)
-                    forms = forms.Where(x => string.Equals(x.ArtikelNr, ArtikelNr, StringComparison.CurrentCultureIgnoreCase) && x.TijdGewerkt > 0)
-                        .ToList();
-                if (forms?.Count > 0)
+                if (updategemiddeld)
                 {
-                    peruur = TotaalGemiddeldAantalPerUur(forms);
-                    if (peruur > 0)
-                    {
-                        GemiddeldPerUur = (int)peruur;
-                        if (Aantal > 0)
-                            GemiddeldDoorlooptijd = Math.Round((Aantal / peruur), 2);
-                    }
-
-                    GemiddeldPerUur = GemiddeldPerUur > 0 ? GemiddeldPerUur : peruur;
-                    var xtijd = TotaalGewerkteUren(forms);
-                    if (xtijd > 0)
-                        TotaalTijdGewerkt = xtijd;
-                    Geproduceerd = forms.Count;
+                    await UpdateDoorloopTijd(formulieren, this, change, false, raiseevent);
+                    return true;
                 }
+                else
+                {
+                    if (State != ProductieState.Verwijderd)
+                        VerwachtLeverDatum = VerwachtDatumGereed();
+                    else if (State == ProductieState.Gereed)
+                        VerwachtLeverDatum = DatumGereed;
 
-                if (State != ProductieState.Gereed && State != ProductieState.Verwijderd)
-                    VerwachtLeverDatum = VerwachtDatumGereed();
+                    if (updatebewerking)
+                        if (Bewerkingen != null && Bewerkingen.Length > 0)
+                            foreach (var b in Bewerkingen)
+                            {
+                                if (!b.IsAllowed(null)) continue;
+                                await b.UpdateBewerking(forms, $"[{b.Path}] Bewerking Update", false);
+                            }
 
-                if (updatebewerking)
-                    if (Bewerkingen != null && Bewerkingen.Length > 0)
-                        foreach (var b in Bewerkingen)
-                        {
-                            if (!b.IsAllowed(null)) continue;
-                            await b.UpdateBewerking(forms, $"[{b.Path}] Bewerking Update", false, true);
-                        }
+                    peruur = ActueelProductenPerUur();
+                    if (peruur > 0)
+                        ActueelPerUur = (int)peruur;
+                    GemiddeldDoorlooptijd = GemiddeldDoorlooptijd > 0 ? GemiddeldDoorlooptijd : DoorloopTijd;
+                    var st = DateTime.Now;
+                    AanbevolenPersonen = AantalPersonenNodig(ref st);
+                    StartOp = st;
+                    TijdGewerkt = TijdAanGewerkt();
+                    Gereed = GereedPercentage();
 
-                peruur = ActueelProductenPerUur();
-                if (peruur > 0)
-                    ActueelPerUur = (int)peruur;
-                GemiddeldDoorlooptijd = GemiddeldDoorlooptijd > 0 ? GemiddeldDoorlooptijd : DoorloopTijd;
-                var st = DateTime.Now;
-                AanbevolenPersonen = AantalPersonenNodig(ref st);
-                StartOp = st;
-                TijdGewerkt = TijdAanGewerkt();
-                Gereed = GereedPercentage();
+                    if (GemiddeldPerUur <= 0)
+                        GemiddeldPerUur = ActueelPerUur;
+                    if (TotaalTijdGewerkt <= 0)
+                        TotaalTijdGewerkt = TijdGewerkt;
 
-                if (GemiddeldPerUur <= 0)
-                    GemiddeldPerUur = ActueelPerUur;
-                if (TotaalTijdGewerkt <= 0)
-                    TotaalTijdGewerkt = TijdGewerkt;
-
-                if (save)
-                    await Manager.Database.UpSert(this, change,showmessage);
-                else if(raiseevent)
-                    Manager.FormulierChanged(this, this);
-                if (raiseevent)
-                    FormulierChanged(this);
-                return true;
+                    if (save)
+                        await Manager.Database.UpSert(this, change, showmessage);
+                    else if (raiseevent)
+                        Manager.FormulierChanged(this, this);
+                    if (raiseevent)
+                        FormulierChanged(this);
+                    return true;
+                }
             }
             catch
             {
@@ -1152,9 +1125,9 @@ namespace Rpm.Productie
                 var xa = TotaalGemaakt == 1 ? "stuk" : "stuks";
                 var change =
                     $"[{ProductieNr.ToUpper()}|{ArtikelNr}] {paraaf} heeft is zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u).";
-                //UpdateDoorloopTijd(this);
+               
                 await UpdateForm(false, false, null, change);
-
+                _ = UpdateDoorloopTijd(null, this, null, false, true);
                 if (sendmail)
                     RemoteProductie.RespondByEmail(this, change);
 

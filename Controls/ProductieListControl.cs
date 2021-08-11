@@ -1151,7 +1151,7 @@ namespace Controls
                                                                 wp.AddPersoon(per, werk);
                                                             }
                                                             await wp.Werk.UpdateBewerking(null,
-                                                                $"{wp.Path} indeling aangepast",false,true);
+                                                                $"{wp.Path} indeling aangepast",false);
                                                             werk.CopyTo(ref bws[i]);
                                                         }
                                                     }

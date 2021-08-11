@@ -65,8 +65,22 @@ namespace Rpm.Productie
         public virtual double GemiddeldPerUur { get; set; }
         public virtual double ActueelPerUur { get; set; }
         public virtual int PerUur => Aantal > 0 && DoorloopTijd > 0 ? (int) (Aantal / DoorloopTijd) : 0;
+        public virtual decimal ProcentAfwijkingPerUur => GetAfwijking();
         public virtual string GestartDoor { get; set; }
         public virtual int Geproduceerd { get; set; }
+
+        private decimal GetAfwijking()
+        {
+            try
+            {
+                return (ActueelPerUur - PerUur) == 0 ? 0 : Math.Round((decimal)(((ActueelPerUur - PerUur) / (PerUur == 0? ActueelPerUur :  PerUur)) * 100), 2);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return 0;
+            }
+        }
 
         public virtual List<WerkPlek> GetWerkPlekken()
         {
@@ -83,7 +97,7 @@ namespace Rpm.Productie
             try
             {
                 if (this is Bewerking bew)
-                    return await bew.UpdateBewerking(null, change, save, true);
+                    return await bew.UpdateBewerking(null, change, save);
                 if (this is ProductieFormulier form)
                     return await form.UpdateForm(true, false, null, change, save);
                 return false;
@@ -93,6 +107,23 @@ namespace Rpm.Productie
                 Console.WriteLine(e);
                 return false;
             }
+        }
+      
+        private Color GetColorByPercentage(decimal percentage)
+        {
+            if (percentage < -25)
+                return Color.Red;
+            if (percentage < -15)
+                return Color.Orange;
+            if (percentage < -5)
+                return Color.Yellow;
+            if (percentage < 5)
+                return Color.LightGreen;
+            if (percentage > 5)
+                return Color.Green;
+            if (percentage > 15)
+                return Color.DarkGreen;
+            return Color.Black;
         }
 
         public static string GetStylesheet(string src)
@@ -158,7 +189,7 @@ namespace Rpm.Productie
                           $"Aantal Gemaakt: <b>{TotaalGemaakt} / {Aantal}</b><br>" +
                           $"Tijd Gewerkt: <b>{TijdGewerkt} uur</b><br>" +
                           $"Aantal Aanbevolen Personen: <b>{AanbevolenPersonen}</b><br>" +
-                          $"Per Uur: <b>{ActueelPerUur} i.p.v. {PerUur}</b><br>" +
+                          $"Per Uur: <b>{ActueelPerUur} i.p.v. {PerUur} <span style = 'color: {GetColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span></b><br>" +
                           $"Notitie: <b>{Note?.Notitie ?? "Geen notitie."}</b><br>" +
                           $"Gereed Notitie: <b>{GereedNote?.Notitie ?? "Geen notitie."}</b><br>" +
                           $"</div>\r\n" +

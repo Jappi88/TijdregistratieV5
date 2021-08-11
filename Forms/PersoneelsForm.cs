@@ -934,8 +934,7 @@ namespace Forms
                     if (changed)
                     {
                         await werk.Bewerking.UpdateBewerking(null,
-                            $"{persoon.PersoneelNaam} Werkrooster aangepast op klus {klus.Path}", true,
-                            true);
+                            $"{persoon.PersoneelNaam} Werkrooster aangepast op klus {klus.Path}", true);
                     }
                 }
             }

@@ -86,8 +86,8 @@ namespace Rpm.Misc
                                 columns.Add(charcol.Key);
                         var style = CreateStyle(workbook, true, HorizontalAlignment.Center, 18);
                         var omschrijving = $"{xinfo} {fields[fieldindex]} van de afgelopen {overzichten.Count} {xwk}.";
-                        CreateHeader(sheet, omschrijving, rowindex, 2, 0, columns.Count + 1, style);
-                        rowindex += 2;
+                       // CreateHeader(sheet, omschrijving, rowindex, 2, 0, columns.Count + 1, style);
+                        //rowindex += 2;
                         var rowstart = rowindex;
                         //create column font
                         style = CreateStyle(workbook, true, HorizontalAlignment.Left, 12);
@@ -313,12 +313,13 @@ namespace Rpm.Misc
 
                 //border layaout
                 var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Center, 18);
-                CreateHeader(sheet, omschrijving, 0, 2, 0, ProductieColumns.Length, cellStyleBorder);
-
+                var rowindex = 0;
+                //CreateHeader(sheet, omschrijving, 0, 2, 0, ProductieColumns.Length, cellStyleBorder);
+                //rowindex += 2;
                 //create column font
                 cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12);
                 //init the columns and font
-                var rowindex = 2;
+                
                 var row = sheet.CreateRow(rowindex);
                
                 var cellindex = 0;
@@ -372,29 +373,29 @@ namespace Rpm.Misc
 
                 cellindex = GetProductieColumnIndex("tijd gewerkt");
                 var xs = GetColumnName(cellindex);
-                CreateCellFormula(row, cellindex, $"SUM({xs}4:{xs}{rowindex})", cellStyleBorder);
+                CreateCellFormula(row, cellindex, $"SUM({xs}2:{xs}{rowindex})", cellStyleBorder);
 
                 cellindex = GetProductieColumnIndex("productie aantal");
                 xs = GetColumnName(cellindex);
-                CreateCellFormula(row, cellindex, $"SUM({xs}4:{xs}{rowindex})", cellStyleBorder);
+                CreateCellFormula(row, cellindex, $"SUM({xs}2:{xs}{rowindex})", cellStyleBorder);
 
                 cellindex = GetProductieColumnIndex("aantal gemaakt");
                 xs = GetColumnName(cellindex);
-                CreateCellFormula(row, cellindex, $"SUM({xs}4:{xs}{rowindex})", cellStyleBorder);
+                CreateCellFormula(row, cellindex, $"SUM({xs}2:{xs}{rowindex})", cellStyleBorder);
 
                 cellindex = GetProductieColumnIndex("actueel per uur");
                 xs = GetColumnName(cellindex);
-                CreateCellFormula(row, cellindex, $"ROUND(SUM({xs}4:{xs}{rowindex}) / {rowindex - 3},0)",
+                CreateCellFormula(row, cellindex, $"ROUND(SUM({xs}2:{xs}{rowindex}) / {rowindex - 1},0)",
                     cellStyleBorder);
 
                 cellindex = GetProductieColumnIndex("per uur");
                 xs = GetColumnName(cellindex);
-                CreateCellFormula(row, cellindex, $"ROUND(SUM({xs}4:{xs}{rowindex}) / {rowindex - 3},0)",
+                CreateCellFormula(row, cellindex, $"ROUND(SUM({xs}2:{xs}{rowindex}) / {rowindex - 1},0)",
                     cellStyleBorder);
 
                 cellindex = GetProductieColumnIndex("aantal personen");
                 xs = GetColumnName(cellindex);
-                CreateCellFormula(row, cellindex, $"SUM({xs}4:{xs}{rowindex})", cellStyleBorder);
+                CreateCellFormula(row, cellindex, $"SUM({xs}2:{xs}{rowindex})", cellStyleBorder);
 
                 if (aantalpers > 0)
                 {
@@ -532,29 +533,29 @@ namespace Rpm.Misc
                 #region Sheet Titel Aanmaken
 
                 //create header cells
-                var row = sheet.CreateRow(0);
-                for (var i = 0; i < StoringColumns.Length; i++)
-                    row.CreateCell(i);
-                row = sheet.CreateRow(1);
-                for (var i = 0; i < StoringColumns.Length; i++)
-                    row.CreateCell(i);
+                //var row = sheet.CreateRow(0);
+                //for (var i = 0; i < StoringColumns.Length; i++)
+                //    row.CreateCell(i);
+                //row = sheet.CreateRow(1);
+                //for (var i = 0; i < StoringColumns.Length; i++)
+                //    row.CreateCell(i);
 
                 //border layaout
                 var cellStyleBorder = GetBorderStyle(workbook);
-                cellStyleBorder.Alignment = HorizontalAlignment.Center;
-                //cell header font
+                //cellStyleBorder.Alignment = HorizontalAlignment.Center;
+                ////cell header font
                 var cellStylefont = workbook.CreateFont();
-                cellStylefont.IsBold = true;
-                cellStylefont.FontHeightInPoints = 18;
-                cellStyleBorder.SetFont(cellStylefont);
+                //cellStylefont.IsBold = true;
+                //cellStylefont.FontHeightInPoints = 18;
+                //cellStyleBorder.SetFont(cellStylefont);
 
-                var cra = new CellRangeAddress(0, 1, 0, StoringColumns.Length - 1);
-                sheet.AddMergedRegion(cra);
+                //var cra = new CellRangeAddress(0, 1, 0, StoringColumns.Length - 1);
+                //sheet.AddMergedRegion(cra);
 
-                var cell = sheet.GetRow(0).GetCell(0);
-                cell.CellStyle = cellStyleBorder;
-                cell.CellStyle.SetFont(cellStylefont);
-                cell.SetCellValue(omschrijving);
+                //var cell = sheet.GetRow(0).GetCell(0);
+                //cell.CellStyle = cellStyleBorder;
+                //cell.CellStyle.SetFont(cellStylefont);
+                //cell.SetCellValue(omschrijving);
 
                 #endregion
 
@@ -567,8 +568,8 @@ namespace Rpm.Misc
                 cellStylefont.FontHeightInPoints = 12;
                 cellStyleBorder.SetFont(cellStylefont);
                 //init the columns and font
-                var rowindex = 2;
-                row = sheet.CreateRow(rowindex);
+                var rowindex = 0;
+                var row = sheet.CreateRow(rowindex);
                 var cellindex = 0;
                 foreach (var col in StoringColumns)
                     CreateCell(row, cellindex++, col, cellStyleBorder);
@@ -615,7 +616,7 @@ namespace Rpm.Misc
                 if (cellindex > -1)
                 {
                     var xs = GetColumnName(cellindex);
-                    CreateCellFormula(row, cellindex, $"SUM({xs}4:{xs}{rowindex})", cellStyleBorder);
+                    CreateCellFormula(row, cellindex, $"SUM({xs}2:{xs}{rowindex})", cellStyleBorder);
                 }
 
                 #endregion

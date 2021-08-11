@@ -52,6 +52,7 @@ namespace ProductieManager.Forms
             this.Size = base.MinimumSize;
             InitOperand();
             InitFields(entry.PropertyName);
+            SetValue(entry.Value);
         }
 
         private void InitOperand()
@@ -93,8 +94,8 @@ namespace ProductieManager.Forms
             {
                 if (xval.ToLower() == "none") continue;
                 if ((xdecimalvalue.Enabled || xdatevalue.Enabled) && xval.ToLower().StartsWith("bevat")) continue;
-                if (xtextvalue.Enabled && (xval.ToLower() == "lager" || xval.ToLower() == "hoger")) continue;
-                if ((xcheckvalue.Enabled || xcombovalue.Enabled) && (xval.ToLower() == "lager" || xval.ToLower() == "hoger" ||
+                if (xtextvalue.Enabled && (xval.ToLower().StartsWith("lager") || xval.ToLower().StartsWith("hoger"))) continue;
+                if ((xcheckvalue.Enabled || xcombovalue.Enabled) && (xval.ToLower().StartsWith("lager") || xval.ToLower().StartsWith("hoger") ||
                                                                    xval.ToLower().StartsWith("bevat"))) continue;
                 xvaluetypes.Items.Add(xval);
             }

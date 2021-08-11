@@ -136,12 +136,12 @@ namespace Rpm.Misc
 
         public static void ExcludeFromUpdate(this ProductieFormulier productie)
         {
-            Manager.ProductieProvider?.AddToExclude(productie);
+           // Manager.ProductieProvider?.AddToExclude(productie);
         }
 
         public static void RemoveExcludeFromUpdate(this ProductieFormulier productie)
         {
-            Manager.ProductieProvider?.RemoveFromExclude(productie);
+            //Manager.ProductieProvider?.RemoveFromExclude(productie);
         }
 
         public static Dictionary<string, Dictionary<string, double>> CreateChartData(
@@ -630,7 +630,11 @@ namespace Rpm.Misc
                         wp = wpchooser.Selected;
                     }
                     else wp = bew.WerkPlekken?.FirstOrDefault();
-                    if (wp == null) return;
+                    if (wp == null)
+                    {
+                        XMessageBox.Show($"{b.Naam} heeft nog geen werkplek.\n\nMaak eerst een werkplek aan voordat je de rooster kan aanpassen.", "Geen Werkplek", MessageBoxIcon.Exclamation);
+                        return;
+                    }
                     var roosterform = new RoosterForm(wp.Tijden._rooster,
                         "Kies een rooster voor al je werkzaamheden");
                     if (roosterform.ShowDialog() == DialogResult.OK)
@@ -657,7 +661,7 @@ namespace Rpm.Misc
                             ? "eigen rooster"
                             : "standaard rooster";
                         await b.UpdateBewerking(null,
-                            $"{Manager.Opties.Username} heeft voor een {xchange} gekozen voor {wp.Path}", true, true);
+                            $"{Manager.Opties.Username} heeft voor een {xchange} gekozen voor {wp.Path}", true);
                         
                     }
                 }

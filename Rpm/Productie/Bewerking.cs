@@ -326,7 +326,7 @@ namespace Rpm.Productie
         }
 
         public async Task<bool> UpdateBewerking(List<ProductieFormulier> allforms = null, string change = null,
-            bool save = true, bool updatewerkplekken = false)
+            bool save = true)
         {
             change ??= $"[{Path}] Update.";
             if (allforms != null)
@@ -339,7 +339,8 @@ namespace Rpm.Productie
                 GemiddeldPerUur = GemiddeldAantalPerUur(forms);
                 GemiddeldPerUur = GemiddeldPerUur > 0 ? GemiddeldPerUur : PerUur;
                 TotaalTijdGewerkt = TotaalGewerkteUren(forms);
-                GemiddeldDoorlooptijd = Aantal > 0 && GemiddeldPerUur > 0? Math.Round(Aantal / GemiddeldPerUur, 2) : DoorloopTijd;
+                var xaantal = TotaalGemaakt > Aantal ? TotaalGemaakt : Aantal;
+                GemiddeldDoorlooptijd = xaantal > 0 && GemiddeldPerUur > 0? Math.Round(xaantal / GemiddeldPerUur, 2) : DoorloopTijd;
             }
 
             if(WerkPlekken != null)
@@ -697,6 +698,7 @@ namespace Rpm.Productie
             await UpdateBewerking(null, change, update);
             if (sendmail)
                 RemoteProductie.RespondByEmail(this, change);
+
             //count = 0;
             //var parent = Parent;
             //if (parent.Bewerkingen != null)

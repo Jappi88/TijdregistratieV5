@@ -458,8 +458,9 @@ namespace Rpm.SqlLite
 
                     // Manager.FormulierChanged(this, form);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                     xreturn = false;
                 }
                 form.RemoveExcludeFromUpdate();

@@ -121,10 +121,6 @@ namespace ProductieManager.Forms
             this.xvaluetypes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xvaluetypes.FormattingEnabled = true;
             this.xvaluetypes.ItemHeight = 23;
-            this.xvaluetypes.Items.AddRange(new object[] {
-            "ALS",
-            "EN",
-            "OF"});
             this.xvaluetypes.Location = new System.Drawing.Point(259, 0);
             this.xvaluetypes.Name = "xvaluetypes";
             this.xvaluetypes.Size = new System.Drawing.Size(191, 29);
@@ -213,6 +209,11 @@ namespace ProductieManager.Forms
             2,
             0,
             0});
+            this.xdecimalvalue.Minimum = new decimal(new int[] {
+            1410065407,
+            2,
+            0,
+            -2147483648});
             this.xdecimalvalue.Name = "xdecimalvalue";
             this.xdecimalvalue.Size = new System.Drawing.Size(450, 27);
             this.xdecimalvalue.TabIndex = 9;
@@ -222,7 +223,7 @@ namespace ProductieManager.Forms
             // 
             this.xdatevalue.Dock = System.Windows.Forms.DockStyle.Top;
             this.xdatevalue.Location = new System.Drawing.Point(0, 58);
-            this.xdatevalue.MinimumSize = new System.Drawing.Size(4, 29);
+            this.xdatevalue.MinimumSize = new System.Drawing.Size(0, 29);
             this.xdatevalue.Name = "xdatevalue";
             this.xdatevalue.Size = new System.Drawing.Size(450, 29);
             this.xdatevalue.TabIndex = 8;
