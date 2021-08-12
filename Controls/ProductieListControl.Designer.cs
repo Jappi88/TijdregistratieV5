@@ -51,9 +51,10 @@ namespace Controls
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn19 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn20 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn22 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn21 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn22 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn23 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn24 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn25 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -126,7 +127,7 @@ namespace Controls
             this.xstopb = new System.Windows.Forms.Button();
             this.xstartb = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xproductieLijst)).BeginInit();
             this.xproductieLijstcontext.SuspendLayout();
@@ -184,6 +185,7 @@ namespace Controls
             this.xproductieLijst.AllColumns.Add(this.olvColumn20);
             this.xproductieLijst.AllColumns.Add(this.olvColumn22);
             this.xproductieLijst.AllColumns.Add(this.olvColumn10);
+            this.xproductieLijst.AllColumns.Add(this.olvColumn11);
             this.xproductieLijst.AllColumns.Add(this.olvColumn8);
             this.xproductieLijst.AllColumns.Add(this.olvColumn21);
             this.xproductieLijst.AllColumns.Add(this.olvColumn23);
@@ -216,6 +218,7 @@ namespace Controls
             this.olvColumn20,
             this.olvColumn22,
             this.olvColumn10,
+            this.olvColumn11,
             this.olvColumn8,
             this.olvColumn21,
             this.olvColumn23,
@@ -452,6 +455,24 @@ namespace Controls
             this.olvColumn20.Width = 106;
             this.olvColumn20.WordWrap = true;
             // 
+            // olvColumn22
+            // 
+            this.olvColumn22.AspectName = "ActueelPerUur";
+            this.olvColumn22.AspectToStringFormat = "{0} p/u";
+            this.olvColumn22.Groupable = false;
+            this.olvColumn22.Text = "Actueel/Uur";
+            this.olvColumn22.ToolTipText = "Actuele aantal per uur";
+            this.olvColumn22.Width = 120;
+            // 
+            // olvColumn10
+            // 
+            this.olvColumn10.AspectName = "ProcentAfwijkingPerUur";
+            this.olvColumn10.AspectToStringFormat = "{0}%";
+            this.olvColumn10.Text = "Afwijking(%)";
+            this.olvColumn10.ToolTipText = "Aantal procent afwijking van de orginele aantal per uur";
+            this.olvColumn10.Width = 100;
+            this.olvColumn10.WordWrap = true;
+            // 
             // olvColumn8
             // 
             this.olvColumn8.AspectName = "GemiddeldDoorlooptijd";
@@ -471,15 +492,6 @@ namespace Controls
             this.olvColumn21.Text = "Gemiddeld PerUur";
             this.olvColumn21.ToolTipText = "Totaal gemiddelde aantal per uur";
             this.olvColumn21.Width = 120;
-            // 
-            // olvColumn22
-            // 
-            this.olvColumn22.AspectName = "ActueelPerUur";
-            this.olvColumn22.AspectToStringFormat = "{0} p/u";
-            this.olvColumn22.Groupable = false;
-            this.olvColumn22.Text = "Actueel/Uur";
-            this.olvColumn22.ToolTipText = "Actuele aantal per uur";
-            this.olvColumn22.Width = 120;
             // 
             // olvColumn23
             // 
@@ -1317,14 +1329,14 @@ namespace Controls
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
-            // olvColumn10
+            // olvColumn11
             // 
-            this.olvColumn10.AspectName = "ProcentAfwijkingPerUur";
-            this.olvColumn10.AspectToStringFormat = "{0}%";
-            this.olvColumn10.Text = "Afwijking(%)";
-            this.olvColumn10.ToolTipText = "Aantal procent afwijking van de orginele aantal per uur";
-            this.olvColumn10.Width = 100;
-            this.olvColumn10.WordWrap = true;
+            this.olvColumn11.AspectName = "GemiddeldProcentAfwijkingPerUur";
+            this.olvColumn11.AspectToStringFormat = "{0}%";
+            this.olvColumn11.Text = "Gemiddeld Afwijking(%)";
+            this.olvColumn11.ToolTipText = "Aantal procent afwijking van de gemiddeld aantal per uur";
+            this.olvColumn11.Width = 100;
+            this.olvColumn11.WordWrap = true;
             // 
             // ProductieListControl
             // 
@@ -1449,5 +1461,6 @@ namespace Controls
         private BrightIdeasSoftware.OLVColumn olvColumn6;
         private BrightIdeasSoftware.OLVColumn olvColumn9;
         private BrightIdeasSoftware.OLVColumn olvColumn10;
+        private BrightIdeasSoftware.OLVColumn olvColumn11;
     }
 }

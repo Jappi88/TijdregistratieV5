@@ -336,8 +336,8 @@ namespace Rpm.Productie
                     : allforms.Where(t =>string.Equals(ArtikelNr, t.ArtikelNr, StringComparison.CurrentCultureIgnoreCase))
                         .ToArray();
                 Geproduceerd = AlleBewerkingen(forms).Length;
-                GemiddeldPerUur = GemiddeldAantalPerUur(forms);
-                GemiddeldPerUur = GemiddeldPerUur > 0 ? GemiddeldPerUur : PerUur;
+                GemiddeldPerUur = GetGemiddeldAantalPerUur(forms);
+                GemiddeldActueelPerUur = GetGemiddeldActueelPerUur(forms);
                 TotaalTijdGewerkt = TotaalGewerkteUren(forms);
                 var xaantal = TotaalGemaakt > Aantal ? TotaalGemaakt : Aantal;
                 GemiddeldDoorlooptijd = xaantal > 0 && GemiddeldPerUur > 0? Math.Round(xaantal / GemiddeldPerUur, 2) : DoorloopTijd;
@@ -845,7 +845,23 @@ namespace Rpm.Productie
             return gewerkt;
         }
 
-        public double GemiddeldAantalPerUur(ProductieFormulier[] forms)
+        public double GetGemiddeldAantalPerUur(ProductieFormulier[] forms)
+        {
+            if (forms == null)
+                return 0;
+            var x = forms;
+            var bws = x.Select(t =>
+                t.Bewerkingen.Where(b =>
+                        b.PerUur > 0 && string.Equals(b.Naam, Naam, StringComparison.CurrentCultureIgnoreCase))
+                    .ToArray()).ToArray();
+            var aantalbws = bws.Sum(t => t.Length);
+            if (aantalbws == 0)
+                return 0;
+            var peruur = (double)bws.Sum(t => t.Sum(b => b.PerUur)) / aantalbws;
+            return Math.Round(peruur, 0);
+        }
+
+        public double GetGemiddeldActueelPerUur(ProductieFormulier[] forms)
         {
             if (forms == null)
                 return 0;

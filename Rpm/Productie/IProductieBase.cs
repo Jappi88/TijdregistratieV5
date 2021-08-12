@@ -63,9 +63,11 @@ namespace Rpm.Productie
         public virtual double Gereed { get; set; }
         public virtual int DeelsGereed { get; }
         public virtual double GemiddeldPerUur { get; set; }
+        public virtual double GemiddeldActueelPerUur { get; set; }
         public virtual double ActueelPerUur { get; set; }
         public virtual int PerUur => Aantal > 0 && DoorloopTijd > 0 ? (int) (Aantal / DoorloopTijd) : 0;
         public virtual decimal ProcentAfwijkingPerUur => GetAfwijking();
+        public virtual decimal GemiddeldProcentAfwijkingPerUur => GetGemiddeldAfwijking();
         public virtual string GestartDoor { get; set; }
         public virtual int Geproduceerd { get; set; }
 
@@ -74,6 +76,19 @@ namespace Rpm.Productie
             try
             {
                 return (ActueelPerUur - PerUur) == 0 ? 0 : Math.Round((decimal)(((ActueelPerUur - PerUur) / (PerUur == 0? ActueelPerUur :  PerUur)) * 100), 2);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return 0;
+            }
+        }
+
+        private decimal GetGemiddeldAfwijking()
+        {
+            try
+            {
+                return (GemiddeldActueelPerUur - GemiddeldPerUur) == 0 ? 0 : Math.Round((decimal)(((GemiddeldActueelPerUur - GemiddeldPerUur) / (GemiddeldPerUur == 0 ? GemiddeldActueelPerUur : GemiddeldPerUur)) * 100), 2);
             }
             catch (Exception ex)
             {
@@ -190,6 +205,7 @@ namespace Rpm.Productie
                           $"Tijd Gewerkt: <b>{TijdGewerkt} uur</b><br>" +
                           $"Aantal Aanbevolen Personen: <b>{AanbevolenPersonen}</b><br>" +
                           $"Per Uur: <b>{ActueelPerUur} i.p.v. {PerUur} <span style = 'color: {GetColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span></b><br>" +
+                          $"Gemiddeld Per Uur: <b>{GemiddeldActueelPerUur} i.p.v. {GemiddeldPerUur} <span style = 'color: {GetColorByPercentage(GemiddeldProcentAfwijkingPerUur).Name}'>({GemiddeldProcentAfwijkingPerUur}%)</span></b><br>" +
                           $"Notitie: <b>{Note?.Notitie ?? "Geen notitie."}</b><br>" +
                           $"Gereed Notitie: <b>{GereedNote?.Notitie ?? "Geen notitie."}</b><br>" +
                           $"</div>\r\n" +

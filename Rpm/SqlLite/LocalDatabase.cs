@@ -18,7 +18,7 @@ namespace Rpm.SqlLite
 {
     public class LocalDatabase : IDisposable
     {
-        public static readonly string DbVersion = "2.2.0.0";
+        public static readonly string DbVersion = "2.3.0.0";
         public LocalDatabase(Manager instance, string pcid, string path, bool createnew)
         {
             OwnerId = pcid;

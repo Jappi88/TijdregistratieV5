@@ -836,10 +836,12 @@ namespace Rpm.Productie
                         else forms = await Manager.Database.GetProducties(form.ArtikelNr, true, ProductieState.Gereed, true);
 
                         form.Geproduceerd = forms.Count;
-                        var peruur = forms.Sum(x => x.ActueelPerUur > 0? x.ActueelPerUur : x.PerUur) / forms.Count;
+                        var peruur = forms.Sum(x => x.PerUur) / forms.Count;
+                        var gemiddeldperuur = forms.Sum(x => x.ActueelPerUur) / forms.Count;
                         if (peruur > 0) form.GemiddeldPerUur = (int)peruur;
-                        if (peruur > 0 && form.Aantal > 0)
-                            form.GemiddeldDoorlooptijd = Math.Round((form.TotaalGemaakt > form.Aantal?form.TotaalGemaakt : form.Aantal) / peruur, 2);
+                        if (gemiddeldperuur > 0) form.GemiddeldActueelPerUur = (int)gemiddeldperuur;
+                        if (gemiddeldperuur > 0 && form.Aantal > 0)
+                            form.GemiddeldDoorlooptijd = Math.Round((form.TotaalGemaakt > form.Aantal?form.TotaalGemaakt : form.Aantal) / gemiddeldperuur, 2);
                         if (form.Bewerkingen != null && form.Bewerkingen.Length > 0)
                             foreach (var b in form.Bewerkingen)
                                 await b.UpdateBewerking(forms, null, false);
