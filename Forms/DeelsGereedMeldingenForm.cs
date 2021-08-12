@@ -78,7 +78,7 @@ namespace ProductieManager.Forms
             if (wps.Count > 1)
             {
                 wps.Add("Alle Werkplekken");
-                WerkPlekChooser wpChooser = new WerkPlekChooser(wps.ToArray());
+                WerkPlekChooser wpChooser = new WerkPlekChooser(wps.ToArray(),null);
                 if (wpChooser.ShowDialog() == DialogResult.Cancel) return;
                 wp = wpChooser.SelectedName?.ToLower() == "alle werkplekken" ? null : wpChooser.SelectedName;
             }

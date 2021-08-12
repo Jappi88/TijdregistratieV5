@@ -572,7 +572,6 @@ namespace Rpm.Productie
                             MessageAction.ProductieWijziging, MsgType.Waarschuwing, null, prod, prod.ProductieNr);
 
                     }
-
                     var xa = prod.Aantal == 1 ? "stuk" : "stuks";
                    // prod = await ProductieFormulier.UpdateDoorloopTijd(prod);
                     if (await Database.UpSert(prod,
@@ -581,7 +580,10 @@ namespace Rpm.Productie
                     {
                         var xprod = await Database.GetProductie(prod.ProductieNr);
                         if (xprod != null)
+                        {
                             prod = xprod;
+                            _ = ProductieFormulier.UpdateDoorloopTijd(null, prod, null, true, true);
+                        }
                         return new RemoteMessage($"{prod.ProductieNr} toegevoegd!", MessageAction.NieweProductie,
                             MsgType.Success, null, prod, prod.ProductieNr);
 
@@ -641,8 +643,15 @@ namespace Rpm.Productie
                             {
                                 try
                                 {
+                                    string fpath = ProductieFormPath + $"\\{prod.ProductieNr}.pdf";
                                     if (delete)
-                                        File.Move(pdffile, ProductieFormPath + $"\\{prod.ProductieNr}.pdf");
+                                    {
+
+                                        if (File.Exists(fpath))
+                                            File.Delete(pdffile);
+                                        else
+                                            File.Move(pdffile, fpath);
+                                    }
                                     else
                                         File.Copy(pdffile, ProductieFormPath + $"\\{prod.ProductieNr}.pdf", true);
                                 }
@@ -1025,10 +1034,13 @@ namespace Rpm.Productie
             }
         }
 
-        private void LoadUnloadedFiles()
+        private bool _IsLoadingFiles = false;
+        private async void LoadUnloadedFiles()
         {
             try
-            {
+                {
+                if (_IsLoadingFiles) return;
+                _IsLoadingFiles = true;
                 var files = new List<string>();
                 if (Opties?.SyncLocaties != null)
                 {
@@ -1036,13 +1048,14 @@ namespace Rpm.Productie
                         files.AddRange(Directory.GetFiles(s, "*.pdf").Where(t => !t.Contains("_old")).ToArray());
                     if (files.Count > 0)
                     {
-                        AddProductie(files.ToArray(), true, false);
+                        await AddProductie(files.ToArray(), true, false);
                     }
                 }
             }
             catch (Exception)
             {
             }
+            _IsLoadingFiles = false;
         }
 
         private static Task<bool> AutoLogin(object sender)

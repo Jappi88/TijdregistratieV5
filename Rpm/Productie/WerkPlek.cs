@@ -229,12 +229,6 @@ namespace Rpm.Productie
                 return false;
             Werk = werk;
             persoon.Werkplek = Naam;
-            werk.WerkPlekken.ForEach(wp =>
-            {
-                if (!string.Equals(wp.Naam, Naam, StringComparison.CurrentCultureIgnoreCase))
-                    wp.Personen.RemoveAll(pr => string.Equals(persoon.PersoneelNaam, pr.PersoneelNaam,
-                        StringComparison.CurrentCultureIgnoreCase));
-            });
             var xpers = Personen.FirstOrDefault(t =>
                 string.Equals(persoon.PersoneelNaam, t.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase));
             if (xpers != null)

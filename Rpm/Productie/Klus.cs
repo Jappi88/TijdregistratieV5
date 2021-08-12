@@ -242,6 +242,16 @@ namespace Rpm.Productie
             }
         }
 
+        public bool ZetActief(bool actief, bool isgestart)
+        {
+            if (Status == ProductieState.Gestart && !actief)
+                Stop();
+            else if (actief && Status == ProductieState.Gestopt && isgestart)
+                Start();
+            IsActief = actief;
+            return IsActief;
+        }
+
         public void UpdateTijdGewerkt(DateTime start, DateTime stop, bool isactief)
         {
             Tijden?.UpdateTijdGewerkt(start, stop, isactief);

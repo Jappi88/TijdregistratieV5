@@ -621,7 +621,7 @@ namespace Rpm.Misc
                     WerkPlek wp = null;
                     if (bew.WerkPlekken != null && bew.WerkPlekken.Count > 1)
                     {
-                        var wpchooser = new WerkPlekChooser(bew.WerkPlekken)
+                        var wpchooser = new WerkPlekChooser(bew.WerkPlekken,null)
                         {
                             Title = "Kies een werkplek om een rooster van te wijzigen"
                         };
@@ -683,7 +683,7 @@ namespace Rpm.Misc
             }
             else if (b.WerkPlekken.Count > 1)
             {
-                var wpchooser = new WerkPlekChooser(b.WerkPlekken);
+                var wpchooser = new WerkPlekChooser(b.WerkPlekken,null);
                 wpchooser.Title = $"Kies voor {b.Naam} een werkplek om de werktijd van te wijzigen";
                 if (wpchooser.ShowDialog() == DialogResult.Cancel) return;
                 wp = wpchooser.Selected;

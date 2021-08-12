@@ -328,7 +328,7 @@ namespace Controls
                     }
                     else
                     {
-                        var wpc = new WerkPlekChooser(wps);
+                        var wpc = new WerkPlekChooser(wps,null);
                         if (wpc.ShowDialog() != DialogResult.OK)
                             return;
                         plek = wpc.Selected;

@@ -8,24 +8,33 @@ namespace Forms
 {
     public partial class WerkPlekChooser : MetroFramework.Forms.MetroForm
     {
-        public WerkPlekChooser(List<WerkPlek> plekken)
+        public WerkPlekChooser(List<WerkPlek> plekken, string selected)
         {
             InitializeComponent();
             if (plekken != null && plekken.Count > 0)
             {
                 Plekken = plekken;
                 comboBox1.Items.AddRange(plekken.Select(x => x.Path).ToArray());
-                comboBox1.SelectedIndex = 0;
+                selected = plekken.FirstOrDefault(x => x.Path.ToLower().Contains(selected.ToLower()))?.Path;
+                if (selected == null)
+                    comboBox1.SelectedIndex = 0;
+                else comboBox1.SelectedItem = selected;
+                comboBox1.Select();
+                comboBox1.Focus();
             }
         }
 
-        public WerkPlekChooser(string[] plekken)
+        public WerkPlekChooser(string[] plekken, string selected)
         {
             InitializeComponent();
             if (plekken != null && plekken.Length > 0)
             {
                 comboBox1.Items.AddRange(plekken.Cast<object>().ToArray());
-                comboBox1.SelectedIndex = 0;
+                if (selected == null)
+                    comboBox1.SelectedIndex = 0;
+                else comboBox1.SelectedItem = selected;
+                comboBox1.Select();
+                comboBox1.Focus();
             }
         }
 

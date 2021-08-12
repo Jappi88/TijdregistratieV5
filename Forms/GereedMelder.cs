@@ -145,6 +145,8 @@ namespace Forms
                 $"Er is {_prod.DeelsGereed} deels gereed gemeld.";
             xtextfield1.Text = bericht;
             xtextfield2.Text = _prod.Omschrijving;
+            this.Text = $"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
+            this.Invalidate();
             // xtextfield3.Text = Melding;
         }
 
@@ -281,7 +283,7 @@ namespace Forms
                 if (wps.Count > 1)
                 {
                     wps.Add("Alle Werkplekken");
-                    WerkPlekChooser wpChooser = new WerkPlekChooser(wps.ToArray());
+                    WerkPlekChooser wpChooser = new WerkPlekChooser(wps.ToArray(),null);
                     if (wpChooser.ShowDialog() == DialogResult.Cancel) return;
                     wp = wpChooser.SelectedName?.ToLower() == "alle werkplekken" ? null : wpChooser.SelectedName;
                 }

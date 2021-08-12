@@ -539,7 +539,7 @@ namespace Controls
 
             if (plekken.Count > 0)
             {
-                var selector = new WerkPlekChooser(plekken);
+                var selector = new WerkPlekChooser(plekken,null);
                 if (selector.ShowDialog() == DialogResult.OK)
                 {
                     var plek = selector.Selected;

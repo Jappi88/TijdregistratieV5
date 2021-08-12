@@ -57,7 +57,7 @@
             this.xtijdgestart = new System.Windows.Forms.DateTimePicker();
             this.xgestoptlabel = new System.Windows.Forms.Label();
             this.xtijdgestopt = new System.Windows.Forms.DateTimePicker();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.xpersoneelgroep = new System.Windows.Forms.GroupBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.xroosterb = new System.Windows.Forms.Button();
             this.xtijdengewerkt = new System.Windows.Forms.Button();
@@ -87,7 +87,7 @@
             this.groupBox1.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xactiefimage)).BeginInit();
-            this.groupBox2.SuspendLayout();
+            this.xpersoneelgroep.SuspendLayout();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xshiftlist)).BeginInit();
             this.panel1.SuspendLayout();
@@ -179,7 +179,7 @@
             this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(1, 4);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(78, 16);
+            this.label1.Size = new System.Drawing.Size(77, 16);
             this.label1.TabIndex = 26;
             this.label1.Text = "Gemaakt: ";
             // 
@@ -364,7 +364,7 @@
             this.xnaampersoneel.Name = "xnaampersoneel";
             this.xnaampersoneel.Size = new System.Drawing.Size(299, 29);
             this.xnaampersoneel.TabIndex = 0;
-            this.xnaampersoneel.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.xnaampersoneel_KeyPress);
+            this.xnaampersoneel.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xnaampersoneel_KeyDown);
             // 
             // label2
             // 
@@ -452,20 +452,20 @@
             this.xtijdgestopt.TabIndex = 4;
             this.toolTip1.SetToolTip(this.xtijdgestopt, "De tijd waarop de persoon is gestopt");
             // 
-            // groupBox2
+            // xpersoneelgroep
             // 
-            this.groupBox2.Controls.Add(this.panel5);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.ForeColor = System.Drawing.Color.Black;
-            this.groupBox2.Location = new System.Drawing.Point(0, 0);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Size = new System.Drawing.Size(582, 409);
-            this.groupBox2.TabIndex = 1;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Personeel";
+            this.xpersoneelgroep.Controls.Add(this.panel5);
+            this.xpersoneelgroep.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xpersoneelgroep.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xpersoneelgroep.ForeColor = System.Drawing.Color.Black;
+            this.xpersoneelgroep.Location = new System.Drawing.Point(0, 0);
+            this.xpersoneelgroep.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.xpersoneelgroep.Name = "xpersoneelgroep";
+            this.xpersoneelgroep.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.xpersoneelgroep.Size = new System.Drawing.Size(582, 409);
+            this.xpersoneelgroep.TabIndex = 1;
+            this.xpersoneelgroep.TabStop = false;
+            this.xpersoneelgroep.Text = "Personeel";
             // 
             // panel5
             // 
@@ -748,7 +748,7 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
+            this.splitContainer1.Panel2.Controls.Add(this.xpersoneelgroep);
             this.splitContainer1.Panel2.Controls.Add(this.panel1);
             this.splitContainer1.Size = new System.Drawing.Size(1015, 455);
             this.splitContainer1.SplitterDistance = 429;
@@ -780,7 +780,7 @@
             this.groupBox1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xactiefimage)).EndInit();
-            this.groupBox2.ResumeLayout(false);
+            this.xpersoneelgroep.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xshiftlist)).EndInit();
@@ -797,7 +797,7 @@
         #endregion
 
         private System.Windows.Forms.GroupBox xindelinggroup;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox xpersoneelgroep;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox xnaampersoneel;
         private System.Windows.Forms.Button xvoegindeling;

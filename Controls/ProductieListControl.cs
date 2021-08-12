@@ -1118,7 +1118,7 @@ namespace Controls
                                                 if (!werk.IsBemand || !afzonderlijk)
                                                 {
                                                     var klusui = new NieuwKlusForm(parent, pers.SelectedPersoneel,
-                                                        true,
+                                                        true,false,
                                                         werk);
                                                     if (klusui.ShowDialog() != DialogResult.OK)
                                                         return;
@@ -1140,7 +1140,7 @@ namespace Controls
                                                 {
                                                     foreach (var per in pers.SelectedPersoneel)
                                                     {
-                                                        var klusui = new NieuwKlusForm(parent, per, true, werk);
+                                                        var klusui = new NieuwKlusForm(parent, per, true,false, werk);
                                                         if (klusui.ShowDialog() != DialogResult.OK)
                                                             break;
                                                         //klusui.Persoon.CopyTo(ref per);

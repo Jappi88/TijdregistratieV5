@@ -484,6 +484,39 @@ namespace Rpm.Productie
             }
         }
 
+        public void ZetPersoneelActief(string personeelnaam,string werkplek,bool actief)
+        {
+            if (WerkPlekken != null)
+            {
+                var xwp = WerkPlekken.FirstOrDefault(x => string.Equals(x.Naam, werkplek, StringComparison.CurrentCultureIgnoreCase));
+                if(xwp != null)
+                {
+                    var xpers = xwp.Personen.Where(x =>
+                   string.Equals(x.PersoneelNaam, personeelnaam, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                    foreach (var xper in xpers)
+                    {
+                        var xklus = xper.Klusjes.GetKlus($"{Path}\\{werkplek}");
+                        if (xklus == null) continue;
+                        xklus.ZetActief(actief, State == ProductieState.Gestart);
+                    }
+                }
+                if (!actief) return;
+                foreach (var wp in WerkPlekken)
+                {
+                    if (string.Equals(wp.Naam, werkplek, StringComparison.CurrentCultureIgnoreCase)) continue;
+                  
+                    var xpers = wp.Personen.Where(x =>
+                    string.Equals(x.PersoneelNaam, personeelnaam, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                    foreach (var xper in xpers)
+                    {
+                        var xklus = xper.Klusjes.GetKlus($"{Path}\\{wp.Naam}");
+                        if (xklus == null) continue;
+                        xklus.ZetActief(false, State == ProductieState.Gestart);
+                    }
+                }
+            }
+        }
+
         public async Task<bool> StopProductie(bool email)
         {
             try

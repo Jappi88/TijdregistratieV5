@@ -17,29 +17,33 @@ namespace Forms
         private string _werkplek;
         private Personeel[] OrigPersoon;
         public Klus SelectedKlus = new();
+        public bool EditMode { get; private set; }
 
-        public NieuwKlusForm(ProductieFormulier formulier, Personeel pers, bool save, Bewerking bew = null, string werkplek = null)
+        public NieuwKlusForm(ProductieFormulier formulier, Personeel pers, bool save,bool editmode, Bewerking bew = null, string werkplek = null)
         {
             InitializeComponent();
+            EditMode = editmode;
             _save = save; 
             _origklus = pers.CurrentKlus() ?? new Klus();
             SelectedKlus = _origklus.CreateCopy();
             InitFields(formulier, new[] {pers}, bew, werkplek);
         }
 
-        public NieuwKlusForm(ProductieFormulier formulier, Personeel[] pers, bool save, Bewerking bew = null,
+        public NieuwKlusForm(ProductieFormulier formulier, Personeel[] pers, bool save, bool editmode, Bewerking bew = null,
             string werkplek = null)
         {
             InitializeComponent();
+            EditMode = editmode;
             _save = save;
             _origklus = pers.FirstOrDefault()?.CurrentKlus() ?? new Klus();
             SelectedKlus = _origklus.CreateCopy();
             InitFields(formulier, pers, bew, werkplek);
         }
 
-        public NieuwKlusForm(Personeel pers, Klus klus)
+        public NieuwKlusForm(Personeel pers, Klus klus,bool editmode)
         {
             InitializeComponent();
+            EditMode = editmode;
             _save = true;
             _origklus = klus;
             SelectedKlus = klus.CreateCopy();
@@ -95,8 +99,8 @@ namespace Forms
 
         private async void button2_Click(object sender, EventArgs e)
         {
-            await Save();
-            DialogResult = DialogResult.OK;
+            if (await Save())
+                DialogResult = DialogResult.OK;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -201,7 +205,7 @@ namespace Forms
             return wp;
         }
 
-        public Task Save()
+        public Task<bool> Save()
         {
             return Task.Run(async () =>
             {
@@ -211,6 +215,7 @@ namespace Forms
                 var prod = pair.Formulier;
                 var bewerking = pair.Bewerking;
                 var wp = GetWerkPlek(_origklus.WerkPlek, bewerking, false);
+                var xpersonen = new List<Personeel>();
                 foreach (var xpers in Persoon)
                 {
                     xpers.Klusjes.Remove(_origklus);
@@ -249,13 +254,24 @@ namespace Forms
                     {
                         if (wp != null)
                         {
-                            wp.Personen.Remove(xpers);
-                            xpers.Klusjes.RemoveAll(x =>
-                                string.Equals(x.Path, wp.Path, StringComparison.CurrentCultureIgnoreCase));
-                            dbpers.Klusjes.RemoveAll(x =>
-                                string.Equals(x.Path, wp.Path, StringComparison.CurrentCultureIgnoreCase));
+                            var xcurpers = wp.Personen.FirstOrDefault(x=> string.Equals(x.PersoneelNaam, xpers.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase));
+                            if (xcurpers != null)
+                            {
+                                var klus = xcurpers.Klusjes.GetKlus(wp.Path);
+                                if (klus != null)
+                                    klus.ZetActief(false, bewerking.State == ProductieState.Gestart);
+                            }
+                            //wp.Personen.Remove(xpers);
+                            //xpers.Klusjes.RemoveAll(x =>
+                            //    string.Equals(x.Path, wp.Path, StringComparison.CurrentCultureIgnoreCase));
+                            //dbpers.Klusjes.RemoveAll(x =>
+                            //    string.Equals(x.Path, wp.Path, StringComparison.CurrentCultureIgnoreCase));
                             if (wp.Personen.Count == 0 && wp.TijdGewerkt <= 0 && wp.AantalGemaakt == 0)
+                            {
                                 bewerking.WerkPlekken.Remove(wp);
+                                dbpers.Klusjes.RemoveAll(x =>
+                                string.Equals(x.Path, wp.Path, StringComparison.CurrentCultureIgnoreCase));
+                            }
                         }
 
                         wp = GetWerkPlek(SelectedKlus.WerkPlek, bewerking, false);
@@ -270,18 +286,27 @@ namespace Forms
                         wp = new WerkPlek(SelectedKlus.WerkPlek, bewerking);
                         bewerking.WerkPlekken.Add(wp);
                     }
-
+                    else if (!EditMode && wp.Personen.Any(x => string.Equals(x.PersoneelNaam, xpers.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase)))
+                    {
+                        if (XMessageBox.Show($"{xpers.PersoneelNaam} is al toegevoegd op {wp.Naam}...\n\n" +
+                           $"Zou je {xpers.PersoneelNaam} willen overschrijven?", $"{xpers.PersoneelNaam} bestaat al!",
+                           MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                            continue;
+                    }
+                   
                     xpers.ReplaceKlus(SelectedKlus);
                     wp.AddPersoon(xpers, bewerking);
                     wp.Tijden.SetUren(SelectedKlus.Tijden.Uren.ToArray(), bewerking.State == ProductieState.Gestart,
                         false);
+                    bewerking.ZetPersoneelActief(xpers.PersoneelNaam, wp.Naam, true);
                     dbpers.ReplaceKlus(SelectedKlus);
                     if (_save)
                         await Manager.Database.UpSert(dbpers,
                             $"{xpers.PersoneelNaam} Klus {SelectedKlus.Path} Update.");
+                    xpersonen.Add(xpers);
                 }
-
-                Persoon = Persoon.CopyTo(ref OrigPersoon);
+                if (xpersonen.Count == 0) return false;
+                Persoon = xpersonen.ToArray().CopyTo(ref OrigPersoon);
                 SelectedKlus = SelectedKlus.CopyTo(ref _origklus);
                 if (Formulier != null && bewerking != null)
                 {
@@ -294,6 +319,7 @@ namespace Forms
                         await bewerking.UpdateBewerking(null,
                             $"{string.Join(", ", Persoon.Select(x => x.PersoneelNaam))} aangepast op {bewerking.Path}");
                 }
+                return true;
             });
         }
 

@@ -126,6 +126,8 @@ namespace Rpm.Productie
       
         private Color GetColorByPercentage(decimal percentage)
         {
+            if (percentage <= -50)
+                return Color.Maroon;
             if (percentage <= -25)
                 return Color.Red;
             if (percentage <= -15)
@@ -133,11 +135,13 @@ namespace Rpm.Productie
             if (percentage <= -5)
                 return Color.Orange;
             if (percentage <= 5)
-                return Color.LightGreen;
-            if (percentage >= 5)
                 return Color.Green;
-            if (percentage >= 15)
+            if (percentage >= 5)
                 return Color.DarkGreen;
+            if (percentage >= 25)
+                return Color.RoyalBlue;
+            if (percentage >= 50)
+                return Color.Purple;
             return Color.Black;
         }
 
