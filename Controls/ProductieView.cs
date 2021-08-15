@@ -21,6 +21,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Various;
+using static Forms.RangeCalculatorForm;
 
 namespace Controls
 {
@@ -230,7 +231,7 @@ namespace Controls
                 var xsettings = settings;
                 if (InvokeRequired)
                 {
-                    BeginInvoke(new Action(() =>
+                    Invoke(new Action(() =>
                     {
                         try
                         {
@@ -1714,11 +1715,57 @@ namespace Controls
 
         #endregion Taken Lijst
 
-        private void button5_Click(object sender, EventArgs e)
+        private void xproductieoverzichtb_Click(object sender, EventArgs e)
         {
             var prodform = new ProductieOverzichtForm();
             prodform.ShowDialog();
             
+        }
+
+        private async void xsearchprodnr_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Manager.Database == null)
+                    throw new Exception("Database is niet geladen!");
+                if (Manager.Database == null)
+                    throw new Exception("Database is niet geladen!");
+                var tb = new TextFieldEditor();
+                tb.FieldImage = Resources.search_page_document_128x128;
+                tb.MultiLine = false;
+                tb.Title = "Zoek productienr";
+                if (tb.ShowDialog() == DialogResult.OK)
+                {
+                    var xsel = tb.SelectedText.Trim();
+                    var prod = await Manager.Database.GetProductie(xsel);
+                    if (prod == null)
+                        throw new Exception($"Er is geen productie gevonden met '{xsel}'.");
+                    var bw = prod.Bewerkingen?.FirstOrDefault(x => x.IsAllowed());
+                    Manager.FormulierActie(new object[] { prod, bw }, MainAktie.OpenProductie);
+                }
+            }
+            catch (Exception ex)
+            {
+                XMessageBox.Show(ex.Message, "Fout", MessageBoxIcon.Error);
+            }
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+
+        {
+
+            KeyEventArgs e = new KeyEventArgs(keyData);
+
+            if (e.Control && e.KeyCode == Keys.F)
+
+            {
+                xsearchprodnr_Click(null, EventArgs.Empty);
+                return true; // handled
+
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+
         }
     }
 }

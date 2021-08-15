@@ -204,6 +204,7 @@ namespace Controls
                     var xbws = new List<Bewerking>();
                     for(int i = 0; i < xprodids.Count; i++)
                     {
+                        if (IsDisposed || Disposing) return;
                         var id = xprodids[i];
                         if (string.IsNullOrEmpty(id)) continue;
                         var prod = await Manager.Database.GetProductie(id);
@@ -237,11 +238,12 @@ namespace Controls
             _iswaiting = true;
             var value = "Producties laden";
             int cur = 0;
-            while (_iswaiting && !IsDisposed)
+            while (_iswaiting && !IsDisposed && !Disposing)
             {
                 int xcur = cur++;
-                xstatus.Invoke(new MethodInvoker(() =>
+                xstatus.BeginInvoke(new MethodInvoker(() =>
                 {
+                    if (IsDisposed || Disposing) return;
                     xstatus.Text = value.PadRight(value.Length + xcur, '.');
                     xstatus.Invalidate();
                 }));
@@ -261,6 +263,7 @@ namespace Controls
 
         private bool IsAllowed(object value, string filter)
         {
+            if (IsDisposed || Disposing) return false;
             UpdateTijdPeriode(false);
             if (value is ProductieFormulier form)
             {
@@ -283,8 +286,10 @@ namespace Controls
 
         private void UpdateStatus()
         {
+            if (IsDisposed || Disposing) return;
             this.BeginInvoke(new MethodInvoker(() =>
             {
+                if (IsDisposed || Disposing) return;
                 var bws = productieListControl1.Bewerkingen;
                 int count = bws?.Count ?? 0;
                 var x1 = count == 1 ? "Gereedmelding" : "Gereedmeldingen";

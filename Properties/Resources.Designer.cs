@@ -993,6 +993,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Letters512_44202_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("Letters512_44202_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap lightning_weather_storm_2781 {
             get {
                 object obj = ResourceManager.GetObject("lightning_weather_storm_2781", resourceCulture);
@@ -1283,6 +1293,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap operation_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("operation_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap page_document_16748 {
             get {
                 object obj = ResourceManager.GetObject("page_document_16748", resourceCulture);
@@ -1396,6 +1416,26 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap search_icon_32x32 {
             get {
                 object obj = ResourceManager.GetObject("search_icon_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap search_page_document_128x128 {
+            get {
+                object obj = ResourceManager.GetObject("search_page_document_128x128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap search_page_document_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("search_page_document_32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

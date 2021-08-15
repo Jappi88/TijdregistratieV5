@@ -193,6 +193,7 @@ namespace Controls
             xshowproductieinfo.Enabled = enable1;
             exportExcelToolStripMenuItem.Enabled = enable3;
             xtoolstripaanbevolenpersonen.Enabled = enable1;
+            zoekToolStripMenuItem.Enabled = enable3;
         }
 
         public void InitEvents()
@@ -488,6 +489,11 @@ namespace Controls
             });
         }
 
+        public string GetFilter()
+        {
+            return xsearch.Text.ToLower() == "zoeken..." ? "" : xsearch.Text;
+        }
+
         public void UpdateProductieList(bool reload, bool showwaitui = true)
         {
             if (_loadingproductielist || Manager.Opties == null || !CanLoad) return;
@@ -505,20 +511,20 @@ namespace Controls
                         .ToArray();
                     // Manager.Opties.ProductieWeergaveFilters = GetCurrentProductieViewStates();
                     var states = GetCurrentViewStates();
-                    var filter = xsearch.Text.ToLower() == "zoeken..." ? "" : xsearch.Text;
+                    
                     int xlistcount = xproductieLijst.Items.Count;
 
                     if (!IsBewerkingView)
                     {
                         var xprods = !reload && CustomList && Producties != null
-                            ? Producties.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(filter)).ToList()
+                            ? Producties.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter())).ToList()
                             : Producties = await Manager.GetProducties(states, true, !IsBewerkingView, true);
                         if (!CanLoad) return;
                         if (ValidHandler != null)
-                            xprods = xprods.Where(x => ValidHandler.Invoke(x, filter))
+                            xprods = xprods.Where(x => ValidHandler.Invoke(x, GetFilter()))
                                 .ToList();
                         else
-                            xprods = xprods.Where(x => x.IsAllowed(filter, states, true)).ToList();
+                            xprods = xprods.Where(x => x.IsAllowed(GetFilter(), states, true)).ToList();
                         ProductieLijst.BeginUpdate();
                         ProductieLijst.SetObjects(xprods);
                         ProductieLijst.EndUpdate();
@@ -526,14 +532,14 @@ namespace Controls
                     else
                     {
                         var bws = !reload && CustomList && Bewerkingen != null
-                            ? Bewerkingen.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(filter)).ToList()
+                            ? Bewerkingen.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter())).ToList()
                             : Bewerkingen = (await Manager.GetBewerkingen(states, true, true));
                         if (!CanLoad) return;
                         if (ValidHandler != null)
-                            bws = bws.Where(x => ValidHandler.Invoke(x, filter))
+                            bws = bws.Where(x => ValidHandler.Invoke(x, GetFilter()))
                                 .ToList();
                         else
-                            bws = bws.Where(x => x.IsAllowed(filter)).ToList();
+                            bws = bws.Where(x => x.IsAllowed(GetFilter())).ToList();
                         ProductieLijst.BeginUpdate();
                         ProductieLijst.SetObjects(bws);
                         ProductieLijst.EndUpdate();
@@ -766,17 +772,14 @@ namespace Controls
                 
                 var xbewerkingen = bewerkingen ?? ProductieLijst.Objects?.Cast<Bewerking>().ToList();
                 states ??= GetCurrentViewStates();
-                filter ??= xsearch.Text.ToLower() == "zoeken..."
-                    ? null
-                    : xsearch.Text.Trim();
                 // bool checkall = xbewerkingen != null && !xbewerkingen.Any(x=> string.Equals(x.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase));
                 if (form?.Bewerkingen != null && form.Bewerkingen.Length > 0)
                     foreach (var b in form.Bewerkingen)
                     {
                         bool isvalid;
                         if (ValidHandler != null)
-                            isvalid = states.Any(b.IsValidState) && ValidHandler.Invoke(b, filter);
-                        else isvalid = states.Any(x => b.IsValidState(x)) && b.IsAllowed(filter);
+                            isvalid = states.Any(b.IsValidState) && ValidHandler.Invoke(b, filter ?? GetFilter());
+                        else isvalid = states.Any(x => b.IsValidState(x)) && b.IsAllowed(filter ?? GetFilter());
                         var xb = xbewerkingen?.FirstOrDefault(x =>
                             string.Equals(x.Path, b.Path, StringComparison.CurrentCultureIgnoreCase));
                         if (xb == null && isvalid)
@@ -990,7 +993,7 @@ namespace Controls
 
         private void xsearchbox_TextChanged(object sender, EventArgs e)
         {
-            if (xsearch.Text.ToLower().Trim() != "zoeken...") UpdateProductieList(false);
+            if (xsearch.Text.ToLower().Trim() != "zoeken..." && !_iswaiting) UpdateProductieList(false);
         }
 
         private void xsearch_Enter(object sender, EventArgs e)
@@ -1323,6 +1326,40 @@ namespace Controls
 
             bw = deelgereed.Bewerking;
             await bw.UpdateBewerking(null, $"[{bw.Path}] Deels gereedmeldingen aangepast");
+        }
+
+        public void ShowSelectedRangeArtikelNr()
+        {
+            var bws = GetSelectedBewerkingen();
+            if (bws.Count == 0) return;
+            List<string> done = new List<string>();
+            for (int i = 0; i < bws.Count; i++)
+            {
+                if (done.Any(x => string.Equals(x, bws[i].ArtikelNr, StringComparison.CurrentCultureIgnoreCase))) continue;
+                var _calcform = new RangeCalculatorForm();
+                RangeFilter rf = new RangeFilter();
+                rf.Enabled = true;
+                rf.Criteria = bws[i].ArtikelNr;
+                _calcform.Show(rf);
+                done.Add(bws[i].ArtikelNr);
+            }
+        }
+
+        public void ShowSelectedRangeBewerking()
+        {
+            var bws = GetSelectedBewerkingen();
+            if (bws.Count == 0) return;
+            List<string> done = new List<string>();
+            for (int i = 0; i < bws.Count; i++)
+            {
+                if (done.Any(x => string.Equals(x, bws[i].Naam, StringComparison.CurrentCultureIgnoreCase))) continue;
+                var _calcform = new RangeCalculatorForm();
+                RangeFilter rf = new RangeFilter();
+                rf.Enabled = true;
+                rf.Bewerking = bws[i].Naam;
+                _calcform.Show(rf);
+                done.Add(bws[i].Naam);
+            }
         }
 
         private void ShowSelectedProdDeelGereedMeldingen()
@@ -1763,6 +1800,35 @@ namespace Controls
             }
         }
 
+        public List<Bewerking> GetSelectedBewerkingen()
+        {
+           var xreturn = new List<Bewerking>();
+            try
+            {
+                if (!IsBewerkingView)
+                {
+                    foreach (var o in ProductieLijst.SelectedObjects.Cast<ProductieFormulier>().ToArray())
+                    {
+                        foreach(var bw in o.Bewerkingen)
+                            if(bw.IsAllowed())
+                                xreturn.Add(bw);
+                    }
+                }
+                else
+                {
+                    var bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToArray();
+                    foreach (var bw in bws)
+                        if (bw.IsAllowed())
+                            xreturn.Add(bw);
+                }
+            }
+            catch (Exception e)
+            {
+                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+            }
+            return xreturn;
+        }
+
         #endregion MenuButton Methods
 
         #region MenuButton Events
@@ -1896,6 +1962,16 @@ namespace Controls
         private void xaanbevolenpersb_Click(object sender, EventArgs e)
         {
             ShowSelectedAanbevolenPersonen();
+        }
+
+        private void opArtikelNrToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowSelectedRangeArtikelNr();
+        }
+
+        private void opBewerkingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowSelectedRangeBewerking();
         }
 
         #endregion MenuButton Events

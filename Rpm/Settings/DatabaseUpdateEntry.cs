@@ -7,7 +7,9 @@ namespace Rpm.Settings
     public class DatabaseUpdateEntry
     {
         public string Naam { get; set; }
-        public string UpdatePath { get; set; }
+        private string _updatepath;
+        public string UpdatePath { get => _updatepath; set => _updatepath = value.Replace("\\RPM_Data", ""); } 
+            
 
         public string RootPath
         {

@@ -33,6 +33,7 @@ namespace Controls
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieView));
             Various.MenuButton menuButton1 = new Various.MenuButton();
             Various.MenuButton menuButton2 = new Various.MenuButton();
             Various.MenuButton menuButton3 = new Various.MenuButton();
@@ -44,27 +45,10 @@ namespace Controls
             Various.MenuButton menuButton9 = new Various.MenuButton();
             Various.MenuButton menuButton10 = new Various.MenuButton();
             Various.MenuButton menuButton11 = new Various.MenuButton();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieView));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.button1 = new System.Windows.Forms.Button();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.metroTabControl = new MetroFramework.Controls.MetroTabControl();
-            this.tabPage1 = new MetroFramework.Controls.MetroTabPage();
-            this.tabPage2 = new MetroFramework.Controls.MetroTabPage();
-            this.tabPage3 = new MetroFramework.Controls.MetroTabPage();
-            this.tabPage4 = new MetroFramework.Controls.MetroTabPage();
-            this.xspeciaalroosterlabel = new System.Windows.Forms.Panel();
-            this.xtabimages = new System.Windows.Forms.ImageList(this.components);
-            this.xproductieListControl1 = new Controls.ProductieListControl();
-            this.xbewerkingListControl = new Controls.ProductieListControl();
-            this.werkPlekkenUI1 = new Controls.WerkPlekkenUI();
-            this.recentGereedMeldingenUI1 = new Controls.RecentGereedMeldingenUI();
-            this.takenManager1 = new Controls.TakenManager();
-            this.mainMenu1 = new Controls.MainMenu();
             this.xspeciaalroosterbutton = new System.Windows.Forms.Button();
+            this.xsearchprodnr = new System.Windows.Forms.Button();
             this.xproductieoverzichtb = new System.Windows.Forms.Button();
             this.xchatformbutton = new System.Windows.Forms.Button();
             this.xallenotities = new System.Windows.Forms.Button();
@@ -78,20 +62,37 @@ namespace Controls
             this.xonderbrekeningen = new System.Windows.Forms.Button();
             this.xbehvaardigheden = new System.Windows.Forms.Button();
             this.xbehpersoneel = new System.Windows.Forms.Button();
+            this.panel6 = new System.Windows.Forms.Panel();
             this.xsettingsb = new System.Windows.Forms.Button();
             this.xloginb = new System.Windows.Forms.Button();
             this.xaboutb = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.metroTabControl = new MetroFramework.Controls.MetroTabControl();
+            this.tabPage1 = new MetroFramework.Controls.MetroTabPage();
+            this.xproductieListControl1 = new Controls.ProductieListControl();
+            this.tabPage2 = new MetroFramework.Controls.MetroTabPage();
+            this.xbewerkingListControl = new Controls.ProductieListControl();
+            this.tabPage3 = new MetroFramework.Controls.MetroTabPage();
+            this.werkPlekkenUI1 = new Controls.WerkPlekkenUI();
+            this.tabPage4 = new MetroFramework.Controls.MetroTabPage();
+            this.recentGereedMeldingenUI1 = new Controls.RecentGereedMeldingenUI();
+            this.xspeciaalroosterlabel = new System.Windows.Forms.Panel();
+            this.xtabimages = new System.Windows.Forms.ImageList(this.components);
+            this.takenManager1 = new Controls.TakenManager();
+            this.mainMenu1 = new Controls.MainMenu();
             this.panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.metroTabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.xspeciaalroosterlabel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -111,8 +112,289 @@ namespace Controls
             this.toolTip1.SetToolTip(this.button1, "Maak nieuwe productie aan");
             this.button1.UseVisualStyleBackColor = true;
             // 
+            // xspeciaalroosterbutton
+            // 
+            this.xspeciaalroosterbutton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xspeciaalroosterbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xspeciaalroosterbutton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xspeciaalroosterbutton.ForeColor = System.Drawing.Color.DarkRed;
+            this.xspeciaalroosterbutton.Image = global::ProductieManager.Properties.Resources.schedule_32_32;
+            this.xspeciaalroosterbutton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.xspeciaalroosterbutton.Location = new System.Drawing.Point(3, 7);
+            this.xspeciaalroosterbutton.Name = "xspeciaalroosterbutton";
+            this.xspeciaalroosterbutton.Size = new System.Drawing.Size(1141, 40);
+            this.xspeciaalroosterbutton.TabIndex = 0;
+            this.xspeciaalroosterbutton.Text = "Rooster is momenteel inactief en zal geen tijd worden gemeten";
+            this.xspeciaalroosterbutton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xspeciaalroosterbutton, "Wijzig rooster");
+            this.xspeciaalroosterbutton.UseVisualStyleBackColor = true;
+            this.xspeciaalroosterbutton.Click += new System.EventHandler(this.xspeciaalroosterbutton_Click);
+            // 
+            // xsearchprodnr
+            // 
+            this.xsearchprodnr.BackColor = System.Drawing.Color.Transparent;
+            this.xsearchprodnr.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xsearchprodnr.FlatAppearance.BorderSize = 0;
+            this.xsearchprodnr.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
+            this.xsearchprodnr.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xsearchprodnr.Image = global::ProductieManager.Properties.Resources.search_page_document_32x32;
+            this.xsearchprodnr.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xsearchprodnr.Location = new System.Drawing.Point(533, 0);
+            this.xsearchprodnr.Name = "xsearchprodnr";
+            this.xsearchprodnr.Size = new System.Drawing.Size(44, 43);
+            this.xsearchprodnr.TabIndex = 43;
+            this.xsearchprodnr.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xsearchprodnr.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xsearchprodnr, "Zoek productienr");
+            this.xsearchprodnr.UseVisualStyleBackColor = false;
+            this.xsearchprodnr.Click += new System.EventHandler(this.xsearchprodnr_Click);
+            // 
+            // xproductieoverzichtb
+            // 
+            this.xproductieoverzichtb.BackColor = System.Drawing.Color.Transparent;
+            this.xproductieoverzichtb.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xproductieoverzichtb.FlatAppearance.BorderSize = 0;
+            this.xproductieoverzichtb.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
+            this.xproductieoverzichtb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xproductieoverzichtb.Image = global::ProductieManager.Properties.Resources.list_icon_icons_com_60651;
+            this.xproductieoverzichtb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xproductieoverzichtb.Location = new System.Drawing.Point(489, 0);
+            this.xproductieoverzichtb.Name = "xproductieoverzichtb";
+            this.xproductieoverzichtb.Size = new System.Drawing.Size(44, 43);
+            this.xproductieoverzichtb.TabIndex = 42;
+            this.xproductieoverzichtb.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xproductieoverzichtb.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xproductieoverzichtb, "Toon productie overzicht");
+            this.xproductieoverzichtb.UseVisualStyleBackColor = false;
+            this.xproductieoverzichtb.Click += new System.EventHandler(this.xproductieoverzichtb_Click);
+            // 
+            // xchatformbutton
+            // 
+            this.xchatformbutton.BackColor = System.Drawing.Color.Transparent;
+            this.xchatformbutton.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xchatformbutton.FlatAppearance.BorderSize = 0;
+            this.xchatformbutton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
+            this.xchatformbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xchatformbutton.Image = global::ProductieManager.Properties.Resources.conversation_chat_32x321;
+            this.xchatformbutton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xchatformbutton.Location = new System.Drawing.Point(445, 0);
+            this.xchatformbutton.Name = "xchatformbutton";
+            this.xchatformbutton.Size = new System.Drawing.Size(44, 43);
+            this.xchatformbutton.TabIndex = 40;
+            this.xchatformbutton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xchatformbutton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xchatformbutton, "Cumuniceer met productie");
+            this.xchatformbutton.UseVisualStyleBackColor = false;
+            this.xchatformbutton.Click += new System.EventHandler(this.xchatformbutton_Click);
+            // 
+            // xallenotities
+            // 
+            this.xallenotities.BackColor = System.Drawing.Color.Transparent;
+            this.xallenotities.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xallenotities.FlatAppearance.BorderSize = 0;
+            this.xallenotities.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
+            this.xallenotities.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xallenotities.Image = global::ProductieManager.Properties.Resources.education_school_memo_pad_notes_reminder_task_icon_133450;
+            this.xallenotities.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xallenotities.Location = new System.Drawing.Point(401, 0);
+            this.xallenotities.Name = "xallenotities";
+            this.xallenotities.Size = new System.Drawing.Size(44, 43);
+            this.xallenotities.TabIndex = 39;
+            this.xallenotities.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xallenotities.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xallenotities, "Toon alle notities");
+            this.xallenotities.UseVisualStyleBackColor = false;
+            this.xallenotities.Click += new System.EventHandler(this.xallenotities_Click);
+            // 
+            // xsendemail
+            // 
+            this.xsendemail.BackColor = System.Drawing.Color.Transparent;
+            this.xsendemail.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xsendemail.FlatAppearance.BorderSize = 0;
+            this.xsendemail.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
+            this.xsendemail.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xsendemail.Image = global::ProductieManager.Properties.Resources.email_18961;
+            this.xsendemail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xsendemail.Location = new System.Drawing.Point(357, 0);
+            this.xsendemail.Name = "xsendemail";
+            this.xsendemail.Size = new System.Drawing.Size(44, 43);
+            this.xsendemail.TabIndex = 37;
+            this.xsendemail.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xsendemail.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xsendemail, "Stuur Email");
+            this.xsendemail.UseVisualStyleBackColor = false;
+            this.xsendemail.Click += new System.EventHandler(this.xsendemail_Click);
+            // 
+            // xupdateallform
+            // 
+            this.xupdateallform.BackColor = System.Drawing.Color.Transparent;
+            this.xupdateallform.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xupdateallform.FlatAppearance.BorderSize = 0;
+            this.xupdateallform.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
+            this.xupdateallform.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xupdateallform.Image = global::ProductieManager.Properties.Resources.task_update_folder_progress_icon_142270;
+            this.xupdateallform.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xupdateallform.Location = new System.Drawing.Point(313, 0);
+            this.xupdateallform.Name = "xupdateallform";
+            this.xupdateallform.Size = new System.Drawing.Size(44, 43);
+            this.xupdateallform.TabIndex = 36;
+            this.xupdateallform.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xupdateallform.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xupdateallform, "Update alle productie tijden");
+            this.xupdateallform.UseVisualStyleBackColor = false;
+            this.xupdateallform.Click += new System.EventHandler(this.xupdateallform_Click);
+            // 
+            // xmateriaalverbruikb
+            // 
+            this.xmateriaalverbruikb.BackColor = System.Drawing.Color.Transparent;
+            this.xmateriaalverbruikb.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xmateriaalverbruikb.FlatAppearance.BorderSize = 0;
+            this.xmateriaalverbruikb.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
+            this.xmateriaalverbruikb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xmateriaalverbruikb.Image = global::ProductieManager.Properties.Resources.graph_9_icon_icons_com_58019_32x32;
+            this.xmateriaalverbruikb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xmateriaalverbruikb.Location = new System.Drawing.Point(269, 0);
+            this.xmateriaalverbruikb.Name = "xmateriaalverbruikb";
+            this.xmateriaalverbruikb.Size = new System.Drawing.Size(44, 43);
+            this.xmateriaalverbruikb.TabIndex = 41;
+            this.xmateriaalverbruikb.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xmateriaalverbruikb.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xmateriaalverbruikb, "Materiaal verbruik");
+            this.xmateriaalverbruikb.UseVisualStyleBackColor = false;
+            this.xmateriaalverbruikb.Click += new System.EventHandler(this.xmateriaalverbruikb_Click);
+            // 
+            // xupdateb
+            // 
+            this.xupdateb.Dock = System.Windows.Forms.DockStyle.Right;
+            this.xupdateb.FlatAppearance.BorderSize = 0;
+            this.xupdateb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xupdateb.Image = global::ProductieManager.Properties.Resources.cloudrefresh_icon_icons_com_54403_32x32;
+            this.xupdateb.Location = new System.Drawing.Point(835, 0);
+            this.xupdateb.Name = "xupdateb";
+            this.xupdateb.Size = new System.Drawing.Size(44, 43);
+            this.xupdateb.TabIndex = 38;
+            this.toolTip1.SetToolTip(this.xupdateb, "Controlleer op updates");
+            this.xupdateb.UseVisualStyleBackColor = true;
+            this.xupdateb.Click += new System.EventHandler(this.xUpdate_Click);
+            // 
+            // xoverzicht
+            // 
+            this.xoverzicht.BackColor = System.Drawing.Color.Transparent;
+            this.xoverzicht.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xoverzicht.FlatAppearance.BorderSize = 0;
+            this.xoverzicht.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
+            this.xoverzicht.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xoverzicht.Image = global::ProductieManager.Properties.Resources.FocusEye_Img_32_32;
+            this.xoverzicht.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xoverzicht.Location = new System.Drawing.Point(225, 0);
+            this.xoverzicht.Name = "xoverzicht";
+            this.xoverzicht.Size = new System.Drawing.Size(44, 43);
+            this.xoverzicht.TabIndex = 34;
+            this.xoverzicht.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xoverzicht.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xoverzicht, "Bekijk Overzicht");
+            this.xoverzicht.UseVisualStyleBackColor = false;
+            this.xoverzicht.Click += new System.EventHandler(this.xprodinfob_Click);
+            // 
+            // xlogbook
+            // 
+            this.xlogbook.BackColor = System.Drawing.Color.Transparent;
+            this.xlogbook.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xlogbook.FlatAppearance.BorderSize = 0;
+            this.xlogbook.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
+            this.xlogbook.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xlogbook.Image = global::ProductieManager.Properties.Resources.activitylogmanager_104624;
+            this.xlogbook.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xlogbook.Location = new System.Drawing.Point(181, 0);
+            this.xlogbook.Name = "xlogbook";
+            this.xlogbook.Size = new System.Drawing.Size(44, 43);
+            this.xlogbook.TabIndex = 33;
+            this.xlogbook.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xlogbook.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xlogbook, "Productie Logboek");
+            this.xlogbook.UseVisualStyleBackColor = false;
+            this.xlogbook.Click += new System.EventHandler(this.xtoonlogsb_Click);
+            // 
+            // xdbbewerkingen
+            // 
+            this.xdbbewerkingen.BackColor = System.Drawing.Color.Transparent;
+            this.xdbbewerkingen.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xdbbewerkingen.FlatAppearance.BorderSize = 0;
+            this.xdbbewerkingen.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
+            this.xdbbewerkingen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xdbbewerkingen.Image = global::ProductieManager.Properties.Resources.list_992_32_32;
+            this.xdbbewerkingen.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xdbbewerkingen.Location = new System.Drawing.Point(137, 0);
+            this.xdbbewerkingen.Name = "xdbbewerkingen";
+            this.xdbbewerkingen.Size = new System.Drawing.Size(44, 43);
+            this.xdbbewerkingen.TabIndex = 35;
+            this.xdbbewerkingen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xdbbewerkingen.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xdbbewerkingen, "Bewerkinglijst Database");
+            this.xdbbewerkingen.UseVisualStyleBackColor = false;
+            this.xdbbewerkingen.Click += new System.EventHandler(this.xdbbewerkingen_Click);
+            // 
+            // xonderbrekeningen
+            // 
+            this.xonderbrekeningen.BackColor = System.Drawing.Color.Transparent;
+            this.xonderbrekeningen.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xonderbrekeningen.FlatAppearance.BorderSize = 0;
+            this.xonderbrekeningen.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
+            this.xonderbrekeningen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xonderbrekeningen.Image = global::ProductieManager.Properties.Resources.onderhoud32_32;
+            this.xonderbrekeningen.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xonderbrekeningen.Location = new System.Drawing.Point(93, 0);
+            this.xonderbrekeningen.Name = "xonderbrekeningen";
+            this.xonderbrekeningen.Size = new System.Drawing.Size(44, 43);
+            this.xonderbrekeningen.TabIndex = 32;
+            this.xonderbrekeningen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xonderbrekeningen.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xonderbrekeningen, "Onderbrekeningen");
+            this.xonderbrekeningen.UseVisualStyleBackColor = false;
+            this.xonderbrekeningen.Click += new System.EventHandler(this.xallstoringenb_Click);
+            // 
+            // xbehvaardigheden
+            // 
+            this.xbehvaardigheden.BackColor = System.Drawing.Color.Transparent;
+            this.xbehvaardigheden.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xbehvaardigheden.FlatAppearance.BorderSize = 0;
+            this.xbehvaardigheden.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
+            this.xbehvaardigheden.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xbehvaardigheden.Image = global::ProductieManager.Properties.Resources.key_skills;
+            this.xbehvaardigheden.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xbehvaardigheden.Location = new System.Drawing.Point(49, 0);
+            this.xbehvaardigheden.Name = "xbehvaardigheden";
+            this.xbehvaardigheden.Size = new System.Drawing.Size(44, 43);
+            this.xbehvaardigheden.TabIndex = 31;
+            this.xbehvaardigheden.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xbehvaardigheden.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xbehvaardigheden, "Beheer Vaardigheden");
+            this.xbehvaardigheden.UseVisualStyleBackColor = false;
+            this.xbehvaardigheden.Click += new System.EventHandler(this.xallevaardighedenb_Click);
+            // 
+            // xbehpersoneel
+            // 
+            this.xbehpersoneel.BackColor = System.Drawing.Color.Transparent;
+            this.xbehpersoneel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xbehpersoneel.FlatAppearance.BorderSize = 0;
+            this.xbehpersoneel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
+            this.xbehpersoneel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xbehpersoneel.Image = global::ProductieManager.Properties.Resources.users_12820;
+            this.xbehpersoneel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xbehpersoneel.Location = new System.Drawing.Point(5, 0);
+            this.xbehpersoneel.Name = "xbehpersoneel";
+            this.xbehpersoneel.Size = new System.Drawing.Size(44, 43);
+            this.xbehpersoneel.TabIndex = 30;
+            this.xbehpersoneel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xbehpersoneel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xbehpersoneel, "Beheer Personeel");
+            this.xbehpersoneel.UseVisualStyleBackColor = false;
+            this.xbehpersoneel.Click += new System.EventHandler(this.xpersoneelb_Click);
+            // 
             // panel6
             // 
+            this.panel6.Controls.Add(this.xsearchprodnr);
             this.panel6.Controls.Add(this.xproductieoverzichtb);
             this.panel6.Controls.Add(this.xchatformbutton);
             this.panel6.Controls.Add(this.xallenotities);
@@ -134,9 +416,74 @@ namespace Controls
             this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel6.Location = new System.Drawing.Point(0, 0);
             this.panel6.Name = "panel6";
-            this.panel6.Padding = new System.Windows.Forms.Padding(40, 0, 0, 0);
+            this.panel6.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
             this.panel6.Size = new System.Drawing.Size(1147, 43);
             this.panel6.TabIndex = 25;
+            // 
+            // xsettingsb
+            // 
+            this.xsettingsb.Dock = System.Windows.Forms.DockStyle.Right;
+            this.xsettingsb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xsettingsb.ForeColor = System.Drawing.Color.White;
+            this.xsettingsb.Image = ((System.Drawing.Image)(resources.GetObject("xsettingsb.Image")));
+            this.xsettingsb.Location = new System.Drawing.Point(879, 0);
+            this.xsettingsb.Name = "xsettingsb";
+            this.xsettingsb.Size = new System.Drawing.Size(44, 43);
+            this.xsettingsb.TabIndex = 27;
+            this.xsettingsb.UseVisualStyleBackColor = true;
+            this.xsettingsb.Click += new System.EventHandler(this.xsettingsb_Click);
+            // 
+            // xloginb
+            // 
+            this.xloginb.Dock = System.Windows.Forms.DockStyle.Right;
+            this.xloginb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xloginb.ForeColor = System.Drawing.Color.White;
+            this.xloginb.Image = ((System.Drawing.Image)(resources.GetObject("xloginb.Image")));
+            this.xloginb.Location = new System.Drawing.Point(923, 0);
+            this.xloginb.Name = "xloginb";
+            this.xloginb.Size = new System.Drawing.Size(44, 43);
+            this.xloginb.TabIndex = 26;
+            this.xloginb.UseVisualStyleBackColor = true;
+            this.xloginb.Click += new System.EventHandler(this.xloginb_Click);
+            // 
+            // xaboutb
+            // 
+            this.xaboutb.Dock = System.Windows.Forms.DockStyle.Right;
+            this.xaboutb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xaboutb.ForeColor = System.Drawing.Color.White;
+            this.xaboutb.Image = global::ProductieManager.Properties.Resources.info_15260;
+            this.xaboutb.Location = new System.Drawing.Point(967, 0);
+            this.xaboutb.Name = "xaboutb";
+            this.xaboutb.Size = new System.Drawing.Size(44, 43);
+            this.xaboutb.TabIndex = 29;
+            this.xaboutb.UseVisualStyleBackColor = true;
+            this.xaboutb.Click += new System.EventHandler(this.xaboutb_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(1011, 0);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(68, 43);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.TabIndex = 28;
+            this.pictureBox2.TabStop = false;
+            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(1079, 0);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(68, 43);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 25;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // button2
             // 
@@ -202,71 +549,6 @@ namespace Controls
             this.tabPage1.VerticalScrollbarHighlightOnWheel = false;
             this.tabPage1.VerticalScrollbarSize = 10;
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.xbewerkingListControl);
-            this.tabPage2.HorizontalScrollbarBarColor = true;
-            this.tabPage2.HorizontalScrollbarHighlightOnWheel = false;
-            this.tabPage2.HorizontalScrollbarSize = 10;
-            this.tabPage2.Location = new System.Drawing.Point(4, 38);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(1061, 420);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Bewerkingen";
-            this.tabPage2.VerticalScrollbarBarColor = true;
-            this.tabPage2.VerticalScrollbarHighlightOnWheel = false;
-            this.tabPage2.VerticalScrollbarSize = 10;
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.tabPage3.Controls.Add(this.werkPlekkenUI1);
-            this.tabPage3.HorizontalScrollbarBarColor = true;
-            this.tabPage3.HorizontalScrollbarHighlightOnWheel = false;
-            this.tabPage3.HorizontalScrollbarSize = 10;
-            this.tabPage3.Location = new System.Drawing.Point(4, 38);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1061, 420);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Werk Plaatsen";
-            this.tabPage3.VerticalScrollbarBarColor = true;
-            this.tabPage3.VerticalScrollbarHighlightOnWheel = false;
-            this.tabPage3.VerticalScrollbarSize = 10;
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.recentGereedMeldingenUI1);
-            this.tabPage4.HorizontalScrollbarBarColor = true;
-            this.tabPage4.HorizontalScrollbarHighlightOnWheel = false;
-            this.tabPage4.HorizontalScrollbarSize = 10;
-            this.tabPage4.Location = new System.Drawing.Point(4, 38);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(1061, 420);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Recente Gereedmeldingen";
-            this.tabPage4.VerticalScrollbarBarColor = true;
-            this.tabPage4.VerticalScrollbarHighlightOnWheel = false;
-            this.tabPage4.VerticalScrollbarSize = 10;
-            // 
-            // xspeciaalroosterlabel
-            // 
-            this.xspeciaalroosterlabel.Controls.Add(this.xspeciaalroosterbutton);
-            this.xspeciaalroosterlabel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.xspeciaalroosterlabel.Location = new System.Drawing.Point(0, 43);
-            this.xspeciaalroosterlabel.Name = "xspeciaalroosterlabel";
-            this.xspeciaalroosterlabel.Size = new System.Drawing.Size(1147, 54);
-            this.xspeciaalroosterlabel.TabIndex = 29;
-            this.xspeciaalroosterlabel.Visible = false;
-            // 
-            // xtabimages
-            // 
-            this.xtabimages.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("xtabimages.ImageStream")));
-            this.xtabimages.TransparentColor = System.Drawing.Color.Transparent;
-            this.xtabimages.Images.SetKeyName(0, "page_document_16748_128_128.png");
-            this.xtabimages.Images.SetKeyName(1, "operation.png");
-            this.xtabimages.Images.SetKeyName(2, "iconfinder-technologymachineelectronic32_32.png");
-            this.xtabimages.Images.SetKeyName(3, "ic_done_all_128_28243.png");
-            // 
             // xproductieListControl1
             // 
             this.xproductieListControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -287,6 +569,21 @@ namespace Controls
             this.xproductieListControl1.Size = new System.Drawing.Size(1055, 412);
             this.xproductieListControl1.TabIndex = 2;
             this.xproductieListControl1.ValidHandler = null;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.xbewerkingListControl);
+            this.tabPage2.HorizontalScrollbarBarColor = true;
+            this.tabPage2.HorizontalScrollbarHighlightOnWheel = false;
+            this.tabPage2.HorizontalScrollbarSize = 10;
+            this.tabPage2.Location = new System.Drawing.Point(4, 38);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Size = new System.Drawing.Size(1061, 420);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Bewerkingen";
+            this.tabPage2.VerticalScrollbarBarColor = true;
+            this.tabPage2.VerticalScrollbarHighlightOnWheel = false;
+            this.tabPage2.VerticalScrollbarSize = 10;
             // 
             // xbewerkingListControl
             // 
@@ -309,6 +606,22 @@ namespace Controls
             this.xbewerkingListControl.TabIndex = 2;
             this.xbewerkingListControl.ValidHandler = null;
             // 
+            // tabPage3
+            // 
+            this.tabPage3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tabPage3.Controls.Add(this.werkPlekkenUI1);
+            this.tabPage3.HorizontalScrollbarBarColor = true;
+            this.tabPage3.HorizontalScrollbarHighlightOnWheel = false;
+            this.tabPage3.HorizontalScrollbarSize = 10;
+            this.tabPage3.Location = new System.Drawing.Point(4, 38);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(1061, 420);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Werk Plaatsen";
+            this.tabPage3.VerticalScrollbarBarColor = true;
+            this.tabPage3.VerticalScrollbarHighlightOnWheel = false;
+            this.tabPage3.VerticalScrollbarSize = 10;
+            // 
             // werkPlekkenUI1
             // 
             this.werkPlekkenUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -323,6 +636,21 @@ namespace Controls
             this.werkPlekkenUI1.TabIndex = 0;
             this.werkPlekkenUI1.WerkPlekClicked += new System.EventHandler(this.werkPlekkenUI1_WerkPlekClicked);
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.recentGereedMeldingenUI1);
+            this.tabPage4.HorizontalScrollbarBarColor = true;
+            this.tabPage4.HorizontalScrollbarHighlightOnWheel = false;
+            this.tabPage4.HorizontalScrollbarSize = 10;
+            this.tabPage4.Location = new System.Drawing.Point(4, 38);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(1061, 420);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Recente Gereedmeldingen";
+            this.tabPage4.VerticalScrollbarBarColor = true;
+            this.tabPage4.VerticalScrollbarHighlightOnWheel = false;
+            this.tabPage4.VerticalScrollbarSize = 10;
+            // 
             // recentGereedMeldingenUI1
             // 
             this.recentGereedMeldingenUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -335,6 +663,25 @@ namespace Controls
             this.recentGereedMeldingenUI1.Name = "recentGereedMeldingenUI1";
             this.recentGereedMeldingenUI1.Size = new System.Drawing.Size(1056, 420);
             this.recentGereedMeldingenUI1.TabIndex = 2;
+            // 
+            // xspeciaalroosterlabel
+            // 
+            this.xspeciaalroosterlabel.Controls.Add(this.xspeciaalroosterbutton);
+            this.xspeciaalroosterlabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.xspeciaalroosterlabel.Location = new System.Drawing.Point(0, 43);
+            this.xspeciaalroosterlabel.Name = "xspeciaalroosterlabel";
+            this.xspeciaalroosterlabel.Size = new System.Drawing.Size(1147, 54);
+            this.xspeciaalroosterlabel.TabIndex = 29;
+            this.xspeciaalroosterlabel.Visible = false;
+            // 
+            // xtabimages
+            // 
+            this.xtabimages.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("xtabimages.ImageStream")));
+            this.xtabimages.TransparentColor = System.Drawing.Color.Transparent;
+            this.xtabimages.Images.SetKeyName(0, "page_document_16748_128_128.png");
+            this.xtabimages.Images.SetKeyName(1, "operation.png");
+            this.xtabimages.Images.SetKeyName(2, "iconfinder-technologymachineelectronic32_32.png");
+            this.xtabimages.Images.SetKeyName(3, "ic_done_all_128_28243.png");
             // 
             // takenManager1
             // 
@@ -496,332 +843,6 @@ namespace Controls
             this.mainMenu1.TabIndex = 27;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
             // 
-            // xspeciaalroosterbutton
-            // 
-            this.xspeciaalroosterbutton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xspeciaalroosterbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xspeciaalroosterbutton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xspeciaalroosterbutton.ForeColor = System.Drawing.Color.DarkRed;
-            this.xspeciaalroosterbutton.Image = global::ProductieManager.Properties.Resources.schedule_32_32;
-            this.xspeciaalroosterbutton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.xspeciaalroosterbutton.Location = new System.Drawing.Point(3, 7);
-            this.xspeciaalroosterbutton.Name = "xspeciaalroosterbutton";
-            this.xspeciaalroosterbutton.Size = new System.Drawing.Size(1141, 40);
-            this.xspeciaalroosterbutton.TabIndex = 0;
-            this.xspeciaalroosterbutton.Text = "Rooster is momenteel inactief en zal geen tijd worden gemeten";
-            this.xspeciaalroosterbutton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xspeciaalroosterbutton, "Wijzig rooster");
-            this.xspeciaalroosterbutton.UseVisualStyleBackColor = true;
-            this.xspeciaalroosterbutton.Click += new System.EventHandler(this.xspeciaalroosterbutton_Click);
-            // 
-            // xproductieoverzichtb
-            // 
-            this.xproductieoverzichtb.BackColor = System.Drawing.Color.Transparent;
-            this.xproductieoverzichtb.Dock = System.Windows.Forms.DockStyle.Left;
-            this.xproductieoverzichtb.FlatAppearance.BorderSize = 0;
-            this.xproductieoverzichtb.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
-            this.xproductieoverzichtb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xproductieoverzichtb.Image = global::ProductieManager.Properties.Resources.list_icon_icons_com_60651;
-            this.xproductieoverzichtb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xproductieoverzichtb.Location = new System.Drawing.Point(524, 0);
-            this.xproductieoverzichtb.Name = "xproductieoverzichtb";
-            this.xproductieoverzichtb.Size = new System.Drawing.Size(44, 43);
-            this.xproductieoverzichtb.TabIndex = 42;
-            this.xproductieoverzichtb.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xproductieoverzichtb.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xproductieoverzichtb, "Toon productie overzicht");
-            this.xproductieoverzichtb.UseVisualStyleBackColor = false;
-            this.xproductieoverzichtb.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // xchatformbutton
-            // 
-            this.xchatformbutton.BackColor = System.Drawing.Color.Transparent;
-            this.xchatformbutton.Dock = System.Windows.Forms.DockStyle.Left;
-            this.xchatformbutton.FlatAppearance.BorderSize = 0;
-            this.xchatformbutton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
-            this.xchatformbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xchatformbutton.Image = global::ProductieManager.Properties.Resources.conversation_chat_32x321;
-            this.xchatformbutton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xchatformbutton.Location = new System.Drawing.Point(480, 0);
-            this.xchatformbutton.Name = "xchatformbutton";
-            this.xchatformbutton.Size = new System.Drawing.Size(44, 43);
-            this.xchatformbutton.TabIndex = 40;
-            this.xchatformbutton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xchatformbutton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xchatformbutton, "Cumuniceer met productie");
-            this.xchatformbutton.UseVisualStyleBackColor = false;
-            this.xchatformbutton.Click += new System.EventHandler(this.xchatformbutton_Click);
-            // 
-            // xallenotities
-            // 
-            this.xallenotities.BackColor = System.Drawing.Color.Transparent;
-            this.xallenotities.Dock = System.Windows.Forms.DockStyle.Left;
-            this.xallenotities.FlatAppearance.BorderSize = 0;
-            this.xallenotities.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
-            this.xallenotities.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xallenotities.Image = global::ProductieManager.Properties.Resources.education_school_memo_pad_notes_reminder_task_icon_133450;
-            this.xallenotities.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xallenotities.Location = new System.Drawing.Point(436, 0);
-            this.xallenotities.Name = "xallenotities";
-            this.xallenotities.Size = new System.Drawing.Size(44, 43);
-            this.xallenotities.TabIndex = 39;
-            this.xallenotities.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xallenotities.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xallenotities, "Toon alle notities");
-            this.xallenotities.UseVisualStyleBackColor = false;
-            this.xallenotities.Click += new System.EventHandler(this.xallenotities_Click);
-            // 
-            // xsendemail
-            // 
-            this.xsendemail.BackColor = System.Drawing.Color.Transparent;
-            this.xsendemail.Dock = System.Windows.Forms.DockStyle.Left;
-            this.xsendemail.FlatAppearance.BorderSize = 0;
-            this.xsendemail.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
-            this.xsendemail.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xsendemail.Image = global::ProductieManager.Properties.Resources.email_18961;
-            this.xsendemail.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xsendemail.Location = new System.Drawing.Point(392, 0);
-            this.xsendemail.Name = "xsendemail";
-            this.xsendemail.Size = new System.Drawing.Size(44, 43);
-            this.xsendemail.TabIndex = 37;
-            this.xsendemail.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xsendemail.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xsendemail, "Stuur Email");
-            this.xsendemail.UseVisualStyleBackColor = false;
-            this.xsendemail.Click += new System.EventHandler(this.xsendemail_Click);
-            // 
-            // xupdateallform
-            // 
-            this.xupdateallform.BackColor = System.Drawing.Color.Transparent;
-            this.xupdateallform.Dock = System.Windows.Forms.DockStyle.Left;
-            this.xupdateallform.FlatAppearance.BorderSize = 0;
-            this.xupdateallform.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
-            this.xupdateallform.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xupdateallform.Image = global::ProductieManager.Properties.Resources.task_update_folder_progress_icon_142270;
-            this.xupdateallform.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xupdateallform.Location = new System.Drawing.Point(348, 0);
-            this.xupdateallform.Name = "xupdateallform";
-            this.xupdateallform.Size = new System.Drawing.Size(44, 43);
-            this.xupdateallform.TabIndex = 36;
-            this.xupdateallform.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xupdateallform.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xupdateallform, "Update alle productie tijden");
-            this.xupdateallform.UseVisualStyleBackColor = false;
-            this.xupdateallform.Click += new System.EventHandler(this.xupdateallform_Click);
-            // 
-            // xmateriaalverbruikb
-            // 
-            this.xmateriaalverbruikb.BackColor = System.Drawing.Color.Transparent;
-            this.xmateriaalverbruikb.Dock = System.Windows.Forms.DockStyle.Left;
-            this.xmateriaalverbruikb.FlatAppearance.BorderSize = 0;
-            this.xmateriaalverbruikb.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
-            this.xmateriaalverbruikb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xmateriaalverbruikb.Image = global::ProductieManager.Properties.Resources.graph_9_icon_icons_com_58019_32x32;
-            this.xmateriaalverbruikb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xmateriaalverbruikb.Location = new System.Drawing.Point(304, 0);
-            this.xmateriaalverbruikb.Name = "xmateriaalverbruikb";
-            this.xmateriaalverbruikb.Size = new System.Drawing.Size(44, 43);
-            this.xmateriaalverbruikb.TabIndex = 41;
-            this.xmateriaalverbruikb.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xmateriaalverbruikb.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xmateriaalverbruikb, "Materiaal verbruik");
-            this.xmateriaalverbruikb.UseVisualStyleBackColor = false;
-            this.xmateriaalverbruikb.Click += new System.EventHandler(this.xmateriaalverbruikb_Click);
-            // 
-            // xupdateb
-            // 
-            this.xupdateb.Dock = System.Windows.Forms.DockStyle.Right;
-            this.xupdateb.FlatAppearance.BorderSize = 0;
-            this.xupdateb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xupdateb.Image = global::ProductieManager.Properties.Resources.cloudrefresh_icon_icons_com_54403_32x32;
-            this.xupdateb.Location = new System.Drawing.Point(835, 0);
-            this.xupdateb.Name = "xupdateb";
-            this.xupdateb.Size = new System.Drawing.Size(44, 43);
-            this.xupdateb.TabIndex = 38;
-            this.toolTip1.SetToolTip(this.xupdateb, "Controlleer op updates");
-            this.xupdateb.UseVisualStyleBackColor = true;
-            this.xupdateb.Click += new System.EventHandler(this.xUpdate_Click);
-            // 
-            // xoverzicht
-            // 
-            this.xoverzicht.BackColor = System.Drawing.Color.Transparent;
-            this.xoverzicht.Dock = System.Windows.Forms.DockStyle.Left;
-            this.xoverzicht.FlatAppearance.BorderSize = 0;
-            this.xoverzicht.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
-            this.xoverzicht.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xoverzicht.Image = global::ProductieManager.Properties.Resources.FocusEye_Img_32_32;
-            this.xoverzicht.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xoverzicht.Location = new System.Drawing.Point(260, 0);
-            this.xoverzicht.Name = "xoverzicht";
-            this.xoverzicht.Size = new System.Drawing.Size(44, 43);
-            this.xoverzicht.TabIndex = 34;
-            this.xoverzicht.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xoverzicht.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xoverzicht, "Bekijk Overzicht");
-            this.xoverzicht.UseVisualStyleBackColor = false;
-            this.xoverzicht.Click += new System.EventHandler(this.xprodinfob_Click);
-            // 
-            // xlogbook
-            // 
-            this.xlogbook.BackColor = System.Drawing.Color.Transparent;
-            this.xlogbook.Dock = System.Windows.Forms.DockStyle.Left;
-            this.xlogbook.FlatAppearance.BorderSize = 0;
-            this.xlogbook.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
-            this.xlogbook.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xlogbook.Image = global::ProductieManager.Properties.Resources.activitylogmanager_104624;
-            this.xlogbook.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xlogbook.Location = new System.Drawing.Point(216, 0);
-            this.xlogbook.Name = "xlogbook";
-            this.xlogbook.Size = new System.Drawing.Size(44, 43);
-            this.xlogbook.TabIndex = 33;
-            this.xlogbook.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xlogbook.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xlogbook, "Productie Logboek");
-            this.xlogbook.UseVisualStyleBackColor = false;
-            this.xlogbook.Click += new System.EventHandler(this.xtoonlogsb_Click);
-            // 
-            // xdbbewerkingen
-            // 
-            this.xdbbewerkingen.BackColor = System.Drawing.Color.Transparent;
-            this.xdbbewerkingen.Dock = System.Windows.Forms.DockStyle.Left;
-            this.xdbbewerkingen.FlatAppearance.BorderSize = 0;
-            this.xdbbewerkingen.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
-            this.xdbbewerkingen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xdbbewerkingen.Image = global::ProductieManager.Properties.Resources.list_992_32_32;
-            this.xdbbewerkingen.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xdbbewerkingen.Location = new System.Drawing.Point(172, 0);
-            this.xdbbewerkingen.Name = "xdbbewerkingen";
-            this.xdbbewerkingen.Size = new System.Drawing.Size(44, 43);
-            this.xdbbewerkingen.TabIndex = 35;
-            this.xdbbewerkingen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xdbbewerkingen.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xdbbewerkingen, "Bewerkinglijst Database");
-            this.xdbbewerkingen.UseVisualStyleBackColor = false;
-            this.xdbbewerkingen.Click += new System.EventHandler(this.xdbbewerkingen_Click);
-            // 
-            // xonderbrekeningen
-            // 
-            this.xonderbrekeningen.BackColor = System.Drawing.Color.Transparent;
-            this.xonderbrekeningen.Dock = System.Windows.Forms.DockStyle.Left;
-            this.xonderbrekeningen.FlatAppearance.BorderSize = 0;
-            this.xonderbrekeningen.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
-            this.xonderbrekeningen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xonderbrekeningen.Image = global::ProductieManager.Properties.Resources.onderhoud32_32;
-            this.xonderbrekeningen.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xonderbrekeningen.Location = new System.Drawing.Point(128, 0);
-            this.xonderbrekeningen.Name = "xonderbrekeningen";
-            this.xonderbrekeningen.Size = new System.Drawing.Size(44, 43);
-            this.xonderbrekeningen.TabIndex = 32;
-            this.xonderbrekeningen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xonderbrekeningen.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xonderbrekeningen, "Onderbrekeningen");
-            this.xonderbrekeningen.UseVisualStyleBackColor = false;
-            this.xonderbrekeningen.Click += new System.EventHandler(this.xallstoringenb_Click);
-            // 
-            // xbehvaardigheden
-            // 
-            this.xbehvaardigheden.BackColor = System.Drawing.Color.Transparent;
-            this.xbehvaardigheden.Dock = System.Windows.Forms.DockStyle.Left;
-            this.xbehvaardigheden.FlatAppearance.BorderSize = 0;
-            this.xbehvaardigheden.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
-            this.xbehvaardigheden.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xbehvaardigheden.Image = global::ProductieManager.Properties.Resources.key_skills;
-            this.xbehvaardigheden.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xbehvaardigheden.Location = new System.Drawing.Point(84, 0);
-            this.xbehvaardigheden.Name = "xbehvaardigheden";
-            this.xbehvaardigheden.Size = new System.Drawing.Size(44, 43);
-            this.xbehvaardigheden.TabIndex = 31;
-            this.xbehvaardigheden.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xbehvaardigheden.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xbehvaardigheden, "Beheer Vaardigheden");
-            this.xbehvaardigheden.UseVisualStyleBackColor = false;
-            this.xbehvaardigheden.Click += new System.EventHandler(this.xallevaardighedenb_Click);
-            // 
-            // xbehpersoneel
-            // 
-            this.xbehpersoneel.BackColor = System.Drawing.Color.Transparent;
-            this.xbehpersoneel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.xbehpersoneel.FlatAppearance.BorderSize = 0;
-            this.xbehpersoneel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
-            this.xbehpersoneel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xbehpersoneel.Image = global::ProductieManager.Properties.Resources.users_12820;
-            this.xbehpersoneel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xbehpersoneel.Location = new System.Drawing.Point(40, 0);
-            this.xbehpersoneel.Name = "xbehpersoneel";
-            this.xbehpersoneel.Size = new System.Drawing.Size(44, 43);
-            this.xbehpersoneel.TabIndex = 30;
-            this.xbehpersoneel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xbehpersoneel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xbehpersoneel, "Beheer Personeel");
-            this.xbehpersoneel.UseVisualStyleBackColor = false;
-            this.xbehpersoneel.Click += new System.EventHandler(this.xpersoneelb_Click);
-            // 
-            // xsettingsb
-            // 
-            this.xsettingsb.Dock = System.Windows.Forms.DockStyle.Right;
-            this.xsettingsb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xsettingsb.ForeColor = System.Drawing.Color.White;
-            this.xsettingsb.Image = ((System.Drawing.Image)(resources.GetObject("xsettingsb.Image")));
-            this.xsettingsb.Location = new System.Drawing.Point(879, 0);
-            this.xsettingsb.Name = "xsettingsb";
-            this.xsettingsb.Size = new System.Drawing.Size(44, 43);
-            this.xsettingsb.TabIndex = 27;
-            this.xsettingsb.UseVisualStyleBackColor = true;
-            this.xsettingsb.Click += new System.EventHandler(this.xsettingsb_Click);
-            // 
-            // xloginb
-            // 
-            this.xloginb.Dock = System.Windows.Forms.DockStyle.Right;
-            this.xloginb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xloginb.ForeColor = System.Drawing.Color.White;
-            this.xloginb.Image = ((System.Drawing.Image)(resources.GetObject("xloginb.Image")));
-            this.xloginb.Location = new System.Drawing.Point(923, 0);
-            this.xloginb.Name = "xloginb";
-            this.xloginb.Size = new System.Drawing.Size(44, 43);
-            this.xloginb.TabIndex = 26;
-            this.xloginb.UseVisualStyleBackColor = true;
-            this.xloginb.Click += new System.EventHandler(this.xloginb_Click);
-            // 
-            // xaboutb
-            // 
-            this.xaboutb.Dock = System.Windows.Forms.DockStyle.Right;
-            this.xaboutb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xaboutb.ForeColor = System.Drawing.Color.White;
-            this.xaboutb.Image = global::ProductieManager.Properties.Resources.info_15260;
-            this.xaboutb.Location = new System.Drawing.Point(967, 0);
-            this.xaboutb.Name = "xaboutb";
-            this.xaboutb.Size = new System.Drawing.Size(44, 43);
-            this.xaboutb.TabIndex = 29;
-            this.xaboutb.UseVisualStyleBackColor = true;
-            this.xaboutb.Click += new System.EventHandler(this.xaboutb_Click);
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(1011, 0);
-            this.pictureBox2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(68, 43);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox2.TabIndex = 28;
-            this.pictureBox2.TabStop = false;
-            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(1079, 0);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(68, 43);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 25;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
-            // 
             // ProductieView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -836,14 +857,14 @@ namespace Controls
             this.Name = "ProductieView";
             this.Size = new System.Drawing.Size(1147, 559);
             this.panel6.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.metroTabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.xspeciaalroosterlabel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -887,5 +908,6 @@ namespace Controls
         private RecentGereedMeldingenUI recentGereedMeldingenUI1;
         private ImageList xtabimages;
         private Button xproductieoverzichtb;
+        private Button xsearchprodnr;
     }
 }

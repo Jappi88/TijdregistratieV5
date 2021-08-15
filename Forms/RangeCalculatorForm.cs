@@ -101,8 +101,8 @@ namespace Forms
             return false;
         }
 
-        public Filter ShowFilter = new Filter();
-        public struct Filter
+        public RangeFilter ShowFilter = new RangeFilter();
+        public struct RangeFilter
         {
             public bool Enabled;
             public bool VanafCheck;
@@ -112,6 +112,40 @@ namespace Forms
             public string Criteria;
             public string werkPlek;
             public string Bewerking;
+        }
+
+        private void SetFilter(RangeFilter filter)
+        {
+            if (!filter.Enabled) return;
+            var x = filter;
+            xvanafcheck.Checked = x.VanafCheck;
+            xtotcheck.Checked = x.TotCheck;
+            if (x.VanafCheck)
+                xvanafdate.SetValue(x.VanafTime);
+            if (x.TotCheck)
+                xtotdate.SetValue(x.TotTime);
+            if (!string.IsNullOrEmpty(x.Criteria))
+            {
+                xcriteria.Text = x.Criteria;
+                xcriteriacheckbox.Checked = true;
+                xcriteria.Select();
+            }
+            else xcriteriacheckbox.Checked = false;
+            if (!string.IsNullOrEmpty(x.werkPlek))
+            {
+                xwerkplekken.SelectedItem = x.werkPlek;
+                xwerkplekcheck.Checked = true;
+                xwerkplekken.Select();
+            }
+            else xwerkplekcheck.Checked = false;
+            if (!string.IsNullOrEmpty(x.Bewerking))
+            {
+                xbewerkingen.SelectedItem = x.Bewerking;
+                xbewerkingcheck.Checked = true;
+                xbewerkingen.Select();
+            }
+            else xbewerkingcheck.Checked = false;
+
         }
 
         private bool IsAllowed(object value, string filter)
@@ -213,67 +247,84 @@ namespace Forms
 
         private bool _isbussy = false;
 
-        private async Task<int> Verwerk()
+        public void Show(RangeFilter filter)
         {
-            int count = 0;
             try
             {
-                if (_isbussy) return -1;
-                if (DoCheck())
-                {
-                    _isbussy = true;
-                    ShowFilter.Enabled = true;
-                    ShowFilter.VanafCheck = xvanafcheck.Checked;
-                    ShowFilter.VanafTime = xvanafdate.Value;
-                    ShowFilter.TotCheck = xtotcheck.Checked;
-                    ShowFilter.TotTime = xtotdate.Value;
-                    ShowFilter.Bewerking = xbewerkingcheck.Checked ? xbewerkingen.Text.Trim() : null;
-                    ShowFilter.werkPlek = xwerkplekcheck.Checked ? xwerkplekken.Text.Trim() : null;
-                    ShowFilter.Criteria = xcriteriacheckbox.Checked ? xcriteria.Text.Trim() : null;
-                    EnableProgressLabel(true);
-                    SetProgressLabelText("Producties Laden...");
-                    var ids = await Manager.GetAllProductieIDs(true);
-                    int cur = 0;
-                    int max = ids.Count;
-                    var loaded = new List<Bewerking>();
-                    foreach (var id in ids)
-                    {
-                        if (IsDisposed || !Visible) break;
-                        if (string.IsNullOrEmpty(id)) continue;
-                        var x = await Manager.Database.GetProductie(id);
-                        if (x == null) continue;
-                        if (x.Bewerkingen != null && x.Bewerkingen.Length > 0)
-                        {
-                            var bws = x.Bewerkingen.Where(b => IsAllowed(b, null)).ToArray();
-                            if (bws.Length > 0)
-                            {
-                                loaded.AddRange(bws);
-                                count += bws.Length;
-                            }
-                        }
-
-                        cur++;
-                        double perc = (double) cur / max;
-                        SetProgressLabelText($"Producties laden ({perc:0.0%})...");
-                    }
-                    if (IsDisposed) return -1;
-                    productieListControl1.InitProductie(loaded,true,true,false);
-                }
-                else
-                    return -1;
+                base.Show();
+                SetFilter(filter);
+                _=Verwerk();
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                XMessageBox.Show(e.Message,"Fout", MessageBoxIcon.Error);
             }
+        }
 
-            _isbussy = false;
+        private Task Verwerk()
+        {
+            return Task.Run(new Action(()=>  this.Invoke(new Action(async () =>
+            {
+                int count = 0;
+                try
+                {
+                    if (_isbussy) return;
 
-            EnableProgressLabel(false);
-            UpdateStatusLabel();
+                    if (DoCheck())
+                    {
+                        _isbussy = true;
+                        ShowFilter.Enabled = true;
+                        ShowFilter.VanafCheck = xvanafcheck.Checked;
+                        ShowFilter.VanafTime = xvanafdate.Value;
+                        ShowFilter.TotCheck = xtotcheck.Checked;
+                        ShowFilter.TotTime = xtotdate.Value;
+                        ShowFilter.Bewerking = xbewerkingcheck.Checked ? xbewerkingen.Text.Trim() : null;
+                        ShowFilter.werkPlek = xwerkplekcheck.Checked ? xwerkplekken.Text.Trim() : null;
+                        ShowFilter.Criteria = xcriteriacheckbox.Checked ? xcriteria.Text.Trim() : null;
+                        EnableProgressLabel(true);
+                        SetProgressLabelText("Producties Laden...");
+                        var ids = await Manager.GetAllProductieIDs(true);
+                        int cur = 0;
+                        int max = ids.Count;
+                        var loaded = new List<Bewerking>();
+                        foreach (var id in ids)
+                        {
+                            if (IsDisposed || !Visible) break;
+                            if (string.IsNullOrEmpty(id)) continue;
+                            var x = await Manager.Database.GetProductie(id);
+                            if (x == null) continue;
+                            if (x.Bewerkingen != null && x.Bewerkingen.Length > 0)
+                            {
+                                var bws = x.Bewerkingen.Where(b => IsAllowed(b, null)).ToArray();
+                                if (bws.Length > 0)
+                                {
+                                    loaded.AddRange(bws);
+                                    count += bws.Length;
+                                }
+                            }
 
-            return count;
+                            cur++;
+                            double perc = (double)cur / max;
+                            SetProgressLabelText($"Producties laden ({perc:0.0%})...");
+                        }
+                        if (IsDisposed) return;
+                        productieListControl1.InitProductie(loaded, true, true, false);
+                    }
+                    else
+                        return;
+                }
+                catch (Exception e)
+                {
+                    XMessageBox.Show(e.Message, "Fout", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+
+                _isbussy = false;
+
+                EnableProgressLabel(false);
+                UpdateStatusLabel();
+                return;
+            }))));
         }
 
         private void UpdateStatusLabel()
@@ -296,17 +347,35 @@ namespace Forms
             {
                 xoutput.Text = "Geen resultaten gevonden!";
             }
+            if (ShowFilter.Enabled)
+            {
+                var xtitle = $"Resultaten voor ";
+                if (!string.IsNullOrEmpty(ShowFilter.Criteria))
+                    xtitle += $"criteria '{ShowFilter.Criteria}', ";
+                if (!string.IsNullOrEmpty(ShowFilter.werkPlek))
+                    xtitle += $"werkplek '{ShowFilter.werkPlek}', ";
+                if (!string.IsNullOrEmpty(ShowFilter.Bewerking))
+                    xtitle += $"bewerking '{ShowFilter.Bewerking}', ";
+                xtitle = xtitle.TrimEnd(new char[] { ',', ' ' });
+                if (ShowFilter.VanafCheck)
+                    xtitle += $" vanaf {ShowFilter.VanafTime.ToString()}";
+                if (ShowFilter.TotCheck)
+                    xtitle += $" t/m {ShowFilter.TotTime.ToString()}";
+                this.Text = xtitle;
+            }
+            else this.Text = "Zoek producties";
+            this.Invalidate();
         }
 
         private void RangeCalculatorForm_Shown(object sender, EventArgs e)
         {
-            xwerkplekcheck.Checked = false;
-            xbewerkingcheck.Checked = false;
-            xvanafcheck.Checked = false;
-            xtotcheck.Checked = false;
-            xcriteriacheckbox.Checked = true;
-            xcriteria.ShowClearButton = true;
-            xcriteria.Select();
+            //xwerkplekcheck.Checked = false;
+            //xbewerkingcheck.Checked = false;
+            //xvanafcheck.Checked = false;
+            //xtotcheck.Checked = false;
+            //xcriteriacheckbox.Checked = true;
+            //xcriteria.ShowClearButton = true;
+            //xcriteria.Select();
             productieListControl1.InitEvents();
             if (Manager.Opties?._viewbewdata != null)
                 productieListControl1.ProductieLijst.RestoreState(Manager.Opties.ViewDataBewerkingenState);

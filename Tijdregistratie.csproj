@@ -1218,6 +1218,10 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\search_page_document_128x128.png" />
+    <None Include="Resources\search_page_document_32x32.png" />
+    <None Include="Resources\Letters512_44202_32x32.png" />
+    <None Include="Resources\operation_32x32.png" />
     <None Include="Resources\list_icon-icons.com_60651.png" />
     <None Include="Resources\arrow_right_64x64.png" />
     <None Include="Resources\code_html_link_share_icon_123633.png" />

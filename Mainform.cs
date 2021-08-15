@@ -431,8 +431,8 @@ namespace ProductieManager
                 productieView1.DetachEvents();
                 //  _updatechecker?.Stop();
                 // _updatechecker = null;
-                Manager.Database?.Dispose();
-                ProductieView._manager?.Dispose();
+                //Manager.Database?.Dispose();
+                //ProductieView._manager?.Dispose();
             }
             catch (Exception)
             {
@@ -471,6 +471,15 @@ namespace ProductieManager
             Show();
             this.WindowState = FormWindowState.Normal;
             notifyIcon1.Visible = false;
+        }
+
+        private void Mainform_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Control && e.KeyCode == Keys.F)
+            {
+                Console.WriteLine("Pressed!");
+                // do your stuff
+            }
         }
     }
 }

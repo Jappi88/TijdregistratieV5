@@ -56,6 +56,7 @@ namespace Controls
             this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn21 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn27 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn23 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn24 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn25 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -75,6 +76,9 @@ namespace Controls
             this.xbewaantalGemaaktToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xbewnotitieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xtoolstripaanbevolenpersonen = new System.Windows.Forms.ToolStripMenuItem();
+            this.zoekToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.opArtikelNrToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.opBewerkingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.benodigdeMaterialenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xafkeurstoolstrip = new System.Windows.Forms.ToolStripMenuItem();
@@ -128,7 +132,6 @@ namespace Controls
             this.xstopb = new System.Windows.Forms.Button();
             this.xstartb = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.olvColumn27 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xproductieLijst)).BeginInit();
             this.xproductieLijstcontext.SuspendLayout();
@@ -505,6 +508,15 @@ namespace Controls
             this.olvColumn21.ToolTipText = "Totaal gemiddelde aantal per uur";
             this.olvColumn21.Width = 120;
             // 
+            // olvColumn27
+            // 
+            this.olvColumn27.AspectName = "GemiddeldActueelPerUur";
+            this.olvColumn27.AspectToStringFormat = "{0} p/u";
+            this.olvColumn27.Text = "Gemiddeld Actueel PerUur";
+            this.olvColumn27.ToolTipText = "Gemiddeld actuele per uur";
+            this.olvColumn27.Width = 100;
+            this.olvColumn27.WordWrap = true;
+            // 
             // olvColumn23
             // 
             this.olvColumn23.AspectName = "VerwachtLeverDatum";
@@ -580,6 +592,7 @@ namespace Controls
             this.productieToolStripMenuItem,
             this.xwijzigToolStripMenuItem1,
             this.xtoolstripaanbevolenpersonen,
+            this.zoekToolStripMenuItem,
             this.toolStripSeparator1,
             this.benodigdeMaterialenToolStripMenuItem,
             this.xafkeurstoolstrip,
@@ -600,7 +613,7 @@ namespace Controls
             this.vouwAllGroepenToolStripMenuItem,
             this.ontvouwAlleGroepenToolStripMenuItem});
             this.xproductieLijstcontext.Name = "contextMenuStrip1";
-            this.xproductieLijstcontext.Size = new System.Drawing.Size(269, 470);
+            this.xproductieLijstcontext.Size = new System.Drawing.Size(269, 514);
             // 
             // xopenProductieToolStripMenuItem
             // 
@@ -708,6 +721,32 @@ namespace Controls
             this.xtoolstripaanbevolenpersonen.Text = "Aanbevolen Personen";
             this.xtoolstripaanbevolenpersonen.ToolTipText = "Zoek voor aanbevolen werkplaatsen en personen";
             this.xtoolstripaanbevolenpersonen.Click += new System.EventHandler(this.xaanbevolenpersb_Click);
+            // 
+            // zoekToolStripMenuItem
+            // 
+            this.zoekToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.opArtikelNrToolStripMenuItem,
+            this.opBewerkingToolStripMenuItem});
+            this.zoekToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.FocusEye_Img_32_32;
+            this.zoekToolStripMenuItem.Name = "zoekToolStripMenuItem";
+            this.zoekToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.zoekToolStripMenuItem.Text = "Zoek Volgens";
+            // 
+            // opArtikelNrToolStripMenuItem
+            // 
+            this.opArtikelNrToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Letters512_44202_32x32;
+            this.opArtikelNrToolStripMenuItem.Name = "opArtikelNrToolStripMenuItem";
+            this.opArtikelNrToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.opArtikelNrToolStripMenuItem.Text = "ArtikelNr";
+            this.opArtikelNrToolStripMenuItem.Click += new System.EventHandler(this.opArtikelNrToolStripMenuItem_Click);
+            // 
+            // opBewerkingToolStripMenuItem
+            // 
+            this.opBewerkingToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.operation_32x32;
+            this.opBewerkingToolStripMenuItem.Name = "opBewerkingToolStripMenuItem";
+            this.opBewerkingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.opBewerkingToolStripMenuItem.Text = "Bewerking";
+            this.opBewerkingToolStripMenuItem.Click += new System.EventHandler(this.opBewerkingToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -1341,15 +1380,6 @@ namespace Controls
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
-            // olvColumn27
-            // 
-            this.olvColumn27.AspectName = "GemiddeldActueelPerUur";
-            this.olvColumn27.AspectToStringFormat = "{0} p/u";
-            this.olvColumn27.Text = "Gemiddeld Actueel PerUur";
-            this.olvColumn27.ToolTipText = "Gemiddeld actuele per uur";
-            this.olvColumn27.Width = 100;
-            this.olvColumn27.WordWrap = true;
-            // 
             // ProductieListControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -1475,5 +1505,8 @@ namespace Controls
         private BrightIdeasSoftware.OLVColumn olvColumn10;
         private BrightIdeasSoftware.OLVColumn olvColumn11;
         private BrightIdeasSoftware.OLVColumn olvColumn27;
+        private System.Windows.Forms.ToolStripMenuItem zoekToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem opArtikelNrToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem opBewerkingToolStripMenuItem;
     }
 }

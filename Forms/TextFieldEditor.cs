@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Forms
@@ -21,6 +22,8 @@ namespace Forms
             get => this.Text;
             set => this.Text = value;
         }
+
+        public Image FieldImage { get => ximage.Image; set => ximage.Image = value; }
 
         public bool MultiLine
         {
@@ -50,9 +53,15 @@ namespace Forms
             if (xtextfield.TextLength > 0)
             {
                 xtextfield.SelectAll();
-                xtextfield.Select();
-                xtextfield.Focus();
-            }
+                            }
+            xtextfield.Select();
+            xtextfield.Focus();
+        }
+
+        private void xtextfield_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter && !MultiLine)
+                DialogResult = DialogResult.OK;
         }
     }
 }

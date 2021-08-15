@@ -46,8 +46,8 @@ namespace Rpm.Productie
 
         // [NonSerialized] private readonly Timer _emailcheckTimer = new();
 
-        [NonSerialized] private Timer _syncTimer;
-        [NonSerialized] private Timer _overzichtSyncTimer;
+        [NonSerialized] private Timer _syncTimer = new Timer();
+        [NonSerialized] private Timer _overzichtSyncTimer = new Timer();
 
         public string Versie => "1.0";
         public static UserSettings Opties { get; set; }
@@ -506,7 +506,7 @@ namespace Rpm.Productie
         {
             return Task.Run(async () =>
             {
-                if (Database.IsDisposed || Database?.ProductieFormulieren == null)
+                if (Database?.ProductieFormulieren == null || Database.IsDisposed)
                     return new List<string>();
                 List<string> xreturn = new List<string>();
                 try
@@ -1481,11 +1481,8 @@ namespace Rpm.Productie
             _fileWatchers?.ForEach(x => x.Dispose());
             _syncTimer?.Stop();
             _syncTimer?.Dispose();
-            _syncTimer = null;
             Database?.Dispose();
-            Database = null;
             ProductieProvider?.Dispose();
-            ProductieProvider = null;
             Dispose(true);
             GC.SuppressFinalize(this);
         }
