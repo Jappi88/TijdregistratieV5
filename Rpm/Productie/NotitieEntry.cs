@@ -48,6 +48,16 @@ namespace Rpm.Productie
             ID = base.GetHashCode();
         }
 
+        public NotitieEntry(string notitie, IProductieBase productie) : this()
+        {
+            Productie = productie;
+            Notitie = notitie;
+            if (productie is Bewerking)
+                Type = NotitieType.Bewerking;
+            else Type = NotitieType.Productie;
+            ID = base.GetHashCode();
+        }
+
         public NotitieEntry(string notitie, ProductieFormulier productie) : this(notitie, NotitieType.Productie)
         {
             Productie = productie;

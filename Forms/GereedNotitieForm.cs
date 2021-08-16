@@ -20,6 +20,8 @@ namespace Forms
         {
             _Productie = productie;
             this.Text = $"Productie Aflsuiten: {productie.ProductieNr} | {productie.ArtikelNr}";
+            if (_Productie.GereedNote != null)
+                xredentextbox.Text = _Productie.GereedNote.Notitie;
             this.Invalidate();
             CreateMessage(productie);
             return base.ShowDialog();

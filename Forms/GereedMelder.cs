@@ -182,6 +182,7 @@ namespace Forms
             if (xtxtform.ShowDialog() == DialogResult.OK)
             {
                 Notitie = xtxtform.SelectedText;
+                _prod.GereedNote = new NotitieEntry(Notitie, _prod);
             }
         }
 
@@ -213,6 +214,7 @@ namespace Forms
                 }
                 else
                     _prod = changedform.CreateCopy();
+                _prod.GereedNote = new NotitieEntry(Notitie, _prod);
                 if (_prod.AantalGemaakt != (int)xaantal.Value)
                     _prod.AantalGemaakt = (int)xaantal.Value;
             }
