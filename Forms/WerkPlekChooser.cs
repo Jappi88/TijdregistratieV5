@@ -15,7 +15,8 @@ namespace Forms
             {
                 Plekken = plekken;
                 comboBox1.Items.AddRange(plekken.Select(x => x.Path).ToArray());
-                selected = plekken.FirstOrDefault(x => x.Path.ToLower().Contains(selected.ToLower()))?.Path;
+                if (!string.IsNullOrEmpty(selected))
+                    selected = plekken.FirstOrDefault(x => x.Path.ToLower().Contains(selected.ToLower()))?.Path;
                 if (selected == null)
                     comboBox1.SelectedIndex = 0;
                 else comboBox1.SelectedItem = selected;

@@ -1340,6 +1340,7 @@ namespace Controls
                 RangeFilter rf = new RangeFilter();
                 rf.Enabled = true;
                 rf.Criteria = bws[i].ArtikelNr;
+                rf.Bewerking = bws[i].Naam;
                 _calcform.Show(rf);
                 done.Add(bws[i].ArtikelNr);
             }

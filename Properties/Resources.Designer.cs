@@ -443,6 +443,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap document_report_128x128 {
+            get {
+                object obj = ResourceManager.GetObject("document_report_128x128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap download_database_21022 {
             get {
                 object obj = ResourceManager.GetObject("download_database_21022", resourceCulture);
@@ -1356,6 +1366,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap Private_80_icon_icons_com_57286 {
             get {
                 object obj = ResourceManager.GetObject("Private-80_icon-icons.com_57286", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Private_80_icon_icons1 {
+            get {
+                object obj = ResourceManager.GetObject("Private-80_icon-icons1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

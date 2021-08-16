@@ -69,10 +69,16 @@ namespace Forms
         private async void MeldGereed()
         {
             if (DoCheck() && XMessageBox.Show($"{xtextfield1.Text}...\n\n" +
-                                              "Heb je goed na gekeken of alles wel klopt?",
+                                              "Klopt dit allemaal hoe er is geproduceerd?",
                 "Gereed Melden",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                if(_prod.TotaalGemaakt < _prod.Aantal)
+                {
+                    var xt = new GereedNotitieForm();
+                    if (xt.ShowDialog(_prod) == DialogResult.Cancel) return;
+                    Notitie = xt.Reden;
+                }
                 if (_prod is ProductieFormulier form)
                 {
                     Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
@@ -93,7 +99,7 @@ namespace Forms
 
         private bool DoCheck()
         {
-
+            _prod.AantalGemaakt = (int)xaantal.Value;
             if ((_prod.TotaalGemaakt) <= 0 && xaantal.Value == 0)
             {
                 XMessageBox.Show("Je aantal kan niet 0 zijn!\nJe kan minstins maar 1 product gereedmelden",
@@ -139,10 +145,10 @@ namespace Forms
             if (_prod.TotaalGemaakt > _prod.Aantal)
                 xfieldinfo = $"Je staat op het punt {_prod.Naam} gereed te melden met {_prod.TotaalGemaakt - _prod.Aantal} stuk(s) extra!";
             var bericht =
-                $"{xfieldinfo}\n" +
-                $"Totaal {_prod.TijdGewerkt} / {_prod.DoorloopTijd} uur aan gewerkt met {_prod.ActueelPerUur} i.p.v. {_prod.PerUur} per uur.\n" +
-                $"Er is Totaal {_prod.TotaalGemaakt} van de {_prod.Aantal} gemaakt.\n" +
-                $"Er is {_prod.DeelsGereed} deels gereed gemeld.";
+                $"{xfieldinfo}\n\n" +
+                $"* Totaal {_prod.TijdGewerkt} / {_prod.DoorloopTijd} uur aan gewerkt met {_prod.ActueelPerUur} i.p.v. {_prod.PerUur} per uur.\n\n" +
+                $"* Er is {_prod.TotaalGemaakt} van de {_prod.Aantal} gemaakt.\n\n" +
+                $"* Er is {_prod.DeelsGereed} deels gereed gemeld.";
             xtextfield1.Text = bericht;
             xtextfield2.Text = _prod.Omschrijving;
             this.Text = $"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
@@ -207,6 +213,8 @@ namespace Forms
                 }
                 else
                     _prod = changedform.CreateCopy();
+                if (_prod.AantalGemaakt != (int)xaantal.Value)
+                    _prod.AantalGemaakt = (int)xaantal.Value;
             }
             catch (Exception e)
             {

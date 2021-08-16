@@ -183,7 +183,6 @@
             this.Text = "Productie Manager";
             this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Mainform_FormClosing);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Mainform_KeyDown);
             this.Resize += new System.EventHandler(this.Mainform_Resize);
             this.panel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);

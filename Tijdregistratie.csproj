@@ -377,6 +377,12 @@
     <Compile Include="Forms\FilterEditor.Designer.cs">
       <DependentUpon>FilterEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\GereedNotitieForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GereedNotitieForm.Designer.cs">
+      <DependentUpon>GereedNotitieForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\LijstWeergaveForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -752,6 +758,7 @@
     <Compile Include="Rpm\Misc\FingerPrint.cs" />
     <Compile Include="Rpm\Misc\Functions.cs" />
     <Compile Include="Rpm\Misc\GraphicsExtension.cs" />
+    <Compile Include="Rpm\Misc\HtmlStringFormat.cs" />
     <Compile Include="Rpm\Misc\LogEntry.cs" />
     <Compile Include="Rpm\Misc\Logger.cs" />
     <Compile Include="Rpm\Misc\Notifications.cs" />
@@ -918,6 +925,9 @@
     <EmbeddedResource Include="Forms\FilterEditor.resx">
       <DependentUpon>FilterEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GereedNotitieForm.resx">
+      <DependentUpon>GereedNotitieForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\LijstWeergaveForm.resx">
       <DependentUpon>LijstWeergaveForm.cs</DependentUpon>
@@ -1218,6 +1228,8 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Private-80_icon-icons.com_572861.png" />
+    <None Include="Resources\document_report_128x128.png" />
     <None Include="Resources\search_page_document_128x128.png" />
     <None Include="Resources\search_page_document_32x32.png" />
     <None Include="Resources\Letters512_44202_32x32.png" />

@@ -99,7 +99,8 @@ namespace ProductieManager
                     var xrslt = XMessageBox.Show("Oorspronkelijke database kan niet geladen worden!\n\n" +
                         " * Kies 'Herstart' als je de ProductieManager opnieuw wilt opstarten.\n" +
                         " * Kies 'Offline' als je gewoon op de standaard database wilt werken.\n" +
-                        " * Kies anders voor een andere database of sluit de ProductieManager af.", "Database niet gevonden!",                        MessageBoxIcon.Exclamation, null, xbtns);
+                        " * Kies anders voor een andere database of sluit de ProductieManager af.", "Database niet gevonden!", 
+                        MessageBoxIcon.Warning, null, xbtns);
                     if (xrslt == DialogResult.OK) { Application.Restart(); return; }
                     if (xrslt == DialogResult.No) { this.Close(); return; }
                     if (xrslt == DialogResult.Yes)
@@ -439,6 +440,17 @@ namespace ProductieManager
             }
         }
 
+        private void Mainform_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized && Manager.Opties != null && Manager.Opties.MinimizeToTray)
+            {
+                this.Hide();
+                notifyIcon1.Visible = true;
+                notifyIcon1.Text = $"ProductieManager Versie {Application.ProductVersion}";
+                notifyIcon1.ShowBalloonTip(5000);
+            }
+        }
+
         #endregion "Mainform"
 
         #region IMain Interface
@@ -455,17 +467,6 @@ namespace ProductieManager
 
         #endregion IMain Interface
 
-        private void Mainform_Resize(object sender, EventArgs e)
-        {
-            if(this.WindowState == FormWindowState.Minimized && Manager.Opties != null && Manager.Opties.MinimizeToTray)
-            {
-                this.Hide();
-                notifyIcon1.Visible = true;
-                notifyIcon1.Text = $"ProductieManager Versie {Application.ProductVersion}";
-                notifyIcon1.ShowBalloonTip(5000);
-            }
-        }
-
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             Show();
@@ -473,13 +474,5 @@ namespace ProductieManager
             notifyIcon1.Visible = false;
         }
 
-        private void Mainform_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Control && e.KeyCode == Keys.F)
-            {
-                Console.WriteLine("Pressed!");
-                // do your stuff
-            }
-        }
     }
 }
