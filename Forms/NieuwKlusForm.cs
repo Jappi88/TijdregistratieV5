@@ -218,49 +218,47 @@ namespace Forms
                 var xpersonen = new List<Personeel>();
                 foreach (var xpers in Persoon)
                 {
+                    var xklus = SelectedKlus.CreateCopy();
                     xpers.Klusjes.Remove(_origklus);
                     var dbpers = await Manager.Database.GetPersoneel(xpers.PersoneelNaam) ?? xpers;
-                    if (!string.Equals(_origklus.Naam, SelectedKlus.Naam, StringComparison.CurrentCultureIgnoreCase))
+                    if (!string.Equals(_origklus.Naam, xklus.Naam, StringComparison.CurrentCultureIgnoreCase))
                     {
                         if (wp != null)
                         {
+                            string path = wp.Path;
                             wp.Personen.Remove(xpers);
                             xpers.Klusjes.RemoveAll(x =>
-                                string.Equals(x.Path, wp.Path, StringComparison.CurrentCultureIgnoreCase));
+                                string.Equals(x.Path, path, StringComparison.CurrentCultureIgnoreCase));
                             dbpers.Klusjes.RemoveAll(x =>
-                                string.Equals(x.Path, wp.Path, StringComparison.CurrentCultureIgnoreCase));
+                                string.Equals(x.Path, path, StringComparison.CurrentCultureIgnoreCase));
                         }
 
                         if (_save && bewerking != null)
                             await bewerking.UpdateBewerking(null,
                                 $"{xpers.PersoneelNaam} aangepast op {bewerking.Path}");
                         //nu het oude verwijderd is kunnen we nieuwe gegevens toevoegen.
-                        pair = SelectedKlus.GetWerk(Formulier);
+                        pair = xklus.GetWerk(Formulier);
                         //prod = pair.Key;
                         bewerking = pair.Bewerking;
                     }
 
                     if (bewerking == null)
                     {
-                        pair = SelectedKlus.GetWerk(Formulier);
+                        pair = xklus.GetWerk(Formulier);
                         //prod = pair.Key;
                         bewerking = pair.Bewerking;
                         if (bewerking == null)
                             continue;
                     }
 
-                    if (!string.Equals(_origklus.WerkPlek, SelectedKlus.WerkPlek,
+                    if (!string.Equals(_origklus.WerkPlek, xklus.WerkPlek,
                         StringComparison.CurrentCultureIgnoreCase))
                     {
                         if (wp != null)
                         {
                             var xcurpers = wp.Personen.FirstOrDefault(x=> string.Equals(x.PersoneelNaam, xpers.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase));
-                            if (xcurpers != null)
-                            {
-                                var klus = xcurpers.Klusjes.GetKlus(wp.Path);
-                                if (klus != null)
-                                    klus.ZetActief(false, bewerking.State == ProductieState.Gestart);
-                            }
+                            var klus = xcurpers?.Klusjes.GetKlus(wp.Path);
+                            klus?.ZetActief(false, bewerking.State == ProductieState.Gestart);
                             //wp.Personen.Remove(xpers);
                             //xpers.Klusjes.RemoveAll(x =>
                             //    string.Equals(x.Path, wp.Path, StringComparison.CurrentCultureIgnoreCase));
@@ -268,22 +266,23 @@ namespace Forms
                             //    string.Equals(x.Path, wp.Path, StringComparison.CurrentCultureIgnoreCase));
                             if (wp.Personen.Count == 0 && wp.TijdGewerkt <= 0 && wp.AantalGemaakt == 0)
                             {
+                                string path = wp.Path;
                                 bewerking.WerkPlekken.Remove(wp);
-                                dbpers.Klusjes.RemoveAll(x =>
-                                string.Equals(x.Path, wp.Path, StringComparison.CurrentCultureIgnoreCase));
+                                dbpers?.Klusjes.RemoveAll(x =>
+                                string.Equals(x.Path, path, StringComparison.CurrentCultureIgnoreCase));
                             }
                         }
 
-                        wp = GetWerkPlek(SelectedKlus.WerkPlek, bewerking, false);
+                        wp = GetWerkPlek(xklus.WerkPlek, bewerking, false);
                     }
 
                     //nu het oude verwijderd is kunnen we nieuwe gegevens toevoegen.
                     //if (wp == null)
-                    //    wp = GetWerkPlek(SelectedKlus.WerkPlek, bewerking, false);
+                    //    wp = GetWerkPlek(xklus.WerkPlek, bewerking, false);
                     //wp?.Personen.Remove(per);
                     if (wp == null)
                     {
-                        wp = new WerkPlek(SelectedKlus.WerkPlek, bewerking);
+                        wp = new WerkPlek(xklus.WerkPlek, bewerking);
                         bewerking.WerkPlekken.Add(wp);
                     }
                     else if (!EditMode && wp.Personen.Any(x => string.Equals(x.PersoneelNaam, xpers.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase)))
@@ -294,15 +293,15 @@ namespace Forms
                             continue;
                     }
                    
-                    xpers.ReplaceKlus(SelectedKlus);
+                    xpers.ReplaceKlus(xklus);
                     wp.AddPersoon(xpers, bewerking);
-                    wp.Tijden.SetUren(SelectedKlus.Tijden.Uren.ToArray(), bewerking.State == ProductieState.Gestart,
+                    wp.Tijden.SetUren(xklus.Tijden.Uren.ToArray(), bewerking.State == ProductieState.Gestart,
                         false);
                     bewerking.ZetPersoneelActief(xpers.PersoneelNaam, wp.Naam, true);
-                    dbpers.ReplaceKlus(SelectedKlus);
+                    dbpers.ReplaceKlus(xklus);
                     if (_save)
                         await Manager.Database.UpSert(dbpers,
-                            $"{xpers.PersoneelNaam} Klus {SelectedKlus.Path} Update.");
+                            $"{xpers.PersoneelNaam} Klus {xklus.Path} Update.");
                     xpersonen.Add(xpers);
                 }
                 if (xpersonen.Count == 0) return false;
