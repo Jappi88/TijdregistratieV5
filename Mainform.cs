@@ -87,15 +87,30 @@ namespace ProductieManager
         private void _DbWatcher_PathLocationLost(object sender, EventArgs e)
         {
             _DbWatcher?.Stop();
-            Dictionary<string, DialogResult> xbtns = new Dictionary<string, DialogResult>();
-            xbtns.Add("Herstart", DialogResult.OK);
-            xbtns.Add("Ga Offline", DialogResult.Cancel);
-            xbtns.Add("Afsluiten", DialogResult.No);
-            xbtns.Add("Kies DB", DialogResult.Yes);
-            this.Invoke(new MethodInvoker(() =>
+            Dictionary<string, DialogResult> xbtns = new Dictionary<string, DialogResult>
+            {
+                {"Herstart", DialogResult.OK},
+                {"Ga Offline", DialogResult.Cancel},
+                {"Afsluiten", DialogResult.No},
+                {"Kies DB", DialogResult.Yes}
+            };
+            this.Invoke(new MethodInvoker(async () =>
             {
                 try
                 {
+                    bool found = false;
+                    for(int i = 0; i < 5; i++)
+                    {
+                        if (Directory.Exists(Manager.DefaultSettings.MainDB.UpdatePath))
+                        {
+                            found = true;
+                            break;
+                        }
+
+                        await Task.Delay(400);
+                    }
+
+                    if (found) return;
                     var xrslt = XMessageBox.Show("Oorspronkelijke database kan niet geladen worden!\n\n" +
                         " * Kies 'Herstart' als je de ProductieManager opnieuw wilt opstarten.\n" +
                         " * Kies 'Offline' als je gewoon op de standaard database wilt werken.\n" +

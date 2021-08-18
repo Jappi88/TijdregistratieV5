@@ -244,9 +244,9 @@ namespace Rpm.Productie
 
         public bool ZetActief(bool actief, bool isgestart)
         {
-            if (Status == ProductieState.Gestart && !actief)
+            if (!actief)
                 Stop();
-            else if (actief && Status == ProductieState.Gestopt && isgestart)
+            else if (isgestart)
                 Start();
             IsActief = actief;
             return IsActief;

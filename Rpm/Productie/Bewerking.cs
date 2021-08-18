@@ -496,8 +496,7 @@ namespace Rpm.Productie
                     foreach (var xper in xpers)
                     {
                         var xklus = xper.Klusjes.GetKlus($"{Path}\\{werkplek}");
-                        if (xklus == null) continue;
-                        xklus.ZetActief(actief, State == ProductieState.Gestart);
+                        xklus?.ZetActief(actief, State == ProductieState.Gestart);
                     }
                 }
                 if (!actief) return;
@@ -510,8 +509,7 @@ namespace Rpm.Productie
                     foreach (var xper in xpers)
                     {
                         var xklus = xper.Klusjes.GetKlus($"{Path}\\{wp.Naam}");
-                        if (xklus == null) continue;
-                        xklus.ZetActief(false, State == ProductieState.Gestart);
+                        xklus?.ZetActief(false, State == ProductieState.Gestart);
                     }
                 }
             }

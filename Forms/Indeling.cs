@@ -337,7 +337,6 @@ namespace Forms
                     var klusui = new NieuwKlusForm(Formulier, pers, false,false, Bewerking);
                     if (klusui.ShowDialog() == DialogResult.OK)
                     {
-                        WerkPlek xwp = null;
                         foreach (var pr in klusui.Persoon)
                         {
                             //klusui.Persoon[0].CopyTo(ref pers[i]);
@@ -598,9 +597,8 @@ namespace Forms
             //if(actief)
             //{
                 var bew = GetCurrentBewerking();
-                if (bew != null)
-                    bew.ZetPersoneelActief(per.PersoneelNaam,per.Werkplek, actief);
-            //}
+                bew?.ZetPersoneelActief(per.PersoneelNaam,per.Werkplek, actief);
+                //}
             xshiftlist.RefreshObject(per);
             xshiftlist.SelectedObject = per;
             xshiftlist.SelectedItem?.EnsureVisible();
