@@ -283,7 +283,7 @@ namespace Forms
                         ShowFilter.Criteria = xcriteriacheckbox.Checked ? xcriteria.Text.Trim() : null;
                         EnableProgressLabel(true);
                         SetProgressLabelText("Producties Laden...");
-                        var ids = await Manager.GetAllProductieIDs(true);
+                        var ids = await Manager.GetAllProductieIDs(true,true);
                         int cur = 0;
                         int max = ids.Count;
                         var loaded = new List<Bewerking>();

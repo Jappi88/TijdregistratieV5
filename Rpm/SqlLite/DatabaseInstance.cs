@@ -235,7 +235,7 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<List<string>> GetAllIDs()
+        public Task<List<string>> GetAllIDs(bool checksecondary)
         {
             return Task.Run(() =>
             {
@@ -250,7 +250,38 @@ namespace Rpm.SqlLite
                             break;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
-                            xreturn = MultiFiles.GetAllIDs();
+                            xreturn = MultiFiles.GetAllIDs(checksecondary);
+                            break;
+                        case DbInstanceType.Server:
+                            //if (ServerDb == null) throw new NullReferenceException();
+                            // xreturn = await ServerDb.GetAllInstances<T>();
+                            break;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+
+                return xreturn;
+            });
+        }
+
+        public Task<List<string>> GetAllPaths(bool checksecondary)
+        {
+            return Task.Run(() =>
+            {
+                var xreturn = new List<string>();
+                try
+                {
+                    switch (InstanceType)
+                    {
+                        case DbInstanceType.LiteDb:
+                            //if (LocalDbCollection == null) throw new NullReferenceException();
+                            // xreturn = LocalDbCollection.FindAll().ToList();
+                            break;
+                        case DbInstanceType.MultipleFiles:
+                            if (MultiFiles == null) throw new NullReferenceException();
+                            xreturn = MultiFiles.GetAllPaths(checksecondary);
                             break;
                         case DbInstanceType.Server:
                             //if (ServerDb == null) throw new NullReferenceException();

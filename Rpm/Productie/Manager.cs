@@ -149,16 +149,16 @@ namespace Rpm.Productie
                 }
 
                 LoadPath(path);
-                
-                // LocalConnection = new LocalService();
-                //Server = new SqlDatabase();
                 Database = new LocalDatabase(this, SystemID, DbPath, true)
                 {
                     LoggerEnabled = LoggerEnabled,
                     NotificationEnabled = false
                 };
-                await Database.LoadMultiFiles(true);
+                await Database.LoadMultiFiles();
                 ProductieProvider = new ProductieProvider();
+                // LocalConnection = new LocalService();
+                //Server = new SqlDatabase();
+
                 DbUpdater = new DatabaseUpdater();
                 Logbook = new Logger();
                 BackupInfo = BackupInfo.Load();
@@ -168,13 +168,29 @@ namespace Rpm.Productie
                     DefaultSettings.SystemID = Guid.NewGuid().ToByteArray().ToHexString(4);
                     DefaultSettings.SaveAsDefault();
                 }
-
+                if (loadsettings && !string.Equals(DbPath,
+                        DefaultSettings.TempMainDB.UpdatePath, StringComparison.CurrentCultureIgnoreCase) &&
+                    Directory.Exists(DefaultSettings.TempMainDB.UpdatePath))
+                {
+                    Database.ProductieFormulieren.MultiFiles.SetSecondaryPath(DefaultSettings.TempMainDB.UpdatePath, new SecondaryManageType[]
+                    {
+                        SecondaryManageType.Write,
+                        SecondaryManageType.Read
+                    });
+                    Database.GereedFormulieren.MultiFiles.SetSecondaryPath(DefaultSettings.TempMainDB.UpdatePath, new SecondaryManageType[]
+                    {
+                        SecondaryManageType.Write,
+                        SecondaryManageType.Read
+                    });
+                    ProductieProvider.SyncProducties();
+                }
                 SystemID = DefaultSettings.SystemID;
                 if (autologin)
                     await AutoLogin(this);
                 if (Opties == null || loadsettings)
                     await LoadSettings(this, raiseManagerLoadingEvents);
                 //await Database.UpdateUserActivity(false);
+
                 DbUpdater.UpdateStartupDbs();
                 //Server.StartSync();
                 //LocalConnection.OpenConnection();
@@ -502,7 +518,7 @@ namespace Rpm.Productie
             });
         }
 
-        public static Task<List<string>> GetAllProductieIDs(bool incgereed)
+        public static Task<List<string>> GetAllProductieIDs(bool incgereed, bool checksecondary)
         {
             return Task.Run(async () =>
             {
@@ -511,7 +527,7 @@ namespace Rpm.Productie
                 List<string> xreturn = new List<string>();
                 try
                 {
-                    var xitems = await Database.ProductieFormulieren.GetAllIDs();
+                    var xitems = await Database.ProductieFormulieren.GetAllIDs(checksecondary);
                     if (xitems != null && xitems.Count > 0)
                         xreturn.AddRange(xitems);
                 }
@@ -524,8 +540,44 @@ namespace Rpm.Productie
                 {
                     try
                     {
-                        var gereed = await Database.GereedFormulieren.GetAllIDs();
+                        var gereed = await Database.GereedFormulieren.GetAllIDs(true);
                         if (gereed != null && gereed.Count > 0)
+                            xreturn.AddRange(gereed);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+
+                }
+                return xreturn;
+            });
+        }
+
+        public static Task<List<string>> GetAllProductiePaths(bool incgereed, bool checksecondary)
+        {
+            return Task.Run(async () =>
+            {
+                if (Database?.ProductieFormulieren == null || Database.IsDisposed)
+                    return new List<string>();
+                List<string> xreturn = new List<string>();
+                try
+                {
+                    var xitems = await Database.ProductieFormulieren.GetAllPaths(checksecondary);
+                    if (xitems is {Count: > 0})
+                        xreturn.AddRange(xitems);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                if (incgereed)
+                {
+                    try
+                    {
+                        var gereed = await Database.GereedFormulieren.GetAllPaths(checksecondary);
+                        if (gereed is {Count: > 0})
                             xreturn.AddRange(gereed);
                     }
                     catch (Exception ex)

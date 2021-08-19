@@ -93,7 +93,7 @@ namespace Controls
                     _manager = new Manager(true);
                     _manager.InitManager();
                 }
-               DetachEvents();
+                DetachEvents();
                 //BeginInvoke(new MethodInvoker(() => _manager.Load()));
                 //BeginInvoke(new MethodInvoker(_manager.StartMonitor));
                 await _manager.Load(path, false, false,false);
@@ -1243,7 +1243,7 @@ namespace Controls
                 return;
             if (Manager.LogedInGebruiker != null && Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieBasis)
             {
-                var prs = await Manager.GetAllProductieIDs(false);
+                var prs = await Manager.GetAllProductieIDs(false,true);
                 foreach (var v in prs)
                 {
                     var prod = await Manager.Database.GetProductie(v);
@@ -1656,30 +1656,30 @@ namespace Controls
                     break;
 
                 case AktieType.Telaat:
-                    if (taak.Formulier != null)
+                    if (taak.Bewerking != null)
                     {
-                        DatumChanger dt;
-                        dt = new DatumChanger();
-                        if (dt.ShowDialog(taak.Formulier.LeverDatum, $"Wijzig leverdatum voor {taak.Formulier.Omschrijving}.") == DialogResult.OK)
+                        var dt = new DatumChanger();
+                        if (dt.ShowDialog(taak.Bewerking.LeverDatum, $"Wijzig leverdatum voor ({taak.Bewerking.Path}) {taak.Bewerking.Omschrijving}.") == DialogResult.OK)
                         {
-                            taak.Formulier.LeverDatum = dt.SelectedValue;
+                            taak.Bewerking.LeverDatum = dt.SelectedValue;
                             save = true;
                         }
 
                         dt.Dispose();
-                        if (taak.Formulier.Bewerkingen != null && taak.Formulier.Bewerkingen.Length > 1)
-                            for (var i = 0; i < taak.Formulier.Bewerkingen.Length - 1; i++)
-                            {
-                                var b = taak.Formulier.Bewerkingen[i];
-                                dt = new DatumChanger();
-                                if (dt.ShowDialog(b.LeverDatum, $"wijzig leverdatum voor {b.Naam} van {b.Omschrijving}.") == DialogResult.OK)
-                                {
-                                    b.LeverDatum = dt.SelectedValue;
-                                    save = true;
-                                }
-
-                                dt.Dispose();
-                            }
+                    }
+                    else if (taak.Formulier != null)
+                    {
+                        var dt = new DatumChanger();
+                        if (dt.ShowDialog(taak.Formulier.LeverDatum, $"Wijzig leverdatum voor {taak.Formulier.Omschrijving}.") == DialogResult.OK)
+                        {
+                            taak.Formulier.LeverDatum = dt.SelectedValue;
+                            if (taak.Formulier.Bewerkingen.Length > 0)
+                                taak.Formulier.Bewerkingen[taak.Formulier.Bewerkingen.Length - 1].LeverDatum =
+                                    dt.SelectedValue;
+                            save = true;
+                        }
+                        
+                        dt.Dispose();
                     }
 
                     break;

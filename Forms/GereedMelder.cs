@@ -150,7 +150,7 @@ namespace Forms
                 $"* Er is {_prod.TotaalGemaakt} van de {_prod.Aantal} gemaakt.\n\n" +
                 $"* Er is {_prod.DeelsGereed} deels gereed gemeld.";
             xtextfield1.Text = bericht;
-            xtextfield2.Text = _prod.Omschrijving;
+            //xtextfield2.Text = _prod.Omschrijving;
             this.Text = $"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
             this.Invalidate();
             // xtextfield3.Text = Melding;

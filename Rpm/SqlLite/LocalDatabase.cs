@@ -1595,9 +1595,9 @@ namespace Rpm.SqlLite
 
         #region Database
 
-        public Task LoadMultiFiles(bool migrate)
+        public Task LoadMultiFiles()
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 var dbfilename = "SqlDatabase";
                // var changeddb = "ChangeDb";
@@ -1610,7 +1610,6 @@ namespace Rpm.SqlLite
                 //var bewerkingentriesdb = "BewerkingLijst";
                 ProductieFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, RootPath,
                     dbfilename, "ProductieFormulieren");
-
                 ProductieFormulieren.InstanceChanged += ProductieFormulieren_InstanceChanged;
                 ProductieFormulieren.InstanceDeleted += ProductieFormulieren_InstanceDeleted;
 
@@ -1640,105 +1639,6 @@ namespace Rpm.SqlLite
                 DbVersions = new DatabaseInstance<DbVersion>(DbInstanceType.MultipleFiles, RootPath, versiondb, "DbVersions");
                 //BewerkingEntries = new DatabaseInstance<BewerkingEntry>(DbInstanceType.MultipleFiles, RootPath,
                 //    bewerkingentriesdb, "BewerkingEntries");
-                if (!migrate) return;
-                var dbpath = RootPath + "\\" + dbfilename + ".db";
-                if (File.Exists(dbpath) && !File.Exists(dbpath.Replace(".db", "_migrated.db")))
-                {
-                    var prodsdb = new DatabaseInstance<ProductieFormulier>(DbInstanceType.LiteDb, RootPath, dbfilename,
-                        "ProductieFormulieren");
-                    var prods = await prodsdb.FindAll();
-                    foreach (var prod in prods)
-                        await ProductieFormulieren.Upsert(prod.ProductieNr, prod);
-                    File.Move(dbpath, dbpath.Replace(".db", "_migrated.db"));
-                }
-
-                //dbpath = RootPath + "\\" + changeddb + ".db";
-                //if (File.Exists(dbpath) && !File.Exists(dbpath.Replace(".db", "_migrated.db")))
-                //{
-                //    var prodsdb =
-                //        new DatabaseInstance<UserChange>(DbInstanceType.LiteDb, RootPath, changeddb, "ChangeLog");
-                //    var prods = await prodsdb.FindAll();
-                //    foreach (var prod in prods)
-                //        await ChangeLog.Upsert(prod.User, prod);
-                //    File.Move(dbpath, dbpath.Replace(".db", "_migrated.db"));
-                //}
-
-                dbpath = RootPath + "\\" + personeeldb + ".db";
-                if (File.Exists(dbpath) && !File.Exists(dbpath.Replace(".db", "_migrated.db")))
-                {
-                    var prodsdb =
-                        new DatabaseInstance<Personeel>(DbInstanceType.LiteDb, RootPath, personeeldb, "Personeel");
-                    var prods = await prodsdb.FindAll();
-                    foreach (var prod in prods)
-                        await PersoneelLijst.Upsert(prod.PersoneelNaam, prod);
-                    File.Move(dbpath, dbpath.Replace(".db", "_migrated.db"));
-                }
-
-                dbpath = RootPath + "\\" + Gereeddb + ".db";
-                if (File.Exists(dbpath) && !File.Exists(dbpath.Replace(".db", "_migrated.db")))
-                {
-                    var prodsdb = new DatabaseInstance<ProductieFormulier>(DbInstanceType.LiteDb, RootPath, Gereeddb,
-                        "GereedFormulieren");
-                    var prods = await prodsdb.FindAll();
-                    foreach (var prod in prods)
-                        await GereedFormulieren.Upsert(prod.ProductieNr, prod);
-                    File.Move(dbpath, dbpath.Replace(".db", "_migrated.db"));
-                }
-
-                dbpath = RootPath + "\\" + Settingdb + ".db";
-                if (File.Exists(dbpath) && !File.Exists(dbpath.Replace(".db", "_migrated.db")))
-                {
-                    var prodsdb =
-                        new DatabaseInstance<UserSettings>(DbInstanceType.LiteDb, RootPath, Settingdb, "AllSettings");
-                    var prods = await prodsdb.FindAll();
-                    foreach (var prod in prods)
-                        await AllSettings.Upsert(prod.Username, prod);
-                    File.Move(dbpath, dbpath.Replace(".db", "_migrated.db"));
-                }
-
-                dbpath = RootPath + "\\" + Accountdb + ".db";
-                if (File.Exists(dbpath) && !File.Exists(dbpath.Replace(".db", "_migrated.db")))
-                {
-                    var prodsdb =
-                        new DatabaseInstance<UserAccount>(DbInstanceType.LiteDb, RootPath, Accountdb, "UserAccounts");
-                    var prods = await prodsdb.FindAll();
-                    foreach (var prod in prods)
-                        await UserAccounts.Upsert(prod.Username, prod);
-                    File.Move(dbpath, dbpath.Replace(".db", "_migrated.db"));
-                }
-
-                dbpath = RootPath + "\\" + Logdb + ".db";
-                if (File.Exists(dbpath) && !File.Exists(dbpath.Replace(".db", "_migrated.db")))
-                {
-                    var prodsdb = new DatabaseInstance<LogEntry>(DbInstanceType.LiteDb, RootPath, Logdb, "Logs");
-                    var prods = await prodsdb.FindAll();
-                    foreach (var prod in prods)
-                        await Logger.Upsert(prod.Id.ToString(), prod);
-                    File.Move(dbpath, dbpath.Replace(".db", "_migrated.db"));
-                }
-
-                dbpath = RootPath + "\\" + versiondb + ".db";
-                if (File.Exists(dbpath) && !File.Exists(dbpath.Replace(".db", "_migrated.db")))
-                {
-                    var prodsdb =
-                        new DatabaseInstance<DbVersion>(DbInstanceType.LiteDb, RootPath, versiondb, "DbVersions");
-                    var prods = await prodsdb.FindAll();
-                    foreach (var prod in prods)
-                        await DbVersions.Upsert(prod.Name, prod);
-                    File.Move(dbpath, dbpath.Replace(".db", "_migrated.db"));
-                }
-
-                //LoadSyncDirectories();
-                //dbpath = RootPath + "\\" + bewerkingentriesdb + ".db";
-                //if (File.Exists(dbpath) && !File.Exists(dbpath.Replace(".db", "_migrated.db")))
-                //{
-                //    var prodsdb =
-                //        new DatabaseInstance<BewerkingEntry>(DbInstanceType.LiteDb, RootPath, bewerkingentriesdb, "BewerkingEntries");
-                //    var prods = await prodsdb.FindAll();
-                //    foreach (var prod in prods)
-                //        await BewerkingEntries.Upsert(prod.Naam, prod);
-                //    File.Move(dbpath, dbpath.Replace(".db", "_migrated.db"));
-                //}
             });
         }
 
@@ -2485,7 +2385,7 @@ namespace Rpm.SqlLite
                     LoggerEnabled = false;
                     RaiseEventWhenChanged = false;
                     RaiseEventWhenDeleted = false;
-                    await database.LoadMultiFiles(false);
+                    await database.LoadMultiFiles();
                     //foreach (var dbtype in Enum.GetValues(typeof(DbType)))
                     //    database.CheckVersions((DbType) dbtype);
 

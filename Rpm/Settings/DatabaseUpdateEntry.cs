@@ -7,14 +7,19 @@ namespace Rpm.Settings
     public class DatabaseUpdateEntry
     {
         public string Naam { get; set; }
-        private string _updatepath;
-        public string UpdatePath { get => _updatepath; set => _updatepath = value.Replace("\\RPM_Data", ""); } 
+        private string _rootpath;
+
+        public string UpdatePath
+        {
+            get => _rootpath.Replace("\\RPM_Data", "") + "\\RPM_Data";
+            set => _rootpath = value.Replace("\\RPM_Data", "");
+        } 
             
 
         public string RootPath
         {
-            get => UpdatePath?.Replace("\\RPM_Data", "");
-            set => UpdatePath = value.Replace("\\RPM_Data", "") + "\\RPM_Data";
+            get => _rootpath.Replace("\\RPM_Data", "");
+            set => _rootpath = value.Replace("\\RPM_Data", "");
         }
 
         public bool UpdateMetStartup { get; set; }

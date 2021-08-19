@@ -199,7 +199,7 @@ namespace Controls
                 {
                     DoWait();
                     //productieListControl1.SetWaitUI();
-                    var xprodids = await Manager.GetAllProductieIDs(true);
+                    var xprodids = await Manager.GetAllProductieIDs(true, true);
                     productieListControl1.ValidHandler = IsAllowed;
                     var xbws = new List<Bewerking>();
                     for(int i = 0; i < xprodids.Count; i++)

@@ -40,11 +40,39 @@ namespace Rpm.SqlLite
 
         private void _pathwatcher_Deleted(object sender, FileSystemEventArgs e)
         {
+
+            try
+            {
+                if (!string.IsNullOrEmpty(SecondaryDestination) && Directory.Exists(SecondaryDestination) &&
+                    SecondaryManagedTypes != null && SecondaryManagedTypes.Any(x => x == SecondaryManageType.Read))
+                {
+                    var readpath = GetReadPath(true);
+                    File.Delete(readpath + "\\" + e.Name);
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
             OnFileDeleted(e);
         }
 
         private void _pathwatcher_Changed(object sender, FileSystemEventArgs e)
         {
+
+            try
+            {
+                if (!string.IsNullOrEmpty(SecondaryDestination) && Directory.Exists(SecondaryDestination) &&
+                    SecondaryManagedTypes != null && SecondaryManagedTypes.Any(x => x == SecondaryManageType.Read))
+                {
+                    var readpath = GetReadPath(true);
+                    File.Copy(e.FullPath, readpath + "\\" + e.Name, true);
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
             OnFileChanged(e);
         }
 
@@ -100,7 +128,7 @@ namespace Rpm.SqlLite
                 var xreturn = new List<T>();
                 try
                 {
-                    string path = GetReadPath();
+                    string path = GetReadPath(true);
                     var files = Directory.GetFiles(path, "*.rpm");
 
                     foreach (var file in files)
@@ -119,12 +147,26 @@ namespace Rpm.SqlLite
             }
         }
 
-        public List<string> GetAllIDs()
+        public List<string> GetAllIDs(bool checksecondary)
         {
             try
             {
-                string path = GetReadPath();
+                string path = GetReadPath(checksecondary);
                 return Directory.GetFiles(path, "*.rpm").Select(System.IO.Path.GetFileNameWithoutExtension).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new List<string>();
+            }
+        }
+
+        public List<string> GetAllPaths(bool checksecondary)
+        {
+            try
+            {
+                string path = GetReadPath(checksecondary);
+                return Directory.GetFiles(path, "*.rpm").ToList();
             }
             catch (Exception ex)
             {
@@ -166,7 +208,7 @@ namespace Rpm.SqlLite
                 var xreturn = new List<T>();
                 try
                 {
-                    string path = GetReadPath();
+                    string path = GetReadPath(true);
                     var files = Directory.GetFiles(path, "*.rpm");
                     foreach (var file in files)
                     {
@@ -197,7 +239,7 @@ namespace Rpm.SqlLite
                 var xreturn = new List<T>();
                 try
                 {
-                    string path = GetReadPath();
+                    string path = GetReadPath(true);
                     var files = Directory.GetFiles(path, "*.rpm");
                     foreach (var file in files)
                     {
@@ -221,7 +263,7 @@ namespace Rpm.SqlLite
 
         public T GetEntry<T>(string id)
         {
-            string path = GetReadPath();
+            string path = GetReadPath(true,$"{id}.rpm");
             path = $"{path}\\{id}.rpm";
             return GetInstanceFromFile<T>(path);
         }
@@ -231,7 +273,7 @@ namespace Rpm.SqlLite
             lock (_locker)
             {
                 var xreturn = new List<T>();
-                string xpath = GetReadPath();
+                string xpath = GetReadPath(false);
                 string[] crits = criterias.Split(';');
                 foreach (var crit in crits)
                 {
@@ -245,7 +287,7 @@ namespace Rpm.SqlLite
                     }
                 }
 
-                var ids = GetAllIDs();
+                var ids = GetAllIDs(true);
                 foreach (var id in ids)
                 {
                     string path = null;
@@ -445,7 +487,7 @@ namespace Rpm.SqlLite
         {
             try
             {
-                string path = GetReadPath();
+                string path = GetReadPath(true, $"{id}.rpm");
                 path = $"{path}\\{id}.rpm";
                 return File.Exists(path);
             }
@@ -570,7 +612,7 @@ namespace Rpm.SqlLite
         {
             try
             {
-                string path = GetReadPath();
+                string path = GetReadPath(true);
                 return Directory.GetFiles(path, "*.rpm").Length;
             }
             catch (Exception)
@@ -588,23 +630,28 @@ namespace Rpm.SqlLite
             };
         }
 
-        public string GetReadPath()
+        public string GetReadPath(bool checksecondary, string filename = null)
         {
-            return !string.IsNullOrEmpty(SecondaryDestination) && SecondaryManagedTypes != null &&
+            string pathname = System.IO.Path.GetFileName(Path);
+            string xpath = SecondaryDestination + "\\" + pathname;
+            return checksecondary && !string.IsNullOrEmpty(xpath) && SecondaryManagedTypes != null &&
                    SecondaryManagedTypes.Any(x => x == SecondaryManageType.Read)
-                   && Directory.Exists(SecondaryDestination)
-                ? SecondaryDestination
+                   && (((!string.IsNullOrEmpty(filename) && File.Exists(xpath + $"\\{filename}"))
+                        || Directory.Exists(xpath)))
+                ? xpath
                 : Path;
         }
 
         public string[] GetWritePaths()
         {
             var xreturn = new List<string>();
-            if (!string.IsNullOrEmpty(SecondaryDestination) && SecondaryManagedTypes != null && SecondaryManagedTypes.Any(
+            string pathname = System.IO.Path.GetFileName(Path);
+            string xpath = SecondaryDestination + "\\" + pathname;
+            if (!string.IsNullOrEmpty(xpath) && !string.Equals(xpath,Path, StringComparison.CurrentCultureIgnoreCase) && SecondaryManagedTypes != null && SecondaryManagedTypes.Any(
                 x => x == SecondaryManageType.Write
-                     && Directory.Exists(SecondaryDestination)))
+                     && Directory.Exists(xpath)))
             {
-                xreturn.Add(SecondaryDestination);
+                xreturn.Add(xpath);
             }
 
             xreturn.Add(Path);
