@@ -1204,7 +1204,7 @@
             this.metroTabPage1.HorizontalScrollbarSize = 10;
             this.metroTabPage1.Location = new System.Drawing.Point(4, 35);
             this.metroTabPage1.Name = "metroTabPage1";
-            this.metroTabPage1.Size = new System.Drawing.Size(618, 330);
+            this.metroTabPage1.Size = new System.Drawing.Size(618, 327);
             this.metroTabPage1.TabIndex = 0;
             this.metroTabPage1.Text = "Sync Folders";
             this.metroTabPage1.ToolTipText = "Folders voor het kijken naar eventuele nieuwe productie formulieren";
@@ -1223,7 +1223,7 @@
             this.groupBox10.Location = new System.Drawing.Point(0, 0);
             this.groupBox10.Margin = new System.Windows.Forms.Padding(5);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(618, 330);
+            this.groupBox10.Size = new System.Drawing.Size(618, 327);
             this.groupBox10.TabIndex = 18;
             this.groupBox10.TabStop = false;
             // 
@@ -1239,7 +1239,7 @@
             this.xlocatielist.HideSelection = false;
             this.xlocatielist.Location = new System.Drawing.Point(3, 81);
             this.xlocatielist.Name = "xlocatielist";
-            this.xlocatielist.Size = new System.Drawing.Size(612, 246);
+            this.xlocatielist.Size = new System.Drawing.Size(612, 243);
             this.xlocatielist.TabIndex = 1;
             this.toolTip1.SetToolTip(this.xlocatielist, "Lijst voor alle locaties waar moet gekeken worden voor nieuwe producties");
             this.xlocatielist.UseCompatibleStateImageBehavior = false;
@@ -2326,9 +2326,9 @@
             this.xgebruikofflinemetsync.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xgebruikofflinemetsync.Location = new System.Drawing.Point(16, 292);
             this.xgebruikofflinemetsync.Name = "xgebruikofflinemetsync";
-            this.xgebruikofflinemetsync.Size = new System.Drawing.Size(311, 21);
+            this.xgebruikofflinemetsync.Size = new System.Drawing.Size(348, 21);
             this.xgebruikofflinemetsync.TabIndex = 45;
-            this.xgebruikofflinemetsync.Text = "Gebruik Offline DB met Online Synchronisatie";
+            this.xgebruikofflinemetsync.Text = "Gebruik Offline DB met Online Synchronisatie(Beta)";
             this.xgebruikofflinemetsync.UseVisualStyleBackColor = false;
             this.xgebruikofflinemetsync.Visible = false;
             // 
@@ -2604,6 +2604,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Opties";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Opties_FormClosing);
+            this.Load += new System.EventHandler(this.Form_Load);
             this.Shown += new System.EventHandler(this.Opties_Shown);
             this.groupBox5.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);

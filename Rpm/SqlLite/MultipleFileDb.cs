@@ -41,38 +41,12 @@ namespace Rpm.SqlLite
         private void _pathwatcher_Deleted(object sender, FileSystemEventArgs e)
         {
 
-            try
-            {
-                if (!string.IsNullOrEmpty(SecondaryDestination) && Directory.Exists(SecondaryDestination) &&
-                    SecondaryManagedTypes != null && SecondaryManagedTypes.Any(x => x == SecondaryManageType.Read))
-                {
-                    var readpath = GetReadPath(true);
-                    File.Delete(readpath + "\\" + e.Name);
-                }
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
             OnFileDeleted(e);
         }
 
         private void _pathwatcher_Changed(object sender, FileSystemEventArgs e)
         {
 
-            try
-            {
-                if (!string.IsNullOrEmpty(SecondaryDestination) && Directory.Exists(SecondaryDestination) &&
-                    SecondaryManagedTypes != null && SecondaryManagedTypes.Any(x => x == SecondaryManageType.Read))
-                {
-                    var readpath = GetReadPath(true);
-                    File.Copy(e.FullPath, readpath + "\\" + e.Name, true);
-                }
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
             OnFileChanged(e);
         }
 
@@ -104,6 +78,8 @@ namespace Rpm.SqlLite
 
         public void DisposeSecondayPath()
         {
+            _secondarypathwatcher.Deleted -= _secondarypathwatcher_Deleted;
+            _secondarypathwatcher.Changed -= _secondarypathwatcher_Changed;
             SecondaryManagedTypes = new SecondaryManageType[] { };
             SecondaryDestination = null;
             _secondarypathwatcher?.Dispose();
@@ -112,11 +88,13 @@ namespace Rpm.SqlLite
         private void _secondarypathwatcher_Changed(object sender, FileSystemEventArgs e)
         {
             OnSecondaryFileChanged(e);
+            OnFileChanged(e);
         }
 
         private void _secondarypathwatcher_Deleted(object sender, FileSystemEventArgs e)
         {
             OnSecondayFileDeleted(e);
+            OnFileDeleted(e);
         }
 
         public string Path { get; }
@@ -451,6 +429,7 @@ namespace Rpm.SqlLite
                 T xreturn = default;
                 for (int i = 0; i < 5; i++)
                 {
+                    bool xbreak = false;
                     try
                     {
                         if (!File.Exists(filepath)) return default;
@@ -463,7 +442,10 @@ namespace Rpm.SqlLite
                             return xent;
                         if (packet == null || string.IsNullOrEmpty(criteria) ||
                             packet.ContainsCriteria(criteria, fullmatch))
+                        {
+                            xbreak = true;
                             xent = (T)ser.Deserialize(fs);
+                        }
 
                         fs.Close();
                         return xent;
@@ -471,6 +453,7 @@ namespace Rpm.SqlLite
                     catch (Exception e)
                     {
                         xreturn = default;
+                        if (xbreak) break;
                     }
                 }
 

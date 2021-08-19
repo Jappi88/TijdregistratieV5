@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Various;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Forms
@@ -219,7 +220,7 @@ namespace Forms
 
         private void Producties_FormClosing(object sender, FormClosingEventArgs e)
         {
-           
+            this.SetLastInfo();
         }
 
         private DockStyle GetDockStyle(int index)
@@ -259,6 +260,11 @@ namespace Forms
                 curindex++;
                 //content.DockHandler.DockTo(pane, DockStyle.Right, i);
             }
+        }
+
+        private void Producties_Load(object sender, EventArgs e)
+        {
+            this.InitLastInfo();
         }
     }
 }

@@ -46,6 +46,7 @@ namespace Forms
             this.Controls.Add(this.chartView1);
             this.Name = "ViewChartForm";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.Load += new System.EventHandler(this.ViewChartForm_Load);
             this.ResumeLayout(false);
 

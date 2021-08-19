@@ -163,9 +163,6 @@
     <Reference Include="ObjectListView">
       <HintPath>..\..\..\Desktop\ProductieManager\ObjectListView.dll</HintPath>
     </Reference>
-    <Reference Include="Polenter.SharpSerializer">
-      <HintPath>..\..\..\Desktop\ProductieManager\Polenter.SharpSerializer.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -1417,6 +1414,13 @@
       <Project>{fb9e7e6b-b19f-4f37-a708-2996190cef13}</Project>
       <Name>AutoUpdater.NET</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SharpSerializer-master\SharpSerializer\SharpSerializer.csproj">
+      <Project>{e29b5e7d-3821-4b60-a8ce-6c896dff6c61}</Project>
+      <Name>SharpSerializer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Rpm\Synchronisatie\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Code to merge the assemblies into one:setup.exe -->

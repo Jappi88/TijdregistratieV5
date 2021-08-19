@@ -226,6 +226,13 @@ namespace ProductieManager.Forms
             return $"<img src='{name};width:{imagesize.Width};height:{imagesize.Height};'</>";
         }
 
+        private string _Selected = null;
+        public void Show(string selected = null)
+        {
+            _Selected = selected;
+            base.Show();
+        }
+
         private void ChatForm_Shown(object sender, EventArgs e)
         {
             if (!ProductieChat.LoggedIn || ProductieChat.Chat == null)
@@ -305,6 +312,9 @@ namespace ProductieManager.Forms
                 for(int i = 0; i < ProductieChat.Gebruikers.Count; i++)
                 {
                     var user = ProductieChat.Gebruikers[i];
+                    if (_Selected != null &&
+                        string.Equals(user.UserName, _Selected, StringComparison.CurrentCultureIgnoreCase))
+                        selected = user;
                     var img = user.GetProfielImage()??Properties.Resources.avatardefault_92824;
                     LoadedUserImages.Images.Add(user.UserName, img);
                     int unread = ProductieChat.Chat.UnreadMessages(user.UserName);

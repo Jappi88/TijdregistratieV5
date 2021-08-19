@@ -1275,7 +1275,7 @@ namespace Controls
         private XMessageBox _unreadMessages;
         public void UpdateUnreadMessages(UserChat user)
         {
-            this.Invoke(new MethodInvoker(() =>
+            this.BeginInvoke(new Action(() =>
             {
                 try
                 {
@@ -1311,6 +1311,7 @@ namespace Controls
 
                         if (names.Count == 0) return;
                         {
+                            Application.OpenForms["SplashScreen"]?.Close();
                             string xv = names.Count == 1 ? "bericht" : "berichten";
                             var bttns = new Dictionary<string, DialogResult>();
                             bttns.Add("OK", DialogResult.OK);
@@ -1323,7 +1324,7 @@ namespace Controls
                            _unreadMessages?.Dispose();
                             _unreadMessages = null;
                             if (result == DialogResult.Yes)
-                                ShowChatWindow();
+                                ShowChatWindow(names[0]);
 
                         }
                     }
@@ -1447,7 +1448,7 @@ namespace Controls
             //_calcform.Focus();
         }
 
-        public static void ShowChatWindow()
+        public static void ShowChatWindow(string username = null)
         {
             if (_chatform == null)
             {
@@ -1458,7 +1459,7 @@ namespace Controls
                     _chatform = null;
                 };
             }
-            _chatform.Show();
+            _chatform.Show(username);
             if (_chatform.WindowState == FormWindowState.Minimized)
                 _chatform.WindowState = FormWindowState.Normal;
             _chatform.BringToFront();

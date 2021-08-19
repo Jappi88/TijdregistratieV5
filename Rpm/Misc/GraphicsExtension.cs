@@ -24,11 +24,9 @@ namespace ProductieManager.Rpm.Misc
 
         public static byte[] ToByteArray(this Image imageIn)
         {
-            using (var ms = new MemoryStream())
-            {
-                imageIn.Save(ms, imageIn.RawFormat);
-                return ms.ToArray();
-            }
+            using var ms = new MemoryStream();
+            imageIn.Save(ms, imageIn.RawFormat);
+            return ms.ToArray();
         }
 
         public static Bitmap ResizeImage(this Image image, int width, int height)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -74,6 +75,7 @@ namespace ProductieManager.Rpm.Productie
 
         public void InitOfflineDB()
         {
+            return;
             if (Manager.DefaultSettings.GebruikOfflineMetSync && !string.Equals(Manager.DbPath,
                     Manager.DefaultSettings.TempMainDB.UpdatePath, StringComparison.CurrentCultureIgnoreCase) &&
                 Directory.Exists(Manager.DefaultSettings.TempMainDB.UpdatePath))
@@ -99,18 +101,10 @@ namespace ProductieManager.Rpm.Productie
 
         public void DisableOfflineDB()
         {
-            Manager.Database.ProductieFormulieren.MultiFiles.SetSecondaryPath(
-                Manager.DefaultSettings.TempMainDB.UpdatePath, new SecondaryManageType[]
-                {
-                });
-            Manager.Database.GereedFormulieren.MultiFiles.SetSecondaryPath(
-                Manager.DefaultSettings.TempMainDB.UpdatePath, new SecondaryManageType[]
-                {
-                });
-            Manager.Database.PersoneelLijst.MultiFiles.SetSecondaryPath(Manager.DefaultSettings.TempMainDB.UpdatePath,
-                new SecondaryManageType[]
-                {
-                });
+            return;
+            Manager.Database.ProductieFormulieren.MultiFiles.DisposeSecondayPath();
+            Manager.Database.GereedFormulieren.MultiFiles.DisposeSecondayPath();
+            Manager.Database.PersoneelLijst.MultiFiles.DisposeSecondayPath();
         }
 
         private bool _IsSyncing = false;
@@ -118,7 +112,7 @@ namespace ProductieManager.Rpm.Productie
         {
             if (_IsSyncing || !Manager.DefaultSettings.GebruikOfflineMetSync) return;
             _IsSyncing = true;
-            Task.Factory.StartNew(async ()=>
+            Task.Factory.StartNew(()=>
             {
                 if (Manager.DefaultSettings?.MainDB == null || Manager.DefaultSettings.TempMainDB == null) return 0;
                 int xreturn = 0;
@@ -131,329 +125,19 @@ namespace ProductieManager.Rpm.Productie
                         Directory.Exists(Manager.DefaultSettings.MainDB.UpdatePath) &&
                         Directory.Exists(Manager.DefaultSettings.TempMainDB.UpdatePath))
                     {
-                        var remotepath = Manager.DefaultSettings.MainDB.UpdatePath;
-                        var localpath = Manager.DefaultSettings.TempMainDB.UpdatePath;
-                        var remotedb = await Manager.GetAllProductiePaths(true, false);
-                        var localdb = await Manager.GetAllProductiePaths(true, true);
-                        //sync producties die offline zijn.
-                        foreach (var path in remotedb)
-                        {
-                            if (!path.ToLower().StartsWith(remotepath.ToLower())) continue;
+                        //producties
+                        string remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\SqlDatabase";
+                        string localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\SqlDatabase";
+                        //gereed producties
+                        string remotegereedproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\GereedDb";
+                        string localgereedproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\GereedDb";
+                        //personeel
+                        string remotepersoneelpath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\PersoneelDb";
+                        string localpersoneelpath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\PersoneelDb";
 
-                            var localfilep = localpath + path.ToLower().Replace(remotepath.ToLower(), "");
-                            if (File.Exists(localfilep))
-                            {
-                                var fi1 = new FileInfo(path);
-                                var fi2 = new FileInfo(localfilep);
-                                if (fi1.CreationTime > fi2.CreationTime || fi1.LastWriteTime > fi2.LastWriteTime)
-                                {
-                                    for (int i = 0; i < 10; i++)
-                                    {
-                                        try
-                                        {
-                                            //File.Delete(localfilep);
-                                            //File.WriteAllBytes(localfilep,File.ReadAllBytes(path));
-                                            File.Copy(path, localfilep, true);
-                                            var dt = DateTime.Now;
-                                            fi1.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
-                                            fi2.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
-                                            xreturn++;
-                                            break;
-                                        }
-                                        catch (Exception e)
-                                        {
-                                        }
-
-                                        await Task.Delay(100);
-                                    }
-
-                                }
-                                else if (fi1.CreationTime < fi2.CreationTime || fi1.LastWriteTime < fi2.LastWriteTime)
-                                {
-                                    for (int i = 0; i < 10; i++)
-                                    {
-                                        try
-                                        {
-                                            //File.Delete(path);
-                                            //File.WriteAllBytes(path, File.ReadAllBytes(localfilep));
-                                            File.Copy(localfilep, path, true);
-                                            var dt = DateTime.Now;
-                                            fi1.CreationTime = new DateTime(dt.Year, dt.Month,dt.Day, dt.Hour, dt.Minute,0);
-                                            fi2.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
-                                            xreturn++;
-                                            break;
-                                        }
-                                        catch (Exception e)
-                                        {
-                                        }
-
-                                        await Task.Delay(100);
-                                    }
-
-                                }
-
-
-                            }
-                            else
-                            {
-                                for (int i = 0; i < 10; i++)
-                                {
-                                    try
-                                    {
-                                        //File.Delete(localfilep);
-                                        //File.WriteAllBytes(localfilep, File.ReadAllBytes(path));
-                                        File.Copy(path, localfilep, true);
-                                        xreturn++;
-                                        break;
-                                    }
-                                    catch (Exception e)
-                                    {
-                                    }
-
-                                    await Task.Delay(100);
-                                }
-                            }
-
-                            localdb.RemoveAll(x => string.Equals(Path.GetFileName(path), Path.GetFileName(x),
-                                StringComparison.CurrentCultureIgnoreCase));
-                        }
-                        //sync producties die nog over zijn en online zijn.
-                        foreach (var path in localdb)
-                        {
-                            if (!path.ToLower().StartsWith(localpath.ToLower())) continue;
-
-                            var remotefilep = remotepath + path.ToLower().Replace(localpath.ToLower(), "");
-                            if (File.Exists(remotefilep))
-                            {
-                                var fi1 = new FileInfo(path);
-                                var fi2 = new FileInfo(remotefilep);
-                                if (fi1.CreationTime > fi2.CreationTime || fi1.LastWriteTime > fi2.LastWriteTime)
-                                {
-                                    for (int i = 0; i < 10; i++)
-                                    {
-                                        try
-                                        {
-                                            //File.Delete(remotefilep);
-                                            //File.WriteAllBytes(remotefilep, File.ReadAllBytes(path));
-                                            File.Copy(path, remotefilep, true);
-                                            var dt = DateTime.Now;
-                                            fi1.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
-                                            fi2.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
-                                            xreturn++;
-                                            break;
-                                        }
-                                        catch (Exception e)
-                                        {
-                                        }
-
-                                        await Task.Delay(100);
-                                    }
-
-                                }
-                                else if (fi1.CreationTime < fi2.CreationTime || fi1.LastWriteTime < fi2.LastWriteTime)
-                                {
-                                    for (int i = 0; i < 10; i++)
-                                    {
-                                        try
-                                        {
-                                            //File.Delete(path);
-                                            //File.WriteAllBytes(path, File.ReadAllBytes(remotefilep));
-                                            File.Copy(remotefilep, path, true);
-                                            var dt = DateTime.Now;
-                                            fi1.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
-                                            fi2.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
-                                            break;
-                                        }
-                                        catch (Exception e)
-                                        {
-                                        }
-
-                                        await Task.Delay(100);
-                                    }
-
-                                }
-                            }
-                            else
-                            {
-                                for (int i = 0; i < 10; i++)
-                                {
-                                    try
-                                    {
-                                        //File.Delete(remotefilep);
-                                        //File.WriteAllBytes(remotefilep, File.ReadAllBytes(path));
-                                        File.Copy(path, remotefilep, true);
-                                        xreturn++;
-                                        break;
-                                    }
-                                    catch (Exception e)
-                                    {
-                                    }
-
-                                    await Task.Delay(100);
-                                }
-                            }
-                        }
-
-                        //sync personeel.
-                        var remotepers = await Manager.Database.PersoneelLijst.GetAllPaths(false);
-                        var localpers = await Manager.Database.PersoneelLijst.GetAllPaths(true);
-                        foreach (var path in remotepers)
-                        {
-                            if (!path.ToLower().StartsWith(remotepath.ToLower())) continue;
-
-                            var localfilep = localpath + path.ToLower().Replace(remotepath.ToLower(), "");
-                            if (File.Exists(localfilep))
-                            {
-                                var fi1 = new FileInfo(path);
-                                var fi2 = new FileInfo(localfilep);
-                                if (fi1.CreationTime > fi2.CreationTime || fi1.LastWriteTime > fi2.LastWriteTime)
-                                {
-                                    for (int i = 0; i < 10; i++)
-                                    {
-                                        try
-                                        {
-                                            //File.Delete(localfilep);
-                                            //File.WriteAllBytes(localfilep,File.ReadAllBytes(path));
-                                            File.Copy(path, localfilep, true);
-                                            var dt = DateTime.Now;
-                                            fi1.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
-                                            fi2.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
-                                            xreturn++;
-                                            break;
-                                        }
-                                        catch (Exception e)
-                                        {
-                                        }
-
-                                        await Task.Delay(100);
-                                    }
-
-                                }
-                                else if (fi1.CreationTime < fi2.CreationTime || fi1.LastWriteTime < fi2.LastWriteTime)
-                                {
-                                    for (int i = 0; i < 10; i++)
-                                    {
-                                        try
-                                        {
-                                            //File.Delete(path);
-                                            //File.WriteAllBytes(path, File.ReadAllBytes(localfilep));
-                                            File.Copy(localfilep, path, true);
-                                            var dt = DateTime.Now;
-                                            fi1.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
-                                            fi2.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
-                                            xreturn++;
-                                            break;
-                                        }
-                                        catch (Exception e)
-                                        {
-                                        }
-
-                                        await Task.Delay(100);
-                                    }
-
-                                }
-
-
-                            }
-                            else
-                            {
-                                for (int i = 0; i < 10; i++)
-                                {
-                                    try
-                                    {
-                                        //File.Delete(localfilep);
-                                        //File.WriteAllBytes(localfilep, File.ReadAllBytes(path));
-                                        File.Copy(path, localfilep, true);
-                                        xreturn++;
-                                        break;
-                                    }
-                                    catch (Exception e)
-                                    {
-                                    }
-
-                                    await Task.Delay(100);
-                                }
-                            }
-
-                            localpers.RemoveAll(x => string.Equals(Path.GetFileName(path), Path.GetFileName(x),
-                                StringComparison.CurrentCultureIgnoreCase));
-                        }
-                        //sync personeel die nog over zijn en online zijn.
-                        foreach (var path in localpers)
-                        {
-                            if (!path.ToLower().StartsWith(localpath.ToLower())) continue;
-
-                            var remotefilep = remotepath + path.ToLower().Replace(localpath.ToLower(), "");
-                            if (File.Exists(remotefilep))
-                            {
-                                var fi1 = new FileInfo(path);
-                                var fi2 = new FileInfo(remotefilep);
-                                if (fi1.CreationTime > fi2.CreationTime || fi1.LastWriteTime > fi2.LastWriteTime)
-                                {
-                                    for (int i = 0; i < 10; i++)
-                                    {
-                                        try
-                                        {
-                                            //File.Delete(remotefilep);
-                                            //File.WriteAllBytes(remotefilep, File.ReadAllBytes(path));
-                                            File.Copy(path, remotefilep, true);
-                                            var dt = DateTime.Now;
-                                            fi1.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
-                                            fi2.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
-                                            xreturn++;
-                                            break;
-                                        }
-                                        catch (Exception e)
-                                        {
-                                        }
-
-                                        await Task.Delay(100);
-                                    }
-
-                                }
-                                else if (fi1.CreationTime < fi2.CreationTime || fi1.LastWriteTime < fi2.LastWriteTime)
-                                {
-                                    for (int i = 0; i < 10; i++)
-                                    {
-                                        try
-                                        {
-                                            //File.Delete(path);
-                                            //File.WriteAllBytes(path, File.ReadAllBytes(remotefilep));
-                                            File.Copy(remotefilep, path, true);
-                                            var dt = DateTime.Now;
-                                            fi1.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
-                                            fi2.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
-                                            break;
-                                        }
-                                        catch (Exception e)
-                                        {
-                                        }
-
-                                        await Task.Delay(100);
-                                    }
-
-                                }
-                            }
-                            else
-                            {
-                                for (int i = 0; i < 10; i++)
-                                {
-                                    try
-                                    {
-                                        //File.Delete(remotefilep);
-                                        //File.WriteAllBytes(remotefilep, File.ReadAllBytes(path));
-                                        File.Copy(path, remotefilep, true);
-                                        xreturn++;
-                                        break;
-                                    }
-                                    catch (Exception e)
-                                    {
-                                    }
-
-                                    await Task.Delay(100);
-                                }
-                            }
-                        }
+                        SyncDirectories(remoteproductiepath, localproductiepath);
+                        SyncDirectories(remotegereedproductiepath, localgereedproductiepath);
+                        SyncDirectories(remotepersoneelpath, localpersoneelpath);
                     }
 
                 }
@@ -461,16 +145,341 @@ namespace ProductieManager.Rpm.Productie
                 {
                     Console.WriteLine(e);
                 }
-
-                if (xreturn > 0)
-                {
-                    string x1 = xreturn == 1 ? "bestand" : "bestanden";
-                    Manager.RemoteMessage(new RemoteMessage($"{xreturn} {x1} offline gesynchroniseerd", MessageAction.AlgemeneMelding, MsgType.Info));
-                }
-
                 _IsSyncing = false;
                 return xreturn;
             });
+        }
+
+        private Task SyncDirectories(string remotepath, string localpath)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                using var roboCopyProcess = new Process();
+                roboCopyProcess.StartInfo.FileName = "robocopy.exe";
+                roboCopyProcess.StartInfo.Arguments = remotepath + " " + localpath + " /MIR /mon:1 /mot:0";
+                roboCopyProcess.StartInfo.UseShellExecute = false;
+                roboCopyProcess.StartInfo.CreateNoWindow = false;
+                roboCopyProcess.Start();
+                roboCopyProcess.WaitForExit();
+                Console.WriteLine("Done!");
+            });
+        }
+
+        private async Task xSyncDirectories(string remotepath, string localpath)
+        {
+            var remotedb = await Manager.GetAllProductiePaths(true, false);
+            var localdb = await Manager.GetAllProductiePaths(true, true);
+            //sync producties die offline zijn.
+            foreach (var path in remotedb)
+            {
+                if (!path.ToLower().StartsWith(remotepath.ToLower())) continue;
+
+                var localfilep = localpath + path.ToLower().Replace(remotepath.ToLower(), "");
+                if (File.Exists(localfilep))
+                {
+                    var fi1 = new FileInfo(path);
+                    var fi2 = new FileInfo(localfilep);
+                    if (fi1.CreationTime > fi2.CreationTime || fi1.LastWriteTime > fi2.LastWriteTime)
+                    {
+                        for (int i = 0; i < 10; i++)
+                        {
+                            try
+                            {
+                                //File.Delete(localfilep);
+                                //File.WriteAllBytes(localfilep,File.ReadAllBytes(path));
+                                File.Copy(path, localfilep, true);
+                                var dt = DateTime.Now;
+                                fi1.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
+                                fi2.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
+                                break;
+                            }
+                            catch (Exception e)
+                            {
+                            }
+
+                            await Task.Delay(100);
+                        }
+
+                    }
+                    else if (fi1.CreationTime < fi2.CreationTime || fi1.LastWriteTime < fi2.LastWriteTime)
+                    {
+                        for (int i = 0; i < 10; i++)
+                        {
+                            try
+                            {
+                                //File.Delete(path);
+                                //File.WriteAllBytes(path, File.ReadAllBytes(localfilep));
+                                File.Copy(localfilep, path, true);
+                                var dt = DateTime.Now;
+                                fi1.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
+                                fi2.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
+                                break;
+                            }
+                            catch (Exception e)
+                            {
+                            }
+
+                            await Task.Delay(100);
+                        }
+
+                    }
+
+
+                }
+                else
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        try
+                        {
+                            //File.Delete(localfilep);
+                            //File.WriteAllBytes(localfilep, File.ReadAllBytes(path));
+                            File.Copy(path, localfilep, true);
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                        }
+
+                        await Task.Delay(100);
+                    }
+                }
+
+                localdb.RemoveAll(x => string.Equals(Path.GetFileName(path), Path.GetFileName(x),
+                    StringComparison.CurrentCultureIgnoreCase));
+            }
+
+            //sync producties die nog over zijn en online zijn.
+            foreach (var path in localdb)
+            {
+                if (!path.ToLower().StartsWith(localpath.ToLower())) continue;
+
+                var remotefilep = remotepath + path.ToLower().Replace(localpath.ToLower(), "");
+                if (File.Exists(remotefilep))
+                {
+                    var fi1 = new FileInfo(path);
+                    var fi2 = new FileInfo(remotefilep);
+                    if (fi1.CreationTime > fi2.CreationTime || fi1.LastWriteTime > fi2.LastWriteTime)
+                    {
+                        for (int i = 0; i < 10; i++)
+                        {
+                            try
+                            {
+                                //File.Delete(remotefilep);
+                                //File.WriteAllBytes(remotefilep, File.ReadAllBytes(path));
+                                File.Copy(path, remotefilep, true);
+                                var dt = DateTime.Now;
+                                fi1.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
+                                fi2.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
+                                break;
+                            }
+                            catch (Exception e)
+                            {
+                            }
+
+                            await Task.Delay(100);
+                        }
+
+                    }
+                    else if (fi1.CreationTime < fi2.CreationTime || fi1.LastWriteTime < fi2.LastWriteTime)
+                    {
+                        for (int i = 0; i < 10; i++)
+                        {
+                            try
+                            {
+                                //File.Delete(path);
+                                //File.WriteAllBytes(path, File.ReadAllBytes(remotefilep));
+                                File.Copy(remotefilep, path, true);
+                                var dt = DateTime.Now;
+                                fi1.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
+                                fi2.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
+                                break;
+                            }
+                            catch (Exception e)
+                            {
+                            }
+
+                            await Task.Delay(100);
+                        }
+
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        try
+                        {
+                            //File.Delete(remotefilep);
+                            //File.WriteAllBytes(remotefilep, File.ReadAllBytes(path));
+                            File.Copy(path, remotefilep, true);
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                        }
+
+                        await Task.Delay(100);
+                    }
+                }
+            }
+
+            //sync personeel.
+            var remotepers = await Manager.Database.PersoneelLijst.GetAllPaths(false);
+            var localpers = await Manager.Database.PersoneelLijst.GetAllPaths(true);
+            foreach (var path in remotepers)
+            {
+                if (!path.ToLower().StartsWith(remotepath.ToLower())) continue;
+
+                var localfilep = localpath + path.ToLower().Replace(remotepath.ToLower(), "");
+                if (File.Exists(localfilep))
+                {
+                    var fi1 = new FileInfo(path);
+                    var fi2 = new FileInfo(localfilep);
+                    if (fi1.CreationTime > fi2.CreationTime || fi1.LastWriteTime > fi2.LastWriteTime)
+                    {
+                        for (int i = 0; i < 10; i++)
+                        {
+                            try
+                            {
+                                //File.Delete(localfilep);
+                                //File.WriteAllBytes(localfilep,File.ReadAllBytes(path));
+                                File.Copy(path, localfilep, true);
+                                var dt = DateTime.Now;
+                                fi1.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
+                                fi2.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
+                                break;
+                            }
+                            catch (Exception e)
+                            {
+                            }
+
+                            await Task.Delay(100);
+                        }
+
+                    }
+                    else if (fi1.CreationTime < fi2.CreationTime || fi1.LastWriteTime < fi2.LastWriteTime)
+                    {
+                        for (int i = 0; i < 10; i++)
+                        {
+                            try
+                            {
+                                //File.Delete(path);
+                                //File.WriteAllBytes(path, File.ReadAllBytes(localfilep));
+                                File.Copy(localfilep, path, true);
+                                var dt = DateTime.Now;
+                                fi1.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
+                                fi2.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
+                                break;
+                            }
+                            catch (Exception e)
+                            {
+                            }
+
+                            await Task.Delay(100);
+                        }
+
+                    }
+
+
+                }
+                else
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        try
+                        {
+                            //File.Delete(localfilep);
+                            //File.WriteAllBytes(localfilep, File.ReadAllBytes(path));
+                            File.Copy(path, localfilep, true);
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                        }
+
+                        await Task.Delay(100);
+                    }
+                }
+
+                localpers.RemoveAll(x => string.Equals(Path.GetFileName(path), Path.GetFileName(x),
+                    StringComparison.CurrentCultureIgnoreCase));
+            }
+
+            //sync personeel die nog over zijn en online zijn.
+            foreach (var path in localpers)
+            {
+                if (!path.ToLower().StartsWith(localpath.ToLower())) continue;
+
+                var remotefilep = remotepath + path.ToLower().Replace(localpath.ToLower(), "");
+                if (File.Exists(remotefilep))
+                {
+                    var fi1 = new FileInfo(path);
+                    var fi2 = new FileInfo(remotefilep);
+                    if (fi1.CreationTime > fi2.CreationTime || fi1.LastWriteTime > fi2.LastWriteTime)
+                    {
+                        for (int i = 0; i < 10; i++)
+                        {
+                            try
+                            {
+                                //File.Delete(remotefilep);
+                                //File.WriteAllBytes(remotefilep, File.ReadAllBytes(path));
+                                File.Copy(path, remotefilep, true);
+                                var dt = DateTime.Now;
+                                fi1.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
+                                fi2.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
+                                break;
+                            }
+                            catch (Exception e)
+                            {
+                            }
+
+                            await Task.Delay(100);
+                        }
+
+                    }
+                    else if (fi1.CreationTime < fi2.CreationTime || fi1.LastWriteTime < fi2.LastWriteTime)
+                    {
+                        for (int i = 0; i < 10; i++)
+                        {
+                            try
+                            {
+                                //File.Delete(path);
+                                //File.WriteAllBytes(path, File.ReadAllBytes(remotefilep));
+                                File.Copy(remotefilep, path, true);
+                                var dt = DateTime.Now;
+                                fi1.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
+                                fi2.CreationTime = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0);
+                                break;
+                            }
+                            catch (Exception e)
+                            {
+                            }
+
+                            await Task.Delay(100);
+                        }
+
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        try
+                        {
+                            //File.Delete(remotefilep);
+                            //File.WriteAllBytes(remotefilep, File.ReadAllBytes(path));
+                            File.Copy(path, remotefilep, true);
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                        }
+
+                        await Task.Delay(100);
+                    }
+                }
+            }
         }
 
         public void UpdateProducties()

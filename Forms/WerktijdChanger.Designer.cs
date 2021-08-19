@@ -44,6 +44,7 @@ namespace Forms
             this.xstatuslabel = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.xroosterb = new System.Windows.Forms.Button();
+            this.xspeciaalroosterb = new System.Windows.Forms.Button();
             this.xaddextratime = new System.Windows.Forms.Button();
             this.xpasaan = new System.Windows.Forms.Button();
             this.xuurgewerkt = new System.Windows.Forms.Label();
@@ -57,7 +58,6 @@ namespace Forms
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.xcancelb = new System.Windows.Forms.Button();
             this.xokb = new System.Windows.Forms.Button();
-            this.xspeciaalroosterb = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.xwerktijden)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -225,6 +225,23 @@ namespace Forms
             this.xroosterb.UseVisualStyleBackColor = true;
             this.xroosterb.Click += new System.EventHandler(this.xroosterb_Click);
             // 
+            // xspeciaalroosterb
+            // 
+            this.xspeciaalroosterb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.xspeciaalroosterb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xspeciaalroosterb.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xspeciaalroosterb.Image = global::ProductieManager.Properties.Resources.schedule_32_32;
+            this.xspeciaalroosterb.Location = new System.Drawing.Point(248, 71);
+            this.xspeciaalroosterb.Name = "xspeciaalroosterb";
+            this.xspeciaalroosterb.Size = new System.Drawing.Size(158, 41);
+            this.xspeciaalroosterb.TabIndex = 11;
+            this.xspeciaalroosterb.Text = "Speciale Roosters";
+            this.xspeciaalroosterb.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xspeciaalroosterb, "Beheer speciale roosters.\r\nSpecial roosters zijn roosters die vallen buiten om de" +
+        " normale werkdagen.");
+            this.xspeciaalroosterb.UseVisualStyleBackColor = true;
+            this.xspeciaalroosterb.Click += new System.EventHandler(this.xspeciaalroosterb_Click);
+            // 
             // xaddextratime
             // 
             this.xaddextratime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -375,23 +392,6 @@ namespace Forms
             this.xokb.UseVisualStyleBackColor = true;
             this.xokb.Click += new System.EventHandler(this.xokb_Click);
             // 
-            // xspeciaalroosterb
-            // 
-            this.xspeciaalroosterb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.xspeciaalroosterb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xspeciaalroosterb.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xspeciaalroosterb.Image = global::ProductieManager.Properties.Resources.schedule_32_32;
-            this.xspeciaalroosterb.Location = new System.Drawing.Point(248, 71);
-            this.xspeciaalroosterb.Name = "xspeciaalroosterb";
-            this.xspeciaalroosterb.Size = new System.Drawing.Size(158, 41);
-            this.xspeciaalroosterb.TabIndex = 11;
-            this.xspeciaalroosterb.Text = "Speciale Roosters";
-            this.xspeciaalroosterb.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xspeciaalroosterb, "Beheer speciale roosters.\r\nSpecial roosters zijn roosters die vallen buiten om de" +
-        " normale werkdagen.");
-            this.xspeciaalroosterb.UseVisualStyleBackColor = true;
-            this.xspeciaalroosterb.Click += new System.EventHandler(this.xspeciaalroosterb_Click);
-            // 
             // WerktijdChanger
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -410,6 +410,8 @@ namespace Forms
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Pas Werktijd Aan";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WerktijdChanger_FormClosing);
+            this.Load += new System.EventHandler(this.WerktijdChanger_Load);
             ((System.ComponentModel.ISupportInitialize)(this.xwerktijden)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);

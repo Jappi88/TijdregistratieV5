@@ -8,6 +8,7 @@ using ProductieManager.Forms;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
+using Various;
 
 namespace Forms
 {
@@ -536,6 +537,16 @@ namespace Forms
                 UpdateUurGewerkt(GetRooster(null));
                 UpdateStatus();
             }
+        }
+
+        private void WerktijdChanger_Load(object sender, EventArgs e)
+        {
+            this.InitLastInfo();
+        }
+
+        private void WerktijdChanger_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.SetLastInfo();
         }
     }
 }

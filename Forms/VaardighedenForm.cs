@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Rpm.Productie;
+using Various;
 
 namespace Forms
 {
@@ -37,9 +38,15 @@ namespace Forms
 
         private void VaardighedenForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            this.SetLastInfo();
             Manager.OnPersoneelChanged -= Manager_OnPersoneelChanged;
             if (Manager.Opties != null)
                 Manager.Opties.ViewDataVaardighedenState = persoonVaardigheden1.xskillview.SaveState();
+        }
+
+        private void Form_Load(object sender, EventArgs e)
+        {
+            this.InitLastInfo();
         }
 
         private void VaardighedenForm_Shown(object sender, EventArgs e)

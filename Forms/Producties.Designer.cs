@@ -48,6 +48,7 @@ namespace Forms
             this.Name = "Producties";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Producties_FormClosing);
+            this.Load += new System.EventHandler(this.Producties_Load);
             this.Shown += new System.EventHandler(this.Producties_Shown);
             this.ResumeLayout(false);
 

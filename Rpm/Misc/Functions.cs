@@ -1087,6 +1087,7 @@ namespace Rpm.Misc
         {
             try
             {
+                if (data == null || data.Length < 8) return default;
                 var ser = new SharpSerializer(true);
                 using var ms = new MemoryStream(data);
                 var xreturn = (T) ser.Deserialize(ms);
@@ -1118,11 +1119,31 @@ namespace Rpm.Misc
         {
             try
             {
-                using var ms = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                var ser = new SharpSerializer(true);
-                var xreturn = (T)ser.Deserialize(ms);
-                ms.Close();
-                return xreturn;
+                //T xreturn = default;
+                if (!File.Exists(filepath)) return default;
+                for (int i = 0; i < 4; i++)
+                {
+                    try
+                    {
+                        var data = File.ReadAllBytes(filepath);
+                        if (data.Length > 8)
+                            return data.DeSerialize<T>();
+                        break;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                    
+                }
+                return File.ReadAllBytes(filepath).DeSerialize<T>();
+                //using (var ms = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                //{
+                //    var ser = new SharpSerializer(true);
+                //    xreturn = (T)ser.Deserialize(ms);
+                //    ms.Close();
+                //}
+                //return xreturn;
             }
             catch (Exception ex)
             {
@@ -1151,10 +1172,14 @@ namespace Rpm.Misc
         {
             try
             {
-                var ser = new SharpSerializer(true);
-                using var ms = new FileStream(destination, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
-                ser.Serialize(instance, ms);
-                ms.Close();
+            //    var ser = new SharpSerializer(true);
+            //    using (var ms = new FileStream(destination, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
+            //    {
+            //        ser.Serialize(instance, ms);
+            //        ms.Flush();
+            //        ms.Close();
+            //    }
+                File.WriteAllBytes(destination,instance.Serialize());
                 return true;
             }
             catch (Exception)

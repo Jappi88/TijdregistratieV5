@@ -17,6 +17,7 @@ using Rpm.Settings;
 using Rpm.Various;
 using Rpm.ViewModels;
 using ProductieManager.Rpm.Misc;
+using Various;
 
 namespace Forms
 {
@@ -654,8 +655,14 @@ namespace Forms
                 }
             }
 
+            this.SetLastInfo();
             Manager.OnSettingsChanged -= _manager_OnSettingsChanged;
             //Manager.OnLoginChanged -= _manager_OnLoginChanged;
+        }
+
+        private void Form_Load(object sender, EventArgs e)
+        {
+            this.InitLastInfo();
         }
 
         private void xweergavelijst_SelectedIndexChanged(object sender, EventArgs e)

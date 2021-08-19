@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
+using MetroFramework.Controls;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
@@ -13,6 +14,7 @@ using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.Various;
 using Rpm.ViewModels;
+using Various;
 
 namespace Forms
 {
@@ -1007,6 +1009,7 @@ namespace Forms
 
     private void PersoneelsForm_FormClosing(object sender, FormClosingEventArgs e)
     {
+        this.SetLastInfo();
         if (Manager.Opties != null)
             Manager.Opties.ViewDataPersoneelState = xuserlist.SaveState();
         Manager.OnSettingsChanged -= PManager_OnSettingsChanged;
@@ -1014,7 +1017,12 @@ namespace Forms
         Manager.OnPersoneelDeleted -= Manager_OnPersoneelDeleted;
     }
 
-    private void CollapseGroups(bool collapsed)
+    private void Form_Load(object sender, EventArgs e)
+    {
+        this.InitLastInfo();
+    }
+
+        private void CollapseGroups(bool collapsed)
     {
         foreach (ListViewGroup group in xuserlist.Groups)
             ((OLVGroup) @group.Tag).Collapsed = collapsed;
@@ -1042,16 +1050,14 @@ namespace Forms
 
     private void xsearch_Enter(object sender, EventArgs e)
     {
-        var tb = sender as MetroFramework.Controls.MetroTextBox;
-        if (tb != null)
+        if (sender is MetroTextBox tb)
             if (tb.Text == "Zoeken...")
                 tb.Text = "";
     }
 
     private void xsearch_Leave(object sender, EventArgs e)
     {
-        var tb = sender as MetroFramework.Controls.MetroTextBox;
-        if (tb != null)
+        if (sender is MetroTextBox tb)
             if (string.IsNullOrWhiteSpace(tb.Text))
                 tb.Text = "Zoeken...";
     }

@@ -323,7 +323,7 @@ namespace Rpm.Productie
                 //    return false;
                 try
                 {
-                    var xt = await Database.GetSetting(id);
+                    UserSettings xt = await Database.GetSetting(id);
                     if (xt == null)
                     {
                         xt = (await Database.GetAllSettings()).FirstOrDefault(x=> x.Username.ToLower().StartsWith(name.ToLower()));
@@ -390,16 +390,16 @@ namespace Rpm.Productie
                     changed = true;
                 }
 
-                if (!changed)
-                    changed = !settings.xPublicInstancePropertiesEqual(Opties, new[] {typeof(UserChange)});
+                //if (!changed)
+                //    changed = !settings.xPublicInstancePropertiesEqual(Opties, new[] {typeof(UserChange)});
 
-                if (changed)
-                {
+                //if (changed)
+                //{
                     Functions.SetAutoStartOnBoot(settings.StartNaOpstart);
-                    settings.Save().Wait();
-                }
-
-                if (replace && changed)
+                    settings.Save();
+                //}
+            
+                if (replace)
                 {
                     Opties = settings;
                     if (triggersaved)

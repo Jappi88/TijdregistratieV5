@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using ProductieManager.Rpm.Misc;
 
 namespace ProductieManager.Rpm.Various
 {
@@ -39,20 +40,41 @@ namespace ProductieManager.Rpm.Various
                 if (Manager.LogedInGebruiker == null) return false;
                 if (LoggedIn) return true;
                 ChatPath = Manager.DbPath + "\\Chat";
+                if (!Directory.Exists(ChatPath))
+                    Directory.CreateDirectory(ChatPath);
                 ProfielPath = Manager.DbPath + $"\\Chat\\{Manager.LogedInGebruiker.Username}";
                 BerichtenPath = ChatPath + $"\\{Manager.LogedInGebruiker.Username}\\Berichten";
                 GroupChatImagePath = ChatPath + "\\GroupChatImage.png";
                 if (!File.Exists(GroupChatImagePath) || !GroupChatImagePath.IsImageFile())
-                    Properties.Resources.users_12820.Save(GroupChatImagePath, ImageFormat.Png);
-                if (!Directory.Exists(ChatPath))
-                    Directory.CreateDirectory(ChatPath);
+                {
+                    try
+                    {
+                        var data = Properties.Resources.users_12820.ToByteArray();
+                        File.WriteAllBytes(GroupChatImagePath, data);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                  
+                }
                 if (!Directory.Exists(ProfielPath))
                     Directory.CreateDirectory(ProfielPath);
                 if (!Directory.Exists(BerichtenPath))
                     Directory.CreateDirectory(BerichtenPath);
                 GebruikerPath = ChatPath + $"\\{Manager.LogedInGebruiker.Username}.rpm";
 
-                Chat = GebruikerPath.DeSerialize<UserChat>() ?? new UserChat();
+                try
+                {
+                    if (File.Exists(GebruikerPath))
+                        Chat = File.ReadAllBytes(GebruikerPath).DeSerialize<UserChat>() ?? new UserChat();
+                    else Chat = new UserChat();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+               
                 Chat.UserName = Manager.LogedInGebruiker.Username;
                 Chat.IsOnline = true;
                 Chat.LastOnline = DateTime.Now;
