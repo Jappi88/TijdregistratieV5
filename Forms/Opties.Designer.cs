@@ -174,6 +174,7 @@
             this.metroPanel3 = new MetroFramework.Controls.MetroPanel();
             this.xsynctabpage = new MetroFramework.Controls.MetroTabPage();
             this.panel9 = new System.Windows.Forms.Panel();
+            this.xgebruikofflinemetsync = new System.Windows.Forms.CheckBox();
             this.xenableproductielijstsync = new System.Windows.Forms.CheckBox();
             this.xproductielijstsyncgroup = new System.Windows.Forms.GroupBox();
             this.label19 = new System.Windows.Forms.Label();
@@ -2305,6 +2306,7 @@
             // 
             this.panel9.AutoScroll = true;
             this.panel9.BackColor = System.Drawing.Color.Transparent;
+            this.panel9.Controls.Add(this.xgebruikofflinemetsync);
             this.panel9.Controls.Add(this.xenableproductielijstsync);
             this.panel9.Controls.Add(this.xproductielijstsyncgroup);
             this.panel9.Controls.Add(this.xenablegreedsync);
@@ -2316,6 +2318,19 @@
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(632, 390);
             this.panel9.TabIndex = 43;
+            // 
+            // xgebruikofflinemetsync
+            // 
+            this.xgebruikofflinemetsync.AutoSize = true;
+            this.xgebruikofflinemetsync.BackColor = System.Drawing.Color.Transparent;
+            this.xgebruikofflinemetsync.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xgebruikofflinemetsync.Location = new System.Drawing.Point(16, 292);
+            this.xgebruikofflinemetsync.Name = "xgebruikofflinemetsync";
+            this.xgebruikofflinemetsync.Size = new System.Drawing.Size(311, 21);
+            this.xgebruikofflinemetsync.TabIndex = 45;
+            this.xgebruikofflinemetsync.Text = "Gebruik Offline DB met Online Synchronisatie";
+            this.xgebruikofflinemetsync.UseVisualStyleBackColor = false;
+            this.xgebruikofflinemetsync.Visible = false;
             // 
             // xenableproductielijstsync
             // 
@@ -2833,5 +2848,6 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.NumericUpDown xproductielijstsyncinterval;
+        private System.Windows.Forms.CheckBox xgebruikofflinemetsync;
     }
 }

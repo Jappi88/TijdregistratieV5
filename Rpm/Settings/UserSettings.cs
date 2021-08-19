@@ -357,7 +357,7 @@ namespace Rpm.Settings
         public int WeekOverzichtUpdateInterval { get; set; }
         public int VanafWeek { get; set; }
         public int VanafJaar { get; set; }
-
+        public bool GebruikOfflineMetSync { get; set; }
         public List<DatabaseUpdateEntry> DbUpdateEntries { get; set; }
         public int DbUpdateInterval { get; set; }
         public double BackupInterval { get; set; }

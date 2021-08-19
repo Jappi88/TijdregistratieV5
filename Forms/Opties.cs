@@ -123,6 +123,7 @@ namespace Forms
                 xautologin.Checked = Manager.LogedInGebruiker != null && string.Equals(
                     Manager.LogedInGebruiker?.Username,
                     Manager.DefaultSettings.AutoLoginUsername, StringComparison.CurrentCultureIgnoreCase);
+                xgebruikofflinemetsync.Checked = Manager.DefaultSettings.GebruikOfflineMetSync;
             }
 
             var x = opties;
@@ -483,6 +484,20 @@ namespace Forms
 
                 Manager.DefaultSettings.MainDB.RootPath = db;
             }
+
+            if (Manager.DefaultSettings.GebruikOfflineMetSync != xgebruikofflinemetsync.Checked)
+            {
+                Manager.DefaultSettings.GebruikOfflineMetSync = xgebruikofflinemetsync.Checked;
+                if (Manager.DefaultSettings.GebruikOfflineMetSync)
+                {
+                    Manager.ProductieProvider.InitOfflineDB();
+                }
+                else
+                {
+                    Manager.ProductieProvider.DisableOfflineDB();
+                }
+            }
+
             Manager.DefaultSettings.SaveAsDefault();
             Close();
             return true;

@@ -168,29 +168,15 @@ namespace Rpm.Productie
                     DefaultSettings.SystemID = Guid.NewGuid().ToByteArray().ToHexString(4);
                     DefaultSettings.SaveAsDefault();
                 }
-                if (loadsettings && !string.Equals(DbPath,
-                        DefaultSettings.TempMainDB.UpdatePath, StringComparison.CurrentCultureIgnoreCase) &&
-                    Directory.Exists(DefaultSettings.TempMainDB.UpdatePath))
-                {
-                    Database.ProductieFormulieren.MultiFiles.SetSecondaryPath(DefaultSettings.TempMainDB.UpdatePath, new SecondaryManageType[]
-                    {
-                        SecondaryManageType.Write,
-                        SecondaryManageType.Read
-                    });
-                    Database.GereedFormulieren.MultiFiles.SetSecondaryPath(DefaultSettings.TempMainDB.UpdatePath, new SecondaryManageType[]
-                    {
-                        SecondaryManageType.Write,
-                        SecondaryManageType.Read
-                    });
-                    ProductieProvider.SyncProducties();
-                }
+
                 SystemID = DefaultSettings.SystemID;
                 if (autologin)
                     await AutoLogin(this);
                 if (Opties == null || loadsettings)
                     await LoadSettings(this, raiseManagerLoadingEvents);
                 //await Database.UpdateUserActivity(false);
-
+                if (loadsettings)
+                    ProductieProvider.InitOfflineDB();
                 DbUpdater.UpdateStartupDbs();
                 //Server.StartSync();
                 //LocalConnection.OpenConnection();
