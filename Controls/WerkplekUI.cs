@@ -440,8 +440,7 @@ namespace Controls
         {
             if (xwerkpleklist.SelectedObjects.Count > 0)
             {
-                var wp = xwerkpleklist.SelectedObjects[0] as WerkPlek;
-                if (wp != null)
+                if (xwerkpleklist.SelectedObjects[0] is WerkPlek wp)
                 {
                     var sf = new StoringForm(wp);
                     sf.ShowDialog();

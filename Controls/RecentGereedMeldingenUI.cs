@@ -109,16 +109,23 @@ namespace Controls
             try
             {
                 this.BeginInvoke(new MethodInvoker(() =>
-                            {
-                                //EnableSync = Manager.Opties.AutoGereedSync;
-                                //bool changed = Bereik.Start != Manager.Opties.LastGereedStart || (!Manager.Opties.LastGereedStop.IsDefault() && Manager.Opties.LastGereedStop != Bereik.Stop);
-                                UpdateTijdPeriode(true);
-                                //var dt = DateTime.Now;
-                                //xhourvalue.SetValue(new DateTime(dt.Year, dt.Month, dt.Day, settings.LastRecentGereedTime.Hours,
-                                //    settings.LastRecentGereedTime.Minutes, 0));
-                                //if (changed)
-                                InitRecenteGereedmeldingen();
-                            }));
+                {
+                    try
+                    {
+//EnableSync = Manager.Opties.AutoGereedSync;
+                        //bool changed = Bereik.Start != Manager.Opties.LastGereedStart || (!Manager.Opties.LastGereedStop.IsDefault() && Manager.Opties.LastGereedStop != Bereik.Stop);
+                        UpdateTijdPeriode(true);
+                        //var dt = DateTime.Now;
+                        //xhourvalue.SetValue(new DateTime(dt.Year, dt.Month, dt.Day, settings.LastRecentGereedTime.Hours,
+                        //    settings.LastRecentGereedTime.Minutes, 0));
+                        //if (changed)
+                        InitRecenteGereedmeldingen();
+                    }
+                    catch (Exception e)
+                    {
+                    }
+
+                }));
             }
             catch (Exception e)
             {
@@ -187,6 +194,7 @@ namespace Controls
                 if (xtotgereed.Checked)
                     Manager.Opties.LastGereedStop = xstop;
                 else Manager.Opties.LastGereedStop = new DateTime();
+                Manager.Opties.Save();
             }
         }
 

@@ -7,9 +7,11 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FolderSync;
 using Microsoft.Win32.SafeHandles;
 using ProductieManager;
 using ProductieManager.Rpm.Productie;
+using ProductieManager.Rpm.SqlLite;
 using ProductieManager.Rpm.Various;
 using Rpm.SqlLite;
 using Rpm.Mailing;
@@ -29,7 +31,8 @@ namespace Rpm.Productie
         public static LocalDatabase Database { get; private set; }
         public static DatabaseUpdater DbUpdater { get; private set; }
         public static ProductieProvider ProductieProvider { get; private set; }
-        
+        //public static FileDeletionManager FileDeletionManager { get; private set; }
+
         //public static SqlDatabase Server { get; private set; }
         private List<FileSystemWatcher> _fileWatchers = new();
         private readonly TaskQueues _tasks = new();
@@ -149,6 +152,7 @@ namespace Rpm.Productie
                 }
 
                 LoadPath(path);
+               
                 Database = new LocalDatabase(this, SystemID, DbPath, true)
                 {
                     LoggerEnabled = LoggerEnabled,
@@ -174,12 +178,11 @@ namespace Rpm.Productie
                     await AutoLogin(this);
                 if (Opties == null || loadsettings)
                     await LoadSettings(this, raiseManagerLoadingEvents);
-                //await Database.UpdateUserActivity(false);
+
                 if (loadsettings)
-                    ProductieProvider.InitOfflineDB();
+                    ProductieProvider?.InitOfflineDb();
+
                 DbUpdater.UpdateStartupDbs();
-                //Server.StartSync();
-                //LocalConnection.OpenConnection();
                 while (Mainform.IsLoading)
                     Application.DoEvents();
                 if (raiseManagerLoadingEvents)
@@ -290,8 +293,11 @@ namespace Rpm.Productie
 
         public static void LogOut(object sender)
         {
-            LogedInGebruiker = null;
-            LoginChanged(sender);
+            if (LogedInGebruiker != null)
+            {
+                LogedInGebruiker = null;
+                LoginChanged(sender);
+            }
         }
 
         public Task<ProductieFormulier> Werktaan(string personeelnaam)
@@ -620,7 +626,7 @@ namespace Rpm.Productie
                         if (xprod != null)
                         {
                             prod = xprod;
-                            _ = ProductieFormulier.UpdateDoorloopTijd(null, prod, null, true, true);
+                            _ = ProductieFormulier.UpdateDoorloopTijd(null, prod, null, true, true,false);
                         }
                         return new RemoteMessage($"{prod.ProductieNr} toegevoegd!", MessageAction.NieweProductie,
                             MsgType.Success, null, prod, prod.ProductieNr);
@@ -807,11 +813,11 @@ namespace Rpm.Productie
                         {
                             prod.State = ProductieState.Verwijderd;
                             prod.DatumVerwijderd = DateTime.Now;
-                            if (await Database.UpSert(prod))
+                            string change = $"Productie [{prod.ProductieNr.ToUpper()}] is zojuist verwijderd";
+                            if (await Database.UpSert(prod,change,true,false))
                             {
                                 removed++;
-                                RemoteProductie.RespondByEmail(prod,
-                                    $"Productie [{prod.ProductieNr.ToUpper()}] is zojuist verwijderd");
+                                RemoteProductie.RespondByEmail(prod,change);
                             }
                         }
                     }
@@ -891,12 +897,12 @@ namespace Rpm.Productie
 
                             current.DatumVerwijderd = DateTime.Now;
                             current.State = ProductieState.Verwijderd;
-
-                            if (await Database.UpSert(current))
+                            string change =
+                                "Productie [{current.ArtikelNr}|{current.ProductieNr.ToUpper()}] is zojuist verwijderd";
+                            if (await Database.UpSert(current,change))
                             {
                                 removed = true;
-                                RemoteProductie.RespondByEmail(current,
-                                    $"Productie [{current.ArtikelNr}|{current.ProductieNr.ToUpper()}] is zojuist verwijderd");
+                                RemoteProductie.RespondByEmail(current,change);
                             }
                         }
                     }

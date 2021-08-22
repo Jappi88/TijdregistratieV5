@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Windows.Forms;
 using Rpm.Connection;
 using Rpm.Controls;
@@ -26,19 +27,34 @@ namespace Rpm.Misc
             new Thread(new ThreadStart(() =>
             {
                 if (Application.OpenForms.Count == 0) return;
-                var visibleform = Application.OpenForms[Application.OpenForms.Count - 1];
-
-                parent?.BeginInvoke(new MethodInvoker(() =>
+                var visibleform = Application.OpenForms["Mainform"];
+                try
                 {
-                    var frm = new Form_Alert();
-                    if (closed != null)
-                        frm.FormClosed += closed;
-                    frm.FormClosed += MessageClosed;
-                    //_messages.Add(frm);
-                    frm.showAlert(msg, title, type);
-                   // frm.MdiParent = parent;
-                    frm.Show();
-                }));
+                    visibleform?.BeginInvoke(new MethodInvoker(() =>
+                    {
+                        try
+                        {
+                            var frm = new Form_Alert();
+                            if (closed != null)
+                                frm.FormClosed += closed;
+                            frm.FormClosed += MessageClosed;
+                            //_messages.Add(frm);
+                            frm.showAlert(msg, title, type);
+                            // frm.MdiParent = parent;
+                            frm.Show();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
+
+                    }));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+
             })).Start();
         }
 

@@ -113,7 +113,7 @@ namespace ProductieManager
                     if (found) return;
                     var xrslt = XMessageBox.Show("Oorspronkelijke database kan niet geladen worden!\n\n" +
                         " * Kies 'Herstart' als je de ProductieManager opnieuw wilt opstarten.\n" +
-                        " * Kies 'Offline' als je gewoon op de standaard database wilt werken.\n" +
+                        " * Kies 'Offline' als je gewoon offline wilt werken.\n" +
                         " * Kies anders voor een andere database of sluit de ProductieManager af.", "Database niet gevonden!", 
                         MessageBoxIcon.Warning, null, xbtns);
                     if (xrslt == DialogResult.OK) { Application.Restart(); return; }
@@ -138,13 +138,23 @@ namespace ProductieManager
             _DbWatcher?.Start();
         }
 
-        private void _DbWatcher_PathLocationFound(object sender, EventArgs e)
+        private async void _DbWatcher_PathLocationFound(object sender, EventArgs e)
         {
             try
             {
-                Application.Restart();
+                var proc = Process.GetCurrentProcess();
+                if (proc.MainModule != null)
+                    Process.Start(proc.MainModule.FileName);
+                Manager.DefaultSettings?.SaveAsDefault();
+                if (Manager.Opties != null)
+                    await Manager.Opties.Save();
+                proc.Kill();
             }
-            catch (Exception ex) { };
+            catch (Exception ex)
+            {
+                _DbWatcher.PathLost = true;
+                Console.WriteLine(ex);
+            };
         }
 
         private Task InitBootDir(string path = null)
@@ -443,7 +453,8 @@ namespace ProductieManager
                 this.SetLastInfo();
                 Manager.DefaultSettings?.SaveAsDefault();
                 Manager.SaveSettings(Manager.Opties, false, false, true);
-
+                Manager.ProductieProvider?.StopSync();
+                Manager.ProductieProvider?.DisableOfflineDb();
                 productieView1.DetachEvents();
                 //  _updatechecker?.Stop();
                 // _updatechecker = null;

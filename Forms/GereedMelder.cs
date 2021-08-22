@@ -116,20 +116,10 @@ namespace Forms
 
             Storing[] storingen = _prod.Root.GetAlleStoringen(true).ToArray();
 
-            if (storingen.Length > 0)
+            if ( (storingen.Length > 0 || _prod.TijdGewerkt <= 0 || _prod.GetPersonen(true).Length == 0))
             {
-                var xk1 = storingen.Length == 1 ? "staat" : "staan";
-                var xk2 = storingen.Length == 1 ? "onderbreking" : "onderbrekeningen";
-                string xmsg = $"Er {xk1} nog {storingen.Length} {xk2} open!\n\n" +
-                              $"Je kan geen productie gereedmelden als er een onderbreking openstaat!\n" +
-                              $"Wil je nu de openstaande {xk2} wijzigen?";
-                if (XMessageBox.Show(xmsg,
-                    $"Openstaande {xk2}", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
-                    return false;
-                var allst = new AlleStoringen();
-                allst.InitStoringen(_prod.Root);
-                allst.ShowDialog();
-                if (_prod.Root.GetAlleStoringen(true).Count > 0)
+                var xopenform = new OpenTakenForm(_prod);
+                if (xopenform.ShowDialog() != DialogResult.OK)
                     return false;
             }
 
@@ -145,9 +135,9 @@ namespace Forms
             if (_prod.TotaalGemaakt > _prod.Aantal)
                 xfieldinfo = $"Je staat op het punt {_prod.Naam} gereed te melden met {_prod.TotaalGemaakt - _prod.Aantal} stuk(s) extra!";
             var bericht =
-                $"{xfieldinfo}\n\n" +
-                $"* Totaal {_prod.TijdGewerkt} / {_prod.DoorloopTijd} uur aan gewerkt met {_prod.ActueelPerUur} i.p.v. {_prod.PerUur} per uur.\n\n" +
-                $"* Er is {_prod.TotaalGemaakt} van de {_prod.Aantal} gemaakt.\n\n" +
+                $"{xfieldinfo}\n" +
+                $"* Totaal {_prod.TijdGewerkt} / {_prod.DoorloopTijd} uur aan gewerkt met {_prod.ActueelPerUur} i.p.v. {_prod.PerUur} per uur.\n" +
+                $"* Er is {_prod.TotaalGemaakt} van de {_prod.Aantal} gemaakt.\n" +
                 $"* Er is {_prod.DeelsGereed} deels gereed gemeld.";
             xtextfield1.Text = bericht;
             //xtextfield2.Text = _prod.Omschrijving;

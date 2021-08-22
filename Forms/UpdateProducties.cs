@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -106,14 +107,17 @@ namespace Forms
                         DoProgress("Updating Medewerkers...", count, 100);
                         await Manager.Database.UpdateUserActivity(false);
                         DoProgress("Producties laden...", count, 100);
-                        var forms = await Manager.Database.GetAllProducties(true,true);
-                        foreach (var form in forms)
+                        var files = await Manager.GetAllProductiePaths(true,true);
+                        var forms = await Manager.Database.GetAllProducties(true, false);
+                        foreach (var file in files)
                         {
                             if (!IsBussy || IsDisposed || Disposing)
                                 break;
-                            await form.UpdateForm(true, true, forms,null,true,false,true);
+                            ProductieFormulier form = await MultipleFileDb.FromPath<ProductieFormulier>(file);
+                            if (form == null) continue;
+                            await form.UpdateForm(true, true, forms, null, true, false, true, true);
                             count++;
-                            DoProgress($"Updating productie '{form.ProductieNr}'", count, forms.Count);
+                            DoProgress($"Updating productie '{form.ProductieNr}'", count, files.Count);
                         }
 
                         if (IsBussy)
@@ -221,7 +225,7 @@ namespace Forms
 
         private void DoProgress(string message, double min, double max)
         {
-            var percentage = max > 0 ? (int) (min / max * 100) : 0;
+            var percentage = max > 0  && min > 0? (int) ((min / max) * 100) : 0;
             DoProgress(message, percentage);
         }
 

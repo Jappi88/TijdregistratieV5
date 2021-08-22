@@ -78,6 +78,8 @@ namespace Forms
                 else
                     this.Text = $"Voeg nieuwe onderbreking toe aan {Plek.Path} [{Onderbreking.GetTotaleTijd()} uur]";
             }
+
+            this.Invalidate();
         }
 
         private void pictureBox1_MouseEnter(object sender, EventArgs e)
@@ -189,6 +191,11 @@ namespace Forms
                 XMessageBox.Show(
                     "Ongeldige actie omschrijving!\n\nVul in een geldige actie omschrijving en probeer het opnieuw.",
                     "Ongeldige omschrijving", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            else if(Onderbreking.IsVerholpen && Onderbreking.GetTotaleTijd() <= 0)
+                XMessageBox.Show(
+                    "Onderbreking is verholpen, maar de totale tijd is 0 uur...\n" +
+                    "Vul in een geldige tijd en probeer het opnieuw",
+                    "Ongeldige Tijd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else
                 DialogResult = DialogResult.OK;
         }

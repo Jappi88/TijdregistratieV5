@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using BrightIdeasSoftware;
+﻿using BrightIdeasSoftware;
 using Controls;
-using ProductieManager;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
-using Rpm.SqlLite;
+using ProductieManager.Rpm.Misc;
 using Rpm.Mailing;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
+using Rpm.SqlLite;
 using Rpm.Various;
 using Rpm.ViewModels;
-using ProductieManager.Rpm.Misc;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 using Various;
 
 namespace Forms
@@ -34,7 +34,7 @@ namespace Forms
             InitializeComponent();
             // _stickyWindow = new StickyWindow(this);
             metroTabControl1.SelectedIndex = 0;
-            metroTabControl2.SelectedIndex = 1;
+            metroTabControl2.SelectedIndex = 0;
             ((OLVColumn) xoptielist.Columns[0]).GroupKeyGetter = GroupName;
             ((OLVColumn) xoptielist.Columns[0]).ImageGetter = ImageGetter;
             imageList1.Images.Add(Resources.industry_setting_114090);
@@ -85,7 +85,7 @@ namespace Forms
             lv.Tag = xfeestdagdate.Value.Date;
             var exist = false;
             foreach (ListViewItem x in xfeestdagen.Items)
-                if (x.Text.ToLower() == date.ToLower())
+                if (string.Equals(x.Text, date, StringComparison.CurrentCultureIgnoreCase))
                 {
                     exist = true;
                     break;
@@ -119,7 +119,7 @@ namespace Forms
                 Text = $"{Application.ProductName} Opties [{opties.Username}]";
                 SetLoginState();
                 Manager.DefaultSettings ??= UserSettings.GetDefaultSettings();
-               xdblocatie.Text = Manager.DefaultSettings.MainDB.RootPath;
+                xdblocatie.Text = Manager.DefaultSettings.MainDB.RootPath;
                 xautologin.Enabled = Manager.LogedInGebruiker != null;
                 xautologin.Checked = Manager.LogedInGebruiker != null && string.Equals(
                     Manager.LogedInGebruiker?.Username,
@@ -129,80 +129,87 @@ namespace Forms
 
             var x = opties;
 
-                //werktijden
-                ListFeestdagen(opties);
+            //werktijden
+            ListFeestdagen(opties);
 
-                //rooster
-                roosterUI1.WerkRooster = x.WerkRooster.CreateCopy();
-                xspeciaalroosterb.Tag = x.SpecialeRoosters;
-                //meldingen
-                xtoonnieuwetaak.Checked = x.ToonLijstNaNieuweTaak;
-                xmeldstart.Checked = x.TaakVoorStart;
-                xmeldklaarzet.Checked = x.TaakVoorKlaarZet;
-                xgebruiktaken.Checked = x.GebruikTaken;
-                xmeldtelaatproductie.Checked = x.TaakAlsTelaat;
-                xpersoneelvrij.Checked = x.TaakPersoneelVrij;
-                xtaakproductiegereedcheck.Checked = x.TaakAlsGereed;
-                xtaakperswijzigcheck.Checked = x.TaakVoorPersoneel;
-                xonderbrekeningen.Checked = x.TaakVoorOnderbreking;
-                xtaakcontrolecheck.Checked = x.TaakVoorControle;
-                xminvoorstart.Value = x.MinVoorStart;
-                xminvoorklaarzet.Value = x.MinVoorKlaarZet;
-                xminvoorcontrole.Value = x.MinVoorControle;
-                xsyncinterval.Value = x.SyncInterval;
+            //rooster
+            roosterUI1.WerkRooster = x.WerkRooster.CreateCopy();
+            xspeciaalroosterb.Tag = x.SpecialeRoosters;
+            //meldingen
+            xtoonnieuwetaak.Checked = x.ToonLijstNaNieuweTaak;
+            xmeldstart.Checked = x.TaakVoorStart;
+            xmeldklaarzet.Checked = x.TaakVoorKlaarZet;
+            xgebruiktaken.Checked = x.GebruikTaken;
+            xmeldtelaatproductie.Checked = x.TaakAlsTelaat;
+            xpersoneelvrij.Checked = x.TaakPersoneelVrij;
+            xtaakproductiegereedcheck.Checked = x.TaakAlsGereed;
+            xtaakperswijzigcheck.Checked = x.TaakVoorPersoneel;
+            xonderbrekeningen.Checked = x.TaakVoorOnderbreking;
+            xtaakcontrolecheck.Checked = x.TaakVoorControle;
+            xminvoorstart.Value = x.MinVoorStart;
+            xminvoorklaarzet.Value = x.MinVoorKlaarZet;
+            xminvoorcontrole.Value = x.MinVoorControle;
+            xsyncinterval.Value = x.SyncInterval;
 
-                //weergave producties
-                xtoonvolgensafdeling.Checked = x.ToonVolgensAfdelingen;
-                xtoonvolgensbewerking.Checked = x.ToonVolgensBewerkingen;
-                xtoonallesvanbeide.Checked = x.ToonAllesVanBeide;
-                xtoonalles.Checked = x.ToonAlles;
+            //weergave producties
+            xtoonvolgensafdeling.Checked = x.ToonVolgensAfdelingen;
+            xtoonvolgensbewerking.Checked = x.ToonVolgensBewerkingen;
+            xtoonallesvanbeide.Checked = x.ToonAllesVanBeide;
+            xtoonalles.Checked = x.ToonAlles;
 
-                _afdelingen = x.Afdelingen.ToList();
-                _bewerkingen = x.Bewerkingen.ToList();
+            _afdelingen = x.Afdelingen.ToList();
+            _bewerkingen = x.Bewerkingen.ToList();
 
-                //Productie Filter
-                xcriterialist.Items.Clear();
-                foreach (var value in x.ToegelatenProductieCrit)
-                {
-                    var items = value.Split(':');
-                    var item = xcriterialist.Items.Add(items[0]);
-                    if (items.Length > 1)
-                        item.SubItems.Add(items[1]);
-                }
+            //Productie Filter
+            xcriterialist.Items.Clear();
+            foreach (var value in x.ToegelatenProductieCrit)
+            {
+                var items = value.Split(':');
+                var item = xcriterialist.Items.Add(items[0]);
+                if (items.Length > 1)
+                    item.SubItems.Add(items[1]);
+            }
 
-                WeergaveLijstUpdate();
+            WeergaveLijstUpdate();
 
-                //Admin Settings
-                UpdateOptieList();
-                xenablesync.Checked = x.GebruikLocalSync;
-                xsyncinterval.Value = x.SyncInterval < 5000 ? 10000 : x.SyncInterval;
-                xenablegreedsync.Checked = x.AutoGereedSync;
-                xgereedsyncinterval.SetValue(x.GereedSyncInterval / 60000);
-                xproductielijstsyncinterval.SetValue(x.ProductieLijstSyncInterval / 60000);
-                xenableproductielijstsync.Checked = x.AutoProductieLijstSync;
-                SetEmailFields(x);
-                xlocatielist.Items.Clear();
-                if (x.SyncLocaties != null)
-                    foreach (var s in x.SyncLocaties)
-                        xlocatielist.Items.Add(s);
-                xverwijderverwerkt.Checked = x.VerwijderVerwerkteBestanden;
-                xstartopnaopstart.Checked = x.StartNaOpstart;
-                xsluitaf.Checked = x.SluitPcAf;
-                xsluitaftijd.Value = DateTime.Today.Add(x.AfsluitTijd);
-                xminimizenatray.Checked = x.MinimizeToTray;
-                xtoonallegestartproducties.Checked = x.ToonAlleGestartProducties;
-                xtoonproductielogs.Checked = x.ToonProductieLogs;
-                xweekoverzichtpath.Text = x.WeekOverzichtPath.Trim();
-                xmaakoverichtenaan.Checked = x.CreateWeekOverzichten;
-                xoverzichtbereikgroup.Enabled = x.CreateWeekOverzichten;
-                xdocurrentweekoverzicht.Checked = x.DoCurrentWeekOverzicht;
-                xmaakvanafweek.SetValue(x.VanafWeek);
-                xmaakvanafjaar.SetValue(x.VanafJaar);
-                xexcelinterval.SetValue((decimal)x.WeekOverzichtUpdateInterval / 60000);
-                xcreatebackupinterval.SetValue((decimal)TimeSpan.FromMilliseconds(x.BackupInterval).TotalHours);
-                xcreatebackup.Checked = x.CreateBackup;
-                xmaxbackups.SetValue(x.MaxBackupCount);
-                xtoonlognotificatie.Checked = x.ToonLogNotificatie;
+            //Admin Settings
+            UpdateOptieList();
+            xenablesync.Checked = x.GebruikLocalSync;
+            xsyncinterval.Value = x.SyncInterval < 5000 ? 10000 : x.SyncInterval;
+            xenablegreedsync.Checked = x.AutoGereedSync;
+            xgereedsyncinterval.SetValue(x.GereedSyncInterval / 60000);
+            xproductielijstsyncinterval.SetValue(x.ProductieLijstSyncInterval / 60000);
+            xenableproductielijstsync.Checked = x.AutoProductieLijstSync;
+            SetEmailFields(x);
+            xlocatielist.Items.Clear();
+            if (x.SyncLocaties != null)
+                foreach (var s in x.SyncLocaties)
+                    xlocatielist.Items.Add(s);
+            xverwijderverwerkt.Checked = x.VerwijderVerwerkteBestanden;
+            xstartopnaopstart.Checked = x.StartNaOpstart;
+            xsluitaf.Checked = x.SluitPcAf;
+            xsluitaftijd.Value = DateTime.Today.Add(x.AfsluitTijd);
+            xminimizenatray.Checked = x.MinimizeToTray;
+            xtoonallegestartproducties.Checked = x.ToonAlleGestartProducties;
+            xtoonproductielogs.Checked = x.ToonProductieLogs;
+            xweekoverzichtpath.Text = x.WeekOverzichtPath.Trim();
+            xmaakoverichtenaan.Checked = x.CreateWeekOverzichten;
+            xoverzichtbereikgroup.Enabled = x.CreateWeekOverzichten;
+            xdocurrentweekoverzicht.Checked = x.DoCurrentWeekOverzicht;
+            xmaakvanafweek.SetValue(x.VanafWeek);
+            xmaakvanafjaar.SetValue(x.VanafJaar);
+            xexcelinterval.SetValue((decimal) x.WeekOverzichtUpdateInterval / 60000);
+            xcreatebackupinterval.SetValue((decimal) TimeSpan.FromMilliseconds(x.BackupInterval).TotalHours);
+            xcreatebackup.Checked = x.CreateBackup;
+            xmaxbackups.SetValue(x.MaxBackupCount);
+            xtoonlognotificatie.Checked = x.ToonLogNotificatie;
+            xoffdbsyncinterval.SetValue(Manager.DefaultSettings.OfflineDbSyncInterval);
+            //Zet de offline database gegevens.
+            xoffprodcheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Producties) > -1;
+            xoffgereedprodcheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.GereedProducties) > -1;
+            xoffperscheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Medewerkers) > -1;
+            xoffaccountcheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Opties) > -1;
+            xoffinstellingcheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Accounts) > -1;
         }
 
         private async void UpdateOptieList()
@@ -370,6 +377,30 @@ namespace Forms
             xs.BackupInterval = TimeSpan.FromHours((double)xcreatebackupinterval.Value).TotalMilliseconds;
             xs.MaxBackupCount = (int)xmaxbackups.Value;
             xs.ToonLogNotificatie = xtoonlognotificatie.Checked;
+
+            Manager.DefaultSettings.OfflineDbSyncInterval = (int) xoffdbsyncinterval.Value;
+            Manager.DefaultSettings.OfflineDabaseTypes.Clear();
+            if (xoffprodcheckbox.Checked)
+            {
+                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Producties);
+            }
+            if (xoffgereedprodcheckbox.Checked)
+            {
+                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.GereedProducties);
+            }
+            if (xoffperscheckbox.Checked)
+            {
+                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Medewerkers);
+            }
+            if (xoffaccountcheckbox.Checked)
+            {
+                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Accounts);
+            }
+            if (xoffinstellingcheckbox.Checked)
+            {
+                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Opties);
+            }
+
             //default settings die we hier niet veranderen.
             if (_LoadedOpties != null)
             {
@@ -409,6 +440,8 @@ namespace Forms
 
                 xs.LastFormInfo = _LoadedOpties.LastFormInfo;
             }
+
+
 
             return xs;
         }
@@ -451,7 +484,8 @@ namespace Forms
             if (_locatieGewijzigd)
             {
                 string db = xdblocatie.Text.Trim();
-                if (!string.Equals(Manager.DefaultSettings.MainDB.RootPath, db, StringComparison.CurrentCultureIgnoreCase) &&
+                if (!string.Equals(Manager.DefaultSettings.MainDB.RootPath, db,
+                        StringComparison.CurrentCultureIgnoreCase) &&
                     Directory.Exists(db))
                 {
                     var rsult = XMessageBox.Show("Database locatie is gewijzigd!\n" +
@@ -478,7 +512,15 @@ namespace Forms
                     {
                         Manager.DefaultSettings.MainDB.RootPath = db;
                         Manager.DefaultSettings.SaveAsDefault();
-                        Application.Restart();
+                        var proc = Process.GetCurrentProcess();
+                        var name = proc.MainModule?.FileName;
+                        if (!string.IsNullOrEmpty(name) && File.Exists(name))
+                        {
+                            Process.Start(name);
+                            proc.Kill();
+                        }
+                        else Application.Restart();
+
                         return true;
                     }
                 }
@@ -486,17 +528,14 @@ namespace Forms
                 Manager.DefaultSettings.MainDB.RootPath = db;
             }
 
-            if (Manager.DefaultSettings.GebruikOfflineMetSync != xgebruikofflinemetsync.Checked)
+            Manager.DefaultSettings.GebruikOfflineMetSync = xgebruikofflinemetsync.Checked;
+            if (Manager.DefaultSettings.GebruikOfflineMetSync)
             {
-                Manager.DefaultSettings.GebruikOfflineMetSync = xgebruikofflinemetsync.Checked;
-                if (Manager.DefaultSettings.GebruikOfflineMetSync)
-                {
-                    Manager.ProductieProvider.InitOfflineDB();
-                }
-                else
-                {
-                    Manager.ProductieProvider.DisableOfflineDB();
-                }
+                Manager.ProductieProvider.InitOfflineDb();
+            }
+            else
+            {
+                Manager.ProductieProvider.DisableOfflineDb();
             }
 
             Manager.DefaultSettings.SaveAsDefault();
@@ -1384,6 +1423,11 @@ namespace Forms
         private void xenableproductielijstsync_CheckedChanged(object sender, EventArgs e)
         {
             xproductielijstsyncgroup.Enabled = xenableproductielijstsync.Checked;
+        }
+
+        private void xgebruikofflinemetsync_CheckedChanged(object sender, EventArgs e)
+        {
+            xofflinedbgroup.Enabled = xgebruikofflinemetsync.Checked;
         }
     }
 }

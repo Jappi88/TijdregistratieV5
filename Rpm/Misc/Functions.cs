@@ -1136,7 +1136,8 @@ namespace Rpm.Misc
                     }
                     
                 }
-                return File.ReadAllBytes(filepath).DeSerialize<T>();
+
+                return default;
                 //using (var ms = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 //{
                 //    var ser = new SharpSerializer(true);
@@ -1172,17 +1173,22 @@ namespace Rpm.Misc
         {
             try
             {
-            //    var ser = new SharpSerializer(true);
-            //    using (var ms = new FileStream(destination, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
-            //    {
-            //        ser.Serialize(instance, ms);
-            //        ms.Flush();
-            //        ms.Close();
-            //    }
-                File.WriteAllBytes(destination,instance.Serialize());
-                return true;
+                for (int i = 0; i < 4; i++)
+                {
+                    try
+                    {
+                        File.WriteAllBytes(destination, instance.Serialize());
+                        return true;
+                    }
+                    catch (Exception e)
+                    {
+                        
+                    }
+                }
+
+                return false;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -1779,6 +1785,28 @@ namespace Rpm.Misc
             {
                 return false;
             }
+        }
+
+        public static string GetLastOfPathName(this string path, int depth)
+        {
+            string fpath = path;
+            string xreturn = Path.GetFileName(fpath);
+            for (int i = 0; i < depth; i++)
+            {
+                //string fname = Path.GetFileName(fpath);
+                fpath = Path.GetDirectoryName(fpath);
+                string xp = Path.GetFileName(fpath);
+                bool br = false;
+                if (string.IsNullOrEmpty(xp))
+                {
+                    xp = fpath?.TrimEnd(new char[]{'\\'});
+                    br = true;
+                }
+                xreturn =  xp + "\\" + xreturn;
+                if (br) break;
+            }
+
+            return xreturn;
         }
 
         public static string GetDefaultBrowserPath()

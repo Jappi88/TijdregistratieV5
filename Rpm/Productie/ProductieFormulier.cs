@@ -819,7 +819,7 @@ namespace Rpm.Productie
             });
         }
 
-        public static Task<ProductieFormulier> UpdateDoorloopTijd(List<ProductieFormulier> forms, ProductieFormulier form,string change, bool showmessage, bool raiseevent)
+        public static Task<ProductieFormulier> UpdateDoorloopTijd(List<ProductieFormulier> forms, ProductieFormulier form,string change, bool showmessage, bool raiseevent, bool onlylocal)
         {
             return Task.Run(async () =>
             {
@@ -836,8 +836,8 @@ namespace Rpm.Productie
                         else forms = await Manager.Database.GetProducties(form.ArtikelNr, true, ProductieState.Gereed, true);
 
                         form.Geproduceerd = forms.Count;
-                        var peruur = forms.Sum(x => x.PerUur) / forms.Count;
-                        var gemiddeldperuur = forms.Sum(x => x.ActueelPerUur) / forms.Count;
+                        var peruur = forms.Count > 0? forms.Sum(x => x.PerUur) / forms.Count : 0;
+                        var gemiddeldperuur = forms.Count > 0?forms.Sum(x => x.ActueelPerUur) / forms.Count : 0;
                         if (peruur > 0) form.GemiddeldPerUur = (int)peruur;
                         if (gemiddeldperuur > 0) form.GemiddeldActueelPerUur = (int)gemiddeldperuur;
                         if (gemiddeldperuur > 0 && form.Aantal > 0)
@@ -846,7 +846,7 @@ namespace Rpm.Productie
                             foreach (var b in form.Bewerkingen)
                                 await b.UpdateBewerking(forms, null, false);
                         await form.UpdateForm(false, false, null, 
-                            $"[{form.ProductieNr}|{form.ArtikelNr}]{change}\nDoorlooptijd opnieuw berekend",true, showmessage, raiseevent);
+                            $"[{form.ProductieNr}|{form.ArtikelNr}]{change}\nDoorlooptijd opnieuw berekend",true, showmessage, raiseevent,onlylocal);
                     }
                     catch (Exception ex)
                     {
@@ -894,7 +894,7 @@ namespace Rpm.Productie
 
         public async Task<bool> UpdateForm(bool updatebewerking, bool updategemiddeld,
             List<ProductieFormulier> formulieren = null, string change = "Update Formulier",
-            bool save = true, bool showmessage = true, bool raiseevent = true)
+            bool save = true, bool showmessage = true, bool raiseevent = true, bool onlylocal = false)
         {
 
             try
@@ -903,7 +903,7 @@ namespace Rpm.Productie
                 double peruur = 0;
                 if (updategemiddeld)
                 {
-                    await UpdateDoorloopTijd(formulieren, this, change, false, raiseevent);
+                    await UpdateDoorloopTijd(formulieren, this, change, false, raiseevent,onlylocal);
                     return true;
                 }
                 else
@@ -937,11 +937,15 @@ namespace Rpm.Productie
                         TotaalTijdGewerkt = TijdGewerkt;
 
                     if (save)
-                        await Manager.Database.UpSert(this, change, showmessage);
+                    {
+                        _= Manager.Database.UpSert(this, change, showmessage,onlylocal);
+                    }
                     else if (raiseevent)
+                    {
                         Manager.FormulierChanged(this, this);
-                    if (raiseevent)
                         FormulierChanged(this);
+                    }
+
                     return true;
                 }
             }
@@ -1129,7 +1133,7 @@ namespace Rpm.Productie
                     $"[{ProductieNr.ToUpper()}|{ArtikelNr}] {paraaf} heeft is zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u).";
                
                 await UpdateForm(false, false, null, change);
-                _ = UpdateDoorloopTijd(null, this, null, false, true);
+                _ = UpdateDoorloopTijd(null, this, null, false, true,false);
                 if (sendmail)
                     RemoteProductie.RespondByEmail(this, change);
 

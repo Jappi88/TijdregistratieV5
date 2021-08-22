@@ -193,6 +193,24 @@ namespace Rpm.SqlLite
 
         }
 
+        public Task<ProductieFormulier> GetProductieFromPath(string path)
+        {
+            return Task.Run( () =>
+            {
+                try
+                {
+                    if (!File.Exists(path)) return null;
+                    return MultipleFileDb.FromPath<ProductieFormulier>(path);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return null;
+                }
+            });
+
+        }
+
         public Task<List<ProductieFormulier>> GetProducties(string criteria,bool fullmatch, ProductieState state,
             bool tijdgewerkt)
         {
@@ -386,36 +404,34 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<bool> UpSert(ProductieFormulier form, string change, bool showmessage = true)
+        public Task<bool> UpSert(ProductieFormulier form, string change, bool showmessage = true, bool onlylocal = false)
         {
-            return UpSert(form.ProductieNr, form, change, showmessage);
+            return UpSert(form.ProductieNr, form, change, showmessage,onlylocal);
         }
 
-        public Task<bool> UpSert(ProductieFormulier form, bool showmessage = true)
+        public Task<bool> UpSert(ProductieFormulier form, bool showmessage = true, bool onlylocal = false)
         {
             return UpSert(form.ProductieNr, form, $"[{form.ArtikelNr}|{form.ProductieNr}] ProductieFormulier Update",
-                showmessage);
+                showmessage,onlylocal);
         }
 
-        public Task<bool> UpSert(string id, ProductieFormulier form, string change, bool showmessage = true)
+        public Task<bool> UpSert(string id, ProductieFormulier form, string change, bool showmessage = true, bool onlylocal = false)
         {
             return Task.Run(async () =>
             {
-                if (IsDisposed || id == null || form == null)
+                if (IsDisposed || id == null || form == null || ProductieFormulieren == null || GereedFormulieren == null)
                     return false;
                 bool xreturn = false;
                 try
                 {
                     form.ExcludeFromUpdate();
                     form.LastChanged = form.LastChanged.UpdateChange(change, DbType.Producties);
-                    if (RaiseEventWhenChanged)
-                        Manager.FormulierChanged(this, form);
                     if (ProductieFormulieren != null && form.Bewerkingen.All(x => x.State == ProductieState.Gereed))
                     {
-                        GereedFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
-                        if (await GereedFormulieren.Upsert(id, form))
+                        //GereedFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
+                        if (await GereedFormulieren.Upsert(id, form,onlylocal))
                         {
-                            await UpdateChange(form.LastChanged, form, RespondType.Update, DbType.GereedProducties,
+                            _=UpdateChange(form.LastChanged, form, RespondType.Update, DbType.GereedProducties,
                                 showmessage);
                             if (await ProductieFormulieren.Exists(id))
                             {
@@ -429,33 +445,34 @@ namespace Rpm.SqlLite
                             xreturn = true;
                         }
 
-                        GereedFormulieren.RaiseEventWhenChanged = true;
+                        //GereedFormulieren.RaiseEventWhenChanged = true;
                     }
                     else if (ProductieFormulieren != null)
                     {
-                        ProductieFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
-                        if (await ProductieFormulieren.Upsert(id, form))
+                        //ProductieFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
+                        if (await ProductieFormulieren.Upsert(id, form,onlylocal))
                         {
-                            await UpdateChange(form.LastChanged, form, RespondType.Update, DbType.Producties,
+                            _= UpdateChange(form.LastChanged, form, RespondType.Update, DbType.Producties,
                                 showmessage);
                            
 
                             if (GereedFormulieren != null && await GereedFormulieren.Exists(id))
                             {
-                                GereedFormulieren.RaiseEventWhenDeleted = !RaiseEventWhenDeleted;
+                                //GereedFormulieren.RaiseEventWhenDeleted = !RaiseEventWhenDeleted;
                                 await GereedFormulieren.Delete(id);
                                 if (RaiseEventWhenDeleted)
                                     Manager.FormulierDeleted(this, id);
-                                GereedFormulieren.RaiseEventWhenDeleted = true;
+                                //GereedFormulieren.RaiseEventWhenDeleted = true;
                             }
 
                             xreturn = true;
                         }
 
                         
-                        ProductieFormulieren.RaiseEventWhenChanged = true;
+                        //ProductieFormulieren.RaiseEventWhenChanged = true;
                     }
-
+                    if(xreturn && RaiseEventWhenChanged)
+                        Manager.FormulierChanged(this, form);
                     // Manager.FormulierChanged(this, form);
                 }
                 catch (Exception ex)
@@ -595,7 +612,7 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<bool> Replace(string id, ProductieFormulier newform, bool showmessage = true)
+        public Task<bool> Replace(string id, ProductieFormulier newform, bool showmessage = true, bool onlylocal = false)
         {
             return Task.Run(async () =>
             {
@@ -604,7 +621,7 @@ namespace Rpm.SqlLite
                 try
                 {
                     await DeleteProductie(id, showmessage);
-                    await UpSert(newform, showmessage);
+                    await UpSert(newform, showmessage,onlylocal);
                     return false;
                 }
                 catch
@@ -681,17 +698,17 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<bool> UpSert(UserAccount account, bool showmessage = true)
+        public Task<bool> UpSert(UserAccount account, bool showmessage = true, bool onlylocal = false)
         {
-            return UpSert(account.Username, account, "Gebruiker Account Update", showmessage);
+            return UpSert(account.Username, account, "Gebruiker Account Update", showmessage,onlylocal);
         }
 
-        public Task<bool> UpSert(UserAccount account, string change, bool showmessage = true)
+        public Task<bool> UpSert(UserAccount account, string change, bool showmessage = true, bool onlylocal = false)
         {
             return UpSert(account.Username, account, change, showmessage);
         }
 
-        public Task<bool> UpSert(string id, UserAccount account, string change, bool showmessage = true)
+        public Task<bool> UpSert(string id, UserAccount account, string change, bool showmessage = true, bool onlylocal = false)
         {
             return Task.Run(async () =>
             {
@@ -701,7 +718,7 @@ namespace Rpm.SqlLite
                 {
                     account.LastChanged = account.LastChanged.UpdateChange(change, DbType.Accounts);
                     await UpdateChange(account.LastChanged, account, RespondType.Update, DbType.Accounts, showmessage);
-                    await UserAccounts.Upsert(id, account);
+                    await UserAccounts.Upsert(id, account,onlylocal);
                     Manager.AccountChanged(this, account);
                     return true;
                 }
@@ -712,7 +729,7 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<int> UpSert(UserAccount[] accounts, string change, bool showmessage = true)
+        public Task<int> UpSert(UserAccount[] accounts, string change, bool showmessage = true, bool onlylocal = false)
         {
             return Task.Run(async () =>
             {
@@ -722,7 +739,7 @@ namespace Rpm.SqlLite
                 {
                     var count = 0;
                     foreach (var account in accounts)
-                        if (await UpSert(account.Username, account, change, showmessage))
+                        if (await UpSert(account.Username, account, change, showmessage,onlylocal))
                             count++;
                     return count;
                 }
@@ -911,7 +928,7 @@ namespace Rpm.SqlLite
             return UpSert(id, user, change, showmessage);
         }
 
-        public Task<bool> UpSert(string id, UserSettings account, string change, bool showmessage = true)
+        public Task<bool> UpSert(string id, UserSettings account, string change, bool showmessage = true, bool onlylocal = false)
         {
             return Task.Run(async () =>
             {
@@ -921,7 +938,8 @@ namespace Rpm.SqlLite
                 {
                     account.LastChanged = account.LastChanged.UpdateChange(change, DbType.Opties);
                     await UpdateChange(account.LastChanged, account, RespondType.Update, DbType.Opties, showmessage);
-                    await AllSettings.Upsert(id, account);
+                    if (AllSettings != null)
+                        await AllSettings.Upsert(id, account,onlylocal);
                     return true;
                 }
                 catch
@@ -1216,7 +1234,7 @@ namespace Rpm.SqlLite
             return UpSert(user.PersoneelNaam, user, change, showmessage);
         }
 
-        public Task<bool> UpSert(string id, Personeel persoon, string change, bool showmessage = true)
+        public Task<bool> UpSert(string id, Personeel persoon, string change, bool showmessage = true, bool onlylocal = false)
         {
             return Task.Run(async () =>
             {
@@ -1228,7 +1246,7 @@ namespace Rpm.SqlLite
                     await UpdateChange(persoon.LastChanged, persoon, RespondType.Update, DbType.Medewerkers,
                         showmessage);
                     PersoneelLijst.RaiseEventWhenChanged = !RaiseEventWhenChanged;
-                    await PersoneelLijst.Upsert(id, persoon);
+                    await PersoneelLijst.Upsert(id, persoon,onlylocal);
                     if (RaiseEventWhenChanged)
                         Manager.PersoneelChanged(this, persoon);
                     PersoneelLijst.RaiseEventWhenChanged = true;
@@ -1558,7 +1576,7 @@ namespace Rpm.SqlLite
                     try
                     {
                         var ent = new LogEntry(message.Replace("\n", " "), type);
-                        return await Logger.Upsert(ent.Id.ToString(), ent);
+                        return await Logger.Upsert(ent.Id.ToString(), ent, false);
                     }
                     catch (Exception)
                     {
@@ -1609,34 +1627,34 @@ namespace Rpm.SqlLite
                 var versiondb = "VersionDb";
                 //var bewerkingentriesdb = "BewerkingLijst";
                 ProductieFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, RootPath,
-                    dbfilename, "ProductieFormulieren");
+                    dbfilename, "ProductieFormulieren",true);
                 ProductieFormulieren.InstanceChanged += ProductieFormulieren_InstanceChanged;
                 ProductieFormulieren.InstanceDeleted += ProductieFormulieren_InstanceDeleted;
 
                 PersoneelLijst =
-                    new DatabaseInstance<Personeel>(DbInstanceType.MultipleFiles, RootPath, personeeldb, "Personeel");
+                    new DatabaseInstance<Personeel>(DbInstanceType.MultipleFiles, RootPath, personeeldb, "Personeel",true);
                 PersoneelLijst.InstanceChanged += PersoneelLijst_InstanceChanged;
                 PersoneelLijst.InstanceDeleted += PersoneelLijst_InstanceDeleted;
 
                 UserAccounts = new DatabaseInstance<UserAccount>(DbInstanceType.MultipleFiles, RootPath, Accountdb,
-                    "UserAccounts");
+                    "UserAccounts",true);
                 UserAccounts.InstanceChanged += UserAccounts_InstanceChanged;
                 UserAccounts.InstanceDeleted += UserAccounts_InstanceDeleted;
 
                 AllSettings = new DatabaseInstance<UserSettings>(DbInstanceType.MultipleFiles, RootPath, Settingdb,
-                    "AllSettings");
+                    "AllSettings",true);
                 AllSettings.InstanceChanged += AllSettings_InstanceChanged;
                 AllSettings.InstanceDeleted += AllSettings_InstanceDeleted;
 
-                Logger = new DatabaseInstance<LogEntry>(DbInstanceType.MultipleFiles, RootPath, Logdb, "Logs");
+                Logger = new DatabaseInstance<LogEntry>(DbInstanceType.MultipleFiles, RootPath, Logdb, "Logs",false);
                // ChangeLog = new DatabaseInstance<UserChange>(DbInstanceType.MultipleFiles, RootPath, changeddb,
                    // "ChangeLog");
                 GereedFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, RootPath,
-                    Gereeddb, "GereedFormulieren");
+                    Gereeddb, "GereedFormulieren",true);
                 GereedFormulieren.InstanceChanged += ProductieFormulieren_InstanceChanged;
                 GereedFormulieren.InstanceDeleted += ProductieFormulieren_InstanceDeleted;
 
-                DbVersions = new DatabaseInstance<DbVersion>(DbInstanceType.MultipleFiles, RootPath, versiondb, "DbVersions");
+                DbVersions = new DatabaseInstance<DbVersion>(DbInstanceType.MultipleFiles, RootPath, versiondb, "DbVersions",false);
                 //BewerkingEntries = new DatabaseInstance<BewerkingEntry>(DbInstanceType.MultipleFiles, RootPath,
                 //    bewerkingentriesdb, "BewerkingEntries");
             });
@@ -1650,8 +1668,8 @@ namespace Rpm.SqlLite
 
         private void AllSettings_InstanceChanged(object sender, FileSystemEventArgs y)
         {
-            lock (_locker1)
-            {
+            //lock (_locker1)
+            //{
                 try
                 {
                     if (AllSettings == null || !RaiseEventWhenChanged) return;
@@ -1667,7 +1685,7 @@ namespace Rpm.SqlLite
                 {
                     Console.WriteLine(x);
                 }
-            }
+            //}
         }
 
         private void UserAccounts_InstanceDeleted(object sender, FileSystemEventArgs y)
@@ -1682,8 +1700,8 @@ namespace Rpm.SqlLite
 
         private void PersoneelLijst_InstanceDeleted(object sender, FileSystemEventArgs y)
         {
-            lock (_locker2)
-            {
+            //lock (_locker2)
+            //{
                 try
                 {
                     if (!RaiseEventWhenDeleted || File.Exists(y.FullPath)) return;
@@ -1694,18 +1712,18 @@ namespace Rpm.SqlLite
                 {
                     Console.WriteLine(e);
                 }
-            }
+            //}
         }
 
-        private void PersoneelLijst_InstanceChanged(object sender, FileSystemEventArgs y)
+        private async void PersoneelLijst_InstanceChanged(object sender, FileSystemEventArgs y)
         {
-            lock (_locker2)
-            {
+           // lock (_locker2)
+           // {
                 try
                 {
                     if (!RaiseEventWhenChanged || PersoneelLijst == null) return;
                     var id = Path.GetFileNameWithoutExtension(y.FullPath);
-                    var pers = PersoneelLijst.FindOne(id).Result;
+                    var pers = await PersoneelLijst.FindOne(id);
                     if (pers != null)
                         Manager.PersoneelChanged(this, pers);
                 }
@@ -1713,13 +1731,13 @@ namespace Rpm.SqlLite
                 {
                     Console.WriteLine(e);
                 }
-            }
+            //}
         }
 
         private void ProductieFormulieren_InstanceDeleted(object sender, FileSystemEventArgs y)
         {
-            lock (_locker1)
-            {
+           // lock (_locker1)
+            //{
                 try
                 {
                     if (!RaiseEventWhenDeleted || File.Exists(y.FullPath)) return;
@@ -1730,18 +1748,18 @@ namespace Rpm.SqlLite
                 {
                     Console.WriteLine(e);
                 }
-            }
+            //}
         }
 
-        private void ProductieFormulieren_InstanceChanged(object sender, FileSystemEventArgs e)
+        private async void ProductieFormulieren_InstanceChanged(object sender, FileSystemEventArgs e)
         {
-            lock (_locker1)
-            {
+            //lock (_locker1)
+            //{
                 try
                 {
                     if (ProductieFormulieren == null || !RaiseEventWhenChanged) return;
                     var id = Path.GetFileNameWithoutExtension(e.FullPath);
-                    var prod = ProductieFormulieren.FindOne(id).Result;
+                    var prod = await MultipleFileDb.FromPath<ProductieFormulier>(e.FullPath);
                     if (prod != null && prod.IsAllowed(null))
                         Manager.FormulierChanged(this, prod);
                 }
@@ -1749,13 +1767,13 @@ namespace Rpm.SqlLite
                 {
                     Console.WriteLine(x);
                 }
-            }
+            //}
         }
         #endregion
 
-        private static readonly object _locker1 = new object();
-        private static readonly object _locker2 = new object();
-        private static readonly object _locker3 = new object();
+        //private static readonly object _locker1 = new object();
+        //private static readonly object _locker2 = new object();
+        //private static readonly object _locker3 = new object();
 
         //private void LoadSyncDirectories()
         //{
@@ -1922,27 +1940,27 @@ namespace Rpm.SqlLite
                 var versiondb = "VersionDb";
 
                 ProductieFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.Server, RootPath,
-                    dbfilename, "ProductieFormulieren");
+                    dbfilename, "ProductieFormulieren",false);
                 PersoneelLijst =
-                    new DatabaseInstance<Personeel>(DbInstanceType.Server, RootPath, personeeldb, "Personeel");
+                    new DatabaseInstance<Personeel>(DbInstanceType.Server, RootPath, personeeldb, "Personeel", false);
                 UserAccounts =
-                    new DatabaseInstance<UserAccount>(DbInstanceType.Server, RootPath, Accountdb, "UserAccounts");
+                    new DatabaseInstance<UserAccount>(DbInstanceType.Server, RootPath, Accountdb, "UserAccounts", false);
                 AllSettings =
-                    new DatabaseInstance<UserSettings>(DbInstanceType.Server, RootPath, Settingdb, "AllSettings");
-                Logger = new DatabaseInstance<LogEntry>(DbInstanceType.MultipleFiles, RootPath, Logdb, "Logs");
+                    new DatabaseInstance<UserSettings>(DbInstanceType.Server, RootPath, Settingdb, "AllSettings", false);
+                Logger = new DatabaseInstance<LogEntry>(DbInstanceType.MultipleFiles, RootPath, Logdb, "Logs", false);
                 //ChangeLog = new DatabaseInstance<UserChange>(DbInstanceType.Server, RootPath, changeddb, "ChangeLog");
                 GereedFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.Server, RootPath, Gereeddb,
-                    "GereedFormulieren");
-                DbVersions = new DatabaseInstance<DbVersion>(DbInstanceType.Server, RootPath, versiondb, "DbVersions");
+                    "GereedFormulieren", false);
+                DbVersions = new DatabaseInstance<DbVersion>(DbInstanceType.Server, RootPath, versiondb, "DbVersions", false);
                 if (!migrate) return;
                 var dbpath = RootPath + "\\" + dbfilename;
                 if (Directory.Exists(dbpath) && !Directory.Exists(dbpath + "_migrated"))
                 {
                     var prodsdb = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, RootPath,
-                        dbfilename, "ProductieFormulieren");
+                        dbfilename, "ProductieFormulieren", false);
                     var prods = await prodsdb.FindAll();
                     foreach (var prod in prods)
-                        await ProductieFormulieren.Upsert(prod.ProductieNr, prod);
+                        await ProductieFormulieren.Upsert(prod.ProductieNr, prod,false);
                     Directory.Move(dbpath, dbpath + "_migrated");
                 }
 
@@ -1961,10 +1979,10 @@ namespace Rpm.SqlLite
                 if (Directory.Exists(dbpath) && !Directory.Exists(dbpath + "_migrated"))
                 {
                     var prodsdb = new DatabaseInstance<Personeel>(DbInstanceType.MultipleFiles, RootPath, personeeldb,
-                        "Personeel");
+                        "Personeel", false);
                     var prods = await prodsdb.FindAll();
                     foreach (var prod in prods)
-                        await PersoneelLijst.Upsert(prod.PersoneelNaam, prod);
+                        await PersoneelLijst.Upsert(prod.PersoneelNaam, prod,false);
                     Directory.Move(dbpath, dbpath + "_migrated");
                 }
 
@@ -1972,10 +1990,10 @@ namespace Rpm.SqlLite
                 if (Directory.Exists(dbpath) && !Directory.Exists(dbpath + "_migrated"))
                 {
                     var prodsdb = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, RootPath,
-                        Gereeddb, "GereedFormulieren");
+                        Gereeddb, "GereedFormulieren", false);
                     var prods = await prodsdb.FindAll();
                     foreach (var prod in prods)
-                        await GereedFormulieren.Upsert(prod.ProductieNr, prod);
+                        await GereedFormulieren.Upsert(prod.ProductieNr, prod,false);
                     Directory.Move(dbpath, dbpath + "_migrated");
                 }
 
@@ -1983,10 +2001,10 @@ namespace Rpm.SqlLite
                 if (Directory.Exists(dbpath) && !Directory.Exists(dbpath + "_migrated"))
                 {
                     var prodsdb = new DatabaseInstance<UserSettings>(DbInstanceType.MultipleFiles, RootPath, Settingdb,
-                        "AllSettings");
+                        "AllSettings", false);
                     var prods = await prodsdb.FindAll();
                     foreach (var prod in prods)
-                        await AllSettings.Upsert(prod.Username, prod);
+                        await AllSettings.Upsert(prod.Username, prod,false);
                     Directory.Move(dbpath, dbpath + "_migrated");
                 }
 
@@ -1994,10 +2012,10 @@ namespace Rpm.SqlLite
                 if (Directory.Exists(dbpath) && !Directory.Exists(dbpath + "_migrated"))
                 {
                     var prodsdb = new DatabaseInstance<UserAccount>(DbInstanceType.MultipleFiles, RootPath, Accountdb,
-                        "UserAccounts");
+                        "UserAccounts", false);
                     var prods = await prodsdb.FindAll();
                     foreach (var prod in prods)
-                        await UserAccounts.Upsert(prod.Username, prod);
+                        await UserAccounts.Upsert(prod.Username, prod,false);
                     Directory.Move(dbpath, dbpath + "_migrated");
                 }
 
@@ -2005,10 +2023,10 @@ namespace Rpm.SqlLite
                 if (Directory.Exists(dbpath) && !Directory.Exists(dbpath + "_migrated"))
                 {
                     var prodsdb = new DatabaseInstance<DbVersion>(DbInstanceType.MultipleFiles, RootPath, versiondb,
-                        "DbVersions");
+                        "DbVersions", false);
                     var prods = await prodsdb.FindAll();
                     foreach (var prod in prods)
-                        await DbVersions.Upsert(prod.Name, prod);
+                        await DbVersions.Upsert(prod.Name, prod,false);
                     Directory.Move(dbpath, dbpath + "_migrated");
                 }
             });
@@ -2152,7 +2170,7 @@ namespace Rpm.SqlLite
                             }
 
                             version.Version = cur;
-                            await DbVersions.Upsert(version.Name, version);
+                            await DbVersions.Upsert(version.Name, version,false);
                         }
                         catch
                         {
@@ -2219,7 +2237,7 @@ namespace Rpm.SqlLite
                     var personen = await PersoneelLijst?.FindAll();
                     if (personen == null)
                         return false;
-                    foreach (var v in personen) await PersoneelLijst?.Upsert(v.PersoneelNaam, v);
+                    foreach (var v in personen) await PersoneelLijst?.Upsert(v.PersoneelNaam, v,false);
                 }
 
                 if (Logger != null)
@@ -2654,20 +2672,13 @@ namespace Rpm.SqlLite
 
         public void Dispose()
         {
-            //ProductiesDb?.Checkpoint();
-            //PersoneelDb?.Checkpoint();
-            //GereedDb?.Checkpoint();
-            //AccountsDb?.Checkpoint();
-            //ChangedDb?.Checkpoint();
-            //SettingsDb?.Checkpoint();
-            //LogDb?.Checkpoint();
-            //ProductiesDb?.Dispose();
-            //PersoneelDb?.Dispose();
-            //GereedDb?.Dispose();
-            //AccountsDb?.Dispose();
-            //ChangedDb?.Dispose();
-            //SettingsDb?.Dispose();
-            //LogDb?.Dispose();
+            ProductieFormulieren?.Close();
+            PersoneelLijst?.Close();
+            GereedFormulieren?.Close();
+            UserAccounts?.Close();
+            DbVersions?.Close();
+            AllSettings?.Close();
+            Logger?.Close();
             Dispose(true);
             GC.SuppressFinalize(this);
         }

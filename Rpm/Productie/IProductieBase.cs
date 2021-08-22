@@ -107,6 +107,16 @@ namespace Rpm.Productie
             return Root?.Materialen?.Where(x=> x != null).ToList() ?? new List<Materiaal>();
         }
 
+        public virtual Personeel[] GetPersonen(bool onlyactive)
+        {
+            return Personen.Where(x => x.IngezetAanKlus(Path, onlyactive, out _)).ToArray();
+        }
+
+        public virtual Storing[] GetStoringen(bool onlyactive)
+        {
+            return Root?.GetAlleStoringen(onlyactive).ToArray();
+        }
+
         public virtual async Task<bool> Update(string change, bool save)
         {
             try

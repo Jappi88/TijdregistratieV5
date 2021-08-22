@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using MetroFramework;
 using ProductieManager.Properties;
@@ -188,10 +189,10 @@ namespace Forms
             }
 
             xchooser.Items.Clear();
-            xchooserpanel.Visible = chooseitems != null && chooseitems.Length > 0;
-            if (chooseitems != null && chooseitems.Length > 0)
+            xchooserpanel.Visible = chooseitems is {Length: > 0};
+            if (chooseitems is {Length: > 0})
             {
-                xchooser.Items.AddRange(chooseitems);
+                xchooser.Items.AddRange(chooseitems.Select(x=> (object)x).ToArray());
                 if (xchooser.Items.Count > 0)
                     xchooser.SelectedIndex = 0;
                 Height += 50;

@@ -87,7 +87,7 @@ namespace Controls
             {
                 //if (_manager == null)
 
-                // _manager?.Dispose();
+                 _manager?.Dispose();
                 if (_manager == null)
                 {
                     _manager = new Manager(true);
@@ -103,7 +103,9 @@ namespace Controls
                 xbewerkingListControl.InitProductie(true, true, true,true, false,false);
                 werkPlekkenUI1.InitUI(_manager);
                 //recentGereedMeldingenUI1.LoadBewerkingen();
-               
+                _manager.Dispose();
+                _manager = new Manager(true);
+                _manager.InitManager();
                 InitEvents();
                 await _manager.Load(path, autologin, true,true);
                 // _manager.StartMonitor();

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using iTextSharp.text.pdf.parser.clipper;
+using NPOI.SS.Formula.Functions;
 using Polenter.Serialization;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
@@ -16,7 +19,7 @@ namespace Rpm.SqlLite
         private readonly FileSystemWatcher _pathwatcher;
         private FileSystemWatcher _secondarypathwatcher;
 
-        private static readonly object _locker = new object();
+        //private static readonly object _locker = new object();
         public string SecondaryDestination { get; private set; }
         public SecondaryManageType[] SecondaryManagedTypes { get; private set; }
         public event FileSystemEventHandler FileChanged;
@@ -24,30 +27,92 @@ namespace Rpm.SqlLite
         public event FileSystemEventHandler SecondaryFileChanged;
         public event FileSystemEventHandler SecondaryFileDeleted;
         public event ProgressChangedHandler ProgressChanged;
-
-        public MultipleFileDb(string path)
+        public static List<string>CorruptedFilePaths {  get; private set; }
+        public MultipleFileDb(string path, bool watchdb)
         {
+            CorruptedFilePaths = new List<string>();
             Path = path;
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            _pathwatcher = new FileSystemWatcher(Path);
-            _pathwatcher.EnableRaisingEvents = true;
-            _pathwatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
-            _pathwatcher.Filter = "*.rpm";
-            _pathwatcher.Changed += _pathwatcher_Changed;
-            _pathwatcher.Deleted += _pathwatcher_Deleted;
+            if (watchdb)
+            {
+                _pathwatcher = new FileSystemWatcher(Path);
+                _pathwatcher.EnableRaisingEvents = true;
+                _pathwatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
+                _pathwatcher.Filter = "*.rpm";
+                _pathwatcher.Changed += _pathwatcher_Changed;
+                _pathwatcher.Deleted += _pathwatcher_Deleted;
+            }
+        }
+
+        private readonly List<string> _changes = new List<string>();
+
+        private void DoChangeWait(string path, int duration)
+        {
+            Task.Factory.StartNew(async () =>
+            {
+                int cur = 0;
+                while (cur < duration)
+                {
+                    await Task.Delay(100);
+                    cur += 100;
+                }
+                lock (_changes)
+                {
+                    _changes.Remove(path);
+                }
+            });
         }
 
         private void _pathwatcher_Deleted(object sender, FileSystemEventArgs e)
         {
-
             OnFileDeleted(e);
         }
 
         private void _pathwatcher_Changed(object sender, FileSystemEventArgs e)
         {
-
+            var rpath = GetReadPath(true).ToLower();
+            if (!e.FullPath.ToLower().StartsWith(rpath)) return;
+            lock (_changes)
+            {
+                if (_changes.Any(x => string.Equals(x, e.FullPath, StringComparison.CurrentCultureIgnoreCase))) return;
+                _changes.Add(e.FullPath);
+            }
             OnFileChanged(e);
+            DoChangeWait(e.FullPath, 500);
+        }
+
+        public void DisposeSecondayPath()
+        {
+            if (_secondarypathwatcher != null)
+            {
+                _secondarypathwatcher.Deleted -= _secondarypathwatcher_Deleted;
+                _secondarypathwatcher.Changed -= _secondarypathwatcher_Changed;
+                _secondarypathwatcher.Dispose();
+                _secondarypathwatcher = null;
+            }
+
+            SecondaryManagedTypes = new SecondaryManageType[] { };
+            SecondaryDestination = null;
+        }
+
+        private void _secondarypathwatcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            var rpath = GetReadPath(true).ToLower();
+            if (!e.FullPath.ToLower().StartsWith(rpath)) return;
+            lock (_changes)
+            {
+                if (_changes.Any(x => string.Equals(x, e.FullPath, StringComparison.CurrentCultureIgnoreCase))) return;
+                _changes.Add(e.FullPath);
+            }
+           
+            OnSecondaryFileChanged(e);
+            DoChangeWait(e.FullPath, 500);
+        }
+
+        private void _secondarypathwatcher_Deleted(object sender, FileSystemEventArgs e)
+        {
+            OnSecondayFileDeleted(e);
         }
 
         public bool SetSecondaryPath(string path, SecondaryManageType[] managetypes)
@@ -60,8 +125,9 @@ namespace Rpm.SqlLite
                     SecondaryManagedTypes = managetypes;
                     _secondarypathwatcher?.Dispose();
                     _secondarypathwatcher = new FileSystemWatcher(path);
-                    _secondarypathwatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
                     _secondarypathwatcher.EnableRaisingEvents = true;
+                    _secondarypathwatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
+                    _secondarypathwatcher.Filter = "*.rpm";
                     _secondarypathwatcher.Deleted += _secondarypathwatcher_Deleted;
                     _secondarypathwatcher.Changed += _secondarypathwatcher_Changed;
                     return true;
@@ -76,33 +142,12 @@ namespace Rpm.SqlLite
             }
         }
 
-        public void DisposeSecondayPath()
-        {
-            _secondarypathwatcher.Deleted -= _secondarypathwatcher_Deleted;
-            _secondarypathwatcher.Changed -= _secondarypathwatcher_Changed;
-            SecondaryManagedTypes = new SecondaryManageType[] { };
-            SecondaryDestination = null;
-            _secondarypathwatcher?.Dispose();
-        }
-
-        private void _secondarypathwatcher_Changed(object sender, FileSystemEventArgs e)
-        {
-            OnSecondaryFileChanged(e);
-            OnFileChanged(e);
-        }
-
-        private void _secondarypathwatcher_Deleted(object sender, FileSystemEventArgs e)
-        {
-            OnSecondayFileDeleted(e);
-            OnFileDeleted(e);
-        }
-
         public string Path { get; }
 
         public List<T> GetAllEntries<T>()
         {
-            lock (_locker)
-            {
+            //lock (_locker)
+            ///{
                 var xreturn = new List<T>();
                 try
                 {
@@ -122,7 +167,7 @@ namespace Rpm.SqlLite
                 }
 
                 return xreturn;
-            }
+           // }
         }
 
         public List<string> GetAllIDs(bool checksecondary)
@@ -155,8 +200,8 @@ namespace Rpm.SqlLite
 
         public List<T> GetEntries<T>(string[] ids)
         {
-            lock (_locker)
-            {
+            //lock (_locker)
+            //{
                 var xreturn = new List<T>();
                 try
                 {
@@ -176,44 +221,44 @@ namespace Rpm.SqlLite
                 }
 
                 return xreturn;
-            }
+            //}
         }
 
         public List<T> GetEntries<T>(DateTime vanaf, DateTime tot, IsValidHandler validhandler)
         {
-            lock (_locker)
-            {
-                var xreturn = new List<T>();
-                try
-                {
-                    string path = GetReadPath(true);
-                    var files = Directory.GetFiles(path, "*.rpm");
-                    foreach (var file in files)
-                    {
+           //lock (_locker)
+           //{
+               var xreturn = new List<T>();
+               try
+               {
+                   string path = GetReadPath(true);
+                   var files = Directory.GetFiles(path, "*.rpm");
+                   foreach (var file in files)
+                   {
 
-                        var xent = GetInstanceFromFile<T>(file, null, false, new TijdEntry(vanaf, tot, null));
-                        if (xent != null)
-                        {
-                            if (validhandler != null && !validhandler.Invoke(xent, null)) continue;
-                            xreturn.Add(xent);
-                        }
-                    }
+                       var xent = GetInstanceFromFile<T>(file, null, false, new TijdEntry(vanaf, tot, null));
+                       if (xent != null)
+                       {
+                           if (validhandler != null && !validhandler.Invoke(xent, null)) continue;
+                           xreturn.Add(xent);
+                       }
+                   }
 
 
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
+               }
+               catch (Exception ex)
+               {
+                   Console.WriteLine(ex);
+               }
 
-                return xreturn;
-            }
+               return xreturn;
+           //}
         }
 
         public List<T> GetEntries<T>(IsValidHandler validhandler)
         {
-            lock (_locker)
-            {
+            //lock (_locker)
+           // {
                 var xreturn = new List<T>();
                 try
                 {
@@ -236,7 +281,7 @@ namespace Rpm.SqlLite
                 }
 
                 return xreturn;
-            }
+            //}
         }
 
         public T GetEntry<T>(string id)
@@ -248,8 +293,8 @@ namespace Rpm.SqlLite
 
         public List<T> FindEntries<T>(string criterias, bool fullmatch)
         {
-            lock (_locker)
-            {
+            //lock (_locker)
+            //{
                 var xreturn = new List<T>();
                 string xpath = GetReadPath(false);
                 string[] crits = criterias.Split(';');
@@ -278,7 +323,7 @@ namespace Rpm.SqlLite
                 }
 
                 return xreturn;
-            }
+            //}
         }
 
         public RpmPacket CreatePacketFromObject(object value)
@@ -296,7 +341,7 @@ namespace Rpm.SqlLite
                             rpm.Criterias.Add(x.ArtikelNr);
                         if (!string.IsNullOrEmpty(x.Omschrijving))
                             rpm.Criterias.Add(x.Omschrijving);
-                        if(x.Bewerkingen != null && x.Bewerkingen.Length > 0)
+                        if(x.Bewerkingen is {Length: > 0})
                             foreach (var b in x.Bewerkingen)
                             {
                                 rpm.Criterias.Add(b.Naam);
@@ -348,7 +393,7 @@ namespace Rpm.SqlLite
 
         }
 
-        public RpmPacket ReadPacket(Stream input)
+        public static RpmPacket ReadPacket(Stream input)
         {
             try
             {
@@ -368,8 +413,8 @@ namespace Rpm.SqlLite
 
         public bool WriteInstanceToFile(object data, string filepath)
         {
-            lock (_locker)
-            {
+            //lock (_locker)
+            //{
                 try
                 {
                     if (string.IsNullOrEmpty(filepath)) return false;
@@ -386,19 +431,20 @@ namespace Rpm.SqlLite
                         bytes = fs.ToArray();
                         fs.Close();
                     }
-                    if (bytes == null) return false;
                     for (int i = 0; i < 10; i++)
                     {
                         try
                         {
-                            using (var xs = new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.ReadWrite,
-                                FileShare.None))
-                            {
-                                xs.Write(bytes, 0, bytes.Length);
-                                xs.Flush();
-                                xs.Close();
-                            }
-
+                            var dir = System.IO.Path.GetDirectoryName(filepath);
+                            if (!Directory.Exists(dir)) break;
+                            using var xs = new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.ReadWrite,
+                                FileShare.None);
+                            xs.Write(bytes, 0, bytes.Length);
+                            xs.Flush();
+                            xs.Close();
+                            //var fi = new FileInfo(filepath);
+                            //fi.CreationTime = DateTime.Now;
+                            //fi.LastWriteTime = fi.CreationTime;
                             //File.Copy(tmp, filepath, true);
                             //File.Delete(tmp);
                             return true;
@@ -408,7 +454,6 @@ namespace Rpm.SqlLite
                             Console.WriteLine(e);
                         }
                     }
-                    bytes = null;
                     //OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Changed,
                     //    System.IO.Path.GetDirectoryName(filepath) ?? string.Empty, System.IO.Path.GetFileName(filepath)));
                     return false;
@@ -418,52 +463,66 @@ namespace Rpm.SqlLite
                     Console.WriteLine(e);
                     return false;
                 }
-            }
+            //}
         }
 
-        public T GetInstanceFromFile<T>(string filepath, string criteria = null, bool fullmatch = false, TijdEntry bereik = null)
+        public static T GetInstanceFromFile<T>(string filepath, string criteria = null, bool fullmatch = false, TijdEntry bereik = null)
         {
 
-            lock (_locker)
-            {
-                T xreturn = default;
-                for (int i = 0; i < 5; i++)
-                {
-                    bool xbreak = false;
-                    try
-                    {
-                        if (!File.Exists(filepath)) return default;
-                        using var fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                        var packet = ReadPacket(fs);
-                        var ser = new SharpSerializer(true);
-                        T xent = default;
-                        if (bereik != null && packet != null &&
-                            !(packet.Changed >= bereik.Start && packet.Changed <= bereik.Stop))
-                            return xent;
-                        if (packet == null || string.IsNullOrEmpty(criteria) ||
-                            packet.ContainsCriteria(criteria, fullmatch))
-                        {
-                            xbreak = true;
-                            xent = (T)ser.Deserialize(fs);
-                        }
+           //lock (_locker)
+           //{
+               T xreturn = default;
+               for (int i = 0; i < 5; i++)
+               {
+                   bool xbreak = false;
+                   try
+                   {
+                       if (!File.Exists(filepath)) return default;
+                       using var fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                       var packet = ReadPacket(fs);
+                       var ser = new SharpSerializer(true);
+                       T xent = default;
+                       if (bereik != null && packet != null &&
+                           !(packet.Changed >= bereik.Start && packet.Changed <= bereik.Stop))
+                           return xent;
+                       if (packet == null || string.IsNullOrEmpty(criteria) ||
+                           packet.ContainsCriteria(criteria, fullmatch))
+                       {
+                           xbreak = true;
+                           xreturn = (T)ser.Deserialize(fs);
+                           lock (CorruptedFilePaths)
+                           {
+                               int index =0;
+                               if ((index = CorruptedFilePaths.IndexOf(filepath.ToLower())) > -1)
+                                   CorruptedFilePaths.RemoveAt(index);
+                           }
+                       }
 
-                        fs.Close();
-                        return xent;
-                    }
-                    catch (Exception e)
-                    {
-                        xreturn = default;
-                        if (xbreak) break;
-                    }
-                }
+                       fs.Close();
+                       return xreturn;
+                   }
+                   catch (Exception e)
+                   {
+                       xreturn = default;
+                       if (xbreak)
+                       {
+                           lock (CorruptedFilePaths)
+                           {
+                               if (CorruptedFilePaths.IndexOf(filepath.ToLower()) < 0)
+                                   CorruptedFilePaths.Add(filepath.ToLower());
+                           }
+                           break;
+                       }
+                   }
+               }
 
-                return xreturn;
-            }
+               return xreturn;
+           //}
         }
 
-        public bool Replace<T>(string id, T newitem)
+        public bool Replace<T>(string id, T newitem, bool onlylocal)
         {
-            return Upsert(id, newitem);
+            return Upsert<T>(id, newitem,onlylocal);
         }
 
         public bool Exists(string id)
@@ -480,18 +539,21 @@ namespace Rpm.SqlLite
             }
         }
 
-        public bool Upsert<T>(string id, T item)
+        public bool Upsert<T>(string id, T item, bool onlylocal)
         {
             try
             {
-                var paths = GetWritePaths();
+                var paths = GetWritePaths(onlylocal);
                 bool xreturn = false;
                 foreach (var path in paths)
                 {
                     try
                     {
                         var path1 = $"{path}\\{id.Trim()}.rpm";
-                        xreturn |= WriteInstanceToFile(item, path1);
+                        if (WriteInstanceToFile(item, path1))
+                        {
+                            xreturn = true;
+                        }
                     }
                     catch (Exception e)
                     {
@@ -509,11 +571,27 @@ namespace Rpm.SqlLite
             }
         }
 
+        public static Task<T> FromPath<T>(string path)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+
+                try
+                {
+                    return GetInstanceFromFile<T>(path);
+                }
+                catch (Exception e)
+                {
+                    return default;
+                }
+            });
+        }
+
         public bool Delete(string id)
         {
             try
             {
-                var paths = GetWritePaths();
+                var paths = GetWritePaths(false);
                 foreach (var path in paths)
                 {
                     try
@@ -564,7 +642,7 @@ namespace Rpm.SqlLite
             int max = 0;
             try
             {
-                var paths = GetWritePaths();
+                var paths = GetWritePaths(false);
                 DoProgress("Entries laden...", 0, 0, null, ProgressType.WriteBussy);
                 foreach (var path in paths)
                 {
@@ -615,30 +693,44 @@ namespace Rpm.SqlLite
 
         public string GetReadPath(bool checksecondary, string filename = null)
         {
-            string pathname = System.IO.Path.GetFileName(Path);
-            string xpath = SecondaryDestination + "\\" + pathname;
-            return checksecondary && !string.IsNullOrEmpty(xpath) && SecondaryManagedTypes != null &&
+            string xpath = SecondaryDestination;
+            var x = checksecondary && !string.IsNullOrEmpty(xpath) && SecondaryManagedTypes != null &&
                    SecondaryManagedTypes.Any(x => x == SecondaryManageType.Read)
                    && (((!string.IsNullOrEmpty(filename) && File.Exists(xpath + $"\\{filename}"))
                         || Directory.Exists(xpath)))
                 ? xpath
                 : Path;
+            return x;
         }
 
-        public string[] GetWritePaths()
+        public string[] GetWritePaths(bool onlylocal)
         {
             var xreturn = new List<string>();
-            string pathname = System.IO.Path.GetFileName(Path);
-            string xpath = SecondaryDestination + "\\" + pathname;
-            if (!string.IsNullOrEmpty(xpath) && !string.Equals(xpath,Path, StringComparison.CurrentCultureIgnoreCase) && SecondaryManagedTypes != null && SecondaryManagedTypes.Any(
-                x => x == SecondaryManageType.Write
-                     && Directory.Exists(xpath)))
+            string xpath = SecondaryDestination;
+           
+            if (!string.IsNullOrEmpty(xpath) &&
+                !string.Equals(xpath, Path, StringComparison.CurrentCultureIgnoreCase) &&
+                SecondaryManagedTypes != null && SecondaryManagedTypes.Any(
+                    x => x == SecondaryManageType.Write
+                         && Directory.Exists(xpath)))
             {
                 xreturn.Add(xpath);
             }
 
-            xreturn.Add(Path);
+            if (!onlylocal)
+                xreturn.Insert(0, Path);
             return xreturn.ToArray();
+        }
+
+        public void Close()
+        {
+            DisposeSecondayPath();
+            if (_pathwatcher != null)
+            {
+                _pathwatcher.Changed -= _pathwatcher_Changed;
+                _pathwatcher.Deleted -= _pathwatcher_Deleted;
+                _pathwatcher?.Dispose();
+            }
         }
 
         protected virtual void OnFileChanged(FileSystemEventArgs e)

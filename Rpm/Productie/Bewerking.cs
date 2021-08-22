@@ -448,7 +448,7 @@ namespace Rpm.Productie
                                 if (per.WerkRooster == null)
                                     per.WerkRooster = x.WerkRooster;
                                 x.ReplaceKlus(klus);
-                                await Manager.Database.UpSert(x,
+                                _= Manager.Database.UpSert(x,
                                     $"[{x.PersoneelNaam}] is gestart aan klus '{klus.Naam} op {klus.WerkPlek}'.");
                             }
                         }

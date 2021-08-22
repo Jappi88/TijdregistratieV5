@@ -92,6 +92,11 @@ namespace Rpm.Settings
             CreateBackup = true;
             BackupInterval = TimeSpan.FromHours(1).TotalMilliseconds;
             MaxBackupCount = 100;
+            OfflineDabaseTypes = new List<DbType>();
+            OfflineDbSyncInterval = 1000;
+            OfflineDabaseTypes.Add(DbType.Producties);
+            OfflineDabaseTypes.Add(DbType.GereedProducties);
+            OfflineDabaseTypes.Add(DbType.Medewerkers);
             //admin
             EmailClients = new List<EmailClient>();
             VerzendAdres = new List<UitgaandAdres>();
@@ -358,6 +363,8 @@ namespace Rpm.Settings
         public int VanafWeek { get; set; }
         public int VanafJaar { get; set; }
         public bool GebruikOfflineMetSync { get; set; }
+        public int OfflineDbSyncInterval { get; set; }
+        public List<DbType> OfflineDabaseTypes { get; set; }
         public List<DatabaseUpdateEntry> DbUpdateEntries { get; set; }
         public int DbUpdateInterval { get; set; }
         public double BackupInterval { get; set; }

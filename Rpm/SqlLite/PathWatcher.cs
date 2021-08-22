@@ -20,7 +20,7 @@ namespace Rpm.SqlLite
 
         public bool RaiseEvent { get; set; }
         public bool IsSyncing { get; private set; }
-        public bool PathLost { get; private set; }
+        public bool PathLost { get;  set; }
         public bool IsFile { get; private set; }
         public void WatchPath(string path, bool isfile, bool raiseevent)
         {
