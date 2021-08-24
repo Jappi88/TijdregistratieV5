@@ -711,6 +711,7 @@ namespace Controls
                     case DialogResult.Yes:
                         var roosterform = new RoosterForm(Manager.Opties.TijdelijkeRooster,
                             "Kies een rooster voor al je werkzaamheden");
+                        roosterform.ViewPeriode = false;
                         if (roosterform.ShowDialog() == DialogResult.Cancel)
                             return;
                         Manager.Opties.TijdelijkeRooster = roosterform.WerkRooster;

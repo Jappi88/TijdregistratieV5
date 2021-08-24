@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
 using NPOI.SS.UserModel.Charts;
@@ -21,9 +22,58 @@ namespace Rpm.Misc
         {
             "ArtikelNr", "ProductieNr", "Omschrijving", "Bewerking Naam", "Status",
             "Start Datum", "Eind Datum", "Tijd Gewerkt", "Productie Aantal",
-            "Aantal Gemaakt", "Actueel Per Uur", "Per Uur", "Aantal Personen",
+            "Aantal Gemaakt", "Actueel P/u", "Per Uur","Afwijking P/u","Gemiddeld Actueel P/u", "Afwijking Gemiddeld P/u", "Aantal Personen",
             "Werkplekken", "Personen"
         };
+
+        public static string GetProductieColumnOmschrijving(string colmn)
+        {
+            var x = ProductieColumns.FirstOrDefault(x =>
+                string.Equals(x, colmn, StringComparison.CurrentCultureIgnoreCase));
+            if (string.IsNullOrEmpty(x)) return colmn;
+            switch (x.ToLower())
+            {
+                case "productienr":
+                    return "Unieke nr dat de productie representeerd.";
+                case "artikelnr":
+                    return "Product artikel nummer.";
+                case "omschrijving":
+                    return "De omschrijving van de productie.";
+                case "bewerking naam":
+                    return "Bewerking naam.";
+                case "status":
+                    return "Huidige status van de bewerking (Gestart,gestopt,gereed of verwijderd).";
+                case "start datum":
+                    return "De datum waarop de bewerking is gestart.";
+                case "eind datum":
+                    return "De tijd waarop de bewerking is gestopt.";
+                case "tijd gewerkt":
+                    return "De aantal gewerkte uren aan de bewerking.";
+                case "productie aantal":
+                    return "Aantal om te produceren";
+                case "aantal gemaakt":
+                    return "Aantal gemaakt";
+                case "actueel p/u":
+                    return "Actuele aantal per uur";
+                case "per uur":
+                    return "Aantal per uur dat bekend is volgens de productie formulier";
+                case "afwijking p/u":
+                    return
+                        "Percentage afwijking tussen de actuele aantal per uur en de aantal die bekend is.";
+                case "gemiddeld actueel p/u":
+                    return "Dit is de gemiddelde actuele aantal per uur op basis van alle bewerkingen met de zelfde artikel nummer en de bewerking naam";
+                case "afwijking gemiddeld p/u":
+                    return "Percentage afwijking van de gemiddeld actuele per uur op basis van wat er bekend is";
+                case "aantal personen":
+                    return "De aantal personen gewerkt aan de bewerking";
+                case "werkplekken":
+                    return "De werkplaatsen gebruikt voor de bewerking";
+                case "personen":
+                    return "De personen die aan de bewerking hebben gewerkt";
+            }
+
+            return colmn;
+        }
 
         public static string[] HiddenProductieColumns =
         {
@@ -302,13 +352,45 @@ namespace Rpm.Misc
             return cellStyleBorder;
         }
 
+        public static ISheet CreateProductieUitlegSheet(XSSFWorkbook workbook)
+        {
+            try
+            {
+                var sheet = workbook.CreateSheet("Columns Uitleg");
+
+                //border layaout
+                var rowindex = 4;
+                //CreateHeader(sheet, omschrijving, 0, 2, 0, ProductieColumns.Length, cellStyleBorder);
+                //rowindex += 2;
+                //create column font
+               
+                //init the columns and font
+                
+                foreach (var xrow in ProductieColumns)
+                {
+                    var row = sheet.CreateRow(rowindex);
+                    var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12);
+                    CreateCell(row, 0, xrow + ": ", cellStyleBorder);
+                    cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 12);
+                    CreateCell(row, 1, GetProductieColumnOmschrijving(xrow), cellStyleBorder);
+                    rowindex++;
+                }
+                sheet.AutoSizeColumn(0, true);
+                sheet.AutoSizeColumn(1, true);
+                return sheet;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public static ISheet CreateProductieOverzicht(XSSFWorkbook workbook, TijdEntry bereik, string omschrijving,
             string naam, List<Bewerking> producties)
         {
             try
             {
                 naam += $"({producties.Count})";
-
                 var sheet = workbook.CreateSheet(naam);
 
                 //border layaout
@@ -347,10 +429,15 @@ namespace Rpm.Misc
 
                     var formatting = CreateRowConditionalFormatRules(sheet, rowindex + 1, ProductieColumns.Length);
                     cellindex = 0;
-                    cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11);
+                  
                     foreach (var xrow in ProductieColumns)
                     {
-                        var cell = CreateCell(row, cellindex++, GetValue(bw, xrow, bereik), cellStyleBorder);
+                        var value = GetValue(bw, xrow, bereik, out var format);
+                        cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11);
+                        if (!string.IsNullOrEmpty(format))
+                            cellStyleBorder.DataFormat = workbook.CreateDataFormat().GetFormat(format);
+                        var cell = CreateCell(row, cellindex++, value,cellStyleBorder);
+                        
                     }
 
                     var pers = bw.GetPersoneel().Select(x => x.PersoneelNaam).Where(x =>
@@ -383,12 +470,16 @@ namespace Rpm.Misc
                 xs = GetColumnName(cellindex);
                 CreateCellFormula(row, cellindex, $"SUM({xs}2:{xs}{rowindex})", cellStyleBorder);
 
-                cellindex = GetProductieColumnIndex("actueel per uur");
+                cellindex = GetProductieColumnIndex("actueel p/u");
                 xs = GetColumnName(cellindex);
                 CreateCellFormula(row, cellindex, $"ROUND(SUM({xs}2:{xs}{rowindex}) / {rowindex - 1},0)",
                     cellStyleBorder);
 
                 cellindex = GetProductieColumnIndex("per uur");
+                xs = GetColumnName(cellindex);
+                CreateCellFormula(row, cellindex, $"ROUND(SUM({xs}2:{xs}{rowindex}) / {rowindex - 1},0)",
+                    cellStyleBorder);
+                cellindex = GetProductieColumnIndex("gemiddeld actueel p/u");
                 xs = GetColumnName(cellindex);
                 CreateCellFormula(row, cellindex, $"ROUND(SUM({xs}2:{xs}{rowindex}) / {rowindex - 1},0)",
                     cellStyleBorder);
@@ -675,6 +766,8 @@ namespace Rpm.Misc
                 cell.SetCellValue(time.ToString());
             else if (value is double xdouble)
                 cell.SetCellValue(xdouble);
+            else if (value is decimal xdecimal)
+                cell.SetCellValue((double)xdecimal);
             else if (value is int xint)
                 cell.SetCellValue(xint);
             else if (value is string xstring)
@@ -730,8 +823,9 @@ namespace Rpm.Misc
             return "N.V.T";
         }
 
-        public static object GetValue(Bewerking bew, string value, TijdEntry vanaf)
+        public static object GetValue(Bewerking bew, string value, TijdEntry vanaf, out string format)
         {
+            format = null;
             if (bew == null || string.IsNullOrEmpty(value)) return null;
             switch (value.ToLower())
             {
@@ -755,10 +849,18 @@ namespace Rpm.Misc
                     return bew.Aantal;
                 case "aantal gemaakt":
                     return bew.TotaalGemaakt;
-                case "actueel per uur":
+                case "actueel p/u":
                     return bew.ActueelProductenPerUur();
                 case "per uur":
                     return bew.PerUur;
+                case "afwijking p/u":
+                    //format = "_ * #.##0,00_% ;_  * -#.##0,00_% ;";
+                    return bew.ProcentAfwijkingPerUur.ToString() + "%";
+                case "gemiddeld actueel p/u":
+                    return bew.GemiddeldActueelPerUur;
+                case "afwijking gemiddeld p/u":
+                    //format = "_ * #.##0,00_% ;_  * -#.##0,00_% ;";
+                    return bew.GemiddeldProcentAfwijkingPerUur.ToString() + "%";
                 case "aantal personen":
                     return bew.AantalPersonen;
                 case "werkplekken":
@@ -772,7 +874,6 @@ namespace Rpm.Misc
                         return string.Join(", ", pers);
                     return "Geen Personeel";
             }
-
             return "N.V.T.";
         }
 
@@ -833,7 +934,7 @@ namespace Rpm.Misc
                         CreateOverzichtChartSheet(workbook, bewerkingen, false);
                         CreateOverzichtChartSheet(workbook, bewerkingen, true);
                     }
-
+                    var uitlegsheet = CreateProductieUitlegSheet(workbook);
                     using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
                     {
                         workbook.Write(fs);

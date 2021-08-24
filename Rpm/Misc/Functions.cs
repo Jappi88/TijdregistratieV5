@@ -1586,6 +1586,12 @@ namespace Rpm.Misc
             return date;
         }
 
+        public static DateTime ChangeTime(this DateTime date, TimeSpan time)
+        {
+            return new DateTime(date.Year, date.Month, date.Day, time.Hours, time.Minutes, time.Seconds,
+                time.Milliseconds);
+        }
+
         public static TimeSpan ToTime(this string value)
         {
             var date = new DateTime();

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Rpm.Misc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Rpm.Misc;
 
 namespace Rpm.Productie
 {
@@ -44,8 +44,9 @@ namespace Rpm.Productie
         {
             if (Uren == null || isnew)
                 Uren = new List<TijdEntry>();
-            if (uren != null && uren.Length > 0)
+            if (uren is {Length: > 0})
             {
+                UpdateUrenRooster(false);
                 var isbussy = false;
                 foreach (var tijd in uren)
                 {
@@ -55,53 +56,74 @@ namespace Rpm.Productie
 
                 if (isactief && !isbussy)
                     UpdateTijdGewerkt(DateTime.Now, DateTime.Now, true);
+                
             }
         }
 
-        public void UpdateUrenRooster(bool onlyactive, bool checkforspecialrooster)
+        public void UpdateUrenRooster(bool dospecialrooster)
         {
-            if (Uren != null && Uren.Count > 0)
-            {
-                if (WerkRooster != null && WerkRooster.IsCustom() && Uren.Any(x => x.InUse && (x.WerkRooster == null || !x.WerkRooster.IsCustom() || !x.WerkRooster.SameTijden(WerkRooster))))
-                {  
-                    var xtime = DateTime.Now;
-                    var xstart = xtime.TimeOfDay >= WerkRooster.StartWerkdag && xtime.TimeOfDay <= WerkRooster.EindWerkdag ? WerkRooster.StartWerkdag : xtime.TimeOfDay;
-                    var xstop = xtime.TimeOfDay >= WerkRooster.EindWerkdag ? WerkRooster.EindWerkdag : xtime.TimeOfDay;
-                    var xstartdate = new DateTime(xtime.Year, xtime.Month, xtime.Day, xstart.Hours, xstart.Minutes, 0);
-                    var xenddate = new DateTime(xtime.Year, xtime.Month, xtime.Day, xstop.Hours, xstop.Minutes, 0);
-                    SetStop(xenddate);
-                    SetStart(xstartdate,xenddate);
-                }
 
-                if (SpecialeRoosters == null)
-                    SpecialeRoosters = new List<Rooster>();
-                foreach (var uur in Uren)
+            lock (Uren)
+            {
+                if (Uren is {Count: > 0})
                 {
-                    if (checkforspecialrooster)
+                    SpecialeRoosters ??= new List<Rooster>();
+                    var currooster = WerkRooster == null || !WerkRooster.IsValid()
+                        ? Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster()
+                        : WerkRooster;
+                    if (dospecialrooster)
                     {
-                        var xspc = Manager.Opties?.SpecialeRoosters
-                            ?.Where(x =>  (x.Vanaf.Date >= uur.Start.Date  && x.Vanaf.Date <= uur.Stop.Date) &&
-                                          uur.Stop.TimeOfDay >= x.StartWerkdag).ToList();
-                        xspc = xspc?.Where(x => SpecialeRoosters.All(s => s.Vanaf.Date != x.Vanaf.Date)).ToList();
-                        if (xspc == null || xspc.Count == 0) continue;
-                        SpecialeRoosters.AddRange(xspc);
+                        for (int i = 0; i < Uren.Count; i++)
+                        {
+                            var xent = Uren[i];
+                            if (xent.ExtraTijd != null) continue;
+                            var xspc = Manager.Opties?.SpecialeRoosters
+                                ?.Where(x => (x.Vanaf.Date >= xent.Start.Date && x.Vanaf.Date <= xent.Stop.Date) &&
+                                             xent.Stop.TimeOfDay >= x.StartWerkdag).ToList();
+                            xspc = xspc?.Where(x => SpecialeRoosters.All(s => s.Vanaf.Date != x.Vanaf.Date)).ToList();
+
+                            if (xspc != null)
+                                SpecialeRoosters.AddRange(xspc);
+                        }
                     }
 
-                    if (!uur.InUse && onlyactive) continue;
-                    uur.WerkRooster ??= WerkRooster;
+                    for (int i = 0; i < Uren.Count; i++)
+                    {
+                        var xent = Uren[i];
+                        if (xent.ExtraTijd != null) continue;
+                        var xr = xent.WerkRooster;
+                        if (xr == null || !xr.IsValid())
+                        {
+                            if (!xent.InUse)
+                                xr = Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
+                            else xr = currooster.CreateCopy();
+                        }
+
+                        xent.WerkRooster = xr;
+                        if (xent.Start.TimeOfDay < xr.StartWerkdag || xent.Start.TimeOfDay > xr.EindWerkdag)
+                            xent.Start = Werktijd.EerstVolgendeWerkdag(xent.Start, ref xr, xr, SpecialeRoosters);
+                        if (xent.Stop.TimeOfDay > xr.EindWerkdag)
+                            xent.Stop = xent.Stop.ChangeTime(xr.EindWerkdag);
+
+                    }
                 }
             }
-
         }
 
         public bool Remove(TijdEntry entry)
         {
-            return Uren.Remove(entry);
+            lock (Uren)
+            {
+                return Uren.Remove(entry);
+            }
         }
 
         public int RemoveAllEmpty()
         {
-            return Uren.RemoveAll(x => x.TotaalTijd == 0 && !x.InUse);
+            lock (Uren)
+            {
+                return Uren.RemoveAll(x => x.TotaalTijd == 0 && !x.InUse);
+            }
         }
 
         public TijdEntry Add(TijdEntry entry)
@@ -116,20 +138,26 @@ namespace Rpm.Productie
             var rooster = WerkRooster == null || !WerkRooster.IsCustom() ? Manager.Opties?.GetWerkRooster() : WerkRooster;
             if (entry.WerkRooster == null || !entry.WerkRooster.IsCustom())
                 entry.WerkRooster = rooster;
-            if (Uren.Count == 0)
+            lock (Uren)
             {
-                Uren.Add(entry);
-                isnew = true;
-                return entry;
+                if (Uren.Count == 0)
+                {
+                    Uren.Add(entry);
+                    isnew = true;
+                    return entry;
+                }
             }
 
             //controlleer eerst of de entry extra tijd is, en of we die kunnen toevoegen.
             if (entry.ExtraTijd != null)
             {
-                if (!Uren.Any(x => x.ExtraTijd != null && x.ExtraTijd.Equals(entry.ExtraTijd)))
+                lock (Uren)
                 {
-                    Uren.Add(entry);
-                    return entry;
+                    if (!Uren.Any(x => x.ExtraTijd != null && x.ExtraTijd.Equals(entry.ExtraTijd)))
+                    {
+                        Uren.Add(entry);
+                        return entry;
+                    }
                 }
 
                 return entry;
@@ -150,7 +178,11 @@ namespace Rpm.Productie
                     else xent.WerkRooster = rooster;
                 if (!xent.InUse && entry.InUse)
                 {
-                    Uren.ForEach(x => x.InUse = false);
+                    lock (Uren)
+                    {
+                        Uren.ForEach(x => x.InUse = false);
+                    }
+
                     xent.InUse = true;
                 }
 
@@ -174,7 +206,11 @@ namespace Rpm.Productie
                             else xent.WerkRooster = rooster;
                         if (!xent.InUse && entry.InUse)
                         {
-                            Uren.ForEach(x => x.InUse = false);
+                            lock (Uren)
+                            {
+                                Uren.ForEach(x => x.InUse = false);
+                            }
+
                             xent.InUse = true;
                         }
 
@@ -202,7 +238,11 @@ namespace Rpm.Productie
                             else xent.WerkRooster = rooster;
                         if (!xent.InUse && entry.InUse)
                         {
-                            Uren.ForEach(x => x.InUse = false);
+                            lock (Uren)
+                            {
+                                Uren.ForEach(x => x.InUse = false);
+                            }
+
                             xent.InUse = true;
                         }
 
@@ -215,9 +255,12 @@ namespace Rpm.Productie
 
             if (!changed)
             {
-                if (entry.InUse)
-                    Uren.ForEach(x => x.InUse = false);
-                Uren.Add(entry);
+                lock (Uren)
+                {
+                    if (entry.InUse)
+                        Uren.ForEach(x => x.InUse = false);
+                    Uren.Add(entry);
+                }
             }
 
             //we gaan alle tijden pakken die tussen andere tijden zitten.
@@ -228,41 +271,51 @@ namespace Rpm.Productie
                         s.ExtraTijd == null && x.Start >= s.Start && x._gestopt < s._gestopt ||
                         x.Start > s.Start && x._gestopt <= s._gestopt)) || !x.InUse && x.TotaalTijd <= 0)
                     .ToArray();
-                foreach (var old in toremove)
+                lock (Uren)
                 {
-                    Uren.Remove(old);
-                    //tijd die ingebruik is maar wel verwijderd word moeten we natuurlijk in andere in plaats geven.
-                    if (old.InUse)
-                        Uren.Add(new TijdEntry(DateTime.Now, DateTime.Now, WerkRooster)
-                            {WerkRooster = old.WerkRooster, InUse = true});
+                    foreach (var old in toremove)
+                    {
+                        Uren.Remove(old);
+                        //tijd die ingebruik is maar wel verwijderd word moeten we natuurlijk in andere in plaats geven.
+                        if (old.InUse)
+                            Uren.Add(new TijdEntry(DateTime.Now, DateTime.Now, WerkRooster)
+                                {WerkRooster = old.WerkRooster, InUse = true});
+                    }
                 }
 
-                if (Uren.Count > 1)
+                lock (Uren)
                 {
-                    for (int i = 0; i < Uren.Count; i++)
+                    if (Uren.Count > 1)
                     {
-                        var te = Uren[i];
-                        for (int j = 0; j < Uren.Count; j++)
+                        for (int i = 0; i < Uren.Count; i++)
                         {
-                            if (j == i) continue;
-                            var xte = Uren[j];
-                            if (xte.Start < te.Stop && xte.Stop > te.Start)
+                            var te = Uren[i];
+                            for (int j = 0; j < Uren.Count; j++)
                             {
-                                if (xte.Stop > te.Stop)
-                                    te.Stop = xte.Stop;
-                                if (xte.InUse)
-                                    te.InUse = true;
-                                Uren.Remove(xte);
-                                j--;
-                            }
+                                if (j == i) continue;
+                                var xte = Uren[j];
+                                if (xte.Start < te.Stop && xte.Stop > te.Start)
+                                {
+                                    if (xte.Stop > te.Stop)
+                                        te.Stop = xte.Stop;
+                                    if (xte.InUse)
+                                        te.InUse = true;
+                                    Uren.Remove(xte);
+                                    j--;
+                                }
 
+                            }
                         }
                     }
                 }
             }
 
-            if (reorder && Uren.Count > 1)
-                Uren = Uren.OrderBy(x => x.Start).ToList();
+            lock (Uren)
+            {
+                if (reorder && Uren.Count > 1)
+                    Uren = Uren.OrderBy(x => x.Start).ToList();
+            }
+
             isnew = !changed;
             return entry;
         }
@@ -276,8 +329,10 @@ namespace Rpm.Productie
                     bool x = false;
                     Add(t,ref x, false);
                 }
-                  
-                Uren = Uren.OrderBy(x => x.Start).ToList();
+                lock (Uren)
+                {
+                    Uren = Uren.OrderBy(x => x.Start).ToList();
+                    }
             }
         }
 
@@ -398,20 +453,25 @@ namespace Rpm.Productie
             foreach (var tijd in from.Uren)
             {
                 var changed = false;
-                foreach (var t in Uren)
+                lock (Uren)
                 {
-                    if (t.WerkRooster == null || !t.WerkRooster.IsCustom())
-                        t.WerkRooster = WerkRooster;
-                    if (t.Equals(tijd))
+                    foreach (var t in Uren)
                     {
                         if (t.WerkRooster == null || !t.WerkRooster.IsCustom())
-                            t.WerkRooster = tijd.WerkRooster != null && tijd.WerkRooster.IsCustom()? tijd.WerkRooster : WerkRooster;
-                        t.Omschrijving = tijd.Omschrijving;
-                        t.Start = tijd.Start;
-                        t.Stop = tijd.Stop;
-                        changed = true;
-                        done++;
-                        break;
+                            t.WerkRooster = WerkRooster;
+                        if (t.Equals(tijd))
+                        {
+                            if (t.WerkRooster == null || !t.WerkRooster.IsCustom())
+                                t.WerkRooster = tijd.WerkRooster != null && tijd.WerkRooster.IsCustom()
+                                    ? tijd.WerkRooster
+                                    : WerkRooster;
+                            t.Omschrijving = tijd.Omschrijving;
+                            t.Start = tijd.Start;
+                            t.Stop = tijd.Stop;
+                            changed = true;
+                            done++;
+                            break;
+                        }
                     }
                 }
 
@@ -423,7 +483,7 @@ namespace Rpm.Productie
                         done++;
                 }
             }
-
+            UpdateUrenRooster(false);
             return done;
         }
 

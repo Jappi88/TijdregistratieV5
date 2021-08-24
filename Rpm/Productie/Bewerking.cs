@@ -255,7 +255,7 @@ namespace Rpm.Productie
             if (WerkPlekken == null || WerkPlekken.Count == 0)
                 return new Personeel[] { };
             var personeel = new List<Personeel>();
-            WerkPlekken.Where(x => x.Naam.ToLower() == werkplek.ToLower()).ToList()
+            WerkPlekken.Where(x => string.Equals(x.Naam, werkplek, StringComparison.CurrentCultureIgnoreCase)).ToList()
                 .ForEach(x => personeel.AddRange(x.Personen));
             return personeel.ToArray();
         }

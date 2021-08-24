@@ -955,8 +955,7 @@ namespace Rpm.Productie
                 {
                     int done = 0;
                     var prods = await GetProducties(ViewState.Gestart, true, false, false);
-                    var acces1 = LogedInGebruiker != null &&
-                                 LogedInGebruiker.AccesLevel >= AccesType.ProductieBasis;
+                    var acces1 = LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
                     if (!acces1) return -1;
                     for (int i = 0; i < prods.Count; i++)
                     {

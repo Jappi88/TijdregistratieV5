@@ -415,8 +415,10 @@ namespace Forms
         {
             if (e.KeyCode == Keys.Enter)
             {
+                e.Handled = e.SuppressKeyPress = true;
                 if (_isbussy) return;
                 await Verwerk();
+
             }
         }
     }

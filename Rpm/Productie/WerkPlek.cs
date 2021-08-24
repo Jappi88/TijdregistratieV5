@@ -327,7 +327,7 @@ namespace Rpm.Productie
             }
 
             Tijden.WerkRooster = rooster;
-            Tijden.UpdateUrenRooster(true,checkforspecialrooster);
+            Tijden.UpdateUrenRooster(checkforspecialrooster);
             for (int i = 0; i < Personen.Count; i++)
             {
                 var pers = Personen[i];
@@ -346,7 +346,6 @@ namespace Rpm.Productie
                                 klus.Tijden.WerkRooster ??= pers.WerkRooster ?? dbpers?.WerkRooster ?? Tijden.WerkRooster;
                                 klus.Tijden.SpecialeRoosters = Tijden.SpecialeRoosters;
                                 klus.Tijden.SetUren(Tijden.Uren.ToArray(), Werk.State == ProductieState.Gestart,true);
-                                klus.Tijden.UpdateUrenRooster(true,checkforspecialrooster);
                                 save |= dbpers?.ReplaceKlus(klus) ?? false;
                             }
 
@@ -383,6 +382,7 @@ namespace Rpm.Productie
                 else if (Tijden.IsActief)
                     Tijden.SetStop();
 
+                Tijden?.UpdateUrenRooster(false);
                 CalculatePerUur(false);
                 return true;
             }

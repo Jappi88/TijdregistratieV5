@@ -17,6 +17,7 @@ using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.Various;
 using static Forms.RangeCalculatorForm;
+using Timer = System.Timers.Timer;
 
 namespace Controls
 {
@@ -38,6 +39,20 @@ namespace Controls
             EnableEntryFiltering = false;
             EnableFiltering = true;
             CanLoad = true;
+            _WaitTimer = new Timer(500);
+            _WaitTimer.Elapsed += _WaitTimer_Elapsed;
+        }
+
+        private void _WaitTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            _WaitTimer?.Stop();
+            if (this.Disposing || this.IsDisposed) return;
+            this.BeginInvoke(new Action(() =>
+            {
+                _selectedItem = ProductieLijst.SelectedObject;
+                SetButtonEnable();
+                OnSelectedItemChanged();
+            }));
         }
 
         public object SelectedItem
@@ -81,6 +96,7 @@ namespace Controls
             }
         }
         public bool EnableSync { get; set; }
+        protected Timer _WaitTimer;
         #region Init Methods
 
         /// <summary>
@@ -162,7 +178,7 @@ namespace Controls
             xstartb.Enabled = acces1 && isgestopt;
             xstopb.Enabled = acces1 && isgestart;
             xwijzigformb.Enabled = enable1 && acces1;
-            xwerktijdenb.Enabled = acces1 && enable3;
+            xwerktijdenb.Enabled = acces1 && enable1;
             xwerkplekkenb.Enabled = enable1 && acces1;
             xaantalgemaaktb.Enabled = enable1 && acces1;
             xverwijderb.Enabled = enable3 && acces1;
@@ -180,7 +196,7 @@ namespace Controls
             xtoolstripstart.Enabled = acces1 && isgestopt;
             xtoolstripstop.Enabled = acces1 && isgestart;
             productieToolStripMenuItem.Enabled = enable1 && acces1;
-            xtoolstripbehwerktijden.Enabled = acces1 && enable3;
+            xtoolstripbehwerktijden.Enabled = acces1 && enable1;
             xtoolstripbehwerkplekken.Enabled = enable1 && acces1;
             xwijzigToolStripMenuItem1.Enabled = enable3 && acces1;
             xverwijdertoolstrip.Enabled = enable3 && acces1;
@@ -2080,9 +2096,8 @@ namespace Controls
 
         private void xproductieLijst_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _selectedItem = ProductieLijst.SelectedObject;
-            SetButtonEnable();
-            OnSelectedItemChanged();
+            _WaitTimer?.Stop();
+            _WaitTimer?.Start();
         }
         
         private void xproductieLijst_DoubleClick(object sender, EventArgs e)

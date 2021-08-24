@@ -584,7 +584,7 @@ namespace Forms
             this.xbewnotitie.Location = new System.Drawing.Point(13, 390);
             this.xbewnotitie.Multiline = true;
             this.xbewnotitie.Name = "xbewnotitie";
-            this.xbewnotitie.Size = new System.Drawing.Size(207, 70);
+            this.xbewnotitie.Size = new System.Drawing.Size(190, 70);
             this.xbewnotitie.TabIndex = 57;
             this.toolTip1.SetToolTip(this.xbewnotitie, "Bewerking Notitie");
             // 
@@ -1252,6 +1252,7 @@ namespace Forms
             this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
             this.metroTabControl1.Name = "metroTabControl1";
+            this.metroTabControl1.Padding = new System.Drawing.Point(6, 8);
             this.metroTabControl1.SelectedIndex = 0;
             this.metroTabControl1.Size = new System.Drawing.Size(970, 470);
             this.metroTabControl1.TabIndex = 26;
@@ -1260,6 +1261,7 @@ namespace Forms
             // metroTabPage1
             // 
             this.metroTabPage1.Controls.Add(this.groupBox2);
+            this.metroTabPage1.Enabled = true;
             this.metroTabPage1.HorizontalScrollbarBarColor = true;
             this.metroTabPage1.HorizontalScrollbarHighlightOnWheel = false;
             this.metroTabPage1.HorizontalScrollbarSize = 10;
@@ -1271,11 +1273,13 @@ namespace Forms
             this.metroTabPage1.VerticalScrollbarBarColor = true;
             this.metroTabPage1.VerticalScrollbarHighlightOnWheel = false;
             this.metroTabPage1.VerticalScrollbarSize = 10;
+            this.metroTabPage1.Visible = true;
             // 
             // metroTabPage2
             // 
             this.metroTabPage2.Controls.Add(this.groupBox4);
             this.metroTabPage2.Controls.Add(this.xbeweditgroup);
+            this.metroTabPage2.Enabled = true;
             this.metroTabPage2.HorizontalScrollbarBarColor = true;
             this.metroTabPage2.HorizontalScrollbarHighlightOnWheel = false;
             this.metroTabPage2.HorizontalScrollbarSize = 10;
@@ -1287,10 +1291,12 @@ namespace Forms
             this.metroTabPage2.VerticalScrollbarBarColor = true;
             this.metroTabPage2.VerticalScrollbarHighlightOnWheel = false;
             this.metroTabPage2.VerticalScrollbarSize = 10;
+            this.metroTabPage2.Visible = false;
             // 
             // metroTabPage3
             // 
             this.metroTabPage3.Controls.Add(this.materiaalUI1);
+            this.metroTabPage3.Enabled = true;
             this.metroTabPage3.HorizontalScrollbarBarColor = true;
             this.metroTabPage3.HorizontalScrollbarHighlightOnWheel = false;
             this.metroTabPage3.HorizontalScrollbarSize = 10;
@@ -1302,6 +1308,7 @@ namespace Forms
             this.metroTabPage3.VerticalScrollbarBarColor = true;
             this.metroTabPage3.VerticalScrollbarHighlightOnWheel = false;
             this.metroTabPage3.VerticalScrollbarSize = 10;
+            this.metroTabPage3.Visible = false;
             // 
             // WijzigProductie
             // 
