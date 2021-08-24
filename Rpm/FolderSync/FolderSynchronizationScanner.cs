@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FolderSync.MultiKey;
+using NPOI.SS.Formula.UDF;
 using Rpm.Misc;
 using Rpm.Productie;
 
@@ -11,7 +12,7 @@ namespace FolderSync
 {
     public enum FolderSynchorizationOption
     {
-        Both, Destination
+        Both, Destination,SourceCreate
     }
 
     public class FolderSynchronizationScanner
@@ -49,11 +50,11 @@ namespace FolderSync
             if (Directory.Exists(sourcePath) == false) AddCreateFolderTask(sourcePath);
             if (Directory.Exists(destinationPath) == false) AddCreateFolderTask(destinationPath);
 
-            if (Directory.Exists(sourcePath) == true) LoadFilesInFirstPath(sourcePath, destinationPath, false);
+            if (Directory.Exists(sourcePath)) LoadFilesInFirstPath(sourcePath, destinationPath, false);
             if (_Options == FolderSynchorizationOption.Both && Directory.Exists(destinationPath)) 
                 LoadFilesInFirstPath(destinationPath, sourcePath, true);
 
-            if (Directory.Exists(sourcePath) == true)
+            if (Directory.Exists(sourcePath))
             {
                 foreach (string subfolder in Directory.GetDirectories(sourcePath))
                 {
@@ -62,7 +63,7 @@ namespace FolderSync
                 }
             }
 
-            if (_Options == FolderSynchorizationOption.Both && Directory.Exists(destinationPath) == true)
+            if (_Options == FolderSynchorizationOption.Both && Directory.Exists(destinationPath))
             {
                 foreach (string subfolder in Directory.GetDirectories(destinationPath))
                 {
@@ -148,7 +149,14 @@ namespace FolderSync
                 {
                     foreach (var delfile in delFiles)
                     {
-                        AddFileTask(new(delfile, delfile, FolderSynchronizationItemFileOption.DestinationDelete));
+
+                        if (_Options == FolderSynchorizationOption.SourceCreate)
+                        {
+                            string xpath = Path.Combine(sourcePath, Path.GetFileName(delfile));
+                            AddFileTask(new(xpath, delfile, FolderSynchronizationItemFileOption.SourceCreate));
+                        }
+                        else
+                            AddFileTask(new(delfile, delfile, FolderSynchronizationItemFileOption.DestinationDelete));
                     }
                 }
             }
@@ -157,7 +165,7 @@ namespace FolderSync
         public void AddCreateFolderTask(string folder)
         {
             FolderSynchronizationItemFolder item = new FolderSynchronizationItemFolder(folder, FolderSynchronizationItemFolderOption.CreateFolder);
-            FolderSynchronizationItemFolder existingitem = (FolderSynchronizationItemFolder) _SyncCollection.GetAddObject((FileOperation) item);
+            FolderSynchronizationItemFolder existingitem = (FolderSynchronizationItemFolder) _SyncCollection.GetAddFolderSyncEntry(item);
             if (existingitem.Option != item.Option)
             {
                 existingitem.Option = item.Option;
@@ -166,7 +174,7 @@ namespace FolderSync
 
         public void AddFileTask(FolderSynchronizationItemFile item)
         {
-            FolderSynchronizationItemFile existingitem = (FolderSynchronizationItemFile) _SyncCollection.GetAddObject((FileOperation) item);
+            FolderSynchronizationItemFile existingitem = (FolderSynchronizationItemFile) _SyncCollection.GetAddFileSyncEntry(item);
             if (existingitem.Option != item.Option)
             {
                 existingitem.Option = item.Option;

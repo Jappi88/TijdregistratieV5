@@ -27,7 +27,7 @@ namespace FolderSync
         protected string _Status = string.Empty;
         public int Interval
         {
-            get => Manager.DefaultSettings == null ? 1000 : Manager.DefaultSettings.OfflineDbSyncInterval;
+            get => Manager.DefaultSettings == null || Manager.DefaultSettings.OfflineDbSyncInterval < 500? 1000 : Manager.DefaultSettings.OfflineDbSyncInterval;
         }
         public string Status => _Status;
 
@@ -257,17 +257,19 @@ namespace FolderSync
                                     FolderSynchronizationScanner fss =
                                         new FolderSynchronizationScanner(op.Source, op.Destination, op.Option);
                                     await fss.Sync();
-                                    if (fss.SyncCollection.Objects.Count > 0)
+                                    if (fss.SyncCollection.Operations.Count > 0)
                                     {
                                         lock (_SyncQueue)
                                         {
-                                            _SyncQueue.Clear();
-                                            foreach (FileOperation fo in fss.SyncCollection.Objects)
+                                            //_SyncQueue.Clear();
+                                            foreach (FileOperation fo in fss.SyncCollection.Operations)
                                             {
-                                                _SyncQueue.Enqueue(fo);
+                                                if (!_SyncQueue.Contains(fo))
+                                                    _SyncQueue.Enqueue(fo);
                                             }
                                         }
-                                        await Task.Delay(fss.SyncCollection.Objects.Count * 10);
+
+                                        //await Task.Delay(fss.SyncCollection.Operations.Count * 10);
                                     }
                                 }
 
@@ -277,9 +279,10 @@ namespace FolderSync
                             {
                                 _Status = ex.Message;
                             }
-                           
+
                         }
 
+                        await Task.Delay(Interval);
                     }
                 }
 

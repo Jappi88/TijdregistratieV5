@@ -410,5 +410,14 @@ namespace Forms
             //Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
             productieListControl1.DetachEvents();
         }
+
+        private async void xcriteria_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (_isbussy) return;
+                await Verwerk();
+            }
+        }
     }
 }

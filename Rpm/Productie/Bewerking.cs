@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using LiteDB;
-using NPOI.OpenXmlFormats.Dml.Diagram;
 using Polenter.Serialization;
 using Rpm.SqlLite;
 using Rpm.Mailing;

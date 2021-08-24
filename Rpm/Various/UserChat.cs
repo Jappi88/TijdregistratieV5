@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
+using Rpm.Productie;
 
 namespace ProductieManager.Rpm.Various
 {
@@ -24,7 +25,9 @@ namespace ProductieManager.Rpm.Various
         {
             var xreturn = new List<ProductieChatEntry>();
             if (string.IsNullOrEmpty(UserName)) return xreturn;
-            string path = $"{ProductieChat.ChatPath}\\{UserName}\\Berichten";
+            string path = Path.Combine(ProductieChat.GetReadPath(true), "Chat", UserName, "Berichten");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
             string[] files = Directory.GetFiles(path, "*.rpm", SearchOption.TopDirectoryOnly);
             try
             {
@@ -63,7 +66,33 @@ namespace ProductieManager.Rpm.Various
             try
             {
                 if (string.IsNullOrEmpty(UserName)) return false;
-                return this.Serialize(ProductieChat.ChatPath+ $"\\{UserName}.rpm");
+                var paths = ProductieChat.GetWritePaths(false);
+                if (paths.Length == 0) return false;
+                var xfirst = paths[0];
+                var xfile = Path.Combine(xfirst, "Chat", $"{UserName}.rpm");
+                if (this.Serialize(xfile))
+                {
+                    for (int i = 1; i < paths.Length; i++)
+                    {
+                        var path2 = Path.Combine(paths[i], "Chat", $"{UserName}.rpm");
+                        for (int j = 0; j < 5; j++)
+                        {
+                            try
+                            {
+                                File.Copy(xfile, path2, true);
+                                break;
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+
+                return false;
             }
             catch (Exception e)
             {
@@ -72,11 +101,14 @@ namespace ProductieManager.Rpm.Various
             }
         }
 
+
         public Bitmap GetProfielImage()
         {
-            if (string.IsNullOrEmpty(ProfielImage) || !File.Exists(ProfielImage))
+            if (Manager.LogedInGebruiker == null) return null;
+            var xfile = Path.Combine(ProductieChat.GetReadPath(true), "Chat", UserName, "ProfielFoto.png");
+            if (!File.Exists(xfile))
                 return null;
-            return Image.FromStream(new MemoryStream(File.ReadAllBytes(ProfielImage))).ResizeImage(64,64);
+            return Image.FromStream(new MemoryStream(File.ReadAllBytes(xfile))).ResizeImage(64,64);
         }
 
         public override bool Equals(object obj)

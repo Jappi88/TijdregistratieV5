@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Rpm.SqlLite;
 
 namespace Rpm.Settings
@@ -11,15 +12,15 @@ namespace Rpm.Settings
 
         public string UpdatePath
         {
-            get => _rootpath.Replace("\\RPM_Data", "") + "\\RPM_Data";
-            set => _rootpath = value.Replace("\\RPM_Data", "");
+            get => Path.Combine(_rootpath.Replace("\\RPM_Data", ""), "RPM_Data");
+            set => _rootpath = value.Replace("\\RPM_Data", "").TrimEnd(new char[]{'\\'});
         } 
             
 
         public string RootPath
         {
             get => _rootpath.Replace("\\RPM_Data", "");
-            set => _rootpath = value.Replace("\\RPM_Data", "");
+            set => _rootpath = value.Replace("\\RPM_Data", "").TrimEnd(new char[] { '\\' });
         }
 
         public bool UpdateMetStartup { get; set; }

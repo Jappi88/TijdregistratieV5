@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ICSharpCode.SharpZipLib.Checksum;
 using ICSharpCode.SharpZipLib.Zip;
-using NPOI.OpenXmlFormats.Dml;
 using Polenter.Serialization;
 using Rpm.Misc;
 using Rpm.Productie;

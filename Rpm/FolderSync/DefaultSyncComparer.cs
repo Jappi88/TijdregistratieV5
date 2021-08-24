@@ -15,15 +15,15 @@ namespace FolderSync
         /// <returns></returns>
         public virtual int Compare(FileInfo sourcefile, FileInfo destinationfile)
         {
-            TimeSpan ts = sourcefile.CreationTime - destinationfile.CreationTime;
-            if (ts.TotalMilliseconds < -2000)
+            //TimeSpan ts = sourcefile.CreationTime - destinationfile.CreationTime;
+            //if (ts.TotalMilliseconds < -2000)
+            //    return -1;
+            //if (ts.TotalMilliseconds > 2000)
+            //    return 1;
+            var ts = sourcefile.LastWriteTime - destinationfile.LastWriteTime;
+            if (ts.TotalMilliseconds < 0)
                 return -1;
-            if (ts.TotalMilliseconds > 2000)
-                return 1;
-            ts = sourcefile.LastWriteTime - destinationfile.LastWriteTime;
-            if (ts.TotalMilliseconds < -2000)
-                return -1;
-            if (ts.TotalMilliseconds > 2000)
+            if (ts.TotalMilliseconds > 0)
                 return 1;
             return 0;
         }

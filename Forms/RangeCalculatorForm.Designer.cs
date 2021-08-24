@@ -104,6 +104,7 @@ namespace Forms
             this.xcriteria.UseSelectable = true;
             this.xcriteria.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.xcriteria.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.xcriteria.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xcriteria_KeyDown);
             // 
             // xtotcheck
             // 
@@ -127,6 +128,7 @@ namespace Forms
             this.xtotdate.Name = "xtotdate";
             this.xtotdate.Size = new System.Drawing.Size(268, 25);
             this.xtotdate.TabIndex = 12;
+            this.xtotdate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xcriteria_KeyDown);
             // 
             // xvanafcheck
             // 
@@ -150,6 +152,7 @@ namespace Forms
             this.xvanafdate.Name = "xvanafdate";
             this.xvanafdate.Size = new System.Drawing.Size(268, 25);
             this.xvanafdate.TabIndex = 10;
+            this.xvanafdate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xcriteria_KeyDown);
             // 
             // xbewerkingcheck
             // 
@@ -200,6 +203,7 @@ namespace Forms
             this.xbewerkingen.Name = "xbewerkingen";
             this.xbewerkingen.Size = new System.Drawing.Size(268, 25);
             this.xbewerkingen.TabIndex = 6;
+            this.xbewerkingen.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xcriteria_KeyDown);
             // 
             // xwerkplekken
             // 
@@ -212,6 +216,7 @@ namespace Forms
             this.xwerkplekken.Name = "xwerkplekken";
             this.xwerkplekken.Size = new System.Drawing.Size(268, 25);
             this.xwerkplekken.TabIndex = 3;
+            this.xwerkplekken.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xcriteria_KeyDown);
             // 
             // pictureBox1
             // 

@@ -852,14 +852,14 @@ namespace Controls
                     {
                         var prods = ProductieLijst.Objects?.Cast<ProductieFormulier>()?.Where(x =>
                             string.Equals(id, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase)).ToArray();
-                        if (prods != null && prods.Length > 0)
+                        if (prods is {Length: > 0})
                             ProductieLijst.RemoveObjects(prods);
                     }
                     else
                     {
                         var bws = ProductieLijst.Objects?.Cast<Bewerking>()?.Where(x =>
                             string.Equals(id, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase)).ToArray();
-                        if (bws != null && bws.Length > 0)
+                        if (bws is {Length: > 0})
                             ProductieLijst.RemoveObjects(bws);
                     }
 

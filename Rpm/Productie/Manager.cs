@@ -277,7 +277,7 @@ namespace Rpm.Productie
                     {
                         LogedInGebruiker = x;
                         x.OsID = SystemID;
-                        Database?.UpSert(x, $"{x.Username} Ingelogd!");
+                        await Database?.UpSert(x, $"{x.Username} Ingelogd!");
                         LoginChanged(sender);
                         return true;
                     }

@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using ProductieManager.Rpm.Misc;
+using Rpm.SqlLite;
 
 namespace ProductieManager.Rpm.Various
 {
@@ -33,18 +34,54 @@ namespace ProductieManager.Rpm.Various
 
         }
 
+        public static string GetReadPath(bool checksecondary, string filename = null)
+        {
+            string remote = Manager.DefaultSettings?.MainDB?.UpdatePath;
+            string local = Manager.DefaultSettings?.TempMainDB?.UpdatePath;
+            if (string.IsNullOrEmpty(local))
+                local = AppDomain.CurrentDomain.BaseDirectory + "\\RPM_Data";
+            var x = checksecondary && !string.IsNullOrEmpty(local)
+                    && (((!string.IsNullOrEmpty(filename) && File.Exists(local + $"\\{filename}"))
+                         || Directory.Exists(local)))
+                ? local
+                : remote;
+            return x;
+        }
+
+        public static string[] GetWritePaths(bool onlylocal)
+        {
+            var xreturn = new List<string>();
+            string remote = Manager.DefaultSettings?.MainDB?.UpdatePath;
+            string local = Manager.DefaultSettings?.TempMainDB?.UpdatePath;
+            if (string.IsNullOrEmpty(local))
+                local = AppDomain.CurrentDomain.BaseDirectory + "\\RPM_Data";
+
+            if (!string.IsNullOrEmpty(local) &&
+                !string.Equals(local, remote, StringComparison.CurrentCultureIgnoreCase) &&
+                Directory.Exists(local))
+            {
+                xreturn.Add(local);
+            }
+
+            if (!onlylocal)
+                xreturn.Insert(0, remote);
+            return xreturn.ToArray();
+        }
+
         public bool Login()
         {
             try
             {
                 if (Manager.LogedInGebruiker == null) return false;
                 if (LoggedIn) return true;
-                ChatPath = Manager.DbPath + "\\Chat";
-                if (!Directory.Exists(ChatPath))
-                    Directory.CreateDirectory(ChatPath);
-                ProfielPath = Manager.DbPath + $"\\Chat\\{Manager.LogedInGebruiker.Username}";
-                BerichtenPath = ChatPath + $"\\{Manager.LogedInGebruiker.Username}\\Berichten";
-                GroupChatImagePath = ChatPath + "\\GroupChatImage.png";
+                
+                var xpath = Path.Combine(GetReadPath(true), "Chat");
+                ChatPath = xpath;
+                if (!Directory.Exists(xpath))
+                    Directory.CreateDirectory(xpath);
+                ProfielPath = Path.Combine(xpath, Manager.LogedInGebruiker.Username);
+                BerichtenPath = Path.Combine(xpath,Manager.LogedInGebruiker.Username, "Berichten");
+                GroupChatImagePath = Path.Combine(xpath, "GroupChatImage.png");
                 if (!File.Exists(GroupChatImagePath) || !GroupChatImagePath.IsImageFile())
                 {
                     try
@@ -62,7 +99,7 @@ namespace ProductieManager.Rpm.Various
                     Directory.CreateDirectory(ProfielPath);
                 if (!Directory.Exists(BerichtenPath))
                     Directory.CreateDirectory(BerichtenPath);
-                GebruikerPath = ChatPath + $"\\{Manager.LogedInGebruiker.Username}.rpm";
+                GebruikerPath = Path.Combine(xpath, $"{Manager.LogedInGebruiker.Username}.rpm");
 
                 try
                 {
@@ -88,9 +125,10 @@ namespace ProductieManager.Rpm.Various
                 _berichtenWatcher = new FileSystemWatcher(BerichtenPath);
                 _berichtenWatcher.EnableRaisingEvents = true;
                 _berichtenWatcher.Changed += _berichtenWatcher_Changed;
-
+                _berichtenWatcher.Filter = "*.rpm";
                 _gebruikerWatcher = new FileSystemWatcher(ChatPath);
                 _gebruikerWatcher.EnableRaisingEvents = true;
+                _gebruikerWatcher.Filter = "*.rpm";
                 _gebruikerWatcher.NotifyFilter = NotifyFilters.LastWrite;
                 _gebruikerWatcher.Changed += _gebruikerWatcher_Changed;
                 LoggedIn = true;
@@ -136,21 +174,28 @@ namespace ProductieManager.Rpm.Various
         public static bool SendMessage(string message, string destination)
         {
             if (string.IsNullOrEmpty(message) || string.IsNullOrEmpty(destination) || Chat == null) return false;
-            string[] users = destination.Split(';');
-            bool xreturn = false;
-            foreach (var user in users)
+            var ent = new ProductieChatEntry()
             {
-                var ent = new ProductieChatEntry()
-                {
-                    Afzender = Chat,
-                    Bericht = message,
-                    Ontvanger = destination
-                };
-                string path = ChatPath + $"\\{user}\\Berichten\\{ent.ID}.rpm";
-                xreturn |= ent.Serialize(path);
-            }
+                Afzender = Chat,
+                Bericht = message,
+                Ontvanger = destination
+            };
+            return ent.UpdateMessage();
+            //string[] users = destination.Split(';');
+            //bool xreturn = false;
+            //foreach (var user in users)
+            //{
+            //    var ent = new ProductieChatEntry()
+            //    {
+            //        Afzender = Chat,
+            //        Bericht = message,
+            //        Ontvanger = destination
+            //    };
+            //    //string path = ChatPath + $"\\{user}\\Berichten\\{ent.ID}.rpm";
+            //    xreturn |= ent.UpdateMessage();
+            //}
 
-            return xreturn;
+            //return xreturn;
         }
 
         public static bool ChangeProfielImage(string img)
@@ -161,6 +206,8 @@ namespace ProductieManager.Rpm.Various
                 
                 Chat.ProfielImage = ProfielPath + "\\ProfielFoto.png";
                 File.Copy(img, Chat.ProfielImage, true);
+                FileInfo fi = new FileInfo(Chat.ProfielImage);
+                fi.LastWriteTime = DateTime.Now; 
                 return Chat.Save();
             }
             catch (Exception e)
@@ -175,8 +222,9 @@ namespace ProductieManager.Rpm.Various
             try
             {
                 Gebruikers = new List<UserChat>();
-                if (Chat == null || !Directory.Exists(ChatPath)) return false;
-                string[] files = Directory.GetFiles(ChatPath, "*.rpm", SearchOption.TopDirectoryOnly);
+                var xpath = Path.Combine(GetReadPath(true), "Chat");
+                if (Chat == null || !Directory.Exists(xpath)) return false;
+                string[] files = Directory.GetFiles(xpath, "*.rpm", SearchOption.TopDirectoryOnly);
                 foreach (var file in files)
                 {
                     var ent = file.DeSerialize<UserChat>();

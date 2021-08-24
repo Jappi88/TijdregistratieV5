@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Rpm.Misc;
 
@@ -9,12 +10,17 @@ namespace ProductieManager.Rpm.Various
         public string ID { get; set; }
         public UserChat Afzender { get; set; }
         public string Ontvanger { get; set; }
+
         public string[] Ontvangers =>
-            string.IsNullOrEmpty(Ontvanger) ? new string[0] : Ontvanger.Split(';').Where(x=> !string.IsNullOrEmpty(x)).Select(x => x.Trim()).ToArray();
+            string.IsNullOrEmpty(Ontvanger)
+                ? Array.Empty<string>()
+                : Ontvanger.Split(';').Where(x => !string.IsNullOrEmpty(x)).Select(x => x.Trim()).ToArray();
+
         public string Bericht { get; set; }
         public DateTime Tijd { get; set; }
         public bool IsGelezen { get; set; }
         public bool IsPrivate => Ontvangers.Length <= 1;
+
         public ProductieChatEntry()
         {
             ID = DateTime.Now.Ticks.ToString();
@@ -23,30 +29,50 @@ namespace ProductieManager.Rpm.Various
 
         public bool UpdateMessage()
         {
-            try
+            var paths = ProductieChat.GetWritePaths(false);
+            if (paths.Length == 0) return false;
+            foreach (var ontv in Ontvangers)
             {
-                bool updated = false;
-                foreach (var ontv in Ontvangers)
+                try
                 {
-                    try
+                    if (string.IsNullOrEmpty(ontv)) continue;
+
+                    var xfirst = paths[0];
+                    var xfile = Path.Combine(xfirst, "Chat", ontv, "Berichten", $"{ID}.rpm");
+                    if (this.Serialize(xfile))
                     {
-                        string path = ProductieChat.ChatPath + $"\\{ontv}\\Berichten\\{ID}.rpm";
-                        updated |= this.Serialize(path);
+                        for (int i = 1; i < paths.Length; i++)
+                        {
+                            var path2 = Path.Combine(paths[i], "Chat", ontv, "Berichten", $"{ID}.rpm");
+                            for (int j = 0; j < 5; j++)
+                            {
+                                try
+                                {
+                                    File.Copy(xfile, path2, true);
+                                    break;
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(e);
+                                }
+                            }
+                        }
+
+                        return true;
                     }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
+
+                    return false;
                 }
-
-                return updated;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return false;
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return false;
+                }
             }
 
+            return false;
         }
+
+
     }
 }

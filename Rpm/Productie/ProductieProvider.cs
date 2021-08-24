@@ -168,6 +168,10 @@ namespace ProductieManager.Rpm.Productie
                                         SecondaryManageType.Read
                                     });
                                 break;
+                            case DbType.Messages:
+                                localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\Chat";
+                                remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\Chat";
+                                break;
 
                         }
 
@@ -181,7 +185,7 @@ namespace ProductieManager.Rpm.Productie
                             {
                                 Destination = localproductiepath,
                                 Monitor = true,
-                                Option = FolderSynchorizationOption.Destination,
+                                Option = xkey == DbType.Messages? FolderSynchorizationOption.SourceCreate : FolderSynchorizationOption.Destination,
                                 Source = remoteproductiepath
                             };
                             FolderSynchronization?.AddScan(fsync);

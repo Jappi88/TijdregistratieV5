@@ -440,13 +440,7 @@ namespace Rpm.SqlLite
                             using var xs = new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.ReadWrite,
                                 FileShare.None);
                             xs.Write(bytes, 0, bytes.Length);
-                            xs.Flush();
                             xs.Close();
-                            //var fi = new FileInfo(filepath);
-                            //fi.CreationTime = DateTime.Now;
-                            //fi.LastWriteTime = fi.CreationTime;
-                            //File.Copy(tmp, filepath, true);
-                            //File.Delete(tmp);
                             return true;
                         }
                         catch (Exception e)
@@ -544,25 +538,32 @@ namespace Rpm.SqlLite
             try
             {
                 var paths = GetWritePaths(onlylocal);
-                bool xreturn = false;
-                foreach (var path in paths)
+                if (paths.Length == 0) return false;
+                var xfirst = paths[0];
+                var path1 = $"{xfirst}\\{id.Trim()}.rpm";
+                if (WriteInstanceToFile(item, path1))
                 {
-                    try
+                    for (int i = 1; i < paths.Length; i++)
                     {
-                        var path1 = $"{path}\\{id.Trim()}.rpm";
-                        if (WriteInstanceToFile(item, path1))
+                        var path2 = System.IO.Path.Combine(paths[i], id + ".rpm");
+                        for (int j = 0; j < 5; j++)
                         {
-                            xreturn = true;
+                            try
+                            {
+                                File.Copy(path1, path2, true);
+                                break;
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                            }
                         }
                     }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
 
+                    return true;
                 }
 
-                return xreturn;
+                return false;
             }
             catch (Exception ex)
             {

@@ -717,7 +717,7 @@ namespace Rpm.SqlLite
                 try
                 {
                     account.LastChanged = account.LastChanged.UpdateChange(change, DbType.Accounts);
-                    await UpdateChange(account.LastChanged, account, RespondType.Update, DbType.Accounts, showmessage);
+                    _=UpdateChange(account.LastChanged, account, RespondType.Update, DbType.Accounts, showmessage);
                     await UserAccounts.Upsert(id, account,onlylocal);
                     Manager.AccountChanged(this, account);
                     return true;

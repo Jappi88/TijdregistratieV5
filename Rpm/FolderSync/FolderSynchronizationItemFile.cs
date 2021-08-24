@@ -45,6 +45,8 @@ namespace FolderSync
             _Option = option;
         }
 
+
+
         public override void DoOperation()
         {
             try
@@ -55,20 +57,18 @@ namespace FolderSync
                         if (File.Exists(_SourceFileName) == false)
                         {
                             File.Copy(_DestinationFileName, _SourceFileName);
-                            var sourcefi = new FileInfo(_SourceFileName);
-                            var destfi = new FileInfo(_DestinationFileName);
-                            sourcefi.CreationTime = destfi.CreationTime;
-                            sourcefi.LastWriteTime = destfi.LastWriteTime;
+                            //var sourcefi = new FileInfo(_SourceFileName);
+                            //var destfi = new FileInfo(_DestinationFileName);
+                            //sourcefi.LastWriteTime = destfi.LastWriteTime;
                         }
                         break;
                     case FolderSynchronizationItemFileOption.SourceOverwrite:
                         if (File.Exists(_SourceFileName))
                         {
                             File.Copy(_DestinationFileName, _SourceFileName, true);
-                            var sourcefi = new FileInfo(_SourceFileName);
-                            var destfi = new FileInfo(_DestinationFileName);
-                            sourcefi.CreationTime = destfi.CreationTime;
-                            sourcefi.LastWriteTime = destfi.LastWriteTime;
+                            //var sourcefi = new FileInfo(_SourceFileName);
+                            //var destfi = new FileInfo(_DestinationFileName);
+                            //sourcefi.LastWriteTime = destfi.LastWriteTime;
                         }
                         break;
                     case FolderSynchronizationItemFileOption.DestinationCreate:
@@ -76,10 +76,9 @@ namespace FolderSync
                         {
 
                             File.Copy(_SourceFileName, _DestinationFileName);
-                            var sourcefi = new FileInfo(_SourceFileName);
-                            var destfi = new FileInfo(_DestinationFileName);
-                            destfi.CreationTime = sourcefi.CreationTime;
-                            destfi.LastWriteTime = sourcefi.LastWriteTime;
+                            //var sourcefi = new FileInfo(_SourceFileName);
+                            //var destfi = new FileInfo(_DestinationFileName);
+                            //destfi.LastWriteTime = sourcefi.LastWriteTime;
                         }
                         break;
                     case FolderSynchronizationItemFileOption.DestinationDelete:
@@ -99,11 +98,11 @@ namespace FolderSync
                     case FolderSynchronizationItemFileOption.DestinationOverwrite:
                         if (File.Exists(_DestinationFileName))
                         {
+                            //var sourcefi = new FileInfo(_SourceFileName);
                             File.Copy(_SourceFileName, _DestinationFileName, true);
-                            var sourcefi = new FileInfo(_SourceFileName);
-                            var destfi = new FileInfo(_DestinationFileName);
-                            destfi.CreationTime = sourcefi.CreationTime;
-                            destfi.LastWriteTime = sourcefi.LastWriteTime;
+                            
+                            //var destfi = new FileInfo(_DestinationFileName);
+                            //destfi.LastWriteTime = sourcefi.LastWriteTime;
                         }
                         break;
                     case FolderSynchronizationItemFileOption.NoOperation:
@@ -116,6 +115,21 @@ namespace FolderSync
             {
             }
 
+        }
+
+        public override bool Equals(object obj)
+        {
+            return (obj is FolderSynchronizationItemFile item &&
+                    string.Equals(item.SourceFileName, SourceFileName, StringComparison.CurrentCultureIgnoreCase) &&
+                    string.Equals(item.DestinationFileName, DestinationFileName,
+                        StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        public override int GetHashCode()
+        {
+            int id1 = string.IsNullOrEmpty(SourceFileName) ? 0 : SourceFileName.ToLower().GetHashCode();
+            int id2 = string.IsNullOrEmpty(DestinationFileName) ? 0 : DestinationFileName.ToLower().GetHashCode();
+            return id1 | id2;
         }
     }
 }

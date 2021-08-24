@@ -210,6 +210,7 @@ namespace Forms
             xoffperscheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Medewerkers) > -1;
             xoffaccountcheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Opties) > -1;
             xoffinstellingcheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Accounts) > -1;
+            xoffberichtencheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Messages) > -1;
         }
 
         private async void UpdateOptieList()
@@ -399,6 +400,10 @@ namespace Forms
             if (xoffinstellingcheckbox.Checked)
             {
                 Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Opties);
+            }
+            if (xoffberichtencheckbox.Checked)
+            {
+                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Messages);
             }
 
             //default settings die we hier niet veranderen.
