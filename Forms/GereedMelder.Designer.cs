@@ -32,8 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GereedMelder));
             this.xgroup = new System.Windows.Forms.GroupBox();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.xtextfield1 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.xinfofield = new HtmlRenderer.HtmlPanel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.xafkeur = new System.Windows.Forms.Button();
             this.xgereedlijst = new System.Windows.Forms.Button();
@@ -50,7 +49,6 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.xgroup.SuspendLayout();
             this.panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xaantal)).BeginInit();
             this.panel1.SuspendLayout();
@@ -69,46 +67,34 @@
             this.xgroup.Margin = new System.Windows.Forms.Padding(4);
             this.xgroup.Name = "xgroup";
             this.xgroup.Padding = new System.Windows.Forms.Padding(4);
-            this.xgroup.Size = new System.Drawing.Size(776, 370);
+            this.xgroup.Size = new System.Drawing.Size(814, 470);
             this.xgroup.TabIndex = 1;
             this.xgroup.TabStop = false;
             // 
             // panel4
             // 
             this.panel4.AutoScroll = true;
-            this.panel4.Controls.Add(this.xtextfield1);
-            this.panel4.Controls.Add(this.pictureBox1);
+            this.panel4.Controls.Add(this.xinfofield);
             this.panel4.Controls.Add(this.panel3);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(4, 26);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(768, 288);
+            this.panel4.Size = new System.Drawing.Size(806, 388);
             this.panel4.TabIndex = 13;
             // 
-            // xtextfield1
+            // xinfofield
             // 
-            this.xtextfield1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xtextfield1.ForeColor = System.Drawing.Color.Black;
-            this.xtextfield1.Location = new System.Drawing.Point(129, 0);
-            this.xtextfield1.Margin = new System.Windows.Forms.Padding(5);
-            this.xtextfield1.Name = "xtextfield1";
-            this.xtextfield1.Padding = new System.Windows.Forms.Padding(5);
-            this.xtextfield1.Size = new System.Drawing.Size(639, 217);
-            this.xtextfield1.TabIndex = 10;
-            this.xtextfield1.Text = "Controlleer eerst alle gegevens voordat je verder gaat!";
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pictureBox1.Image = global::ProductieManager.Properties.Resources.notification_done_114461;
-            this.pictureBox1.ImageLocation = "";
-            this.pictureBox1.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.InitialImage")));
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(129, 217);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureBox1.TabIndex = 8;
-            this.pictureBox1.TabStop = false;
+            this.xinfofield.AutoScroll = true;
+            this.xinfofield.AutoScrollMinSize = new System.Drawing.Size(806, 17);
+            this.xinfofield.BackColor = System.Drawing.SystemColors.Window;
+            this.xinfofield.BaseStylesheet = null;
+            this.xinfofield.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.xinfofield.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xinfofield.Location = new System.Drawing.Point(0, 0);
+            this.xinfofield.Name = "xinfofield";
+            this.xinfofield.Size = new System.Drawing.Size(806, 317);
+            this.xinfofield.TabIndex = 9;
+            this.xinfofield.Text = "Informatie veld";
             // 
             // panel3
             // 
@@ -121,9 +107,9 @@
             this.panel3.Controls.Add(this.xaantal);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.panel3.Location = new System.Drawing.Point(0, 217);
+            this.panel3.Location = new System.Drawing.Point(0, 317);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(768, 71);
+            this.panel3.Size = new System.Drawing.Size(806, 71);
             this.panel3.TabIndex = 8;
             // 
             // xafkeur
@@ -133,7 +119,7 @@
             this.xafkeur.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xafkeur.ForeColor = System.Drawing.Color.Black;
             this.xafkeur.Image = global::ProductieManager.Properties.Resources.bin_icon_icons_com_32x32;
-            this.xafkeur.Location = new System.Drawing.Point(431, 16);
+            this.xafkeur.Location = new System.Drawing.Point(469, 16);
             this.xafkeur.Name = "xafkeur";
             this.xafkeur.Size = new System.Drawing.Size(126, 42);
             this.xafkeur.TabIndex = 8;
@@ -150,7 +136,7 @@
             this.xgereedlijst.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xgereedlijst.ForeColor = System.Drawing.Color.Black;
             this.xgereedlijst.Image = global::ProductieManager.Properties.Resources.ic_done_all_128_28243;
-            this.xgereedlijst.Location = new System.Drawing.Point(563, 16);
+            this.xgereedlijst.Location = new System.Drawing.Point(601, 16);
             this.xgereedlijst.Name = "xgereedlijst";
             this.xgereedlijst.Size = new System.Drawing.Size(201, 42);
             this.xgereedlijst.TabIndex = 6;
@@ -167,7 +153,7 @@
             this.xnotitie.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xnotitie.ForeColor = System.Drawing.Color.Black;
             this.xnotitie.Image = global::ProductieManager.Properties.Resources.Note_34576_32x32;
-            this.xnotitie.Location = new System.Drawing.Point(299, 16);
+            this.xnotitie.Location = new System.Drawing.Point(337, 16);
             this.xnotitie.Name = "xnotitie";
             this.xnotitie.Size = new System.Drawing.Size(126, 42);
             this.xnotitie.TabIndex = 4;
@@ -184,7 +170,7 @@
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(169, 5);
+            this.label1.Location = new System.Drawing.Point(207, 5);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(124, 21);
             this.label1.TabIndex = 2;
@@ -197,7 +183,7 @@
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(19, 5);
+            this.label3.Location = new System.Drawing.Point(57, 5);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(55, 21);
             this.label3.TabIndex = 5;
@@ -207,18 +193,18 @@
             // 
             this.xparaaf.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xparaaf.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xparaaf.Location = new System.Drawing.Point(19, 29);
+            this.xparaaf.Location = new System.Drawing.Point(57, 29);
             this.xparaaf.Name = "xparaaf";
             this.xparaaf.Size = new System.Drawing.Size(147, 29);
             this.xparaaf.TabIndex = 0;
             this.toolTip1.SetToolTip(this.xparaaf, "Vul je naam in");
-            this.xparaaf.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.GereedMelder_KeyPress);
+            this.xparaaf.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GereedMelder_KeyDown);
             // 
             // xaantal
             // 
             this.xaantal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xaantal.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xaantal.Location = new System.Drawing.Point(173, 29);
+            this.xaantal.Location = new System.Drawing.Point(211, 29);
             this.xaantal.Margin = new System.Windows.Forms.Padding(4);
             this.xaantal.Maximum = new decimal(new int[] {
             999999999,
@@ -229,15 +215,15 @@
             this.xaantal.Size = new System.Drawing.Size(111, 29);
             this.xaantal.TabIndex = 1;
             this.toolTip1.SetToolTip(this.xaantal, "Vul de aantal gemaakt");
-            this.xaantal.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.GereedMelder_KeyPress);
+            this.xaantal.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GereedMelder_KeyDown);
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(4, 314);
+            this.panel1.Location = new System.Drawing.Point(4, 414);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(768, 52);
+            this.panel1.Size = new System.Drawing.Size(806, 52);
             this.panel1.TabIndex = 7;
             // 
             // panel2
@@ -246,7 +232,7 @@
             this.panel2.Controls.Add(this.xannuleerb);
             this.panel2.Controls.Add(this.xgereedb);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(185, 0);
+            this.panel2.Location = new System.Drawing.Point(223, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(583, 52);
             this.panel2.TabIndex = 7;
@@ -308,10 +294,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(816, 450);
+            this.ClientSize = new System.Drawing.Size(854, 550);
             this.Controls.Add(this.xgroup);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(800, 450);
+            this.MinimumSize = new System.Drawing.Size(800, 550);
             this.Name = "GereedMelder";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -321,7 +307,6 @@
             this.Shown += new System.EventHandler(this.GereedMelder_Shown);
             this.xgroup.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xaantal)).EndInit();
@@ -334,7 +319,6 @@
         #endregion
 
         private System.Windows.Forms.GroupBox xgroup;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label label1;
@@ -345,11 +329,11 @@
         private System.Windows.Forms.Button xannuleerb;
         private System.Windows.Forms.Button xgereedb;
         private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Label xtextfield1;
         private System.Windows.Forms.Button xnotitie;
         private System.Windows.Forms.Button xdeelsgereed;
         private System.Windows.Forms.Button xgereedlijst;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button xafkeur;
+        private HtmlRenderer.HtmlPanel xinfofield;
     }
 }

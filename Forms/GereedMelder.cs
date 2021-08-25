@@ -3,9 +3,13 @@ using Rpm.Misc;
 using Rpm.Productie;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Input;
 using MetroFramework.Properties;
+using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
+using Resources = ProductieManager.Properties.Resources;
 
 namespace Forms
 {
@@ -45,7 +49,6 @@ namespace Forms
         public DialogResult ShowDialog(ProductieFormulier form)
         {
             _prod = form.CreateCopy();
-            SetString();
             xparaaf.Text = form.Paraaf;
             xaantal.Value = form.AantalGemaakt;
             xdeelsgereed.Visible = false;
@@ -57,7 +60,6 @@ namespace Forms
         public DialogResult ShowDialog(Bewerking bewerking)
         {
             _prod = bewerking.CreateCopy();
-            SetString();
             xparaaf.Text = bewerking.Paraaf;
             xaantal.Value = bewerking.AantalGemaakt;
             xdeelsgereed.Visible = true;
@@ -68,8 +70,7 @@ namespace Forms
 
         private async void MeldGereed()
         {
-            if (DoCheck() && XMessageBox.Show($"{xtextfield1.Text}...\n\n" +
-                                              "Klopt dit allemaal hoe er is geproduceerd?",
+            if (DoCheck() && XMessageBox.Show(Melding,
                 "Gereed Melden",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
@@ -130,19 +131,31 @@ namespace Forms
         {
             if (_prod == null)
                 return;
-            string xfieldinfo =
-                $"Je staat op het punt {_prod.Naam} gereed te melden met {_prod.TotaalGemaakt} stuk(s) van de {_prod.Aantal}.";
-            if (_prod.TotaalGemaakt > _prod.Aantal)
-                xfieldinfo = $"Je staat op het punt {_prod.Naam} gereed te melden met {_prod.TotaalGemaakt - _prod.Aantal} stuk(s) extra!";
-            var bericht =
-                $"{xfieldinfo}\n" +
-                $"* Totaal {_prod.TijdGewerkt} / {_prod.DoorloopTijd} uur aan gewerkt met {_prod.ActueelPerUur} i.p.v. {_prod.PerUur} per uur.\n" +
-                $"* Er is {_prod.TotaalGemaakt} van de {_prod.Aantal} gemaakt.\n" +
-                $"* Er is {_prod.DeelsGereed} deels gereed gemeld.";
-            xtextfield1.Text = bericht;
-            //xtextfield2.Text = _prod.Omschrijving;
-            this.Text = $"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
-            this.Invalidate();
+            if (this.IsDisposed || this.Disposing) return;
+            this.BeginInvoke(new Action(async () =>
+            {
+                //string xfieldinfo =
+                //    $"Je staat op het punt {_prod.Naam} gereed te melden met {_prod.TotaalGemaakt} stuk(s) van de {_prod.Aantal}.";
+                //if (_prod.TotaalGemaakt > _prod.Aantal)
+                //    xfieldinfo = $"Je staat op het punt {_prod.Naam} gereed te melden met {_prod.TotaalGemaakt - _prod.Aantal} stuk(s) extra!";
+                //var bericht =
+                //    $"{xfieldinfo}\n" +
+                //    $"* Totaal {_prod.TijdGewerkt} / {_prod.DoorloopTijd} uur aan gewerkt met {_prod.ActueelPerUur} i.p.v. {_prod.PerUur} per uur.\n" +
+                //    $"* Er is {_prod.TotaalGemaakt} van de {_prod.Aantal} gemaakt.\n" +
+                //    $"* Er is {_prod.DeelsGereed} deels gereed gemeld.";
+                //xtextfield1.Text = bericht;
+                //xtextfield2.Text = _prod.Omschrijving;
+                await _prod.Update(null, false);
+                this.Text = $"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
+                var curpos = xinfofield.VerticalScroll.Value;
+                xinfofield.Text = _prod.GetHtmlBody(this.Text,Resources.notification_done_114461,
+                    new Size(64, 64), Color.White,
+                    Color.White, Color.DarkGreen);
+                for (int i = 0; i < 4; i++)
+                    xinfofield.VerticalScroll.Value = curpos;
+                this.Invalidate();
+
+            }));
             // xtextfield3.Text = Melding;
         }
 
@@ -156,9 +169,13 @@ namespace Forms
             DialogResult = DialogResult.Cancel;
         }
 
-        private void GereedMelder_KeyPress(object sender, KeyPressEventArgs e)
+        private void GereedMelder_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyChar == (char) Keys.Enter) MeldGereed();
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = e.SuppressKeyPress = true;
+                MeldGereed();
+            }
         }
 
         private void xnotitie_Click(object sender, EventArgs e)
@@ -178,6 +195,7 @@ namespace Forms
 
         private void GereedMelder_Shown(object sender, System.EventArgs e)
         {
+            SetString();
             Manager.OnFormulierChanged += Manager_OnFormulierChanged;
             xparaaf.Text = ProductieManager.Properties.Settings.Default.Paraaf;
             xparaaf.Select();
@@ -207,6 +225,7 @@ namespace Forms
                 _prod.GereedNote = new NotitieEntry(Notitie, _prod);
                 if (_prod.AantalGemaakt != (int)xaantal.Value)
                     _prod.AantalGemaakt = (int)xaantal.Value;
+                SetString();
             }
             catch (Exception e)
             {
