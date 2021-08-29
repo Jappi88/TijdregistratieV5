@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Windows.Navigation;
 using Rpm.Productie;
 
 namespace Forms
 {
     public partial class LogIn : MetroFramework.Forms.MetroForm
     {
+        public bool DisableLogin { get; set; }
+        public bool ShowAutoLoginCheckbox
+        {
+            get => xautologin.Visible;
+            set => xautologin.Visible = value;
+        }
         public LogIn()
         {
             InitializeComponent();
@@ -15,14 +22,18 @@ namespace Forms
 
         private void xgebruikersname_MouseEnter(object sender, EventArgs e)
         {
-            if (xgebruikersname.Text == "Vul in je gebruikersnaam...")
+            if (xgebruikersname.Text == @"Vul in je gebruikersnaam...")
                 xgebruikersname.Text = "";
         }
+
+        public string Username => xgebruikersname.Text.Replace("Vul in je gebruikersnaam...", "").Trim();
+        public string Password => xwachtwoord1.Text.Trim();
+        public bool AutoLogin => xautologin.Checked;
 
         private void xgebruikersname_MouseLeave(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(xgebruikersname.Text) || xgebruikersname.Text.Trim().Length == 0)
-                xgebruikersname.Text = "Vul in je gebruikersnaam...";
+                xgebruikersname.Text = @"Vul in je gebruikersnaam...";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -34,7 +45,7 @@ namespace Forms
         {
             try
             {
-                if (await Manager.Login(xgebruikersname.Text.Replace("Vul in je gebruikersnaam...", ""),
+                if (DisableLogin || await Manager.Login(xgebruikersname.Text.Replace("Vul in je gebruikersnaam...", ""),
                     xwachtwoord1.Text, xautologin.Checked,this))
                     DialogResult = DialogResult.OK;
             }
@@ -49,10 +60,13 @@ namespace Forms
             DialogResult = DialogResult.Cancel;
         }
 
-        private void xwachtwoord1_KeyPress(object sender, KeyPressEventArgs e)
+        private void xwachtwoord1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyChar == Convert.ToChar(Keys.Enter))
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = e.SuppressKeyPress = true;
                 Login();
+            }
         }
     }
 }

@@ -89,10 +89,7 @@ namespace Controls
 
                  _manager?.Dispose();
                 if (_manager == null)
-                {
                     _manager = new Manager(true);
-                    _manager.InitManager();
-                }
                 DetachEvents();
                 //BeginInvoke(new MethodInvoker(() => _manager.Load()));
                 //BeginInvoke(new MethodInvoker(_manager.StartMonitor));
@@ -277,6 +274,7 @@ namespace Controls
         {
             try
             {
+                if (this.IsDisposed || this.Disposing) return;
                 mainMenu1.OnSettingChanged(instance, settings, init);
                 if (!init) return;
                 BeginInvoke(new MethodInvoker(() =>
@@ -286,7 +284,7 @@ namespace Controls
                     {
 
                         var name = Manager.Opties == null ? "Default" : Manager.Opties.Username;
-                        Text = $"RealTime Productie Manager [{name}]";
+                        Text = @$"RealTime Productie Manager [{name}]";
 
 
                         if (Manager.Opties?._viewproddata != null)
@@ -340,7 +338,6 @@ namespace Controls
                 {
                     if (this.IsDisposed || this.Disposing) return;
                     xloginb.Image = user != null ? Resources.Logout_37127__1_ : Resources.Login_37128__1_;
-                    CheckForSpecialRooster(false);
                     OnLoginChanged?.Invoke(user, instance);
                 }));
             }
@@ -500,7 +497,7 @@ namespace Controls
             var res = XMessageBox.Show(message, "Onderbreking", MessageBoxButtons.OK, MessageBoxIcon.Question, null,
                 bttns);
             if (res == DialogResult.Cancel) return;
-            var prods = await Manager.GetProducties(new[] { ViewState.Gestart, ViewState.Gestopt }, true, false,false);
+            var prods = await Manager.GetProducties(new[] { ViewState.Gestart, ViewState.Gestopt }, true, false);
             var plekken = new List<WerkPlek>();
             switch (res)
             {

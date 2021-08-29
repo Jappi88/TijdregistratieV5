@@ -13,7 +13,7 @@ namespace ProductieManager.Rpm.Various
 
         public string[] Ontvangers =>
             string.IsNullOrEmpty(Ontvanger)
-                ? Array.Empty<string>()
+                ? new string[]{}
                 : Ontvanger.Split(';').Where(x => !string.IsNullOrEmpty(x)).Select(x => x.Trim()).ToArray();
 
         public string Bericht { get; set; }

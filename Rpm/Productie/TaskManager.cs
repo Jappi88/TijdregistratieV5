@@ -26,7 +26,7 @@ namespace Rpm.Productie
 
         public bool ReQueue { get; set; }
 
-        public int ID => GetHashCode();
+        public int Id => GetHashCode();
 
         public RemoteMessage[] Results { get; set; }
 
@@ -37,7 +37,7 @@ namespace Rpm.Productie
 
         public bool CheckEquals(IQueue queue)
         {
-            return queue.ID == ID;
+            return queue.Id == Id;
         }
 
         public Task DoWork()

@@ -37,7 +37,7 @@ namespace Rpm.Mailing
                             continue;
                         var onderwerp =
                             $"[{Manager.LogedInGebruiker.Username}] {Enum.GetName(typeof(ProductieState),state)} [{prodnr.ToUpper()}, {Productie.ArtikelNr?.ToUpper()}]";
-                        var mail = CreateMail(adres.Adres, "Productie Manager", onderwerp, GetMessageBody(title), null,true);
+                        var mail = CreateMail(adres.Adres, "ProductieManager", onderwerp, GetMessageBody(title,false), null,true);
                         mails.Add(mail);
                     }
                 }
@@ -67,8 +67,6 @@ namespace Rpm.Mailing
                     xgroeten = xgroeten.Replace("\n", "<br>");
                 bericht += xgroeten;
                 var mail = new MailMessage();
-                mail.Sender = new MailAddress("Valk.Rpm@gmail.com", afzender);
-                mail.From = new MailAddress("Valk.Rpm@gmail.com", afzender);
                 mail.To.Add(adres);
                 mail.Subject = onderwerp;
                 if (bijlages?.Count > 0)
@@ -99,7 +97,7 @@ namespace Rpm.Mailing
                 {
                     if (string.IsNullOrEmpty(adres.Adres) || !adres.SendStoringMail)
                         continue;
-                    var mail = CreateMail(adres.Adres, "Productie Manager", $"[{Manager.Opties.Username}] {storing.StoringType} op {storing.Path}",
+                    var mail = CreateMail(adres.Adres, "ProductieManager", $"[{Manager.Opties.Username}] {storing.StoringType} op {storing.Path}",
                         CreateStoringBody(storing, productie), null,false);
                     if (mail != null)
                         mails.Add(mail);
@@ -135,10 +133,10 @@ namespace Rpm.Mailing
             return xreturn;
         }
 
-        public string GetMessageBody(string title)
+        public string GetMessageBody(string title, bool showimage)
         {
             if (Productie == null) return String.Empty;
-            return Productie.GetHtmlBody(title, Productie.GetImageFromResources(), new Size(48, 48), Color.RoyalBlue, Color.DodgerBlue, Color.DarkBlue);
+            return Productie.GetHtmlBody(title, showimage?Productie.GetImageFromResources():null, new Size(48, 48), Color.RoyalBlue, Color.DodgerBlue, Color.DarkBlue);
         }
     }
 }

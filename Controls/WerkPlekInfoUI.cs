@@ -2,6 +2,7 @@
 using Rpm.Productie;
 using System.Drawing;
 using System.Windows.Forms;
+using Rpm.Misc;
 
 namespace Controls
 {
@@ -76,13 +77,13 @@ namespace Controls
         private void xmeebezig_DoubleClick(object sender, System.EventArgs e)
         {
             if (Huidig != null)
-                Manager.FormulierActie(new object[] { Huidig.Parent, Huidig }, Rpm.Various.MainAktie.OpenProductie);
+                Manager.FormulierActie(new object[] { Huidig.Parent.CreateCopy(), Huidig }, Rpm.Various.MainAktie.OpenProductie);
         }
 
         private void xvolgende_DoubleClick(object sender, System.EventArgs e)
         {
             if (Volgende != null)
-                Manager.FormulierActie(new object[] { Volgende.Parent, Volgende }, Rpm.Various.MainAktie.OpenProductie);
+                Manager.FormulierActie(new object[] { Volgende.Parent.CreateCopy(), Volgende }, Rpm.Various.MainAktie.OpenProductie);
         }
     }
 }

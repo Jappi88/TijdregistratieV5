@@ -920,6 +920,56 @@ namespace Rpm.Misc
             return data;
         }
 
+        public static byte[] Encrypt(this byte[] input, string pass)
+        {
+            try
+            {
+                if (input == null || input.Length < 8) return null;
+                var pdb =
+                    new Rfc2898DeriveBytes(pass,
+                        new byte[] {0x43, 0x87, 0x23, 0x72, 0x36, 0x45, 0x88, 0x61});
+                MemoryStream ms = new MemoryStream();
+                Aes aes = new AesManaged();
+                aes.Key = pdb.GetBytes(aes.KeySize / 8);
+                aes.IV = pdb.GetBytes(aes.BlockSize / 8);
+                CryptoStream cs = new CryptoStream(ms,
+                    aes.CreateEncryptor(), CryptoStreamMode.Write);
+                cs.Write(input, 0, input.Length);
+                cs.Close();
+                return ms.ToArray();
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+
+        }
+
+        public static byte[] Decrypt(this byte[] input, string pass)
+        {
+            try
+            {
+                if (input == null || input.Length < 8) return null;
+                var pdb =
+                    new Rfc2898DeriveBytes(pass,
+                        new byte[] {0x43, 0x87, 0x23, 0x72, 0x36, 0x45, 0x88, 0x61}); // Change this
+                MemoryStream ms = new MemoryStream();
+                Aes aes = new AesManaged();
+                aes.Key = pdb.GetBytes(aes.KeySize / 8);
+                aes.IV = pdb.GetBytes(aes.BlockSize / 8);
+                CryptoStream cs = new CryptoStream(ms,
+                    aes.CreateDecryptor(), CryptoStreamMode.Write);
+                cs.Write(input, 0, input.Length);
+                cs.Close();
+                return ms.ToArray();
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+
+        }
+
         public static byte[] Compress(this byte[] data)
         {
             if (data == null)
@@ -1157,6 +1207,7 @@ namespace Rpm.Misc
         {
             try
             {
+                if (instance == null) return null;
                 var ser = new SharpSerializer(true);
                 using var ms = new MemoryStream();
                 ser.Serialize(instance, ms);
@@ -1173,6 +1224,7 @@ namespace Rpm.Misc
         {
             try
             {
+                if (instance == null) return false;
                 for (int i = 0; i < 4; i++)
                 {
                     try
@@ -1443,7 +1495,7 @@ namespace Rpm.Misc
 
             var xs = a.Equals(b);
             if (!xs)
-                Console.WriteLine("");
+                Console.WriteLine(@"");
             return xs;
         }
 
@@ -2031,9 +2083,9 @@ namespace Rpm.Misc
             else
                 change.Change = message;
             change.DbIds[type] = DateTime.Now;
-            change.PcId = Manager.SystemID;
+            change.PcId = Manager.SystemId;
             change.TimeChanged = DateTime.Now;
-            change.User = Manager.Opties == null ? Manager.SystemID : Manager.Opties.Username;
+            change.User = Manager.Opties == null ? Manager.SystemId : Manager.Opties.Username;
             return change;
         }
 

@@ -28,6 +28,7 @@ namespace Rpm.Settings
         public string AutoLoginUsername { get; set; }
         public UserChange LastChanged { get; set; }
         public string Username { get; set; }
+        public string BoundUsername { get; set; }
 
         [ExcludeFromSerialization]
         public string OSID { get; set; }
@@ -43,8 +44,9 @@ namespace Rpm.Settings
 
         public void Initdefault()
         {
-            SystemID = Manager.SystemID;
+            SystemID = Manager.SystemId;
             Username = $"Default";
+            BoundUsername = "ihab";
             LastChanged = new UserChange {User = Username, Change = $"Optie [{Username}] Aangemaakt"};
             //werktijden
             SetWerkRooster(Rooster.StandaartRooster());

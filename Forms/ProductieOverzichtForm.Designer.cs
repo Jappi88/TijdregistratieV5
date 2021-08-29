@@ -32,13 +32,11 @@ namespace ProductieManager.Forms
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieOverzichtForm));
             this.xcontrolpanel = new System.Windows.Forms.Panel();
             this.xloadinglabel = new System.Windows.Forms.Label();
-            this.xcontrolpanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // xcontrolpanel
             // 
             this.xcontrolpanel.AutoScroll = true;
-            this.xcontrolpanel.Controls.Add(this.xloadinglabel);
             this.xcontrolpanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xcontrolpanel.Location = new System.Drawing.Point(10, 60);
             this.xcontrolpanel.Name = "xcontrolpanel";
@@ -51,9 +49,9 @@ namespace ProductieManager.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xloadinglabel.Location = new System.Drawing.Point(3, 0);
+            this.xloadinglabel.Location = new System.Drawing.Point(10, 53);
             this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(758, 394);
+            this.xloadinglabel.Size = new System.Drawing.Size(764, 401);
             this.xloadinglabel.TabIndex = 31;
             this.xloadinglabel.Text = "Overzicht aanmaken...";
             this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -64,6 +62,7 @@ namespace ProductieManager.Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 464);
+            this.Controls.Add(this.xloadinglabel);
             this.Controls.Add(this.xcontrolpanel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ProductieOverzichtForm";
@@ -71,9 +70,8 @@ namespace ProductieManager.Forms
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.Style = MetroFramework.MetroColorStyle.Lime;
             this.Text = "Productie Overzicht";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ProductieOverzichtForm_FormClosing);
             this.Shown += new System.EventHandler(this.ProductieOverzichtForm_Shown);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(ProductieOverzichtForm_FormClosing);
-            this.xcontrolpanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

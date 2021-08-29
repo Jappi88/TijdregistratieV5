@@ -17,7 +17,7 @@ namespace Rpm.Misc
         {
             Type = type;
             Message = message;
-            MachineId = Manager.SystemID;
+            MachineId = Manager.SystemId;
             Username = Manager.Opties != null ? Manager.Opties.Username : MachineId;
         }
 

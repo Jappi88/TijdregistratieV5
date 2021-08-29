@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using LiteDB;
 using Polenter.Serialization;
+using Rpm.Mailing;
 using Rpm.SqlLite;
 using Rpm.Misc;
 using Rpm.Productie;
@@ -20,6 +21,19 @@ namespace Rpm.Settings
             OsID = CpuID.ProcessorId();
         }
 
+        [ExcludeFromSerialization] public EmailHost MailingHost
+        {
+            get => RawMailData?.Decrypt(Password)?.DeSerialize<EmailHost>();
+            set => RawMailData = value?.Serialize()?.Encrypt(Password);
+        }
+
+        private byte[] _rawmaildata;
+        public byte[] RawMailData
+        {
+            get => _rawmaildata;
+            set => _rawmaildata = value;
+        }
+
         public UserChange LastChanged { get; set; }
 
         public string _pass { get; set; }
@@ -29,7 +43,13 @@ namespace Rpm.Settings
         public string Password
         {
             get => _pass;
-            set => _pass = Convert.ToBase64String(SHA1.Create().ComputeHash(Encoding.UTF8.GetBytes(value)));
+            set
+            {
+                var host = MailingHost;
+                _pass = Convert.ToBase64String(SHA1.Create().ComputeHash(Encoding.UTF8.GetBytes(value)));
+                if (host != null)
+                    MailingHost = host;
+            }
         }
 
         public string Username { get; set; }
@@ -38,14 +58,18 @@ namespace Rpm.Settings
         public bool AutoLogIn { get; set; }
         public string OsID { get; set; }
 
-        public bool ValidateUser(string username, string password)
+        public bool ValidateUser(string username, string password, bool save)
         {
             if (!String.Equals(Username, username, StringComparison.CurrentCultureIgnoreCase))
                 throw new Exception("Ongeldige Gebruikers Name!");
             if (Password != Convert.ToBase64String(SHA1.Create().ComputeHash(Encoding.UTF8.GetBytes(password))))
                 throw new Exception("Ongeldige Wachtwoord!");
-            this.OsID = Manager.SystemID;
-            Manager.Database.UpSert(this, $"{username} Ingelogd!");
+            if (save)
+            {
+                this.OsID = Manager.SystemId;
+                Manager.Database.UpSert(this, $"{username} Ingelogd!");
+            }
+
             return true;
         }
 

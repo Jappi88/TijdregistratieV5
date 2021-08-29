@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using NPOI.HSSF.UserModel;
-using NPOI.HSSF.Util;
+﻿using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
 using NPOI.SS.UserModel.Charts;
 using NPOI.SS.Util;
@@ -12,12 +6,23 @@ using NPOI.XSSF.UserModel;
 using Rpm.Mailing;
 using Rpm.Productie;
 using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 // ReSharper disable All
 
 namespace Rpm.Misc
 {
+    /// <summary>
+    /// Een class voor het maken van excel sheets
+    /// </summary>
     public static class ExcelWorkbook
     {
+        /// <summary>
+        /// De productie Columns
+        /// </summary>
         public static string[] ProductieColumns =
         {
             "ArtikelNr", "ProductieNr", "Omschrijving", "Bewerking Naam", "Status",
@@ -26,6 +31,11 @@ namespace Rpm.Misc
             "Werkplekken", "Personen"
         };
 
+        /// <summary>
+        /// Verkrijg een column beschrijving
+        /// </summary>
+        /// <param name="colmn">De naam van de column</param>
+        /// <returns>De column omschrijving</returns>
         public static string GetProductieColumnOmschrijving(string colmn)
         {
             var x = ProductieColumns.FirstOrDefault(x =>
@@ -75,6 +85,9 @@ namespace Rpm.Misc
             return colmn;
         }
 
+        /// <summary>
+        /// De productie columns die verborgen moeten worden
+        /// </summary>
         public static string[] HiddenProductieColumns =
         {
             "ProductieNr", "Omschrijving",
@@ -83,6 +96,9 @@ namespace Rpm.Misc
             "Personen"
         };
 
+        /// <summary>
+        /// De storing columns
+        /// </summary>
         public static string[] StoringColumns =
         {
             "WerkPlek", "Storing Type", "Omschrijving", "Gemeld Door", "Gestart Op",
@@ -90,6 +106,10 @@ namespace Rpm.Misc
             "Productie Omschrijving"
         };
 
+
+        /// <summary>
+        /// Verborgen storing columns
+        /// </summary>
         public static string[] HiddenStoringColumns =
         {
         };
@@ -107,6 +127,13 @@ namespace Rpm.Misc
             return cellStyleBorder;
         }
 
+        /// <summary>
+        /// Maak aan de productie statistieken en grafieken een excel sheet.
+        /// </summary>
+        /// <param name="workbook">De excel waarvoor de sheet gemaakt moet worden</param>
+        /// <param name="bewerkingen">De bewerkingen waarvoor de statistieken gemaakt moeten worden</param>
+        /// <param name="iswerkplek">Of de statistieken voor de werkplekken moet zijn i.p.v de bewerkingen</param>
+        /// <returns>De excel sheet</returns>
         public static ISheet CreateOverzichtChartSheet(XSSFWorkbook workbook, List<Bewerking> bewerkingen,
             bool iswerkplek)
         {
@@ -202,6 +229,13 @@ namespace Rpm.Misc
             }
         }
 
+        /// <summary>
+        /// Verkrijg een waarde vanuit een cel lokatie
+        /// </summary>
+        /// <param name="sheet">De sheet waarvan de waarde uit gehaald moet worden</param>
+        /// <param name="rowindex">De rij index voor waar de waarde zich bevind</param>
+        /// <param name="colindex">De column index waarvan de waarde zich bevind</param>
+        /// <returns>De waarde uit de opgegeven lokatie</returns>
         public static string GetValue(ISheet sheet, int rowindex, int colindex)
         {
             var value = sheet.GetRow(rowindex)?.GetCell(colindex);
@@ -225,6 +259,13 @@ namespace Rpm.Misc
             return null;
         }
 
+        /// <summary>
+        /// Verkrijg een opgetelde waarde binnen een specifieke tijd frame
+        /// </summary>
+        /// <param name="producties">De bewerkingen waarvan de waardes van opgeteld moeten worden</param>
+        /// <param name="bereik">De tijd bereik voor het optellen van de waarde</param>
+        /// <param name="type">De waarde naam dat opgeteld moet worden</param>
+        /// <returns>Opgetelde waarde als een double afgerond naar 2 decimalen</returns>
         public static double GetSumValueRange(List<Bewerking> producties, TijdEntry bereik, string type)
         {
             if (producties.Count == 0) return 0;
@@ -260,6 +301,12 @@ namespace Rpm.Misc
             return 0;
         }
 
+        /// <summary>
+        /// Verkrijg de producties als secties
+        /// </summary>
+        /// <param name="producties">De producties die verdeeld moeten worden als secties</param>
+        /// <param name="bereik">De tijd bereik voor het indelen van de producties</param>
+        /// <returns>Een dictionary met de bewerking naam als de key waarvan de waarde een lijst bevat met de bewerkingen die dezelfde naam hebben als de key</returns>
         public static Dictionary<string, List<Bewerking>> CreateProductieSections(List<ProductieFormulier> producties,
             TijdEntry bereik)
         {
@@ -318,6 +365,16 @@ namespace Rpm.Misc
             chart.Plot(data, bottomAxis, leftAxis);
         }
 
+        /// <summary>
+        /// Maak een Titel aan op een excel sheet
+        /// </summary>
+        /// <param name="sheet">De excel sheet waarvoor er een titel gemaakt moet worden</param>
+        /// <param name="header">De titel</param>
+        /// <param name="startrow">De start rij index waar de titel moet beginnen</param>
+        /// <param name="rows">De aantal rijen die gebruikt worden voor de titel</param>
+        /// <param name="startcell">De start cell index voor waar de titel moet beginnen</param>
+        /// <param name="cells">De aantal cellen die ervoor gebruikt moeten worden</param>
+        /// <param name="style">De style van de titel</param>
         public static void CreateHeader(ISheet sheet, string header, int startrow, int rows, int startcell, int cells,
             ICellStyle style)
         {
@@ -339,6 +396,14 @@ namespace Rpm.Misc
             }
         }
 
+        /// <summary>
+        /// Maak aan een nieuwe cell style
+        /// </summary>
+        /// <param name="workbook">De excel waarvan er een style gemaakt kan worden</param>
+        /// <param name="isbold">Of de text dik gedrukt moet zijn</param>
+        /// <param name="textalign">Waar de tekst lokatie zou moeten zijn</param>
+        /// <param name="fontheight">De grootte van de tekst</param>
+        /// <returns>De nieuw aangemaakte style met de opgegeven argumenten</returns>
         public static ICellStyle CreateStyle(XSSFWorkbook workbook, bool isbold, HorizontalAlignment textalign,
             int fontheight)
         {
@@ -352,6 +417,11 @@ namespace Rpm.Misc
             return cellStyleBorder;
         }
 
+        /// <summary>
+        /// Maak aan een sheet dat uitlegt wat de productie columns betekenen
+        /// </summary>
+        /// <param name="workbook">De excel waarvoor de sheet gemaakt moet worden</param>
+        /// <returns>De nieuw aangemaakte sheet</returns>
         public static ISheet CreateProductieUitlegSheet(XSSFWorkbook workbook)
         {
             try
@@ -385,7 +455,15 @@ namespace Rpm.Misc
             }
         }
 
-        public static ISheet CreateProductieOverzicht(XSSFWorkbook workbook, TijdEntry bereik, string omschrijving,
+        /// <summary>
+        /// Maak aan een niew productie sheet binnen een bepaald tijd periode
+        /// </summary>
+        /// <param name="workbook">De excel pagina waarvoor de sheet gemaakt moet worden</param>
+        /// <param name="bereik">Het bereik voor de productie overzicht</param>
+        /// <param name="naam"></param>
+        /// <param name="producties"></param>
+        /// <returns></returns>
+        public static ISheet CreateProductieOverzicht(XSSFWorkbook workbook, TijdEntry bereik,
             string naam, List<Bewerking> producties)
         {
             try
@@ -515,6 +593,13 @@ namespace Rpm.Misc
             }
         }
 
+        /// <summary>
+        /// Maak aan een rij regel op basis van de productie status
+        /// </summary>
+        /// <param name="sheet">De productie sheet waar de regels voor moeten gelden</param>
+        /// <param name="rowindex">De rij index waar de regel moet beginnen</param>
+        /// <param name="cellcount">De aantal cellen waarvoor de regel moet gelden</param>
+        /// <returns>De nieuw aangemaakte regel</returns>
         public static ISheetConditionalFormatting CreateRowConditionalFormatRules(ISheet sheet, int rowindex, int cellcount)
         {
             try
@@ -562,6 +647,13 @@ namespace Rpm.Misc
             }
         }
 
+        /// <summary>
+        /// Maak aan een storing rij regel
+        /// </summary>
+        /// <param name="sheet">De storing sheet waarvoor de regel moet gelden</param>
+        /// <param name="rowindex">De rij bereik waarvoor de regel moet gelden</param>
+        /// <param name="cellcount">De aantal cellen waarvoor de regel moet gelden</param>
+        /// <returns>De nieuw aangemaakte regel</returns>
         public static ISheetConditionalFormatting CreateStoringRowConditionalFormatRules(ISheet sheet, int rowindex,
             int cellcount)
         {
@@ -597,6 +689,11 @@ namespace Rpm.Misc
             }
         }
 
+        /// <summary>
+        /// Verkrijg de kleur index op basis van de productie status
+        /// </summary>
+        /// <param name="state">De productie status</param>
+        /// <returns>De excel kleur index</returns>
         public static short GetRowColor(ProductieState state)
         {
             switch (state)
@@ -613,7 +710,15 @@ namespace Rpm.Misc
             return HSSFColor.White.Index;
         }
 
-        public static ISheet CreateStoringOverzicht(XSSFWorkbook workbook, List<Storing> storingen, string omschrijving,
+        /// <summary>
+        /// Maak aan een nieuwe storing overzicht
+        /// </summary>
+        /// <param name="workbook">De excel waarvoor de overzicht gemaakt moet worden</param>
+        /// <param name="storingen">De storingen waarvan de overzicht gemaakt moet worden</param>
+        /// <param name="naam">De naam van de overzicht sheet</param>
+        /// <param name="vanaf">De periode waarvan de overzicht gemaakt moet worden</param>
+        /// <returns></returns>
+        public static ISheet CreateStoringOverzicht(XSSFWorkbook workbook, List<Storing> storingen,
             string naam, TijdEntry vanaf)
         {
             try
@@ -758,6 +863,14 @@ namespace Rpm.Misc
             return columnName;
         }
 
+        /// <summary>
+        /// Maak aan een nieuwe cel op basis van de argumenten
+        /// </summary>
+        /// <param name="row">De rij waarin de nieuwe cell gemaakt moet worden</param>
+        /// <param name="index">De cell index waar de cell zich moet bevinden</param>
+        /// <param name="value">De waarde dat zich in de cell moet bevinden</param>
+        /// <param name="style">De cell style</param>
+        /// <returns>De nieuw aangemaakt cell</returns>
         public static ICell CreateCell(IRow row, int index, object value, ICellStyle style)
         {
             if (row == null || value == null) return null;
@@ -767,7 +880,7 @@ namespace Rpm.Misc
             else if (value is double xdouble)
                 cell.SetCellValue(xdouble);
             else if (value is decimal xdecimal)
-                cell.SetCellValue((double)xdecimal);
+                cell.SetCellValue((double)Math.Round(xdecimal,2));
             else if (value is int xint)
                 cell.SetCellValue(xint);
             else if (value is string xstring)
@@ -782,6 +895,14 @@ namespace Rpm.Misc
             return cell;
         }
 
+        /// <summary>
+        /// Maak een een nieuwe cell aan met een formule
+        /// </summary>
+        /// <param name="row">De rij index waar de cell zich moet plaatsvinden</param>
+        /// <param name="index">De index waar de cell zich moet bevinden</param>
+        /// <param name="formula">De formule voor de aangemaakte cell</param>
+        /// <param name="style">De style van de cell</param>
+        /// <returns>De niewe aangemaakte cell met de aangegeven formule</returns>
         public static ICell CreateCellFormula(IRow row, int index, string formula, ICellStyle style)
         {
             if (row == null || string.IsNullOrEmpty(formula)) return null;
@@ -791,6 +912,13 @@ namespace Rpm.Misc
             return cell;
         }
 
+        /// <summary>
+        /// Verkrijg de waarde van een storing op basis van de column naam
+        /// </summary>
+        /// <param name="storing">De storing waarvan de waarde verkregen moet worden</param>
+        /// <param name="value">De column naam waarvoor de waarde verkregen moet worden</param>
+        /// <param name="vanaf">de periode waarvan de waarde moet zijn</param>
+        /// <returns>Een object als waarde van de storing</returns>
         public static object GetValue(Storing storing, string value, TijdEntry vanaf)
         {
             if (storing == null || string.IsNullOrEmpty(value)) return null;
@@ -823,6 +951,14 @@ namespace Rpm.Misc
             return "N.V.T";
         }
 
+        /// <summary>
+        /// Verkrijg de waarde van een bewerking op basis van de column naam
+        /// </summary>
+        /// <param name="bew">De bewerking waarvan de waarde verkregen moet worden</param>
+        /// <param name="value">De column naam waarvan de waarde verkregen moet worden</param>
+        /// <param name="vanaf">De periode waarvan de waarde moet zijn</param>
+        /// <param name="format">Geeft een format terug als dat nodig is</param>
+        /// <returns></returns>
         public static object GetValue(Bewerking bew, string value, TijdEntry vanaf, out string format)
         {
             format = null;
@@ -854,13 +990,17 @@ namespace Rpm.Misc
                 case "per uur":
                     return bew.PerUur;
                 case "afwijking p/u":
-                    //format = "_ * #.##0,00_% ;_  * -#.##0,00_% ;";
-                    return bew.ProcentAfwijkingPerUur.ToString() + "%";
+                    format = "0.00%";
+                    if (bew.ProcentAfwijkingPerUur != 0)
+                        return (double) (bew.ProcentAfwijkingPerUur / 100);
+                    else return 0;
                 case "gemiddeld actueel p/u":
                     return bew.GemiddeldActueelPerUur;
                 case "afwijking gemiddeld p/u":
-                    //format = "_ * #.##0,00_% ;_  * -#.##0,00_% ;";
-                    return bew.GemiddeldProcentAfwijkingPerUur.ToString() + "%";
+                    format = "0.00%";
+                    if (bew.GemiddeldProcentAfwijkingPerUur != 0)
+                        return (double)(bew.GemiddeldProcentAfwijkingPerUur / 100);
+                    else return 0;
                 case "aantal personen":
                     return bew.AantalPersonen;
                 case "werkplekken":
@@ -877,6 +1017,15 @@ namespace Rpm.Misc
             return "N.V.T.";
         }
 
+        /// <summary>
+        /// Maak aan een nieuwe overzicht
+        /// </summary>
+        /// <param name="bereik">De bereik waarvoor de overzicht moet zijn</param>
+        /// <param name="bewerkingen">De bewerkingen waarvoor de overzicht gemaakt moet worden</param>
+        /// <param name="createoverzicht">True voor als je een statistieken Sheet aan wilt maken</param>
+        /// <param name="filepath">De excel bestand die aangemaakt moet worden</param>
+        /// <param name="omschrijving">Omschrijving voor de excel</param>
+        /// <returns>Een taak die een excel overzicht op de achtergrond maakt</returns>
         public static Task<string> CreateWeekOverzicht(TijdEntry bereik,
             List<Bewerking> bewerkingen, bool createoverzicht, string filepath, string omschrijving)
         {
@@ -914,8 +1063,7 @@ namespace Rpm.Misc
                         bewerkingen = bewerkingen.OrderBy(x => x.ArtikelNr).ToList();
                         var sheetname = $"Producties";
                         var xomschrijving = $"Productie {omschrijving}";
-                        var sheet = CreateProductieOverzicht(workbook, bereik,
-                            xomschrijving, sheetname, bewerkingen);
+                        var sheet = CreateProductieOverzicht(workbook, bereik, sheetname, bewerkingen);
                     }
 
                     if (storingen.Count > 0)
@@ -925,7 +1073,7 @@ namespace Rpm.Misc
                         var sheetname = $"Onderbrekeningen";
                         var xomschrijving =
                             $"Onderbreking {omschrijving}";
-                        CreateStoringOverzicht(workbook, storingen, xomschrijving, sheetname,
+                        CreateStoringOverzicht(workbook, storingen, sheetname,
                            bereik);
                     }
 
@@ -950,6 +1098,12 @@ namespace Rpm.Misc
             });
         }
 
+        /// <summary>
+        /// Maak aan meerdere week overzichten
+        /// </summary>
+        /// <param name="overzichten">Een serie overzichten die gemaakt moeten worden</param>
+        /// <param name="createoverzicht">True voor als je ook de statistieken wilt maken</param>
+        /// <returns>Een taak die op de achtergrond excel bestanden aanmaakt</returns>
         public static Task<WeekOverzicht[]> CreateWeekOverzicht(WeekOverzicht[] overzichten, bool createoverzicht)
         {
             return Task.Run(async () =>
@@ -1003,15 +1157,14 @@ namespace Rpm.Misc
 
                                     var workbook = new XSSFWorkbook();
 
-                                    var sheet = CreateProductieOverzicht(workbook, new TijdEntry(startweek, endweek, null),
-                                        omschrijving, sheetname, xbws);
+                                    var sheet = CreateProductieOverzicht(workbook, new TijdEntry(startweek, endweek, null), sheetname, xbws);
                                     if (sheet == null) continue;
                                     if (storingen.Count > 0)
                                     {
                                         //Creeer een niew tapblad als er storingen zijn.
                                         sheetname = $"Week {weekNum} {year} Storingen";
                                         omschrijving = $"Week {weekNum} {year} {afdeling} Storing Overzicht";
-                                        CreateStoringOverzicht(workbook, storingen, omschrijving, sheetname,new TijdEntry(startweek, endweek, null));
+                                        CreateStoringOverzicht(workbook, storingen, sheetname,new TijdEntry(startweek, endweek, null));
                                     }
 
                                     if (createoverzicht)
@@ -1041,6 +1194,14 @@ namespace Rpm.Misc
             });
         }
 
+        /// <summary>
+        /// Update de bestaande overzichten met nieuwe als die nog niet bestaan
+        /// </summary>
+        /// <param name="startweek">De startweek waarvoor de overzicht gemaakt moet worden</param>
+        /// <param name="startjaar">De startjaar waarvan de overzicht gemaakt moet maken</param>
+        /// <param name="bestaande">Een lijst met al bestaande overzichten</param>
+        /// <param name="updateweeknr">De weeknr die geupdate moet worden</param>
+        /// <returns></returns>
         public static Task<List<WeekOverzicht>> UpdateWeekOverzichten(int startweek, int startjaar,
             List<WeekOverzicht> bestaande, int updateweeknr)
         {
@@ -1076,6 +1237,10 @@ namespace Rpm.Misc
         }
 
         private static bool _issendingweek;
+        /// <summary>
+        /// Maak een taak aan die alle week overzichten update op de achtergrond
+        /// </summary>
+        /// <returns>Een taak die week overzichten update op de achtergrond</returns>
         public static Task<int> UpdateWeekOverzichten()
         {
             return Task.Run(async () =>

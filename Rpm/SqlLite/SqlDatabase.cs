@@ -249,7 +249,7 @@ namespace Rpm.SqlLite
                         {
                             command.Parameters.Add(@"LastChanged", SqlDbType.DateTime).Value = from;
                             command.Parameters.Add(@"Tot", SqlDbType.DateTime).Value = tot;
-                            command.Parameters.Add(@"ChangedBy", SqlDbType.VarChar, 50).Value = Manager.SystemID;
+                            command.Parameters.Add(@"ChangedBy", SqlDbType.VarChar, 50).Value = Manager.SystemId;
                             connection.Open();
                             using (var Locationreader = command.ExecuteReader())
                             {
@@ -492,7 +492,7 @@ namespace Rpm.SqlLite
                         //cmd.Parameters.Add("@Id", SqlDbType.Int).Value = 0;
                         cmd.Parameters.Add("@Name", SqlDbType.VarChar, 50).Value = name;
                         cmd.Parameters.Add("@LastChanged", SqlDbType.DateTime).Value = DateTime.Now;
-                        cmd.Parameters.Add("@ChangedBy", SqlDbType.VarChar, 16).Value = Manager.SystemID;
+                        cmd.Parameters.Add("@ChangedBy", SqlDbType.VarChar, 16).Value = Manager.SystemId;
                         cmd.Parameters.Add("@DataObject", SqlDbType.Binary).Value =
                             instance.Serialize().Compress();
                         connection.Open();

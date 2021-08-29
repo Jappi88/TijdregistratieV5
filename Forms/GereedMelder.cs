@@ -132,7 +132,7 @@ namespace Forms
             if (_prod == null)
                 return;
             if (this.IsDisposed || this.Disposing) return;
-            this.BeginInvoke(new Action(async () =>
+            this.Invoke(new Action( () =>
             {
                 //string xfieldinfo =
                 //    $"Je staat op het punt {_prod.Naam} gereed te melden met {_prod.TotaalGemaakt} stuk(s) van de {_prod.Aantal}.";
@@ -145,8 +145,8 @@ namespace Forms
                 //    $"* Er is {_prod.DeelsGereed} deels gereed gemeld.";
                 //xtextfield1.Text = bericht;
                 //xtextfield2.Text = _prod.Omschrijving;
-                await _prod.Update(null, false);
-                this.Text = $"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
+                var result = _prod.Update(null, false,false).Result;
+                this.Text = @$"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
                 var curpos = xinfofield.VerticalScroll.Value;
                 xinfofield.Text = _prod.GetHtmlBody(this.Text,Resources.notification_done_114461,
                     new Size(64, 64), Color.White,

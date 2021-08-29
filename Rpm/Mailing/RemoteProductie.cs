@@ -148,7 +148,7 @@ namespace Rpm.Mailing
         {
             try
             {
-                var es = EmailRespond.CreateMail(adress, "Productie Manager", title, msg, attachments,ishtml);
+                var es = EmailRespond.CreateMail(adress, "ProductieManager", title, msg, attachments,ishtml);
                 return RespondByEmail(new[] {es},shownotification);
             }
             catch (Exception)
@@ -163,13 +163,16 @@ namespace Rpm.Mailing
             {
                 if (adresses == null || adresses.Count == 0)
                     return false;
-                var oSmtp = CreateSmtpClient();
+                var oSmtp = CreateSmtpClient(out var email);
+                if (oSmtp == null) return false;
                 //AsyncCallback callback = shownotification ? new AsyncCallback(RecievedRespond) : null;
                 foreach (var adres in adresses)
                 {
                     var es = EmailRespond.CreateMail(adres.Email, afzender, title, msg, attachments,ishtml);
-                    if (es != null)
-                        oSmtp.SendAsync(es,es);
+                    if (es == null) continue;
+                    es.From = new MailAddress(email, "ProductieManager");
+                    es.Sender = new MailAddress(email, "ProductieManager");
+                    oSmtp.SendAsync(es, shownotification ? es : null);
                 }
 
                 return true;
@@ -180,18 +183,21 @@ namespace Rpm.Mailing
             }
         }
 
-        public static SmtpClient CreateSmtpClient()
+        public static SmtpClient CreateSmtpClient(out string email)
         {
+            email = string.Empty;
             try
             {
-                var smtp = new SmtpClient("smtp.gmail.com")
-                {
-                    Port = 587,
-                    Credentials = new NetworkCredential("valk.rpm@gmail.com", "RPM_Productie"),
-                    EnableSsl = true,
-                };
+                
+                if (Manager.Opties == null || string.IsNullOrEmpty(Manager.Opties.BoundUsername)) return null;
+                var acc = Manager.Database?.GetAccount(Manager.Opties.BoundUsername).Result;
+                var host = acc?.MailingHost;
+                if (host == null) return null;
+                email = host.EmailAdres;
+                var smtp = host.CreateClient();
                 smtp.SendCompleted += Smtp_SendCompleted;
                 return smtp;
+
             }
             catch (Exception)
             {
@@ -228,11 +234,15 @@ namespace Rpm.Mailing
             {
                 if (mails == null || mails.Length == 0)
                     return false;
-                var oSmtp = CreateSmtpClient();
-               //AsyncCallback callback = shownotification ? new AsyncCallback(RecievedRespond) : null;
+                var oSmtp = CreateSmtpClient(out var email);
+                if (oSmtp == null) return false;
+                //AsyncCallback callback = shownotification ? new AsyncCallback(RecievedRespond) : null;
                 foreach (var mail in mails)
                 {
-                    oSmtp.SendAsync(mail,mail);
+                    if (mail == null) continue;
+                    mail.From = new MailAddress(email, "ProductieManager");
+                    mail.Sender = new MailAddress(email, "ProductieManager");
+                    oSmtp.SendAsync(mail, shownotification ? email : null);
                 }
 
                 return true;

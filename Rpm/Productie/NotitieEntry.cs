@@ -97,7 +97,7 @@ namespace Rpm.Productie
                         if (Productie != null)
                         {
                             Productie.GereedNote = entry?.CreateCopy();
-                           await  Productie.Update($"Gereed notitie aangepast voor {Path}", save);
+                           await  Productie.Update($"Gereed notitie aangepast voor {Path}", save,false);
                         }
                         break;
                     case NotitieType.DeelsGereed:
@@ -106,7 +106,7 @@ namespace Rpm.Productie
                             var deel = werk.DeelGereedMeldingen?.FirstOrDefault(x => x.Note.Equals(this));
                             if (deel == null) return;
                             deel.Note = entry?.CreateCopy();
-                            await Productie.Update($"Deels Gereed notitie aangepast voor {Path}", save);
+                            await Productie.Update($"Deels Gereed notitie aangepast voor {Path}", save,false);
                         }
                         break;
                     case NotitieType.Werkplek:
@@ -123,7 +123,7 @@ namespace Rpm.Productie
                         if (Productie != null)
                         {
                             Productie.Note = entry?.CreateCopy();
-                            await Productie.Update($"Notitie aangepast voor {Path}", save);
+                            await Productie.Update($"Notitie aangepast voor {Path}", save,false);
                         }
                         break;
                 }

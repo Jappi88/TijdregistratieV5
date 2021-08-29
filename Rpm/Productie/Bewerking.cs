@@ -1125,7 +1125,7 @@ namespace Rpm.Productie
                 try
                 {
                     var prods = await Manager.Database.GetProducties($"{ArtikelNr}",true, true);
-                    if (prods != null && prods.Count > 0)
+                    if (prods is {Count: > 0})
                     {
                         foreach (var prod in prods)
                         {

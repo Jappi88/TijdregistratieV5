@@ -154,7 +154,7 @@ namespace Controls
             {
                 int count = xwerkpleklist.Items.Count;
                 var selected = xwerkpleklist.SelectedObject;
-                var items = await Manager.GetProducties(ViewState.Gestart, true, false,false);
+                var items = await Manager.GetProducties(ViewState.Gestart, true, false);
                 var plekken = new List<WerkPlek>();
                 foreach (var item in items)
                 {

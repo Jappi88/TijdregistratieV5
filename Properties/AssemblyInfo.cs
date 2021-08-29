@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Van Der Valk Systemen")]
 [assembly: AssemblyProduct("Productie Manager")]
-[assembly: AssemblyCopyright("Ihab Abed Copyright ©  2021")]
+[assembly: AssemblyCopyright("Ihab Abed Copyright ©  2020")]
 [assembly: AssemblyTrademark("IhabAbed")]
 [assembly: AssemblyCulture("")]
 
@@ -34,6 +34,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.2.7.3")]
-[assembly: AssemblyFileVersion("3.2.7.3")]
+[assembly: AssemblyVersion("3.2.7.4")]
+[assembly: AssemblyFileVersion("3.2.7.4")]
 [assembly: NeutralResourcesLanguage("")]

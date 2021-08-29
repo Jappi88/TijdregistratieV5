@@ -6,9 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Controls;
 using Microsoft.Win32.SafeHandles;
-using Rpm.Connection;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
@@ -428,10 +426,10 @@ namespace Rpm.SqlLite
                     form.LastChanged = form.LastChanged.UpdateChange(change, DbType.Producties);
                     if (ProductieFormulieren != null && form.Bewerkingen.All(x => x.State == ProductieState.Gereed))
                     {
-                        //GereedFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
+                        GereedFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
                         if (await GereedFormulieren.Upsert(id, form,onlylocal))
                         {
-                            _=UpdateChange(form.LastChanged, form, RespondType.Update, DbType.GereedProducties,
+                            _=UpdateChange(form.LastChanged, DbType.GereedProducties,
                                 showmessage);
                             if (await ProductieFormulieren.Exists(id))
                             {
@@ -445,35 +443,35 @@ namespace Rpm.SqlLite
                             xreturn = true;
                         }
 
-                        //GereedFormulieren.RaiseEventWhenChanged = true;
+                        GereedFormulieren.RaiseEventWhenChanged = true;
                     }
                     else if (ProductieFormulieren != null)
                     {
-                        //ProductieFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
+                        ProductieFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
                         if (await ProductieFormulieren.Upsert(id, form,onlylocal))
                         {
-                            _= UpdateChange(form.LastChanged, form, RespondType.Update, DbType.Producties,
+                            _= UpdateChange(form.LastChanged, DbType.Producties,
                                 showmessage);
                            
 
                             if (GereedFormulieren != null && await GereedFormulieren.Exists(id))
                             {
-                                //GereedFormulieren.RaiseEventWhenDeleted = !RaiseEventWhenDeleted;
+                                GereedFormulieren.RaiseEventWhenDeleted = !RaiseEventWhenDeleted;
                                 await GereedFormulieren.Delete(id);
                                 if (RaiseEventWhenDeleted)
                                     Manager.FormulierDeleted(this, id);
-                                //GereedFormulieren.RaiseEventWhenDeleted = true;
+                                GereedFormulieren.RaiseEventWhenDeleted = true;
                             }
 
                             xreturn = true;
                         }
 
                         
-                        //ProductieFormulieren.RaiseEventWhenChanged = true;
+                        ProductieFormulieren.RaiseEventWhenChanged = true;
                     }
-                    if(xreturn && RaiseEventWhenChanged)
+                    if (xreturn && RaiseEventWhenChanged)
                         Manager.FormulierChanged(this, form);
-                    // Manager.FormulierChanged(this, form);
+                    //Manager.FormulierChanged(this, form);
                 }
                 catch (Exception ex)
                 {
@@ -520,7 +518,7 @@ namespace Rpm.SqlLite
                     form.ExcludeFromUpdate();
                     var changed = new UserChange().UpdateChange(change, DbType.Producties);
                     changed.IsRemoved = true;
-                    await UpdateChange(changed, form, RespondType.Delete, DbType.Producties, showmessage);
+                    await UpdateChange(changed, DbType.Producties, showmessage);
                     bool deleted = true;
                     if (!await ProductieFormulieren.Delete(id))
                         deleted = await GereedFormulieren.Delete(form.ProductieNr);
@@ -552,7 +550,7 @@ namespace Rpm.SqlLite
                     {
                         form.LastChanged = form.LastChanged.UpdateChange(change, DbType.Producties);
                         form.LastChanged.IsRemoved = true;
-                        await UpdateChange(form.LastChanged, form, RespondType.Delete, DbType.Producties, showmessage);
+                        await UpdateChange(form.LastChanged, DbType.Producties, showmessage);
                         if (RaiseEventWhenDeleted)
                             Manager.FormulierDeleted(this, form.ProductieNr);
                         xreturn = true;
@@ -562,7 +560,7 @@ namespace Rpm.SqlLite
                     {
                         form.LastChanged = form.LastChanged.UpdateChange(change, DbType.GereedProducties);
                         form.LastChanged.IsRemoved = true;
-                        await UpdateChange(form.LastChanged, form, RespondType.Delete, DbType.GereedProducties,
+                        await UpdateChange(form.LastChanged, DbType.GereedProducties,
                             showmessage);
                         if (RaiseEventWhenDeleted)
                             Manager.FormulierDeleted(this, form.ProductieNr);
@@ -717,7 +715,7 @@ namespace Rpm.SqlLite
                 try
                 {
                     account.LastChanged = account.LastChanged.UpdateChange(change, DbType.Accounts);
-                    _=UpdateChange(account.LastChanged, account, RespondType.Update, DbType.Accounts, showmessage);
+                    _=UpdateChange(account.LastChanged, DbType.Accounts, showmessage);
                     await UserAccounts.Upsert(id, account,onlylocal);
                     Manager.AccountChanged(this, account);
                     return true;
@@ -782,7 +780,7 @@ namespace Rpm.SqlLite
                             PcId = OwnerId,
                             User = Manager.Opties == null ? "Default" : Manager.Opties.Username
                         };
-                        await UpdateChange(changed, accounts, RespondType.Delete, DbType.Accounts, showmessage);
+                        await UpdateChange(changed, DbType.Accounts, showmessage);
                     }
 
                     return xreturn;
@@ -812,7 +810,7 @@ namespace Rpm.SqlLite
                             PcId = OwnerId,
                             User = Manager.Opties == null ? "Default" : Manager.Opties.Username
                         };
-                        await UpdateChange(changed, pers, RespondType.Delete, DbType.Accounts, showmessage);
+                        await UpdateChange(changed, DbType.Accounts, showmessage);
                         return true;
                     }
 
@@ -937,7 +935,7 @@ namespace Rpm.SqlLite
                 try
                 {
                     account.LastChanged = account.LastChanged.UpdateChange(change, DbType.Opties);
-                    await UpdateChange(account.LastChanged, account, RespondType.Update, DbType.Opties, showmessage);
+                    await UpdateChange(account.LastChanged, DbType.Opties, showmessage);
                     if (AllSettings != null)
                         await AllSettings.Upsert(id, account,onlylocal);
                     return true;
@@ -1022,7 +1020,7 @@ namespace Rpm.SqlLite
                     {
                         var lastchange = new UserChange().UpdateChange($"[{id}] Optie Verwijderd", DbType.Opties);
                         lastchange.IsRemoved = true;
-                        await UpdateChange(lastchange, xset, RespondType.Delete, DbType.Opties, showmessage);
+                        await UpdateChange(lastchange, DbType.Opties, showmessage);
                         return true;
                     }
 
@@ -1243,7 +1241,7 @@ namespace Rpm.SqlLite
                 try
                 {
                     persoon.LastChanged = persoon.LastChanged.UpdateChange(change, DbType.Medewerkers);
-                    await UpdateChange(persoon.LastChanged, persoon, RespondType.Update, DbType.Medewerkers,
+                    await UpdateChange(persoon.LastChanged, DbType.Medewerkers,
                         showmessage);
                     PersoneelLijst.RaiseEventWhenChanged = !RaiseEventWhenChanged;
                     await PersoneelLijst.Upsert(id, persoon,onlylocal);
@@ -1333,7 +1331,7 @@ namespace Rpm.SqlLite
                             PcId = OwnerId,
                             User = Manager.Opties == null ? "Default" : Manager.Opties.Username
                         };
-                        await UpdateChange(lastchange, per, RespondType.Delete, DbType.Medewerkers, showmessage);
+                        await UpdateChange(lastchange,DbType.Medewerkers, showmessage);
                         if (RaiseEventWhenDeleted)
                             Manager.PersoneelDeleted(this, id);
                         xreturn = true;
@@ -1451,112 +1449,13 @@ namespace Rpm.SqlLite
         //    });
         //}
 
-        public Task UpdateChange(UserChange change, object value, RespondType type, DbType dbname,
+        public Task UpdateChange(UserChange change, DbType dbname,
             bool showmessage = true)
         {
             return Task.Run(async () =>
             {
-                #region Update Server
-                //update server
-                //if (Manager.Server != null && Manager.Server.IsSyncing && updatelocal && ChangeLog != null &&
-                //    !IsDisposed)
-                //    try
-                //    {
-                //        var old = await ChangeLog.FindOne(OwnerId);
-                //        if (old != null)
-                //            change.DbIds = old.DbIds;
-                //        if (value != null)
-                //        {
-                //            var container = new ValueContainer(value);
-                //            switch (dbname)
-                //            {
-                //                case DbType.Accounts:
-                //                    if (container.Accounts != null && container.Accounts.Count > 0)
-                //                        foreach (var acc in container.Accounts)
-                //                            switch (type)
-                //                            {
-                //                                case RespondType.Add:
-                //                                case RespondType.Update:
-                //                                    if (await Manager.Server.Upsert(acc, acc.Username,
-                //                                        DbType.Accounts) && acc.LastChanged != null)
-                //                                        acc.LastChanged.ServerUpdated = DateTime.Now;
-                //                                    break;
-                //                                case RespondType.Delete:
-                //                                    await Manager.Server.Delete(acc.Username, DbType.Accounts);
-                //                                    break;
-                //                            }
-
-                //                    break;
-                //                case DbType.GereedProducties:
-                //                case DbType.Producties:
-                //                    if (container.Producties != null && container.Producties.Count > 0)
-                //                        foreach (var prod in container.Producties)
-                //                            switch (type)
-                //                            {
-                //                                case RespondType.Add:
-                //                                case RespondType.Update:
-                //                                    if (await Manager.Server.Upsert(prod, prod.ProductieNr,
-                //                                        DbType.Producties) && prod.LastChanged != null)
-                //                                        prod.LastChanged.ServerUpdated = DateTime.Now;
-
-                //                                    break;
-                //                                case RespondType.Delete:
-                //                                    await Manager.Server.Delete(prod.ProductieNr, DbType.Producties);
-                //                                    break;
-                //                            }
-
-                //                    break;
-                //                case DbType.Medewerkers:
-                //                    if (container.Personen != null && container.Personen.Count > 0)
-                //                        foreach (var pers in container.Personen)
-                //                            switch (type)
-                //                            {
-                //                                case RespondType.Add:
-                //                                case RespondType.Update:
-                //                                    if (await Manager.Server.Upsert(pers, pers.PersoneelNaam,
-                //                                        DbType.Medewerkers) && pers.LastChanged != null)
-                //                                        pers.LastChanged.ServerUpdated = DateTime.Now;
-
-                //                                    break;
-                //                                case RespondType.Delete:
-                //                                    await Manager.Server.Delete(pers.PersoneelNaam, DbType.Medewerkers);
-                //                                    break;
-                //                            }
-
-                //                    break;
-                //                case DbType.Opties:
-                //                    if (container.Settings != null && container.Settings.Count > 0)
-                //                        foreach (var opties in container.Settings)
-                //                            switch (type)
-                //                            {
-                //                                case RespondType.Add:
-                //                                case RespondType.Update:
-                //                                    if (await Manager.Server.Upsert(opties, opties.Username,
-                //                                        DbType.Opties) && opties.LastChanged != null)
-                //                                        opties.LastChanged.ServerUpdated = DateTime.Now;
-                //                                    break;
-                //                                case RespondType.Delete:
-                //                                    await Manager.Server.Delete(opties.Username, DbType.Opties);
-                //                                    break;
-                //                            }
-
-                //                    break;
-                //                case DbType.Messages:
-                //                    break;
-                //            }
-                //        }
-                //    }
-                //    catch (Exception)
-                //    {
-                //    }
-                #endregion
-
                 try
                 {
-                    //change.PcId = OwnerId;
-                    //change.DbIds[dbname] = DateTime.Now;
-                    //if (ChangeLog != null) await ChangeLog.Upsert(OwnerId, change);
-                   
                     if (NotificationEnabled && showmessage) Manager.RemoteMessage(change.CreateMessage(dbname));
                     if (LoggerEnabled && showmessage) await AddLog(change.Change, MsgType.Info);
                     // PManager.RemoteMessage(new Mailing.RemoteMessage(change.Change, MessageAction.None, MsgType.Info));
@@ -2356,24 +2255,7 @@ namespace Rpm.SqlLite
                 }
             });
         }
-
-        public Task<int> UpdateDbEntries(ValueContainer value, bool showmessage = true)
-        {
-            return Task.Run(async () =>
-            {
-                var done = 0;
-                if (value.Settings.Count > 0)
-                    done += await UpSert(value.Settings.ToArray(), "Update from local server", showmessage);
-                if (value.Producties.Count > 0)
-                    done += await UpSert(value.Producties.ToArray(), "Update from local server", showmessage);
-                if (value.Accounts.Count > 0)
-                    done += await UpSert(value.Accounts.ToArray(), "Update from local server", showmessage);
-                if (value.Personen.Count > 0)
-                    done += await UpSert(value.Personen.ToArray(), "Update from local server", showmessage);
-                return done;
-            });
-        }
-
+        
         //public Task<bool> NeedDbCheck()
         //{
         //    return Task.Run(async () => (await GetLastDbChanges()).Count > 0);
@@ -2395,7 +2277,7 @@ namespace Rpm.SqlLite
 
                     DoProgress(changed, "Database gegevens laden...", 0, 0);
                     token.Token.ThrowIfCancellationRequested();
-                    var database = new LocalDatabase(PManager, Manager.SystemID, dbpath, false);
+                    var database = new LocalDatabase(PManager, Manager.SystemId, dbpath, false);
                     database.NotificationEnabled = false;
                     database.LoggerEnabled = false;
 

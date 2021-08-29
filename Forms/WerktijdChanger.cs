@@ -254,9 +254,9 @@ namespace Forms
 
         private void xokb_Click(object sender, EventArgs e)
         {
-            var rooster = CurrentRooster != null && CurrentRooster.IsCustom()
+            var rooster = CurrentRooster != null && CurrentRooster.IsValid()
                 ? CurrentRooster
-                : null;
+                : Manager.Opties?.GetWerkRooster()??Rooster.StandaartRooster();
             var tijden = GetWerkTijden().ToArray();
             if (Klusje != null)
             {

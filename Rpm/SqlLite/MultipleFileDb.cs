@@ -88,7 +88,7 @@ namespace Rpm.SqlLite
             {
                 _secondarypathwatcher.Deleted -= _secondarypathwatcher_Deleted;
                 _secondarypathwatcher.Changed -= _secondarypathwatcher_Changed;
-                _secondarypathwatcher.Dispose();
+                //_secondarypathwatcher.Dispose();
                 _secondarypathwatcher = null;
             }
 
@@ -297,17 +297,23 @@ namespace Rpm.SqlLite
             //{
                 var xreturn = new List<T>();
                 string xpath = GetReadPath(false);
-                string[] crits = criterias.Split(';');
-                foreach (var crit in crits)
+                if (criterias != null)
                 {
-                    var path = $"{xpath}\\{crit}.rpm";
-                    if (File.Exists(path))
+                    string[] crits = criterias.Split(';');
+                    foreach (var crit in crits)
                     {
-                        var xent = GetInstanceFromFile<T>(path);
-                        if (xent != null)
-                            xreturn.Add(xent);
-                        return xreturn;
+                        var path = $"{xpath}\\{crit}.rpm";
+                        if (File.Exists(path))
+                        {
+                            var xent = GetInstanceFromFile<T>(path);
+                            if (xent != null)
+                                xreturn.Add(xent);
+                            criterias = criterias.Replace(crit, "");
+                        }
                     }
+
+                    if (criterias.Replace(";", "").Trim().Length < 4)
+                        return xreturn;
                 }
 
                 var ids = GetAllIDs(true);

@@ -28,8 +28,7 @@ namespace Forms
 
         private void pictureBox_Click(object sender, EventArgs e)
         {
-            var box = sender as PictureBox;
-            if (box != null)
+            if (sender is PictureBox box)
             {
                 var t = GetTextBoxByPicturebox(box);
                 if (t != null)
@@ -50,7 +49,17 @@ namespace Forms
             }
         }
 
-        private TextBox GetTextBoxByPicturebox(PictureBox box)
+  private void pictureBox_MouseEnter(object sender, EventArgs e)
+        {
+            if (sender is PictureBox box) box.BackColor = Color.LightBlue;
+        }
+
+  private void pictureBox_MouseLeave(object sender, EventArgs e)
+  {
+      if (sender is PictureBox box) box.BackColor = Color.Transparent;
+  }
+
+  private TextBox GetTextBoxByPicturebox(PictureBox box)
         {
             if (box.Name == "xpic1")
                 return xpass1;
@@ -61,17 +70,7 @@ namespace Forms
             return null;
         }
 
-        private void pictureBox_MouseEnter(object sender, EventArgs e)
-        {
-            var box = sender as PictureBox;
-            if (box != null) box.BackColor = Color.LightBlue;
-        }
-
-        private void pictureBox_MouseLeave(object sender, EventArgs e)
-        {
-            var box = sender as PictureBox;
-            if (box != null) box.BackColor = Color.Transparent;
-        }
+      
 
         private void xok_Click(object sender, EventArgs e)
         {

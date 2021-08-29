@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>ProductieManager</RootNamespace>
     <AssemblyName>ProductieManager</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -72,6 +72,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>ProductieManager.Program</StartupObject>
@@ -110,6 +112,10 @@
   <PropertyGroup>
     <DelaySign>false</DelaySign>
   </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CircularProgressBar">
       <HintPath>..\Libraries\CircularProgressBar.dll</HintPath>
@@ -138,6 +144,12 @@
     <Reference Include="MetroFramework">
       <HintPath>..\Libraries\MetroFramework.dll</HintPath>
     </Reference>
+    <Reference Include="MetroFramework.Design">
+      <HintPath>..\Libraries\MetroFramework.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework.Fonts">
+      <HintPath>..\Libraries\MetroFramework.Fonts.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="NPOI">
       <HintPath>..\Libraries\NPOI.dll</HintPath>
@@ -155,7 +167,6 @@
     <Reference Include="System.Management" />
     <Reference Include="System.Runtime" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Data" />
@@ -346,6 +357,12 @@
     </Compile>
     <Compile Include="Forms\EditCriteriaForm.Designer.cs">
       <DependentUpon>EditCriteriaForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EmailHostForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EmailHostForm.Designer.cs">
+      <DependentUpon>EmailHostForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FilterEditor.cs">
       <SubType>Form</SubType>
@@ -702,13 +719,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Rpm\Connection\Broadcaster.cs" />
-    <Compile Include="Rpm\Connection\ClientInfo.cs" />
-    <Compile Include="Rpm\Connection\Enumarations.cs" />
-    <Compile Include="Rpm\Connection\Handlers.cs" />
-    <Compile Include="Rpm\Connection\RequestMessage.cs" />
-    <Compile Include="Rpm\Connection\RespondMessage.cs" />
-    <Compile Include="Rpm\Connection\ValueContainer.cs" />
+    <Compile Include="Rpm\Connection\SmtpConnectorBase.cs" />
+    <Compile Include="Rpm\Connection\SmtpConnectorWithoutSsl.cs" />
+    <Compile Include="Rpm\Connection\SmtpConnectorWithSsl.cs" />
+    <Compile Include="Rpm\Connection\SmtpHelper.cs" />
     <Compile Include="Rpm\Controls\Form_Alert.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -722,7 +736,6 @@
       <DependentUpon>ImageCombineForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Rpm\FolderSync\DefaultSyncComparer.cs" />
-    <Compile Include="Rpm\SqlLite\FileDeletionEntry.cs" />
     <Compile Include="Rpm\FolderSync\FileOperation.cs" />
     <Compile Include="Rpm\FolderSync\FolderSynchronization.cs" />
     <Compile Include="Rpm\FolderSync\FolderSynchronizationItemFile.cs" />
@@ -760,7 +773,6 @@
     <Compile Include="Rpm\Misc\GraphicsExtension.cs" />
     <Compile Include="Rpm\Misc\HtmlStringFormat.cs" />
     <Compile Include="Rpm\Misc\LogEntry.cs" />
-    <Compile Include="Rpm\Misc\Logger.cs" />
     <Compile Include="Rpm\Misc\Notifications.cs" />
     <Compile Include="Rpm\Misc\ObjectExtensions.cs" />
     <Compile Include="Rpm\Misc\RpmPacket.cs" />
@@ -769,7 +781,6 @@
     <Compile Include="Rpm\Misc\SharedFolders.cs" />
     <Compile Include="Rpm\Misc\StickyWindow.cs" />
     <Compile Include="Rpm\Misc\WeekRange.cs" />
-    <Compile Include="Rpm\Misc\WindowService.cs" />
     <Compile Include="Rpm\Productie\Bewerking.cs" />
     <Compile Include="Rpm\Productie\DeelsGereedMelding.cs" />
     <Compile Include="Rpm\Productie\ExtraTijd.cs" />
@@ -801,6 +812,7 @@
     <Compile Include="Rpm\Productie\WerkPlek.cs" />
     <Compile Include="Rpm\Productie\Werktijd.cs" />
     <Compile Include="Rpm\Settings\DatabaseUpdateEntry.cs" />
+    <Compile Include="Rpm\Mailing\EmailHost.cs" />
     <Compile Include="Rpm\Settings\LastFormScreenInfo.cs" />
     <Compile Include="Rpm\Settings\UserAccount.cs" />
     <Compile Include="Rpm\Settings\UserSettings.cs" />
@@ -809,7 +821,6 @@
     <Compile Include="Rpm\SqlLite\BewerkingLijst.cs" />
     <Compile Include="Rpm\SqlLite\DatabaseInstance.cs" />
     <Compile Include="Rpm\SqlLite\DatabaseUpdater.cs" />
-    <Compile Include="Rpm\SqlLite\FileDeletionManager.cs" />
     <Compile Include="Rpm\SqlLite\PathWatcher.cs" />
     <Compile Include="Rpm\SqlLite\DbType.cs" />
     <Compile Include="Rpm\SqlLite\DbVersion.cs" />
@@ -922,6 +933,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EditCriteriaForm.resx">
       <DependentUpon>EditCriteriaForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EmailHostForm.resx">
+      <DependentUpon>EmailHostForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FilterEditor.resx">
       <DependentUpon>FilterEditor.cs</DependentUpon>
@@ -1231,6 +1245,9 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\delete_adres_icon_32x32.png" />
+    <None Include="Resources\Email_30017.png" />
+    <None Include="Resources\email-send256_25228.png" />
     <None Include="Resources\augmented_reality_calendar_schedule_mountain_32x32.png" />
     <None Include="Resources\Private-80_icon-icons.com_572861.png" />
     <None Include="Resources\document_report_128x128.png" />

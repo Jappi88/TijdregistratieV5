@@ -1,36 +1,56 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
-using Rpm.Connection;
 using Rpm.Controls;
 using Rpm.Mailing;
 using Rpm.Various;
 
 namespace Rpm.Misc
 {
+    /// <summary>
+    /// Een notificatie helper
+    /// </summary>
     public static class Notifications
     {
-       // private static readonly List<Form_Alert> _messages = new List<Form_Alert>();
-
-        public static void Notify(this RespondMessage message, string title, Form parent)
+        // private static readonly List<Form_Alert> _messages = new List<Form_Alert>();
+        /// <summary>
+        /// Toon notificatie
+        /// </summary>
+        /// <param name="message">De bericht die getoond moet worden</param>
+        /// <param name="title">De titel van de notificatie</param>
+        /// <param name="parent">De scherm die de notificatie toont</param>
+        public static void Notify(this RemoteMessage message, string title, Form parent)
         {
             message?.Message?.Alert( title, message.MessageType, parent);
         }
 
+        /// <summary>
+        /// Toon  notificatie
+        /// </summary>
+        /// <param name="message">De bericht die getoond moet worden</param>
+        /// <param name="parent">De scherm die de notificatie toont</param>
         public static void Notify(this RemoteMessage message, Form parent)
         {
             message.Message.Alert(message.Title,message.MessageType,parent);
         }
 
+       /// <summary>
+       /// Toon notificatie
+       /// </summary>
+       /// <param name="msg">De bericht die getoond moet worden</param>
+       /// <param name="title">De titel van de notificatie</param>
+       /// <param name="type">De soort notificatie</param>
+       /// <param name="parent">De scherm die de notificatie toont</param>
+       /// <param name="closed">Een event die je kan koppelen als de notificatie is afgesloten</param>
         public static void Alert(this string msg, string title, MsgType type, Form parent, FormClosedEventHandler closed = null)
         {
-            new Thread(new ThreadStart(() =>
+            new Thread(() =>
             {
-                if (Application.OpenForms.Count == 0) return;
-                var visibleform = Application.OpenForms["Mainform"];
+                //if (Application.OpenForms.Count == 0) return;
+                //var visibleform = Application.OpenForms["Mainform"];
                 try
                 {
-                    visibleform?.BeginInvoke(new MethodInvoker(() =>
+                    parent?.BeginInvoke(new MethodInvoker(() =>
                     {
                         try
                         {
@@ -55,7 +75,7 @@ namespace Rpm.Misc
                     Console.WriteLine(e);
                 }
 
-            })).Start();
+            }).Start();
         }
 
         private static void MessageClosed(object sender, FormClosedEventArgs args)

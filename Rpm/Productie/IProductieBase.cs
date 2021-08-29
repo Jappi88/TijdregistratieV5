@@ -117,14 +117,14 @@ namespace Rpm.Productie
             return Root?.GetAlleStoringen(onlyactive).ToArray();
         }
 
-        public virtual async Task<bool> Update(string change, bool save)
+        public virtual async Task<bool> Update(string change, bool save, bool raiseevent)
         {
             try
             {
                 if (this is Bewerking bew)
                     return await bew.UpdateBewerking(null, change, save);
                 if (this is ProductieFormulier form)
-                    return await form.UpdateForm(true, false, null, change, save);
+                    return await form.UpdateForm(true, false, null, change, save,save,raiseevent);
                 return false;
             }
             catch (Exception e)

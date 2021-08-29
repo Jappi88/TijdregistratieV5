@@ -39,7 +39,7 @@ namespace Controls
             EnableEntryFiltering = false;
             EnableFiltering = true;
             CanLoad = true;
-            _WaitTimer = new Timer(500);
+            _WaitTimer = new Timer(100);
             _WaitTimer.Elapsed += _WaitTimer_Elapsed;
         }
 
@@ -254,6 +254,9 @@ namespace Controls
 
         private bool _iswaiting;
 
+        /// <summary>
+        /// Toon laad scherm
+        /// </summary>
         public void SetWaitUI()
         {
             if (_iswaiting) return;
@@ -299,6 +302,9 @@ namespace Controls
             });
         }
 
+        /// <summary>
+        /// verberg het laad scherm
+        /// </summary>
         public void StopWait()
         {
             _iswaiting = false;
@@ -534,7 +540,7 @@ namespace Controls
                     {
                         var xprods = !reload && CustomList && Producties != null
                             ? Producties.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter())).ToList()
-                            : Producties = await Manager.GetProducties(states, true, !IsBewerkingView, true);
+                            : Producties = await Manager.GetProducties(states, true, !IsBewerkingView);
                         if (!CanLoad) return;
                         if (ValidHandler != null)
                             xprods = xprods.Where(x => ValidHandler.Invoke(x, GetFilter()))
@@ -549,7 +555,7 @@ namespace Controls
                     {
                         var bws = !reload && CustomList && Bewerkingen != null
                             ? Bewerkingen.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter())).ToList()
-                            : Bewerkingen = (await Manager.GetBewerkingen(states, true, true));
+                            : Bewerkingen = (await Manager.GetBewerkingen(states, true));
                         if (!CanLoad) return;
                         if (ValidHandler != null)
                             bws = bws.Where(x => ValidHandler.Invoke(x, GetFilter()))
@@ -685,7 +691,7 @@ namespace Controls
             }
             catch (ObjectDisposedException)
             {
-                Console.WriteLine("Disposed!");
+                Console.WriteLine(@"Disposed!");
                 return false;
             }
             finally

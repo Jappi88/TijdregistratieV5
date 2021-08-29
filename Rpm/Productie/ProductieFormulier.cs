@@ -33,7 +33,7 @@ namespace Rpm.Productie
 
         public override int GetHashCode()
         {
-            return ProductieNr.GetHashCode();
+            return ProductieNr?.GetHashCode()??0;
         }
 
         #region "Variables"
@@ -677,6 +677,19 @@ namespace Rpm.Productie
                                                                         valid = false;
                                                                         break;
                                                                     }
+                                                            }
+
+                                                            if (tmp.Length > 0)
+                                                            {
+                                                                var xchar = tmp[0];
+                                                                while (xchar is '-' or '.' or ' ' || char.IsDigit(xchar) || char.IsUpper(xchar))
+                                                                {
+                                                                    if (xchar == ' ' && length == 0) break;
+                                                                    length++;
+                                                                    if (length < tmp.Length)
+                                                                        xchar = tmp[length];
+                                                                    else break;
+                                                                }
                                                             }
 
                                                             if (valid)

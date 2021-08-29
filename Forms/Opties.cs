@@ -174,6 +174,7 @@ namespace Forms
 
             //Admin Settings
             UpdateOptieList();
+            UpdateEmailHostControls();
             xenablesync.Checked = x.GebruikLocalSync;
             xsyncinterval.Value = x.SyncInterval < 5000 ? 10000 : x.SyncInterval;
             xenablegreedsync.Checked = x.AutoGereedSync;
@@ -211,6 +212,24 @@ namespace Forms
             xoffaccountcheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Opties) > -1;
             xoffinstellingcheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Accounts) > -1;
             xoffberichtencheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Messages) > -1;
+        }
+
+        private void UpdateEmailHostControls()
+        {
+            if (!string.IsNullOrEmpty(_LoadedOpties?.BoundUsername))
+            {
+                xhostlabel.Text = $@"Host van '{_LoadedOpties.BoundUsername}' wordt gebruikt";
+                xhostlabel.ForeColor = Color.ForestGreen;
+                xdeletehost.Enabled = true;
+                xdeletehost.Text = @$"Verwijder Host '{_LoadedOpties.BoundUsername}'";
+            }
+            else
+            {
+                xhostlabel.Text = @"Geen host om emails te verzenden!";
+                xhostlabel.ForeColor = Color.Red;
+                xdeletehost.Enabled = false;
+                xdeletehost.Text = @$"Verwijder Host";
+            }
         }
 
         private async void UpdateOptieList()
@@ -350,7 +369,6 @@ namespace Forms
             {
                 Manager.DefaultSettings.AutoLoginUsername = xautologin.Checked ? Manager.LogedInGebruiker.Username : null;
             }
-           
             xs.GebruikLocalSync = xenablesync.Checked;
             xs.SyncInterval = (int) xsyncinterval.Value;
             xs.AutoGereedSync = xenablegreedsync.Checked;
@@ -409,6 +427,7 @@ namespace Forms
             //default settings die we hier niet veranderen.
             if (_LoadedOpties != null)
             {
+                xs.BoundUsername = _LoadedOpties.BoundUsername;
                 xs.OntvangAdres = _LoadedOpties.OntvangAdres;
                 xs.Filters = _LoadedOpties.Filters;
                 xs.MainDB = _LoadedOpties.MainDB;
@@ -603,8 +622,7 @@ namespace Forms
 
         private void radioButton_CheckedChanged(object sender, EventArgs e)
         {
-            var rb = sender as RadioButton;
-            if (rb != null)
+            if (sender is RadioButton rb)
             {
                 // per toon afdelingen
                 var list = true;
@@ -1433,6 +1451,87 @@ namespace Forms
         private void xgebruikofflinemetsync_CheckedChanged(object sender, EventArgs e)
         {
             xofflinedbgroup.Enabled = xgebruikofflinemetsync.Checked;
+        }
+
+        private async void xbeheerEmailhost_Click(object sender, EventArgs e)
+        {
+            if (Manager.Database?.UserAccounts == null) return;
+            var login = new LogIn();
+            login.DisableLogin = true;
+            login.ShowAutoLoginCheckbox = false;
+            if (login.ShowDialog() == DialogResult.OK)
+            {
+                var acc = await Manager.Database.GetAccount(login.Username);
+                if (acc == null)
+                {
+                    XMessageBox.Show($"Gebruiker '{login.Username}' bestaat niet", "Gebruiker bestaat niet",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                try
+                {
+                    if (acc.ValidateUser(login.Username, login.Password, false))
+                    {
+                        if (acc.AccesLevel < AccesType.Manager)
+                            throw new Exception($"'{acc.Username}' is geen beheerder!\n\n" +
+                                                $"De emailhost kan alleen door een beheerder worden gewijzigd.");
+                        var mailhost = new EmailHostForm(acc.MailingHost);
+                        if (mailhost.ShowDialog() == DialogResult.OK)
+                        {
+                            _LoadedOpties.BoundUsername = acc.Username;
+                            UpdateEmailHostControls();
+                            acc.MailingHost = mailhost.SelectedHost;
+                            await Manager.Database.UpSert(acc);
+                        }
+                    }
+                }
+                catch (Exception exception)
+                {
+                    XMessageBox.Show(exception.Message, "Fout",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+             
+            }
+        }
+
+        private async void xdeletehost_Click(object sender, EventArgs e)
+        {
+            if (Manager.Database?.UserAccounts == null) return;
+            var login = new LogIn();
+            login.DisableLogin = true;
+            login.ShowAutoLoginCheckbox = false;
+            if (login.ShowDialog() == DialogResult.OK)
+            {
+                var acc = await Manager.Database.GetAccount(login.Username);
+                if (acc == null)
+                {
+                    XMessageBox.Show($"Gebruiker '{login.Username}' bestaat niet", "Gebruiker bestaat niet",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                try
+                {
+                    if (acc.ValidateUser(login.Username, login.Password, false))
+                    {
+                        if (acc.AccesLevel < AccesType.Manager)
+                            throw new Exception($"'{acc.Username}' is geen beheerder!\n\n" +
+                                                $"De emailhost kan alleen door een beheerder worden gewijzigd.");
+                        if (!string.Equals(_LoadedOpties.BoundUsername, acc.Username,
+                            StringComparison.CurrentCultureIgnoreCase))
+                            throw new Exception(@$"Alleen '{_LoadedOpties.BoundUsername}' kan de email host verwijderen!");
+                        _LoadedOpties.BoundUsername = null;
+                        UpdateEmailHostControls();
+                    }
+                }
+                catch (Exception exception)
+                {
+                    XMessageBox.Show(exception.Message, "Fout",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+            }
         }
     }
 }

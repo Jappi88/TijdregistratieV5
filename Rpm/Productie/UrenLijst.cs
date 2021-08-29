@@ -46,7 +46,7 @@ namespace Rpm.Productie
                 Uren = new List<TijdEntry>();
             if (uren is {Length: > 0})
             {
-                UpdateUrenRooster(false);
+                
                 var isbussy = false;
                 foreach (var tijd in uren)
                 {
@@ -54,6 +54,7 @@ namespace Rpm.Productie
                     Add(tijd.CreateCopy());
                 }
 
+                UpdateUrenRooster(false);
                 if (isactief && !isbussy)
                     UpdateTijdGewerkt(DateTime.Now, DateTime.Now, true);
                 

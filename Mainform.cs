@@ -1,59 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using AutoUpdaterDotNET;
-using Controls;
+﻿using AutoUpdaterDotNET;
 using Forms;
 using Rpm.Mailing;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.SqlLite;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using Various;
 using Timer = System.Windows.Forms.Timer;
 
 namespace ProductieManager
 {
+    /// <summary>
+    /// De hoofd scherm van de productiemanager
+    /// </summary>
     [Serializable]
     public partial class Mainform : Form
     {
-        private string _BootDir;
-        private PathWatcher _DbWatcher;
+        private string _bootDir;
+        private PathWatcher _dbWatcher;
+        /// <summary>
+        /// De titel van de hoofdscherm
+        /// </summary>
         public string MainAppTitle
         {
             get => this.Text;
             set => this.Text = value;
         }
 
-
+        /// <summary>
+        /// Update de titel en status text
+        /// </summary>
         public void UpdateTitle()
         {
             string xuser = Manager.LogedInGebruiker == null ? "Niet Ingelogd" : $"Ingelogd als: {Manager.LogedInGebruiker.Username}";
             MainAppTitle = $"Productie Manager Versie {ProductVersion} {xuser}";
-            xstatuslabel.Text = $"Database: {Manager.AppRootPath}";
+            xstatuslabel.Text = $@"Database: {Manager.AppRootPath}";
         }
-
+        /// <summary>
+        /// Of de hoofdscherm bezig is met laden
+        /// </summary>
         public static bool IsLoading { get; private set; }
         private SplashScreen _splash;
+        /// <summary>
+        /// De timer die ingesteld staat om te kijken voor nieuwe updates
+        /// </summary>
+        public Timer Updatechecker;
 
-        public Timer _updatechecker;
-
-        public Mainform() : this(null)
-        {
-        }
-
-        public Mainform(string bootdir = null)
+        /// <summary>
+        /// Maak een nieuwe hoofdscherm aan
+        /// </summary>
+        public Mainform()
         {
             //InitBootDir(bootdir);
             InitializeComponent();
+            IsLoading = true;
             SetStyle(
                 ControlStyles.UserPaint |
                 ControlStyles.AllPaintingInWmPaint |
@@ -63,9 +72,10 @@ namespace ProductieManager
             AutoUpdater.AppCastURL = "https://www.dropbox.com/s/3bnp0so9o1mj8at/UpdateInfo.xml?dl=1";
             AutoUpdater.AppTitle = "Productie Manager";
             AutoUpdater.ShowSkipButton = false;
-            _updatechecker = new Timer {Interval = 60000};
-            _updatechecker.Tick += _updatechecker_Tick;
-            _updatechecker.Start();
+            AutoUpdater.ApplicationExitEvent += AutoUpdater_ApplicationExitEvent;
+            Updatechecker = new Timer {Interval = 60000};
+            Updatechecker.Tick += _updatechecker_Tick;
+            Updatechecker.Start();
             Hide();
             Manager.OnSettingsChanged += ProductieView1_OnSettingsChanged;
             Manager.OnManagerLoaded += _manager_OnManagerLoaded;
@@ -73,96 +83,135 @@ namespace ProductieManager
             
             //Shown += Mainform_Shown;
             //Task.Run(new Action(productieView1.LoadForm));
-            _splash = new SplashScreen(1500) {WindowState = FormWindowState.Normal};
+            _splash = new SplashScreen(2000) {WindowState = FormWindowState.Normal};
             _splash.FinishedLoading += _splash_FinishedLoading;
             _splash.FormClosed += Screen_FormClosed;
             Shown += Mainform_Shown;
             _splash.Shown += _splash_Shown;
             _splash.Show();
-            _DbWatcher = new PathWatcher();
-            _DbWatcher.PathLocationFound += _DbWatcher_PathLocationFound;
-            _DbWatcher.PathLocationLost += _DbWatcher_PathLocationLost;
+            _dbWatcher = new PathWatcher();
+            _dbWatcher.PathLocationFound += _DbWatcher_PathLocationFound;
+            _dbWatcher.PathLocationLost += _DbWatcher_PathLocationLost;
         }
 
+        private void AutoUpdater_ApplicationExitEvent()
+        {
+            Exit(false);
+        }
+
+        /// <summary>
+        /// Sluit de ProductieManager 
+        /// </summary>
+        /// <param name="restart">Of je de productiemanager wilt restarten</param>
+        public static async void Exit(bool restart)
+        {
+            var proc = Process.GetCurrentProcess();
+            if (proc.MainModule != null && restart)
+                Process.Start(proc.MainModule.FileName);
+            Manager.DefaultSettings?.SaveAsDefault();
+            if (Manager.Opties != null)
+            {
+                bool cancel = false;
+                var opties = Manager.Opties;
+                Manager.SettingsChanging(null, ref opties, ref cancel);
+                if (cancel) return;
+                Manager.Opties = opties;
+                await Manager.Opties.Save();
+            }
+            proc.Kill();
+        }
+        /// <summary>
+        /// Een event die aangeeft of de hoofd database niet meer bestaat
+        /// </summary>
+        /// <param name="sender">De gene die dat heeft geconstateerd</param>
+        /// <param name="e">Event informatie</param>
         private void _DbWatcher_PathLocationLost(object sender, EventArgs e)
         {
-            _DbWatcher?.Stop();
-            Dictionary<string, DialogResult> xbtns = new Dictionary<string, DialogResult>
-            {
-                {"Herstart", DialogResult.OK},
-                {"Ga Offline", DialogResult.Cancel},
-                {"Afsluiten", DialogResult.No},
-                {"Kies DB", DialogResult.Yes}
-            };
-            this.Invoke(new MethodInvoker(async () =>
-            {
-                try
-                {
-                    bool found = false;
-                    for(int i = 0; i < 5; i++)
-                    {
-                        if (Directory.Exists(Manager.DefaultSettings.MainDB.UpdatePath))
-                        {
-                            found = true;
-                            break;
-                        }
-
-                        await Task.Delay(400);
-                    }
-
-                    if (found) return;
-                    var xrslt = XMessageBox.Show("Oorspronkelijke database kan niet geladen worden!\n\n" +
-                        " * Kies 'Herstart' als je de ProductieManager opnieuw wilt opstarten.\n" +
-                        " * Kies 'Offline' als je gewoon offline wilt werken.\n" +
-                        " * Kies anders voor een andere database of sluit de ProductieManager af.", "Database niet gevonden!", 
-                        MessageBoxIcon.Warning, null, xbtns);
-                    if (xrslt == DialogResult.OK) { Application.Restart(); return; }
-                    if (xrslt == DialogResult.No) { this.Close(); return; }
-                    if (xrslt == DialogResult.Yes)
-                    {
-                        DbPathChooser ps = new DbPathChooser();
-                        if (ps.ShowDialog() == DialogResult.OK)
-                        {
-                            Manager.DefaultSettings.MainDB.RootPath = ps.SelectedPath;
-                            Application.Restart();
-                            return;
-                        }
-                    }
-                    productieView1.LoadManager(Manager.DefaultSettings.TempMainDB.RootPath, true);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }));
-            _DbWatcher?.Start();
+            this.Invoke(new Action(DoDbLocationLost));
         }
 
-        private async void _DbWatcher_PathLocationFound(object sender, EventArgs e)
+        private async void DoDbLocationLost()
         {
             try
             {
-                var proc = Process.GetCurrentProcess();
-                if (proc.MainModule != null)
-                    Process.Start(proc.MainModule.FileName);
-                Manager.DefaultSettings?.SaveAsDefault();
-                if (Manager.Opties != null)
-                    await Manager.Opties.Save();
-                proc.Kill();
+                _dbWatcher?.Stop();
+                bool found = false;
+                for (int i = 0; i < 5; i++)
+                {
+                    if (Directory.Exists(Manager.DefaultSettings.MainDB.UpdatePath))
+                    {
+                        found = true;
+                        break;
+                    }
+
+                    await Task.Delay(400);
+                }
+
+                if (found) return;
+                Dictionary<string, DialogResult> xbtns = new Dictionary<string, DialogResult>
+                {
+                    {"Herstart", DialogResult.OK},
+                    {"Ga Offline", DialogResult.Cancel},
+                    {"Afsluiten", DialogResult.No},
+                    {"Kies DB", DialogResult.Yes}
+                };
+                var xrslt = XMessageBox.Show("Oorspronkelijke database kan niet geladen worden!\n\n" + " * Kies 'Herstart' als je de ProductieManager opnieuw wilt opstarten.\n" + " * Kies 'Offline' als je gewoon offline wilt werken.\n" + " * Kies anders voor een andere database of sluit de ProductieManager af.", "Database niet gevonden!", MessageBoxIcon.Warning, null, xbtns);
+                if (xrslt == DialogResult.OK)
+                {
+                    Application.Restart();
+                    return;
+                }
+
+                if (xrslt == DialogResult.No)
+                {
+                    this.Close();
+                    return;
+                }
+
+                if (xrslt == DialogResult.Yes)
+                {
+                    DbPathChooser ps = new DbPathChooser();
+                    if (ps.ShowDialog() == DialogResult.OK)
+                    {
+                        Manager.DefaultSettings.MainDB.RootPath = ps.SelectedPath;
+                        Exit(true);
+                        return;
+                    }
+                }
+
+                productieView1.LoadManager(Manager.DefaultSettings.TempMainDB.RootPath);
             }
             catch (Exception ex)
             {
-                _DbWatcher.PathLost = true;
+                Console.WriteLine(ex.Message);
+            }
+            _dbWatcher?.Start();
+        }
+
+        /// <summary>
+        /// Of de hoofd database weer is gevonden
+        /// </summary>
+        /// <param name="sender">De gene die dat heeft geconstateerd</param>
+        /// <param name="e">De event informatoie</param>
+        private void _DbWatcher_PathLocationFound(object sender, EventArgs e)
+        {
+            try
+            {
+                Exit(true);
+            }
+            catch (Exception ex)
+            {
+                _dbWatcher.PathLost = true;
                 Console.WriteLine(ex);
-            };
+            }
         }
 
         private Task InitBootDir(string path = null)
         {
             return Task.Run(() =>
             {
-                _BootDir = Application.StartupPath;
-                Manager.AppRootPath = path ?? _BootDir;
+                _bootDir = Application.StartupPath;
+                Manager.AppRootPath = path ?? _bootDir;
                
                 if (Manager.DefaultSettings != null)
                 {
@@ -209,6 +258,7 @@ namespace ProductieManager
                         }
                         catch (Exception e)
                         {
+                            // ignored
                         }
 
                         Application.DoEvents();
@@ -216,11 +266,11 @@ namespace ProductieManager
 
                     if (rootpath != null)
                     {
-                        _BootDir = rootpath;
+                        _bootDir = rootpath;
                     }
                     else
                     {
-                        tempdbent.RootPath = _BootDir;
+                        tempdbent.RootPath = _bootDir;
                         if (tempdbent.LastUpdated < dbent.LastUpdated || tempdbent.LastUpdated.IsDefault())
                         {
                             tempdbent.LastUpdated = DateTime.Now;
@@ -236,8 +286,21 @@ namespace ProductieManager
         }
 
         private void _splash_FinishedLoading(object sender, EventArgs e)
-        {
+        { 
             IsLoading = false;
+            while (!Manager.IsLoaded)
+                Application.DoEvents();
+            StartPosition = FormStartPosition.CenterParent;
+            Show();
+            this.InitLastInfo();
+            Select();
+            BringToFront();
+            AutoUpdater.Start();
+            productieView1.ShowUnreadMessage = true;
+            productieView1.UpdateUnreadMessages(null);
+            _splash.Dispose();
+            _splash = null;
+           
         }
 
         private void _manager_OnRemoteMessage(RemoteMessage message, Manager instance)
@@ -245,6 +308,10 @@ namespace ProductieManager
            ShowMessagePopup(message);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="msg"></param>
         public void ShowMessagePopup(RemoteMessage msg)
         {
             if (msg == null) return;
@@ -263,23 +330,32 @@ namespace ProductieManager
 
         private void _manager_OnManagerLoaded()
         {
-            if (_splash != null)
-                if (_splash.CanClose)
-                    _splash.Close();
-                else _splash.CanClose = true;
-            _DbWatcher.WatchPath(Manager.DefaultSettings.MainDB.UpdatePath, false, true);
+            this.BeginInvoke(new Action(() =>
+            {
+                if (_splash != null)
+                {
+                    if (_splash.CanClose)
+                        _splash.Close();
+                    else _splash.CanClose = true;
+
+                }
+                _dbWatcher.WatchPath(Manager.DefaultSettings.MainDB.UpdatePath, false, true);
+            }));
+
         }
 
         private void _splash_Shown(object sender, EventArgs e)
         {
             IsLoading = true;
-            BeginInvoke(new Action(async () =>
-            {
-                await InitBootDir();
-                UpdateTitle();
-                xversie.Text = $"Versie {ProductVersion}";
-                productieView1.LoadManager(_BootDir);
-            }));
+            BeginInvoke(new Action(Action));
+        }
+
+        private async void Action()
+        {
+            await InitBootDir();
+            UpdateTitle();
+            xversie.Text = $@"Versie {ProductVersion}";
+            productieView1.LoadManager(_bootDir);
         }
 
         private void Mainform_Shown(object sender, EventArgs e)
@@ -293,6 +369,9 @@ namespace ProductieManager
             AutoUpdater.Start();
         }
 
+        /// <summary>
+        /// Een event voor als de hoofdscherm zichtbaar is
+        /// </summary>
         public event EventHandler OnFormShown;
 
         //private void InitBootDir(string bootdir)
@@ -365,17 +444,7 @@ namespace ProductieManager
 
         private void Screen_FormClosed(object sender, FormClosedEventArgs e)
         {
-            StartPosition = FormStartPosition.CenterParent;
-            Show();
-            this.InitLastInfo();
-            Select();
-            BringToFront();
-            AutoUpdater.Start();
-            productieView1.ShowUnreadMessage = true;
-            productieView1.UpdateUnreadMessages(null);
-            _splash.Dispose();
-            _splash = null;
-            IsLoading = false;
+            
         }
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -383,7 +452,7 @@ namespace ProductieManager
             Process.Start("https://www.valksystemen.nl/");
         }
 
-        private void mynotifyicon_Click(object sender, EventArgs e)
+        private void mynotifyicon_Click()
         {
             if (WindowState == FormWindowState.Minimized)
             {
@@ -406,26 +475,9 @@ namespace ProductieManager
             Close();
         }
 
-        private void Cnn_InfoMessage(object sender, SqlInfoMessageEventArgs e)
+        private void Cnn_InfoMessage(SqlInfoMessageEventArgs e)
         {
             Console.WriteLine(e.Message);
-        }
-
-        private static List<string> getAllHostNames()
-        {
-            var hostNames = new List<string>();
-            var ipaddress = Dns.GetHostAddresses(Dns.GetHostName());
-            string hname;
-
-            foreach (var ip in ipaddress)
-                //if ipv4
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    hname = Dns.GetHostEntry(ip).HostName.ToLower();
-                    if (!hostNames.Contains(hname)) hostNames.Add(hname);
-                }
-
-            return hostNames;
         }
 
         #region "Mainform"
@@ -463,6 +515,7 @@ namespace ProductieManager
             }
             catch (Exception)
             {
+                // ignored
             }
         }
 
@@ -472,7 +525,7 @@ namespace ProductieManager
             {
                 this.Hide();
                 notifyIcon1.Visible = true;
-                notifyIcon1.Text = $"ProductieManager Versie {Application.ProductVersion}";
+                notifyIcon1.Text = $@"ProductieManager Versie {Application.ProductVersion}";
                 notifyIcon1.ShowBalloonTip(5000);
             }
         }
@@ -480,12 +533,17 @@ namespace ProductieManager
         #endregion "Mainform"
 
         #region IMain Interface
-
+        /// <summary>
+        /// Toon de hoofdscherm
+        /// </summary>
         public void ShowForm()
         {
             Show();
         }
 
+        /// <summary>
+        /// Geef aan dat de hoofdscherm zichtbaar is
+        /// </summary>
         protected void FormShown()
         {
             OnFormShown?.Invoke(this, EventArgs.Empty);
