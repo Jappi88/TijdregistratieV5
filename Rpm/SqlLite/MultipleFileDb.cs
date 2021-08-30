@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using iTextSharp.text.pdf.parser.clipper;
 using NPOI.SS.Formula.Functions;
 using Polenter.Serialization;
@@ -16,8 +17,9 @@ namespace Rpm.SqlLite
 {
     public class MultipleFileDb
     {
-        private readonly FileSystemWatcher _pathwatcher;
+        private FileSystemWatcher _pathwatcher;
         private FileSystemWatcher _secondarypathwatcher;
+        private readonly Timer _FileChangedNotifyTimer;
 
         //private static readonly object _locker = new object();
         public string SecondaryDestination { get; private set; }
@@ -31,6 +33,8 @@ namespace Rpm.SqlLite
         public MultipleFileDb(string path, bool watchdb)
         {
             CorruptedFilePaths = new List<string>();
+            _FileChangedNotifyTimer = new Timer(1000);//500 ms vertraging
+            _FileChangedNotifyTimer.Elapsed += _FileChangedNotifyTimer_Elapsed;
             Path = path;
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
@@ -38,7 +42,7 @@ namespace Rpm.SqlLite
             {
                 _pathwatcher = new FileSystemWatcher(Path);
                 _pathwatcher.EnableRaisingEvents = true;
-                _pathwatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
+                _pathwatcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName;
                 _pathwatcher.Filter = "*.rpm";
                 _pathwatcher.Changed += _pathwatcher_Changed;
                 _pathwatcher.Deleted += _pathwatcher_Deleted;
@@ -47,21 +51,27 @@ namespace Rpm.SqlLite
 
         private readonly List<string> _changes = new List<string>();
 
-        private void DoChangeWait(string path, int duration)
+        private void _FileChangedNotifyTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Task.Factory.StartNew(async () =>
+            _FileChangedNotifyTimer?.Stop();
+            if (_changes == null) return;
+            try
             {
-                int cur = 0;
-                while (cur < duration)
-                {
-                    await Task.Delay(100);
-                    cur += 100;
-                }
                 lock (_changes)
                 {
-                    _changes.Remove(path);
+                    for (int i = 0; i < _changes.Count; i++)
+                    {
+                        var x = _changes[i];
+                        OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Changed,
+                            System.IO.Path.GetDirectoryName(x) ?? x, System.IO.Path.GetFileName(x)));
+                        _changes.RemoveAt(i--);
+                    }
                 }
-            });
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
         }
 
         private void _pathwatcher_Deleted(object sender, FileSystemEventArgs e)
@@ -71,15 +81,15 @@ namespace Rpm.SqlLite
 
         private void _pathwatcher_Changed(object sender, FileSystemEventArgs e)
         {
+            _FileChangedNotifyTimer?.Stop();
             var rpath = GetReadPath(true).ToLower();
             if (!e.FullPath.ToLower().StartsWith(rpath)) return;
             lock (_changes)
             {
-                if (_changes.Any(x => string.Equals(x, e.FullPath, StringComparison.CurrentCultureIgnoreCase))) return;
-                _changes.Add(e.FullPath);
+                if (!_changes.Any(x => string.Equals(x, e.FullPath, StringComparison.CurrentCultureIgnoreCase)))
+                    _changes.Add(e.FullPath);
             }
-            OnFileChanged(e);
-            DoChangeWait(e.FullPath, 500);
+            _FileChangedNotifyTimer?.Start();
         }
 
         public void DisposeSecondayPath()
@@ -98,16 +108,15 @@ namespace Rpm.SqlLite
 
         private void _secondarypathwatcher_Changed(object sender, FileSystemEventArgs e)
         {
+            _FileChangedNotifyTimer?.Stop();
             var rpath = GetReadPath(true).ToLower();
             if (!e.FullPath.ToLower().StartsWith(rpath)) return;
             lock (_changes)
             {
-                if (_changes.Any(x => string.Equals(x, e.FullPath, StringComparison.CurrentCultureIgnoreCase))) return;
-                _changes.Add(e.FullPath);
+                if (!_changes.Any(x => string.Equals(x, e.FullPath, StringComparison.CurrentCultureIgnoreCase)))
+                    _changes.Add(e.FullPath);
             }
-           
-            OnSecondaryFileChanged(e);
-            DoChangeWait(e.FullPath, 500);
+            _FileChangedNotifyTimer?.Start();
         }
 
         private void _secondarypathwatcher_Deleted(object sender, FileSystemEventArgs e)
@@ -126,7 +135,7 @@ namespace Rpm.SqlLite
                     _secondarypathwatcher?.Dispose();
                     _secondarypathwatcher = new FileSystemWatcher(path);
                     _secondarypathwatcher.EnableRaisingEvents = true;
-                    _secondarypathwatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
+                    _secondarypathwatcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName;
                     _secondarypathwatcher.Filter = "*.rpm";
                     _secondarypathwatcher.Deleted += _secondarypathwatcher_Deleted;
                     _secondarypathwatcher.Changed += _secondarypathwatcher_Changed;
@@ -146,28 +155,26 @@ namespace Rpm.SqlLite
 
         public List<T> GetAllEntries<T>()
         {
-            //lock (_locker)
-            ///{
-                var xreturn = new List<T>();
-                try
-                {
-                    string path = GetReadPath(true);
-                    var files = Directory.GetFiles(path, "*.rpm");
 
-                    foreach (var file in files)
-                    {
-                        var xent = GetInstanceFromFile<T>(file);
-                        if (xent != null)
-                            xreturn.Add(xent);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
+            var xreturn = new List<T>();
+            try
+            {
+                string path = GetReadPath(true);
+                var files = Directory.GetFiles(path, "*.rpm");
 
-                return xreturn;
-           // }
+                foreach (var file in files)
+                {
+                    var xent = GetInstanceFromFile<T>(file);
+                    if (xent != null)
+                        xreturn.Add(xent);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return xreturn;
         }
 
         public List<string> GetAllIDs(bool checksecondary)
@@ -737,6 +744,7 @@ namespace Rpm.SqlLite
                 _pathwatcher.Changed -= _pathwatcher_Changed;
                 _pathwatcher.Deleted -= _pathwatcher_Deleted;
                 _pathwatcher?.Dispose();
+                _pathwatcher = null;
             }
         }
 

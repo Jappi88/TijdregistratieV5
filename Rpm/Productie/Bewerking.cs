@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using LiteDB;
+using NPOI.SS.Formula.Functions;
 using Polenter.Serialization;
 using Rpm.SqlLite;
 using Rpm.Mailing;
@@ -426,6 +427,7 @@ namespace Rpm.Productie
                 LaatstAantalUpdate = DateTime.Now;
                 State = ProductieState.Gestart;
                 TijdGestart = DateTime.Now;
+                var xtasks = new List<Task<bool>>();
                 foreach (var plek in WerkPlekken)
                 {
                     plek.UpdateWerkRooster(true,false,false,false,true);
@@ -447,8 +449,8 @@ namespace Rpm.Productie
                                 if (per.WerkRooster == null)
                                     per.WerkRooster = x.WerkRooster;
                                 x.ReplaceKlus(klus);
-                                _= Manager.Database.UpSert(x,
-                                    $"[{x.PersoneelNaam}] is gestart aan klus '{klus.Naam} op {klus.WerkPlek}'.");
+                                xtasks.Add(Manager.Database.UpSert(x,
+                                    $"[{x.PersoneelNaam}] is gestart aan klus '{klus.Naam} op {klus.WerkPlek}'."));
                             }
                         }
                     }
@@ -463,14 +465,15 @@ namespace Rpm.Productie
                     plek.UpdateTijdGestart();
                 }
 
+                if (xtasks.Count > 0)
+                    _=Task.WhenAll(xtasks);
                 //if (newtime || Tijden.Count == 0)
-              
+
                 if (Parent != null && Parent.State != ProductieState.Gestart)
                     Parent.TijdGestart = DateTime.Now;
                
                 GestartDoor = Manager.Opties.Username;
                 await UpdateBewerking(null, $"[{Path}] Bewerking Gestart");
-
                 if (email)
                     RemoteProductie.RespondByEmail(this,
                         $"Productie [{ProductieNr.ToUpper()}] {Naam} is zojuist gestart op {WerkplekkenName}.");
@@ -527,7 +530,7 @@ namespace Rpm.Productie
                     Parent.TijdGestopt = DateTime.Now;
                 State = ProductieState.Gestopt;
 
-               
+                var xtasks = new List<Task<bool>>();
                 foreach (var plek in WerkPlekken)
                 {
                     plek.TijdGestopt = DateTime.Now;
@@ -543,10 +546,12 @@ namespace Rpm.Productie
                         if (x == null) continue;
                         per.VrijeDagen = x.VrijeDagen;
                         x.ReplaceKlus(klus);
-                        await Manager.Database.UpSert(x, $"[{x.PersoneelNaam}] uit werk [{Path}] gehaald");
+                        xtasks.Add(Manager.Database.UpSert(x, $"[{x.PersoneelNaam}] uit werk [{Path}] gehaald"));
                     }
                 }
 
+                if (xtasks.Count > 0)
+                   _=Task.WhenAll(xtasks);
                 await UpdateBewerking(null, $"[{Path}] Bewerking Gestopt");
                 if (email)
                     RemoteProductie.RespondByEmail(this,
@@ -559,76 +564,85 @@ namespace Rpm.Productie
             }
         }
 
-        public async Task<bool> RemoveBewerking(bool skip)
+        public Task<bool> RemoveBewerking(bool skip)
         {
-            var personen = GetPersoneel();
-           
-            if (State == ProductieState.Verwijderd)
+            return Task.Run(async() =>
             {
-                if (Parent != null && !skip)
+                var personen = GetPersoneel();
+
+                if (State == ProductieState.Verwijderd)
                 {
-                    foreach (var per in personen)
+                    if (Parent != null && !skip)
                     {
-                        if (per.IngezetAanKlus(this, false, out var klusjes))
+                        foreach (var per in personen)
                         {
-                            var dbpers = await Manager.Database.GetPersoneel(per.PersoneelNaam);
-                            if (dbpers != null)
+                            if (per.IngezetAanKlus(this, false, out var klusjes))
                             {
-                                foreach (var klus in klusjes)
-                                    dbpers.Klusjes.Remove(klus);
-                                await Manager.Database.UpSert(dbpers, $"{Path} Klusjes verwijderd");
+                                var dbpers = await Manager.Database.GetPersoneel(per.PersoneelNaam);
+                                if (dbpers != null)
+                                {
+                                    foreach (var klus in klusjes)
+                                        dbpers.Klusjes.Remove(klus);
+                                    await Manager.Database.UpSert(dbpers, $"{Path} Klusjes verwijderd");
+                                }
                             }
                         }
-                    }
-                    var bws = Parent.Bewerkingen.Where(x => !x.Equals(this)).ToArray();
-                    var deleted = bws.Length < Parent.Bewerkingen.Length;
-                    Parent.Bewerkingen = bws;
-                    if (Parent.Bewerkingen.Length == 0)
-                    {
-                        return await Manager.Database.Delete(Parent);
-                    }
-                    if (deleted)
-                    {
-                        Manager.BewerkingDeleted(this, this);
-                        await Parent.UpdateForm(true, false);
-                        
-                    }
 
-                    return deleted;
-                }
-
-                return false;
-            }
-
-            if (State == ProductieState.Gestart) await StopProductie(false);
-            foreach (var per in personen)
-            {
-                if (per.IngezetAanKlus(this, false, out var klusjes))
-                {
-                    var dbpers = await Manager.Database.GetPersoneel(per.PersoneelNaam);
-                    if (dbpers != null)
-                    {
-                        foreach (var klus in klusjes)
+                        var bws = Parent.Bewerkingen.Where(x => !x.Equals(this)).ToArray();
+                        var deleted = bws.Length < Parent.Bewerkingen.Length;
+                        Parent.Bewerkingen = bws;
+                        if (Parent.Bewerkingen.Length == 0)
                         {
-                            klus.Stop();
-                            klus.Status = ProductieState.Verwijderd;
-                            dbpers.ReplaceKlus(klus);
+                            return await Manager.Database.Delete(Parent);
                         }
-                        await Manager.Database.UpSert(dbpers, $"{Path} Klusjes verwijderd");
+
+                        if (deleted)
+                        {
+                            Manager.BewerkingDeleted(this, this);
+                            await Parent.UpdateForm(true, false);
+
+                        }
+
+                        return deleted;
+                    }
+
+                    return false;
+                }
+
+                if (State == ProductieState.Gestart) await StopProductie(false);
+                foreach (var per in personen)
+                {
+                    if (per.IngezetAanKlus(this, false, out var klusjes))
+                    {
+                        var dbpers = await Manager.Database.GetPersoneel(per.PersoneelNaam);
+                        if (dbpers != null)
+                        {
+                            foreach (var klus in klusjes)
+                            {
+                                klus.Stop();
+                                klus.Status = ProductieState.Verwijderd;
+                                dbpers.ReplaceKlus(klus);
+                            }
+
+                            await Manager.Database.UpSert(dbpers, $"{Path} Klusjes verwijderd");
+                        }
                     }
                 }
-            }
-            DatumVerwijderd = DateTime.Now;
-            State = ProductieState.Verwijderd;
-            await UpdateBewerking(null, $"[{Path}] Verwijderd.");
-            return true;
+
+                DatumVerwijderd = DateTime.Now;
+                State = ProductieState.Verwijderd;
+                await UpdateBewerking(null, $"[{Path}] Verwijderd.");
+                return true;
+            });
         }
 
-        public async Task<bool> Undo()
+        public Task<bool> Undo()
         {
-            if (State != ProductieState.Gestart && State != ProductieState.Gestopt)
+            return Task.Run(async() =>
             {
-                State = ProductieState.Gestopt;
+                if (State != ProductieState.Gestart && State != ProductieState.Gestopt)
+                {
+                    State = ProductieState.Gestopt;
                     var personen = GetPersoneel();
                     foreach (var per in personen)
                     {
@@ -648,11 +662,12 @@ namespace Rpm.Productie
                         }
                     }
 
-                await UpdateBewerking();
-                return true;
-            }
+                    await UpdateBewerking();
+                    return true;
+                }
 
-            return false;
+                return false;
+            });
         }
 
         public DateTime GestartOp()

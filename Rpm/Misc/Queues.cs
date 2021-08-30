@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Rpm.Mailing;
 using Rpm.Various;
 
-namespace Rpm.Productie
+namespace Rpm.Misc
 {
     /// <summary>
     /// Een rij taak dat bevat de functionaliteit info
@@ -27,7 +27,7 @@ namespace Rpm.Productie
         /// <summary>
         /// Resultaat berichten van de uitgevoerde taak
         /// </summary>
-        public RemoteMessage[] Results { get; set; }
+        public List<RemoteMessage> Results { get; set; }
 
         /// <summary>
         ///     Dont use async

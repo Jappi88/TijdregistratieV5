@@ -89,7 +89,7 @@ namespace Controls
 
                  _manager?.Dispose();
                 if (_manager == null)
-                    _manager = new Manager(true);
+                    _manager = new Manager(false);
                 DetachEvents();
                 //BeginInvoke(new MethodInvoker(() => _manager.Load()));
                 //BeginInvoke(new MethodInvoker(_manager.StartMonitor));
@@ -101,7 +101,7 @@ namespace Controls
                 werkPlekkenUI1.InitUI(_manager);
                 //recentGereedMeldingenUI1.LoadBewerkingen();
                 _manager.Dispose();
-                _manager = new Manager(true);
+                _manager = new Manager(false);
                 _manager.InitManager();
                 InitEvents();
                 await _manager.Load(path, autologin, true,true);

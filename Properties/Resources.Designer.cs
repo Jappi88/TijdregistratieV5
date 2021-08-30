@@ -613,6 +613,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap exclamation_warning_24x24 {
+            get {
+                object obj = ResourceManager.GetObject("exclamation_warning_24x24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap exit_close_error_15565 {
             get {
                 object obj = ResourceManager.GetObject("exit_close_error_15565", resourceCulture);
@@ -1253,6 +1263,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Note_msgIcon_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("Note_msgIcon_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap notification_done_114461 {
             get {
                 object obj = ResourceManager.GetObject("notification-done_114461", resourceCulture);
@@ -1373,6 +1393,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap PauseHot_26935 {
+            get {
+                object obj = ResourceManager.GetObject("PauseHot_26935", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap play_button_icon_icons_com_60615 {
             get {
                 object obj = ResourceManager.GetObject("play-button_icon-icons.com_60615", resourceCulture);
@@ -1406,16 +1436,6 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap Private_80_icon_icons_com_57286 {
             get {
                 object obj = ResourceManager.GetObject("Private-80_icon-icons.com_57286", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Private_80_icon_icons1 {
-            get {
-                object obj = ResourceManager.GetObject("Private-80_icon-icons1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -950,8 +950,8 @@ namespace Rpm.Productie
                         TotaalTijdGewerkt = TijdGewerkt;
 
                     if (save)
-                    {
-                        _= Manager.Database.UpSert(this, change, showmessage,onlylocal);
+                    { 
+                        await Manager.Database.UpSert(this, change, showmessage,onlylocal);
                     }
                     else if (raiseevent)
                     {

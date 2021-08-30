@@ -144,8 +144,8 @@ namespace Controls
 
         private void SetButtonEnable()
         {
-            var enable1 = ProductieLijst.SelectedObjects != null && ProductieLijst.SelectedObjects.Count == 1;
-            var enable2 = ProductieLijst.SelectedObjects != null && ProductieLijst.SelectedObjects.Count > 1;
+            var enable1 = ProductieLijst.SelectedObjects is {Count: 1};
+            var enable2 = ProductieLijst.SelectedObjects is {Count: > 1};
             var enable3 = enable1 || enable2;
             var acces1 = Manager.LogedInGebruiker != null &&
                          Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieBasis;
@@ -415,28 +415,38 @@ namespace Controls
             ximagelist.Images.Add(img.CombineImage(Resources.play_button_icon_icons_com_60615, 2.5)); //play document
             ximagelist.Images.Add(img.CombineImage(Resources.delete_1577, 2)); //deleted document
             ximagelist.Images.Add(img.CombineImage(Resources.check_1582, 2)); // checked document
+
+            double imgscale = 1.75;
+            //zelfde afbeeldingen, maar dan met de note icon
+            ximagelist.Images.Add(img.CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); // regular document
+            ximagelist.Images.Add(img.CombineImage(Resources.new_25355, 2).CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); //new document
+            ximagelist.Images.Add(img.CombineImage(Resources.Warning_36828, 2).CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); //warning document
+            ximagelist.Images.Add(img.CombineImage(Resources.play_button_icon_icons_com_60615, 2.5).CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); //play document
+            ximagelist.Images.Add(img.CombineImage(Resources.delete_1577, 2).CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); //deleted document
+            ximagelist.Images.Add(img.CombineImage(Resources.check_1582, 2).CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); // checked document
         }
 
         private int GetProductieImageIndex(IProductieBase productie)
         {
             if (productie == null) return 0;
+            int xbase = string.IsNullOrEmpty(productie.Note?.Notitie) ? 0 : 6;
             switch (productie.State)
             {
                 case ProductieState.Gestopt:
                     if (productie.IsNieuw)
-                        return 1;
+                        return 1 + xbase;
                     if (productie.TeLaat)
-                        return 2;
-                    return 0;
+                        return 2 + xbase;
+                    return 0 + xbase;
                 case ProductieState.Gestart:
-                    return 3;
+                    return 3 + xbase;
                 case ProductieState.Verwijderd:
-                    return 4;
+                    return 4 + xbase;
                 case ProductieState.Gereed:
-                    return 5;
+                    return 5 + xbase;
             }
 
-            return 0;
+            return 0 + xbase;
         }
 
         private object ImageGetter(object sender)
@@ -1465,6 +1475,7 @@ namespace Controls
                     {
                         var ag = new AantalGemaaktUI();
                         ag.ShowDialog(form);
+                        break;
                     }
                 }
                 catch (Exception e)
@@ -1491,6 +1502,8 @@ namespace Controls
                                 bew.UpdateBewerking(null,
                                     $"[{bew.Path}] Aantal gemaakt aangepast van {oldaantal} naar {bew.AantalGemaakt}").Wait();
                         }
+
+                        break;
                     }
                 }
                 catch (Exception e)
@@ -1562,6 +1575,7 @@ namespace Controls
                     }
                 else bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToList();
 
+                if (bws.Count == 0) return;
                 var done = 0;
                 var removed = bws.Any(x => x.State == ProductieState.Verwijderd);
                 var skip = false;
@@ -1578,15 +1592,21 @@ namespace Controls
                     skip = res == DialogResult.No;
                 }
 
+                var taskf = new Dictionary<string,Task<bool>>();
                 for (var i = 0; i < bws.Count; i++)
                 {
                     var pr = bws[i];
                     if (pr == null)
                         continue;
-                    if (await pr.RemoveBewerking(skip))
-                        done++;
+                    taskf.Add($"Bewerking '{pr.Path}' wordt verwijderd...", pr.RemoveBewerking(skip));
                 }
 
+                if (taskf.Count > 1)
+                {
+                    new MethodsForm(taskf).ShowDialog();
+                }
+                else
+                    await Task.WhenAll(taskf.Select(x => x.Value));
                 //if (done > 0)
                 //{
                 //    string xvalue = done == 1 ? "productie" : "producties";
@@ -1610,13 +1630,20 @@ namespace Controls
                             bws.AddRange(xbws);
                     }
                 else bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToList();
-
+                var taskf = new Dictionary<string, Task<bool>>();
                 for (var i = 0; i < bws.Count; i++)
                 {
                     var bw = bws[i];
                     if (bw == null) continue;
-                    await bw.Undo();
+                    taskf.Add($@"'{bw.Path}' wordt terug gezet...", bw.Undo());
                 }
+
+                if (taskf.Count > 1)
+                {
+                    new MethodsForm(taskf).ShowDialog();
+                }
+                else
+                    await Task.WhenAll(taskf.Select(x => x.Value));
             }
         }
 
@@ -1642,16 +1669,22 @@ namespace Controls
                     var dc = new DatumChanger();
                     if (dc.ShowDialog(datum,msg) == DialogResult.OK)
                     {
+                        var xdic = new Dictionary<string, Task<bool>>();
                         foreach (var form in items)
                         {
                             var change = $"[{form.ProductieNr}|{form.ArtikelNr}] Leverdatum gewijzigd!\n" +
                                          $"Van: {form.LeverDatum:dd MMMM yyyy HH:mm} uur\n" +
                                          $"Naar: {dc.SelectedValue:dd MMMM yyyy HH:mm} uur";
                             form.LeverDatum = dc.SelectedValue;
-                            await form.UpdateForm(true, false, null, change);
+                            xdic.Add(change, form.UpdateForm(true, false, null, change));
                         }
-                    }
 
+                        if (xdic.Count == 1)
+                            await Task.WhenAll(xdic.Select(x => x.Value));
+                        else if (xdic.Count > 1)
+                            new MethodsForm(xdic).ShowDialog();
+
+                    }
                     dc.Dispose();
                 }
                 catch (Exception e)
@@ -1673,14 +1706,19 @@ namespace Controls
                     var dc = new DatumChanger();
                     if (dc.ShowDialog(datum, msg) == DialogResult.OK)
                     {
+                        var xdic = new Dictionary<string, Task<bool>>();
                         foreach (var form in items)
                         {
                             var change = $"[{form.ProductieNr}|{form.ArtikelNr}] {form.Naam} Leverdatum gewijzigd!\n" +
                                          $"Van: {form.LeverDatum:dd MMMM yyyy HH:mm} uur\n" +
                                          $"Naar: {dc.SelectedValue:dd MMMM yyyy HH:mm} uur";
                             form.LeverDatum = dc.SelectedValue;
-                            await form.UpdateBewerking(null, change);
+                            xdic.Add(change,form.UpdateBewerking(null, change));
                         }
+                        if (xdic.Count == 1)
+                            await Task.WhenAll(xdic.Select(x => x.Value));
+                        else if (xdic.Count > 1)
+                            new MethodsForm(xdic).ShowDialog();
                     }
 
                     dc.Dispose();
@@ -1704,14 +1742,19 @@ namespace Controls
             var dc = new AantalChanger();
             if (dc.ShowDialog(aantal, msg) == DialogResult.OK)
             {
+                var xdic = new Dictionary<string, Task<bool>>();
                 foreach (var form in prods)
                 {
                     var change = $"[{form.ProductieNr}|{form.ArtikelNr}] Aantal gewijzigd!\n" +
                                  $"Van: {form.Aantal}\n" +
                                  $"Naar: {dc.Aantal}";
                     form.Aantal = dc.Aantal;
-                    await form.UpdateForm(true, false, null, change);
+                    xdic.Add(change, form.UpdateForm(true, false, null, change));
                 }
+                if (xdic.Count == 1)
+                    await Task.WhenAll(xdic.Select(x => x.Value));
+                else if (xdic.Count > 1)
+                    new MethodsForm(xdic).ShowDialog();
             }
         }
 
@@ -1735,6 +1778,8 @@ namespace Controls
                             await form.UpdateForm(false, false, null,
                                 $"[{form.ProductieNr}, {form.ArtikelNr}] {form.Naam} Notitie Gewijzigd");
                         }
+
+                        break;
                     }
                 }
                 catch (Exception e)
@@ -1760,6 +1805,8 @@ namespace Controls
                             bew.Note = xtxtform.Notitie;
                             await bew.UpdateBewerking(null,$"[{bew.ProductieNr}, {bew.ArtikelNr}] {bew.Naam} Notitie Gewijzigd");
                         }
+
+                        break;
                     }
                 }
                 catch (Exception e)

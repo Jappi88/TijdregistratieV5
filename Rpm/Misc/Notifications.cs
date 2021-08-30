@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Rpm.Controls;
 using Rpm.Mailing;
@@ -43,40 +44,39 @@ namespace Rpm.Misc
        /// <param name="parent">De scherm die de notificatie toont</param>
        /// <param name="closed">Een event die je kan koppelen als de notificatie is afgesloten</param>
         public static void Alert(this string msg, string title, MsgType type, Form parent, FormClosedEventHandler closed = null)
-        {
-            new Thread(() =>
-            {
-                //if (Application.OpenForms.Count == 0) return;
-                //var visibleform = Application.OpenForms["Mainform"];
-                try
-                {
-                    parent?.BeginInvoke(new MethodInvoker(() =>
-                    {
-                        try
-                        {
-                            var frm = new Form_Alert();
-                            if (closed != null)
-                                frm.FormClosed += closed;
-                            frm.FormClosed += MessageClosed;
-                            //_messages.Add(frm);
-                            frm.showAlert(msg, title, type);
-                            // frm.MdiParent = parent;
-                            frm.Show();
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e);
-                        }
+       {
+           Task.Factory.StartNew(() =>
+           {
+               if (Application.OpenForms.Count == 0) return;
+               var visibleform = Application.OpenForms[Application.OpenForms.Count -1];
+               try
+               {
+                   visibleform?.BeginInvoke(new MethodInvoker(() =>
+                   {
+                       try
+                       {
+                           var frm = new Form_Alert();
+                           if (closed != null)
+                               frm.FormClosed += closed;
+                           frm.FormClosed += MessageClosed;
+                           //_messages.Add(frm);
+                           frm.showAlert(msg, title, type);
+                           // frm.MdiParent = parent;
+                           frm.Show();
+                       }
+                       catch (Exception e)
+                       {
+                           Console.WriteLine(e);
+                       }
+                   }));
+               }
+               catch (Exception e)
+               {
+                   Console.WriteLine(e);
+               }
 
-                    }));
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-
-            }).Start();
-        }
+           });
+       }
 
         private static void MessageClosed(object sender, FormClosedEventArgs args)
         {

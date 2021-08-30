@@ -220,12 +220,6 @@
     <Compile Include="Controls\MateriaalUI.Designer.cs">
       <DependentUpon>MateriaalUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NotificationUI.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\NotificationUI.Designer.cs">
-      <DependentUpon>NotificationUI.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\ProductieListControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -387,6 +381,12 @@
     </Compile>
     <Compile Include="Forms\MateriaalVerbruikForm.Designer.cs">
       <DependentUpon>MateriaalVerbruikForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MethodsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MethodsForm.Designer.cs">
+      <DependentUpon>MethodsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\NewFilterEntry.cs">
       <SubType>Form</SubType>
@@ -797,7 +797,7 @@
     <Compile Include="Rpm\Productie\PersoneelTaken.cs" />
     <Compile Include="Rpm\Productie\ProductieFormulier.cs" />
     <Compile Include="Rpm\Productie\ProductieProvider.cs" />
-    <Compile Include="Rpm\Productie\Queues.cs" />
+    <Compile Include="Rpm\Misc\Queues.cs" />
     <Compile Include="Rpm\Productie\Rooster.cs" />
     <Compile Include="Rpm\Productie\SkillEntry.cs" />
     <Compile Include="Rpm\Productie\SkillTree.cs" />
@@ -867,9 +867,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\MateriaalUI.resx">
       <DependentUpon>MateriaalUI.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\NotificationUI.resx">
-      <DependentUpon>NotificationUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ProductieListControl.resx">
       <DependentUpon>ProductieListControl.cs</DependentUpon>
@@ -949,6 +946,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MateriaalVerbruikForm.resx">
       <DependentUpon>MateriaalVerbruikForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MethodsForm.resx">
+      <DependentUpon>MethodsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NewFilterEntry.resx">
       <DependentUpon>NewFilterEntry.cs</DependentUpon>
@@ -1245,6 +1245,11 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\PauseHot_26935.png" />
+    <None Include="Resources\pause-play-blue_32x321.png" />
+    <None Include="Resources\pause-play-blue_32x32.png" />
+    <None Include="Resources\Note_msgIcon_32x32.png" />
+    <None Include="Resources\exclamation_warning_24x24.png" />
     <None Include="Resources\delete_adres_icon_32x32.png" />
     <None Include="Resources\Email_30017.png" />
     <None Include="Resources\email-send256_25228.png" />

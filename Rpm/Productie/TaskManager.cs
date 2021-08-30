@@ -28,7 +28,7 @@ namespace Rpm.Productie
 
         public int Id => GetHashCode();
 
-        public RemoteMessage[] Results { get; set; }
+        public List<RemoteMessage> Results { get; set; }
 
         public void Cancel()
         {
@@ -139,7 +139,7 @@ namespace Rpm.Productie
             }
         }
 
-        private async Task<RemoteMessage[]> UpdateProductieFromMessage(RemoteMessage[] messages)
+        private async Task<List<RemoteMessage>> UpdateProductieFromMessage(RemoteMessage[] messages)
         {
             var xreturn = messages.ToList();
             foreach (var message in messages)
@@ -277,7 +277,7 @@ namespace Rpm.Productie
                 }
             }
 
-            return xreturn.ToArray();
+            return xreturn;
         }
     }
 }

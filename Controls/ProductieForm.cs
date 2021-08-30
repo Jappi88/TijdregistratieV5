@@ -23,12 +23,14 @@ namespace Controls
         public ProductieForm()
         {
             InitializeComponent();
-            //SetStyle(
-            //    ControlStyles.UserPaint |
-            //    ControlStyles.AllPaintingInWmPaint |
-            //    ControlStyles.OptimizedDoubleBuffer |
-            //    ControlStyles.SupportsTransparentBackColor,
-            //    true);
+            SetStyle(
+                ControlStyles.UserPaint |
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.SupportsTransparentBackColor,
+                true);
+            xnotepanel.Visible = true;
+            xnotepanel.Height = 32;
         }
 
         public ProductieFormulier Formulier { get; set; }
@@ -198,6 +200,18 @@ namespace Controls
                 if (b != null)
                 {
                     _bewerking = b;
+                    if (!string.IsNullOrEmpty(b.Note?.Notitie))
+                    {
+                        xnoteButton.Text = $@"LET OP! Er is een notitie geplaatst op {b.Note.DatumToegevoegd} door '{b.Note.Naam}'";
+                        xnotepanel.Visible = true;
+                        xnoteTextbox.Text = b.Note.Notitie.Trim();
+                    }
+                    else
+                    {
+                        xnoteButton.Text = $@"LET OP! Er is een notitie geplaatst!";
+                        xnoteTextbox.Text = "";
+                        xnotepanel.Visible = false;
+                    }
                     var xmeldgereed = mainMenu1.GetMenuButton("xmeldgereed");
                     if (xmeldgereed != null)
                     {
@@ -585,6 +599,11 @@ namespace Controls
             if (bew?.Parent == null) return;
             var xafk = new AfkeurForm(bew.Parent);
             xafk.ShowDialog();
+        }
+
+        private void xnoteButton_Click(object sender, EventArgs e)
+        {
+            xnotepanel.Height = xnotepanel.Height > 100 ? 32 : 125;
         }
     }
 }

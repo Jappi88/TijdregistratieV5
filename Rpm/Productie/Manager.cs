@@ -1413,7 +1413,7 @@ namespace Rpm.Productie
         #endregion Timers & Auto Productie detection
         private void _tasks_OnRunInstanceComplete(object sender, EventArgs e)
         {
-            if (sender is not IQueue {Results: {Length: > 0}} instance) return;
+            if (sender is not IQueue {Results: {Count: > 0}} instance) return;
             foreach (var rm in instance.Results)
                 RemoteMessage(rm);
         }
