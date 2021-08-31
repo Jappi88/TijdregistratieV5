@@ -23,22 +23,18 @@ namespace Rpm.Productie
 
         public Klus(Personeel pers, Bewerking bew, string werkPlek) : this()
         {
-            if (bew == null || werkPlek == null || pers == null)
-                throw new NullReferenceException();
-            Naam = bew.Naam;
-            ArtikelNr = bew.ArtikelNr;
-            Omschrijving = bew.Omschrijving;
-            ProductieNr = bew.ProductieNr;
+            Naam = bew?.Naam;
+            ArtikelNr = bew?.ArtikelNr;
+            Omschrijving = bew?.Omschrijving;
+            ProductieNr = bew?.ProductieNr;
             WerkPlek = werkPlek;
-            Status = bew.State;
-            PersoneelNaam = pers.PersoneelNaam;
-            Tijden.WerkRooster = pers.WerkRooster;
+            Status = bew?.State?? ProductieState.Gestopt;
+            PersoneelNaam = pers?.PersoneelNaam;
+            Tijden.WerkRooster = pers?.WerkRooster;
         }
 
-        public Klus(Personeel pers, WerkPlek werkPlek) : this(pers, werkPlek.Werk, werkPlek.Naam)
+        public Klus(Personeel pers, WerkPlek werkPlek) : this(pers, werkPlek?.Werk, werkPlek?.Naam)
         {
-            if (werkPlek == null)
-                throw new NullReferenceException();
         }
 
         public string PersoneelNaam { get; set; }

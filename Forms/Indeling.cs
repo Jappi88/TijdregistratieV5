@@ -370,8 +370,7 @@ namespace Forms
                 WerktAan = bew.Path
             };
 
-            var xshift = xnaampersoneel.Tag as Personeel;
-            if (xshift != null && string.Equals(xnaampersoneel.Text.Trim(), xshift.PersoneelNaam.Trim(),
+            if (xnaampersoneel.Tag is Personeel xshift && string.Equals(xnaampersoneel.Text.Trim(), xshift.PersoneelNaam.Trim(),
                 StringComparison.CurrentCultureIgnoreCase))
             {
                 shift.WerkRooster = xshift.WerkRooster;
@@ -471,10 +470,12 @@ namespace Forms
         {
             if (shift?.WerktAan == null)
                 return false;
-            var werk = Formulier.Bewerkingen.FirstOrDefault(x => x.Path.ToLower() == shift.WerktAan.ToLower());
+            var werk = Formulier.Bewerkingen.FirstOrDefault(x =>
+                string.Equals(x.Path, shift.WerktAan, StringComparison.CurrentCultureIgnoreCase));
             if (werk != null)
             {
-                var wp = werk.WerkPlekken.FirstOrDefault(x => x.Naam.ToLower() == shift.Werkplek.ToLower());
+                var wp = werk.WerkPlekken.FirstOrDefault(x =>
+                    string.Equals(x.Naam, shift.Werkplek, StringComparison.CurrentCultureIgnoreCase));
                 if (wp == null)
                 {
                     wp = new WerkPlek(shift, shift.Werkplek, werk);
@@ -482,7 +483,8 @@ namespace Forms
                 }
                 else
                 {
-                    if(!wp.Personen.Any(x=> string.Equals(x.PersoneelNaam, shift.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase)))
+                    if (!wp.Personen.Any(x => string.Equals(x.PersoneelNaam, shift.PersoneelNaam,
+                        StringComparison.CurrentCultureIgnoreCase)))
                         wp.AddPersoon(shift, werk);
                 }
 
@@ -542,10 +544,10 @@ namespace Forms
                     return pers.SelectedPersoneel;
                 }
 
-            return new Personeel[0];
+            return Array.Empty<Personeel>();
         }
 
-        private Timer _textTimer = new Timer() { Interval = 1000 };
+        private readonly Timer _textTimer = new Timer() { Interval = 2000 };
 
         private void _textTimer_Tick(object sender, EventArgs e)
         {
@@ -553,16 +555,16 @@ namespace Forms
             UpdatePersoneelNaamTextbox();
         }
 
-        private void UpdatePersoneelNaamTextbox()
+        private async void UpdatePersoneelNaamTextbox()
         {
-            this.BeginInvoke(new Action(async () =>
+            var pers = await Manager.Database.GetPersoneel(xnaampersoneel.Text);
+            if (pers != null)
             {
-                var pers = await Manager.Database.GetPersoneel(xnaampersoneel.Text);
-                if (pers != null)
-                {
+                if (this.InvokeRequired)
+                    this.Invoke(new Action(() => SetFields(pers, true, true)));
+                else
                     SetFields(pers, true, true);
-                }
-            }));
+            }
         }
 
         private void xnaampersoneel_TextChanged(object sender, EventArgs e)
@@ -941,7 +943,7 @@ namespace Forms
                 if (xklus.ShowDialog() == DialogResult.OK)
                 {
                     WerkPlek wp = bew.WerkPlekken.FirstOrDefault(x => 
-                    string.Equals(x.Naam, per.Werkplek, StringComparison.CurrentCultureIgnoreCase));
+                    string.Equals(x.Naam, xklus.SelectedKlus.WerkPlek, StringComparison.CurrentCultureIgnoreCase));
                     LoadWerkPlekken(wp);
                     //LoadShifts();
                     xshiftlist.SelectedObject = per;
@@ -1166,9 +1168,63 @@ namespace Forms
             }
         }
 
-        private void xnaampersoneel_KeyDown(object sender, KeyEventArgs e)
+        private void xwerkplekken_ModelCanDrop(object sender, ModelDropEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter) xvoegindeling_Click(sender, EventArgs.Empty);
+            if (e.TargetModel is WerkPlek wp)
+            {
+                var pers = e.SourceModels.Cast<Personeel>().ToArray();
+                foreach (var per in pers)
+                    if (string.Equals(per.Werkplek, wp.Naam, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        e.Effect = DragDropEffects.None;
+                        return;
+                    }
+
+                e.Effect = DragDropEffects.Move;
+            }
+            else e.Effect = DragDropEffects.None;
+        }
+
+        private void xwerkplekken_ModelDropped(object sender, ModelDropEventArgs e)
+        {
+            if (e.TargetModel is WerkPlek wp)
+            {
+                var pers = e.SourceModels.Cast<Personeel>().ToArray();
+                foreach (var per in pers)
+                {
+                    if (string.Equals(per.Werkplek, wp.Naam, StringComparison.CurrentCultureIgnoreCase))
+                        continue;
+                   
+                    
+                    if (wp.Personen.Any(x =>
+                        string.Equals(per.PersoneelNaam, x.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase)))
+                    {
+                        var result = XMessageBox.Show($"'{per.PersoneelNaam}' bestaat al op '{wp.Naam}'!\n\n" + 
+                                                      $@"Zou je {per.PersoneelNaam} willen overschrijven?",$"{per.PersoneelNaam} vervangen op {wp.Naam}",
+                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                        if (result == DialogResult.Cancel) return;
+                        if (result == DialogResult.No)
+                            continue;
+                    }
+                    var oldwp = GetWerkPlek(per, false);
+                    Klus klus = null;
+                    if (oldwp != null)
+                    {
+                        oldwp.RemovePersoon(per.PersoneelNaam);
+                        wp.RemovePersoon(per.PersoneelNaam);
+                        per.WerktAanKlus(oldwp.Path, out klus);
+                    }
+                    per.Werkplek = wp.Naam;
+                    klus ??= new Klus(per, wp);
+                    per.ReplaceKlus(klus);
+                    klus.WerkPlek = wp.Naam;
+                    wp.AddPersoon(per, wp.Werk);
+                }
+
+                e.RefreshObjects();
+                xwerkplekken.SelectedObject = wp;
+                xwerkplekken.SelectedItem?.EnsureVisible();
+            }
         }
     }
 }

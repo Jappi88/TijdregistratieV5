@@ -189,6 +189,7 @@
             this.xwerkplekken.AllColumns.Add(this.xrooster);
             this.xwerkplekken.AllColumns.Add(this.xgemaaktcol);
             this.xwerkplekken.AllColumns.Add(this.xtijdgewerktcol);
+            this.xwerkplekken.AllowDrop = true;
             this.xwerkplekken.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -202,6 +203,7 @@
             this.xwerkplekken.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xwerkplekken.FullRowSelect = true;
             this.xwerkplekken.HideSelection = false;
+            this.xwerkplekken.IsSimpleDropSink = true;
             this.xwerkplekken.LargeImageList = this.xwerkplekimages;
             this.xwerkplekken.Location = new System.Drawing.Point(4, 53);
             this.xwerkplekken.Name = "xwerkplekken";
@@ -217,6 +219,8 @@
             this.xwerkplekken.UseTranslucentSelection = true;
             this.xwerkplekken.View = System.Windows.Forms.View.Details;
             this.xwerkplekken.CellToolTipShowing += new System.EventHandler<BrightIdeasSoftware.ToolTipShowingEventArgs>(this.xwerkplekken_CellToolTipShowing);
+            this.xwerkplekken.ModelCanDrop += new System.EventHandler<BrightIdeasSoftware.ModelDropEventArgs>(this.xwerkplekken_ModelCanDrop);
+            this.xwerkplekken.ModelDropped += new System.EventHandler<BrightIdeasSoftware.ModelDropEventArgs>(this.xwerkplekken_ModelDropped);
             this.xwerkplekken.SelectedIndexChanged += new System.EventHandler(this.xwerkplekken_SelectedIndexChanged);
             // 
             // xnaamcol
@@ -364,7 +368,6 @@
             this.xnaampersoneel.Name = "xnaampersoneel";
             this.xnaampersoneel.Size = new System.Drawing.Size(299, 29);
             this.xnaampersoneel.TabIndex = 0;
-            this.xnaampersoneel.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xnaampersoneel_KeyDown);
             // 
             // label2
             // 
@@ -561,6 +564,7 @@
             this.xshiftlist.AllColumns.Add(this.olvColumn3);
             this.xshiftlist.AllColumns.Add(this.olvColumn6);
             this.xshiftlist.AllColumns.Add(this.olvColumn4);
+            this.xshiftlist.AllowDrop = true;
             this.xshiftlist.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -578,6 +582,7 @@
             this.xshiftlist.FullRowSelect = true;
             this.xshiftlist.HeaderWordWrap = true;
             this.xshiftlist.HideSelection = false;
+            this.xshiftlist.IsSimpleDragSource = true;
             this.xshiftlist.LargeImageList = this.imageList1;
             this.xshiftlist.Location = new System.Drawing.Point(2, 101);
             this.xshiftlist.Name = "xshiftlist";

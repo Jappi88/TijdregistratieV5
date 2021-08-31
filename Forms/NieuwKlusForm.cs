@@ -13,10 +13,10 @@ namespace Forms
     {
         private readonly bool _save;
 
-        private Klus _origklus = new();
+        private Klus _origklus;
         private string _werkplek;
         private Personeel[] OrigPersoon;
-        public Klus SelectedKlus = new();
+        public Klus SelectedKlus;
         public bool EditMode { get; private set; }
 
         public NieuwKlusForm(ProductieFormulier formulier, Personeel pers, bool save,bool editmode, Bewerking bew = null, string werkplek = null)
@@ -24,7 +24,7 @@ namespace Forms
             InitializeComponent();
             EditMode = editmode;
             _save = save; 
-            _origklus = pers.CurrentKlus() ?? new Klus();
+            _origklus = pers.CurrentKlus() ?? new Klus(pers, bew,werkplek);
             SelectedKlus = _origklus.CreateCopy();
             InitFields(formulier, new[] {pers}, bew, werkplek);
         }
@@ -35,7 +35,8 @@ namespace Forms
             InitializeComponent();
             EditMode = editmode;
             _save = save;
-            _origklus = pers.FirstOrDefault()?.CurrentKlus() ?? new Klus();
+            var xpers = pers.FirstOrDefault();
+            _origklus = xpers?.CurrentKlus() ?? new Klus(xpers, bew, werkplek);
             SelectedKlus = _origklus.CreateCopy();
             InitFields(formulier, pers, bew, werkplek);
         }
@@ -216,6 +217,7 @@ namespace Forms
                 var bewerking = pair.Bewerking;
                 var wp = GetWerkPlek(_origklus.WerkPlek, bewerking, false);
                 var xpersonen = new List<Personeel>();
+                Rooster rooster = Persoon.Length == 1 ? Persoon[0].WerkRooster : wp.Tijden.WerkRooster;
                 foreach (var xpers in Persoon)
                 {
                     var xklus = SelectedKlus.CreateCopy();
@@ -250,26 +252,37 @@ namespace Forms
                         if (bewerking == null)
                             continue;
                     }
-
+                    //We gaan eerst kijken of de personen zich ook in een andere werkplek zitten.
+                    //Met editmode doen we de dezelfde personen gewoon wijzigen. Dus verwijderen van de oude werkplek.
+                    //Zonder editmode doen we dezelfde personen op een andere werkplek gewoon op inactief zetten
                     if (!string.Equals(_origklus.WerkPlek, xklus.WerkPlek,
                         StringComparison.CurrentCultureIgnoreCase))
                     {
                         if (wp != null)
                         {
                             var xcurpers = wp.Personen.FirstOrDefault(x=> string.Equals(x.PersoneelNaam, xpers.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase));
-                            var klus = xcurpers?.Klusjes.GetKlus(wp.Path);
-                            klus?.ZetActief(false, bewerking.State == ProductieState.Gestart);
-                            //wp.Personen.Remove(xpers);
-                            //xpers.Klusjes.RemoveAll(x =>
-                            //    string.Equals(x.Path, wp.Path, StringComparison.CurrentCultureIgnoreCase));
-                            //dbpers.Klusjes.RemoveAll(x =>
-                            //    string.Equals(x.Path, wp.Path, StringComparison.CurrentCultureIgnoreCase));
-                            if (wp.Personen.Count == 0 && wp.TijdGewerkt <= 0 && wp.AantalGemaakt == 0)
+                            if (EditMode)
                             {
-                                string path = wp.Path;
-                                bewerking.WerkPlekken.Remove(wp);
-                                dbpers?.Klusjes.RemoveAll(x =>
-                                string.Equals(x.Path, path, StringComparison.CurrentCultureIgnoreCase));
+                                wp.Personen.Remove(xpers);
+                                var xwp = wp;
+                                xpers.Klusjes.RemoveAll(x =>
+                                    string.Equals(x.Path, xwp.Path, StringComparison.CurrentCultureIgnoreCase));
+                                dbpers.Klusjes.RemoveAll(x =>
+                                    string.Equals(x.Path, xwp.Path, StringComparison.CurrentCultureIgnoreCase));
+                                wp = xwp;
+                            }
+                            else
+                            {
+                                var klus = xcurpers?.Klusjes.GetKlus(wp.Path);
+                                klus?.ZetActief(false, bewerking.State == ProductieState.Gestart);
+
+                                if (wp.Personen.Count == 0 && wp.TijdGewerkt <= 0 && wp.AantalGemaakt == 0)
+                                {
+                                    string path = wp.Path;
+                                    bewerking.WerkPlekken.Remove(wp);
+                                    dbpers?.Klusjes.RemoveAll(x =>
+                                        string.Equals(x.Path, path, StringComparison.CurrentCultureIgnoreCase));
+                                }
                             }
                         }
 
@@ -292,7 +305,8 @@ namespace Forms
                            MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                             continue;
                     }
-                   
+
+                    xklus.Tijden.WerkRooster = rooster;
                     xpers.ReplaceKlus(xklus);
                     wp.AddPersoon(xpers, bewerking);
                     wp.Tijden.SetUren(xklus.Tijden.Uren.ToArray(), bewerking.State == ProductieState.Gestart,

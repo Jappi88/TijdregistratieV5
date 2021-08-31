@@ -478,10 +478,8 @@ namespace Rpm.Productie
 
         public bool RemovePersoon(string naam)
         {
-            var per = Personen?.FirstOrDefault(x => string.Equals(x.PersoneelNaam, naam, StringComparison.CurrentCultureIgnoreCase));
-            if (per != null)
-                return Personen.Remove(per);
-            return false;
+            return Personen?.RemoveAll(x =>
+                string.Equals(x.PersoneelNaam, naam, StringComparison.CurrentCultureIgnoreCase)) > 0;
         }
 
         public override bool Equals(object obj)

@@ -38,6 +38,16 @@ namespace Forms
             UpdateFormText();
         }
 
+        public string Title
+        {
+            get => this.Text;
+            set
+            {
+                this.Text = value;
+                this.Invalidate();
+            }
+        }
+
         public WerktijdChanger(WerkPlek werk):this()
         {
             Werklplek = werk;
@@ -56,15 +66,15 @@ namespace Forms
         {
             if (Werklplek != null)
             {
-                Text = $"Pas werktijden aan voor : {Werklplek.Path}";
+                Text = $@"Wijzig werktijden van: {Werklplek.Path}";
                 
             }
             else if (Klusje != null)
             {
-                Text = $"Pas werktijden aan voor : {Klusje.Path}";
+                Text = $@"Wijzig werktijden van '{Klusje.PersoneelNaam}' op '{Klusje.Path}'";
             }
             if (CurrentRooster != null && CurrentRooster.IsCustom())
-                Text += " [EIGEN ROOSTER]";
+                Text += @" [Aangepaste Rooster]";
             this.Invalidate();
         }
 
