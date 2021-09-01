@@ -50,7 +50,7 @@ namespace Rpm.Misc
                     string.IsNullOrEmpty(PropertyName) ? instance : instance.GetPropValue(PropertyName);
                 if (propertyvalue == null) return false;
                 bool xreturn = ContainsFilter(Value, propertyvalue, FilterType);
-                if (ChildEntries != null && ChildEntries.Count > 0)
+                if (ChildEntries is {Count: > 0})
                 {
                     foreach (var filter in ChildEntries)
                     {

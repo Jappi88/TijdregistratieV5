@@ -44,6 +44,7 @@ namespace Forms
 
         private bool _IsRunning;
         private bool _Cancel;
+
         private async void RunTasks()
         {
             if (_IsRunning) return;
@@ -60,18 +61,14 @@ namespace Forms
                     {
                         item.ImageIndex = 1;
                         listView1.Invalidate();
-                        item.Selected = true;
                         item.EnsureVisible();
-                        if (await task)
-                        {
-                            listView1.Items.RemoveAt(i--);
-                            listView1.Invalidate();
-                        }
-
+                        task.Start();
+                        _ = await task;
+                        listView1.Items.RemoveAt(i--);
+                        listView1.Invalidate();
                     }
-
-                    Invalidate();
                     Application.DoEvents();
+                    this.Select();
                 }
             }
             catch (Exception e)
@@ -86,7 +83,29 @@ namespace Forms
 
         private void xannuleren_Click(object sender, EventArgs e)
         {
-            this.Close();
+            if (CloseTasks())
+                this.Close();
+        }
+
+        private bool CloseTasks()
+        {
+            int count = listView1.Items.Count;
+
+            if (count > 0)
+            {
+                string x1 = count == 1 ? "actie" : "acties";
+                if (XMessageBox.Show(
+                    $"Er staan nog {count} {x1} open!\nDeze scherm sluiten zal alle acties annuleren...\n\n" +
+                    $"Weetje zeker dat je alsnog wilt sluiten?", "Alles Annuleren?", MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning) == DialogResult.No)
+                {
+                    return false;
+                }
+            }
+
+            _Cancel = true;
+            listView1.Items.Clear();
+            return true;
         }
 
         private void xpausestart_Click(object sender, EventArgs e)
@@ -102,10 +121,15 @@ namespace Forms
             {
                 _Cancel = true;
                 xpausestart.Enabled = false;
-                while (_IsRunning)
+                while (true)
                 {
                     Application.DoEvents();
+                    if (!listView1.Items.Cast<ListViewItem>().Select(x => x.Tag as Task<bool>)
+                        .Any(x => x is {Status: TaskStatus.Running}))
+                        break;
                 }
+
+                _IsRunning = false;
                 xpausestart.Enabled = true;
                 xpausestart.Image = Resources.play_button_icon_icons_com_60615;
                 xpausestart.Text = @"Hervat Acties";
@@ -121,20 +145,8 @@ namespace Forms
 
         private void MethodsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            int count = listView1.Items.Count;
-
-            if (count > 0)
-            {
-                string x1 = count == 1 ? "actie" : "acties";
-                if (XMessageBox.Show(
-                    $"Er staan nog {count} {x1} open!\nDeze scherm sluiten zal alle acties annuleren...\n\n" +
-                    $"Weetje zeker dat je alsnog wilt sluiten?", "Alles Annuleren?", MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning) == DialogResult.No)
-                {
-                    e.Cancel = true;
-                    return;
-                }
-            }
+            if (!CloseTasks())
+                e.Cancel = true;
         }
     }
 }

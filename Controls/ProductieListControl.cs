@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xaml;
 using BrightIdeasSoftware;
 using Forms;
 using MetroFramework.Controls;
@@ -68,6 +69,7 @@ namespace Controls
 
         // ReSharper disable once ConvertToAutoProperty
         public ObjectListView ProductieLijst => xproductieLijst;
+        public string ListName { get; set; }
         public bool RemoveCustomItemIfNotValid { get; set; }
         public bool CustomList { get; private set; }
         public List<ProductieFormulier> Producties { get; private set; }
@@ -108,13 +110,13 @@ namespace Controls
         public void InitProductie(List<ProductieFormulier> producties, bool bewerkingen,bool initlist, bool loadproducties, bool reload)
         {
             Producties = producties;
-            InitProductie(bewerkingen, false, true,initlist, loadproducties, reload);
+            InitProductie(bewerkingen, true, true,initlist, loadproducties, reload);
         }
 
         public void InitProductie(List<Bewerking> bewerkingen, bool initlist, bool loadproducties, bool reload)
         {
             Bewerkingen = bewerkingen;
-            InitProductie(true, false, true,initlist, loadproducties, reload);
+            InitProductie(true, true, true,initlist, loadproducties, reload);
         }
 
         public void InitProductie(bool bewerkingen, bool enablefilter, bool customlist,bool initlist, bool loadproducties, bool reload)
@@ -526,15 +528,48 @@ namespace Controls
             return xsearch.Text.ToLower() == "zoeken..." ? "" : xsearch.Text;
         }
 
+        private bool IsAllowd(Bewerking bewerking)
+        {
+            var filters = Manager.Opties.Filters;
+            if (filters is {Count: > 0})
+            {
+                if (filters.Any(xf =>
+                    xf.ListNames.Any(x =>
+                        string.Equals(ListName, x, StringComparison.CurrentCultureIgnoreCase)) &&
+                        xf.IsAllowed(bewerking,ListName)))
+                    return true;
+
+                if (filters.Any(x => x.ListNames.Any(s =>
+                    string.Equals(ListName, s, StringComparison.CurrentCultureIgnoreCase))))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool IsAllowd(ProductieFormulier productie)
+        {
+            var filters = Manager.Opties.Filters;
+            if (filters is { Count: > 0 })
+            {
+                if (productie?.Bewerkingen == null) return false;
+                return productie.Bewerkingen.Any(IsAllowd);
+            }
+
+            return true;
+        }
+
         public void UpdateProductieList(bool reload, bool showwaitui = true)
         {
             if (_loadingproductielist || Manager.Opties == null || !CanLoad) return;
             _loadingproductielist = true;
             this.Invoke(new MethodInvoker(async() =>
             {
+                InitFilterStrips();
+              
                 if (showwaitui)
                     SetWaitUI();
-                
+               
                 try
                 {
                     var selected1 = ProductieLijst.SelectedObject;
@@ -553,10 +588,10 @@ namespace Controls
                             : Producties = await Manager.GetProducties(states, true, !IsBewerkingView);
                         if (!CanLoad) return;
                         if (ValidHandler != null)
-                            xprods = xprods.Where(x => ValidHandler.Invoke(x, GetFilter()))
+                            xprods = xprods.Where(x =>IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
                                 .ToList();
                         else
-                            xprods = xprods.Where(x => x.IsAllowed(GetFilter(), states, true)).ToList();
+                            xprods = xprods.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter(), states, true)).ToList();
                         ProductieLijst.BeginUpdate();
                         ProductieLijst.SetObjects(xprods);
                         ProductieLijst.EndUpdate();
@@ -568,10 +603,10 @@ namespace Controls
                             : Bewerkingen = (await Manager.GetBewerkingen(states, true));
                         if (!CanLoad) return;
                         if (ValidHandler != null)
-                            bws = bws.Where(x => ValidHandler.Invoke(x, GetFilter()))
+                            bws = bws.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
                                 .ToList();
                         else
-                            bws = bws.Where(x => x.IsAllowed(GetFilter())).ToList();
+                            bws = bws.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter())).ToList();
                         ProductieLijst.BeginUpdate();
                         ProductieLijst.SetObjects(bws);
                         ProductieLijst.EndUpdate();
@@ -625,10 +660,10 @@ namespace Controls
 
                 if (!IsBewerkingView)
                 {
-                    bool isvalid;
+                    bool isvalid = IsAllowd(form);
                     if (ValidHandler != null)
-                        isvalid = states.Any(form.IsValidState) && ValidHandler.Invoke(form, filter);
-                    else isvalid = form.IsAllowed(filter, states, true);
+                        isvalid &= states.Any(form.IsValidState) && ValidHandler.Invoke(form, filter);
+                    else isvalid &= form.IsAllowed(filter, states, true);
 
                     var xproducties = ProductieLijst.Objects?.Cast<ProductieFormulier>().ToList();
                     var xform = xproducties?.FirstOrDefault(x =>
@@ -808,10 +843,10 @@ namespace Controls
                 if (form?.Bewerkingen != null && form.Bewerkingen.Length > 0)
                     foreach (var b in form.Bewerkingen)
                     {
-                        bool isvalid;
+                        bool isvalid = IsAllowd(b);
                         if (ValidHandler != null)
-                            isvalid = states.Any(b.IsValidState) && ValidHandler.Invoke(b, filter ?? GetFilter());
-                        else isvalid = states.Any(x => b.IsValidState(x)) && b.IsAllowed(filter ?? GetFilter());
+                            isvalid &= states.Any(b.IsValidState) && ValidHandler.Invoke(b, filter ?? GetFilter());
+                        else isvalid &= states.Any(x => b.IsValidState(x)) && b.IsAllowed(filter ?? GetFilter());
                         var xb = xbewerkingen?.FirstOrDefault(x =>
                             string.Equals(x.Path, b.Path, StringComparison.CurrentCultureIgnoreCase));
                         if (xb == null && isvalid)
@@ -917,11 +952,10 @@ namespace Controls
             try
             {
                 if (!_enableEntryFilter) return;
-                BeginInvoke(new MethodInvoker(() =>
+                if (sender is ProductieListControl xc && string.Equals(xc.ListName, ListName))
                 {
-                    InitFilterStrips();
-                    UpdateProductieList(true);
-                }));
+                    BeginInvoke(new MethodInvoker(() => { UpdateProductieList(true); }));
+                }
             }
             catch (Exception exception)
             {
@@ -937,7 +971,6 @@ namespace Controls
                 BeginInvoke(new MethodInvoker(() =>
                 {
                     if (IsDisposed) return;
-                    InitFilterStrips();
                     UpdateProductieList(true);
                 }));
             }
@@ -976,7 +1009,7 @@ namespace Controls
             }
         }
 
-        private void _manager_OnBewerkingDeleted(object sender, Bewerking bew, string change)
+        private void _manager_OnBewerkingDeleted(object sender, Bewerking bew, string change, bool shownotification)
         {
             if (IsDisposed || Disposing || !IsBewerkingView || !IsLoaded) return;
             try
@@ -1120,12 +1153,15 @@ namespace Controls
                     try
                     {
                         var mainform = Application.OpenForms["MainForm"];
-                        mainform?.BeginInvoke(new MethodInvoker(async () =>
+                        mainform?.BeginInvoke(new Action(async () =>
                         {
+                            var xdic = new Dictionary<string, Task<bool>>();
                             for (var i = 0; i < bws.Length; i++)
                             {
                                 var parent = bws[i].GetParent();
                                 var werk = bws[i];
+                                if (werk == null) continue;
+
                                 if (werk.State != ProductieState.Gestart)
                                 {
                                     var initnew = true;
@@ -1153,7 +1189,7 @@ namespace Controls
                                                 if (!werk.IsBemand || !afzonderlijk)
                                                 {
                                                     var klusui = new NieuwKlusForm(parent, pers.SelectedPersoneel,
-                                                        true,false,
+                                                        true, false,
                                                         werk);
                                                     if (klusui.ShowDialog() != DialogResult.OK)
                                                         return;
@@ -1175,7 +1211,7 @@ namespace Controls
                                                 {
                                                     foreach (var per in pers.SelectedPersoneel)
                                                     {
-                                                        var klusui = new NieuwKlusForm(parent, per, true,false, werk);
+                                                        var klusui = new NieuwKlusForm(parent, per, true, false, werk);
                                                         if (klusui.ShowDialog() != DialogResult.OK)
                                                             break;
                                                         //klusui.Persoon.CopyTo(ref per);
@@ -1199,9 +1235,10 @@ namespace Controls
                                                             {
                                                                 wp.AddPersoon(per, werk);
                                                             }
-                                                            await wp.Werk.UpdateBewerking(null,
-                                                                $"{wp.Path} indeling aangepast",false);
-                                                            werk.CopyTo(ref bws[i]);
+
+                                                            if (await wp.Werk.UpdateBewerking(null,
+                                                                $"{wp.Path} indeling aangepast", false, false))
+                                                                werk.CopyTo(ref bws[i]);
                                                         }
                                                     }
                                                 }
@@ -1212,7 +1249,23 @@ namespace Controls
                                         }
                                     }
 
-                                    werk?.StartProductie(true, initnew);
+                                    if (werk == null) continue;
+                                    var action = new Task<bool>(() => werk.StartProductie(true, initnew).Result);
+                                    xdic.Add($"Starten van '{werk.Path}'...", action);
+                                }
+                            }
+
+                            if (xdic.Count > 1)
+                            {
+                                new MethodsForm(xdic).ShowDialog();
+                            }
+                            else
+                            {
+                                var xaction = xdic.FirstOrDefault();
+                                if (!xaction.IsDefault())
+                                {
+                                    xaction.Value.Start();
+                                   // await xaction.Value;
                                 }
                             }
                         }));
@@ -1225,15 +1278,31 @@ namespace Controls
             }
         }
 
-        private static async void StopBewerkingen(Bewerking[] bws)
+        private static void StopBewerkingen(Bewerking[] bws)
         {
             var count = bws.Length;
             if (count > 0)
             {
-                var save = false;
+                var xdic = new Dictionary<string, Task<bool>>();
                 foreach (var bw in bws)
                     if (bw.State == ProductieState.Gestart)
-                        save |= await bw.StopProductie(true);
+                    {
+                        var action = new Task<bool>(() => bw.StopProductie(true).Result);
+                        xdic.Add($"Stoppen van '{bw.Path}'...", action);
+                    }
+                if (xdic.Count > 1)
+                {
+                    new MethodsForm(xdic).ShowDialog();
+                }
+                else
+                {
+                    var xaction = xdic.FirstOrDefault();
+                    if (!xaction.IsDefault())
+                    {
+                        xaction.Value.Start();
+                        // await xaction.Value;
+                    }
+                }
             }
         }
 
@@ -1576,7 +1645,6 @@ namespace Controls
                 else bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToList();
 
                 if (bws.Count == 0) return;
-                var done = 0;
                 var removed = bws.Any(x => x.State == ProductieState.Verwijderd);
                 var skip = false;
                 if (removed)
@@ -1598,7 +1666,8 @@ namespace Controls
                     var pr = bws[i];
                     if (pr == null)
                         continue;
-                    taskf.Add($"Bewerking '{pr.Path}' wordt verwijderd...", pr.RemoveBewerking(skip));
+                    var action = new Task<bool>(()=> pr.RemoveBewerking(skip).Result); 
+                    taskf.Add($"Bewerking '{pr.Path}' wordt verwijderd...", action);
                 }
 
                 if (taskf.Count > 1)
@@ -1606,7 +1675,14 @@ namespace Controls
                     new MethodsForm(taskf).ShowDialog();
                 }
                 else
-                    await Task.WhenAll(taskf.Select(x => x.Value));
+                {
+                    var xaction = taskf.FirstOrDefault();
+                    if (!xaction.IsDefault())
+                    {
+                        xaction.Value.Start();
+                        await xaction.Value;
+                    }
+                }
                 //if (done > 0)
                 //{
                 //    string xvalue = done == 1 ? "productie" : "producties";
@@ -1635,7 +1711,8 @@ namespace Controls
                 {
                     var bw = bws[i];
                     if (bw == null) continue;
-                    taskf.Add($@"'{bw.Path}' wordt terug gezet...", bw.Undo());
+                    var action = new Task<bool>(() => bw.Undo().Result);
+                    taskf.Add($@"'{bw.Path}' wordt terug gezet...", action);
                 }
 
                 if (taskf.Count > 1)
@@ -1643,7 +1720,14 @@ namespace Controls
                     new MethodsForm(taskf).ShowDialog();
                 }
                 else
-                    await Task.WhenAll(taskf.Select(x => x.Value));
+                {
+                    var xaction = taskf.FirstOrDefault();
+                    if (!xaction.IsDefault())
+                    {
+                        xaction.Value.Start();
+                        await xaction.Value;
+                    }
+                }
             }
         }
 
@@ -1676,11 +1760,19 @@ namespace Controls
                                          $"Van: {form.LeverDatum:dd MMMM yyyy HH:mm} uur\n" +
                                          $"Naar: {dc.SelectedValue:dd MMMM yyyy HH:mm} uur";
                             form.LeverDatum = dc.SelectedValue;
-                            xdic.Add(change, form.UpdateForm(true, false, null, change));
+                            var action = new Task<bool>(() => form.UpdateForm(true, false, null, change).Result);
+                            xdic.Add(change, action);
                         }
 
                         if (xdic.Count == 1)
-                            await Task.WhenAll(xdic.Select(x => x.Value));
+                        {
+                            var xaction = xdic.FirstOrDefault();
+                            if (!xaction.IsDefault())
+                            {
+                                xaction.Value.Start();
+                                await xaction.Value;
+                            }
+                        }
                         else if (xdic.Count > 1)
                             new MethodsForm(xdic).ShowDialog();
 
@@ -1713,10 +1805,19 @@ namespace Controls
                                          $"Van: {form.LeverDatum:dd MMMM yyyy HH:mm} uur\n" +
                                          $"Naar: {dc.SelectedValue:dd MMMM yyyy HH:mm} uur";
                             form.LeverDatum = dc.SelectedValue;
-                            xdic.Add(change,form.UpdateBewerking(null, change));
+                            var action = new Task<bool>(() => form.UpdateBewerking(null, change).Result);
+                            xdic.Add(change, action);
                         }
+
                         if (xdic.Count == 1)
-                            await Task.WhenAll(xdic.Select(x => x.Value));
+                        {
+                            var xaction = xdic.FirstOrDefault();
+                            if (!xaction.IsDefault())
+                            {
+                                xaction.Value.Start();
+                                await xaction.Value;
+                            }
+                        }
                         else if (xdic.Count > 1)
                             new MethodsForm(xdic).ShowDialog();
                     }
@@ -1749,10 +1850,19 @@ namespace Controls
                                  $"Van: {form.Aantal}\n" +
                                  $"Naar: {dc.Aantal}";
                     form.Aantal = dc.Aantal;
-                    xdic.Add(change, form.UpdateForm(true, false, null, change));
+                    var action = new Task<bool>(() => form.UpdateForm(true, false, null, change).Result);
+                    xdic.Add(change, action);
                 }
+
                 if (xdic.Count == 1)
-                    await Task.WhenAll(xdic.Select(x => x.Value));
+                {
+                    var xaction = xdic.FirstOrDefault();
+                    if (!xaction.IsDefault())
+                    {
+                        xaction.Value.Start();
+                        await xaction.Value;
+                    }
+                }
                 else if (xdic.Count > 1)
                     new MethodsForm(xdic).ShowDialog();
             }
@@ -1823,8 +1933,7 @@ namespace Controls
             foreach (var tb in items.Cast<ToolStripMenuItem>())
                 if (tb.Checked)
                 {
-                    var xstate = -1;
-                    if (int.TryParse(tb.Tag.ToString(), out xstate))
+                    if (int.TryParse(tb.Tag.ToString(), out var xstate))
                     {
                         var state = (ViewState) xstate;
                         states.Add(state);
@@ -2088,7 +2197,8 @@ namespace Controls
             {
                 var xitem = new ToolStripMenuItem(f.Name) {Image = Resources.add_1588, Tag = f};
                 menuitem.DropDownItems.Add(xitem);
-                if (f.Enabled)
+                if (f.ListNames.Any(x =>
+                    string.Equals(ListName, x, StringComparison.CurrentCultureIgnoreCase)))
                     AddFilterToolstripItem(f, false);
             }
         }
@@ -2106,9 +2216,12 @@ namespace Controls
                 return;
             }
 
-            if (e.ClickedItem.Tag is Rpm.Misc.Filter filter)
+            if (e.ClickedItem.Tag is Filter filter)
             {
-                filter.Enabled = true;
+                if (filter.ListNames.Any(x =>
+                    string.Equals(ListName, x, StringComparison.CurrentCultureIgnoreCase)))
+                    return;
+                filter.ListNames.Add(ListName);
                 Manager.OnFilterChanged(this);
                 //if (AddFilterToolstripItem(filter, true))
                 //{
@@ -2119,9 +2232,11 @@ namespace Controls
             }
         }
 
-        private bool AddFilterToolstripItem(Rpm.Misc.Filter filter, bool docheck)
+        private bool AddFilterToolstripItem(Filter filter, bool docheck)
         {
-            if (filter.Enabled && docheck) return false;
+            if (filter.ListNames.Any(x =>
+                    string.Equals(ListName, x, StringComparison.CurrentCultureIgnoreCase)) &&
+                docheck) return false;
             var ts = new ToolStripMenuItem(filter.Name) {Image = Resources.delete_1577, Tag = filter};
             ts.Click += Ts_Click;
             xfiltersStrip.Items.Add(ts);
@@ -2130,9 +2245,9 @@ namespace Controls
 
         private void Ts_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripItem {Tag: Rpm.Misc.Filter filter } ts)
+            if (sender is ToolStripItem {Tag: Filter filter } ts)
             {
-                filter.Enabled = false;
+                filter.ListNames.RemoveAll(x => string.Equals(x, ListName, StringComparison.CurrentCultureIgnoreCase));
                 Manager.OnFilterChanged(this);
                 //ts = xfiltersStrip.Items.Cast<ToolStripItem>().FirstOrDefault(x =>
                 //    string.Equals(x.Text, filter.Name, StringComparison.CurrentCultureIgnoreCase));

@@ -47,7 +47,19 @@ namespace Controls
             Various.MenuButton menuButton11 = new Various.MenuButton();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.button1 = new System.Windows.Forms.Button();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.metroTabControl = new MetroFramework.Controls.MetroTabControl();
+            this.tabPage1 = new MetroFramework.Controls.MetroTabPage();
+            this.tabPage2 = new MetroFramework.Controls.MetroTabPage();
+            this.tabPage3 = new MetroFramework.Controls.MetroTabPage();
+            this.tabPage4 = new MetroFramework.Controls.MetroTabPage();
+            this.xspeciaalroosterlabel = new System.Windows.Forms.Panel();
+            this.xtabimages = new System.Windows.Forms.ImageList(this.components);
             this.xspeciaalroosterbutton = new System.Windows.Forms.Button();
+            this.xopennewlijst = new System.Windows.Forms.Button();
             this.xsearchprodnr = new System.Windows.Forms.Button();
             this.xproductieoverzichtb = new System.Windows.Forms.Button();
             this.xchatformbutton = new System.Windows.Forms.Button();
@@ -62,37 +74,26 @@ namespace Controls
             this.xonderbrekeningen = new System.Windows.Forms.Button();
             this.xbehvaardigheden = new System.Windows.Forms.Button();
             this.xbehpersoneel = new System.Windows.Forms.Button();
-            this.panel6 = new System.Windows.Forms.Panel();
             this.xsettingsb = new System.Windows.Forms.Button();
             this.xloginb = new System.Windows.Forms.Button();
             this.xaboutb = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.metroTabControl = new MetroFramework.Controls.MetroTabControl();
-            this.tabPage1 = new MetroFramework.Controls.MetroTabPage();
             this.xproductieListControl1 = new Controls.ProductieListControl();
-            this.tabPage2 = new MetroFramework.Controls.MetroTabPage();
             this.xbewerkingListControl = new Controls.ProductieListControl();
-            this.tabPage3 = new MetroFramework.Controls.MetroTabPage();
             this.werkPlekkenUI1 = new Controls.WerkPlekkenUI();
-            this.tabPage4 = new MetroFramework.Controls.MetroTabPage();
             this.recentGereedMeldingenUI1 = new Controls.RecentGereedMeldingenUI();
-            this.xspeciaalroosterlabel = new System.Windows.Forms.Panel();
-            this.xtabimages = new System.Windows.Forms.ImageList(this.components);
             this.takenManager1 = new Controls.TakenManager();
             this.mainMenu1 = new Controls.MainMenu();
             this.panel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.metroTabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.xspeciaalroosterlabel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -112,6 +113,164 @@ namespace Controls
             this.toolTip1.SetToolTip(this.button1, "Maak nieuwe productie aan");
             this.button1.UseVisualStyleBackColor = true;
             // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.xopennewlijst);
+            this.panel6.Controls.Add(this.xsearchprodnr);
+            this.panel6.Controls.Add(this.xproductieoverzichtb);
+            this.panel6.Controls.Add(this.xchatformbutton);
+            this.panel6.Controls.Add(this.xallenotities);
+            this.panel6.Controls.Add(this.xsendemail);
+            this.panel6.Controls.Add(this.xupdateallform);
+            this.panel6.Controls.Add(this.xmateriaalverbruikb);
+            this.panel6.Controls.Add(this.xupdateb);
+            this.panel6.Controls.Add(this.xoverzicht);
+            this.panel6.Controls.Add(this.xlogbook);
+            this.panel6.Controls.Add(this.xdbbewerkingen);
+            this.panel6.Controls.Add(this.xonderbrekeningen);
+            this.panel6.Controls.Add(this.xbehvaardigheden);
+            this.panel6.Controls.Add(this.xbehpersoneel);
+            this.panel6.Controls.Add(this.xsettingsb);
+            this.panel6.Controls.Add(this.xloginb);
+            this.panel6.Controls.Add(this.xaboutb);
+            this.panel6.Controls.Add(this.pictureBox2);
+            this.panel6.Controls.Add(this.pictureBox1);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel6.Location = new System.Drawing.Point(0, 0);
+            this.panel6.Name = "panel6";
+            this.panel6.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
+            this.panel6.Size = new System.Drawing.Size(1147, 43);
+            this.panel6.TabIndex = 25;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(0, 0);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 0;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(0, 0);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 0;
+            this.button3.Text = "button3";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(0, 0);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 0;
+            this.button4.Text = "button4";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // metroTabControl
+            // 
+            this.metroTabControl.AllowDrop = true;
+            this.metroTabControl.Controls.Add(this.tabPage1);
+            this.metroTabControl.Controls.Add(this.tabPage2);
+            this.metroTabControl.Controls.Add(this.tabPage3);
+            this.metroTabControl.Controls.Add(this.tabPage4);
+            this.metroTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.metroTabControl.Location = new System.Drawing.Point(40, 97);
+            this.metroTabControl.Name = "metroTabControl";
+            this.metroTabControl.SelectedIndex = 1;
+            this.metroTabControl.ShowToolTips = true;
+            this.metroTabControl.Size = new System.Drawing.Size(1069, 462);
+            this.metroTabControl.Style = MetroFramework.MetroColorStyle.Blue;
+            this.metroTabControl.TabIndex = 28;
+            this.metroTabControl.UseSelectable = true;
+            this.metroTabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.AutoScroll = true;
+            this.tabPage1.Controls.Add(this.xproductieListControl1);
+            this.tabPage1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabPage1.HorizontalScrollbar = true;
+            this.tabPage1.HorizontalScrollbarBarColor = true;
+            this.tabPage1.HorizontalScrollbarHighlightOnWheel = false;
+            this.tabPage1.HorizontalScrollbarSize = 10;
+            this.tabPage1.Location = new System.Drawing.Point(4, 38);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Size = new System.Drawing.Size(1061, 420);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Producties";
+            this.tabPage1.VerticalScrollbar = true;
+            this.tabPage1.VerticalScrollbarBarColor = true;
+            this.tabPage1.VerticalScrollbarHighlightOnWheel = false;
+            this.tabPage1.VerticalScrollbarSize = 10;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.xbewerkingListControl);
+            this.tabPage2.HorizontalScrollbarBarColor = true;
+            this.tabPage2.HorizontalScrollbarHighlightOnWheel = false;
+            this.tabPage2.HorizontalScrollbarSize = 10;
+            this.tabPage2.Location = new System.Drawing.Point(4, 38);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Size = new System.Drawing.Size(1061, 420);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Bewerkingen";
+            this.tabPage2.VerticalScrollbarBarColor = true;
+            this.tabPage2.VerticalScrollbarHighlightOnWheel = false;
+            this.tabPage2.VerticalScrollbarSize = 10;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tabPage3.Controls.Add(this.werkPlekkenUI1);
+            this.tabPage3.HorizontalScrollbarBarColor = true;
+            this.tabPage3.HorizontalScrollbarHighlightOnWheel = false;
+            this.tabPage3.HorizontalScrollbarSize = 10;
+            this.tabPage3.Location = new System.Drawing.Point(4, 38);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(1061, 420);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Werk Plaatsen";
+            this.tabPage3.VerticalScrollbarBarColor = true;
+            this.tabPage3.VerticalScrollbarHighlightOnWheel = false;
+            this.tabPage3.VerticalScrollbarSize = 10;
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.recentGereedMeldingenUI1);
+            this.tabPage4.HorizontalScrollbarBarColor = true;
+            this.tabPage4.HorizontalScrollbarHighlightOnWheel = false;
+            this.tabPage4.HorizontalScrollbarSize = 10;
+            this.tabPage4.Location = new System.Drawing.Point(4, 38);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(1061, 420);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Recente Gereedmeldingen";
+            this.tabPage4.VerticalScrollbarBarColor = true;
+            this.tabPage4.VerticalScrollbarHighlightOnWheel = false;
+            this.tabPage4.VerticalScrollbarSize = 10;
+            // 
+            // xspeciaalroosterlabel
+            // 
+            this.xspeciaalroosterlabel.Controls.Add(this.xspeciaalroosterbutton);
+            this.xspeciaalroosterlabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.xspeciaalroosterlabel.Location = new System.Drawing.Point(0, 43);
+            this.xspeciaalroosterlabel.Name = "xspeciaalroosterlabel";
+            this.xspeciaalroosterlabel.Size = new System.Drawing.Size(1147, 54);
+            this.xspeciaalroosterlabel.TabIndex = 29;
+            this.xspeciaalroosterlabel.Visible = false;
+            // 
+            // xtabimages
+            // 
+            this.xtabimages.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("xtabimages.ImageStream")));
+            this.xtabimages.TransparentColor = System.Drawing.Color.Transparent;
+            this.xtabimages.Images.SetKeyName(0, "page_document_16748_128_128.png");
+            this.xtabimages.Images.SetKeyName(1, "operation.png");
+            this.xtabimages.Images.SetKeyName(2, "iconfinder-technologymachineelectronic32_32.png");
+            this.xtabimages.Images.SetKeyName(3, "ic_done_all_128_28243.png");
+            // 
             // xspeciaalroosterbutton
             // 
             this.xspeciaalroosterbutton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -130,6 +289,25 @@ namespace Controls
             this.toolTip1.SetToolTip(this.xspeciaalroosterbutton, "Wijzig rooster");
             this.xspeciaalroosterbutton.UseVisualStyleBackColor = true;
             this.xspeciaalroosterbutton.Click += new System.EventHandler(this.xspeciaalroosterbutton_Click);
+            // 
+            // xopennewlijst
+            // 
+            this.xopennewlijst.BackColor = System.Drawing.Color.Transparent;
+            this.xopennewlijst.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xopennewlijst.FlatAppearance.BorderSize = 0;
+            this.xopennewlijst.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
+            this.xopennewlijst.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xopennewlijst.Image = global::ProductieManager.Properties.Resources.view_screen_32x32;
+            this.xopennewlijst.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xopennewlijst.Location = new System.Drawing.Point(577, 0);
+            this.xopennewlijst.Name = "xopennewlijst";
+            this.xopennewlijst.Size = new System.Drawing.Size(44, 43);
+            this.xopennewlijst.TabIndex = 44;
+            this.xopennewlijst.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xopennewlijst.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xopennewlijst, "Open een nieuwe productielijst venster");
+            this.xopennewlijst.UseVisualStyleBackColor = false;
+            this.xopennewlijst.Click += new System.EventHandler(this.xopennewlijst_Click);
             // 
             // xsearchprodnr
             // 
@@ -392,34 +570,6 @@ namespace Controls
             this.xbehpersoneel.UseVisualStyleBackColor = false;
             this.xbehpersoneel.Click += new System.EventHandler(this.xpersoneelb_Click);
             // 
-            // panel6
-            // 
-            this.panel6.Controls.Add(this.xsearchprodnr);
-            this.panel6.Controls.Add(this.xproductieoverzichtb);
-            this.panel6.Controls.Add(this.xchatformbutton);
-            this.panel6.Controls.Add(this.xallenotities);
-            this.panel6.Controls.Add(this.xsendemail);
-            this.panel6.Controls.Add(this.xupdateallform);
-            this.panel6.Controls.Add(this.xmateriaalverbruikb);
-            this.panel6.Controls.Add(this.xupdateb);
-            this.panel6.Controls.Add(this.xoverzicht);
-            this.panel6.Controls.Add(this.xlogbook);
-            this.panel6.Controls.Add(this.xdbbewerkingen);
-            this.panel6.Controls.Add(this.xonderbrekeningen);
-            this.panel6.Controls.Add(this.xbehvaardigheden);
-            this.panel6.Controls.Add(this.xbehpersoneel);
-            this.panel6.Controls.Add(this.xsettingsb);
-            this.panel6.Controls.Add(this.xloginb);
-            this.panel6.Controls.Add(this.xaboutb);
-            this.panel6.Controls.Add(this.pictureBox2);
-            this.panel6.Controls.Add(this.pictureBox1);
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel6.Location = new System.Drawing.Point(0, 0);
-            this.panel6.Name = "panel6";
-            this.panel6.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
-            this.panel6.Size = new System.Drawing.Size(1147, 43);
-            this.panel6.TabIndex = 25;
-            // 
             // xsettingsb
             // 
             this.xsettingsb.Dock = System.Windows.Forms.DockStyle.Right;
@@ -485,70 +635,6 @@ namespace Controls
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(0, 0);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 0;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(0, 0);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 0;
-            this.button3.Text = "button3";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(0, 0);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 0;
-            this.button4.Text = "button4";
-            this.button4.UseVisualStyleBackColor = true;
-            // 
-            // metroTabControl
-            // 
-            this.metroTabControl.AllowDrop = true;
-            this.metroTabControl.Controls.Add(this.tabPage1);
-            this.metroTabControl.Controls.Add(this.tabPage2);
-            this.metroTabControl.Controls.Add(this.tabPage3);
-            this.metroTabControl.Controls.Add(this.tabPage4);
-            this.metroTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.metroTabControl.Location = new System.Drawing.Point(40, 97);
-            this.metroTabControl.Name = "metroTabControl";
-            this.metroTabControl.SelectedIndex = 2;
-            this.metroTabControl.ShowToolTips = true;
-            this.metroTabControl.Size = new System.Drawing.Size(1069, 462);
-            this.metroTabControl.Style = MetroFramework.MetroColorStyle.Blue;
-            this.metroTabControl.TabIndex = 28;
-            this.metroTabControl.UseSelectable = true;
-            this.metroTabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.AutoScroll = true;
-            this.tabPage1.Controls.Add(this.xproductieListControl1);
-            this.tabPage1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabPage1.HorizontalScrollbar = true;
-            this.tabPage1.HorizontalScrollbarBarColor = true;
-            this.tabPage1.HorizontalScrollbarHighlightOnWheel = false;
-            this.tabPage1.HorizontalScrollbarSize = 10;
-            this.tabPage1.Location = new System.Drawing.Point(4, 38);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(1061, 420);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Producties";
-            this.tabPage1.VerticalScrollbar = true;
-            this.tabPage1.VerticalScrollbarBarColor = true;
-            this.tabPage1.VerticalScrollbarHighlightOnWheel = false;
-            this.tabPage1.VerticalScrollbarSize = 10;
-            // 
             // xproductieListControl1
             // 
             this.xproductieListControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -561,6 +647,7 @@ namespace Controls
             this.xproductieListControl1.EnableSync = true;
             this.xproductieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xproductieListControl1.IsBewerkingView = false;
+            this.xproductieListControl1.ListName = "Producties";
             this.xproductieListControl1.Location = new System.Drawing.Point(3, 4);
             this.xproductieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.xproductieListControl1.Name = "xproductieListControl1";
@@ -569,21 +656,6 @@ namespace Controls
             this.xproductieListControl1.Size = new System.Drawing.Size(1055, 412);
             this.xproductieListControl1.TabIndex = 2;
             this.xproductieListControl1.ValidHandler = null;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.xbewerkingListControl);
-            this.tabPage2.HorizontalScrollbarBarColor = true;
-            this.tabPage2.HorizontalScrollbarHighlightOnWheel = false;
-            this.tabPage2.HorizontalScrollbarSize = 10;
-            this.tabPage2.Location = new System.Drawing.Point(4, 38);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(1061, 420);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Bewerkingen";
-            this.tabPage2.VerticalScrollbarBarColor = true;
-            this.tabPage2.VerticalScrollbarHighlightOnWheel = false;
-            this.tabPage2.VerticalScrollbarSize = 10;
             // 
             // xbewerkingListControl
             // 
@@ -597,6 +669,7 @@ namespace Controls
             this.xbewerkingListControl.EnableSync = true;
             this.xbewerkingListControl.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xbewerkingListControl.IsBewerkingView = false;
+            this.xbewerkingListControl.ListName = "Bewerkingen";
             this.xbewerkingListControl.Location = new System.Drawing.Point(3, 4);
             this.xbewerkingListControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.xbewerkingListControl.Name = "xbewerkingListControl";
@@ -605,22 +678,6 @@ namespace Controls
             this.xbewerkingListControl.Size = new System.Drawing.Size(1055, 412);
             this.xbewerkingListControl.TabIndex = 2;
             this.xbewerkingListControl.ValidHandler = null;
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.tabPage3.Controls.Add(this.werkPlekkenUI1);
-            this.tabPage3.HorizontalScrollbarBarColor = true;
-            this.tabPage3.HorizontalScrollbarHighlightOnWheel = false;
-            this.tabPage3.HorizontalScrollbarSize = 10;
-            this.tabPage3.Location = new System.Drawing.Point(4, 38);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1061, 420);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Werk Plaatsen";
-            this.tabPage3.VerticalScrollbarBarColor = true;
-            this.tabPage3.VerticalScrollbarHighlightOnWheel = false;
-            this.tabPage3.VerticalScrollbarSize = 10;
             // 
             // werkPlekkenUI1
             // 
@@ -636,21 +693,6 @@ namespace Controls
             this.werkPlekkenUI1.TabIndex = 0;
             this.werkPlekkenUI1.WerkPlekClicked += new System.EventHandler(this.werkPlekkenUI1_WerkPlekClicked);
             // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.recentGereedMeldingenUI1);
-            this.tabPage4.HorizontalScrollbarBarColor = true;
-            this.tabPage4.HorizontalScrollbarHighlightOnWheel = false;
-            this.tabPage4.HorizontalScrollbarSize = 10;
-            this.tabPage4.Location = new System.Drawing.Point(4, 38);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(1061, 420);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Recente Gereedmeldingen";
-            this.tabPage4.VerticalScrollbarBarColor = true;
-            this.tabPage4.VerticalScrollbarHighlightOnWheel = false;
-            this.tabPage4.VerticalScrollbarSize = 10;
-            // 
             // recentGereedMeldingenUI1
             // 
             this.recentGereedMeldingenUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -663,25 +705,6 @@ namespace Controls
             this.recentGereedMeldingenUI1.Name = "recentGereedMeldingenUI1";
             this.recentGereedMeldingenUI1.Size = new System.Drawing.Size(1056, 420);
             this.recentGereedMeldingenUI1.TabIndex = 2;
-            // 
-            // xspeciaalroosterlabel
-            // 
-            this.xspeciaalroosterlabel.Controls.Add(this.xspeciaalroosterbutton);
-            this.xspeciaalroosterlabel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.xspeciaalroosterlabel.Location = new System.Drawing.Point(0, 43);
-            this.xspeciaalroosterlabel.Name = "xspeciaalroosterlabel";
-            this.xspeciaalroosterlabel.Size = new System.Drawing.Size(1147, 54);
-            this.xspeciaalroosterlabel.TabIndex = 29;
-            this.xspeciaalroosterlabel.Visible = false;
-            // 
-            // xtabimages
-            // 
-            this.xtabimages.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("xtabimages.ImageStream")));
-            this.xtabimages.TransparentColor = System.Drawing.Color.Transparent;
-            this.xtabimages.Images.SetKeyName(0, "page_document_16748_128_128.png");
-            this.xtabimages.Images.SetKeyName(1, "operation.png");
-            this.xtabimages.Images.SetKeyName(2, "iconfinder-technologymachineelectronic32_32.png");
-            this.xtabimages.Images.SetKeyName(3, "ic_done_all_128_28243.png");
             // 
             // takenManager1
             // 
@@ -857,14 +880,14 @@ namespace Controls
             this.Name = "ProductieView";
             this.Size = new System.Drawing.Size(1147, 559);
             this.panel6.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.metroTabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.xspeciaalroosterlabel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -909,5 +932,6 @@ namespace Controls
         private ImageList xtabimages;
         private Button xproductieoverzichtb;
         private Button xsearchprodnr;
+        private Button xopennewlijst;
     }
 }

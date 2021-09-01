@@ -464,6 +464,12 @@
     <Compile Include="Forms\ProductieOverzichtForm.Designer.cs">
       <DependentUpon>ProductieOverzichtForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ProductieLijsten.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ProductieLijsten.Designer.cs">
+      <DependentUpon>ProductieLijsten.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\RoosterForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -619,6 +625,12 @@
     </Compile>
     <Compile Include="Forms\SpeciaalWerkRoostersForm.Designer.cs">
       <DependentUpon>SpeciaalWerkRoostersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ProductieLijstForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ProductieLijstForm.Designer.cs">
+      <DependentUpon>ProductieLijstForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\UpdateProducties.cs">
       <SubType>Form</SubType>
@@ -990,6 +1002,9 @@
     <EmbeddedResource Include="Forms\ProductieOverzichtForm.resx">
       <DependentUpon>ProductieOverzichtForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ProductieLijsten.resx">
+      <DependentUpon>ProductieLijsten.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\RoosterForm.resx">
       <DependentUpon>RoosterForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1067,6 +1082,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SpeciaalWerkRoostersForm.resx">
       <DependentUpon>SpeciaalWerkRoostersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ProductieLijstForm.resx">
+      <DependentUpon>ProductieLijstForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UpdateProducties.resx">
       <DependentUpon>UpdateProducties.cs</DependentUpon>
@@ -1249,6 +1267,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\view_screen_32x32.png" />
     <None Include="Resources\PauseHot_26935.png" />
     <None Include="Resources\pause-play-blue_32x321.png" />
     <None Include="Resources\pause-play-blue_32x32.png" />

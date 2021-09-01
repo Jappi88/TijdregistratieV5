@@ -1528,14 +1528,14 @@ namespace Rpm.Productie
 
         public event BewerkingChangedHandler OnBewerkingChanged;
 
-        public async void BewerkingChanged(object sender, Bewerking bew, string change)
+        public async void BewerkingChanged(object sender, Bewerking bew, string change, bool shownotification)
         {
             var xchange = change ?? (bew.LastChanged?.Change ?? $"[{bew.Path}] Bewerking Gewijzigd");
-            await UpdateForm(false, false, null, xchange);
+            await UpdateForm(false, false, null, xchange,true,shownotification);
             //Manager.Database.UpSert(this, xchange);
-            OnBewerkingChanged?.Invoke(sender, bew, xchange);
+            OnBewerkingChanged?.Invoke(sender, bew, xchange,shownotification);
             FormulierChanged(sender);
-            Manager.BewerkingChanged(sender, bew, xchange);
+            Manager.BewerkingChanged(sender, bew, xchange,shownotification);
         }
 
         #endregion "Events"

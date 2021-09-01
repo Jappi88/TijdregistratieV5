@@ -219,7 +219,7 @@ namespace Forms
             Manager.OnBewerkingChanged -= Manager_OnBewerkingChanged;
         }
 
-        private void Manager_OnBewerkingChanged(object sender, Bewerking bewerking, string change)
+        private void Manager_OnBewerkingChanged(object sender, Bewerking bewerking, string change, bool shownotification)
         {
             if (IsDisposed) return;
             var pers = bewerking?.GetPersoneel()

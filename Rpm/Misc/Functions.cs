@@ -353,12 +353,11 @@ namespace Rpm.Misc
                 return false;
             var xreturn = false;
             if (!string.IsNullOrEmpty(filter) && !bew.ContainsFilter(filter)) return false;
-            bool valid = false;
             foreach (var value in Manager.Opties.ToegelatenProductieCrit)
             {
                 var xvalues = value.Split(':');
                 var xcrits = xvalues[0].Split(';');
-                valid = true;
+                var valid = true;
                 foreach (var c in xcrits)
                     valid &= bew.ContainsFilter(c);
                 bool allow = false;
@@ -366,16 +365,6 @@ namespace Rpm.Misc
                     allow = xvalues[1].ToLower() == "toelaten";
                 if (valid)
                     return allow;
-            }
-
-            var filters = Manager.Opties.Filters;
-            if (filters != null && filters.Count > 0)
-            {
-                foreach (var xf in filters)
-                    if (xf.Enabled && xf.IsAllowed(bew))
-                        return true;
-                if (filters.Any(x => x.Enabled))
-                    return false;
             }
             //if (valid) return xreturn;
             if (Manager.Opties.ToonAlles)

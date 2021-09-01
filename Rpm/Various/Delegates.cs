@@ -17,7 +17,7 @@ namespace Rpm.Various
 
     public delegate void FormulierActieHandler(object[] values, MainAktie type);
 
-    public delegate void BewerkingChangedHandler(object sender, Bewerking bewerking, string change);
+    public delegate void BewerkingChangedHandler(object sender, Bewerking bewerking, string change, bool shownotification);
 
     public delegate void AccountChangedHandler(object sender, UserAccount account);
 

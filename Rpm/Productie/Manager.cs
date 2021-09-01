@@ -1659,10 +1659,10 @@ namespace Rpm.Productie
         /// <param name="sender">De afzender die dit oproept</param>
         /// <param name="bew">De bewerking die gewijzigd is</param>
         /// <param name="change">De verandering van de bewerking</param>
-        public static void BewerkingChanged(object sender, Bewerking bew, string change)
+        public static void BewerkingChanged(object sender, Bewerking bew, string change, bool shownotification)
         {
             if (bew != null)
-                OnBewerkingChanged?.Invoke(sender, bew, change);
+                OnBewerkingChanged?.Invoke(sender, bew, change,shownotification);
         }
 
         /// <summary>
@@ -1670,10 +1670,11 @@ namespace Rpm.Productie
         /// </summary>
         /// <param name="sender">De afzender die dit oproept</param>
         /// <param name="bew">De bewerking die verwijderd is</param>
-        public static void BewerkingDeleted(object sender, Bewerking bew)
+        /// <param name="shownotification">Toon notificatie voor als de bewerking is verwijderd</param>
+        public static void BewerkingDeleted(object sender, Bewerking bew, bool shownotification)
         {
             if (bew != null)
-                OnBewerkingDeleted?.Invoke(sender, bew, $"{bew.Path} Verwijderd!");
+                OnBewerkingDeleted?.Invoke(sender, bew, $"{bew.Path} Verwijderd!",shownotification);
         }
 
         /// <summary>
@@ -1726,7 +1727,7 @@ namespace Rpm.Productie
         /// <param name="sender">De afzender die dit oproept</param>
         public static void OnFilterChanged(object sender)
         {
-            FilterChanged?.Invoke(sender, EventArgs.Empty);
+            FilterChanged?.Invoke(sender,EventArgs.Empty);
         }
 
         /// <summary>

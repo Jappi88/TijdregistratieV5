@@ -293,7 +293,7 @@ namespace Forms
                             if (string.IsNullOrEmpty(id)) continue;
                             var x = await Manager.Database.GetProductie(id);
                             if (x == null) continue;
-                            if (x.Bewerkingen != null && x.Bewerkingen.Length > 0)
+                            if (x.Bewerkingen is {Length: > 0})
                             {
                                 var bws = x.Bewerkingen.Where(b => IsAllowed(b, null)).ToArray();
                                 if (bws.Length > 0)

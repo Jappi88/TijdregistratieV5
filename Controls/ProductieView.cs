@@ -67,7 +67,9 @@ namespace Controls
         //private RangeCalculatorForm _rangeform;
 
         private static readonly List<StartProductie> _formuis = new();
+        private static readonly List<ProductieLijstForm> _Productelijsten = new();
         private static Producties _producties;
+        private static ProductieLijsten _productielijstdock;
         private static LogForm _logform = null;
         private static RangeCalculatorForm _calcform = null;
         private static ChatForm _chatform = null;
@@ -1403,11 +1405,50 @@ namespace Controls
             }
         }
 
+        public static ProductieLijstForm ShowProductieLijstForm()
+        {
+            if (Manager.LogedInGebruiker == null || Manager.LogedInGebruiker.AccesLevel < AccesType.ProductieBasis)
+                return null;
+            try
+            {
+                var prodform = new ProductieLijstForm($"[{_Productelijsten.Count}]Productielijst");
+
+                prodform.FormClosing += AddProduction_FormClosing;
+                _Productelijsten.Add(prodform);
+                if (_productielijstdock == null || _productielijstdock.IsDisposed)
+                {
+                    _productielijstdock = new ProductieLijsten()
+                    {
+                        Tag = prodform,
+                        StartPosition = FormStartPosition.CenterScreen
+                    };
+                    _productielijstdock.FormClosed += (x, y) => _producties = null;
+
+                }
+
+                prodform.Show(_productielijstdock.DockPanel);
+
+                if (!_productielijstdock.Visible)
+                    _productielijstdock.Show();
+                if (_productielijstdock.WindowState == FormWindowState.Minimized)
+                    _productielijstdock.WindowState = FormWindowState.Normal;
+
+                _productielijstdock.Focus();
+                return prodform;
+            }
+            catch (Exception e)
+            {
+                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                return null;
+            }
+        }
+
         public static void AddProduction_FormClosing(object sender, FormClosingEventArgs e)
         {
-            var AddProduction = (StartProductie)sender;
-            if (AddProduction != null)
-                _formuis.Remove(AddProduction);
+            if (sender is StartProductie prod)
+                _formuis.Remove(prod);
+            else if (sender is ProductieLijstForm form)
+                _Productelijsten.Remove(form);
         }
 
         public static void ShowProductieLogWindow()
@@ -1767,6 +1808,11 @@ namespace Controls
 
             return base.ProcessCmdKey(ref msg, keyData);
 
+        }
+
+        private void xopennewlijst_Click(object sender, EventArgs e)
+        {
+            ShowProductieLijstForm();
         }
     }
 }

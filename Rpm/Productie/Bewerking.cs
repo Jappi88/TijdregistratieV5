@@ -326,7 +326,7 @@ namespace Rpm.Productie
         }
 
         public async Task<bool> UpdateBewerking(List<ProductieFormulier> allforms = null, string change = null,
-            bool save = true)
+            bool save = true, bool shownotification = true)
         {
             change ??= $"[{Path}] Update.";
             if (allforms != null)
@@ -376,10 +376,10 @@ namespace Rpm.Productie
                 ProductieNr = Parent.ProductieNr;
 
                 if (save)
-                    Parent.BewerkingChanged(this, this, change);
+                    Parent.BewerkingChanged(this, this, change,shownotification);
             }
 
-            BewerkingChanged(this, this, change);
+            BewerkingChanged(this, this, change, shownotification);
             return true;
         }
 
@@ -430,14 +430,14 @@ namespace Rpm.Productie
                 var xtasks = new List<Task<bool>>();
                 foreach (var plek in WerkPlekken)
                 {
-                    plek.UpdateWerkRooster(true,false,false,false,true);
+                    plek.UpdateWerkRooster(true, false, false, false, true);
                     foreach (var per in plek.Personen)
                     {
                         var klus = per.Klusjes.GetKlus(plek.Path);
                         if (klus == null)
                         {
-                           klus = new Klus(per, plek);
-                           per.ReplaceKlus(klus);
+                            klus = new Klus(per, plek);
+                            per.ReplaceKlus(klus);
                         }
 
                         if (klus.Start())
@@ -449,8 +449,10 @@ namespace Rpm.Productie
                                 if (per.WerkRooster == null)
                                     per.WerkRooster = x.WerkRooster;
                                 x.ReplaceKlus(klus);
-                                xtasks.Add(Manager.Database.UpSert(x,
-                                    $"[{x.PersoneelNaam}] is gestart aan klus '{klus.Naam} op {klus.WerkPlek}'."));
+                                var action = new Task<bool>(() => Manager.Database.UpSert(x,
+                                        $"[{x.PersoneelNaam}] is gestart aan klus '{klus.Naam} op {klus.WerkPlek}'.")
+                                    .Result);
+                                xtasks.Add(action);
                             }
                         }
                     }
@@ -464,16 +466,15 @@ namespace Rpm.Productie
                     plek.LaatstAantalUpdate = DateTime.Now;
                     plek.UpdateTijdGestart();
                 }
-
-                if (xtasks.Count > 0)
-                    _=Task.WhenAll(xtasks);
                 //if (newtime || Tijden.Count == 0)
 
                 if (Parent != null && Parent.State != ProductieState.Gestart)
                     Parent.TijdGestart = DateTime.Now;
-               
+
                 GestartDoor = Manager.Opties.Username;
                 await UpdateBewerking(null, $"[{Path}] Bewerking Gestart");
+                if (xtasks.Count > 0)
+                    xtasks.ForEach(x => x.Start());
                 if (email)
                     RemoteProductie.RespondByEmail(this,
                         $"Productie [{ProductieNr.ToUpper()}] {Naam} is zojuist gestart op {WerkplekkenName}.");
@@ -546,13 +547,14 @@ namespace Rpm.Productie
                         if (x == null) continue;
                         per.VrijeDagen = x.VrijeDagen;
                         x.ReplaceKlus(klus);
-                        xtasks.Add(Manager.Database.UpSert(x, $"[{x.PersoneelNaam}] uit werk [{Path}] gehaald"));
+                        var action = new Task<bool>(() =>
+                            Manager.Database.UpSert(x, $"[{x.PersoneelNaam}] uit werk [{Path}] gehaald").Result);
+                        xtasks.Add(action);
                     }
                 }
-
-                if (xtasks.Count > 0)
-                   _=Task.WhenAll(xtasks);
                 await UpdateBewerking(null, $"[{Path}] Bewerking Gestopt");
+                if (xtasks.Count > 0)
+                    xtasks.ForEach(x => x.Start());
                 if (email)
                     RemoteProductie.RespondByEmail(this,
                         $"Productie [{ProductieNr.ToUpper()}] {Naam} is zojuist gestopt op {WerkplekkenName}.");
@@ -598,7 +600,7 @@ namespace Rpm.Productie
 
                         if (deleted)
                         {
-                            Manager.BewerkingDeleted(this, this);
+                            Manager.BewerkingDeleted(this, this,false);
                             await Parent.UpdateForm(true, false);
 
                         }
@@ -1071,9 +1073,9 @@ namespace Rpm.Productie
 
         public event BewerkingChangedHandler OnBewerkingChanged;
 
-        public void BewerkingChanged(object sender, Bewerking bewerking, string change)
+        public void BewerkingChanged(object sender, Bewerking bewerking, string change, bool shownotification)
         {
-            OnBewerkingChanged?.Invoke(sender, bewerking, change);
+            OnBewerkingChanged?.Invoke(sender, bewerking, change,shownotification);
         }
 
         public async void BewerkingChanged(string change = null)

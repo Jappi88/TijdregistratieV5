@@ -42,17 +42,17 @@ namespace Forms
             this.xcriteriacheckbox = new System.Windows.Forms.CheckBox();
             this.xbewerkingen = new System.Windows.Forms.ComboBox();
             this.xwerkplekken = new System.Windows.Forms.ComboBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.xverwerkb = new System.Windows.Forms.Button();
-            this.xsluiten = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.xoutput = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.xprogresslabel = new System.Windows.Forms.Label();
             this.productieListControl1 = new Controls.ProductieListControl();
+            this.xsluiten = new System.Windows.Forms.Button();
+            this.xverwerkb = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -218,47 +218,6 @@ namespace Forms
             this.xwerkplekken.TabIndex = 3;
             this.xwerkplekken.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xcriteria_KeyDown);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pictureBox1.Image = global::ProductieManager.Properties.Resources.FocusEye_img_128_128;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(124, 105);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
-            // 
-            // xverwerkb
-            // 
-            this.xverwerkb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xverwerkb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xverwerkb.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xverwerkb.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
-            this.xverwerkb.Location = new System.Drawing.Point(644, 10);
-            this.xverwerkb.Name = "xverwerkb";
-            this.xverwerkb.Size = new System.Drawing.Size(153, 38);
-            this.xverwerkb.TabIndex = 14;
-            this.xverwerkb.Text = "Zoek Producties!";
-            this.xverwerkb.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.xverwerkb.UseVisualStyleBackColor = true;
-            this.xverwerkb.Click += new System.EventHandler(this.xverwerkb_Click);
-            // 
-            // xsluiten
-            // 
-            this.xsluiten.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.xsluiten.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xsluiten.Location = new System.Drawing.Point(803, 10);
-            this.xsluiten.Name = "xsluiten";
-            this.xsluiten.Size = new System.Drawing.Size(120, 38);
-            this.xsluiten.TabIndex = 2;
-            this.xsluiten.Text = "&Sluiten";
-            this.xsluiten.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.xsluiten.UseVisualStyleBackColor = true;
-            this.xsluiten.Click += new System.EventHandler(this.xsluiten_Click);
-            // 
             // imageList1
             // 
             this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
@@ -306,11 +265,12 @@ namespace Forms
             this.productieListControl1.BackColor = System.Drawing.Color.White;
             this.productieListControl1.CanLoad = true;
             this.productieListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.productieListControl1.EnableEntryFiltering = false;
-            this.productieListControl1.EnableFiltering = false;
+            this.productieListControl1.EnableEntryFiltering = true;
+            this.productieListControl1.EnableFiltering = true;
             this.productieListControl1.EnableSync = false;
             this.productieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.productieListControl1.IsBewerkingView = false;
+            this.productieListControl1.ListName = "RangeBewerkingLijst";
             this.productieListControl1.Location = new System.Drawing.Point(20, 165);
             this.productieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.productieListControl1.Name = "productieListControl1";
@@ -319,6 +279,47 @@ namespace Forms
             this.productieListControl1.Size = new System.Drawing.Size(926, 320);
             this.productieListControl1.TabIndex = 23;
             this.productieListControl1.ValidHandler = null;
+            // 
+            // xsluiten
+            // 
+            this.xsluiten.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.xsluiten.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.xsluiten.Location = new System.Drawing.Point(803, 10);
+            this.xsluiten.Name = "xsluiten";
+            this.xsluiten.Size = new System.Drawing.Size(120, 38);
+            this.xsluiten.TabIndex = 2;
+            this.xsluiten.Text = "&Sluiten";
+            this.xsluiten.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.xsluiten.UseVisualStyleBackColor = true;
+            this.xsluiten.Click += new System.EventHandler(this.xsluiten_Click);
+            // 
+            // xverwerkb
+            // 
+            this.xverwerkb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xverwerkb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xverwerkb.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xverwerkb.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
+            this.xverwerkb.Location = new System.Drawing.Point(644, 10);
+            this.xverwerkb.Name = "xverwerkb";
+            this.xverwerkb.Size = new System.Drawing.Size(153, 38);
+            this.xverwerkb.TabIndex = 14;
+            this.xverwerkb.Text = "Zoek Producties!";
+            this.xverwerkb.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.xverwerkb.UseVisualStyleBackColor = true;
+            this.xverwerkb.Click += new System.EventHandler(this.xverwerkb_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pictureBox1.Image = global::ProductieManager.Properties.Resources.FocusEye_img_128_128;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(124, 105);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox1.TabIndex = 1;
+            this.pictureBox1.TabStop = false;
             // 
             // RangeCalculatorForm
             // 
@@ -340,8 +341,8 @@ namespace Forms
             this.Shown += new System.EventHandler(this.RangeCalculatorForm_Shown);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }

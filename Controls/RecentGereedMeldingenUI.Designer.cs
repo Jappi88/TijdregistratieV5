@@ -137,6 +137,7 @@ namespace Controls
             this.productieListControl1.EnableSync = false;
             this.productieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.productieListControl1.IsBewerkingView = true;
+            this.productieListControl1.ListName = "GereedProducties";
             this.productieListControl1.Location = new System.Drawing.Point(0, 64);
             this.productieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.productieListControl1.Name = "productieListControl1";

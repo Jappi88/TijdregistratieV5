@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Polenter.Serialization;
 using Rpm.Various;
 
 namespace Rpm.Misc
@@ -10,15 +11,22 @@ namespace Rpm.Misc
     public class Filter
     {
         public string Name { get; set; }
+        [ExcludeFromSerialization]
         public bool Enabled { get; set; }
+
+        /// <summary>
+        /// De lijst waarop gefiltered moet worden.
+        /// </summary>
+        public List<string> ListNames { get; set; } = new();
         //public Operand OperandType { get; set; }
         public List<FilterEntry> Filters { get; set; } = new List<FilterEntry>();
 
-        public bool IsAllowed(object value)
+        public bool IsAllowed(object value, string listname)
         {
             try
             {
-                if (!Enabled) return true;
+                if (string.IsNullOrEmpty(listname)) return true;
+                if (!ListNames.Any(x => string.Equals(x, listname))) return true;
                 if (value == null) return false;
                 if (Filters == null || Filters.Count == 0) return true;
                 bool xdone = false;
