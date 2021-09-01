@@ -160,6 +160,10 @@
     <Reference Include="ObjectListView">
       <HintPath>..\Libraries\ObjectListView.dll</HintPath>
     </Reference>
+    <Reference Include="Polenter.SharpSerializer, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Desktop\ProductieManager\Polenter.SharpSerializer.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -1442,10 +1446,6 @@
     <ProjectReference Include="..\..\..\Dropbox\Repos\AutoUpdater.NET\AutoUpdater.NET.csproj">
       <Project>{fb9e7e6b-b19f-4f37-a708-2996190cef13}</Project>
       <Name>AutoUpdater.NET</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpSerializer-master\SharpSerializer\SharpSerializer.csproj">
-      <Project>{e29b5e7d-3821-4b60-a8ce-6c896dff6c61}</Project>
-      <Name>SharpSerializer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -217,7 +217,9 @@ namespace Forms
                 var bewerking = pair.Bewerking;
                 var wp = GetWerkPlek(_origklus.WerkPlek, bewerking, false);
                 var xpersonen = new List<Personeel>();
-                Rooster rooster = Persoon.Length == 1 ? Persoon[0].WerkRooster : wp.Tijden.WerkRooster;
+                Rooster rooster = Persoon.Length == 1
+                    ? Persoon[0].WerkRooster
+                    : wp?.Tijden?.WerkRooster ?? Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
                 foreach (var xpers in Persoon)
                 {
                     var xklus = SelectedKlus.CreateCopy();
