@@ -29,6 +29,7 @@ namespace Controls
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.xdatachart = new LiveCharts.WinForms.CartesianChart();
             this.panel1 = new System.Windows.Forms.Panel();
             this.xstatuslabel = new System.Windows.Forms.Label();
@@ -37,7 +38,7 @@ namespace Controls
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.xbewerkingradio = new System.Windows.Forms.RadioButton();
             this.xwerkplekradio = new System.Windows.Forms.RadioButton();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.xweergaveperiodegroup = new System.Windows.Forms.GroupBox();
             this.xalleennucheckbox = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.xstartjaar = new System.Windows.Forms.NumericUpDown();
@@ -52,11 +53,12 @@ namespace Controls
             this.panel3 = new System.Windows.Forms.Panel();
             this.xstatus = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
             this.xoptionpanel.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.xweergaveperiodegroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xstartjaar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xstartweek)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xserieslist)).BeginInit();
@@ -106,7 +108,7 @@ namespace Controls
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.groupBox3);
-            this.groupBox1.Controls.Add(this.groupBox2);
+            this.groupBox1.Controls.Add(this.xweergaveperiodegroup);
             this.groupBox1.Controls.Add(this.xstoringenradio);
             this.groupBox1.Controls.Add(this.xaantalperuurradio);
             this.groupBox1.Controls.Add(this.xaantalgemaaktradio);
@@ -158,22 +160,22 @@ namespace Controls
             this.xwerkplekradio.UseVisualStyleBackColor = true;
             this.xwerkplekradio.CheckedChanged += new System.EventHandler(this.radiocheckchanged_CheckedChanged);
             // 
-            // groupBox2
+            // xweergaveperiodegroup
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.xweergaveperiodegroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.xalleennucheckbox);
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.xstartjaar);
-            this.groupBox2.Controls.Add(this.xstartweek);
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(301, 0);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(572, 129);
-            this.groupBox2.TabIndex = 2;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Weergave Periode";
+            this.xweergaveperiodegroup.Controls.Add(this.xalleennucheckbox);
+            this.xweergaveperiodegroup.Controls.Add(this.label2);
+            this.xweergaveperiodegroup.Controls.Add(this.xstartjaar);
+            this.xweergaveperiodegroup.Controls.Add(this.xstartweek);
+            this.xweergaveperiodegroup.Controls.Add(this.label1);
+            this.xweergaveperiodegroup.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xweergaveperiodegroup.Location = new System.Drawing.Point(301, 0);
+            this.xweergaveperiodegroup.Name = "xweergaveperiodegroup";
+            this.xweergaveperiodegroup.Size = new System.Drawing.Size(572, 129);
+            this.xweergaveperiodegroup.TabIndex = 2;
+            this.xweergaveperiodegroup.TabStop = false;
+            this.xweergaveperiodegroup.Text = "Weergave Periode";
             // 
             // xalleennucheckbox
             // 
@@ -359,9 +361,9 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xstatus.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xstatus.Location = new System.Drawing.Point(-1, 167);
+            this.xstatus.Location = new System.Drawing.Point(3, 170);
             this.xstatus.Name = "xstatus";
-            this.xstatus.Size = new System.Drawing.Size(871, 391);
+            this.xstatus.Size = new System.Drawing.Size(870, 388);
             this.xstatus.TabIndex = 6;
             this.xstatus.Text = "Producties Laden...";
             this.xstatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -393,8 +395,8 @@ namespace Controls
             this.groupBox1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.xweergaveperiodegroup.ResumeLayout(false);
+            this.xweergaveperiodegroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xstartjaar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xstartweek)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xserieslist)).EndInit();
@@ -415,7 +417,7 @@ namespace Controls
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RadioButton xbewerkingradio;
         private System.Windows.Forms.RadioButton xwerkplekradio;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox xweergaveperiodegroup;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton xstoringenradio;
         private System.Windows.Forms.RadioButton xaantalperuurradio;
@@ -429,5 +431,6 @@ namespace Controls
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox xalleennucheckbox;
         private System.Windows.Forms.Label xstatus;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

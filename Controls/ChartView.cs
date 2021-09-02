@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,22 +13,29 @@ using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
+using Point = System.Drawing.Point;
 
 namespace Controls
 {
     public partial class ChartView : UserControl
     {
         private bool _isbussy;
-        private List<Bewerking> _producties;
+        public List<Bewerking> _producties;
 
         public ChartView()
         {
             InitializeComponent();
             xdatachart.DataTooltip = new DefaultTooltip
             {
-                SelectionMode = TooltipSelectionMode.OnlySender
+                SelectionMode = TooltipSelectionMode.OnlySender 
             };
             xserieslist.CheckStateGetter = GetCheckedState;
+        }
+
+        public bool PeriodeWeergave
+        {
+            get => xweergaveperiodegroup.Visible;
+            set => xweergaveperiodegroup.Visible = value;
         }
 
         private CheckState GetCheckedState(object item)
@@ -85,6 +93,7 @@ namespace Controls
                         _producties =
                             await Manager.GetBewerkingen(new[] {ViewState.Alles, ViewState.Gereed}, true);
                     var chartdata = _producties.CreateChartData(iswerkplek, startweek, startjaar, type, true, shownow);
+                    
                     //xtijdgewerktlist.Columns?.Clear();
                     if (chartdata.Count > 0)
                     {
@@ -94,8 +103,16 @@ namespace Controls
                             var werkplek = iswerkplek ? "Werkplek" : "Bewerking";
                             var xperiode = shownow ? "uur" :
                                 chartdata.Any(t => t.Key.ToLower() == "maandag") ? "dagen" : "weken";
-                            xstatuslabel.Text =
-                                $"{werkplek} {type} overzicht van de afgelopen {chartdata.Count} {xperiode}";
+                            if (_producties == null)
+                            {
+                                xstatuslabel.Text =
+                                    $@"{werkplek} {type} overzicht van de afgelopen {chartdata.Count} {xperiode}";
+                            }
+                            else
+                            {
+                                xstatuslabel.Text =
+                                    $@"{werkplek} {type} overzicht van {_producties.Count} {(_producties.Count == 1 ? "bewerking" : "bewerkingen")}";
+                            }
                         }));
                         var table = new DataTable(type);
                         table.Columns.Add("Periode");

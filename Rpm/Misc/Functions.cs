@@ -178,6 +178,7 @@ namespace Rpm.Misc
                     // if (range?.StartDate >= DateTime.Now) break;
                     xreturn.Add(rows[xrowindex], new Dictionary<string, double>());
                     //var tabledata = new Dictionary<string, double>();
+                    double val = 0;
                     foreach (var prod in data)
                     {
                         var value = GetSumValueRange(prod.Value, new TijdEntry(range.StartDate, range.EndDate, null), field,
@@ -185,8 +186,12 @@ namespace Rpm.Misc
                         if (value <= 0) continue;
                         // value = Math.Round(value, 0, MidpointRounding.AwayFromZero);
                         //tabledata.Add(prod.Key, value);
+                        val += value;
                         xreturn[rows[xrowindex]].Add(prod.Key, value);
                     }
+
+                    if (val <= 0)
+                        xreturn.Remove(rows[xrowindex]);
                 }
             }
             catch

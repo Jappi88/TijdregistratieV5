@@ -61,7 +61,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -343,6 +343,12 @@
     </Compile>
     <Compile Include="Forms\AlleNotitiesForm.Designer.cs">
       <DependentUpon>AlleNotitiesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AllProductiesInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AllProductiesInfo.Designer.cs">
+      <DependentUpon>AllProductiesInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ChatForm.cs">
       <SubType>Form</SubType>
@@ -790,6 +796,7 @@
     <Compile Include="Rpm\Misc\HtmlStringFormat.cs" />
     <Compile Include="Rpm\Misc\LogEntry.cs" />
     <Compile Include="Rpm\Misc\Notifications.cs" />
+    <Compile Include="Rpm\Misc\NumberToName.cs" />
     <Compile Include="Rpm\Misc\ObjectExtensions.cs" />
     <Compile Include="Rpm\Misc\RpmPacket.cs" />
     <Compile Include="Rpm\Misc\SafeProxy.cs" />
@@ -940,6 +947,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AlleNotitiesForm.resx">
       <DependentUpon>AlleNotitiesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AllProductiesInfo.resx">
+      <DependentUpon>AllProductiesInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ChatForm.resx">
       <DependentUpon>ChatForm.cs</DependentUpon>
@@ -1267,6 +1277,11 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\3844441-eye-see-show-view-watch_110305.png" />
+    <None Include="Resources\stats_15267_128x128.png" />
+    <None Include="Resources\stats_15267_32x32.png" />
+    <None Include="Resources\blue_chartstats.png" />
+    <None Include="Resources\blue_chartstats_128x128.png" />
     <None Include="Resources\view_screen_32x32.png" />
     <None Include="Resources\PauseHot_26935.png" />
     <None Include="Resources\pause-play-blue_32x321.png" />
@@ -1405,7 +1420,6 @@
     <None Include="Resources\arrow_right_15600.png" />
     <None Include="Resources\Updater.exe" />
     <None Include="Resources\internet_lock_locked_padlock_password_secure_security_icon_127100 %281%29.png" />
-    <None Include="Resources\3844441-eye-see-show-view-watch_110305.png" />
     <None Include="Resources\3844443-disable-eye-inactive-see-show-view-watch_110296.png" />
     <None Include="Resources\internet_lock_locked_padlock_password_secure_security_icon_127100.png" />
     <None Include="Resources\file-complete256_25223.png" />
@@ -1467,7 +1481,6 @@
       <Name>AutoUpdater.NET</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Code to merge the assemblies into one:setup.exe -->
 </Project>

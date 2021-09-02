@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Windows.Forms;
+using Controls;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Forms
@@ -60,14 +61,32 @@ namespace Forms
         private void StartProductie_Shown(object sender, EventArgs e)
         {
             productieListControl1.InitEvents();
+            Manager.FilterChanged += Manager_FilterChanged;
             productieListControl1.InitProductie(true, true, true, true, true, true);
             if (Manager.Opties?._viewbewdata != null)
                 productieListControl1.ProductieLijst.RestoreState(Manager.Opties.ViewDataBewerkingenState);
         }
 
+        private void Manager_FilterChanged(object sender, EventArgs e)
+        {
+            if (sender is ProductieListControl control && string.Equals(productieListControl1.ListName,
+                control.ListName, StringComparison.CurrentCultureIgnoreCase))
+            {
+                try
+                {
+                    this.BeginInvoke(new Action(UpdateListName));
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                }
+            }
+        }
+
         private void StartProductie_FormClosing(object sender, FormClosingEventArgs e)
         {
             productieListControl1.DetachEvents();
+            Manager.FilterChanged -= Manager_FilterChanged;
         }
 
         private void xsluiten_Click(object sender, EventArgs e)

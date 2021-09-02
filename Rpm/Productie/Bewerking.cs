@@ -44,7 +44,7 @@ namespace Rpm.Productie
         [ExcludeFromSerialization]
         public UrenLijst Tijden { get; set; }
 
-        public override bool TeLaat => DateTime.Now > LeverDatum;
+        public override bool TeLaat => DateTime.Now > LeverDatum && State != ProductieState.Gereed;
 
         public bool IsBemand { get; set; }
 

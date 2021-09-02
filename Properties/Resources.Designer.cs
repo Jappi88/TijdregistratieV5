@@ -1533,6 +1533,26 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap stats_15267_128x128 {
+            get {
+                object obj = ResourceManager.GetObject("stats_15267_128x128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap stats_15267_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("stats_15267_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap stop_red256_24890 {
             get {
                 object obj = ResourceManager.GetObject("stop_red256_24890", resourceCulture);

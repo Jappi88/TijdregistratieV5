@@ -2351,5 +2351,39 @@ namespace Controls
             ItemCountChanged?.Invoke(this, EventArgs.Empty);
         }
         #endregion Events
+
+        private void xbewerkingeninfob_Click(object sender, EventArgs e)
+        {
+            if (IsBewerkingView)
+            {
+                var bws = xproductieLijst.Objects?.Cast<Bewerking>().ToList();
+                if (bws is {Count: > 0})
+                {
+                    new ProductieInfoForm(bws).ShowDialog();
+                }
+            }
+            else
+            {
+                var prods = xproductieLijst.Objects?.Cast<ProductieFormulier>().ToList();
+                if (prods is { Count: > 0 })
+                {
+                    var bws = new List<Bewerking>();
+                    for (int i = 0; i < prods.Count; i++)
+                    {
+                        var prod = prods[i];
+                        if (prod.Bewerkingen is {Length: < 1}) continue;
+                        foreach(var bw in prod.Bewerkingen)
+                        {
+                            var flag = bw.IsAllowed() && IsAllowd(bw);
+                            if (ValidHandler != null)
+                                flag &= ValidHandler.Invoke(bw, null);
+                            if (flag)
+                                bws.Add(bw);
+                        }
+                    }
+                    new ProductieInfoForm(bws).ShowDialog();
+                }
+            }
+        }
     }
 }

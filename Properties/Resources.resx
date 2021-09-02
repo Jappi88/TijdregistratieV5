@@ -202,6 +202,9 @@
   <data name="businessapplication_edit_male_user" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\businessapplication_edit_male_user.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="rooster_128_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\rooster_128_128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="page_document_16748" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\page_document_16748.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -271,9 +274,6 @@
   <data name="ic_info_outline_128_28513" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ic_info_outline_128_28513.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ic_send_128_28719" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ic_send_128_28719.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Time_machine__40675" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Time_machine__40675.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -327,6 +327,9 @@
   </data>
   <data name="email-send256_25228" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\email-send256_25228.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="view_screen_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\view_screen_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="icons8-minimize-window-321" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icons8-minimize-window-321.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -382,8 +385,8 @@
   <data name="text_edit_14943" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\text_edit_14943.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="3844443-disable-eye-inactive-see-show-view-watch_110296" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\3844443-disable-eye-inactive-see-show-view-watch_110296.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ic_send_128_28719" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ic_send_128_28719.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Statics_Icon_32_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Statics_Icon_32_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -505,8 +508,8 @@
   <data name="taskboardlinear_106203" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\taskboardlinear_106203.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="avatardefault_92824" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\avatardefault_92824.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="3844443-disable-eye-inactive-see-show-view-watch_110296" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\3844443-disable-eye-inactive-see-show-view-watch_110296.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="notification-done_114461" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\notification-done_114461.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -520,11 +523,11 @@
   <data name="cloudrefresh_icon-icons.com_54403_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cloudrefresh_icon-icons.com_54403_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="error" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Online_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Online_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="avatardefault_92824" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\avatardefault_92824.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="arrow_down_16740_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow_down_16740_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -564,9 +567,6 @@
   </data>
   <data name="errorlog" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\errorlog.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_3844441_eye_see_show_view_watch_110305" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\3844441-eye-see-show-view-watch_110305.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="arrow_right_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow_right_64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -643,8 +643,8 @@
   <data name="filter_filters_navigation_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\filter_filters_navigation_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="rooster_128_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\rooster_128_128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="task_update_folder_progress_icon_142270" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\task_update_folder_progress_icon_142270.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -652,7 +652,13 @@
   <data name="onderhoud32_321" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\onderhoud32_321.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="view_screen_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\view_screen_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="stats_15267_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\stats_15267_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="stats_15267_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\stats_15267_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_3844441_eye_see_show_view_watch_110305" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\3844441-eye-see-show-view-watch_110305.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
