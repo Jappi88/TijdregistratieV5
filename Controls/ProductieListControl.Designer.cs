@@ -1001,7 +1001,6 @@ namespace Controls
             this.xsearch.UseSelectable = true;
             this.xsearch.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.xsearch.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
-            this.xsearch.TextChanged += new System.EventHandler(this.xsearchbox_TextChanged);
             this.xsearch.Enter += new System.EventHandler(this.xsearch_Enter);
             this.xsearch.Leave += new System.EventHandler(this.xsearch_Leave);
             // 

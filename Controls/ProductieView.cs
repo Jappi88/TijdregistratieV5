@@ -1411,7 +1411,7 @@ namespace Controls
                 return null;
             try
             {
-                var prodform = new ProductieLijstForm($"[{_Productelijsten.Count}]Productielijst");
+                var prodform = new ProductieLijstForm(_Productelijsten.Count);
 
                 prodform.FormClosing += AddProduction_FormClosing;
                 _Productelijsten.Add(prodform);

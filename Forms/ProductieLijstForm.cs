@@ -1,5 +1,6 @@
 ﻿using Rpm.Productie;
 using System;
+using System.Linq;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -9,7 +10,9 @@ namespace Forms
     {
         public string ListName => productieListControl1?.ListName;
 
-        public ProductieLijstForm(string name)
+        private int _ListIndex;
+
+        public ProductieLijstForm(int index)
         {
             InitializeComponent();
             SetStyle(
@@ -18,9 +21,33 @@ namespace Forms
                 ControlStyles.OptimizedDoubleBuffer |
                 ControlStyles.SupportsTransparentBackColor,
                 true);
-            productieListControl1.ListName = name;
-            xlijstname.Text = name;
-            this.Text = name;
+            _ListIndex = index;
+            productieListControl1.ListName = $"[{_ListIndex}]ProductieLijst";
+            UpdateListName();
+        }
+
+        private void UpdateListName()
+        {
+            var xname = productieListControl1.ListName;
+            int xitemcount = productieListControl1.ProductieLijst.Items.Count;
+            if (Manager.Opties?.Filters != null)
+            {
+                var name = xname;
+                var items = Manager.Opties.Filters.Where(x =>
+                    x.ListNames.Any(s => string.Equals(name, s, StringComparison.CurrentCultureIgnoreCase))).ToArray();
+                xname = items.Length > 0 ? string.Join(", ", items.Select(x => x.Name)) : name;
+            }
+
+            Text = xname;
+            var x1 = xitemcount == 1 ? "bewerking" : "bewerkingen";
+            xlijstname.Text = @$"{xname} met totaal {xitemcount} {x1}";
+            this.Invalidate();
+        }
+
+        public sealed override string Text
+        {
+            get => base.Text;
+            set => base.Text = value;
         }
 
         public new void Show(DockPanel dock)
@@ -52,13 +79,7 @@ namespace Forms
         {
             try
             {
-                this.BeginInvoke(new Action(() =>
-                {
-                    var count = productieListControl1.ProductieLijst.Items.Count;
-                    var x1 = count == 1 ? "bewerking" : "bewerkingen";
-                    xlijstname.Text = @$"{ListName} met totaal {count} {x1}";
-                    this.Invalidate();
-                }));
+                this.BeginInvoke(new Action(UpdateListName));
             }
             catch (Exception exception)
             {

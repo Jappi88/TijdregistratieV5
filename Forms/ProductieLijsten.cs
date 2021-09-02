@@ -76,25 +76,10 @@ namespace Forms
 
         private void UpdateStatusText(DockPanel dockPanel)
         {
-            //this.BeginInvoke(new Action(() =>
-            //{
-            //    try
-            //    {
-            //        var count = dockPanel.Contents.Count;
-            //        var xv = count == 1 ? "Productie" : "Producties";
-            //        this.Text = $"{count} {xv} Geopend";
-            //        this.Invalidate();
-                    
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        Console.WriteLine(e);
-            //    }
-            //}));
             try
             {
                 var count = dockPanel.Contents.Count;
-                var xv = count == 1 ? "Productie" : "Producties";
+                var xv = count == 1 ? "Productielijst" : "Productielijsten";
                 this.Text = $"{count} {xv} Geopend";
                 this.Invalidate();
 
@@ -113,65 +98,6 @@ namespace Forms
             this.BringToFront();
             this.Focus();
             this.Select();
-        }
-
-        private void SaveLastState(DockPanel dockPanel)
-        {
-            for (int i = 0; i < dockPanel.DockWindows.Count; i++)
-            {
-                var dw = dockPanel.DockWindows[i];
-            }
-        }
-
-        //public void ReArangeDocks(DockPanel dockPanel)
-        //{
-        //    try
-        //    {
-        //        if (IsDisposed || dockPanel?.Contents == null || dockPanel.Contents.Count == 0) return;
-        //        int xcur = 1;
-        //        foreach (var dock in dockPanel.Contents)
-        //        {
-        //            var state = GetDockState(xcur++);
-        //            dock.DockHandler.Form.Width = this.MinimumSize.Width;
-        //            dock.DockHandler.DockState = state;
-        //        }
-
-        //        if (dockPanel.Contents.Count > 4)
-        //            this.WindowState = FormWindowState.Maximized;
-        //        else
-        //            this.Size = GetFormSize(dockPanel.Contents.Count);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e);
-        //    }
-        //}
-
-        //private DockState GetDockState(int count)
-        //{
-        //    switch (count)
-        //    {
-        //        case 0:
-        //        case 1:
-        //        case 2:
-        //        case 5:
-        //            return DockState.Document;
-        //        case 3:
-        //        case 4:
-        //        case 6:
-        //            return DockState.DockBottom;
-        //        default: return DockState.Float;
-        //    }
-        //}
-
-        private Size GetFormSize(int forms)
-        {
-            int row = forms > 2 ? 2 : 1;
-            int colmns = forms == 3 ? 2 : forms < 3 ? forms : forms > 4 ? 3 : 2;
-
-            int width = this.MinimumSize.Width * colmns;
-            int height = this.MinimumSize.Height * row;
-            return new Size(width, height);
         }
 
         private void Producties_Shown(object sender, EventArgs e)

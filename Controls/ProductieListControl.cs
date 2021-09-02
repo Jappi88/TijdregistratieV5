@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xaml;
-using BrightIdeasSoftware;
+﻿using BrightIdeasSoftware;
 using Forms;
 using MetroFramework.Controls;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
-using ProductieManager.Rpm.Productie;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using static Forms.RangeCalculatorForm;
 using Timer = System.Timers.Timer;
 
@@ -130,6 +127,8 @@ namespace Controls
                 {
                     this.BeginInvoke(new MethodInvoker(() =>
                     {
+                        this.xsearch.TextChanged -= this.xsearchbox_TextChanged;
+                        this.xsearch.TextChanged += this.xsearchbox_TextChanged;
                         InitImageList();
                         InitColumns();
                         IsLoaded = true;
@@ -242,16 +241,6 @@ namespace Controls
             //Manager.OnDbEndUpdate -= Manager_OnDbEndUpdate;
             Manager.OnManagerLoaded -= _manager_OnManagerLoaded;
             Manager.FilterChanged -= Manager_FilterChanged;
-        }
-
-        private void Manager_OnDbEndUpdate()
-        {
-            _iswaiting = false;
-        }
-
-        private void Manager_OnDbBeginUpdate()
-        {
-            SetWaitUI();
         }
 
         private bool _iswaiting;
@@ -562,16 +551,17 @@ namespace Controls
         public void UpdateProductieList(bool reload, bool showwaitui = true)
         {
             if (_loadingproductielist || Manager.Opties == null || !CanLoad) return;
-            _loadingproductielist = true;
+            
             this.Invoke(new MethodInvoker(async() =>
             {
-                InitFilterStrips();
+               
               
                 if (showwaitui)
                     SetWaitUI();
-               
                 try
                 {
+                    _loadingproductielist = true;
+                    InitFilterStrips();
                     var selected1 = ProductieLijst.SelectedObject;
                     var groups1 = ProductieLijst.Groups.Cast<ListViewGroup>().Select(t => (OLVGroup) t.Tag)
                         .Where(x => x.Collapsed)
@@ -583,25 +573,29 @@ namespace Controls
 
                     if (!IsBewerkingView)
                     {
-                        var xprods = !reload && CustomList && Producties != null
-                            ? Producties.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter())).ToList()
-                            : Producties = await Manager.GetProducties(states, true, !IsBewerkingView);
-                        if (!CanLoad) return;
-                        if (ValidHandler != null)
-                            xprods = xprods.Where(x =>IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
-                                .ToList();
-                        else
-                            xprods = xprods.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter(), states, true)).ToList();
-                        ProductieLijst.BeginUpdate();
-                        ProductieLijst.SetObjects(xprods);
-                        ProductieLijst.EndUpdate();
+                        if (CanLoad)
+                        {
+                            var xprods = !reload && CustomList && Producties != null
+                                ? Producties.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
+                                    .ToList()
+                                : Producties = await Manager.GetProducties(states, true, !IsBewerkingView);
+                            if (ValidHandler != null)
+                                xprods = xprods.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
+                                    .ToList();
+                            else
+                                xprods = xprods.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter(), states, true))
+                                    .ToList();
+                            ProductieLijst.BeginUpdate();
+                            ProductieLijst.SetObjects(xprods);
+                            ProductieLijst.EndUpdate();
+                        }
                     }
-                    else
+                    else if(CanLoad)
                     {
+                        
                         var bws = !reload && CustomList && Bewerkingen != null
                             ? Bewerkingen.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter())).ToList()
                             : Bewerkingen = (await Manager.GetBewerkingen(states, true));
-                        if (!CanLoad) return;
                         if (ValidHandler != null)
                             bws = bws.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
                                 .ToList();
@@ -746,6 +740,7 @@ namespace Controls
         }
 
         private bool _IsUpdating;
+
         public Task UpdateList(bool onlywhilesyncing)
         {
             return Task.Factory.StartNew(() =>
@@ -765,12 +760,15 @@ namespace Controls
                                 var xprod = await Manager.Database.GetProductie(prod.ProductieNr);
                                 if (onlywhilesyncing && !IsSyncing) break;
                                 if (IsDisposed || Disposing) break;
-                                bool valid = xprod != null;
+                                bool valid = xprod != null && IsAllowd(xprod);
                                 if (valid)
                                 {
                                     if (ValidHandler != null)
-                                        valid = states.Any(xprod.IsValidState) && ValidHandler.Invoke(xprod, null);
-                                    else valid = states.Any(x => xprod.IsValidState(x)) && xprod.IsAllowed(null);
+                                        valid = states.Any(xprod.IsValidState) &&
+                                                ValidHandler.Invoke(xprod, null);
+                                    else
+                                        valid = states.Any(x => xprod.IsValidState(x)) && IsAllowd(xprod) &&
+                                                xprod.IsAllowed(null);
                                 }
                                 if (!valid)
                                 {
@@ -795,12 +793,12 @@ namespace Controls
                                 var xbew = Werk.FromPath(bew.Path)?.Bewerking;
                                 if (onlywhilesyncing && !IsSyncing) break;
                                 if (IsDisposed || Disposing) break;
-                                bool valid = xbew != null;
+                                bool valid = xbew != null && IsAllowd(xbew);
                                 if (valid)
                                 {
                                     if (ValidHandler != null)
-                                        valid = states.Any(xbew.IsValidState) && ValidHandler.Invoke(xbew, null);
-                                    else valid = states.Any(x => xbew.IsValidState(x)) && xbew.IsAllowed(null);
+                                        valid &= states.Any(xbew.IsValidState) && ValidHandler.Invoke(xbew, null);
+                                    else valid &= states.Any(x => xbew.IsValidState(x)) && xbew.IsAllowed(null);
                                 }
                                 if (!valid)
                                 {
