@@ -578,14 +578,14 @@ namespace Rpm.Productie
                                         if (start > -1)
                                         {
                                             start += 13;
-                                            end = text.ToLower().GetWordIndex("geproduceerd:", start);
+                                            end = text.ToLower().GetWordIndex("benodigde materialen:", start);
                                             if (end > -1)
                                             {
-                                                value = text.Substring(start, end - start).Replace("Aantal", "")
-                                                    .Replace("Artikelnr.", "").Replace("Omschrijving", "")
-                                                    .Replace("datum gereed", "").TrimStart('\n').Replace("\n\n", "\n")
-                                                    .TrimEnd('\n').Trim();
-                                                value = value.Replace("paraaf gereed\n", "");
+                                                value = text.Substring(start, end - start).Replace("Aantal", "\n")
+                                                    .Replace("Artikelnr.", "\n").Replace("Omschrijving", "\n")
+                                                    .Replace("datum gereed", "\n").Replace("Geproduceerd:", "\n")
+                                                    .Replace("stuks", "\n").Trim().TrimStart('\n').Replace("\n\n", "\n");
+                                                value = value.Replace("paraaf gereed\n", "").Replace("\n\n", "\n").Replace("\n   \n", "\n");
                                                 start = 0;
                                                 end = value.Length;
                                                 var length = GetLengthBySpace(value);
