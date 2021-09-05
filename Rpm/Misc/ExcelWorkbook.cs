@@ -496,7 +496,7 @@ namespace Rpm.Misc
                 double totaaltg = 0;
                 //var allbws = producties.Select(x => x.Bewerkingen).ToArray();
                 var personeel = new List<string>();
-               
+               cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11);
                 foreach (var bw in producties)
                 {
                     var tg = bereik == null ? bw.TijdAanGewerkt() : bw.TijdAanGewerkt(bereik.Start, bereik.Stop);
@@ -507,13 +507,17 @@ namespace Rpm.Misc
 
                     var formatting = CreateRowConditionalFormatRules(sheet, rowindex + 1, ProductieColumns.Length);
                     cellindex = 0;
-                  
+                    
                     foreach (var xrow in ProductieColumns)
                     {
                         var value = GetValue(bw, xrow, bereik, out var format);
-                        cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11);
-                        if (!string.IsNullOrEmpty(format))
-                            cellStyleBorder.DataFormat = workbook.CreateDataFormat().GetFormat(format);
+
+                        //if (!string.IsNullOrEmpty(format))
+                        //{
+                        //    cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11);
+                        //    cellStyleBorder.DataFormat = workbook.CreateDataFormat().GetFormat(format);
+                        //}
+                        //else cellStyleBorder.DataFormat = 0;
                         var cell = CreateCell(row, cellindex++, value,cellStyleBorder);
                         
                     }
