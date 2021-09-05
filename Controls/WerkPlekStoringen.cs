@@ -84,12 +84,12 @@ namespace Controls
 
         public void RefreshItems(WerkPlek plek)
         {
-            this.BeginInvoke(new MethodInvoker(() => xRefreshItems(plek)));
+            BeginInvoke(new MethodInvoker(() => xRefreshItems(plek)));
         }
 
         public void RefreshItems(KeyValuePair<string, List<WerkPlek>> pair)
         {
-            this.BeginInvoke(new MethodInvoker(() => xRefreshItems(pair)));
+            BeginInvoke(new MethodInvoker(() => xRefreshItems(pair)));
         }
 
         private void xRefreshItems(KeyValuePair<string, List<WerkPlek>> pair)
@@ -126,7 +126,6 @@ namespace Controls
             }
             else
             {
-               
                 if (xst != null && !allowed)
                     xskillview.RemoveObject(xst);
                 else if (xst != null)
@@ -328,7 +327,7 @@ namespace Controls
                     }
                     else
                     {
-                        var wpc = new WerkPlekChooser(wps,null);
+                        var wpc = new WerkPlekChooser(wps, null);
                         if (wpc.ShowDialog() != DialogResult.OK)
                             return;
                         plek = wpc.Selected;

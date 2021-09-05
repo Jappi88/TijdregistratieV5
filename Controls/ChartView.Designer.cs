@@ -361,9 +361,9 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xstatus.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xstatus.Location = new System.Drawing.Point(3, 170);
+            this.xstatus.Location = new System.Drawing.Point(3, 167);
             this.xstatus.Name = "xstatus";
-            this.xstatus.Size = new System.Drawing.Size(870, 388);
+            this.xstatus.Size = new System.Drawing.Size(870, 391);
             this.xstatus.TabIndex = 6;
             this.xstatus.Text = "Producties Laden...";
             this.xstatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

@@ -29,6 +29,7 @@ namespace ProductieManager.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.xannuleren = new MetroFramework.Controls.MetroButton();
             this.xok = new MetroFramework.Controls.MetroButton();
             this.xoperandtype = new MetroFramework.Controls.MetroComboBox();
@@ -37,16 +38,20 @@ namespace ProductieManager.Forms
             this.xvaluetypes = new MetroFramework.Controls.MetroComboBox();
             this.xtextvalue = new MetroFramework.Controls.MetroTextBox();
             this.xvaluepanel = new MetroFramework.Controls.MetroPanel();
+            this.xdatepanel = new System.Windows.Forms.Panel();
+            this.xcurrentcheckbox = new System.Windows.Forms.CheckBox();
+            this.xdatevalue = new System.Windows.Forms.DateTimePicker();
             this.xcheckvalue = new MetroFramework.Controls.MetroCheckBox();
             this.xdecimalvalue = new System.Windows.Forms.NumericUpDown();
-            this.xdatevalue = new MetroFramework.Controls.MetroDateTime();
             this.xcombovalue = new MetroFramework.Controls.MetroComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.xcriteriahtml = new HtmlRenderer.HtmlPanel();
             this.xvoorwaardenb = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.metroPanel1.SuspendLayout();
             this.xvaluepanel.SuspendLayout();
+            this.xdatepanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xdecimalvalue)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -61,6 +66,7 @@ namespace ProductieManager.Forms
             this.xannuleren.Size = new System.Drawing.Size(100, 34);
             this.xannuleren.TabIndex = 0;
             this.xannuleren.Text = "Annuleren";
+            this.toolTip1.SetToolTip(this.xannuleren, "Annuleren");
             this.xannuleren.UseSelectable = true;
             this.xannuleren.Click += new System.EventHandler(this.xannuleren_Click);
             // 
@@ -73,6 +79,7 @@ namespace ProductieManager.Forms
             this.xok.Size = new System.Drawing.Size(100, 34);
             this.xok.TabIndex = 1;
             this.xok.Text = "OK";
+            this.toolTip1.SetToolTip(this.xok, "Opslaan");
             this.xok.UseSelectable = true;
             this.xok.Click += new System.EventHandler(this.xok_Click);
             // 
@@ -85,6 +92,7 @@ namespace ProductieManager.Forms
             this.xoperandtype.Name = "xoperandtype";
             this.xoperandtype.Size = new System.Drawing.Size(79, 29);
             this.xoperandtype.TabIndex = 2;
+            this.toolTip1.SetToolTip(this.xoperandtype, "Kies of de criteria \'EN\', \'OF\' of \'ALS\', als de andere waarde moet zijn. ");
             this.xoperandtype.UseSelectable = true;
             this.xoperandtype.SelectedIndexChanged += new System.EventHandler(this.xoperandtype_SelectedIndexChanged);
             // 
@@ -125,6 +133,7 @@ namespace ProductieManager.Forms
             this.xvaluetypes.Name = "xvaluetypes";
             this.xvaluetypes.Size = new System.Drawing.Size(191, 29);
             this.xvaluetypes.TabIndex = 5;
+            this.toolTip1.SetToolTip(this.xvaluetypes, "Kies een type van HOE de criteria vergeleken moet worden");
             this.xvaluetypes.UseSelectable = true;
             this.xvaluetypes.SelectedIndexChanged += new System.EventHandler(this.xvaluetypes_SelectedIndexChanged);
             // 
@@ -160,6 +169,7 @@ namespace ProductieManager.Forms
             this.xtextvalue.Size = new System.Drawing.Size(450, 29);
             this.xtextvalue.TabIndex = 6;
             this.xtextvalue.Text = "Vul in een criteria...";
+            this.toolTip1.SetToolTip(this.xtextvalue, "Vul in een text waaraan de criteria moet voldoen");
             this.xtextvalue.UseSelectable = true;
             this.xtextvalue.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.xtextvalue.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
@@ -169,9 +179,9 @@ namespace ProductieManager.Forms
             // 
             // xvaluepanel
             // 
+            this.xvaluepanel.Controls.Add(this.xdatepanel);
             this.xvaluepanel.Controls.Add(this.xcheckvalue);
             this.xvaluepanel.Controls.Add(this.xdecimalvalue);
-            this.xvaluepanel.Controls.Add(this.xdatevalue);
             this.xvaluepanel.Controls.Add(this.xtextvalue);
             this.xvaluepanel.Controls.Add(this.xcombovalue);
             this.xvaluepanel.Dock = System.Windows.Forms.DockStyle.Top;
@@ -186,16 +196,54 @@ namespace ProductieManager.Forms
             this.xvaluepanel.VerticalScrollbarHighlightOnWheel = false;
             this.xvaluepanel.VerticalScrollbarSize = 10;
             // 
+            // xdatepanel
+            // 
+            this.xdatepanel.Controls.Add(this.xcurrentcheckbox);
+            this.xdatepanel.Controls.Add(this.xdatevalue);
+            this.xdatepanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.xdatepanel.Location = new System.Drawing.Point(0, 104);
+            this.xdatepanel.Name = "xdatepanel";
+            this.xdatepanel.Size = new System.Drawing.Size(450, 41);
+            this.xdatepanel.TabIndex = 11;
+            this.xdatepanel.Visible = false;
+            // 
+            // xcurrentcheckbox
+            // 
+            this.xcurrentcheckbox.AutoSize = true;
+            this.xcurrentcheckbox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xcurrentcheckbox.Location = new System.Drawing.Point(343, 14);
+            this.xcurrentcheckbox.Name = "xcurrentcheckbox";
+            this.xcurrentcheckbox.Size = new System.Drawing.Size(104, 21);
+            this.xcurrentcheckbox.TabIndex = 9;
+            this.xcurrentcheckbox.Text = "Huidige Tijd";
+            this.toolTip1.SetToolTip(this.xcurrentcheckbox, "KIes dit voor als je de criteria wilt vergelijken met de huidige tijd ");
+            this.xcurrentcheckbox.UseVisualStyleBackColor = true;
+            // 
+            // xdatevalue
+            // 
+            this.xdatevalue.CalendarFont = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xdatevalue.CustomFormat = "dddd dd MMMM yyyy HH:mm";
+            this.xdatevalue.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xdatevalue.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.xdatevalue.Location = new System.Drawing.Point(3, 8);
+            this.xdatevalue.MinimumSize = new System.Drawing.Size(4, 29);
+            this.xdatevalue.Name = "xdatevalue";
+            this.xdatevalue.Size = new System.Drawing.Size(334, 29);
+            this.xdatevalue.TabIndex = 8;
+            this.toolTip1.SetToolTip(this.xdatevalue, "Vul in de datum en tijd waaraan de criteria moet voldoen");
+            this.xdatevalue.ValueChanged += new System.EventHandler(this.xdatevalue_ValueChanged);
+            // 
             // xcheckvalue
             // 
             this.xcheckvalue.AutoSize = true;
             this.xcheckvalue.Dock = System.Windows.Forms.DockStyle.Top;
             this.xcheckvalue.FontSize = MetroFramework.MetroCheckBoxSize.Medium;
-            this.xcheckvalue.Location = new System.Drawing.Point(0, 114);
+            this.xcheckvalue.Location = new System.Drawing.Point(0, 85);
             this.xcheckvalue.Name = "xcheckvalue";
             this.xcheckvalue.Size = new System.Drawing.Size(450, 19);
             this.xcheckvalue.TabIndex = 10;
             this.xcheckvalue.Text = "NIET WAAR";
+            this.toolTip1.SetToolTip(this.xcheckvalue, "Vergelijk de criteria met waar of niet waar");
             this.xcheckvalue.UseSelectable = true;
             this.xcheckvalue.CheckedChanged += new System.EventHandler(this.xcheckvalue_CheckedChanged);
             // 
@@ -203,7 +251,7 @@ namespace ProductieManager.Forms
             // 
             this.xdecimalvalue.Dock = System.Windows.Forms.DockStyle.Top;
             this.xdecimalvalue.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xdecimalvalue.Location = new System.Drawing.Point(0, 87);
+            this.xdecimalvalue.Location = new System.Drawing.Point(0, 58);
             this.xdecimalvalue.Maximum = new decimal(new int[] {
             1410065407,
             2,
@@ -217,17 +265,9 @@ namespace ProductieManager.Forms
             this.xdecimalvalue.Name = "xdecimalvalue";
             this.xdecimalvalue.Size = new System.Drawing.Size(450, 27);
             this.xdecimalvalue.TabIndex = 9;
+            this.xdecimalvalue.ThousandsSeparator = true;
+            this.toolTip1.SetToolTip(this.xdecimalvalue, "Vul in de waarde waar de criteria mee vergeleken moet worden");
             this.xdecimalvalue.ValueChanged += new System.EventHandler(this.xdecimalvalue_ValueChanged);
-            // 
-            // xdatevalue
-            // 
-            this.xdatevalue.Dock = System.Windows.Forms.DockStyle.Top;
-            this.xdatevalue.Location = new System.Drawing.Point(0, 58);
-            this.xdatevalue.MinimumSize = new System.Drawing.Size(0, 29);
-            this.xdatevalue.Name = "xdatevalue";
-            this.xdatevalue.Size = new System.Drawing.Size(450, 29);
-            this.xdatevalue.TabIndex = 8;
-            this.xdatevalue.ValueChanged += new System.EventHandler(this.xdatevalue_ValueChanged);
             // 
             // xcombovalue
             // 
@@ -238,6 +278,7 @@ namespace ProductieManager.Forms
             this.xcombovalue.Name = "xcombovalue";
             this.xcombovalue.Size = new System.Drawing.Size(450, 29);
             this.xcombovalue.TabIndex = 7;
+            this.toolTip1.SetToolTip(this.xcombovalue, "Kies een waarde waaraan de criteria moet voldoen.");
             this.xcombovalue.UseSelectable = true;
             this.xcombovalue.SelectedIndexChanged += new System.EventHandler(this.xcombovalue_SelectedIndexChanged);
             // 
@@ -293,6 +334,10 @@ namespace ProductieManager.Forms
             this.panel2.Size = new System.Drawing.Size(450, 43);
             this.panel2.TabIndex = 10;
             // 
+            // toolTip1
+            // 
+            this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            // 
             // NewFilterEntry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -309,6 +354,8 @@ namespace ProductieManager.Forms
             this.metroPanel1.ResumeLayout(false);
             this.xvaluepanel.ResumeLayout(false);
             this.xvaluepanel.PerformLayout();
+            this.xdatepanel.ResumeLayout(false);
+            this.xdatepanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xdecimalvalue)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
@@ -327,12 +374,15 @@ namespace ProductieManager.Forms
         private MetroFramework.Controls.MetroTextBox xtextvalue;
         private MetroFramework.Controls.MetroPanel xvaluepanel;
         private System.Windows.Forms.NumericUpDown xdecimalvalue;
-        private MetroFramework.Controls.MetroDateTime xdatevalue;
+        private System.Windows.Forms.DateTimePicker xdatevalue;
         private MetroFramework.Controls.MetroComboBox xcombovalue;
         private MetroFramework.Controls.MetroCheckBox xcheckvalue;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private HtmlRenderer.HtmlPanel xcriteriahtml;
         private System.Windows.Forms.Button xvoorwaardenb;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Panel xdatepanel;
+        private System.Windows.Forms.CheckBox xcurrentcheckbox;
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Emit;
 using System.Windows.Forms;
 using Forms;
 using ProductieManager.Forms;
@@ -13,8 +12,8 @@ namespace Controls
 {
     public partial class FilterEntryEditorUI : UserControl
     {
-        private List<FilterEntry> _Criterias = new List<FilterEntry>();
-        public List<FilterEntry> Criterias => _Criterias;
+        public List<FilterEntry> Criterias { get; private set; } = new();
+
         private bool _UseOperand;
 
         public FilterEntryEditorUI()
@@ -44,8 +43,8 @@ namespace Controls
 
         public string CreateHtmlFromList()
         {
-            if (_Criterias == null || _Criterias.Count == 0) return string.Empty;
-            return string.Join("\n", _Criterias.Select(x => x.ToHtmlString()));
+            if (Criterias == null || Criterias.Count == 0) return string.Empty;
+            return string.Join("\n", Criterias.Select(x => x.ToHtmlString()));
         }
 
         private void DeleteSelectedCriterias()
@@ -57,7 +56,7 @@ namespace Controls
                 var crits = xcriterialijst.SelectedObjects.Cast<FilterEntry>().ToArray();
                 xcriterialijst.RemoveObjects(crits);
                 foreach (var xcrit in crits)
-                    _Criterias.Remove(xcrit);
+                    Criterias.Remove(xcrit);
 
                 UpdateCriterias();
                 xcriterialijst.Invalidate();
@@ -69,7 +68,8 @@ namespace Controls
             try
             {
                 xvariablelijst.Items.Clear();
-                var properties = typeof(Bewerking).GetProperties().Where(x => x.CanRead && x.PropertyType.IsSupportedType()).ToArray();
+                var properties = typeof(Bewerking).GetProperties()
+                    .Where(x => x.CanRead && x.PropertyType.IsSupportedType()).ToArray();
                 xvariablelijst.SetObjects(properties);
                 xvariablelijst.Sort(0);
             }
@@ -83,12 +83,13 @@ namespace Controls
         {
             try
             {
-                _Criterias = criterias;
+                Criterias = criterias;
                 if (criterias == null)
                 {
                     xcriterialijst.SetObjects(new FilterEntry[] { });
                     return;
                 }
+
                 xcriterialijst.SetObjects(criterias);
                 UpdateHtmlCriteria();
             }
@@ -107,11 +108,12 @@ namespace Controls
         {
             if (xvariablelijst.SelectedItems.Count == 0) return;
             var xvar = xvariablelijst.SelectedItems[0].Text;
-            var xnewcrit = new NewFilterEntry(xvar, xcriterialijst.Items.Count > 0 || _UseOperand) { Title = $"Nieuwe regel voor {xvar}" };
+            var xnewcrit = new NewFilterEntry(xvar, xcriterialijst.Items.Count > 0 || _UseOperand)
+                {Title = $"Nieuwe regel voor {xvar}"};
 
             if (xnewcrit.ShowDialog() == DialogResult.OK)
             {
-                _Criterias.Add(xnewcrit.SelectedFilter);
+                Criterias.Add(xnewcrit.SelectedFilter);
                 xcriterialijst.AddObject(xnewcrit.SelectedFilter);
                 xcriterialijst.SelectedObject = xnewcrit.SelectedFilter;
                 xcriterialijst.SelectedItem?.EnsureVisible();
@@ -129,15 +131,13 @@ namespace Controls
         {
             var xfilter = SelectedFilterEntry();
             if (xfilter == null) return;
-            int index = _Criterias.IndexOf(xfilter);
+            var index = Criterias.IndexOf(xfilter);
             if (index > -1)
             {
                 var xnewcrit = new NewFilterEntry(xfilter) {Title = $"Wijzig regel voor {xfilter.PropertyName}"};
                 if (xnewcrit.ShowDialog() == DialogResult.OK)
                 {
-
-
-                    _Criterias[index] = xnewcrit.SelectedFilter;
+                    Criterias[index] = xnewcrit.SelectedFilter;
                     //xfilter.Filters.Remove(xvar);
                     //xvar = xnewcrit.SelectedFilter;
                     //xvar.OldOperandType = xvar.OperandType;
@@ -154,10 +154,10 @@ namespace Controls
             if (xfilter == null) return;
             if (xcriterialijst.SelectedIndex == 0) return;
             var index = xcriterialijst.SelectedIndex - 1;
-            _Criterias.Remove(xfilter);
-            _Criterias.Insert(index, xfilter);
+            Criterias.Remove(xfilter);
+            Criterias.Insert(index, xfilter);
             xcriterialijst.RemoveObject(xfilter);
-            xcriterialijst.InsertObjects(index, new FilterEntry[] { xfilter });
+            xcriterialijst.InsertObjects(index, new[] {xfilter});
             xcriterialijst.SelectedObject = xfilter;
             xcriterialijst.SelectedItem?.EnsureVisible();
             UpdateCriterias();
@@ -167,7 +167,7 @@ namespace Controls
         {
             if (!_UseOperand)
             {
-                bool first = true;
+                var first = true;
                 var xfilters = xcriterialijst.Objects.Cast<FilterEntry>().ToList();
                 var filters = new List<FilterEntry>();
                 foreach (var entry in xfilters)
@@ -187,9 +187,13 @@ namespace Controls
                     xcriterialijst.RefreshObject(entry);
                     filters.Add(entry);
                 }
+
                 InitCriterias(filters);
             }
-            else UpdateHtmlCriteria();
+            else
+            {
+                UpdateHtmlCriteria();
+            }
         }
 
         private void UpdateHtmlCriteria()
@@ -204,7 +208,7 @@ namespace Controls
             if (xcriterialijst.SelectedIndex >= xcriterialijst.Items.Count - 1 || xvar == null) return;
             var index = xcriterialijst.SelectedIndex + 1;
             xcriterialijst.RemoveObject(xvar);
-            xcriterialijst.InsertObjects(index, new FilterEntry[] { xvar });
+            xcriterialijst.InsertObjects(index, new[] {xvar});
             xcriterialijst.SelectedObject = xvar;
             xcriterialijst.SelectedItem?.EnsureVisible();
             UpdateCriterias();
@@ -225,12 +229,12 @@ namespace Controls
             WijzigCriteria();
         }
 
-        private void xvariablelijst_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void xvariablelijst_SelectedIndexChanged(object sender, EventArgs e)
         {
             xaddcriteria.Enabled = xvariablelijst.SelectedItems.Count > 0;
         }
 
-        private void xcriterialijst_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void xcriterialijst_SelectedIndexChanged(object sender, EventArgs e)
         {
             xwijzigfilterregel.Enabled = xcriterialijst.SelectedItems.Count > 0;
             xdeletefilterregel.Enabled = xcriterialijst.SelectedItems.Count > 0;

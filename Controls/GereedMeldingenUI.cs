@@ -5,7 +5,7 @@ namespace Controls
 {
     public partial class GereedMeldingenUI : UserControl
     {
-        public List<string> Producties { get; private set; } = new List<string>();
+        public List<string> Producties { get; } = new();
 
         public GereedMeldingenUI()
         {

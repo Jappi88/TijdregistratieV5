@@ -36,7 +36,7 @@
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <AutorunEnabled>true</AutorunEnabled>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.0.1.0</ApplicationVersion>
+    <ApplicationVersion>3.2.8.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -46,7 +46,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -54,14 +54,15 @@
     <LangVersion>9.0</LangVersion>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile>bin\Debug\ProductieManager.xml</DocumentationFile>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -82,11 +83,10 @@
     <ApplicationIcon>logo-vanderValk.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>DE553A3E1F1561DA6BA4B17C6C55DA8D28DCE6BB</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>39A5329C52E5F7DBD3A24D86BC7DCE2FF014F85E</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>
-    </ManifestKeyFile>
+    <ManifestKeyFile>Tijdregistratie_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -106,8 +106,7 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>RPMLicense.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <DelaySign>false</DelaySign>
@@ -115,6 +114,9 @@
   <PropertyGroup />
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CircularProgressBar">
@@ -343,12 +345,6 @@
     </Compile>
     <Compile Include="Forms\AlleNotitiesForm.Designer.cs">
       <DependentUpon>AlleNotitiesForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\AllProductiesInfo.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AllProductiesInfo.Designer.cs">
-      <DependentUpon>AllProductiesInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ChatForm.cs">
       <SubType>Form</SubType>
@@ -741,6 +737,36 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Rpm\AutoUpdater\AutoUpdater.cs" />
+    <Compile Include="Rpm\AutoUpdater\BasicAuthentication.cs" />
+    <Compile Include="Rpm\AutoUpdater\CustomAuthentication.cs" />
+    <Compile Include="Rpm\AutoUpdater\Forms\DownloadUpdateDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Rpm\AutoUpdater\Forms\DownloadUpdateDialog.Designer.cs">
+      <DependentUpon>DownloadUpdateDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Rpm\AutoUpdater\Forms\RemindLaterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Rpm\AutoUpdater\Forms\RemindLaterForm.Designer.cs">
+      <DependentUpon>RemindLaterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Rpm\AutoUpdater\Forms\UpdateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Rpm\AutoUpdater\Forms\UpdateForm.Designer.cs">
+      <DependentUpon>UpdateForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Rpm\AutoUpdater\IAuthentication.cs" />
+    <Compile Include="Rpm\AutoUpdater\IPersistenceProvider.cs" />
+    <Compile Include="Rpm\AutoUpdater\MyWebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Rpm\AutoUpdater\NetworkAuthentication.cs" />
+    <Compile Include="Rpm\AutoUpdater\ParseUpdateInfoEventArgs.cs" />
+    <Compile Include="Rpm\AutoUpdater\RegistryPersistenceProvider.cs" />
+    <Compile Include="Rpm\AutoUpdater\UpdateInfoEventArgs.cs" />
     <Compile Include="Rpm\Connection\SmtpConnectorBase.cs" />
     <Compile Include="Rpm\Connection\SmtpConnectorWithoutSsl.cs" />
     <Compile Include="Rpm\Connection\SmtpConnectorWithSsl.cs" />
@@ -948,9 +974,6 @@
     <EmbeddedResource Include="Forms\AlleNotitiesForm.resx">
       <DependentUpon>AlleNotitiesForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AllProductiesInfo.resx">
-      <DependentUpon>AllProductiesInfo.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ChatForm.resx">
       <DependentUpon>ChatForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1152,6 +1175,33 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Rpm\AutoUpdater\Forms\DownloadUpdateDialog.nl-NL.resx">
+      <DependentUpon>DownloadUpdateDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Rpm\AutoUpdater\Forms\DownloadUpdateDialog.nl.resx">
+      <DependentUpon>DownloadUpdateDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Rpm\AutoUpdater\Forms\DownloadUpdateDialog.resx">
+      <DependentUpon>DownloadUpdateDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Rpm\AutoUpdater\Forms\RemindLaterForm.nl-NL.resx">
+      <DependentUpon>RemindLaterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Rpm\AutoUpdater\Forms\RemindLaterForm.nl.resx">
+      <DependentUpon>RemindLaterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Rpm\AutoUpdater\Forms\RemindLaterForm.resx">
+      <DependentUpon>RemindLaterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Rpm\AutoUpdater\Forms\UpdateForm.nl-NL.resx">
+      <DependentUpon>UpdateForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Rpm\AutoUpdater\Forms\UpdateForm.nl.resx">
+      <DependentUpon>UpdateForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Rpm\AutoUpdater\Forms\UpdateForm.resx">
+      <DependentUpon>UpdateForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Rpm\Controls\Form_Alert.resx">
       <DependentUpon>Form_Alert.cs</DependentUpon>
     </EmbeddedResource>
@@ -1168,11 +1218,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\ZipExtractor.exe.config" />
     <None Include="RPMLicense.snk" />
     <EmbeddedResource Include="Rpm\Controls\ImageCombineForm.resx">
       <DependentUpon>ImageCombineForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Rpm\Files\PersoneelDb.db" />
+    <None Include="Tijdregistratie_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -1277,6 +1329,23 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\add_Blue_circle_32x32.png" />
+    <None Include="Resources\verbeteringen_32x32.png" />
+    <None Include="Resources\fixed_Bug_32x32.png" />
+    <None Include="Resources\add_circle_32x32.png" />
+    <None Include="Resources\ZipExtractor.exe" />
+    <None Include="Resources\update.png" />
+    <None Include="Resources\hand_point.png" />
+    <None Include="Resources\download1.png" />
+    <None Include="Resources\download_32.png" />
+    <None Include="Resources\download.png" />
+    <None Include="Resources\cloudrefresh_icon-icons.com_54403_256x256.png" />
+    <None Include="Resources\clouddown_icon-icons.com_54405.png" />
+    <None Include="Resources\clock_play.png" />
+    <None Include="Resources\clock_go1.png" />
+    <None Include="Resources\clock_go_32.png" />
+    <None Include="Resources\clock_go.png" />
+    <None Include="Resources\apps_system_software_update_15746.png" />
     <None Include="Resources\3844441-eye-see-show-view-watch_110305.png" />
     <None Include="Resources\stats_15267_128x128.png" />
     <None Include="Resources\stats_15267_32x32.png" />
@@ -1476,10 +1545,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Dropbox\Repos\AutoUpdater.NET\AutoUpdater.NET.csproj">
-      <Project>{fb9e7e6b-b19f-4f37-a708-2996190cef13}</Project>
-      <Name>AutoUpdater.NET</Name>
-    </ProjectReference>
+    <PublishFile Include="ProductieManager.pdb">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Code to merge the assemblies into one:setup.exe -->

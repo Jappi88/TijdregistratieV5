@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,7 +12,6 @@ using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
-using Point = System.Drawing.Point;
 
 namespace Controls
 {
@@ -27,7 +25,7 @@ namespace Controls
             InitializeComponent();
             xdatachart.DataTooltip = new DefaultTooltip
             {
-                SelectionMode = TooltipSelectionMode.OnlySender 
+                SelectionMode = TooltipSelectionMode.OnlySender
             };
             xserieslist.CheckStateGetter = GetCheckedState;
         }
@@ -46,21 +44,21 @@ namespace Controls
         }
 
         private bool _IsWaiting;
+
         private void StartWaiting()
         {
             if (_IsWaiting) return;
             _IsWaiting = true;
             Task.Run(async () =>
             {
-                int cur = 0;
-                string xvalue = "Producties Laden.";
-                this.BeginInvoke(new MethodInvoker(() => xstatus.Visible = true));
+                var cur = 0;
+                var xvalue = "Producties Laden.";
+                BeginInvoke(new MethodInvoker(() => xstatus.Visible = true));
                 while (_IsWaiting && !IsDisposed)
-                {
                     try
                     {
-                        int xcur = cur;
-                        this.BeginInvoke(new MethodInvoker(() => xstatus.Text = xvalue.PadRight(xvalue.Length + xcur, '.')));
+                        var xcur = cur;
+                        BeginInvoke(new MethodInvoker(() => xstatus.Text = xvalue.PadRight(xvalue.Length + xcur, '.')));
                         cur++;
                         if (cur > 5) cur = 0;
                         await Task.Delay(350);
@@ -68,9 +66,8 @@ namespace Controls
                     catch (Exception e)
                     {
                     }
-                   
-                }
-                this.BeginInvoke(new MethodInvoker(() => xstatus.Visible = false));
+
+                BeginInvoke(new MethodInvoker(() => xstatus.Visible = false));
                 _IsWaiting = false;
             });
         }
@@ -93,26 +90,21 @@ namespace Controls
                         _producties =
                             await Manager.GetBewerkingen(new[] {ViewState.Alles, ViewState.Gereed}, true);
                     var chartdata = _producties.CreateChartData(iswerkplek, startweek, startjaar, type, true, shownow);
-                    
+
                     //xtijdgewerktlist.Columns?.Clear();
                     if (chartdata.Count > 0)
                     {
-                     
                         Invoke(new Action(() =>
                         {
                             var werkplek = iswerkplek ? "Werkplek" : "Bewerking";
                             var xperiode = shownow ? "uur" :
                                 chartdata.Any(t => t.Key.ToLower() == "maandag") ? "dagen" : "weken";
                             if (_producties == null)
-                            {
                                 xstatuslabel.Text =
                                     $@"{werkplek} {type} overzicht van de afgelopen {chartdata.Count} {xperiode}";
-                            }
                             else
-                            {
                                 xstatuslabel.Text =
                                     $@"{werkplek} {type} overzicht van {_producties.Count} {(_producties.Count == 1 ? "bewerking" : "bewerkingen")}";
-                            }
                         }));
                         var table = new DataTable(type);
                         table.Columns.Add("Periode");
@@ -178,19 +170,25 @@ namespace Controls
                         {
                             xdatachart.AxisX.Clear();
                             xdatachart.AxisY.Clear();
-                            var xAxis = new Axis {Title = "Periode"};
-                            xAxis.MinValue = 0;
-                            xAxis.MinRange = 0;
-                            xAxis.Labels = chartdata.Select(x => x.Key).ToList();
+                            var xAxis = new Axis
+                            {
+                                Title = "Periode",
+                                MinValue = 0,
+                                MinRange = 0,
+                                Labels = chartdata.Select(x => x.Key).ToList()
+                            };
                             xdatachart.AxisX.Add(xAxis);
-                            var yAxis = new Axis {Title = type + $"({valuetype})"};
-                            yAxis.MinValue = 0;
-                            yAxis.MinRange = 0;
+                            var yAxis = new Axis
+                            {
+                                Title = type + $"({valuetype})",
+                                MinValue = 0,
+                                MinRange = 0
+                            };
                             xAxis.Labels = chartdata.Select(x => x.Key).ToList();
                             xdatachart.AxisY.Add(yAxis);
                         }));
                         var series = new List<LineSeries>();
-                        bool selected = false;
+                        var selected = false;
                         xdatachart.Invoke(new Action(() =>
                         {
                             foreach (var data in seriedata)
@@ -203,20 +201,19 @@ namespace Controls
                                     LineSmoothness = 1,
                                     Focusable = true
                                 };
-                                
+
                                 serie.IsVisibleChanged += Serie_IsVisibleChanged;
                                 series.Add(serie);
-                               
                             }
 
                             xdatachart.Series.Clear();
                             xdatachart.Series.AddRange(series);
-                            string[] checkedvalues = xserieslist.Objects?.Cast<LineSeries>()
+                            var checkedvalues = xserieslist.Objects?.Cast<LineSeries>()
                                 .Where(x => x.Visibility == Visibility.Visible).Select(x => x.Title).ToArray();
                             foreach (var serie in series)
                             {
-                                bool shouldselected = (checkedvalues != null && checkedvalues.Any(x =>
-                                    string.Equals(x, serie.Title, StringComparison.CurrentCultureIgnoreCase)));
+                                var shouldselected = checkedvalues != null && checkedvalues.Any(x =>
+                                    string.Equals(x, serie.Title, StringComparison.CurrentCultureIgnoreCase));
                                 if (shouldselected)
                                 {
                                     serie.Visibility = Visibility.Visible;
@@ -244,11 +241,6 @@ namespace Controls
                 StopWaiting();
                 _isbussy = false;
             });
-        }
-
-        private void Serie_MouseEnter(object sender, MouseEventArgs e)
-        {
-            Console.WriteLine(e.Source);
         }
 
         private void Serie_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)

@@ -1,8 +1,8 @@
-﻿using Rpm.Productie;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Forms;
 using Controls;
+using Rpm.Productie;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Forms
@@ -11,7 +11,7 @@ namespace Forms
     {
         public string ListName => productieListControl1?.ListName;
 
-        private int _ListIndex;
+        private readonly int _ListIndex;
 
         public ProductieLijstForm(int index)
         {
@@ -30,7 +30,7 @@ namespace Forms
         private void UpdateListName()
         {
             var xname = productieListControl1.ListName;
-            int xitemcount = productieListControl1.ProductieLijst.Items.Count;
+            var xitemcount = productieListControl1.ProductieLijst.Items.Count;
             if (Manager.Opties?.Filters != null)
             {
                 var name = xname;
@@ -39,10 +39,10 @@ namespace Forms
                 xname = items.Length > 0 ? string.Join(", ", items.Select(x => x.Name)) : name;
             }
 
-            Text = xname;
+            Text = xname + @$"[{xitemcount}]";
             var x1 = xitemcount == 1 ? "bewerking" : "bewerkingen";
             xlijstname.Text = @$"{xname} met totaal {xitemcount} {x1}";
-            this.Invalidate();
+            Invalidate();
         }
 
         public sealed override string Text
@@ -71,16 +71,14 @@ namespace Forms
         {
             if (sender is ProductieListControl control && string.Equals(productieListControl1.ListName,
                 control.ListName, StringComparison.CurrentCultureIgnoreCase))
-            {
                 try
                 {
-                    this.BeginInvoke(new Action(UpdateListName));
+                    BeginInvoke(new Action(UpdateListName));
                 }
                 catch (Exception exception)
                 {
                     Console.WriteLine(exception);
                 }
-            }
         }
 
         private void StartProductie_FormClosing(object sender, FormClosingEventArgs e)
@@ -98,7 +96,7 @@ namespace Forms
         {
             try
             {
-                this.BeginInvoke(new Action(UpdateListName));
+                BeginInvoke(new Action(UpdateListName));
             }
             catch (Exception exception)
             {

@@ -1,8 +1,7 @@
-﻿using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Caching;
+using Rpm.Various;
 
 namespace Rpm.Misc
 {
@@ -12,6 +11,7 @@ namespace Rpm.Misc
         public Operand OperandType { get; set; }
         public FilterType FilterType { get; set; }
     }
+
     [Serializable]
     public class FilterEntry
     {
@@ -49,11 +49,9 @@ namespace Rpm.Misc
                 var propertyvalue =
                     string.IsNullOrEmpty(PropertyName) ? instance : instance.GetPropValue(PropertyName);
                 if (propertyvalue == null) return false;
-                bool xreturn = ContainsFilter(Value, propertyvalue, FilterType);
+                var xreturn = ContainsFilter(Value, propertyvalue, FilterType);
                 if (ChildEntries is {Count: > 0})
-                {
                     foreach (var filter in ChildEntries)
-                    {
                         switch (filter.OperandType)
                         {
                             case Operand.None:
@@ -68,8 +66,6 @@ namespace Rpm.Misc
                                 xreturn &= filter.ContainsFilter(instance);
                                 continue;
                         }
-                    }
-                }
 
                 return xreturn;
             }
@@ -85,8 +81,7 @@ namespace Rpm.Misc
             try
             {
                 if (valueA == null || valueB == null) return false;
-                var xtype = valueB.GetType();
-                bool xisfilter = false;
+                var xisfilter = false;
                 switch (valueB)
                 {
                     case string xvalue:
@@ -124,6 +119,7 @@ namespace Rpm.Misc
                                 xisfilter = !xvalue.ToLower().Contains(value0.ToLower());
                                 break;
                         }
+
                         break;
                     case int xvalue:
                         if (!int.TryParse(valueA.ToString(), out var value1)) return false;
@@ -154,6 +150,7 @@ namespace Rpm.Misc
                                 xisfilter = !xvalue.ToString().Contains(value1.ToString());
                                 break;
                         }
+
                         break;
                     case double xvalue:
                         if (!double.TryParse(valueA.ToString(), out var xdouble)) return false;
@@ -184,6 +181,7 @@ namespace Rpm.Misc
                                 xisfilter = !xvalue.ToString().Contains(xdouble.ToString());
                                 break;
                         }
+
                         break;
                     case decimal xvalue:
                         if (!decimal.TryParse(valueA.ToString(), out var xdecimal)) return false;
@@ -214,9 +212,14 @@ namespace Rpm.Misc
                                 xisfilter = !xvalue.ToString().Contains(xdecimal.ToString());
                                 break;
                         }
+
                         break;
                     case DateTime xvalue:
                         if (valueA is not DateTime value2) return false;
+                        if (xvalue.Year == 9999 && xvalue.Month == 1 && xvalue.Day == 1)
+                            xvalue = DateTime.Now;
+                        if (value2.Year == 9999 && value2.Month == 1 && value2.Day == 1)
+                            value2 = DateTime.Now;
                         switch (type)
                         {
                             case FilterType.GelijkAan:
@@ -244,11 +247,12 @@ namespace Rpm.Misc
                                 xisfilter = !xvalue.ToString().Contains(value2.ToString());
                                 break;
                         }
+
                         break;
                     case Enum xvalue:
                         if (valueA is not Enum value3) return false;
-                        string xvalueenum = Enum.GetName(xvalue.GetType(), xvalue);
-                        string valueenum = Enum.GetName(value3.GetType(), value3);
+                        var xvalueenum = Enum.GetName(xvalue.GetType(), xvalue);
+                        var valueenum = Enum.GetName(value3.GetType(), value3);
                         xisfilter = ContainsFilter(valueenum, xvalueenum, type);
                         break;
                     case bool xvalue:
@@ -267,7 +271,7 @@ namespace Rpm.Misc
                             case FilterType.Hoger:
                                 xisfilter = value4 != xvalue;
                                 break;
-                            
+
                             case FilterType.NietGelijkAan:
                                 xisfilter = value4 != xvalue;
                                 break;
@@ -275,8 +279,10 @@ namespace Rpm.Misc
                                 xisfilter = !xvalue.ToString().Contains(value4.ToString());
                                 break;
                         }
+
                         break;
                 }
+
                 return xisfilter;
             }
             catch (Exception e)
@@ -295,15 +301,21 @@ namespace Rpm.Misc
                 {
                     case string xvalue:
                         return xvalue;
+                    case decimal xvalue:
+                        return xvalue.ToString();
+                    case double xvalue:
+                        return xvalue.ToString();
                     case int xvalue:
                         return xvalue.ToString();
                     case DateTime xvalue:
+                        if (xvalue.Year == 9999 && xvalue.Month == 1 && xvalue.Day == 1)
+                            return "'Huidige Tijd'";
                         return xvalue.ToString();
                     case Enum xvalue:
-                        string xvalueenum = Enum.GetName(xvalue.GetType(), xvalue);
+                        var xvalueenum = Enum.GetName(xvalue.GetType(), xvalue);
                         return xvalueenum;
                     case bool xvalue:
-                        return xvalue?"WAAR": "NIETWAAR";
+                        return xvalue ? "WAAR" : "NIETWAAR";
                 }
 
                 return null;
@@ -319,7 +331,7 @@ namespace Rpm.Misc
         {
             try
             {
-                string value = ValueToString();
+                var value = ValueToString();
                 var xreturn =
                     $"{Enum.GetName(typeof(Operand), OperandType)} '{PropertyName}' {Enum.GetName(typeof(FilterType), FilterType)} '{value}'";
                 if (ChildEntries != null && ChildEntries.Count > 0)
@@ -337,10 +349,11 @@ namespace Rpm.Misc
         {
             try
             {
-                string value = ValueToString();
-                var xreturn = $"<div>(<span Color=RoyalBlue>{Enum.GetName(typeof(Operand), OperandType)}</span> <span Color=Purple>{PropertyName}</span> <span Color=RoyalBlue>{Enum.GetName(typeof(FilterType), FilterType)}</span><span Color=Purple> {value}</span>)</div>";
+                var value = ValueToString();
+                var xreturn =
+                    $"<div>(<span Color=RoyalBlue>{Enum.GetName(typeof(Operand), OperandType)}</span> <span Color=Purple>{PropertyName}</span> <span Color=RoyalBlue>{Enum.GetName(typeof(FilterType), FilterType)}</span><span Color=Purple> {value}</span>)</div>";
                 if (ChildEntries != null && ChildEntries.Count > 0)
-                    xreturn += $"\n" + string.Join("\n", ChildEntries.Select(x => x.ToHtmlString()));
+                    xreturn += "\n" + string.Join("\n", ChildEntries.Select(x => x.ToHtmlString()));
                 return xreturn;
             }
             catch (Exception e)

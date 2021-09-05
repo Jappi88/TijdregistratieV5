@@ -9,7 +9,7 @@ namespace Controls
         public ProgressWait()
         {
             InitializeComponent();
-            this.Resize += ProgressWait_Resize;
+            Resize += ProgressWait_Resize;
         }
 
         private void ProgressWait_Resize(object sender, EventArgs e)
@@ -19,12 +19,12 @@ namespace Controls
 
         private int GetFontHeight()
         {
-            return (int)Math.Round(((double)(xprogress.Width -  xprogress.ProgressWidth) / 100) * FontSizePercentage);
+            return (int) Math.Round((double) (xprogress.Width - xprogress.ProgressWidth) / 100 * FontSizePercentage);
         }
 
         private int GetProgressWidth()
         {
-            return (int) Math.Round(((double) xprogress.Width / 100) * ProgressWidthPercentage);
+            return (int) Math.Round((double) xprogress.Width / 100 * ProgressWidthPercentage);
         }
 
         public double FontSizePercentage { get; set; } = 6.21d;
@@ -32,53 +32,55 @@ namespace Controls
 
         public void UpdateProgressSize()
         {
-            int minpwidth = 1;
-            int maxpwidth = 60;
-            int minfwidth = 1;
-            int maxfwidth = 60;
-            if (this.InvokeRequired)
+            var minpwidth = 1;
+            var maxpwidth = 60;
+            var minfwidth = 1;
+            var maxfwidth = 60;
+            if (InvokeRequired)
             {
-                this.Invoke(new MethodInvoker(() =>
+                Invoke(new MethodInvoker(() =>
                 {
-                    if (xprogress.Height > this.Width)
+                    if (xprogress.Height > Width)
                     {
-                        xprogress.Height = this.Width;
-                        xprogress.Width = this.Width;
+                        xprogress.Height = Width;
+                        xprogress.Width = Width;
                     }
                     else
                     {
-                        xprogress.Height = this.Height;
-                        xprogress.Width = this.Height;
+                        xprogress.Height = Height;
+                        xprogress.Width = Height;
                     }
 
-                    xprogress.Location = new Point((this.Width / 2) - (xprogress.Width / 2), (this.Height / 2) - (xprogress.Height / 2));
-                    int x = GetProgressWidth();
+                    xprogress.Location = new Point(Width / 2 - xprogress.Width / 2, Height / 2 - xprogress.Height / 2);
+                    var x = GetProgressWidth();
                     xprogress.ProgressWidth = x < minpwidth ? minpwidth : x > maxpwidth ? maxpwidth : x;
                     xprogress.Invalidate();
-                    int y = GetFontHeight();
-                    xprogress.Font = new Font(xprogress.Font.FontFamily, y < minfwidth ? minfwidth : y > maxfwidth ? maxfwidth : y);
+                    var y = GetFontHeight();
+                    xprogress.Font = new Font(xprogress.Font.FontFamily,
+                        y < minfwidth ? minfwidth : y > maxfwidth ? maxfwidth : y);
                     xprogress.Invalidate();
                 }));
             }
             else
             {
-                if (this.Height > this.Width)
+                if (Height > Width)
                 {
-                    xprogress.Height = this.Width;
-                    xprogress.Width = this.Width;
+                    xprogress.Height = Width;
+                    xprogress.Width = Width;
                 }
                 else
                 {
-                    xprogress.Height = this.Height;
-                    xprogress.Width = this.Height;
+                    xprogress.Height = Height;
+                    xprogress.Width = Height;
                 }
 
-                xprogress.Location = new Point((this.Width / 2) - (xprogress.Width / 2), (this.Height / 2) - (xprogress.Height / 2));
-                int x = GetProgressWidth();
+                xprogress.Location = new Point(Width / 2 - xprogress.Width / 2, Height / 2 - xprogress.Height / 2);
+                var x = GetProgressWidth();
                 xprogress.ProgressWidth = x < minpwidth ? minpwidth : x > maxpwidth ? maxpwidth : x;
                 xprogress.Invalidate();
-                int y = GetFontHeight();
-                xprogress.Font = new Font(xprogress.Font.FontFamily, y < minfwidth ? minfwidth : y > maxfwidth ? maxfwidth : y);
+                var y = GetFontHeight();
+                xprogress.Font = new Font(xprogress.Font.FontFamily,
+                    y < minfwidth ? minfwidth : y > maxfwidth ? maxfwidth : y);
                 xprogress.Invalidate();
             }
         }
@@ -94,7 +96,7 @@ namespace Controls
             get => xprogress.ProgressColor;
             set => xprogress.ProgressColor = value;
         }
-        
+
         public string ProgressText
         {
             get => xprogress.Text;

@@ -43,7 +43,7 @@ namespace Controls
 
         private Rooster GetRooster()
         {
-            return new()
+            return new Rooster
             {
                 StartWerkdag = xstartwerkdag.Value.TimeOfDay,
                 EindWerkdag = xeindwerkdag.Value.TimeOfDay,

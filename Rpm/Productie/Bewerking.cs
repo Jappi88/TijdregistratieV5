@@ -1,16 +1,15 @@
-﻿using System;
+﻿using LiteDB;
+using Polenter.Serialization;
+using Rpm.Mailing;
+using Rpm.Misc;
+using Rpm.SqlLite;
+using Rpm.Various;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using LiteDB;
-using NPOI.SS.Formula.Functions;
-using Polenter.Serialization;
-using Rpm.SqlLite;
-using Rpm.Mailing;
-using Rpm.Misc;
-using Rpm.Various;
 
 namespace Rpm.Productie
 {
@@ -35,7 +34,7 @@ namespace Rpm.Productie
         public List<WerkPlek> WerkPlekken { get; set; } = new();
         public override string WerkplekkenName => string.Join(", ", WerkPlekken.Select(x => x.Naam));
         public override string PersoneelNamen => string.Join(", ", Personen.Select(x => x.PersoneelNaam));
-        public List<DeelsGereedMelding> DeelGereedMeldingen { get; set; } = new List<DeelsGereedMelding>();
+        public List<DeelsGereedMelding> DeelGereedMeldingen { get; set; } = new();
         public override int AanbevolenPersonen { get; set; }
 
         [ExcludeFromSerialization]
@@ -195,7 +194,7 @@ namespace Rpm.Productie
         public DateTime GetStartOp()
         {
             var dt = DateTime.Now;
-            int pers = AantalPersonenNodig(ref dt,false);
+            AantalPersonenNodig(ref dt,false);
             return dt;
         }
 
@@ -1054,7 +1053,7 @@ namespace Rpm.Productie
                 else
                     pers = (int) Math.Ceiling(nodig / uurover);
 
-                if (pers < 1) return pers = 1;
+                if (pers < 1) pers = 1;
             }
 
             var uurpp = nodig / pers;
@@ -1160,7 +1159,9 @@ namespace Rpm.Productie
                             }
                         }
 
-                        xreturn = xreturn.OrderBy(x => x.Value.Sum(s => s.PerUur)).Reverse().ToDictionary(x => x.Key, x => x.Value);
+                        if (xreturn.Count > 0)
+                            xreturn = xreturn.OrderBy(x => x.Value.Sum(s => s.PerUur)).Reverse()
+                                .ToDictionary(x => x.Key, x => x.Value);
                     }
                 }
                 catch (Exception e)
@@ -1222,9 +1223,8 @@ namespace Rpm.Productie
                         xkey += $"<h3><u><b>{Naam}</b></u></h3>\r\n";
                         foreach (var key in xdict)
                         {
-                            var x2 = key.Value.Count == 1 ? "klus" : "klusjes";
                             double tijd = 0;
-                            int aantal = 0;
+                            int aantal;
                             xkey += $"<h3>{key.Key}</h3>\r\n" +
                                     $"<div>\r\n" +
                                     $"<b>{key.Key}</b> heeft <b>{key.Value.Count}</b> keer aan {Naam} van {Omschrijving} gewerkt.<br>" +
@@ -1283,9 +1283,8 @@ namespace Rpm.Productie
                         xret += $"<h3><u><b>{Naam}</b></u></h3>\r\n";
                         foreach (var key in xdict)
                         {
-                            var x2 = key.Value.Count == 1 ? "klus" : "klusjes";
                             double tijd = key.Value.Sum(x => x.TijdAanGewerkt());
-                            int aantal = 0;
+                            int aantal;
                             xret += $"<h3>{key.Key}</h3>\r\n" +
                                     $"<div>\r\n" +
                                     $"<b>{key.Key}</b> is <b>{key.Value.Count}</b> keer gebruikt voor {Naam} van {Omschrijving}.<br>" +

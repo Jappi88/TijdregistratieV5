@@ -1,7 +1,15 @@
-﻿using AutoUpdaterDotNET;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using AutoUpdaterDotNET;
 using BrightIdeasSoftware;
 using Forms;
-using ProductieManager;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
@@ -12,16 +20,7 @@ using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.SqlLite;
 using Rpm.Various;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Various;
-using static Forms.RangeCalculatorForm;
 
 namespace Controls
 {
@@ -58,7 +57,8 @@ namespace Controls
         private readonly Timer _specialRoosterWatcher;
         public static Manager _manager;
 
-        public int ProductieRefreshInterval { get; set; } = 10000;// 10 sec
+        public int ProductieRefreshInterval { get; set; } = 10000; // 10 sec
+
         public bool ProductieSyncEnabled { get; set; }
         //private PersoneelsForm _persform;
         //private LogForm _logform;
@@ -70,9 +70,9 @@ namespace Controls
         private static readonly List<ProductieLijstForm> _Productelijsten = new();
         private static Producties _producties;
         private static ProductieLijsten _productielijstdock;
-        private static LogForm _logform = null;
+        private static LogForm _logform;
         private static RangeCalculatorForm _calcform = null;
-        private static ChatForm _chatform = null;
+        private static ChatForm _chatform;
         public bool ShowUnreadMessage { get; set; }
 
         // [NonSerialized] private Opties _opties;
@@ -89,24 +89,24 @@ namespace Controls
             {
                 //if (_manager == null)
 
-                 _manager?.Dispose();
+                _manager?.Dispose();
                 if (_manager == null)
                     _manager = new Manager(false);
                 DetachEvents();
                 //BeginInvoke(new MethodInvoker(() => _manager.Load()));
                 //BeginInvoke(new MethodInvoker(_manager.StartMonitor));
-                await _manager.Load(path, false, false,false);
+                await _manager.Load(path, false, false, false);
                 CheckForUpdateDatabase();
                 takenManager1.InitManager();
-                xproductieListControl1.InitProductie(false, true, true,true, false,false);
-                xbewerkingListControl.InitProductie(true, true, true,true, false,false);
+                xproductieListControl1.InitProductie(false, true, true, true, false, false);
+                xbewerkingListControl.InitProductie(true, true, true, true, false, false);
                 werkPlekkenUI1.InitUI(_manager);
                 //recentGereedMeldingenUI1.LoadBewerkingen();
                 _manager.Dispose();
                 _manager = new Manager(false);
                 _manager.InitManager();
                 InitEvents();
-                await _manager.Load(path, autologin, true,true);
+                await _manager.Load(path, autologin, true, true);
                 // _manager.StartMonitor();
                 FormLoaded();
             }
@@ -150,15 +150,14 @@ namespace Controls
             werkPlekkenUI1.InitEvents();
             werkPlekkenUI1.OnRequestOpenWerk += WerkPlekkenUI1_OnRequestOpenWerk;
             werkPlekkenUI1.OnPlekkenChanged += WerkPlekkenUI1_OnPlekkenChanged;
-
         }
 
         private void Manager_FilterChanged(object sender, EventArgs e)
         {
             try
             {
-                this.BeginInvoke(new MethodInvoker(()=> werkPlekkenUI1.LoadPlekken(true)));
-                this.BeginInvoke(new MethodInvoker(recentGereedMeldingenUI1.LoadBewerkingen));
+                BeginInvoke(new MethodInvoker(() => werkPlekkenUI1.LoadPlekken(true)));
+                BeginInvoke(new MethodInvoker(recentGereedMeldingenUI1.LoadBewerkingen));
             }
             catch (Exception exception)
             {
@@ -213,7 +212,6 @@ namespace Controls
             werkPlekkenUI1.DetachEvents();
             werkPlekkenUI1.OnRequestOpenWerk -= WerkPlekkenUI1_OnRequestOpenWerk;
             werkPlekkenUI1.OnPlekkenChanged -= WerkPlekkenUI1_OnPlekkenChanged;
-            
         }
 
         private DialogResult _manager_OnShutdown(Manager instance, ref TimeSpan verlengtijd)
@@ -226,12 +224,11 @@ namespace Controls
 
         private void _manager_OnSettingsChanging(object instance, ref UserSettings settings, ref bool cancel)
         {
-            if (this.IsDisposed || Disposing) return;
+            if (IsDisposed || Disposing) return;
             try
             {
                 var xsettings = settings;
                 if (InvokeRequired)
-                {
                     Invoke(new Action(() =>
                     {
                         try
@@ -246,11 +243,8 @@ namespace Controls
                         {
                             Console.WriteLine(e);
                         }
-
                     }));
-                }
                 else
-                {
                     try
                     {
                         xsettings.ViewDataProductieState = xproductieListControl1.ProductieLijst.SaveState();
@@ -262,7 +256,6 @@ namespace Controls
                     {
                         Console.WriteLine(e);
                     }
-                }
 
                 settings = xsettings;
             }
@@ -276,15 +269,14 @@ namespace Controls
         {
             try
             {
-                if (this.IsDisposed || this.Disposing) return;
+                if (IsDisposed || Disposing) return;
                 mainMenu1.OnSettingChanged(instance, settings, init);
                 if (!init) return;
                 BeginInvoke(new MethodInvoker(() =>
                 {
-                    if (this.IsDisposed || this.Disposing) return;
+                    if (IsDisposed || Disposing) return;
                     try
                     {
-
                         var name = Manager.Opties == null ? "Default" : Manager.Opties.Username;
                         Text = @$"RealTime Productie Manager [{name}]";
 
@@ -338,7 +330,7 @@ namespace Controls
             {
                 BeginInvoke(new Action(() =>
                 {
-                    if (this.IsDisposed || this.Disposing) return;
+                    if (IsDisposed || Disposing) return;
                     xloginb.Image = user != null ? Resources.Logout_37127__1_ : Resources.Login_37128__1_;
                     OnLoginChanged?.Invoke(user, instance);
                 }));
@@ -347,15 +339,13 @@ namespace Controls
             {
                 Console.WriteLine(e);
             }
-
         }
 
         private void _manager_OnManagerLoaded()
         {
-            if (this.IsDisposed || Disposing) return;
+            if (IsDisposed || Disposing) return;
             try
             {
-               
                 BeginInvoke(new Action(() =>
                 {
                     //CheckForSyncDatabase();
@@ -376,78 +366,77 @@ namespace Controls
 
         private void Manager_OnFormulierActie(object[] values, MainAktie type)
         {
-            if (this.IsDisposed || Disposing) return;
+            if (IsDisposed || Disposing) return;
             try
             {
                 BeginInvoke(new Action(() =>
                 {
                     var flag = values != null && values.Length > 0;
-                switch (type)
-                {
-                    case MainAktie.OpenProductie:
-                        if (flag)
-                        {
-                            var form =
-                                (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
-                            var bew = (Bewerking) values.FirstOrDefault(x => x is Bewerking);
-                            if (form != null)
-                                ShowProductieForm(form,true, bew);
-                        }
+                    switch (type)
+                    {
+                        case MainAktie.OpenProductie:
+                            if (flag)
+                            {
+                                var form =
+                                    (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
+                                var bew = (Bewerking) values.FirstOrDefault(x => x is Bewerking);
+                                if (form != null)
+                                    ShowProductieForm(form, true, bew);
+                            }
 
-                        break;
-                    case MainAktie.OpenIndeling:
-                        if (flag)
-                        {
-                            var form =
-                                (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
-                            ShowWerkplekken(form);
-                        }
+                            break;
+                        case MainAktie.OpenIndeling:
+                            if (flag)
+                            {
+                                var form =
+                                    (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
+                                ShowWerkplekken(form);
+                            }
 
-                        break;
-                    case MainAktie.OpenProductieWijziging:
-                        if (flag)
-                        {
-                            var form =
-                                (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
-                            ShowProductieSettings(form);
-                        }
+                            break;
+                        case MainAktie.OpenProductieWijziging:
+                            if (flag)
+                            {
+                                var form =
+                                    (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
+                                ShowProductieSettings(form);
+                            }
 
-                        break;
-                    case MainAktie.OpenInstellingen:
-                        ShowOptieWidow();
-                        break;
-                    case MainAktie.OpenRangeSearcher:
-                        ShowCalculatieWindow();
-                        break;
-                    case MainAktie.OpenPersoneel:
-                        ShowPersoneelWindow();
-                        break;
-                    case MainAktie.OpenStoringen:
-                        if (flag)
-                        {
-                            var bew = (Bewerking) values.FirstOrDefault(x => x is Bewerking);
-                            if (bew != null)
-                                ShowBewStoringen(bew);
-                        }
+                            break;
+                        case MainAktie.OpenInstellingen:
+                            ShowOptieWidow();
+                            break;
+                        case MainAktie.OpenRangeSearcher:
+                            ShowCalculatieWindow();
+                            break;
+                        case MainAktie.OpenPersoneel:
+                            ShowPersoneelWindow();
+                            break;
+                        case MainAktie.OpenStoringen:
+                            if (flag)
+                            {
+                                var bew = (Bewerking) values.FirstOrDefault(x => x is Bewerking);
+                                if (bew != null)
+                                    ShowBewStoringen(bew);
+                            }
 
-                        break;
-                    case MainAktie.OpenAlleStoringen:
-                        ShowOnderbrekeningenWidow();
-                        break;
-                    case MainAktie.OpenVaardigheden:
-                        if (flag)
-                        {
-                            var per = (Personeel) values.FirstOrDefault(x => x is Personeel);
-                            if (per != null)
-                                ShowPersoonVaardigheden(per);
-                        }
+                            break;
+                        case MainAktie.OpenAlleStoringen:
+                            ShowOnderbrekeningenWidow();
+                            break;
+                        case MainAktie.OpenVaardigheden:
+                            if (flag)
+                            {
+                                var per = (Personeel) values.FirstOrDefault(x => x is Personeel);
+                                if (per != null)
+                                    ShowPersoonVaardigheden(per);
+                            }
 
-                        break;
-                    case MainAktie.OpenAlleVaardigheden:
-                        ShowAlleVaardighedenWidow();
-                        break;
-                }
-
+                            break;
+                        case MainAktie.OpenAlleVaardigheden:
+                            ShowAlleVaardighedenWidow();
+                            break;
+                    }
                 }));
             }
             catch (Exception e)
@@ -462,7 +451,7 @@ namespace Controls
 
         private void DoCreateExcel()
         {
-            CreateExcelForm f = new CreateExcelForm();
+            var f = new CreateExcelForm();
             f.ShowDialog();
         }
 
@@ -499,7 +488,7 @@ namespace Controls
             var res = XMessageBox.Show(message, "Onderbreking", MessageBoxButtons.OK, MessageBoxIcon.Question, null,
                 bttns);
             if (res == DialogResult.Cancel) return;
-            var prods = await Manager.GetProducties(new[] { ViewState.Gestart, ViewState.Gestopt }, true, false);
+            var prods = await Manager.GetProducties(new[] {ViewState.Gestart, ViewState.Gestopt}, true, false);
             var plekken = new List<WerkPlek>();
             switch (res)
             {
@@ -541,7 +530,7 @@ namespace Controls
 
             if (plekken.Count > 0)
             {
-                var selector = new WerkPlekChooser(plekken,null);
+                var selector = new WerkPlekChooser(plekken, null);
                 if (selector.ShowDialog() == DialogResult.OK)
                 {
                     var plek = selector.Selected;
@@ -646,7 +635,8 @@ namespace Controls
                     break;
                 case 1: //bewerkingen
                     if (xbewerkingListControl.SelectedItem is Bewerking bew)
-                        mainMenu1.Enable("xbekijkproductiepdf", bew.Parent != null && bew.Parent.ContainsProductiePdf());
+                        mainMenu1.Enable("xbekijkproductiepdf",
+                            bew.Parent != null && bew.Parent.ContainsProductiePdf());
                     break;
                 case 2: //werkplekken
                     var plek = werkPlekkenUI1.SelectedWerkplek;
@@ -687,7 +677,9 @@ namespace Controls
                 bttns.Add("Annuleren", DialogResult.Cancel);
                 bttns.Add("Standaard", DialogResult.No);
                 bttns.Add("Aangepast", DialogResult.Yes);
-                var xrstr = Manager.Opties.TijdelijkeRooster != null && Manager.Opties.TijdelijkeRooster.IsCustom() ? "al een aangepaste rooster" : "een standaart rooster";
+                var xrstr = Manager.Opties.TijdelijkeRooster != null && Manager.Opties.TijdelijkeRooster.IsCustom()
+                    ? "al een aangepaste rooster"
+                    : "een standaart rooster";
                 if (Manager.Opties.TijdelijkeRooster != null)
                 {
                     var xvalue = "\nMet een bereik:\n";
@@ -720,19 +712,15 @@ namespace Controls
                         break;
                 }
 
-                bool thesame = xold.SameTijden(Manager.Opties?.GetWerkRooster());
+                var thesame = xold.SameTijden(Manager.Opties?.GetWerkRooster());
                 if (!thesame)
-                {
                     if (XMessageBox.Show(
                         "Je rooster is gewijzigd!\n\nZou je alle actieve producties willen wijzigen met de aangepaste rooster?",
                         "Aangepaste Rooster",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                    {
                         await Manager.UpdateGestarteProductieRoosters();
-                    }
-                }
                 var xrooster = mainMenu1.GetButton("xroostermenubutton");
-                bool iscustom = Manager.Opties.TijdelijkeRooster != null && Manager.Opties.TijdelijkeRooster.IsCustom();
+                var iscustom = Manager.Opties.TijdelijkeRooster != null && Manager.Opties.TijdelijkeRooster.IsCustom();
                 if (xrooster != null)
                     xrooster.Image = iscustom
                         ? Resources.schedule_32_32.CombineImage(Resources.exclamation_warning_15590, 1.75)
@@ -751,20 +739,22 @@ namespace Controls
             try
             {
                 var startedprods =
-                    (await Manager.Database.GetAllProducties(false, true,null)).Where(x => x.State == ProductieState.Gestart)
+                    (await Manager.Database.GetAllProducties(false, true, null))
+                    .Where(x => x.State == ProductieState.Gestart)
                     .ToArray();
                 if (startedprods.Length == 0)
+                {
                     XMessageBox.Show("Er zijn geen gestarte producties om te openen.", "Geen Producties",
                         MessageBoxIcon.Exclamation);
+                }
                 else
                 {
-                    string xvalue0 = startedprods.Length == 1 ? "is" : "zijn";
-                    string xvalue1 = startedprods.Length == 1 ? "productie" : "producties";
+                    var xvalue0 = startedprods.Length == 1 ? "is" : "zijn";
+                    var xvalue1 = startedprods.Length == 1 ? "productie" : "producties";
                     if (XMessageBox.Show(
                         $"Er {xvalue0} {startedprods.Length} gestarte {xvalue1}.\n\nWil je ze allemaal openen?",
                         "Open Producties", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                    {
-                        for (int i = 0; i < startedprods.Length; i++)
+                        for (var i = 0; i < startedprods.Length; i++)
                         {
                             var prod = startedprods[i];
                             var bws = prod.Bewerkingen?.Where(x => x.IsAllowed()).ToArray();
@@ -775,7 +765,6 @@ namespace Controls
                                     ShowProductieForm(prod, true, bw);
                             }
                         }
-                    }
                 }
             }
             catch (Exception e)
@@ -789,12 +778,13 @@ namespace Controls
             try
             {
                 var msgbox = new XMessageBox();
-                string msg = "Kies een database dat je zou willen laden";
+                var msg = "Kies een database dat je zou willen laden";
                 var bttns = new Dictionary<string, DialogResult>();
                 bttns.Add("Annuleren", DialogResult.Cancel);
                 bttns.Add("Laad Database", DialogResult.OK);
                 bttns.Add("Kies Folder", DialogResult.Yes);
-                var dbs = Manager.DefaultSettings?.DbUpdateEntries ?? UserSettings.GetDefaultSettings()?.DbUpdateEntries ?? new List<DatabaseUpdateEntry>();
+                var dbs = Manager.DefaultSettings?.DbUpdateEntries ??
+                          UserSettings.GetDefaultSettings()?.DbUpdateEntries ?? new List<DatabaseUpdateEntry>();
                 var dbnames = dbs.Select(x => x.Naam).ToList();
                 dbnames.Insert(0, "Eigen Database");
                 var result = msgbox.ShowDialog(msg, "Laad Database", MessageBoxButtons.YesNoCancel,
@@ -822,7 +812,7 @@ namespace Controls
 
                 if (path == null)
                 {
-                    FolderBrowserDialog fb = new FolderBrowserDialog { Description = "Kies een database locatie" };
+                    var fb = new FolderBrowserDialog {Description = "Kies een database locatie"};
                     if (fb.ShowDialog() == DialogResult.OK)
                         path = fb.SelectedPath;
                 }
@@ -831,16 +821,18 @@ namespace Controls
                 {
                     if (!Directory.Exists(path))
                     {
-                        XMessageBox.Show($"'{path}' bestaat niet, of is niet toegankelijk!", "Fout", MessageBoxIcon.Error);
+                        XMessageBox.Show($"'{path}' bestaat niet, of is niet toegankelijk!", "Fout",
+                            MessageBoxIcon.Error);
                         return;
                     }
+
                     //if (name != null)
                     //{
                     //    var opties = await Manager.Database.GetSetting(name);
                     //    if (opties != null)
                     //        Manager.Opties = opties;
                     //}
-                    await _manager.Load(path, false, false,true);
+                    await _manager.Load(path, false, false, true);
                 }
             }
             catch (Exception e)
@@ -851,7 +843,7 @@ namespace Controls
 
         private void mainMenu1_OnMenuClick(object sender, EventArgs e)
         {
-            if (sender is Button { Tag: MenuButton menubutton })
+            if (sender is Button {Tag: MenuButton menubutton})
                 try
                 {
                     switch (menubutton.Name.ToLower())
@@ -859,33 +851,29 @@ namespace Controls
                         case "xniewproductie":
                             var AddProduction = new WijzigProductie();
                             if (AddProduction.ShowDialog() == DialogResult.OK)
-                            {
-                                this.BeginInvoke(new MethodInvoker(async () =>
+                                BeginInvoke(new MethodInvoker(async () =>
                                 {
                                     var form = AddProduction.Formulier;
                                     var msg = await Manager.AddProductie(form);
                                     Manager.RemoteMessage(msg);
                                 }));
-                            }
 
                             break;
                         case "xopenproductie":
-                            
-                                var ofd = new OpenFileDialog
+
+                            var ofd = new OpenFileDialog
+                            {
+                                Title = "Open Productie Formulier(en)",
+                                Filter = "Pdf|*.pdf|Image|*.JPG;*.Img|Text|*.txt|Alles|*.*",
+                                Multiselect = true
+                            };
+                            if (ofd.ShowDialog() == DialogResult.OK)
+                                BeginInvoke(new MethodInvoker(async () =>
                                 {
-                                    Title = "Open Productie Formulier(en)",
-                                    Filter = "Pdf|*.pdf|Image|*.JPG;*.Img|Text|*.txt|Alles|*.*",
-                                    Multiselect = true
-                                };
-                                if (ofd.ShowDialog() == DialogResult.OK)
-                                {
-                                    this.BeginInvoke(new MethodInvoker(async () =>
-                                    {
-                                        var files = ofd.FileNames;
-                                        await _manager.AddProductie(files, false, true);
-                                    }));
-                                }
-                                break;
+                                    var files = ofd.FileNames;
+                                    await _manager.AddProductie(files, false, true);
+                                }));
+                            break;
                         case "xquickproductie":
                             DoQuickProductie();
                             break;
@@ -1019,7 +1007,10 @@ namespace Controls
 
         private void WerkPlekkenUI1_OnPlekkenChanged(object sender, EventArgs e)
         {
-            if (sender is ObjectListView olv) tabPage3.Text = olv.Items.Count == 0 ? "Geen Actieve Werkplekken" : $"Actieve Werkplekken [{olv.Items.Count}]";
+            if (sender is ObjectListView olv)
+                tabPage3.Text = olv.Items.Count == 0
+                    ? "Geen Actieve Werkplekken"
+                    : $"Actieve Werkplekken [{olv.Items.Count}]";
         }
 
         private void WerkPlekkenUI1_OnRequestOpenWerk(object sender, EventArgs e)
@@ -1054,6 +1045,7 @@ namespace Controls
         #endregion Control Events
 
         #region Methods
+
         public Task RunProductieRefresh()
         {
             return Task.Run(async () =>
@@ -1064,7 +1056,7 @@ namespace Controls
                     {
                         await Task.Delay(ProductieRefreshInterval);
                         if (!ProductieSyncEnabled || IsDisposed || Disposing) break;
-                        this.BeginInvoke(new MethodInvoker(xUpdateList));
+                        BeginInvoke(new MethodInvoker(xUpdateList));
                     }
                 }
                 catch (Exception e)
@@ -1096,26 +1088,24 @@ namespace Controls
 
             var xtime = DateTime.Now;
             //eerst kijken of het weekend is.
-            var culture = new System.Globalization.CultureInfo("nl-NL");
+            var culture = new CultureInfo("nl-NL");
             var day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
             if (xtime.DayOfWeek == DayOfWeek.Saturday || xtime.DayOfWeek == DayOfWeek.Sunday)
             {
                 //het is weekend, dus we zullen moeten kijken of er wel gewerkt wordt.
-                string xbttntxt =
+                var xbttntxt =
                     $"Het is {day} {xtime.TimeOfDay:hh\\:mm} uur. Vandaag is geen officiële werkdag. Click hier voor de speciale rooster";
                 xspeciaalroosterbutton.Text = xbttntxt;
                 var rooster = Manager.Opties.SpecialeRoosters.FirstOrDefault(x => x.Vanaf.Date == xtime.Date);
                 if (rooster == null && prompchange)
                 {
-                    string xmsg =
+                    var xmsg =
                         $"Het is vandaag {day}, en geen officiële werkdag.\n" +
-                        $"Je kan een speciale rooster toevoegen als er vandaag toch wordt gewerkt.\n\n" +
-                        $"Wil je een rooster nu toevoegen?\nSpeciale roosters kan je achteraf ook aanpassen in de instellingen";
+                        "Je kan een speciale rooster toevoegen als er vandaag toch wordt gewerkt.\n\n" +
+                        "Wil je een rooster nu toevoegen?\nSpeciale roosters kan je achteraf ook aanpassen in de instellingen";
                     if (XMessageBox.Show(xmsg, "Speciaal Rooster", MessageBoxButtons.YesNo,
                         MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                    {
                         SetSpecialeRooster();
-                    }
                 }
 
                 xspeciaalroosterlabel.Visible = true;
@@ -1125,7 +1115,7 @@ namespace Controls
                 var rooster = Manager.Opties.WerkRooster;
                 if (xtime.TimeOfDay < rooster.StartWerkdag || xtime.TimeOfDay > rooster.EindWerkdag)
                 {
-                    string xbttntxt =
+                    var xbttntxt =
                         $"Het is nu {day} {xtime.TimeOfDay:hh\\:mm} uur, dat is buiten om de gewone werkrooster van {rooster.StartWerkdag:hh\\:mm} tot {rooster.EindWerkdag:hh\\:mm} uur. Click hier voor de aangepaste rooster";
                     xspeciaalroosterbutton.Text = xbttntxt;
                     xspeciaalroosterlabel.Visible = true;
@@ -1139,7 +1129,7 @@ namespace Controls
             if (_specialRoosterWatcher != null)
             {
                 xtime = DateTime.Now;
-                _specialRoosterWatcher.Interval = ((60 - xtime.Second) * 1000 - xtime.Millisecond);
+                _specialRoosterWatcher.Interval = (60 - xtime.Second) * 1000 - xtime.Millisecond;
             }
         }
 
@@ -1148,12 +1138,12 @@ namespace Controls
             if (Manager.Opties == null) return;
             var xtime = DateTime.Now;
             //eerst kijken of het weekend is.
-            var culture = new System.Globalization.CultureInfo("nl-NL");
+            var culture = new CultureInfo("nl-NL");
             var day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
             if (xtime.DayOfWeek == DayOfWeek.Saturday || xtime.DayOfWeek == DayOfWeek.Sunday)
             {
                 var rooster = Manager.Opties?.SpecialeRoosters?.FirstOrDefault(x => x.Vanaf.Date == DateTime.Now.Date);
-                bool xreturn = rooster != null;
+                var xreturn = rooster != null;
                 if (rooster == null)
                 {
                     rooster = Rooster.StandaartRooster();
@@ -1176,14 +1166,12 @@ namespace Controls
                     Manager.Opties.SpecialeRoosters.Remove(rooster);
                     Manager.Opties.SpecialeRoosters.Add(newrooster);
                     Manager.Opties.SpecialeRoosters = Manager.Opties.SpecialeRoosters.OrderBy(x => x.Vanaf).ToList();
-                   
+
                     if (XMessageBox.Show(
                         "Zou je ook alle actieve producties willen wijzigen met de speciale roosters?",
                         "Speciale Rooster",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                    {
                         await Manager.UpdateGestarteProductieRoosters();
-                    }
                     await Manager.Opties.Save("Speciale roosters aangepast.");
                 }
             }
@@ -1200,10 +1188,11 @@ namespace Controls
 
         private void CheckForSyncDatabase()
         {
-            var opties = Manager.DefaultSettings??UserSettings.GetDefaultSettings();
-            if (opties?.TempMainDB != null && opties.MainDB != null && opties.TempMainDB.LastUpdated > opties.MainDB.LastUpdated && Directory.Exists(opties.MainDB.UpdatePath))
+            var opties = Manager.DefaultSettings ?? UserSettings.GetDefaultSettings();
+            if (opties?.TempMainDB != null && opties.MainDB != null &&
+                opties.TempMainDB.LastUpdated > opties.MainDB.LastUpdated && Directory.Exists(opties.MainDB.UpdatePath))
             {
-                var splash = (SplashScreen)Application.OpenForms["SplashScreen"];
+                var splash = (SplashScreen) Application.OpenForms["SplashScreen"];
                 if (splash != null)
                 {
                     while (splash.Visible && !splash.CanClose)
@@ -1212,7 +1201,8 @@ namespace Controls
                 }
 
                 opties.TempMainDB.LastUpdated = opties.MainDB.LastUpdated;
-                var prod = new UpdateProducties(opties.TempMainDB) { CloseWhenFinished = true, ShowStop = false, StartWhenShown = true };
+                var prod = new UpdateProducties(opties.TempMainDB)
+                    {CloseWhenFinished = true, ShowStop = false, StartWhenShown = true};
                 prod.ShowDialog();
                 if (prod.IsFinished)
                 {
@@ -1221,7 +1211,7 @@ namespace Controls
                 }
             }
         }
-        
+
         public static void CheckForUpdateDatabase()
         {
             var opties = Manager.DefaultSettings ?? UserSettings.GetDefaultSettings();
@@ -1245,7 +1235,7 @@ namespace Controls
                 return;
             if (Manager.LogedInGebruiker != null && Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieBasis)
             {
-                var prs = await Manager.GetAllProductieIDs(false,true);
+                var prs = await Manager.GetAllProductieIDs(false, true);
                 foreach (var v in prs)
                 {
                     var prod = await Manager.Database.GetProductie(v);
@@ -1266,7 +1256,7 @@ namespace Controls
 
         private void UpdateTabCounts()
         {
-            this.BeginInvoke(new MethodInvoker(() =>
+            BeginInvoke(new MethodInvoker(() =>
             {
                 tabPage1.Text = $"Producties [{xproductieListControl1.ProductieLijst.Items.Count}]";
                 tabPage2.Text = $"Bewerkingen [{xbewerkingListControl.ProductieLijst.Items.Count}]";
@@ -1275,9 +1265,10 @@ namespace Controls
         }
 
         private XMessageBox _unreadMessages;
+
         public void UpdateUnreadMessages(UserChat user)
         {
-            this.BeginInvoke(new Action(() =>
+            BeginInvoke(new Action(() =>
             {
                 try
                 {
@@ -1285,11 +1276,15 @@ namespace Controls
                     var unread = ProductieChat.Chat.GetAllUnreadMessages();
                     if (unread.Count > 0)
                     {
-                        var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White, unread.Count.ToString(),
+                        var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White,
+                            unread.Count.ToString(),
                             new Font("Ariel", 16, FontStyle.Bold), Color.DarkRed);
                         xchatformbutton.Image = Resources.conversation_chat_32x321.CombineImage(ximg, 1.75);
                     }
-                    else xchatformbutton.Image = Resources.conversation_chat_32x321;
+                    else
+                    {
+                        xchatformbutton.Image = Resources.conversation_chat_32x321;
+                    }
 
                     if (_chatform != null)
                     {
@@ -1301,20 +1296,18 @@ namespace Controls
                         _chatform.BringToFront();
                         _chatform.Focus();
                     }
-                    else if(unread.Count > 0 && ShowUnreadMessage)
+                    else if (unread.Count > 0 && ShowUnreadMessage)
                     {
                         _unreadMessages?.Dispose();
                         var names = new List<string>();
                         foreach (var msg in unread.Where(msg => msg.Afzender != null && !names.Any(x =>
                             string.Equals(x, msg.Afzender.UserName, StringComparison.CurrentCultureIgnoreCase))))
-                        {
                             names.Add(msg.Afzender.UserName);
-                        }
 
                         if (names.Count == 0) return;
                         {
                             Application.OpenForms["SplashScreen"]?.Close();
-                            string xv = names.Count == 1 ? "bericht" : "berichten";
+                            var xv = names.Count == 1 ? "bericht" : "berichten";
                             var bttns = new Dictionary<string, DialogResult>();
                             bttns.Add("OK", DialogResult.OK);
                             bttns.Add("Toon Bericht", DialogResult.Yes);
@@ -1323,11 +1316,10 @@ namespace Controls
                                 $"Je hebt {unread.Count} ongelezen {xv} van {string.Join(", ", names)}",
                                 $"{unread.Count} ongelezen berichten", MessageBoxButtons.OK, MessageBoxIcon.None, null,
                                 bttns);
-                           _unreadMessages?.Dispose();
+                            _unreadMessages?.Dispose();
                             _unreadMessages = null;
                             if (result == DialogResult.Yes)
                                 ShowChatWindow(names[0]);
-
                         }
                     }
                 }
@@ -1342,9 +1334,11 @@ namespace Controls
 
         #region MenuButton Methods
 
-        public static StartProductie ShowProductieForm(ProductieFormulier pform, bool showform, Bewerking bewerking = null)
+        public static StartProductie ShowProductieForm(ProductieFormulier pform, bool showform,
+            Bewerking bewerking = null)
         {
-            if (pform == null || Manager.LogedInGebruiker == null || Manager.LogedInGebruiker.AccesLevel < AccesType.ProductieBasis)
+            if (pform == null || Manager.LogedInGebruiker == null ||
+                Manager.LogedInGebruiker.AccesLevel < AccesType.ProductieBasis)
                 return null;
             try
             {
@@ -1353,7 +1347,7 @@ namespace Controls
                 if (bws.Count == 0)
                     throw new Exception(
                         $"Kan '{pform.Omschrijving}' niet openen omdat er geen geldige bewerkingen zijn!\n\n" +
-                        $"Bewerkingen zijn verwijderd of gefiltered.");
+                        "Bewerkingen zijn verwijderd of gefiltered.");
                 var productie = _formuis.FirstOrDefault(t => t.Name == pform.ProductieNr.Trim().Replace(" ", ""));
                 if (productie != null && !productie.IsDisposed && _producties != null && showform)
                 {
@@ -1362,10 +1356,8 @@ namespace Controls
                 else
                 {
                     if (productie != null)
-                    {
                         _formuis.Remove(productie);
-                        //productie.Dispose();
-                    }
+                    //productie.Dispose();
 
                     productie = new StartProductie(pform, bewerking)
                     {
@@ -1384,8 +1376,8 @@ namespace Controls
                             StartPosition = FormStartPosition.CenterScreen
                         };
                         _producties.FormClosed += (x, y) => _producties = null;
-
                     }
+
                     if (showform)
                         productie.Show(_producties.DockPanel);
                 }
@@ -1394,7 +1386,7 @@ namespace Controls
                     _producties.Show();
                 if (_producties.WindowState == FormWindowState.Minimized)
                     _producties.WindowState = FormWindowState.Normal;
-               
+
                 _producties.Focus();
                 return productie;
             }
@@ -1417,13 +1409,12 @@ namespace Controls
                 _Productelijsten.Add(prodform);
                 if (_productielijstdock == null || _productielijstdock.IsDisposed)
                 {
-                    _productielijstdock = new ProductieLijsten()
+                    _productielijstdock = new ProductieLijsten
                     {
                         Tag = prodform,
                         StartPosition = FormStartPosition.CenterScreen
                     };
                     _productielijstdock.FormClosed += (x, y) => _producties = null;
-
                 }
 
                 prodform.Show(_productielijstdock.DockPanel);
@@ -1462,6 +1453,7 @@ namespace Controls
                     _logform = null;
                 };
             }
+
             _logform.Show();
             if (_logform.WindowState == FormWindowState.Minimized)
                 _logform.WindowState = FormWindowState.Normal;
@@ -1500,6 +1492,7 @@ namespace Controls
                     _chatform = null;
                 };
             }
+
             _chatform.Show(username);
             if (_chatform.WindowState == FormWindowState.Minimized)
                 _chatform.WindowState = FormWindowState.Normal;
@@ -1583,9 +1576,11 @@ namespace Controls
             var db = new DbBewerkingChanger();
             db.ShowDialog();
         }
+
         #endregion MenuButton Methods
 
         #region Menu Button Events
+
         #endregion Menu Button Events
 
         #region Taken Lijst
@@ -1604,21 +1599,16 @@ namespace Controls
                         return;
                     }
                 }
+
                 if (taak.Bewerking != null)
                 {
                     xbewerkingListControl.SelectedItem = taak.Bewerking;
-                    if (xbewerkingListControl.SelectedItem != null)
-                    {
-                        metroTabControl.SelectedIndex = 1;
-                    }
+                    if (xbewerkingListControl.SelectedItem != null) metroTabControl.SelectedIndex = 1;
                 }
                 else
                 {
                     xproductieListControl1.SelectedItem = taak.Formulier;
-                    if (xproductieListControl1.SelectedItem != null)
-                    {
-                        metroTabControl.SelectedIndex = 0;
-                    }
+                    if (xproductieListControl1.SelectedItem != null) metroTabControl.SelectedIndex = 0;
                 }
             }
         }
@@ -1701,7 +1691,9 @@ namespace Controls
                     if (taak.Bewerking != null)
                     {
                         var dt = new DatumChanger();
-                        if (dt.ShowDialog(taak.Bewerking.LeverDatum, $"Wijzig leverdatum voor ({taak.Bewerking.Path}) {taak.Bewerking.Omschrijving}.") == DialogResult.OK)
+                        if (dt.ShowDialog(taak.Bewerking.LeverDatum,
+                                $"Wijzig leverdatum voor ({taak.Bewerking.Path}) {taak.Bewerking.Omschrijving}.") ==
+                            DialogResult.OK)
                         {
                             taak.Bewerking.LeverDatum = dt.SelectedValue;
                             save = true;
@@ -1712,7 +1704,8 @@ namespace Controls
                     else if (taak.Formulier != null)
                     {
                         var dt = new DatumChanger();
-                        if (dt.ShowDialog(taak.Formulier.LeverDatum, $"Wijzig leverdatum voor {taak.Formulier.Omschrijving}.") == DialogResult.OK)
+                        if (dt.ShowDialog(taak.Formulier.LeverDatum,
+                            $"Wijzig leverdatum voor {taak.Formulier.Omschrijving}.") == DialogResult.OK)
                         {
                             taak.Formulier.LeverDatum = dt.SelectedValue;
                             if (taak.Formulier.Bewerkingen.Length > 0)
@@ -1720,7 +1713,7 @@ namespace Controls
                                     dt.SelectedValue;
                             save = true;
                         }
-                        
+
                         dt.Dispose();
                     }
 
@@ -1761,7 +1754,6 @@ namespace Controls
         {
             var prodform = new ProductieOverzichtForm();
             prodform.ShowDialog();
-            
         }
 
         private async void xsearchprodnr_Click(object sender, EventArgs e)
@@ -1783,7 +1775,7 @@ namespace Controls
                     if (prod == null)
                         throw new Exception($"Er is geen productie gevonden met '{xsel}'.");
                     var bw = prod.Bewerkingen?.FirstOrDefault(x => x.IsAllowed());
-                    Manager.FormulierActie(new object[] { prod, bw }, MainAktie.OpenProductie);
+                    Manager.FormulierActie(new object[] {prod, bw}, MainAktie.OpenProductie);
                 }
             }
             catch (Exception ex)
@@ -1795,19 +1787,16 @@ namespace Controls
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
 
         {
-
-            KeyEventArgs e = new KeyEventArgs(keyData);
+            var e = new KeyEventArgs(keyData);
 
             if (e.Control && e.KeyCode == Keys.F)
 
             {
                 xsearchprodnr_Click(null, EventArgs.Empty);
                 return true; // handled
-
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
-
         }
 
         private void xopennewlijst_Click(object sender, EventArgs e)

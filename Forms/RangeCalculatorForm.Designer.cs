@@ -42,21 +42,22 @@ namespace Forms
             this.xcriteriacheckbox = new System.Windows.Forms.CheckBox();
             this.xbewerkingen = new System.Windows.Forms.ComboBox();
             this.xwerkplekken = new System.Windows.Forms.ComboBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.xoutput = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.xprogresslabel = new System.Windows.Forms.Label();
-            this.productieListControl1 = new Controls.ProductieListControl();
             this.xsluiten = new System.Windows.Forms.Button();
             this.xverwerkb = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.xprogresslabel = new System.Windows.Forms.Label();
+            this.productieListControl1 = new Controls.ProductieListControl();
             this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.AutoScroll = true;
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.xcriteria);
             this.panel1.Controls.Add(this.xtotcheck);
@@ -72,7 +73,7 @@ namespace Forms
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(20, 60);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(926, 105);
+            this.panel1.Size = new System.Drawing.Size(888, 105);
             this.panel1.TabIndex = 0;
             // 
             // xcriteria
@@ -218,6 +219,17 @@ namespace Forms
             this.xwerkplekken.TabIndex = 3;
             this.xwerkplekken.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xcriteria_KeyDown);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pictureBox1.Image = global::ProductieManager.Properties.Resources.FocusEye_img_128_128;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(124, 105);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox1.TabIndex = 1;
+            this.pictureBox1.TabStop = false;
+            // 
             // imageList1
             // 
             this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
@@ -231,7 +243,7 @@ namespace Forms
             this.xoutput.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xoutput.Location = new System.Drawing.Point(5, 3);
             this.xoutput.Name = "xoutput";
-            this.xoutput.Size = new System.Drawing.Size(633, 51);
+            this.xoutput.Size = new System.Drawing.Size(595, 51);
             this.xoutput.TabIndex = 21;
             // 
             // panel2
@@ -240,45 +252,10 @@ namespace Forms
             this.panel2.Controls.Add(this.xsluiten);
             this.panel2.Controls.Add(this.xverwerkb);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(20, 485);
+            this.panel2.Location = new System.Drawing.Point(20, 473);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(926, 60);
+            this.panel2.Size = new System.Drawing.Size(888, 60);
             this.panel2.TabIndex = 22;
-            // 
-            // xprogresslabel
-            // 
-            this.xprogresslabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xprogresslabel.BackColor = System.Drawing.Color.White;
-            this.xprogresslabel.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xprogresslabel.Location = new System.Drawing.Point(20, 168);
-            this.xprogresslabel.Name = "xprogresslabel";
-            this.xprogresslabel.Size = new System.Drawing.Size(926, 320);
-            this.xprogresslabel.TabIndex = 23;
-            this.xprogresslabel.Text = "Producties laden...";
-            this.xprogresslabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.xprogresslabel.Visible = false;
-            // 
-            // productieListControl1
-            // 
-            this.productieListControl1.BackColor = System.Drawing.Color.White;
-            this.productieListControl1.CanLoad = true;
-            this.productieListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.productieListControl1.EnableEntryFiltering = true;
-            this.productieListControl1.EnableFiltering = true;
-            this.productieListControl1.EnableSync = false;
-            this.productieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productieListControl1.IsBewerkingView = false;
-            this.productieListControl1.ListName = "RangeBewerkingLijst";
-            this.productieListControl1.Location = new System.Drawing.Point(20, 165);
-            this.productieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.productieListControl1.Name = "productieListControl1";
-            this.productieListControl1.RemoveCustomItemIfNotValid = false;
-            this.productieListControl1.SelectedItem = null;
-            this.productieListControl1.Size = new System.Drawing.Size(926, 320);
-            this.productieListControl1.TabIndex = 23;
-            this.productieListControl1.ValidHandler = null;
             // 
             // xsluiten
             // 
@@ -286,7 +263,7 @@ namespace Forms
             this.xsluiten.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xsluiten.Location = new System.Drawing.Point(803, 10);
+            this.xsluiten.Location = new System.Drawing.Point(765, 10);
             this.xsluiten.Name = "xsluiten";
             this.xsluiten.Size = new System.Drawing.Size(120, 38);
             this.xsluiten.TabIndex = 2;
@@ -301,7 +278,7 @@ namespace Forms
             this.xverwerkb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xverwerkb.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xverwerkb.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
-            this.xverwerkb.Location = new System.Drawing.Point(644, 10);
+            this.xverwerkb.Location = new System.Drawing.Point(606, 10);
             this.xverwerkb.Name = "xverwerkb";
             this.xverwerkb.Size = new System.Drawing.Size(153, 38);
             this.xverwerkb.TabIndex = 14;
@@ -310,22 +287,46 @@ namespace Forms
             this.xverwerkb.UseVisualStyleBackColor = true;
             this.xverwerkb.Click += new System.EventHandler(this.xverwerkb_Click);
             // 
-            // pictureBox1
+            // xprogresslabel
             // 
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pictureBox1.Image = global::ProductieManager.Properties.Resources.FocusEye_img_128_128;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(124, 105);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
+            this.xprogresslabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xprogresslabel.BackColor = System.Drawing.Color.White;
+            this.xprogresslabel.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xprogresslabel.Location = new System.Drawing.Point(20, 165);
+            this.xprogresslabel.Name = "xprogresslabel";
+            this.xprogresslabel.Size = new System.Drawing.Size(888, 311);
+            this.xprogresslabel.TabIndex = 23;
+            this.xprogresslabel.Text = "Producties laden...";
+            this.xprogresslabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.xprogresslabel.Visible = false;
+            // 
+            // productieListControl1
+            // 
+            this.productieListControl1.BackColor = System.Drawing.Color.White;
+            this.productieListControl1.CanLoad = true;
+            this.productieListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieListControl1.EnableEntryFiltering = true;
+            this.productieListControl1.EnableFiltering = false;
+            this.productieListControl1.EnableSync = false;
+            this.productieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productieListControl1.IsBewerkingView = false;
+            this.productieListControl1.ListName = "RangeBewerkingLijst";
+            this.productieListControl1.Location = new System.Drawing.Point(20, 165);
+            this.productieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.productieListControl1.Name = "productieListControl1";
+            this.productieListControl1.RemoveCustomItemIfNotValid = false;
+            this.productieListControl1.SelectedItem = null;
+            this.productieListControl1.Size = new System.Drawing.Size(888, 308);
+            this.productieListControl1.TabIndex = 23;
+            this.productieListControl1.ValidHandler = null;
             // 
             // RangeCalculatorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(966, 565);
+            this.ClientSize = new System.Drawing.Size(928, 553);
             this.Controls.Add(this.xprogresslabel);
             this.Controls.Add(this.productieListControl1);
             this.Controls.Add(this.panel2);
@@ -341,8 +342,8 @@ namespace Forms
             this.Shown += new System.EventHandler(this.RangeCalculatorForm_Shown);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

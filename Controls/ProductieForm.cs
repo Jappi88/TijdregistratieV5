@@ -66,13 +66,14 @@ namespace Controls
             if (Disposing || IsDisposed) return;
             var startfont = new Font(xstatuslabel.Font.FontFamily, 20);
             var txtsize = xstatuslabel.Text.MeasureString(startfont);
-            while (txtsize.Width > (this.Width - 100))
+            while (txtsize.Width > Width - 100)
             {
                 startfont = new Font(startfont.FontFamily, startfont.SizeInPoints - 0.5f);
-               
+
                 txtsize = xstatuslabel.Text.MeasureString(startfont);
                 if (startfont.SizeInPoints <= 10) break;
             }
+
             xstatuslabel.Font = startfont;
             xstatuslabel.Invalidate();
         }
@@ -93,21 +94,18 @@ namespace Controls
                 HtmlPanel curpanel = null;
                 //string selected = null;
                 if (xpanelcontainer.Controls.Count > 0 && xpanelcontainer.Controls[0] is HtmlPanel xpanel)
-                {
                     curpanel = xpanel;
-                    //selected = xpanel.SelectedText;
-                }
+                //selected = xpanel.SelectedText;
 
-                int curpos = curpanel?.VerticalScroll.Value ?? 0;
+                var curpos = curpanel?.VerticalScroll.Value ?? 0;
 
                 var htmlpanel = new HtmlPanel
                 {
                     Dock = DockStyle.Fill,
                     Text = bewerking.GetHtmlBody(bewerking.Omschrijving, bewerking.GetImageFromResources(),
                         new Size(64, 64), Color.DarkBlue, Color.White, Color.DarkBlue)
-
                 };
-                for (int i = 0; i < 3; i++)
+                for (var i = 0; i < 3; i++)
                 {
                     htmlpanel.VerticalScroll.Value = curpos;
                     Application.DoEvents();
@@ -119,7 +117,6 @@ namespace Controls
                     xpanelcontainer.Controls.RemoveAt(0);
                 //xpanelcontainer.ResumeLayout();
                 xpanelcontainer.Invalidate();
-
             }
             catch (Exception e)
             {
@@ -147,10 +144,10 @@ namespace Controls
                 string.Equals(t.Naam, xbewerking.SelectedItem.ToString(), StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public void OnSettingChanged(object instance,UserSettings settings, bool init)
+        public void OnSettingChanged(object instance, UserSettings settings, bool init)
         {
             mainMenu1.OnSettingChanged(instance, settings, init);
-            this.BeginInvoke(new MethodInvoker(UpdateFields));
+            BeginInvoke(new MethodInvoker(UpdateFields));
         }
 
         public void UpdateFields()
@@ -160,17 +157,16 @@ namespace Controls
             xbewerking.SelectionChangeCommitted -= xbewerking_SelectedIndexChanged;
             try
             {
-
                 string selectedname = null;
                 if (xbewerking.SelectedItem != null)
                     selectedname = xbewerking.SelectedItem.ToString();
-                
+
                 var names = new List<object>();
 
                 if (Formulier.Bewerkingen != null)
-                    names.AddRange((from s in Formulier.Bewerkingen
-                        where (s.IsAllowed() && s.State != ProductieState.Verwijderd)
-                        select (object) s.Naam));
+                    names.AddRange(from s in Formulier.Bewerkingen
+                        where s.IsAllowed() && s.State != ProductieState.Verwijderd
+                        select (object) s.Naam);
 
                 var olditems = xbewerking.Items.Cast<string>().ToArray();
                 var thesame = olditems.Length == names.Count && olditems.All(x =>
@@ -193,7 +189,7 @@ namespace Controls
                         selectedname = xbewerking.SelectedItem as string;
                 }
 
-                Bewerking b = CurrentBewerking();
+                var b = CurrentBewerking();
                 if (b == null && selectedname != null && Formulier.Bewerkingen != null)
                     b = Formulier.Bewerkingen.FirstOrDefault(x =>
                         string.Equals(x.Naam, selectedname, StringComparison.CurrentCultureIgnoreCase));
@@ -202,19 +198,20 @@ namespace Controls
                     _bewerking = b;
                     if (!string.IsNullOrEmpty(b.Note?.Notitie))
                     {
-                        xnoteButton.Text = $@"LET OP! Er is een notitie geplaatst op {b.Note.DatumToegevoegd} door '{b.Note.Naam}'";
+                        xnoteButton.Text =
+                            $@"LET OP! Er is een notitie geplaatst op {b.Note.DatumToegevoegd} door '{b.Note.Naam}'";
                         xnotepanel.Visible = true;
                         xnoteTextbox.Text = b.Note.Notitie.Trim();
                     }
                     else
                     {
-                        xnoteButton.Text = $@"LET OP! Er is een notitie geplaatst!";
+                        xnoteButton.Text = @"LET OP! Er is een notitie geplaatst!";
                         xnoteTextbox.Text = "";
                         xnotepanel.Visible = false;
                     }
+
                     var xmeldgereed = mainMenu1.GetMenuButton("xmeldgereed");
                     if (xmeldgereed != null)
-                    {
                         switch (b.State)
                         {
                             case ProductieState.Verwijderd:
@@ -230,10 +227,9 @@ namespace Controls
                                 xmeldgereed.Text = "Meld Gereed";
                                 break;
                         }
-                    }
+
                     var xdeelgereed = mainMenu1.GetMenuButton("xdeelmeldingen");
                     if (xdeelgereed != null)
-                    {
                         switch (b.State)
                         {
                             case ProductieState.Verwijderd:
@@ -249,7 +245,6 @@ namespace Controls
                                 xdeelgereed.Text = "Meld Deel Gereed";
                                 break;
                         }
-                    }
 
                     var xrooster = mainMenu1.GetButton("xrooster");
                     if (xrooster != null)
@@ -269,6 +264,7 @@ namespace Controls
                         //        new Font("Segoe UI", 16, FontStyle.Bold), Brushes.Red);
                         xstoring.Image = img;
                     }
+
                     //mainMenu1.Enable("xwerktijden", !b.IsBemand);
                     mainMenu1.Enable("xopenpdf", b?.Parent != null && b.Parent.ContainsProductiePdf());
                     switch (b.State)
@@ -332,7 +328,6 @@ namespace Controls
                         b.StopProductie(true).Wait();
                     CreateTextField(b);
                 }
-
             }
             catch (Exception e)
             {
@@ -444,7 +439,6 @@ namespace Controls
                 return;
             var b = CurrentBewerking();
             if (b != null)
-            {
                 try
                 {
                     new AanbevolenPersonenForm(b).ShowDialog();
@@ -453,7 +447,6 @@ namespace Controls
                 {
                     XMessageBox.Show(e.Message, "Geen Aanbevelingen");
                 }
-            }
         }
 
         private void ShowSelectedBewStoringen()
@@ -551,13 +544,14 @@ namespace Controls
             var bew = CurrentBewerking();
             if (bew?.Parent == null) return;
             var dc = new AantalChanger();
-            if (dc.ShowDialog(bew.Parent.Aantal, $"Wijzig aantal voor {bew.Naam} van {bew.Omschrijving}.") == DialogResult.OK)
+            if (dc.ShowDialog(bew.Parent.Aantal, $"Wijzig aantal voor {bew.Naam} van {bew.Omschrijving}.") ==
+                DialogResult.OK)
             {
                 var change = $"[{bew.ProductieNr}|{bew.ArtikelNr}] Aantal gewijzigd!\n" +
                              $"Van: {bew.Aantal}\n" +
                              $"Naar: {dc.Aantal}";
                 bew.Aantal = dc.Aantal;
-                if (await bew.UpdateBewerking(null,change))
+                if (await bew.UpdateBewerking(null, change))
                     XMessageBox.Show(change, "Gewijzigd", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -582,14 +576,14 @@ namespace Controls
         {
             var bew = CurrentBewerking();
             if (bew?.Parent == null) return;
-            var xtxtform = new NotitieForms(bew.Note,bew)
+            var xtxtform = new NotitieForms(bew.Note, bew)
             {
                 Title = $"Notitie voor [{bew.ProductieNr}, {bew.ArtikelNr}] {bew.Naam}"
             };
             if (xtxtform.ShowDialog() == DialogResult.OK)
             {
                 bew.Note = xtxtform.Notitie;
-                await bew.UpdateBewerking(null,$"[{bew.ProductieNr}, {bew.ArtikelNr}] {bew.Naam} Notitie Gewijzigd");
+                await bew.UpdateBewerking(null, $"[{bew.ProductieNr}, {bew.ArtikelNr}] {bew.Naam} Notitie Gewijzigd");
             }
         }
 

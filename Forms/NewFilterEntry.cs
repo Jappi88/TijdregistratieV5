@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Reflection;
-using System.Windows;
 using System.Windows.Forms;
 using Forms;
 using MetroFramework.Forms;
@@ -18,10 +16,11 @@ namespace ProductieManager.Forms
         public PropertyInfo Property { get; private set; }
 
         public FilterEntry SelectedFilter { get; private set; }
+
         public string Title
         {
-            get => this.Text;
-            set => this.Text = value;
+            get => Text;
+            set => Text = value;
         }
 
         public NewFilterEntry(string propertyname, bool useoperand)
@@ -29,14 +28,14 @@ namespace ProductieManager.Forms
             InitializeComponent();
             xoperandtype.Enabled = useoperand;
             xoperandtype.Visible = true;
-            xvaluepanel.Height = 29;
-            this.Size = base.MinimumSize;
-            SelectedFilter = new FilterEntry()
+            xvaluepanel.Height = 40;
+            Size = base.MinimumSize;
+            SelectedFilter = new FilterEntry
             {
                 FilterType = FilterType.None,
                 OperandType = Operand.ALS,
                 PropertyName = propertyname,
-               ChildEntries = new List<FilterEntry>()
+                ChildEntries = new List<FilterEntry>()
             };
             InitOperand();
             InitFields(propertyname);
@@ -48,8 +47,8 @@ namespace ProductieManager.Forms
             xoperandtype.Enabled = entry.OperandType != Operand.ALS;
             xoperandtype.Visible = true;
             SelectedFilter = entry.CreateCopy();
-            xvaluepanel.Height = 29;
-            this.Size = base.MinimumSize;
+            xvaluepanel.Height = 40;
+            Size = base.MinimumSize;
             InitOperand();
             InitFields(entry.PropertyName);
             SetValue(entry.Value);
@@ -58,7 +57,7 @@ namespace ProductieManager.Forms
         private void InitOperand()
         {
             if (xoperandtype.Enabled)
-                xoperandtype.Items.AddRange(new object[] { "EN", "OF" });
+                xoperandtype.Items.AddRange(new object[] {"EN", "OF"});
             else xoperandtype.Items.Add("ALS");
         }
 
@@ -75,17 +74,17 @@ namespace ProductieManager.Forms
                 throw new Exception($"'{propertyname}' bestaat niet, of is ongeldig!");
             xvariablenamelabel.Text = propertyname;
             xvaluetypes.Items.Clear();
-           
-           
+
+
             xtextvalue.Enabled = Property.PropertyType == typeof(string);
             xdecimalvalue.Enabled = Property.PropertyType.IsNumericType();
-            xdatevalue.Enabled = Property.PropertyType == typeof(DateTime);
+            xdatepanel.Enabled = Property.PropertyType == typeof(DateTime);
             xcombovalue.Enabled = Property.PropertyType.IsEnum;
             xcheckvalue.Enabled = Property.PropertyType == typeof(bool);
 
             xtextvalue.Visible = xtextvalue.Enabled;
             xdecimalvalue.Visible = xdecimalvalue.Enabled;
-            xdatevalue.Visible = xdatevalue.Enabled;
+            xdatepanel.Visible = xdatevalue.Enabled;
             xcombovalue.Visible = xcombovalue.Enabled;
             xcheckvalue.Visible = xcheckvalue.Enabled;
 
@@ -93,12 +92,15 @@ namespace ProductieManager.Forms
             foreach (var xval in xvaltypes)
             {
                 if (xval.ToLower() == "none") continue;
-                if ((xdecimalvalue.Enabled || xdatevalue.Enabled) && xval.ToLower().StartsWith("bevat")) continue;
-                if (xtextvalue.Enabled && (xval.ToLower().StartsWith("lager") || xval.ToLower().StartsWith("hoger"))) continue;
-                if ((xcheckvalue.Enabled || xcombovalue.Enabled) && (xval.ToLower().StartsWith("lager") || xval.ToLower().StartsWith("hoger") ||
-                                                                   xval.ToLower().StartsWith("bevat"))) continue;
+                if ((xdecimalvalue.Enabled || xdatepanel.Enabled) && xval.ToLower().StartsWith("bevat")) continue;
+                if (xtextvalue.Enabled &&
+                    (xval.ToLower().StartsWith("lager") || xval.ToLower().StartsWith("hoger"))) continue;
+                if ((xcheckvalue.Enabled || xcombovalue.Enabled) &&
+                    (xval.ToLower().StartsWith("lager") || xval.ToLower().StartsWith("hoger") ||
+                     xval.ToLower().StartsWith("bevat"))) continue;
                 xvaluetypes.Items.Add(xval);
             }
+
             if (xcombovalue.Enabled)
             {
                 xcombovalue.Items.Clear();
@@ -120,6 +122,7 @@ namespace ProductieManager.Forms
                         xoperandtype.SelectedIndex = 0;
                 }
             }
+
             if (xvaluetypes.Items.Count > 0 && xvaluetypes.SelectedIndex < 0)
                 xvaluetypes.SelectedIndex = 0;
             if (xoperandtype.Items.Count > 0 && xoperandtype.SelectedIndex < 0)
@@ -136,14 +139,30 @@ namespace ProductieManager.Forms
                     case string xvalue:
                         xtextvalue.Text = xvalue;
                         break;
+                    case decimal xdecimal:
+                        xdecimalvalue.SetValue(xdecimal);
+                        break;
+                    case double xdouble:
+                        xdecimalvalue.SetValue((decimal) xdouble);
+                        break;
                     case int xvalue:
-                        xdecimalvalue.Value = xvalue;
+                        xdecimalvalue.SetValue(xvalue);
                         break;
                     case DateTime xvalue:
+                        if (xvalue.Year == 9999 && xvalue.Month == 1 && xvalue.Day == 1)
+                        {
+                            xvalue = DateTime.Now;
+                            xcurrentcheckbox.Checked = true;
+                        }
+                        else
+                        {
+                            xcurrentcheckbox.Checked = false;
+                        }
+
                         xdatevalue.Value = xvalue;
                         break;
                     case Enum xvalue:
-                        string xvalueenum = Enum.GetName(xvalue.GetType(), xvalue);
+                        var xvalueenum = Enum.GetName(xvalue.GetType(), xvalue);
                         xcombovalue.SelectedItem = xvalueenum;
                         break;
                     case bool xvalue:
@@ -163,18 +182,24 @@ namespace ProductieManager.Forms
             {
                 if (xtextvalue.Enabled)
                 {
-                    
                     var xtxt = xtextvalue.Text.Trim();
                     if (xtxt.ToLower().StartsWith("vul in een criteria..."))
                         return null;
                     return xtxt;
                 }
+
                 if (xdecimalvalue.Enabled)
-                    return (int)xdecimalvalue.Value;
-                if (xdatevalue.Enabled)
-                    return xdatevalue.Value;
-                if (xcombovalue.Enabled)
+                    return xdecimalvalue.Value;
+                if (xdatepanel.Enabled)
                 {
+                    var dt = xdatevalue.Value;
+                    if (xcurrentcheckbox.Checked)
+                        dt = new DateTime(9999, 1, 1, 1, 1, 1, 1);
+                    return dt;
+                }
+
+
+                if (xcombovalue.Enabled)
                     try
                     {
                         var xenum = Enum.Parse(Property.PropertyType, xcombovalue.SelectedItem.ToString().Trim(), true);
@@ -184,12 +209,8 @@ namespace ProductieManager.Forms
                     {
                         return null;
                     }
-                }
 
-                if (xcheckvalue.Enabled)
-                {
-                    return xcheckvalue.Checked;
-                }
+                if (xcheckvalue.Enabled) return xcheckvalue.Checked;
             }
             catch (Exception e)
             {
@@ -199,9 +220,9 @@ namespace ProductieManager.Forms
             return null;
         }
 
-        private void xok_Click(object sender, System.EventArgs e)
+        private void xok_Click(object sender, EventArgs e)
         {
-            if(SaveChanges(true))
+            if (SaveChanges(true))
                 DialogResult = DialogResult.OK;
         }
 
@@ -213,7 +234,6 @@ namespace ProductieManager.Forms
                 var value = GetValue();
                 var operand = Operand.ALS;
                 if (xoperandtype.Enabled && xoperandtype.SelectedItem != null)
-                {
                     try
                     {
                         operand = (Operand) Enum.Parse(typeof(Operand), xoperandtype.SelectedItem.ToString(), true);
@@ -225,7 +245,6 @@ namespace ProductieManager.Forms
                                 MessageBoxIcon.Error);
                         return false;
                     }
-                }
 
                 if (value == null)
                 {
@@ -234,7 +253,7 @@ namespace ProductieManager.Forms
                     return false;
                 }
 
-                var x = new FilterEntry()
+                var x = new FilterEntry
                 {
                     FilterType = xfiltertype,
                     OperandType = xoperandtype.Enabled ? operand : Operand.ALS,
@@ -256,16 +275,11 @@ namespace ProductieManager.Forms
             try
             {
                 if (xoperandtype.Enabled)
-                {
                     if (xoperandtype.SelectedIndex < 0)
                         throw new Exception(
                             "Criteria operand is niet gekozen!\n\nKies of je criteria 'IS','OF' of 'EN' met de voorgaande criteria is");
-                }
 
-                if (xvaluetypes.SelectedIndex < 0)
-                {
-                    throw new Exception("Kies eerst waar je criteria aan moet voldoen");
-                }
+                if (xvaluetypes.SelectedIndex < 0) throw new Exception("Kies eerst waar je criteria aan moet voldoen");
 
                 if (xtextvalue.Enabled && string.IsNullOrEmpty(xtextvalue.Text.Trim()))
                     throw new Exception($"Vul in een criteria text waar '{xvariablenamelabel.Text}' aan moet voldoen");
@@ -281,7 +295,7 @@ namespace ProductieManager.Forms
             }
         }
 
-        private void xannuleren_Click(object sender, System.EventArgs e)
+        private void xannuleren_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
         }
@@ -309,7 +323,6 @@ namespace ProductieManager.Forms
             xcheckvalue.Text = xcheckvalue.Checked ? "WAAR" : "NIET WAAR";
             if (xcheckvalue.Enabled)
                 SaveChanges(false);
-
         }
 
         private void UpdateHtmlText()
@@ -355,7 +368,7 @@ namespace ProductieManager.Forms
 
         private void xdatevalue_ValueChanged(object sender, EventArgs e)
         {
-            if (xdatevalue.Enabled)
+            if (xdatepanel.Enabled)
                 SaveChanges(false);
         }
 
