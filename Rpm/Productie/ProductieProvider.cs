@@ -540,11 +540,11 @@ namespace ProductieManager.Rpm.Productie
                 {
                     if (Manager.Opties.GebruikLocalSync || Manager.Opties.GebruikTaken)
                     {
-                        var forms = await Manager.GetAllProductiePaths(false,false);
+                        var forms = await Manager.GetAllProductieIDs(false,false);
                         for (int i = 0; i < forms.Count; i++)
                         {
                             if (!IsProductiesSyncing || (!Manager.Opties.GebruikLocalSync && !Manager.Opties.GebruikTaken)) break;
-                            var prod = await Manager.Database.GetProductieFromPath(forms[i]);
+                            var prod = await Manager.Database.GetProductie(forms[i]);
                             if (prod == null || !prod.IsAllowed(null) || IsExcluded(prod))
                                 continue;
                             if (prod.State is ProductieState.Verwijderd or ProductieState.Gereed)

@@ -248,12 +248,17 @@ namespace Controls
             while (_iswaiting && !IsDisposed && !Disposing)
             {
                 var xcur = cur++;
-                xstatus.BeginInvoke(new MethodInvoker(() =>
+                try
                 {
-                    if (IsDisposed || Disposing) return;
-                    xstatus.Text = value.PadRight(value.Length + xcur, '.');
-                    xstatus.Invalidate();
-                }));
+                    xstatus.Invoke(new Action(() =>
+                                   {
+                                       if (IsDisposed || Disposing) return;
+                                       xstatus.Text = value.PadRight(value.Length + xcur, '.');
+                                       xstatus.Invalidate();
+                                   }));
+                }
+                catch { }
+
                 await Task.Delay(350);
                 if (cur > 5)
                     cur = 0;

@@ -29,7 +29,7 @@ namespace Controls
         public ProductieListControl()
         {
             InitializeComponent();
-            ProductieLijst.CustomSorter = delegate(OLVColumn column, SortOrder order)
+            ProductieLijst.CustomSorter = delegate (OLVColumn column, SortOrder order)
             {
                 // check which column is about to be sorted and set your custom comparer
                 ProductieLijst.ListViewItemSorter = new Comparer(order, column);
@@ -67,7 +67,7 @@ namespace Controls
         }
 
         // ReSharper disable once ConvertToAutoProperty
-        public ObjectListView ProductieLijst { get; private set; }
+        public ObjectListView ProductieLijst => xProductieLijst;
 
         public string ListName { get; set; }
         public bool RemoveCustomItemIfNotValid { get; set; }
@@ -107,11 +107,13 @@ namespace Controls
         #region Init Methods
 
         /// <summary>
-        ///     Laad producties
+        /// Laadt producties
         /// </summary>
         /// <param name="producties">De producties om te laden</param>
         /// <param name="bewerkingen">Laad alleen de bewerkingen</param>
-        /// <param name="filter">Filter producties</param>
+        /// <param name="initlist">Of je ook de lijst events en afbeeldingen wilt</param>
+        /// <param name="loadproducties">Of je ook gelijk de producties wilt laten</param>
+        /// <param name="reload">Of je de lijst wilt refreshen</param>
         public void InitProductie(List<ProductieFormulier> producties, bool bewerkingen, bool initlist,
             bool loadproducties, bool reload)
         {
@@ -154,11 +156,10 @@ namespace Controls
 
         private void SetButtonEnable()
         {
-            var enable1 = ProductieLijst.SelectedObjects is {Count: 1};
-            var enable2 = ProductieLijst.SelectedObjects is {Count: > 1};
+            var enable1 = ProductieLijst.SelectedObjects is { Count: 1 };
+            var enable2 = ProductieLijst.SelectedObjects is { Count: > 1 };
             var enable3 = enable1 || enable2;
-            var acces1 = Manager.LogedInGebruiker != null &&
-                         Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieBasis;
+            var acces1 = Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieBasis };
             //var acces2 = Manager.LogedInGebruiker != null &&
             //Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieAdvance;
 
@@ -187,7 +188,12 @@ namespace Controls
             var isgereed2 = enable3 && bws.Any(x => x.State != ProductieState.Gereed);
             var isgestart = enable3 && bws.Any(x => x.State == ProductieState.Gestart);
             var isgestopt = enable3 && bws.Any(x => x.State == ProductieState.Gestopt);
+            var haspdf = bws.Count > 0 && bws[0].Parent != null && bws[0].Parent.ContainsProductiePdf();
             //var nietbemand = bws.Any(x => !x.IsBemand);
+            xbewerkingeninfob.Enabled = xProductieLijst.Items.Count > 0;
+            xwijzigproductieinfo.Enabled = enable3 && acces1;
+            xtoonpdfb.Enabled = haspdf;
+            xverpakkingb.Enabled = enable1;
             xopenproductieb.Enabled = enable3 && acces1 && verwijderd2;
             xstartb.Enabled = acces1 && isgestopt;
             xstopb.Enabled = acces1 && isgestart;
@@ -327,23 +333,23 @@ namespace Controls
                 };
             }
 
-            var c = (OLVColumn) ProductieLijst.Columns["Naam"];
+            var c = (OLVColumn)ProductieLijst.Columns["Naam"];
             if (c != null)
                 c.IsVisible = IsBewerkingView;
             //((OLVColumn)xproductieLijst.Columns["Omschrijving"]).ImageGetter = ImageGetter;
             //((OLVColumn)xproductieLijst.Columns["Naam"]).ImageGetter = ImageGetter;
             if (!IsBewerkingView)
             {
-                c = (OLVColumn) ProductieLijst.Columns["Omschrijving"];
+                c = (OLVColumn)ProductieLijst.Columns["Omschrijving"];
                 if (c != null)
                     c.GroupKeyGetter = GroupGetter;
             }
 
-            c = (OLVColumn) ProductieLijst.Columns["TijdOver"];
+            c = (OLVColumn)ProductieLijst.Columns["TijdOver"];
             if (c != null)
                 c.AspectGetter = BewerkingTijdOverGetter;
             //init time fields
-            c = (OLVColumn) ProductieLijst.Columns["LaatstAantalUpdate"];
+            c = (OLVColumn)ProductieLijst.Columns["LaatstAantalUpdate"];
             if (c != null)
                 c.AspectGetter = y =>
                 {
@@ -371,7 +377,7 @@ namespace Controls
             //    return "N.V.T.";
             //};
 
-            c = (OLVColumn) ProductieLijst.Columns["VerwachtLeverDatum"];
+            c = (OLVColumn)ProductieLijst.Columns["VerwachtLeverDatum"];
             if (c != null)
                 c.AspectGetter = y =>
                 {
@@ -381,7 +387,7 @@ namespace Controls
                         return pr.VerwachtLeverDatum.ToString(8, "over {0} {1}", "{0} {1} geleden", false);
                     return "N.V.T.";
                 };
-            c = (OLVColumn) ProductieLijst.Columns["LeverDatum"];
+            c = (OLVColumn)ProductieLijst.Columns["LeverDatum"];
             if (c != null)
                 c.AspectGetter = y =>
                 {
@@ -457,7 +463,7 @@ namespace Controls
         private object BewerkingTijdOverGetter(object sender)
         {
             if (sender is Bewerking bew) return bew.TijdOver() + " uur";
-            if (sender is ProductieFormulier {Bewerkingen: { }} prod)
+            if (sender is ProductieFormulier { Bewerkingen: { } } prod)
                 return Math.Round(prod.Bewerkingen.Sum(x => x.TijdOver()), 2) + " uur";
             return 0;
         }
@@ -531,7 +537,7 @@ namespace Controls
         private bool IsAllowd(Bewerking bewerking)
         {
             var filters = Manager.Opties.Filters;
-            if (filters is {Count: > 0})
+            if (filters is { Count: > 0 })
             {
                 if (filters.Any(xf =>
                     xf.ListNames.Any(x =>
@@ -550,7 +556,7 @@ namespace Controls
         private bool IsAllowd(ProductieFormulier productie)
         {
             var filters = Manager.Opties.Filters;
-            if (filters is {Count: > 0})
+            if (filters is { Count: > 0 })
             {
                 if (productie?.Bewerkingen == null) return false;
                 return productie.Bewerkingen.Any(IsAllowd);
@@ -572,7 +578,7 @@ namespace Controls
                     _loadingproductielist = true;
                     InitFilterStrips();
                     var selected1 = ProductieLijst.SelectedObject;
-                    var groups1 = ProductieLijst.Groups.Cast<ListViewGroup>().Select(t => (OLVGroup) t.Tag)
+                    var groups1 = ProductieLijst.Groups.Cast<ListViewGroup>().Select(t => (OLVGroup)t.Tag)
                         .Where(x => x.Collapsed)
                         .ToArray();
                     // Manager.Opties.ProductieWeergaveFilters = GetCurrentProductieViewStates();
@@ -922,14 +928,14 @@ namespace Controls
                     {
                         var prods = ProductieLijst.Objects?.Cast<ProductieFormulier>()?.Where(x =>
                             string.Equals(id, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase)).ToArray();
-                        if (prods is {Length: > 0})
+                        if (prods is { Length: > 0 })
                             ProductieLijst.RemoveObjects(prods);
                     }
                     else
                     {
                         var bws = ProductieLijst.Objects?.Cast<Bewerking>()?.Where(x =>
                             string.Equals(id, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase)).ToArray();
-                        if (bws is {Length: > 0})
+                        if (bws is { Length: > 0 })
                             ProductieLijst.RemoveObjects(bws);
                     }
 
@@ -1084,7 +1090,7 @@ namespace Controls
 
         public void ShowProductieForm(ProductieFormulier pform, bool showform, Bewerking bewerking = null)
         {
-            Manager.FormulierActie(new object[] {pform, bewerking}, MainAktie.OpenProductie);
+            Manager.FormulierActie(new object[] { pform, bewerking }, MainAktie.OpenProductie);
         }
 
         private void StartSelectedProducties()
@@ -1625,8 +1631,11 @@ namespace Controls
         {
             if (ProductieLijst.SelectedObjects.Count == 0)
                 return;
-            if (XMessageBox.Show("Weetje zeker dat je alle geselecteerde producties wilt verwijderen?", "Verwijderen",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+            var res = XMessageBox.Show("Wil je de geselecteerde producties helemaal verwijderen?\n\n" +
+                                               "Click op 'Ja' als je helemaal van de database wilt verwijderen.\n" +
+                                               "Click op 'Nee' als je alleen op een verwijderde status wilt te zetten.", "",
+                        MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            if (res != DialogResult.Cancel)
             {
                 var bws = new List<Bewerking>();
                 if (!IsBewerkingView)
@@ -1640,28 +1649,14 @@ namespace Controls
                 else bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToList();
 
                 if (bws.Count == 0) return;
-                var removed = bws.Any(x => x.State == ProductieState.Verwijderd);
-                var skip = false;
-                if (removed)
-                {
-                    var res = XMessageBox.Show("Er zit een verwijderd productie tussen je selecties!\n" +
-                                               "Deze nogmaals verwijderen zal ze voorgoed wissen!\n\n" +
-                                               "Weet je zeker dat je dat wilt doen!?\n\n" +
-                                               "Click op 'Nee' als je ze wilt overslaan", "",
-                        MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
-
-                    if (res == DialogResult.Cancel)
-                        return;
-                    skip = res == DialogResult.No;
-                }
-
+                var skip = res == DialogResult.No;
                 var taskf = new Dictionary<string, Task<bool>>();
                 for (var i = 0; i < bws.Count; i++)
                 {
                     var pr = bws[i];
                     if (pr == null)
                         continue;
-                    var action = new Task<bool>(() => pr.RemoveBewerking(skip).Result);
+                    var action = new Task<bool>(() => pr.RemoveBewerking(skip,res == DialogResult.Yes).Result);
                     taskf.Add($"Bewerking '{pr.Path}' wordt verwijderd...", action);
                 }
 
@@ -1931,7 +1926,7 @@ namespace Controls
                 if (tb.Checked)
                     if (int.TryParse(tb.Tag.ToString(), out var xstate))
                     {
-                        var state = (ViewState) xstate;
+                        var state = (ViewState)xstate;
                         states.Add(state);
                     }
 
@@ -1986,9 +1981,9 @@ namespace Controls
                 if (!IsBewerkingView)
                 {
                     foreach (var o in ProductieLijst.SelectedObjects.Cast<ProductieFormulier>().ToArray())
-                    foreach (var bw in o.Bewerkingen)
-                        if (bw.IsAllowed())
-                            xreturn.Add(bw);
+                        foreach (var bw in o.Bewerkingen)
+                            if (bw.IsAllowed())
+                                xreturn.Add(bw);
                 }
                 else
                 {
@@ -2108,13 +2103,13 @@ namespace Controls
         private void vouwAllGroepenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             foreach (ListViewGroup group in ProductieLijst.Groups)
-                ((OLVGroup) group.Tag).Collapsed = true;
+                ((OLVGroup)group.Tag).Collapsed = true;
         }
 
         private void ontvouwAlleGroepenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             foreach (ListViewGroup group in ProductieLijst.Groups)
-                ((OLVGroup) group.Tag).Collapsed = false;
+                ((OLVGroup)group.Tag).Collapsed = false;
         }
 
         private void xfiltercontainer_Click(object sender, EventArgs e)
@@ -2151,6 +2146,55 @@ namespace Controls
             ShowSelectedRangeBewerking();
         }
 
+        private void xbewerkingeninfob_Click(object sender, EventArgs e)
+        {
+            if (IsBewerkingView)
+            {
+                var bws = ProductieLijst.Objects?.Cast<Bewerking>().ToList();
+                if (bws is { Count: > 0 }) new ProductieInfoForm(bws).ShowDialog();
+            }
+            else
+            {
+                var prods = ProductieLijst.Objects?.Cast<ProductieFormulier>().ToList();
+                if (prods is { Count: > 0 })
+                {
+                    var bws = new List<Bewerking>();
+                    for (var i = 0; i < prods.Count; i++)
+                    {
+                        var prod = prods[i];
+                        if (prod.Bewerkingen is { Length: < 1 }) continue;
+                        foreach (var bw in prod.Bewerkingen)
+                        {
+                            var flag = bw.IsAllowed() && IsAllowd(bw);
+                            if (ValidHandler != null)
+                                flag &= ValidHandler.Invoke(bw, null);
+                            if (flag)
+                                bws.Add(bw);
+                        }
+                    }
+
+                    new ProductieInfoForm(bws).ShowDialog();
+                }
+            }
+        }
+
+        private void xverpakkingb_Click(object sender, EventArgs e)
+        {
+            if (xProductieLijst.SelectedObject is IProductieBase productie)
+                new VerpakkingInstructieForm(productie).ShowDialog();
+        }
+
+        private void xwijzigproductieinfo_ButtonClick(object sender, EventArgs e)
+        {
+            xwijzigproductieinfo.ShowDropDown();
+        }
+
+        private void xtoonpdfb_Click(object sender, EventArgs e)
+        {
+            if (xProductieLijst.SelectedObject is ProductieFormulier form) form.OpenProductiePdf();
+            else if (xProductieLijst.SelectedObject is Bewerking bew) bew.Parent?.OpenProductiePdf();
+        }
+
         #endregion MenuButton Events
 
         #region FilterStrip
@@ -2163,7 +2207,7 @@ namespace Controls
                     tb.Checked = false;
                 else
                     tb.Checked =
-                        Manager.Opties.ProductieWeergaveFilters.Any(t => tb.Tag.ToString() == ((int) t).ToString());
+                        Manager.Opties.ProductieWeergaveFilters.Any(t => tb.Tag.ToString() == ((int)t).ToString());
         }
 
         public void InitFilterStrips()
@@ -2193,7 +2237,7 @@ namespace Controls
             if (Manager.Opties?.Filters == null || menuitem == null) return;
             foreach (var f in Manager.Opties.Filters)
             {
-                var xitem = new ToolStripMenuItem(f.Name) {Image = Resources.add_1588, Tag = f};
+                var xitem = new ToolStripMenuItem(f.Name) { Image = Resources.add_1588, Tag = f };
                 menuitem.DropDownItems.Add(xitem);
                 if (f.ListNames.Any(x =>
                     string.Equals(ListName, x, StringComparison.CurrentCultureIgnoreCase)))
@@ -2235,7 +2279,7 @@ namespace Controls
             if (filter.ListNames.Any(x =>
                     string.Equals(ListName, x, StringComparison.CurrentCultureIgnoreCase)) &&
                 docheck) return false;
-            var ts = new ToolStripMenuItem(filter.Name) {Image = Resources.delete_1577, Tag = filter};
+            var ts = new ToolStripMenuItem(filter.Name) { Image = Resources.delete_1577, Tag = filter };
             ts.Click += Ts_Click;
             xfiltersStrip.Items.Add(ts);
             return true;
@@ -2243,7 +2287,7 @@ namespace Controls
 
         private void Ts_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripItem {Tag: Filter filter} ts)
+            if (sender is ToolStripItem { Tag: Filter filter } ts)
             {
                 filter.ListNames.RemoveAll(x => string.Equals(x, ListName, StringComparison.CurrentCultureIgnoreCase));
                 Manager.OnFilterChanged(this);
@@ -2353,36 +2397,5 @@ namespace Controls
 
         #endregion Events
 
-        private void xbewerkingeninfob_Click(object sender, EventArgs e)
-        {
-            if (IsBewerkingView)
-            {
-                var bws = ProductieLijst.Objects?.Cast<Bewerking>().ToList();
-                if (bws is {Count: > 0}) new ProductieInfoForm(bws).ShowDialog();
-            }
-            else
-            {
-                var prods = ProductieLijst.Objects?.Cast<ProductieFormulier>().ToList();
-                if (prods is {Count: > 0})
-                {
-                    var bws = new List<Bewerking>();
-                    for (var i = 0; i < prods.Count; i++)
-                    {
-                        var prod = prods[i];
-                        if (prod.Bewerkingen is {Length: < 1}) continue;
-                        foreach (var bw in prod.Bewerkingen)
-                        {
-                            var flag = bw.IsAllowed() && IsAllowd(bw);
-                            if (ValidHandler != null)
-                                flag &= ValidHandler.Invoke(bw, null);
-                            if (flag)
-                                bws.Add(bw);
-                        }
-                    }
-
-                    new ProductieInfoForm(bws).ShowDialog();
-                }
-            }
-        }
     }
 }

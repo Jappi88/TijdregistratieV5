@@ -599,5 +599,13 @@ namespace Controls
         {
             xnotepanel.Height = xnotepanel.Height > 100 ? 32 : 125;
         }
+
+        private void xverpakking_Click(object sender, EventArgs e)
+        {
+            var bew = CurrentBewerking();
+            if (bew?.Parent == null) return;
+            var x = new VerpakkingInstructieForm(bew);
+            x.ShowDialog();
+        }
     }
 }

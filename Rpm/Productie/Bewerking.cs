@@ -53,6 +53,16 @@ namespace Rpm.Productie
             set => _gestartop = value;
         }
 
+        public override VerpakkingInstructie VerpakkingInstries
+        {
+            get => Parent?.VerpakkingInstries;
+            set
+            {
+                if (Parent != null)
+                    Parent.VerpakkingInstries = value;
+            }
+        }
+
         public override DateTime TijdGestopt
         {
             get => GestoptOp();
@@ -145,6 +155,8 @@ namespace Rpm.Productie
             get => (Parent == null ? base.Omschrijving : Parent.Omschrijving);//.WrapText(150);
             set => base.Omschrijving = value;
         }
+
+        public string Opmerking { get; set; }
 
         public override string Path => ProductieNr + "\\" + Naam;
 
@@ -565,7 +577,7 @@ namespace Rpm.Productie
             }
         }
 
-        public Task<bool> RemoveBewerking(bool skip)
+        public Task<bool> RemoveBewerking(bool skip, bool completeremove)
         {
             return Task.Run(async() =>
             {
@@ -632,7 +644,10 @@ namespace Rpm.Productie
 
                 DatumVerwijderd = DateTime.Now;
                 State = ProductieState.Verwijderd;
-                await UpdateBewerking(null, $"[{Path}] Verwijderd.");
+                if (completeremove)
+                    await RemoveBewerking(false, true);
+                else
+                    await UpdateBewerking(null, $"[{Path}] Verwijderd.");
                 return true;
             });
         }

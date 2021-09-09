@@ -262,6 +262,12 @@
     <Compile Include="Controls\RoundedButton.Designer.cs">
       <DependentUpon>RoundedButton.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\VerpakkingInstructieUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\VerpakkingInstructieUI.Designer.cs">
+      <DependentUpon>VerpakkingInstructieUI.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\WerkPlekInfoUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -676,6 +682,12 @@
     <Compile Include="Forms\VaardighedenForm.Designer.cs">
       <DependentUpon>VaardighedenForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\VerpakkingInstructieForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VerpakkingInstructieForm.Designer.cs">
+      <DependentUpon>VerpakkingInstructieForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ViewChartForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -857,6 +869,7 @@
     <Compile Include="Rpm\Productie\TaskManager.cs" />
     <Compile Include="Rpm\Productie\TijdEntry.cs" />
     <Compile Include="Rpm\Productie\UrenLijst.cs" />
+    <Compile Include="Rpm\Productie\VerpakkingInstructie.cs" />
     <Compile Include="Rpm\Productie\Werk.cs" />
     <Compile Include="Rpm\Productie\WerkPlek.cs" />
     <Compile Include="Rpm\Productie\Werktijd.cs" />
@@ -883,6 +896,7 @@
     <Compile Include="Rpm\Various\Comparer.cs" />
     <Compile Include="Rpm\Various\Delegates.cs" />
     <Compile Include="Rpm\Various\Enums.cs" />
+    <Compile Include="Rpm\Various\MyLocationTextExtractionStrategy.cs" />
     <Compile Include="Rpm\Various\ProductieChat.cs" />
     <Compile Include="Rpm\Various\ProductieChatEntry.cs" />
     <Compile Include="Rpm\Various\UserChat.cs" />
@@ -931,6 +945,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\RoosterUI.resx">
       <DependentUpon>RoosterUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\VerpakkingInstructieUI.resx">
+      <DependentUpon>VerpakkingInstructieUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\WerkPlekInfoUI.resx">
       <DependentUpon>WerkPlekInfoUI.cs</DependentUpon>
@@ -1140,6 +1157,9 @@
     <EmbeddedResource Include="Forms\VaardighedenForm.resx">
       <DependentUpon>VaardighedenForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VerpakkingInstructieForm.resx">
+      <DependentUpon>VerpakkingInstructieForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ViewChartForm.nl-NL.resx">
       <DependentUpon>ViewChartForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1208,6 +1228,7 @@
     <None Include=".editorconfig" />
     <None Include="bin\Debug\ProductieManager.exe.config" />
     <None Include="bin\Release\ProductieManager.zip" />
+    <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
@@ -1329,6 +1350,9 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Make_Lead_32x32.png" />
+    <None Include="Resources\package_box_10801.png" />
+    <None Include="Resources\package_box_128x128.png" />
     <None Include="Resources\add_Blue_circle_32x32.png" />
     <None Include="Resources\verbeteringen_32x32.png" />
     <None Include="Resources\fixed_Bug_32x32.png" />

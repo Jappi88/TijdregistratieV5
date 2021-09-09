@@ -340,102 +340,110 @@ namespace AutoUpdaterDotNET
 
         private static object CheckUpdate(Assembly mainAssembly, bool onlychecknew)
         {
-            var companyAttribute =
-                (AssemblyCompanyAttribute) GetAttribute(mainAssembly, typeof(AssemblyCompanyAttribute));
-            string appCompany = companyAttribute != null ? companyAttribute.Company : "";
-
-            if (string.IsNullOrEmpty(AppTitle))
+            UpdateInfoEventArgs args = null;
+            try
             {
-                var titleAttribute =
-                    (AssemblyTitleAttribute) GetAttribute(mainAssembly, typeof(AssemblyTitleAttribute));
-                AppTitle = titleAttribute != null ? titleAttribute.Title : mainAssembly.GetName().Name;
-            }
+                var companyAttribute =
+                    (AssemblyCompanyAttribute)GetAttribute(mainAssembly, typeof(AssemblyCompanyAttribute));
+                string appCompany = companyAttribute != null ? companyAttribute.Company : "";
 
-            string registryLocation = !string.IsNullOrEmpty(appCompany)
-                ? $@"Software\{appCompany}\{AppTitle}\AutoUpdater"
-                : $@"Software\{AppTitle}\AutoUpdater";
-
-            if (PersistenceProvider == null)
-            {
-                PersistenceProvider = new RegistryPersistenceProvider(registryLocation);
-            }
-
-            BaseUri = new Uri(AppCastURL);
-
-            UpdateInfoEventArgs args;
-            using (MyWebClient client = GetWebClient(BaseUri, BasicAuthXML))
-            {
-                string xml = client.DownloadString(BaseUri);
-                
-                if (ParseUpdateInfoEvent == null)
+                if (string.IsNullOrEmpty(AppTitle))
                 {
-                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(UpdateInfoEventArgs));
-                    XmlTextReader xmlTextReader = new XmlTextReader(new StringReader(xml)) {XmlResolver = null};
-                    args = (UpdateInfoEventArgs) xmlSerializer.Deserialize(xmlTextReader);
+                    var titleAttribute =
+                        (AssemblyTitleAttribute)GetAttribute(mainAssembly, typeof(AssemblyTitleAttribute));
+                    AppTitle = titleAttribute != null ? titleAttribute.Title : mainAssembly.GetName().Name;
+                }
+
+                string registryLocation = !string.IsNullOrEmpty(appCompany)
+                    ? $@"Software\{appCompany}\{AppTitle}\AutoUpdater"
+                    : $@"Software\{AppTitle}\AutoUpdater";
+
+                if (PersistenceProvider == null)
+                {
+                    PersistenceProvider = new RegistryPersistenceProvider(registryLocation);
+                }
+
+                BaseUri = new Uri(AppCastURL);
+
+
+                using (MyWebClient client = GetWebClient(BaseUri, BasicAuthXML))
+                {
+                    string xml = client.DownloadString(BaseUri);
+
+                    if (ParseUpdateInfoEvent == null)
+                    {
+                        XmlSerializer xmlSerializer = new XmlSerializer(typeof(UpdateInfoEventArgs));
+                        XmlTextReader xmlTextReader = new XmlTextReader(new StringReader(xml)) { XmlResolver = null };
+                        args = (UpdateInfoEventArgs)xmlSerializer.Deserialize(xmlTextReader);
+                    }
+                    else
+                    {
+                        ParseUpdateInfoEventArgs parseArgs = new ParseUpdateInfoEventArgs(xml);
+                        ParseUpdateInfoEvent(parseArgs);
+                        args = parseArgs.UpdateInfo;
+                    }
+
+                }
+
+                if (string.IsNullOrEmpty(args.CurrentVersion) || string.IsNullOrEmpty(args.DownloadURL))
+                {
+                    throw new MissingFieldException();
+                }
+                if (args != null)
+                    RunUpdateAsAdmin = args.RunAsAdmin;
+                args.InstalledVersion = InstalledVersion != null ? InstalledVersion : mainAssembly.GetName().Version;
+                args.IsUpdateAvailable = !onlychecknew || new Version(args.CurrentVersion) > args.InstalledVersion;
+
+                if (!Mandatory)
+                {
+                    if (string.IsNullOrEmpty(args.Mandatory.MinimumVersion) ||
+                        args.InstalledVersion < new Version(args.Mandatory.MinimumVersion))
+                    {
+                        Mandatory = args.Mandatory.Value;
+                        UpdateMode = args.Mandatory.UpdateMode;
+                    }
+                }
+
+                if (Mandatory)
+                {
+                    ShowRemindLaterButton = false;
+                    ShowSkipButton = false;
                 }
                 else
                 {
-                    ParseUpdateInfoEventArgs parseArgs = new ParseUpdateInfoEventArgs(xml);
-                    ParseUpdateInfoEvent(parseArgs);
-                    args = parseArgs.UpdateInfo;
-                }
-               
-            }
-
-            if (string.IsNullOrEmpty(args.CurrentVersion) || string.IsNullOrEmpty(args.DownloadURL))
-            {
-                throw new MissingFieldException();
-            }
-            if (args != null)
-                RunUpdateAsAdmin = args.RunAsAdmin;
-            args.InstalledVersion = InstalledVersion != null ? InstalledVersion : mainAssembly.GetName().Version;
-            args.IsUpdateAvailable = !onlychecknew || new Version(args.CurrentVersion) > args.InstalledVersion;
-
-            if (!Mandatory)
-            {
-                if (string.IsNullOrEmpty(args.Mandatory.MinimumVersion) ||
-                    args.InstalledVersion < new Version(args.Mandatory.MinimumVersion))
-                {
-                    Mandatory = args.Mandatory.Value;
-                    UpdateMode = args.Mandatory.UpdateMode;
-                }
-            }
-
-            if (Mandatory)
-            {
-                ShowRemindLaterButton = false;
-                ShowSkipButton = false;
-            }
-            else
-            {
-                // Read the persisted state from the persistence provider.
-                // This method makes the persistence handling independent from the storage method.
-                var skippedVersion = PersistenceProvider.GetSkippedVersion();
-                if (skippedVersion != null)
-                {
-                    var currentVersion = new Version(args.CurrentVersion);
-                    if (currentVersion <= skippedVersion)
-                        return null;
-
-                    if (currentVersion > skippedVersion)
+                    // Read the persisted state from the persistence provider.
+                    // This method makes the persistence handling independent from the storage method.
+                    var skippedVersion = PersistenceProvider.GetSkippedVersion();
+                    if (skippedVersion != null)
                     {
-                        // Update the persisted state. Its no longer makes sense to have this flag set as we are working on a newer application version.
-                        PersistenceProvider.SetSkippedVersion(null);
+                        var currentVersion = new Version(args.CurrentVersion);
+                        if (currentVersion <= skippedVersion)
+                            return null;
+
+                        if (currentVersion > skippedVersion)
+                        {
+                            // Update the persisted state. Its no longer makes sense to have this flag set as we are working on a newer application version.
+                            PersistenceProvider.SetSkippedVersion(null);
+                        }
+                    }
+
+                    var remindLaterAt = PersistenceProvider.GetRemindLater();
+                    if (remindLaterAt != null)
+                    {
+                        int compareResult = DateTime.Compare(DateTime.Now, remindLaterAt.Value);
+
+                        if (compareResult < 0)
+                        {
+                            return remindLaterAt.Value;
+                        }
                     }
                 }
 
-                var remindLaterAt = PersistenceProvider.GetRemindLater();
-                if (remindLaterAt != null)
-                {
-                    int compareResult = DateTime.Compare(DateTime.Now, remindLaterAt.Value);
-
-                    if (compareResult < 0)
-                    {
-                        return remindLaterAt.Value;
-                    }
-                }
             }
+            catch
+            {
 
+            }
             return args;
         }
 

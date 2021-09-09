@@ -32,6 +32,7 @@ namespace Rpm.Productie
         public virtual string Naam { get; set; }
         public virtual double DoorloopTijd { get; set; }
         public virtual double GemiddeldDoorlooptijd { get; set; }
+        public virtual VerpakkingInstructie VerpakkingInstries { get; set; }
         public virtual ProductieFormulier Root { get; }
         public virtual string WerkplekkenName { get; }
         public virtual string PersoneelNamen { get; }
@@ -180,6 +181,76 @@ namespace Rpm.Productie
             return null;
         }
 
+        private string VerpakkingHtmlText(VerpakkingInstructie verpakking, string title, bool usebody)
+        {
+            var x = verpakking ?? new VerpakkingInstructie();
+            string Body = $"<h2>Verpakking</h2>" +
+                          $"<div>";
+
+            if (!string.IsNullOrEmpty(x.VerpakkingType))
+                Body += $"Verpakking Soort: <b>{x.VerpakkingType?.Trim()}</b><br>";
+
+            if (!string.IsNullOrEmpty(x.PalletSoort))
+                Body += $"Pallet Soort: <b>{x.PalletSoort?.Trim()}</b><br>";
+
+            Body += $"</div>" +
+            $"<hr />" +
+            $"<h2>Verpakking Aantallen</h2>" +
+            $"<div>";
+
+            if (verpakking.VerpakkenPer > 0)
+                Body += $"Aantal Per Doos/Bak: <b>{x.VerpakkenPer:##,###}</b><br>";
+
+            if (verpakking.LagenOpColli > 0)
+                Body += $"Lagen Per Colli: <b>{x.LagenOpColli:##,###}</b><br>";
+
+            if (verpakking.PerLaagOpColli > 0)
+                Body += $"Dozen/Bakken Per Laag: <b>{x.PerLaagOpColli:##,###}</b><br>";
+
+            if (verpakking.DozenOpColli > 0)
+                Body += $"Dozen/Bakken Per Colli: <b>{x.DozenOpColli:##,###}</b><br>";
+
+            if (verpakking.ProductenPerColli > 0)
+                Body += $"Aantal Per Colli: <b>{x.ProductenPerColli:##,###}</b>";
+
+            Body += $"</div>" +
+                      $"<hr />" +
+                      $"<h2>Locatie</h2>" +
+                      $"<div>";
+
+            if (!string.IsNullOrEmpty(x.StandaardLocatie))
+                Body += $"Standaard Locatie: <b>{x.StandaardLocatie?.Trim()}</b><br>";
+            if (!string.IsNullOrEmpty(x.BulkLocatie))
+                Body += $"Bulk Locatie: <b>{x.BulkLocatie?.Trim()}</b>";
+            Body += $"</div>" +
+            $"<hr />";
+            if (!usebody) return Body;
+            var xreturn = $"<html>\r\n" +
+                          $"<head>\r\n" +
+                          $"<link rel=\"Stylesheet\" href=\"StyleSheet\" />\r\n" +
+                          $"<Title>Verpakking Instructie</Title>\r\n" +
+                          $"<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
+                          $"</head>\r\n" +
+                          $"<body style='background - color: {Color.White.Name}; background-gradient: {Color.SaddleBrown.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 50px 0px'>\r\n" +
+                          $"<h1 align='center' style='color: {Color.White.Name}'>\r\n" +
+                          $"       {title}\r\n" +
+                          $"        <br/>\r\n" +
+                          $"        <span style=\'font-size: x-small;\'>Aangepast op {verpakking.LastChanged}</span>\r\n " +
+                          $"</h1>\r\n" +
+                          $"<blockquote class='whitehole'>\r\n" +
+                          $"       <p style = 'margin-top: 0px' >\r\n" +
+                          $"<table border = '0' width = '100%' >\r\n" +
+                          $"<tr style = 'vertical-align: top;' >\r\n" +
+                          Body  +
+            $"</tr>\r\n" +
+            $"</table >\r\n" +
+            $"</p>\r\n" +
+            $"</blockquote>\r\n" +
+            $"</body>\r\n" +
+            $"</html>";
+            return xreturn;
+        }
+
         public string GetHtmlBody(string title, Bitmap image, Size imagesize, Color backcolor, Color backgroundgradient,
             Color textcolor)
         {
@@ -245,7 +316,7 @@ namespace Rpm.Productie
                                $"Notitie: <b>{x.Note?.Notitie ?? "Geen notitie."}</b><br>" +
                                $"</div>"))) +
                           $"</div>\r\n" +
-                          $"<hr />" +
+                          VerpakkingHtmlText(VerpakkingInstries, "VerpakkingsInstructies", false) +
                           $"<h3>Materialen Verbruik</h3>" +
                           string.Join("<br>", GetMaterialen().Select(x =>
                               ($"<div Color=RoyalBlue>[{x.ArtikelNr}] {x.Omschrijving}</div>" +

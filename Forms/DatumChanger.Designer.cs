@@ -69,7 +69,7 @@
             this.xmessage.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xmessage.Location = new System.Drawing.Point(151, 60);
             this.xmessage.Name = "xmessage";
-            this.xmessage.Size = new System.Drawing.Size(379, 159);
+            this.xmessage.Size = new System.Drawing.Size(429, 124);
             this.xmessage.TabIndex = 4;
             this.xmessage.Text = "Wijzig Datum";
             // 
@@ -79,7 +79,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(20, 219);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(510, 36);
+            this.panel1.Size = new System.Drawing.Size(560, 36);
             this.panel1.TabIndex = 5;
             // 
             // panel2
@@ -87,7 +87,7 @@
             this.panel2.Controls.Add(this.button2);
             this.panel2.Controls.Add(this.button1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(297, 0);
+            this.panel2.Location = new System.Drawing.Point(347, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(213, 36);
             this.panel2.TabIndex = 0;
@@ -113,21 +113,21 @@
             this.dateTimePicker1.Location = new System.Drawing.Point(151, 184);
             this.dateTimePicker1.MinimumSize = new System.Drawing.Size(4, 35);
             this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(379, 35);
+            this.dateTimePicker1.Size = new System.Drawing.Size(429, 35);
             this.dateTimePicker1.TabIndex = 6;
             // 
             // DatumChanger
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(550, 275);
-            this.Controls.Add(this.dateTimePicker1);
+            this.ClientSize = new System.Drawing.Size(600, 275);
             this.Controls.Add(this.xmessage);
+            this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(550, 275);
+            this.MinimumSize = new System.Drawing.Size(600, 275);
             this.Name = "DatumChanger";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

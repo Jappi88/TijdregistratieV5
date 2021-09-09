@@ -1308,6 +1308,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Make_Lead_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("Make_Lead_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Menu_icon_2_icon_icons_com_71856 {
             get {
                 object obj = ResourceManager.GetObject("Menu_icon_2_icon-icons.com_71856", resourceCulture);
@@ -1541,6 +1551,26 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap operation_32x32 {
             get {
                 object obj = ResourceManager.GetObject("operation_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap package_box_10801 {
+            get {
+                object obj = ResourceManager.GetObject("package_box_10801", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap package_box_128x128 {
+            get {
+                object obj = ResourceManager.GetObject("package_box_128x128", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
