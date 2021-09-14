@@ -46,22 +46,23 @@ namespace Controls
             // 
             // xstatus
             // 
-            this.xstatus.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xstatus.Dock = System.Windows.Forms.DockStyle.Top;
             this.xstatus.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xstatus.Location = new System.Drawing.Point(0, 0);
             this.xstatus.Name = "xstatus";
-            this.xstatus.Size = new System.Drawing.Size(1098, 64);
+            this.xstatus.Size = new System.Drawing.Size(1098, 46);
             this.xstatus.TabIndex = 0;
             this.xstatus.Text = "Recente Gereedmeldingen";
             this.xstatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.xstatus);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1098, 64);
+            this.panel1.Size = new System.Drawing.Size(1098, 88);
             this.panel1.TabIndex = 2;
             // 
             // pictureBox1
@@ -81,9 +82,10 @@ namespace Controls
             this.panel2.Controls.Add(this.xtotgereed);
             this.panel2.Controls.Add(this.xvanafgereed);
             this.panel2.Controls.Add(this.pictureBox1);
-            this.panel2.Location = new System.Drawing.Point(402, 115);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(0, 46);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(615, 40);
+            this.panel2.Size = new System.Drawing.Size(1098, 40);
             this.panel2.TabIndex = 3;
             this.toolTip1.SetToolTip(this.panel2, "Vul in de aantal dagen waarvanaf je wilt kijken");
             // 
@@ -132,18 +134,18 @@ namespace Controls
             this.productieListControl1.BackColor = System.Drawing.Color.White;
             this.productieListControl1.CanLoad = true;
             this.productieListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.productieListControl1.EnableEntryFiltering = false;
+            this.productieListControl1.EnableEntryFiltering = true;
             this.productieListControl1.EnableFiltering = false;
             this.productieListControl1.EnableSync = false;
             this.productieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.productieListControl1.IsBewerkingView = true;
             this.productieListControl1.ListName = "GereedProducties";
-            this.productieListControl1.Location = new System.Drawing.Point(0, 64);
+            this.productieListControl1.Location = new System.Drawing.Point(0, 88);
             this.productieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.productieListControl1.Name = "productieListControl1";
             this.productieListControl1.RemoveCustomItemIfNotValid = false;
             this.productieListControl1.SelectedItem = null;
-            this.productieListControl1.Size = new System.Drawing.Size(1098, 564);
+            this.productieListControl1.Size = new System.Drawing.Size(1098, 540);
             this.productieListControl1.TabIndex = 1;
             this.productieListControl1.ValidHandler = null;
             // 
@@ -152,7 +154,6 @@ namespace Controls
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.panel2);
             this.Controls.Add(this.productieListControl1);
             this.Controls.Add(this.panel1);
             this.DoubleBuffered = true;

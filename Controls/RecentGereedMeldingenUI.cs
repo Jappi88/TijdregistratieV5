@@ -303,8 +303,8 @@ namespace Controls
             BeginInvoke(new MethodInvoker(() =>
             {
                 if (IsDisposed || Disposing) return;
-                var bws = productieListControl1.Bewerkingen;
-                var count = bws?.Count ?? 0;
+                var count = productieListControl1?.ProductieLijst?.Items.Count??0;
+                //var count = bws?.Count ?? 0;
                 var x1 = count == 1 ? "Gereedmelding" : "Gereedmeldingen";
                 var tijd = Bereik.Stop < Bereik.Start ? new TimeSpan() : Bereik.Stop - Bereik.Start;
                 var uur = tijd.Hours;

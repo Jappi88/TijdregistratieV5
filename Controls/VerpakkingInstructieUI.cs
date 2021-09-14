@@ -72,7 +72,7 @@ namespace Controls
                           $"<h1 align='center' style='color: {Color.White.Name}'>\r\n" +
                           $"       {title}\r\n" +
                           $"        <br/>\r\n" +
-                          $"        <span style=\'font-size: x-small;\'>Aangepast op {verpakking.LastChanged}</span>\r\n " +
+                          $"        <span style=\'font-size: x-small;\'>Aangepast op {x.LastChanged}</span>\r\n " +
                           $"</h1>\r\n" +
                           $"<blockquote class='whitehole'>\r\n" +
                           $"       <p style = 'margin-top: 0px' >\r\n" +
@@ -94,19 +94,19 @@ namespace Controls
             $"<h2>Verpakking Aantallen</h2>" +
             $"<div>";
 
-            if (verpakking.VerpakkenPer > 0)
+            if (x.VerpakkenPer > 0)
                 xreturn += $"Aantal Per Doos/Bak: <b>{x.VerpakkenPer:##,###}</b><br>";
 
-            if (verpakking.LagenOpColli > 0)
+            if (x.LagenOpColli > 0)
                 xreturn += $"Lagen Per Colli: <b>{x.LagenOpColli:##,###}</b><br>";
 
-            if (verpakking.PerLaagOpColli > 0)
+            if (x.PerLaagOpColli > 0)
                 xreturn += $"Dozen/Bakken Per Laag: <b>{x.PerLaagOpColli:##,###}</b><br>";
 
-            if (verpakking.DozenOpColli > 0)
+            if (x.DozenOpColli > 0)
                 xreturn += $"Dozen/Bakken Per Colli: <b>{x.DozenOpColli:##,###}</b><br>";
 
-            if (verpakking.ProductenPerColli > 0)
+            if (x.ProductenPerColli > 0)
                 xreturn += $"Aantal Per Colli: <b>{x.ProductenPerColli:##,###}</b>";
 
             xreturn += $"</div>" +
