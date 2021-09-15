@@ -67,7 +67,8 @@ namespace Controls
 
         private void xUpdateTijdPeriode(bool change)
         {
-            if (Manager.Opties != null && change)
+            if (Manager.Opties == null) return;
+            if (change)
             {
                 if (Manager.Opties.LastGereedStart.IsDefault())
                     Manager.Opties.LastGereedStart = DateTime.Now.Subtract(TimeSpan.FromDays(1));
@@ -78,7 +79,8 @@ namespace Controls
             }
 
             Bereik = new TijdEntry
-                {Start = Manager.Opties.LastGereedStart, Stop = xtotgereed.Checked ? xtotgereed.Value : DateTime.Now};
+            { Start = Manager.Opties.UseLastGereedStart ? Manager.Opties.LastGereedStart :
+            DateTime.Now.Subtract(TimeSpan.FromDays(1)), Stop = xtotgereed.Checked ? xtotgereed.Value : DateTime.Now };
         }
 
         public void LoadBewerkingen()
@@ -112,13 +114,7 @@ namespace Controls
                 {
                     try
                     {
-//EnableSync = Manager.Opties.AutoGereedSync;
-                        //bool changed = Bereik.Start != Manager.Opties.LastGereedStart || (!Manager.Opties.LastGereedStop.IsDefault() && Manager.Opties.LastGereedStop != Bereik.Stop);
                         UpdateTijdPeriode(true);
-                        //var dt = DateTime.Now;
-                        //xhourvalue.SetValue(new DateTime(dt.Year, dt.Month, dt.Day, settings.LastRecentGereedTime.Hours,
-                        //    settings.LastRecentGereedTime.Minutes, 0));
-                        //if (changed)
                         InitRecenteGereedmeldingen();
                     }
                     catch (Exception e)

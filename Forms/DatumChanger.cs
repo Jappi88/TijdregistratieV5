@@ -1,7 +1,6 @@
-﻿using System;
+﻿using MetroFramework.Forms;
+using System;
 using System.Windows.Forms;
-using MetroFramework.Forms;
-using Rpm.Productie;
 
 namespace Forms
 {

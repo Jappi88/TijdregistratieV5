@@ -475,33 +475,18 @@ namespace Forms
             rooster = rs.WerkRooster;
             CurrentRooster = rooster;
             var ents = GetWerkTijden();
-            var selected = xwerktijden.SelectedObject;
-            for (int i = 0; i < ents.Count; i++)
+            var ent = ents.FirstOrDefault(x => x.InUse);
+            if (ent != null)
             {
-                if (!ents[i].InUse ||
-                    (ents[i].WerkRooster != null && ents[i].WerkRooster.SameTijden(CurrentRooster))) continue;
-                ents[i].InUse = false;
-                var xdt = DateTime.Now;
-                if(CurrentRooster != null)
-                {
-                    var xstart = new DateTime(xdt.Year, xdt.Month, xdt.Day, CurrentRooster.StartWerkdag.Hours,
-                        CurrentRooster.StartWerkdag.Minutes, 0);
-                    var xstop = new DateTime(xdt.Year, xdt.Month, xdt.Day, CurrentRooster.EindWerkdag.Hours,
-                        CurrentRooster.EindWerkdag.Minutes, 0);
-                    if (ents[i].Stop <= xstop && ents[i].Stop >= xstart)
-                        xdt = xstart;
-                }
-                ents[i].Stop = xdt;
-                ents.Add(new TijdEntry(xdt,DateTime.Now, CurrentRooster){InUse = true});
-                break;
+                ent.WerkRooster = rooster;
+                var selected = xwerktijden.SelectedObject;
+                xwerktijden.SetObjects(ents);
+                xwerktijden.SelectedObject = selected;
+                xwerktijden.SelectedItem?.EnsureVisible();
+                UpdateUurGewerkt(GetRooster(xwerktijden.SelectedObject as TijdEntry));
+                UpdateStatus();
+                UpdateFormText();
             }
-
-            xwerktijden.SetObjects(ents);
-            xwerktijden.SelectedObject = selected;
-            xwerktijden.SelectedItem?.EnsureVisible();
-            UpdateUurGewerkt(GetRooster(xwerktijden.SelectedObject as TijdEntry));
-            UpdateStatus();
-            UpdateFormText();
         }
 
         private void xroosterb_Click(object sender, EventArgs e)

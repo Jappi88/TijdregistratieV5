@@ -551,8 +551,7 @@ namespace Controls
                              $"Van: {bew.Aantal}\n" +
                              $"Naar: {dc.Aantal}";
                 bew.Aantal = dc.Aantal;
-                if (await bew.UpdateBewerking(null, change))
-                    XMessageBox.Show(change, "Gewijzigd", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                await bew.UpdateBewerking(null, change);
             }
         }
 
@@ -567,8 +566,7 @@ namespace Controls
                              $"Van: {bew.LeverDatum:dd MMMM yyyy HH:mm} uur\n" +
                              $"Naar: {dc.SelectedValue:dd MMMM yyyy HH:mm} uur";
                 bew.LeverDatum = dc.SelectedValue;
-                if (await bew.UpdateBewerking(null, change))
-                    XMessageBox.Show(change, "Gewijzigd", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                await bew.UpdateBewerking(null, change);
             }
         }
 
