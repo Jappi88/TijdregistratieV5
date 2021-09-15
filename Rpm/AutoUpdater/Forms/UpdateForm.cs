@@ -24,7 +24,7 @@ namespace AutoUpdaterDotNET
             var curversion = new Version(_args.CurrentVersion);
             bool isnew = curversion > _args.InstalledVersion;
             labelUpdate.Text = isnew
-                ? $"Een nieuwe versie van {AutoUpdater.AppTitle} is beschickbaar!"
+                ? $"Een nieuwe versie van {AutoUpdater.AppTitle} is beschikbaar!"
                 : $"Er is geen nieuwe update beschikbaar voor {AutoUpdater.AppTitle}.";
             this.Text = labelUpdate.Text;
            xdescription.Text = isnew? $"{AutoUpdater.AppTitle} {_args.CurrentVersion} is nu beschikbaar." +
