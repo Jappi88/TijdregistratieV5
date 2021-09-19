@@ -308,10 +308,10 @@ namespace Rpm.Productie
             return true;
         }
 
-        public void UpdateWerkRooster(bool alleengestart, bool editpersoneelklusjes, bool savepersoneelklusjes, bool showsavenotofication, bool checkforspecialrooster)
+        public void UpdateWerkRooster(Rooster rooster, bool alleengestart, bool editpersoneelklusjes, bool savepersoneelklusjes, bool showsavenotofication, bool checkforspecialrooster)
         {
             if (Werk == null || (alleengestart && Werk.State != ProductieState.Gestart)) return;
-            var rooster = Tijden.WerkRooster??Manager.Opties.GetWerkRooster();
+            rooster ??= Tijden.WerkRooster??Manager.Opties.GetWerkRooster();
             if (Werk.IsBemand)
             {
                 var actiefroosters = Personen.Where(x => x.Actief && x.WerkRooster != null)
@@ -325,9 +325,7 @@ namespace Rpm.Productie
                     rooster.EindWerkdag = actiefroosters[actiefroosters.Count - 1].EindWerkdag;
                 }
             }
-
-            Tijden.WerkRooster = rooster;
-            Tijden.UpdateUrenRooster(checkforspecialrooster);
+            Tijden.UpdateUrenRooster(checkforspecialrooster,rooster);
             for (int i = 0; i < Personen.Count; i++)
             {
                 var pers = Personen[i];
@@ -364,10 +362,10 @@ namespace Rpm.Productie
                 st.WerkRooster = Tijden.WerkRooster?.CreateCopy() ?? Manager.Opties.GetWerkRooster();
             }
 
-            UpdateWerkplek();
+            UpdateWerkplek(false);
         }
 
-        public bool UpdateWerkplek()
+        public bool UpdateWerkplek(bool updaterooster)
         {
             try
             {
@@ -381,8 +379,8 @@ namespace Rpm.Productie
                 }
                 else if (Tijden.IsActief)
                     Tijden.SetStop();
-
-                Tijden?.UpdateUrenRooster(false);
+                if (updaterooster)
+                    Tijden?.UpdateUrenRooster(false, null);
                 CalculatePerUur(false);
                 return true;
             }

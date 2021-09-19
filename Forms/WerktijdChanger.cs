@@ -296,11 +296,11 @@ namespace Forms
                         if (result == DialogResult.Cancel) return;
                     }
                 }
-                Werklplek.Tijden.WerkRooster = rooster;
+               // Werklplek.Tijden.WerkRooster = rooster;
                 Werklplek.Tijden.SpecialeRoosters = SpecialeRoosters;
                 Werklplek.Tijden.SetUren(tijden, isgestart, true);
                 //Werklplek.Tijden.UpdateUrenRooster(true,false);
-                Werklplek.UpdateWerkRooster(false, result == DialogResult.Yes, SaveChanges, true, false);
+                Werklplek.UpdateWerkRooster(rooster,false, result == DialogResult.Yes, SaveChanges, true, false);
             }
 
             DialogResult = DialogResult.OK;

@@ -54,14 +54,14 @@ namespace Rpm.Productie
                     Add(tijd.CreateCopy());
                 }
 
-                UpdateUrenRooster(false);
+                UpdateUrenRooster(false,null);
                 if (isactief && !isbussy)
                     UpdateTijdGewerkt(DateTime.Now, DateTime.Now, true);
                 
             }
         }
 
-        public void UpdateUrenRooster(bool dospecialrooster)
+        public void UpdateUrenRooster(bool dospecialrooster, Rooster rooster)
         {
 
             lock (Uren)
@@ -69,9 +69,12 @@ namespace Rpm.Productie
                 if (Uren is {Count: > 0})
                 {
                     SpecialeRoosters ??= new List<Rooster>();
-                    var currooster = WerkRooster == null || !WerkRooster.IsValid()
+                    rooster ??= WerkRooster;
+                    var currooster = rooster == null || !rooster.IsValid()
                         ? Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster()
-                        : WerkRooster;
+                        : rooster;
+                    bool xflag = WerkRooster != null && !WerkRooster.SameTijden(currooster);
+                    WerkRooster = currooster;
                     if (dospecialrooster)
                     {
                         for (int i = 0; i < Uren.Count; i++)
@@ -87,25 +90,21 @@ namespace Rpm.Productie
                                 SpecialeRoosters.AddRange(xspc);
                         }
                     }
-
+                    if(xflag && Uren.Any(x=> x.InUse))
+                    {
+                        SetStop();
+                        SetStart();
+                    }
                     for (int i = 0; i < Uren.Count; i++)
                     {
                         var xent = Uren[i];
                         if (xent.ExtraTijd != null) continue;
-                        var xr = xent.WerkRooster;
-                        if (xr == null || !xr.IsValid())
-                        {
-                            if (!xent.InUse)
-                                xr = Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
-                            else xr = currooster.CreateCopy();
-                        }
-
-                        xent.WerkRooster = xr;
+                        var xr = xent.WerkRooster;                        
                         if (xent.Start.TimeOfDay < xr.StartWerkdag || xent.Start.TimeOfDay > xr.EindWerkdag)
                             xent.Start = Werktijd.EerstVolgendeWerkdag(xent.Start, ref xr, xr, SpecialeRoosters);
                         if (xent.Stop.TimeOfDay > xr.EindWerkdag)
                             xent.Stop = xent.Stop.ChangeTime(xr.EindWerkdag);
-
+                        //gaan we even kijken of er een tijdlijn is die vandaag
                     }
                 }
             }
@@ -484,7 +483,7 @@ namespace Rpm.Productie
                         done++;
                 }
             }
-            UpdateUrenRooster(false);
+            UpdateUrenRooster(false, from.WerkRooster);
             return done;
         }
 

@@ -207,26 +207,26 @@ namespace ProductieManager.Forms
                         if (plekken.Count > 0 && bws.Count > 0)
                         {
                             var xtmp = new List<WerkVolgorde>();
-                            for (int i = 0; i < bws.Count; i++)
-                            {
-                                var bw = bws[i];
-                                var xaanbev = await bw.GetAanbevolenWerkplekken();
-                                if (xaanbev is {Count: > 0})
-                                {
-                                    foreach (var xbev in xaanbev)
-                                    {
-                                        var xpl = plekken.FirstOrDefault(x =>
-                                            string.Equals(x, xbev.Key, StringComparison.CurrentCultureIgnoreCase));
-                                        if (xpl != null)
-                                        {
-                                            xtmp.Add(new WerkVolgorde() {Name = xpl, Huidig = null, Volgende = bw});
-                                            bws.RemoveAt(i--);
-                                            plekken.Remove(xpl);
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
+                            //for (int i = 0; i < bws.Count; i++)
+                            //{
+                            //    var bw = bws[i];
+                            //    var xaanbev = await bw.GetAanbevolenWerkplekken();
+                            //    if (xaanbev is {Count: > 0})
+                            //    {
+                            //        foreach (var xbev in xaanbev)
+                            //        {
+                            //            var xpl = plekken.FirstOrDefault(x =>
+                            //                string.Equals(x, xbev.Key, StringComparison.CurrentCultureIgnoreCase));
+                            //            if (xpl != null)
+                            //            {
+                            //                xtmp.Add(new WerkVolgorde() {Name = xpl, Huidig = null, Volgende = bw});
+                            //                bws.RemoveAt(i--);
+                            //                plekken.Remove(xpl);
+                            //                break;
+                            //            }
+                            //        }
+                            //    }
+                            //}
 
                             foreach (var plek in plekken)
                             {

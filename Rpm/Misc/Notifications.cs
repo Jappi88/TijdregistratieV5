@@ -45,12 +45,13 @@ namespace Rpm.Misc
        /// <param name="closed">Een event die je kan koppelen als de notificatie is afgesloten</param>
         public static void Alert(this string msg, string title, MsgType type, Form parent, FormClosedEventHandler closed = null)
        {
-           Task.Factory.StartNew(() =>
+           Task.Run(() =>
            {
                if (Application.OpenForms.Count == 0) return;
-               var visibleform = Application.OpenForms[Application.OpenForms.Count -1];
+               
                try
                {
+                   var visibleform = Application.OpenForms[Application.OpenForms.Count - 1];
                    visibleform?.BeginInvoke(new MethodInvoker(() =>
                    {
                        try
@@ -69,6 +70,8 @@ namespace Rpm.Misc
                            Console.WriteLine(e);
                        }
                    }));
+                   //visibleform?.Select();
+                   //visibleform?.Focus();
                }
                catch (Exception e)
                {

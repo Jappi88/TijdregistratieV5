@@ -94,7 +94,10 @@ namespace Forms
             var telaat = bewerkingen.Count(x => x.TeLaat);
 
             var actueelperuur = (int) (xbws.Sum(x => x.ActueelPerUur) / xbws.Count);
+            if (actueelperuur < 0) actueelperuur = 0;
             var peruur = bewerkingen.Sum(x => x.PerUur) / bewerkingen.Count;
+            if (peruur < 0)
+                peruur = 0;
             var actueeltotaaluurgewerkt = Math.Round(bewerkingen.Sum(x => x.TijdAanGewerkt()), 2);
             var totaaluurgewerkt = Math.Round(bewerkingen.Sum(x => x.DoorloopTijd), 2);
             var personen = new List<Personeel>();
@@ -128,20 +131,20 @@ namespace Forms
                           "Cijfers Berekend:\r\n" +
                           "</h3 >\r\n" +
                           "<div>\r\n" +
-                          $"Totaal Gemaakt: <b>{totaalgemaakt:##,###}</b><br>" +
+                          $"Totaal Gemaakt: <b>{(totaalgemaakt == 0 ? "0" : totaalgemaakt.ToString("##,###"))}</b><br>" +
                           $"Totaal Gemaakt Zin: <b>{totaalgemaaktText}</b><br>" +
-                          $"Gemeten P/u: <b>{actueelperuur:##,###} p/u</b><br>" +
-                          $"Formulier P/u: <b>{peruur:##,###} p/u</b><br>" +
-                          $"Gemeten TijdGewerkt: <b>{actueeltotaaluurgewerkt:##,###} uur</b><br>" +
-                          $"Formulier Doorlooptijd: <b>{totaaluurgewerkt:##,###} uur</b><br>" +
-                          $"Aantal Personen: <b>{totaalpersonen:##,###}</b><br>" +
-                          $"Nu te laat: <b>{telaat:##,###} {(telaat == 1 ? "bewerking" : "bewerkingen")}</b><br>" +
-                          $"Later gereed gemeld: <b>{latergereed:##,###} {(latergereed == 1 ? "bewerking" : "bewerkingen")}</b><br>" +
-                          $"Op tijd gereed gemeld: <b>{optijdgereed:##,###} {(optijdgereed == 1 ? "bewerking" : "bewerkingen")}</b><br>" +
-                          $"Gereed: <b>{totaalgereed:##,###} {(totaalgereed == 1 ? "bewerking" : "bewerkingen")}</b><br>" +
-                          $"Nu bezig: <b>{gestart:##,###} {(gestart == 1 ? "bewerking" : "bewerkingen")}</b><br>" +
-                          $"Gestopt: <b>{gestopt:##,###} {(gestopt == 1 ? "bewerking" : "bewerkingen")}</b><br>" +
-                          $"Verdwijderd: <b>{verwijderd:##,###} {(verwijderd == 1 ? "bewerking" : "bewerkingen")}</b><br>" +
+                          $"Gemeten P/u: <b>{(actueelperuur == 0 ? "0" : actueelperuur.ToString("##,###"))} p/u</b><br>" +
+                          $"Formulier P/u: <b>{(peruur == 0? "0" : peruur.ToString("##,###"))} p/u</b><br>" +
+                          $"Gemeten TijdGewerkt: <b>{(actueeltotaaluurgewerkt == 0 ? "0" : actueeltotaaluurgewerkt.ToString("##,###"))} uur</b><br>" +
+                          $"Formulier Doorlooptijd: <b>{(totaaluurgewerkt == 0 ? "0" : totaaluurgewerkt.ToString("##,###"))} uur</b><br>" +
+                          $"Aantal Personen: <b>{(totaalpersonen == 0 ? "0" : totaalpersonen.ToString("##,###"))}</b><br>" +
+                          $"Nu te laat: <b>{(telaat == 0 ? "0" : telaat.ToString("##,###"))} {(telaat == 1 ? "bewerking" : "bewerkingen")}</b><br>" +
+                          $"Later gereed gemeld: <b>{(latergereed == 0 ? "0" : latergereed.ToString("##,###"))} {(latergereed == 1 ? "bewerking" : "bewerkingen")}</b><br>" +
+                          $"Op tijd gereed gemeld: <b>{(optijdgereed == 0 ? "0" : optijdgereed.ToString("##,###"))} {(optijdgereed == 1 ? "bewerking" : "bewerkingen")}</b><br>" +
+                          $"Gereed: <b>{(totaalgereed == 0 ? "0" : totaalgereed.ToString("##,###"))} {(totaalgereed == 1 ? "bewerking" : "bewerkingen")}</b><br>" +
+                          $"Nu bezig: <b>{(gestart == 0 ? "0" : gestart.ToString("##,###"))} {(gestart == 1 ? "bewerking" : "bewerkingen")}</b><br>" +
+                          $"Gestopt: <b>{(gestopt == 0 ? "0" : gestopt.ToString("##,###"))} {(gestopt == 1 ? "bewerking" : "bewerkingen")}</b><br>" +
+                          $"Verdwijderd: <b>{(verwijderd == 0 ? "0" : verwijderd.ToString("##,###"))} {(verwijderd == 1 ? "bewerking" : "bewerkingen")}</b><br>" +
                           "</div>\r\n" +
                           "<hr />" +
                           "</td>" +

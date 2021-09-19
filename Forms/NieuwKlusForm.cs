@@ -313,7 +313,7 @@ namespace Forms
                     wp.AddPersoon(xpers, bewerking);
                     wp.Tijden.SetUren(xklus.Tijden.Uren.ToArray(), bewerking.State == ProductieState.Gestart,
                         false);
-                    bewerking.ZetPersoneelActief(xpers.PersoneelNaam, wp.Naam, true);
+                    bewerking.ZetPersoneelActief(xpers.PersoneelNaam, wp.Naam, !EditMode || xpers.IngezetAanKlus(bewerking,true, out _));
                     dbpers.ReplaceKlus(xklus);
                     if (_save)
                         await Manager.Database.UpSert(dbpers,

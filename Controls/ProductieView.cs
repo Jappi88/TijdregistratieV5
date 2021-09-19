@@ -673,52 +673,46 @@ namespace Controls
                 if (Manager.Opties == null)
                     throw new Exception(
                         "Opties zijn niet geladen en kan daarvoor geen rooster aanpassen.\n\nRaadpleeg Ihab a.u.b.");
-                var bttns = new Dictionary<string, DialogResult>();
-                bttns.Add("Annuleren", DialogResult.Cancel);
-                bttns.Add("Standaard", DialogResult.No);
-                bttns.Add("Aangepast", DialogResult.Yes);
-                var xrstr = Manager.Opties.TijdelijkeRooster != null && Manager.Opties.TijdelijkeRooster.IsCustom()
-                    ? "al een aangepaste rooster"
-                    : "een standaart rooster";
-                if (Manager.Opties.TijdelijkeRooster != null)
-                {
-                    var xvalue = "\nMet een bereik:\n";
-                    if (Manager.Opties.TijdelijkeRooster.GebruiktVanaf)
-                        xvalue += $"Vanaf {Manager.Opties.TijdelijkeRooster.Vanaf} ";
-                    if (Manager.Opties.TijdelijkeRooster.GebruiktTot)
-                        xvalue += $"Tot {Manager.Opties.TijdelijkeRooster.Tot}\n";
-                    if (Manager.Opties.TijdelijkeRooster.GebruiktVanaf || Manager.Opties.TijdelijkeRooster.GebruiktTot)
-                        xrstr += xvalue;
-                }
+                //if (Manager.Opties.TijdelijkeRooster != null)
+                //{
+                //    var xvalue = "\nMet een bereik:\n";
+                //    if (Manager.Opties.TijdelijkeRooster.GebruiktVanaf)
+                //        xvalue += $"Vanaf {Manager.Opties.TijdelijkeRooster.Vanaf} ";
+                //    if (Manager.Opties.TijdelijkeRooster.GebruiktTot)
+                //        xvalue += $"Tot {Manager.Opties.TijdelijkeRooster.Tot}\n";
+                //    if (Manager.Opties.TijdelijkeRooster.GebruiktVanaf || Manager.Opties.TijdelijkeRooster.GebruiktTot)
+                //        xrstr += xvalue;
+                //}
 
-                var message = "Wat voor rooster zou je willen gebruiken voor alle producties?\n\n" +
-                              $"Momenteel gebruik je {xrstr}.";
-                var dialog = XMessageBox.Show(message, "Eigen Rooster",
-                    MessageBoxButtons.OK, MessageBoxIcon.Question, null, bttns);
-                if (dialog == DialogResult.Cancel) return;
+                //var message = "Wat voor rooster zou je willen gebruiken voor alle producties?\n\n" +
+                //              $"Momenteel gebruik je {xrstr}.";
+                //var dialog = XMessageBox.Show(message, "Eigen Rooster",
+                //    MessageBoxButtons.OK, MessageBoxIcon.Question, null, bttns);
+               // if (dialog == DialogResult.Cancel) return;
                 var xold = Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
-                switch (dialog)
-                {
-                    case DialogResult.Yes:
-                        var roosterform = new RoosterForm(Manager.Opties.TijdelijkeRooster,
-                            "Kies een rooster voor al je werkzaamheden");
-                        roosterform.ViewPeriode = false;
-                        if (roosterform.ShowDialog() == DialogResult.Cancel)
-                            return;
-                        Manager.Opties.TijdelijkeRooster = roosterform.WerkRooster;
-                        break;
-                    case DialogResult.No:
-                        Manager.Opties.TijdelijkeRooster = null;
-                        break;
-                }
-
+                var roosterform = new RoosterForm(Manager.Opties.TijdelijkeRooster,
+                           "Kies een rooster voor al je werkzaamheden");
+                roosterform.ViewPeriode = false;
+                if (roosterform.ShowDialog() == DialogResult.Cancel)
+                    return;
+                Manager.Opties.TijdelijkeRooster = roosterform.WerkRooster;
                 var thesame = xold.SameTijden(Manager.Opties?.GetWerkRooster());
                 if (!thesame)
-                    if (XMessageBox.Show(
-                        "Je rooster is gewijzigd!\n\nZou je alle actieve producties willen wijzigen met de aangepaste rooster?",
-                        "Aangepaste Rooster",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                        await Manager.UpdateGestarteProductieRoosters();
+                {
+                    var bws = await Manager.GetBewerkingen(new ViewState[] {ViewState.Gestart}, true);
+
+                    bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
+                        StringComparison.CurrentCultureIgnoreCase)).ToList();
+
+                    if (bws.Count > 0)
+                    {
+                        var bwselector = new BewerkingSelectorForm(bws);
+                        bwselector.Title = "Selecteer bewerkingen waarvan de rooster aangepast moet worden";
+                        if (bwselector.ShowDialog() == DialogResult.OK)
+                            await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedBewerkingen, roosterform.WerkRooster);
+                    }
+
+                }
                 var xrooster = mainMenu1.GetButton("xroostermenubutton");
                 var iscustom = Manager.Opties.TijdelijkeRooster != null && Manager.Opties.TijdelijkeRooster.IsCustom();
                 if (xrooster != null)
@@ -863,8 +857,8 @@ namespace Controls
 
                             var ofd = new OpenFileDialog
                             {
-                                Title = "Open Productie Formulier(en)",
-                                Filter = "Pdf|*.pdf|Image|*.JPG;*.Img|Text|*.txt|Alles|*.*",
+                                Title = @"Open Productie Formulier(en)",
+                                Filter = @"Pdf|*.pdf|Image|*.JPG;*.Img|Text|*.txt|Alles|*.*",
                                 Multiselect = true
                             };
                             if (ofd.ShowDialog() == DialogResult.OK)
@@ -1167,11 +1161,16 @@ namespace Controls
                     Manager.Opties.SpecialeRoosters.Add(newrooster);
                     Manager.Opties.SpecialeRoosters = Manager.Opties.SpecialeRoosters.OrderBy(x => x.Vanaf).ToList();
 
-                    if (XMessageBox.Show(
-                        "Zou je ook alle actieve producties willen wijzigen met de speciale roosters?",
-                        "Speciale Rooster",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                        await Manager.UpdateGestarteProductieRoosters();
+                    var bws = await Manager.GetBewerkingen(new ViewState[] { ViewState.Gestart }, true);
+                    bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
+                        StringComparison.CurrentCultureIgnoreCase)).ToList();
+                    if (bws.Count > 0)
+                    {
+                        var bwselector = new BewerkingSelectorForm(bws);
+                        bwselector.Title = "Selecteer bewerkingen waarvan de rooster aangepast moet worden";
+                        if (bwselector.ShowDialog() == DialogResult.OK)
+                            await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedBewerkingen, roosterform.WerkRooster);
+                    }
                     await Manager.Opties.Save("Speciale roosters aangepast.");
                 }
             }
@@ -1802,6 +1801,130 @@ namespace Controls
         private void xopennewlijst_Click(object sender, EventArgs e)
         {
             ShowProductieLijstForm();
+        }
+
+        private void xtoonartikels_Click(object sender, EventArgs e)
+        {
+            if (Manager.Opties != null)
+                Manager.Opties.ViewDataBewerkingenState = xbewerkingListControl.ProductieLijst.SaveState();
+            new ArtikelsForm().ShowDialog();
+            if (Manager.Opties != null)
+                xbewerkingListControl.ProductieLijst.RestoreState(Manager.Opties.ViewDataBewerkingenState);
+        }
+
+        private void xstartb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xstopb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xopenproductieb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xmeldgereedb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xdeelgereedmeldingenb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xwerkplekkenb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xwijzigformb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xbewleverDatumToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void aantalToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xbewnotitieToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xwerktijdenb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xonderbrekingb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xaantalgemaaktb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xverpakkingb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xmaterialenb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xaanbevolenpersb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xtoonpdfb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xexportexcel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xproductieInfob_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xbewerkingeninfob_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xafkeurb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xverwijderb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xzetterugb_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

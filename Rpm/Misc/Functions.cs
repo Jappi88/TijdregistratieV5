@@ -648,8 +648,8 @@ namespace Rpm.Misc
                                     per.WerkRooster = roosterform.WerkRooster;
                             }
                         }
-                        wp.Tijden._rooster = roosterform.WerkRooster;
-                        wp.UpdateWerkRooster(true, true, true, true, true);
+                        //wp.Tijden._rooster = roosterform.WerkRooster;
+                        wp.UpdateWerkRooster(roosterform.WerkRooster,true, true, true, true, true);
                         var xchange = wp.Tijden._rooster != null && wp.Tijden._rooster.IsCustom()
                             ? "eigen rooster"
                             : "standaard rooster";

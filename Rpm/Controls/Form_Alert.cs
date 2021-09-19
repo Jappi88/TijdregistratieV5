@@ -34,7 +34,7 @@ namespace Rpm.Controls
                     break;
 
                 case enmAction.start:
-                    timer1.Interval = 1;
+                    timer1.Interval = 10;
                     Opacity += 0.1;
                     if (x < Location.X)
                     {
@@ -48,7 +48,7 @@ namespace Rpm.Controls
                     break;
 
                 case enmAction.close:
-                    timer1.Interval = 1;
+                    timer1.Interval = 10;
                     Opacity -= 0.1;
 
                     Left -= 3;
@@ -63,7 +63,7 @@ namespace Rpm.Controls
 
         private void close_Click(object sender, EventArgs e)
         {
-            timer1.Interval = 1;
+            timer1.Interval = 100;
             action = enmAction.close;
         }
 
@@ -139,7 +139,7 @@ namespace Rpm.Controls
         {
             base.Show();
             action = enmAction.start;
-            timer1.Interval = 1;
+            timer1.Interval = 100;
             timer1.Start();
             Invalidate();
         }

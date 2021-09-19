@@ -1322,12 +1322,18 @@ namespace Forms
                 xspeciaalroosterb.Tag = sproosters.Roosters;
                 var acces1 = Manager.LogedInGebruiker != null &&
                              Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieBasis;
-                if (acces1 && sproosters.Roosters.Count > 0 && XMessageBox.Show(
-                    "Zou je ook alle actieve producties willen wijzigen met de speciale roosters?",
-                    "Aangepaste Rooster",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (acces1 && sproosters.Roosters.Count > 0)
                 {
-                    await Manager.UpdateGestarteProductieRoosters();
+                    var bws = await Manager.GetBewerkingen(new ViewState[] { ViewState.Gestart }, true);
+                    bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
+                        StringComparison.CurrentCultureIgnoreCase)).ToList();
+                    if (bws.Count > 0)
+                    {
+                        var bwselector = new BewerkingSelectorForm(bws);
+                        bwselector.Title = "Selecteer bewerkingen waarvan de rooster aangepast moet worden";
+                        if (bwselector.ShowDialog() == DialogResult.OK)
+                            await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedBewerkingen, null);
+                    }
                 }
             }
 

@@ -357,7 +357,7 @@ namespace Rpm.Productie
             if(WerkPlekken != null)
                 foreach (WerkPlek wp in WerkPlekken)
                 {
-                    wp.UpdateWerkplek();
+                    wp.UpdateWerkplek(true);
                 }
 
             if (DeelGereedMeldingen != null)
@@ -441,7 +441,7 @@ namespace Rpm.Productie
                 var xtasks = new List<Task<bool>>();
                 foreach (var plek in WerkPlekken)
                 {
-                    plek.UpdateWerkRooster(true, false, false, false, true);
+                    plek.UpdateWerkRooster(null,true, false, false, false, true);
                     foreach (var per in plek.Personen)
                     {
                         var klus = per.Klusjes.GetKlus(plek.Path);

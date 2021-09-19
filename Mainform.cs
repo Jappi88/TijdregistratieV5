@@ -83,7 +83,7 @@ namespace ProductieManager
             
             //Shown += Mainform_Shown;
             //Task.Run(new Action(productieView1.LoadForm));
-            _splash = new SplashScreen(2000) {WindowState = FormWindowState.Normal};
+            _splash = new SplashScreen(2500) {WindowState = FormWindowState.Normal};
             _splash.FinishedLoading += _splash_FinishedLoading;
             _splash.FormClosed += Screen_FormClosed;
             Shown += Mainform_Shown;

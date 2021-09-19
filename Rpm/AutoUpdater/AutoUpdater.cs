@@ -389,8 +389,7 @@ namespace AutoUpdaterDotNET
                 {
                     throw new MissingFieldException();
                 }
-                if (args != null)
-                    RunUpdateAsAdmin = args.RunAsAdmin;
+                RunUpdateAsAdmin = args.RunAsAdmin;
                 args.InstalledVersion = InstalledVersion != null ? InstalledVersion : mainAssembly.GetName().Version;
                 args.IsUpdateAvailable = !onlychecknew || new Version(args.CurrentVersion) > args.InstalledVersion;
 

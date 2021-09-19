@@ -1155,46 +1155,39 @@ namespace Rpm.Productie
         /// Er wordt dan gekeken of er speciale roosters zijn.
         /// </summary>
         /// <returns>Een taak die de productie roosters update op de achtergrond</returns>
-        public static Task<int> UpdateGestarteProductieRoosters()
+        public static Task<int> UpdateGestarteProductieRoosters(List<Bewerking> bewerkingen, Rooster rooster)
         {
             return Task.Run(async () =>
             {
                 try
                 {
                     int done = 0;
-                    var prods = await GetProducties(ViewState.Gestart, true, false);
                     var acces1 = LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
                     if (!acces1) return -1;
-                    foreach (var prod in prods)
-                    {
-                        if (prod.Bewerkingen == null || prod.Bewerkingen.Length == 0) continue;
                         bool changed = false;
                         var changes = new List<string>();
-                        foreach (var bw in prod.Bewerkingen)
+                        foreach (var bw in bewerkingen)
                         {
                             if (!bw.IsAllowed() || bw.State != ProductieState.Gestart) continue;
-                            if (!string.Equals(Opties.Username, bw.GestartDoor,
-                                StringComparison.CurrentCultureIgnoreCase)) continue;
+                          
                             var wps = bw.WerkPlekken.Where(x => x.IsActief()).ToList();
                             foreach (var wp in wps)
                             {
-                                wp.UpdateWerkRooster(true, true, true, false, true);
+                                wp.UpdateWerkRooster(rooster, true, true, true, false, true);
                                 changed = true;
                                 changes.Add(wp.Naam);
                             }
 
+                            if (changed)
+                            {
+                                done++;
+                                await bw.UpdateBewerking(null,
+                                    $"[{bw.ProductieNr} | {bw.ArtikelNr}] Werkrooster aangepast voor: \n" +
+                                    $"{string.Join(", ", changes)}");
+                            }
                         }
 
-                        if (changed)
-                        {
-                            done++;
-                            await prod.UpdateForm(true, false, null,
-                                $"[{prod.ProductieNr} | {prod.ArtikelNr}] Werkrooster aangepast voor: \n" +
-                                $"{string.Join(", ", changes)}");
-                        }
-                    }
-
-                    return done;
+                        return done;
                 }
                 catch (Exception e)
                 {

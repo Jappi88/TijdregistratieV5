@@ -30,7 +30,7 @@ namespace Forms
 
             ((OLVColumn)xshiftlist.Columns[0]).ImageGetter = ImageGet;
             ((OLVColumn)xshiftlist.Columns[2]).AspectGetter = TijdGewerktGet;
-            ((OLVColumn) xshiftlist.Columns[4]).AspectGetter = TijdGestartGet;
+            ((OLVColumn)xshiftlist.Columns[4]).AspectGetter = TijdGestartGet;
             ((OLVColumn)xshiftlist.Columns[5]).AspectGetter = TijdGestoptGet;
             ((OLVColumn)xshiftlist.Columns[6]).AspectGetter = RoosterGet;
 
@@ -102,8 +102,7 @@ namespace Forms
 
         public object ImageGet(object sender)
         {
-            var per = sender as Personeel;
-            if (per != null)
+            if (sender is Personeel per)
             {
                 var lv = xshiftlist.SelectedItems.Cast<OLVListItem>().FirstOrDefault(x => x.RowObject.Equals(per));
 
@@ -124,8 +123,7 @@ namespace Forms
 
         public object TijdGestartGet(object sender)
         {
-            var per = sender as Personeel;
-            if (per != null)
+            if (sender is Personeel per)
             {
                 var klus = GetCurrentKlus(per, false);
                 var xent = klus?.GetAvailibleTijdEntry();
@@ -137,8 +135,7 @@ namespace Forms
 
         public object TijdGestoptGet(object sender)
         {
-            var per = sender as Personeel;
-            if (per != null)
+            if (sender is Personeel per)
             {
                 var klus = GetCurrentKlus(per, false);
                 var xent = klus?.GetAvailibleTijdEntry();
@@ -150,8 +147,7 @@ namespace Forms
 
         public object TijdGewerktGet(object sender)
         {
-            var per = sender as Personeel;
-            if (per != null)
+            if (sender is Personeel per)
             {
                 var klus = GetCurrentKlus(per, false);
                 var wp = GetWerkPlek(per, false);
@@ -200,9 +196,9 @@ namespace Forms
         {
             if (Bewerking != null)
             {
-                xindelinggroup.Text = $"{Bewerking.Naam}";
+                xindelinggroup.Text = $@"{Bewerking.Naam}";
                 Text =
-                    $"{Bewerking.Omschrijving} | ArtikelNr: {Bewerking.ArtikelNr} | ProductieNr: {Bewerking.ProductieNr}";
+                    $@"{Bewerking.Omschrijving} | ArtikelNr: {Bewerking.ArtikelNr} | ProductieNr: {Bewerking.ProductieNr}";
                 LoadWerkPlekken(null);
                 LoadShifts();
                 xnaampersoneel.Select();
@@ -220,13 +216,15 @@ namespace Forms
                 xshiftlist.SelectedObject = selected;
                 xshiftlist.SelectedItem?.EnsureVisible();
                 string x1 = werkplek.Personen.Count == 1 ? "persoon" : "personen";
-                xpersoneelgroep.Text = $"{werkplek.Naam} Geselecteerd met {werkplek.Personen.Count} {x1}";
+                xpersoneelgroep.Text = $@"{werkplek.Naam} Geselecteerd met {werkplek.Personen.Count} {x1}";
             }
             else
             {
                 xshiftlist.SetObjects(new List<Personeel>());
-                xpersoneelgroep.Text = $"Geen werkplek geselecteerd";
+                xpersoneelgroep.Text = $@"Geen werkplek geselecteerd";
             }
+
+            UpdateUsersButtons();
         }
 
         private void LoadWerkPlekken(WerkPlek selected)
@@ -517,6 +515,7 @@ namespace Forms
                             wp.Personen.Remove(per);
                             xshiftlist.RemoveObject(per);
                             xwerkplekken.RefreshObject(wp);
+                            UpdateUsersButtons();
                         }
                     }
             }
@@ -524,13 +523,18 @@ namespace Forms
 
         private void xshiftlist_SelectedIndexChanged(object sender, EventArgs e)
         {
+            UpdateUsersButtons();
+            if (xshiftlist.SelectedObjects.Count > 0)
+                SetFields(xshiftlist.SelectedObjects[0] as Personeel, false, true);
+            else ClearFields();
+        }
+
+        private void UpdateUsersButtons()
+        {
             xverwijder.Visible = xshiftlist.SelectedObjects.Count > 0;
             xedituser.Visible = xshiftlist.SelectedObjects.Count == 1;
             xtijdengewerkt.Visible = xshiftlist.SelectedObjects.Count == 1;
             xroosterb.Enabled = xshiftlist.SelectedObjects.Count == 1;
-            if (xshiftlist.SelectedObjects.Count > 0)
-                SetFields(xshiftlist.SelectedObjects[0] as Personeel, false, true);
-            else ClearFields();
         }
 
         private Personeel[] KiesPersoneel()
@@ -1005,7 +1009,7 @@ namespace Forms
                 if (Bewerking != null)
                 {
                     foreach (var wp in Bewerking.WerkPlekken)
-                        wp.UpdateWerkRooster(true,false,false,false,false);
+                        wp.UpdateWerkRooster(null,true,false,false,false,false);
                     LoadWerkPlekken(null);
                 }
             }

@@ -40,6 +40,8 @@ namespace Controls
                     ? Materiaal.Aantal
                     : Materiaal.AantalPerStuk * Materiaal.Parent.TotaalGemaakt);
                 var value = xvalue.Value == 0 || aantal == 0 ? 0 : xvalue.Value / aantal;
+                if (value == 0 && xvalue.Value > 0)
+                    value = 1;
                 var xperc = value.ToString("0.00%");
                 var txtcolor = Color.Green;
                 if (value > 0 && value < (decimal) 0.01)

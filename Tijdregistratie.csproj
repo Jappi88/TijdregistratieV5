@@ -352,6 +352,18 @@
     <Compile Include="Forms\AlleNotitiesForm.Designer.cs">
       <DependentUpon>AlleNotitiesForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ArtikelsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ArtikelsForm.Designer.cs">
+      <DependentUpon>ArtikelsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BewerkingSelectorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BewerkingSelectorForm.Designer.cs">
+      <DependentUpon>BewerkingSelectorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ChatForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -991,6 +1003,12 @@
     <EmbeddedResource Include="Forms\AlleNotitiesForm.resx">
       <DependentUpon>AlleNotitiesForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ArtikelsForm.resx">
+      <DependentUpon>ArtikelsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BewerkingSelectorForm.resx">
+      <DependentUpon>BewerkingSelectorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ChatForm.resx">
       <DependentUpon>ChatForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1228,7 +1246,6 @@
     <None Include=".editorconfig" />
     <None Include="bin\Debug\ProductieManager.exe.config" />
     <None Include="bin\Release\ProductieManager.zip" />
-    <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
@@ -1350,6 +1367,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\product_document_file_32x32.png" />
     <None Include="Resources\Make_Lead_32x32.png" />
     <None Include="Resources\package_box_10801.png" />
     <None Include="Resources\package_box_128x128.png" />
