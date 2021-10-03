@@ -4,6 +4,7 @@
     {
         Producties,
         Changes,
+        Opmerkingen,
         Medewerkers,
         GereedProducties,
         Opties,

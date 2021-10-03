@@ -62,7 +62,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -466,6 +466,18 @@
     <Compile Include="Forms\OpenTakenForm.Designer.cs">
       <DependentUpon>OpenTakenForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\OpmerkingEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OpmerkingEditor.Designer.cs">
+      <DependentUpon>OpmerkingEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OpmerkingenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OpmerkingenForm.Designer.cs">
+      <DependentUpon>OpmerkingenForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\PersoneelTakenForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -854,6 +866,7 @@
     <Compile Include="Rpm\Misc\SharedFolders.cs" />
     <Compile Include="Rpm\Misc\StickyWindow.cs" />
     <Compile Include="Rpm\Misc\WeekRange.cs" />
+    <Compile Include="Rpm\Opmerking\Opmerkingen.cs" />
     <Compile Include="Rpm\Productie\Bewerking.cs" />
     <Compile Include="Rpm\Productie\DeelsGereedMelding.cs" />
     <Compile Include="Rpm\Productie\ExtraTijd.cs" />
@@ -864,6 +877,7 @@
     <Compile Include="Rpm\Productie\MateriaalBeheer.cs" />
     <Compile Include="Rpm\Productie\MateriaalEntryInfo.cs" />
     <Compile Include="Rpm\Productie\NotitieEntry.cs" />
+    <Compile Include="Rpm\Opmerking\OpmerkingEntry.cs" />
     <Compile Include="Rpm\Productie\Personeel.cs" />
     <Compile Include="Rpm\Productie\PersoneelTaak.cs" />
     <Compile Include="Rpm\Productie\PersoneelTaakEntry.cs" />
@@ -871,6 +885,7 @@
     <Compile Include="Rpm\Productie\ProductieFormulier.cs" />
     <Compile Include="Rpm\Productie\ProductieProvider.cs" />
     <Compile Include="Rpm\Misc\Queues.cs" />
+    <Compile Include="Rpm\Opmerking\ReactieEntry.cs" />
     <Compile Include="Rpm\Productie\Rooster.cs" />
     <Compile Include="Rpm\Productie\SkillEntry.cs" />
     <Compile Include="Rpm\Productie\SkillTree.cs" />
@@ -1060,6 +1075,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OpenTakenForm.resx">
       <DependentUpon>OpenTakenForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OpmerkingEditor.resx">
+      <DependentUpon>OpmerkingEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OpmerkingenForm.resx">
+      <DependentUpon>OpmerkingenForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PersoneelTakenForm.resx">
       <DependentUpon>PersoneelTakenForm.cs</DependentUpon>
@@ -1367,6 +1388,14 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\notekey-office_32x32.png" />
+    <None Include="Resources\noterespond-general_32x32.png" />
+    <None Include="Resources\noteresponds-office-32x32.png" />
+    <None Include="Resources\noteuser-general-office-tie_32x32.png" />
+    <None Include="Resources\time-general-office-management_32x32.png" />
+    <None Include="Resources\notedescription-office-page-paper_107752.png" />
+    <None Include="Resources\note-office-page-paper_32x32.png" />
+    <None Include="Resources\notes-office-page-papers_32x32.png" />
     <None Include="Resources\product_document_file_32x32.png" />
     <None Include="Resources\Make_Lead_32x32.png" />
     <None Include="Resources\package_box_10801.png" />
@@ -1598,6 +1627,7 @@
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Code to merge the assemblies into one:setup.exe -->
 </Project>

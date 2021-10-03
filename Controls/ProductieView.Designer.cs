@@ -34,21 +34,42 @@ namespace Controls
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieView));
-            Various.MenuButton menuButton34 = new Various.MenuButton();
-            Various.MenuButton menuButton35 = new Various.MenuButton();
-            Various.MenuButton menuButton36 = new Various.MenuButton();
-            Various.MenuButton menuButton37 = new Various.MenuButton();
-            Various.MenuButton menuButton38 = new Various.MenuButton();
-            Various.MenuButton menuButton39 = new Various.MenuButton();
-            Various.MenuButton menuButton40 = new Various.MenuButton();
-            Various.MenuButton menuButton41 = new Various.MenuButton();
-            Various.MenuButton menuButton42 = new Various.MenuButton();
-            Various.MenuButton menuButton43 = new Various.MenuButton();
-            Various.MenuButton menuButton44 = new Various.MenuButton();
+            Various.MenuButton menuButton12 = new Various.MenuButton();
+            Various.MenuButton menuButton13 = new Various.MenuButton();
+            Various.MenuButton menuButton14 = new Various.MenuButton();
+            Various.MenuButton menuButton15 = new Various.MenuButton();
+            Various.MenuButton menuButton16 = new Various.MenuButton();
+            Various.MenuButton menuButton17 = new Various.MenuButton();
+            Various.MenuButton menuButton18 = new Various.MenuButton();
+            Various.MenuButton menuButton19 = new Various.MenuButton();
+            Various.MenuButton menuButton20 = new Various.MenuButton();
+            Various.MenuButton menuButton21 = new Various.MenuButton();
+            Various.MenuButton menuButton22 = new Various.MenuButton();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.xspeciaalroosterbutton = new System.Windows.Forms.Button();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.xbehpersoneel = new System.Windows.Forms.ToolStripButton();
+            this.xbehvaardigheden = new System.Windows.Forms.ToolStripButton();
+            this.xonderbrekeningen = new System.Windows.Forms.ToolStripButton();
+            this.xdbbewerkingen = new System.Windows.Forms.ToolStripButton();
+            this.xlogbook = new System.Windows.Forms.ToolStripButton();
+            this.xoverzicht = new System.Windows.Forms.ToolStripButton();
+            this.xmateriaalverbruikb = new System.Windows.Forms.ToolStripButton();
+            this.xupdateallform = new System.Windows.Forms.ToolStripButton();
+            this.xsendemail = new System.Windows.Forms.ToolStripButton();
+            this.xallenotities = new System.Windows.Forms.ToolStripButton();
+            this.xchatformbutton = new System.Windows.Forms.ToolStripButton();
+            this.xproductieoverzichtb = new System.Windows.Forms.ToolStripButton();
+            this.xsearchprodnr = new System.Windows.Forms.ToolStripButton();
+            this.xopennewlijst = new System.Windows.Forms.ToolStripButton();
+            this.xtoonartikels = new System.Windows.Forms.ToolStripButton();
+            this.xaboutb = new System.Windows.Forms.ToolStripButton();
+            this.xloginb = new System.Windows.Forms.ToolStripButton();
+            this.xsettingsb = new System.Windows.Forms.ToolStripButton();
+            this.xupdateb = new System.Windows.Forms.ToolStripButton();
+            this.xopmerkingentoolstripbutton = new System.Windows.Forms.ToolStripButton();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button2 = new System.Windows.Forms.Button();
@@ -67,27 +88,8 @@ namespace Controls
             this.xtabimages = new System.Windows.Forms.ImageList(this.components);
             this.takenManager1 = new Controls.TakenManager();
             this.mainMenu1 = new Controls.MainMenu();
-            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.xbehpersoneel = new System.Windows.Forms.ToolStripButton();
-            this.xbehvaardigheden = new System.Windows.Forms.ToolStripButton();
-            this.xonderbrekeningen = new System.Windows.Forms.ToolStripButton();
-            this.xdbbewerkingen = new System.Windows.Forms.ToolStripButton();
-            this.xlogbook = new System.Windows.Forms.ToolStripButton();
-            this.xoverzicht = new System.Windows.Forms.ToolStripButton();
-            this.xmateriaalverbruikb = new System.Windows.Forms.ToolStripButton();
-            this.xsendemail = new System.Windows.Forms.ToolStripButton();
-            this.xallenotities = new System.Windows.Forms.ToolStripButton();
-            this.xchatformbutton = new System.Windows.Forms.ToolStripButton();
-            this.xproductieoverzichtb = new System.Windows.Forms.ToolStripButton();
-            this.xsearchprodnr = new System.Windows.Forms.ToolStripButton();
-            this.xopennewlijst = new System.Windows.Forms.ToolStripButton();
-            this.xtoonartikels = new System.Windows.Forms.ToolStripButton();
-            this.xaboutb = new System.Windows.Forms.ToolStripButton();
-            this.xloginb = new System.Windows.Forms.ToolStripButton();
-            this.xsettingsb = new System.Windows.Forms.ToolStripButton();
-            this.xupdateb = new System.Windows.Forms.ToolStripButton();
-            this.xupdateallform = new System.Windows.Forms.ToolStripButton();
             this.panel6.SuspendLayout();
+            this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.metroTabControl.SuspendLayout();
@@ -96,7 +98,6 @@ namespace Controls
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.xspeciaalroosterlabel.SuspendLayout();
-            this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -145,6 +146,262 @@ namespace Controls
             this.panel6.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
             this.panel6.Size = new System.Drawing.Size(1147, 43);
             this.panel6.TabIndex = 25;
+            // 
+            // toolStrip2
+            // 
+            this.toolStrip2.BackColor = System.Drawing.Color.White;
+            this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.xbehpersoneel,
+            this.xbehvaardigheden,
+            this.xonderbrekeningen,
+            this.xdbbewerkingen,
+            this.xlogbook,
+            this.xoverzicht,
+            this.xmateriaalverbruikb,
+            this.xupdateallform,
+            this.xsendemail,
+            this.xallenotities,
+            this.xchatformbutton,
+            this.xproductieoverzichtb,
+            this.xsearchprodnr,
+            this.xopennewlijst,
+            this.xtoonartikels,
+            this.xaboutb,
+            this.xloginb,
+            this.xsettingsb,
+            this.xupdateb,
+            this.xopmerkingentoolstripbutton});
+            this.toolStrip2.Location = new System.Drawing.Point(5, 0);
+            this.toolStrip2.Name = "toolStrip2";
+            this.toolStrip2.Size = new System.Drawing.Size(1006, 39);
+            this.toolStrip2.TabIndex = 46;
+            this.toolStrip2.Text = "toolStrip2";
+            // 
+            // xbehpersoneel
+            // 
+            this.xbehpersoneel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xbehpersoneel.Image = global::ProductieManager.Properties.Resources.users_12820;
+            this.xbehpersoneel.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xbehpersoneel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xbehpersoneel.Name = "xbehpersoneel";
+            this.xbehpersoneel.Size = new System.Drawing.Size(36, 36);
+            this.xbehpersoneel.ToolTipText = "Toon alle medewerkers";
+            this.xbehpersoneel.Click += new System.EventHandler(this.xpersoneelb_Click);
+            // 
+            // xbehvaardigheden
+            // 
+            this.xbehvaardigheden.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xbehvaardigheden.Image = global::ProductieManager.Properties.Resources.key_skills;
+            this.xbehvaardigheden.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xbehvaardigheden.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xbehvaardigheden.Name = "xbehvaardigheden";
+            this.xbehvaardigheden.Size = new System.Drawing.Size(36, 36);
+            this.xbehvaardigheden.ToolTipText = "Toon alle vaardigheden";
+            this.xbehvaardigheden.Click += new System.EventHandler(this.xallevaardighedenb_Click);
+            // 
+            // xonderbrekeningen
+            // 
+            this.xonderbrekeningen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xonderbrekeningen.Image = global::ProductieManager.Properties.Resources.onderhoud32_321;
+            this.xonderbrekeningen.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xonderbrekeningen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xonderbrekeningen.Name = "xonderbrekeningen";
+            this.xonderbrekeningen.Size = new System.Drawing.Size(36, 36);
+            this.xonderbrekeningen.ToolTipText = "Toon alle onderbrekeningen";
+            this.xonderbrekeningen.Click += new System.EventHandler(this.xallstoringenb_Click);
+            // 
+            // xdbbewerkingen
+            // 
+            this.xdbbewerkingen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xdbbewerkingen.Image = global::ProductieManager.Properties.Resources.list_992_32_32;
+            this.xdbbewerkingen.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xdbbewerkingen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xdbbewerkingen.Name = "xdbbewerkingen";
+            this.xdbbewerkingen.Size = new System.Drawing.Size(36, 36);
+            this.xdbbewerkingen.ToolTipText = "Beheer Bewerkingen en de werkplaatsen";
+            this.xdbbewerkingen.Click += new System.EventHandler(this.xdbbewerkingen_Click);
+            // 
+            // xlogbook
+            // 
+            this.xlogbook.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xlogbook.Image = global::ProductieManager.Properties.Resources.activitylogmanager_104624;
+            this.xlogbook.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xlogbook.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xlogbook.Name = "xlogbook";
+            this.xlogbook.Size = new System.Drawing.Size(36, 36);
+            this.xlogbook.ToolTipText = "Toon alle logs";
+            this.xlogbook.Click += new System.EventHandler(this.xtoonlogsb_Click);
+            // 
+            // xoverzicht
+            // 
+            this.xoverzicht.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xoverzicht.Image = global::ProductieManager.Properties.Resources.FocusEye_Img_32_32;
+            this.xoverzicht.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xoverzicht.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xoverzicht.Name = "xoverzicht";
+            this.xoverzicht.Size = new System.Drawing.Size(36, 36);
+            this.xoverzicht.ToolTipText = "Zoek producties op basis van criteria\'s";
+            this.xoverzicht.Click += new System.EventHandler(this.xprodinfob_Click);
+            // 
+            // xmateriaalverbruikb
+            // 
+            this.xmateriaalverbruikb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xmateriaalverbruikb.Image = global::ProductieManager.Properties.Resources.graph_9_icon_icons_com_58019_32x32;
+            this.xmateriaalverbruikb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xmateriaalverbruikb.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xmateriaalverbruikb.Name = "xmateriaalverbruikb";
+            this.xmateriaalverbruikb.Size = new System.Drawing.Size(36, 36);
+            this.xmateriaalverbruikb.ToolTipText = "Toon alle verbruikte materialen";
+            this.xmateriaalverbruikb.Click += new System.EventHandler(this.xmateriaalverbruikb_Click);
+            // 
+            // xupdateallform
+            // 
+            this.xupdateallform.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xupdateallform.Image = global::ProductieManager.Properties.Resources.task_update_folder_progress_icon_142270;
+            this.xupdateallform.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xupdateallform.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xupdateallform.Name = "xupdateallform";
+            this.xupdateallform.Size = new System.Drawing.Size(36, 36);
+            this.xupdateallform.ToolTipText = "Update alle producties";
+            this.xupdateallform.Click += new System.EventHandler(this.xupdateallform_Click);
+            // 
+            // xsendemail
+            // 
+            this.xsendemail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xsendemail.Image = global::ProductieManager.Properties.Resources.email_18961;
+            this.xsendemail.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xsendemail.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xsendemail.Name = "xsendemail";
+            this.xsendemail.Size = new System.Drawing.Size(36, 36);
+            this.xsendemail.ToolTipText = "Verzend een email";
+            this.xsendemail.Click += new System.EventHandler(this.xsendemail_Click);
+            // 
+            // xallenotities
+            // 
+            this.xallenotities.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xallenotities.Image = global::ProductieManager.Properties.Resources.education_school_memo_pad_notes_reminder_task_icon_133450;
+            this.xallenotities.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xallenotities.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xallenotities.Name = "xallenotities";
+            this.xallenotities.Size = new System.Drawing.Size(36, 36);
+            this.xallenotities.ToolTipText = "Beheer alle notities";
+            this.xallenotities.Click += new System.EventHandler(this.xallenotities_Click);
+            // 
+            // xchatformbutton
+            // 
+            this.xchatformbutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xchatformbutton.Image = global::ProductieManager.Properties.Resources.conversation_chat_32x321;
+            this.xchatformbutton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xchatformbutton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xchatformbutton.Name = "xchatformbutton";
+            this.xchatformbutton.Size = new System.Drawing.Size(36, 36);
+            this.xchatformbutton.ToolTipText = "Open ProductieChat";
+            this.xchatformbutton.Click += new System.EventHandler(this.xchatformbutton_Click);
+            // 
+            // xproductieoverzichtb
+            // 
+            this.xproductieoverzichtb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xproductieoverzichtb.Image = global::ProductieManager.Properties.Resources.list_icon_icons_com_60651;
+            this.xproductieoverzichtb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xproductieoverzichtb.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xproductieoverzichtb.Name = "xproductieoverzichtb";
+            this.xproductieoverzichtb.Size = new System.Drawing.Size(36, 36);
+            this.xproductieoverzichtb.ToolTipText = "Bekijk een ProductieOverzicht en de volgorde van het produceren";
+            this.xproductieoverzichtb.Click += new System.EventHandler(this.xproductieoverzichtb_Click);
+            // 
+            // xsearchprodnr
+            // 
+            this.xsearchprodnr.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xsearchprodnr.Image = global::ProductieManager.Properties.Resources.search_page_document_32x32;
+            this.xsearchprodnr.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xsearchprodnr.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xsearchprodnr.Name = "xsearchprodnr";
+            this.xsearchprodnr.Size = new System.Drawing.Size(36, 36);
+            this.xsearchprodnr.ToolTipText = "Zoek ProductieNr";
+            this.xsearchprodnr.Click += new System.EventHandler(this.xsearchprodnr_Click);
+            // 
+            // xopennewlijst
+            // 
+            this.xopennewlijst.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xopennewlijst.Image = global::ProductieManager.Properties.Resources.view_screen_32x32;
+            this.xopennewlijst.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xopennewlijst.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xopennewlijst.Name = "xopennewlijst";
+            this.xopennewlijst.Size = new System.Drawing.Size(36, 36);
+            this.xopennewlijst.ToolTipText = "Open een nieuw ProductieLijst venster";
+            this.xopennewlijst.Click += new System.EventHandler(this.xopennewlijst_Click);
+            // 
+            // xtoonartikels
+            // 
+            this.xtoonartikels.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xtoonartikels.Image = global::ProductieManager.Properties.Resources.product_document_file_32x32;
+            this.xtoonartikels.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xtoonartikels.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xtoonartikels.Name = "xtoonartikels";
+            this.xtoonartikels.Size = new System.Drawing.Size(36, 36);
+            this.xtoonartikels.Text = "toolStripButton18";
+            this.xtoonartikels.ToolTipText = "Toon alle artikelen";
+            this.xtoonartikels.Click += new System.EventHandler(this.xtoonartikels_Click);
+            // 
+            // xaboutb
+            // 
+            this.xaboutb.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.xaboutb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xaboutb.Image = global::ProductieManager.Properties.Resources.info_15260;
+            this.xaboutb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xaboutb.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xaboutb.Name = "xaboutb";
+            this.xaboutb.Size = new System.Drawing.Size(36, 36);
+            this.xaboutb.ToolTipText = "ProductieManager Info";
+            this.xaboutb.Click += new System.EventHandler(this.xaboutb_Click);
+            // 
+            // xloginb
+            // 
+            this.xloginb.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.xloginb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xloginb.Image = global::ProductieManager.Properties.Resources.Login_37128__1_;
+            this.xloginb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xloginb.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xloginb.Name = "xloginb";
+            this.xloginb.Size = new System.Drawing.Size(36, 36);
+            this.xloginb.ToolTipText = "Log In/Uit";
+            this.xloginb.Click += new System.EventHandler(this.xloginb_Click);
+            // 
+            // xsettingsb
+            // 
+            this.xsettingsb.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.xsettingsb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xsettingsb.Image = global::ProductieManager.Properties.Resources.ccsm_103993;
+            this.xsettingsb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xsettingsb.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xsettingsb.Name = "xsettingsb";
+            this.xsettingsb.Size = new System.Drawing.Size(36, 36);
+            this.xsettingsb.ToolTipText = "Beheer Instellingen";
+            this.xsettingsb.Click += new System.EventHandler(this.xsettingsb_Click);
+            // 
+            // xupdateb
+            // 
+            this.xupdateb.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.xupdateb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xupdateb.Image = global::ProductieManager.Properties.Resources.clouddown_icon_icons_com_54405;
+            this.xupdateb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xupdateb.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xupdateb.Name = "xupdateb";
+            this.xupdateb.Size = new System.Drawing.Size(36, 36);
+            this.xupdateb.ToolTipText = "Controleer voor een update";
+            this.xupdateb.Click += new System.EventHandler(this.xUpdate_Click);
+            // 
+            // xopmerkingentoolstripbutton
+            // 
+            this.xopmerkingentoolstripbutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xopmerkingentoolstripbutton.Image = global::ProductieManager.Properties.Resources.notes_office_page_papers_32x32;
+            this.xopmerkingentoolstripbutton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xopmerkingentoolstripbutton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xopmerkingentoolstripbutton.Name = "xopmerkingentoolstripbutton";
+            this.xopmerkingentoolstripbutton.Size = new System.Drawing.Size(36, 36);
+            this.xopmerkingentoolstripbutton.ToolTipText = "Bekijk, wijzig of voeg toe een opmerking, vraag of een verzoek";
+            this.xopmerkingentoolstripbutton.Click += new System.EventHandler(this.xopmerkingentoolstripbutton_Click);
             // 
             // pictureBox2
             // 
@@ -394,387 +651,143 @@ namespace Controls
             this.mainMenu1.IsExpanded = false;
             this.mainMenu1.Location = new System.Drawing.Point(0, 97);
             this.mainMenu1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            menuButton34.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton34.CombineImage = null;
-            menuButton34.CombineScale = 0D;
-            menuButton34.ContextMenu = null;
-            menuButton34.Enabled = true;
-            menuButton34.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton34.Image")));
-            menuButton34.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton34.Index = 0;
-            menuButton34.Name = "xniewproductie";
-            menuButton34.Text = "Nieuwe Productie";
-            menuButton34.Tooltip = "Maak een nieuwe productie aan";
-            menuButton35.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton35.CombineImage = null;
-            menuButton35.CombineScale = 1.5D;
-            menuButton35.ContextMenu = null;
-            menuButton35.Enabled = true;
-            menuButton35.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton35.Image")));
-            menuButton35.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton35.Index = 1;
-            menuButton35.Name = "xopenproductie";
-            menuButton35.Text = "Open Productie";
-            menuButton35.Tooltip = "Open productie vanuit een pdf";
-            menuButton36.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton36.CombineImage = global::ProductieManager.Properties.Resources.lightning_weather_storm_2781;
-            menuButton36.CombineScale = 1.25D;
-            menuButton36.ContextMenu = null;
-            menuButton36.Enabled = true;
-            menuButton36.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton36.Image")));
-            menuButton36.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton36.Index = 2;
-            menuButton36.Name = "xquickproductie";
-            menuButton36.Text = "Simpel Productie";
-            menuButton36.Tooltip = "Maak een nieuwe simpele productie";
-            menuButton37.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
-            menuButton37.CombineImage = null;
-            menuButton37.CombineScale = 1.5D;
-            menuButton37.ContextMenu = null;
-            menuButton37.Enabled = true;
-            menuButton37.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton37.Image")));
-            menuButton37.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton37.Index = 3;
-            menuButton37.Name = "xcreateexcel";
-            menuButton37.Text = "Excel Overzicht";
-            menuButton37.Tooltip = "Maak excel overzicht";
-            menuButton38.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton38.CombineImage = null;
-            menuButton38.CombineScale = 1.5D;
-            menuButton38.ContextMenu = null;
-            menuButton38.Enabled = true;
-            menuButton38.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton38.Image")));
-            menuButton38.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton38.Index = 4;
-            menuButton38.Name = "xupdatedb";
-            menuButton38.Text = "Update Database";
-            menuButton38.Tooltip = "Update database vanuit adere locaties";
-            menuButton39.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton39.CombineImage = null;
-            menuButton39.CombineScale = 1.5D;
-            menuButton39.ContextMenu = null;
-            menuButton39.Enabled = true;
-            menuButton39.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton39.Image")));
-            menuButton39.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton39.Index = 5;
-            menuButton39.Name = "xlaaddb";
-            menuButton39.Text = "Laad Database";
-            menuButton39.Tooltip = "Laad een andere database";
-            menuButton40.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
-            menuButton40.CombineImage = null;
-            menuButton40.CombineScale = 1.5D;
-            menuButton40.ContextMenu = null;
-            menuButton40.Enabled = true;
-            menuButton40.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton40.Image")));
-            menuButton40.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton40.Index = 6;
-            menuButton40.Name = "xstats";
-            menuButton40.Text = "Toon Statistieken";
-            menuButton40.Tooltip = "Toon statistieken van de afgelopen periode";
-            menuButton41.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton41.CombineImage = global::ProductieManager.Properties.Resources.lightning_weather_storm_2781;
-            menuButton41.CombineScale = 1.25D;
-            menuButton41.ContextMenu = null;
-            menuButton41.Enabled = true;
-            menuButton41.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton41.Image")));
-            menuButton41.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton41.Index = 7;
-            menuButton41.Name = "xstoringmenubutton";
-            menuButton41.Text = "Onderbreking";
-            menuButton41.Tooltip = "Maak/Wijzig onderbreking";
-            menuButton42.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
-            menuButton42.CombineImage = null;
-            menuButton42.CombineScale = 1.25D;
-            menuButton42.ContextMenu = null;
-            menuButton42.Enabled = false;
-            menuButton42.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton42.Image")));
-            menuButton42.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton42.Index = 8;
-            menuButton42.Name = "xbekijkproductiepdf";
-            menuButton42.Text = "Bekijk Productieformulier";
-            menuButton42.Tooltip = "Open productieformulier pdf";
-            menuButton43.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton43.CombineImage = null;
-            menuButton43.CombineScale = 1.5D;
-            menuButton43.ContextMenu = null;
-            menuButton43.Enabled = true;
-            menuButton43.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton43.Image")));
-            menuButton43.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton43.Index = 9;
-            menuButton43.Name = "xroostermenubutton";
-            menuButton43.Text = "Eigen Rooster";
-            menuButton43.Tooltip = "Kies hier je eigen rooster voor elke periode";
-            menuButton44.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton44.CombineImage = global::ProductieManager.Properties.Resources.play_button_icon_icons_com_60615;
-            menuButton44.CombineScale = 1.5D;
-            menuButton44.ContextMenu = null;
-            menuButton44.Enabled = true;
-            menuButton44.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton44.Image")));
-            menuButton44.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton44.Index = 10;
-            menuButton44.Name = "xopenproducties";
-            menuButton44.Text = "Gestart Producties";
-            menuButton44.Tooltip = "Open alle gestarte producties";
+            menuButton12.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton12.CombineImage = null;
+            menuButton12.CombineScale = 0D;
+            menuButton12.ContextMenu = null;
+            menuButton12.Enabled = true;
+            menuButton12.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton12.Image")));
+            menuButton12.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton12.Index = 0;
+            menuButton12.Name = "xniewproductie";
+            menuButton12.Text = "Nieuwe Productie";
+            menuButton12.Tooltip = "Maak een nieuwe productie aan";
+            menuButton13.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton13.CombineImage = null;
+            menuButton13.CombineScale = 1.5D;
+            menuButton13.ContextMenu = null;
+            menuButton13.Enabled = true;
+            menuButton13.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton13.Image")));
+            menuButton13.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton13.Index = 1;
+            menuButton13.Name = "xopenproductie";
+            menuButton13.Text = "Open Productie";
+            menuButton13.Tooltip = "Open productie vanuit een pdf";
+            menuButton14.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton14.CombineImage = global::ProductieManager.Properties.Resources.lightning_weather_storm_2781;
+            menuButton14.CombineScale = 1.25D;
+            menuButton14.ContextMenu = null;
+            menuButton14.Enabled = true;
+            menuButton14.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton14.Image")));
+            menuButton14.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton14.Index = 2;
+            menuButton14.Name = "xquickproductie";
+            menuButton14.Text = "Simpel Productie";
+            menuButton14.Tooltip = "Maak een nieuwe simpele productie";
+            menuButton15.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton15.CombineImage = null;
+            menuButton15.CombineScale = 1.5D;
+            menuButton15.ContextMenu = null;
+            menuButton15.Enabled = true;
+            menuButton15.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton15.Image")));
+            menuButton15.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton15.Index = 3;
+            menuButton15.Name = "xcreateexcel";
+            menuButton15.Text = "Excel Overzicht";
+            menuButton15.Tooltip = "Maak excel overzicht";
+            menuButton16.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton16.CombineImage = null;
+            menuButton16.CombineScale = 1.5D;
+            menuButton16.ContextMenu = null;
+            menuButton16.Enabled = true;
+            menuButton16.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton16.Image")));
+            menuButton16.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton16.Index = 4;
+            menuButton16.Name = "xupdatedb";
+            menuButton16.Text = "Update Database";
+            menuButton16.Tooltip = "Update database vanuit adere locaties";
+            menuButton17.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton17.CombineImage = null;
+            menuButton17.CombineScale = 1.5D;
+            menuButton17.ContextMenu = null;
+            menuButton17.Enabled = true;
+            menuButton17.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton17.Image")));
+            menuButton17.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton17.Index = 5;
+            menuButton17.Name = "xlaaddb";
+            menuButton17.Text = "Laad Database";
+            menuButton17.Tooltip = "Laad een andere database";
+            menuButton18.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton18.CombineImage = null;
+            menuButton18.CombineScale = 1.5D;
+            menuButton18.ContextMenu = null;
+            menuButton18.Enabled = true;
+            menuButton18.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton18.Image")));
+            menuButton18.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton18.Index = 6;
+            menuButton18.Name = "xstats";
+            menuButton18.Text = "Toon Statistieken";
+            menuButton18.Tooltip = "Toon statistieken van de afgelopen periode";
+            menuButton19.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton19.CombineImage = global::ProductieManager.Properties.Resources.lightning_weather_storm_2781;
+            menuButton19.CombineScale = 1.25D;
+            menuButton19.ContextMenu = null;
+            menuButton19.Enabled = true;
+            menuButton19.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton19.Image")));
+            menuButton19.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton19.Index = 7;
+            menuButton19.Name = "xstoringmenubutton";
+            menuButton19.Text = "Onderbreking";
+            menuButton19.Tooltip = "Maak/Wijzig onderbreking";
+            menuButton20.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton20.CombineImage = null;
+            menuButton20.CombineScale = 1.25D;
+            menuButton20.ContextMenu = null;
+            menuButton20.Enabled = false;
+            menuButton20.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton20.Image")));
+            menuButton20.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton20.Index = 8;
+            menuButton20.Name = "xbekijkproductiepdf";
+            menuButton20.Text = "Bekijk Productieformulier";
+            menuButton20.Tooltip = "Open productieformulier pdf";
+            menuButton21.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton21.CombineImage = null;
+            menuButton21.CombineScale = 1.5D;
+            menuButton21.ContextMenu = null;
+            menuButton21.Enabled = true;
+            menuButton21.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton21.Image")));
+            menuButton21.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton21.Index = 9;
+            menuButton21.Name = "xroostermenubutton";
+            menuButton21.Text = "Eigen Rooster";
+            menuButton21.Tooltip = "Kies hier je eigen rooster voor elke periode";
+            menuButton22.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton22.CombineImage = global::ProductieManager.Properties.Resources.play_button_icon_icons_com_60615;
+            menuButton22.CombineScale = 1.5D;
+            menuButton22.ContextMenu = null;
+            menuButton22.Enabled = true;
+            menuButton22.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton22.Image")));
+            menuButton22.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton22.Index = 10;
+            menuButton22.Name = "xopenproducties";
+            menuButton22.Text = "Gestart Producties";
+            menuButton22.Tooltip = "Open alle gestarte producties";
             this.mainMenu1.MenuButtons = new Various.MenuButton[] {
-        menuButton34,
-        menuButton35,
-        menuButton36,
-        menuButton37,
-        menuButton38,
-        menuButton39,
-        menuButton40,
-        menuButton41,
-        menuButton42,
-        menuButton43,
-        menuButton44};
+        menuButton12,
+        menuButton13,
+        menuButton14,
+        menuButton15,
+        menuButton16,
+        menuButton17,
+        menuButton18,
+        menuButton19,
+        menuButton20,
+        menuButton21,
+        menuButton22};
             this.mainMenu1.Name = "mainMenu1";
             this.mainMenu1.Size = new System.Drawing.Size(40, 462);
             this.mainMenu1.TabIndex = 27;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
-            // 
-            // toolStrip2
-            // 
-            this.toolStrip2.BackColor = System.Drawing.Color.White;
-            this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.xbehpersoneel,
-            this.xbehvaardigheden,
-            this.xonderbrekeningen,
-            this.xdbbewerkingen,
-            this.xlogbook,
-            this.xoverzicht,
-            this.xmateriaalverbruikb,
-            this.xupdateallform,
-            this.xsendemail,
-            this.xallenotities,
-            this.xchatformbutton,
-            this.xproductieoverzichtb,
-            this.xsearchprodnr,
-            this.xopennewlijst,
-            this.xtoonartikels,
-            this.xaboutb,
-            this.xloginb,
-            this.xsettingsb,
-            this.xupdateb});
-            this.toolStrip2.Location = new System.Drawing.Point(5, 0);
-            this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(1006, 39);
-            this.toolStrip2.TabIndex = 46;
-            this.toolStrip2.Text = "toolStrip2";
-            // 
-            // xbehpersoneel
-            // 
-            this.xbehpersoneel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xbehpersoneel.Image = global::ProductieManager.Properties.Resources.users_12820;
-            this.xbehpersoneel.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xbehpersoneel.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xbehpersoneel.Name = "xbehpersoneel";
-            this.xbehpersoneel.Size = new System.Drawing.Size(36, 36);
-            this.xbehpersoneel.ToolTipText = "Toon alle medewerkers";
-            this.xbehpersoneel.Click += new System.EventHandler(this.xpersoneelb_Click);
-            // 
-            // xbehvaardigheden
-            // 
-            this.xbehvaardigheden.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xbehvaardigheden.Image = global::ProductieManager.Properties.Resources.key_skills;
-            this.xbehvaardigheden.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xbehvaardigheden.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xbehvaardigheden.Name = "xbehvaardigheden";
-            this.xbehvaardigheden.Size = new System.Drawing.Size(36, 36);
-            this.xbehvaardigheden.ToolTipText = "Toon alle vaardigheden";
-            this.xbehvaardigheden.Click += new System.EventHandler(this.xallevaardighedenb_Click);
-            // 
-            // xonderbrekeningen
-            // 
-            this.xonderbrekeningen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xonderbrekeningen.Image = global::ProductieManager.Properties.Resources.onderhoud32_321;
-            this.xonderbrekeningen.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xonderbrekeningen.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xonderbrekeningen.Name = "xonderbrekeningen";
-            this.xonderbrekeningen.Size = new System.Drawing.Size(36, 36);
-            this.xonderbrekeningen.ToolTipText = "Toon alle onderbrekeningen";
-            this.xonderbrekeningen.Click += new System.EventHandler(this.xallstoringenb_Click);
-            // 
-            // xdbbewerkingen
-            // 
-            this.xdbbewerkingen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xdbbewerkingen.Image = global::ProductieManager.Properties.Resources.list_992_32_32;
-            this.xdbbewerkingen.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xdbbewerkingen.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xdbbewerkingen.Name = "xdbbewerkingen";
-            this.xdbbewerkingen.Size = new System.Drawing.Size(36, 36);
-            this.xdbbewerkingen.ToolTipText = "Beheer Bewerkingen en de werkplaatsen";
-            this.xdbbewerkingen.Click += new System.EventHandler(this.xdbbewerkingen_Click);
-            // 
-            // xlogbook
-            // 
-            this.xlogbook.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xlogbook.Image = global::ProductieManager.Properties.Resources.activitylogmanager_104624;
-            this.xlogbook.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xlogbook.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xlogbook.Name = "xlogbook";
-            this.xlogbook.Size = new System.Drawing.Size(36, 36);
-            this.xlogbook.ToolTipText = "Toon alle logs";
-            this.xlogbook.Click += new System.EventHandler(this.xtoonlogsb_Click);
-            // 
-            // xoverzicht
-            // 
-            this.xoverzicht.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xoverzicht.Image = global::ProductieManager.Properties.Resources.FocusEye_Img_32_32;
-            this.xoverzicht.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xoverzicht.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xoverzicht.Name = "xoverzicht";
-            this.xoverzicht.Size = new System.Drawing.Size(36, 36);
-            this.xoverzicht.ToolTipText = "Zoek producties op basis van criteria\'s";
-            this.xoverzicht.Click += new System.EventHandler(this.xprodinfob_Click);
-            // 
-            // xmateriaalverbruikb
-            // 
-            this.xmateriaalverbruikb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xmateriaalverbruikb.Image = global::ProductieManager.Properties.Resources.graph_9_icon_icons_com_58019_32x32;
-            this.xmateriaalverbruikb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xmateriaalverbruikb.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xmateriaalverbruikb.Name = "xmateriaalverbruikb";
-            this.xmateriaalverbruikb.Size = new System.Drawing.Size(36, 36);
-            this.xmateriaalverbruikb.ToolTipText = "Toon alle verbruikte materialen";
-            this.xmateriaalverbruikb.Click += new System.EventHandler(this.xmateriaalverbruikb_Click);
-            // 
-            // xsendemail
-            // 
-            this.xsendemail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xsendemail.Image = global::ProductieManager.Properties.Resources.email_18961;
-            this.xsendemail.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xsendemail.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xsendemail.Name = "xsendemail";
-            this.xsendemail.Size = new System.Drawing.Size(36, 36);
-            this.xsendemail.ToolTipText = "Verzend een email";
-            this.xsendemail.Click += new System.EventHandler(this.xsendemail_Click);
-            // 
-            // xallenotities
-            // 
-            this.xallenotities.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xallenotities.Image = global::ProductieManager.Properties.Resources.education_school_memo_pad_notes_reminder_task_icon_133450;
-            this.xallenotities.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xallenotities.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xallenotities.Name = "xallenotities";
-            this.xallenotities.Size = new System.Drawing.Size(36, 36);
-            this.xallenotities.ToolTipText = "Beheer alle notities";
-            this.xallenotities.Click += new System.EventHandler(this.xallenotities_Click);
-            // 
-            // xchatformbutton
-            // 
-            this.xchatformbutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xchatformbutton.Image = global::ProductieManager.Properties.Resources.conversation_chat_32x321;
-            this.xchatformbutton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xchatformbutton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xchatformbutton.Name = "xchatformbutton";
-            this.xchatformbutton.Size = new System.Drawing.Size(36, 36);
-            this.xchatformbutton.ToolTipText = "Open ProductieChat";
-            this.xchatformbutton.Click += new System.EventHandler(this.xchatformbutton_Click);
-            // 
-            // xproductieoverzichtb
-            // 
-            this.xproductieoverzichtb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xproductieoverzichtb.Image = global::ProductieManager.Properties.Resources.list_icon_icons_com_60651;
-            this.xproductieoverzichtb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xproductieoverzichtb.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xproductieoverzichtb.Name = "xproductieoverzichtb";
-            this.xproductieoverzichtb.Size = new System.Drawing.Size(36, 36);
-            this.xproductieoverzichtb.ToolTipText = "Bekijk een ProductieOverzicht en de volgorde van het produceren";
-            this.xproductieoverzichtb.Click += new System.EventHandler(this.xproductieoverzichtb_Click);
-            // 
-            // xsearchprodnr
-            // 
-            this.xsearchprodnr.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xsearchprodnr.Image = global::ProductieManager.Properties.Resources.search_page_document_32x32;
-            this.xsearchprodnr.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xsearchprodnr.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xsearchprodnr.Name = "xsearchprodnr";
-            this.xsearchprodnr.Size = new System.Drawing.Size(36, 36);
-            this.xsearchprodnr.ToolTipText = "Zoek ProductieNr";
-            this.xsearchprodnr.Click += new System.EventHandler(this.xsearchprodnr_Click);
-            // 
-            // xopennewlijst
-            // 
-            this.xopennewlijst.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xopennewlijst.Image = global::ProductieManager.Properties.Resources.view_screen_32x32;
-            this.xopennewlijst.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xopennewlijst.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xopennewlijst.Name = "xopennewlijst";
-            this.xopennewlijst.Size = new System.Drawing.Size(36, 36);
-            this.xopennewlijst.ToolTipText = "Open een nieuw ProductieLijst venster";
-            this.xopennewlijst.Click += new System.EventHandler(this.xopennewlijst_Click);
-            // 
-            // xtoonartikels
-            // 
-            this.xtoonartikels.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xtoonartikels.Image = global::ProductieManager.Properties.Resources.product_document_file_32x32;
-            this.xtoonartikels.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xtoonartikels.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xtoonartikels.Name = "xtoonartikels";
-            this.xtoonartikels.Size = new System.Drawing.Size(36, 36);
-            this.xtoonartikels.Text = "toolStripButton18";
-            this.xtoonartikels.ToolTipText = "Toon alle artikelen";
-            this.xtoonartikels.Click += new System.EventHandler(this.xtoonartikels_Click);
-            // 
-            // xaboutb
-            // 
-            this.xaboutb.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.xaboutb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xaboutb.Image = global::ProductieManager.Properties.Resources.info_15260;
-            this.xaboutb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xaboutb.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xaboutb.Name = "xaboutb";
-            this.xaboutb.Size = new System.Drawing.Size(36, 36);
-            this.xaboutb.ToolTipText = "ProductieManager Info";
-            this.xaboutb.Click += new System.EventHandler(this.xaboutb_Click);
-            // 
-            // xloginb
-            // 
-            this.xloginb.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.xloginb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xloginb.Image = global::ProductieManager.Properties.Resources.Login_37128__1_;
-            this.xloginb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xloginb.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xloginb.Name = "xloginb";
-            this.xloginb.Size = new System.Drawing.Size(36, 36);
-            this.xloginb.ToolTipText = "Log In/Uit";
-            this.xloginb.Click += new System.EventHandler(this.xloginb_Click);
-            // 
-            // xsettingsb
-            // 
-            this.xsettingsb.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.xsettingsb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xsettingsb.Image = global::ProductieManager.Properties.Resources.ccsm_103993;
-            this.xsettingsb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xsettingsb.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xsettingsb.Name = "xsettingsb";
-            this.xsettingsb.Size = new System.Drawing.Size(36, 36);
-            this.xsettingsb.ToolTipText = "Beheer Instellingen";
-            this.xsettingsb.Click += new System.EventHandler(this.xsettingsb_Click);
-            // 
-            // xupdateb
-            // 
-            this.xupdateb.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.xupdateb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xupdateb.Image = global::ProductieManager.Properties.Resources.clouddown_icon_icons_com_54405;
-            this.xupdateb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xupdateb.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xupdateb.Name = "xupdateb";
-            this.xupdateb.Size = new System.Drawing.Size(36, 36);
-            this.xupdateb.ToolTipText = "Controleer voor een update";
-            this.xupdateb.Click += new System.EventHandler(this.xUpdate_Click);
-            // 
-            // xupdateallform
-            // 
-            this.xupdateallform.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xupdateallform.Image = global::ProductieManager.Properties.Resources.task_update_folder_progress_icon_142270;
-            this.xupdateallform.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xupdateallform.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xupdateallform.Name = "xupdateallform";
-            this.xupdateallform.Size = new System.Drawing.Size(36, 36);
-            this.xupdateallform.ToolTipText = "Update alle producties";
-            this.xupdateallform.Click += new System.EventHandler(this.xupdateallform_Click);
             // 
             // ProductieView
             // 
@@ -791,6 +804,8 @@ namespace Controls
             this.Size = new System.Drawing.Size(1147, 559);
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
+            this.toolStrip2.ResumeLayout(false);
+            this.toolStrip2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.metroTabControl.ResumeLayout(false);
@@ -799,8 +814,6 @@ namespace Controls
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.xspeciaalroosterlabel.ResumeLayout(false);
-            this.toolStrip2.ResumeLayout(false);
-            this.toolStrip2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -848,5 +861,6 @@ namespace Controls
         private ToolStripButton xloginb;
         private ToolStripButton xsettingsb;
         private ToolStripButton xupdateb;
+        private ToolStripButton xopmerkingentoolstripbutton;
     }
 }

@@ -33,9 +33,9 @@ namespace Forms
             this.xtextfield = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
             this.xanuleren = new System.Windows.Forms.Button();
             this.xok = new System.Windows.Forms.Button();
+            this.panel3 = new System.Windows.Forms.Panel();
             this.ximage = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -73,16 +73,6 @@ namespace Forms
             this.panel2.Size = new System.Drawing.Size(252, 46);
             this.panel2.TabIndex = 3;
             // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.xtextfield);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(129, 60);
-            this.panel3.Name = "panel3";
-            this.panel3.Padding = new System.Windows.Forms.Padding(5, 15, 5, 15);
-            this.panel3.Size = new System.Drawing.Size(401, 74);
-            this.panel3.TabIndex = 10;
-            // 
             // xanuleren
             // 
             this.xanuleren.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -110,6 +100,16 @@ namespace Forms
             this.xok.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.xok.UseVisualStyleBackColor = true;
             this.xok.Click += new System.EventHandler(this.xok_Click);
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.xtextfield);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(129, 60);
+            this.panel3.Name = "panel3";
+            this.panel3.Padding = new System.Windows.Forms.Padding(5, 15, 5, 15);
+            this.panel3.Size = new System.Drawing.Size(401, 74);
+            this.panel3.TabIndex = 10;
             // 
             // ximage
             // 

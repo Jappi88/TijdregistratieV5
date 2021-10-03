@@ -172,6 +172,10 @@ namespace ProductieManager.Rpm.Productie
                                 localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\Chat";
                                 remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\Chat";
                                 break;
+                            case DbType.Opmerkingen:
+                                localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\Opmerkingen";
+                                remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\Opmerkingen";
+                                break;
 
                         }
 

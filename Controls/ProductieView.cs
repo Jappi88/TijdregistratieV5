@@ -1926,5 +1926,16 @@ namespace Controls
         {
 
         }
+
+        private void xopmerkingentoolstripbutton_Click(object sender, EventArgs e)
+        {
+            var xopm = new OpmerkingenForm();
+            xopm.LoadOpmerkingen();
+            if (xopm.ShowDialog() == DialogResult.OK)
+            {
+                Manager.Opmerkingen.SetNotes(xopm.Opmerkingen);
+                Manager.Opmerkingen.Save();
+            }
+        }
     }
 }

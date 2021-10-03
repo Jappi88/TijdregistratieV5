@@ -259,7 +259,6 @@ namespace Controls
             this.xProductieLijst.MenuLabelUnlockGroupingOn = "Ontgrendel groepering van \'{0}\'";
             this.xProductieLijst.MenuLabelUnsort = "Uitsorteren";
             this.xProductieLijst.Name = "xProductieLijst";
-            this.xProductieLijst.OwnerDraw = false;
             this.xProductieLijst.ShowCommandMenuOnRightClick = true;
             this.xProductieLijst.ShowItemCountOnGroups = true;
             this.xProductieLijst.ShowItemToolTips = true;
@@ -1163,7 +1162,7 @@ namespace Controls
             this.xwijzigleverdatum.Image = global::ProductieManager.Properties.Resources.systemtime_778_32_32;
             this.xwijzigleverdatum.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xwijzigleverdatum.Name = "xwijzigleverdatum";
-            this.xwijzigleverdatum.Size = new System.Drawing.Size(196, 38);
+            this.xwijzigleverdatum.Size = new System.Drawing.Size(153, 38);
             this.xwijzigleverdatum.Text = "Leverdatum";
             this.xwijzigleverdatum.ToolTipText = "Wijzig leverdatum";
             this.xwijzigleverdatum.Click += new System.EventHandler(this.xbewleverDatumToolStripMenuItem1_Click);
@@ -1173,7 +1172,7 @@ namespace Controls
             this.xwijzigaantal.Image = global::ProductieManager.Properties.Resources.hashtag_icon_152828_32_32;
             this.xwijzigaantal.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xwijzigaantal.Name = "xwijzigaantal";
-            this.xwijzigaantal.Size = new System.Drawing.Size(196, 38);
+            this.xwijzigaantal.Size = new System.Drawing.Size(153, 38);
             this.xwijzigaantal.Text = "Aantal";
             this.xwijzigaantal.ToolTipText = "Wijzig aantal te maken";
             this.xwijzigaantal.Click += new System.EventHandler(this.aantalToolStripMenuItem1_Click);
@@ -1183,7 +1182,7 @@ namespace Controls
             this.xwijzignotitie.Image = global::ProductieManager.Properties.Resources.Note_msgIcon_32x32;
             this.xwijzignotitie.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xwijzignotitie.Name = "xwijzignotitie";
-            this.xwijzignotitie.Size = new System.Drawing.Size(196, 38);
+            this.xwijzignotitie.Size = new System.Drawing.Size(153, 38);
             this.xwijzignotitie.Text = "Notitie";
             this.xwijzignotitie.ToolTipText = "Maak of wijzig notitie";
             this.xwijzignotitie.Click += new System.EventHandler(this.xbewnotitieToolStripMenuItem_Click);

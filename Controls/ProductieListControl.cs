@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
@@ -34,13 +35,20 @@ namespace Controls
                 // check which column is about to be sorted and set your custom comparer
                 ProductieLijst.ListViewItemSorter = new Comparer(order, column);
             };
-
+           // ProductieLijst.BeforeSearching += ProductieLijst_BeforeSearching;
             xsearch.ShowClearButton = true;
             EnableEntryFiltering = false;
             EnableFiltering = true;
             CanLoad = true;
             _WaitTimer = new Timer(100);
             _WaitTimer.Elapsed += _WaitTimer_Elapsed;
+        }
+
+        private void ProductieLijst_BeforeSearching(object sender, BeforeSearchingEventArgs e)
+        {
+            TextMatchFilter filter = TextMatchFilter.Contains(ProductieLijst, e.StringToFind);
+            //this.ProductieLijst.ModelFilter = filter;
+            this.ProductieLijst.DefaultRenderer = new HighlightTextRenderer(filter);
         }
 
         private void _WaitTimer_Elapsed(object sender, ElapsedEventArgs e)

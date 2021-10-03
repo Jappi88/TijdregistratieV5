@@ -16,6 +16,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Rpm.Opmerking;
 
 namespace Rpm.Productie
 {
@@ -40,6 +41,10 @@ namespace Rpm.Productie
         /// De database updater die kijkt of de database is geupdate, en update.
         /// </summary>
         public static DatabaseUpdater DbUpdater { get; private set; }
+        /// <summary>
+        /// De database voor alle opmerkingen.
+        /// </summary>
+        public static Opmerkingen Opmerkingen { get; private set; }
         /// <summary>
         /// De productieprovider zorgt ervoor dat altijd je altijd de actuele infomatie krijgt.
         /// </summary>
@@ -245,7 +250,11 @@ namespace Rpm.Productie
                     (this, raiseManagerLoadingEvents);
 
                     if (loadsettings)
+                    {
+                        Opmerkingen = new Opmerkingen();
+                        await Opmerkingen.Load();
                         ProductieProvider?.InitOfflineDb();
+                    }
 
                     DbUpdater.UpdateStartupDbs();
                     while (Mainform.IsLoading)
