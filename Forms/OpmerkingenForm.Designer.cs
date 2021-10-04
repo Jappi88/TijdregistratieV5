@@ -36,34 +36,34 @@ namespace Forms
             this.xannuleren = new System.Windows.Forms.Button();
             this.xOpslaan = new System.Windows.Forms.Button();
             this.xselectedopmerkingpanel = new System.Windows.Forms.Panel();
+            this.xwijzigbutton = new System.Windows.Forms.Button();
             this.xaansluitencheckbox = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.xreactietextbox = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.xopmerkingtextbox = new System.Windows.Forms.TextBox();
+            this.xselectedopmerkinglabel = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.xOpmerkingenTree = new System.Windows.Forms.TreeView();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.wijzigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.verwijderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.vouwAllesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ontvouwAllesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.xaddtoolstripbutton = new System.Windows.Forms.ToolStripButton();
             this.xdeletetoolstripbutton = new System.Windows.Forms.ToolStripButton();
-            this.xwijzigbutton = new System.Windows.Forms.Button();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.wijzigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.verwijderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.vouwAllesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ontvouwAllesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.xselectedopmerkinglabel = new System.Windows.Forms.Label();
             this.panel6.SuspendLayout();
             this.xselectedopmerkingpanel.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // xopmerkingimages
@@ -93,8 +93,9 @@ namespace Forms
             this.xannuleren.Name = "xannuleren";
             this.xannuleren.Size = new System.Drawing.Size(135, 38);
             this.xannuleren.TabIndex = 4;
-            this.xannuleren.Text = "Annuleren";
+            this.xannuleren.Text = "Sluiten";
             this.xannuleren.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xannuleren, "Sluit venster");
             this.xannuleren.UseVisualStyleBackColor = true;
             this.xannuleren.Click += new System.EventHandler(this.xannuleren_Click);
             // 
@@ -128,6 +129,25 @@ namespace Forms
             this.xselectedopmerkingpanel.Size = new System.Drawing.Size(239, 445);
             this.xselectedopmerkingpanel.TabIndex = 3;
             this.xselectedopmerkingpanel.Visible = false;
+            // 
+            // xwijzigbutton
+            // 
+            this.xwijzigbutton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xwijzigbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xwijzigbutton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xwijzigbutton.ForeColor = System.Drawing.Color.Black;
+            this.xwijzigbutton.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
+            this.xwijzigbutton.Location = new System.Drawing.Point(3, 351);
+            this.xwijzigbutton.Name = "xwijzigbutton";
+            this.xwijzigbutton.Size = new System.Drawing.Size(233, 38);
+            this.xwijzigbutton.TabIndex = 6;
+            this.xwijzigbutton.Text = "Wijzigingen Toepassen";
+            this.xwijzigbutton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xwijzigbutton, "Pas de wijzigingen toe");
+            this.xwijzigbutton.UseVisualStyleBackColor = true;
+            this.xwijzigbutton.Visible = false;
+            this.xwijzigbutton.Click += new System.EventHandler(this.xwijzigbutton_Click);
             // 
             // xaansluitencheckbox
             // 
@@ -188,6 +208,16 @@ namespace Forms
             this.xopmerkingtextbox.TabIndex = 0;
             this.xopmerkingtextbox.TextChanged += new System.EventHandler(this.xopmerkingtextbox_TextChanged);
             // 
+            // xselectedopmerkinglabel
+            // 
+            this.xselectedopmerkinglabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.xselectedopmerkinglabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xselectedopmerkinglabel.Location = new System.Drawing.Point(0, 0);
+            this.xselectedopmerkinglabel.Name = "xselectedopmerkinglabel";
+            this.xselectedopmerkinglabel.Size = new System.Drawing.Size(239, 39);
+            this.xselectedopmerkinglabel.TabIndex = 7;
+            this.xselectedopmerkinglabel.Text = "Opmerking Van: ";
+            // 
             // toolTip1
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
@@ -218,6 +248,61 @@ namespace Forms
             this.xOpmerkingenTree.TabIndex = 1;
             this.xOpmerkingenTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.xOpmerkingenTree_AfterSelect);
             this.xOpmerkingenTree.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.xOpmerkingenTree_NodeMouseClick);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.wijzigToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.verwijderToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.vouwAllesToolStripMenuItem,
+            this.ontvouwAllesToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(152, 104);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // wijzigToolStripMenuItem
+            // 
+            this.wijzigToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.edit__52382;
+            this.wijzigToolStripMenuItem.Name = "wijzigToolStripMenuItem";
+            this.wijzigToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.wijzigToolStripMenuItem.Text = "Wijzig";
+            this.wijzigToolStripMenuItem.Click += new System.EventHandler(this.wijzigToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
+            // 
+            // verwijderToolStripMenuItem
+            // 
+            this.verwijderToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.verwijderToolStripMenuItem.Name = "verwijderToolStripMenuItem";
+            this.verwijderToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.verwijderToolStripMenuItem.Text = "Verwijder";
+            this.verwijderToolStripMenuItem.Click += new System.EventHandler(this.xdeletetoolstripbutton_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(148, 6);
+            // 
+            // vouwAllesToolStripMenuItem
+            // 
+            this.vouwAllesToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.icons8_collapse_32;
+            this.vouwAllesToolStripMenuItem.Name = "vouwAllesToolStripMenuItem";
+            this.vouwAllesToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.vouwAllesToolStripMenuItem.Text = "Vouw Alles";
+            this.vouwAllesToolStripMenuItem.Click += new System.EventHandler(this.vouwAllesToolStripMenuItem_Click);
+            // 
+            // ontvouwAllesToolStripMenuItem
+            // 
+            this.ontvouwAllesToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.icons8_expand_32;
+            this.ontvouwAllesToolStripMenuItem.Name = "ontvouwAllesToolStripMenuItem";
+            this.ontvouwAllesToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.ontvouwAllesToolStripMenuItem.Text = "Ontvouw Alles";
+            this.ontvouwAllesToolStripMenuItem.Click += new System.EventHandler(this.ontvouwAllesToolStripMenuItem_Click);
             // 
             // toolStrip1
             // 
@@ -255,94 +340,10 @@ namespace Forms
             this.xdeletetoolstripbutton.ToolTipText = "Verdwijder geselecteerde opmerking";
             this.xdeletetoolstripbutton.Click += new System.EventHandler(this.xdeletetoolstripbutton_Click);
             // 
-            // xwijzigbutton
-            // 
-            this.xwijzigbutton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xwijzigbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xwijzigbutton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xwijzigbutton.ForeColor = System.Drawing.Color.Black;
-            this.xwijzigbutton.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
-            this.xwijzigbutton.Location = new System.Drawing.Point(3, 351);
-            this.xwijzigbutton.Name = "xwijzigbutton";
-            this.xwijzigbutton.Size = new System.Drawing.Size(233, 38);
-            this.xwijzigbutton.TabIndex = 6;
-            this.xwijzigbutton.Text = "Wijzigingen Toepassen";
-            this.xwijzigbutton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xwijzigbutton, "Pas de wijzigingen toe");
-            this.xwijzigbutton.UseVisualStyleBackColor = true;
-            this.xwijzigbutton.Visible = false;
-            this.xwijzigbutton.Click += new System.EventHandler(this.xwijzigbutton_Click);
-            // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.wijzigToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.verwijderToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.vouwAllesToolStripMenuItem,
-            this.ontvouwAllesToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(152, 104);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
-            // 
-            // wijzigToolStripMenuItem
-            // 
-            this.wijzigToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.edit__52382;
-            this.wijzigToolStripMenuItem.Name = "wijzigToolStripMenuItem";
-            this.wijzigToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
-            this.wijzigToolStripMenuItem.Text = "Wijzig";
-            this.wijzigToolStripMenuItem.Click += new System.EventHandler(this.wijzigToolStripMenuItem_Click);
-            // 
-            // verwijderToolStripMenuItem
-            // 
-            this.verwijderToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.verwijderToolStripMenuItem.Name = "verwijderToolStripMenuItem";
-            this.verwijderToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
-            this.verwijderToolStripMenuItem.Text = "Verwijder";
-            this.verwijderToolStripMenuItem.Click += new System.EventHandler(this.xdeletetoolstripbutton_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
-            // 
-            // vouwAllesToolStripMenuItem
-            // 
-            this.vouwAllesToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.icons8_collapse_32;
-            this.vouwAllesToolStripMenuItem.Name = "vouwAllesToolStripMenuItem";
-            this.vouwAllesToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
-            this.vouwAllesToolStripMenuItem.Text = "Vouw Alles";
-            this.vouwAllesToolStripMenuItem.Click += new System.EventHandler(this.vouwAllesToolStripMenuItem_Click);
-            // 
-            // ontvouwAllesToolStripMenuItem
-            // 
-            this.ontvouwAllesToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.icons8_expand_32;
-            this.ontvouwAllesToolStripMenuItem.Name = "ontvouwAllesToolStripMenuItem";
-            this.ontvouwAllesToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
-            this.ontvouwAllesToolStripMenuItem.Text = "Ontvouw Alles";
-            this.ontvouwAllesToolStripMenuItem.Click += new System.EventHandler(this.ontvouwAllesToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(148, 6);
-            // 
             // timer1
             // 
             this.timer1.Interval = 5000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // xselectedopmerkinglabel
-            // 
-            this.xselectedopmerkinglabel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.xselectedopmerkinglabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xselectedopmerkinglabel.Location = new System.Drawing.Point(0, 0);
-            this.xselectedopmerkinglabel.Name = "xselectedopmerkinglabel";
-            this.xselectedopmerkinglabel.Size = new System.Drawing.Size(239, 39);
-            this.xselectedopmerkinglabel.TabIndex = 7;
-            this.xselectedopmerkinglabel.Text = "Opmerking Van: ";
             // 
             // OpmerkingenForm
             // 
@@ -370,9 +371,9 @@ namespace Forms
             this.groupBox1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

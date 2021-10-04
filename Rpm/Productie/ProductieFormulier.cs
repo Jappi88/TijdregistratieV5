@@ -457,7 +457,15 @@ namespace Rpm.Productie
                     //doorlooptijd
                     if (startindex > sections.Count - 1) return xreturn;
                     if (double.TryParse(sections[startindex].Text, out double xdoorlooptijd))
+                    {
                         xreturn.DoorloopTijd = xdoorlooptijd;
+                    }
+                    else
+                    {
+                        startindex--;
+                        if (double.TryParse(sections[startindex].Text, out double xxdoorlooptijd))
+                            xreturn.DoorloopTijd = xxdoorlooptijd;
+                    }
                     startindex = sections.FindIndex(startindex, x => x.Text.ToLower().StartsWith("afkeur"));
                     if (startindex < 0)
                         return xreturn;
@@ -668,15 +676,23 @@ namespace Rpm.Productie
             xkey = sections[startindex].Text;
             if (double.TryParse(xkey, out var xaantal))
                 mat._aantal = xaantal;
-            startindex += 3;
+            startindex ++;
             if (startindex > sections.Count - 1) return mat;
             xkey = sections[startindex].Text;
             if (double.TryParse(xkey, out var xps))
                 mat.AantalPerStuk = xps;
-            startindex++;
-            if (startindex > sections.Count - 1) return mat;
-            xkey = sections[startindex].Text;
-            mat.Locatie = xkey;
+            else
+            {
+                startindex += 2;
+                xkey = sections[startindex].Text;
+                if (double.TryParse(xkey, out var xxps))
+                    mat.AantalPerStuk = xxps;
+                startindex++;
+                if (startindex > sections.Count - 1) return mat;
+                xkey = sections[startindex].Text;
+                mat.Locatie = xkey;
+            }
+            
             startindex++;
             return mat;
         }

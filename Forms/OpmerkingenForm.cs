@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Rpm.Mailing;
+using Rpm.Various;
 
 namespace Forms
 {
@@ -46,12 +48,14 @@ namespace Forms
                 var xroot = new TreeNode($"Opmerkingen[{Opmerkingen.Count}]");
                 xroot.Tag = Opmerkingen;
                 xroot.ImageIndex = 0;
+                xroot.SelectedImageIndex = 0;
                 foreach (var op in Opmerkingen)
                 {
                     var tn = new TreeNode(op.Title)
                     {
                         Tag = op,
-                        ImageIndex = op.IsGelezen ? 1 : 2
+                        ImageIndex = op.IsGelezen ? 1 : 2,
+                        SelectedImageIndex = op.IsGelezen ? 1 : 2
                     };
 
                     //voeg de tijd waarop is geplaatst
@@ -62,14 +66,16 @@ namespace Forms
                     var tn1 = new TreeNode($"Reacties[{op.Reacties.Count}]")
                     {
                         Tag = op.Reacties,
-                        ImageIndex = 6
+                        ImageIndex = 6,
+                        SelectedImageIndex = 6
                     };
                     foreach (var rea in op.Reacties)
                     {
                         var reatn = new TreeNode(rea.ReactieVan)
                         {
                             Tag = rea,
-                            ImageIndex = rea.IsGelezen ? 7 : 8
+                            ImageIndex = rea.IsGelezen ? 7 : 8,
+                            SelectedImageIndex = rea.IsGelezen ? 7 : 8
                         };
                         AddNode(reatn,
                             "Gelezen op " + rea.GelezenOp.ToString(CultureInfo.CurrentCulture), 4, rea);
@@ -152,7 +158,8 @@ namespace Forms
             var tn = new TreeNode(text)
             {
                 Tag = tag,
-                ImageIndex = imageindex
+                ImageIndex = imageindex,
+                SelectedImageIndex = imageindex,
             };
 
             parent?.Nodes.Add(tn);
@@ -222,12 +229,18 @@ namespace Forms
 
         private void xOpslaan_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
+            Manager.Opmerkingen.SetNotes(Opmerkingen);
+            foreach (var r in _removed)
+                Manager.Opmerkingen?.Remove(r);
+            _removed.Clear();
+            Manager.Opmerkingen.Save().Wait();
+            Manager.RemoteMessage(new RemoteMessage("Opmerkingen Opgeslagen!", MessageAction.AlgemeneMelding, MsgType.Info));
         }
 
         private void xannuleren_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
+            this.Close();
         }
 
         private void xaddtoolstripbutton_Click(object sender, EventArgs e)
@@ -302,6 +315,8 @@ namespace Forms
             xOpmerkingenTree.SelectedNode = e.Node;
         }
 
+        private List<OpmerkingEntry> _removed = new List<OpmerkingEntry>();
+
         private void xdeletetoolstripbutton_Click(object sender, EventArgs e)
         {
             if (xselectedopmerkingpanel.Tag is OpmerkingEntry xent)
@@ -309,7 +324,10 @@ namespace Forms
                 if (XMessageBox.Show($"Weetje zeker dat je '{xent.Title}' wilt verwijderen?", "Opmerking verwijderen",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
+                    timer1.Stop();
                     Opmerkingen.Remove(xent);
+                    _removed.Add(xent);
+                    SetOpmerkingFields(null);
                     LoadOpmerkingen();
                 }
             }
@@ -333,6 +351,8 @@ namespace Forms
                         xOpmerkingenTree.SelectedNode?.EnsureVisible();
                         return;
                     }
+
+                    SetOpmerkingFields(null);
                     LoadOpmerkingen(op);
                 }
             }
@@ -384,7 +404,9 @@ namespace Forms
             if (xselectedopmerkingpanel.Tag is OpmerkingEntry entry)
             {
                 entry.SetIsGelezen();
+                Manager.Opmerkingen.SetNotes(Opmerkingen);
                 LoadOpmerkingen(entry);
+                Manager.Opmerkingen.Save();
             }
         }
     }

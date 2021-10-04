@@ -19,10 +19,9 @@ namespace Forms
         {
             _Selected = entry ?? new OpmerkingEntry();
             xtitle.Text = string.IsNullOrEmpty(_Selected.Title?.Trim()) ? "Vul in een onderwerp..." : _Selected.Title.Trim();
-            if (_Selected.Ontvangers == null || _Selected.Ontvangers.Count == 0)
-                xontvangers.SelectedIndex = 1;
-            else
+            if (_Selected.Ontvangers is {Count: > 0})
                 xontvangers.Text = string.Join(";", _Selected.Ontvangers);
+            else  xontvangers.SelectedIndex = 1;
             xopmerking.Text = string.IsNullOrEmpty(_Selected.Opmerking?.Trim()) ? "Vul in een vraag, opmerking of een verzoek..." : _Selected.Opmerking.Trim();
             xgeplaatstOpLabel.Text = _Selected.GeplaatstOp.ToString(CultureInfo.CurrentCulture);
         }

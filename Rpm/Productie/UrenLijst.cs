@@ -99,7 +99,8 @@ namespace Rpm.Productie
                     {
                         var xent = Uren[i];
                         if (xent.ExtraTijd != null) continue;
-                        var xr = xent.WerkRooster;                        
+                        var xr = xent.WerkRooster;
+                        if (xr == null) continue;
                         if (xent.Start.TimeOfDay < xr.StartWerkdag || xent.Start.TimeOfDay > xr.EindWerkdag)
                             xent.Start = Werktijd.EerstVolgendeWerkdag(xent.Start, ref xr, xr, SpecialeRoosters);
                         if (xent.Stop.TimeOfDay > xr.EindWerkdag)

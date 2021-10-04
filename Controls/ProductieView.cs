@@ -73,6 +73,7 @@ namespace Controls
         private static LogForm _logform;
         private static RangeCalculatorForm _calcform = null;
         private static ChatForm _chatform;
+        private static OpmerkingenForm _opmerkingform;
         public bool ShowUnreadMessage { get; set; }
 
         // [NonSerialized] private Opties _opties;
@@ -107,6 +108,8 @@ namespace Controls
                 _manager.InitManager();
                 InitEvents();
                 await _manager.Load(path, autologin, true, true);
+                if (Manager.Opmerkingen != null)
+                    Manager.Opmerkingen.OnOpmerkingenChanged += Opmerkingen_OnOpmerkingenChanged;
                 // _manager.StartMonitor();
                 FormLoaded();
             }
@@ -134,7 +137,6 @@ namespace Controls
             //Manager.OnDbEndUpdate += Manager_OnDbEndUpdate;
             Manager.OnManagerLoaded += _manager_OnManagerLoaded;
             Manager.FilterChanged += Manager_FilterChanged;
-
             ProductieChat.MessageRecieved += ProductieChat_MessageRecieved;
             ProductieChat.GebruikerUpdate += ProductieChat_GebruikerUpdate;
 
@@ -150,6 +152,11 @@ namespace Controls
             werkPlekkenUI1.InitEvents();
             werkPlekkenUI1.OnRequestOpenWerk += WerkPlekkenUI1_OnRequestOpenWerk;
             werkPlekkenUI1.OnPlekkenChanged += WerkPlekkenUI1_OnPlekkenChanged;
+        }
+
+        private void Opmerkingen_OnOpmerkingenChanged(object sender, EventArgs e)
+        {
+          UpdateUnreadOpmerkingen();
         }
 
         private void Manager_FilterChanged(object sender, EventArgs e)
@@ -194,7 +201,8 @@ namespace Controls
             Manager.OnLoginChanged -= _manager_OnLoginChanged;
             Manager.OnSettingsChanging -= _manager_OnSettingsChanging;
             Manager.FilterChanged -= Manager_FilterChanged;
-
+            if (Manager.Opmerkingen != null)
+                Manager.Opmerkingen.OnOpmerkingenChanged -= Opmerkingen_OnOpmerkingenChanged;
             ProductieChat.MessageRecieved -= ProductieChat_MessageRecieved;
             ProductieChat.GebruikerUpdate -= ProductieChat_GebruikerUpdate;
 
@@ -1329,6 +1337,60 @@ namespace Controls
             }));
         }
 
+        public void UpdateUnreadOpmerkingen()
+        {
+            BeginInvoke(new Action(() =>
+            {
+                try
+                {
+                    if (Manager.Opmerkingen?.OpmerkingenLijst == null) return;
+                    var unread = Manager.Opmerkingen.GetUnreadNotes();
+                    if (unread.Count > 0)
+                    {
+                        var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White,
+                            unread.Count.ToString(),
+                            new Font("Ariel", 16, FontStyle.Bold), Color.DarkRed);
+                        xopmerkingentoolstripbutton.Image = Resources.notes_office_page_papers_32x32.CombineImage(ximg, 1.75);
+                    }
+                    else
+                    {
+                        xopmerkingentoolstripbutton.Image = Resources.notes_office_page_papers_32x32;
+                    }
+
+                    if (_opmerkingform != null)
+                    {
+                        if (_opmerkingform.WindowState == FormWindowState.Minimized)
+                            _opmerkingform.WindowState = FormWindowState.Normal;
+                        //if (user != null)
+                        //    _chatform.SelectedUser(user);
+                        _opmerkingform.Show();
+                        _opmerkingform.BringToFront();
+                        _opmerkingform.Focus();
+                    }
+                    else if (unread.Count > 0 && ShowUnreadMessage)
+                    {
+                            Application.OpenForms["SplashScreen"]?.Close();
+                            var xv = unread.Count == 1 ? "opmerking" : "opmerkingen";
+                            var bttns = new Dictionary<string, DialogResult>();
+                            bttns.Add("OK", DialogResult.OK);
+                            bttns.Add("Toon Opmerkingen", DialogResult.Yes);
+                            var xmsgBox = new XMessageBox();
+                            var result = xmsgBox.ShowDialog(
+                                $"Je hebt {unread.Count} ongelezen {xv}",
+                                $"{unread.Count} ongelezen {xv}", MessageBoxButtons.OK, MessageBoxIcon.None, null,
+                                bttns);
+                            xmsgBox.Dispose();
+                            if (result == DialogResult.Yes)
+                                ShowOpmerkingWindow();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }));
+        }
+
         #endregion Methods
 
         #region MenuButton Methods
@@ -1497,6 +1559,26 @@ namespace Controls
                 _chatform.WindowState = FormWindowState.Normal;
             _chatform.BringToFront();
             _chatform.Focus();
+        }
+
+        public static void ShowOpmerkingWindow(string username = null)
+        {
+            if (_opmerkingform == null)
+            {
+                _opmerkingform = new OpmerkingenForm();
+                _opmerkingform.LoadOpmerkingen();
+                _opmerkingform.FormClosed += (x, y) =>
+                {
+                    _opmerkingform?.Dispose();
+                    _opmerkingform = null;
+                };
+            }
+
+            _opmerkingform.Show();
+            if (_opmerkingform.WindowState == FormWindowState.Minimized)
+                _opmerkingform.WindowState = FormWindowState.Normal;
+            _opmerkingform.BringToFront();
+            _opmerkingform.Focus();
         }
 
         public static void ShowOnderbrekeningenWidow()
@@ -1812,130 +1894,9 @@ namespace Controls
                 xbewerkingListControl.ProductieLijst.RestoreState(Manager.Opties.ViewDataBewerkingenState);
         }
 
-        private void xstartb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xstopb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xopenproductieb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xmeldgereedb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xdeelgereedmeldingenb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xwerkplekkenb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xwijzigformb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xbewleverDatumToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void aantalToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xbewnotitieToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xwerktijdenb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xonderbrekingb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xaantalgemaaktb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xverpakkingb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xmaterialenb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xaanbevolenpersb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xtoonpdfb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xexportexcel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xproductieInfob_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xbewerkingeninfob_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xafkeurb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xverwijderb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void xzetterugb_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void xopmerkingentoolstripbutton_Click(object sender, EventArgs e)
         {
-            var xopm = new OpmerkingenForm();
-            xopm.LoadOpmerkingen();
-            if (xopm.ShowDialog() == DialogResult.OK)
-            {
-                Manager.Opmerkingen.SetNotes(xopm.Opmerkingen);
-                Manager.Opmerkingen.Save();
-            }
+            ShowOpmerkingWindow();
         }
     }
 }

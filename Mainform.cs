@@ -298,6 +298,7 @@ namespace ProductieManager
             AutoUpdater.Start();
             productieView1.ShowUnreadMessage = true;
             productieView1.UpdateUnreadMessages(null);
+            productieView1.UpdateUnreadOpmerkingen();
             _splash.Dispose();
             _splash = null;
            

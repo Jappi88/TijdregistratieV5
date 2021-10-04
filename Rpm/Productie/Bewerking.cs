@@ -600,7 +600,8 @@ namespace Rpm.Productie
                                 }
                             }
                         }
-
+                        if(completeremove)
+                            return await Manager.Database.Delete(Parent);
                         var bws = Parent.Bewerkingen.Where(x => !x.Equals(this)).ToArray();
                         var deleted = bws.Length < Parent.Bewerkingen.Length;
                         Parent.Bewerkingen = bws;

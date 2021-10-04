@@ -66,6 +66,23 @@ namespace Rpm.Opmerking
             FilePath = dir + "\\Opmerkingen.rpm";
         }
 
+        public int Remove(OpmerkingEntry entry)
+        {
+            if (entry == null) return -1;
+            try
+            {
+                if (OpmerkingenLijst == null) return -1;
+                return OpmerkingenLijst.RemoveAll(x =>
+                    string.Equals(entry.Title, x.Title, StringComparison.CurrentCultureIgnoreCase) &&
+                    string.Equals(entry.Afzender, x.Afzender, StringComparison.CurrentCultureIgnoreCase));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return -1;
+            }
+        }
+
         public Task<bool> Load()
         {
             return Task.Run(async () =>
