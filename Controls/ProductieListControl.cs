@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Timers;
-using System.Windows.Forms;
-using BrightIdeasSoftware;
+﻿using BrightIdeasSoftware;
 using Forms;
 using MetroFramework.Controls;
 using ProductieManager.Forms;
@@ -16,6 +8,13 @@ using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Timers;
+using System.Windows.Forms;
 using static Forms.RangeCalculatorForm;
 using Timer = System.Timers.Timer;
 
@@ -937,14 +936,22 @@ namespace Controls
                         var prods = ProductieLijst.Objects?.Cast<ProductieFormulier>()?.Where(x =>
                             string.Equals(id, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase)).ToArray();
                         if (prods is { Length: > 0 })
+                        {
                             ProductieLijst.RemoveObjects(prods);
+                            Producties.RemoveAll(x =>
+                                string.Equals(id, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase));
+                        }
                     }
                     else
                     {
                         var bws = ProductieLijst.Objects?.Cast<Bewerking>()?.Where(x =>
                             string.Equals(id, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase)).ToArray();
-                        if (bws is { Length: > 0 })
+                        if (bws is {Length: > 0})
+                        {
                             ProductieLijst.RemoveObjects(bws);
+                            Bewerkingen.RemoveAll(x =>
+                                string.Equals(id, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase));
+                        }
                     }
 
                     OnItemCountChanged();

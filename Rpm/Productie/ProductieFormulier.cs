@@ -551,7 +551,7 @@ namespace Rpm.Productie
 
                         xreturn.Bewerkingen = xbws.ToArray();
                     }
-
+                    else return null;
                     xreturn.Bewerkingen ??= new Bewerking[] { };
                     startindex = sections.FindIndex(startindex,
                         x => x.Text.ToLower().StartsWith("verpakkingsinstructie"));
@@ -660,7 +660,7 @@ namespace Rpm.Productie
             var xkey = sections[startindex].Text;
             if (string.IsNullOrEmpty(xkey) || xkey.Length is < 6 or > 20)
                 return null;
-            bool valid = xkey.All(x => char.IsDigit(x) || char.IsNumber(x) || char.IsUpper(x));
+            bool valid = xkey.All(x => char.IsDigit(x) || char.IsNumber(x) || char.IsUpper(x) || x == '-');
             if (!valid) return null;
             mat.ArtikelNr = xkey;
             startindex++;
@@ -689,8 +689,16 @@ namespace Rpm.Productie
                     mat.AantalPerStuk = xxps;
                 startindex++;
                 if (startindex > sections.Count - 1) return mat;
+                if (sections[startindex].Rect.Left > 30 && sections[startindex].Rect.Left < 32)
+                    return mat;
                 xkey = sections[startindex].Text;
-                mat.Locatie = xkey;
+                var xb = Manager.BewerkingenLijst.GetEntry(xkey);
+                if (xb != null && sections.FindIndex(startindex, 2, x => x.Text == "I") > -1)
+                {
+                    startindex--;
+                }
+                else
+                    mat.Locatie = xkey;
             }
             
             startindex++;
@@ -822,7 +830,7 @@ namespace Rpm.Productie
                     reader.Close();
                     return pfs;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     return null;
                 }
