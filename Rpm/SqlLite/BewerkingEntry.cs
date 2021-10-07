@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using LiteDB;
+using Polenter.Serialization;
 
 namespace Rpm.SqlLite
 {
@@ -32,6 +33,10 @@ namespace Rpm.SqlLite
         [BsonId] public string Naam { get; set; }
 
         public string NewName { get; set; }
+        [ExcludeFromSerialization]
+        public double DoorloopTijd { get; set; }
+        [ExcludeFromSerialization]
+        public string Opmerking { get; set; }
 
         public bool HasChanged => !string.IsNullOrEmpty(NewName) &&
                                   !string.Equals(Naam, NewName, StringComparison.CurrentCultureIgnoreCase);

@@ -355,7 +355,7 @@ namespace Rpm.Productie
             {
                 if (_versie < 2.0)
                 {
-                    if (Bewerkingen != null && Bewerkingen.Length > 0)
+                    if (Bewerkingen is {Length: > 0})
                         foreach (var bew in Bewerkingen)
                         {
                             //update productie 'isbemand' variable
@@ -456,6 +456,7 @@ namespace Rpm.Productie
                     startindex = endindex + 1;
                     //doorlooptijd
                     if (startindex > sections.Count - 1) return xreturn;
+                    
                     if (double.TryParse(sections[startindex].Text, out double xdoorlooptijd))
                     {
                         xreturn.DoorloopTijd = xdoorlooptijd;
@@ -466,84 +467,101 @@ namespace Rpm.Productie
                         if (double.TryParse(sections[startindex].Text, out double xxdoorlooptijd))
                             xreturn.DoorloopTijd = xxdoorlooptijd;
                     }
-                    startindex = sections.FindIndex(startindex, x => x.Text.ToLower().StartsWith("afkeur"));
-                    if (startindex < 0)
-                        return xreturn;
-                    startindex++;
+                    //startindex = sections.FindIndex(startindex, x => x.Text.ToLower().StartsWith("afkeur"));
+                    //if (startindex < 0)
+                    //    return xreturn;
+                    //startindex++;
                     if (startindex > sections.Count - 1) return xreturn;
 
 
-                    var materialen = new List<Materiaal>();
-                    Materiaal mat = null;
-                    while ((mat = GetMateriaalFromSections(sections, ref startindex)) != null)
-                    {
-                        mat.Parent = xreturn;
-                        materialen.Add(mat);
-                    }
-
-                    xreturn.Materialen = materialen;
+                    //var materialen = new List<Materiaal>();
+                    //Materiaal mat = null;
+                    //while ((mat = GetMateriaalFromSections(sections, ref startindex)) != null)
+                    //{
+                    //    mat.Parent = xreturn;
+                    //    materialen.Add(mat);
+                    //}
+                    sections = sections.OrderBy(x => x.Rect.Bottom).Reverse().ToList();
+                    xreturn.Materialen = GetMaterialenFromSections(sections, ref startindex);
+                    startindex++;
                     if (startindex > sections.Count - 1)
                         return xreturn;
-                    Dictionary<BewerkingEntry,string> bws = new Dictionary<BewerkingEntry,string>();
-                    if (endindex > -1)
+                    int xend = sections.FindIndex(startindex, x => x.Text.ToLower().Contains("verpakkingsinstructie"));
+                    if (xend < 0)
+                        xend = sections.Count;
+                    var xsections = sections.GetRange(startindex, xend - startindex).OrderBy(x => x.Rect.Left).ThenBy(x => x.Rect.Bottom).ToList();
+                    int xstart = 0;
+                    Dictionary<string, BewerkingEntry> bws = new Dictionary<string, BewerkingEntry>();
+                    while (true)
                     {
-                        while (true)
+                        if (xstart > xsections.Count - 1)
+                            break;
+                        endindex = xsections.FindIndex(xstart + 1, x => x.Text == "I");
+                        //heeft geen bewerkingen.
+                        if (endindex < 0)
+                            break;
+                        string opmerking = "";
+                        string added = null;
+                        while (xstart < endindex)
                         {
-                            if (startindex > sections.Count - 1)
-                                break;
-                            endindex = sections.FindIndex(startindex + 1, x => x.Text == "I");
-                            //heeft geen bewerkingen.
-                            if (endindex < 0)
-                                break;
-                            string opmerking = "";
-                            BewerkingEntry added = null;
-                            while (startindex < endindex)
+                            if (xsections[xstart].Text == "I")
                             {
-                                if (sections[startindex].Text == "I")
-                                    startindex++;
-                                string xname = sections[startindex].Text;
-                                var xb = Manager.BewerkingenLijst.GetEntry(xname);
-                                if (xb != null)
-                                {
-                                    int xcount = bws.Where(x =>
-                                            string.Equals(xname, x.Key.Naam, StringComparison.CurrentCultureIgnoreCase))
-                                        .ToList().Count;
-                                    if (xcount > 0)
-                                        xb = new BewerkingEntry(xname + $"[{xcount}]", xb.IsBemand, xb.WerkPlekken);
-                                    bws.Add(xb, null);
-                                    added = xb;
-                                }
-                                else opmerking += xname + "\n";
-                                startindex++;
+                                xstart++;
+                                continue;
                             }
-                            if (added != null && bws.ContainsKey(added))
-                                bws[added] = opmerking.TrimEnd('\n');
+                            string xname = xsections[xstart].Text;
+                            var xb = Manager.BewerkingenLijst.GetEntry(xname);
+                            if (xb != null)
+                            {
+                                int xcount = bws.Where(x =>
+                                        x.Key.Split('[')[0].Trim().ToLower().StartsWith(xname.ToLower().Trim()))
+                                    .ToList().Count;
+                                if (xcount > 0)
+                                    xb = new BewerkingEntry(xname + $"[{xcount}]", xb.IsBemand, xb.WerkPlekken);
+                                xb.Opmerking = opmerking?.TrimEnd('\n');
+                                if (!string.IsNullOrEmpty(opmerking))
+                                {
+                                    if (opmerking.ToLower().StartsWith("doorlooptijd"))
+                                    {
+                                        var xvals = opmerking.Trim().Split(':');
+                                        if (xvals.Length > 1 && double.TryParse(xvals[1].Trim(), out var xdouble))
+                                            xb.DoorloopTijd = xdouble;
+                                    }
+                                }
+                                bws.Add(xb.Naam, xb);
+                                opmerking = null;
+                            }
+                            else
+                                opmerking += xname + "\n";
+                            xstart++;
                         }
+
+                       
                     }
 
+                    startindex = xend;
                     if (bws.Count > 0)
                     {
                         var xbws = new List<Bewerking>();
                         foreach (var xs in bws)
                         {
-                            var s = xs.Key;
-                            count = xbws.Sum(x =>
-                                x.Naam.ToLower().Split('[')[0].Trim() == s.Naam.ToLower().Trim()
-                                    ? 1
-                                    : 0);
-                            var naam = s.Naam;
-                            if (count > 0)
-                                naam = $"{s.Naam}[{count - 1}]";
-                            var bw = new Bewerking(Math.Round(xreturn.DoorloopTijd / bws.Count, 2))
+                            var s = xs.Value;
+                            var xdt = s.DoorloopTijd > 0
+                                ? s.DoorloopTijd
+                                : Math.Round(xreturn.DoorloopTijd / bws.Count, 2);
+                            if(!string.IsNullOrEmpty(s.Opmerking))
+                                Console.WriteLine(s.Opmerking);
+                            var bw = new Bewerking()
                             {
+                                DoorloopTijd = xdt,
                                 IsBemand = s.IsBemand,
                                 LeverDatum = xreturn.LeverDatum,
                                 DatumToegevoegd = DateTime.Now,
                                 Parent = xreturn,
                                 Aantal = xreturn.Aantal,
-                                Naam = naam,
+                                Naam = s.Naam,
                                 Omschrijving = xreturn.Omschrijving,
-                                Opmerking = xs.Value,
+                                Opmerking = s.Opmerking,
                                 ProductieNr = xreturn.ProductieNr,
                                 ArtikelNr = xreturn.ArtikelNr,
                                 State = ProductieState.Gestopt
@@ -556,7 +574,8 @@ namespace Rpm.Productie
 
                         xreturn.Bewerkingen = xbws.ToArray();
                     }
-                    else return null;
+                    else
+                        return null;
                     xreturn.Bewerkingen ??= new Bewerking[] { };
                     startindex = sections.FindIndex(startindex,
                         x => x.Text.ToLower().StartsWith("verpakkingsinstructie"));
@@ -658,56 +677,168 @@ namespace Rpm.Productie
             });
         }
 
-        private static Materiaal GetMateriaalFromSections(List<RectAndText> sections, ref int startindex)
+        private static List<Materiaal> GetMaterialenFromSections(List<RectAndText> sections, ref int startindex)
         {
             if (startindex > sections.Count - 1) return null;
-            Materiaal mat = new Materiaal();
-            var xkey = sections[startindex].Text;
-            if (string.IsNullOrEmpty(xkey) || xkey.Length is < 6 or > 20)
-                return null;
-            bool valid = xkey.All(x => char.IsDigit(x) || char.IsNumber(x) || char.IsUpper(x) || x == '-');
-            if (!valid) return null;
-            mat.ArtikelNr = xkey;
-            startindex++;
-            if (startindex > sections.Count - 1) return mat;
-            
-            mat.Omschrijving = sections[startindex].Text;
-            startindex++;
-            if (startindex > sections.Count - 1) return mat;
-            xkey = sections[startindex].Text;
-            mat.Eenheid = xkey;
-            startindex++;
-            if (startindex > sections.Count - 1) return mat;
-            xkey = sections[startindex].Text;
-            if (double.TryParse(xkey, out var xaantal))
-                mat._aantal = xaantal;
-            startindex ++;
-            if (startindex > sections.Count - 1) return mat;
-            xkey = sections[startindex].Text;
-            if (double.TryParse(xkey, out var xps))
-                mat.AantalPerStuk = xps;
-            else
+            List<Materiaal> xreturn = new List<Materiaal>();
+            var xstart = sections.FindIndex(startindex, x => x.Text.ToLower().Trim().Contains("benodigde materialen"));
+            if (xstart < 0)
+                return xreturn;
+            xstart++;
+            int xend = sections.FindIndex(startindex, x => x.Text.ToLower().Trim().Contains("toelichting bewerking"));
+            if (xend < 0)
             {
-                startindex += 2;
-                xkey = sections[startindex].Text;
-                if (double.TryParse(xkey, out var xxps))
-                    mat.AantalPerStuk = xxps;
-                startindex++;
-                if (startindex > sections.Count - 1) return mat;
-                if (sections[startindex].Rect.Left > 30 && sections[startindex].Rect.Left < 32)
-                    return mat;
-                xkey = sections[startindex].Text;
-                var xb = Manager.BewerkingenLijst.GetEntry(xkey);
-                if (xb != null && sections.FindIndex(startindex, 2, x => x.Text == "I") > -1)
-                {
-                    startindex--;
-                }
-                else
-                    mat.Locatie = xkey;
+                xend = sections.FindIndex(startindex, x => x.Text.ToLower().Trim().Contains("verpakkingsinstructie"));
+
+                if (xend < 0)
+                    xend = sections.Count;
             }
             
-            startindex++;
-            return mat;
+            var xsections = sections.GetRange(xstart, 8);
+            xsections.RemoveAll(x => x.Text.ToLower().Contains("telling na"));
+            xsections = xsections.OrderBy(x => x.Rect.Left).ToList();
+            xstart += 8;
+            double xline = -1;
+            Materiaal mat = null;
+            for (int i = xstart; i < xend; i++)
+            {
+                var xcursec = sections[i];
+                if (mat == null)
+                {
+                    mat = new Materiaal();
+                    xline = xcursec.Rect.Bottom;
+                }
+                else if ( i == xend -1 || xcursec.Rect.Bottom < xline)
+                {
+                    xreturn.Add(mat);
+                    mat = new Materiaal();
+                    xline = xcursec.Rect.Bottom;
+                }
+
+                for (int j = 0; j < xsections.Count; j++)
+                {
+                    var first = (j - 1) > 0 ? xsections[j - 1] : xsections[j];
+                    var xlast = (j + 1) < xsections.Count ? xsections[j + 1] : null;
+                    var t = xsections[j];
+                    //switch (t.Text.Trim().ToLower())
+                    // {
+                    //case "art.nr.":
+
+                    bool xvalid = false;
+                    if (xlast != null && xcursec.Rect.Right <= xlast.Rect.Left &&
+                        (first.Rect.Right >= xcursec.Rect.Left || first.Rect.Right <= xcursec.Rect.Left))
+                    {
+                        xvalid = true;
+                        // mat.ArtikelNr = xcursec.Text.Trim();
+                        //xstart++;
+                    }
+                    else if (xlast == null && xcursec.Rect.Left >= first.Rect.Right &&
+                             xcursec.Rect.Right <= t.Rect.Left)
+                    {
+                        xvalid = true;
+                        //mat.ArtikelNr = xcursec.Text.Trim();
+                        // xstart++;
+                    }
+
+                    if (xvalid)
+                    {
+                        var xvalue = xcursec.Text.Trim();
+                        switch (t.Text.Trim().ToLower())
+                        {
+                            case "art.nr.":
+                                mat.ArtikelNr = xvalue;
+                                break;
+                            case "aantal/st":
+                                if (double.TryParse(xvalue, out var xperstuk))
+                                    mat.AantalPerStuk = xperstuk;
+                                break;
+                            case "aantal":
+                                if (double.TryParse(xvalue, out var xaantal))
+                                    mat._aantal = xaantal;
+                                break;
+                            case "eenheid":
+                                mat.Eenheid = xvalue;
+                                break;
+                            case "locatie":
+                                mat.Locatie = xvalue;
+                                break;
+                            case "omschrijving":
+                                mat.Omschrijving = xvalue;
+                                break;
+                            case "afkeur":
+                                break;
+                        }
+
+                        xstart++;
+                        break;
+                    }
+                    //        break;
+                    //    case "aantal/st":
+                    //        break;
+                    //    case "aantal":
+                    //        break;
+                    //    case "eenheid":
+                    //        break;
+                    //    case "locatie":
+                    //        break;
+                    //    case "omschrijving":
+                    //        break;
+                    //    case "afkeur":
+                    //        break;
+                    //}
+                }
+
+
+            }
+
+            startindex = xend;
+            //var xkey = sections[startindex].Text;
+            //if (string.IsNullOrEmpty(xkey) || xkey.Length is < 6 or > 20)
+            //    return null;
+            //bool valid = xkey.All(x => char.IsDigit(x) || char.IsNumber(x) || char.IsUpper(x) || x == '-');
+            //if (!valid) return null;
+            //mat.ArtikelNr = xkey;
+            //startindex++;
+            //if (startindex > sections.Count - 1) return mat;
+            
+            //mat.Omschrijving = sections[startindex].Text;
+            //startindex++;
+            //if (startindex > sections.Count - 1) return mat;
+            //xkey = sections[startindex].Text;
+            //mat.Eenheid = xkey;
+            //startindex++;
+            //if (startindex > sections.Count - 1) return mat;
+            //xkey = sections[startindex].Text;
+            //if (double.TryParse(xkey, out var xaantal))
+            //    mat._aantal = xaantal;
+            //startindex ++;
+            //if (startindex > sections.Count - 1) return mat;
+            //xkey = sections[startindex].Text;
+            //if (double.TryParse(xkey, out var xps))
+            //    mat.AantalPerStuk = xps;
+            //else
+            //{
+            //    startindex += 2;
+            //    xkey = sections[startindex].Text;
+            //    if (double.TryParse(xkey, out var xxps))
+            //        mat.AantalPerStuk = xxps;
+            //    startindex++;
+            //    if (startindex > sections.Count - 1) return mat;
+            //    if (sections[startindex].Rect.Left is > 30 and < 32)
+            //        return mat;
+            //    xkey = sections[startindex].Text;
+            //    var xb = Manager.BewerkingenLijst.GetEntry(xkey);
+            //    if (xb != null && sections.FindIndex(startindex, 2, x => x.Text == "I") > -1)
+            //    {
+            //        startindex--;
+            //    }
+            //    else
+            //        mat.Locatie = xkey;
+            //}
+            
+            //startindex++;
+            //return mat;
+            return xreturn;
         }
 
         public static Task<List<ProductieFormulier>> FromPdf(byte[] data)

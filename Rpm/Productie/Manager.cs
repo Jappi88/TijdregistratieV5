@@ -769,6 +769,9 @@ namespace Rpm.Productie
                     if (await Database.Exist(prod))
                     {
                         prod = await Database.GetProductie(prod.ProductieNr);
+                        if (prod == null)
+                            return new RemoteMessage("Er is iets fout gegaan bij toevoegen van een Productie",
+                                MessageAction.AlgemeneMelding, MsgType.Fout);
                         return new RemoteMessage(
                             $"Productie [{prod.ProductieNr}] bestaat al, en kan niet nogmaals worden toegevoegd!",
                             MessageAction.ProductieWijziging, MsgType.Waarschuwing, null, prod, prod.ProductieNr);
