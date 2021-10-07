@@ -505,6 +505,11 @@ namespace Rpm.Productie
                                 var xb = Manager.BewerkingenLijst.GetEntry(xname);
                                 if (xb != null)
                                 {
+                                    int xcount = bws.Where(x =>
+                                            string.Equals(xname, x.Key.Naam, StringComparison.CurrentCultureIgnoreCase))
+                                        .ToList().Count;
+                                    if (xcount > 0)
+                                        xb = new BewerkingEntry(xname + $"[{xcount}]", xb.IsBemand, xb.WerkPlekken);
                                     bws.Add(xb, null);
                                     added = xb;
                                 }
