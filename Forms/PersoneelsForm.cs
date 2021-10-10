@@ -818,15 +818,12 @@ namespace Forms
 
     private async void zetOpNonActiefToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        var permodel = xuserlist.SelectedObject as PersoneelModel;
-        if (permodel != null && XMessageBox.Show($"Weet je zeker dat je {permodel.Naam} op non actief wilt zetten?",
+        if (xuserlist.SelectedObject is PersoneelModel permodel && XMessageBox.Show($"Weet je zeker dat je {permodel.Naam} op non actief wilt zetten?",
             "Non Actief Zetten", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
         {
             if (await permodel.PersoneelLid.ZetOpInactief())
             {
                 UpdateUserFields(permodel);
-                XMessageBox.Show($"{permodel.PersoneelLid.PersoneelNaam} is op non actief gezet.", "Inactief",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
@@ -839,10 +836,9 @@ namespace Forms
 
     private void OpenSelectedVaardigheden()
     {
-        if (xuserlist.SelectedObject != null && xuserlist.SelectedObject is PersoneelModel)
+        if (xuserlist.SelectedObject is PersoneelModel)
         {
-            var model = xuserlist.SelectedObject as PersoneelModel;
-            if (model != null)
+            if (xuserlist.SelectedObject is PersoneelModel model)
             {
                 var vf = new VaardighedenForm(model.PersoneelLid);
                 vf.ShowDialog();
@@ -952,8 +948,7 @@ namespace Forms
 
     private void xuserlist_CellToolTipShowing(object sender, ToolTipShowingEventArgs e)
     {
-        var wp = e.Model as PersoneelModel;
-        if (wp != null)
+        if (e.Model is PersoneelModel wp)
         {
             e.Title = $"{wp.Naam}";
             e.Text = "";

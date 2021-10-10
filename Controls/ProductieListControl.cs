@@ -309,11 +309,12 @@ namespace Controls
                         Invoke(new MethodInvoker(() => valid = !IsDisposed));
                         if (!valid) break;
                     }
+
+                    
                 }
                 catch (Exception e)
                 {
                 }
-
                 xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
             });
         }
@@ -575,87 +576,94 @@ namespace Controls
         public void UpdateProductieList(bool reload, bool showwaitui = true)
         {
             if (_loadingproductielist || Manager.Opties == null || !CanLoad) return;
-
-            Invoke(new MethodInvoker(async () =>
+            try
             {
-                if (showwaitui)
-                    SetWaitUI();
-                try
+                Invoke(new MethodInvoker(async () =>
                 {
-                    _loadingproductielist = true;
-                    InitFilterStrips();
-                    var selected1 = ProductieLijst.SelectedObject;
-                    var groups1 = ProductieLijst.Groups.Cast<ListViewGroup>().Select(t => (OLVGroup)t.Tag)
-                        .Where(x => x.Collapsed)
-                        .ToArray();
-                    // Manager.Opties.ProductieWeergaveFilters = GetCurrentProductieViewStates();
-                    var states = GetCurrentViewStates();
-
-                    var xlistcount = ProductieLijst.Items.Count;
-
-                    if (!IsBewerkingView)
+                    if (showwaitui)
+                        SetWaitUI();
+                    try
                     {
-                        if (CanLoad)
+                        _loadingproductielist = true;
+                        InitFilterStrips();
+                        var selected1 = ProductieLijst.SelectedObject;
+                        var groups1 = ProductieLijst.Groups.Cast<ListViewGroup>().Select(t => (OLVGroup) t.Tag)
+                            .Where(x => x.Collapsed)
+                            .ToArray();
+                        // Manager.Opties.ProductieWeergaveFilters = GetCurrentProductieViewStates();
+                        var states = GetCurrentViewStates();
+
+                        var xlistcount = ProductieLijst.Items.Count;
+
+                        if (!IsBewerkingView)
                         {
-                            var xprods = !reload && CustomList && Producties != null
-                                ? Producties.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
+                            if (CanLoad)
+                            {
+                                var xprods = !reload && CustomList && Producties != null
+                                    ? Producties.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
+                                        .ToList()
+                                    : Producties = await Manager.GetProducties(states, true, !IsBewerkingView);
+                                if (ValidHandler != null)
+                                    xprods = xprods.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
+                                        .ToList();
+                                else
+                                    xprods = xprods.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter(), states, true))
+                                        .ToList();
+                                ProductieLijst.BeginUpdate();
+                                ProductieLijst.SetObjects(xprods);
+                                ProductieLijst.EndUpdate();
+                            }
+                        }
+                        else if (CanLoad)
+                        {
+                            var bws = !reload && CustomList && Bewerkingen != null
+                                ? Bewerkingen.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
                                     .ToList()
-                                : Producties = await Manager.GetProducties(states, true, !IsBewerkingView);
+                                : Bewerkingen = await Manager.GetBewerkingen(states, true);
                             if (ValidHandler != null)
-                                xprods = xprods.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
+                                bws = bws.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
                                     .ToList();
                             else
-                                xprods = xprods.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter(), states, true))
-                                    .ToList();
+                                bws = bws.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter())).ToList();
                             ProductieLijst.BeginUpdate();
-                            ProductieLijst.SetObjects(xprods);
+                            ProductieLijst.SetObjects(bws);
                             ProductieLijst.EndUpdate();
                         }
-                    }
-                    else if (CanLoad)
-                    {
-                        var bws = !reload && CustomList && Bewerkingen != null
-                            ? Bewerkingen.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
-                                .ToList()
-                            : Bewerkingen = await Manager.GetBewerkingen(states, true);
-                        if (ValidHandler != null)
-                            bws = bws.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
-                                .ToList();
-                        else
-                            bws = bws.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter())).ToList();
-                        ProductieLijst.BeginUpdate();
-                        ProductieLijst.SetObjects(bws);
+
+                        var xgroups = ProductieLijst.Groups.Cast<ListViewGroup>().ToList();
+                        if (groups1.Length > 0)
+                            for (var i = 0; i < xgroups.Count; i++)
+                            {
+                                var group = xgroups[i].Tag as OLVGroup;
+                                if (@group == null)
+                                    continue;
+                                if (groups1.Any(t => !@group.Collapsed && t.Header == @group.Header))
+                                    @group.Collapsed = true;
+                            }
+
+                        ProductieLijst.SelectedObject = selected1;
+                        ProductieLijst.SelectedItem?.EnsureVisible();
                         ProductieLijst.EndUpdate();
+                        SetButtonEnable();
+                        if (xlistcount != ProductieLijst.Items.Count)
+                            OnItemCountChanged();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
                     }
 
-                    var xgroups = ProductieLijst.Groups.Cast<ListViewGroup>().ToList();
-                    if (groups1.Length > 0)
-                        for (var i = 0; i < xgroups.Count; i++)
-                        {
-                            var group = xgroups[i].Tag as OLVGroup;
-                            if (@group == null)
-                                continue;
-                            if (groups1.Any(t => !@group.Collapsed && t.Header == @group.Header))
-                                @group.Collapsed = true;
-                        }
+                    _loadingproductielist = false;
+                    if (EnableSync)
+                        StartSync();
+                    StopWait();
+                }));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
-                    ProductieLijst.SelectedObject = selected1;
-                    ProductieLijst.SelectedItem?.EnsureVisible();
-                    ProductieLijst.EndUpdate();
-                    SetButtonEnable();
-                    if (xlistcount != ProductieLijst.Items.Count)
-                        OnItemCountChanged();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-
-                _loadingproductielist = false;
-                if (EnableSync)
-                    StartSync();
-                StopWait();
-            }));
         }
 
         public bool UpdateFormulier(ProductieFormulier form)

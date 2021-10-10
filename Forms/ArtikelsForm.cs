@@ -71,12 +71,13 @@ namespace Forms
                         Invoke(new MethodInvoker(() => valid = !IsDisposed));
                         if (!valid) break;
                     }
+                    xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
                 }
                 catch (Exception e)
                 {
                 }
 
-                xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
+                
             });
         }
 
