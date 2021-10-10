@@ -207,7 +207,7 @@ namespace Rpm.Productie
                         break;
 
                     case MessageAction.NieweProductie:
-                        if (message.Value is ProductieFormulier pr) await Manager.AddProductie(pr);
+                        if (message.Value is ProductieFormulier pr) await Manager.AddProductie(pr,true);
                         break;
                     case MessageAction.AlgemeneMelding:
                         break;

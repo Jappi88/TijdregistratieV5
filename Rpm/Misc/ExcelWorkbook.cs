@@ -8,9 +8,12 @@ using Rpm.Productie;
 using Rpm.Various;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using NPOI.HSSF.UserModel;
+
 // ReSharper disable All
 
 namespace Rpm.Misc
@@ -26,8 +29,8 @@ namespace Rpm.Misc
         public static string[] ProductieColumns =
         {
             "ArtikelNr", "ProductieNr", "Omschrijving", "Bewerking Naam", "Status",
-            "Start Datum", "Eind Datum", "Tijd Gewerkt", "Productie Aantal",
-            "Aantal Gemaakt", "Actueel P/u", "Per Uur","Afwijking P/u","Gemiddeld Actueel P/u", "Afwijking Gemiddeld P/u", "Aantal Personen",
+            "Start Datum", "Eind Datum", "Tijd Gewerkt(uur)", "Productie Aantal",
+            "Aantal Gemaakt", "Actueel P/u", "Per Uur","Afwijking P/u(%)","Gemiddeld Actueel P/u", "Gemiddeld Afwijking P/u(%)", "Aantal Personen",
             "Werkplekken", "Personen"
         };
 
@@ -271,7 +274,7 @@ namespace Rpm.Misc
             if (producties.Count == 0) return 0;
             switch (type.ToLower())
             {
-                case "tijd gewerkt":
+                case "tijd gewerkt(uur)":
                     return Math.Round(producties.Sum(x => x.TijdAanGewerkt(bereik.Start, bereik.Stop)), 2);
                 case "aantal gemaakt":
                     double done = 0;
@@ -496,16 +499,31 @@ namespace Rpm.Misc
                 double totaaltg = 0;
                 //var allbws = producties.Select(x => x.Bewerkingen).ToArray();
                 var personeel = new List<string>();
-               cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11);
+               
+                string lastid = null;
+                short rowcolor = IndexedColors.White.Index;
                 foreach (var bw in producties)
                 {
+                    if (!string.Equals(lastid, bw.ArtikelNr, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        rowcolor = rowcolor == IndexedColors.LightGreen.Index ? IndexedColors.White.Index : IndexedColors.LightGreen.Index;
+                        lastid = bw.ArtikelNr;
+                    }
+                    cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11);
+                    cellStyleBorder.FillBackgroundColor = rowcolor;
+                    cellStyleBorder.FillPattern = FillPattern.FineDots;
+                    cellStyleBorder.FillForegroundColor = IndexedColors.White.Index;
+                    var ffont = workbook.CreateFont();
+                    ffont.FontHeightInPoints = 12;
+                    ffont.Color = HSSFColor.Black.Index;
+                    cellStyleBorder.SetFont(ffont);
                     var tg = bereik == null ? bw.TijdAanGewerkt() : bw.TijdAanGewerkt(bereik.Start, bereik.Stop);
                     //if (tg <= 0) continue;
                     row = sheet.CreateRow(rowindex);
                     row.HeightInPoints = 15;
                     //Fill Green if Passing Score
 
-                    var formatting = CreateRowConditionalFormatRules(sheet, rowindex + 1, ProductieColumns.Length);
+                    //var formatting = CreateRowConditionalFormatRules(sheet, rowindex + 1, ProductieColumns.Length);
                     cellindex = 0;
                     
                     foreach (var xrow in ProductieColumns)
@@ -540,7 +558,7 @@ namespace Rpm.Misc
                 row = sheet.CreateRow(rowindex);
                 CreateCell(row, 0, "Totaal", cellStyleBorder);
 
-                cellindex = GetProductieColumnIndex("tijd gewerkt");
+                cellindex = GetProductieColumnIndex("tijd gewerkt(uur)");
                 var xs = GetColumnName(cellindex);
                 CreateCellFormula(row, cellindex, $"SUM({xs}2:{xs}{rowindex})", cellStyleBorder);
 
@@ -983,7 +1001,7 @@ namespace Rpm.Misc
                     return bew.GestartOp().ToString();
                 case "eind datum":
                     return bew.GestoptOp().ToString();
-                case "tijd gewerkt":
+                case "tijd gewerkt(uur)":
                     return vanaf == null? bew.TijdAanGewerkt() : bew.TijdAanGewerkt(vanaf.Start, vanaf.Stop);
                 case "productie aantal":
                     return bew.Aantal;
@@ -993,17 +1011,17 @@ namespace Rpm.Misc
                     return bew.ActueelProductenPerUur();
                 case "per uur":
                     return bew.PerUur;
-                case "afwijking p/u":
+                case "afwijking p/u(%)":
                     format = "0.00%";
                     if (bew.ProcentAfwijkingPerUur != 0)
-                        return (double) (bew.ProcentAfwijkingPerUur / 100);
+                        return Math.Round((double) (bew.ProcentAfwijkingPerUur / 100), 2);
                     else return 0;
                 case "gemiddeld actueel p/u":
                     return bew.GemiddeldActueelPerUur;
-                case "afwijking gemiddeld p/u":
+                case "gemiddeld afwijking p/u(%)":
                     format = "0.00%";
                     if (bew.GemiddeldProcentAfwijkingPerUur != 0)
-                        return (double)(bew.GemiddeldProcentAfwijkingPerUur / 100);
+                        return Math.Round((double)(bew.GemiddeldProcentAfwijkingPerUur / 100),2);
                     else return 0;
                 case "aantal personen":
                     return bew.AantalPersonen;

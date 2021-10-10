@@ -53,6 +53,7 @@
             this.xstopb = new System.Windows.Forms.Button();
             this.xindelingb = new System.Windows.Forms.Button();
             this.xstartb = new System.Windows.Forms.Button();
+            this.xverpakking = new System.Windows.Forms.Button();
             this.xpanelcontainer = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -62,7 +63,7 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.xstatusimage = new System.Windows.Forms.PictureBox();
             this.mainMenu1 = new Controls.MainMenu();
-            this.xverpakking = new System.Windows.Forms.Button();
+            this.materialenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -77,18 +78,19 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aantalTeMakenToolStripMenuItem,
             this.leverdatumToolStripMenuItem,
+            this.materialenToolStripMenuItem,
             this.xprodafkeurtoolstrip,
             this.notitieToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(178, 156);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(208, 216);
             // 
             // aantalTeMakenToolStripMenuItem
             // 
             this.aantalTeMakenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.hashtag_icon_152828_32_32;
             this.aantalTeMakenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.aantalTeMakenToolStripMenuItem.Name = "aantalTeMakenToolStripMenuItem";
-            this.aantalTeMakenToolStripMenuItem.Size = new System.Drawing.Size(177, 38);
-            this.aantalTeMakenToolStripMenuItem.Text = "&Aantal Te Maken";
+            this.aantalTeMakenToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
+            this.aantalTeMakenToolStripMenuItem.Text = "Aantal Te Maken";
             this.aantalTeMakenToolStripMenuItem.Click += new System.EventHandler(this.aantalTeMakenToolStripMenuItem_Click);
             // 
             // leverdatumToolStripMenuItem
@@ -96,8 +98,8 @@
             this.leverdatumToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.systemtime_778_32_32;
             this.leverdatumToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.leverdatumToolStripMenuItem.Name = "leverdatumToolStripMenuItem";
-            this.leverdatumToolStripMenuItem.Size = new System.Drawing.Size(177, 38);
-            this.leverdatumToolStripMenuItem.Text = "&Leverdatum";
+            this.leverdatumToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
+            this.leverdatumToolStripMenuItem.Text = "Leverdatum";
             this.leverdatumToolStripMenuItem.Click += new System.EventHandler(this.leverdatumToolStripMenuItem_Click);
             // 
             // xprodafkeurtoolstrip
@@ -105,7 +107,7 @@
             this.xprodafkeurtoolstrip.Image = global::ProductieManager.Properties.Resources.bin_icon_icons_com_32x32;
             this.xprodafkeurtoolstrip.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xprodafkeurtoolstrip.Name = "xprodafkeurtoolstrip";
-            this.xprodafkeurtoolstrip.Size = new System.Drawing.Size(177, 38);
+            this.xprodafkeurtoolstrip.Size = new System.Drawing.Size(207, 38);
             this.xprodafkeurtoolstrip.Text = "Afkeur";
             this.xprodafkeurtoolstrip.ToolTipText = "Vul in product afkeur";
             this.xprodafkeurtoolstrip.Click += new System.EventHandler(this.xprodafkeurtoolstrip_Click);
@@ -115,8 +117,8 @@
             this.notitieToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Note_34576_32x32;
             this.notitieToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.notitieToolStripMenuItem.Name = "notitieToolStripMenuItem";
-            this.notitieToolStripMenuItem.Size = new System.Drawing.Size(177, 38);
-            this.notitieToolStripMenuItem.Text = "&Notitie";
+            this.notitieToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
+            this.notitieToolStripMenuItem.Text = "Notitie";
             this.notitieToolStripMenuItem.Click += new System.EventHandler(this.notitieToolStripMenuItem_Click);
             // 
             // groupBox3
@@ -264,6 +266,26 @@
             this.toolTip1.SetToolTip(this.xstartb, "Start of stop de bewerking");
             this.xstartb.UseVisualStyleBackColor = true;
             this.xstartb.Click += new System.EventHandler(this.xstartb_Click);
+            // 
+            // xverpakking
+            // 
+            this.xverpakking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xverpakking.ContextMenuStrip = this.contextMenuStrip1;
+            this.xverpakking.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xverpakking.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xverpakking.ForeColor = System.Drawing.Color.Black;
+            this.xverpakking.Image = global::ProductieManager.Properties.Resources.package_box_10801;
+            this.xverpakking.Location = new System.Drawing.Point(4, 302);
+            this.xverpakking.Margin = new System.Windows.Forms.Padding(4);
+            this.xverpakking.Name = "xverpakking";
+            this.xverpakking.Size = new System.Drawing.Size(177, 40);
+            this.xverpakking.TabIndex = 4;
+            this.xverpakking.Text = "Verpakking";
+            this.xverpakking.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xverpakking, "Bekijk of wijzig de verpakkingsinstructies");
+            this.xverpakking.UseVisualStyleBackColor = true;
+            this.xverpakking.Click += new System.EventHandler(this.xverpakking_Click);
             // 
             // xpanelcontainer
             // 
@@ -504,25 +526,15 @@
             this.mainMenu1.TabIndex = 4;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
             // 
-            // xverpakking
+            // materialenToolStripMenuItem
             // 
-            this.xverpakking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xverpakking.ContextMenuStrip = this.contextMenuStrip1;
-            this.xverpakking.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xverpakking.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xverpakking.ForeColor = System.Drawing.Color.Black;
-            this.xverpakking.Image = global::ProductieManager.Properties.Resources.package_box_10801;
-            this.xverpakking.Location = new System.Drawing.Point(4, 302);
-            this.xverpakking.Margin = new System.Windows.Forms.Padding(4);
-            this.xverpakking.Name = "xverpakking";
-            this.xverpakking.Size = new System.Drawing.Size(177, 40);
-            this.xverpakking.TabIndex = 4;
-            this.xverpakking.Text = "Verpakking";
-            this.xverpakking.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xverpakking, "Bekijk of wijzig de verpakkingsinstructies");
-            this.xverpakking.UseVisualStyleBackColor = true;
-            this.xverpakking.Click += new System.EventHandler(this.xverpakking_Click);
+            this.materialenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.pngegg__1_;
+            this.materialenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.materialenToolStripMenuItem.Name = "materialenToolStripMenuItem";
+            this.materialenToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
+            this.materialenToolStripMenuItem.Text = "Materialen";
+            this.materialenToolStripMenuItem.ToolTipText = "Beheer materialen";
+            this.materialenToolStripMenuItem.Click += new System.EventHandler(this.materialenToolStripMenuItem_Click);
             // 
             // ProductieForm
             // 
@@ -569,5 +581,6 @@
         private System.Windows.Forms.Button xnoteButton;
         private System.Windows.Forms.TextBox xnoteTextbox;
         private System.Windows.Forms.Button xverpakking;
+        private System.Windows.Forms.ToolStripMenuItem materialenToolStripMenuItem;
     }
 }

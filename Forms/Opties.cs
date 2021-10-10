@@ -204,6 +204,7 @@ namespace Forms
             xcreatebackup.Checked = x.CreateBackup;
             xmaxbackups.SetValue(x.MaxBackupCount);
             xtoonlognotificatie.Checked = x.ToonLogNotificatie;
+            xtoonproductieNaToevoegen.Checked = x.ToonProductieNaToevoegen;
             xoffdbsyncinterval.SetValue(Manager.DefaultSettings.OfflineDbSyncInterval);
             //Zet de offline database gegevens.
             xoffprodcheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Producties) > -1;
@@ -386,7 +387,8 @@ namespace Forms
             xs.MinimizeToTray = xminimizenatray.Checked;
             xs.ToonAlleGestartProducties = xtoonallegestartproducties.Checked;
             xs.ToonProductieLogs = xtoonproductielogs.Checked;
-            
+            xs.ToonProductieNaToevoegen = xtoonproductieNaToevoegen.Checked;
+
             xs.WeekOverzichtPath = xweekoverzichtpath.Text.Trim();
             xs.CreateWeekOverzichten = xmaakoverichtenaan.Checked;
             xs.DoCurrentWeekOverzicht = xdocurrentweekoverzicht.Checked;

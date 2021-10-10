@@ -856,7 +856,7 @@ namespace Controls
                                 BeginInvoke(new MethodInvoker(async () =>
                                 {
                                     var form = AddProduction.Formulier;
-                                    var msg = await Manager.AddProductie(form);
+                                    var msg = await Manager.AddProductie(form,false);
                                     Manager.RemoteMessage(msg);
                                 }));
 
@@ -873,7 +873,7 @@ namespace Controls
                                 BeginInvoke(new MethodInvoker(async () =>
                                 {
                                     var files = ofd.FileNames;
-                                    await _manager.AddProductie(files, false, true);
+                                    await _manager.AddProductie(files,true, false, true);
                                 }));
                             break;
                         case "xquickproductie":

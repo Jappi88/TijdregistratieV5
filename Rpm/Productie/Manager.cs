@@ -760,21 +760,39 @@ namespace Rpm.Productie
         /// </summary>
         /// <param name="prod">De productieformulier om toe te voegen</param>
         /// <returns>Een taak die op de achtergrond een productie toevoegd</returns>
-        public static Task<RemoteMessage> AddProductie(ProductieFormulier prod)
+        public static Task<RemoteMessage> AddProductie(ProductieFormulier prod, bool updateifexist)
         {
             return Task.Run(async () =>
             {
                 try
                 {
+                    ProductieFormulier xprod = null;
                     if (await Database.Exist(prod))
                     {
-                        prod = await Database.GetProductie(prod.ProductieNr);
-                        if (prod == null)
+                        xprod = await Database.GetProductie(prod.ProductieNr);
+                        if (xprod == null)
                             return new RemoteMessage("Er is iets fout gegaan bij toevoegen van een Productie",
                                 MessageAction.AlgemeneMelding, MsgType.Fout);
-                        return new RemoteMessage(
-                            $"Productie [{prod.ProductieNr}] bestaat al, en kan niet nogmaals worden toegevoegd!",
-                            MessageAction.ProductieWijziging, MsgType.Waarschuwing, null, prod, prod.ProductieNr);
+                        if (updateifexist || (xprod.Bewerkingen == null || xprod.Bewerkingen.Length == 0))
+                        {
+                            if (await xprod.UpdateFieldsFrom(prod) && await Database.UpSert(xprod,
+                                $"[{xprod.ArtikelNr}|{xprod.ProductieNr}] geupdate!",false))
+                            {
+                                return new RemoteMessage(
+                                    $"Productie [{prod.ProductieNr}] geupdate!",
+                                    MessageAction.ProductieWijziging, MsgType.Info, null, prod,
+                                    prod.ProductieNr);
+                            }
+                            else
+                                return new RemoteMessage(
+                                    $"Productie [{prod.ProductieNr}] bestaat al, en kan niet nogmaals worden toegevoegd!",
+                                    MessageAction.ProductieWijziging, MsgType.Waarschuwing, null, prod,
+                                    prod.ProductieNr);
+                        }
+                        else
+                            return new RemoteMessage(
+                                $"Productie [{prod.ProductieNr}] bestaat al, en kan niet nogmaals worden toegevoegd!",
+                                MessageAction.ProductieWijziging, MsgType.Waarschuwing, null, prod, prod.ProductieNr);
 
                     }
                     var xa = prod.Aantal == 1 ? "stuk" : "stuks";
@@ -784,7 +802,7 @@ namespace Rpm.Productie
                        return new RemoteMessage($"Het is niet gelukt om {prod.ProductieNr} toe te voegen!",
                            MessageAction.None,
                            MsgType.Fout, null, prod, prod.ProductieNr);
-                   var xprod = await Database.GetProductie(prod.ProductieNr);
+                   xprod = await Database.GetProductie(prod.ProductieNr);
                    if (xprod != null)
                    {
                        prod = xprod;
@@ -809,9 +827,10 @@ namespace Rpm.Productie
         /// Voeg een nieuwe productie toe vanuit een bestand
         /// </summary>
         /// <param name="pdffile">De pdf bestand die teoegevoegd zou moeten worden</param>
+        /// <param name="updateifexist">True voor als je een productie wilt updaten als die bestaat</param>
         /// <param name="delete">True voor als je het bestand wilt verwijderen zodra het is toegevoegd</param>
         /// <returns>Een taak die een productie toevoegd op de achtergrond</returns>
-        public Task<List<RemoteMessage>> AddProductie(string pdffile, bool delete)
+        public Task<List<RemoteMessage>> AddProductie(string pdffile, bool updateifexist, bool delete)
         {
             return Task.Run(async () =>
             {
@@ -829,14 +848,14 @@ namespace Rpm.Productie
                             RemoteMessage msg;
                             if (prod.IsAllowed(null))
                             {
-                                msg = await AddProductie(prod);
+                                msg = await AddProductie(prod, updateifexist);
                                 try
                                 {
                                     if (msg.Value is ProductieFormulier xprod)
                                     {
 
                                         var bew = xprod.Bewerkingen?.FirstOrDefault(x => x.IsAllowed());
-                                        if (bew != null)
+                                        if (Opties is {ToonProductieNaToevoegen: true} && bew != null)
                                             FormulierActie(new object[] { xprod, bew}, MainAktie.OpenProductie);
                                     }
                                 }
@@ -846,7 +865,7 @@ namespace Rpm.Productie
                                 }
                             }
                             else
-                                msg = new RemoteMessage($"[{prod.ProductieNr}, {prod.AantalGemaakt}] is gefilterd!",
+                                msg = new RemoteMessage($"[{prod.ProductieNr}, {prod.ArtikelNr}]{prod.Omschrijving} is gefilterd!",
                                     MessageAction.AlgemeneMelding, MsgType.Info);
                             rms.Add(msg);
                             if (msg.Action is MessageAction.NieweProductie or MessageAction.ProductieWijziging)
@@ -906,7 +925,7 @@ namespace Rpm.Productie
         /// <param name="delete">True voor als je de bestanden wilt verwijderen zodra ze zijn toegevoegd</param>
         /// <param name="showerror">True voor als je een foutmelding wilt laten zien</param>
         /// <returns></returns>
-        public Task<int> AddProductie(string[] pdffiles, bool delete, bool showerror)
+        public Task<int> AddProductie(string[] pdffiles, bool updateifexist, bool delete, bool showerror)
         {
             return Task.Run(() =>
             {
@@ -916,7 +935,7 @@ namespace Rpm.Productie
                     foreach (var file in pdffiles)
                         try
                         {
-                            var msgs = AddProductie(file, delete).Result;
+                            var msgs = AddProductie(file, updateifexist, delete).Result;
                             foreach (var msg in msgs)
                             {
                                 if (msg.MessageType == MsgType.Fout && !showerror)
@@ -939,7 +958,7 @@ namespace Rpm.Productie
         /// </summary>
         /// <param name="prods">De productieformulieren om toe te voegen</param>
         /// <returns>Een taak die de productieformulieren op de achtergrond toevoegd</returns>
-        public Task<List<RemoteMessage>> AddProducties(ProductieFormulier[] prods)
+        public Task<List<RemoteMessage>> AddProducties(ProductieFormulier[] prods, bool updateifexist)
         {
             return Task.Run(async () =>
             {
@@ -950,7 +969,7 @@ namespace Rpm.Productie
                         throw new Exception("Geen geldige productieformulieren om toe te voegen!");
                     foreach (var prod in prods)
                     {
-                        var msg = await AddProductie(prod);
+                        var msg = await AddProductie(prod, updateifexist);
                         msgs.Add(msg);
                     }
                 }
@@ -1310,7 +1329,7 @@ namespace Rpm.Productie
                         files.AddRange(Directory.GetFiles(s, "*.pdf").Where(t => !t.Contains("_old")).ToArray());
                     if (files.Count > 0)
                     {
-                        await AddProductie(files.ToArray(), true, false);
+                        await AddProductie(files.ToArray(),false, true, false);
                     }
                 }
             }
@@ -1370,7 +1389,7 @@ namespace Rpm.Productie
             _filesaddertimer?.Stop();
             if (_filestoadd?.Count > 0)
             {
-                AddProductie(_filestoadd.ToArray(), true, false).Wait();
+                AddProductie(_filestoadd.ToArray(),true, true, false).Wait();
                 _filestoadd.Clear();
             }
             _isbusy = false;
@@ -1767,7 +1786,7 @@ namespace Rpm.Productie
                 case MessageAction.NieweProductie:
                     if (message.Value is ProductieFormulier form)
                     {
-                        AddProductie(form);
+                        AddProductie(form,true);
                     }
 
                     break;

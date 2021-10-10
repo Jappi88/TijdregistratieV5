@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using MetroFramework.Forms;
+using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Productie;
@@ -35,6 +36,7 @@ namespace Forms
             xinfopanel.Text = CreateProductiesInfoHtml(bewerkingen);
             xstatsb.Visible = bewerkingen is {Count: > 0};
             _Bewerkingen = bewerkingen;
+            xexport.Visible = bewerkingen is { Count: > 0 }; ;
             Invalidate();
         }
 
@@ -166,6 +168,12 @@ namespace Forms
         {
             if (_Bewerkingen == null || _Bewerkingen.Count == 0) return;
             new ViewChartForm(_Bewerkingen).ShowDialog();
+        }
+
+        private void xexport_Click(object sender, EventArgs e)
+        {
+            if (_Bewerkingen == null || _Bewerkingen.Count == 0) return;
+            new CreateExcelForm(_Bewerkingen).ShowDialog();
         }
     }
 }

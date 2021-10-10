@@ -53,6 +53,7 @@ namespace Forms
                     var tries = 0;
                     while (_iswaiting && tries < 200)
                     {
+                        if (Disposing || IsDisposed) return;
                         if (cur > 5) cur = 0;
                         var curvalue = xwv.PadRight(xwv.Length + cur, '.');
                         //xcurvalue = curvalue;
@@ -97,6 +98,11 @@ namespace Forms
                 var bws = await Manager.Database.GetAllBewerkingen(true, true);
                 foreach (var bw in bws)
                 {
+                    if (IsDisposed || Disposing)
+                    {
+                        StopWait();
+                        return;
+                    }
                     if (_Values.ContainsKey(bw.ArtikelNr.ToLower()))
                         _Values[bw.ArtikelNr.ToLower()].Add(bw);
                     else
@@ -110,7 +116,6 @@ namespace Forms
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
             }
 
             StopWait();

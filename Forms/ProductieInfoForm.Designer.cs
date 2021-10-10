@@ -34,12 +34,14 @@ namespace Forms
             this.xstatsb = new System.Windows.Forms.Button();
             this.xsluiten = new System.Windows.Forms.Button();
             this.xinfopanel = new HtmlRenderer.HtmlPanel();
+            this.xexport = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.xexport);
             this.panel1.Controls.Add(this.xstatsb);
             this.panel1.Controls.Add(this.xsluiten);
             this.panel1.Controls.Add(this.xinfopanel);
@@ -103,6 +105,24 @@ namespace Forms
             this.xinfopanel.TabIndex = 0;
             this.xinfopanel.Text = "Productie Info";
             // 
+            // xexport
+            // 
+            this.xexport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.xexport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xexport.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xexport.ForeColor = System.Drawing.Color.Black;
+            this.xexport.Image = global::ProductieManager.Properties.Resources.microsoft_excel_22733;
+            this.xexport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xexport.Location = new System.Drawing.Point(299, 434);
+            this.xexport.Name = "xexport";
+            this.xexport.Size = new System.Drawing.Size(152, 35);
+            this.xexport.TabIndex = 7;
+            this.xexport.Text = "Exporteer";
+            this.xexport.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.xexport.UseVisualStyleBackColor = true;
+            this.xexport.Visible = false;
+            this.xexport.Click += new System.EventHandler(this.xexport_Click);
+            // 
             // ProductieInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -130,5 +150,6 @@ namespace Forms
         private HtmlRenderer.HtmlPanel xinfopanel;
         private System.Windows.Forms.Button xsluiten;
         private System.Windows.Forms.Button xstatsb;
+        private System.Windows.Forms.Button xexport;
     }
 }

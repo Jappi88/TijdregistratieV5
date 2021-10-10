@@ -502,7 +502,7 @@ namespace Forms
             // imageList1
             // 
             this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.imageList1.ImageSize = new System.Drawing.Size(64, 64);
+            this.imageList1.ImageSize = new System.Drawing.Size(32, 32);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // toolTip1

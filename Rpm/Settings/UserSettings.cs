@@ -121,6 +121,7 @@ namespace Rpm.Settings
             GebruikLocalSync = true;
             LicenseGelezen = false;
             ToonLogNotificatie = true;
+            ToonProductieNaToevoegen = true;
             //Gebruiker Info
             //Weergave
             PersoneelAfdelingFilter = "";
@@ -394,6 +395,7 @@ namespace Rpm.Settings
         public TimeSpan AfsluitTijd { get; set; }
         public bool MinimizeToTray { get; set; }
         public bool ToonAlleGestartProducties { get; set; }
+        public bool ToonProductieNaToevoegen { get; set; }
         public bool ToonProductieLogs { get; set; }
         public bool GebruikLocalSync { get; set; }
         public bool LicenseGelezen { get; set; }
