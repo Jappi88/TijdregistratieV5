@@ -23,7 +23,7 @@ namespace Forms
     {
     private readonly bool _choose;
 
-    public PersoneelsForm(Manager manager, bool choose)
+    public PersoneelsForm(bool choose)
     {
         InitializeComponent();
         ((OLVColumn) xuserlist.Columns[0]).ImageGetter = ImageGet;
@@ -47,10 +47,8 @@ namespace Forms
 
         //((OLVColumn) xuserlist.Columns[0]).AspectGetter = NameGetter;
         _choose = choose;
-        PManager = manager;
     }
 
-    public Manager PManager { get; set; }
     public Bewerking Bewerking { get; set; }
 
     private readonly List<StartProductie> _formuis = new();

@@ -623,16 +623,11 @@ namespace Rpm.Productie
             return Task.Run(async () =>
             {
                 if (ProductieProvider == null) return new List<Bewerking>();
-                var type = ProductieProvider.LoadedType.None;
-                if (states.Any(x => x == ViewState.Gereed))
+                var type = ProductieProvider.LoadedType.Producties;
+                if (states.Any(x => x is ViewState.Gereed))
                     type = ProductieProvider.LoadedType.Gereed;
-                if (states.Any(x => x != ViewState.Gereed))
-                {
-                    type = type == ProductieProvider.LoadedType.Gereed
-                        ? ProductieProvider.LoadedType.Alles
-                        : ProductieProvider.LoadedType.Producties;
-                }
-
+                if (states.Any(x => x is ViewState.Alles))
+                    type = ProductieProvider.LoadedType.Alles;
                 var xitems = await ProductieProvider.GetBewerkingen(type, states, filter);
                 return xitems;
             });

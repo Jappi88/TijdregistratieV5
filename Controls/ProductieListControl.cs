@@ -547,15 +547,15 @@ namespace Controls
             var filters = Manager.Opties.Filters;
             if (filters is { Count: > 0 })
             {
-                if (filters.Any(xf =>
-                    xf.ListNames.Any(x =>
-                        string.Equals(ListName, x, StringComparison.CurrentCultureIgnoreCase)) &&
-                    xf.IsAllowed(bewerking, ListName)))
-                    return true;
+                bool xreturn = true;
+                foreach (var filter in filters)
+                {
+                    if (filter.ListNames.Any(x =>
+                        string.Equals(ListName, x, StringComparison.CurrentCultureIgnoreCase)))
+                        xreturn &= filter.IsAllowed(bewerking, ListName);
+                }
 
-                if (filters.Any(x => x.ListNames.Any(s =>
-                    string.Equals(ListName, s, StringComparison.CurrentCultureIgnoreCase))))
-                    return false;
+                return xreturn;
             }
 
             return true;
@@ -1198,10 +1198,10 @@ namespace Controls
 
                                     if (werk.AantalActievePersonen == 0)
                                     {
-                                        var pers = new PersoneelsForm(ProductieView._manager, true);
+                                        var pers = new PersoneelsForm(true);
                                         if (pers.ShowDialog(werk) == DialogResult.OK)
                                         {
-                                            if (pers.SelectedPersoneel != null && pers.SelectedPersoneel.Length > 0)
+                                            if (pers.SelectedPersoneel is {Length: > 0})
                                             {
                                                 foreach (var per in pers.SelectedPersoneel) per.Klusjes?.Clear();
                                                 var afzonderlijk = false;

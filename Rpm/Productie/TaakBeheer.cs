@@ -67,9 +67,13 @@ namespace Rpm.Productie
                     //Taak maken voor als de bewerking te laat is.
                     if (Manager.Opties.TaakAlsTelaat && bew.TeLaat)
                     {
-                        var t = new TakenLijst(bew).Telaat(TaakUrgentie.ZSM);
-                        if (t != null)
-                            xreturn.Add(t);
+                        var tijd = Werktijd.TijdGewerkt(bew.LeverDatum, DateTime.Now, null, null);
+                        if (tijd.Seconds > 0)
+                        {
+                            var t = new TakenLijst(bew).Telaat(TaakUrgentie.ZSM);
+                            if (t != null)
+                                xreturn.Add(t);
+                        }
                     }
 
                     //Taak maken voor als de bewerking al gereed is.
@@ -124,7 +128,7 @@ namespace Rpm.Productie
                         //Taak aanmaken voor een controle
                         if (Manager.Opties.TaakVoorControle)
                         {
-                            if (bew.WerkPlekken != null && bew.WerkPlekken.Count > 0)
+                            if (bew.WerkPlekken is {Count: > 0})
                             {
                                 foreach (var wp in bew.WerkPlekken)
                                 {

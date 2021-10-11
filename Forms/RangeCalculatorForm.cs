@@ -18,12 +18,25 @@ namespace Forms
             InitializeComponent();
             productieListControl1.IsBewerkingView = true;
             productieListControl1.ValidHandler = IsAllowed;
+            productieListControl1.ItemCountChanged += ProductieListControl1_ItemCountChanged;
             if (Manager.BewerkingenLijst == null) return;
             
             var bewerkingen = Manager.BewerkingenLijst.GetAllEntries().Select(x => (object) x.Naam).ToArray();
             var afdelingen = Manager.BewerkingenLijst.GetAlleWerkplekken().Select(x => (object) x).ToArray();
             xwerkplekken.Items.AddRange(afdelingen);
             xbewerkingen.Items.AddRange(bewerkingen);
+        }
+
+        private void ProductieListControl1_ItemCountChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                this.BeginInvoke(new MethodInvoker(UpdateStatusLabel));
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
         }
 
         private int GetProductieImageIndex(Bewerking prod)
@@ -329,13 +342,14 @@ namespace Forms
 
         private void UpdateStatusLabel()
         {
-            var count = productieListControl1.Bewerkingen?.Count ?? 0;
-            if (count > 0 && productieListControl1.Bewerkingen != null)
+            var bws = productieListControl1.ProductieLijst.Objects?.Cast<Bewerking>().ToList();
+            var count = bws?.Count ?? 0;
+            if (count > 0 && bws != null)
             {
                 var x1 = count == 1 ? "resulaat" : "resultaten";
                 var xvalue = $"{count} {x1} gevonden!";
-                var gemaakt = productieListControl1.Bewerkingen.Sum(x => x.AantalGemaakt);
-                var tijd = Math.Round(productieListControl1.Bewerkingen.Sum(x => x.TijdGewerkt), 2);
+                var gemaakt = bws.Sum(x => x.AantalGemaakt);
+                var tijd = Math.Round(bws.Sum(x => x.TijdGewerkt), 2);
                 var pu = (int)(tijd > 0 && gemaakt > 0 ? gemaakt / tijd : 0);
                 var x2 = pu == 1 ? "stuk" : "stuks";
                 xvalue += $"\nAantal gemaakt: {gemaakt}.";

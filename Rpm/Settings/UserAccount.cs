@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text;
@@ -18,7 +19,7 @@ namespace Rpm.Settings
     {
         public UserAccount()
         {
-            OsID = CpuID.ProcessorId();
+            OsID = Guid.NewGuid().ToString().Split('-').LastOrDefault();
         }
 
         [ExcludeFromSerialization] public EmailHost MailingHost

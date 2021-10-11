@@ -539,9 +539,9 @@ namespace Forms
 
         private Personeel[] KiesPersoneel()
         {
-            var pers = new PersoneelsForm(ProductieView._manager, true);
+            var pers = new PersoneelsForm(true);
             if (pers.ShowDialog(Bewerking) == DialogResult.OK)
-                if (pers.SelectedPersoneel != null && pers.SelectedPersoneel.Length > 0)
+                if (pers.SelectedPersoneel is {Length: > 0})
                 {
                     foreach (var per in pers.SelectedPersoneel)
                         per.Klusjes.Clear();

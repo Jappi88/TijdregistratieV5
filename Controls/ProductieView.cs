@@ -74,6 +74,8 @@ namespace Controls
         private static RangeCalculatorForm _calcform = null;
         private static ChatForm _chatform;
         private static OpmerkingenForm _opmerkingform;
+        private static ArtikelsForm _ArtikelsForm;
+        private static PersoneelsForm _PersoneelForm;
         public bool ShowUnreadMessage { get; set; }
 
         // [NonSerialized] private Opties _opties;
@@ -1410,7 +1412,7 @@ namespace Controls
                         $"Kan '{pform.Omschrijving}' niet openen omdat er geen geldige bewerkingen zijn!\n\n" +
                         "Bewerkingen zijn verwijderd of gefiltered.");
                 var productie = _formuis.FirstOrDefault(t => t.Name == pform.ProductieNr.Trim().Replace(" ", ""));
-                if (productie != null && !productie.IsDisposed && _producties != null && showform)
+                if (productie is {IsDisposed: false} && _producties != null && showform)
                 {
                     productie.Show(_producties.DockPanel);
                 }
@@ -1524,22 +1526,22 @@ namespace Controls
 
         public static void ShowCalculatieWindow()
         {
-            var _calcform = new RangeCalculatorForm();
-            _calcform.ShowDialog();
-            //if (_calcform == null)
-            //{
-            //    _calcform = new RangeCalculatorForm();
-            //    _calcform.FormClosed += (x, y) =>
-            //    {
-            //        _calcform?.Dispose();
-            //        _calcform = null;
-            //    };
-            //}
-            //_calcform.Show();
-            //if (_calcform.WindowState == FormWindowState.Minimized)
-            //    _calcform.WindowState = FormWindowState.Normal;
-            //_calcform.BringToFront();
-            //_calcform.Focus();
+            //var _calcform = new RangeCalculatorForm();
+            //_calcform.ShowDialog();
+            if (_calcform == null)
+            {
+                _calcform = new RangeCalculatorForm();
+                _calcform.FormClosed += (x, y) =>
+                {
+                    _calcform?.Dispose();
+                    _calcform = null;
+                };
+            }
+            _calcform.Show();
+            if (_calcform.WindowState == FormWindowState.Minimized)
+                _calcform.WindowState = FormWindowState.Normal;
+            _calcform.BringToFront();
+            _calcform.Focus();
         }
 
         public static void ShowChatWindow(string username = null)
@@ -1561,7 +1563,7 @@ namespace Controls
             _chatform.Focus();
         }
 
-        public static void ShowOpmerkingWindow(string username = null)
+        public static void ShowOpmerkingWindow()
         {
             if (_opmerkingform == null)
             {
@@ -1581,6 +1583,25 @@ namespace Controls
             _opmerkingform.Focus();
         }
 
+        public static void ShowArtikelenWindow()
+        {
+            if (_ArtikelsForm == null)
+            {
+                _ArtikelsForm = new ArtikelsForm();
+                _ArtikelsForm.FormClosed += (x, y) =>
+                {
+                    _ArtikelsForm?.Dispose();
+                    _ArtikelsForm = null;
+                };
+            }
+
+            _ArtikelsForm.Show();
+            if (_ArtikelsForm.WindowState == FormWindowState.Minimized)
+                _ArtikelsForm.WindowState = FormWindowState.Normal;
+            _ArtikelsForm.BringToFront();
+            _ArtikelsForm.Focus();
+        }
+
         public static void ShowOnderbrekeningenWidow()
         {
             var x = new AlleStoringen();
@@ -1595,7 +1616,21 @@ namespace Controls
 
         public static void ShowPersoneelWindow()
         {
-            new PersoneelsForm(_manager, false).ShowDialog();
+            if (_PersoneelForm == null)
+            {
+                _PersoneelForm = new PersoneelsForm(false);
+                _PersoneelForm.FormClosed += (x, y) =>
+                {
+                    _PersoneelForm?.Dispose();
+                    _PersoneelForm = null;
+                };
+            }
+
+            _PersoneelForm.Show();
+            if (_PersoneelForm.WindowState == FormWindowState.Minimized)
+                _PersoneelForm.WindowState = FormWindowState.Normal;
+            _PersoneelForm.BringToFront();
+            _PersoneelForm.Focus();
         }
 
         public static void ShowPersoonVaardigheden(Personeel persoon)
@@ -1889,9 +1924,10 @@ namespace Controls
         {
             if (Manager.Opties != null)
                 Manager.Opties.ViewDataBewerkingenState = xbewerkingListControl.ProductieLijst.SaveState();
-            new ArtikelsForm().ShowDialog();
-            if (Manager.Opties != null)
-                xbewerkingListControl.ProductieLijst.RestoreState(Manager.Opties.ViewDataBewerkingenState);
+            ShowArtikelenWindow();
+            //new ArtikelsForm().ShowDialog();
+            //if (Manager.Opties != null)
+            //    xbewerkingListControl.ProductieLijst.RestoreState(Manager.Opties.ViewDataBewerkingenState);
         }
 
         private void xopmerkingentoolstripbutton_Click(object sender, EventArgs e)
