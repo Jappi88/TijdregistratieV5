@@ -276,14 +276,13 @@ namespace Rpm.Productie
                           $"<tr style = 'vertical-align: top;' >\r\n" +
                           ximage +
                           $"<td>" +
-                          $"<h3>\r\n" +
-                          $"<h3>{(State != ProductieState.Gereed ? $"Verwachte Leverdatum: <b>{VerwachtLeverDatum:f}</b>" : $"Gereed Gemeld Op: <b>{DatumGereed:f}</b>")}</h3>" +
-                          $"Productie Info\r\n" +
-                          $"</h3 >\r\n" +
+                          $"<h3>Leverdatum: {LeverDatum:f}.<br>" +
+                          $"{(State != ProductieState.Gereed ? $"Verwachte Leverdatum: {VerwachtLeverDatum:f}" : $"Gereed Gemeld Op: {DatumGereed:f}")}.</h3>" +
+                          $"<h3>Productie Info</h3>\r\n" +
                           $"<div>\r\n" +
-                          $"Omschrijving: <b>{Omschrijving}</b><br>" +
-                          $"ArtikelNr: <b>{ArtikelNr}</b><br>" +
                           $"ProductieNr: <b>{ProductieNr}</b><br>" +
+                          $"ArtikelNr: <b>{ArtikelNr}</b><br>" +
+                          $"Omschrijving: <b>{Omschrijving}</b><br>" +
                           $"Status: <b>{Enum.GetName(typeof(ProductieState), State)}</b><br>" +
                           $"{(State != ProductieState.Gestart? "Laatst ": "")}Gestart Door: <b>{(string.IsNullOrEmpty(GestartDoor)?"Niemand":GestartDoor)}</b><br>" +
                           $"Aantal Gemaakt: <b>{TotaalGemaakt} / {Aantal}</b><br>" +
