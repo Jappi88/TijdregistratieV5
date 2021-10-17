@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Windows.Navigation;
 using MetroFramework.Forms;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
 
@@ -55,6 +57,9 @@ namespace Forms
             {
                 xbewerkinglijst.BeginUpdate();
                 xbewerkinglijst.Items.Clear();
+                imageList1.Images.Clear();
+                imageList1.Images.Add(Resources.operation.CombineImage(Resources.play_button_icon_icons_com_60615,
+                    2));
                 foreach (var bw in bws)
                 {
                     var lv = new ListViewItem(bw.Naam)
