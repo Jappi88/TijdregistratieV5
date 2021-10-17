@@ -190,12 +190,12 @@ namespace Controls
                     try
                     {
                         var xwerkplekken = xwerkpleklist.Objects?.Cast<WerkPlek>().ToList();
-                        if (xwerkplekken != null && form.Bewerkingen != null && form.Bewerkingen.Length > 0)
+                        if (xwerkplekken != null && form.Bewerkingen is {Length: > 0})
                         {
                             var formplekken = xwerkplekken
                                 .Where(x => string.Equals(x.Werk.ProductieNr, form.ProductieNr)).ToList();
                             foreach (var bewerking in form.Bewerkingen)
-                                if (bewerking.WerkPlekken != null && bewerking.WerkPlekken.Count > 0)
+                                if (bewerking.WerkPlekken is {Count: > 0})
                                 {
                                     var isvalid = bewerking.IsAllowed(null);
                                     foreach (var plek in bewerking.WerkPlekken)
@@ -321,13 +321,13 @@ namespace Controls
                     return werkplekken.ToArray();
 
                 foreach (var form in forms)
-                    if (form.Bewerkingen != null && form.Bewerkingen.Length > 0)
+                    if (form.Bewerkingen is {Length: > 0})
                     {
                         var bws = form.Bewerkingen.Where(x => x.State == ProductieState.Gestart).ToArray();
                         if (bws.Length <= 0) continue;
                         {
                             foreach (var b in bws)
-                                if (b.IsAllowed(null) && b.WerkPlekken != null && b.WerkPlekken.Count > 0)
+                                if (b.IsAllowed(null) && b.WerkPlekken is {Count: > 0})
                                     werkplekken.AddRange(b.WerkPlekken.Where(x => x.Personen.Any(t => t.WerktAanKlus(b,out _))));
                         }
                     }
@@ -346,13 +346,13 @@ namespace Controls
             {
                 if (PManager == null)
                     return werkplekken.ToArray();
-                    if (form.Bewerkingen != null && form.Bewerkingen.Length > 0)
+                    if (form.Bewerkingen is {Length: > 0})
                     {
                         var bws = form.Bewerkingen.Where(x => x.State == ProductieState.Gestart).ToArray();
                         if (bws.Length > 0)
                         {
                             foreach (var b in bws)
-                                if (b.IsAllowed(null) && b.WerkPlekken != null && b.WerkPlekken.Count > 0)
+                                if (b.IsAllowed(null) && b.WerkPlekken is {Count: > 0})
                                     werkplekken.AddRange(b.WerkPlekken.Where(x => x.Personen.Any(t => t.WerktAanKlus(b, out _))));
                         }
                     }
@@ -407,8 +407,7 @@ namespace Controls
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-            var flag = Manager.LogedInGebruiker != null &&
-                       Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieBasis;
+            var flag = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
             if (!flag || xwerkpleklist.SelectedObjects.Count == 0)
             {
                 e.Cancel = true;

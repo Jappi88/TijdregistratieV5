@@ -22,7 +22,7 @@ namespace Rpm.Productie
         public WerkPlek(Personeel[] personen, string werkplek, Bewerking werk)
         {
             Personen = new List<Personeel>();
-            if (personen != null && personen.Length > 0) Personen.AddRange(personen);
+            if (personen is {Length: > 0}) Personen.AddRange(personen);
             Naam = werkplek ?? "N.V.T";
             Werk = werk;
         }
@@ -32,7 +32,7 @@ namespace Rpm.Productie
         {
         }
 
-        public WerkPlek(string naam, Bewerking bew) : this(new Personeel[0], naam, bew)
+        public WerkPlek(string naam, Bewerking bew) : this(Array.Empty<Personeel>(), naam, bew)
         {
         }
 
@@ -57,7 +57,7 @@ namespace Rpm.Productie
             set
             {
                 _Storingen = value;
-                if (value != null && value.Count > 0)
+                if (value is {Count: > 0})
                     _Storingen.ForEach(x => x.Plek = this);
             }
         }
@@ -141,17 +141,9 @@ namespace Rpm.Productie
             get
             {
                 var value = "Geen Personeel";
-                if (Personen != null && Personen.Count > 0)
+                if (Personen is {Count: > 0})
                 {
-                    value = "";
-                    for (var i = 0; i < Personen.Count; i++)
-                    {
-                        if (i > 0)
-                            value += " ";
-                        value += Personen[i].PersoneelNaam;
-                        if (i < Personen.Count - 1)
-                            value += ",";
-                    }
+                    value = string.Join(", ", Personen.Select(x => x.PersoneelNaam));
                 }
 
                 return value;
@@ -212,7 +204,7 @@ namespace Rpm.Productie
 
         public void UpdateStoringWerkplekken()
         {
-            if (Storingen != null && Storingen.Count > 0)
+            if (Storingen is {Count: > 0})
                 Storingen.ForEach(x => x.Plek = this);
         }
 
@@ -308,7 +300,7 @@ namespace Rpm.Productie
             return true;
         }
 
-        public void UpdateWerkRooster(Rooster rooster, bool alleengestart, bool editpersoneelklusjes, bool savepersoneelklusjes, bool showsavenotofication, bool checkforspecialrooster)
+        public void UpdateWerkRooster(Rooster rooster, bool alleengestart,bool updatetijdenrooster, bool editpersoneelklusjes, bool savepersoneelklusjes,bool updatewerkplek, bool showsavenotofication, bool checkforspecialrooster)
         {
             if (Werk == null || (alleengestart && Werk.State != ProductieState.Gestart)) return;
             rooster ??= Tijden.WerkRooster??Manager.Opties.GetWerkRooster();
@@ -325,7 +317,9 @@ namespace Rpm.Productie
                     rooster.EindWerkdag = actiefroosters[actiefroosters.Count - 1].EindWerkdag;
                 }
             }
-            Tijden.UpdateUrenRooster(checkforspecialrooster,rooster);
+
+            if (updatetijdenrooster)
+                Tijden.UpdateUrenRooster(checkforspecialrooster, rooster);
             for (int i = 0; i < Personen.Count; i++)
             {
                 var pers = Personen[i];
@@ -362,7 +356,8 @@ namespace Rpm.Productie
                 st.WerkRooster = Tijden.WerkRooster?.CreateCopy() ?? Manager.Opties.GetWerkRooster();
             }
 
-            UpdateWerkplek(false);
+            if (updatewerkplek)
+                UpdateWerkplek(false);
         }
 
         public bool UpdateWerkplek(bool updaterooster)
@@ -405,7 +400,7 @@ namespace Rpm.Productie
         public async void CalculatePerUur(bool updatedb)
         {
             var xtotaal = TotaalGemaakt;
-            if (Personen?.Count > 0 && Werk != null && Werk.State == ProductieState.Gestart && xtotaal > 0)
+            if (Personen?.Count > 0 && Werk is {State: ProductieState.Gestart} && xtotaal > 0)
             {
                 var tijd = TijdAanGewerkt();
                 for (int i = 0; i < Personen.Count; i++)
@@ -413,7 +408,7 @@ namespace Rpm.Productie
                     var per = Personen[i];
                     var tg = per.TijdAanGewerkt(GetStoringen(), this, per.WerkRooster ?? Tijden?.WerkRooster)
                         .TotalHours;
-                    if (tg > 0 && xtotaal > 0)
+                    if (tg > 0)
                     {
                         var klus = per.Klusjes.GetKlus(Path);
                         if (klus == null) continue;
@@ -445,7 +440,7 @@ namespace Rpm.Productie
         public double TijdAanGewerkt()
         {
             double tijd = 0;
-            if (Werk != null && !Werk.IsBemand)
+            if (Werk is {IsBemand: false})
                 tijd = Tijden.TijdGewerkt(null, GetStoringen());
             else
                 tijd = Personen.Sum(x =>
@@ -457,7 +452,7 @@ namespace Rpm.Productie
         public double TijdAanGewerkt(DateTime vanaf, DateTime tot)
         {
             double tijd = 0;
-            if (Werk != null && !Werk.IsBemand)
+            if (Werk is {IsBemand: false})
                 tijd = Tijden.TijdGewerkt(null, vanaf, tot, GetStoringen());
             else
                 tijd = Personen.Sum(x =>

@@ -86,7 +86,7 @@ namespace Forms
             {
                 var pers = xuserlist.Objects?.Cast<PersoneelModel>().ToList();
                 var remove = pers?.Where(x => string.Equals(x.Naam, id)).ToArray();
-                if (remove != null && remove.Length > 0)
+                if (remove is {Length: > 0})
                 {
                     for (int i = 0; i < remove.Length; i++)
                     {
@@ -131,7 +131,7 @@ namespace Forms
                 Text = $"Personeel Beheer: {xuserlist.Items.Count} {xm} Op Verlof";
                 break;
             default:
-                if (xuserlist.Groups != null && xuserlist.Groups.Count > 0)
+                if (xuserlist.Groups is {Count: > 0})
                 {
                     var value = "";
                     foreach (var group in xuserlist.Groups.Cast<ListViewGroup>())
@@ -207,7 +207,7 @@ namespace Forms
         var user = Manager.LogedInGebruiker;
         Invoke(new Action(() =>
         {
-            var _enable = user != null && user.AccesLevel >= AccesType.ProductieBasis;
+            var _enable = user is {AccesLevel: >= AccesType.ProductieBasis};
             xuserinfopanel.Visible = _enable;
         }));
     }
@@ -372,10 +372,8 @@ namespace Forms
 
     private void EnableSelected()
     {
-        var acces1 = Manager.LogedInGebruiker != null &&
-                     Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieBasis;
-        var acces2 = Manager.LogedInGebruiker != null &&
-                     Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieAdvance;
+        var acces1 = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
+        var acces2 = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieAdvance};
 
         var enable1 = xuserinfopanel.Tag != null;
         var enable2 = xuserlist.SelectedObjects.Count > 0;
@@ -408,7 +406,7 @@ namespace Forms
 
     private void InitSelected()
     {
-        if (xuserinfopanel.Tag != null && xuserinfopanel.Tag is PersoneelModel)
+        if (xuserinfopanel.Tag is PersoneelModel)
         {
             var model = xuserinfopanel.Tag as PersoneelModel;
             UpdateUserFields(model);
@@ -605,7 +603,7 @@ namespace Forms
         if (pform == null || pform.State == ProductieState.Verwijderd)
             return;
         var productie = _formuis.FirstOrDefault(t => t.Name == pform.ProductieNr.Trim().Replace(" ", ""));
-        if (productie != null && !productie.IsDisposed && _producties != null)
+        if (productie is {IsDisposed: false} && _producties != null)
         {
             productie.Show(_producties.DockPanel);
         }
@@ -1043,9 +1041,7 @@ namespace Forms
 
     private void xsearch_Enter(object sender, EventArgs e)
     {
-        if (sender is MetroTextBox tb)
-            if (tb.Text == "Zoeken...")
-                tb.Text = "";
+        if (sender is MetroTextBox {Text: "Zoeken..."} tb) tb.Text = "";
     }
 
     private void xsearch_Leave(object sender, EventArgs e)

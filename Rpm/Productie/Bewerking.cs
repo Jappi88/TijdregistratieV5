@@ -53,13 +53,13 @@ namespace Rpm.Productie
             set => _gestartop = value;
         }
 
-        public override VerpakkingInstructie VerpakkingInstries
+        public override VerpakkingInstructie VerpakkingsInstructies
         {
-            get => Parent?.VerpakkingInstries;
+            get => Parent?.VerpakkingsInstructies;
             set
             {
                 if (Parent != null)
-                    Parent.VerpakkingInstries = value;
+                    Parent.VerpakkingsInstructies = value;
             }
         }
 
@@ -243,7 +243,7 @@ namespace Rpm.Productie
             foreach (var wp in WerkPlekken)
             {
                 var xstoringen = wp.Storingen;
-                if (xstoringen != null && xstoringen.Count > 0)
+                if (xstoringen is {Count: > 0})
                 {
                     foreach (var storing in xstoringen)
                     {
@@ -441,7 +441,7 @@ namespace Rpm.Productie
                 var xtasks = new List<Task<bool>>();
                 foreach (var plek in WerkPlekken)
                 {
-                    plek.UpdateWerkRooster(null,true, false, false, false, true);
+                    plek.UpdateWerkRooster(null,true,false, false, false,false, false, true);
                     foreach (var per in plek.Personen)
                     {
                         var klus = per.Klusjes.GetKlus(plek.Path);
@@ -973,7 +973,7 @@ namespace Rpm.Productie
             }
             else
             {
-                if (WerkPlekken != null && WerkPlekken.Count > 0)
+                if (WerkPlekken is {Count: > 0})
                     foreach (var wp in WerkPlekken)
                         tijd += wp.TijdAanGewerkt();
 
@@ -992,7 +992,7 @@ namespace Rpm.Productie
             }
             else
             {
-                if (WerkPlekken != null && WerkPlekken.Count > 0)
+                if (WerkPlekken is {Count: > 0})
                     foreach (var wp in WerkPlekken)
                         tijd += wp.TijdAanGewerkt(vanaf, tot);
 
@@ -1104,7 +1104,7 @@ namespace Rpm.Productie
         {
             var aantal = 0;
             var done = false;
-            if (WerkPlekken != null && WerkPlekken.Count > 0)
+            if (WerkPlekken is {Count: > 0})
                 foreach (var plek in WerkPlekken)
                     if (plek.Werk.Equals(this))
                     {
@@ -1123,12 +1123,12 @@ namespace Rpm.Productie
                 try
                 {
                     var pers = await Manager.Database.GetAllPersoneel();
-                    if (pers != null && pers.Count > 0)
+                    if (pers is {Count: > 0})
                     {
                         foreach (var per in pers)
                         {
                             var klusjes = per.HeeftOoitGewerktAan(this);
-                            if (klusjes != null && klusjes.Count > 0)
+                            if (klusjes is {Count: > 0})
                             {
                                 if (xreturn.ContainsKey(per.PersoneelNaam))
                                     xreturn[per.PersoneelNaam].AddRange(klusjes);

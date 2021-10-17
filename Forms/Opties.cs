@@ -197,6 +197,19 @@ namespace Forms
             xmaakoverichtenaan.Checked = x.CreateWeekOverzichten;
             xoverzichtbereikgroup.Enabled = x.CreateWeekOverzichten;
             xdocurrentweekoverzicht.Checked = x.DoCurrentWeekOverzicht;
+
+            var selected = x.ExcelColumns?.FirstOrDefault(x => x.IsSelected);
+            if (selected != null)
+            {
+                xcolumnsStatusLabel.Text = $@"Opties Geselecteerd: {selected.Name}";
+                xcolumnsStatusLabel.ForeColor = Color.DarkGreen;
+            }
+            else
+            {
+                xcolumnsStatusLabel.Text = $@"Geen Opties Geselecteerd!";
+                xcolumnsStatusLabel.ForeColor = Color.DarkRed;
+            }
+
             xmaakvanafweek.SetValue(x.VanafWeek);
             xmaakvanafjaar.SetValue(x.VanafJaar);
             xexcelinterval.SetValue((decimal) x.WeekOverzichtUpdateInterval / 60000);
@@ -236,7 +249,7 @@ namespace Forms
 
         private async void UpdateOptieList()
         {
-            if (Manager.LogedInGebruiker != null && Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieAdvance)
+            if (Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieAdvance})
                 try
                 {
                     var sets = await Manager.Database.GetAllSettings();
@@ -434,6 +447,7 @@ namespace Forms
             //default settings die we hier niet veranderen.
             if (_LoadedOpties != null)
             {
+                xs.ExcelColumns = _LoadedOpties.ExcelColumns;
                 xs.BoundUsername = _LoadedOpties.BoundUsername;
                 xs.OntvangAdres = _LoadedOpties.OntvangAdres;
                 xs.Filters = _LoadedOpties.Filters;
@@ -864,7 +878,7 @@ namespace Forms
 
         private void xrebuilddb_Click(object sender, EventArgs e)
         {
-            if (Manager.Database != null && !Manager.Database.IsDisposed)
+            if (Manager.Database is {IsDisposed: false})
             {
                 var prod = new UpdateProducties(){StartWhenShown = true, CloseWhenFinished = true};
                 prod.ShowDialog();
@@ -1262,7 +1276,7 @@ namespace Forms
             {
                 var adres = xuitgaandemailijst.SelectedItems[0].Tag as UitgaandAdres;
                 var states = new List<ProductieState>();
-                if (adres.States != null && adres.States.Length > 0)
+                if (adres.States is {Length: > 0})
                     states.AddRange(adres.States.Where(t => t != ProductieState.Gestart).ToArray());
                 if (xverzendstartcheck.Checked)
                     states.Add(ProductieState.Gestart);
@@ -1276,7 +1290,7 @@ namespace Forms
             {
                 var adres = xuitgaandemailijst.SelectedItems[0].Tag as UitgaandAdres;
                 var states = new List<ProductieState>();
-                if (adres.States != null && adres.States.Length > 0)
+                if (adres.States is {Length: > 0})
                     states.AddRange(adres.States.Where(t => t != ProductieState.Gestopt).ToArray());
                 if (xverzendstopcheck.Checked)
                     states.Add(ProductieState.Gestopt);
@@ -1290,7 +1304,7 @@ namespace Forms
             {
                 var adres = xuitgaandemailijst.SelectedItems[0].Tag as UitgaandAdres;
                 var states = new List<ProductieState>();
-                if (adres.States != null && adres.States.Length > 0)
+                if (adres.States is {Length: > 0})
                     states.AddRange(adres.States.Where(t => t != ProductieState.Verwijderd).ToArray());
                 if (xverzendverwijdercheck.Checked)
                     states.Add(ProductieState.Verwijderd);
@@ -1305,7 +1319,7 @@ namespace Forms
                 if (xuitgaandemailijst.SelectedItems[0].Tag is UitgaandAdres adres)
                 {
                     var states = new List<ProductieState>();
-                    if (adres.States != null && adres.States.Length > 0)
+                    if (adres.States is {Length: > 0})
                         states.AddRange(adres.States.Where(t => t != ProductieState.Gereed).ToArray());
                     if (xverzendgereedcheck.Checked)
                         states.Add(ProductieState.Gereed);
@@ -1327,8 +1341,7 @@ namespace Forms
             if (sproosters.ShowDialog() == DialogResult.OK)
             {
                 xspeciaalroosterb.Tag = sproosters.Roosters;
-                var acces1 = Manager.LogedInGebruiker != null &&
-                             Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieBasis;
+                var acces1 = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
                 if (acces1 && sproosters.Roosters.Count > 0)
                 {
                     var bws = await Manager.GetBewerkingen(new ViewState[] { ViewState.Gestart }, true);
@@ -1545,6 +1558,35 @@ namespace Forms
                 }
 
             }
+        }
+
+        private void xExcelColumnsButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xKiesExcelColumnButton_Click(object sender, EventArgs e)
+        {
+            if (_LoadedOpties == null) return;
+            var xf = new ExcelOptiesForm();
+            xf.LoadOpties(_LoadedOpties);
+            if (xf.ShowDialog() == DialogResult.OK)
+            {
+                _LoadedOpties.ExcelColumns = xf.Settings;
+                _LoadedOpties.Save("ExcelColumns Aangepast!");
+            }
+            var selected = _LoadedOpties.ExcelColumns?.FirstOrDefault(x => x.IsSelected);
+            if (selected != null)
+            {
+                xcolumnsStatusLabel.Text = $@"Opties Geselecteerd: {selected.Name}";
+                xcolumnsStatusLabel.ForeColor = Color.DarkGreen;
+            }
+            else
+            {
+                xcolumnsStatusLabel.Text = $@"Geen Opties Geselecteerd!";
+                xcolumnsStatusLabel.ForeColor = Color.DarkRed;
+            }
+
         }
     }
 }

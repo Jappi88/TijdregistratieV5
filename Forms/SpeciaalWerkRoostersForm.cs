@@ -32,7 +32,7 @@ namespace ProductieManager.Forms
 
         public SpeciaalWerkRoostersForm(List<Rooster> roosters) : this()
         {
-            xroosterlist.SetObjects((roosters??new List<Rooster>()).CreateCopy());
+            xroosterlist.SetObjects((roosters?.CreateCopy()?? new List<Rooster>()));
             if (xroosterlist.Items.Count > 0)
             {
                 xroosterlist.SelectedIndex = 0;

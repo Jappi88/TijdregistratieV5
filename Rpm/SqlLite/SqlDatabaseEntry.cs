@@ -12,7 +12,7 @@ namespace Rpm.SqlLite
 
         public SqlDatabaseEntry(object[] values)
         {
-            if (values != null && values.Length > 0)
+            if (values is {Length: > 0})
                 foreach (var value in values)
                     if (value is string item)
                         Name = item;

@@ -7,6 +7,8 @@ using LiteDB;
 using Polenter.Serialization;
 using ProductieManager;
 using ProductieManager.Rpm.Mailing;
+using ProductieManager.Rpm.Misc;
+using ProductieManager.Rpm.Settings;
 using Rpm.SqlLite;
 using Rpm.Mailing;
 using Rpm.Misc;
@@ -84,6 +86,10 @@ namespace Rpm.Settings
             UpdateDatabaseVersion = "1.0.0.0";
             CreateWeekOverzichten = true;
             DoCurrentWeekOverzicht = true;
+            ExcelColumns = new List<ExcelSettings>();
+            var xset = ExcelSettings.CreateSettings(0);
+            xset.IsSelected = true;
+            ExcelColumns.Add(xset);
             WeekOverzichtPath = Manager.WeekOverzichtPath;
             WeekOverzichtUpdateInterval = (5 * 60000); //5min
             VanafWeek = 6;
@@ -364,6 +370,7 @@ namespace Rpm.Settings
         public bool CreateWeekOverzichten { get; set; }
         public bool DoCurrentWeekOverzicht { get; set; }
         public int WeekOverzichtUpdateInterval { get; set; }
+        public List<ExcelSettings> ExcelColumns { get; set; }
         public int VanafWeek { get; set; }
         public int VanafJaar { get; set; }
         public bool GebruikOfflineMetSync { get; set; }

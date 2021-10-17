@@ -495,8 +495,7 @@ namespace Controls
         private string GetBewerkingGroup(Bewerking bew)
         {
             var group = "";
-            if (Manager.Opties != null && Manager.Opties.Bewerkingen != null &&
-                (Manager.Opties.ToonAllesVanBeide || Manager.Opties.ToonVolgensBewerkingen))
+            if (Manager.Opties is {Bewerkingen: { }} && (Manager.Opties.ToonAllesVanBeide || Manager.Opties.ToonVolgensBewerkingen))
                 group = Manager.Opties.Bewerkingen
                     .FirstOrDefault(t => bew.Naam.Split('[')[0].ToLower() == t.ToLower());
             else group = bew.Naam;
@@ -781,7 +780,7 @@ namespace Controls
                     BeginInvoke(new Action(async () =>
                     {
                         var states = GetCurrentViewStates();
-                        if (Producties != null && Producties.Count > 0)
+                        if (Producties is {Count: > 0})
                             for (var i = 0; i < Producties.Count; i++)
                             {
                                 var prod = Producties[i];
@@ -814,7 +813,7 @@ namespace Controls
                                 }
                             }
 
-                        if (Bewerkingen != null && Bewerkingen.Count > 0)
+                        if (Bewerkingen is {Count: > 0})
                             for (var i = 0; i < Bewerkingen.Count; i++)
                             {
                                 var bew = Bewerkingen[i];
@@ -1094,9 +1093,7 @@ namespace Controls
         private void xsearch_Enter(object sender, EventArgs e)
         {
             var tb = sender as MetroTextBox;
-            if (tb != null)
-                if (tb.Text == "Zoeken...")
-                    tb.Text = "";
+            if (tb is {Text: "Zoeken..."}) tb.Text = "";
         }
 
         private void xsearch_Leave(object sender, EventArgs e)
@@ -1183,7 +1180,7 @@ namespace Controls
                     try
                     {
                         var mainform = Application.OpenForms["MainForm"];
-                        mainform?.BeginInvoke(new Action(async () =>
+                        mainform?.Invoke(new Action( () =>
                         {
                             var xdic = new Dictionary<string, Task<bool>>();
                             for (var i = 0; i < bws.Length; i++)
@@ -1226,8 +1223,7 @@ namespace Controls
                                                     var pair = klusui.SelectedKlus.GetWerk(parent);
                                                     var prod = pair.Formulier;
                                                     werk = pair.Bewerking;
-                                                    if (werk != null && !werk.IsBemand &&
-                                                        klusui.SelectedKlus?.Tijden?.Count > 0)
+                                                    if (werk is {IsBemand: false} && klusui.SelectedKlus?.Tijden?.Count > 0)
                                                         foreach (var wp in werk.WerkPlekken)
                                                             wp.Tijden = klusui.SelectedKlus.Tijden.CreateCopy();
 
@@ -1266,8 +1262,8 @@ namespace Controls
                                                                 wp.AddPersoon(per, werk);
                                                             }
 
-                                                            if (await wp.Werk.UpdateBewerking(null,
-                                                                $"{wp.Path} indeling aangepast", false, false))
+                                                            if (wp.Werk.UpdateBewerking(null,
+                                                                $"{wp.Path} indeling aangepast", false, false).Result)
                                                                 werk.CopyTo(ref bws[i]);
                                                         }
                                                     }
@@ -1336,7 +1332,7 @@ namespace Controls
 
         private void ShowSelectedProducties()
         {
-            if (Manager.LogedInGebruiker != null && Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieBasis)
+            if (Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis})
                 if (!IsBewerkingView)
                 {
                     foreach (var o in ProductieLijst.SelectedObjects.Cast<ProductieFormulier>().ToArray())

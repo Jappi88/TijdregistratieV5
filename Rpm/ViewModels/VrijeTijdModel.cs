@@ -25,7 +25,7 @@ namespace Rpm.ViewModels
         public Dictionary<DateTime, DateTime> GetVrijeDagen()
         {
             var xreturn = new Dictionary<DateTime, DateTime>();
-            if (VrijeTijd != null && VrijeTijd.Count > 0)
+            if (VrijeTijd is {Count: > 0})
                 foreach (var v in VrijeTijd)
                     if (v.Key != Start && v.Value != Stop)
                         xreturn.Add(v.Key, v.Value);

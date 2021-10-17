@@ -251,7 +251,6 @@ namespace ProductieManager.Forms
             this.filterEntryEditorUI1.Padding = new System.Windows.Forms.Padding(5);
             this.filterEntryEditorUI1.Size = new System.Drawing.Size(631, 373);
             this.filterEntryEditorUI1.TabIndex = 4;
-            this.filterEntryEditorUI1.Load += new System.EventHandler(this.filterEntryEditorUI1_Load);
             // 
             // FilterEditor
             // 

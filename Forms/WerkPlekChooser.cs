@@ -11,7 +11,7 @@ namespace Forms
         public WerkPlekChooser(List<WerkPlek> plekken, string selected)
         {
             InitializeComponent();
-            if (plekken != null && plekken.Count > 0)
+            if (plekken is {Count: > 0})
             {
                 Plekken = plekken;
                 comboBox1.Items.AddRange(plekken.Select(x => x.Path).ToArray());
@@ -28,7 +28,7 @@ namespace Forms
         public WerkPlekChooser(string[] plekken, string selected)
         {
             InitializeComponent();
-            if (plekken != null && plekken.Length > 0)
+            if (plekken is {Length: > 0})
             {
                 comboBox1.Items.AddRange(plekken.Cast<object>().ToArray());
                 if (selected == null)

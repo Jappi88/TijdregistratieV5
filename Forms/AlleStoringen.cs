@@ -81,7 +81,7 @@ namespace Forms
                 {
                     await Task.Run(async () =>
                     {
-                        if (Manager.Database != null && !Manager.Database.IsDisposed)
+                        if (Manager.Database is {IsDisposed: false})
                         {
                             var items = await Manager.Database.GetAllProducties(true, true,
                                 Bereik, null);
@@ -195,7 +195,7 @@ namespace Forms
                                 for (int j = 0; j < pair.Value.Count; j++)
                                 {
                                     var sts = pair.Value[j].Storingen?.CreateCopy();
-                                    if (sts != null && sts.Count > 0)
+                                    if (sts is {Count: > 0})
                                     {
                                         uren += sts.Sum(t => t.GetTotaleTijd());
                                     }

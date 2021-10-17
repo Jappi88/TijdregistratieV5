@@ -1,14 +1,18 @@
-﻿using System;
+﻿using Rpm.Misc;
+using Rpm.Productie;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Rpm.Mailing;
-using Rpm.Misc;
-using Rpm.Productie;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.ExcelHelper;
+using Rpm.Various;
 
-namespace ProductieManager.Forms
+namespace Forms
 {
     public partial class CreateExcelForm : MetroFramework.Forms.MetroForm
     {
@@ -59,6 +63,17 @@ namespace ProductieManager.Forms
                 xinfolabel.Visible = true;
             }
             else xinfolabel.Visible = false;
+            var selected = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsSelected);
+            if (selected != null)
+            {
+                xcolumnsStatusLabel.Text = $@"Opties Geselecteerd: {selected.Name}";
+                xcolumnsStatusLabel.ForeColor = Color.DarkGreen;
+            }
+            else
+            {
+                xcolumnsStatusLabel.Text = $@"Geen Opties Geselecteerd!";
+                xcolumnsStatusLabel.ForeColor = Color.DarkRed;
+            }
         }
 
         private void xsluiten_Click(object sender, EventArgs e)
@@ -68,6 +83,29 @@ namespace ProductieManager.Forms
 
         private async void xOpslaan_Click(object sender, EventArgs e)
         {
+            if (IsRunning(null))
+            {
+                StopWait();
+                return;
+            }
+            var selected = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsSelected);
+            if (selected == null)
+            {
+                var xf = new ExcelOptiesForm();
+                xf.LoadOpties(Manager.Opties);
+                xf.IsSelectDialog = true;
+                if (xf.ShowDialog() == DialogResult.OK)
+                {
+                    if (Manager.Opties != null)
+                    {
+                        Manager.Opties.ExcelColumns = xf.Settings;
+                        await Manager.Opties.Save("ExcelColumns Aangepast!");
+                        SetFieldInfo();
+                    }
+                }
+            }
+            selected = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsSelected);
+            if (selected == null) return;
             var ofd = new SaveFileDialog
             {
                 Title = "creëer Productie Overzicht",
@@ -79,7 +117,7 @@ namespace ProductieManager.Forms
                 StartWait();
                 var producties = Bewerkingen?? await Manager.Database.GetAllBewerkingen(true,true);
                 TijdEntry te = Bewerkingen == null ? new TijdEntry(xvanafdate.Value, xtotdate.Value, null) : null;
-                var file = await ExcelWorkbook.CreateWeekOverzicht(te, producties, xcreeroverzicht.Checked, ofd.FileName,$"Overzicht vanaf {xvanafdate.Value} t/m {xtotdate.Value}");
+                var file = await ExcelWorkbook.CreateWeekOverzicht(te, producties, xcreeroverzicht.Checked, ofd.FileName,$"Overzicht vanaf {xvanafdate.Value} t/m {xtotdate.Value}",IsRunning);
                 if (file != null && File.Exists(file) && xopenexcel.Checked)
                     Process.Start(file);
                 StopWait();
@@ -91,7 +129,9 @@ namespace ProductieManager.Forms
         {
             if (_isbusy) return;
             _isbusy = true;
-            xOpslaan.Enabled = false;
+            xOpslaan.Text = "Stoppen";
+            xOpslaan.Image = Resources.stop_red256_24890;
+            button1.Enabled = false;
             xbezig.Visible = true;
             Task.Run(async () =>
             {
@@ -99,7 +139,7 @@ namespace ProductieManager.Forms
                 while (_isbusy)
                 {
                     var xvalue = ("Overzicht Aanmaken").PadRight(count + 19, '.');
-                    xbezig.Invoke(new Action(() => xbezig.Text = xvalue));
+                    //xbezig.Invoke(new Action(() => xbezig.Text = xvalue));
                     count++;
                     if (count > 4)
                         count = 0;
@@ -119,12 +159,52 @@ namespace ProductieManager.Forms
         {
             _isbusy = false;
             if (!this.IsDisposed)
-                xOpslaan.Enabled = true;
+            {
+                xOpslaan.Text = "Opslaan";
+                xOpslaan.Image = Resources.diskette_save_saveas_1514;
+                button1.Enabled = true;
+            }
+        }
+
+        public bool IsRunning(ProgressArg arg)
+        {
+            if (arg?.Message != null)
+            {
+                this.BeginInvoke(new MethodInvoker(() =>
+                {
+                    xbezig.Text = arg.Message;
+                    xbezig.Invalidate();
+                }));
+            }
+
+            return _isbusy;
         }
 
         private void CreateExcelForm_Shown(object sender, EventArgs e)
         {
             SetFieldInfo();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var xf = new ExcelOptiesForm();
+            xf.LoadOpties(Manager.Opties);
+            if (xf.ShowDialog() == DialogResult.OK)
+            {
+                Manager.Opties.ExcelColumns = xf.Settings;
+                Manager.Opties.Save("ExcelColumns Aangepast!");
+                SetFieldInfo();
+            }
+        }
+
+        private void CreateExcelForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            StopWait();
+        }
+
+        private void xcolumnsStatusLabel_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

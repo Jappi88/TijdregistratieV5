@@ -39,7 +39,7 @@ namespace Rpm.Productie
             }
             set
             {
-                if (Parent != null && Parent.TotaalGemaakt > 0)
+                if (Parent is {TotaalGemaakt: > 0})
                     AantalPerStuk = Math.Round(value / Parent.TotaalGemaakt,4);
                 _aantal = value;
             }

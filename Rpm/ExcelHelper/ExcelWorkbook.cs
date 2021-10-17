@@ -12,92 +12,92 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using NPOI.HSSF.UserModel;
+using Rpm.Misc;
 
 // ReSharper disable All
 
-namespace Rpm.Misc
+namespace ProductieManager.Rpm.ExcelHelper
 {
     /// <summary>
     /// Een class voor het maken van excel sheets
     /// </summary>
     public static class ExcelWorkbook
     {
-        /// <summary>
-        /// De productie Columns
-        /// </summary>
-        public static string[] ProductieColumns =
-        {
-            "ArtikelNr", "ProductieNr", "Omschrijving", "Bewerking Naam", "Status",
-            "Start Datum", "Eind Datum", "Tijd Gewerkt(uur)", "Productie Aantal",
-            "Aantal Gemaakt", "Actueel P/u", "Per Uur","Afwijking P/u(%)","Gemiddeld Actueel P/u", "Gemiddeld Afwijking P/u(%)", "Aantal Personen",
-            "Werkplekken", "Personen"
-        };
+        ///// <summary>
+        ///// De productie Columns
+        ///// </summary>
+        //public static string[] ProductieColumns =
+        //{
+        //    "ArtikelNr", "ProductieNr", "Omschrijving", "Bewerking Naam", "Status",
+        //    "Start Datum", "Eind Datum", "Tijd Gewerkt(uur)", "Productie Aantal",
+        //    "Aantal Gemaakt", "Actueel P/u", "Per Uur","Afwijking P/u(%)","Gemiddeld Actueel P/u", "Gemiddeld Afwijking P/u(%)", "Aantal Personen",
+        //    "Werkplekken", "Personen"
+        //};
 
-        /// <summary>
-        /// Verkrijg een column beschrijving
-        /// </summary>
-        /// <param name="colmn">De naam van de column</param>
-        /// <returns>De column omschrijving</returns>
-        public static string GetProductieColumnOmschrijving(string colmn)
-        {
-            var x = ProductieColumns.FirstOrDefault(x =>
-                string.Equals(x, colmn, StringComparison.CurrentCultureIgnoreCase));
-            if (string.IsNullOrEmpty(x)) return colmn;
-            switch (x.ToLower())
-            {
-                case "productienr":
-                    return "Unieke nr dat de productie representeerd.";
-                case "artikelnr":
-                    return "Product artikel nummer.";
-                case "omschrijving":
-                    return "De omschrijving van de productie.";
-                case "bewerking naam":
-                    return "Bewerking naam.";
-                case "status":
-                    return "Huidige status van de bewerking (Gestart,gestopt,gereed of verwijderd).";
-                case "start datum":
-                    return "De datum waarop de bewerking is gestart.";
-                case "eind datum":
-                    return "De tijd waarop de bewerking is gestopt.";
-                case "tijd gewerkt":
-                    return "De aantal gewerkte uren aan de bewerking.";
-                case "productie aantal":
-                    return "Aantal om te produceren";
-                case "aantal gemaakt":
-                    return "Aantal gemaakt";
-                case "actueel p/u":
-                    return "Actuele aantal per uur";
-                case "per uur":
-                    return "Aantal per uur dat bekend is volgens de productie formulier";
-                case "afwijking p/u":
-                    return
-                        "Percentage afwijking tussen de actuele aantal per uur en de aantal die bekend is.";
-                case "gemiddeld actueel p/u":
-                    return "Dit is de gemiddelde actuele aantal per uur op basis van alle bewerkingen met de zelfde artikel nummer en de bewerking naam";
-                case "afwijking gemiddeld p/u":
-                    return "Percentage afwijking van de gemiddeld actuele per uur op basis van wat er bekend is";
-                case "aantal personen":
-                    return "De aantal personen gewerkt aan de bewerking";
-                case "werkplekken":
-                    return "De werkplaatsen gebruikt voor de bewerking";
-                case "personen":
-                    return "De personen die aan de bewerking hebben gewerkt";
-            }
+        ///// <summary>
+        ///// Verkrijg een column beschrijving
+        ///// </summary>
+        ///// <param name="colmn">De naam van de column</param>
+        ///// <returns>De column omschrijving</returns>
+        //public static string GetProductieColumnOmschrijving(string colmn)
+        //{
+        //    var x = ProductieColumns.FirstOrDefault(x =>
+        //        string.Equals(x, colmn, StringComparison.CurrentCultureIgnoreCase));
+        //    if (string.IsNullOrEmpty(x)) return colmn;
+        //    switch (x.ToLower())
+        //    {
+        //        case "productienr":
+        //            return "Unieke nr dat de productie representeerd.";
+        //        case "artikelnr":
+        //            return "Product artikel nummer.";
+        //        case "omschrijving":
+        //            return "De omschrijving van de productie.";
+        //        case "bewerking naam":
+        //            return "Bewerking naam.";
+        //        case "status":
+        //            return "Huidige status van de bewerking (Gestart,gestopt,gereed of verwijderd).";
+        //        case "start datum":
+        //            return "De datum waarop de bewerking is gestart.";
+        //        case "eind datum":
+        //            return "De tijd waarop de bewerking is gestopt.";
+        //        case "tijd gewerkt":
+        //            return "De aantal gewerkte uren aan de bewerking.";
+        //        case "productie aantal":
+        //            return "Aantal om te produceren";
+        //        case "aantal gemaakt":
+        //            return "Aantal gemaakt";
+        //        case "actueel p/u":
+        //            return "Actuele aantal per uur";
+        //        case "per uur":
+        //            return "Aantal per uur dat bekend is volgens de productie formulier";
+        //        case "afwijking p/u":
+        //            return
+        //                "Percentage afwijking tussen de actuele aantal per uur en de aantal die bekend is.";
+        //        case "gemiddeld actueel p/u":
+        //            return "Dit is de gemiddelde actuele aantal per uur op basis van alle bewerkingen met de zelfde artikel nummer en de bewerking naam";
+        //        case "afwijking gemiddeld p/u":
+        //            return "Percentage afwijking van de gemiddeld actuele per uur op basis van wat er bekend is";
+        //        case "aantal personen":
+        //            return "De aantal personen gewerkt aan de bewerking";
+        //        case "werkplekken":
+        //            return "De werkplaatsen gebruikt voor de bewerking";
+        //        case "personen":
+        //            return "De personen die aan de bewerking hebben gewerkt";
+        //    }
 
-            return colmn;
-        }
+        //    return colmn;
+        //}
 
-        /// <summary>
-        /// De productie columns die verborgen moeten worden
-        /// </summary>
-        public static string[] HiddenProductieColumns =
-        {
-            "ProductieNr", "Omschrijving",
-            "Start Datum", "Eind Datum", "Productie Aantal",
-            "Productie Aantal", "Per Uur",
-            "Personen"
-        };
+        ///// <summary>
+        ///// De productie columns die verborgen moeten worden
+        ///// </summary>
+        //public static string[] HiddenProductieColumns =
+        //{
+        //    "ProductieNr", "Omschrijving",
+        //    "Start Datum", "Eind Datum", "Productie Aantal",
+        //    "Productie Aantal", "Per Uur",
+        //    "Personen"
+        //};
 
         /// <summary>
         /// De storing columns
@@ -164,13 +164,13 @@ namespace Rpm.Misc
                             if (columns.All(x =>
                                 !string.Equals(charcol.Key, x, StringComparison.CurrentCultureIgnoreCase)))
                                 columns.Add(charcol.Key);
-                        var style = CreateStyle(workbook, true, HorizontalAlignment.Center, 18);
+                        var style = CreateStyle(workbook, true, HorizontalAlignment.Center, 18, IndexedColors.Black.Index);
                         var omschrijving = $"{xinfo} {fields[fieldindex]} van de afgelopen {overzichten.Count} {xwk}.";
                        // CreateHeader(sheet, omschrijving, rowindex, 2, 0, columns.Count + 1, style);
                         //rowindex += 2;
                         var rowstart = rowindex;
                         //create column font
-                        style = CreateStyle(workbook, true, HorizontalAlignment.Left, 12);
+                        style = CreateStyle(workbook, true, HorizontalAlignment.Left, 12, IndexedColors.Black.Index);
                         style.WrapText = false;
                         //init the columns
 
@@ -189,7 +189,7 @@ namespace Rpm.Misc
                         for (var xrowindex = 0; xrowindex < rowkeys.Length; xrowindex++)
                         {
                             //init values
-                            style = CreateStyle(workbook, false, HorizontalAlignment.Left, 11);
+                            style = CreateStyle(workbook, false, HorizontalAlignment.Left, 11, IndexedColors.Black.Index);
                             style.WrapText = false;
                             row = sheet.CreateRow(rowindex);
                             row.HeightInPoints = 15;
@@ -406,57 +406,61 @@ namespace Rpm.Misc
         /// <param name="isbold">Of de text dik gedrukt moet zijn</param>
         /// <param name="textalign">Waar de tekst lokatie zou moeten zijn</param>
         /// <param name="fontheight">De grootte van de tekst</param>
+        /// <param name="fontcolor">Text kleur</param>
         /// <returns>De nieuw aangemaakte style met de opgegeven argumenten</returns>
         public static ICellStyle CreateStyle(XSSFWorkbook workbook, bool isbold, HorizontalAlignment textalign,
-            int fontheight)
+            int fontheight, short fontcolor)
         {
             var cellStyleBorder = GetBorderStyle(workbook);
             cellStyleBorder.Alignment = textalign;
             //cell header font
             var cellStylefont = workbook.CreateFont();
             cellStylefont.IsBold = isbold;
+            cellStylefont.Color = fontcolor;
             cellStylefont.FontHeightInPoints = fontheight;
             cellStyleBorder.SetFont(cellStylefont);
             return cellStyleBorder;
         }
 
-        /// <summary>
-        /// Maak aan een sheet dat uitlegt wat de productie columns betekenen
-        /// </summary>
-        /// <param name="workbook">De excel waarvoor de sheet gemaakt moet worden</param>
-        /// <returns>De nieuw aangemaakte sheet</returns>
-        public static ISheet CreateProductieUitlegSheet(XSSFWorkbook workbook)
-        {
-            try
-            {
-                var sheet = workbook.CreateSheet("Columns Uitleg");
+        ///// <summary>
+        ///// Maak aan een sheet dat uitlegt wat de productie columns betekenen
+        ///// </summary>
+        ///// <param name="workbook">De excel waarvoor de sheet gemaakt moet worden</param>
+        ///// <returns>De nieuw aangemaakte sheet</returns>
+        //public static ISheet CreateProductieUitlegSheet(XSSFWorkbook workbook)
+        //{
+        //    try
+        //    {
+        //        var sheet = workbook.CreateSheet("Columns Uitleg");
 
-                //border layaout
-                var rowindex = 4;
-                //CreateHeader(sheet, omschrijving, 0, 2, 0, ProductieColumns.Length, cellStyleBorder);
-                //rowindex += 2;
-                //create column font
+        //        //border layaout
+        //        var rowindex = 4;
+        //        //CreateHeader(sheet, omschrijving, 0, 2, 0, ProductieColumns.Length, cellStyleBorder);
+        //        //rowindex += 2;
+        //        //create column font
                
-                //init the columns and font
+        //        //init the columns and font
                 
-                foreach (var xrow in ProductieColumns)
-                {
-                    var row = sheet.CreateRow(rowindex);
-                    var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12);
-                    CreateCell(row, 0, xrow + ": ", cellStyleBorder);
-                    cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 12);
-                    CreateCell(row, 1, GetProductieColumnOmschrijving(xrow), cellStyleBorder);
-                    rowindex++;
-                }
-                sheet.AutoSizeColumn(0, true);
-                sheet.AutoSizeColumn(1, true);
-                return sheet;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
+        //        foreach (var xrow in ProductieColumns)
+        //        {
+        //            var row = sheet.CreateRow(rowindex);
+        //            var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12);
+        //            CreateCell(row, 0, xrow + ": ", cellStyleBorder);
+        //            cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 12);
+        //            CreateCell(row, 1, GetProductieColumnOmschrijving(xrow), cellStyleBorder);
+        //            rowindex++;
+        //        }
+        //        sheet.AutoSizeColumn(0, true);
+        //        sheet.AutoSizeColumn(1, true);
+        //        return sheet;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return null;
+        //    }
+        //}
+
+        public delegate bool IsRunningHandler(ProgressArg arg);
 
         /// <summary>
         /// Maak aan een niew productie sheet binnen een bepaald tijd periode
@@ -465,29 +469,40 @@ namespace Rpm.Misc
         /// <param name="bereik">Het bereik voor de productie overzicht</param>
         /// <param name="naam"></param>
         /// <param name="producties"></param>
+        /// <param name="handler"></param>
         /// <returns></returns>
         public static ISheet CreateProductieOverzicht(XSSFWorkbook workbook, TijdEntry bereik,
-            string naam, List<Bewerking> producties)
+            string naam, List<Bewerking> producties, IsRunningHandler handler)
         {
             try
             {
                 naam += $"({producties.Count})";
                 var sheet = workbook.CreateSheet(naam);
-
+                var xcols = Manager.Opties?.ExcelColumns.FirstOrDefault(x => x.IsSelected);
+                var arg = new ProgressArg();
+                arg.Type = ProgressType.WriteBussy;
+                arg.Value = workbook;
+                arg.Message = $"Excel bestand aanmaken...";
+                if (xcols == null) return sheet;
+                if (handler != null && !handler.Invoke(arg)) return sheet;
                 //border layaout
-                var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Center, 18);
+                //var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Center, 18, IndexedColors.Black.Index);
                 var rowindex = 0;
-                //CreateHeader(sheet, omschrijving, 0, 2, 0, ProductieColumns.Length, cellStyleBorder);
-                //rowindex += 2;
-                //create column font
-                cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12);
+                var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12, IndexedColors.Black.Index);
                 //init the columns and font
                 
                 var row = sheet.CreateRow(rowindex);
-               
+                
                 var cellindex = 0;
-                foreach (var xrow in ProductieColumns)
-                    CreateCell(row, cellindex++, xrow, cellStyleBorder);
+               
+                foreach (var xrow in xcols.Columns)
+                {
+                    arg.Message = $"Columns Aanmaken {cellindex}/{xcols.Columns.Count}...";
+                    arg.Pogress = cellindex == 0 ? 0 : (int)((double)(cellindex / xcols.Columns.Count) * 100);
+                    CreateCell(row, cellindex++, xrow.ColumnText, cellStyleBorder);
+                    if (handler != null && !handler.Invoke(arg)) return sheet;
+                }
+               
                 rowindex++;
 
                 #region Populate Values
@@ -502,21 +517,17 @@ namespace Rpm.Misc
                
                 string lastid = null;
                 short rowcolor = IndexedColors.White.Index;
+                int xcurindex = 0;
                 foreach (var bw in producties)
                 {
+                    arg.Message = $"Rij Aanmaken voor '{bw.ProductieNr}'({xcurindex}/{producties.Count})...";
+                    arg.Pogress = xcurindex == 0 ? 0 : (int)((double)(xcurindex / producties.Count) * 100);
+                    if (handler != null && !handler.Invoke(arg)) break;
                     if (!string.Equals(lastid, bw.ArtikelNr, StringComparison.CurrentCultureIgnoreCase))
                     {
                         rowcolor = rowcolor == IndexedColors.LightGreen.Index ? IndexedColors.White.Index : IndexedColors.LightGreen.Index;
                         lastid = bw.ArtikelNr;
                     }
-                    cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11);
-                    cellStyleBorder.FillBackgroundColor = rowcolor;
-                    cellStyleBorder.FillPattern = FillPattern.FineDots;
-                    cellStyleBorder.FillForegroundColor = IndexedColors.White.Index;
-                    var ffont = workbook.CreateFont();
-                    ffont.FontHeightInPoints = 12;
-                    ffont.Color = HSSFColor.Black.Index;
-                    cellStyleBorder.SetFont(ffont);
                     var tg = bereik == null ? bw.TijdAanGewerkt() : bw.TijdAanGewerkt(bereik.Start, bereik.Stop);
                     //if (tg <= 0) continue;
                     row = sheet.CreateRow(rowindex);
@@ -525,21 +536,75 @@ namespace Rpm.Misc
 
                     //var formatting = CreateRowConditionalFormatRules(sheet, rowindex + 1, ProductieColumns.Length);
                     cellindex = 0;
-                    
-                    foreach (var xrow in ProductieColumns)
+                    cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11,HSSFColor.Black.Index);
+                    cellStyleBorder.FillBackgroundColor =  rowcolor;
+                    cellStyleBorder.FillPattern = FillPattern.SolidForeground;
+                    cellStyleBorder.FillForegroundColor = rowcolor;
+                    bool defstyle = true;
+                    foreach (var xcolmn in xcols.Columns)
                     {
-                        var value = GetValue(bw, xrow, bereik, out var format);
-
+                        if (handler != null && !handler.Invoke(arg)) break;
+                        var value = GetValue(bw, xcolmn.Naam, bereik);
+                        short xcolcolor = -1;
+                        short xtxtcolor = -1;
+                        if (xcolmn.ColorType != ColorRuleType.None)
+                        {
+                            
+                            if (xcolmn.ColorType == ColorRuleType.Static)
+                            {
+                                xcolcolor = xcolmn.ColumnColorIndex;
+                                xtxtcolor = xcolmn.ColumnTextColorIndex;
+                            }
+                            else if (xcolmn.ColorType == ColorRuleType.Dynamic)
+                            {
+                                foreach (var regel in xcolmn.KleurRegels)
+                                {
+                                    if (regel.Filter.ContainsFilter(bw))
+                                    {
+                                        if (regel.IsFontColor)
+                                            xtxtcolor = regel.ColorIndex;
+                                        else
+                                            xcolcolor = regel.ColorIndex;
+                                    }
+                                }
+                            }
+                        }
+                        if (xtxtcolor > -1 || xcolcolor > -1 || !string.IsNullOrEmpty(xcolmn.ColumnFormat))
+                        {
+                            cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11,
+                                xtxtcolor == -1 ? HSSFColor.Black.Index : xtxtcolor);
+                            cellStyleBorder.FillBackgroundColor = xcolcolor == -1 ? rowcolor : xcolcolor;
+                            cellStyleBorder.FillPattern = FillPattern.SolidForeground;
+                            cellStyleBorder.FillForegroundColor = xcolcolor == -1 ? rowcolor : xcolcolor;
+                            if (!string.IsNullOrEmpty(xcolmn.ColumnFormat))
+                            {
+                                IDataFormat dataFormatCustom = workbook.CreateDataFormat();
+                                cellStyleBorder.DataFormat = dataFormatCustom.GetFormat(xcolmn.ColumnFormat);
+                            }
+                            defstyle = false;
+                        }
+                        else if (!defstyle)
+                        {
+                            cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11,
+                                HSSFColor.Black.Index);
+                            cellStyleBorder.FillBackgroundColor = rowcolor;
+                            cellStyleBorder.FillPattern = FillPattern.SolidForeground;
+                            cellStyleBorder.FillForegroundColor = rowcolor;
+                            cellStyleBorder.DataFormat = 0;
+                            defstyle = true;
+                        }
+                        var cell = CreateCell(row, cellindex++, value, cellStyleBorder);
+                       
                         //if (!string.IsNullOrEmpty(format))
                         //{
                         //    cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11);
                         //    cellStyleBorder.DataFormat = workbook.CreateDataFormat().GetFormat(format);
                         //}
                         //else cellStyleBorder.DataFormat = 0;
-                        var cell = CreateCell(row, cellindex++, value,cellStyleBorder);
-                        
-                    }
 
+
+                    }
+                    
                     var pers = bw.GetPersoneel().Select(x => x.PersoneelNaam).Where(x =>
                         personeel.All(t => !string.Equals(x, t, StringComparison.CurrentCultureIgnoreCase))).ToArray();
                     if (pers.Length > 0)
@@ -548,65 +613,57 @@ namespace Rpm.Misc
 
                     totaaltg += tg;
                     rowindex++;
+                    xcurindex++;
                 }
 
                 //Laten we nu wat extra velden aanmaken om het totale te kunnen weergeven van sommige velden.
                 //hier maken we de cel styles aan!
-                cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12);
+                cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12, IndexedColors.Black.Index);
 
                 //hier gaan we de cells aanmaken.
                 row = sheet.CreateRow(rowindex);
                 CreateCell(row, 0, "Totaal", cellStyleBorder);
-
-                cellindex = GetProductieColumnIndex("tijd gewerkt(uur)");
-                var xs = GetColumnName(cellindex);
-                CreateCellFormula(row, cellindex, $"SUM({xs}2:{xs}{rowindex})", cellStyleBorder);
-
-                cellindex = GetProductieColumnIndex("productie aantal");
-                xs = GetColumnName(cellindex);
-                CreateCellFormula(row, cellindex, $"SUM({xs}2:{xs}{rowindex})", cellStyleBorder);
-
-                cellindex = GetProductieColumnIndex("aantal gemaakt");
-                xs = GetColumnName(cellindex);
-                CreateCellFormula(row, cellindex, $"SUM({xs}2:{xs}{rowindex})", cellStyleBorder);
-
-                cellindex = GetProductieColumnIndex("actueel p/u");
-                xs = GetColumnName(cellindex);
-                CreateCellFormula(row, cellindex, $"ROUND(SUM({xs}2:{xs}{rowindex}) / {rowindex - 1},0)",
-                    cellStyleBorder);
-
-                cellindex = GetProductieColumnIndex("per uur");
-                xs = GetColumnName(cellindex);
-                CreateCellFormula(row, cellindex, $"ROUND(SUM({xs}2:{xs}{rowindex}) / {rowindex - 1},0)",
-                    cellStyleBorder);
-                cellindex = GetProductieColumnIndex("gemiddeld actueel p/u");
-                xs = GetColumnName(cellindex);
-                CreateCellFormula(row, cellindex, $"ROUND(SUM({xs}2:{xs}{rowindex}) / {rowindex - 1},0)",
-                    cellStyleBorder);
-
-                cellindex = GetProductieColumnIndex("aantal personen");
-                xs = GetColumnName(cellindex);
-                CreateCellFormula(row, cellindex, $"SUM({xs}2:{xs}{rowindex})", cellStyleBorder);
-
-                if (aantalpers > 0)
+                xcurindex = 0;
+                foreach (var xcol in xcols.Columns)
                 {
-                    var tijdpp = totaaltg == 0 ? 0 : totaaltg / aantalpers;
-                    var xpers = aantalpers == 1 ? "persoon" : "personen";
-                    var xvalue = $"Gewerkt met {aantalpers} verschillende {xpers} ({Math.Round(tijdpp, 2)} uur p.p.)";
-                    CreateCell(row, GetProductieColumnIndex("werkplekken"), xvalue, cellStyleBorder);
+                    if (xcol.Type == CalculationType.None) continue;
+                    arg.Message = $"Berekening Column Aanmaken voor '{xcol.ColumnText}'({xcurindex}/{xcols.Columns.Count})...";
+                    arg.Pogress = xcurindex == 0 ? 0 : (int)((double)(xcurindex / xcols.Columns.Count) * 100);
+                    handler?.Invoke(arg);
+                    //if (handler != null && !handler.Invoke()) return sheet;
+                    cellindex = GetProductieColumnIndex(xcol.Naam);
+                    var xss = GetColumnName(cellindex);
+                    switch (xcol.Type)
+                    {
+                        case CalculationType.SOM:
+                            CreateCellFormula(row, cellindex, $"SUM({xss}2:{xss}{rowindex})", cellStyleBorder);
+                            break;
+                        case CalculationType.Gemiddeld:
+                            CreateCellFormula(row, cellindex, $"ROUND(SUM({xss}2:{xss}{rowindex}) / {rowindex - 1},0)",
+                                cellStyleBorder);
+                            break;
+                    }
                 }
-
                 rowindex++;
 
                 #endregion
 
-                for (var i = 0; i < ProductieColumns.Length; i++)
-                    sheet.AutoSizeColumn(i, true);
+                for (var i = 0; i < xcols.Columns.Count; i++)
 
-                //verberg sommige info velden die niet nodig zijn.
-                foreach (var xv in HiddenProductieColumns)
-                    sheet.SetColumnHidden(GetProductieColumnIndex(xv), true);
-
+                {
+                    arg.Message = $"Breedte aanpassen voor Column '{xcols.Columns[i].ColumnText}'({i}/{xcols.Columns.Count})...";
+                    arg.Pogress = xcurindex == 0 ? 0 : (int)((double)(i / xcols.Columns.Count) * 100);
+                    //if (handler != null && !handler.Invoke()) return sheet;
+                    handler?.Invoke(arg);
+                    if (xcols.Columns[i].AutoSize)
+                        sheet.AutoSizeColumn(i, true);
+                    else
+                    {
+                        sheet.SetColumnWidth(i, xcols.Columns[i].ColumnBreedte);
+                    }
+                    if (xcols.Columns[i].IsVerborgen)
+                        sheet.SetColumnHidden(GetProductieColumnIndex(xcols.Columns[i].Naam), true);
+                }
                 return sheet;
             }
             catch (Exception ex)
@@ -855,8 +912,10 @@ namespace Rpm.Misc
 
         private static int GetProductieColumnIndex(string naam)
         {
-            for (var i = 0; i < ProductieColumns.Length; i++)
-                if (string.Equals(ProductieColumns[i], naam, StringComparison.CurrentCultureIgnoreCase))
+            var xcol = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsSelected);
+            if (xcol == null) return -1;
+            for (var i = 0; i < xcol.Columns.Count; i++)
+                if (string.Equals(xcol.Columns[i].Naam, naam, StringComparison.CurrentCultureIgnoreCase))
                     return i;
             return -1;
         }
@@ -899,12 +958,21 @@ namespace Rpm.Misc
             var cell = row.CreateCell(index);
             if (value is DateTime time)
                 cell.SetCellValue(time.ToString());
+            else if (value is NotitieEntry xnote)
+                cell.SetCellValue(xnote.Notitie);
+            else if (value is VerpakkingInstructie xverp)
+                cell.SetCellValue(xverp.VerpakkingType);
             else if (value is double xdouble)
-                cell.SetCellValue(xdouble);
+                cell.SetCellValue(Math.Round(xdouble, 2));
             else if (value is decimal xdecimal)
                 cell.SetCellValue((double)Math.Round(xdecimal,2));
             else if (value is int xint)
                 cell.SetCellValue(xint);
+            else if (value.GetType().IsEnum)
+            {
+                var xname = Enum.GetName(value.GetType(), value);
+                cell.SetCellValue(xname);
+            }
             else if (value is string xstring)
                 cell.SetCellValue(xstring);
             else if (value is bool xbool)
@@ -981,50 +1049,19 @@ namespace Rpm.Misc
         /// <param name="vanaf">De periode waarvan de waarde moet zijn</param>
         /// <param name="format">Geeft een format terug als dat nodig is</param>
         /// <returns></returns>
-        public static object GetValue(Bewerking bew, string value, TijdEntry vanaf, out string format)
+        public static object GetValue(Bewerking bew, string value, TijdEntry vanaf)
         {
-            format = null;
             if (bew == null || string.IsNullOrEmpty(value)) return null;
+            var prop = bew.GetPropValue(value);
+            if (prop == null)
+            {
+                return "N.V.T.";
+            }
+
             switch (value.ToLower())
             {
-                case "productienr":
-                    return bew.ProductieNr;
-                case "artikelnr":
-                    return bew.ArtikelNr;
-                case "omschrijving":
-                    return bew.Omschrijving;
-                case "bewerking naam":
-                    return bew.Naam;
-                case "status":
-                    return Enum.GetName(typeof(ProductieState), bew.State);
-                case "start datum":
-                    return bew.GestartOp().ToString();
-                case "eind datum":
-                    return bew.GestoptOp().ToString();
-                case "tijd gewerkt(uur)":
-                    return vanaf == null? bew.TijdAanGewerkt() : bew.TijdAanGewerkt(vanaf.Start, vanaf.Stop);
-                case "productie aantal":
-                    return bew.Aantal;
-                case "aantal gemaakt":
-                    return bew.TotaalGemaakt;
-                case "actueel p/u":
-                    return bew.ActueelProductenPerUur();
-                case "per uur":
-                    return bew.PerUur;
-                case "afwijking p/u(%)":
-                    format = "0.00%";
-                    if (bew.ProcentAfwijkingPerUur != 0)
-                        return Math.Round((double) (bew.ProcentAfwijkingPerUur / 100), 2);
-                    else return 0;
-                case "gemiddeld actueel p/u":
-                    return bew.GemiddeldActueelPerUur;
-                case "gemiddeld afwijking p/u(%)":
-                    format = "0.00%";
-                    if (bew.GemiddeldProcentAfwijkingPerUur != 0)
-                        return Math.Round((double)(bew.GemiddeldProcentAfwijkingPerUur / 100),2);
-                    else return 0;
-                case "aantal personen":
-                    return bew.AantalPersonen;
+                case "tijdgewerkt":
+                    return vanaf == null ? bew.TijdAanGewerkt() : bew.TijdAanGewerkt(vanaf.Start, vanaf.Stop);
                 case "werkplekken":
                     var wps = bew.WerkPlekken?.Where(x => x.Personen.Count > 0).ToArray();
                     if (wps?.Length > 0)
@@ -1036,7 +1073,7 @@ namespace Rpm.Misc
                         return string.Join(", ", pers);
                     return "Geen Personeel";
             }
-            return "N.V.T.";
+            return prop;
         }
 
         /// <summary>
@@ -1049,7 +1086,7 @@ namespace Rpm.Misc
         /// <param name="omschrijving">Omschrijving voor de excel</param>
         /// <returns>Een taak die een excel overzicht op de achtergrond maakt</returns>
         public static Task<string> CreateWeekOverzicht(TijdEntry bereik,
-            List<Bewerking> bewerkingen, bool createoverzicht, string filepath, string omschrijving)
+            List<Bewerking> bewerkingen, bool createoverzicht, string filepath, string omschrijving, IsRunningHandler handler)
         {
             return Task.Run(() =>
             {
@@ -1058,8 +1095,14 @@ namespace Rpm.Misc
                     var path = filepath;//$"{filepath}.xlsx";
                     var storingen = new List<Storing>();
                     //var bewerkingen = new List<Bewerking>();
+                    var arg = new ProgressArg();
+                    arg.Type = ProgressType.WriteBussy;
+                   
                     for (var i = 0; i < bewerkingen.Count; i++)
                     {
+                        arg.Message = $"Bewerkingen Verzamelen ({i}/{bewerkingen.Count})...";
+                        arg.Pogress = i == 0 ? 0 : (int)(((double) (i / bewerkingen.Count)) * 100);
+                        if (handler != null && !handler.Invoke(arg)) return null;
                         var bw = bewerkingen[i];
                         //if (producties[i].Bewerkingen?.Length == 0) continue;
                         if (!bw.IsAllowed())
@@ -1085,10 +1128,11 @@ namespace Rpm.Misc
                         bewerkingen = bewerkingen.OrderBy(x => x.ArtikelNr).ToList();
                         var sheetname = $"Producties";
                         var xomschrijving = $"Productie {omschrijving}";
-                        var sheet = CreateProductieOverzicht(workbook, bereik, sheetname, bewerkingen);
+                        var sheet = CreateProductieOverzicht(workbook, bereik, sheetname, bewerkingen,handler);
                     }
-
-                    if (storingen.Count > 0)
+                    arg.Message = $"Overzicht aanmaken...";
+                    bool flag = handler != null && !handler.Invoke(arg);
+                    if (!flag && storingen.Count > 0)
                     {
                         storingen = storingen.OrderBy(x => x.WerkPlek).ToList();
                         //Creeer een niew tapblad als er storingen zijn.
@@ -1099,12 +1143,11 @@ namespace Rpm.Misc
                            bereik);
                     }
 
-                    if (createoverzicht)
+                    if (!flag && createoverzicht)
                     {
                         CreateOverzichtChartSheet(workbook, bewerkingen, false);
                         CreateOverzichtChartSheet(workbook, bewerkingen, true);
                     }
-                    var uitlegsheet = CreateProductieUitlegSheet(workbook);
                     using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
                     {
                         workbook.Write(fs);
@@ -1120,13 +1163,19 @@ namespace Rpm.Misc
             });
         }
 
+        public static bool CanMakeOverzicht(ProgressArg arg)
+        {
+            if (Manager.Opties == null) return false;
+            return Manager.Opties.CreateWeekOverzichten;
+        }
+
         /// <summary>
         /// Maak aan meerdere week overzichten
         /// </summary>
         /// <param name="overzichten">Een serie overzichten die gemaakt moeten worden</param>
         /// <param name="createoverzicht">True voor als je ook de statistieken wilt maken</param>
         /// <returns>Een taak die op de achtergrond excel bestanden aanmaakt</returns>
-        public static Task<WeekOverzicht[]> CreateWeekOverzicht(WeekOverzicht[] overzichten, bool createoverzicht)
+        public static Task<WeekOverzicht[]> CreateWeekOverzicht(WeekOverzicht[] overzichten, bool createoverzicht, IsRunningHandler handler)
         {
             return Task.Run(async () =>
             {
@@ -1135,9 +1184,14 @@ namespace Rpm.Misc
                 {
                     if (Manager.Database == null || Manager.Database.IsDisposed || overzichten?.Length == 0)
                         return aangemaakt.ToArray();
-
+                    var arg = new ProgressArg();
+                    arg.Type = ProgressType.WriteBussy;
+                    arg.Message = "Bewerkingen Verzamelen...";
+                    if (handler != null && !handler.Invoke(arg)) return aangemaakt.ToArray();
                     var bewerkingen = await Manager.Database.GetAllBewerkingen(true,true);
-                    var rootpath = Manager.Opties.WeekOverzichtPath;
+                    arg.Message = "Locatie aanmaken...";
+                    if (handler != null && !handler.Invoke(arg)) return aangemaakt.ToArray();
+                        var rootpath = Manager.Opties.WeekOverzichtPath;
                     if (!Directory.Exists(rootpath))
                         Directory.CreateDirectory(rootpath);
                     if (bewerkingen.Count > 0)
@@ -1145,6 +1199,8 @@ namespace Rpm.Misc
                             foreach (var overzicht in overzichten)
                                 try
                                 {
+                                    arg.Message = $"Overzicht '{overzicht.ToString()}' aanmaken...";
+                                    if (handler != null && !handler.Invoke(arg)) break;
                                     var xbws = new List<Bewerking>();
                                     var startweek =
                                         Functions.DateOfWeek(overzicht.Jaar, DayOfWeek.Monday, overzicht.WeekNr);
@@ -1158,6 +1214,10 @@ namespace Rpm.Misc
                                     //var xbewerkingen = new List<Bewerking>();
                                     for (var i = 0; i < bewerkingen.Count; i++)
                                     {
+                                        arg.Message =
+                                            $"Bewerkingen verzamelen voor '{overzicht.ToString()}'({i}/{bewerkingen.Count})...";
+                                        arg.Pogress = i == 0 ? 0 : (int) (((double) (i / bewerkingen.Count)) * 100);
+                                        if (handler != null && !handler.Invoke(arg)) break;
                                         var bw = bewerkingen[i];
                                         var sts = bw.GetAlleStoringen(startweek, endweek);
                                         if (sts?.Length > 0)
@@ -1179,9 +1239,12 @@ namespace Rpm.Misc
 
                                     var workbook = new XSSFWorkbook();
 
-                                    var sheet = CreateProductieOverzicht(workbook, new TijdEntry(startweek, endweek, null), sheetname, xbws);
+                                    var sheet = CreateProductieOverzicht(workbook, new TijdEntry(startweek, endweek, null), sheetname, xbws,handler);
                                     if (sheet == null) continue;
-                                    if (storingen.Count > 0)
+                                    arg.Message =
+                                        $"Statistieken aanmaken...";
+                                    bool flag = handler != null && !handler.Invoke(arg);
+                                    if (!flag && storingen.Count > 0)
                                     {
                                         //Creeer een niew tapblad als er storingen zijn.
                                         sheetname = $"Week {weekNum} {year} Storingen";
@@ -1189,7 +1252,7 @@ namespace Rpm.Misc
                                         CreateStoringOverzicht(workbook, storingen, sheetname,new TijdEntry(startweek, endweek, null));
                                     }
 
-                                    if (createoverzicht)
+                                    if (!flag && createoverzicht)
                                     {
                                         CreateOverzichtChartSheet(workbook, bewerkingen, false);
                                         CreateOverzichtChartSheet(workbook, bewerkingen, true);
@@ -1225,7 +1288,7 @@ namespace Rpm.Misc
         /// <param name="updateweeknr">De weeknr die geupdate moet worden</param>
         /// <returns></returns>
         public static Task<List<WeekOverzicht>> UpdateWeekOverzichten(int startweek, int startjaar,
-            List<WeekOverzicht> bestaande, int updateweeknr)
+            List<WeekOverzicht> bestaande, int updateweeknr, IsRunningHandler handler)
         {
             return Task.Run(async () =>
             {
@@ -1246,7 +1309,7 @@ namespace Rpm.Misc
 
                     if (tobecreated.Count > 0)
                     {
-                        var newcreated = await ExcelWorkbook.CreateWeekOverzicht(tobecreated.ToArray(), true);
+                        var newcreated = await ExcelWorkbook.CreateWeekOverzicht(tobecreated.ToArray(), true,handler);
                         if (newcreated?.Length > 0) bestaande.AddRange(newcreated);
                     }
                 }
@@ -1291,19 +1354,22 @@ namespace Rpm.Misc
 
                         int currentweek = DateTime.Now.GetWeekNr();
                         overzichten = await UpdateWeekOverzichten(opties.VanafWeek, opties.VanafJaar, overzichten,
-                            opties.DoCurrentWeekOverzicht ? currentweek : 0);
+                            opties.DoCurrentWeekOverzicht ? currentweek : 0, CanMakeOverzicht);
                         if (opties.VerzendAdres?.Count > 0)
                         {
                             foreach (var adres in opties.VerzendAdres)
                             {
+                                if (!CanMakeOverzicht(null)) break;
                                 if (!adres.SendWeekOverzichten || adres.VanafWeek < 1 || adres.VanafYear < 2021)
                                     continue;
                                 if (adres.VerzondenWeekOverzichten == null)
                                     adres.VerzondenWeekOverzichten = new List<WeekOverzicht>();
                                 overzichten =
-                                    await UpdateWeekOverzichten(adres.VanafWeek, adres.VanafYear, overzichten, 0);
+                                    await UpdateWeekOverzichten(adres.VanafWeek, adres.VanafYear, overzichten, 0,CanMakeOverzicht);
+                                
                                 foreach (var overzicht in overzichten)
                                 {
+                                    if (!CanMakeOverzicht(null)) break;
                                     if (overzicht.WeekNr == currentweek || adres.VerzondenWeekOverzichten.Any(t => t.Equals(overzicht))) continue;
                                     if (adres.VanafYear > overzicht.Jaar) continue;
                                     if (adres.VanafWeek > overzicht.WeekNr && adres.VanafYear >= overzicht.Jaar)

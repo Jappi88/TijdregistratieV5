@@ -136,7 +136,7 @@ namespace Controls
             if (Persoon != null)
             {
                 var skills = Persoon.GetSkills();
-                if (skills != null && skills.SkillEntries != null)
+                if (skills is {SkillEntries: { }})
                 {
                     var entries = skills.SkillEntries.Where(x => x.TijdGewerkt > 0).ToList();
                     var title =
@@ -197,9 +197,7 @@ namespace Controls
         private void xsearch_Enter(object sender, EventArgs e)
         {
             var tb = sender as TextBox;
-            if (tb != null)
-                if (tb.Text == "Zoeken...")
-                    tb.Text = "";
+            if (tb is {Text: "Zoeken..."}) tb.Text = "";
         }
 
         private void xsearch_Leave(object sender, EventArgs e)

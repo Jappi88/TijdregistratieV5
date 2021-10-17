@@ -88,7 +88,7 @@ namespace Forms
 
         private void UpdateWerkplek(WerkPlek wp)
         {
-            if (Plekken != null && Plekken.Count > 0)
+            if (Plekken is {Count: > 0})
                 for (var i = 0; i < Plekken.Count; i++)
                     if (Plekken[i].Path.ToLower() == wp.Path.ToLower())
                     {

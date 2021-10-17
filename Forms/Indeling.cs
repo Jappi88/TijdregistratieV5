@@ -217,11 +217,13 @@ namespace Forms
                 xshiftlist.SelectedItem?.EnsureVisible();
                 string x1 = werkplek.Personen.Count == 1 ? "persoon" : "personen";
                 xpersoneelgroep.Text = $@"{werkplek.Naam} Geselecteerd met {werkplek.Personen.Count} {x1}";
+                xwerktijdnaarwerkplek.Visible = werkplek.Personen.Count > 0;
             }
             else
             {
                 xshiftlist.SetObjects(new List<Personeel>());
                 xpersoneelgroep.Text = $@"Geen werkplek geselecteerd";
+                xwerktijdnaarwerkplek.Visible = false;
             }
 
             UpdateUsersButtons();
@@ -535,6 +537,7 @@ namespace Forms
             xedituser.Visible = xshiftlist.SelectedObjects.Count == 1;
             xtijdengewerkt.Visible = xshiftlist.SelectedObjects.Count == 1;
             xroosterb.Enabled = xshiftlist.SelectedObjects.Count == 1;
+            xwerktijdnaarwerkplek.Visible = xshiftlist.Items.Count > 0;
         }
 
         private Personeel[] KiesPersoneel()
@@ -896,7 +899,7 @@ namespace Forms
                         var xent = klus.GetAvailibleTijdEntry();
                         xent.Start = xtijdgestart.Value;
                         xent.Stop = xtijdgestopt.Value;
-                        xent.InUse = Bewerking.State == ProductieState.Gestart;
+                        xent.InUse = Bewerking.State == ProductieState.Gestart && klus.IsActief;
                         klus.UpdateTijdGewerkt(xent);
 
                         xshiftlist.RefreshObject(per);
@@ -910,6 +913,7 @@ namespace Forms
         private void xtijdgestopt_ValueChanged(object sender, EventArgs e)
         {
             if (xshiftlist.SelectedObjects.Count > 0)
+            {
                 //if (xtijdgestopt.Value > DateTime.Now)
                 //    XMessageBox.Show(
                 //        "Ben je helderziend ofzo?\n\n" +
@@ -926,14 +930,17 @@ namespace Forms
                         var xent = klus.GetAvailibleTijdEntry();
                         xent.Start = xtijdgestart.Value;
                         xent.Stop = xtijdgestopt.Value;
-                        xent.InUse = Bewerking.State == ProductieState.Gestart;
+                        xent.InUse = Bewerking.State == ProductieState.Gestart && klus.IsActief;
                         klus.UpdateTijdGewerkt(xent);
 
                         xshiftlist.RefreshObject(per);
-                        if (Bewerking != null)
-                            xwerkplekken.RefreshObjects(Bewerking.WerkPlekken);
+
                     }
                 }
+
+                if (Bewerking != null)
+                    xwerkplekken.RefreshObjects(Bewerking.WerkPlekken);
+            }
             // }
         }
 
@@ -1009,7 +1016,7 @@ namespace Forms
                 if (Bewerking != null)
                 {
                     foreach (var wp in Bewerking.WerkPlekken)
-                        wp.UpdateWerkRooster(null,true,false,false,false,false);
+                        wp.UpdateWerkRooster(null,true,false,false,false,false,false,false);
                     LoadWerkPlekken(null);
                 }
             }
@@ -1228,6 +1235,31 @@ namespace Forms
                 e.RefreshObjects();
                 xwerkplekken.SelectedObject = wp;
                 xwerkplekken.SelectedItem?.EnsureVisible();
+            }
+        }
+
+        private void xwerktijdnaarwerkplek_Click(object sender, EventArgs e)
+        {
+            if (xwerkplekken.SelectedObject is WerkPlek wp)
+            {
+                var users = wp.Personen;
+                if (users.Count > 0)
+                {
+                    var x1 = users.Count == 1 ? users[0].PersoneelNaam : $"{users.Count} medewerkers";
+                    if (XMessageBox.Show($"Wil je alle gewerkte tijden van {x1} naar {wp.Naam} verplaatsen?",
+                            $"Tijden Naar {wp.Naam}", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) ==
+                        DialogResult.Yes)
+                    {
+                        foreach (var user in users)
+                        {
+                            var klus = GetCurrentKlus(user, false);
+                            if (klus == null) continue;
+                            wp.Tijden.UpdateLijst(klus.Tijden);
+                        }
+                    }
+
+                    xwerkplekken.RefreshObject(wp);
+                }
             }
         }
     }

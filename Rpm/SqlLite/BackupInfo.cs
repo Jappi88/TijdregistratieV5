@@ -80,8 +80,7 @@ namespace Rpm.SqlLite
                 var bki = BackupInfo.Load();
                 if (!bki.IsCreating || (bki.IsCreating && (DateTime.Now - bki.Creating).TotalHours > 2))
                 {
-                    if (Manager.Opties != null && Manager.Opties.CreateBackup &&
-                        (DateTime.Now - bki.Created).TotalHours >
+                    if (Manager.Opties is {CreateBackup: true} && (DateTime.Now - bki.Created).TotalHours >
                         TimeSpan.FromMilliseconds(Manager.Opties.BackupInterval).TotalHours)
                     {
                         IsCreating = false;
@@ -89,7 +88,7 @@ namespace Rpm.SqlLite
                     }
                 }
 
-                if (Manager.Opties != null && Manager.Opties.CreateBackup)
+                if (Manager.Opties is {CreateBackup: true})
                     _BackupSyncTimer?.Start();
                 else IsSyncing = false;
             }

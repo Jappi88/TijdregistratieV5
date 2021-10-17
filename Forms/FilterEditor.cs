@@ -142,7 +142,7 @@ namespace ProductieManager.Forms
         {
             try
             {
-                filterEntryEditorUI1.LoadFilterEntries(filter?.Filters ?? new List<FilterEntry>(),false);
+                filterEntryEditorUI1.LoadFilterEntries(typeof(Bewerking), filter?.Filters ?? new List<FilterEntry>(),false);
             }
             catch (Exception e)
             {
@@ -170,11 +170,6 @@ namespace ProductieManager.Forms
         private void xannuleren_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
-        }
-
-        private void filterEntryEditorUI1_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

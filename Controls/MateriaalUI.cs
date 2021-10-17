@@ -22,9 +22,7 @@ namespace Controls
 
         public object GetImage(object sender)
         {
-            if (sender is Materiaal mat)
-                if (mat.IsKlaarGezet)
-                    return 1;
+            if (sender is Materiaal {IsKlaarGezet: true}) return 1;
 
             return 0;
         }
@@ -207,7 +205,7 @@ namespace Controls
             else xklaarzetimage.Image = null;
             var xchecked = xklaarzetimage.Image != null;
             var mats = xmateriaalpanel.Tag as Materiaal[];
-            if (mats != null && mats.Length > 0)
+            if (mats is {Length: > 0})
             {
                 foreach (var mat in mats)
                     mat.IsKlaarGezet = xchecked;
@@ -218,7 +216,7 @@ namespace Controls
         private void xwijzigmatb_Click(object sender, EventArgs e)
         {
             var mats = xmateriaalpanel.Tag as Materiaal[];
-            if (mats != null && mats.Length > 0)
+            if (mats is {Length: > 0})
             {
                 UpdateMateriaal(mats[0]);
                 xmateriaallijst.RefreshObject(mats[0]);
@@ -249,7 +247,7 @@ namespace Controls
         private void xverwijderb_Click(object sender, EventArgs e)
         {
             var mats = xmateriaalpanel.Tag as Materiaal[];
-            if (mats != null && mats.Length > 0)
+            if (mats is {Length: > 0})
             {
                 string txt;
                 if (mats.Length == 1)

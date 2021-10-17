@@ -233,6 +233,7 @@ namespace Controls
                                 {
                                     Taken.Remove(xt);
                                     takenlijst.Remove(xt);
+                                    changed = true;
                                 }
                                 xtakenlijst.BeginUpdate();
                                 xtakenlijst.RemoveObjects(xremove);
@@ -298,7 +299,7 @@ namespace Controls
                 {
                     try
                     {
-                        if (Taken != null && Taken.Count > 0)
+                        if (Taken is {Count: > 0})
                         {
                             for (int i = 0; i < Taken.Count; i++)
                             {
@@ -407,8 +408,7 @@ namespace Controls
 
         private void xtakenlijst_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var taak = xtakenlijst.SelectedObject as Taak;
-            if (taak != null) TaakClicked(taak);
+            if (xtakenlijst.SelectedObject is Taak taak) TaakClicked(taak);
 
             UpdateStatus();
         }
@@ -554,8 +554,7 @@ namespace Controls
 
         private void xtakenlijst_CellToolTipShowing(object sender, ToolTipShowingEventArgs e)
         {
-            var wp = e.Model as Taak;
-            if (wp != null)
+            if (e.Model is Taak wp)
             {
                 e.Title = $"[{Enum.GetName(typeof(AktieType), wp.Type)}]";
                 e.Text = wp.Beschrijving;

@@ -15,15 +15,21 @@ namespace ProductieManager.Forms
     {
         public PropertyInfo Property { get; private set; }
 
+        public Type PropertyType { get; private set; }
+
         public FilterEntry SelectedFilter { get; private set; }
 
         public string Title
         {
             get => Text;
-            set => Text = value;
+            set
+            {
+                Text = value;
+                this.Invalidate();
+            }
         }
 
-        public NewFilterEntry(string propertyname, bool useoperand)
+        public NewFilterEntry(Type type, string propertyname, bool useoperand)
         {
             InitializeComponent();
             xoperandtype.Enabled = useoperand;
@@ -38,10 +44,10 @@ namespace ProductieManager.Forms
                 ChildEntries = new List<FilterEntry>()
             };
             InitOperand();
-            InitFields(propertyname);
+            InitFields(type, propertyname);
         }
 
-        public NewFilterEntry(FilterEntry entry)
+        public NewFilterEntry(Type type, FilterEntry entry)
         {
             InitializeComponent();
             xoperandtype.Enabled = entry.OperandType != Operand.ALS;
@@ -50,7 +56,7 @@ namespace ProductieManager.Forms
             xvaluepanel.Height = 40;
             Size = base.MinimumSize;
             InitOperand();
-            InitFields(entry.PropertyName);
+            InitFields(type, entry.PropertyName);
             SetValue(entry.Value);
         }
 
@@ -67,9 +73,10 @@ namespace ProductieManager.Forms
         //Hoger,
         //NietGelijkAan,
         //BevatNiet
-        private void InitFields(string propertyname)
+        private void InitFields(Type type, string propertyname)
         {
-            Property = typeof(Bewerking).GetPropertyInfo(propertyname);
+            PropertyType = type;
+            Property = type.GetPropertyInfo(propertyname);
             if (Property == null)
                 throw new Exception($"'{propertyname}' bestaat niet, of is ongeldig!");
             xvariablenamelabel.Text = propertyname;
@@ -333,7 +340,7 @@ namespace ProductieManager.Forms
         private void xvoorwaardenb_Click(object sender, EventArgs e)
         {
             if (SelectedFilter == null) return;
-            var fs = new EditCriteriaForm(SelectedFilter.ChildEntries);
+            var fs = new EditCriteriaForm(PropertyType,SelectedFilter.ChildEntries);
             if (fs.ShowDialog() == DialogResult.OK)
             {
                 SelectedFilter.ChildEntries = fs.SelectedFilter;

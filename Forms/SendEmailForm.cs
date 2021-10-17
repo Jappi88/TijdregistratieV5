@@ -45,7 +45,7 @@ namespace ProductieManager.Forms
 
         private void EmailClient_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem menuitem && menuitem.Tag is EmailClient client)
+            if (sender is ToolStripMenuItem {Tag: EmailClient client})
             {
                 var items = xontvangerstrip.Items.Cast<ToolStripMenuItem>().ToList();
                 if (items.Any(x => x.Tag is EmailClient xclient && xclient.Equals(client))) return;

@@ -268,6 +268,7 @@ namespace Forms
                 ? CurrentRooster
                 : Manager.Opties?.GetWerkRooster()??Rooster.StandaartRooster();
             var tijden = GetWerkTijden().ToArray();
+            var result = DialogResult.No;
             if (Klusje != null)
             {
                 Klusje.Tijden.WerkRooster = rooster;
@@ -277,7 +278,6 @@ namespace Forms
             else if(Werklplek != null)
             {
                 bool isgestart = false;
-                var result = DialogResult.Cancel;
                 if (Werklplek.Personen is {Count: > 0})
                 {
                     var xpers = Werklplek.Personen.Where(x => x.IngezetAanKlus(Werklplek.Path,true)).ToList();
@@ -290,17 +290,17 @@ namespace Forms
                         var x3 = xpers.Count == 1 ? "deze werktijden" : "allemaal deze werktijden";
                         var x4 = xpers.Count == 1 ? "krijgt" : "hebben";
                         result = XMessageBox.Show($"{x0} {x1} actief op {Werklplek.Naam}.\n\n" +
-                                                      $"Wil je dat {x2} {x3} {x4}?",
+                                                      $"Wil je {x2} {x3} geven?",
                             "Medewerkers Werktijden",
                             MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                         if (result == DialogResult.Cancel) return;
                     }
                 }
-               // Werklplek.Tijden.WerkRooster = rooster;
+                // Werklplek.Tijden.WerkRooster = rooster;
                 Werklplek.Tijden.SpecialeRoosters = SpecialeRoosters;
                 Werklplek.Tijden.SetUren(tijden, isgestart, true);
                 //Werklplek.Tijden.UpdateUrenRooster(true,false);
-                Werklplek.UpdateWerkRooster(rooster,false, result == DialogResult.Yes, SaveChanges, true, false);
+                Werklplek.UpdateWerkRooster(rooster,false, false,result == DialogResult.Yes, SaveChanges,false, true, false);
             }
 
             DialogResult = DialogResult.OK;
@@ -331,26 +331,18 @@ namespace Forms
         {
             //update status totaal uur vrij
             var rooster = GetRooster(null);
-            //var exc = new Dictionary<DateTime, DateTime>();
-            //if (Bewerking != null)
-            //    exc = Bewerking.WerkPlekken.ToArray().CreateStoringDictionary();
             var tijden = xwerktijden.Objects.Cast<TijdEntry>().ToArray();
-            var lijst = new UrenLijst(tijden);
-            lijst.SpecialeRoosters = SpecialeRoosters;
-            lijst.WerkRooster = rooster;
-            //var extra = tijden.Where(x => x.ExtraTijd != null && x.ExtraTijd.Tijd.TotalHours > 0).Select(x=> x.ExtraTijd).ToArray();
-            //tijden = tijden.Where(x => x.ExtraTijd == null).ToArray();
-            //foreach (var v in tijden)
-            //    x += v.TotaalTijdMetExtra(extra, start, stop,null);
-            xstatuslabel.Text = $"Totaal Gewerkt: {Math.Round(lijst.TijdGewerkt(rooster, null), 2)} uur";
+            var lijst = new UrenLijst(tijden)
+            {
+                SpecialeRoosters = SpecialeRoosters,
+                WerkRooster = rooster
+            };
+            xstatuslabel.Text = $@"Totaal Gewerkt: {Math.Round(lijst.TijdGewerkt(rooster, null), 2)} uur";
         }
 
         public double UurGewerkt(DateTime start, DateTime stop, Rooster rooster)
         {
             rooster ??= GetRooster(null);
-            //var exc = new Dictionary<DateTime, DateTime>();
-            //if (Bewerking != null)
-            //    exc = Bewerking.WerkPlekken.ToArray().CreateStoringDictionary();
             return Math.Round(
                 Werktijd.TijdGewerkt(new TijdEntry(start, stop, rooster), rooster,SpecialeRoosters).TotalHours, 2);
         }
@@ -382,7 +374,7 @@ namespace Forms
                 if (entry.InUse)
                 {
                     xdeleteb.Enabled = false;
-                    xgestoptlabel.Text = "Momenteel Actief!";
+                    xgestoptlabel.Text = @"Momenteel Actief!";
                     xstopdate.Value = DateTime.Now;
                     xstopdate.Enabled = false;
                     return;
@@ -393,7 +385,7 @@ namespace Forms
                     : entry.Stop;
             }
 
-            xgestoptlabel.Text = "Gestopt Op";
+            xgestoptlabel.Text = @"Gestopt Op";
             xstopdate.Enabled = true;
         }
 

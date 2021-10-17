@@ -143,7 +143,7 @@ namespace Controls
             IsSyncing = true;
             Task.Run(async () =>
             {
-                while (IsSyncing && Manager.Opties != null && Manager.Opties.AutoGereedSync && !IsDisposed && IsLoaded)
+                while (IsSyncing && Manager.Opties is {AutoGereedSync: true} && !IsDisposed && IsLoaded)
                     try
                     {
                         if (_LastSynced.AddMilliseconds(Manager.Opties.GereedSyncInterval) > DateTime.Now)

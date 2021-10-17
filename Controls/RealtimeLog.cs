@@ -91,17 +91,14 @@ namespace Controls
                 xlogview.SelectedObject = entry;
                 xlogview.SelectedItem?.EnsureVisible();
             }
-            else if (e.UserState is List<LogEntry> entries)
+            else if (e.UserState is List<LogEntry> {Count: > 0} entries)
             {
-                if (entries.Count > 0)
-                {
-                    Logs.AddRange(entries);
-                    xlogview.BeginUpdate();
-                    xlogview.AddObjects(entries);
-                    xlogview.SelectedObject = entries[entries.Count - 1];
-                    xlogview.SelectedItem?.EnsureVisible();
-                    xlogview.EndUpdate();
-                }
+                Logs.AddRange(entries);
+                xlogview.BeginUpdate();
+                xlogview.AddObjects(entries);
+                xlogview.SelectedObject = entries[entries.Count - 1];
+                xlogview.SelectedItem?.EnsureVisible();
+                xlogview.EndUpdate();
             }
 
             LastRead = DateTime.Now;
@@ -117,7 +114,7 @@ namespace Controls
         {
             return Task.Run(async () =>
             {
-                while (!IsDisposed && Manager.Database != null && LogSyncer != null && !LogSyncer.CancellationPending)
+                while (!IsDisposed && Manager.Database != null && LogSyncer is {CancellationPending: false})
                 {
                     try
                     {
@@ -138,7 +135,7 @@ namespace Controls
 
         public void Start()
         {
-            if (LogSyncer != null && !LogSyncer.IsBusy)
+            if (LogSyncer is {IsBusy: false})
             {
                 Logs = new List<LogEntry>();
                 LogSyncer.RunWorkerAsync();
@@ -252,9 +249,7 @@ namespace Controls
         private void xsearch_Enter(object sender, EventArgs e)
         {
             var tb = sender as TextBox;
-            if (tb != null)
-                if (tb.Text == "Zoeken...")
-                    tb.Text = "";
+            if (tb is {Text: "Zoeken..."}) tb.Text = "";
         }
 
         private void xsearch_Leave(object sender, EventArgs e)

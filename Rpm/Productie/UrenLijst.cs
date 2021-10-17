@@ -82,8 +82,8 @@ namespace Rpm.Productie
                             var xent = Uren[i];
                             if (xent.ExtraTijd != null) continue;
                             var xspc = Manager.Opties?.SpecialeRoosters
-                                ?.Where(x => (x.Vanaf.Date >= xent.Start.Date && x.Vanaf.Date <= xent.Stop.Date) &&
-                                             xent.Stop.TimeOfDay >= x.StartWerkdag).ToList();
+                                ?.Where(x => (x.Vanaf.Date >= xent.Start.Date && x.Vanaf.Date <= xent.Stop.Date) && (
+                                             xent.Stop.TimeOfDay >= x.StartWerkdag && xent.Start.TimeOfDay <= x.EindWerkdag)).ToList();
                             xspc = xspc?.Where(x => SpecialeRoosters.All(s => s.Vanaf.Date != x.Vanaf.Date)).ToList();
 
                             if (xspc != null)
@@ -143,7 +143,7 @@ namespace Rpm.Productie
             {
                 if (Uren.Count == 0)
                 {
-                    Uren.Add(entry);
+                    Uren.Add(entry.CreateCopy());
                     isnew = true;
                     return entry;
                 }
@@ -156,7 +156,7 @@ namespace Rpm.Productie
                 {
                     if (!Uren.Any(x => x.ExtraTijd != null && x.ExtraTijd.Equals(entry.ExtraTijd)))
                     {
-                        Uren.Add(entry);
+                        Uren.Add(entry.CreateCopy());
                         return entry;
                     }
                 }
@@ -260,7 +260,7 @@ namespace Rpm.Productie
                 {
                     if (entry.InUse)
                         Uren.ForEach(x => x.InUse = false);
-                    Uren.Add(entry);
+                    Uren.Add(entry.CreateCopy());
                 }
             }
 
@@ -328,12 +328,13 @@ namespace Rpm.Productie
                 foreach (var t in tijden)
                 {
                     bool x = false;
-                    Add(t,ref x, false);
+                    Add(t, ref x, false);
                 }
+
                 lock (Uren)
                 {
                     Uren = Uren.OrderBy(x => x.Start).ToList();
-                    }
+                }
             }
         }
 
@@ -370,7 +371,7 @@ namespace Rpm.Productie
             rooster ??= WerkRooster;
             if (rooster == null || !rooster.IsValid())
                 rooster = Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
-            var extra = Uren.Where(x => x.ExtraTijd != null && x.ExtraTijd.Tijd.TotalHours > 0).Select(x => x.ExtraTijd)
+            var extra = Uren.Where(x => x.ExtraTijd is {Tijd: {TotalHours: > 0}}).Select(x => x.ExtraTijd)
                 .ToList();
             var tijden = Uren.Where(x => x.ExtraTijd == null).ToArray();
             if (tijden.Length == 0)
@@ -398,7 +399,7 @@ namespace Rpm.Productie
             rooster ??= WerkRooster;
             if (rooster == null || !rooster.IsValid())
                 rooster = Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
-            var xextra = Uren.Where(x => x.ExtraTijd != null && x.ExtraTijd.Tijd.TotalHours > 0).Select(x => x.ExtraTijd)
+            var xextra = Uren.Where(x => x.ExtraTijd is {Tijd: {TotalHours: > 0}}).Select(x => x.ExtraTijd)
                 .ToList();
             var extra = new List<ExtraTijd>();
             xextra.ForEach(x =>

@@ -124,13 +124,12 @@ namespace Forms
 
                     foreach (var item in xmaterialen.Items)
                     {
-                        if (item is ListViewItem olv)
-                            if (olv.Checked)
-                            {
-                                var mat = olv.Tag as Materiaal;
-                                if (mat == null) continue;
-                                xselected.Add($"[({mat.ArtikelNr}){mat.Omschrijving}]");
-                            }
+                        if (item is ListViewItem {Checked: true} olv)
+                        {
+                            var mat = olv.Tag as Materiaal;
+                            if (mat == null) continue;
+                            xselected.Add($"[({mat.ArtikelNr}){mat.Omschrijving}]");
+                        }
                     }
                     if (xmaterialen.Items.Count > 0 && xselected.Count == 0)
                     {

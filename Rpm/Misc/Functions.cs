@@ -613,7 +613,7 @@ namespace Rpm.Misc
                 if (b != null)
                 {
                     WerkPlek wp = null;
-                    if (bew.WerkPlekken != null && bew.WerkPlekken.Count > 1)
+                    if (bew.WerkPlekken is {Count: > 1})
                     {
                         var wpchooser = new WerkPlekChooser(bew.WerkPlekken,null)
                         {
@@ -649,7 +649,7 @@ namespace Rpm.Misc
                             }
                         }
                         //wp.Tijden._rooster = roosterform.WerkRooster;
-                        wp.UpdateWerkRooster(roosterform.WerkRooster,true, true, true, true, true);
+                        wp.UpdateWerkRooster(roosterform.WerkRooster,true, true,true, true, true,true, true);
                         var xchange = wp.Tijden._rooster != null && wp.Tijden._rooster.IsCustom()
                             ? "eigen rooster"
                             : "standaard rooster";
@@ -833,7 +833,7 @@ namespace Rpm.Misc
                         {
                             var xpers = wp.Personen.FirstOrDefault(x =>
                                 string.Equals(x.PersoneelNaam, personeel.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase));
-                            if (xpers != null && xpers.Actief)
+                            if (xpers is {Actief: true})
                             {
                                 xpers.ReplaceKlus(klus);
                                 saved = true;
@@ -1914,7 +1914,7 @@ namespace Rpm.Misc
         {
             try
             {
-                if (Manager.Opties != null && Manager.Opties.VerwijderVerwerkteBestanden && File.Exists(filepath))
+                if (Manager.Opties is {VerwijderVerwerkteBestanden: true} && File.Exists(filepath))
                 {
                     File.Delete(filepath);
                 }
@@ -2148,13 +2148,13 @@ namespace Rpm.Misc
             var xreturn = new Dictionary<string, List<WerkPlek>>();
             try
             {
-                if (werkplekken != null && werkplekken.Length > 0)
+                if (werkplekken is {Length: > 0})
                     foreach (var wp in werkplekken)
                     {
                         var value = xreturn[wp.Naam];
                         if (value == null)
                             value = new List<WerkPlek>();
-                        if (wp.Storingen != null && wp.Storingen.Count > 0)
+                        if (wp.Storingen is {Count: > 0})
                             value.Add(wp);
                     }
             }
@@ -2199,7 +2199,7 @@ namespace Rpm.Misc
                     plek.Storingen = storingen;
                     if (!collection.ContainsKey(plek.Naam))
                     {
-                        if (storingen != null && storingen.Count > 0 || withoutstoringen)
+                        if (storingen is {Count: > 0} || withoutstoringen)
                         {
                             collection.Add(plek.Naam, new List<WerkPlek>());
                             wps = collection[plek.Naam];

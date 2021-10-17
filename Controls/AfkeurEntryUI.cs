@@ -44,7 +44,7 @@ namespace Controls
                     value = 1;
                 var xperc = value.ToString("0.00%");
                 var txtcolor = Color.Green;
-                if (value > 0 && value < (decimal) 0.01)
+                if (value is > 0 and < (decimal) 0.01)
                     txtcolor = Color.Orange;
                 else if (value >= (decimal) 0.01)
                     txtcolor = Color.Red;

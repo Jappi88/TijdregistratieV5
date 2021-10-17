@@ -88,7 +88,7 @@ namespace Forms
                     Text = $"[{Formulier.ProductieNr}]";
                     productieForm1.SetParent(Formulier);
                     var plekken = productieForm1.SelectedBewerking?.WerkPlekken;
-                    if (plekken != null && plekken.Count > 0)
+                    if (plekken is {Count: > 0})
                         TabText = $"{string.Join(",",plekken.Select(x=> x.Naam))} [{Formulier.ProductieNr}, {Formulier.ArtikelNr}]";
                     else TabText = $"[{Formulier.ProductieNr}, {Formulier.ArtikelNr}]";
                 }

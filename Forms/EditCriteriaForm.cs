@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Rpm.Misc;
+using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
-using Rpm.Misc;
-using Rpm.Various;
 
 namespace Forms
 {
@@ -9,10 +9,10 @@ namespace Forms
     {
         public List<FilterEntry> SelectedFilter { get; private set; }
 
-        public EditCriteriaForm(List<FilterEntry> filters)
+        public EditCriteriaForm(Type type, List<FilterEntry> filters)
         {
             InitializeComponent();
-            filterEntryEditorUI1.LoadFilterEntries(filters,true);
+            filterEntryEditorUI1.LoadFilterEntries(type, filters,true);
             SelectedFilter = new List<FilterEntry>();
         }
 

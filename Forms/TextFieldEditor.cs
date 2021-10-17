@@ -20,7 +20,11 @@ namespace Forms
         public string Title
         {
             get => this.Text;
-            set => this.Text = value;
+            set
+            {
+                this.Text = value;
+                this.Invalidate();
+            }
         }
 
         public Image FieldImage { get => ximage.Image; set => ximage.Image = value; }
@@ -40,7 +44,10 @@ namespace Forms
 
         private void xok_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.OK;
+            if (xtextfield.Text.Trim().Length < 2)
+                XMessageBox.Show("Ongeldige waarde", "Ongeldig", MessageBoxIcon.Warning);
+            else
+                DialogResult = DialogResult.OK;
         }
 
         private void xanuleren_Click(object sender, EventArgs e)

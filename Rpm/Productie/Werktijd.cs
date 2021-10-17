@@ -195,7 +195,7 @@ namespace Rpm.Productie
                 var cur = start.TimeOfDay;
                 var vrij = new TimeSpan();
                 //eerst gaan we alle tijd berekenen dat niet gewerkt is.
-                if (vrijetijd != null && vrijetijd.Count > 0)
+                if (vrijetijd is {Count: > 0})
                 {
                     var xdict = new Dictionary<DateTime, DateTime>();
                     foreach (var v in vrijetijd)
@@ -505,7 +505,7 @@ namespace Rpm.Productie
         {
             var x = vanaf;
             rooster = rooster == null || !rooster.IsValid() ? Manager.Opties.GetWerkRooster() : rooster;
-            var specialrooster = (specialeRoosters??Manager.Opties.SpecialeRoosters)?.FirstOrDefault(t => t.Vanaf.Date == vanaf.Date);
+            var specialrooster = (specialeRoosters?.FirstOrDefault(t => t.Vanaf.Date == vanaf.Date));
             if (specialrooster != null)
             {
                 rooster = specialrooster;
@@ -550,7 +550,7 @@ namespace Rpm.Productie
                         {
                             x = x.AddDays(1);
                             specialrooster =
-                                (specialeRoosters ?? Manager.Opties.SpecialeRoosters)?.FirstOrDefault(t =>
+                                specialeRoosters?.FirstOrDefault(t =>
                                     t.Vanaf.Date == x.Date);
                             if (specialrooster != null)
                                 break;
@@ -561,7 +561,7 @@ namespace Rpm.Productie
                     break;
                 case DayOfWeek.Sunday:
                     x = x.AddDays(1);
-                    specialrooster = (specialeRoosters ?? Manager.Opties.SpecialeRoosters)?.FirstOrDefault(t => t.Vanaf.Date == x.Date);
+                    specialrooster = specialeRoosters?.FirstOrDefault(t => t.Vanaf.Date == x.Date);
                     isnewday = true;
                     break;
 
@@ -569,7 +569,7 @@ namespace Rpm.Productie
                     for (int i = 0; i < 2; i++)
                     {
                         x = x.AddDays(1);
-                        specialrooster = (specialeRoosters ?? Manager.Opties.SpecialeRoosters)?.FirstOrDefault(t => t.Vanaf.Date == x.Date);
+                        specialrooster = specialeRoosters?.FirstOrDefault(t => t.Vanaf.Date == x.Date);
                         if (specialrooster != null)
                             break;
                     }
@@ -611,7 +611,7 @@ namespace Rpm.Productie
         {
             var x = vanaf;
             rooster = rooster == null || !rooster.IsValid() ? Manager.Opties.GetWerkRooster() : rooster;
-            var specialrooster = (specialeRoosters ?? Manager.Opties.SpecialeRoosters)?.FirstOrDefault(t => t.Vanaf.Date == vanaf.Date);
+            var specialrooster = specialeRoosters?.FirstOrDefault(t => t.Vanaf.Date == vanaf.Date);
             if (specialrooster != null)
             {
                 rooster = specialrooster;

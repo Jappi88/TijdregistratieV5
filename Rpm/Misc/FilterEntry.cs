@@ -334,7 +334,7 @@ namespace Rpm.Misc
                 var value = ValueToString();
                 var xreturn =
                     $"{Enum.GetName(typeof(Operand), OperandType)} '{PropertyName}' {Enum.GetName(typeof(FilterType), FilterType)} '{value}'";
-                if (ChildEntries != null && ChildEntries.Count > 0)
+                if (ChildEntries is {Count: > 0})
                     xreturn += $"\n({string.Join("\n", ChildEntries.Select(x => x.ToString()))})";
                 return xreturn;
             }
@@ -352,7 +352,7 @@ namespace Rpm.Misc
                 var value = ValueToString();
                 var xreturn =
                     $"<div>(<span Color=RoyalBlue>{Enum.GetName(typeof(Operand), OperandType)}</span> <span Color=Purple>{PropertyName}</span> <span Color=RoyalBlue>{Enum.GetName(typeof(FilterType), FilterType)}</span><span Color=Purple> {value}</span>)</div>";
-                if (ChildEntries != null && ChildEntries.Count > 0)
+                if (ChildEntries is {Count: > 0})
                     xreturn += "\n" + string.Join("\n", ChildEntries.Select(x => x.ToHtmlString()));
                 return xreturn;
             }

@@ -381,7 +381,7 @@ namespace Controls
             {
                 BeginInvoke(new Action(() =>
                 {
-                    var flag = values != null && values.Length > 0;
+                    var flag = values is {Length: > 0};
                     switch (type)
                     {
                         case MainAktie.OpenProductie:
@@ -905,6 +905,9 @@ namespace Controls
                         case "xroostermenubutton":
                             SetSpecialeRooster();
                             break;
+                        case "xspecialeroosterbutton":
+                          BeheerSpecialeRoosters();
+                            break;
                         case "xopenproducties":
                             DoOpenStartedProducties();
                             break;
@@ -1195,6 +1198,36 @@ namespace Controls
             }
         }
 
+        private async void BeheerSpecialeRoosters()
+        {
+            var sproosters = new SpeciaalWerkRoostersForm(Manager.Opties.SpecialeRoosters);
+            if (sproosters.ShowDialog() == DialogResult.OK)
+            {
+               
+                var acces1 = Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieBasis };
+                if (acces1)
+                {
+                    Manager.Opties.SpecialeRoosters = sproosters.Roosters;
+                }
+                if (acces1 && sproosters.Roosters.Count > 0)
+                {
+                    var bws = await Manager.GetBewerkingen(new ViewState[] { ViewState.Gestart }, true);
+                    bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
+                        StringComparison.CurrentCultureIgnoreCase)).ToList();
+                    if (bws.Count > 0)
+                    {
+                        var bwselector = new BewerkingSelectorForm(bws);
+                        bwselector.Title = "Selecteer bewerkingen waarvan de rooster aangepast moet worden";
+                        if (bwselector.ShowDialog() == DialogResult.OK)
+                            await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedBewerkingen, null);
+                    }
+                }
+
+                if (acces1)
+                    _ = Manager.Opties.Save();
+            }
+        }
+
         private void CheckForSyncDatabase()
         {
             var opties = Manager.DefaultSettings ?? UserSettings.GetDefaultSettings();
@@ -1242,7 +1275,7 @@ namespace Controls
         {
             if (_manager == null || Manager.Opties == null || !Manager.Opties.ToonAlleGestartProducties)
                 return;
-            if (Manager.LogedInGebruiker != null && Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieBasis)
+            if (Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis})
             {
                 var prs = await Manager.GetAllProductieIDs(false, true);
                 foreach (var v in prs)

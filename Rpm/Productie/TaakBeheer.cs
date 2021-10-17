@@ -161,7 +161,7 @@ namespace Rpm.Productie
                                     continue;
                                 //tijd dat we kijken of iemand vrij is (8uur)
                                 var tijd = pers.IsVrijOver();
-                                if (tijd > -1 && tijd <= 8)
+                                if (tijd is > -1 and <= 8)
                                 {
                                     var t = new TakenLijst(pers, bew).PersoneelVrij(TaakUrgentie.ZodraMogelijk);
                                     if (t != null)

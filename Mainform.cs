@@ -522,7 +522,7 @@ namespace ProductieManager
 
         private void Mainform_Resize(object sender, EventArgs e)
         {
-            if (this.WindowState == FormWindowState.Minimized && Manager.Opties != null && Manager.Opties.MinimizeToTray)
+            if (this.WindowState == FormWindowState.Minimized && Manager.Opties is {MinimizeToTray: true})
             {
                 this.Hide();
                 notifyIcon1.Visible = true;

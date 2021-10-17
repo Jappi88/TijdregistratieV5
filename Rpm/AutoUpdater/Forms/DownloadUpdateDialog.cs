@@ -265,7 +265,7 @@ namespace AutoUpdaterDotNET
                     return;
                 }
             }
-            if (_webClient != null && _webClient.IsBusy)
+            if (_webClient is {IsBusy: true})
             {
                 _webClient.CancelAsync();
                 DialogResult = DialogResult.Cancel;

@@ -374,6 +374,12 @@
     <Compile Include="Forms\ChatForm.Designer.cs">
       <DependentUpon>ChatForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ColorPickerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ColorPickerForm.Designer.cs">
+      <DependentUpon>ColorPickerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\EditCriteriaForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -386,11 +392,17 @@
     <Compile Include="Forms\EmailHostForm.Designer.cs">
       <DependentUpon>EmailHostForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ExcelOptiesForm.cs">
+    <Compile Include="Forms\Excel\ExcelOptiesForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ExcelOptiesForm.Designer.cs">
+    <Compile Include="Forms\Excel\ExcelOptiesForm.Designer.cs">
       <DependentUpon>ExcelOptiesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Excel\KleurRegelsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Excel\KleurRegelsForm.Designer.cs">
+      <DependentUpon>KleurRegelsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FilterEditor.cs">
       <SubType>Form</SubType>
@@ -434,10 +446,10 @@
     <Compile Include="Forms\NotitieForms.Designer.cs">
       <DependentUpon>NotitieForms.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CreateExcelForm.cs">
+    <Compile Include="Forms\Excel\CreateExcelForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\CreateExcelForm.Designer.cs">
+    <Compile Include="Forms\Excel\CreateExcelForm.Designer.cs">
       <DependentUpon>CreateExcelForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\DeelsGereedForm.cs">
@@ -857,9 +869,9 @@
     <Compile Include="Rpm\Misc\BootLoader.cs" />
     <Compile Include="Rpm\Misc\CpuID.cs" />
     <Compile Include="Rpm\Misc\Crc32.cs" />
-    <Compile Include="Rpm\Misc\ExcelColumnEntry.cs" />
-    <Compile Include="Rpm\Misc\ExcelRegelEntry.cs" />
-    <Compile Include="Rpm\Misc\ExcelWorkbook.cs" />
+    <Compile Include="Rpm\ExcelHelper\ExcelColumnEntry.cs" />
+    <Compile Include="Rpm\ExcelHelper\ExcelRegelEntry.cs" />
+    <Compile Include="Rpm\ExcelHelper\ExcelWorkbook.cs" />
     <Compile Include="Rpm\Misc\Filter.cs" />
     <Compile Include="Rpm\Misc\FilterEntry.cs" />
     <Compile Include="Rpm\Misc\FingerPrint.cs" />
@@ -912,6 +924,7 @@
     <Compile Include="Rpm\Productie\Werktijd.cs" />
     <Compile Include="Rpm\Settings\DatabaseUpdateEntry.cs" />
     <Compile Include="Rpm\Mailing\EmailHost.cs" />
+    <Compile Include="Rpm\Settings\ExcelSettings.cs" />
     <Compile Include="Rpm\Settings\LastFormScreenInfo.cs" />
     <Compile Include="Rpm\Settings\UserAccount.cs" />
     <Compile Include="Rpm\Settings\UserSettings.cs" />
@@ -1037,14 +1050,20 @@
     <EmbeddedResource Include="Forms\ChatForm.resx">
       <DependentUpon>ChatForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ColorPickerForm.resx">
+      <DependentUpon>ColorPickerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\EditCriteriaForm.resx">
       <DependentUpon>EditCriteriaForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EmailHostForm.resx">
       <DependentUpon>EmailHostForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ExcelOptiesForm.resx">
+    <EmbeddedResource Include="Forms\Excel\ExcelOptiesForm.resx">
       <DependentUpon>ExcelOptiesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Excel\KleurRegelsForm.resx">
+      <DependentUpon>KleurRegelsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FilterEditor.resx">
       <DependentUpon>FilterEditor.cs</DependentUpon>
@@ -1068,7 +1087,7 @@
     <EmbeddedResource Include="Forms\NotitieForms.resx">
       <DependentUpon>NotitieForms.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CreateExcelForm.resx">
+    <EmbeddedResource Include="Forms\Excel\CreateExcelForm.resx">
       <DependentUpon>CreateExcelForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DeelsGereedForm.resx">
@@ -1400,6 +1419,9 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Move_Werktijd_Right_32x32.png" />
+    <None Include="Resources\Move_Time_Left_32x32.png" />
+    <None Include="Resources\mimetypes_excel_32x32.png" />
     <None Include="Resources\notekey-office_32x32.png" />
     <None Include="Resources\noterespond-general_32x32.png" />
     <None Include="Resources\noteresponds-office-32x32.png" />

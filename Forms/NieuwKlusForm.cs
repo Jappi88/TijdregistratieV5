@@ -117,7 +117,7 @@ namespace Forms
             SelectedKlus.Naam = xbewerkingen.SelectedItem.ToString();
             var xs = Manager.BewerkingenLijst.GetWerkplekken(xbewerkingen.SelectedItem.ToString().Split('[')[0]);
             xwerkplekken.Items.Clear();
-            if (xs != null && xs.Count > 0)
+            if (xs is {Count: > 0})
             {
                 xwerkplekken.Items.AddRange(xs.Select(x => (object) x).ToArray());
 

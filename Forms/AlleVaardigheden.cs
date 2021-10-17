@@ -47,7 +47,7 @@ namespace Forms
         public async void InitPersoneel()
         {
             var personen = new List<Personeel>();
-            if (Manager.Database != null && !Manager.Database.IsDisposed)
+            if (Manager.Database is {IsDisposed: false})
                 personen = await Manager.Database.GetAllPersoneel();
             xuserlist.SetObjects(personen);
             if (xuserlist.Items.Count > 0 && xuserlist.SelectedObject == null)

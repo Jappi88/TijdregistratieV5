@@ -43,7 +43,7 @@ namespace Rpm.SqlLite
 
         private void _serverwatcher_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (e.UserState != null && e.UserState is List<SqlDataEntry> entries) OnEntryChanged(entries);
+            if (e.UserState is List<SqlDataEntry> entries) OnEntryChanged(entries);
         }
 
         private async void _serverwatcher_DoWork(object sender, DoWorkEventArgs e)

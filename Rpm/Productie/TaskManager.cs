@@ -49,7 +49,7 @@ namespace Rpm.Productie
         {
             return Task.Run(async () =>
             {
-                if (data != null && data.Length > 0)
+                if (data is {Length: > 0})
                 {
                     var pfs = new List<RemoteMessage>();
                     if (data.IsImage())
@@ -66,7 +66,7 @@ namespace Rpm.Productie
                     {
                         //pdf?
                         var pfss = await ProductieFormulier.FromPdf(data);
-                        if (pfss != null && pfss.Count > 0)
+                        if (pfss is {Count: > 0})
                             pfs.AddRange(pfss
                                 .Where(x => pfs.All(t => t.ProductieNummer.ToLower() != x.ProductieNr.ToLower()))
                                 .Select(x => new RemoteMessage($"{x.ProductieNr} toegevoegd!",
@@ -92,7 +92,7 @@ namespace Rpm.Productie
                 if (ProductieData is byte[] data)
                 {
                     var msgs = await ProcessFile(data);
-                    if (msgs != null && msgs.Count > 0)
+                    if (msgs is {Count: > 0})
                         rms.AddRange(msgs.Where(x =>
                             rms.All(t => !string.Equals(t.ProductieNummer, x.ProductieNummer, StringComparison.CurrentCultureIgnoreCase))));
                 }
@@ -101,7 +101,7 @@ namespace Rpm.Productie
                     if (File.Exists(fp1))
                     {
                         var msgs = await ProcessFile(File.ReadAllBytes(fp1));
-                        if (msgs != null && msgs.Count > 0)
+                        if (msgs is {Count: > 0})
                             rms.AddRange(msgs.Where(x =>
                                 rms.All(t => !string.Equals(t.ProductieNummer, x.ProductieNummer, StringComparison.CurrentCultureIgnoreCase))));
                     }
@@ -112,7 +112,7 @@ namespace Rpm.Productie
                         if (File.Exists(fp))
                         {
                             var msgs = await ProcessFile(File.ReadAllBytes(fp));
-                            if (msgs != null && msgs.Count > 0)
+                            if (msgs is {Count: > 0})
                                 rms.AddRange(msgs.Where(x =>
                                     rms.All(t => !string.Equals(t.ProductieNummer, x.ProductieNummer, StringComparison.CurrentCultureIgnoreCase))));
                         }
@@ -122,7 +122,7 @@ namespace Rpm.Productie
                     if (msg.Value is byte[] bytes)
                     {
                         var msgs = await ProcessFile(bytes);
-                        if (msgs != null && msgs.Count > 0)
+                        if (msgs is {Count: > 0})
                             rms.AddRange(msgs.Where(x =>
                                 rms.All(t => !string.Equals(t.ProductieNummer, x.ProductieNummer, StringComparison.CurrentCultureIgnoreCase))));
                     }

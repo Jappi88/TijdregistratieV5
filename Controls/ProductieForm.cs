@@ -498,7 +498,7 @@ namespace Controls
 
         private void mainMenu1_OnMenuClick(object sender, EventArgs e)
         {
-            if (sender is Button xbutton && xbutton.Tag is MenuButton button)
+            if (sender is Button {Tag: MenuButton button})
                 switch (button.Name.ToLower())
                 {
                     case "xwijzigproductie":
@@ -612,6 +612,11 @@ namespace Controls
             if (bew?.Parent == null) return;
             var x = new MateriaalForm();
             x.ShowDialog(bew.Parent);
+        }
+
+        private void mainMenu1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

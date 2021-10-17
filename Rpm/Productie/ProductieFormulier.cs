@@ -80,8 +80,6 @@ namespace Rpm.Productie
         public override string WerkplekkenName => string.Join(", ", GetAlleWerkplekken().Select(x => x.Naam));
         public override string PersoneelNamen => string.Join(", ", Personen.Select(x => x.PersoneelNaam));
 
-        public override VerpakkingInstructie VerpakkingInstries { get; set; }
-
         private Bewerking[] _bewerkingen;
 
         public Bewerking[] Bewerkingen
@@ -1369,7 +1367,7 @@ namespace Rpm.Productie
                         if (gemiddeldperuur > 0) form.GemiddeldActueelPerUur = (int)gemiddeldperuur;
                         if (gemiddeldperuur > 0 && form.Aantal > 0)
                             form.GemiddeldDoorlooptijd = Math.Round((form.TotaalGemaakt > form.Aantal?form.TotaalGemaakt : form.Aantal) / gemiddeldperuur, 2);
-                        if (form.Bewerkingen != null && form.Bewerkingen.Length > 0)
+                        if (form.Bewerkingen is {Length: > 0})
                             foreach (var b in form.Bewerkingen)
                                 await b.UpdateBewerking(forms, null, false);
                         await form.UpdateForm(false, false, null, 
@@ -1441,7 +1439,7 @@ namespace Rpm.Productie
                         VerwachtLeverDatum = DatumGereed;
 
                     if (updatebewerking)
-                        if (Bewerkingen != null && Bewerkingen.Length > 0)
+                        if (Bewerkingen is {Length: > 0})
                             foreach (var b in Bewerkingen)
                             {
                                 if (!b.IsAllowed(null)) continue;
@@ -1847,9 +1845,9 @@ namespace Rpm.Productie
         public List<WerkPlek> GetAlleWerkplekken()
         {
             var plekken = new List<WerkPlek>();
-            if (Bewerkingen != null && Bewerkingen.Length > 0)
+            if (Bewerkingen is {Length: > 0})
                 foreach (var bew in Bewerkingen)
-                    if (bew.WerkPlekken != null && bew.WerkPlekken.Count > 0)
+                    if (bew.WerkPlekken is {Count: > 0})
                         plekken.AddRange(bew.WerkPlekken);
             return plekken;
         }

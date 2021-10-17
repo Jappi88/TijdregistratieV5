@@ -56,7 +56,7 @@ namespace Rpm.Productie
             get => Tijden.ToDictionary();
             set
             {
-                if (value != null && value.Count > 0)
+                if (value is {Count: > 0})
                     foreach (var x in value)
                         Tijden.Add(new TijdEntry(x.Key, x.Value, Tijden.WerkRooster));
             }

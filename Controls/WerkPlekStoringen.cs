@@ -68,7 +68,7 @@ namespace Controls
                 var sts = new List<Storing>();
                 Plek.Value.ForEach(x =>
                 {
-                    if (x.Storingen != null && x.Storingen.Count > 0) sts.AddRange(x.Storingen);
+                    if (x.Storingen is {Count: > 0}) sts.AddRange(x.Storingen);
                 });
                 xskillview.SetObjects(sts.Where(IsAllowed));
             }
@@ -100,7 +100,7 @@ namespace Controls
             var sts = new List<Storing>();
             Plek.Value.ForEach(x =>
             {
-                if (x.Storingen != null && x.Storingen.Count > 0) sts.AddRange(x.Storingen);
+                if (x.Storingen is {Count: > 0}) sts.AddRange(x.Storingen);
             });
             if (sts.Count > 0)
             {
@@ -194,8 +194,7 @@ namespace Controls
 
         public void UpdateButtonEnable()
         {
-            var acces1 = Manager.LogedInGebruiker != null &&
-                         Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieBasis;
+            var acces1 = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
             var selected1 = xskillview.SelectedObjects.Count == 1;
             var selected2 = xskillview.SelectedObjects.Count > 0;
             xaddstoring.Enabled = acces1;
@@ -272,9 +271,7 @@ namespace Controls
         private void xsearch_Enter(object sender, EventArgs e)
         {
             var tb = sender as TextBox;
-            if (tb != null)
-                if (tb.Text == "Zoeken...")
-                    tb.Text = "";
+            if (tb is {Text: "Zoeken..."}) tb.Text = "";
         }
 
         private void xsearch_Leave(object sender, EventArgs e)
@@ -360,8 +357,7 @@ namespace Controls
 
         public async void WijzigSelected()
         {
-            var acces1 = Manager.LogedInGebruiker != null &&
-                         Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieBasis;
+            var acces1 = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
             if (!acces1) return;
             if (!Plek.IsDefault() && xskillview.SelectedObject != null)
             {

@@ -80,7 +80,7 @@ namespace Rpm.Productie
             if (klus == null) return new TimeSpan();
             rooster ??= WerkRooster ?? klus.Tijden?.WerkRooster ?? Manager.Opties.GetWerkRooster();
             var storingen = new Dictionary<DateTime, DateTime>();
-            if (exclude != null && exclude.Count > 0)
+            if (exclude is {Count: > 0})
                 storingen = exclude;
 
             if (VrijeDagen == null || VrijeDagen.Count <= 0) return klus.TijdGewerkt(storingen, rooster);
@@ -102,7 +102,7 @@ namespace Rpm.Productie
             if (klus == null) return new TimeSpan();
             rooster ??= WerkRooster ?? klus.Tijden?.WerkRooster ?? Manager.Opties.GetWerkRooster();
             var storingen = new Dictionary<DateTime, DateTime>();
-            if (exclude != null && exclude.Count > 0)
+            if (exclude is {Count: > 0})
                 storingen = exclude;
 
             if (VrijeDagen == null || VrijeDagen.Count <= 0) return klus.TijdGewerkt(storingen, vanaf, tot, rooster);
@@ -229,7 +229,7 @@ namespace Rpm.Productie
         public double IsVrijOver()
         {
             var firststart = new DateTime(1, 1, 1);
-            if (VrijeDagen != null && VrijeDagen.Count > 0)
+            if (VrijeDagen is {Count: > 0})
                 foreach (var v in VrijeDagen.Uren)
                     if (firststart < v.Start)
                         firststart = v.Start;
@@ -246,7 +246,7 @@ namespace Rpm.Productie
         public TimeSpan TijdVrij()
         {
             var time = new TimeSpan();
-            if (VrijeDagen != null && VrijeDagen.Count > 0)
+            if (VrijeDagen is {Count: > 0})
                 foreach (var v in VrijeDagen.Uren)
                     time = time.Add(Werktijd.TijdGewerkt(new TijdEntry(v.Start, v.Stop, WerkRooster), WerkRooster,null));
             return time;

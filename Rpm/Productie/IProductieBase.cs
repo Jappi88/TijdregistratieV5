@@ -18,7 +18,7 @@ namespace Rpm.Productie
         public IProductieBase()
         {
         }
-
+        public virtual ProductieFormulier Root { get; }
         public virtual UserChange LastChanged { get; set; }
         public virtual ProductieState State { get; set; }
         public virtual int Aantal { get; set; }
@@ -32,8 +32,14 @@ namespace Rpm.Productie
         public virtual string Naam { get; set; }
         public virtual double DoorloopTijd { get; set; }
         public virtual double GemiddeldDoorlooptijd { get; set; }
-        public virtual VerpakkingInstructie VerpakkingInstries { get; set; }
-        public virtual ProductieFormulier Root { get; }
+        [ExcludeFromSerialization]
+        public virtual VerpakkingInstructie VerpakkingInstries
+        {
+            get => VerpakkingsInstructies;
+            set => VerpakkingsInstructies = value;
+        }
+
+        public virtual VerpakkingInstructie VerpakkingsInstructies { get; set; }
         public virtual string WerkplekkenName { get; }
         public virtual string PersoneelNamen { get; }
         public virtual DateTime DatumToegevoegd { get; set; } //  datum van het toevoegen van de productie formulier

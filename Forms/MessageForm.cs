@@ -67,7 +67,7 @@ namespace Forms
             var maxSize = new Size(xmessage.Width, int.MaxValue);
             var textheight = TextRenderer.MeasureText(xmessage.Text, xmessage.Font, maxSize).Height;
             Height = textheight + 200;
-            if (custombuttons != null && custombuttons.Count > 0)
+            if (custombuttons is {Count: > 0})
             {
                 var done = 0;
                 foreach (var cust in custombuttons)

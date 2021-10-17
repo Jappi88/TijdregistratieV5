@@ -74,7 +74,7 @@ namespace Rpm.SqlLite
                     if (e.UserState is Personeel[])
                     {
                         var acc = e.UserState as Personeel[];
-                        if (acc != null && acc.Length > 0)
+                        if (acc is {Length: > 0})
                         {
                             LastPersoneelUpdate = DateTime.Now;
                             foreach (var pers in acc)
@@ -85,7 +85,7 @@ namespace Rpm.SqlLite
                     else if (e.UserState is ProductieFormulier[])
                     {
                         var acc = e.UserState as ProductieFormulier[];
-                        if (acc != null && acc.Length > 0)
+                        if (acc is {Length: > 0})
                         {
                             LastProductieUpdate = DateTime.Now;
                             foreach (var prod in acc)
@@ -98,7 +98,7 @@ namespace Rpm.SqlLite
                     else if (e.UserState is UserAccount[])
                     {
                         var acc = e.UserState as UserAccount[];
-                        if (acc != null && acc.Length > 0)
+                        if (acc is {Length: > 0})
                         {
                             LastAccountUpdate = DateTime.Now;
                             foreach (var account in acc) Manager.AccountChanged(this, account);
@@ -109,34 +109,31 @@ namespace Rpm.SqlLite
                         LastSettingUpdate = DateTime.Now;
                         Manager.UserSettingChanged(this, e.UserState as UserSettings);
                     }
-                    else if (e.UserState is UserChange change)
+                    else if (e.UserState is UserChange {Change: { }} change)
                     {
-                        if (change.Change != null)
-                        {
-                            if (change.IsRemoved)
-                                foreach (var v in change.DbIds)
-                                    switch (v.Key)
-                                    {
-                                        case DbType.Producties:
-                                            Manager.ProductiesChanged();
-                                            break;
-                                        case DbType.GereedProducties:
-                                            Manager.ProductiesChanged();
-                                            break;
-                                        case DbType.Opties:
-                                            break;
-                                        case DbType.Accounts:
-                                            break;
-                                        case DbType.Medewerkers:
-                                            break;
-                                        case DbType.None:
-                                            break;
-                                        default:
-                                            throw new ArgumentOutOfRangeException();
-                                    }
+                        if (change.IsRemoved)
+                            foreach (var v in change.DbIds)
+                                switch (v.Key)
+                                {
+                                    case DbType.Producties:
+                                        Manager.ProductiesChanged();
+                                        break;
+                                    case DbType.GereedProducties:
+                                        Manager.ProductiesChanged();
+                                        break;
+                                    case DbType.Opties:
+                                        break;
+                                    case DbType.Accounts:
+                                        break;
+                                    case DbType.Medewerkers:
+                                        break;
+                                    case DbType.None:
+                                        break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
+                                }
 
-                            Manager.RemoteMessage(change.CreateMessage(change.DbIds.FirstOrDefault().Key));
-                        }
+                        Manager.RemoteMessage(change.CreateMessage(change.DbIds.FirstOrDefault().Key));
                     }
                 }
                 catch
@@ -1185,7 +1182,7 @@ namespace Rpm.SqlLite
             return Task.Run(async () =>
             {
                 var done = 0;
-                if (personen != null && personen.Length > 0 && !IsDisposed && PersoneelLijst != null)
+                if (personen is {Length: > 0} && !IsDisposed && PersoneelLijst != null)
                     foreach (var personeel in personen)
                     {
                         var xpers = await PersoneelLijst.FindOne(personeel.PersoneelNaam);
@@ -2299,7 +2296,7 @@ namespace Rpm.SqlLite
                         try
                         {
                             var xs = await database.AllSettings.FindAll(dbentry.LastUpdated, DateTime.MaxValue,null);
-                            if (xs != null && xs.Count > 0)
+                            if (xs is {Count: > 0})
                             {
                                 max = xs.Count;
                                 count = 0;
@@ -2336,7 +2333,7 @@ namespace Rpm.SqlLite
                         try
                         {
                             var xs1 = await database.UserAccounts.FindAll(dbentry.LastUpdated, DateTime.MaxValue,null);
-                            if (xs1 != null && xs1.Count > 0)
+                            if (xs1 is {Count: > 0})
                             {
                                 //count = 0;
                                 max += xs1.Count;
@@ -2373,7 +2370,7 @@ namespace Rpm.SqlLite
                         try
                         {
                             var xs2 = await database.PersoneelLijst.FindAll(dbentry.LastUpdated, DateTime.MaxValue,null);
-                            if (xs2 != null && xs2.Count > 0)
+                            if (xs2 is {Count: > 0})
                             {
                                 // count = 0;
                                 max += xs2.Count;
@@ -2421,7 +2418,7 @@ namespace Rpm.SqlLite
                            
                             var xs3 = await database.ProductieFormulieren?.FindAll(dbentry.LastUpdated,
                                 DateTime.MaxValue,null);
-                            if (xs3 != null && xs3.Count > 0)
+                            if (xs3 is {Count: > 0})
                             {
                                 max += xs3.Count;
                                 foreach (var s in xs3)
@@ -2458,7 +2455,7 @@ namespace Rpm.SqlLite
                         {
                             var xs3 = await database.GereedFormulieren?.FindAll(dbentry.LastUpdated,
                                 DateTime.MaxValue,null);
-                            if (xs3 != null && xs3.Count > 0)
+                            if (xs3 is {Count: > 0})
                             {
                                 max += xs3.Count;
                                 foreach (var s in xs3)

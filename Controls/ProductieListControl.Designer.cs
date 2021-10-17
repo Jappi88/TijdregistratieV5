@@ -159,7 +159,7 @@ namespace Controls
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(960, 619);
+            this.panel1.Size = new System.Drawing.Size(1126, 620);
             this.panel1.TabIndex = 0;
             // 
             // xloadinglabel
@@ -170,7 +170,7 @@ namespace Controls
             this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xloadinglabel.Location = new System.Drawing.Point(3, 73);
             this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(954, 546);
+            this.xloadinglabel.Size = new System.Drawing.Size(1120, 547);
             this.xloadinglabel.TabIndex = 29;
             this.xloadinglabel.Text = "Producties Laden...";
             this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -262,7 +262,7 @@ namespace Controls
             this.xProductieLijst.ShowCommandMenuOnRightClick = true;
             this.xProductieLijst.ShowItemCountOnGroups = true;
             this.xProductieLijst.ShowItemToolTips = true;
-            this.xProductieLijst.Size = new System.Drawing.Size(960, 546);
+            this.xProductieLijst.Size = new System.Drawing.Size(1126, 547);
             this.xProductieLijst.SmallImageList = this.ximagelist;
             this.xProductieLijst.SpaceBetweenGroups = 5;
             this.xProductieLijst.TabIndex = 28;
@@ -939,7 +939,7 @@ namespace Controls
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 40);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(960, 33);
+            this.panel3.Size = new System.Drawing.Size(1126, 33);
             this.panel3.TabIndex = 27;
             // 
             // xfiltersStrip
@@ -953,7 +953,7 @@ namespace Controls
             this.xfiltersStrip.Location = new System.Drawing.Point(396, 0);
             this.xfiltersStrip.Name = "xfiltersStrip";
             this.xfiltersStrip.ShowItemToolTips = true;
-            this.xfiltersStrip.Size = new System.Drawing.Size(564, 33);
+            this.xfiltersStrip.Size = new System.Drawing.Size(730, 33);
             this.xfiltersStrip.TabIndex = 9;
             this.xfiltersStrip.Text = "menuStrip1";
             // 
@@ -1028,7 +1028,7 @@ namespace Controls
             this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel7.Location = new System.Drawing.Point(0, 0);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(960, 40);
+            this.panel7.Size = new System.Drawing.Size(1126, 40);
             this.panel7.TabIndex = 3;
             // 
             // toolStrip2
@@ -1060,7 +1060,7 @@ namespace Controls
             this.xfiltercontainer});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(960, 39);
+            this.toolStrip2.Size = new System.Drawing.Size(1126, 39);
             this.toolStrip2.TabIndex = 30;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -1419,7 +1419,7 @@ namespace Controls
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "ProductieListControl";
-            this.Size = new System.Drawing.Size(960, 619);
+            this.Size = new System.Drawing.Size(1126, 620);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst)).EndInit();
             this.xproductieLijstcontext.ResumeLayout(false);

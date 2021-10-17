@@ -43,6 +43,7 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.aantalTeMakenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.leverdatumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.materialenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xprodafkeurtoolstrip = new System.Windows.Forms.ToolStripMenuItem();
             this.notitieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -63,7 +64,6 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.xstatusimage = new System.Windows.Forms.PictureBox();
             this.mainMenu1 = new Controls.MainMenu();
-            this.materialenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -82,14 +82,14 @@
             this.xprodafkeurtoolstrip,
             this.notitieToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(208, 216);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(189, 194);
             // 
             // aantalTeMakenToolStripMenuItem
             // 
             this.aantalTeMakenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.hashtag_icon_152828_32_32;
             this.aantalTeMakenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.aantalTeMakenToolStripMenuItem.Name = "aantalTeMakenToolStripMenuItem";
-            this.aantalTeMakenToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
+            this.aantalTeMakenToolStripMenuItem.Size = new System.Drawing.Size(188, 38);
             this.aantalTeMakenToolStripMenuItem.Text = "Aantal Te Maken";
             this.aantalTeMakenToolStripMenuItem.Click += new System.EventHandler(this.aantalTeMakenToolStripMenuItem_Click);
             // 
@@ -98,16 +98,26 @@
             this.leverdatumToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.systemtime_778_32_32;
             this.leverdatumToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.leverdatumToolStripMenuItem.Name = "leverdatumToolStripMenuItem";
-            this.leverdatumToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
+            this.leverdatumToolStripMenuItem.Size = new System.Drawing.Size(188, 38);
             this.leverdatumToolStripMenuItem.Text = "Leverdatum";
             this.leverdatumToolStripMenuItem.Click += new System.EventHandler(this.leverdatumToolStripMenuItem_Click);
+            // 
+            // materialenToolStripMenuItem
+            // 
+            this.materialenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.pngegg__1_;
+            this.materialenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.materialenToolStripMenuItem.Name = "materialenToolStripMenuItem";
+            this.materialenToolStripMenuItem.Size = new System.Drawing.Size(188, 38);
+            this.materialenToolStripMenuItem.Text = "Materialen";
+            this.materialenToolStripMenuItem.ToolTipText = "Beheer materialen";
+            this.materialenToolStripMenuItem.Click += new System.EventHandler(this.materialenToolStripMenuItem_Click);
             // 
             // xprodafkeurtoolstrip
             // 
             this.xprodafkeurtoolstrip.Image = global::ProductieManager.Properties.Resources.bin_icon_icons_com_32x32;
             this.xprodafkeurtoolstrip.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xprodafkeurtoolstrip.Name = "xprodafkeurtoolstrip";
-            this.xprodafkeurtoolstrip.Size = new System.Drawing.Size(207, 38);
+            this.xprodafkeurtoolstrip.Size = new System.Drawing.Size(188, 38);
             this.xprodafkeurtoolstrip.Text = "Afkeur";
             this.xprodafkeurtoolstrip.ToolTipText = "Vul in product afkeur";
             this.xprodafkeurtoolstrip.Click += new System.EventHandler(this.xprodafkeurtoolstrip_Click);
@@ -117,7 +127,7 @@
             this.notitieToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Note_34576_32x32;
             this.notitieToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.notitieToolStripMenuItem.Name = "notitieToolStripMenuItem";
-            this.notitieToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
+            this.notitieToolStripMenuItem.Size = new System.Drawing.Size(188, 38);
             this.notitieToolStripMenuItem.Text = "Notitie";
             this.notitieToolStripMenuItem.Click += new System.EventHandler(this.notitieToolStripMenuItem_Click);
             // 
@@ -525,16 +535,6 @@
             this.mainMenu1.Size = new System.Drawing.Size(40, 453);
             this.mainMenu1.TabIndex = 4;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
-            // 
-            // materialenToolStripMenuItem
-            // 
-            this.materialenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.pngegg__1_;
-            this.materialenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.materialenToolStripMenuItem.Name = "materialenToolStripMenuItem";
-            this.materialenToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
-            this.materialenToolStripMenuItem.Text = "Materialen";
-            this.materialenToolStripMenuItem.ToolTipText = "Beheer materialen";
-            this.materialenToolStripMenuItem.Click += new System.EventHandler(this.materialenToolStripMenuItem_Click);
             // 
             // ProductieForm
             // 

@@ -16,6 +16,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ProductieManager.Rpm.ExcelHelper;
 using Rpm.Opmerking;
 
 namespace Rpm.Productie
@@ -1199,7 +1200,7 @@ namespace Rpm.Productie
                             var wps = bw.WerkPlekken.Where(x => x.IsActief()).ToList();
                             foreach (var wp in wps)
                             {
-                                wp.UpdateWerkRooster(rooster, true, true, true, false, true);
+                                wp.UpdateWerkRooster(rooster, true,true, true, true, false,true, true);
                                 changed = true;
                                 changes.Add(wp.Naam);
                             }

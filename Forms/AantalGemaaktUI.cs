@@ -124,7 +124,7 @@ namespace Forms
         private string ProductiewWerkPlekken(ProductieFormulier form)
         {
             var value = "";
-            if (form != null && form.Bewerkingen != null && form.Bewerkingen.Length > 0)
+            if (form is {Bewerkingen: {Length: > 0}})
                 foreach (var bew in form.Bewerkingen)
                 {
                     value += $"[{bew.Naam}]\n";
@@ -148,7 +148,7 @@ namespace Forms
         private string BewerkingPersoneelText(Bewerking bew)
         {
             var werkplek = "";
-            if (bew.WerkPlekken != null && bew.WerkPlekken.Count > 0)
+            if (bew.WerkPlekken is {Count: > 0})
             {
                 string.Join(", ",
                     bew.WerkPlekken.SelectMany(x =>
@@ -245,7 +245,7 @@ namespace Forms
                     {
                         xaantalgemaakt.SetValue(Bewerking.AantalGemaakt);
                     }
-                    else if (Bewerking.WerkPlekken != null && Bewerking.WerkPlekken.Count > 0)
+                    else if (Bewerking.WerkPlekken is {Count: > 0})
                     {
                         var wp = Bewerking.WerkPlekken.FirstOrDefault(t => string.Equals(t.Naam, selected, StringComparison.CurrentCultureIgnoreCase));
                         if (wp != null) xaantalgemaakt.SetValue(wp.AantalGemaakt);
@@ -263,7 +263,7 @@ namespace Forms
                     {
                         xaantalgemaakt.SetValue(Formulier.AantalGemaakt);
                     }
-                    else if (Formulier.Bewerkingen != null && Formulier.Bewerkingen.Length > 0)
+                    else if (Formulier.Bewerkingen is {Length: > 0})
                     {
                         var b = Bewerking ?? Formulier.Bewerkingen.FirstOrDefault(t =>
                             string.Equals(t.Naam, selected, StringComparison.CurrentCultureIgnoreCase));
@@ -304,7 +304,7 @@ namespace Forms
                         changed = true;
                     }
 
-                    if (!changed && Bewerking.WerkPlekken != null && Bewerking.WerkPlekken.Count > 0)
+                    if (!changed && Bewerking.WerkPlekken is {Count: > 0})
                     {
                         var wp = Bewerking.WerkPlekken.FirstOrDefault(t => string.Equals(t.Naam, selected, StringComparison.CurrentCultureIgnoreCase));
                         if (wp != null)
@@ -352,7 +352,7 @@ namespace Forms
                             await Formulier.UpdateForm(false, false, null, change);
                         }
                     }
-                    else if (Formulier.Bewerkingen != null && Formulier.Bewerkingen.Length > 0)
+                    else if (Formulier.Bewerkingen is {Length: > 0})
                     {
                         var b = Bewerking ??
                                 Formulier.Bewerkingen.FirstOrDefault(t => string.Equals(t.Naam, selected, StringComparison.CurrentCultureIgnoreCase));
