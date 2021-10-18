@@ -80,6 +80,13 @@ namespace Rpm.Productie
         public override string WerkplekkenName => string.Join(", ", GetAlleWerkplekken().Select(x => x.Naam));
         public override string PersoneelNamen => string.Join(", ", Personen.Select(x => x.PersoneelNaam));
 
+        [ExcludeFromSerialization]
+        public override VerpakkingInstructie VerpakkingInstries
+        {
+            get => base.VerpakkingsInstructies;
+            set => base.VerpakkingsInstructies = value;
+        }
+
         private Bewerking[] _bewerkingen;
 
         public Bewerking[] Bewerkingen

@@ -8,7 +8,7 @@ namespace Rpm.Productie
 {
     public class NotitieEntry
     {
-        internal IProductieBase Productie { get; set; }
+        public IProductieBase Productie { get; set; }
         public WerkPlek  Werkplek { get; set; }
         public string Naam { get; set; }
         public string Notitie { get; set; }

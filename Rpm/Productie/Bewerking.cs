@@ -53,13 +53,14 @@ namespace Rpm.Productie
             set => _gestartop = value;
         }
 
-        public override VerpakkingInstructie VerpakkingsInstructies
+        [ExcludeFromSerialization]
+        public override VerpakkingInstructie VerpakkingInstries
         {
-            get => Parent?.VerpakkingsInstructies;
+            get => Parent?.VerpakkingInstries;
             set
             {
                 if (Parent != null)
-                    Parent.VerpakkingsInstructies = value;
+                    Parent.VerpakkingInstries = value;
             }
         }
 

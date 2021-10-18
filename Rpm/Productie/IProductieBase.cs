@@ -18,6 +18,7 @@ namespace Rpm.Productie
         public IProductieBase()
         {
         }
+
         public virtual ProductieFormulier Root { get; }
         public virtual UserChange LastChanged { get; set; }
         public virtual ProductieState State { get; set; }
@@ -39,7 +40,7 @@ namespace Rpm.Productie
             set => VerpakkingsInstructies = value;
         }
 
-        public virtual VerpakkingInstructie VerpakkingsInstructies { get; set; }
+        public virtual VerpakkingInstructie VerpakkingsInstructies { get; set; } = new VerpakkingInstructie();
         public virtual string WerkplekkenName { get; }
         public virtual string PersoneelNamen { get; }
         public virtual DateTime DatumToegevoegd { get; set; } //  datum van het toevoegen van de productie formulier
@@ -51,7 +52,8 @@ namespace Rpm.Productie
         public virtual DateTime LaatstAantalUpdate { get; set; }
         public virtual DateTime TijdGestopt { get; set; }
         public virtual double TotaalTijdGewerkt { get; set; }
-        [ExcludeFromSerialization] public virtual Personeel[] Personen { get; set; }
+        [ExcludeFromSerialization] 
+        public virtual Personeel[] Personen { get; set; }
         public double TijdGewerkt { get; set; }
         public virtual DateTime LeverDatum { get; set; } // de datum waarop de productie klaar moet zijn
 
@@ -63,7 +65,8 @@ namespace Rpm.Productie
         //[ExcludeFromSerialization]
         public virtual NotitieEntry GereedNote { get; set; }
 
-        [ExcludeFromSerialization] public virtual string Path { get; set; }
+        [ExcludeFromSerialization] 
+        public virtual string Path { get; set; }
         public virtual string Paraaf { get; set; } //De persoon die aftekent
         public virtual bool TeLaat => DateTime.Now > LeverDatum;
         public virtual bool IsNieuw => DatumToegevoegd.AddHours(4) > DateTime.Now;
