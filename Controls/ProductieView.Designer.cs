@@ -466,7 +466,7 @@ namespace Controls
             this.metroTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl.Location = new System.Drawing.Point(40, 97);
             this.metroTabControl.Name = "metroTabControl";
-            this.metroTabControl.SelectedIndex = 0;
+            this.metroTabControl.SelectedIndex = 3;
             this.metroTabControl.ShowToolTips = true;
             this.metroTabControl.Size = new System.Drawing.Size(1089, 533);
             this.metroTabControl.Style = MetroFramework.MetroColorStyle.Blue;
@@ -578,7 +578,7 @@ namespace Controls
             this.werkPlekkenUI1.Location = new System.Drawing.Point(3, 3);
             this.werkPlekkenUI1.Name = "werkPlekkenUI1";
             this.werkPlekkenUI1.SelectedWerkplek = null;
-            this.werkPlekkenUI1.Size = new System.Drawing.Size(1051, 410);
+            this.werkPlekkenUI1.Size = new System.Drawing.Size(1071, 481);
             this.werkPlekkenUI1.TabIndex = 0;
             this.werkPlekkenUI1.WerkPlekClicked += new System.EventHandler(this.werkPlekkenUI1_WerkPlekClicked);
             // 
@@ -607,7 +607,7 @@ namespace Controls
             this.recentGereedMeldingenUI1.Location = new System.Drawing.Point(2, 4);
             this.recentGereedMeldingenUI1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.recentGereedMeldingenUI1.Name = "recentGereedMeldingenUI1";
-            this.recentGereedMeldingenUI1.Size = new System.Drawing.Size(1056, 420);
+            this.recentGereedMeldingenUI1.Size = new System.Drawing.Size(1076, 483);
             this.recentGereedMeldingenUI1.TabIndex = 2;
             // 
             // xspeciaalroosterlabel
