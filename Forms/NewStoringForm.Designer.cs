@@ -54,12 +54,15 @@ namespace Forms
             this.xstartstoring = new System.Windows.Forms.DateTimePicker();
             this.xomschrijving = new System.Windows.Forms.RichTextBox();
             this.xsoortstoringen = new System.Windows.Forms.ComboBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.xok = new System.Windows.Forms.Button();
             this.xsluiten = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.xtijdlabel = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -69,6 +72,7 @@ namespace Forms
             ((System.ComponentModel.ISupportInitialize)(this.xisbeeindigd)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel6.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -158,6 +162,7 @@ namespace Forms
             // 
             // panel7
             // 
+            this.panel7.Controls.Add(this.xtijdlabel);
             this.panel7.Controls.Add(this.xisbeeindigd);
             this.panel7.Controls.Add(this.label4);
             this.panel7.Controls.Add(this.xnaambeeindiger);
@@ -338,6 +343,7 @@ namespace Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xsoortstoringen.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.xsoortstoringen.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.xsoortstoringen.ContextMenuStrip = this.contextMenuStrip1;
             this.xsoortstoringen.FormattingEnabled = true;
             this.xsoortstoringen.Location = new System.Drawing.Point(276, 33);
             this.xsoortstoringen.Name = "xsoortstoringen";
@@ -345,6 +351,22 @@ namespace Forms
             this.xsoortstoringen.TabIndex = 1;
             this.toolTip1.SetToolTip(this.xsoortstoringen, "Kies of vul in de soort onderbreking");
             this.xsoortstoringen.TextChanged += new System.EventHandler(this.xsoortstoringen_TextChanged);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(136, 26);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.deleteToolStripMenuItem.Text = "Verwijderen";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // pictureBox2
             // 
@@ -414,6 +436,18 @@ namespace Forms
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip1.ToolTipTitle = "Onderbreking";
             // 
+            // xtijdlabel
+            // 
+            this.xtijdlabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xtijdlabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xtijdlabel.Location = new System.Drawing.Point(6, 109);
+            this.xtijdlabel.Name = "xtijdlabel";
+            this.xtijdlabel.Size = new System.Drawing.Size(260, 37);
+            this.xtijdlabel.TabIndex = 7;
+            this.xtijdlabel.Text = "{0} Voor {1} Uur";
+            // 
             // NewStoringForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -441,6 +475,7 @@ namespace Forms
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
@@ -479,5 +514,8 @@ namespace Forms
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox xnaammelder;
         private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.Label xtijdlabel;
     }
 }

@@ -564,18 +564,28 @@ namespace Rpm.Misc
             return xreturn;
         }
 
+        public static bool SaveStoringen(List<string> storingen, string path)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(path) && storingen is {Count : > 0})
+                {
+                    File.WriteAllBytes(path, storingen.Serialize());
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
         public static string[] LoadSoortStoringen(string txt)
         {
             var xreturn = new List<string>();
             try
             {
-                //if (!File.Exists(txt))
-                //{
-                //    var value = ReadResourceString(txt);
-                //    if (value != null)
-                //        File.WriteAllText(txt, value);
-                //    else return xreturn.ToArray();
-                //}
                 try
                 {
                     xreturn = File.ReadAllBytes(txt).DeSerialize<List<string>>();
@@ -602,7 +612,7 @@ namespace Rpm.Misc
                 Console.WriteLine(ex.Message);
             }
 
-            return xreturn?.ToArray() ?? new string[0];
+            return xreturn?.ToArray() ?? Array.Empty<string>();
         }
 
         public static async void DoBewerkingEigenRooster(this Bewerking bew)

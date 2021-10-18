@@ -609,5 +609,15 @@ namespace Forms
                 xWijzigColumnBreedte.Visible = false;
             }
         }
+
+        private void xColumnBreedte_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (xZichtbareColumnsView.SelectedObject is ExcelColumnEntry entry)
+            {
+                xWijzigColumnBreedte.Visible = entry.ColumnBreedte != xColumnBreedte.Value;
+            }
+            else
+                xWijzigColumnBreedte.Visible = false;
+        }
     }
 }

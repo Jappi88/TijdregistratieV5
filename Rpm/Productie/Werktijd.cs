@@ -201,6 +201,8 @@ namespace Rpm.Productie
                     foreach (var v in vrijetijd)
                     {
                         var vrijstart = EerstVolgendeWerkdag(v.Key, ref rooster, realrooster,specialeRoosters);
+                        if (vrijstart < start)
+                            vrijstart = start;
                         var vrijend = v.Value;
                         if (vrijend.TimeOfDay > xstop)
                             vrijend = new DateTime(vrijend.Year, vrijend.Month, vrijend.Day, xstop.Hours,

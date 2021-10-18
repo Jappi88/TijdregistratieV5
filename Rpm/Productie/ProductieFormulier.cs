@@ -122,7 +122,7 @@ namespace Rpm.Productie
                         if (ps == 0 && mat._aantal > 0)
                         {
                             ps = mat._aantal / value;
-                            mat.AantalPerStuk = ps;
+                            mat.AantalPerStuk = Math.Round(ps, 4);
                         }
                         mat._aantal = value * ps;
                     }
@@ -844,7 +844,7 @@ namespace Rpm.Productie
                                 break;
                             case "aantal/st":
                                 if (double.TryParse(xvalue, out var xperstuk))
-                                    mat.AantalPerStuk = xperstuk;
+                                    mat.AantalPerStuk = Math.Round(xperstuk, 4);
                                 break;
                             case "aantal":
                                 if (double.TryParse(xvalue, out var xaantal))
@@ -1162,7 +1162,7 @@ namespace Rpm.Productie
                                                             length++;
                                                             tmp = tmp.Substring(length, tmp.Length - length);
                                                             if (double.TryParse(xvalue, out var matvalue))
-                                                                xmat.AantalPerStuk = matvalue;
+                                                                xmat.AantalPerStuk = Math.Round(matvalue, 4);
 
                                                             //aantal
                                                             length = GetLengthBySpace(tmp);
@@ -1632,7 +1632,7 @@ namespace Rpm.Productie
 
             return Bewerkingen.FirstOrDefault(x => x.IsAllowed());
         }
-        public async Task<bool> MeldGereed(int aantal, string paraaf, string notitie, bool sendmail)
+        public async Task<bool> MeldGereed(int aantal, string paraaf, string notitie, bool sendmail, bool showmessage)
         {
             try
             {
@@ -1652,7 +1652,7 @@ namespace Rpm.Productie
                 {
                     if (!b.IsAllowed(null)) continue;
                     if (b.State != ProductieState.Verwijderd && b.State != ProductieState.Gereed)
-                        await b.MeldBewerkingGereed(paraaf, aantal, notitie, false,false);
+                        await b.MeldBewerkingGereed(paraaf, aantal, notitie, false,false,false);
                     tijd += b.TijdGewerkt;
                 }
 
@@ -1664,7 +1664,7 @@ namespace Rpm.Productie
                 var change =
                     $"[{ProductieNr.ToUpper()}|{ArtikelNr}] {paraaf} heeft is zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u).";
                
-                await UpdateForm(false, false, null, change);
+                await UpdateForm(false, false, null, change,true,showmessage);
                 _ = UpdateDoorloopTijd(null, this, null, false, true,false);
                 if (sendmail)
                     RemoteProductie.RespondByEmail(this, change);

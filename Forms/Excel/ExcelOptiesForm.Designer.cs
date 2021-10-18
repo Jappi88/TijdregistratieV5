@@ -57,6 +57,9 @@ namespace Forms
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.xItemDelete = new System.Windows.Forms.ToolStripButton();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.xWijzigColumnBreedte = new System.Windows.Forms.Button();
+            this.xColumnBreedte = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.xWijzigColumnFormat = new System.Windows.Forms.Button();
             this.xColumnFormatTextbox = new System.Windows.Forms.TextBox();
@@ -80,9 +83,6 @@ namespace Forms
             this.xGeenBerekeningRadio = new System.Windows.Forms.RadioButton();
             this.xautoculmncheckbox = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.xColumnBreedte = new System.Windows.Forms.NumericUpDown();
-            this.xWijzigColumnBreedte = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -99,11 +99,11 @@ namespace Forms
             ((System.ComponentModel.ISupportInitialize)(this.xZichtbareColumnsView)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.xColumnBreedte)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.xKleurRegelPanel.SuspendLayout();
             this.xStaticColorPanel.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.xColumnBreedte)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -468,6 +468,48 @@ namespace Forms
             this.panel3.Size = new System.Drawing.Size(235, 476);
             this.panel3.TabIndex = 1;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(116, 107);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 17);
+            this.label3.TabIndex = 14;
+            this.label3.Text = "Breedte";
+            // 
+            // xWijzigColumnBreedte
+            // 
+            this.xWijzigColumnBreedte.FlatAppearance.BorderSize = 0;
+            this.xWijzigColumnBreedte.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xWijzigColumnBreedte.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
+            this.xWijzigColumnBreedte.Location = new System.Drawing.Point(200, 121);
+            this.xWijzigColumnBreedte.Name = "xWijzigColumnBreedte";
+            this.xWijzigColumnBreedte.Size = new System.Drawing.Size(32, 32);
+            this.xWijzigColumnBreedte.TabIndex = 13;
+            this.toolTip1.SetToolTip(this.xWijzigColumnBreedte, "Wijzig column breedte");
+            this.xWijzigColumnBreedte.UseVisualStyleBackColor = true;
+            this.xWijzigColumnBreedte.Visible = false;
+            this.xWijzigColumnBreedte.Click += new System.EventHandler(this.xWijzigColumnBreedte_Click);
+            // 
+            // xColumnBreedte
+            // 
+            this.xColumnBreedte.Location = new System.Drawing.Point(119, 127);
+            this.xColumnBreedte.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.xColumnBreedte.Name = "xColumnBreedte";
+            this.xColumnBreedte.Size = new System.Drawing.Size(75, 25);
+            this.xColumnBreedte.TabIndex = 12;
+            this.xColumnBreedte.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.xColumnBreedte.ValueChanged += new System.EventHandler(this.xColumnBreedte_ValueChanged);
+            this.xColumnBreedte.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xColumnBreedte_KeyDown);
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -486,7 +528,7 @@ namespace Forms
             this.xWijzigColumnFormat.Name = "xWijzigColumnFormat";
             this.xWijzigColumnFormat.Size = new System.Drawing.Size(32, 32);
             this.xWijzigColumnFormat.TabIndex = 10;
-            this.toolTip1.SetToolTip(this.xWijzigColumnFormat, "Wijzig column text");
+            this.toolTip1.SetToolTip(this.xWijzigColumnFormat, "Wijzig column formaat");
             this.xWijzigColumnFormat.UseVisualStyleBackColor = true;
             this.xWijzigColumnFormat.Visible = false;
             this.xWijzigColumnFormat.Click += new System.EventHandler(this.xWijzigColumnFormat_Click);
@@ -750,47 +792,6 @@ namespace Forms
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
-            // xColumnBreedte
-            // 
-            this.xColumnBreedte.Location = new System.Drawing.Point(119, 127);
-            this.xColumnBreedte.Maximum = new decimal(new int[] {
-            9999,
-            0,
-            0,
-            0});
-            this.xColumnBreedte.Name = "xColumnBreedte";
-            this.xColumnBreedte.Size = new System.Drawing.Size(75, 25);
-            this.xColumnBreedte.TabIndex = 12;
-            this.xColumnBreedte.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.xColumnBreedte.ValueChanged += new System.EventHandler(this.xColumnBreedte_ValueChanged);
-            // 
-            // xWijzigColumnBreedte
-            // 
-            this.xWijzigColumnBreedte.FlatAppearance.BorderSize = 0;
-            this.xWijzigColumnBreedte.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xWijzigColumnBreedte.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
-            this.xWijzigColumnBreedte.Location = new System.Drawing.Point(200, 121);
-            this.xWijzigColumnBreedte.Name = "xWijzigColumnBreedte";
-            this.xWijzigColumnBreedte.Size = new System.Drawing.Size(32, 32);
-            this.xWijzigColumnBreedte.TabIndex = 13;
-            this.toolTip1.SetToolTip(this.xWijzigColumnBreedte, "Wijzig column text");
-            this.xWijzigColumnBreedte.UseVisualStyleBackColor = true;
-            this.xWijzigColumnBreedte.Visible = false;
-            this.xWijzigColumnBreedte.Click += new System.EventHandler(this.xWijzigColumnBreedte_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(116, 107);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(53, 17);
-            this.label3.TabIndex = 14;
-            this.label3.Text = "Breedte";
-            // 
             // ExcelOptiesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -826,6 +827,7 @@ namespace Forms
             this.toolStrip1.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.xColumnBreedte)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.xKleurRegelPanel.ResumeLayout(false);
@@ -833,7 +835,6 @@ namespace Forms
             this.xStaticColorPanel.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.xColumnBreedte)).EndInit();
             this.ResumeLayout(false);
 
         }

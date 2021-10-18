@@ -31,9 +31,9 @@ namespace Forms
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CreateExcelForm));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.xbezig = new System.Windows.Forms.Label();
             this.xsluiten = new System.Windows.Forms.Button();
             this.xOpslaan = new System.Windows.Forms.Button();
+            this.xbezig = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.xinfolabel = new System.Windows.Forms.Label();
@@ -59,17 +59,6 @@ namespace Forms
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(550, 45);
             this.panel1.TabIndex = 1;
-            // 
-            // xbezig
-            // 
-            this.xbezig.AutoSize = true;
-            this.xbezig.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xbezig.Location = new System.Drawing.Point(146, 247);
-            this.xbezig.Name = "xbezig";
-            this.xbezig.Size = new System.Drawing.Size(166, 20);
-            this.xbezig.TabIndex = 8;
-            this.xbezig.Text = "Overzicht Aanmaken...";
-            this.xbezig.Visible = false;
             // 
             // xsluiten
             // 
@@ -102,6 +91,17 @@ namespace Forms
             this.xOpslaan.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.xOpslaan.UseVisualStyleBackColor = true;
             this.xOpslaan.Click += new System.EventHandler(this.xOpslaan_Click);
+            // 
+            // xbezig
+            // 
+            this.xbezig.AutoSize = true;
+            this.xbezig.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xbezig.Location = new System.Drawing.Point(146, 247);
+            this.xbezig.Name = "xbezig";
+            this.xbezig.Size = new System.Drawing.Size(166, 20);
+            this.xbezig.TabIndex = 8;
+            this.xbezig.Text = "Overzicht Aanmaken...";
+            this.xbezig.Visible = false;
             // 
             // pictureBox1
             // 
@@ -260,6 +260,7 @@ namespace Forms
             this.Name = "CreateExcelForm";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Style = MetroFramework.MetroColorStyle.Green;
             this.Text = "Excel Overzicht Aanmaken";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CreateExcelForm_FormClosing);
             this.Shown += new System.EventHandler(this.CreateExcelForm_Shown);

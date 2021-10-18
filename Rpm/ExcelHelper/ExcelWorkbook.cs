@@ -659,7 +659,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                         sheet.AutoSizeColumn(i, true);
                     else
                     {
-                        sheet.SetColumnWidth(i, xcols.Columns[i].ColumnBreedte);
+                        sheet.SetColumnWidth(i, xcols.Columns[i].ColumnBreedte * 256);
                     }
                     if (xcols.Columns[i].IsVerborgen)
                         sheet.SetColumnHidden(GetProductieColumnIndex(xcols.Columns[i].Naam), true);

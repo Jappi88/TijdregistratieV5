@@ -91,7 +91,6 @@ namespace Controls
             try
             {
                 //if (_manager == null)
-
                 _manager?.Dispose();
                 if (_manager == null)
                     _manager = new Manager(false);

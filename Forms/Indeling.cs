@@ -27,6 +27,7 @@ namespace Forms
            
             ((OLVColumn) xwerkplekken.Columns[0]).ImageGetter = item => 0;
             ((OLVColumn)xwerkplekken.Columns[1]).AspectGetter = WerkplekRoosterGet;
+            ((OLVColumn)xwerkplekken.Columns[3]).AspectGetter = WerkplekTijdGewerktGet;
 
             ((OLVColumn)xshiftlist.Columns[0]).ImageGetter = ImageGet;
             ((OLVColumn)xshiftlist.Columns[2]).AspectGetter = TijdGewerktGet;
@@ -83,6 +84,15 @@ namespace Forms
                 if (wp.Tijden?.WerkRooster != null && wp.Tijden.WerkRooster.IsCustom())
                     return "Eigen";
                 return "Standaard";
+            }
+
+            return "Geen Idee";
+        }
+        public object WerkplekTijdGewerktGet(object sender)
+        {
+            if (sender is WerkPlek wp)
+            {
+                return wp.TijdAanGewerkt();
             }
 
             return "Geen Idee";
@@ -537,7 +547,25 @@ namespace Forms
             xedituser.Visible = xshiftlist.SelectedObjects.Count == 1;
             xtijdengewerkt.Visible = xshiftlist.SelectedObjects.Count == 1;
             xroosterb.Enabled = xshiftlist.SelectedObjects.Count == 1;
-            xwerktijdnaarwerkplek.Visible = xshiftlist.Items.Count > 0;
+            var wp = GetCurrentWerkPlek();
+            xwerktijdnaarwerkplek.Visible = wp != null && xshiftlist.Items.Count > 0;
+            if (wp != null)
+            {
+                if (xshiftlist.SelectedObjects.Count == 0)
+                {
+                    var x1 = xshiftlist.Items.Count == 1
+                        ? xshiftlist.Objects.Cast<Personeel>().FirstOrDefault()?.PersoneelNaam
+                        : $"{xshiftlist.Items.Count} Medewerkers";
+                    xwerktijdnaarwerkplek.Text = $"{x1} Tijden Naar {wp.Naam}";
+                }
+                else
+                {
+                    var x1 = xshiftlist.SelectedObjects.Count == 1
+                        ? xshiftlist.SelectedObjects.Cast<Personeel>().FirstOrDefault()?.PersoneelNaam
+                        : $"{xshiftlist.SelectedObjects.Count} Medewerkers";
+                    xwerktijdnaarwerkplek.Text = $"{x1} Tijden Naar {wp.Naam}";
+                }
+            }
         }
 
         private Personeel[] KiesPersoneel()
@@ -1242,15 +1270,22 @@ namespace Forms
         {
             if (xwerkplekken.SelectedObject is WerkPlek wp)
             {
-                var users = wp.Personen;
-                if (users.Count > 0)
+                List<Personeel> pers = new List<Personeel>();
+                if (xshiftlist.SelectedObjects.Count > 0)
                 {
-                    var x1 = users.Count == 1 ? users[0].PersoneelNaam : $"{users.Count} medewerkers";
+                    pers = xshiftlist.SelectedObjects.Cast<Personeel>().ToList();
+                }
+                else
+                    pers = wp.Personen;
+
+                if (pers.Count > 0)
+                {
+                    var x1 = pers.Count == 1 ? pers[0].PersoneelNaam : $"{pers.Count} medewerkers";
                     if (XMessageBox.Show($"Wil je alle gewerkte tijden van {x1} naar {wp.Naam} verplaatsen?",
                             $"Tijden Naar {wp.Naam}", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) ==
                         DialogResult.Yes)
                     {
-                        foreach (var user in users)
+                        foreach (var user in pers)
                         {
                             var klus = GetCurrentKlus(user, false);
                             if (klus == null) continue;

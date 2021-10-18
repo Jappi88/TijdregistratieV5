@@ -33,14 +33,19 @@ namespace Rpm.Productie
         public virtual string Naam { get; set; }
         public virtual double DoorloopTijd { get; set; }
         public virtual double GemiddeldDoorlooptijd { get; set; }
+
+        private VerpakkingInstructie _verpakking;
         [ExcludeFromSerialization]
         public virtual VerpakkingInstructie VerpakkingInstries
         {
-            get => VerpakkingsInstructies;
-            set => VerpakkingsInstructies = value;
+            get => _verpakking;
+            set => _verpakking = value;
         }
 
-        public virtual VerpakkingInstructie VerpakkingsInstructies { get; set; } = new VerpakkingInstructie();
+        public virtual VerpakkingInstructie VerpakkingsInstructies { get=> _verpakking;
+            set => _verpakking = value;
+        }
+
         public virtual string WerkplekkenName { get; }
         public virtual string PersoneelNamen { get; }
         public virtual DateTime DatumToegevoegd { get; set; } //  datum van het toevoegen van de productie formulier
@@ -286,7 +291,9 @@ namespace Rpm.Productie
                           ximage +
                           $"<td>" +
                           $"<h3>Leverdatum: {LeverDatum:f}.<br>" +
+                          $"<hr />" +
                           $"{(State != ProductieState.Gereed ? $"Verwachte Leverdatum: {VerwachtLeverDatum:f}" : $"Gereed Gemeld Op: {DatumGereed:f}")}.</h3>" +
+                          $"<hr />" +
                           $"<h3>Productie Info</h3>\r\n" +
                           $"<div>\r\n" +
                           $"ProductieNr: <b>{ProductieNr}</b><br>" +
@@ -329,9 +336,9 @@ namespace Rpm.Productie
                           string.Join("<br>", GetMaterialen().Select(x =>
                               ($"<div Color=RoyalBlue>[{x.ArtikelNr}] {x.Omschrijving}</div>" +
                                $"<div>Locatie: <b>{x.Locatie}</b></div>" +
-                               $"<div>Verbuik Per Eenheid: <b>{x.AantalPerStuk} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
-                               $"<div>Verbuik: <b>{TotaalGemaakt * x.AantalPerStuk} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
-                               $"<div>Aantal Afkeur: <b>{x.AantalAfkeur} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)} ({x.AfKeurProcent()})</b></div>"))) +
+                               $"<div>Verbuik Per Eenheid: <b>{Math.Round(x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
+                               $"<div>Verbuik: <b>{Math.Round(TotaalGemaakt * x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
+                               $"<div>Aantal Afkeur: <b>{Math.Round(x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)} ({x.AfKeurProcent()})</b></div>"))) +
                           $"<hr />" +
                           $"</td>" +
                           $"</tr>\r\n" +

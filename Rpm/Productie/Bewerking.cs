@@ -729,7 +729,7 @@ namespace Rpm.Productie
 
         public async Task<bool> MeldBewerkingGereed(string paraaf, int aantal,
             string notitie,
-            bool update, bool sendmail)
+            bool update, bool sendmail, bool showmessage)
         {
             await StopProductie(false);
            // await MeldDeelsGereed(paraaf, aantal, notitie,null,DateTime.Now, false);
@@ -758,7 +758,7 @@ namespace Rpm.Productie
             var change =
                 $"[{Path}] {paraaf} heeft is zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u) op {WerkplekkenName}.";
            
-            await UpdateBewerking(null, change, update);
+            await UpdateBewerking(null, change, update,showmessage);
             if (sendmail)
                 RemoteProductie.RespondByEmail(this, change);
 
@@ -767,7 +767,7 @@ namespace Rpm.Productie
             if (parent.Bewerkingen != null)
                 xcount = parent.Bewerkingen.Count(t => t.State != ProductieState.Gereed);
             if (xcount == 0)
-                await parent.MeldGereed(aantal, paraaf, notitie, false);
+                await parent.MeldGereed(aantal, paraaf, notitie, false,false);
             //else
             //{
             //    if (sendmail)

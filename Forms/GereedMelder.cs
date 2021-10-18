@@ -83,13 +83,13 @@ namespace Forms
                 if (_prod is ProductieFormulier form)
                 {
                     Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
-                    await form.MeldGereed((int)xaantal.Value, xparaaf.Text.Trim(), Notitie,true);
+                    await form.MeldGereed((int)xaantal.Value, xparaaf.Text.Trim(), Notitie,true,true);
                     DialogResult = DialogResult.OK;
                 }
                 else if (_prod is Bewerking bew)
                 {
                     Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
-                    await bew.MeldBewerkingGereed(xparaaf.Text.Trim(), (int) xaantal.Value, Notitie, true,true);
+                    await bew.MeldBewerkingGereed(xparaaf.Text.Trim(), (int) xaantal.Value, Notitie, true,true,true);
                     ProductieManager.Properties.Settings.Default.Paraaf = xparaaf.Text.Trim();
                     ProductieManager.Properties.Settings.Default.Save();
                     DialogResult = DialogResult.OK;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Documents;
 using System.Windows.Forms;
 using ProductieManager.Properties;
 using Rpm.Misc;
@@ -79,6 +80,9 @@ namespace Forms
                     this.Text = $"Voeg nieuwe onderbreking toe aan {Plek.Path} [{Onderbreking.GetTotaleTijd()} uur]";
             }
 
+            if (Onderbreking != null)
+                xtijdlabel.Text = $"{Onderbreking.GetTotaleTijd()} Uur Aan {Onderbreking.StoringType}";
+            else xtijdlabel.Text = "";
             this.Invalidate();
         }
 
@@ -110,6 +114,7 @@ namespace Forms
                 Onderbreking.StoringType = xsoortstoringen.Text;
                 xomschrijving.Enabled = MustEditTextFields();
                 xactie.Enabled = Onderbreking.IsVerholpen;
+                UpdateStatusLabel();
             }
         }
 
@@ -197,7 +202,32 @@ namespace Forms
                     "Vul in een geldige tijd en probeer het opnieuw",
                     "Ongeldige Tijd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else
+            {
+                SaveStoringen();
                 DialogResult = DialogResult.OK;
+            }
+        }
+
+        private void SaveStoringen()
+        {
+            try
+            {
+                string value = xsoortstoringen.Text.Trim();
+                if (value.Length > 2)
+                {
+                    var xcur = xsoortstoringen.Items.Cast<string>().ToList();
+                    if (!xcur.Any(x => string.Equals(x, value, StringComparison.CurrentCultureIgnoreCase)))
+                    {
+                        xcur.Insert(0, value);
+                        xsoortstoringen.Items.Insert(0, value);
+                        Functions.SaveStoringen(xcur, "SoortStilstanden.txt");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private void xsluiten_Click(object sender, EventArgs e)
@@ -238,6 +268,20 @@ namespace Forms
             else
             {
                 this.BeginInvoke(new MethodInvoker(this.Close));
+            }
+        }
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (xsoortstoringen.SelectedIndex < 0)
+                e.Cancel = true;
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (xsoortstoringen.SelectedItem != null)
+            {
+                xsoortstoringen.Items.Remove(xsoortstoringen.SelectedItem);
             }
         }
     }
