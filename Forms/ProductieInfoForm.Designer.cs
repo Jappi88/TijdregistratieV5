@@ -31,11 +31,13 @@ namespace Forms
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieInfoForm));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.xexport = new System.Windows.Forms.Button();
             this.xstatsb = new System.Windows.Forms.Button();
             this.xsluiten = new System.Windows.Forms.Button();
             this.xinfopanel = new HtmlRenderer.HtmlPanel();
-            this.xexport = new System.Windows.Forms.Button();
+            this.productieInfoUI1 = new Controls.ProductieInfoUI();
             this.panel1.SuspendLayout();
+            this.xinfopanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -52,6 +54,24 @@ namespace Forms
             this.panel1.Padding = new System.Windows.Forms.Padding(10);
             this.panel1.Size = new System.Drawing.Size(743, 475);
             this.panel1.TabIndex = 11;
+            // 
+            // xexport
+            // 
+            this.xexport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.xexport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xexport.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xexport.ForeColor = System.Drawing.Color.Black;
+            this.xexport.Image = global::ProductieManager.Properties.Resources.microsoft_excel_22733;
+            this.xexport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xexport.Location = new System.Drawing.Point(299, 434);
+            this.xexport.Name = "xexport";
+            this.xexport.Size = new System.Drawing.Size(152, 35);
+            this.xexport.TabIndex = 7;
+            this.xexport.Text = "Exporteer";
+            this.xexport.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.xexport.UseVisualStyleBackColor = true;
+            this.xexport.Visible = false;
+            this.xexport.Click += new System.EventHandler(this.xexport_Click);
             // 
             // xstatsb
             // 
@@ -98,6 +118,7 @@ namespace Forms
             this.xinfopanel.AutoScrollMinSize = new System.Drawing.Size(743, 17);
             this.xinfopanel.BackColor = System.Drawing.SystemColors.Window;
             this.xinfopanel.BaseStylesheet = "";
+            this.xinfopanel.Controls.Add(this.productieInfoUI1);
             this.xinfopanel.Cursor = System.Windows.Forms.Cursors.Default;
             this.xinfopanel.Location = new System.Drawing.Point(0, 0);
             this.xinfopanel.Name = "xinfopanel";
@@ -105,23 +126,16 @@ namespace Forms
             this.xinfopanel.TabIndex = 0;
             this.xinfopanel.Text = "Productie Info";
             // 
-            // xexport
+            // productieInfoUI1
             // 
-            this.xexport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.xexport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xexport.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xexport.ForeColor = System.Drawing.Color.Black;
-            this.xexport.Image = global::ProductieManager.Properties.Resources.microsoft_excel_22733;
-            this.xexport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xexport.Location = new System.Drawing.Point(299, 434);
-            this.xexport.Name = "xexport";
-            this.xexport.Size = new System.Drawing.Size(152, 35);
-            this.xexport.TabIndex = 7;
-            this.xexport.Text = "Exporteer";
-            this.xexport.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.xexport.UseVisualStyleBackColor = true;
-            this.xexport.Visible = false;
-            this.xexport.Click += new System.EventHandler(this.xexport_Click);
+            this.productieInfoUI1.BackColor = System.Drawing.Color.White;
+            this.productieInfoUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
+            this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
+            this.productieInfoUI1.Name = "productieInfoUI1";
+            this.productieInfoUI1.Size = new System.Drawing.Size(743, 428);
+            this.productieInfoUI1.TabIndex = 0;
             // 
             // ProductieInfoForm
             // 
@@ -141,6 +155,7 @@ namespace Forms
             this.Style = MetroFramework.MetroColorStyle.Purple;
             this.Text = "Productie Info";
             this.panel1.ResumeLayout(false);
+            this.xinfopanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -151,5 +166,6 @@ namespace Forms
         private System.Windows.Forms.Button xsluiten;
         private System.Windows.Forms.Button xstatsb;
         private System.Windows.Forms.Button xexport;
+        private Controls.ProductieInfoUI productieInfoUI1;
     }
 }

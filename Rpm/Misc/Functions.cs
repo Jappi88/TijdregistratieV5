@@ -10,6 +10,8 @@ using Rpm.Various;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -2363,6 +2365,26 @@ namespace Rpm.Misc
         public static bool IsCollectionType(this Type type)
         {
             return type.GetInterfaces().Any(s => s.Namespace == "System.Collections.Generic" && (s.Name == "ICollection" || s.Name.StartsWith("ICollection`")));
+        }
+
+        public static string GetPropertyDescription(this Type type, string name)
+        {
+            try
+            {
+                var atri = type.GetProperty(name)?.GetCustomAttributes(false);
+                if (atri == null) return null;
+                if (atri.Length > 0)
+                {
+                    if (atri[0] is DisplayAttribute attrib)
+                        return attrib.Description;
+                }
+
+                return null;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         #endregion Misc

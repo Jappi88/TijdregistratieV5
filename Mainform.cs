@@ -316,6 +316,7 @@ namespace ProductieManager
         public void ShowMessagePopup(RemoteMessage msg)
         {
             if (msg == null) return;
+            if (Manager.Opties is {ToonLogNotificatie: false}) return;
             try
             {
                 //if (InvokeRequired)

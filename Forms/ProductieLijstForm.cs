@@ -63,8 +63,8 @@ namespace Forms
             productieListControl1.InitEvents();
             Manager.FilterChanged += Manager_FilterChanged;
             productieListControl1.InitProductie(true, true, true, true, true, true);
-            if (Manager.Opties?._viewbewdata != null)
-                productieListControl1.ProductieLijst.RestoreState(Manager.Opties.ViewDataBewerkingenState);
+            //if (Manager.Opties?._viewbewdata != null)
+            //    productieListControl1.ProductieLijst.RestoreState(Manager.Opties.ViewDataBewerkingenState);
         }
 
         private void Manager_FilterChanged(object sender, EventArgs e)
@@ -83,6 +83,7 @@ namespace Forms
 
         private void StartProductie_FormClosing(object sender, FormClosingEventArgs e)
         {
+            productieListControl1.SaveColumns(false, Manager.Opties);
             productieListControl1.DetachEvents();
             Manager.FilterChanged -= Manager_FilterChanged;
         }

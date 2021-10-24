@@ -152,6 +152,7 @@ namespace Forms
             xsyncinterval.Value = x.SyncInterval;
 
             //weergave producties
+            xniewaantaluur.SetValue((decimal)x.NieuwTijd);
             xtoonvolgensafdeling.Checked = x.ToonVolgensAfdelingen;
             xtoonvolgensbewerking.Checked = x.ToonVolgensBewerkingen;
             xtoonallesvanbeide.Checked = x.ToonAllesVanBeide;
@@ -198,7 +199,7 @@ namespace Forms
             xoverzichtbereikgroup.Enabled = x.CreateWeekOverzichten;
             xdocurrentweekoverzicht.Checked = x.DoCurrentWeekOverzicht;
 
-            var selected = x.ExcelColumns?.FirstOrDefault(x => x.IsSelected);
+            var selected = x.ExcelColumns?.FirstOrDefault(x => x.IsUsed("ExcelColumns"));
             if (selected != null)
             {
                 xcolumnsStatusLabel.Text = $@"Opties Geselecteerd: {selected.Name}";
@@ -358,6 +359,7 @@ namespace Forms
             xs.TaakSyncInterval = (int) xsyncinterval.Value;
             xs.SyncInterval = (int)xsyncinterval.Value;
             //weergave
+            xs.NieuwTijd = (double)xniewaantaluur.Value;
             xs.ToonAlles = xtoonalles.Checked;
             xs.ToonAllesVanBeide = xtoonallesvanbeide.Checked;
             xs.ToonVolgensAfdelingen = xtoonvolgensafdeling.Checked;
@@ -1569,13 +1571,13 @@ namespace Forms
         {
             if (_LoadedOpties == null) return;
             var xf = new ExcelOptiesForm();
-            xf.LoadOpties(_LoadedOpties);
+            xf.LoadOpties(_LoadedOpties, "ExcelColumns");
             if (xf.ShowDialog() == DialogResult.OK)
             {
                 _LoadedOpties.ExcelColumns = xf.Settings;
                 _LoadedOpties.Save("ExcelColumns Aangepast!");
             }
-            var selected = _LoadedOpties.ExcelColumns?.FirstOrDefault(x => x.IsSelected);
+            var selected = _LoadedOpties.ExcelColumns?.FirstOrDefault(x => x.IsUsed("ExcelColumns"));
             if (selected != null)
             {
                 xcolumnsStatusLabel.Text = $@"Opties Geselecteerd: {selected.Name}";

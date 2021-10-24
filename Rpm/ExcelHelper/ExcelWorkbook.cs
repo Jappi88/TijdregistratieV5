@@ -104,7 +104,7 @@ namespace ProductieManager.Rpm.ExcelHelper
         /// </summary>
         public static string[] StoringColumns =
         {
-            "WerkPlek", "Storing Type", "Omschrijving", "Gemeld Door", "Gestart Op",
+            "ArtikelNr", "ProductieNr",  "WerkPlek", "Storing Type", "Omschrijving", "Gemeld Door", "Gestart Op",
             "Gestopt Op", "Totaal Tijd", "Is Verholpen", "Verholpen Door", "Oplossing",
             "Productie Omschrijving"
         };
@@ -478,7 +478,7 @@ namespace ProductieManager.Rpm.ExcelHelper
             {
                 naam += $"({producties.Count})";
                 var sheet = workbook.CreateSheet(naam);
-                var xcols = Manager.Opties?.ExcelColumns.FirstOrDefault(x => x.IsSelected);
+                var xcols = Manager.Opties?.ExcelColumns.FirstOrDefault(x => x.IsUsed("ExcelColumns"));
                 var arg = new ProgressArg();
                 arg.Type = ProgressType.WriteBussy;
                 arg.Value = workbook;
@@ -1032,6 +1032,10 @@ namespace ProductieManager.Rpm.ExcelHelper
                     return storing.VerholpenDoor;
                 case "oplossing":
                     return storing.Oplossing;
+                case "artikelnr":
+                    return storing.Plek?.ArtikelNr;
+                case "productienr":
+                    return storing.Plek?.ProductieNr;
                 case "productie omschrijving":
                     return storing.Path;
                 case "werkplek":

@@ -24,6 +24,8 @@ namespace Rpm.Controls
             InitializeComponent();
         }
 
+        protected override bool ShowWithoutActivation => true;
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             switch (action)

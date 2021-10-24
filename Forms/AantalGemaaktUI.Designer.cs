@@ -43,7 +43,7 @@
             this.xaantal = new System.Windows.Forms.Label();
             this.xaantalgemaakt = new System.Windows.Forms.NumericUpDown();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.xwerkinfopanel = new HtmlRenderer.HtmlPanel();
+            this.productieInfoUI1 = new Controls.ProductieInfoUI();
             this.panel6 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -189,7 +189,7 @@
             // panel4
             // 
             this.panel4.AutoScroll = true;
-            this.panel4.Controls.Add(this.xwerkinfopanel);
+            this.panel4.Controls.Add(this.productieInfoUI1);
             this.panel4.Controls.Add(this.panel6);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(138, 60);
@@ -197,19 +197,16 @@
             this.panel4.Size = new System.Drawing.Size(709, 333);
             this.panel4.TabIndex = 5;
             // 
-            // xwerkinfopanel
+            // productieInfoUI1
             // 
-            this.xwerkinfopanel.AutoScroll = true;
-            this.xwerkinfopanel.AutoScrollMinSize = new System.Drawing.Size(709, 17);
-            this.xwerkinfopanel.BackColor = System.Drawing.SystemColors.Window;
-            this.xwerkinfopanel.BaseStylesheet = null;
-            this.xwerkinfopanel.Cursor = System.Windows.Forms.Cursors.Default;
-            this.xwerkinfopanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xwerkinfopanel.Location = new System.Drawing.Point(0, 0);
-            this.xwerkinfopanel.Name = "xwerkinfopanel";
-            this.xwerkinfopanel.Size = new System.Drawing.Size(709, 293);
-            this.xwerkinfopanel.TabIndex = 3;
-            this.xwerkinfopanel.Text = "werkinfo";
+            this.productieInfoUI1.BackColor = System.Drawing.Color.White;
+            this.productieInfoUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
+            this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
+            this.productieInfoUI1.Name = "productieInfoUI1";
+            this.productieInfoUI1.Size = new System.Drawing.Size(709, 293);
+            this.productieInfoUI1.TabIndex = 2;
             // 
             // panel6
             // 
@@ -225,11 +222,11 @@
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pictureBox1.Image = global::ProductieManager.Properties.Resources.ic_info_outline_128_28513;
+            this.pictureBox1.Image = global::ProductieManager.Properties.Resources.Count_tool_34564__1_;
             this.pictureBox1.Location = new System.Drawing.Point(20, 60);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(118, 333);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
             // 
@@ -287,6 +284,6 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private MetroFramework.Controls.MetroComboBox xwerkplekken;
         private MetroFramework.Controls.MetroButton xnextb;
-        private HtmlRenderer.HtmlPanel xwerkinfopanel;
+        private Controls.ProductieInfoUI productieInfoUI1;
     }
 }

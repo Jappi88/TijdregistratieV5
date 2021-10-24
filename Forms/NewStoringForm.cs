@@ -50,8 +50,14 @@ namespace Forms
             xisbeeindigd.Image = Onderbreking.IsVerholpen ? Resources.check_1582 : Resources.delete_1577;
             if (!string.IsNullOrEmpty(x.StoringType))
                 xsoortstoringen.Text = x.StoringType;
-            else if(xsoortstoringen.Items.Count > 0)
-                xsoortstoringen.SelectedIndex = 0;
+            else
+            {
+                var xitem = xsoortstoringen.Items.Cast<string>().FirstOrDefault(s => s.ToLower().Contains("ombouw"));
+                xsoortstoringen.SelectedItem = xitem;
+                if (xsoortstoringen.SelectedIndex < 0 && xsoortstoringen.Items.Count > 0)
+                    xsoortstoringen.SelectedIndex = 0;
+            }
+
             xnaammelder.Text = x.GemeldDoor;
             xnaambeeindiger.Text = x.VerholpenDoor;
             xstartstoring.SetValue(x.Gestart);
@@ -213,16 +219,17 @@ namespace Forms
             try
             {
                 string value = xsoortstoringen.Text.Trim();
+                var xcur = xsoortstoringen.Items.Cast<string>().ToList();
                 if (value.Length > 2)
                 {
-                    var xcur = xsoortstoringen.Items.Cast<string>().ToList();
+                   
                     if (!xcur.Any(x => string.Equals(x, value, StringComparison.CurrentCultureIgnoreCase)))
                     {
                         xcur.Insert(0, value);
                         xsoortstoringen.Items.Insert(0, value);
-                        Functions.SaveStoringen(xcur, "SoortStilstanden.txt");
                     }
                 }
+                Functions.SaveStoringen(xcur, "SoortStilstanden.txt");
             }
             catch (Exception e)
             {

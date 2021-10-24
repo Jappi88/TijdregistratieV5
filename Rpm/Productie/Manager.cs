@@ -17,6 +17,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ProductieManager.Rpm.ExcelHelper;
+using ProductieManager.Rpm.Settings;
 using Rpm.Opmerking;
 
 namespace Rpm.Productie
@@ -192,11 +193,11 @@ namespace Rpm.Productie
         private void LoadPath(string rootpath)
         {
             AppRootPath = rootpath;
-            DbPath = AppRootPath + "\\RPM_Data";
-            TempPath = AppRootPath + "\\Temp";
-            BackupPath = AppRootPath + "\\Backup";
-            WeekOverzichtPath = AppRootPath + "\\Week Overzichten";
-            ProductieFormPath = AppRootPath + "\\RPM_Data\\Productie Formulieren";
+            DbPath = Path.Combine(AppRootPath, "RPM_Data");
+            TempPath = Path.Combine(AppRootPath, "Temp");
+            BackupPath = Path.Combine(AppRootPath, "Backup");
+            WeekOverzichtPath = Path.Combine(AppRootPath, "Week Overzichten");
+            ProductieFormPath = Path.Combine(AppRootPath, "RPM_Data","Productie Formulieren");
             InitDirectories();
         }
 
@@ -869,16 +870,19 @@ namespace Rpm.Productie
                                 try
                                 {
                                     string fpath = ProductieFormPath + $"\\{prod.ProductieNr}.pdf";
-                                    if (delete)
+                                    if (!string.Equals(fpath, pdffile, StringComparison.CurrentCultureIgnoreCase))
                                     {
+                                        if (delete)
+                                        {
 
-                                        if (File.Exists(fpath))
-                                            File.Delete(pdffile);
+                                            if (File.Exists(fpath))
+                                                File.Delete(pdffile);
+                                            else
+                                                File.Move(pdffile, fpath);
+                                        }
                                         else
-                                            File.Move(pdffile, fpath);
+                                            File.Copy(pdffile, ProductieFormPath + $"\\{prod.ProductieNr}.pdf", true);
                                     }
-                                    else
-                                        File.Copy(pdffile, ProductieFormPath + $"\\{prod.ProductieNr}.pdf", true);
                                 }
                                 catch (Exception e)
                                 {
@@ -895,7 +899,7 @@ namespace Rpm.Productie
                             {
                                 try
                                 {
-                                    File.Delete(pdffile);
+                                        File.Delete(pdffile);
                                 }
                                 catch
                                 {
@@ -1750,6 +1754,13 @@ namespace Rpm.Productie
             FilterChanged?.Invoke(sender,EventArgs.Empty);
         }
 
+        public static event EventHandler OnColumnsSettingsChanged;
+
+        public static void ColumnsSettingsChanged(ExcelSettings settings)
+        {
+            OnColumnsSettingsChanged?.Invoke(settings, EventArgs.Empty);
+        }
+
         /// <summary>
         /// Roep een verzoek op om iets uit te voeren
         /// </summary>
@@ -1808,6 +1819,7 @@ namespace Rpm.Productie
 
                     break;
             }
+
             RemoteMessageHandler rms;
             lock (_messageLocker)
             {

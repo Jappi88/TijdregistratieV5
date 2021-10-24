@@ -1,12 +1,11 @@
-﻿using Rpm.Misc;
+﻿using ProductieManager.Rpm.Misc;
+using Rpm.Misc;
 using Rpm.Productie;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using ProductieManager.Rpm.Misc;
-using Rpm.SqlLite;
 
 namespace ProductieManager.Rpm.Various
 {

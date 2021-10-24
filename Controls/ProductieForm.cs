@@ -90,33 +90,8 @@ namespace Controls
                 xstatuslabel.Text =
                     $"{bewerking.Naam} {Enum.GetName(typeof(ProductieState), bewerking.State)?.ToUpper()} {wps}";
                 ResizeStatusLable();
-
-                HtmlPanel curpanel = null;
-                //string selected = null;
-                if (xpanelcontainer.Controls.Count > 0 && xpanelcontainer.Controls[0] is HtmlPanel xpanel)
-                    curpanel = xpanel;
-                //selected = xpanel.SelectedText;
-
-                var curpos = curpanel?.VerticalScroll.Value ?? 0;
-
-                var htmlpanel = new HtmlPanel
-                {
-                    Dock = DockStyle.Fill,
-                    Text = bewerking.GetHtmlBody(bewerking.Omschrijving, bewerking.GetImageFromResources(),
-                        new Size(64, 64), Color.DarkBlue, Color.White, Color.DarkBlue)
-                };
-                for (var i = 0; i < 3; i++)
-                {
-                    htmlpanel.VerticalScroll.Value = curpos;
-                    Application.DoEvents();
-                }
-
-                //xpanelcontainer.SuspendLayout();
-                xpanelcontainer.Controls.Add(htmlpanel);
-                if (xpanelcontainer.Controls.Count > 1)
-                    xpanelcontainer.Controls.RemoveAt(0);
-                //xpanelcontainer.ResumeLayout();
-                xpanelcontainer.Invalidate();
+                productieInfoUI1.SetInfo(bewerking, bewerking.Omschrijving, Color.AliceBlue, Color.White,
+                    Color.Black);
             }
             catch (Exception e)
             {
@@ -311,8 +286,8 @@ namespace Controls
                         case ProductieState.Verwijderd:
                             break;
                     }
-
-                    xprogressbar.Value = (int) b.GereedPercentage();
+                    int xpercent = (int) b.GereedPercentage();
+                    xprogressbar.Value = (xpercent > xprogressbar.Maximum? xprogressbar.Maximum : xpercent);
                     xprogressbar.Text = b.GereedPercentage() + "%";
                     var tg = b.TijdAanGewerkt();
                     xprogressbar.Invalidate();

@@ -294,9 +294,9 @@ namespace Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xprogresslabel.BackColor = System.Drawing.Color.White;
             this.xprogresslabel.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xprogresslabel.Location = new System.Drawing.Point(20, 165);
+            this.xprogresslabel.Location = new System.Drawing.Point(20, 168);
             this.xprogresslabel.Name = "xprogresslabel";
-            this.xprogresslabel.Size = new System.Drawing.Size(888, 311);
+            this.xprogresslabel.Size = new System.Drawing.Size(888, 305);
             this.xprogresslabel.TabIndex = 23;
             this.xprogresslabel.Text = "Producties laden...";
             this.xprogresslabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

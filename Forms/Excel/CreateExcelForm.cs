@@ -63,7 +63,7 @@ namespace Forms
                 xinfolabel.Visible = true;
             }
             else xinfolabel.Visible = false;
-            var selected = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsSelected);
+            var selected = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsUsed("ExcelColumns"));
             if (selected != null)
             {
                 xcolumnsStatusLabel.Text = $@"Opties Geselecteerd: {selected.Name}";
@@ -88,11 +88,11 @@ namespace Forms
                 StopWait();
                 return;
             }
-            var selected = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsSelected);
+            var selected = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsUsed("ExcelColumns"));
             if (selected == null)
             {
                 var xf = new ExcelOptiesForm();
-                xf.LoadOpties(Manager.Opties);
+                xf.LoadOpties(Manager.Opties, "ExcelColumns");
                 xf.IsSelectDialog = true;
                 if (xf.ShowDialog() == DialogResult.OK)
                 {
@@ -101,10 +101,11 @@ namespace Forms
                         Manager.Opties.ExcelColumns = xf.Settings;
                         await Manager.Opties.Save("ExcelColumns Aangepast!");
                         SetFieldInfo();
+                        selected = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsUsed("ExcelColumns"));
                     }
+                   
                 }
             }
-            selected = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsSelected);
             if (selected == null) return;
             var ofd = new SaveFileDialog
             {
@@ -188,11 +189,11 @@ namespace Forms
         private void button1_Click(object sender, EventArgs e)
         {
             var xf = new ExcelOptiesForm();
-            xf.LoadOpties(Manager.Opties);
+            xf.LoadOpties(Manager.Opties, "ExcelColumns");
             if (xf.ShowDialog() == DialogResult.OK)
             {
                 Manager.Opties.ExcelColumns = xf.Settings;
-                Manager.Opties.Save("ExcelColumns Aangepast!");
+                Manager.Opties.Save("ExcelColumns Aangepast!",false,false,true);
                 SetFieldInfo();
             }
         }

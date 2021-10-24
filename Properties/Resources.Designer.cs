@@ -73,16 +73,6 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap _3605318_bolt_bolts_construction_rivet_screw_screws_128x128 {
-            get {
-                object obj = ResourceManager.GetObject("3605318-bolt-bolts-construction-rivet-screw-screws_128x128", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap _3844441_eye_see_show_view_watch_110305 {
             get {
                 object obj = ResourceManager.GetObject("_3844441_eye_see_show_view_watch_110305", resourceCulture);
@@ -286,6 +276,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap bluewarningexclamationmark_azul_advertenci_12454__1_ {
             get {
                 object obj = ResourceManager.GetObject("bluewarningexclamationmark_azul_advertenci_12454 (1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bolts_construction_rivet_screw_screws_128x128 {
+            get {
+                object obj = ResourceManager.GetObject("bolts-construction-rivet-screw-screws_128x128", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1318,6 +1318,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap memo_pad_notes_reminder_task_icon_128x128 {
+            get {
+                object obj = ResourceManager.GetObject("memo_pad_notes_reminder_task_icon_128x128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Menu_icon_2_icon_icons_com_71856 {
             get {
                 object obj = ResourceManager.GetObject("Menu_icon_2_icon-icons.com_71856", resourceCulture);
@@ -1411,6 +1421,26 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap MsgRead_32 {
             get {
                 object obj = ResourceManager.GetObject("MsgRead_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Navigate_down_36747 {
+            get {
+                object obj = ResourceManager.GetObject("Navigate-down_36747", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Navigate_up_36744 {
+            get {
+                object obj = ResourceManager.GetObject("Navigate-up_36744", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

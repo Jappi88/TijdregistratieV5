@@ -1573,8 +1573,9 @@ namespace Rpm.SqlLite
                     var xset = AllSettings.FindOne(id).Result;
                     if(xset != null && Manager.Opties != null && string.Equals(Manager.Opties.Username, xset.Username, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        Manager.Opties = xset;
-                        Manager.SettingsChanged(this,true);
+                        var xdiffers = new List<string>();
+                        if (!Manager.Opties.xPublicInstancePropertiesEqual(xset, xdiffers))
+                            Manager.SettingsChanged(this, true);
                     }
                 }
                 catch (Exception x)

@@ -35,7 +35,7 @@ namespace Forms
             xaantal.Text = bew.AantalTeMaken.ToString();
             xaantalgemaaktlabel.Text = bew.AantalGemaakt.ToString();
             Text = $"[{bew.ArtikelNr}][{bew.ProductieNr}] {bew.Omschrijving}";
-            LoadBewerkingText(bew);
+            LoadBewerkingText(Bewerking);
             return ShowDialog();
         }
 
@@ -48,34 +48,36 @@ namespace Forms
             else xaantalgemaakt.SetValue(form.AantalGemaakt);
             xaantal.Text = form.AantalTeMaken.ToString();
             Text = $"[{form.ArtikelNr}][{form.ProductieNr}] {form.Omschrijving}";
-            LoadProductieText(form);
+            LoadProductieText(Formulier);
             return ShowDialog();
         }
 
         private void LoadProductieText(ProductieFormulier form)
         {
-            var xcurpos = xwerkinfopanel.VerticalScroll.Value;
-            xwerkinfopanel.Text = form.GetHtmlBody("Wijzig Aantal Gemaakt", null, new Size(32, 32), Color.AliceBlue,
-                Color.White, Color.Black);//ProductieText(form);
-            for (int i = 0; i < 3; i++)
-            {
-                xwerkinfopanel.VerticalScroll.Value = xcurpos;
-                Application.DoEvents();
-            }
+            productieInfoUI1.SetInfo(form, "Wijzig Aantal Gemaakt", Color.AliceBlue, Color.White, Color.Black);
+            //var xcurpos = xwerkinfopanel.VerticalScroll.Value;
+            //xwerkinfopanel.Text = form.GetHtmlBody("Wijzig Aantal Gemaakt", null, new Size(32, 32), Color.AliceBlue,
+            //    Color.White, Color.Black);//ProductieText(form);
+            //for (int i = 0; i < 3; i++)
+            //{
+            //    xwerkinfopanel.VerticalScroll.Value = xcurpos;
+            //    Application.DoEvents();
+            //}
             // xfieldinfo.Text = DefaultFieldText();
             //xpersooninfo.Text = ProductiewWerkPlekken(form);
         }
 
         private void LoadBewerkingText(Bewerking bew)
         {
-            var xcurpos = xwerkinfopanel.VerticalScroll.Value;
-            xwerkinfopanel.Text = bew.GetHtmlBody("Wijzig Aantal Gemaakt", null, new Size(32, 32), Color.AliceBlue,
-                Color.White, Color.Black);
-            for (int i = 0; i < 3; i++)
-            {
-                xwerkinfopanel.VerticalScroll.Value = xcurpos;
-                Application.DoEvents();
-            }
+            productieInfoUI1.SetInfo(bew, "Wijzig Aantal Gemaakt", Color.AliceBlue, Color.White, Color.Black);
+            //var xcurpos = xwerkinfopanel.VerticalScroll.Value;
+            //xwerkinfopanel.Text = bew.GetHtmlBody("Wijzig Aantal Gemaakt", null, new Size(32, 32), Color.AliceBlue,
+            //    Color.White, Color.Black);
+            //for (int i = 0; i < 3; i++)
+            //{
+            //    xwerkinfopanel.VerticalScroll.Value = xcurpos;
+            //    Application.DoEvents();
+            //}
             //xwerkinfo.Text = BewerkingText(bew);
             //// xfieldinfo.Text = DefaultFieldText();
             //xpersooninfo.Text = BewerkingPersoneelText(bew);

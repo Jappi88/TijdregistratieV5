@@ -172,6 +172,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
     <Reference Include="System.Messaging" />
@@ -229,6 +230,12 @@
     </Compile>
     <Compile Include="Controls\MateriaalUI.Designer.cs">
       <DependentUpon>MateriaalUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ProductieInfoUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ProductieInfoUI.Designer.cs">
+      <DependentUpon>ProductieInfoUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ProductieListControl.cs">
       <SubType>UserControl</SubType>
@@ -981,6 +988,9 @@
     <EmbeddedResource Include="Controls\MateriaalUI.resx">
       <DependentUpon>MateriaalUI.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ProductieInfoUI.resx">
+      <DependentUpon>ProductieInfoUI.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ProductieListControl.resx">
       <DependentUpon>ProductieListControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -1419,6 +1429,9 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\memo_pad_notes_reminder_task_icon_128x128.png" />
+    <None Include="Resources\Navigate-up_36744.png" />
+    <None Include="Resources\Navigate-down_36747.png" />
     <None Include="Resources\Move_Werktijd_Right_32x32.png" />
     <None Include="Resources\Move_Time_Left_32x32.png" />
     <None Include="Resources\mimetypes_excel_32x32.png" />

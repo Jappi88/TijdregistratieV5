@@ -47,6 +47,7 @@ namespace Rpm.Settings
         public void Initdefault()
         {
             SystemID = Manager.SystemId;
+            NieuwTijd = 4.0;
             Username = $"Default";
             BoundUsername = "ihab";
             LastChanged = new UserChange {User = Username, Change = $"Optie [{Username}] Aangemaakt"};
@@ -87,8 +88,7 @@ namespace Rpm.Settings
             CreateWeekOverzichten = true;
             DoCurrentWeekOverzicht = true;
             ExcelColumns = new List<ExcelSettings>();
-            var xset = ExcelSettings.CreateSettings(0);
-            xset.IsSelected = true;
+            var xset = ExcelSettings.CreateSettings("ExcelColumns");
             ExcelColumns.Add(xset);
             WeekOverzichtPath = Manager.WeekOverzichtPath;
             WeekOverzichtUpdateInterval = (5 * 60000); //5min
@@ -148,6 +148,8 @@ namespace Rpm.Settings
             return Task.Run(async () =>
             {
                 change ??= $"[{Username}] Intellingen Opgeslagen";
+                foreach (var selected in Manager.Opties.ExcelColumns)
+                    Manager.ColumnsSettingsChanged(selected);
                 if (await Manager.Database.UpSert(this, change,showmessage))
                 {
                     if (triggersaved)
@@ -252,7 +254,7 @@ namespace Rpm.Settings
         #endregion "Taken"
 
         #region "Weergave Producties"
-
+        public double NieuwTijd { get; set; }
         public bool ToonVolgensAfdelingen { get; set; }
         public bool ToonVolgensBewerkingen { get; set; }
         public bool ToonAllesVanBeide { get; set; }

@@ -66,7 +66,7 @@ namespace Forms
             this.xWijzigColumnText = new System.Windows.Forms.Button();
             this.xColumnTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.xKleurenGroup = new System.Windows.Forms.GroupBox();
             this.xKleurRegelPanel = new System.Windows.Forms.Panel();
             this.xColorRegelStatusLabel = new System.Windows.Forms.Label();
             this.xKiesKleurRegels = new System.Windows.Forms.Button();
@@ -77,7 +77,7 @@ namespace Forms
             this.xVasteKleurRadio = new System.Windows.Forms.RadioButton();
             this.xGeenKleurRadio = new System.Windows.Forms.RadioButton();
             this.xverborgencheckbox = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.xBerekeningGroup = new System.Windows.Forms.GroupBox();
             this.xBerekenGemiddeldRadio = new System.Windows.Forms.RadioButton();
             this.xSomAllesRadio = new System.Windows.Forms.RadioButton();
             this.xGeenBerekeningRadio = new System.Windows.Forms.RadioButton();
@@ -100,10 +100,10 @@ namespace Forms
             this.toolStrip1.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xColumnBreedte)).BeginInit();
-            this.groupBox2.SuspendLayout();
+            this.xKleurenGroup.SuspendLayout();
             this.xKleurRegelPanel.SuspendLayout();
             this.xStaticColorPanel.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.xBerekeningGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -111,9 +111,9 @@ namespace Forms
             this.panel1.Controls.Add(this.xsluiten);
             this.panel1.Controls.Add(this.xOpslaan);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(10, 536);
+            this.panel1.Location = new System.Drawing.Point(10, 553);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(902, 45);
+            this.panel1.Size = new System.Drawing.Size(892, 45);
             this.panel1.TabIndex = 2;
             // 
             // xsluiten
@@ -123,7 +123,7 @@ namespace Forms
             this.xsluiten.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.ForeColor = System.Drawing.Color.Black;
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xsluiten.Location = new System.Drawing.Point(780, 3);
+            this.xsluiten.Location = new System.Drawing.Point(770, 3);
             this.xsluiten.Name = "xsluiten";
             this.xsluiten.Size = new System.Drawing.Size(119, 38);
             this.xsluiten.TabIndex = 6;
@@ -139,7 +139,7 @@ namespace Forms
             this.xOpslaan.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xOpslaan.ForeColor = System.Drawing.Color.Black;
             this.xOpslaan.Image = global::ProductieManager.Properties.Resources.diskette_save_saveas_1514;
-            this.xOpslaan.Location = new System.Drawing.Point(655, 3);
+            this.xOpslaan.Location = new System.Drawing.Point(645, 3);
             this.xOpslaan.Name = "xOpslaan";
             this.xOpslaan.Size = new System.Drawing.Size(119, 38);
             this.xOpslaan.TabIndex = 7;
@@ -156,7 +156,7 @@ namespace Forms
             this.panel2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.panel2.Location = new System.Drawing.Point(10, 60);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(902, 476);
+            this.panel2.Size = new System.Drawing.Size(892, 493);
             this.panel2.TabIndex = 3;
             // 
             // splitContainer1
@@ -173,8 +173,8 @@ namespace Forms
             // 
             this.splitContainer1.Panel2.Controls.Add(this.xZichtbareColumnsView);
             this.splitContainer1.Panel2.Controls.Add(this.toolStrip1);
-            this.splitContainer1.Size = new System.Drawing.Size(667, 476);
-            this.splitContainer1.SplitterDistance = 408;
+            this.splitContainer1.Size = new System.Drawing.Size(657, 493);
+            this.splitContainer1.SplitterDistance = 401;
             this.splitContainer1.TabIndex = 3;
             // 
             // splitContainer2
@@ -191,8 +191,8 @@ namespace Forms
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.xBeschikbareColumns);
-            this.splitContainer2.Size = new System.Drawing.Size(408, 476);
-            this.splitContainer2.SplitterDistance = 180;
+            this.splitContainer2.Size = new System.Drawing.Size(401, 493);
+            this.splitContainer2.SplitterDistance = 176;
             this.splitContainer2.TabIndex = 6;
             // 
             // xOptiesView
@@ -213,10 +213,9 @@ namespace Forms
             this.xOptiesView.ShowFilterMenuOnRightClick = false;
             this.xOptiesView.ShowGroups = false;
             this.xOptiesView.ShowItemToolTips = true;
-            this.xOptiesView.Size = new System.Drawing.Size(180, 437);
+            this.xOptiesView.Size = new System.Drawing.Size(176, 454);
             this.xOptiesView.SmallImageList = this.imageList1;
             this.xOptiesView.TabIndex = 7;
-            this.xOptiesView.UseAlternatingBackColors = true;
             this.xOptiesView.UseCompatibleStateImageBehavior = false;
             this.xOptiesView.UseExplorerTheme = true;
             this.xOptiesView.UseHotControls = false;
@@ -252,7 +251,7 @@ namespace Forms
             this.xDeleteOptieButton});
             this.xoptiespanel.Location = new System.Drawing.Point(0, 0);
             this.xoptiespanel.Name = "xoptiespanel";
-            this.xoptiespanel.Size = new System.Drawing.Size(180, 39);
+            this.xoptiespanel.Size = new System.Drawing.Size(176, 39);
             this.xoptiespanel.TabIndex = 8;
             this.xoptiespanel.Text = "toolStrip2";
             // 
@@ -314,7 +313,7 @@ namespace Forms
             this.xBeschikbareColumns.ShowFilterMenuOnRightClick = false;
             this.xBeschikbareColumns.ShowGroups = false;
             this.xBeschikbareColumns.ShowItemToolTips = true;
-            this.xBeschikbareColumns.Size = new System.Drawing.Size(224, 476);
+            this.xBeschikbareColumns.Size = new System.Drawing.Size(221, 493);
             this.xBeschikbareColumns.TabIndex = 7;
             this.xBeschikbareColumns.UseAlternatingBackColors = true;
             this.xBeschikbareColumns.UseCompatibleStateImageBehavior = false;
@@ -324,6 +323,7 @@ namespace Forms
             this.xBeschikbareColumns.UseTranslucentHotItem = true;
             this.xBeschikbareColumns.UseTranslucentSelection = true;
             this.xBeschikbareColumns.View = System.Windows.Forms.View.Details;
+            this.xBeschikbareColumns.CellToolTipShowing += new System.EventHandler<BrightIdeasSoftware.ToolTipShowingEventArgs>(this.xBeschikbareColumns_CellToolTipShowing);
             this.xBeschikbareColumns.SelectedIndexChanged += new System.EventHandler(this.xBeschikbareColumns_SelectedIndexChanged);
             this.xBeschikbareColumns.DoubleClick += new System.EventHandler(this.xBeschikbareColumns_DoubleClick);
             // 
@@ -353,7 +353,7 @@ namespace Forms
             this.xZichtbareColumnsView.ShowFilterMenuOnRightClick = false;
             this.xZichtbareColumnsView.ShowGroups = false;
             this.xZichtbareColumnsView.ShowItemToolTips = true;
-            this.xZichtbareColumnsView.Size = new System.Drawing.Size(218, 476);
+            this.xZichtbareColumnsView.Size = new System.Drawing.Size(215, 493);
             this.xZichtbareColumnsView.TabIndex = 6;
             this.xZichtbareColumnsView.UseAlternatingBackColors = true;
             this.xZichtbareColumnsView.UseCompatibleStateImageBehavior = false;
@@ -363,6 +363,7 @@ namespace Forms
             this.xZichtbareColumnsView.UseTranslucentHotItem = true;
             this.xZichtbareColumnsView.UseTranslucentSelection = true;
             this.xZichtbareColumnsView.View = System.Windows.Forms.View.Details;
+            this.xZichtbareColumnsView.CellToolTipShowing += new System.EventHandler<BrightIdeasSoftware.ToolTipShowingEventArgs>(this.xZichtbareColumnsView_CellToolTipShowing);
             this.xZichtbareColumnsView.SelectedIndexChanged += new System.EventHandler(this.xZichtbareColumnsView_SelectedIndexChanged);
             // 
             // olvColumn1
@@ -387,7 +388,7 @@ namespace Forms
             this.xItemDelete});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(37, 476);
+            this.toolStrip1.Size = new System.Drawing.Size(37, 493);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -457,15 +458,15 @@ namespace Forms
             this.panel3.Controls.Add(this.xWijzigColumnText);
             this.panel3.Controls.Add(this.xColumnTextBox);
             this.panel3.Controls.Add(this.label1);
-            this.panel3.Controls.Add(this.groupBox2);
+            this.panel3.Controls.Add(this.xKleurenGroup);
             this.panel3.Controls.Add(this.xverborgencheckbox);
-            this.panel3.Controls.Add(this.groupBox1);
+            this.panel3.Controls.Add(this.xBerekeningGroup);
             this.panel3.Controls.Add(this.xautoculmncheckbox);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.Location = new System.Drawing.Point(667, 0);
+            this.panel3.Location = new System.Drawing.Point(657, 0);
             this.panel3.Name = "panel3";
             this.panel3.Padding = new System.Windows.Forms.Padding(10);
-            this.panel3.Size = new System.Drawing.Size(235, 476);
+            this.panel3.Size = new System.Drawing.Size(235, 493);
             this.panel3.TabIndex = 1;
             // 
             // label3
@@ -572,22 +573,22 @@ namespace Forms
             this.label1.TabIndex = 6;
             this.label1.Text = "Column Text";
             // 
-            // groupBox2
+            // xKleurenGroup
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.xKleurenGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.xKleurRegelPanel);
-            this.groupBox2.Controls.Add(this.xStaticColorPanel);
-            this.groupBox2.Controls.Add(this.xVariableColorRadio);
-            this.groupBox2.Controls.Add(this.xVasteKleurRadio);
-            this.groupBox2.Controls.Add(this.xGeenKleurRadio);
-            this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(8, 303);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(219, 165);
-            this.groupBox2.TabIndex = 5;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Columns Kleuren";
+            this.xKleurenGroup.Controls.Add(this.xKleurRegelPanel);
+            this.xKleurenGroup.Controls.Add(this.xStaticColorPanel);
+            this.xKleurenGroup.Controls.Add(this.xVariableColorRadio);
+            this.xKleurenGroup.Controls.Add(this.xVasteKleurRadio);
+            this.xKleurenGroup.Controls.Add(this.xGeenKleurRadio);
+            this.xKleurenGroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xKleurenGroup.Location = new System.Drawing.Point(8, 303);
+            this.xKleurenGroup.Name = "xKleurenGroup";
+            this.xKleurenGroup.Size = new System.Drawing.Size(219, 165);
+            this.xKleurenGroup.TabIndex = 5;
+            this.xKleurenGroup.TabStop = false;
+            this.xKleurenGroup.Text = "Columns Kleuren";
             // 
             // xKleurRegelPanel
             // 
@@ -714,7 +715,7 @@ namespace Forms
             // 
             this.xverborgencheckbox.AutoSize = true;
             this.xverborgencheckbox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xverborgencheckbox.Location = new System.Drawing.Point(10, 162);
+            this.xverborgencheckbox.Location = new System.Drawing.Point(10, 155);
             this.xverborgencheckbox.Name = "xverborgencheckbox";
             this.xverborgencheckbox.Size = new System.Drawing.Size(89, 21);
             this.xverborgencheckbox.TabIndex = 4;
@@ -722,20 +723,20 @@ namespace Forms
             this.xverborgencheckbox.UseVisualStyleBackColor = true;
             this.xverborgencheckbox.CheckedChanged += new System.EventHandler(this.xverborgencheckbox_CheckedChanged);
             // 
-            // groupBox1
+            // xBerekeningGroup
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.xBerekeningGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.xBerekenGemiddeldRadio);
-            this.groupBox1.Controls.Add(this.xSomAllesRadio);
-            this.groupBox1.Controls.Add(this.xGeenBerekeningRadio);
-            this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(7, 189);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(220, 108);
-            this.groupBox1.TabIndex = 3;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Berekening";
+            this.xBerekeningGroup.Controls.Add(this.xBerekenGemiddeldRadio);
+            this.xBerekeningGroup.Controls.Add(this.xSomAllesRadio);
+            this.xBerekeningGroup.Controls.Add(this.xGeenBerekeningRadio);
+            this.xBerekeningGroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xBerekeningGroup.Location = new System.Drawing.Point(7, 189);
+            this.xBerekeningGroup.Name = "xBerekeningGroup";
+            this.xBerekeningGroup.Size = new System.Drawing.Size(220, 108);
+            this.xBerekeningGroup.TabIndex = 3;
+            this.xBerekeningGroup.TabStop = false;
+            this.xBerekeningGroup.Text = "Berekening";
             // 
             // xBerekenGemiddeldRadio
             // 
@@ -796,7 +797,7 @@ namespace Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(922, 591);
+            this.ClientSize = new System.Drawing.Size(912, 608);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -828,13 +829,13 @@ namespace Forms
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xColumnBreedte)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.xKleurenGroup.ResumeLayout(false);
+            this.xKleurenGroup.PerformLayout();
             this.xKleurRegelPanel.ResumeLayout(false);
             this.xKleurRegelPanel.PerformLayout();
             this.xStaticColorPanel.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.xBerekeningGroup.ResumeLayout(false);
+            this.xBerekeningGroup.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -847,7 +848,7 @@ namespace Forms
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.CheckBox xverborgencheckbox;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox xBerekeningGroup;
         private System.Windows.Forms.RadioButton xBerekenGemiddeldRadio;
         private System.Windows.Forms.RadioButton xSomAllesRadio;
         private System.Windows.Forms.RadioButton xGeenBerekeningRadio;
@@ -860,7 +861,7 @@ namespace Forms
         private System.Windows.Forms.ToolStripButton xItemRight;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton xItemDelete;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox xKleurenGroup;
         private System.Windows.Forms.Button xTextKleurB;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button xColumnKleurB;

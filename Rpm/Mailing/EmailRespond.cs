@@ -136,7 +136,28 @@ namespace Rpm.Mailing
         public string GetMessageBody(string title, bool showimage)
         {
             if (Productie == null) return String.Empty;
-            return Productie.GetHtmlBody(title, showimage?Productie.GetImageFromResources():null, new Size(48, 48), Color.RoyalBlue, Color.DodgerBlue, Color.DarkBlue);
+            string xreturn = Productie.GetHeaderHtmlBody(title, showimage ? Productie.GetImageFromResources() : null,
+                new Size(48, 48), Color.White, Color.White, Color.DarkBlue,false);
+            xreturn += Productie.GetProductieInfoHtml("Productie Info", Color.White, Color.White,
+                Color.DarkBlue,false);
+
+            xreturn += Productie.GetNotitiesHtml("Notities", Color.White, Color.White,
+                Color.DarkBlue, false);
+
+            xreturn += Productie.GetDatumsHtml("Datums", Color.White, Color.White,
+                Color.DarkBlue, false);
+
+            xreturn += Productie.GetVerpakkingHtmlText(null,"VerpakkingsInstructies", Color.White, Color.White,
+                Color.DarkBlue, false);
+
+            xreturn += Productie.GetMaterialenHtml("Materialen", Color.White, Color.White,
+                Color.DarkBlue, false);
+
+            xreturn += Productie.GetWerkplekkenHtml("Werk Plaatsen", Color.White, Color.White,
+                Color.DarkBlue, false);
+
+            return xreturn;
+            // return Productie.GetHtmlBody(title, showimage?Productie.GetImageFromResources():null, new Size(48, 48), Color.RoyalBlue, Color.DodgerBlue, Color.DarkBlue);
         }
     }
 }

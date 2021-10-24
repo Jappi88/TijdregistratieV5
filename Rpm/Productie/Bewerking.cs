@@ -145,6 +145,13 @@ namespace Rpm.Productie
             }
         }
 
+        private double _TijdGewerkt;
+        public override double TijdGewerkt
+        {
+            get => TijdAanGewerkt();
+            set => _TijdGewerkt = value;
+        }
+
         public override string ArtikelNr
         {
             get => Parent == null ? base.ArtikelNr : Parent.ArtikelNr;
@@ -157,7 +164,7 @@ namespace Rpm.Productie
             set => base.Omschrijving = value;
         }
 
-        public string Opmerking { get; set; }
+        public override string Opmerking { get; set; }
 
         public override string Path => ProductieNr + "\\" + Naam;
 
@@ -349,6 +356,7 @@ namespace Rpm.Productie
                         .ToArray();
                 Geproduceerd = AlleBewerkingen(forms).Length;
                 GemiddeldPerUur = GetGemiddeldAantalPerUur(forms);
+                GemiddeldAantalGemaakt = GetGemiddeldAantalGemaakt(forms);
                 GemiddeldActueelPerUur = GetGemiddeldActueelPerUur(forms);
                 TotaalTijdGewerkt = TotaalGewerkteUren(forms);
                 var xaantal = TotaalGemaakt > Aantal ? TotaalGemaakt : Aantal;
@@ -374,12 +382,14 @@ namespace Rpm.Productie
                 GemiddeldPerUur = ActueelPerUur;
             VerwachtLeverDatum = VerwachtDatumGereed();
             Gereed = GereedPercentage();
+            TijdGewerktPercentage = GetTijdGewerktPercentage();
             var dt = DateTime.Now;
             AanbevolenPersonen = AantalPersonenNodig(ref dt,false);
             StartOp = dt;
             if (AantalActievePersonen == 0 && State == ProductieState.Gestart)
                 await StopProductie(true);
-            LastChanged = LastChanged.UpdateChange(change, DbType.Producties);
+            if (save)
+                LastChanged = LastChanged.UpdateChange(change, DbType.Producties);
             if (Parent != null)
             {
                 Aantal = Parent.Aantal;
@@ -439,7 +449,6 @@ namespace Rpm.Productie
                 LaatstAantalUpdate = DateTime.Now;
                 State = ProductieState.Gestart;
                 TijdGestart = DateTime.Now;
-                var xtasks = new List<Task<bool>>();
                 foreach (var plek in WerkPlekken)
                 {
                     plek.UpdateWerkRooster(null,true,false, false, false,false, false, true);
@@ -461,10 +470,8 @@ namespace Rpm.Productie
                                 if (per.WerkRooster == null)
                                     per.WerkRooster = x.WerkRooster;
                                 x.ReplaceKlus(klus);
-                                var action = new Task<bool>(() => Manager.Database.UpSert(x,
-                                        $"[{x.PersoneelNaam}] is gestart aan klus '{klus.Naam} op {klus.WerkPlek}'.")
-                                    .Result);
-                                xtasks.Add(action);
+                                await Manager.Database.UpSert(x,
+                                    $"[{x.PersoneelNaam}] is gestart aan klus '{klus.Naam} op {klus.WerkPlek}'.");
                             }
                         }
                     }
@@ -485,8 +492,6 @@ namespace Rpm.Productie
 
                 GestartDoor = Manager.Opties.Username;
                 await UpdateBewerking(null, $"[{Path}] Bewerking Gestart");
-                if (xtasks.Count > 0)
-                    xtasks.ForEach(x => x.Start());
                 if (email)
                     RemoteProductie.RespondByEmail(this,
                         $"Productie [{ProductieNr.ToUpper()}] {Naam} is zojuist gestart op {WerkplekkenName}.");
@@ -908,6 +913,22 @@ namespace Rpm.Productie
             return gewerkt;
         }
 
+        public int GetGemiddeldAantalGemaakt(ProductieFormulier[] forms)
+        {
+            if (forms == null)
+                return 0;
+            var x = forms;
+            var bws = x.Select(t =>
+                t.Bewerkingen.Where(b =>
+                        b.PerUur > 0 && string.Equals(b.Naam, Naam, StringComparison.CurrentCultureIgnoreCase))
+                    .ToArray()).ToArray();
+            var aantalbws = bws.Sum(t => t.Length);
+            if (aantalbws == 0)
+                return 0;
+            var aantal = (int)bws.Sum(t => t.Sum(b => b.TotaalGemaakt)) / aantalbws;
+            return aantal;
+        }
+
         public double GetGemiddeldAantalPerUur(ProductieFormulier[] forms)
         {
             if (forms == null)
@@ -945,9 +966,28 @@ namespace Rpm.Productie
             if (Aantal > 0)
             {
                 var val = Math.Round(TotaalGemaakt / (double) Aantal * 100, 1);
-                if (val > 100)
-                    val = 100;
                 return val;
+            }
+
+            if (TotaalGemaakt > 0)
+            {
+                var val = Math.Round((double)Aantal / TotaalGemaakt * 100, 1);
+                return val + 100;
+            }
+            return 0;
+        }
+
+        public double GetTijdGewerktPercentage()
+        {
+            if (DoorloopTijd > 0)
+            {
+                var val = Math.Round(TijdGewerkt / DoorloopTijd * 100, 1);
+                return val;
+            }
+            if(TijdGewerkt > 0)
+            {
+                var val = Math.Round(DoorloopTijd / TijdGewerkt * 100, 1);
+                return val + 100;
             }
 
             return 0;

@@ -390,9 +390,10 @@ namespace Forms
             //xcriteriacheckbox.Checked = true;
             //xcriteria.ShowClearButton = true;
             //xcriteria.Select();
+            //productieListControl1.InitProductie(true, true, true, true, false, false);
             productieListControl1.InitEvents();
-            if (Manager.Opties?._viewbewdata != null)
-                productieListControl1.ProductieLijst.RestoreState(Manager.Opties.ViewDataBewerkingenState);
+            //if (Manager.Opties?._viewbewdata != null)
+            //    productieListControl1.ProductieLijst.RestoreState(Manager.Opties.ViewDataBewerkingenState);
             //Manager.OnFormulierChanged += Manager_OnFormulierChanged;
         }
 
@@ -422,6 +423,7 @@ namespace Forms
         private void RangeCalculatorForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             //Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
+            productieListControl1.SaveColumns(true, Manager.Opties);
             productieListControl1.DetachEvents();
         }
 

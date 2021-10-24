@@ -34,35 +34,6 @@ namespace Controls
             this.panel1 = new System.Windows.Forms.Panel();
             this.xloadinglabel = new System.Windows.Forms.Label();
             this.xProductieLijst = new BrightIdeasSoftware.ObjectListView();
-            this.xbewnaamc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.xnaambewerkingc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn12 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn13 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn14 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn15 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn16 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn17 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn18 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn19 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn20 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn22 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn21 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn27 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn23 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn24 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn25 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn26 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xproductieLijstcontext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.xopenProductieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
@@ -106,6 +77,7 @@ namespace Controls
             this.xbeheerfilterstoolstripbutton = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
             this.xsearch = new MetroFramework.Controls.MetroTextBox();
+            this.xListColumnsButton = new System.Windows.Forms.Button();
             this.panel7 = new System.Windows.Forms.Panel();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.xstartb = new System.Windows.Forms.ToolStripButton();
@@ -159,7 +131,7 @@ namespace Controls
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1126, 620);
+            this.panel1.Size = new System.Drawing.Size(1149, 634);
             this.panel1.TabIndex = 0;
             // 
             // xloadinglabel
@@ -167,10 +139,11 @@ namespace Controls
             this.xloadinglabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.xloadinglabel.BackColor = System.Drawing.Color.Transparent;
             this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xloadinglabel.Location = new System.Drawing.Point(3, 73);
+            this.xloadinglabel.Location = new System.Drawing.Point(0, 39);
             this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(1120, 547);
+            this.xloadinglabel.Size = new System.Drawing.Size(1149, 595);
             this.xloadinglabel.TabIndex = 29;
             this.xloadinglabel.Text = "Producties Laden...";
             this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -178,69 +151,10 @@ namespace Controls
             // 
             // xProductieLijst
             // 
-            this.xProductieLijst.AllColumns.Add(this.xbewnaamc);
-            this.xProductieLijst.AllColumns.Add(this.xnaambewerkingc);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn12);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn13);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn3);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn7);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn14);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn15);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn4);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn2);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn16);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn17);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn5);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn18);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn1);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn19);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn20);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn22);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn10);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn11);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn8);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn21);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn27);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn23);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn24);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn25);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn26);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn6);
-            this.xProductieLijst.AllColumns.Add(this.olvColumn9);
             this.xProductieLijst.AllowColumnReorder = true;
             this.xProductieLijst.AllowDrop = true;
             this.xProductieLijst.AlternateRowBackColor = System.Drawing.Color.AliceBlue;
             this.xProductieLijst.CellEditUseWholeCell = false;
-            this.xProductieLijst.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.xbewnaamc,
-            this.xnaambewerkingc,
-            this.olvColumn12,
-            this.olvColumn13,
-            this.olvColumn3,
-            this.olvColumn7,
-            this.olvColumn14,
-            this.olvColumn15,
-            this.olvColumn4,
-            this.olvColumn2,
-            this.olvColumn16,
-            this.olvColumn17,
-            this.olvColumn5,
-            this.olvColumn18,
-            this.olvColumn1,
-            this.olvColumn19,
-            this.olvColumn20,
-            this.olvColumn22,
-            this.olvColumn10,
-            this.olvColumn11,
-            this.olvColumn8,
-            this.olvColumn21,
-            this.olvColumn27,
-            this.olvColumn23,
-            this.olvColumn24,
-            this.olvColumn25,
-            this.olvColumn26,
-            this.olvColumn6,
-            this.olvColumn9});
             this.xProductieLijst.ContextMenuStrip = this.xproductieLijstcontext;
             this.xProductieLijst.Cursor = System.Windows.Forms.Cursors.Default;
             this.xProductieLijst.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -262,13 +176,14 @@ namespace Controls
             this.xProductieLijst.ShowCommandMenuOnRightClick = true;
             this.xProductieLijst.ShowItemCountOnGroups = true;
             this.xProductieLijst.ShowItemToolTips = true;
-            this.xProductieLijst.Size = new System.Drawing.Size(1126, 547);
+            this.xProductieLijst.Size = new System.Drawing.Size(1149, 561);
             this.xProductieLijst.SmallImageList = this.ximagelist;
             this.xProductieLijst.SpaceBetweenGroups = 5;
             this.xProductieLijst.TabIndex = 28;
             this.xProductieLijst.TileSize = new System.Drawing.Size(750, 120);
             this.xProductieLijst.TintSortColumn = true;
             this.xProductieLijst.UseAlternatingBackColors = true;
+            this.xProductieLijst.UseCellFormatEvents = true;
             this.xProductieLijst.UseCompatibleStateImageBehavior = false;
             this.xProductieLijst.UseExplorerTheme = true;
             this.xProductieLijst.UseFilterIndicator = true;
@@ -279,314 +194,12 @@ namespace Controls
             this.xProductieLijst.UseTranslucentSelection = true;
             this.xProductieLijst.View = System.Windows.Forms.View.Details;
             this.xProductieLijst.CellToolTipShowing += new System.EventHandler<BrightIdeasSoftware.ToolTipShowingEventArgs>(this.xproductieLijst_CellToolTipShowing);
+            this.xProductieLijst.FormatCell += new System.EventHandler<BrightIdeasSoftware.FormatCellEventArgs>(this.xProductieLijst_FormatCell);
+            this.xProductieLijst.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.xProductieLijst_ColumnReordered);
             this.xProductieLijst.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.xproductieLijst_ItemDrag);
             this.xProductieLijst.SelectedIndexChanged += new System.EventHandler(this.xproductieLijst_SelectedIndexChanged);
             this.xProductieLijst.DragEnter += new System.Windows.Forms.DragEventHandler(this.xproductieLijst_DragEnter);
             this.xProductieLijst.DoubleClick += new System.EventHandler(this.xproductieLijst_DoubleClick);
-            // 
-            // xbewnaamc
-            // 
-            this.xbewnaamc.AspectName = "Naam";
-            this.xbewnaamc.IsEditable = false;
-            this.xbewnaamc.Text = "Naam";
-            this.xbewnaamc.ToolTipText = "Bewerking naam";
-            this.xbewnaamc.Width = 150;
-            this.xbewnaamc.WordWrap = true;
-            // 
-            // xnaambewerkingc
-            // 
-            this.xnaambewerkingc.AspectName = "Omschrijving";
-            this.xnaambewerkingc.HeaderFont = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.xnaambewerkingc.IsEditable = false;
-            this.xnaambewerkingc.IsTileViewColumn = true;
-            this.xnaambewerkingc.Text = "Omschrijving";
-            this.xnaambewerkingc.ToolTipText = "Product Omschrijving";
-            this.xnaambewerkingc.Width = 246;
-            this.xnaambewerkingc.WordWrap = true;
-            // 
-            // olvColumn12
-            // 
-            this.olvColumn12.AspectName = "ArtikelNr";
-            this.olvColumn12.Groupable = false;
-            this.olvColumn12.HeaderFont = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.olvColumn12.ImageAspectName = "";
-            this.olvColumn12.IsEditable = false;
-            this.olvColumn12.IsTileViewColumn = true;
-            this.olvColumn12.Text = "ArtikelNr";
-            this.olvColumn12.ToolTipText = "Product Artikel Nummer";
-            this.olvColumn12.Width = 101;
-            this.olvColumn12.WordWrap = true;
-            // 
-            // olvColumn13
-            // 
-            this.olvColumn13.AspectName = "ProductieNr";
-            this.olvColumn13.Groupable = false;
-            this.olvColumn13.HeaderFont = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.olvColumn13.IsEditable = false;
-            this.olvColumn13.IsTileViewColumn = true;
-            this.olvColumn13.Text = "ProductieNr";
-            this.olvColumn13.ToolTipText = "Productie Nummer";
-            this.olvColumn13.Width = 85;
-            this.olvColumn13.WordWrap = true;
-            // 
-            // olvColumn3
-            // 
-            this.olvColumn3.AspectName = "AantalTeMaken";
-            this.olvColumn3.Groupable = false;
-            this.olvColumn3.Text = "Aantal Te Maken";
-            this.olvColumn3.ToolTipText = "Aantal nog te maken";
-            this.olvColumn3.Width = 150;
-            // 
-            // olvColumn7
-            // 
-            this.olvColumn7.AspectName = "AantalNogTeMaken";
-            this.olvColumn7.Groupable = false;
-            this.olvColumn7.Text = "Nog Te Maken";
-            this.olvColumn7.ToolTipText = "Aantal nog te maken";
-            this.olvColumn7.Width = 120;
-            // 
-            // olvColumn14
-            // 
-            this.olvColumn14.AspectName = "Aantal";
-            this.olvColumn14.Groupable = false;
-            this.olvColumn14.HeaderFont = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.olvColumn14.IsEditable = false;
-            this.olvColumn14.IsTileViewColumn = true;
-            this.olvColumn14.Text = "Aantal";
-            this.olvColumn14.ToolTipText = "Productie Aantal";
-            this.olvColumn14.Width = 81;
-            this.olvColumn14.WordWrap = true;
-            // 
-            // olvColumn15
-            // 
-            this.olvColumn15.AspectName = "AantalGemaakt";
-            this.olvColumn15.Groupable = false;
-            this.olvColumn15.IsEditable = false;
-            this.olvColumn15.IsTileViewColumn = true;
-            this.olvColumn15.Text = "#Gemaakt";
-            this.olvColumn15.ToolTipText = "Aantal Producten Gemaakt";
-            this.olvColumn15.Width = 120;
-            // 
-            // olvColumn4
-            // 
-            this.olvColumn4.AspectName = "LaatstAantalUpdate";
-            this.olvColumn4.Groupable = false;
-            this.olvColumn4.IsEditable = false;
-            this.olvColumn4.Text = "Laatst Gewijzigd";
-            this.olvColumn4.ToolTipText = "de tijd waarom de productie aantal gemaakt voor het laatst is gewijzigd.";
-            this.olvColumn4.Width = 120;
-            this.olvColumn4.WordWrap = true;
-            // 
-            // olvColumn2
-            // 
-            this.olvColumn2.AspectName = "TotaalGemaakt";
-            this.olvColumn2.Groupable = false;
-            this.olvColumn2.Text = "Totaal Gemaakt";
-            this.olvColumn2.ToolTipText = "Totaal aantal gemaakt";
-            this.olvColumn2.Width = 120;
-            // 
-            // olvColumn16
-            // 
-            this.olvColumn16.AspectName = "Gereed";
-            this.olvColumn16.AspectToStringFormat = "{0}%";
-            this.olvColumn16.Groupable = false;
-            this.olvColumn16.HeaderFont = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.olvColumn16.IsEditable = false;
-            this.olvColumn16.IsTileViewColumn = true;
-            this.olvColumn16.Text = "Gereed(%)";
-            this.olvColumn16.ToolTipText = "Gereed Percentage";
-            this.olvColumn16.Width = 87;
-            this.olvColumn16.WordWrap = true;
-            // 
-            // olvColumn17
-            // 
-            this.olvColumn17.AspectName = "DoorloopTijd";
-            this.olvColumn17.AspectToStringFormat = "{0} uur";
-            this.olvColumn17.Groupable = false;
-            this.olvColumn17.HeaderFont = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.olvColumn17.IsEditable = false;
-            this.olvColumn17.IsTileViewColumn = true;
-            this.olvColumn17.Text = "DoorloopTijd";
-            this.olvColumn17.ToolTipText = "Productie Doorlooptijd In Uren";
-            this.olvColumn17.Width = 95;
-            this.olvColumn17.WordWrap = true;
-            // 
-            // olvColumn5
-            // 
-            this.olvColumn5.AspectName = "TijdGestart";
-            this.olvColumn5.Text = "Tijd Gestart";
-            this.olvColumn5.ToolTipText = "Tijd gestart";
-            this.olvColumn5.Width = 120;
-            this.olvColumn5.WordWrap = true;
-            // 
-            // olvColumn18
-            // 
-            this.olvColumn18.AspectName = "TijdGewerkt";
-            this.olvColumn18.AspectToStringFormat = "{0} uur";
-            this.olvColumn18.Groupable = false;
-            this.olvColumn18.HeaderFont = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.olvColumn18.IsEditable = false;
-            this.olvColumn18.IsTileViewColumn = true;
-            this.olvColumn18.Text = "Tijd Gewerkt";
-            this.olvColumn18.ToolTipText = "Totaal Uren Aan Gewerkt";
-            this.olvColumn18.Width = 89;
-            this.olvColumn18.WordWrap = true;
-            // 
-            // olvColumn1
-            // 
-            this.olvColumn1.AspectName = "TijdOver";
-            this.olvColumn1.Groupable = false;
-            this.olvColumn1.IsEditable = false;
-            this.olvColumn1.IsTileViewColumn = true;
-            this.olvColumn1.Text = "Restered (Uur)";
-            this.olvColumn1.ToolTipText = "Uren nog te gaan";
-            this.olvColumn1.Width = 100;
-            // 
-            // olvColumn19
-            // 
-            this.olvColumn19.AspectName = "TotaalTijdGewerkt";
-            this.olvColumn19.AspectToStringFormat = "{0} uur";
-            this.olvColumn19.Groupable = false;
-            this.olvColumn19.HeaderFont = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.olvColumn19.IsEditable = false;
-            this.olvColumn19.IsTileViewColumn = true;
-            this.olvColumn19.Text = "Totaal Tijd Gewerkt";
-            this.olvColumn19.ToolTipText = "Totaal gewerkte tijd";
-            this.olvColumn19.Width = 104;
-            this.olvColumn19.WordWrap = true;
-            // 
-            // olvColumn20
-            // 
-            this.olvColumn20.AspectName = "PerUur";
-            this.olvColumn20.AspectToStringFormat = "{0} p/u";
-            this.olvColumn20.Groupable = false;
-            this.olvColumn20.HeaderFont = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.olvColumn20.IsEditable = false;
-            this.olvColumn20.IsTileViewColumn = true;
-            this.olvColumn20.Text = "Aantal/Uur";
-            this.olvColumn20.ToolTipText = "Aantal producten per uur";
-            this.olvColumn20.Width = 106;
-            this.olvColumn20.WordWrap = true;
-            // 
-            // olvColumn22
-            // 
-            this.olvColumn22.AspectName = "ActueelPerUur";
-            this.olvColumn22.AspectToStringFormat = "{0} p/u";
-            this.olvColumn22.Groupable = false;
-            this.olvColumn22.Text = "Actueel/Uur";
-            this.olvColumn22.ToolTipText = "Actuele aantal per uur";
-            this.olvColumn22.Width = 120;
-            // 
-            // olvColumn10
-            // 
-            this.olvColumn10.AspectName = "ProcentAfwijkingPerUur";
-            this.olvColumn10.AspectToStringFormat = "{0}%";
-            this.olvColumn10.Text = "Afwijking(%)";
-            this.olvColumn10.ToolTipText = "Aantal procent afwijking van de orginele aantal per uur";
-            this.olvColumn10.Width = 100;
-            this.olvColumn10.WordWrap = true;
-            // 
-            // olvColumn11
-            // 
-            this.olvColumn11.AspectName = "GemiddeldProcentAfwijkingPerUur";
-            this.olvColumn11.AspectToStringFormat = "{0}%";
-            this.olvColumn11.Text = "Gemiddeld Afwijking(%)";
-            this.olvColumn11.ToolTipText = "Aantal procent afwijking van de gemiddeld aantal per uur";
-            this.olvColumn11.Width = 100;
-            this.olvColumn11.WordWrap = true;
-            // 
-            // olvColumn8
-            // 
-            this.olvColumn8.AspectName = "GemiddeldDoorlooptijd";
-            this.olvColumn8.AspectToStringFormat = "{0} uur";
-            this.olvColumn8.Groupable = false;
-            this.olvColumn8.IsEditable = false;
-            this.olvColumn8.Text = "Gemiddeld Doorlooptijd";
-            this.olvColumn8.ToolTipText = "Gemiddeld doorlooptijd op basis van voorgaande producties";
-            this.olvColumn8.Width = 150;
-            this.olvColumn8.WordWrap = true;
-            // 
-            // olvColumn21
-            // 
-            this.olvColumn21.AspectName = "GemiddeldPerUur";
-            this.olvColumn21.AspectToStringFormat = "{0} p/u";
-            this.olvColumn21.Groupable = false;
-            this.olvColumn21.Text = "Gemiddeld PerUur";
-            this.olvColumn21.ToolTipText = "Totaal gemiddelde aantal per uur";
-            this.olvColumn21.Width = 120;
-            // 
-            // olvColumn27
-            // 
-            this.olvColumn27.AspectName = "GemiddeldActueelPerUur";
-            this.olvColumn27.AspectToStringFormat = "{0} p/u";
-            this.olvColumn27.Text = "Gemiddeld Actueel PerUur";
-            this.olvColumn27.ToolTipText = "Gemiddeld actuele per uur";
-            this.olvColumn27.Width = 100;
-            this.olvColumn27.WordWrap = true;
-            // 
-            // olvColumn23
-            // 
-            this.olvColumn23.AspectName = "VerwachtLeverDatum";
-            this.olvColumn23.Groupable = false;
-            this.olvColumn23.HeaderFont = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.olvColumn23.IsEditable = false;
-            this.olvColumn23.IsTileViewColumn = true;
-            this.olvColumn23.Text = "Verwachte Leverdatum";
-            this.olvColumn23.ToolTipText = "Verwachte Leverdatum";
-            this.olvColumn23.Width = 151;
-            this.olvColumn23.WordWrap = true;
-            // 
-            // olvColumn24
-            // 
-            this.olvColumn24.AspectName = "LeverDatum";
-            this.olvColumn24.Groupable = false;
-            this.olvColumn24.HeaderFont = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.olvColumn24.IsEditable = false;
-            this.olvColumn24.IsTileViewColumn = true;
-            this.olvColumn24.Text = "Leverdatum";
-            this.olvColumn24.ToolTipText = "Productie Leverdatum";
-            this.olvColumn24.Width = 146;
-            this.olvColumn24.WordWrap = true;
-            // 
-            // olvColumn25
-            // 
-            this.olvColumn25.AspectName = "Geproduceerd";
-            this.olvColumn25.AspectToStringFormat = "";
-            this.olvColumn25.Groupable = false;
-            this.olvColumn25.IsEditable = false;
-            this.olvColumn25.IsTileViewColumn = true;
-            this.olvColumn25.Text = "Geproduceerd";
-            this.olvColumn25.ToolTipText = "Aantal keer geproduceerd";
-            this.olvColumn25.Width = 120;
-            // 
-            // olvColumn26
-            // 
-            this.olvColumn26.AspectName = "AantalPersonen";
-            this.olvColumn26.Groupable = false;
-            this.olvColumn26.HeaderFont = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.olvColumn26.IsEditable = false;
-            this.olvColumn26.IsTileViewColumn = true;
-            this.olvColumn26.Text = "#Personen";
-            this.olvColumn26.ToolTipText = "Aantal Personen Mee Bezig";
-            this.olvColumn26.Width = 86;
-            this.olvColumn26.WordWrap = true;
-            // 
-            // olvColumn6
-            // 
-            this.olvColumn6.AspectName = "AanbevolenPersonen";
-            this.olvColumn6.IsEditable = false;
-            this.olvColumn6.Text = "Personen Nodig";
-            this.olvColumn6.ToolTipText = "Aantal personen nodig voor dit klus";
-            this.olvColumn6.Width = 120;
-            this.olvColumn6.WordWrap = true;
-            // 
-            // olvColumn9
-            // 
-            this.olvColumn9.AspectName = "StartOp";
-            this.olvColumn9.Text = "Starten Op";
-            this.olvColumn9.ToolTipText = "Tijd om productie te starten";
-            this.olvColumn9.Width = 120;
-            this.olvColumn9.WordWrap = true;
             // 
             // xproductieLijstcontext
             // 
@@ -936,10 +549,11 @@ namespace Controls
             this.panel3.BackColor = System.Drawing.Color.Transparent;
             this.panel3.Controls.Add(this.xfiltersStrip);
             this.panel3.Controls.Add(this.xsearch);
+            this.panel3.Controls.Add(this.xListColumnsButton);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 40);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1126, 33);
+            this.panel3.Size = new System.Drawing.Size(1149, 33);
             this.panel3.TabIndex = 27;
             // 
             // xfiltersStrip
@@ -950,10 +564,10 @@ namespace Controls
             this.xfiltersStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.xfiltertoolstrip});
             this.xfiltersStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.xfiltersStrip.Location = new System.Drawing.Point(396, 0);
+            this.xfiltersStrip.Location = new System.Drawing.Point(373, 0);
             this.xfiltersStrip.Name = "xfiltersStrip";
             this.xfiltersStrip.ShowItemToolTips = true;
-            this.xfiltersStrip.Size = new System.Drawing.Size(730, 33);
+            this.xfiltersStrip.Size = new System.Drawing.Size(776, 33);
             this.xfiltersStrip.TabIndex = 9;
             this.xfiltersStrip.Text = "menuStrip1";
             // 
@@ -988,7 +602,7 @@ namespace Controls
             // 
             // 
             this.xsearch.CustomButton.Image = null;
-            this.xsearch.CustomButton.Location = new System.Drawing.Point(364, 1);
+            this.xsearch.CustomButton.Location = new System.Drawing.Point(307, 1);
             this.xsearch.CustomButton.Name = "";
             this.xsearch.CustomButton.Size = new System.Drawing.Size(31, 31);
             this.xsearch.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -1000,7 +614,7 @@ namespace Controls
             this.xsearch.FontSize = MetroFramework.MetroTextBoxSize.Medium;
             this.xsearch.Lines = new string[] {
         "Zoeken..."};
-            this.xsearch.Location = new System.Drawing.Point(0, 0);
+            this.xsearch.Location = new System.Drawing.Point(34, 0);
             this.xsearch.MaxLength = 32767;
             this.xsearch.Name = "xsearch";
             this.xsearch.PasswordChar = '\0';
@@ -1010,7 +624,7 @@ namespace Controls
             this.xsearch.SelectionStart = 0;
             this.xsearch.ShortcutsEnabled = true;
             this.xsearch.ShowClearButton = true;
-            this.xsearch.Size = new System.Drawing.Size(396, 33);
+            this.xsearch.Size = new System.Drawing.Size(339, 33);
             this.xsearch.TabIndex = 6;
             this.xsearch.Text = "Zoeken...";
             this.toolTip1.SetToolTip(this.xsearch, "Zoek productie bij naam,omschrijving,artikel of productie nummer");
@@ -1020,6 +634,20 @@ namespace Controls
             this.xsearch.Enter += new System.EventHandler(this.xsearch_Enter);
             this.xsearch.Leave += new System.EventHandler(this.xsearch_Leave);
             // 
+            // xListColumnsButton
+            // 
+            this.xListColumnsButton.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xListColumnsButton.FlatAppearance.BorderSize = 0;
+            this.xListColumnsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xListColumnsButton.Image = global::ProductieManager.Properties.Resources.mimetypes_excel_32x32;
+            this.xListColumnsButton.Location = new System.Drawing.Point(0, 0);
+            this.xListColumnsButton.Name = "xListColumnsButton";
+            this.xListColumnsButton.Size = new System.Drawing.Size(34, 33);
+            this.xListColumnsButton.TabIndex = 10;
+            this.toolTip1.SetToolTip(this.xListColumnsButton, "Beheer Lijst Columns");
+            this.xListColumnsButton.UseVisualStyleBackColor = true;
+            this.xListColumnsButton.Click += new System.EventHandler(this.xListColumnsButton_Click);
+            // 
             // panel7
             // 
             this.panel7.AutoScroll = true;
@@ -1028,7 +656,7 @@ namespace Controls
             this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel7.Location = new System.Drawing.Point(0, 0);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(1126, 40);
+            this.panel7.Size = new System.Drawing.Size(1149, 40);
             this.panel7.TabIndex = 3;
             // 
             // toolStrip2
@@ -1060,7 +688,7 @@ namespace Controls
             this.xfiltercontainer});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(1126, 39);
+            this.toolStrip2.Size = new System.Drawing.Size(1149, 39);
             this.toolStrip2.TabIndex = 30;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -1419,7 +1047,7 @@ namespace Controls
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "ProductieListControl";
-            this.Size = new System.Drawing.Size(1126, 620);
+            this.Size = new System.Drawing.Size(1149, 634);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst)).EndInit();
             this.xproductieLijstcontext.ResumeLayout(false);
@@ -1446,28 +1074,6 @@ namespace Controls
         private System.Windows.Forms.ToolStripMenuItem xbeheerfilterstoolstripbutton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
         private MetroFramework.Controls.MetroTextBox xsearch;
-        private BrightIdeasSoftware.OLVColumn xbewnaamc;
-        private BrightIdeasSoftware.OLVColumn xnaambewerkingc;
-        private BrightIdeasSoftware.OLVColumn olvColumn12;
-        private BrightIdeasSoftware.OLVColumn olvColumn13;
-        private BrightIdeasSoftware.OLVColumn olvColumn3;
-        private BrightIdeasSoftware.OLVColumn olvColumn7;
-        private BrightIdeasSoftware.OLVColumn olvColumn14;
-        private BrightIdeasSoftware.OLVColumn olvColumn15;
-        private BrightIdeasSoftware.OLVColumn olvColumn2;
-        private BrightIdeasSoftware.OLVColumn olvColumn16;
-        private BrightIdeasSoftware.OLVColumn olvColumn17;
-        private BrightIdeasSoftware.OLVColumn olvColumn18;
-        private BrightIdeasSoftware.OLVColumn olvColumn1;
-        private BrightIdeasSoftware.OLVColumn olvColumn19;
-        private BrightIdeasSoftware.OLVColumn olvColumn20;
-        private BrightIdeasSoftware.OLVColumn olvColumn8;
-        private BrightIdeasSoftware.OLVColumn olvColumn21;
-        private BrightIdeasSoftware.OLVColumn olvColumn22;
-        private BrightIdeasSoftware.OLVColumn olvColumn23;
-        private BrightIdeasSoftware.OLVColumn olvColumn24;
-        private BrightIdeasSoftware.OLVColumn olvColumn25;
-        private BrightIdeasSoftware.OLVColumn olvColumn26;
         private System.Windows.Forms.ContextMenuStrip xproductieLijstcontext;
         private System.Windows.Forms.ToolStripMenuItem xopenProductieToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
@@ -1501,15 +1107,8 @@ namespace Controls
         private System.Windows.Forms.ImageList ximagelist;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ToolStripMenuItem exportExcelToolStripMenuItem;
-        private BrightIdeasSoftware.OLVColumn olvColumn4;
         private System.Windows.Forms.Label xloadinglabel;
         private System.Windows.Forms.ToolStripMenuItem xtoolstripaanbevolenpersonen;
-        private BrightIdeasSoftware.OLVColumn olvColumn5;
-        private BrightIdeasSoftware.OLVColumn olvColumn6;
-        private BrightIdeasSoftware.OLVColumn olvColumn9;
-        private BrightIdeasSoftware.OLVColumn olvColumn10;
-        private BrightIdeasSoftware.OLVColumn olvColumn11;
-        private BrightIdeasSoftware.OLVColumn olvColumn27;
         private System.Windows.Forms.ToolStripMenuItem zoekToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem opArtikelNrToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem opBewerkingToolStripMenuItem;
@@ -1546,5 +1145,6 @@ namespace Controls
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem11;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem12;
         private System.Windows.Forms.ToolStripMenuItem verpakkingsInstructieToolStripMenuItem;
+        private System.Windows.Forms.Button xListColumnsButton;
     }
 }

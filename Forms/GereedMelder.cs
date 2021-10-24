@@ -54,6 +54,10 @@ namespace Forms
             xdeelsgereed.Visible = false;
             xgereedlijst.Visible = false;
             xaantal.ValueChanged += xaantal_ValueChanged;
+            this.Text = @$"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
+            this.Invalidate();
+            productieInfoUI1.SetInfo(_prod, this.Text, Color.White,
+                Color.White, Color.DarkGreen);
             return ShowDialog();
         }
 
@@ -65,6 +69,10 @@ namespace Forms
             xdeelsgereed.Visible = true;
             xgereedlijst.Visible = true;
             xaantal.ValueChanged += xaantal_ValueChanged;
+            this.Text = @$"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
+            this.Invalidate();
+            productieInfoUI1.SetInfo(_prod, this.Text, Color.White,
+                Color.White, Color.DarkGreen);
             return ShowDialog();
         }
 
@@ -147,13 +155,16 @@ namespace Forms
                 //xtextfield2.Text = _prod.Omschrijving;
                 var result = _prod.Update(null, false,false).Result;
                 this.Text = @$"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
-                var curpos = xinfofield.VerticalScroll.Value;
-                xinfofield.Text = _prod.GetHtmlBody(this.Text,Resources.notification_done_114461,
-                    new Size(64, 64), Color.White,
-                    Color.White, Color.DarkGreen);
-                for (int i = 0; i < 4; i++)
-                    xinfofield.VerticalScroll.Value = curpos;
                 this.Invalidate();
+                //var curpos = xinfofield.VerticalScroll.Value;
+                //xinfofield.Text = _prod.GetHtmlBody(this.Text,Resources.notification_done_114461,
+                //    new Size(64, 64), Color.White,
+                //    Color.White, Color.DarkGreen);
+                //for (int i = 0; i < 4; i++)
+                //    xinfofield.VerticalScroll.Value = curpos;
+                productieInfoUI1.SetInfo(_prod, this.Text, Color.White,
+                    Color.White, Color.DarkGreen);
+                
 
             }));
             // xtextfield3.Text = Melding;

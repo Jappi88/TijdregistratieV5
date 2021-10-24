@@ -3,7 +3,9 @@ using Forms;
 using MetroFramework.Controls;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
+using ProductieManager.Rpm.ExcelHelper;
 using ProductieManager.Rpm.Misc;
+using ProductieManager.Rpm.Settings;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
@@ -38,7 +40,6 @@ namespace Controls
             xsearch.ShowClearButton = true;
             EnableEntryFiltering = false;
             EnableFiltering = true;
-            CanLoad = true;
             _WaitTimer = new Timer(100);
             _WaitTimer.Elapsed += _WaitTimer_Elapsed;
         }
@@ -143,6 +144,7 @@ namespace Controls
             if (initlist)
                 try
                 {
+                    CanLoad = true;
                     BeginInvoke(new MethodInvoker(() =>
                     {
                         xsearch.TextChanged -= xsearchbox_TextChanged;
@@ -163,85 +165,93 @@ namespace Controls
 
         private void SetButtonEnable()
         {
-            var enable1 = ProductieLijst.SelectedObjects is { Count: 1 };
-            var enable2 = ProductieLijst.SelectedObjects is { Count: > 1 };
-            var enable3 = enable1 || enable2;
-            var acces1 = Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieBasis };
-            //var acces2 = Manager.LogedInGebruiker != null &&
-            //Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieAdvance;
-
-            var bws = new List<Bewerking>();
-            if (ProductieLijst.SelectedObjects != null)
+            try
             {
-                if (!IsBewerkingView)
-                    foreach (var prod in ProductieLijst.SelectedObjects.Cast<ProductieFormulier>().ToArray())
-                    {
-                        if (prod.Bewerkingen == null) continue;
-                        var xbws = prod.Bewerkingen.Where(x => x.IsAllowed()).ToList();
-                        if (xbws.Count > 0)
-                            bws.AddRange(xbws);
-                    }
-                else bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToList();
-            }
+                var enable1 = ProductieLijst.SelectedObjects is {Count: 1};
+                var enable2 = ProductieLijst.SelectedObjects is {Count: > 1};
+                var enable3 = enable1 || enable2;
+                var acces1 = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
+                //var acces2 = Manager.LogedInGebruiker != null &&
+                //Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieAdvance;
 
-            var isprod = !IsBewerkingView;
-            var verwijderd1 = enable3 && isprod
-                ? bws.All(x => x.State == ProductieState.Verwijderd)
-                : bws.Any(x => x.State == ProductieState.Verwijderd);
-            var verwijderd2 = enable3 && bws.Any(x => x.State != ProductieState.Verwijderd);
-            var isgereed1 = enable3 && isprod
-                ? bws.All(x => x.State == ProductieState.Gereed)
-                : bws.Any(x => x.State == ProductieState.Gereed);
-            var isgereed2 = enable3 && bws.Any(x => x.State != ProductieState.Gereed);
-            var isgestart = enable3 && bws.Any(x => x.State == ProductieState.Gestart);
-            var isgestopt = enable3 && bws.Any(x => x.State == ProductieState.Gestopt);
-            var haspdf = bws.Count > 0 && bws[0].Parent != null && bws[0].Parent.ContainsProductiePdf();
-            //var nietbemand = bws.Any(x => !x.IsBemand);
-            xbewerkingeninfob.Enabled = xProductieLijst.Items.Count > 0;
-            xwijzigproductieinfo.Enabled = enable3 && acces1;
-            xtoonpdfb.Enabled = haspdf;
-            xverpakkingb.Enabled = enable1;
-            xopenproductieb.Enabled = enable3 && acces1 && verwijderd2;
-            xstartb.Enabled = acces1 && isgestopt;
-            xstopb.Enabled = acces1 && isgestart;
-            xwijzigformb.Enabled = enable1 && acces1;
-            xwerktijdenb.Enabled = acces1 && enable1;
-            xwerkplekkenb.Enabled = enable1 && acces1;
-            xaantalgemaaktb.Enabled = enable1 && acces1;
-            xverwijderb.Enabled = enable3 && acces1;
-            xzetterugb.Enabled = enable3 && acces1 && (verwijderd1 || isgereed1);
-            xmeldgereedb.Enabled = enable1 && acces1 && !verwijderd1 && !isgereed1;
-            xdeelgereedmeldingenb.Enabled = enable1 && acces1;
-            xonderbrekingb.Enabled = enable1 && acces1;
-            xmaterialenb.Enabled = enable1 && acces1;
-            xafkeurb.Enabled = enable1 && acces1;
-            xproductieInfob.Enabled = enable1;
-            xexportexcel.Enabled = enable3;
-            xaanbevolenpersb.Enabled = enable1;
-            //set context menu
-            xopenProductieToolStripMenuItem.Enabled = enable3 && acces1 && verwijderd2;
-            xtoolstripstart.Enabled = acces1 && isgestopt;
-            xtoolstripstop.Enabled = acces1 && isgestart;
-            productieToolStripMenuItem.Enabled = enable1 && acces1;
-            xtoolstripbehwerktijden.Enabled = acces1 && enable1;
-            xtoolstripbehwerkplekken.Enabled = enable1 && acces1;
-            xwijzigToolStripMenuItem1.Enabled = enable3 && acces1;
-            xverwijdertoolstrip.Enabled = enable3 && acces1;
-            xzetterugtoolstrip.Enabled = enable3 && acces1 && (verwijderd1 || isgereed1);
-            xmeldGereedToolStripMenuItem1.Enabled = enable1 && acces1 && !verwijderd1 && !isgereed1;
-            xdeelGereedmeldingenToolStripMenuItem.Enabled = enable1 && acces1;
-            xonderbrekingtoolstripbutton.Enabled = enable1 && acces1;
-            benodigdeMaterialenToolStripMenuItem.Enabled = enable1 && acces1;
-            xafkeurstoolstrip.Enabled = enable1 && acces1;
-            xshowproductieinfo.Enabled = enable1;
-            exportExcelToolStripMenuItem.Enabled = enable3;
-            xtoolstripaanbevolenpersonen.Enabled = enable1;
-            zoekToolStripMenuItem.Enabled = enable3;
+                var bws = new List<Bewerking>();
+                if (ProductieLijst.SelectedObjects != null)
+                {
+                    if (!IsBewerkingView)
+                        foreach (var prod in ProductieLijst.SelectedObjects.Cast<ProductieFormulier>().ToArray())
+                        {
+                            if (prod.Bewerkingen == null) continue;
+                            var xbws = prod.Bewerkingen.Where(x => x.IsAllowed()).ToList();
+                            if (xbws.Count > 0)
+                                bws.AddRange(xbws);
+                        }
+                    else bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToList();
+                }
+
+                var isprod = !IsBewerkingView;
+                var verwijderd1 = enable3 && isprod
+                    ? bws.All(x => x.State == ProductieState.Verwijderd)
+                    : bws.Any(x => x.State == ProductieState.Verwijderd);
+                var verwijderd2 = enable3 && bws.Any(x => x.State != ProductieState.Verwijderd);
+                var isgereed1 = enable3 && isprod
+                    ? bws.All(x => x.State == ProductieState.Gereed)
+                    : bws.Any(x => x.State == ProductieState.Gereed);
+                var isgereed2 = enable3 && bws.Any(x => x.State != ProductieState.Gereed);
+                var isgestart = enable3 && bws.Any(x => x.State == ProductieState.Gestart);
+                var isgestopt = enable3 && bws.Any(x => x.State == ProductieState.Gestopt);
+                var haspdf = bws.Count > 0 && bws[0].Parent != null && bws[0].Parent.ContainsProductiePdf();
+                //var nietbemand = bws.Any(x => !x.IsBemand);
+                xbewerkingeninfob.Enabled = xProductieLijst.Items.Count > 0;
+                xwijzigproductieinfo.Enabled = enable3 && acces1;
+                xtoonpdfb.Enabled = haspdf;
+                xverpakkingb.Enabled = enable1;
+                xopenproductieb.Enabled = enable3 && acces1 && verwijderd2;
+                xstartb.Enabled = acces1 && isgestopt;
+                xstopb.Enabled = acces1 && isgestart;
+                xwijzigformb.Enabled = enable1 && acces1;
+                xwerktijdenb.Enabled = acces1 && enable1;
+                xwerkplekkenb.Enabled = enable1 && acces1;
+                xaantalgemaaktb.Enabled = enable1 && acces1;
+                xverwijderb.Enabled = enable3 && acces1;
+                xzetterugb.Enabled = enable3 && acces1 && (verwijderd1 || isgereed1);
+                xmeldgereedb.Enabled = enable1 && acces1 && !verwijderd1 && !isgereed1;
+                xdeelgereedmeldingenb.Enabled = enable1 && acces1;
+                xonderbrekingb.Enabled = enable1 && acces1;
+                xmaterialenb.Enabled = enable1 && acces1;
+                xafkeurb.Enabled = enable1 && acces1;
+                xproductieInfob.Enabled = enable1;
+                xexportexcel.Enabled = enable3;
+                xaanbevolenpersb.Enabled = enable1;
+                //set context menu
+                xopenProductieToolStripMenuItem.Enabled = enable3 && acces1 && verwijderd2;
+                xtoolstripstart.Enabled = acces1 && isgestopt;
+                xtoolstripstop.Enabled = acces1 && isgestart;
+                productieToolStripMenuItem.Enabled = enable1 && acces1;
+                xtoolstripbehwerktijden.Enabled = acces1 && enable1;
+                xtoolstripbehwerkplekken.Enabled = enable1 && acces1;
+                xwijzigToolStripMenuItem1.Enabled = enable3 && acces1;
+                xverwijdertoolstrip.Enabled = enable3 && acces1;
+                xzetterugtoolstrip.Enabled = enable3 && acces1 && (verwijderd1 || isgereed1);
+                xmeldGereedToolStripMenuItem1.Enabled = enable1 && acces1 && !verwijderd1 && !isgereed1;
+                xdeelGereedmeldingenToolStripMenuItem.Enabled = enable1 && acces1;
+                xonderbrekingtoolstripbutton.Enabled = enable1 && acces1;
+                benodigdeMaterialenToolStripMenuItem.Enabled = enable1 && acces1;
+                xafkeurstoolstrip.Enabled = enable1 && acces1;
+                xshowproductieinfo.Enabled = enable1;
+                exportExcelToolStripMenuItem.Enabled = enable3;
+                xtoolstripaanbevolenpersonen.Enabled = enable1;
+                zoekToolStripMenuItem.Enabled = enable3;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void InitEvents()
         {
             Manager.OnSettingsChanged += _manager_OnSettingsChanged;
+            Manager.OnSettingsChanging += Manager_OnSettingsChanging;
             Manager.OnFormulierChanged += _manager_OnFormulierChanged;
             Manager.OnFormulierDeleted += Manager_OnFormulierDeleted;
             //Manager.OnProductiesLoaded += Manager_OnProductiesChanged;
@@ -252,11 +262,27 @@ namespace Controls
             // Manager.OnDbEndUpdate += Manager_OnDbEndUpdate;
             Manager.OnManagerLoaded += _manager_OnManagerLoaded;
             Manager.FilterChanged += Manager_FilterChanged;
+            Manager.OnColumnsSettingsChanged += Xcols_OnColumnsSettingsChanged;
+        }
+
+        private void Manager_OnSettingsChanging(object instance, ref UserSettings settings, ref bool cancel)
+        {
+            try
+            {
+                if (this.Disposing || IsDisposed) return;
+                var x = settings;
+                this.BeginInvoke(new Action(() => SaveColumns(false, x)));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void DetachEvents()
         {
             Manager.OnSettingsChanged -= _manager_OnSettingsChanged;
+            Manager.OnSettingsChanging -= Manager_OnSettingsChanging;
             Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
             Manager.OnFormulierChanged -= _manager_OnFormulierChanged;
             // Manager.OnProductiesLoaded -= Manager_OnProductiesChanged;
@@ -267,6 +293,7 @@ namespace Controls
             //Manager.OnDbEndUpdate -= Manager_OnDbEndUpdate;
             Manager.OnManagerLoaded -= _manager_OnManagerLoaded;
             Manager.FilterChanged -= Manager_FilterChanged;
+            Manager.OnColumnsSettingsChanged -= Xcols_OnColumnsSettingsChanged;
         }
 
         private bool _iswaiting;
@@ -327,87 +354,275 @@ namespace Controls
             _iswaiting = false;
         }
 
-        private void InitColumns()
+        public bool SaveColumns(bool savesettings, UserSettings opties)
         {
-            foreach (var col in ProductieLijst.Columns.Cast<OLVColumn>())
+            if (opties == null) return false;
+            opties.ExcelColumns ??= new List<ExcelSettings>();
+            var xcols = opties.ExcelColumns.FirstOrDefault(x =>
+                x.ListNames.Any(listname=> string.Equals(listname, ListName, StringComparison.CurrentCultureIgnoreCase)));
+            if (xcols == null)
             {
-                col.Groupable = true;
-                col.Name = col.AspectName;
-                col.ImageGetter = ImageGetter;
-                col.GroupFormatter = (group, parms) =>
+                xcols = opties.ExcelColumns.FirstOrDefault(x =>
+                    string.Equals(x.Name, ListName, StringComparison.CurrentCultureIgnoreCase));
+                if (xcols == null)
+                {
+                    xcols = new ExcelSettings(ListName, ListName);
+                    opties.ExcelColumns.Add(xcols);
+                }
+                else xcols.SetSelected(true, ListName);
+            }
+            var xcurcols = ProductieLijst.AllColumns.Cast<OLVColumn>();
+            xcols.Columns ??= new List<ExcelColumnEntry>();
+            var xsorted = ProductieLijst.PrimarySortColumn;
+            foreach (var col in xcurcols)
+            {
+                var xcol = xcols.Columns.FirstOrDefault(x =>
+                    string.Equals(col.Name, x.Naam, StringComparison.CurrentCultureIgnoreCase));
+                if (xcol == null)
+                {
+                    xcol = new ExcelColumnEntry(col.Name);
+                    //if (col.DisplayIndex < xcols.Columns.Count)
+                    //    xcols.Columns.Insert(col.DisplayIndex, xcol);
+                    //else
+                        xcols.Columns.Add(xcol);
+                }
+
+                //if (col.IsVisible)
+                xcol.ColumnIndex = col.LastDisplayIndex;
+                xcol.Naam = col.AspectName;
+                xcol.ColumnBreedte = col.Width;
+                xcol.IsVerborgen = !col.IsVisible;
+                xcol.ColumnFormat = col.AspectToStringFormat;
+                if (string.Equals(xsorted?.AspectName, xcol.Naam, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    if (ProductieLijst.PrimarySortOrder == SortOrder.None)
+                    {
+                        xcol.Sorteer = SorteerType.None;
+                    }
+                    else
+                    {
+                        xcols.Columns.ForEach(x => x.Sorteer = SorteerType.None);
+                        switch (ProductieLijst.PrimarySortOrder)
+                        {
+                            case SortOrder.Ascending:
+                                xcol.Sorteer = SorteerType.Ascending;
+                                break;
+                            case SortOrder.Descending:
+                                xcol.Sorteer = SorteerType.Descending;
+                                break;
+                        }
+                    }
+                  
+                }
+                
+            }
+
+            xcols.Columns = xcols.Columns.OrderBy(x => x.ColumnIndex).ToList();
+            if (!savesettings)
+                Manager.ColumnsSettingsChanged(xcols);
+            //xcols.ReIndexColumns();
+            if (savesettings)
+                opties.Save("Columns Opgeslagen!", false, false, false);
+            return true;
+        }
+
+        private OLVColumn SetColumnsInfo(ref OLVColumn column, ExcelColumnEntry columnEntry)
+        {
+            try
+            {
+                var xcol = columnEntry;
+                var xDescription = typeof(IProductieBase).GetPropertyDescription(xcol.Naam);
+                column.ToolTipText = xDescription;
+                column.Tag = xcol;
+                column.Groupable = true;
+                column.Name = xcol.Naam;
+                column.Text = xcol.ColumnText;
+                column.AspectToStringFormat = xcol.ColumnFormat;
+                column.Width = xcol.ColumnBreedte;
+                if (xcol.AutoSize)
+                    column.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+                column.GroupFormatter = (group, parms) =>
                 {
                     parms.GroupComparer = Comparer<OLVGroup>.Create((x, y) =>
-                        Comparer.Compare(x, y, parms.PrimarySortOrder, parms.PrimarySort ?? parms.SecondarySort));
+                        Comparer.Compare(x, y, parms.PrimarySortOrder,
+                            parms.PrimarySort ?? parms.SecondarySort));
                 };
-            }
+                switch (xcol.Naam.ToLower())
+                {
+                    case "artikelnr":
+                        column.ImageGetter = ImageGetter;
+                        column.LastDisplayIndex = 0;
+                        column.IsVisible = true;
+                        return column;
+                    case "verpakkingsinstructies":
+                    case "verpakkinginstries":
+                        column.AspectGetter = VerpakkingsInstructiesGetter;
+                        break;
+                    case "note":
+                        column.AspectGetter = NoteGetter;
+                        break;
+                    case "gereednote":
+                        column.AspectGetter = GereedNoteGetter;
+                        break;
+                    case "personen":
+                        column.AspectGetter = PersonenGetter;
+                        break;
+                    case "lastchanged":
+                        column.AspectGetter = LastChangedGetter;
+                        break;
+                    case "Omschrijving":
+                        column.GroupKeyGetter = GroupGetter;
+                        break;
+                    case "tijdover":
+                        column.AspectGetter = BewerkingTijdOverGetter;
+                        break;
+                    case "laatstaantalupdate":
+                        column.AspectGetter = y =>
+                        {
+                            if (y is IProductieBase pr)
+                                return pr.LaatstAantalUpdate.ToString(8, "over {0} {1}", "{0} {1} geleden", false);
+                            return "N.V.T.";
+                        };
+                        break;
+                    case "verwachtleverdatum":
+                        column.AspectGetter = y =>
+                        {
+                            if (y is IProductieBase bw)
+                                return bw.VerwachtLeverDatum.ToString(8, "over {0} {1}", "{0} {1} geleden", false);
+                            return "N.V.T.";
+                        };
+                        break;
+                    case "leverdatum":
+                        column.AspectGetter = y =>
+                        {
+                            if (y is IProductieBase pr)
+                                return pr.LeverDatum.ToString(8, "over {0} {1}", "{0} {1} geleden", false);
+                            return "N.V.T.";
+                        };
+                        break;
+                }
 
-            var c = (OLVColumn)ProductieLijst.Columns["Naam"];
-            if (c != null)
-                c.IsVisible = IsBewerkingView;
-            //((OLVColumn)xproductieLijst.Columns["Omschrijving"]).ImageGetter = ImageGetter;
-            //((OLVColumn)xproductieLijst.Columns["Naam"]).ImageGetter = ImageGetter;
-            if (!IsBewerkingView)
+                column.LastDisplayIndex = xcol.ColumnIndex >= 0 &&
+                                          xcol.ColumnIndex <= ProductieLijst.Columns.Count - 1
+                    ? xcol.ColumnIndex
+                    : ProductieLijst.Columns.Count - 1;
+                column.IsVisible = !xcol.IsVerborgen;
+                return column;
+            }
+            catch (Exception e)
             {
-                c = (OLVColumn)ProductieLijst.Columns["Omschrijving"];
-                if (c != null)
-                    c.GroupKeyGetter = GroupGetter;
+                return column;
             }
+        }
 
-            c = (OLVColumn)ProductieLijst.Columns["TijdOver"];
-            if (c != null)
-                c.AspectGetter = BewerkingTijdOverGetter;
-            //init time fields
-            c = (OLVColumn)ProductieLijst.Columns["LaatstAantalUpdate"];
-            if (c != null)
-                c.AspectGetter = y =>
+        private void InitColumns()
+        {
+            try
+            {
+                var xcols = Manager.Opties?.ExcelColumns?.FirstOrDefault(x =>
+                    x.ListNames.Any(
+                        listname => string.Equals(listname, ListName, StringComparison.CurrentCultureIgnoreCase)));
+                if (xcols == null)
                 {
-                    if (y is Bewerking bw)
-                        return bw.LaatstAantalUpdate.ToString(8, "over {0} {1}", "{0} {1} geleden", false);
-                    if (y is ProductieFormulier pr)
-                        return pr.LaatstAantalUpdate.ToString(8, "over {0} {1}", "{0} {1} geleden", false);
-                    return "N.V.T.";
-                };
-            //((OLVColumn)xproductieLijst.Columns["TijdGestart"]).AspectGetter = (y) =>
-            //{
-            //    if (y is Bewerking bw)
-            //        return bw.TijdGestart.ToString(48, "over {0} {1}", "{0} {1} geleden");
-            //    if (y is ProductieFormulier pr)
-            //        return pr.TijdGestart.ToString(48, "over {0} {1}", "{0} {1} geleden");
-            //    return "N.V.T.";
-            //};
-
-            //((OLVColumn)xproductieLijst.Columns["TijdGestopt"]).AspectGetter = (y) =>
-            //{
-            //    if (y is Bewerking bw)
-            //        return bw.TijdGestopt.ToString(48, "over {0} {1}", "{0} {1} geleden");
-            //    if (y is ProductieFormulier pr)
-            //        return pr.TijdGestopt.ToString(48, "over {0} {1}", "{0} {1} geleden");
-            //    return "N.V.T.";
-            //};
-
-            c = (OLVColumn)ProductieLijst.Columns["VerwachtLeverDatum"];
-            if (c != null)
-                c.AspectGetter = y =>
+                    xcols = Manager.Opties?.ExcelColumns?.FirstOrDefault(x =>
+                        string.Equals(x.Name, ListName, StringComparison.CurrentCultureIgnoreCase));
+                    if (xcols != null)
+                    {
+                        xcols.SetSelected(true, ListName);
+                    }
+                    else if (Manager.Opties?.ExcelColumns != null)
+                    {
+                        xcols = ExcelSettings.CreateSettings(ListName);
+                        Manager.Opties.ExcelColumns.Add(xcols);
+                    }
+                }
+                if (xcols?.Columns != null)
                 {
-                    if (y is Bewerking bw)
-                        return bw.VerwachtLeverDatum.ToString(8, "over {0} {1}", "{0} {1} geleden", false);
-                    if (y is ProductieFormulier pr)
-                        return pr.VerwachtLeverDatum.ToString(8, "over {0} {1}", "{0} {1} geleden", false);
-                    return "N.V.T.";
-                };
-            c = (OLVColumn)ProductieLijst.Columns["LeverDatum"];
-            if (c != null)
-                c.AspectGetter = y =>
-                {
-                    if (y is Bewerking bw)
-                        return bw.LeverDatum.ToString(8, "over {0} {1}", "{0} {1} geleden", false);
-                    if (y is ProductieFormulier pr)
-                        return pr.LeverDatum.ToString(8, "over {0} {1}", "{0} {1} geleden", false);
-                    return "N.V.T.";
-                };
+                    if (xcols.Columns.Count == 0)
+                    {
+                        xcols.SetDefaultColumns();
+                    }
+                    ProductieLijst.BeginUpdate();
+                    OLVColumn xsort = null;
+                    var xcurcols = ProductieLijst.AllColumns.Cast<OLVColumn>().ToList();
+                    for (int i = 0; i < xcurcols.Count; i++)
+                    {
+                        var xcurcol = xcurcols[i];
+                        var xcol = xcols.Columns.FirstOrDefault(x => string.Equals(x.Naam, xcurcol.AspectName));
+                        
+                        if (xcol == null)
+                        {
+                            ProductieLijst.AllColumns.RemoveAt(i);
+                            xcurcols.RemoveAt(i--);
+                            continue;
+                        }
 
-            ProductieLijst.RebuildColumns();
+                        xcurcol = SetColumnsInfo(ref xcurcol, xcol);
+                        if (xcol.Sorteer != SorteerType.None)
+                        {
+                            xsort = xcurcol;
+                            xcurcol.Sortable = true;
+                        }
+                    }
+
+                    var xtoadd = xcols.Columns.Where(x =>
+                            !xcurcols.Exists(c =>
+                                string.Equals(c.Name, x.Naam, StringComparison.CurrentCultureIgnoreCase)))
+                        .ToArray();
+                    foreach (var xcol in xtoadd)
+                    {
+
+                        var col = new OLVColumn(xcol.ColumnText, xcol.Naam);
+                        col = SetColumnsInfo(ref col, xcol);
+                        if (xcol.Sorteer != SorteerType.None)
+                        {
+                            xsort = col;
+                            col.Sortable = true;
+                        }
+                        ProductieLijst.AllColumns.Add(col);
+                    }
+
+                    if (xsort?.Tag is ExcelColumnEntry ec)
+                    {
+                        if (ec.Sorteer == SorteerType.Ascending)
+                            ProductieLijst.Sort(xsort, SortOrder.Ascending);
+                        else
+                            ProductieLijst.Sort(xsort, SortOrder.Descending);
+                    }
+
+                    ProductieLijst.EndUpdate();
+                }
+                else
+                {
+                    foreach (var col in ProductieLijst.AllColumns.Cast<OLVColumn>())
+                    {
+                        col.Groupable = true;
+                        col.Name = col.AspectName;
+                        col.ImageGetter = ImageGetter;
+                        col.GroupFormatter = (group, parms) =>
+                        {
+                            parms.GroupComparer = Comparer<OLVGroup>.Create((x, y) =>
+                                Comparer.Compare(x, y, parms.PrimarySortOrder,
+                                    parms.PrimarySort ?? parms.SecondarySort));
+                        };
+                    }
+                }
+                ProductieLijst.RebuildColumns();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
             //((OLVColumn)xproductieLijst.Columns["Omschrijving"]).GroupKeyGetter = BewerkingGroupGetter;
+        }
+
+        private void Xcols_OnColumnsSettingsChanged(object sender, EventArgs e)
+        {
+            if (sender is ExcelSettings settings)
+            {
+                if (settings.IsUsed(ListName))
+                    this.BeginInvoke(new Action(InitColumns));
+            }
         }
 
         private void InitImageList()
@@ -468,6 +683,70 @@ namespace Controls
             return GetProductieImageIndex(sender as IProductieBase);
         }
 
+        private object VerpakkingsInstructiesGetter(object sender)
+        {
+            if (sender is IProductieBase productie)
+            {
+                return productie.VerpakkingInstries?.VerpakkingType ?? "N.V.T.";
+            }
+
+            return "N.V.T.";
+        }
+
+        private object PersonenGetter(object sender)
+        {
+            if (sender is IProductieBase productie)
+            {
+                return string.Join(", ",
+                    productie.Personen?.Select(x => x.PersoneelNaam).ToArray() ?? new string[] {"N.V.T."});
+            }
+
+            return "N.V.T.";
+        }
+
+
+        private object LastChangedGetter(object sender)
+        {
+            if (sender is IProductieBase productie)
+            {
+                string name = productie.LastChanged?.User;
+                string xvalue = name == null ? "" : name + ": ";
+                xvalue = $"[{productie.LastChanged?.TimeChanged}]{xvalue}{productie.LastChanged?.Change}";
+                if (string.IsNullOrEmpty(xvalue)) return "N.V.T.";
+                return xvalue;
+            }
+
+            return "N.V.T.";
+        }
+
+        private object NoteGetter(object sender)
+        {
+            if (sender is IProductieBase productie)
+            {
+                string name = productie.Note?.Naam;
+                string xvalue = name == null ? "" : name + ": ";
+                xvalue += productie.Note?.Notitie;
+                if (string.IsNullOrEmpty(xvalue)) return "N.V.T.";
+                return xvalue;
+            }
+
+            return "N.V.T.";
+        }
+
+        private object GereedNoteGetter(object sender)
+        {
+            if (sender is IProductieBase productie)
+            {
+                string name = productie.GereedNote?.Naam;
+                string xvalue = name == null ? "" : name + ": ";
+                xvalue += productie.GereedNote?.Notitie;
+                if (string.IsNullOrEmpty(xvalue)) return "N.V.T.";
+                return xvalue;
+            }
+
+            return "N.V.T.";
+        }
+
         private object BewerkingTijdOverGetter(object sender)
         {
             if (sender is Bewerking bew) return bew.TijdOver() + " uur";
@@ -525,7 +804,7 @@ namespace Controls
                         await Task.Delay(Manager.Opties.ProductieLijstSyncInterval);
                         if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || !IsSyncing || IsDisposed ||
                             Disposing) break;
-                        if (!_loadingproductielist)
+                        if (!_loadingproductielist && CanLoad)
                             UpdateProductieList(true, false);
                     }
                 }
@@ -593,7 +872,6 @@ namespace Controls
                         var states = GetCurrentViewStates();
 
                         var xlistcount = ProductieLijst.Items.Count;
-
                         if (!IsBewerkingView)
                         {
                             if (CanLoad)
@@ -1000,7 +1278,9 @@ namespace Controls
                 BeginInvoke(new MethodInvoker(() =>
                 {
                     if (IsDisposed) return;
-                    UpdateProductieList(true);
+                    InitColumns();
+                    if (CanLoad)
+                        UpdateProductieList(true);
                 }));
             }
             catch (Exception e)
@@ -1180,9 +1460,9 @@ namespace Controls
                     try
                     {
                         var mainform = Application.OpenForms["MainForm"];
-                        mainform?.Invoke(new Action( () =>
+
+                        async void Action()
                         {
-                            var xdic = new Dictionary<string, Task<bool>>();
                             for (var i = 0; i < bws.Length; i++)
                             {
                                 var parent = bws[i].GetParent();
@@ -1191,8 +1471,6 @@ namespace Controls
 
                                 if (werk.State != ProductieState.Gestart)
                                 {
-                                    var initnew = true;
-
                                     if (werk.AantalActievePersonen == 0)
                                     {
                                         var pers = new PersoneelsForm(true);
@@ -1204,22 +1482,15 @@ namespace Controls
                                                 var afzonderlijk = false;
                                                 if (pers.SelectedPersoneel.Length > 1 && werk.IsBemand)
                                                 {
-                                                    var result = XMessageBox.Show(
-                                                        $"Je hebt {pers.SelectedPersoneel.Length} medewerkers geselecteerd," +
-                                                        " wil je ze allemaal afzonderlijk indelen?", "Indeling",
-                                                        MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                                                    if (result == DialogResult.Cancel)
-                                                        return;
+                                                    var result = XMessageBox.Show($"Je hebt {pers.SelectedPersoneel.Length} medewerkers geselecteerd," + " wil je ze allemaal afzonderlijk indelen?", "Indeling", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                                    if (result == DialogResult.Cancel) return;
                                                     afzonderlijk = result == DialogResult.Yes;
                                                 }
 
                                                 if (!werk.IsBemand || !afzonderlijk)
                                                 {
-                                                    var klusui = new NieuwKlusForm(parent, pers.SelectedPersoneel,
-                                                        true, false,
-                                                        werk);
-                                                    if (klusui.ShowDialog() != DialogResult.OK)
-                                                        return;
+                                                    var klusui = new NieuwKlusForm(parent, pers.SelectedPersoneel, true, false, werk);
+                                                    if (klusui.ShowDialog() != DialogResult.OK) return;
                                                     var pair = klusui.SelectedKlus.GetWerk(parent);
                                                     var prod = pair.Formulier;
                                                     werk = pair.Bewerking;
@@ -1238,8 +1509,7 @@ namespace Controls
                                                     foreach (var per in pers.SelectedPersoneel)
                                                     {
                                                         var klusui = new NieuwKlusForm(parent, per, true, false, werk);
-                                                        if (klusui.ShowDialog() != DialogResult.OK)
-                                                            break;
+                                                        if (klusui.ShowDialog() != DialogResult.OK) break;
                                                         //klusui.Persoon.CopyTo(ref per);
                                                         var pair = klusui.SelectedKlus.GetWerk(parent);
                                                         var prod = pair.Formulier;
@@ -1248,13 +1518,10 @@ namespace Controls
                                                         if (werk != null)
                                                         {
                                                             per.ReplaceKlus(klusui.SelectedKlus);
-                                                            var wp = werk.WerkPlekken.FirstOrDefault(x =>
-                                                                string.Equals(x.Naam, klusui.SelectedKlus.WerkPlek,
-                                                                    StringComparison.CurrentCultureIgnoreCase));
+                                                            var wp = werk.WerkPlekken.FirstOrDefault(x => string.Equals(x.Naam, klusui.SelectedKlus.WerkPlek, StringComparison.CurrentCultureIgnoreCase));
                                                             if (wp == null)
                                                             {
-                                                                wp = new WerkPlek(per,
-                                                                    klusui.SelectedKlus.WerkPlek, werk);
+                                                                wp = new WerkPlek(per, klusui.SelectedKlus.WerkPlek, werk);
                                                                 werk.WerkPlekken.Add(wp);
                                                             }
                                                             else
@@ -1262,38 +1529,25 @@ namespace Controls
                                                                 wp.AddPersoon(per, werk);
                                                             }
 
-                                                            if (wp.Werk.UpdateBewerking(null,
-                                                                $"{wp.Path} indeling aangepast", false, false).Result)
-                                                                werk.CopyTo(ref bws[i]);
+                                                            if (wp.Werk.UpdateBewerking(null, $"{wp.Path} indeling aangepast", false, false).Result) werk.CopyTo(ref bws[i]);
                                                         }
                                                     }
                                                 }
-                                            
+
+                                                if (werk != null)
+                                                    await werk.StartProductie(true, true);
                                             }
-
-
-                                            initnew = false;
                                         }
                                     }
-
-                                    if (werk == null) continue;
-                                    var action = new Task<bool>(() => werk.StartProductie(true, initnew).Result);
-                                    xdic.Add($"Starten van '{werk.Path}'...", action);
+                                    else
+                                    {
+                                        await werk.StartProductie(true, true);
+                                    }
                                 }
                             }
+                        }
 
-                            if (xdic.Count > 1)
-                            {
-                                new MethodsForm(xdic).ShowDialog();
-                            }
-                            else
-                            {
-                                var xaction = xdic.FirstOrDefault();
-                                if (!xaction.IsDefault())
-                                    xaction.Value.Start();
-                                // await xaction.Value;
-                            }
-                        }));
+                        mainform?.BeginInvoke(new Action( Action));
                     }
                     catch (Exception exception)
                     {
@@ -2417,5 +2671,62 @@ namespace Controls
 
         #endregion Events
 
+        private void xListColumnsButton_Click(object sender, EventArgs e)
+        {
+            SaveColumns(false, Manager.Opties);
+            var xf = new ExcelOptiesForm();
+            xf.EnableCalculation = false;
+            xf.LoadOpties(Manager.Opties, ListName);
+            if (xf.ShowDialog() == DialogResult.OK)
+            {
+                Manager.Opties.ExcelColumns = xf.Settings;
+                Manager.Opties.Save($"{ListName} Columns Aangepast!", false, false, true);
+            }
+        }
+
+        private void xProductieLijst_FormatCell(object sender, FormatCellEventArgs e)
+        {
+            if (e.Column.Tag is ExcelColumnEntry entry && e.Model is IProductieBase productie)
+            {
+                var backc = Color.Empty;
+                var fontc = Color.Empty;
+                switch (entry.ColorType)
+                {
+                    case ColorRuleType.None:
+                        break;
+                    case ColorRuleType.Static:
+                        if (entry.ColumnColorIndex > -1)
+                            backc = ExcelColumnEntry.GetColorFromIndex(entry.ColumnColorIndex);
+                        if (entry.ColumnTextColorIndex > -1)
+                            fontc = ExcelColumnEntry.GetColorFromIndex(entry.ColumnTextColorIndex);
+                        break;
+                    case ColorRuleType.Dynamic:
+                        foreach (var k in entry.KleurRegels)
+                        {
+                            if (k.Filter != null && k.ColorIndex > -1)
+                            {
+                                if (k.Filter.ContainsFilter(productie))
+                                {
+                                    if (k.IsFontColor)
+                                        fontc = ExcelColumnEntry.GetColorFromIndex(k.ColorIndex);
+                                    else backc = ExcelColumnEntry.GetColorFromIndex(k.ColorIndex);
+                                }
+                            }
+                        }
+
+                        break;
+                }
+
+                if (!backc.IsEmpty)
+                    e.SubItem.BackColor = backc;
+                if (!fontc.IsEmpty)
+                    e.SubItem.ForeColor = fontc;
+            }
+        }
+
+        private void xProductieLijst_ColumnReordered(object sender, ColumnReorderedEventArgs e)
+        {
+            if (e.OldDisplayIndex == 0 || e.NewDisplayIndex == 0) e.Cancel = true;
+        }
     }
 }

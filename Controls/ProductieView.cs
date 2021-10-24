@@ -29,7 +29,7 @@ namespace Controls
         public ProductieView()
         {
             InitializeComponent();
-            metroTabControl.SelectedIndex = 1;
+            metroTabControl.SelectedIndex = 0;
             _specialRoosterWatcher = new Timer();
             _specialRoosterWatcher.Interval = 60000; //1 minuut;
             _specialRoosterWatcher.Tick += (x, y) => CheckForSpecialRooster(false);
@@ -97,18 +97,22 @@ namespace Controls
                 DetachEvents();
                 //BeginInvoke(new MethodInvoker(() => _manager.Load()));
                 //BeginInvoke(new MethodInvoker(_manager.StartMonitor));
-                await _manager.Load(path, false, false, false);
-                CheckForUpdateDatabase();
-                takenManager1.InitManager();
-                xproductieListControl1.InitProductie(false, true, true, true, false, false);
-                xbewerkingListControl.InitProductie(true, true, true, true, false, false);
-                werkPlekkenUI1.InitUI(_manager);
+                //await _manager.Load(path, false, false, false);
+                //CheckForUpdateDatabase();
+                //takenManager1.InitManager();
+                //xproductieListControl1.InitProductie(false, true, true, true, false, false);
+                //xbewerkingListControl.InitProductie(true, true, true, true, false, false);
+                //werkPlekkenUI1.InitUI(_manager);
                 //recentGereedMeldingenUI1.LoadBewerkingen();
-                _manager.Dispose();
-                _manager = new Manager(false);
+               // _manager.Dispose();
+               // _manager = new Manager(false);
                 _manager.InitManager();
+                //xproductieListControl1.InitProductie(false, true, true, true, false, false);
+                xbewerkingListControl.InitProductie(true, true, true, true, false, false);
                 InitEvents();
                 await _manager.Load(path, autologin, true, true);
+                takenManager1.InitManager();
+                werkPlekkenUI1.InitUI(_manager);
                 if (Manager.Opmerkingen != null)
                     Manager.Opmerkingen.OnOpmerkingenChanged += Opmerkingen_OnOpmerkingenChanged;
                 // _manager.StartMonitor();
@@ -142,12 +146,12 @@ namespace Controls
             ProductieChat.GebruikerUpdate += ProductieChat_GebruikerUpdate;
 
             _manager.OnShutdown += _manager_OnShutdown;
-            xproductieListControl1.InitEvents();
+            //xproductieListControl1.InitEvents();
             xbewerkingListControl.InitEvents();
-            xproductieListControl1.ItemCountChanged += XproductieListControl1_ItemCountChanged;
+            //xproductieListControl1.ItemCountChanged += XproductieListControl1_ItemCountChanged;
             xbewerkingListControl.ItemCountChanged += XproductieListControl1_ItemCountChanged;
             recentGereedMeldingenUI1.ItemCountChanged += XproductieListControl1_ItemCountChanged;
-            xproductieListControl1.SelectedItemChanged += XproductieListControl1_SelectedItemChanged;
+            //xproductieListControl1.SelectedItemChanged += XproductieListControl1_SelectedItemChanged;
             xbewerkingListControl.SelectedItemChanged += XproductieListControl1_SelectedItemChanged;
             xbewerkingListControl.SelectedItemChanged += XproductieListControl1_SelectedItemChanged;
             werkPlekkenUI1.InitEvents();
@@ -211,12 +215,12 @@ namespace Controls
             //Manager.OnDbEndUpdate -= Manager_OnDbEndUpdate;
             Manager.OnManagerLoaded -= _manager_OnManagerLoaded;
             _manager.OnShutdown -= _manager_OnShutdown;
-            xproductieListControl1.DetachEvents();
+            //xproductieListControl1.DetachEvents();
             xbewerkingListControl.DetachEvents();
-            xproductieListControl1.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
+            //productieListControl1.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
             xbewerkingListControl.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
             recentGereedMeldingenUI1.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
-            xproductieListControl1.SelectedItemChanged -= XproductieListControl1_SelectedItemChanged;
+            //xproductieListControl1.SelectedItemChanged -= XproductieListControl1_SelectedItemChanged;
             xbewerkingListControl.SelectedItemChanged -= XproductieListControl1_SelectedItemChanged;
             werkPlekkenUI1.DetachEvents();
             werkPlekkenUI1.OnRequestOpenWerk -= WerkPlekkenUI1_OnRequestOpenWerk;
@@ -242,11 +246,11 @@ namespace Controls
                     {
                         try
                         {
-                            xsettings.ViewDataProductieState = xproductieListControl1.ProductieLijst.SaveState();
-                            xsettings.ViewDataBewerkingenState = xbewerkingListControl.ProductieLijst.SaveState();
+                            //xsettings.ViewDataProductieState = xproductieListControl1.ProductieLijst.SaveState();
+                            //xsettings.ViewDataBewerkingenState = xbewerkingListControl.ProductieLijst.SaveState();
                             xsettings.ViewDataWerkplekState = werkPlekkenUI1.xwerkpleklist.SaveState();
-                            xsettings.ViewDataRecentProductieState =
-                                recentGereedMeldingenUI1.ProductieLijst.SaveState();
+                            //xsettings.ViewDataRecentProductieState =
+                            //    recentGereedMeldingenUI1.ProductieLijst.SaveState();
                         }
                         catch (Exception e)
                         {
@@ -256,10 +260,10 @@ namespace Controls
                 else
                     try
                     {
-                        xsettings.ViewDataProductieState = xproductieListControl1.ProductieLijst.SaveState();
-                        xsettings.ViewDataBewerkingenState = xbewerkingListControl.ProductieLijst.SaveState();
+                        //xsettings.ViewDataProductieState = xproductieListControl1.ProductieLijst.SaveState();
+                        //xsettings.ViewDataBewerkingenState = xbewerkingListControl.ProductieLijst.SaveState();
                         xsettings.ViewDataWerkplekState = werkPlekkenUI1.xwerkpleklist.SaveState();
-                        xsettings.ViewDataRecentProductieState = recentGereedMeldingenUI1.ProductieLijst.SaveState();
+                        //xsettings.ViewDataRecentProductieState = recentGereedMeldingenUI1.ProductieLijst.SaveState();
                     }
                     catch (Exception e)
                     {
@@ -290,20 +294,20 @@ namespace Controls
                         Text = @$"RealTime Productie Manager [{name}]";
 
 
-                        if (Manager.Opties?._viewproddata != null)
-                        {
-                            xproductieListControl1.ProductieLijst.RestoreState(Manager.Opties?.ViewDataProductieState);
-                            xproductieListControl1.ProductieLijst.Columns.Remove(
-                                xproductieListControl1.ProductieLijst.Columns["Naam"]);
-                        }
+                        //if (Manager.Opties?._viewproddata != null)
+                        //{
+                        //    xproductieListControl1.ProductieLijst.RestoreState(Manager.Opties?.ViewDataProductieState);
+                        //    xproductieListControl1.ProductieLijst.Columns.Remove(
+                        //        xproductieListControl1.ProductieLijst.Columns["Naam"]);
+                        //}
 
-                        if (Manager.Opties?._viewbewdata != null)
-                            xbewerkingListControl.ProductieLijst.RestoreState(Manager.Opties.ViewDataBewerkingenState);
+                        //if (Manager.Opties?._viewbewdata != null)
+                        //    xbewerkingListControl.ProductieLijst.RestoreState(Manager.Opties.ViewDataBewerkingenState);
                         if (Manager.Opties?._viewwerkplekdata != null)
                             werkPlekkenUI1.xwerkpleklist.RestoreState(Manager.Opties.ViewDataWerkplekState);
-                        if (Manager.Opties?._viewrecentproddata != null)
-                            recentGereedMeldingenUI1.ProductieLijst.RestoreState(Manager.Opties
-                                .ViewDataRecentProductieState);
+                        //if (Manager.Opties?._viewrecentproddata != null)
+                        //    recentGereedMeldingenUI1.ProductieLijst.RestoreState(Manager.Opties
+                        //        .ViewDataRecentProductieState);
                         var xrooster = mainMenu1.GetButton("xroostermenubutton");
                         if (xrooster != null)
                             xrooster.Image = Manager.Opties?.TijdelijkeRooster == null
@@ -358,7 +362,7 @@ namespace Controls
                 BeginInvoke(new Action(() =>
                 {
                     //CheckForSyncDatabase();
-                    CheckForUpdateDatabase();
+                    //CheckForUpdateDatabase();
                     CheckForSpecialRooster(true);
                     LoadStartedProducties();
                     LoadProductieLogs();
@@ -620,10 +624,7 @@ namespace Controls
         {
             switch (metroTabControl.SelectedIndex)
             {
-                case 0: //producties
-                    if (xproductieListControl1.SelectedItem is ProductieFormulier form) form.OpenProductiePdf();
-                    break;
-                case 1: //bewerkingen
+                case 0: 
                     if (xbewerkingListControl.SelectedItem is Bewerking bew) bew.Parent?.OpenProductiePdf();
                     break;
                 case 2: //werkplekken
@@ -639,10 +640,6 @@ namespace Controls
             switch (metroTabControl.SelectedIndex)
             {
                 case 0: //producties
-                    if (xproductieListControl1.SelectedItem is ProductieFormulier form)
-                        mainMenu1.Enable("xbekijkproductiepdf", form.ContainsProductiePdf());
-                    break;
-                case 1: //bewerkingen
                     if (xbewerkingListControl.SelectedItem is Bewerking bew)
                         mainMenu1.Enable("xbekijkproductiepdf",
                             bew.Parent != null && bew.Parent.ContainsProductiePdf());
@@ -660,7 +657,7 @@ namespace Controls
         {
             if (item is ProductieFormulier form)
             {
-                xproductieListControl1.SelectedItem = form;
+                //xproductieListControl1.SelectedItem = form;
                 metroTabControl.SelectedIndex = 0;
             }
             else if (item is Bewerking bew)
@@ -1105,6 +1102,8 @@ namespace Controls
                 var rooster = Manager.Opties.SpecialeRoosters.FirstOrDefault(x => x.Vanaf.Date == xtime.Date);
                 if (rooster == null && prompchange)
                 {
+                    var splash = Application.OpenForms["SplashScreen"];
+                    splash?.Close();
                     var xmsg =
                         $"Het is vandaag {day}, en geen officiële werkdag.\n" +
                         "Je kan een speciale rooster toevoegen als er vandaag toch wordt gewerkt.\n\n" +
@@ -1299,7 +1298,7 @@ namespace Controls
         {
             BeginInvoke(new MethodInvoker(() =>
             {
-                tabPage1.Text = $"Producties [{xproductieListControl1.ProductieLijst.Items.Count}]";
+                //tabPage1.Text = $"Producties [{xproductieListControl1.ProductieLijst.Items.Count}]";
                 tabPage2.Text = $"Bewerkingen [{xbewerkingListControl.ProductieLijst.Items.Count}]";
                 tabPage4.Text = $"Recente Gereedmeldingen [{recentGereedMeldingenUI1.ItemCount}]";
             }));
@@ -1753,11 +1752,11 @@ namespace Controls
                     xbewerkingListControl.SelectedItem = taak.Bewerking;
                     if (xbewerkingListControl.SelectedItem != null) metroTabControl.SelectedIndex = 1;
                 }
-                else
-                {
-                    xproductieListControl1.SelectedItem = taak.Formulier;
-                    if (xproductieListControl1.SelectedItem != null) metroTabControl.SelectedIndex = 0;
-                }
+                //else
+                //{
+                    //xproductieListControl1.SelectedItem = taak.Formulier;
+                    //if (xproductieListControl1.SelectedItem != null) metroTabControl.SelectedIndex = 0;
+                //}
             }
         }
 

@@ -24,8 +24,10 @@ namespace Forms
         {
             if (productie == null) return;
             Text = $@"Productie Info [{productie.ArtikelNr} => {productie.ProductieNr}]";
-            xinfopanel.Text = productie.GetHtmlBody(productie.Omschrijving, productie.GetImageFromResources(),
-                new Size(64, 64), Color.Black, Color.Purple, Color.White);
+            productieInfoUI1.SetInfo(productie, productie.Omschrijving, Color.Black, Color.Purple, Color.White);
+            productieInfoUI1.Visible = true;
+            //xinfopanel.Text = productie.GetHtmlBody(productie.Omschrijving, productie.GetImageFromResources(),
+            //    new Size(64, 64), Color.Black, Color.Purple, Color.White);
             Invalidate();
         }
 
@@ -33,6 +35,7 @@ namespace Forms
         {
             if (bewerkingen == null) return;
             Text = $@"Info van [{bewerkingen.Count} {(bewerkingen.Count == 1 ? "bewerking" : "bewerkingen")}]";
+            productieInfoUI1.Visible = false;
             xinfopanel.Text = CreateProductiesInfoHtml(bewerkingen);
             xstatsb.Visible = bewerkingen is {Count: > 0};
             _Bewerkingen = bewerkingen;
@@ -44,8 +47,10 @@ namespace Forms
         {
             if (bew == null) return;
             Text = $@"Werk Info [{bew.ArtikelNr} => {bew.ProductieNr}]";
-            xinfopanel.Text = bew.GetHtmlBody($"{bew.Naam} van: {bew.Omschrijving}", bew.GetImageFromResources(),
-                new Size(64, 64), Color.Black, Color.Purple, Color.White);
+            productieInfoUI1.SetInfo(bew, bew.Omschrijving, Color.Black, Color.Purple, Color.White);
+            productieInfoUI1.Visible = true;
+            //xinfopanel.Text = bew.GetHtmlBody($"{bew.Naam} van: {bew.Omschrijving}", bew.GetImageFromResources(),
+            //    new Size(64, 64), Color.Black, Color.Purple, Color.White);
             Invalidate();
         }
 
@@ -53,8 +58,10 @@ namespace Forms
         {
             if (plek == null || plek.Werk == null) return;
             Text = $@"Werk Info [{plek.Werk.ArtikelNr} => {plek.Werk.ProductieNr}]";
-            xinfopanel.Text = plek.Werk.GetHtmlBody($"{plek.Naam}: {plek.Werk.Omschrijving}",
-                Resources.iconfinder_technology, new Size(64, 64), Color.Black, Color.Purple, Color.White);
+            productieInfoUI1.SetInfo(plek.Werk, $"{plek.Naam}: {plek.Werk.Omschrijving}", Color.Black, Color.Purple, Color.White);
+            productieInfoUI1.Visible = true;
+            //xinfopanel.Text = plek.Werk.GetHtmlBody($"{plek.Naam}: {plek.Werk.Omschrijving}",
+            //    Resources.iconfinder_technology, new Size(64, 64), Color.Black, Color.Purple, Color.White);
             Invalidate();
         }
 

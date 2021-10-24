@@ -12,15 +12,15 @@ namespace Rpm.Settings
 
         public string UpdatePath
         {
-            get => Path.Combine(_rootpath.Replace("\\RPM_Data", ""), "RPM_Data");
-            set => _rootpath = value.Replace("\\RPM_Data", "").TrimEnd(new char[]{'\\'});
+            get => Path.Combine(_rootpath.Replace("\\RPM_Data", "").TrimEnd('\\') + "\\", "RPM_Data").Replace("//", "\\");
+            set => _rootpath = value.Replace("\\RPM_Data", "");
         } 
             
 
         public string RootPath
         {
-            get => _rootpath.Replace("\\RPM_Data", "");
-            set => _rootpath = value.Replace("\\RPM_Data", "").TrimEnd(new char[] { '\\' });
+            get => _rootpath.Replace("\\RPM_Data", "").Replace("//", "\\").TrimEnd('\\') + "\\";
+            set => _rootpath = value.Replace("\\RPM_Data", "");
         }
 
         public bool UpdateMetStartup { get; set; }

@@ -21,13 +21,13 @@ namespace ProductieManager.Rpm.Various
         {
             if (obj is RectAndText comp)
             {
-                var a = (int)Math.Round(Math.Floor(this.Rect.Bottom), 0, MidpointRounding.ToEven);
-                var b = (int)Math.Round(Math.Floor(comp.Rect.Bottom), 0, MidpointRounding.ToEven);
-                if (Enumerable.Range(a, 2).Contains(b))
+                var a = (int)Math.Round(Math.Floor(this.Rect.Left), 0, MidpointRounding.ToEven);
+                var b = (int)Math.Round(Math.Floor(comp.Rect.Left), 0, MidpointRounding.ToEven);
+                if (Enumerable.Range(a -1, 2).Contains(b))
                 {
-                    a = (int)Math.Round(Math.Floor(this.Rect.Left), 0, MidpointRounding.ToEven);
-                    b = (int)Math.Round(Math.Floor(comp.Rect.Left), 0, MidpointRounding.ToEven);
-                    if (Enumerable.Range(a, 2).Contains(b))
+                    a = (int)Math.Round(Math.Floor(this.Rect.Bottom), 0, MidpointRounding.ToEven);
+                    b = (int)Math.Round(Math.Floor(comp.Rect.Bottom), 0, MidpointRounding.ToEven);
+                    if (Enumerable.Range(a -1, 2).Contains(b))
                     {
                         return 0;
                     }
@@ -35,7 +35,7 @@ namespace ProductieManager.Rpm.Various
                     if (b > a) return 1;
                     return -1;
                 }
-                if (b < a) return 1;
+                if (b > a) return 1;
                 return -1;
             }
             else

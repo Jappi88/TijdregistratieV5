@@ -45,9 +45,9 @@ namespace Forms
             this.panel1.Controls.Add(this.xsluiten);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.panel1.Location = new System.Drawing.Point(10, 443);
+            this.panel1.Location = new System.Drawing.Point(10, 511);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(680, 47);
+            this.panel1.Size = new System.Drawing.Size(841, 47);
             this.panel1.TabIndex = 1;
             // 
             // xwijzig
@@ -56,7 +56,7 @@ namespace Forms
             this.xwijzig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xwijzig.Image = global::ProductieManager.Properties.Resources.edit__52382;
             this.xwijzig.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xwijzig.Location = new System.Drawing.Point(427, 6);
+            this.xwijzig.Location = new System.Drawing.Point(588, 6);
             this.xwijzig.Name = "xwijzig";
             this.xwijzig.Size = new System.Drawing.Size(122, 34);
             this.xwijzig.TabIndex = 1;
@@ -72,7 +72,7 @@ namespace Forms
             this.xsluiten.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xsluiten.Location = new System.Drawing.Point(555, 6);
+            this.xsluiten.Location = new System.Drawing.Point(716, 6);
             this.xsluiten.Name = "xsluiten";
             this.xsluiten.Size = new System.Drawing.Size(122, 34);
             this.xsluiten.TabIndex = 0;
@@ -94,14 +94,14 @@ namespace Forms
             this.verpakkingInstructieUI1.Location = new System.Drawing.Point(10, 60);
             this.verpakkingInstructieUI1.Name = "verpakkingInstructieUI1";
             this.verpakkingInstructieUI1.Padding = new System.Windows.Forms.Padding(5);
-            this.verpakkingInstructieUI1.Size = new System.Drawing.Size(680, 383);
+            this.verpakkingInstructieUI1.Size = new System.Drawing.Size(841, 451);
             this.verpakkingInstructieUI1.TabIndex = 0;
             // 
             // VerpakkingInstructieForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(700, 500);
+            this.ClientSize = new System.Drawing.Size(861, 568);
             this.Controls.Add(this.verpakkingInstructieUI1);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

@@ -107,7 +107,7 @@ namespace Controls
             // pictureBox1
             // 
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pictureBox1.Image = global::ProductieManager.Properties.Resources._3605318_bolt_bolts_construction_rivet_screw_screws_128x128;
+            this.pictureBox1.Image = global::ProductieManager.Properties.Resources.bolts_construction_rivet_screw_screws_128x128;
             this.pictureBox1.Location = new System.Drawing.Point(3, 21);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pictureBox1.Name = "pictureBox1";

@@ -32,7 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GereedMelder));
             this.xgroup = new System.Windows.Forms.GroupBox();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.xinfofield = new HtmlRenderer.HtmlPanel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.xafkeur = new System.Windows.Forms.Button();
             this.xgereedlijst = new System.Windows.Forms.Button();
@@ -47,6 +46,7 @@
             this.xannuleerb = new System.Windows.Forms.Button();
             this.xgereedb = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.productieInfoUI1 = new Controls.ProductieInfoUI();
             this.xgroup.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -74,27 +74,13 @@
             // panel4
             // 
             this.panel4.AutoScroll = true;
-            this.panel4.Controls.Add(this.xinfofield);
+            this.panel4.Controls.Add(this.productieInfoUI1);
             this.panel4.Controls.Add(this.panel3);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(4, 26);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(806, 388);
             this.panel4.TabIndex = 13;
-            // 
-            // xinfofield
-            // 
-            this.xinfofield.AutoScroll = true;
-            this.xinfofield.AutoScrollMinSize = new System.Drawing.Size(806, 17);
-            this.xinfofield.BackColor = System.Drawing.SystemColors.Window;
-            this.xinfofield.BaseStylesheet = null;
-            this.xinfofield.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.xinfofield.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xinfofield.Location = new System.Drawing.Point(0, 0);
-            this.xinfofield.Name = "xinfofield";
-            this.xinfofield.Size = new System.Drawing.Size(806, 317);
-            this.xinfofield.TabIndex = 9;
-            this.xinfofield.Text = "Informatie veld";
             // 
             // panel3
             // 
@@ -290,6 +276,17 @@
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip1.ToolTipTitle = "Gereed Melden";
             // 
+            // productieInfoUI1
+            // 
+            this.productieInfoUI1.BackColor = System.Drawing.Color.White;
+            this.productieInfoUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
+            this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
+            this.productieInfoUI1.Name = "productieInfoUI1";
+            this.productieInfoUI1.Size = new System.Drawing.Size(806, 317);
+            this.productieInfoUI1.TabIndex = 9;
+            // 
             // GereedMelder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -334,6 +331,6 @@
         private System.Windows.Forms.Button xgereedlijst;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button xafkeur;
-        private HtmlRenderer.HtmlPanel xinfofield;
+        private Controls.ProductieInfoUI productieInfoUI1;
     }
 }

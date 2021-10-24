@@ -76,8 +76,6 @@ namespace Controls
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.metroTabControl = new MetroFramework.Controls.MetroTabControl();
-            this.tabPage1 = new MetroFramework.Controls.MetroTabPage();
-            this.xproductieListControl1 = new Controls.ProductieListControl();
             this.tabPage2 = new MetroFramework.Controls.MetroTabPage();
             this.xbewerkingListControl = new Controls.ProductieListControl();
             this.tabPage3 = new MetroFramework.Controls.MetroTabPage();
@@ -93,7 +91,6 @@ namespace Controls
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.metroTabControl.SuspendLayout();
-            this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -459,61 +456,19 @@ namespace Controls
             // metroTabControl
             // 
             this.metroTabControl.AllowDrop = true;
-            this.metroTabControl.Controls.Add(this.tabPage1);
             this.metroTabControl.Controls.Add(this.tabPage2);
             this.metroTabControl.Controls.Add(this.tabPage3);
             this.metroTabControl.Controls.Add(this.tabPage4);
             this.metroTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl.Location = new System.Drawing.Point(40, 97);
             this.metroTabControl.Name = "metroTabControl";
-            this.metroTabControl.SelectedIndex = 3;
+            this.metroTabControl.SelectedIndex = 0;
             this.metroTabControl.ShowToolTips = true;
             this.metroTabControl.Size = new System.Drawing.Size(1089, 533);
             this.metroTabControl.Style = MetroFramework.MetroColorStyle.Blue;
             this.metroTabControl.TabIndex = 28;
             this.metroTabControl.UseSelectable = true;
             this.metroTabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.AutoScroll = true;
-            this.tabPage1.Controls.Add(this.xproductieListControl1);
-            this.tabPage1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabPage1.HorizontalScrollbar = true;
-            this.tabPage1.HorizontalScrollbarBarColor = true;
-            this.tabPage1.HorizontalScrollbarHighlightOnWheel = false;
-            this.tabPage1.HorizontalScrollbarSize = 10;
-            this.tabPage1.Location = new System.Drawing.Point(4, 38);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(1081, 491);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Producties";
-            this.tabPage1.VerticalScrollbar = true;
-            this.tabPage1.VerticalScrollbarBarColor = true;
-            this.tabPage1.VerticalScrollbarHighlightOnWheel = false;
-            this.tabPage1.VerticalScrollbarSize = 10;
-            // 
-            // xproductieListControl1
-            // 
-            this.xproductieListControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xproductieListControl1.BackColor = System.Drawing.Color.White;
-            this.xproductieListControl1.CanLoad = true;
-            this.xproductieListControl1.EnableEntryFiltering = false;
-            this.xproductieListControl1.EnableFiltering = true;
-            this.xproductieListControl1.EnableSync = true;
-            this.xproductieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xproductieListControl1.IsBewerkingView = false;
-            this.xproductieListControl1.ListName = "Producties";
-            this.xproductieListControl1.Location = new System.Drawing.Point(3, 4);
-            this.xproductieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.xproductieListControl1.Name = "xproductieListControl1";
-            this.xproductieListControl1.RemoveCustomItemIfNotValid = false;
-            this.xproductieListControl1.SelectedItem = null;
-            this.xproductieListControl1.Size = new System.Drawing.Size(1075, 483);
-            this.xproductieListControl1.TabIndex = 2;
-            this.xproductieListControl1.ValidHandler = null;
             // 
             // tabPage2
             // 
@@ -809,7 +764,6 @@ namespace Controls
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.metroTabControl.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
@@ -831,12 +785,10 @@ namespace Controls
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         private MetroFramework.Controls.MetroTabControl metroTabControl;
-        private MetroFramework.Controls.MetroTabPage tabPage1;
         private MetroFramework.Controls.MetroTabPage tabPage2;
         private MetroFramework.Controls.MetroTabPage tabPage3;
         private System.Windows.Forms.Panel xspeciaalroosterlabel;
         private System.Windows.Forms.Button xspeciaalroosterbutton;
-        private ProductieListControl xproductieListControl1;
         private ProductieListControl xbewerkingListControl;
         private MetroTabPage tabPage4;
         private RecentGereedMeldingenUI recentGereedMeldingenUI1;
