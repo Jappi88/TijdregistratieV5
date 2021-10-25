@@ -451,7 +451,7 @@ namespace Rpm.Productie
                 TijdGestart = DateTime.Now;
                 foreach (var plek in WerkPlekken)
                 {
-                    plek.UpdateWerkRooster(null,true,false, false, false,false, false, true);
+                    plek.UpdateWerkRooster(null,true,true, false, false,false, false, true);
                     foreach (var per in plek.Personen)
                     {
                         var klus = per.Klusjes.GetKlus(plek.Path);
@@ -467,6 +467,7 @@ namespace Rpm.Productie
                             if (x != null)
                             {
                                 per.VrijeDagen = x.VrijeDagen;
+                                klus.Tijden.SpecialeRoosters = plek.Tijden.SpecialeRoosters;
                                 if (per.WerkRooster == null)
                                     per.WerkRooster = x.WerkRooster;
                                 x.ReplaceKlus(klus);

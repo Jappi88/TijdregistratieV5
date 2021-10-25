@@ -11,13 +11,18 @@ using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.Various;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
+using Various;
 using static Forms.RangeCalculatorForm;
+using Comparer = Rpm.Various.Comparer;
 using Timer = System.Timers.Timer;
 
 namespace Controls
@@ -33,8 +38,12 @@ namespace Controls
             InitializeComponent();
             ProductieLijst.CustomSorter = delegate (OLVColumn column, SortOrder order)
             {
-                // check which column is about to be sorted and set your custom comparer
-                ProductieLijst.ListViewItemSorter = new Comparer(order, column);
+                if (order != SortOrder.None)
+                {
+                    ProductieLijst.ListViewItemSorter = new Comparer(order, column);
+                    //ArrayList objects = (ArrayList)ProductieLijst.Objects;
+                    //objects.Sort(new Comparer(order, column));
+                }
             };
            // ProductieLijst.BeforeSearching += ProductieLijst_BeforeSearching;
             xsearch.ShowClearButton = true;
@@ -75,7 +84,7 @@ namespace Controls
         }
 
         // ReSharper disable once ConvertToAutoProperty
-        public ObjectListView ProductieLijst => xProductieLijst;
+        public ObjectListView ProductieLijst => xProductieLijst1;
 
         public string ListName { get; set; }
         public bool RemoveCustomItemIfNotValid { get; set; }
@@ -201,7 +210,7 @@ namespace Controls
                 var isgestopt = enable3 && bws.Any(x => x.State == ProductieState.Gestopt);
                 var haspdf = bws.Count > 0 && bws[0].Parent != null && bws[0].Parent.ContainsProductiePdf();
                 //var nietbemand = bws.Any(x => !x.IsBemand);
-                xbewerkingeninfob.Enabled = xProductieLijst.Items.Count > 0;
+                xbewerkingeninfob.Enabled = ProductieLijst.Items.Count > 0;
                 xwijzigproductieinfo.Enabled = enable3 && acces1;
                 xtoonpdfb.Enabled = haspdf;
                 xverpakkingb.Enabled = enable1;
@@ -271,7 +280,7 @@ namespace Controls
             {
                 if (this.Disposing || IsDisposed) return;
                 var x = settings;
-                this.BeginInvoke(new Action(() => SaveColumns(false, x)));
+                this.Invoke(new Action(() => SaveColumns(false, x)));
             }
             catch (Exception e)
             {
@@ -417,6 +426,7 @@ namespace Controls
                 
             }
 
+            xcols.ShowGroups = ProductieLijst.ShowGroups;
             xcols.Columns = xcols.Columns.OrderBy(x => x.ColumnIndex).ToList();
             if (!savesettings)
                 Manager.ColumnsSettingsChanged(xcols);
@@ -426,6 +436,7 @@ namespace Controls
             return true;
         }
 
+
         private OLVColumn SetColumnsInfo(ref OLVColumn column, ExcelColumnEntry columnEntry)
         {
             try
@@ -434,6 +445,7 @@ namespace Controls
                 var xDescription = typeof(IProductieBase).GetPropertyDescription(xcol.Naam);
                 column.ToolTipText = xDescription;
                 column.Tag = xcol;
+               // column.Renderer = new ColumnRenderer();
                 column.Groupable = true;
                 column.Name = xcol.Naam;
                 column.Text = xcol.ColumnText;
@@ -447,6 +459,7 @@ namespace Controls
                         Comparer.Compare(x, y, parms.PrimarySortOrder,
                             parms.PrimarySort ?? parms.SecondarySort));
                 };
+               
                 switch (xcol.Naam.ToLower())
                 {
                     case "artikelnr":
@@ -522,6 +535,7 @@ namespace Controls
                 var xcols = Manager.Opties?.ExcelColumns?.FirstOrDefault(x =>
                     x.ListNames.Any(
                         listname => string.Equals(listname, ListName, StringComparison.CurrentCultureIgnoreCase)));
+                OLVColumn xsort = null;
                 if (xcols == null)
                 {
                     xcols = Manager.Opties?.ExcelColumns?.FirstOrDefault(x =>
@@ -542,8 +556,10 @@ namespace Controls
                     {
                         xcols.SetDefaultColumns();
                     }
+
+                    ProductieLijst.ShowGroups = xcols.ShowGroups;
                     ProductieLijst.BeginUpdate();
-                    OLVColumn xsort = null;
+                    
                     var xcurcols = ProductieLijst.AllColumns.Cast<OLVColumn>().ToList();
                     for (int i = 0; i < xcurcols.Count; i++)
                     {
@@ -582,14 +598,6 @@ namespace Controls
                         ProductieLijst.AllColumns.Add(col);
                     }
 
-                    if (xsort?.Tag is ExcelColumnEntry ec)
-                    {
-                        if (ec.Sorteer == SorteerType.Ascending)
-                            ProductieLijst.Sort(xsort, SortOrder.Ascending);
-                        else
-                            ProductieLijst.Sort(xsort, SortOrder.Descending);
-                    }
-
                     ProductieLijst.EndUpdate();
                 }
                 else
@@ -608,6 +616,15 @@ namespace Controls
                     }
                 }
                 ProductieLijst.RebuildColumns();
+                if (xsort?.Tag is ExcelColumnEntry ec)
+                {
+                    ProductieLijst.PrimarySortColumn = xsort;
+                
+                    if (ec.Sorteer == SorteerType.Ascending)
+                        ProductieLijst.PrimarySortOrder = SortOrder.Ascending;
+                    else
+                        ProductieLijst.PrimarySortOrder = SortOrder.Descending;
+                }
             }
             catch (Exception e)
             {
@@ -2454,7 +2471,7 @@ namespace Controls
 
         private void xverpakkingb_Click(object sender, EventArgs e)
         {
-            if (xProductieLijst.SelectedObject is IProductieBase productie)
+            if (ProductieLijst.SelectedObject is IProductieBase productie)
                 new VerpakkingInstructieForm(productie).ShowDialog();
         }
 
@@ -2465,8 +2482,8 @@ namespace Controls
 
         private void xtoonpdfb_Click(object sender, EventArgs e)
         {
-            if (xProductieLijst.SelectedObject is ProductieFormulier form) form.OpenProductiePdf();
-            else if (xProductieLijst.SelectedObject is Bewerking bew) bew.Parent?.OpenProductiePdf();
+            if (ProductieLijst.SelectedObject is ProductieFormulier form) form.OpenProductiePdf();
+            else if (ProductieLijst.SelectedObject is Bewerking bew) bew.Parent?.OpenProductiePdf();
         }
 
         #endregion MenuButton Events
@@ -2688,40 +2705,46 @@ namespace Controls
         {
             if (e.Column.Tag is ExcelColumnEntry entry && e.Model is IProductieBase productie)
             {
-                var backc = Color.Empty;
-                var fontc = Color.Empty;
-                switch (entry.ColorType)
-                {
-                    case ColorRuleType.None:
-                        break;
-                    case ColorRuleType.Static:
-                        if (entry.ColumnColorIndex > -1)
-                            backc = ExcelColumnEntry.GetColorFromIndex(entry.ColumnColorIndex);
-                        if (entry.ColumnTextColorIndex > -1)
-                            fontc = ExcelColumnEntry.GetColorFromIndex(entry.ColumnTextColorIndex);
-                        break;
-                    case ColorRuleType.Dynamic:
-                        foreach (var k in entry.KleurRegels)
+                FormatCell(e.SubItem, entry, productie);
+            }
+        }
+
+        private void FormatCell(OLVListSubItem item, ExcelColumnEntry entry, IProductieBase productie)
+        {
+            if (item == null || entry == null || productie == null) return;
+            var backc = Color.Empty;
+            var fontc = Color.Empty;
+            switch (entry.ColorType)
+            {
+                case ColorRuleType.None:
+                    break;
+                case ColorRuleType.Static:
+                    if (entry.ColumnColorIndex > -1)
+                        backc = ExcelColumnEntry.GetColorFromIndex(entry.ColumnColorIndex);
+                    if (entry.ColumnTextColorIndex > -1)
+                        fontc = ExcelColumnEntry.GetColorFromIndex(entry.ColumnTextColorIndex);
+                    break;
+                case ColorRuleType.Dynamic:
+                    foreach (var k in entry.KleurRegels)
+                    {
+                        if (k.Filter != null && k.ColorIndex > -1)
                         {
-                            if (k.Filter != null && k.ColorIndex > -1)
+                            if (k.Filter.ContainsFilter(productie))
                             {
-                                if (k.Filter.ContainsFilter(productie))
-                                {
-                                    if (k.IsFontColor)
-                                        fontc = ExcelColumnEntry.GetColorFromIndex(k.ColorIndex);
-                                    else backc = ExcelColumnEntry.GetColorFromIndex(k.ColorIndex);
-                                }
+                                if (k.IsFontColor)
+                                    fontc = ExcelColumnEntry.GetColorFromIndex(k.ColorIndex);
+                                else backc = ExcelColumnEntry.GetColorFromIndex(k.ColorIndex);
                             }
                         }
-
-                        break;
-                }
-
-                if (!backc.IsEmpty)
-                    e.SubItem.BackColor = backc;
-                if (!fontc.IsEmpty)
-                    e.SubItem.ForeColor = fontc;
+                    }
+                    break;
             }
+
+            if (!backc.IsEmpty)
+                item.BackColor = backc;
+            if (!fontc.IsEmpty)
+                item.ForeColor = fontc;
+            else item.ForeColor = Color.Black;
         }
 
         private void xProductieLijst_ColumnReordered(object sender, ColumnReorderedEventArgs e)

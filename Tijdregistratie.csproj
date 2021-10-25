@@ -962,6 +962,9 @@
     <Compile Include="Rpm\ViewModels\TaakModel.cs" />
     <Compile Include="Rpm\ViewModels\VrijeTijdModel.cs" />
     <Compile Include="Rpm\ViewModels\WerkPlekModel.cs" />
+    <Compile Include="Various\ColumnRenderer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Various\DockContentEntry.cs" />
     <Compile Include="Various\DockNestedPaneEntry.cs" />
     <Compile Include="Various\DockPaneContentEntry.cs" />

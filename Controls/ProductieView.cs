@@ -109,10 +109,10 @@ namespace Controls
                 _manager.InitManager();
                 //xproductieListControl1.InitProductie(false, true, true, true, false, false);
                 xbewerkingListControl.InitProductie(true, true, true, true, false, false);
-                InitEvents();
-                await _manager.Load(path, autologin, true, true);
                 takenManager1.InitManager();
                 werkPlekkenUI1.InitUI(_manager);
+                InitEvents();
+                await _manager.Load(path, autologin, true, true);
                 if (Manager.Opmerkingen != null)
                     Manager.Opmerkingen.OnOpmerkingenChanged += Opmerkingen_OnOpmerkingenChanged;
                 // _manager.StartMonitor();

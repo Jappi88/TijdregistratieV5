@@ -33,7 +33,7 @@ namespace Controls
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieListControl));
             this.panel1 = new System.Windows.Forms.Panel();
             this.xloadinglabel = new System.Windows.Forms.Label();
-            this.xProductieLijst = new BrightIdeasSoftware.ObjectListView();
+            this.xProductieLijst1 = new BrightIdeasSoftware.ObjectListView();
             this.xproductieLijstcontext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.xopenProductieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
@@ -113,7 +113,7 @@ namespace Controls
             this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst1)).BeginInit();
             this.xproductieLijstcontext.SuspendLayout();
             this.panel3.SuspendLayout();
             this.xfiltersStrip.SuspendLayout();
@@ -125,7 +125,7 @@ namespace Controls
             // 
             this.panel1.AutoScroll = true;
             this.panel1.Controls.Add(this.xloadinglabel);
-            this.panel1.Controls.Add(this.xProductieLijst);
+            this.panel1.Controls.Add(this.xProductieLijst1);
             this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.panel7);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -141,65 +141,57 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xloadinglabel.BackColor = System.Drawing.Color.Transparent;
             this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xloadinglabel.Location = new System.Drawing.Point(0, 39);
+            this.xloadinglabel.Location = new System.Drawing.Point(3, 76);
             this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(1149, 595);
+            this.xloadinglabel.Size = new System.Drawing.Size(1143, 558);
             this.xloadinglabel.TabIndex = 29;
             this.xloadinglabel.Text = "Producties Laden...";
             this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.xloadinglabel.Visible = false;
             // 
-            // xProductieLijst
+            // xProductieLijst1
             // 
-            this.xProductieLijst.AllowColumnReorder = true;
-            this.xProductieLijst.AllowDrop = true;
-            this.xProductieLijst.AlternateRowBackColor = System.Drawing.Color.AliceBlue;
-            this.xProductieLijst.CellEditUseWholeCell = false;
-            this.xProductieLijst.ContextMenuStrip = this.xproductieLijstcontext;
-            this.xProductieLijst.Cursor = System.Windows.Forms.Cursors.Default;
-            this.xProductieLijst.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xProductieLijst.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xProductieLijst.FullRowSelect = true;
-            this.xProductieLijst.HeaderWordWrap = true;
-            this.xProductieLijst.HideSelection = false;
-            this.xProductieLijst.LargeImageList = this.ximagelist;
-            this.xProductieLijst.Location = new System.Drawing.Point(0, 73);
-            this.xProductieLijst.MenuLabelGroupBy = "Groep op \'{0}\'";
-            this.xProductieLijst.MenuLabelLockGroupingOn = "Vergrendel groepering op \'{0}\'";
-            this.xProductieLijst.MenuLabelSelectColumns = "Selecteer Columns...";
-            this.xProductieLijst.MenuLabelSortAscending = "Oplopend sorteren op \'{0}\'";
-            this.xProductieLijst.MenuLabelSortDescending = "Aflopend sorteren op \'{0}\'";
-            this.xProductieLijst.MenuLabelTurnOffGroups = "Zet groepen uit";
-            this.xProductieLijst.MenuLabelUnlockGroupingOn = "Ontgrendel groepering van \'{0}\'";
-            this.xProductieLijst.MenuLabelUnsort = "Uitsorteren";
-            this.xProductieLijst.Name = "xProductieLijst";
-            this.xProductieLijst.ShowCommandMenuOnRightClick = true;
-            this.xProductieLijst.ShowItemCountOnGroups = true;
-            this.xProductieLijst.ShowItemToolTips = true;
-            this.xProductieLijst.Size = new System.Drawing.Size(1149, 561);
-            this.xProductieLijst.SmallImageList = this.ximagelist;
-            this.xProductieLijst.SpaceBetweenGroups = 5;
-            this.xProductieLijst.TabIndex = 28;
-            this.xProductieLijst.TileSize = new System.Drawing.Size(750, 120);
-            this.xProductieLijst.TintSortColumn = true;
-            this.xProductieLijst.UseAlternatingBackColors = true;
-            this.xProductieLijst.UseCellFormatEvents = true;
-            this.xProductieLijst.UseCompatibleStateImageBehavior = false;
-            this.xProductieLijst.UseExplorerTheme = true;
-            this.xProductieLijst.UseFilterIndicator = true;
-            this.xProductieLijst.UseFiltering = true;
-            this.xProductieLijst.UseHotItem = true;
-            this.xProductieLijst.UseOverlays = false;
-            this.xProductieLijst.UseTranslucentHotItem = true;
-            this.xProductieLijst.UseTranslucentSelection = true;
-            this.xProductieLijst.View = System.Windows.Forms.View.Details;
-            this.xProductieLijst.CellToolTipShowing += new System.EventHandler<BrightIdeasSoftware.ToolTipShowingEventArgs>(this.xproductieLijst_CellToolTipShowing);
-            this.xProductieLijst.FormatCell += new System.EventHandler<BrightIdeasSoftware.FormatCellEventArgs>(this.xProductieLijst_FormatCell);
-            this.xProductieLijst.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.xProductieLijst_ColumnReordered);
-            this.xProductieLijst.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.xproductieLijst_ItemDrag);
-            this.xProductieLijst.SelectedIndexChanged += new System.EventHandler(this.xproductieLijst_SelectedIndexChanged);
-            this.xProductieLijst.DragEnter += new System.Windows.Forms.DragEventHandler(this.xproductieLijst_DragEnter);
-            this.xProductieLijst.DoubleClick += new System.EventHandler(this.xproductieLijst_DoubleClick);
+            this.xProductieLijst1.AlternateRowBackColor = System.Drawing.Color.AliceBlue;
+            this.xProductieLijst1.CellEditUseWholeCell = false;
+            this.xProductieLijst1.ContextMenuStrip = this.xproductieLijstcontext;
+            this.xProductieLijst1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xProductieLijst1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xProductieLijst1.FullRowSelect = true;
+            this.xProductieLijst1.HideSelection = false;
+            this.xProductieLijst1.LargeImageList = this.ximagelist;
+            this.xProductieLijst1.Location = new System.Drawing.Point(0, 73);
+            this.xProductieLijst1.MenuLabelGroupBy = "Groep op \'{0}\'";
+            this.xProductieLijst1.MenuLabelLockGroupingOn = "Vergrendel groupering op \'{0}\'";
+            this.xProductieLijst1.MenuLabelSelectColumns = "Selecteer Columns...";
+            this.xProductieLijst1.MenuLabelSortAscending = "Sorteer oplopend op \'{0}\'";
+            this.xProductieLijst1.MenuLabelSortDescending = "Sorteer aflopend op \'{0}\'";
+            this.xProductieLijst1.MenuLabelTurnOffGroups = "Zet Groepen Uit";
+            this.xProductieLijst1.MenuLabelUnlockGroupingOn = "Vergrendel groepering op \'{0}\'";
+            this.xProductieLijst1.MenuLabelUnsort = "DeSorteer";
+            this.xProductieLijst1.Name = "xProductieLijst1";
+            this.xProductieLijst1.OwnerDraw = false;
+            this.xProductieLijst1.ShowCommandMenuOnRightClick = true;
+            this.xProductieLijst1.ShowItemToolTips = true;
+            this.xProductieLijst1.Size = new System.Drawing.Size(1149, 561);
+            this.xProductieLijst1.SmallImageList = this.ximagelist;
+            this.xProductieLijst1.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.xProductieLijst1.TabIndex = 31;
+            this.xProductieLijst1.TintSortColumn = true;
+            this.xProductieLijst1.UseAlternatingBackColors = true;
+            this.xProductieLijst1.UseCellFormatEvents = true;
+            this.xProductieLijst1.UseCompatibleStateImageBehavior = false;
+            this.xProductieLijst1.UseExplorerTheme = true;
+            this.xProductieLijst1.UseFilterIndicator = true;
+            this.xProductieLijst1.UseFiltering = true;
+            this.xProductieLijst1.UseHotItem = true;
+            this.xProductieLijst1.UseTranslucentHotItem = true;
+            this.xProductieLijst1.UseTranslucentSelection = true;
+            this.xProductieLijst1.View = System.Windows.Forms.View.Details;
+            this.xProductieLijst1.CellToolTipShowing += new System.EventHandler<BrightIdeasSoftware.ToolTipShowingEventArgs>(this.xproductieLijst_CellToolTipShowing);
+            this.xProductieLijst1.FormatCell += new System.EventHandler<BrightIdeasSoftware.FormatCellEventArgs>(this.xProductieLijst_FormatCell);
+            this.xProductieLijst1.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.xProductieLijst_ColumnReordered);
+            this.xProductieLijst1.SelectedIndexChanged += new System.EventHandler(this.xproductieLijst_SelectedIndexChanged);
+            this.xProductieLijst1.DoubleClick += new System.EventHandler(this.xproductieLijst_DoubleClick);
             // 
             // xproductieLijstcontext
             // 
@@ -1049,7 +1041,7 @@ namespace Controls
             this.Name = "ProductieListControl";
             this.Size = new System.Drawing.Size(1149, 634);
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst1)).EndInit();
             this.xproductieLijstcontext.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
@@ -1064,8 +1056,6 @@ namespace Controls
         }
 
         #endregion
-
-        private BrightIdeasSoftware.ObjectListView xProductieLijst;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Panel panel3;
@@ -1146,5 +1136,6 @@ namespace Controls
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem12;
         private System.Windows.Forms.ToolStripMenuItem verpakkingsInstructieToolStripMenuItem;
         private System.Windows.Forms.Button xListColumnsButton;
+        private BrightIdeasSoftware.ObjectListView xProductieLijst1;
     }
 }

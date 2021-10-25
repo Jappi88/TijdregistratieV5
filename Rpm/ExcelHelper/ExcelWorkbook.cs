@@ -478,7 +478,7 @@ namespace ProductieManager.Rpm.ExcelHelper
             {
                 naam += $"({producties.Count})";
                 var sheet = workbook.CreateSheet(naam);
-                var xcols = Manager.Opties?.ExcelColumns.FirstOrDefault(x => x.IsUsed("ExcelColumns"));
+                var xcols = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsUsed("ExcelColumns"));
                 var arg = new ProgressArg();
                 arg.Type = ProgressType.WriteBussy;
                 arg.Value = workbook;
@@ -912,7 +912,7 @@ namespace ProductieManager.Rpm.ExcelHelper
 
         private static int GetProductieColumnIndex(string naam)
         {
-            var xcol = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsSelected);
+            var xcol = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsUsed("ExcelColumns"));
             if (xcol == null) return -1;
             for (var i = 0; i < xcol.Columns.Count; i++)
                 if (string.Equals(xcol.Columns[i].Naam, naam, StringComparison.CurrentCultureIgnoreCase))

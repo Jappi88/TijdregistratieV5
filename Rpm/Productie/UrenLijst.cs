@@ -43,7 +43,9 @@ namespace Rpm.Productie
         public void SetUren(TijdEntry[] uren, bool isactief, bool isnew)
         {
             if (Uren == null || isnew)
+            {
                 Uren = new List<TijdEntry>();
+            }
             if (uren is {Length: > 0})
             {
                 
@@ -123,7 +125,7 @@ namespace Rpm.Productie
         {
             lock (Uren)
             {
-                return Uren.RemoveAll(x => x.TotaalTijd == 0 && !x.InUse);
+                return Uren.RemoveAll(x => x.TijdGewerkt(x.WerkRooster??WerkRooster,null,SpecialeRoosters) == 0 && !x.InUse);
             }
         }
 
@@ -165,7 +167,7 @@ namespace Rpm.Productie
             }
 
             //Het snelste is om eerst te kijken of dit al een actieve tijd lijn is, en of de nieuwe tijd wel meer dan 0 is.
-            if (entry.TotaalTijd == 0 && entry.InUse && Uren.Any(x => x.InUse))
+            if (entry.TijdGewerkt(entry.WerkRooster??rooster,null,SpecialeRoosters) == 0 && entry.InUse && Uren.Any(x => x.InUse))
                 return entry;
 
             var xent = Uren.FirstOrDefault(x => x.ID != 0 && entry.ID != 0 && entry.ID == x.ID);
@@ -270,7 +272,7 @@ namespace Rpm.Productie
             {
                 var toremove = Uren.Where(x => (x.ExtraTijd == null && Uren.Any(s =>
                         s.ExtraTijd == null && x.Start >= s.Start && x._gestopt < s._gestopt ||
-                        x.Start > s.Start && x._gestopt <= s._gestopt)) || !x.InUse && x.TotaalTijd <= 0)
+                        x.Start > s.Start && x._gestopt <= s._gestopt)) || !x.InUse && x.TijdGewerkt(x.WerkRooster??rooster,null,SpecialeRoosters) <= 0)
                     .ToArray();
                 lock (Uren)
                 {
@@ -578,8 +580,8 @@ namespace Rpm.Productie
             if (Uren == null)
                 Uren = new List<TijdEntry>();
             var ent = Uren.FirstOrDefault(x => x.InUse);
-            if (ent == null)
-                ent = Uren.FirstOrDefault(x => x.TotaalTijd == 0);
+            //if (ent == null)
+            //    ent = Uren.FirstOrDefault(x => x.TijdGewerkt(x.WerkRooster ?? WerkRooster, null, SpecialeRoosters) == 0);
             if (ent == null && createnew)
             {
                 ent = new TijdEntry(DateTime.Now, DateTime.Now, WerkRooster) {InUse = true};
@@ -602,7 +604,7 @@ namespace Rpm.Productie
             TijdEntry dt = null;
             if (allocate)
             {
-                dt = Uren.FirstOrDefault(x => x.TotaalTijd == 0);
+                dt = Uren.FirstOrDefault(x => x.TijdGewerkt(x.WerkRooster ?? WerkRooster, null, SpecialeRoosters) == 0);
                 if (dt != null)
                     return dt;
             }

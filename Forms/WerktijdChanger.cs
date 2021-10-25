@@ -221,6 +221,8 @@ namespace Forms
         {
             var wt = tijden??GetWerkTijden();
             var lijst = new UrenLijst();
+            lijst.SpecialeRoosters = SpecialeRoosters;
+            lijst.WerkRooster = CurrentRooster;
             lijst.SetUren(wt.ToArray(), isactief,true);
             rooster ??= GetRooster(null);
             var xent = new TijdEntry(start, stop,rooster) {InUse = isactief};

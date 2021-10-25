@@ -16,6 +16,7 @@ namespace ProductieManager.Rpm.Settings
         public List<ExcelColumnEntry> Columns { get; set; }
         [ExcludeFromSerialization]
         public bool IsSelected { get; set; }
+        public bool ShowGroups { get; set; }
 
         public bool SetSelected(bool selected, string listname)
         {
@@ -85,7 +86,7 @@ namespace ProductieManager.Rpm.Settings
 
         public static string[] ProductieColumns =
         {
-            "ArtikelNr", "ProductieNr", "Omschrijving", "Aantal", "AantalGemaakt","Leverdatum","TijdGewerkt",
+            "ArtikelNr", "ProductieNr", "Omschrijving", "Aantal", "AantalGemaakt","LeverDatum","TijdGewerkt",
              "ActueelPerUur", "PerUur","VerwachtLeverDatum","VerpakkingsInstructies"
         };
 

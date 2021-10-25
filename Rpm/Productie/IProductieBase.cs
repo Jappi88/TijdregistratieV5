@@ -549,7 +549,7 @@ Color textcolor, bool useimage)
             Color backgroundgradient,
             Color textcolor, bool useimage)
         {
-            string ximage = image == null
+            string ximage = image == null || !useimage
                 ? string.Empty
                 : $"<td width = '32' style = 'padding: 5px 5px 0 0' >\r\n" +
                   $"<img width='{imagesize.Width}' height='{imagesize.Height}'  src = 'data:image/png;base64,{image.Base64Encoded()}' />\r\n" +
@@ -573,18 +573,18 @@ Color textcolor, bool useimage)
                           $"<table border = '0' width = '100%' >\r\n" +
                           $"<tr style = 'vertical-align: top;' >\r\n" +
                           ximage +
-                          $"<td><h3>" +
-                          $"{(State != ProductieState.Gereed ? $"Verwachte Leverdatum: <span style = 'color:{GetValidColor(VerwachtLeverDatum < LeverDatum).Name}> {VerwachtLeverDatum:f}</span>." : $"Gereed Gemeld Op: <span style = 'color:{GetValidColor(true).Name}>{DatumGereed:f}</span>.")}" +
-                          $"</h3><hr /><h3>" +
-                          $"Aantal Gemaakt: <b>{TotaalGemaakt} / {Aantal}</b> <span style = 'color: {GetPositiveColorByPercentage((decimal) Gereed).Name}'>({Gereed}%)</span><br>" +
-                          $"Tijd Gewerkt: <b>{TijdGewerkt} / {Math.Round(DoorloopTijd, 2)} uur </b><span style = 'color:{GetPositiveColorByPercentage((decimal) TijdGewerktPercentage).Name}'>({TijdGewerktPercentage}%)</span><br>" +
-                          $"Per Uur: <b>{ActueelPerUur} i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span></b><br>" +
-                          $"</h3><hr /><h3>" +
-                          $"Leverdatum: <span style = 'color: {GetValidColor(LeverDatum > DateTime.Now).Name}>{LeverDatum:f}</span>.<br>" +
-                          
-        $"</h3>" +
-        $"<hr />" +
-        $"</td>" +
+                          $"<td><div><h3>" +
+                          $"{(State != ProductieState.Gereed ? $"Verwachte Leverdatum: <span style = 'color:{GetValidColor(VerwachtLeverDatum < LeverDatum).Name}> {VerwachtLeverDatum:f}</span>." : $"Gereed Gemeld Op: <span style = 'color:{GetValidColor(true).Name}>{DatumGereed:f}</span>.")}\r\n" +
+                          $"</h3><hr />\r\n<h3>" +
+                          $"Aantal Gemaakt: {TotaalGemaakt} / {Aantal} <span style = 'color: {GetPositiveColorByPercentage((decimal) Gereed).Name}'>({Gereed}%)</span><br>" +
+                          $"Tijd Gewerkt: {TijdGewerkt} / {Math.Round(DoorloopTijd, 2)} uur <span style = 'color:{GetPositiveColorByPercentage((decimal) TijdGewerktPercentage).Name}'>({TijdGewerktPercentage}%)</span><br>" +
+                          $"Per Uur: {ActueelPerUur} i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span><br>" +
+                          $"</h3><hr />\r\n<h3><br>" +
+                          $"Leverdatum: <span style = 'color: {GetValidColor(LeverDatum > DateTime.Now).Name}>{LeverDatum:f}</span>." +
+                          $"</h3>" +
+        $"<hr />" + 
+         "</div>" + 
+         "</td>" +
         $"</tr>\r\n" +
         $"</table >\r\n" +
         $"</p>\r\n" +

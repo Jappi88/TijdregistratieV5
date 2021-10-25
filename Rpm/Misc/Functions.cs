@@ -642,6 +642,7 @@ namespace Rpm.Misc
                     }
                     var roosterform = new RoosterForm(wp.Tijden._rooster,
                         "Kies een rooster voor al je werkzaamheden");
+                    roosterform.ViewPeriode = false;
                     if (roosterform.ShowDialog() == DialogResult.OK)
                     {
                         bool flag = wp.Personen.Any(x =>
