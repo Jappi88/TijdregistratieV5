@@ -375,7 +375,7 @@ namespace Controls
                     string.Equals(x.Name, ListName, StringComparison.CurrentCultureIgnoreCase));
                 if (xcols == null)
                 {
-                    xcols = new ExcelSettings(ListName, ListName);
+                    xcols = new ExcelSettings(ListName, ListName,false);
                     opties.ExcelColumns.Add(xcols);
                 }
                 else xcols.SetSelected(true, ListName);
@@ -425,7 +425,6 @@ namespace Controls
                 }
                 
             }
-
             xcols.ShowGroups = ProductieLijst.ShowGroups;
             xcols.Columns = xcols.Columns.OrderBy(x => x.ColumnIndex).ToList();
             if (!savesettings)
@@ -546,7 +545,7 @@ namespace Controls
                     }
                     else if (Manager.Opties?.ExcelColumns != null)
                     {
-                        xcols = ExcelSettings.CreateSettings(ListName);
+                        xcols = ExcelSettings.CreateSettings(ListName,false);
                         Manager.Opties.ExcelColumns.Add(xcols);
                     }
                 }
@@ -2690,13 +2689,12 @@ namespace Controls
 
         private void xListColumnsButton_Click(object sender, EventArgs e)
         {
-            SaveColumns(false, Manager.Opties);
             var xf = new ExcelOptiesForm();
             xf.EnableCalculation = false;
-            xf.LoadOpties(Manager.Opties, ListName);
+            xf.LoadOpties(Manager.Opties, ListName,false);
             if (xf.ShowDialog() == DialogResult.OK)
             {
-                Manager.Opties.ExcelColumns = xf.Settings;
+                Manager.UpdateExcelColumns(xf.Settings,false);
                 Manager.Opties.Save($"{ListName} Columns Aangepast!", false, false, true);
             }
         }
@@ -2721,19 +2719,33 @@ namespace Controls
                 case ColorRuleType.Static:
                     if (entry.ColumnColorIndex > -1)
                         backc = ExcelColumnEntry.GetColorFromIndex(entry.ColumnColorIndex);
+                    else if (entry.ColomnRGB != -1)
+                        backc = Color.FromArgb(entry.ColomnRGB);
+
                     if (entry.ColumnTextColorIndex > -1)
                         fontc = ExcelColumnEntry.GetColorFromIndex(entry.ColumnTextColorIndex);
+                    else if (entry.ColomnTextRGB != -1)
+                        fontc = Color.FromArgb(entry.ColomnTextRGB);
                     break;
                 case ColorRuleType.Dynamic:
                     foreach (var k in entry.KleurRegels)
                     {
-                        if (k.Filter != null && k.ColorIndex > -1)
+                        if (k.Filter != null && (k.ColorIndex > -1 || (k.ColorRGB != -1 && k.ColorRGB != 0)))
                         {
                             if (k.Filter.ContainsFilter(productie))
                             {
-                                if (k.IsFontColor)
-                                    fontc = ExcelColumnEntry.GetColorFromIndex(k.ColorIndex);
-                                else backc = ExcelColumnEntry.GetColorFromIndex(k.ColorIndex);
+                                if (k.ColorIndex > -1)
+                                {
+                                    if (k.IsFontColor)
+                                        fontc = ExcelColumnEntry.GetColorFromIndex(k.ColorIndex);
+                                    else backc = ExcelColumnEntry.GetColorFromIndex(k.ColorIndex);
+                                }
+                                else if (k.ColorRGB != -1)
+                                {
+                                    if (k.IsFontColor)
+                                        fontc = Color.FromArgb(k.ColorRGB);
+                                    else backc = Color.FromArgb(k.ColorRGB);
+                                }
                             }
                         }
                     }
@@ -2750,6 +2762,35 @@ namespace Controls
         private void xProductieLijst_ColumnReordered(object sender, ColumnReorderedEventArgs e)
         {
             if (e.OldDisplayIndex == 0 || e.NewDisplayIndex == 0) e.Cancel = true;
+            else
+            {
+                if (e.Header.Tag is ExcelColumnEntry entry)
+                {
+                    var xset = Manager.Opties.ExcelColumns.FirstOrDefault(x =>
+                        x.IsUsed(ListName) && !x.IsExcelSettings);
+                    if (xset == null) return;
+                    var xent = xset.Columns.FirstOrDefault(x => x.ColumnIndex == e.NewDisplayIndex);
+                    if (xent != null)
+                        xent.ColumnIndex = e.OldDisplayIndex;
+                    entry.ColumnIndex = e.NewDisplayIndex;
+                    xset.ReIndexColumns(true);
+                    Manager.ColumnsSettingsChanged(xset);
+                }
+            }
+        }
+
+        private void xProductieLijst1_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
+        {
+            if (e.ColumnIndex > ProductieLijst.Columns.Count - 1)
+                return;
+            if (ProductieLijst.Columns[e.ColumnIndex]?.Tag is ExcelColumnEntry entry)
+            {
+                if (entry.ColumnBreedte == e.NewWidth) return;
+                var xset = Manager.Opties.ExcelColumns.FirstOrDefault(x =>
+                    x.IsUsed(ListName) && !x.IsExcelSettings);
+                if (xset == null) return;
+                entry.ColumnBreedte = ProductieLijst.Columns[e.ColumnIndex].Width;
+            }
         }
     }
 }

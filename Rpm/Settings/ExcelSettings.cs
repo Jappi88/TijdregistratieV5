@@ -9,6 +9,7 @@ namespace ProductieManager.Rpm.Settings
 {
     public class ExcelSettings
     {
+        public bool IsExcelSettings { get; set; }
         public int ID { get; set; }
         public string  Name { get; set; }
         public List<string> ListNames { get; set; }
@@ -41,19 +42,22 @@ namespace ProductieManager.Rpm.Settings
             ListNames = new List<string>();
         }
 
-        public ExcelSettings(string listname) : this(listname, listname)
+        public ExcelSettings(string listname, bool isExcel) : this(listname, listname, isExcel)
         {
         }
 
-        public ExcelSettings(string name, string listname) : this()
+        public ExcelSettings(string name, string listname, bool isExcel) : this()
         {
             Name = name;
+            IsExcelSettings = isExcel;
             ListNames = new List<string> {listname};
         }
 
-        public void ReIndexColumns()
+        public void ReIndexColumns(bool reorder = false)
         {
             if(Columns == null || Columns.Count == 0)return;
+            if (reorder)
+                Columns = Columns.OrderBy(x => x.ColumnIndex).ToList();
             int ind = 0;
             for (int i = 0; i < Columns.Count; i++)
             {
@@ -62,9 +66,9 @@ namespace ProductieManager.Rpm.Settings
             }
         }
 
-        public static ExcelSettings CreateSettings(string listname)
+        public static ExcelSettings CreateSettings(string listname, bool isExcel)
         {
-            var xreturn = new ExcelSettings(listname);
+            var xreturn = new ExcelSettings(listname,isExcel);
             int count = Manager.Opties?.ExcelColumns == null
                 ? 0
                 : Manager.Opties.ExcelColumns.Count(x =>
@@ -74,6 +78,8 @@ namespace ProductieManager.Rpm.Settings
             else
                 xreturn.Name = listname;
             xreturn.Columns = ProductieColumns.Select(x => new ExcelColumnEntry(x)).ToList();
+            if(isExcel)
+                xreturn.Columns.ForEach(x=> x.AutoSize = true);
             xreturn.ID = count;
             xreturn.ReIndexColumns();
             return xreturn;

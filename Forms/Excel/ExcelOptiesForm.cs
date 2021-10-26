@@ -30,7 +30,7 @@ namespace Forms
         public bool IsSelectDialog { get; set; }
 
         public string ListName { get; set; }
-
+        public bool IsExcelColumnSettings { get; set; }
         public bool EnableCalculation
         {
             get => xBerekeningGroup.Visible;
@@ -49,7 +49,7 @@ namespace Forms
             if (model is ExcelSettings settings)
             {
                 
-                if (settings.IsUsed(ListName)) return 1;
+                if (settings.IsUsed(ListName) && settings.IsExcelSettings == IsExcelColumnSettings) return 1;
             }
 
             return 0;
@@ -57,11 +57,12 @@ namespace Forms
 
         public List<ExcelSettings> Settings { get; set; }
 
-        public void LoadSettings(List<ExcelSettings> settings, string listname)
+        public void LoadSettings(List<ExcelSettings> settings, string listname, bool isExcelColumns)
         {
             ListName = listname;
+            IsExcelColumnSettings = isExcelColumns;
             var selected = Settings.FirstOrDefault(x =>
-                x.IsUsed(listname) || string.Equals(x.Name, listname, StringComparison.CurrentCultureIgnoreCase));
+                (x.IsUsed(listname) || string.Equals(x.Name, listname, StringComparison.CurrentCultureIgnoreCase)) && x.IsExcelSettings == isExcelColumns);
             xOptiesView.SetObjects(settings);
             xOptiesView.SelectedObject = selected;
             xOptiesView.SelectedItem?.EnsureVisible();
@@ -69,12 +70,12 @@ namespace Forms
             xBeschikbareColumns.SetObjects(properties);
         }
 
-        public void LoadOpties(UserSettings opties, string listname)
+        public void LoadOpties(UserSettings opties, string listname, bool isExcelColumns)
         {
             try
             {
-                Settings = opties.ExcelColumns.CreateCopy();
-                LoadSettings(Settings, listname);
+                Settings = opties.ExcelColumns.CreateCopy()?.Where(x=> x.IsExcelSettings == isExcelColumns).ToList();
+                LoadSettings(Settings, listname, isExcelColumns);
             }
             catch (Exception e)
             {
@@ -83,69 +84,41 @@ namespace Forms
             }
         }
 
-        private List<Color> GetCollors()
-        {
-            var xreturn = new List<Color>();
-            var props = typeof(IndexedColors).GetFields().Select(x => (IndexedColors) x.GetValue("Index")).ToArray();
-            if (props.Length > 0)
-            {
-                xreturn.AddRange(props.Select(prop => Color.FromArgb(prop.RGB[0], prop.RGB[1], prop.RGB[2])).ToArray());
-            }
-
-            return xreturn;
-        }
-
-        private short GetColorIndex(Color color)
-        {
-            var props = typeof(IndexedColors).GetFields().Select(x=> ((IndexedColors)x.GetValue("Index"))).ToArray();
-            if (props.Length > 0)
-            {
-                //var rgb = $"{color.R:X2}{color.G:X2}{color.B:X2}";
-                var prop = props.FirstOrDefault(x =>
-                    string.Equals( ColorFromRGB(x.RGB).Name, color.Name, StringComparison.CurrentCultureIgnoreCase));
-                if (prop == null) return -1;
-                var xindex = ((IndexedColors) prop).Index;
-                return xindex;
-            }
-
-            return -1;
-        }
-
-        public Color GetColorFromIndex(short index)
-        {
-            try
-            {
-                var color = IndexedColors.ValueOf(index);
-                if (color == null) return Color.Empty;
-                return ColorFromRGB(color.RGB);
-            }
-            catch (Exception e)
-            {
-                return Color.Empty;
-            }
-           
-        }
-
-        public Color ColorFromRGB(byte[] rgb)
-        {
-            return Color.FromArgb(rgb[0], rgb[1], rgb[2]);
-        }
-
         private void xColumnKleurB_Click(object sender, System.EventArgs e)
         {
             if (xZichtbareColumnsView.SelectedObject is ExcelColumnEntry colentry)
             {
-                var colordialog = new ColorPickerForm();
-                colordialog.Title = $"Kies achtergrond kleur voor '{colentry.Naam}'";
-                colordialog.SetKleuren(GetCollors());
-                colordialog.SelectedColor = xColumnKleurB.BackColor;
-                if (colordialog.ShowDialog() == DialogResult.OK)
+                if (IsExcelColumnSettings)
                 {
-                    var xindex = GetColorIndex(colordialog.SelectedColor);
-                    if (xindex == -1) return;
-                    xColumnKleurB.BackColor = colordialog.SelectedColor;
-                    xTextKleurB.BackColor = colordialog.SelectedColor;
-                    colentry.ColumnColorIndex = xindex;
+                    var colordialog = new ColorPickerForm();
+                    colordialog.Title = $"Kies achtergrond kleur voor '{colentry.Naam}'";
+                    colordialog.SetKleuren(ExcelColumnEntry.GetExcelCollors());
+                    colordialog.SelectedColor = xColumnKleurB.BackColor;
+                    if (colordialog.ShowDialog() == DialogResult.OK)
+                    {
+                        var xindex = ExcelColumnEntry.GetColorIndex(colordialog.SelectedColor);
+                        if (xindex == -1) return;
+                        xColumnKleurB.BackColor = colordialog.SelectedColor;
+                        xTextKleurB.BackColor = colordialog.SelectedColor;
+                        colentry.ColumnColorIndex = xindex;
+                        colentry.ColomnRGB = -1;
+                        xZichtbareColumnsView.RefreshObject(colentry);
+                    }
+
+                    return;
+                }
+                var xpicker = new ColorDialog();
+                xpicker.AllowFullOpen = true;
+                xpicker.AnyColor = true;
+                xpicker.Color = xTextKleurB.BackColor;
+                if (xpicker.ShowDialog() == DialogResult.OK)
+                {
+                    if (xpicker.Color.IsEmpty)
+                        return;
+                    xColumnKleurB.BackColor = xpicker.Color;
+                    xTextKleurB.BackColor = xpicker.Color;
+                    colentry.ColumnColorIndex = -1;
+                    colentry.ColomnRGB = xpicker.Color.ToArgb();
                     xZichtbareColumnsView.RefreshObject(colentry);
                 }
             }
@@ -155,17 +128,37 @@ namespace Forms
         {
             if (xZichtbareColumnsView.SelectedObject is ExcelColumnEntry colentry)
             {
-                var colordialog = new ColorPickerForm();
-                colordialog.Title = $"Kies textkleur voor '{colentry.Naam}'";
-                colordialog.SetKleuren(GetCollors());
-                colordialog.SelectedColor = xTextKleurB.ForeColor;
-                if (colordialog.ShowDialog() == DialogResult.OK)
+                if (IsExcelColumnSettings)
                 {
-                    var xindex = GetColorIndex(colordialog.SelectedColor);
-                    if (xindex == -1) return;
-                    xColumnKleurB.ForeColor = colordialog.SelectedColor;
-                    xTextKleurB.ForeColor = colordialog.SelectedColor;
-                    colentry.ColumnTextColorIndex = xindex;
+                    var colordialog = new ColorPickerForm();
+                    colordialog.Title = $"Kies textkleur voor '{colentry.Naam}'";
+                    colordialog.SetKleuren(ExcelColumnEntry.GetExcelCollors());
+                    colordialog.SelectedColor = xTextKleurB.ForeColor;
+                    if (colordialog.ShowDialog() == DialogResult.OK)
+                    {
+                        var xindex = ExcelColumnEntry.GetColorIndex(colordialog.SelectedColor);
+                        if (xindex == -1) return;
+                        xColumnKleurB.ForeColor = colordialog.SelectedColor;
+                        xTextKleurB.ForeColor = colordialog.SelectedColor;
+                        colentry.ColumnTextColorIndex = xindex;
+                        colentry.ColomnTextRGB = -1;
+                        xZichtbareColumnsView.RefreshObject(colentry);
+                    }
+
+                    return;
+                }
+                var xpicker = new ColorDialog();
+                xpicker.AllowFullOpen = true;
+                xpicker.AnyColor = true;
+                xpicker.Color = xTextKleurB.ForeColor;
+                if (xpicker.ShowDialog() == DialogResult.OK)
+                {
+                    if (xpicker.Color.IsEmpty)
+                        return;
+                    xColumnKleurB.ForeColor = xpicker.Color;
+                    xTextKleurB.ForeColor = xpicker.Color;
+                    colentry.ColumnTextColorIndex = -1;
+                    colentry.ColomnTextRGB = xpicker.Color.ToArgb();
                     xZichtbareColumnsView.RefreshObject(colentry);
                 }
             }
@@ -244,6 +237,7 @@ namespace Forms
                     return;
                 var xnew = new ExcelColumnEntry(prop.Name);
                 xnew.ColumnIndex = settings.Columns.Count;
+                xnew.AutoSize = IsExcelColumnSettings;
                 settings.Columns.Add(xnew);
                 xZichtbareColumnsView.AddObject(xnew);
                 xZichtbareColumnsView.SelectedObject = xnew;
@@ -286,10 +280,10 @@ namespace Forms
                 }
                 else
                 {
-                    var xs = new ExcelSettings(txt);
-                    xs.IsSelected = !Settings.Any(x => x.IsSelected);
+                    var xs = new ExcelSettings(txt,IsExcelColumnSettings);
+                    //xs.SetSelected(!Settings.Any(x => x.IsUsed(txt) && x.IsExcelSettings), txt);
                     Settings.Add(xs);
-                    LoadSettings(Settings, ListName);
+                    LoadSettings(Settings, ListName, IsExcelColumnSettings);
                 }
             }
         }
@@ -350,10 +344,20 @@ namespace Forms
                         break;
                     case ColorRuleType.Static:
                         xVasteKleurRadio.Checked = true;
-                        var color = GetColorFromIndex(entry.ColumnColorIndex);
+                        var color = entry.ColumnColorIndex > -1
+                            ?
+                            ExcelColumnEntry.GetColorFromIndex(entry.ColumnColorIndex)
+                            : entry.ColomnRGB == -1
+                                ? Color.Empty
+                                : Color.FromArgb(entry.ColomnRGB);
+
                         xColumnKleurB.BackColor = color.IsEmpty?Color.White : color;
                         xTextKleurB.BackColor = color.IsEmpty ? Color.White : color;
-                        color = GetColorFromIndex(entry.ColumnTextColorIndex);
+                        color = entry.ColumnColorIndex > -1
+                            ? ExcelColumnEntry.GetColorFromIndex(entry.ColumnTextColorIndex)
+                            : entry.ColomnTextRGB == -1
+                                ? Color.Empty
+                                : Color.FromArgb(entry.ColomnTextRGB);
                         xTextKleurB.ForeColor = color.IsEmpty ? Color.Black : color;
                         xColumnKleurB.ForeColor = color.IsEmpty ? Color.Black : color;
                         break;
@@ -370,6 +374,7 @@ namespace Forms
             }
             else
             {
+                xColorRegelStatusLabel.Text = "";
                 xColumnTextBox.Text = "";
                 xColumnFormatTextbox.Text = "";
                 xColumnBreedte.Enabled = false;
@@ -481,7 +486,7 @@ namespace Forms
 
         private void xOpslaan_Click(object sender, EventArgs e)
         {
-            if (IsSelectDialog && !Settings.Any(x => x.IsSelected))
+            if (IsSelectDialog && !Settings.Any(x => x.IsUsed("ExcelColumns")))
             {
                 XMessageBox.Show("Selecteer een optie om te gebruiken", "Selecteer Optie", MessageBoxIcon.Exclamation);
                 return;
@@ -572,6 +577,7 @@ namespace Forms
                     }
                     else
                     {
+                        setting.IsExcelSettings = IsExcelColumnSettings;
                         setting.Name = txt;
                         xOptiesView.RefreshObject(setting);
                     }
@@ -586,7 +592,7 @@ namespace Forms
             {
                 var regelform = new KleurRegelsForm();
                 regelform.Title = $"Kies een kleur regel voor '{entry.Naam}'";
-                regelform.InitColorRules(entry.KleurRegels, entry.Naam);
+                regelform.InitColorRules(entry.KleurRegels, entry.Naam, setting.IsExcelSettings);
                 if (regelform.ShowDialog() == DialogResult.OK)
                 {
                     entry.KleurRegels = regelform.KleurRegels;

@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.xTextKleur = new System.Windows.Forms.CheckBox();
             this.xWijzigKleur = new System.Windows.Forms.Button();
             this.xcolorPanel = new System.Windows.Forms.Panel();
             this.xKiesKleur = new System.Windows.Forms.Button();
@@ -47,7 +48,6 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.xDeleteOptieButton = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.xTextKleur = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xRegelView)).BeginInit();
             this.panel2.SuspendLayout();
@@ -61,22 +61,36 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.xTextKleur);
+            this.panel1.Controls.Add(this.xoptiespanel);
             this.panel1.Controls.Add(this.xWijzigKleur);
+            this.panel1.Controls.Add(this.xTextKleur);
             this.panel1.Controls.Add(this.xcolorPanel);
             this.panel1.Controls.Add(this.xKiesKleur);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(10, 60);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(518, 39);
+            this.panel1.Size = new System.Drawing.Size(480, 39);
             this.panel1.TabIndex = 0;
+            // 
+            // xTextKleur
+            // 
+            this.xTextKleur.AutoSize = true;
+            this.xTextKleur.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xTextKleur.Location = new System.Drawing.Point(136, 12);
+            this.xTextKleur.Name = "xTextKleur";
+            this.xTextKleur.Size = new System.Drawing.Size(85, 21);
+            this.xTextKleur.TabIndex = 4;
+            this.xTextKleur.Text = "TextKleur";
+            this.xTextKleur.UseVisualStyleBackColor = true;
+            this.xTextKleur.CheckedChanged += new System.EventHandler(this.xTextKleur_CheckedChanged);
             // 
             // xWijzigKleur
             // 
+            this.xWijzigKleur.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xWijzigKleur.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xWijzigKleur.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xWijzigKleur.Location = new System.Drawing.Point(228, 5);
+            this.xWijzigKleur.Location = new System.Drawing.Point(380, 4);
             this.xWijzigKleur.Margin = new System.Windows.Forms.Padding(4);
             this.xWijzigKleur.Name = "xWijzigKleur";
             this.xWijzigKleur.Size = new System.Drawing.Size(96, 30);
@@ -108,7 +122,7 @@
             // xRegelTextPanel
             // 
             this.xRegelTextPanel.AutoScroll = true;
-            this.xRegelTextPanel.AutoScrollMinSize = new System.Drawing.Size(518, 17);
+            this.xRegelTextPanel.AutoScrollMinSize = new System.Drawing.Size(480, 17);
             this.xRegelTextPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xRegelTextPanel.BaseStylesheet = null;
             this.xRegelTextPanel.Cursor = System.Windows.Forms.Cursors.Default;
@@ -116,7 +130,7 @@
             this.xRegelTextPanel.Location = new System.Drawing.Point(0, 0);
             this.xRegelTextPanel.Margin = new System.Windows.Forms.Padding(4);
             this.xRegelTextPanel.Name = "xRegelTextPanel";
-            this.xRegelTextPanel.Size = new System.Drawing.Size(518, 68);
+            this.xRegelTextPanel.Size = new System.Drawing.Size(480, 58);
             this.xRegelTextPanel.TabIndex = 1;
             this.xRegelTextPanel.Text = "Regel Text";
             // 
@@ -137,7 +151,7 @@
             this.xRegelView.ShowGroups = false;
             this.xRegelView.ShowItemToolTips = true;
             this.xRegelView.ShowSortIndicators = false;
-            this.xRegelView.Size = new System.Drawing.Size(518, 165);
+            this.xRegelView.Size = new System.Drawing.Size(480, 139);
             this.xRegelView.SmallImageList = this.imageList1;
             this.xRegelView.TabIndex = 2;
             this.xRegelView.UseAlternatingBackColors = true;
@@ -168,9 +182,9 @@
             // 
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(10, 336);
+            this.panel2.Location = new System.Drawing.Point(10, 300);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(518, 40);
+            this.panel2.Size = new System.Drawing.Size(480, 40);
             this.panel2.TabIndex = 10;
             // 
             // panel3
@@ -178,7 +192,7 @@
             this.panel3.Controls.Add(this.xanuleren);
             this.panel3.Controls.Add(this.xok);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.Location = new System.Drawing.Point(266, 0);
+            this.panel3.Location = new System.Drawing.Point(228, 0);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(252, 40);
             this.panel3.TabIndex = 3;
@@ -213,8 +227,6 @@
             // 
             // xoptiespanel
             // 
-            this.xoptiespanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.xoptiespanel.AutoSize = false;
             this.xoptiespanel.BackColor = System.Drawing.Color.White;
             this.xoptiespanel.Dock = System.Windows.Forms.DockStyle.None;
@@ -223,9 +235,9 @@
             this.xEditOpties,
             this.toolStripSeparator3,
             this.xDeleteOptieButton});
-            this.xoptiespanel.Location = new System.Drawing.Point(338, 60);
+            this.xoptiespanel.Location = new System.Drawing.Point(227, 1);
             this.xoptiespanel.Name = "xoptiespanel";
-            this.xoptiespanel.Size = new System.Drawing.Size(187, 38);
+            this.xoptiespanel.Size = new System.Drawing.Size(142, 38);
             this.xoptiespanel.TabIndex = 9;
             this.xoptiespanel.Text = "toolStrip2";
             // 
@@ -284,34 +296,21 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.xRegelTextPanel);
-            this.splitContainer1.Size = new System.Drawing.Size(518, 237);
-            this.splitContainer1.SplitterDistance = 165;
+            this.splitContainer1.Size = new System.Drawing.Size(480, 201);
+            this.splitContainer1.SplitterDistance = 139;
             this.splitContainer1.TabIndex = 11;
-            // 
-            // xTextKleur
-            // 
-            this.xTextKleur.AutoSize = true;
-            this.xTextKleur.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xTextKleur.Location = new System.Drawing.Point(136, 12);
-            this.xTextKleur.Name = "xTextKleur";
-            this.xTextKleur.Size = new System.Drawing.Size(85, 21);
-            this.xTextKleur.TabIndex = 4;
-            this.xTextKleur.Text = "TextKleur";
-            this.xTextKleur.UseVisualStyleBackColor = true;
-            this.xTextKleur.CheckedChanged += new System.EventHandler(this.xTextKleur_CheckedChanged);
             // 
             // KleurRegelsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(538, 386);
+            this.ClientSize = new System.Drawing.Size(500, 350);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.xoptiespanel);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.MinimumSize = new System.Drawing.Size(400, 350);
+            this.MinimumSize = new System.Drawing.Size(500, 350);
             this.Name = "KleurRegelsForm";
             this.Padding = new System.Windows.Forms.Padding(10, 60, 10, 10);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

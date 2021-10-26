@@ -2318,7 +2318,7 @@
             this.metroTabControl1.HotTrack = true;
             this.metroTabControl1.Location = new System.Drawing.Point(10, 60);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 3;
+            this.metroTabControl1.SelectedIndex = 4;
             this.metroTabControl1.ShowToolTips = true;
             this.metroTabControl1.Size = new System.Drawing.Size(720, 457);
             this.metroTabControl1.TabIndex = 1;
@@ -2403,9 +2403,9 @@
             // xmisctabpage
             // 
             this.xmisctabpage.Controls.Add(this.metroPanel5);
-            this.xmisctabpage.Location = new System.Drawing.Point(4, 38);
+            this.xmisctabpage.Location = new System.Drawing.Point(4, 35);
             this.xmisctabpage.Name = "xmisctabpage";
-            this.xmisctabpage.Size = new System.Drawing.Size(712, 415);
+            this.xmisctabpage.Size = new System.Drawing.Size(712, 418);
             this.xmisctabpage.TabIndex = 4;
             this.xmisctabpage.Text = "Misc";
             this.xmisctabpage.ToolTipText = "Verschillende soort instellingen";
@@ -2434,7 +2434,7 @@
             this.metroPanel5.HorizontalScrollbarSize = 10;
             this.metroPanel5.Location = new System.Drawing.Point(0, 0);
             this.metroPanel5.Name = "metroPanel5";
-            this.metroPanel5.Size = new System.Drawing.Size(712, 415);
+            this.metroPanel5.Size = new System.Drawing.Size(712, 418);
             this.metroPanel5.TabIndex = 7;
             this.metroPanel5.VerticalScrollbar = true;
             this.metroPanel5.VerticalScrollbarBarColor = true;
@@ -2489,9 +2489,9 @@
             this.xExcelTabPage.HorizontalScrollbarBarColor = true;
             this.xExcelTabPage.HorizontalScrollbarHighlightOnWheel = false;
             this.xExcelTabPage.HorizontalScrollbarSize = 10;
-            this.xExcelTabPage.Location = new System.Drawing.Point(4, 35);
+            this.xExcelTabPage.Location = new System.Drawing.Point(4, 38);
             this.xExcelTabPage.Name = "xExcelTabPage";
-            this.xExcelTabPage.Size = new System.Drawing.Size(712, 418);
+            this.xExcelTabPage.Size = new System.Drawing.Size(712, 415);
             this.xExcelTabPage.TabIndex = 7;
             this.xExcelTabPage.Text = "Excel";
             this.xExcelTabPage.VerticalScrollbarBarColor = true;
@@ -2510,7 +2510,7 @@
             this.panel2.Controls.Add(this.xmaakoverichtenaan);
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(706, 404);
+            this.panel2.Size = new System.Drawing.Size(706, 401);
             this.panel2.TabIndex = 9;
             // 
             // xcolumnsStatusLabel
@@ -2591,7 +2591,7 @@
             this.xofflinedbgroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xofflinedbgroup.Location = new System.Drawing.Point(3, 319);
             this.xofflinedbgroup.Name = "xofflinedbgroup";
-            this.xofflinedbgroup.Size = new System.Drawing.Size(434, 162);
+            this.xofflinedbgroup.Size = new System.Drawing.Size(400, 162);
             this.xofflinedbgroup.TabIndex = 46;
             this.xofflinedbgroup.TabStop = false;
             this.xofflinedbgroup.Text = "Offline Database Synchronisatie";
@@ -2626,7 +2626,7 @@
             this.label34.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label34.Location = new System.Drawing.Point(321, 21);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(107, 138);
+            this.label34.Size = new System.Drawing.Size(73, 138);
             this.label34.TabIndex = 49;
             this.label34.Text = resources.GetString("label34.Text");
             // 
@@ -2745,7 +2745,7 @@
             this.xproductielijstsyncgroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xproductielijstsyncgroup.Location = new System.Drawing.Point(3, 229);
             this.xproductielijstsyncgroup.Name = "xproductielijstsyncgroup";
-            this.xproductielijstsyncgroup.Size = new System.Drawing.Size(434, 57);
+            this.xproductielijstsyncgroup.Size = new System.Drawing.Size(400, 57);
             this.xproductielijstsyncgroup.TabIndex = 44;
             this.xproductielijstsyncgroup.TabStop = false;
             this.xproductielijstsyncgroup.Text = "Productielijst Synchronisatie";
@@ -2758,7 +2758,7 @@
             this.label25.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label25.Location = new System.Drawing.Point(266, 9);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(168, 48);
+            this.label25.Size = new System.Drawing.Size(134, 48);
             this.label25.TabIndex = 48;
             this.label25.Text = "Hiermee kan je bepalen om de hoeveel minuten je de lijst weergave van de producti" +
     "es kan laten refreshen.";
@@ -2810,7 +2810,7 @@
             this.xgereedproductiesyncgroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xgereedproductiesyncgroup.Location = new System.Drawing.Point(3, 139);
             this.xgereedproductiesyncgroup.Name = "xgereedproductiesyncgroup";
-            this.xgereedproductiesyncgroup.Size = new System.Drawing.Size(434, 57);
+            this.xgereedproductiesyncgroup.Size = new System.Drawing.Size(400, 57);
             this.xgereedproductiesyncgroup.TabIndex = 42;
             this.xgereedproductiesyncgroup.TabStop = false;
             this.xgereedproductiesyncgroup.Text = "Gereed Productie Synchronisatie";
@@ -2823,7 +2823,7 @@
             this.label24.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label24.Location = new System.Drawing.Point(266, 10);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(168, 44);
+            this.label24.Size = new System.Drawing.Size(134, 44);
             this.label24.TabIndex = 47;
             this.label24.Text = "Hiermee kan je bepalen hoe snel de gereed producties opnieuw worden geladen.";
             // 
@@ -2874,7 +2874,7 @@
             this.xproductiesyncgroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xproductiesyncgroup.Location = new System.Drawing.Point(3, 49);
             this.xproductiesyncgroup.Name = "xproductiesyncgroup";
-            this.xproductiesyncgroup.Size = new System.Drawing.Size(434, 57);
+            this.xproductiesyncgroup.Size = new System.Drawing.Size(400, 57);
             this.xproductiesyncgroup.TabIndex = 38;
             this.xproductiesyncgroup.TabStop = false;
             this.xproductiesyncgroup.Text = "Productie Synchronisatie";
@@ -2887,7 +2887,7 @@
             this.label23.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label23.Location = new System.Drawing.Point(263, 10);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(168, 44);
+            this.label23.Size = new System.Drawing.Size(134, 44);
             this.label23.TabIndex = 37;
             this.label23.Text = "Hiermee kan je bepalen hoe snel de producties refreshen voor de actuele informati" +
     "e.";

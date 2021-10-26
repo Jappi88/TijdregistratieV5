@@ -1562,22 +1562,17 @@ namespace Forms
             }
         }
 
-        private void xExcelColumnsButton_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void xKiesExcelColumnButton_Click(object sender, EventArgs e)
         {
             if (_LoadedOpties == null) return;
             var xf = new ExcelOptiesForm();
-            xf.LoadOpties(_LoadedOpties, "ExcelColumns");
+            xf.LoadOpties(_LoadedOpties, "ExcelColumns",true);
             if (xf.ShowDialog() == DialogResult.OK)
             {
-                _LoadedOpties.ExcelColumns = xf.Settings;
+                Manager.UpdateExcelColumns(_LoadedOpties, xf.Settings,true);
                 _LoadedOpties.Save("ExcelColumns Aangepast!");
             }
-            var selected = _LoadedOpties.ExcelColumns?.FirstOrDefault(x => x.IsUsed("ExcelColumns"));
+            var selected = _LoadedOpties.ExcelColumns?.FirstOrDefault(x => x.IsUsed("ExcelColumns") && x.IsExcelSettings);
             if (selected != null)
             {
                 xcolumnsStatusLabel.Text = $@"Opties Geselecteerd: {selected.Name}";

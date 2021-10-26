@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using NPOI.SS.UserModel;
+using Org.BouncyCastle.Asn1;
+using Polenter.Serialization;
 
 namespace ProductieManager.Rpm.ExcelHelper
 {
@@ -38,7 +40,13 @@ namespace ProductieManager.Rpm.ExcelHelper
         public SorteerType Sorteer { get; set; } = SorteerType.None;
         public bool AutoSize { get; set; } = false;
         public short ColumnColorIndex { get; set; } = -1;
+        [ExcludeFromSerialization]
+        public string ColomnColorName { get; set; }
+        public int ColomnRGB { get; set; }
         public short ColumnTextColorIndex { get; set; } = -1;
+        [ExcludeFromSerialization]
+        public string ColumnTextColorName { get; set; }
+        public int ColomnTextRGB { get; set; }
         public CalculationType Type { get; set; } = CalculationType.None;
         public List<ExcelRegelEntry> KleurRegels { get; set; } = new List<ExcelRegelEntry>();
         public ColorRuleType ColorType { get; set; }
@@ -56,6 +64,23 @@ namespace ProductieManager.Rpm.ExcelHelper
                 return Color.Empty;
             }
 
+        }
+
+        public static List<Color> GetExcelCollors()
+        {
+            var xreturn = new List<Color>();
+            var props = typeof(IndexedColors).GetFields().Select(x => (IndexedColors)x.GetValue("Index")).ToArray();
+            if (props.Length > 0)
+            {
+                xreturn.AddRange(props.Select(prop => Color.FromArgb(prop.RGB[0], prop.RGB[1], prop.RGB[2])).ToArray());
+            }
+
+            return xreturn;
+        }
+
+        public static List<int> GetExcelCollorsRGB()
+        {
+            return GetExcelCollors().Select(x => x.ToArgb()).ToList();
         }
 
         public static Color ColorFromRGB(byte[] rgb)

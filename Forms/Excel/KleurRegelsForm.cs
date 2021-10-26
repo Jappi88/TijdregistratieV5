@@ -35,13 +35,17 @@ namespace Forms.Excel
         {
             if (model is ExcelRegelEntry regel)
             {
-                return imageList1.Images.IndexOfKey(regel.ColorIndex.ToString());
+                if (regel.ColorIndex > -1)
+                    return imageList1.Images.IndexOfKey(regel.ColorIndex.ToString());
+                if(regel.ColorRGB != -1)
+                    return imageList1.Images.IndexOfKey(regel.ColorRGB.ToString());
             }
 
             return 0;
         }
 
         public string Variable { get; private set; }
+        public bool UseExcelColors { get; private set; }
 
         public string Title
         {
@@ -55,9 +59,10 @@ namespace Forms.Excel
 
         public List<ExcelRegelEntry> KleurRegels { get; private set; } = new List<ExcelRegelEntry>();
 
-        public void InitColorRules(List<ExcelRegelEntry> regels, string variable)
+        public void InitColorRules(List<ExcelRegelEntry> regels, string variable, bool useExcelColors)
         {
             Variable = variable;
+            UseExcelColors = useExcelColors;
             var selected = xRegelView.SelectedObject;
             KleurRegels = regels.CreateCopy();
             UpdateImages();
@@ -72,22 +77,19 @@ namespace Forms.Excel
             imageList1.Images.Clear();
             foreach (var regel in KleurRegels)
             {
-                imageList1.Images.Add(regel.ColorIndex.ToString(),
-                    CreateImage(ExcelColumnEntry.GetColorFromIndex(regel.ColorIndex), imageList1.ImageSize.Width,
-                        imageList1.ImageSize.Height));
+                if (regel.ColorIndex > -1)
+                {
+                    imageList1.Images.Add(regel.ColorIndex.ToString(),
+                        CreateImage(ExcelColumnEntry.GetColorFromIndex(regel.ColorIndex), imageList1.ImageSize.Width,
+                            imageList1.ImageSize.Height));
+                }
+                else if(regel.ColorRGB != -1)
+                {
+                    imageList1.Images.Add(regel.ColorRGB.ToString(),
+                        CreateImage(Color.FromArgb(regel.ColorRGB), imageList1.ImageSize.Width,
+                            imageList1.ImageSize.Height));
+                }
             }
-        }
-
-        private List<Color> GetCollors()
-        {
-            var xreturn = new List<Color>();
-            var props = typeof(IndexedColors).GetFields().Select(x => (IndexedColors)x.GetValue("Index")).ToArray();
-            if (props.Length > 0)
-            {
-                xreturn.AddRange(props.Select(prop => Color.FromArgb(prop.RGB[0], prop.RGB[1], prop.RGB[2])).ToArray());
-            }
-
-            return xreturn;
         }
 
         private Image CreateImage(Color color, int width, int height)
@@ -106,22 +108,49 @@ namespace Forms.Excel
 
         private void AddCriteria()
         {
-            var colorindex = ExcelColumnEntry.GetColorIndex(xcolorPanel.BackColor);
-            if (colorindex == -1)
+            short colorindex = -1;
+            int rgb = -1;
+            if (UseExcelColors)
             {
-                XMessageBox.Show("Kies een kleur waarvoor je een regel wilt.", "Kies Kleur",
-                    MessageBoxIcon.Information);
-                return;
-            }
+                colorindex = ExcelColumnEntry.GetColorIndex(xcolorPanel.BackColor);
+                if (colorindex == -1)
+                {
+                    XMessageBox.Show("Kies een kleur waarvoor je een regel wilt.", "Kies Kleur",
+                        MessageBoxIcon.Information);
+                    return;
+                }
 
-            ExcelRegelEntry regel = null;
-            if ((regel = xRegelView.Objects.Cast<ExcelRegelEntry>().FirstOrDefault(x => x.ColorIndex == colorindex)) != null)
+                ExcelRegelEntry regel = null;
+                if ((regel = xRegelView.Objects.Cast<ExcelRegelEntry>()
+                        .FirstOrDefault(x => x.ColorIndex == colorindex)) != null)
+                {
+                    XMessageBox.Show("Er is al een regel gemaakt voor de huidig gekozen kleur.", "Kleur Bestaat Al",
+                        MessageBoxIcon.Information);
+                    xRegelView.SelectedObject = regel;
+                    xRegelView.SelectedItem?.EnsureVisible();
+                    return;
+                }
+            }
+            else
             {
-                XMessageBox.Show("Er is al een regel gemaakt voor de huidig gekozen kleur.", "Kleur Bestaat Al",
-                    MessageBoxIcon.Information);
-                xRegelView.SelectedObject = regel;
-                xRegelView.SelectedItem?.EnsureVisible();
-                return;
+                rgb = xcolorPanel.BackColor.ToArgb();
+                if (rgb == -1)
+                {
+                    XMessageBox.Show("Kies een kleur waarvoor je een regel wilt.", "Kies Kleur",
+                        MessageBoxIcon.Information);
+                    return;
+                }
+
+                ExcelRegelEntry regel = null;
+                if ((regel = xRegelView.Objects.Cast<ExcelRegelEntry>()
+                        .FirstOrDefault(x => x.ColorRGB == rgb && x.IsFontColor == xTextKleur.Checked)) != null)
+                {
+                    XMessageBox.Show("Er is al een regel gemaakt voor de huidig gekozen kleur.", "Kleur Bestaat Al",
+                        MessageBoxIcon.Information);
+                    xRegelView.SelectedObject = regel;
+                    xRegelView.SelectedItem?.EnsureVisible();
+                    return;
+                }
             }
             var xvar = Variable;
             var xnewcrit = new NewFilterEntry(typeof(IProductieBase), xvar, false)
@@ -131,10 +160,12 @@ namespace Forms.Excel
             {
                 var xregel = new ExcelRegelEntry()
                 {
-                    ColorIndex = colorindex,
                     Filter = xnewcrit.SelectedFilter,
                     IsFontColor = xTextKleur.Checked
                 };
+                if (colorindex > -1)
+                    xregel.ColorIndex = colorindex;
+                else xregel.ColorRGB = rgb;
                 KleurRegels.Add(xregel);
                 UpdateImages();
                 xRegelView.AddObject(xregel);
@@ -186,15 +217,29 @@ namespace Forms.Excel
 
         private void xKiesKleur_Click(object sender, System.EventArgs e)
         {
-            var colordialog = new ColorPickerForm();
-            colordialog.Title = Title;
-            colordialog.SetKleuren(GetCollors());
-            colordialog.SelectedColor = xcolorPanel.BackColor;
-            if (colordialog.ShowDialog() == DialogResult.OK)
+            if (UseExcelColors)
             {
-                var xindex = ExcelColumnEntry.GetColorIndex(colordialog.SelectedColor);
-                if (xindex == -1) return;
-                xcolorPanel.BackColor = colordialog.SelectedColor;
+                var colordialog = new ColorPickerForm();
+                colordialog.Title = Title;
+                colordialog.SetKleuren(ExcelColumnEntry.GetExcelCollors());
+                colordialog.SelectedColor = xcolorPanel.BackColor;
+                if (colordialog.ShowDialog() == DialogResult.OK)
+                {
+                    var xindex = ExcelColumnEntry.GetColorIndex(colordialog.SelectedColor);
+                    if (xindex == -1) return;
+                    xcolorPanel.BackColor = colordialog.SelectedColor;
+                }
+
+                return;
+            }
+
+            var xpicker = new ColorDialog();
+            xpicker.AllowFullOpen = true;
+            xpicker.AnyColor = true;
+            xpicker.Color = xcolorPanel.BackColor;
+            if (xpicker.ShowDialog() == DialogResult.OK)
+            {
+                xcolorPanel.BackColor = xpicker.Color;
             }
         }
 
@@ -237,6 +282,11 @@ namespace Forms.Excel
             {
                 xRegelTextPanel.Text = entry.Filter?.ToHtmlString();
                 xTextKleur.Checked = entry.IsFontColor;
+                xcolorPanel.BackColor = entry.ColorIndex > -1
+                    ? ExcelColumnEntry.GetColorFromIndex(entry.ColorIndex)
+                    : entry.ColorRGB == -1
+                        ? Color.Empty
+                        : Color.FromArgb(entry.ColorRGB);
             }
             else
             {
@@ -249,26 +299,48 @@ namespace Forms.Excel
         {
             if (xRegelView.SelectedObject is ExcelRegelEntry regel)
             {
-                var colorindex = ExcelColumnEntry.GetColorIndex(xcolorPanel.BackColor);
-                if (colorindex == -1)
+                try
                 {
-                    XMessageBox.Show("Kies een kleur waarvoor je een regel wilt wijzigen.", "Kies Kleur",
-                        MessageBoxIcon.Information);
-                    return;
-                }
+                    if(UseExcelColors)
+                    {
+                        var colorindex = ExcelColumnEntry.GetColorIndex(xcolorPanel.BackColor);
+                        if (colorindex == -1)
+                        {
+                            throw new Exception("Kies een kleur waarvoor je een regel wilt wijzigen.");
+                        }
 
-                if (colorindex == regel.ColorIndex) return;
-                if (xRegelView.Objects.Cast<ExcelRegelEntry>()
-                    .Any(x => x.ColorIndex == colorindex))
-                {
-                    XMessageBox.Show("Er is al een regel gemaakt voor de huidig gekozen kleur.", "Kleur Bestaat Al",
-                        MessageBoxIcon.Information);
-                    return;
+                        if (colorindex == regel.ColorIndex) return;
+                        if (xRegelView.Objects.Cast<ExcelRegelEntry>()
+                            .Any(x => x.ColorIndex == colorindex))
+                        {
+                            throw new Exception("Er is al een regel gemaakt voor de huidig gekozen kleur.");
+                        }
+                        regel.ColorIndex = colorindex;
+                        regel.ColorRGB = -1;
+                    }
+                    else
+                    {
+                        var rgb = xcolorPanel.BackColor.ToArgb();
+                        if(rgb == 0 || rgb == -1)
+                            throw new Exception("Kies een kleur waarvoor je een regel wilt wijzigen.");
+                        if (rgb == regel.ColorRGB) return;
+                        if (xRegelView.Objects.Cast<ExcelRegelEntry>()
+                            .Any(x => rgb == x.ColorRGB && x.IsFontColor == regel.IsFontColor))
+                        {
+                            throw new Exception("Er is al een regel gemaakt voor de huidig gekozen kleur.");
+                        }
+
+                        regel.ColorIndex = -1;
+                        regel.ColorRGB = rgb;
+                    }
+                    UpdateImages();
+                    xRegelView.RefreshObject(regel);
+                    UpdateFields();
                 }
-                regel.ColorIndex = colorindex;
-                UpdateImages();
-                xRegelView.RefreshObject(regel);
-                UpdateFields();
+                catch (Exception exception)
+                {
+                    XMessageBox.Show(exception.Message, "Waarschuwing!", MessageBoxIcon.Exclamation);
+                }
             }
         }
 

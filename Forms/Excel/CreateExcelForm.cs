@@ -63,7 +63,7 @@ namespace Forms
                 xinfolabel.Visible = true;
             }
             else xinfolabel.Visible = false;
-            var selected = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsUsed("ExcelColumns"));
+            var selected = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsUsed("ExcelColumns") && x.IsExcelSettings);
             if (selected != null)
             {
                 xcolumnsStatusLabel.Text = $@"Opties Geselecteerd: {selected.Name}";
@@ -92,13 +92,13 @@ namespace Forms
             if (selected == null)
             {
                 var xf = new ExcelOptiesForm();
-                xf.LoadOpties(Manager.Opties, "ExcelColumns");
+                xf.LoadOpties(Manager.Opties, "ExcelColumns",true);
                 xf.IsSelectDialog = true;
                 if (xf.ShowDialog() == DialogResult.OK)
                 {
                     if (Manager.Opties != null)
                     {
-                        Manager.Opties.ExcelColumns = xf.Settings;
+                        Manager.UpdateExcelColumns(xf.Settings,true);
                         await Manager.Opties.Save("ExcelColumns Aangepast!");
                         SetFieldInfo();
                         selected = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsUsed("ExcelColumns"));
@@ -189,10 +189,10 @@ namespace Forms
         private void button1_Click(object sender, EventArgs e)
         {
             var xf = new ExcelOptiesForm();
-            xf.LoadOpties(Manager.Opties, "ExcelColumns");
+            xf.LoadOpties(Manager.Opties, "ExcelColumns",true);
             if (xf.ShowDialog() == DialogResult.OK)
             {
-                Manager.Opties.ExcelColumns = xf.Settings;
+                Manager.UpdateExcelColumns(xf.Settings,true);
                 Manager.Opties.Save("ExcelColumns Aangepast!",false,false,true);
                 SetFieldInfo();
             }

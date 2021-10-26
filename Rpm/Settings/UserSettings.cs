@@ -88,7 +88,7 @@ namespace Rpm.Settings
             CreateWeekOverzichten = true;
             DoCurrentWeekOverzicht = true;
             ExcelColumns = new List<ExcelSettings>();
-            var xset = ExcelSettings.CreateSettings("ExcelColumns");
+            var xset = ExcelSettings.CreateSettings("ExcelColumns",true);
             ExcelColumns.Add(xset);
             WeekOverzichtPath = Manager.WeekOverzichtPath;
             WeekOverzichtUpdateInterval = (5 * 60000); //5min
@@ -288,9 +288,6 @@ namespace Rpm.Settings
         public byte[] _viewstoringdata { get; set; }
         public byte[] _viewpersoneeldata { get; set; }
         public byte[] _viewallenotitiesdata { get; set; }
-
-        [ExcludeFromSerialization]
-        public TimeSpan LastRecentGereedTime { get; set; }
         public bool UseLastGereedStart { get; set; }
         public  DateTime LastGereedStart { get; set; }
         public bool UseLastGereedStop { get; set; }

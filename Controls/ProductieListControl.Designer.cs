@@ -112,6 +112,7 @@ namespace Controls
             this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst1)).BeginInit();
             this.xproductieLijstcontext.SuspendLayout();
@@ -151,13 +152,16 @@ namespace Controls
             // 
             // xProductieLijst1
             // 
+            this.xProductieLijst1.AllowColumnReorder = true;
             this.xProductieLijst1.AlternateRowBackColor = System.Drawing.Color.AliceBlue;
             this.xProductieLijst1.CellEditUseWholeCell = false;
             this.xProductieLijst1.ContextMenuStrip = this.xproductieLijstcontext;
             this.xProductieLijst1.Cursor = System.Windows.Forms.Cursors.Default;
             this.xProductieLijst1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xProductieLijst1.FullRowSelect = true;
+            this.xProductieLijst1.GridLines = true;
             this.xProductieLijst1.HideSelection = false;
+            this.xProductieLijst1.IsSimpleDragSource = true;
             this.xProductieLijst1.LargeImageList = this.ximagelist;
             this.xProductieLijst1.Location = new System.Drawing.Point(0, 73);
             this.xProductieLijst1.MenuLabelGroupBy = "Groep op \'{0}\'";
@@ -169,7 +173,6 @@ namespace Controls
             this.xProductieLijst1.MenuLabelUnlockGroupingOn = "Vergrendel groepering op \'{0}\'";
             this.xProductieLijst1.MenuLabelUnsort = "DeSorteer";
             this.xProductieLijst1.Name = "xProductieLijst1";
-            this.xProductieLijst1.OwnerDraw = false;
             this.xProductieLijst1.ShowCommandMenuOnRightClick = true;
             this.xProductieLijst1.ShowItemToolTips = true;
             this.xProductieLijst1.Size = new System.Drawing.Size(1149, 561);
@@ -190,7 +193,10 @@ namespace Controls
             this.xProductieLijst1.CellToolTipShowing += new System.EventHandler<BrightIdeasSoftware.ToolTipShowingEventArgs>(this.xproductieLijst_CellToolTipShowing);
             this.xProductieLijst1.FormatCell += new System.EventHandler<BrightIdeasSoftware.FormatCellEventArgs>(this.xProductieLijst_FormatCell);
             this.xProductieLijst1.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.xProductieLijst_ColumnReordered);
+            this.xProductieLijst1.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.xProductieLijst1_ColumnWidthChanging);
+            this.xProductieLijst1.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.xproductieLijst_ItemDrag);
             this.xProductieLijst1.SelectedIndexChanged += new System.EventHandler(this.xproductieLijst_SelectedIndexChanged);
+            this.xProductieLijst1.DragEnter += new System.Windows.Forms.DragEventHandler(this.xproductieLijst_DragEnter);
             this.xProductieLijst1.DoubleClick += new System.EventHandler(this.xproductieLijst_DoubleClick);
             // 
             // xproductieLijstcontext
@@ -1137,5 +1143,6 @@ namespace Controls
         private System.Windows.Forms.ToolStripMenuItem verpakkingsInstructieToolStripMenuItem;
         private System.Windows.Forms.Button xListColumnsButton;
         private BrightIdeasSoftware.ObjectListView xProductieLijst1;
+        private System.Windows.Forms.ColorDialog colorDialog1;
     }
 }

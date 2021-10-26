@@ -1741,7 +1741,7 @@ namespace Controls
                     werkPlekkenUI1.xwerkpleklist.SelectedObject = taak.Plek;
                     if (werkPlekkenUI1.xwerkpleklist.SelectedItem != null)
                     {
-                        metroTabControl.SelectedIndex = 2;
+                        metroTabControl.SelectedIndex = 1;
                         werkPlekkenUI1.xwerkpleklist.SelectedItem.EnsureVisible();
                         return;
                     }
@@ -1750,7 +1750,7 @@ namespace Controls
                 if (taak.Bewerking != null)
                 {
                     xbewerkingListControl.SelectedItem = taak.Bewerking;
-                    if (xbewerkingListControl.SelectedItem != null) metroTabControl.SelectedIndex = 1;
+                    if (xbewerkingListControl.SelectedItem != null) metroTabControl.SelectedIndex = 0;
                 }
                 //else
                 //{

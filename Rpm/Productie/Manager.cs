@@ -316,15 +316,36 @@ namespace Rpm.Productie
             return Database.UpSert(account);
         }
 
+        public static int UpdateExcelColumns(UserSettings opties, List<ExcelSettings> settings, bool isExcel)
+        {
+            if (opties == null) return -1;
+            if (opties.ExcelColumns == null)
+                opties.ExcelColumns = new List<ExcelSettings>();
+            else
+                opties.ExcelColumns.RemoveAll(x => x.IsExcelSettings == isExcel);
+            int xreturn = 0;
+            foreach (var xset in settings)
+            {
+                xset.IsExcelSettings = isExcel;
+                Opties.ExcelColumns.Add(xset);
+            }
+            return xreturn;
+        }
+
+        public static int UpdateExcelColumns(List<ExcelSettings> settings, bool isExcel)
+        {
+            return UpdateExcelColumns(Opties, settings, isExcel);
+        }
+
         /// <summary>
-        /// Een taak aanmaken voor het inloggen
-        /// </summary>
-        /// <param name="username">De naam van de gebruiker die ingelogd wilt worden</param>
-        /// <param name="password">De wachtwoord dat hoort bij de gebruikersnaam</param>
-        /// <param name="autologin">Of de gebruiker voortaan automatch ingelogd moet worden</param>
-        /// <param name="sender">De afzender die de inglog taak oproept</param>
-        /// <returns>Een taak die draait op de achtergrond</returns>
-        public static Task<bool> Login(string username, string password, bool autologin, object sender)
+            /// Een taak aanmaken voor het inloggen
+            /// </summary>
+            /// <param name="username">De naam van de gebruiker die ingelogd wilt worden</param>
+            /// <param name="password">De wachtwoord dat hoort bij de gebruikersnaam</param>
+            /// <param name="autologin">Of de gebruiker voortaan automatch ingelogd moet worden</param>
+            /// <param name="sender">De afzender die de inglog taak oproept</param>
+            /// <returns>Een taak die draait op de achtergrond</returns>
+            public static Task<bool> Login(string username, string password, bool autologin, object sender)
         {
             return Task.Run(async () =>
             {
