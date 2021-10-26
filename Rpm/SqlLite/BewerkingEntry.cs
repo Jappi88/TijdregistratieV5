@@ -29,7 +29,8 @@ namespace Rpm.SqlLite
 
         public int ID { get; private set; }
         public bool IsBemand { get; set; }
-
+        [ExcludeFromSerialization]
+        public bool IsExtern { get; set; }
         [BsonId] public string Naam { get; set; }
 
         public string NewName { get; set; }

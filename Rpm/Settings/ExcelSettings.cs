@@ -86,7 +86,7 @@ namespace ProductieManager.Rpm.Settings
 
         public static string[] ProductieColumns =
         {
-            "ArtikelNr", "ProductieNr", "Omschrijving", "Aantal", "AantalGemaakt","LeverDatum","TijdGewerkt",
+            "ArtikelNr", "ProductieNr","Naam", "Omschrijving", "Aantal", "AantalGemaakt","LeverDatum","TijdGewerkt",
              "ActueelPerUur", "PerUur","VerwachtLeverDatum","VerpakkingsInstructies"
         };
 

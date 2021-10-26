@@ -401,7 +401,7 @@ namespace Rpm.Productie
                    $"<div>Locatie: <b>{x.Locatie}</b></div>" +
                    $"<div>Verbuik Per Eenheid: <b>{Math.Round(x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
                    $"<div>Verbuik: <b>{Math.Round(TotaalGemaakt * x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
-                   $"<div>Aantal Afkeur: <b>{Math.Round(x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)} ({x.AfKeurProcent()})</b></div>"))) +
+                   $"<div>Aantal Afkeur: <b>{Math.Round(x.AantalAfkeur, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)} ({x.AfKeurProcent()})</b></div>"))) +
               $"</div>\r\n" +
               $"<hr />" +
               $"</td>" +

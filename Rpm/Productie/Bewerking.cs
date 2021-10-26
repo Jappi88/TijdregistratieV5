@@ -46,7 +46,7 @@ namespace Rpm.Productie
         public override bool TeLaat => DateTime.Now > LeverDatum && State != ProductieState.Gereed;
 
         public bool IsBemand { get; set; }
-
+        public bool IsExtern { get; set; }
         public override DateTime TijdGestart
         {
             get => GestartOp();

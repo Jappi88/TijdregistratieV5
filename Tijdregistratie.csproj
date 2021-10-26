@@ -157,10 +157,16 @@
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="NPOI">
-      <HintPath>..\Libraries\NPOI.dll</HintPath>
+      <HintPath>..\..\..\Desktop\ProductieManager\NPOI.dll</HintPath>
     </Reference>
     <Reference Include="NPOI.OOXML">
-      <HintPath>..\Libraries\NPOI.OOXML.dll</HintPath>
+      <HintPath>..\..\..\Desktop\ProductieManager\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net">
+      <HintPath>..\..\..\Desktop\ProductieManager\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats">
+      <HintPath>..\..\..\Desktop\ProductieManager\NPOI.OpenXmlFormats.dll</HintPath>
     </Reference>
     <Reference Include="ObjectListView">
       <HintPath>..\Libraries\ObjectListView.dll</HintPath>

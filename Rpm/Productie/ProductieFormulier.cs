@@ -16,6 +16,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ICSharpCode.SharpZipLib;
+using NPOI.SS.Formula.Functions;
 
 namespace Rpm.Productie
 {
@@ -276,51 +278,7 @@ namespace Rpm.Productie
         #endregion "Variables"
 
         #region "Data Management"
-
-        //public static byte[] Serialize(ProductieFormulier prod)
-        //{
-        //    try
-        //    {
-        //        byte[] xreturn = null;
-        //        using (MemoryStream ms = new MemoryStream())
-        //        {
-        //            SharpSerializer sh = new SharpSerializer(true);
-        //            //sh.PropertyProvider = new ProductieFormulierProvider();
-        //            sh.Serialize(prod, ms);
-        //            xreturn = ms.ToArray();
-        //        }
-        //        return xreturn;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
-
-        //public static ProductieFormulier DeSerializeFromData(byte[] data, Manager manager)
-        //{
-        //    try
-        //    {
-        //        if (data == null || data.Length == 0)
-        //            return null;
-        //        ProductieFormulier xreturn = null;
-        //        using (MemoryStream ms = new MemoryStream(data))
-        //        {
-        //            //BinaryFormatter bf = new BinaryFormatter();
-        //            SharpSerializer sh = new SharpSerializer(true);
-        //            //sh.PropertyProvider = new ProductieFormulierProvider();
-        //            xreturn = sh.Deserialize(ms) as ProductieFormulier;
-        //            if (xreturn != null)
-        //                foreach (var x in xreturn.Bewerkingen)
-        //                {
-        //                    x.OnBewerkingChanged += xreturn.BewerkingChanged;
-        //                }
-        //        }
-        //        return xreturn;
-        //    }
-        //    catch (Exception ex) { return null; }
-        //}
-
+        
         public Task<bool> UpdateFieldsFrom(ProductieFormulier form, string change = null)
         {
             return Task.Run(() =>
@@ -509,7 +467,15 @@ namespace Rpm.Productie
             Dictionary<string, BewerkingEntry> bws = new Dictionary<string, BewerkingEntry>();
             try
             {
-                var xents = sections.Where(x => x.Text == "I").OrderBy(x => x.Rect.Bottom).ThenBy(x => x.Rect.Left).ToList();
+                TODO://Voor andere soort bewerkingen laten lezen i.p.v alleen interne
+                var xinternbws = sections.Where(x => x.Text == "I").ToList();
+                bool isextern = false;
+                if (xinternbws.Count == 0)
+                {
+                    xinternbws = sections.Where(x => x.Text == "E").ToList();
+                    isextern = true;
+                }
+                var xents = xinternbws.OrderBy(x => x.Rect.Bottom).ThenBy(x => x.Rect.Left).ToList();
                 RectAndText xlast = null;
                 foreach (var ent in xents)
                 {
@@ -569,6 +535,7 @@ namespace Rpm.Productie
                     {
                         xlastbw.Opmerking = opmerking?.TrimEnd(new char[] { ' ', '\n' });
                         xlastbw.DoorloopTijd = doorlooptijd;
+                        xlastbw.IsExtern = isextern;
                         xlastbw = null;
                     }
                 }

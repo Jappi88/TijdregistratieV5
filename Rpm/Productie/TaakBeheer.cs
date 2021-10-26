@@ -68,7 +68,7 @@ namespace Rpm.Productie
                     if (Manager.Opties.TaakAlsTelaat && bew.TeLaat)
                     {
                         var tijd = Werktijd.TijdGewerkt(bew.LeverDatum, DateTime.Now, null, null);
-                        if (tijd.Seconds > 0)
+                        if (tijd.TotalSeconds > 0)
                         {
                             var t = new TakenLijst(bew).Telaat(TaakUrgentie.ZSM);
                             if (t != null)
