@@ -73,16 +73,16 @@
             // 
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(20, 393);
+            this.panel1.Location = new System.Drawing.Point(20, 418);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(827, 37);
+            this.panel1.Size = new System.Drawing.Size(874, 37);
             this.panel1.TabIndex = 4;
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.xannuleer);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(714, 0);
+            this.panel2.Location = new System.Drawing.Point(761, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(113, 37);
             this.panel2.TabIndex = 3;
@@ -194,7 +194,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(138, 60);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(709, 333);
+            this.panel4.Size = new System.Drawing.Size(756, 358);
             this.panel4.TabIndex = 5;
             // 
             // productieInfoUI1
@@ -205,7 +205,7 @@
             this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
             this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
             this.productieInfoUI1.Name = "productieInfoUI1";
-            this.productieInfoUI1.Size = new System.Drawing.Size(709, 293);
+            this.productieInfoUI1.Size = new System.Drawing.Size(756, 318);
             this.productieInfoUI1.TabIndex = 2;
             // 
             // panel6
@@ -213,9 +213,9 @@
             this.panel6.Controls.Add(this.panel3);
             this.panel6.Controls.Add(this.panel5);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel6.Location = new System.Drawing.Point(0, 293);
+            this.panel6.Location = new System.Drawing.Point(0, 318);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(709, 40);
+            this.panel6.Size = new System.Drawing.Size(756, 40);
             this.panel6.TabIndex = 1;
             // 
             // pictureBox1
@@ -225,7 +225,7 @@
             this.pictureBox1.Image = global::ProductieManager.Properties.Resources.Count_tool_34564__1_;
             this.pictureBox1.Location = new System.Drawing.Point(20, 60);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(118, 333);
+            this.pictureBox1.Size = new System.Drawing.Size(118, 358);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
@@ -239,14 +239,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(867, 450);
+            this.ClientSize = new System.Drawing.Size(914, 475);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MinimumSize = new System.Drawing.Size(850, 450);
+            this.MinimumSize = new System.Drawing.Size(850, 475);
             this.Name = "AantalGemaaktUI";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

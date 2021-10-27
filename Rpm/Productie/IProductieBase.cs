@@ -168,7 +168,7 @@ namespace Rpm.Productie
         public virtual double ActueelPerUur { get; set; }
 
         [Display(Name = "PerUur", Description = "Aantal per uur volgens de ProductieFormulier")]
-        public virtual int PerUur => Aantal > 0 && DoorloopTijd > 0 ? (int) (Aantal / DoorloopTijd) : 0;
+        public virtual double PerUur => Aantal > 0 && DoorloopTijd > 0 ? (int) (Aantal / DoorloopTijd) : 0;
 
         [Display(Name = "ProcentAfwijkingPerUur", Description = "Aantal procent afwijking tussen de gemeten en de basis aantal per uur")]
         public virtual decimal ProcentAfwijkingPerUur => GetAfwijking();
@@ -295,8 +295,8 @@ namespace Rpm.Productie
             if (src == "StyleSheet")
             {
                 return @"h1, h2, h3 { color: navy; font:11pt Tahoma; }
-                    h1 { margin-bottom: .3em }
-                    h2 { margin-bottom: .3em }
+                    h1 { margin-bottom: .3em}
+                    h2 { margin-bottom: .3em; font:10pt Tahoma }
                     h3 { margin-bottom: .4em }
                     ul { margin-top: .5em }
                     ul li {margin: .5em}
@@ -573,15 +573,16 @@ Color textcolor, bool useimage)
                           $"<table border = '0' width = '100%' >\r\n" +
                           $"<tr style = 'vertical-align: top;' >\r\n" +
                           ximage +
-                          $"<td><div><h3>" +
+                          $"<td><div><h2>" +
                           $"{(State != ProductieState.Gereed ? $"Verwachte Leverdatum: <span style = 'color:{GetValidColor(VerwachtLeverDatum < LeverDatum).Name}> {VerwachtLeverDatum:f}</span>." : $"Gereed Gemeld Op: <span style = 'color:{GetValidColor(true).Name}>{DatumGereed:f}</span>.")}\r\n" +
-                          $"</h3><hr />\r\n<h3>" +
+                          $"</h2><hr />\r\n<h2>" +
                           $"Aantal Gemaakt: {TotaalGemaakt} / {Aantal} <span style = 'color: {GetPositiveColorByPercentage((decimal) Gereed).Name}'>({Gereed}%)</span><br>" +
                           $"Tijd Gewerkt: {TijdGewerkt} / {Math.Round(DoorloopTijd, 2)} uur <span style = 'color:{GetPositiveColorByPercentage((decimal) TijdGewerktPercentage).Name}'>({TijdGewerktPercentage}%)</span><br>" +
-                          $"Per Uur: {ActueelPerUur} i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span><br>" +
-                          $"</h3><hr />\r\n<h3><br>" +
+                          $"Per Uur: {ActueelPerUur} i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span><br><br>" +
+                          $"<span style = 'color: {Color.DarkRed.Name}'>{Opmerking}</span><br>" +
+                          $"</h2><hr />\r\n<h2><br>" +
                           $"Leverdatum: <span style = 'color: {GetValidColor(LeverDatum > DateTime.Now).Name}>{LeverDatum:f}</span>." +
-                          $"</h3>" +
+                          $"</h2>" +
         $"<hr />" + 
          "</div>" + 
          "</td>" +

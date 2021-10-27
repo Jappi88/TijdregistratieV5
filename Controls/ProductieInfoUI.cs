@@ -261,7 +261,7 @@ namespace Controls
                     Productie.GetImageFromResources(),
                     new Size(64, 64), HtmlBackColor, BackColorGradient, TextColor, true);
                 xHeaderHtmlPanel.Visible = true;
-                xHeaderHtmlPanel.Height = 275;
+                xHeaderHtmlPanel.Height = 300;
                 xProductieStatusButton.Image = Resources.Navigate_up_36744;
             }
         }

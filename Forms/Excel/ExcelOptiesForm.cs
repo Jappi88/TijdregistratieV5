@@ -57,11 +57,11 @@ namespace Forms
 
         public List<ExcelSettings> Settings { get; set; }
 
-        public void LoadSettings(List<ExcelSettings> settings, string listname, bool isExcelColumns)
+        public void LoadSettings(List<ExcelSettings> settings, string listname, bool isExcelColumns, ExcelSettings selected = null)
         {
             ListName = listname;
             IsExcelColumnSettings = isExcelColumns;
-            var selected = Settings.FirstOrDefault(x =>
+            selected ??= Settings.FirstOrDefault(x =>
                 (x.IsUsed(listname) || string.Equals(x.Name, listname, StringComparison.CurrentCultureIgnoreCase)) && x.IsExcelSettings == isExcelColumns);
             xOptiesView.SetObjects(settings);
             xOptiesView.SelectedObject = selected;
@@ -101,7 +101,7 @@ namespace Forms
                         xColumnKleurB.BackColor = colordialog.SelectedColor;
                         xTextKleurB.BackColor = colordialog.SelectedColor;
                         colentry.ColumnColorIndex = xindex;
-                        colentry.ColomnRGB = -1;
+                        colentry.ColomnRGB = 0;
                         xZichtbareColumnsView.RefreshObject(colentry);
                     }
 
@@ -141,7 +141,7 @@ namespace Forms
                         xColumnKleurB.ForeColor = colordialog.SelectedColor;
                         xTextKleurB.ForeColor = colordialog.SelectedColor;
                         colentry.ColumnTextColorIndex = xindex;
-                        colentry.ColomnTextRGB = -1;
+                        colentry.ColomnTextRGB = 0;
                         xZichtbareColumnsView.RefreshObject(colentry);
                     }
 
@@ -280,10 +280,11 @@ namespace Forms
                 }
                 else
                 {
-                    var xs = new ExcelSettings(txt,IsExcelColumnSettings);
-                    //xs.SetSelected(!Settings.Any(x => x.IsUsed(txt) && x.IsExcelSettings), txt);
+                    var xs = new ExcelSettings(txt,ListName,IsExcelColumnSettings);
+                    xs.SetSelected(!Settings.Any(x => x.IsUsed(ListName) && x.IsExcelSettings == IsExcelColumnSettings), ListName);
                     Settings.Add(xs);
-                    LoadSettings(Settings, ListName, IsExcelColumnSettings);
+                    LoadSettings(Settings, ListName, IsExcelColumnSettings,xs);
+
                 }
             }
         }
@@ -347,17 +348,13 @@ namespace Forms
                         var color = entry.ColumnColorIndex > -1
                             ?
                             ExcelColumnEntry.GetColorFromIndex(entry.ColumnColorIndex)
-                            : entry.ColomnRGB == -1
-                                ? Color.Empty
-                                : Color.FromArgb(entry.ColomnRGB);
+                            : Color.FromArgb(entry.ColomnRGB);
 
                         xColumnKleurB.BackColor = color.IsEmpty?Color.White : color;
                         xTextKleurB.BackColor = color.IsEmpty ? Color.White : color;
                         color = entry.ColumnColorIndex > -1
                             ? ExcelColumnEntry.GetColorFromIndex(entry.ColumnTextColorIndex)
-                            : entry.ColomnTextRGB == -1
-                                ? Color.Empty
-                                : Color.FromArgb(entry.ColomnTextRGB);
+                            : Color.FromArgb(entry.ColomnTextRGB);
                         xTextKleurB.ForeColor = color.IsEmpty ? Color.Black : color;
                         xColumnKleurB.ForeColor = color.IsEmpty ? Color.Black : color;
                         break;

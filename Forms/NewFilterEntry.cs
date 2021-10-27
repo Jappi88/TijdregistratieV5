@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using Forms;
 using MetroFramework.Forms;
+using Org.BouncyCastle.Asn1.X509.Qualified;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
@@ -34,7 +36,7 @@ namespace ProductieManager.Forms
             InitializeComponent();
             xoperandtype.Enabled = useoperand;
             xoperandtype.Visible = true;
-            xvaluepanel.Height = 40;
+            xvaluepanel.Height = 70;
             Size = base.MinimumSize;
             SelectedFilter = new FilterEntry
             {
@@ -52,8 +54,10 @@ namespace ProductieManager.Forms
             InitializeComponent();
             xoperandtype.Enabled = entry.OperandType != Operand.ALS;
             xoperandtype.Visible = true;
+            if (entry.CompareWithProperty)
+                xVergelijkVariableCheck.Checked = true;
             SelectedFilter = entry.CreateCopy();
-            xvaluepanel.Height = 40;
+            xvaluepanel.Height = 70;
             Size = base.MinimumSize;
             InitOperand();
             InitFields(type, entry.PropertyName);
@@ -82,12 +86,13 @@ namespace ProductieManager.Forms
             xvariablenamelabel.Text = propertyname;
             xvaluetypes.Items.Clear();
 
+            bool xflag = xVergelijkWaardeCheck.Checked;
 
-            xtextvalue.Enabled = Property.PropertyType == typeof(string);
-            xdecimalvalue.Enabled = Property.PropertyType.IsNumericType();
-            xdatepanel.Enabled = Property.PropertyType == typeof(DateTime);
-            xcombovalue.Enabled = Property.PropertyType.IsEnum;
-            xcheckvalue.Enabled = Property.PropertyType == typeof(bool);
+            xtextvalue.Enabled = Property.PropertyType == typeof(string) && xflag;
+            xdecimalvalue.Enabled = Property.PropertyType.IsNumericType() && xflag;
+            xdatepanel.Enabled = Property.PropertyType == typeof(DateTime) && xflag;
+            xcombovalue.Enabled = Property.PropertyType.IsEnum || !xflag;
+            xcheckvalue.Enabled = Property.PropertyType == typeof(bool) && xflag;
 
             xtextvalue.Visible = xtextvalue.Enabled;
             xdecimalvalue.Visible = xdecimalvalue.Enabled;
@@ -95,25 +100,38 @@ namespace ProductieManager.Forms
             xcombovalue.Visible = xcombovalue.Enabled;
             xcheckvalue.Visible = xcheckvalue.Enabled;
 
-            var xvaltypes = Enum.GetNames(typeof(FilterType));
+            var xvaltypes = Enum.GetNames(typeof(FilterType)).ToList();
+            xvaltypes.RemoveAll(x => x.ToLower() == "none");
+            if (Property.PropertyType == typeof(string))
+            {
+                xvaltypes.RemoveAll(x => x.ToLower().StartsWith("lager") || x.ToLower().StartsWith("hoger"));
+            }
+            else if (Property.PropertyType == typeof(bool))
+                xvaltypes.RemoveAll(x => x.ToLower().StartsWith("lager") || x.ToLower().StartsWith("hoger") || x.ToLower().StartsWith("bevat"));
+            else xvaltypes.RemoveAll(x => x.ToLower().StartsWith("bevat"));
+
             foreach (var xval in xvaltypes)
             {
-                if (xval.ToLower() == "none") continue;
-                if ((xdecimalvalue.Enabled || xdatepanel.Enabled) && xval.ToLower().StartsWith("bevat")) continue;
-                if (xtextvalue.Enabled &&
-                    (xval.ToLower().StartsWith("lager") || xval.ToLower().StartsWith("hoger"))) continue;
-                if ((xcheckvalue.Enabled || xcombovalue.Enabled) &&
-                    (xval.ToLower().StartsWith("lager") || xval.ToLower().StartsWith("hoger") ||
-                     xval.ToLower().StartsWith("bevat"))) continue;
                 xvaluetypes.Items.Add(xval);
             }
 
             if (xcombovalue.Enabled)
             {
                 xcombovalue.Items.Clear();
-                var xnames = Enum.GetNames(Property.PropertyType);
-                foreach (var name in xnames)
-                    xcombovalue.Items.Add(name);
+                if (xflag)
+                {
+                    var xnames = Enum.GetNames(Property.PropertyType);
+                    foreach (var name in xnames)
+                        xcombovalue.Items.Add(name);
+                }
+                else
+                {
+                    var xnames = PropertyType.GetProperties()
+                        .Where(x => x.CanRead && x.PropertyType == Property.PropertyType).Select(x => x.Name);
+                    foreach (var name in xnames)
+                        xcombovalue.Items.Add(name);
+                }
+
                 if (xcombovalue.Items.Count > 0)
                     xcombovalue.SelectedIndex = 0;
             }
@@ -209,8 +227,13 @@ namespace ProductieManager.Forms
                 if (xcombovalue.Enabled)
                     try
                     {
-                        var xenum = Enum.Parse(Property.PropertyType, xcombovalue.SelectedItem.ToString().Trim(), true);
-                        return xenum;
+                        if (xVergelijkWaardeCheck.Checked)
+                        {
+                            var xenum = Enum.Parse(Property.PropertyType, xcombovalue.SelectedItem.ToString().Trim(),
+                                true);
+                            return xenum;
+                        }
+                        return xcombovalue.SelectedItem.ToString().Trim();
                     }
                     catch (Exception e)
                     {
@@ -265,7 +288,8 @@ namespace ProductieManager.Forms
                     FilterType = xfiltertype,
                     OperandType = xoperandtype.Enabled ? operand : Operand.ALS,
                     PropertyName = Property.Name,
-                    Value = value
+                    Value = value,
+                    CompareWithProperty = xVergelijkVariableCheck.Checked
                 };
                 if (SelectedFilter != null)
                     x.ChildEntries = SelectedFilter.ChildEntries;
@@ -383,6 +407,30 @@ namespace ProductieManager.Forms
         {
             if (xdecimalvalue.Enabled)
                 SaveChanges(false);
+        }
+
+        private void xVergelijkVariableCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                InitFields(PropertyType, Property?.Name);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+        }
+
+        private void xVergelijkWaardeCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                InitFields(PropertyType, Property?.Name);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
         }
     }
 }

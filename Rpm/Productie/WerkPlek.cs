@@ -101,7 +101,7 @@ namespace Rpm.Productie
         }
 
         [ExcludeFromSerialization]
-        public int PerUurBase => Werk?.PerUur ?? 0;
+        public double PerUurBase => Werk?.PerUur ?? 0;
 
         // public double LastTijdGewerkt { get; set; }
 

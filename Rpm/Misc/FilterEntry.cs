@@ -18,6 +18,7 @@ namespace Rpm.Misc
         public int ID { get; set; }
         public string PropertyName { get; set; }
         public object Value { get; set; }
+        public bool CompareWithProperty { get; set; }
         public FilterType FilterType { get; set; }
         private Operand _fOperand;
         public Operand OldOperandType { get; set; } = Operand.None;
@@ -46,10 +47,15 @@ namespace Rpm.Misc
             try
             {
                 if (instance == null || Value == null) return false;
+                object xvalue = null;
+                if (CompareWithProperty && Value is string xpropname && !string.IsNullOrEmpty(xpropname))
+                {
+                    xvalue = instance.GetPropValue(xpropname);
+                }
                 var propertyvalue =
                     string.IsNullOrEmpty(PropertyName) ? instance : instance.GetPropValue(PropertyName);
                 if (propertyvalue == null) return false;
-                var xreturn = ContainsFilter(Value, propertyvalue, FilterType);
+                var xreturn = ContainsFilter(xvalue??Value, propertyvalue, FilterType);
                 if (ChildEntries is {Count: > 0})
                     foreach (var filter in ChildEntries)
                         switch (filter.OperandType)

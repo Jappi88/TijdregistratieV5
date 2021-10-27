@@ -39,6 +39,7 @@ namespace ProductieManager.Rpm.Settings
         {
             Created = DateTime.Now;
             Columns = new List<ExcelColumnEntry>();
+            Columns.Add(new ExcelColumnEntry("ArtikelNr") {AutoSize = IsExcelSettings});
             ListNames = new List<string>();
         }
 

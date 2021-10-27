@@ -1809,7 +1809,7 @@ namespace Rpm.Productie
             var rooster = Manager.Opties.GetWerkRooster();
             if (aantal <= 0)
                 return Werktijd.EerstVolgendeWerkdag(DateTime.Now, ref rooster,rooster,null);
-            var peruur = (int) ActueelProductenPerUur();
+            var peruur = ActueelProductenPerUur();
             if (peruur == 0)
                 peruur = PerUur;
             var tijd = peruur > 0 ? aantal / peruur : DoorloopTijd;

@@ -280,7 +280,7 @@ namespace Controls
             {
                 if (this.Disposing || IsDisposed) return;
                 var x = settings;
-                this.Invoke(new Action(() => SaveColumns(false, x)));
+                this.Invoke(new Action(() => SaveColumns(false, x, false)));
             }
             catch (Exception e)
             {
@@ -363,7 +363,7 @@ namespace Controls
             _iswaiting = false;
         }
 
-        public bool SaveColumns(bool savesettings, UserSettings opties)
+        public bool SaveColumns(bool savesettings, UserSettings opties, bool raisesettingchanged)
         {
             if (opties == null) return false;
             opties.ExcelColumns ??= new List<ExcelSettings>();
@@ -427,7 +427,7 @@ namespace Controls
             }
             xcols.ShowGroups = ProductieLijst.ShowGroups;
             xcols.Columns = xcols.Columns.OrderBy(x => x.ColumnIndex).ToList();
-            if (!savesettings)
+            if (raisesettingchanged)
                 Manager.ColumnsSettingsChanged(xcols);
             //xcols.ReIndexColumns();
             if (savesettings)
@@ -2719,18 +2719,18 @@ namespace Controls
                 case ColorRuleType.Static:
                     if (entry.ColumnColorIndex > -1)
                         backc = ExcelColumnEntry.GetColorFromIndex(entry.ColumnColorIndex);
-                    else if (entry.ColomnRGB != -1)
+                    else if (entry.ColomnRGB != 0)
                         backc = Color.FromArgb(entry.ColomnRGB);
 
                     if (entry.ColumnTextColorIndex > -1)
                         fontc = ExcelColumnEntry.GetColorFromIndex(entry.ColumnTextColorIndex);
-                    else if (entry.ColomnTextRGB != -1)
+                    else if (entry.ColomnTextRGB != 0)
                         fontc = Color.FromArgb(entry.ColomnTextRGB);
                     break;
                 case ColorRuleType.Dynamic:
                     foreach (var k in entry.KleurRegels)
                     {
-                        if (k.Filter != null && (k.ColorIndex > -1 || (k.ColorRGB != -1 && k.ColorRGB != 0)))
+                        if (k.Filter != null && (k.ColorIndex > -1 ||  k.ColorRGB != 0))
                         {
                             if (k.Filter.ContainsFilter(productie))
                             {
@@ -2740,7 +2740,7 @@ namespace Controls
                                         fontc = ExcelColumnEntry.GetColorFromIndex(k.ColorIndex);
                                     else backc = ExcelColumnEntry.GetColorFromIndex(k.ColorIndex);
                                 }
-                                else if (k.ColorRGB != -1)
+                                else if (k.ColorRGB != 0)
                                 {
                                     if (k.IsFontColor)
                                         fontc = Color.FromArgb(k.ColorRGB);

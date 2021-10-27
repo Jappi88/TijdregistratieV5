@@ -40,12 +40,8 @@ namespace ProductieManager.Rpm.ExcelHelper
         public SorteerType Sorteer { get; set; } = SorteerType.None;
         public bool AutoSize { get; set; } = false;
         public short ColumnColorIndex { get; set; } = -1;
-        [ExcludeFromSerialization]
-        public string ColomnColorName { get; set; }
         public int ColomnRGB { get; set; }
         public short ColumnTextColorIndex { get; set; } = -1;
-        [ExcludeFromSerialization]
-        public string ColumnTextColorName { get; set; }
         public int ColomnTextRGB { get; set; }
         public CalculationType Type { get; set; } = CalculationType.None;
         public List<ExcelRegelEntry> KleurRegels { get; set; } = new List<ExcelRegelEntry>();

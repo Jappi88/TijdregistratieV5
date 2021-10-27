@@ -207,7 +207,7 @@ namespace Forms
         {
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
             Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
-            productieListControl1.SaveColumns(true, Manager.Opties);
+            productieListControl1.SaveColumns(true, Manager.Opties,false);
             productieListControl1.DetachEvents();
             if (Manager.Opties != null)
                 Manager.Opties.ViewDataBewerkingenState = productieListControl1.ProductieLijst.SaveState();

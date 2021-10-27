@@ -423,7 +423,7 @@ namespace Forms
         private void RangeCalculatorForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             //Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
-            productieListControl1.SaveColumns(true, Manager.Opties);
+            productieListControl1.SaveColumns(true, Manager.Opties,false);
             productieListControl1.DetachEvents();
         }
 
