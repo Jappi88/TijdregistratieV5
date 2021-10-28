@@ -54,6 +54,7 @@ namespace ProductieManager.Forms
             InitializeComponent();
             xoperandtype.Enabled = entry.OperandType != Operand.ALS;
             xoperandtype.Visible = true;
+            numericUpDown1.Value = entry.RangeValue;
             if (entry.CompareWithProperty)
                 xVergelijkVariableCheck.Checked = true;
             SelectedFilter = entry.CreateCopy();
@@ -87,19 +88,18 @@ namespace ProductieManager.Forms
             xvaluetypes.Items.Clear();
 
             bool xflag = xVergelijkWaardeCheck.Checked;
-
+            
             xtextvalue.Enabled = Property.PropertyType == typeof(string) && xflag;
             xdecimalvalue.Enabled = Property.PropertyType.IsNumericType() && xflag;
             xdatepanel.Enabled = Property.PropertyType == typeof(DateTime) && xflag;
-            xcombovalue.Enabled = Property.PropertyType.IsEnum || !xflag;
+            xComboPanel.Enabled = Property.PropertyType.IsEnum || !xflag;
             xcheckvalue.Enabled = Property.PropertyType == typeof(bool) && xflag;
-
+            xEditValueRangePanel.Visible = !xflag && Property.PropertyType.IsNumericType();
             xtextvalue.Visible = xtextvalue.Enabled;
             xdecimalvalue.Visible = xdecimalvalue.Enabled;
             xdatepanel.Visible = xdatevalue.Enabled;
-            xcombovalue.Visible = xcombovalue.Enabled;
+            xComboPanel.Visible = xComboPanel.Enabled;
             xcheckvalue.Visible = xcheckvalue.Enabled;
-
             var xvaltypes = Enum.GetNames(typeof(FilterType)).ToList();
             xvaltypes.RemoveAll(x => x.ToLower() == "none");
             if (Property.PropertyType == typeof(string))
@@ -115,7 +115,7 @@ namespace ProductieManager.Forms
                 xvaluetypes.Items.Add(xval);
             }
 
-            if (xcombovalue.Enabled)
+            if (xComboPanel.Enabled)
             {
                 xcombovalue.Items.Clear();
                 if (xflag)
@@ -163,6 +163,7 @@ namespace ProductieManager.Forms
                 {
                     case string xvalue:
                         xtextvalue.Text = xvalue;
+                        xcombovalue.SelectedItem = xvalue;
                         break;
                     case decimal xdecimal:
                         xdecimalvalue.SetValue(xdecimal);
@@ -224,7 +225,7 @@ namespace ProductieManager.Forms
                 }
 
 
-                if (xcombovalue.Enabled)
+                if (xComboPanel.Enabled)
                     try
                     {
                         if (xVergelijkWaardeCheck.Checked)
@@ -288,6 +289,7 @@ namespace ProductieManager.Forms
                     FilterType = xfiltertype,
                     OperandType = xoperandtype.Enabled ? operand : Operand.ALS,
                     PropertyName = Property.Name,
+                    RangeValue = (int)numericUpDown1.Value,
                     Value = value,
                     CompareWithProperty = xVergelijkVariableCheck.Checked
                 };
@@ -314,7 +316,7 @@ namespace ProductieManager.Forms
 
                 if (xtextvalue.Enabled && string.IsNullOrEmpty(xtextvalue.Text.Trim()))
                     throw new Exception($"Vul in een criteria text waar '{xvariablenamelabel.Text}' aan moet voldoen");
-                if (xcombovalue.Enabled && xcombovalue.SelectedItem == null)
+                if (xComboPanel.Enabled && xcombovalue.SelectedItem == null)
                     throw new Exception($"Kies eem criteria waarde waar {xvariablenamelabel.Text} aan moet voldoen");
                 return true;
             }
@@ -386,7 +388,7 @@ namespace ProductieManager.Forms
 
         private void xcombovalue_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (xcombovalue.Enabled)
+            if (xComboPanel.Enabled)
                 SaveChanges(false);
         }
 
@@ -430,6 +432,14 @@ namespace ProductieManager.Forms
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
+            }
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            if (xEditValueRangePanel.Visible)
+            {
+                SaveChanges(false);
             }
         }
     }

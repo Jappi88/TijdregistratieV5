@@ -500,7 +500,11 @@ namespace Controls
                         column.AspectGetter = y =>
                         {
                             if (y is IProductieBase bw)
+                            {
+                                if (bw.TotaalGemaakt >= bw.Aantal)
+                                    return "Is gereed";
                                 return bw.VerwachtLeverDatum.ToString(8, "over {0} {1}", "{0} {1} geleden", false);
+                            }
                             return "N.V.T.";
                         };
                         break;
@@ -2691,6 +2695,7 @@ namespace Controls
         {
             var xf = new ExcelOptiesForm();
             xf.EnableCalculation = false;
+            SaveColumns(false, Manager.Opties, false);
             xf.LoadOpties(Manager.Opties, ListName,false);
             if (xf.ShowDialog() == DialogResult.OK)
             {
@@ -2769,12 +2774,18 @@ namespace Controls
                     var xset = Manager.Opties.ExcelColumns.FirstOrDefault(x =>
                         x.IsUsed(ListName) && !x.IsExcelSettings);
                     if (xset == null) return;
-                    var xent = xset.Columns.FirstOrDefault(x => x.ColumnIndex == e.NewDisplayIndex);
-                    if (xent != null)
-                        xent.ColumnIndex = e.OldDisplayIndex;
+                    //var xent = xset.Columns.FirstOrDefault(x => x.ColumnIndex == e.NewDisplayIndex);
+                    //if (xent != null)
+                    //{
+                    //    if(e.OldDisplayIndex > e.NewDisplayIndex)
+                    //    xent.ColumnIndex = e.OldDisplayIndex;
+                    //}
+
+                    xset.Columns.Remove(entry);
+                    xset.Columns.Insert(e.NewDisplayIndex, entry);
                     entry.ColumnIndex = e.NewDisplayIndex;
-                    xset.ReIndexColumns(true);
-                    Manager.ColumnsSettingsChanged(xset);
+                    SaveColumns(false, Manager.Opties, false);
+                    // Manager.ColumnsSettingsChanged(xset);
                 }
             }
         }
@@ -2786,10 +2797,11 @@ namespace Controls
             if (ProductieLijst.Columns[e.ColumnIndex]?.Tag is ExcelColumnEntry entry)
             {
                 if (entry.ColumnBreedte == e.NewWidth) return;
-                var xset = Manager.Opties.ExcelColumns.FirstOrDefault(x =>
-                    x.IsUsed(ListName) && !x.IsExcelSettings);
-                if (xset == null) return;
-                entry.ColumnBreedte = ProductieLijst.Columns[e.ColumnIndex].Width;
+                SaveColumns(false, Manager.Opties, false);
+                //var xset = Manager.Opties.ExcelColumns.FirstOrDefault(x =>
+                //    x.IsUsed(ListName) && !x.IsExcelSettings);
+                //if (xset == null) return;
+                //entry.ColumnBreedte = ProductieLijst.Columns[e.ColumnIndex].Width;
             }
         }
     }

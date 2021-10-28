@@ -77,6 +77,19 @@ namespace Rpm.Productie
             set => _verpakking = value;
         }
 
+        [Display(Name = "VerpakkingsType", Description = "Verpakkingtype van het geproduceerde product")]
+        public virtual string VerpakkingsType
+        {
+            get => _verpakking?.VerpakkingType ?? "n.v.t.";
+        }
+
+        [Display(Name = "PalletSoort", Description = "Palletsoort dat gebruikt dient te worden")]
+        public virtual string PalletSoort => _verpakking?.PalletSoort ?? "n.v.t.";
+        [Display(Name = "BulkLocatie", Description = "Bulk Locatie voor het geproduceerde product")]
+        public virtual string BulkLocatie => _verpakking?.BulkLocatie ?? "n.v.t";
+        [Display(Name = "StandaardLocatie", Description = "Standaard Locatie voor het geproduceerde product")]
+        public virtual string StandaardLocatie => _verpakking?.StandaardLocatie ?? "n.v.t.";
+
         [Display(Name = "WerkplekkenName", Description = "Namen van de gebruikte werkplaatsen")]
         public virtual string WerkplekkenName { get; }
 

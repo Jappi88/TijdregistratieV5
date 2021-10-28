@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Rpm.Various;
 
@@ -23,7 +24,7 @@ namespace Rpm.Misc
         private Operand _fOperand;
         public Operand OldOperandType { get; set; } = Operand.None;
         public List<FilterEntry> ChildEntries { get; set; }
-
+        public int RangeValue { get; set; }
         public Operand OperandType
         {
             get => _fOperand;
@@ -132,25 +133,25 @@ namespace Rpm.Misc
                         switch (type)
                         {
                             case FilterType.GelijkAan:
-                                xisfilter = value1 == xvalue;
+                                xisfilter = RangeValue + value1 == xvalue;
                                 break;
                             case FilterType.Bevat:
-                                xisfilter = xvalue.ToString().Contains(value1.ToString());
+                                xisfilter = xvalue.ToString().Contains((value1 + RangeValue).ToString());
                                 break;
                             case FilterType.Lager:
-                                xisfilter = xvalue < value1;
+                                xisfilter = xvalue < RangeValue + value1;
                                 break;
                             case FilterType.LagerOfGelijkAan:
-                                xisfilter = xvalue <= value1;
+                                xisfilter = xvalue <= RangeValue + value1;
                                 break;
                             case FilterType.Hoger:
-                                xisfilter = xvalue > value1;
+                                xisfilter = xvalue > RangeValue + value1;
                                 break;
                             case FilterType.HogerOfGelijkAan:
-                                xisfilter = xvalue >= value1;
+                                xisfilter = xvalue >= RangeValue + value1;
                                 break;
                             case FilterType.NietGelijkAan:
-                                xisfilter = value1 != xvalue;
+                                xisfilter = RangeValue + value1 != xvalue;
                                 break;
                             case FilterType.BevatNiet:
                                 xisfilter = !xvalue.ToString().Contains(value1.ToString());
@@ -163,28 +164,28 @@ namespace Rpm.Misc
                         switch (type)
                         {
                             case FilterType.GelijkAan:
-                                xisfilter = xdouble == xvalue;
+                                xisfilter = xdouble == RangeValue + xvalue;
                                 break;
                             case FilterType.Bevat:
-                                xisfilter = xvalue.ToString().Contains(xdouble.ToString());
+                                xisfilter = xvalue.ToString().Contains((xdouble + RangeValue).ToString());
                                 break;
                             case FilterType.Lager:
-                                xisfilter = xvalue < xdouble;
+                                xisfilter = xvalue < RangeValue + xdouble;
                                 break;
                             case FilterType.LagerOfGelijkAan:
-                                xisfilter = xvalue <= xdouble;
+                                xisfilter = xvalue <= RangeValue + xdouble;
                                 break;
                             case FilterType.Hoger:
-                                xisfilter = xvalue > xdouble;
+                                xisfilter = xvalue > RangeValue + xdouble;
                                 break;
                             case FilterType.HogerOfGelijkAan:
-                                xisfilter = xvalue >= xdouble;
+                                xisfilter = xvalue >= RangeValue + xdouble;
                                 break;
                             case FilterType.NietGelijkAan:
-                                xisfilter = xdouble != xvalue;
+                                xisfilter = RangeValue + xdouble != xvalue;
                                 break;
                             case FilterType.BevatNiet:
-                                xisfilter = !xvalue.ToString().Contains(xdouble.ToString());
+                                xisfilter = !xvalue.ToString().Contains((RangeValue + xdouble).ToString());
                                 break;
                         }
 
@@ -194,28 +195,28 @@ namespace Rpm.Misc
                         switch (type)
                         {
                             case FilterType.GelijkAan:
-                                xisfilter = xdecimal == xvalue;
+                                xisfilter = RangeValue + xdecimal == xvalue;
                                 break;
                             case FilterType.Bevat:
-                                xisfilter = xvalue.ToString().Contains(xdecimal.ToString());
+                                xisfilter = xvalue.ToString().Contains((RangeValue + xdecimal).ToString());
                                 break;
                             case FilterType.Lager:
-                                xisfilter = xvalue < xdecimal;
+                                xisfilter = xvalue < RangeValue + xdecimal;
                                 break;
                             case FilterType.LagerOfGelijkAan:
-                                xisfilter = xvalue <= xdecimal;
+                                xisfilter = xvalue <= RangeValue + xdecimal;
                                 break;
                             case FilterType.Hoger:
-                                xisfilter = xvalue > xdecimal;
+                                xisfilter = xvalue > RangeValue + xdecimal;
                                 break;
                             case FilterType.HogerOfGelijkAan:
-                                xisfilter = xvalue >= xdecimal;
+                                xisfilter = xvalue >= RangeValue + xdecimal;
                                 break;
                             case FilterType.NietGelijkAan:
-                                xisfilter = xdecimal != xvalue;
+                                xisfilter = RangeValue + xdecimal != xvalue;
                                 break;
                             case FilterType.BevatNiet:
-                                xisfilter = !xvalue.ToString().Contains(xdecimal.ToString());
+                                xisfilter = !xvalue.ToString().Contains((RangeValue + xdecimal).ToString());
                                 break;
                         }
 
@@ -306,13 +307,13 @@ namespace Rpm.Misc
                 switch (Value)
                 {
                     case string xvalue:
-                        return xvalue;
+                        return xvalue.ToString(CultureInfo.InvariantCulture);
                     case decimal xvalue:
-                        return xvalue.ToString();
+                        return xvalue.ToString(CultureInfo.InvariantCulture);
                     case double xvalue:
-                        return xvalue.ToString();
+                        return xvalue.ToString(CultureInfo.InvariantCulture);
                     case int xvalue:
-                        return xvalue.ToString();
+                        return xvalue.ToString(CultureInfo.InvariantCulture);
                     case DateTime xvalue:
                         if (xvalue.Year == 9999 && xvalue.Month == 1 && xvalue.Day == 1)
                             return "'Huidige Tijd'";
@@ -333,13 +334,18 @@ namespace Rpm.Misc
             }
         }
 
+        private string GetRangeValueString()
+        {
+            return (RangeValue != 0 ? RangeValue > 0 ? $" (+{RangeValue})" : $" ({RangeValue})" : "");
+        }
+
         public new string ToString()
         {
             try
             {
                 var value = ValueToString();
                 var xreturn =
-                    $"{Enum.GetName(typeof(Operand), OperandType)} '{PropertyName}' {Enum.GetName(typeof(FilterType), FilterType)} '{value}'";
+                    $"{Enum.GetName(typeof(Operand), OperandType)} '{PropertyName}' {Enum.GetName(typeof(FilterType), FilterType)} '{value}' {GetRangeValueString()}";
                 if (ChildEntries is {Count: > 0})
                     xreturn += $"\n({string.Join("\n", ChildEntries.Select(x => x.ToString()))})";
                 return xreturn;
@@ -357,7 +363,7 @@ namespace Rpm.Misc
             {
                 var value = ValueToString();
                 var xreturn =
-                    $"<div>(<span Color=RoyalBlue>{Enum.GetName(typeof(Operand), OperandType)}</span> <span Color=Purple>{PropertyName}</span> <span Color=RoyalBlue>{Enum.GetName(typeof(FilterType), FilterType)}</span><span Color=Purple> {value}</span>)</div>";
+                    $"<div>(<span Color=RoyalBlue>{Enum.GetName(typeof(Operand), OperandType)}</span> <span Color=Purple>{PropertyName}</span> <span Color=RoyalBlue>{Enum.GetName(typeof(FilterType), FilterType)}</span><span Color=Purple> {value}</span><span Color=Red> {GetRangeValueString()}</span>)</div>";
                 if (ChildEntries is {Count: > 0})
                     xreturn += "\n" + string.Join("\n", ChildEntries.Select(x => x.ToHtmlString()));
                 return xreturn;

@@ -62,11 +62,13 @@ namespace Forms
             ListName = listname;
             IsExcelColumnSettings = isExcelColumns;
             selected ??= Settings.FirstOrDefault(x =>
-                (x.IsUsed(listname) || string.Equals(x.Name, listname, StringComparison.CurrentCultureIgnoreCase)) && x.IsExcelSettings == isExcelColumns);
+                (x.IsUsed(listname) && x.IsExcelSettings == isExcelColumns));
+            selected ??= Settings.FirstOrDefault(x =>
+                string.Equals(x.Name, listname, StringComparison.CurrentCultureIgnoreCase));
             xOptiesView.SetObjects(settings);
             xOptiesView.SelectedObject = selected;
             xOptiesView.SelectedItem?.EnsureVisible();
-            var properties = typeof(IProductieBase).GetProperties().Where(x => x.CanRead).OrderBy(x=> x.Name).ToArray();
+            var properties = typeof(IProductieBase).GetProperties().Where(x => x.CanRead && x.PropertyType.IsSupportedType()).OrderBy(x=> x.Name).ToArray();
             xBeschikbareColumns.SetObjects(properties);
         }
 

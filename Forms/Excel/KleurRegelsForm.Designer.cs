@@ -30,8 +30,13 @@
         {
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.xTextKleur = new System.Windows.Forms.CheckBox();
+            this.xoptiespanel = new System.Windows.Forms.ToolStrip();
+            this.xAddOptieButton = new System.Windows.Forms.ToolStripButton();
+            this.xEditOpties = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.xDeleteOptieButton = new System.Windows.Forms.ToolStripButton();
             this.xWijzigKleur = new System.Windows.Forms.Button();
+            this.xTextKleur = new System.Windows.Forms.CheckBox();
             this.xcolorPanel = new System.Windows.Forms.Panel();
             this.xKiesKleur = new System.Windows.Forms.Button();
             this.xRegelTextPanel = new HtmlRenderer.HtmlPanel();
@@ -42,17 +47,12 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.xanuleren = new System.Windows.Forms.Button();
             this.xok = new System.Windows.Forms.Button();
-            this.xoptiespanel = new System.Windows.Forms.ToolStrip();
-            this.xAddOptieButton = new System.Windows.Forms.ToolStripButton();
-            this.xEditOpties = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.xDeleteOptieButton = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panel1.SuspendLayout();
+            this.xoptiespanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xRegelView)).BeginInit();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
-            this.xoptiespanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -73,17 +73,62 @@
             this.panel1.Size = new System.Drawing.Size(480, 39);
             this.panel1.TabIndex = 0;
             // 
-            // xTextKleur
+            // xoptiespanel
             // 
-            this.xTextKleur.AutoSize = true;
-            this.xTextKleur.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xTextKleur.Location = new System.Drawing.Point(136, 12);
-            this.xTextKleur.Name = "xTextKleur";
-            this.xTextKleur.Size = new System.Drawing.Size(85, 21);
-            this.xTextKleur.TabIndex = 4;
-            this.xTextKleur.Text = "TextKleur";
-            this.xTextKleur.UseVisualStyleBackColor = true;
-            this.xTextKleur.CheckedChanged += new System.EventHandler(this.xTextKleur_CheckedChanged);
+            this.xoptiespanel.AutoSize = false;
+            this.xoptiespanel.BackColor = System.Drawing.Color.White;
+            this.xoptiespanel.Dock = System.Windows.Forms.DockStyle.None;
+            this.xoptiespanel.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.xAddOptieButton,
+            this.xEditOpties,
+            this.toolStripSeparator3,
+            this.xDeleteOptieButton});
+            this.xoptiespanel.Location = new System.Drawing.Point(227, 1);
+            this.xoptiespanel.Name = "xoptiespanel";
+            this.xoptiespanel.Size = new System.Drawing.Size(142, 38);
+            this.xoptiespanel.TabIndex = 9;
+            this.xoptiespanel.Text = "toolStrip2";
+            // 
+            // xAddOptieButton
+            // 
+            this.xAddOptieButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xAddOptieButton.Image = global::ProductieManager.Properties.Resources.add_Blue_circle_32x32;
+            this.xAddOptieButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xAddOptieButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xAddOptieButton.Name = "xAddOptieButton";
+            this.xAddOptieButton.Size = new System.Drawing.Size(36, 35);
+            this.xAddOptieButton.Text = "toolStripButton1";
+            this.xAddOptieButton.ToolTipText = "Maak nieuwe instellingen";
+            this.xAddOptieButton.Click += new System.EventHandler(this.xAddOptieButton_Click);
+            // 
+            // xEditOpties
+            // 
+            this.xEditOpties.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xEditOpties.Image = global::ProductieManager.Properties.Resources.edit__52382;
+            this.xEditOpties.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xEditOpties.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xEditOpties.Name = "xEditOpties";
+            this.xEditOpties.Size = new System.Drawing.Size(36, 35);
+            this.xEditOpties.Text = "toolStripButton2";
+            this.xEditOpties.ToolTipText = "Wijzig geselecteerde optie";
+            this.xEditOpties.Click += new System.EventHandler(this.xEditOpties_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 38);
+            // 
+            // xDeleteOptieButton
+            // 
+            this.xDeleteOptieButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xDeleteOptieButton.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.xDeleteOptieButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xDeleteOptieButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xDeleteOptieButton.Name = "xDeleteOptieButton";
+            this.xDeleteOptieButton.Size = new System.Drawing.Size(36, 35);
+            this.xDeleteOptieButton.Text = "toolStripButton2";
+            this.xDeleteOptieButton.ToolTipText = "Verwijderer selectie";
+            this.xDeleteOptieButton.Click += new System.EventHandler(this.xDeleteOptieButton_Click);
             // 
             // xWijzigKleur
             // 
@@ -98,6 +143,18 @@
             this.xWijzigKleur.Text = "Wijzig Kleur";
             this.xWijzigKleur.UseVisualStyleBackColor = true;
             this.xWijzigKleur.Click += new System.EventHandler(this.EditColor_Click);
+            // 
+            // xTextKleur
+            // 
+            this.xTextKleur.AutoSize = true;
+            this.xTextKleur.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xTextKleur.Location = new System.Drawing.Point(136, 12);
+            this.xTextKleur.Name = "xTextKleur";
+            this.xTextKleur.Size = new System.Drawing.Size(85, 21);
+            this.xTextKleur.TabIndex = 4;
+            this.xTextKleur.Text = "TextKleur";
+            this.xTextKleur.UseVisualStyleBackColor = true;
+            this.xTextKleur.CheckedChanged += new System.EventHandler(this.xTextKleur_CheckedChanged);
             // 
             // xcolorPanel
             // 
@@ -162,6 +219,7 @@
             this.xRegelView.UseTranslucentSelection = true;
             this.xRegelView.View = System.Windows.Forms.View.Details;
             this.xRegelView.SelectedIndexChanged += new System.EventHandler(this.xRegelView_SelectedIndexChanged);
+            this.xRegelView.DoubleClick += new System.EventHandler(this.xRegelView_DoubleClick);
             // 
             // olvColumn1
             // 
@@ -225,63 +283,6 @@
             this.xok.UseVisualStyleBackColor = true;
             this.xok.Click += new System.EventHandler(this.xok_Click);
             // 
-            // xoptiespanel
-            // 
-            this.xoptiespanel.AutoSize = false;
-            this.xoptiespanel.BackColor = System.Drawing.Color.White;
-            this.xoptiespanel.Dock = System.Windows.Forms.DockStyle.None;
-            this.xoptiespanel.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.xAddOptieButton,
-            this.xEditOpties,
-            this.toolStripSeparator3,
-            this.xDeleteOptieButton});
-            this.xoptiespanel.Location = new System.Drawing.Point(227, 1);
-            this.xoptiespanel.Name = "xoptiespanel";
-            this.xoptiespanel.Size = new System.Drawing.Size(142, 38);
-            this.xoptiespanel.TabIndex = 9;
-            this.xoptiespanel.Text = "toolStrip2";
-            // 
-            // xAddOptieButton
-            // 
-            this.xAddOptieButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xAddOptieButton.Image = global::ProductieManager.Properties.Resources.add_Blue_circle_32x32;
-            this.xAddOptieButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xAddOptieButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xAddOptieButton.Name = "xAddOptieButton";
-            this.xAddOptieButton.Size = new System.Drawing.Size(36, 35);
-            this.xAddOptieButton.Text = "toolStripButton1";
-            this.xAddOptieButton.ToolTipText = "Maak nieuwe instellingen";
-            this.xAddOptieButton.Click += new System.EventHandler(this.xAddOptieButton_Click);
-            // 
-            // xEditOpties
-            // 
-            this.xEditOpties.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xEditOpties.Image = global::ProductieManager.Properties.Resources.edit__52382;
-            this.xEditOpties.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xEditOpties.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xEditOpties.Name = "xEditOpties";
-            this.xEditOpties.Size = new System.Drawing.Size(36, 35);
-            this.xEditOpties.Text = "toolStripButton2";
-            this.xEditOpties.ToolTipText = "Wijzig geselecteerde optie";
-            this.xEditOpties.Click += new System.EventHandler(this.xEditOpties_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 38);
-            // 
-            // xDeleteOptieButton
-            // 
-            this.xDeleteOptieButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xDeleteOptieButton.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xDeleteOptieButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xDeleteOptieButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xDeleteOptieButton.Name = "xDeleteOptieButton";
-            this.xDeleteOptieButton.Size = new System.Drawing.Size(36, 35);
-            this.xDeleteOptieButton.Text = "toolStripButton2";
-            this.xDeleteOptieButton.ToolTipText = "Verwijderer selectie";
-            this.xDeleteOptieButton.Click += new System.EventHandler(this.xDeleteOptieButton_Click);
-            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -318,11 +319,11 @@
             this.Text = "Kleur Regels";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.xoptiespanel.ResumeLayout(false);
+            this.xoptiespanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xRegelView)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
-            this.xoptiespanel.ResumeLayout(false);
-            this.xoptiespanel.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();

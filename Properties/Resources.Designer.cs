@@ -1438,6 +1438,26 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Navigate_left_36746 {
+            get {
+                object obj = ResourceManager.GetObject("Navigate-left_36746", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Navigate_right_36745 {
+            get {
+                object obj = ResourceManager.GetObject("Navigate-right_36745", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Navigate_up_36744 {
             get {
                 object obj = ResourceManager.GetObject("Navigate-up_36744", resourceCulture);

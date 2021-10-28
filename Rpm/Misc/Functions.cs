@@ -29,6 +29,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NPOI.XSSF.UserModel.Charts;
 
 namespace Rpm.Misc
 {
@@ -2281,7 +2282,15 @@ namespace Rpm.Misc
 
         public static object GetPropValue(this object src, string propName)
         {
-            return src?.GetType().GetProperty(propName)?.GetValue(src, null);
+            try
+            {
+                var xitem = src?.GetType().GetProperty(propName);
+                return xitem?.GetValue(src, null);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public static Type GetPropType(this object src, string propName)

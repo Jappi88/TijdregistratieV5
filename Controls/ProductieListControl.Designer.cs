@@ -142,9 +142,9 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xloadinglabel.BackColor = System.Drawing.Color.Transparent;
             this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xloadinglabel.Location = new System.Drawing.Point(3, 76);
+            this.xloadinglabel.Location = new System.Drawing.Point(3, 152);
             this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(1143, 558);
+            this.xloadinglabel.Size = new System.Drawing.Size(1054, 482);
             this.xloadinglabel.TabIndex = 29;
             this.xloadinglabel.Text = "Producties Laden...";
             this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -160,6 +160,7 @@ namespace Controls
             this.xProductieLijst1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xProductieLijst1.FullRowSelect = true;
             this.xProductieLijst1.GridLines = true;
+            this.xProductieLijst1.HeaderWordWrap = true;
             this.xProductieLijst1.HideSelection = false;
             this.xProductieLijst1.IsSimpleDragSource = true;
             this.xProductieLijst1.LargeImageList = this.ximagelist;
@@ -174,6 +175,8 @@ namespace Controls
             this.xProductieLijst1.MenuLabelUnsort = "DeSorteer";
             this.xProductieLijst1.Name = "xProductieLijst1";
             this.xProductieLijst1.ShowCommandMenuOnRightClick = true;
+            this.xProductieLijst1.ShowImagesOnSubItems = true;
+            this.xProductieLijst1.ShowItemCountOnGroups = true;
             this.xProductieLijst1.ShowItemToolTips = true;
             this.xProductieLijst1.Size = new System.Drawing.Size(1149, 561);
             this.xProductieLijst1.SmallImageList = this.ximagelist;

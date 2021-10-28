@@ -350,5 +350,10 @@ namespace Forms.Excel
                 xRegelView.RefreshObject(regel);
             }
         }
+
+        private void xRegelView_DoubleClick(object sender, EventArgs e)
+        {
+            WijzigSelectedCriteria();
+        }
     }
 }
