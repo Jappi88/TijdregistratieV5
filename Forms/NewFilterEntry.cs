@@ -107,8 +107,8 @@ namespace ProductieManager.Forms
                 xvaltypes.RemoveAll(x => x.ToLower().StartsWith("lager") || x.ToLower().StartsWith("hoger"));
             }
             else if (Property.PropertyType == typeof(bool))
-                xvaltypes.RemoveAll(x => x.ToLower().StartsWith("lager") || x.ToLower().StartsWith("hoger") || x.ToLower().StartsWith("bevat"));
-            else xvaltypes.RemoveAll(x => x.ToLower().StartsWith("bevat"));
+                xvaltypes.RemoveAll(x => x.ToLower().StartsWith("lager") || x.ToLower().StartsWith("hoger") || x.ToLower().StartsWith("bevat") || x.ToLower().Contains("met"));
+            else xvaltypes.RemoveAll(x => x.ToLower().StartsWith("bevat") || x.ToLower().Contains("met"));
 
             foreach (var xval in xvaltypes)
             {

@@ -99,6 +99,12 @@ namespace Rpm.Misc
                                 xisfilter = string.Equals(xvalue, value0,
                                     StringComparison.CurrentCultureIgnoreCase);
                                 break;
+                            case FilterType.BegintMet:
+                                xisfilter = xvalue.ToLower().StartsWith(value0.ToLower());
+                                break;
+                            case FilterType.EindigtMet:
+                                xisfilter = xvalue.ToLower().EndsWith(value0.ToLower());
+                                break;
                             case FilterType.Bevat:
                                 xisfilter = xvalue.ToLower().Contains(value0.ToLower());
                                 break;
@@ -138,6 +144,12 @@ namespace Rpm.Misc
                             case FilterType.Bevat:
                                 xisfilter = xvalue.ToString().Contains((value1 + RangeValue).ToString());
                                 break;
+                            case FilterType.BegintMet:
+                                xisfilter = xvalue.ToString().ToLower().StartsWith((value1 + RangeValue).ToString());
+                                break;
+                            case FilterType.EindigtMet:
+                                xisfilter = xvalue.ToString().ToLower().EndsWith((value1 + RangeValue).ToString());
+                                break;
                             case FilterType.Lager:
                                 xisfilter = xvalue < RangeValue + value1;
                                 break;
@@ -169,6 +181,12 @@ namespace Rpm.Misc
                             case FilterType.Bevat:
                                 xisfilter = xvalue.ToString().Contains((xdouble + RangeValue).ToString());
                                 break;
+                            case FilterType.BegintMet:
+                                xisfilter = xvalue.ToString().ToLower().StartsWith((xdouble + RangeValue).ToString());
+                                break;
+                            case FilterType.EindigtMet:
+                                xisfilter = xvalue.ToString().ToLower().EndsWith((xdouble + RangeValue).ToString());
+                                break;
                             case FilterType.Lager:
                                 xisfilter = xvalue < RangeValue + xdouble;
                                 break;
@@ -199,6 +217,12 @@ namespace Rpm.Misc
                                 break;
                             case FilterType.Bevat:
                                 xisfilter = xvalue.ToString().Contains((RangeValue + xdecimal).ToString());
+                                break;
+                            case FilterType.BegintMet:
+                                xisfilter = xvalue.ToString().ToLower().StartsWith((xdecimal + RangeValue).ToString());
+                                break;
+                            case FilterType.EindigtMet:
+                                xisfilter = xvalue.ToString().ToLower().EndsWith((xdecimal + RangeValue).ToString());
                                 break;
                             case FilterType.Lager:
                                 xisfilter = xvalue < RangeValue + xdecimal;
@@ -234,6 +258,12 @@ namespace Rpm.Misc
                                 break;
                             case FilterType.Bevat:
                                 xisfilter = xvalue.ToString().Contains(value2.ToString());
+                                break;
+                            case FilterType.BegintMet:
+                                xisfilter = xvalue.ToString().ToLower().StartsWith(value2.ToString());
+                                break;
+                            case FilterType.EindigtMet:
+                                xisfilter = xvalue.ToString().ToLower().EndsWith(value2.ToString());
                                 break;
                             case FilterType.Lager:
                                 xisfilter = xvalue < value2;

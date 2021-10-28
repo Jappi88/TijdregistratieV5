@@ -7,14 +7,16 @@ namespace Rpm.Various
     public enum FilterType
     {
         None,
+        BegintMet,
+        EindigtMet,
         GelijkAan,
+        NietGelijkAan,
         Bevat,
+        BevatNiet,
         Lager,
         LagerOfGelijkAan,
         Hoger,
-        HogerOfGelijkAan,
-        NietGelijkAan,
-        BevatNiet
+        HogerOfGelijkAan
     }
 
     [Serializable]
