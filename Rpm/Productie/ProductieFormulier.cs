@@ -304,7 +304,7 @@ namespace Rpm.Productie
                     }
 
                     Materialen = form.Materialen.CreateCopy();
-                    VerpakkingInstries = form.VerpakkingInstries;
+                    VerpakkingsInstructies = form.VerpakkingsInstructies;
 
                     if (form.Bewerkingen is { Length: > 0 })
                     {
@@ -796,7 +796,7 @@ namespace Rpm.Productie
                             xindex++;
                         }
 
-                        xreturn.VerpakkingInstries = xinstructie;
+                        xreturn.VerpakkingsInstructies = xinstructie;
                     return xreturn;
                 }
                 catch (Exception e)

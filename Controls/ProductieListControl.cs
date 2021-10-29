@@ -707,7 +707,7 @@ namespace Controls
         {
             if (sender is IProductieBase productie)
             {
-                return productie.VerpakkingInstries?.VerpakkingType ?? "N.V.T.";
+                return productie.VerpakkingsInstructies?.VerpakkingType ?? "n.v.t.";
             }
 
             return "N.V.T.";

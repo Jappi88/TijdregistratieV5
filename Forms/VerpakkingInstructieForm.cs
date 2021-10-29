@@ -21,7 +21,7 @@ namespace Forms
             var xmsg = $"Verpakking Instructie voor [{_productie.ArtikelNr}]{_productie.Omschrijving}";
             this.Text = xmsg;
             this.Invalidate();
-            verpakkingInstructieUI1.InitFields(_productie?.VerpakkingInstries, editmode,xmsg);
+            verpakkingInstructieUI1.InitFields(_productie?.VerpakkingsInstructies, editmode,xmsg);
             if (verpakkingInstructieUI1.IsEditmode)
             {
                 xsluiten.Text = "Annuleren";
@@ -51,7 +51,7 @@ namespace Forms
             if (_productie == null) return;
             if(verpakkingInstructieUI1.IsEditmode)
             {
-                _productie.VerpakkingInstries = verpakkingInstructieUI1.VerpakkingInstructie;
+                _productie.VerpakkingsInstructies = verpakkingInstructieUI1.VerpakkingInstructie;
                 InitUI(false);
                 await _productie.Update($"VerpakkingsInstructies aangepast voor [{_productie.ArtikelNr}]{_productie.Omschrijving}", true, true);
             }

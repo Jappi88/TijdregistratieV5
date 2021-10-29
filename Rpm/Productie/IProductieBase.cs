@@ -64,13 +64,13 @@ namespace Rpm.Productie
         public virtual double GemiddeldDoorlooptijd { get; set; }
         
         private VerpakkingInstructie _verpakking;
-        [Display(Name = "VerpakkingsInstructies", Description = "VerpakkingsInformatie over hoe de geproduceerde product verpakt moet worden")]
-        [ExcludeFromSerialization]
-        public virtual VerpakkingInstructie VerpakkingInstries
-        {
-            get => _verpakking;
-            set => _verpakking = value;
-        }
+        //[Display(Name = "VerpakkingsInstructies", Description = "VerpakkingsInformatie over hoe de geproduceerde product verpakt moet worden")]
+        //[ExcludeFromSerialization]
+        //public virtual VerpakkingInstructie VerpakkingInstries
+        //{
+        //    get => _verpakking;
+        //    set => _verpakking = value;
+        //}
 
         [Display(Name = "VerpakkingsInstructies", Description = "VerpakkingsInformatie over hoe de geproduceerde product verpakt moet worden")]
         public virtual VerpakkingInstructie VerpakkingsInstructies { get=> _verpakking;
@@ -78,10 +78,7 @@ namespace Rpm.Productie
         }
 
         [Display(Name = "VerpakkingsType", Description = "Verpakkingtype van het geproduceerde product")]
-        public virtual string VerpakkingsType
-        {
-            get => _verpakking?.VerpakkingType ?? "n.v.t.";
-        }
+        public virtual string VerpakkingsType => _verpakking?.VerpakkingType ?? "n.v.t.";
 
         [Display(Name = "PalletSoort", Description = "Palletsoort dat gebruikt dient te worden")]
         public virtual string PalletSoort => _verpakking?.PalletSoort ?? "n.v.t.";
@@ -331,7 +328,7 @@ namespace Rpm.Productie
         public string GetVerpakkingHtmlText(VerpakkingInstructie verpakking, string title, Color backcolor, Color backgroundgradient,
             Color textcolor, bool useimage)
         {
-            var x = verpakking ?? VerpakkingsInstructies??VerpakkingInstries?? new VerpakkingInstructie();
+            var x = verpakking ?? VerpakkingsInstructies?? new VerpakkingInstructie();
             return x.CreateHtmlText(title, backcolor, backgroundgradient, textcolor, useimage);
         }
 
