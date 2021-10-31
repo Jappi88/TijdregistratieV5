@@ -18,8 +18,11 @@ namespace Forms
         {
             InitializeComponent();
             UpdateEntry = updateentry;
+            UpdateMethod = UpdateForms;
             Cancelation = new CancellationTokenSource();
         }
+
+        public Func<Task> UpdateMethod { get; set; }
 
         public CancellationTokenSource Cancelation;
         public DatabaseUpdateEntry UpdateEntry { get; private set; }
@@ -37,7 +40,12 @@ namespace Forms
             Close();
         }
 
-        private async void xstartb_Click(object sender, EventArgs e)
+        private void xstartb_Click(object sender, EventArgs e)
+        {
+            Start();
+        }
+
+        private async void Start()
         {
             if (IsBussy)
             {
@@ -57,7 +65,10 @@ namespace Forms
                     //count += await Manager.Database.Count(DbType.Producties);
                     //if (count > 0)
                     //{
-                        await Task.Run(Start);
+                    IsBussy = true;
+                    OnStarted();
+                    await StartMethod(UpdateMethod);
+                    OnFinished();
                     //}
                     //else if (!CloseWhenFinished)
                     //    XMessageBox.Show("Er is zijn geen producties beschikbaar", "Productie Updates");
@@ -68,9 +79,9 @@ namespace Forms
             }
         }
 
-        public Task Start()
+        public Task StartMethod(Func<Task> Update)
         {
-            return UpdateForms();
+            return Update?.Invoke();
         }
 
         private void Stop()
@@ -87,9 +98,7 @@ namespace Forms
             {
                 try
                 {
-                    if (IsDisposed || IsBussy) return;
-                    IsBussy = true;
-                    OnStarted();
+                    if (IsDisposed) return;
                     var count = 0;
                     var oldlog = Manager.Database.LoggerEnabled;
                     var oldnot = Manager.Database.NotificationEnabled;
@@ -134,7 +143,6 @@ namespace Forms
                     Manager.Database.RaiseEventWhenDeleted = true;
                     Manager.Database.LoggerEnabled = oldlog;
                     Manager.Database.NotificationEnabled = oldnot;
-                    OnFinished();
                 }
                 catch
                 {
@@ -164,6 +172,7 @@ namespace Forms
 
         public void ProgressChanged(object sender, ProgressArg arg)
         {
+            arg.IsCanceled = !IsBussy;
             DoProgress(arg.Message, arg.Pogress);
         }
 

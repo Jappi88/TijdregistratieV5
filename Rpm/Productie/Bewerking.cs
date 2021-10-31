@@ -37,6 +37,18 @@ namespace Rpm.Productie
         public List<DeelsGereedMelding> DeelGereedMeldingen { get; set; } = new();
         public override int AanbevolenPersonen { get; set; }
 
+        private string _Eenheid;
+        public override string Eenheid
+        {
+            get => Parent?.Eenheid ?? _Eenheid;
+            set
+            {
+                if (Parent != null)
+                    Parent.Eenheid = value;
+                _Eenheid = value;
+            }
+        }
+
         [ExcludeFromSerialization]
         public Dictionary<DateTime, DateTime> GewerkteTijden { get; set; } = new();
 
@@ -451,7 +463,7 @@ namespace Rpm.Productie
                 TijdGestart = DateTime.Now;
                 foreach (var plek in WerkPlekken)
                 {
-                    plek.UpdateWerkRooster(null,true,true, false, false,false, false, true);
+                   
                     foreach (var per in plek.Personen)
                     {
                         var klus = per.Klusjes.GetKlus(plek.Path);
@@ -484,7 +496,8 @@ namespace Rpm.Productie
                     }
 
                     plek.LaatstAantalUpdate = DateTime.Now;
-                    plek.UpdateTijdGestart();
+                    plek.UpdateTijdGestart(); 
+                    plek.UpdateWerkRooster(null,true,true, false, false,false, false, true);
                 }
                 //if (newtime || Tijden.Count == 0)
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Windows.Forms;
 using Forms;
 using MetroFramework.Forms;
@@ -63,6 +64,7 @@ namespace ProductieManager.Forms
             InitOperand();
             InitFields(type, entry.PropertyName);
             SetValue(entry.Value);
+            xRangeDevider.SelectedItem = Enum.GetName(typeof(RangeDeviderType), entry.DeviderType);
         }
 
         private void InitOperand()
@@ -97,7 +99,7 @@ namespace ProductieManager.Forms
             xEditValueRangePanel.Visible = !xflag && Property.PropertyType.IsNumericType();
             xtextvalue.Visible = xtextvalue.Enabled;
             xdecimalvalue.Visible = xdecimalvalue.Enabled;
-            xdatepanel.Visible = xdatevalue.Enabled;
+            xdatepanel.Visible = xdatepanel.Enabled;
             xComboPanel.Visible = xComboPanel.Enabled;
             xcheckvalue.Visible = xcheckvalue.Enabled;
             var xvaltypes = Enum.GetNames(typeof(FilterType)).ToList();
@@ -115,6 +117,9 @@ namespace ProductieManager.Forms
                 xvaluetypes.Items.Add(xval);
             }
 
+            xRangeDevider.Items.Clear();
+            xRangeDevider.Items.AddRange(Enum.GetNames(typeof(RangeDeviderType)).Select(x => (object) x).ToArray());
+            xRangeDevider.SelectedIndex = 0;
             if (xComboPanel.Enabled)
             {
                 xcombovalue.Items.Clear();
@@ -175,17 +180,23 @@ namespace ProductieManager.Forms
                         xdecimalvalue.SetValue(xvalue);
                         break;
                     case DateTime xvalue:
+                        var xval = xvalue;
                         if (xvalue.Year == 9999 && xvalue.Month == 1 && xvalue.Day == 1)
                         {
-                            xvalue = DateTime.Now;
-                            xcurrentcheckbox.Checked = true;
+                            xval = DateTime.Now;
+                            xhuidigeDatum.Checked = true;
+                        }
+                        else xhuidigeDatum.Checked = false;
+
+                        if (xvalue.TimeOfDay == new TimeSpan())
+                        {
+                            xhuidigeTijd.Checked = true;
+                            xval = xvalue.ChangeTime(DateTime.Now.TimeOfDay);
                         }
                         else
-                        {
-                            xcurrentcheckbox.Checked = false;
-                        }
+                            xhuidigeTijd.Checked = false;
 
-                        xdatevalue.Value = xvalue;
+                        xdatevalue.Value = xval;
                         break;
                     case Enum xvalue:
                         var xvalueenum = Enum.GetName(xvalue.GetType(), xvalue);
@@ -219,8 +230,12 @@ namespace ProductieManager.Forms
                 if (xdatepanel.Enabled)
                 {
                     var dt = xdatevalue.Value;
-                    if (xcurrentcheckbox.Checked)
-                        dt = new DateTime(9999, 1, 1, 1, 1, 1, 1);
+                    if (xhuidigeDatum.Checked)
+                        dt = new DateTime(9999, 1, 1, dt.Hour, dt.Minute, dt.Second, dt.Millisecond);
+
+                    if (xhuidigeTijd.Checked)
+                        dt = dt.ChangeTime(new TimeSpan());
+
                     return dt;
                 }
 
@@ -293,6 +308,9 @@ namespace ProductieManager.Forms
                     Value = value,
                     CompareWithProperty = xVergelijkVariableCheck.Checked
                 };
+                if (Enum.TryParse<RangeDeviderType>(xRangeDevider.SelectedItem.ToString(), out var xtype))
+                    x.DeviderType = xtype;
+                else x.DeviderType = RangeDeviderType.None;
                 if (SelectedFilter != null)
                     x.ChildEntries = SelectedFilter.ChildEntries;
                 SelectedFilter = x;
@@ -438,6 +456,68 @@ namespace ProductieManager.Forms
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             if (xEditValueRangePanel.Visible)
+            {
+                SaveChanges(false);
+            }
+        }
+
+        private void xhuidigeDatum_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (xdatepanel.Enabled)
+            {
+                if (xhuidigeDatum.Checked)
+                {
+                    if (xhuidigeTijd.Checked)
+                        xdatevalue.Enabled = false;
+                    else
+                    {
+                        xdatevalue.CustomFormat = "HH:mm";
+                        xdatevalue.Enabled = true;
+                    }
+                }
+                else
+                {
+                    xdatevalue.Enabled = true;
+                    if (xhuidigeTijd.Checked)
+                        xdatevalue.CustomFormat = "dddd dd MMMM yyyy";
+                    else xdatevalue.CustomFormat = "dddd dd MMMM yyyy HH:mm";
+                }
+
+                SaveChanges(false);
+            }
+        }
+
+        private void xhuidigeTijd_CheckedChanged(object sender, EventArgs e)
+        {
+            if (xdatepanel.Enabled)
+            {
+                if (xhuidigeTijd.Checked)
+                {
+                    if (xhuidigeDatum.Checked)
+                    {
+                        xdatevalue.Enabled = false;
+                    }
+                    else
+                    {
+                        xdatevalue.Enabled = true;
+                        xdatevalue.CustomFormat = "dddd dd MMMM yyyy";
+                    }
+                }
+                else
+                {
+                    xdatevalue.Enabled = true;
+                    if (xhuidigeDatum.Checked)
+                        xdatevalue.CustomFormat = "HH:mm";
+                    else xdatevalue.CustomFormat = "dddd dd MMMM yyyy HH:mm";
+                }
+
+                SaveChanges(false);
+            }
+        }
+
+        private void xRangeDevider_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (xEditValueRangePanel.Enabled)
             {
                 SaveChanges(false);
             }

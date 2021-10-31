@@ -56,7 +56,7 @@ namespace Forms
             this.circularProgressBar1.ProgressColor = System.Drawing.SystemColors.MenuHighlight;
             this.circularProgressBar1.ProgressWidth = 35;
             this.circularProgressBar1.SecondaryFont = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.circularProgressBar1.Size = new System.Drawing.Size(355, 325);
+            this.circularProgressBar1.Size = new System.Drawing.Size(421, 383);
             this.circularProgressBar1.StartAngle = 270;
             this.circularProgressBar1.Step = 1;
             this.circularProgressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
@@ -74,7 +74,7 @@ namespace Forms
             // xstartb
             // 
             this.xstartb.Image = global::ProductieManager.Properties.Resources.play_button_icon_icons_com_60615;
-            this.xstartb.Location = new System.Drawing.Point(129, 280);
+            this.xstartb.Location = new System.Drawing.Point(161, 345);
             this.xstartb.Name = "xstartb";
             this.xstartb.Size = new System.Drawing.Size(142, 36);
             this.xstartb.TabIndex = 1;
@@ -90,7 +90,7 @@ namespace Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(395, 405);
+            this.ClientSize = new System.Drawing.Size(461, 463);
             this.Controls.Add(this.xstartb);
             this.Controls.Add(this.circularProgressBar1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

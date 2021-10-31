@@ -1,19 +1,17 @@
-﻿using System;
+﻿using LiteDB;
+using Polenter.Serialization;
+using ProductieManager.Rpm.Mailing;
+using ProductieManager.Rpm.Settings;
+using Rpm.Mailing;
+using Rpm.Misc;
+using Rpm.Productie;
+using Rpm.SqlLite;
+using Rpm.Various;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LiteDB;
-using Polenter.Serialization;
-using ProductieManager;
-using ProductieManager.Rpm.Mailing;
-using ProductieManager.Rpm.Misc;
-using ProductieManager.Rpm.Settings;
-using Rpm.SqlLite;
-using Rpm.Mailing;
-using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Various;
 
 namespace Rpm.Settings
 {

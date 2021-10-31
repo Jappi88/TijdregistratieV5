@@ -277,8 +277,8 @@ namespace Rpm.Productie
 
         #endregion "Variables"
 
-        #region "Data Management"
-        
+        #region "Data Management"}
+
         public Task<bool> UpdateFieldsFrom(ProductieFormulier form, string change = null)
         {
             return Task.Run(() =>
@@ -291,7 +291,7 @@ namespace Rpm.Productie
                 {
                     Omschrijving = form.Omschrijving;
                     ArtikelNr = form.ArtikelNr;
-
+                    Eenheid = form.Eenheid;
                     if (form.Materialen.Count > 0)
                     {
                         foreach (var mat in form.Materialen)
@@ -315,6 +315,7 @@ namespace Rpm.Productie
                             {
                                 mybew.Naam = bew.Naam;
                                 mybew.Opmerking = bew.Opmerking;
+                                mybew.Eenheid = bew.Eenheid;
                             }
                             else
                             {
@@ -582,6 +583,12 @@ namespace Rpm.Productie
                     //omschrijving
                     //startindex = 18;
                     var endindex = sections.FindIndex(startindex, x => x.Text.ToLower().StartsWith("geproduceerd:"));
+                    if (endindex > -1)
+                    {
+                        var xs = sections[endindex].Text.TrimEnd().Split(' ');
+                        if (xs.Length > 0)
+                            xreturn.Eenheid = xs[xs.Length - 1];
+                    }
                     if(endindex == startindex)
                     {
                         startindex++;

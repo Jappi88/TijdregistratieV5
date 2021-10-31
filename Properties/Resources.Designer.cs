@@ -1698,6 +1698,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Open_folder_accept_36743 {
+            get {
+                object obj = ResourceManager.GetObject("Open-folder-accept_36743", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap operation {
             get {
                 object obj = ResourceManager.GetObject("operation", resourceCulture);

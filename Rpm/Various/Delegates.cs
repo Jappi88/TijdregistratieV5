@@ -60,5 +60,6 @@ namespace Rpm.Various
         public int Pogress;
         public ProgressType Type;
         public object Value;
+        public bool IsCanceled;
     }
 }

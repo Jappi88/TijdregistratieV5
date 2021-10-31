@@ -46,15 +46,19 @@ namespace Forms
             DialogResult = DialogResult.Cancel;
         }
 
-        private void xdatum_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char) Keys.Enter) DialogResult = DialogResult.OK;
-        }
-
         private void DatumChanger_Shown(object sender, EventArgs e)
         {
             dateTimePicker1.Select();
             dateTimePicker1.Focus();
+        }
+
+        private void dateTimePicker1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = e.SuppressKeyPress = true;
+                DialogResult = DialogResult.OK;
+            }
         }
     }
 }

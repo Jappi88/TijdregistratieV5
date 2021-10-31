@@ -56,6 +56,7 @@ namespace Forms
         }
 
         public List<ExcelSettings> Settings { get; set; }
+        public UserSettings Opties { get; private set; }
 
         public void LoadSettings(List<ExcelSettings> settings, string listname, bool isExcelColumns, ExcelSettings selected = null)
         {
@@ -76,6 +77,7 @@ namespace Forms
         {
             try
             {
+                Opties = opties;
                 Settings = opties.ExcelColumns.CreateCopy()?.Where(x=> x.IsExcelSettings == isExcelColumns).ToList();
                 LoadSettings(Settings, listname, isExcelColumns);
             }
@@ -286,7 +288,6 @@ namespace Forms
                     xs.SetSelected(!Settings.Any(x => x.IsUsed(ListName) && x.IsExcelSettings == IsExcelColumnSettings), ListName);
                     Settings.Add(xs);
                     LoadSettings(Settings, ListName, IsExcelColumnSettings,xs);
-
                 }
             }
         }
@@ -368,8 +369,8 @@ namespace Forms
                         break;
                 }
 
-                xItemUp.Enabled = settings.Columns.IndexOf(entry) > 0;
-                xItemDown.Enabled = settings.Columns.IndexOf(entry) < settings.Columns.Count -1;
+                xItemUp.Enabled = (entry.Naam.ToLower() == "artikelnr" && settings.Columns.IndexOf(entry) > 0) || settings.Columns.IndexOf(entry) > 1;
+                xItemDown.Enabled = entry.Naam.ToLower() != "artikelnr" && settings.Columns.IndexOf(entry) < settings.Columns.Count -1;
             }
             else
             {
@@ -668,6 +669,13 @@ namespace Forms
                 e.Title = entry.Name;
                 e.Text = desc;
             }
+        }
+
+        private void xtoepassen_Click(object sender, EventArgs e)
+        {
+            if (Opties == null) return;
+            Manager.UpdateExcelColumns(Opties, Settings, IsExcelColumnSettings);
+            Opties.Save("Columns instellingen opgeslagen!");
         }
     }
 }

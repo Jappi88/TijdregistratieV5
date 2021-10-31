@@ -773,6 +773,26 @@ namespace Controls
             }
         }
 
+        private void DoUpdateFormsFromDirectory()
+        {
+            if (Manager.LogedInGebruiker == null ||
+                Manager.LogedInGebruiker.AccesLevel <= AccesType.ProductieBasis) return;
+            var ofd = new FolderBrowserDialog()
+            {
+                Description = "Kies een folder met productieFormulieren pdf's"
+
+            };
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                var xupdater = new UpdateProducties();
+                xupdater.CloseWhenFinished = false;
+                xupdater.ShowStop = true;
+                xupdater.StartWhenShown = true;
+                xupdater.UpdateMethod = ()=> Manager.UpdateFormulierenFromDirectory(ofd.SelectedPath, false,xupdater.ProgressChanged);
+                xupdater.ShowDialog();
+            }
+        }
+
         private static async void DoLoadDbInstance()
         {
             try
@@ -832,7 +852,7 @@ namespace Controls
                     //    if (opties != null)
                     //        Manager.Opties = opties;
                     //}
-                    await _manager.Load(path, false, false, true);
+                    await _manager.Load(path, true, true, true);
                 }
             }
             catch (Exception e)
@@ -887,6 +907,9 @@ namespace Controls
                             break;
                         case "xlaaddb":
                             DoLoadDbInstance();
+                            break;
+                        case "xupdateforms":
+                            DoUpdateFormsFromDirectory();
                             break;
                         case "xstats":
                             var chartform = new ViewChartForm();

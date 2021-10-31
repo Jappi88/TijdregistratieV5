@@ -502,7 +502,7 @@ namespace Controls
                             if (y is IProductieBase bw)
                             {
                                 if (bw.TotaalGemaakt >= bw.Aantal)
-                                    return "Is gereed";
+                                    return "Aantal Behaald!";
                                 return bw.VerwachtLeverDatum.ToString(8, "over {0} {1}", "{0} {1} geleden", false);
                             }
                             return "N.V.T.";
@@ -883,6 +883,7 @@ namespace Controls
                     try
                     {
                         _loadingproductielist = true;
+                        var xscroloffset = ProductieLijst.LowLevelScrollPosition;
                         InitFilterStrips();
                         var selected1 = ProductieLijst.SelectedObject;
                         var groups1 = ProductieLijst.Groups.Cast<ListViewGroup>().Select(t => (OLVGroup) t.Tag)
@@ -937,9 +938,9 @@ namespace Controls
                                 if (groups1.Any(t => !@group.Collapsed && t.Header == @group.Header))
                                     @group.Collapsed = true;
                             }
-
+                        ProductieLijst.LowLevelScroll(xscroloffset.X, xscroloffset.Y);
                         ProductieLijst.SelectedObject = selected1;
-                        ProductieLijst.SelectedItem?.EnsureVisible();
+                        //ProductieLijst.SelectedItem?.EnsureVisible();
                         ProductieLijst.EndUpdate();
                         SetButtonEnable();
                         if (xlistcount != ProductieLijst.Items.Count)

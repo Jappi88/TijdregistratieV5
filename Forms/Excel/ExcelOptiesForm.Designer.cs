@@ -32,6 +32,7 @@ namespace Forms
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExcelOptiesForm));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.xtoepassen = new System.Windows.Forms.Button();
             this.xsluiten = new System.Windows.Forms.Button();
             this.xOpslaan = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -108,6 +109,7 @@ namespace Forms
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.xtoepassen);
             this.panel1.Controls.Add(this.xsluiten);
             this.panel1.Controls.Add(this.xOpslaan);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -115,6 +117,23 @@ namespace Forms
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(892, 45);
             this.panel1.TabIndex = 2;
+            // 
+            // xtoepassen
+            // 
+            this.xtoepassen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xtoepassen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xtoepassen.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xtoepassen.ForeColor = System.Drawing.Color.Black;
+            this.xtoepassen.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
+            this.xtoepassen.Location = new System.Drawing.Point(494, 3);
+            this.xtoepassen.Name = "xtoepassen";
+            this.xtoepassen.Size = new System.Drawing.Size(145, 38);
+            this.xtoepassen.TabIndex = 8;
+            this.xtoepassen.Text = "Toepassen";
+            this.xtoepassen.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xtoepassen, "Pas wijzigingen toe");
+            this.xtoepassen.UseVisualStyleBackColor = true;
+            this.xtoepassen.Click += new System.EventHandler(this.xtoepassen_Click);
             // 
             // xsluiten
             // 
@@ -894,5 +913,6 @@ namespace Forms
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button xWijzigColumnBreedte;
         private System.Windows.Forms.NumericUpDown xColumnBreedte;
+        private System.Windows.Forms.Button xtoepassen;
     }
 }

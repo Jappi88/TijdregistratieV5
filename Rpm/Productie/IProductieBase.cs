@@ -30,6 +30,8 @@ namespace Rpm.Productie
 
         [Display(Name = "Aantal", Description = "Totaal aantal dat geproduceerd moet worden")]
         public virtual int Aantal { get; set; }
+        [Display(Name = "Eenheid", Description = "Productie eenheid")]
+        public virtual string Eenheid { get; set; }
         [Display(Name = "GemiddeldAantalGemaakt", Description = "Gemiddelde Aantal gemaakt van alle bewerkingen van dit ArtikelNr")]
         public virtual int GemiddeldAantalGemaakt { get; set; }
 
@@ -73,19 +75,20 @@ namespace Rpm.Productie
         //}
 
         [Display(Name = "VerpakkingsInstructies", Description = "VerpakkingsInformatie over hoe de geproduceerde product verpakt moet worden")]
-        public virtual VerpakkingInstructie VerpakkingsInstructies { get=> _verpakking;
+        public virtual VerpakkingInstructie VerpakkingsInstructies { 
+            get=> _verpakking;
             set => _verpakking = value;
         }
 
         [Display(Name = "VerpakkingsType", Description = "Verpakkingtype van het geproduceerde product")]
-        public virtual string VerpakkingsType => _verpakking?.VerpakkingType ?? "n.v.t.";
+        public virtual string VerpakkingsType => VerpakkingsInstructies?.VerpakkingType ?? "n.v.t.";
 
         [Display(Name = "PalletSoort", Description = "Palletsoort dat gebruikt dient te worden")]
-        public virtual string PalletSoort => _verpakking?.PalletSoort ?? "n.v.t.";
+        public virtual string PalletSoort => VerpakkingsInstructies?.PalletSoort ?? "n.v.t.";
         [Display(Name = "BulkLocatie", Description = "Bulk Locatie voor het geproduceerde product")]
-        public virtual string BulkLocatie => _verpakking?.BulkLocatie ?? "n.v.t";
+        public virtual string BulkLocatie => VerpakkingsInstructies?.BulkLocatie ?? "n.v.t";
         [Display(Name = "StandaardLocatie", Description = "Standaard Locatie voor het geproduceerde product")]
-        public virtual string StandaardLocatie => _verpakking?.StandaardLocatie ?? "n.v.t.";
+        public virtual string StandaardLocatie => VerpakkingsInstructies?.StandaardLocatie ?? "n.v.t.";
 
         [Display(Name = "WerkplekkenName", Description = "Namen van de gebruikte werkplaatsen")]
         public virtual string WerkplekkenName { get; }

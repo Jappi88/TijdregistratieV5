@@ -82,32 +82,32 @@ namespace Rpm.Productie
                         for (int i = 0; i < Uren.Count; i++)
                         {
                             var xent = Uren[i];
-                            if (xent.ExtraTijd != null) continue;
+                            if (xent.ExtraTijd != null || !xent.InUse) continue;
                             var xspc = Manager.Opties?.SpecialeRoosters
                                 ?.Where(x => (x.Vanaf.Date >= xent.Start.Date && x.Vanaf.Date <= xent.Stop.Date) && (
-                                             xent.Stop.TimeOfDay >= x.StartWerkdag && xent.Start.TimeOfDay <= x.EindWerkdag)).ToList();
+                                             xent.Stop.TimeOfDay >= x.StartWerkdag && ((x.Vanaf.Date != xent.Start.Date || (xent.Start.TimeOfDay <= x.EindWerkdag))))).ToList();
                             xspc = xspc?.Where(x => SpecialeRoosters.All(s => s.Vanaf.Date != x.Vanaf.Date)).ToList();
 
                             if (xspc != null)
                                 SpecialeRoosters.AddRange(xspc);
                         }
                     }
-                    if(xflag && Uren.Any(x=> x.InUse))
-                    {
-                        SetStop();
-                        SetStart();
-                    }
+                    //if(xflag && Uren.Any(x=> x.InUse))
+                    //{
+                    //    SetStop();
+                    //    SetStart();
+                    //}
                     for (int i = 0; i < Uren.Count; i++)
                     {
                         var xent = Uren[i];
                         if (xent.ExtraTijd != null) continue;
                         var xr = xent.WerkRooster;
-                        if (xr == null) continue;
-                        if (xent.Start.TimeOfDay < xr.StartWerkdag || xent.Start.TimeOfDay > xr.EindWerkdag)
-                            xent.Start = Werktijd.EerstVolgendeWerkdag(xent.Start, ref xr, xr, SpecialeRoosters);
-                        if (xent.Stop.TimeOfDay > xr.EindWerkdag)
-                            xent.Stop = xent.Stop.ChangeTime(xr.EindWerkdag);
-                        //gaan we even kijken of er een tijdlijn is die vandaag
+                        if (xr == null && xent.InUse)
+                        {
+                            xent.WerkRooster = currooster;
+                            break;
+                        }
+                        
                     }
                 }
             }

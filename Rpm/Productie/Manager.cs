@@ -16,6 +16,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Polenter.Serialization.Advanced;
 using ProductieManager.Rpm.ExcelHelper;
 using ProductieManager.Rpm.Settings;
 using Rpm.Opmerking;
@@ -608,14 +609,79 @@ namespace Rpm.Productie
             //InitPersoneel();
         }
 
+        public static Task<int> UpdateFormulierenFromDirectory(string directory, bool addifnotexists, ProgressChangedHandler changedhandler = null)
+        {
+            return Task.Run(() =>
+            {
+                int xreturn = 0;
+                try
+                {
+                    var xprog = new ProgressArg();
+                    xprog.Type = ProgressType.WriteBussy;
+                    
+                    if (string.IsNullOrEmpty(directory) || !Directory.Exists(directory)) return 0;
+                    xprog.Message = $"Bestanden verzamelen...";
+                    changedhandler?.Invoke(null,xprog);
+                    var files = Directory.GetFiles(directory);
+                    int count = 0;
+                    foreach (var file in files)
+                    {
+                        xprog.Pogress = (int)(((double)count / files.Length) * 100);
+                        xprog.Message = $"{Path.GetFileNameWithoutExtension(file)} Updaten ({count}/{files.Length})...";
+                        changedhandler?.Invoke(null, xprog);
+                        if (xprog.IsCanceled) break;
+                        var prods = ProductieFormulier.FromPdf(File.ReadAllBytes(file)).Result;
+                        if (prods == null || prods.Count == 0) continue;
+                       
+                        foreach (var prod in prods)
+                        {
+                           
+                            changedhandler?.Invoke(null, xprog);
+                            if (xprog.IsCanceled) break;
+                            var xold = Manager.Database.GetProductie(prod.ProductieNr).Result;
+                            if (xold == null)
+                            {
+                                if (addifnotexists)
+                                {
+                                    if (Manager.Database.UpSert(prod).Result)
+                                        xreturn++;
+                                }
+
+                                continue;
+                            }
+
+                            if (xold.UpdateFieldsFrom(prod).Result && Manager.Database.UpSert(xold,false).Result)
+                            {
+                                xreturn++;
+                            }
+                        }
+
+                        count++;
+                    }
+
+                    var x1 = xreturn == 1 ? "bestand" : "bestanden";
+                    xprog.Type = ProgressType.WriteCompleet;
+                    xprog.Message = $"{xreturn} {x1} geüpdatet";
+                    xprog.Pogress = 100;
+                    changedhandler?.Invoke(null, xprog);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+
+                return xreturn;
+            });
+        }
+
         /// <summary>
-        /// Verkrijg alle producties
-        /// </summary>
-        /// <param name="states">Verkrijg producties op basis van de gekozen status lijst</param>
-        /// <param name="filter">true als je wilt dat de producties worden gefiltered volgens een geldige bewerking</param>
-        /// <param name="incform">true als de productie ook die aangegeven status moet zijn, false je alleen wilt verkrijgen op basis van een geldige bewerking</param>
-        /// <returns>Lijst van productieformulieren</returns>
-        public static Task<List<ProductieFormulier>> GetProducties(ViewState[] states, bool filter, bool incform)
+            /// Verkrijg alle producties
+            /// </summary>
+            /// <param name="states">Verkrijg producties op basis van de gekozen status lijst</param>
+            /// <param name="filter">true als je wilt dat de producties worden gefiltered volgens een geldige bewerking</param>
+            /// <param name="incform">true als de productie ook die aangegeven status moet zijn, false je alleen wilt verkrijgen op basis van een geldige bewerking</param>
+            /// <returns>Lijst van productieformulieren</returns>
+            public static Task<List<ProductieFormulier>> GetProducties(ViewState[] states, bool filter, bool incform)
         {
             return Task.Run(async () =>
             {
