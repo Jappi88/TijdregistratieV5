@@ -221,9 +221,12 @@ namespace Forms
             var werkplek = GetCurrentWerkPlek();
             if (werkplek != null)
             {
-                var selected = xwerkplekken.SelectedObject;
+                var selected = xshiftlist.SelectedObject;
                 xshiftlist.SetObjects(werkplek.Personen);
-                xshiftlist.SelectedObject = selected;
+                if (selected == null && werkplek.Personen.Count > 0)
+                    xshiftlist.SelectedObject = werkplek.Personen[0];
+                else
+                    xshiftlist.SelectedObject = selected;
                 xshiftlist.SelectedItem?.EnsureVisible();
                 string x1 = werkplek.Personen.Count == 1 ? "persoon" : "personen";
                 xpersoneelgroep.Text = $@"{werkplek.Naam} Geselecteerd met {werkplek.Personen.Count} {x1}";
@@ -557,6 +560,7 @@ namespace Forms
                         ? xshiftlist.Objects.Cast<Personeel>().FirstOrDefault()?.PersoneelNaam
                         : $"{xshiftlist.Items.Count} Medewerkers";
                     xwerktijdnaarwerkplek.Text = $"{x1} Tijden Naar {wp.Naam}";
+                    ClearFields();
                 }
                 else
                 {
@@ -566,6 +570,7 @@ namespace Forms
                     xwerktijdnaarwerkplek.Text = $"{x1} Tijden Naar {wp.Naam}";
                 }
             }
+            else ClearFields();
         }
 
         private Personeel[] KiesPersoneel()

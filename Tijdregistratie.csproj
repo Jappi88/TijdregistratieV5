@@ -1438,6 +1438,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\ic_format_clear_128_28359.png" />
     <None Include="Resources\Open-folder-accept_36743.png" />
     <None Include="Resources\Navigate-right_36745.png" />
     <None Include="Resources\Navigate-left_36746.png" />

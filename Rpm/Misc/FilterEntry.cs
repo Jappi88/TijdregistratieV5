@@ -95,6 +95,31 @@ namespace Rpm.Misc
             }
         }
 
+        public static List<string> GetFilterTypesByType(Type type)
+        {
+            var xvaltypes = Enum.GetNames(typeof(FilterType)).ToList();
+            xvaltypes.RemoveAll(x => x.ToLower() == "none");
+            if (type == typeof(string))
+            {
+                xvaltypes.RemoveAll(x => x.ToLower().StartsWith("lager") || x.ToLower().StartsWith("hoger"));
+            }
+            else if (type == typeof(bool))
+                xvaltypes.RemoveAll(x => x.ToLower().StartsWith("lager") || x.ToLower().StartsWith("hoger") || x.ToLower().StartsWith("bevat") || x.ToLower().Contains("met"));
+            else xvaltypes.RemoveAll(x => x.ToLower().StartsWith("bevat") || x.ToLower().Contains("met"));
+
+            return xvaltypes;
+        }
+
+        public static FilterEntry CreateNewFromValue(string propertyname, object value, FilterType filtertype)
+        {
+            var fe = new FilterEntry();
+            fe.PropertyName = propertyname;
+            fe.FilterType = filtertype;
+            fe.OperandType = Operand.ALS;
+            fe.Value = value;
+            return fe;
+        }
+
         public double GetRangeValue(double value)
         {
             switch (DeviderType)
@@ -331,29 +356,24 @@ namespace Rpm.Misc
 
                         break;
                     case DateTime xvalue:
-                        if (valueA is not DateTime value2) return false;
+                        if (valueA is not DateTime value2)
+                        {
+                            if (!DateTime.TryParse(valueA.ToString(), out value2))
+                                return false;
+                        }
+
                         if (xvalue.Year == 9999 && xvalue.Month == 1 && xvalue.Day == 1)
-                        {
-                            if (xvalue.TimeOfDay > new TimeSpan())
-                                xvalue = DateTime.Now.ChangeTime(xvalue.TimeOfDay);
-                            else xvalue = DateTime.Now;
-                        }
-                        else
-                        {
-                            if (xvalue.TimeOfDay == new TimeSpan())
-                                xvalue = xvalue.ChangeTime(DateTime.Now.TimeOfDay);
-                        }
+                            xvalue = DateTime.Now.ChangeTime(xvalue.TimeOfDay);
+
+                        if (xvalue.TimeOfDay == new TimeSpan())
+                            xvalue = xvalue.ChangeTime(DateTime.Now.TimeOfDay);
+
                         if (value2.Year == 9999 && value2.Month == 1 && value2.Day == 1)
-                        {
-                            if (value2.TimeOfDay > new TimeSpan())
-                                value2 = DateTime.Now.ChangeTime(value2.TimeOfDay);
-                            else value2 = DateTime.Now;
-                        }
-                        else
-                        {
-                            if (value2.TimeOfDay == new TimeSpan())
-                                value2 = value2.ChangeTime(DateTime.Now.TimeOfDay);
-                        }
+                            value2 = DateTime.Now.ChangeTime(value2.TimeOfDay);
+
+                        if (value2.TimeOfDay == new TimeSpan())
+                            value2 = value2.ChangeTime(DateTime.Now.TimeOfDay);
+
                         switch (type)
                         {
                             case FilterType.GelijkAan:
@@ -520,12 +540,13 @@ namespace Rpm.Misc
 
         public override bool Equals(object obj)
         {
-            return obj is FilterEntry entry && entry.ID == ID;
+            return obj is FilterEntry entry &&
+                   string.Equals(entry.ToString(), ToString(), StringComparison.CurrentCultureIgnoreCase);
         }
 
         protected bool Equals(FilterEntry other)
         {
-            return ID == other.ID;
+            return Equals(other);
         }
 
         public override int GetHashCode()

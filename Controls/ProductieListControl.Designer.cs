@@ -68,6 +68,9 @@ namespace Controls
             this.exportExcelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xshowproductieinfo = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.xfiltertoolstripitem = new System.Windows.Forms.ToolStripMenuItem();
+            this.verwijderFiltersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.vouwAllGroepenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ontvouwAlleGroepenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ximagelist = new System.Windows.Forms.ImageList(this.components);
@@ -192,6 +195,8 @@ namespace Controls
             this.xProductieLijst1.UseTranslucentHotItem = true;
             this.xProductieLijst1.UseTranslucentSelection = true;
             this.xProductieLijst1.View = System.Windows.Forms.View.Details;
+            this.xProductieLijst1.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.xProductieLijst1_CellClick);
+            this.xProductieLijst1.CellRightClick += new System.EventHandler<BrightIdeasSoftware.CellRightClickEventArgs>(this.xProductieLijst1_CellRightClick);
             this.xProductieLijst1.CellToolTipShowing += new System.EventHandler<BrightIdeasSoftware.ToolTipShowingEventArgs>(this.xproductieLijst_CellToolTipShowing);
             this.xProductieLijst1.FormatCell += new System.EventHandler<BrightIdeasSoftware.FormatCellEventArgs>(this.xProductieLijst_FormatCell);
             this.xProductieLijst1.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.xProductieLijst_ColumnReordered);
@@ -231,10 +236,13 @@ namespace Controls
             this.exportExcelToolStripMenuItem,
             this.xshowproductieinfo,
             this.toolStripSeparator2,
+            this.xfiltertoolstripitem,
+            this.verwijderFiltersToolStripMenuItem,
+            this.toolStripSeparator3,
             this.vouwAllGroepenToolStripMenuItem,
             this.ontvouwAlleGroepenToolStripMenuItem});
             this.xproductieLijstcontext.Name = "contextMenuStrip1";
-            this.xproductieLijstcontext.Size = new System.Drawing.Size(269, 514);
+            this.xproductieLijstcontext.Size = new System.Drawing.Size(269, 564);
             // 
             // xopenProductieToolStripMenuItem
             // 
@@ -521,6 +529,29 @@ namespace Controls
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(265, 6);
+            // 
+            // xfiltertoolstripitem
+            // 
+            this.xfiltertoolstripitem.Image = global::ProductieManager.Properties.Resources.filter_list_21446;
+            this.xfiltertoolstripitem.Name = "xfiltertoolstripitem";
+            this.xfiltertoolstripitem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
+            this.xfiltertoolstripitem.Size = new System.Drawing.Size(268, 22);
+            this.xfiltertoolstripitem.Text = "Filter Op";
+            this.xfiltertoolstripitem.Click += new System.EventHandler(this.filterOpToolStripMenuItem_Click);
+            // 
+            // verwijderFiltersToolStripMenuItem
+            // 
+            this.verwijderFiltersToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.ic_format_clear_128_28359;
+            this.verwijderFiltersToolStripMenuItem.Name = "verwijderFiltersToolStripMenuItem";
+            this.verwijderFiltersToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.R)));
+            this.verwijderFiltersToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.verwijderFiltersToolStripMenuItem.Text = "Verwijder Filters";
+            this.verwijderFiltersToolStripMenuItem.Click += new System.EventHandler(this.verwijderFiltersToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(265, 6);
             // 
             // vouwAllGroepenToolStripMenuItem
             // 
@@ -1146,5 +1177,8 @@ namespace Controls
         private System.Windows.Forms.Button xListColumnsButton;
         private BrightIdeasSoftware.ObjectListView xProductieLijst1;
         private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.ToolStripMenuItem xfiltertoolstripitem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem verwijderFiltersToolStripMenuItem;
     }
 }

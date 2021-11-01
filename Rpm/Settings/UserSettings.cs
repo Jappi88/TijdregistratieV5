@@ -278,8 +278,11 @@ namespace Rpm.Settings
 
         //weergave
         public string PersoneelAfdelingFilter { get; set; }
+        [ExcludeFromSerialization]
         public byte[] _viewproddata { get; set; }
+        [ExcludeFromSerialization]
         public byte[] _viewrecentproddata { get; set; }
+        [ExcludeFromSerialization]
         public byte[] _viewbewdata { get; set; }
         public byte[] _viewwerkplekdata { get; set; }
         public byte[] _viewvaarddata { get; set; }
@@ -290,7 +293,6 @@ namespace Rpm.Settings
         public  DateTime LastGereedStart { get; set; }
         public bool UseLastGereedStop { get; set; }
         public DateTime LastGereedStop { get; set; }
-
         public Dictionary<string,LastFormScreenInfo> LastFormInfo { get; set; }
 
         [BsonIgnore]

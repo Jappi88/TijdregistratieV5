@@ -45,7 +45,7 @@ namespace Controls
                     //objects.Sort(new Comparer(order, column));
                 }
             };
-           // ProductieLijst.BeforeSearching += ProductieLijst_BeforeSearching;
+            // ProductieLijst.BeforeSearching += ProductieLijst_BeforeSearching;
             xsearch.ShowClearButton = true;
             EnableEntryFiltering = false;
             EnableFiltering = true;
@@ -169,7 +169,7 @@ namespace Controls
                 }
 
             if (loadproducties)
-                UpdateProductieList(reload);
+                UpdateProductieList(reload,true);
         }
 
         private void SetButtonEnable()
@@ -250,6 +250,10 @@ namespace Controls
                 exportExcelToolStripMenuItem.Enabled = enable3;
                 xtoolstripaanbevolenpersonen.Enabled = enable1;
                 zoekToolStripMenuItem.Enabled = enable3;
+                verpakkingsInstructieToolStripMenuItem.Enabled = enable1;
+                verwijderFiltersToolStripMenuItem.Visible = Manager.Opties?.Filters?.Any(x =>
+                    x.IsTempFilter && x.ListNames.Any(s =>
+                        string.Equals(s, ListName, StringComparison.CurrentCultureIgnoreCase))) ?? false;
             }
             catch (Exception e)
             {
@@ -501,6 +505,8 @@ namespace Controls
                         {
                             if (y is IProductieBase bw)
                             {
+                                if (bw.State == ProductieState.Gereed)
+                                    return "Is gereed!";
                                 if (bw.TotaalGemaakt >= bw.Aantal)
                                     return "Aantal Behaald!";
                                 return bw.VerwachtLeverDatum.ToString(8, "over {0} {1}", "{0} {1} geleden", false);
@@ -871,7 +877,7 @@ namespace Controls
             return true;
         }
 
-        public void UpdateProductieList(bool reload, bool showwaitui = true)
+        public void UpdateProductieList(bool reload, bool showwaitui)
         {
             if (_loadingproductielist || Manager.Opties == null || !CanLoad) return;
             try
@@ -938,10 +944,20 @@ namespace Controls
                                 if (groups1.Any(t => !@group.Collapsed && t.Header == @group.Header))
                                     @group.Collapsed = true;
                             }
-                        ProductieLijst.LowLevelScroll(xscroloffset.X, xscroloffset.Y);
+
+                        for (int i = 0; i < 3; i++)
+                        {
+                            if (ProductieLijst.LowLevelScrollPosition.X != xscroloffset.X ||
+                                ProductieLijst.LowLevelScrollPosition.Y != xscroloffset.Y)
+                            {
+                                ProductieLijst.LowLevelScroll(xscroloffset.X - ProductieLijst.LowLevelScrollPosition.X, xscroloffset.Y - ProductieLijst.LowLevelScrollPosition.Y);
+                                Application.DoEvents();
+                            }
+                            else break;
+                        }
+
                         ProductieLijst.SelectedObject = selected1;
                         //ProductieLijst.SelectedItem?.EnsureVisible();
-                        ProductieLijst.EndUpdate();
                         SetButtonEnable();
                         if (xlistcount != ProductieLijst.Items.Count)
                             OnItemCountChanged();
@@ -1283,7 +1299,7 @@ namespace Controls
             {
                 if (!_enableEntryFilter) return;
                 if (sender is ProductieListControl xc && string.Equals(xc.ListName, ListName))
-                    BeginInvoke(new MethodInvoker(() => { UpdateProductieList(true); }));
+                    BeginInvoke(new MethodInvoker(() => { UpdateProductieList(true,false); }));
             }
             catch (Exception exception)
             {
@@ -1301,7 +1317,7 @@ namespace Controls
                     if (IsDisposed) return;
                     InitColumns();
                     if (CanLoad)
-                        UpdateProductieList(true);
+                        UpdateProductieList(true,false);
                 }));
             }
             catch (Exception e)
@@ -1388,19 +1404,17 @@ namespace Controls
 
         private void xsearchbox_TextChanged(object sender, EventArgs e)
         {
-            if (xsearch.Text.ToLower().Trim() != "zoeken..." && !_iswaiting) UpdateProductieList(false);
+            if (xsearch.Text.ToLower().Trim() != "zoeken..." && !_iswaiting) UpdateProductieList(false,false);
         }
 
         private void xsearch_Enter(object sender, EventArgs e)
         {
-            var tb = sender as MetroTextBox;
-            if (tb is {Text: "Zoeken..."}) tb.Text = "";
+            if (sender is MetroTextBox {Text: "Zoeken..."} tb) tb.Text = "";
         }
 
         private void xsearch_Leave(object sender, EventArgs e)
         {
-            var tb = sender as MetroTextBox;
-            if (tb != null)
+            if (sender is MetroTextBox tb)
                 if (string.IsNullOrWhiteSpace(tb.Text))
                     tb.Text = "Zoeken...";
         }
@@ -2417,7 +2431,7 @@ namespace Controls
             if (e.ClickedItem is ToolStripMenuItem b)
             {
                 b.Checked = !b.Checked;
-                UpdateProductieList(true);
+                UpdateProductieList(true,true);
             }
         }
 
@@ -2533,6 +2547,7 @@ namespace Controls
             foreach (var f in Manager.Opties.Filters)
             {
                 var xitem = new ToolStripMenuItem(f.Name) { Image = Resources.add_1588, Tag = f };
+                xitem.ToolTipText = f.ToString();
                 menuitem.DropDownItems.Add(xitem);
                 if (f.ListNames.Any(x =>
                     string.Equals(ListName, x, StringComparison.CurrentCultureIgnoreCase)))
@@ -2575,6 +2590,7 @@ namespace Controls
                     string.Equals(ListName, x, StringComparison.CurrentCultureIgnoreCase)) &&
                 docheck) return false;
             var ts = new ToolStripMenuItem(filter.Name) { Image = Resources.delete_1577, Tag = filter };
+            ts.ToolTipText = filter.ToString();
             ts.Click += Ts_Click;
             xfiltersStrip.Items.Add(ts);
             return true;
@@ -2585,6 +2601,8 @@ namespace Controls
             if (sender is ToolStripItem { Tag: Filter filter } ts)
             {
                 filter.ListNames.RemoveAll(x => string.Equals(x, ListName, StringComparison.CurrentCultureIgnoreCase));
+                if (filter.IsTempFilter && filter.ListNames.Count == 0)
+                    Manager.Opties?.Filters?.Remove(filter);
                 Manager.OnFilterChanged(this);
                 //ts = xfiltersStrip.Items.Cast<ToolStripItem>().FirstOrDefault(x =>
                 //    string.Equals(x.Text, filter.Name, StringComparison.CurrentCultureIgnoreCase));
@@ -2804,6 +2822,78 @@ namespace Controls
                 //if (xset == null) return;
                 //entry.ColumnBreedte = ProductieLijst.Columns[e.ColumnIndex].Width;
             }
+        }
+
+        private void filterOpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!_selectedSubitem.IsDefault() && Manager.Opties?.Filters != null)
+            {
+                var fe = FilterEntry.CreateNewFromValue(this._selectedSubitem.Key,
+                    this._selectedSubitem.Value, FilterType.GelijkAan);
+                fe.OperandType = Operand.ALS;
+                var xold = Manager.Opties.Filters.FirstOrDefault(x =>
+                    x.ListNames.Any(f => string.Equals(f, ListName, StringComparison.CurrentCultureIgnoreCase)) &&
+                    x.Filters.Any(s => s.Equals(fe)));
+                if (xold != null) return;
+                var xf = new Filter() {IsTempFilter = true, Name = fe.PropertyName};
+                xf.ListNames.Add(ListName);
+                xf.Filters.Add(fe);
+                _selectedSubitem = new KeyValuePair<string, object>();
+                Manager.Opties.Filters.Add(xf);
+                Manager.OnFilterChanged(this);
+            }
+        }
+
+        private void ClearTempFilters()
+        {
+            if (Manager.Opties?.Filters == null) return;
+            var count = Manager.Opties.Filters.RemoveAll(x =>
+                x.IsTempFilter &&
+                x.ListNames.Any(s => string.Equals(s, ListName, StringComparison.CurrentCultureIgnoreCase)));
+            if (count > 0) Manager.OnFilterChanged(this);
+        }
+
+        private KeyValuePair<string,object> _selectedSubitem;
+
+        private void xProductieLijst1_CellRightClick(object sender, CellRightClickEventArgs e)
+        {
+            if (e.SubItem == null) return;
+            _selectedSubitem = new KeyValuePair<string, object>(e.Column.AspectName, e.SubItem.ModelValue);
+            if (e.SubItem?.ModelValue is not null)
+            {
+                xfiltertoolstripitem.Visible = true;
+                var xval = e.SubItem.ModelValue.ToString();
+                if(xval.Length > 12)
+                    xval = xval.Substring(0,12) + "...";
+                xfiltertoolstripitem.Text = $"Filter op [{e.Column.Text}] '{xval}'";
+            }
+            else
+            {
+                xfiltertoolstripitem.Visible = false;
+            }
+        }
+
+        private void xProductieLijst1_CellClick(object sender, CellClickEventArgs e)
+        {
+            if (e.SubItem == null) return;
+            _selectedSubitem = new KeyValuePair<string, object>(e.Column.AspectName, e.SubItem.ModelValue);
+            if (e.SubItem?.ModelValue is not null)
+            {
+                xfiltertoolstripitem.Visible = true;
+                var xval = e.SubItem.ModelValue.ToString();
+                if (xval.Length > 12)
+                    xval = xval.Substring(0, 12) + "...";
+                xfiltertoolstripitem.Text = $"Filter op [{e.Column.Text}] '{xval}'";
+            }
+            else
+            {
+                xfiltertoolstripitem.Visible = false;
+            }
+        }
+
+        private void verwijderFiltersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ClearTempFilters();
         }
     }
 }

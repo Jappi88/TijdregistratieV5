@@ -39,13 +39,15 @@ namespace ProductieManager.Forms
             this.xtextvalue = new MetroFramework.Controls.MetroTextBox();
             this.xvaluepanel = new MetroFramework.Controls.MetroPanel();
             this.xdatepanel = new System.Windows.Forms.Panel();
-            this.xhuidigeTijd = new System.Windows.Forms.CheckBox();
             this.xdatevalue = new System.Windows.Forms.DateTimePicker();
+            this.xhuidigeDatum = new System.Windows.Forms.CheckBox();
+            this.xhuidigeTijd = new System.Windows.Forms.CheckBox();
             this.xcheckvalue = new MetroFramework.Controls.MetroCheckBox();
             this.xdecimalvalue = new System.Windows.Forms.NumericUpDown();
             this.xComboPanel = new System.Windows.Forms.Panel();
             this.xcombovalue = new MetroFramework.Controls.MetroComboBox();
             this.xEditValueRangePanel = new System.Windows.Forms.Panel();
+            this.xRangeDevider = new MetroFramework.Controls.MetroComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -56,8 +58,6 @@ namespace ProductieManager.Forms
             this.xvoorwaardenb = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.xhuidigeDatum = new System.Windows.Forms.CheckBox();
-            this.xRangeDevider = new MetroFramework.Controls.MetroComboBox();
             this.metroPanel1.SuspendLayout();
             this.xvaluepanel.SuspendLayout();
             this.xdatepanel.SuspendLayout();
@@ -222,19 +222,6 @@ namespace ProductieManager.Forms
             this.xdatepanel.TabIndex = 11;
             this.xdatepanel.Visible = false;
             // 
-            // xhuidigeTijd
-            // 
-            this.xhuidigeTijd.AutoSize = true;
-            this.xhuidigeTijd.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xhuidigeTijd.Location = new System.Drawing.Point(131, 11);
-            this.xhuidigeTijd.Name = "xhuidigeTijd";
-            this.xhuidigeTijd.Size = new System.Drawing.Size(104, 21);
-            this.xhuidigeTijd.TabIndex = 9;
-            this.xhuidigeTijd.Text = "Huidige Tijd";
-            this.toolTip1.SetToolTip(this.xhuidigeTijd, "KIes dit voor als je de criteria wilt vergelijken met de huidige tijd ");
-            this.xhuidigeTijd.UseVisualStyleBackColor = true;
-            this.xhuidigeTijd.CheckedChanged += new System.EventHandler(this.xhuidigeTijd_CheckedChanged);
-            // 
             // xdatevalue
             // 
             this.xdatevalue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -250,6 +237,32 @@ namespace ProductieManager.Forms
             this.xdatevalue.TabIndex = 8;
             this.toolTip1.SetToolTip(this.xdatevalue, "Vul in de datum en tijd waaraan de criteria moet voldoen");
             this.xdatevalue.ValueChanged += new System.EventHandler(this.xdatevalue_ValueChanged);
+            // 
+            // xhuidigeDatum
+            // 
+            this.xhuidigeDatum.AutoSize = true;
+            this.xhuidigeDatum.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xhuidigeDatum.Location = new System.Drawing.Point(3, 11);
+            this.xhuidigeDatum.Name = "xhuidigeDatum";
+            this.xhuidigeDatum.Size = new System.Drawing.Size(122, 21);
+            this.xhuidigeDatum.TabIndex = 10;
+            this.xhuidigeDatum.Text = "Huidige Datum";
+            this.toolTip1.SetToolTip(this.xhuidigeDatum, "KIes dit voor als je de criteria wilt vergelijken met de huidige datum");
+            this.xhuidigeDatum.UseVisualStyleBackColor = true;
+            this.xhuidigeDatum.CheckStateChanged += new System.EventHandler(this.xhuidigeDatum_CheckStateChanged);
+            // 
+            // xhuidigeTijd
+            // 
+            this.xhuidigeTijd.AutoSize = true;
+            this.xhuidigeTijd.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xhuidigeTijd.Location = new System.Drawing.Point(131, 11);
+            this.xhuidigeTijd.Name = "xhuidigeTijd";
+            this.xhuidigeTijd.Size = new System.Drawing.Size(104, 21);
+            this.xhuidigeTijd.TabIndex = 9;
+            this.xhuidigeTijd.Text = "Huidige Tijd";
+            this.toolTip1.SetToolTip(this.xhuidigeTijd, "KIes dit voor als je de criteria wilt vergelijken met de huidige tijd ");
+            this.xhuidigeTijd.UseVisualStyleBackColor = true;
+            this.xhuidigeTijd.CheckedChanged += new System.EventHandler(this.xhuidigeTijd_CheckedChanged);
             // 
             // xcheckvalue
             // 
@@ -321,6 +334,18 @@ namespace ProductieManager.Forms
             this.xEditValueRangePanel.Size = new System.Drawing.Size(323, 34);
             this.xEditValueRangePanel.TabIndex = 8;
             this.xEditValueRangePanel.Visible = false;
+            // 
+            // xRangeDevider
+            // 
+            this.xRangeDevider.FormattingEnabled = true;
+            this.xRangeDevider.ItemHeight = 23;
+            this.xRangeDevider.Location = new System.Drawing.Point(78, 2);
+            this.xRangeDevider.Name = "xRangeDevider";
+            this.xRangeDevider.Size = new System.Drawing.Size(125, 29);
+            this.xRangeDevider.TabIndex = 8;
+            this.toolTip1.SetToolTip(this.xRangeDevider, "Kies een waarde waaraan de criteria moet voldoen.");
+            this.xRangeDevider.UseSelectable = true;
+            this.xRangeDevider.SelectedIndexChanged += new System.EventHandler(this.xRangeDevider_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -439,31 +464,6 @@ namespace ProductieManager.Forms
             // toolTip1
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            // 
-            // xhuidigeDatum
-            // 
-            this.xhuidigeDatum.AutoSize = true;
-            this.xhuidigeDatum.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xhuidigeDatum.Location = new System.Drawing.Point(3, 11);
-            this.xhuidigeDatum.Name = "xhuidigeDatum";
-            this.xhuidigeDatum.Size = new System.Drawing.Size(122, 21);
-            this.xhuidigeDatum.TabIndex = 10;
-            this.xhuidigeDatum.Text = "Huidige Datum";
-            this.toolTip1.SetToolTip(this.xhuidigeDatum, "KIes dit voor als je de criteria wilt vergelijken met de huidige datum");
-            this.xhuidigeDatum.UseVisualStyleBackColor = true;
-            this.xhuidigeDatum.CheckStateChanged += new System.EventHandler(this.xhuidigeDatum_CheckStateChanged);
-            // 
-            // xRangeDevider
-            // 
-            this.xRangeDevider.FormattingEnabled = true;
-            this.xRangeDevider.ItemHeight = 23;
-            this.xRangeDevider.Location = new System.Drawing.Point(78, 2);
-            this.xRangeDevider.Name = "xRangeDevider";
-            this.xRangeDevider.Size = new System.Drawing.Size(125, 29);
-            this.xRangeDevider.TabIndex = 8;
-            this.toolTip1.SetToolTip(this.xRangeDevider, "Kies een waarde waaraan de criteria moet voldoen.");
-            this.xRangeDevider.UseSelectable = true;
-            this.xRangeDevider.SelectedIndexChanged += new System.EventHandler(this.xRangeDevider_SelectedIndexChanged);
             // 
             // NewFilterEntry
             // 

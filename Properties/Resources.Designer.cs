@@ -958,6 +958,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ic_format_clear_128_28359 {
+            get {
+                object obj = ResourceManager.GetObject("ic_format_clear_128_28359", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ic_info_outline_128_28513 {
             get {
                 object obj = ResourceManager.GetObject("ic_info_outline_128_28513", resourceCulture);

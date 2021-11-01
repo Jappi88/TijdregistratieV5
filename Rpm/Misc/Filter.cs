@@ -11,9 +11,7 @@ namespace Rpm.Misc
     public class Filter
     {
         public string Name { get; set; }
-        [ExcludeFromSerialization]
-        public bool Enabled { get; set; }
-
+        public bool IsTempFilter { get; set; }
         /// <summary>
         /// De lijst waarop gefiltered moet worden.
         /// </summary>
@@ -69,20 +67,20 @@ namespace Rpm.Misc
         {
             try
             {
-                string xreturn = "";
-                bool xdone = false;
+                string xreturn = "(";
+                //bool xdone = false;
                 foreach (var filter in Filters)
                 {
-                    if (!xdone)
-                    {
-                        xreturn = $"('{filter.ToString()}')";
-                        xdone = true;
-                        continue;
-                    }
-                    xreturn += $"{Enum.GetName(typeof(Operand), filter.OperandType)} ('{filter.ToString()}')";
+                    //if (!xdone)
+                    //{
+                    //    xreturn = $"'{filter.ToString()}'";
+                    //    xdone = true;
+                    //    continue;
+                    //}
+                    xreturn += $"{filter.ToString()} ";
                 }
 
-                return xreturn;
+                return xreturn.Trim() + ")";
             }
             catch (Exception e)
             {

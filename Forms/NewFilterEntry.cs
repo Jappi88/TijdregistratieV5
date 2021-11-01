@@ -102,16 +102,7 @@ namespace ProductieManager.Forms
             xdatepanel.Visible = xdatepanel.Enabled;
             xComboPanel.Visible = xComboPanel.Enabled;
             xcheckvalue.Visible = xcheckvalue.Enabled;
-            var xvaltypes = Enum.GetNames(typeof(FilterType)).ToList();
-            xvaltypes.RemoveAll(x => x.ToLower() == "none");
-            if (Property.PropertyType == typeof(string))
-            {
-                xvaltypes.RemoveAll(x => x.ToLower().StartsWith("lager") || x.ToLower().StartsWith("hoger"));
-            }
-            else if (Property.PropertyType == typeof(bool))
-                xvaltypes.RemoveAll(x => x.ToLower().StartsWith("lager") || x.ToLower().StartsWith("hoger") || x.ToLower().StartsWith("bevat") || x.ToLower().Contains("met"));
-            else xvaltypes.RemoveAll(x => x.ToLower().StartsWith("bevat") || x.ToLower().Contains("met"));
-
+            var xvaltypes = FilterEntry.GetFilterTypesByType(Property.PropertyType);
             foreach (var xval in xvaltypes)
             {
                 xvaluetypes.Items.Add(xval);
@@ -187,14 +178,13 @@ namespace ProductieManager.Forms
                             xhuidigeDatum.Checked = true;
                         }
                         else xhuidigeDatum.Checked = false;
-
-                        if (xvalue.TimeOfDay == new TimeSpan())
+                        if (xvalue.TimeOfDay > new TimeSpan())
                         {
-                            xhuidigeTijd.Checked = true;
-                            xval = xvalue.ChangeTime(DateTime.Now.TimeOfDay);
+                            xhuidigeTijd.Checked = false;
+                            xval = xval.ChangeTime(xvalue.TimeOfDay);
                         }
                         else
-                            xhuidigeTijd.Checked = false;
+                            xhuidigeTijd.Checked = true;
 
                         xdatevalue.Value = xval;
                         break;
@@ -231,7 +221,7 @@ namespace ProductieManager.Forms
                 {
                     var dt = xdatevalue.Value;
                     if (xhuidigeDatum.Checked)
-                        dt = new DateTime(9999, 1, 1, dt.Hour, dt.Minute, dt.Second, dt.Millisecond);
+                        dt = new DateTime(9999, 1, 1, dt.Hour, dt.Minute, 0,0);
 
                     if (xhuidigeTijd.Checked)
                         dt = dt.ChangeTime(new TimeSpan());
