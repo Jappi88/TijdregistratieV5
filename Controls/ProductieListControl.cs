@@ -892,6 +892,7 @@ namespace Controls
                         var xscroloffset = ProductieLijst.LowLevelScrollPosition;
                         InitFilterStrips();
                         var selected1 = ProductieLijst.SelectedObject;
+                        var xfocused = ProductieLijst.FocusedObject;
                         var groups1 = ProductieLijst.Groups.Cast<ListViewGroup>().Select(t => (OLVGroup) t.Tag)
                             .Where(x => x.Collapsed)
                             .ToArray();
@@ -945,7 +946,18 @@ namespace Controls
                                     @group.Collapsed = true;
                             }
 
-                        for (int i = 0; i < 3; i++)
+                        
+                        if (xfocused != null)
+                        {
+                            ProductieLijst.FocusedObject = xfocused;
+                            ProductieLijst.FocusedItem?.EnsureVisible();
+                        }
+
+                        ProductieLijst.SelectedObject = selected1;
+                        if (xfocused == null)
+                            ProductieLijst.SelectedItem?.EnsureVisible();
+
+                        for (int i = 0; i < 10; i++)
                         {
                             if (ProductieLijst.LowLevelScrollPosition.X != xscroloffset.X ||
                                 ProductieLijst.LowLevelScrollPosition.Y != xscroloffset.Y)
@@ -953,11 +965,9 @@ namespace Controls
                                 ProductieLijst.LowLevelScroll(xscroloffset.X - ProductieLijst.LowLevelScrollPosition.X, xscroloffset.Y - ProductieLijst.LowLevelScrollPosition.Y);
                                 Application.DoEvents();
                             }
-                            else break;
+                            else 
+                                break;
                         }
-
-                        ProductieLijst.SelectedObject = selected1;
-                        //ProductieLijst.SelectedItem?.EnsureVisible();
                         SetButtonEnable();
                         if (xlistcount != ProductieLijst.Items.Count)
                             OnItemCountChanged();

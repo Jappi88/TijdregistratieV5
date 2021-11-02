@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Navigation;
 using MetroFramework.Forms;
@@ -34,7 +35,7 @@ namespace Forms
             ListBewerkingen(bws);
         }
 
-        public List<Bewerking> SelectedBewerkingen { get; private set; } = new List<Bewerking>();
+        public List<WerkPlek> SelectedWerkplekken { get; private set; } = new List<WerkPlek>();
 
         private async void LoadBewerkingen(ViewState[] bewerkingstates, bool filter)
         {
@@ -58,20 +59,24 @@ namespace Forms
                 xbewerkinglijst.BeginUpdate();
                 xbewerkinglijst.Items.Clear();
                 imageList1.Images.Clear();
-                imageList1.Images.Add(Resources.operation.CombineImage(Resources.play_button_icon_icons_com_60615,
+                imageList1.Images.Add(Resources.iconfinder_technology.CombineImage(Resources.play_button_icon_icons_com_60615,
                     2));
                 foreach (var bw in bws)
                 {
-                    var lv = new ListViewItem(bw.Naam)
+                    foreach (var wp in bw.WerkPlekken)
                     {
-                        Tag = bw,
-                        ImageIndex = 0,
-                        Checked = true
-                    };
-                    lv.SubItems.Add(bw.Omschrijving);
-                    lv.SubItems.Add(bw.ArtikelNr);
-                    lv.SubItems.Add(bw.ProductieNr);
-                    xbewerkinglijst.Items.Add(lv);
+                        if (!wp.Personen.Any(x => x.IngezetAanKlus(wp.Path))) continue;
+                        var lv = new ListViewItem(wp.Naam)
+                        {
+                            Tag = wp,
+                            ImageIndex = 0,
+                            Checked = true
+                        };
+                        lv.SubItems.Add(bw.Omschrijving);
+                        lv.SubItems.Add(bw.ArtikelNr);
+                        lv.SubItems.Add(bw.ProductieNr);
+                        xbewerkinglijst.Items.Add(lv);
+                    }
                 }
 
                 xbewerkinglijst.EndUpdate();
@@ -91,11 +96,11 @@ namespace Forms
 
             try
             {
-                SelectedBewerkingen.Clear();
+                SelectedWerkplekken.Clear();
                 foreach (var lv in xbewerkinglijst.Items)
                 {
-                    if (lv is ListViewItem {Checked: true, Tag: Bewerking bew})
-                        SelectedBewerkingen.Add(bew);
+                    if (lv is ListViewItem {Checked: true, Tag: WerkPlek plek})
+                        SelectedWerkplekken.Add(plek);
                 }
 
                 DialogResult = DialogResult.OK;

@@ -377,7 +377,7 @@ namespace Rpm.Misc
                         switch (type)
                         {
                             case FilterType.GelijkAan:
-                                xisfilter = value2 == xvalue;
+                                xisfilter = value2.Date == xvalue.Date && value2.TimeOfDay == xvalue.TimeOfDay;
                                 break;
                             case FilterType.Bevat:
                                 xisfilter = xvalue.ToString().Contains(value2.ToString());

@@ -713,9 +713,9 @@ namespace Controls
                     if (bws.Count > 0)
                     {
                         var bwselector = new BewerkingSelectorForm(bws);
-                        bwselector.Title = "Selecteer bewerkingen waarvan de rooster aangepast moet worden";
+                        bwselector.Title = "Selecteer Werkplekken waarvan de rooster aangepast moet worden";
                         if (bwselector.ShowDialog() == DialogResult.OK)
-                            await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedBewerkingen, roosterform.WerkRooster);
+                            await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, roosterform.WerkRooster);
                     }
 
                 }
@@ -1201,9 +1201,9 @@ namespace Controls
                     if (bws.Count > 0)
                     {
                         var bwselector = new BewerkingSelectorForm(bws);
-                        bwselector.Title = "Selecteer bewerkingen waarvan de rooster aangepast moet worden";
+                        bwselector.Title = "Selecteer Werkplekken waarvan de rooster aangepast moet worden";
                         if (bwselector.ShowDialog() == DialogResult.OK)
-                            await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedBewerkingen, roosterform.WerkRooster);
+                            await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, roosterform.WerkRooster);
                     }
                     await Manager.Opties.Save("Speciale roosters aangepast.");
                 }
@@ -1238,9 +1238,9 @@ namespace Controls
                     if (bws.Count > 0)
                     {
                         var bwselector = new BewerkingSelectorForm(bws);
-                        bwselector.Title = "Selecteer bewerkingen waarvan de rooster aangepast moet worden";
+                        bwselector.Title = "Selecteer Werkplekken waarvan de rooster aangepast moet worden";
                         if (bwselector.ShowDialog() == DialogResult.OK)
-                            await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedBewerkingen, null);
+                            await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
                     }
                 }
 

@@ -1273,7 +1273,7 @@ namespace Rpm.Productie
         /// Er wordt dan gekeken of er speciale roosters zijn.
         /// </summary>
         /// <returns>Een taak die de productie roosters update op de achtergrond</returns>
-        public static Task<int> UpdateGestarteProductieRoosters(List<Bewerking> bewerkingen, Rooster rooster)
+        public static Task<int> UpdateGestarteProductieRoosters(List<WerkPlek> werkplekken, Rooster rooster)
         {
             return Task.Run(async () =>
             {
@@ -1282,27 +1282,20 @@ namespace Rpm.Productie
                     int done = 0;
                     var acces1 = LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
                     if (!acces1) return -1;
-                        bool changed = false;
                         var changes = new List<string>();
-                        foreach (var bw in bewerkingen)
+                        foreach (var wp in werkplekken)
                         {
-                            if (!bw.IsAllowed() || bw.State != ProductieState.Gestart) continue;
-                          
-                            var wps = bw.WerkPlekken.Where(x => x.IsActief()).ToList();
-                            foreach (var wp in wps)
-                            {
-                                wp.UpdateWerkRooster(rooster, true,true, true, true, false,true, true);
-                                changed = true;
-                                changes.Add(wp.Naam);
-                            }
+                            var bw = wp.Werk;
+                            if (!wp.IsActief() || !bw.IsAllowed() || bw.State != ProductieState.Gestart) continue;
 
-                            if (changed)
-                            {
-                                done++;
-                                await bw.UpdateBewerking(null,
-                                    $"[{bw.ProductieNr} | {bw.ArtikelNr}] Werkrooster aangepast voor: \n" +
-                                    $"{string.Join(", ", changes)}");
-                            }
+                            wp.UpdateWerkRooster(rooster, true, true, true, true, false, true, true);
+
+                            changes.Add(wp.Naam);
+
+                            done++;
+                            await bw.UpdateBewerking(null,
+                                $"[{bw.ProductieNr} | {bw.ArtikelNr}] Werkrooster aangepast voor: \n" +
+                                $"{string.Join(", ", changes)}");
                         }
 
                         return done;

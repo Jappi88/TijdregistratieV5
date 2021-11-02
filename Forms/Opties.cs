@@ -1352,9 +1352,9 @@ namespace Forms
                     if (bws.Count > 0)
                     {
                         var bwselector = new BewerkingSelectorForm(bws);
-                        bwselector.Title = "Selecteer bewerkingen waarvan de rooster aangepast moet worden";
+                        bwselector.Title = "Selecteer Wekplekken waarvan de rooster aangepast moet worden";
                         if (bwselector.ShowDialog() == DialogResult.OK)
-                            await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedBewerkingen, null);
+                            await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
                     }
                 }
             }
