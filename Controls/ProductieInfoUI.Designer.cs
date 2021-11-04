@@ -115,7 +115,7 @@
             this.xWerkPlaatsenButton.Location = new System.Drawing.Point(5, 309);
             this.xWerkPlaatsenButton.Name = "xWerkPlaatsenButton";
             this.xWerkPlaatsenButton.Size = new System.Drawing.Size(756, 25);
-            this.xWerkPlaatsenButton.TabIndex = 10;
+            this.xWerkPlaatsenButton.TabIndex = 6;
             this.xWerkPlaatsenButton.Text = "Werk Plaatsen";
             this.xWerkPlaatsenButton.UseVisualStyleBackColor = true;
             this.xWerkPlaatsenButton.Click += new System.EventHandler(this.xWerkPlaatsenButton_Click);
@@ -149,7 +149,7 @@
             this.xMaterialenButton.Location = new System.Drawing.Point(5, 259);
             this.xMaterialenButton.Name = "xMaterialenButton";
             this.xMaterialenButton.Size = new System.Drawing.Size(756, 25);
-            this.xMaterialenButton.TabIndex = 8;
+            this.xMaterialenButton.TabIndex = 5;
             this.xMaterialenButton.Text = "Materialen";
             this.xMaterialenButton.UseVisualStyleBackColor = true;
             this.xMaterialenButton.Click += new System.EventHandler(this.xMaterialenButton_Click);
@@ -183,7 +183,7 @@
             this.xVerpakkingsButton.Location = new System.Drawing.Point(5, 209);
             this.xVerpakkingsButton.Name = "xVerpakkingsButton";
             this.xVerpakkingsButton.Size = new System.Drawing.Size(756, 25);
-            this.xVerpakkingsButton.TabIndex = 3;
+            this.xVerpakkingsButton.TabIndex = 4;
             this.xVerpakkingsButton.Text = "VerpakkingsInstructies";
             this.xVerpakkingsButton.UseVisualStyleBackColor = true;
             this.xVerpakkingsButton.Click += new System.EventHandler(this.xVerpakkingsButton_Click);
@@ -217,7 +217,7 @@
             this.xProductieDatumsButton.Location = new System.Drawing.Point(5, 159);
             this.xProductieDatumsButton.Name = "xProductieDatumsButton";
             this.xProductieDatumsButton.Size = new System.Drawing.Size(756, 25);
-            this.xProductieDatumsButton.TabIndex = 5;
+            this.xProductieDatumsButton.TabIndex = 3;
             this.xProductieDatumsButton.Text = "Productie Datums";
             this.xProductieDatumsButton.UseVisualStyleBackColor = true;
             this.xProductieDatumsButton.Click += new System.EventHandler(this.xProductieDatumsButton_Click);
@@ -251,7 +251,7 @@
             this.xNotitieButton.Location = new System.Drawing.Point(5, 109);
             this.xNotitieButton.Name = "xNotitieButton";
             this.xNotitieButton.Size = new System.Drawing.Size(756, 25);
-            this.xNotitieButton.TabIndex = 12;
+            this.xNotitieButton.TabIndex = 2;
             this.xNotitieButton.Text = "Notities";
             this.xNotitieButton.UseVisualStyleBackColor = true;
             this.xNotitieButton.Click += new System.EventHandler(this.xNotitieButton_Click);
@@ -268,7 +268,7 @@
             this.xInforHtmlPanel.Name = "xInforHtmlPanel";
             this.xInforHtmlPanel.Padding = new System.Windows.Forms.Padding(5);
             this.xInforHtmlPanel.Size = new System.Drawing.Size(756, 26);
-            this.xInforHtmlPanel.TabIndex = 2;
+            this.xInforHtmlPanel.TabIndex = 1;
             this.xInforHtmlPanel.Text = "Info Html Text";
             this.xInforHtmlPanel.Visible = false;
             this.xInforHtmlPanel.ImageLoad += new System.EventHandler<HtmlRenderer.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
@@ -297,7 +297,7 @@
             this.xHeaderHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(756, 17);
             this.xHeaderHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xHeaderHtmlPanel.BaseStylesheet = null;
-            this.xHeaderHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xHeaderHtmlPanel.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.xHeaderHtmlPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.xHeaderHtmlPanel.Location = new System.Drawing.Point(5, 30);
             this.xHeaderHtmlPanel.Name = "xHeaderHtmlPanel";
@@ -319,7 +319,7 @@
             this.xProductieStatusButton.Location = new System.Drawing.Point(5, 5);
             this.xProductieStatusButton.Name = "xProductieStatusButton";
             this.xProductieStatusButton.Size = new System.Drawing.Size(756, 25);
-            this.xProductieStatusButton.TabIndex = 13;
+            this.xProductieStatusButton.TabIndex = 0;
             this.xProductieStatusButton.Text = "Productie Status";
             this.xProductieStatusButton.UseVisualStyleBackColor = true;
             this.xProductieStatusButton.Click += new System.EventHandler(this.xProductieStatusButton_Click);

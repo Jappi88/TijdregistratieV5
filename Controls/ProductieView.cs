@@ -501,7 +501,7 @@ namespace Controls
             var res = XMessageBox.Show(message, "Onderbreking", MessageBoxButtons.OK, MessageBoxIcon.Question, null,
                 bttns);
             if (res == DialogResult.Cancel) return;
-            var prods = await Manager.GetProducties(new[] {ViewState.Gestart, ViewState.Gestopt}, true, false);
+            var prods = await Manager.GetProducties(new[] {ViewState.Gestart, ViewState.Gestopt}, true, false,null);
             var plekken = new List<WerkPlek>();
             switch (res)
             {
@@ -1976,8 +1976,6 @@ namespace Controls
 
         private void xtoonartikels_Click(object sender, EventArgs e)
         {
-            if (Manager.Opties != null)
-                Manager.Opties.ViewDataBewerkingenState = xbewerkingListControl.ProductieLijst.SaveState();
             ShowArtikelenWindow();
             //new ArtikelsForm().ShowDialog();
             //if (Manager.Opties != null)

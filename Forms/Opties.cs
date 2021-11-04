@@ -476,9 +476,6 @@ namespace Forms
                 xs.UseLastGereedStop = _LoadedOpties.UseLastGereedStop;
                 xs.LastGereedStop = _LoadedOpties.LastGereedStop;
                 //Listview View states
-                xs._viewproddata = _LoadedOpties._viewproddata;
-                xs._viewbewdata = _LoadedOpties._viewbewdata;
-                xs._viewrecentproddata = _LoadedOpties._viewrecentproddata;
                 xs._viewwerkplekdata = _LoadedOpties._viewwerkplekdata;
                 xs._viewstoringdata = _LoadedOpties._viewstoringdata;
                 xs._viewvaarddata = _LoadedOpties._viewvaarddata;

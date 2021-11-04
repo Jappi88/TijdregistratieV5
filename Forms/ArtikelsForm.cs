@@ -17,8 +17,6 @@ namespace Forms
         public ArtikelsForm()
         {
             InitializeComponent();
-            if (Manager.Opties != null)
-                productieListControl1.ProductieLijst.RestoreState(Manager.Opties.ViewDataBewerkingenState);
             productieListControl1.ValidHandler = IsValidHandler;
             productieListControl1.ItemCountChanged += ProductieListControl1_ItemCountChanged;
             ((OLVColumn) xartikelsList.Columns[0]).ImageGetter = (x) => 0;
@@ -209,8 +207,6 @@ namespace Forms
             Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
             productieListControl1.SaveColumns(true, Manager.Opties,false);
             productieListControl1.DetachEvents();
-            if (Manager.Opties != null)
-                Manager.Opties.ViewDataBewerkingenState = productieListControl1.ProductieLijst.SaveState();
         }
 
         private void ArtikelsForm_Shown(object sender, System.EventArgs e)

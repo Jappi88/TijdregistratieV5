@@ -154,5 +154,15 @@ namespace Forms
             {
             }
         }
+
+        private void StartProductie_KeyDown(object sender, KeyEventArgs e)
+        {
+            Console.WriteLine(e.KeyValue);
+        }
+
+        private void StartProductie_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Console.WriteLine(e.KeyChar);
+        }
     }
 }

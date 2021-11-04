@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Forms;
 using HtmlRenderer;
+using Org.BouncyCastle.Asn1.BC;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
@@ -530,7 +531,37 @@ namespace Controls
             }
         }
 
-        private async void leverdatumToolStripMenuItem_Click(object sender, EventArgs e)
+        private void leverdatumToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowLeverDatumForm();
+        }
+
+        private void notitieToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowNotitieForm();
+        }
+
+        private void xprodafkeurtoolstrip_Click(object sender, EventArgs e)
+        {
+            ShowAfkeurForm();
+        }
+
+        private void xnoteButton_Click(object sender, EventArgs e)
+        {
+            xnotepanel.Height = xnotepanel.Height > 100 ? 32 : 125;
+        }
+
+        private void xverpakking_Click(object sender, EventArgs e)
+        {
+            ShowVerpakkingForm();
+        }
+
+        private void materialenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowMaterialenForm();
+        }
+
+        public async void ShowLeverDatumForm()
         {
             var bew = CurrentBewerking();
             if (bew?.Parent == null) return;
@@ -545,7 +576,7 @@ namespace Controls
             }
         }
 
-        private async void notitieToolStripMenuItem_Click(object sender, EventArgs e)
+        public async void ShowNotitieForm()
         {
             var bew = CurrentBewerking();
             if (bew?.Parent == null) return;
@@ -560,7 +591,7 @@ namespace Controls
             }
         }
 
-        private void xprodafkeurtoolstrip_Click(object sender, EventArgs e)
+        public void ShowAfkeurForm()
         {
             var bew = CurrentBewerking();
             if (bew?.Parent == null) return;
@@ -568,20 +599,7 @@ namespace Controls
             xafk.ShowDialog();
         }
 
-        private void xnoteButton_Click(object sender, EventArgs e)
-        {
-            xnotepanel.Height = xnotepanel.Height > 100 ? 32 : 125;
-        }
-
-        private void xverpakking_Click(object sender, EventArgs e)
-        {
-            var bew = CurrentBewerking();
-            if (bew?.Parent == null) return;
-            var x = new VerpakkingInstructieForm(bew);
-            x.ShowDialog();
-        }
-
-        private void materialenToolStripMenuItem_Click(object sender, EventArgs e)
+        public void ShowMaterialenForm()
         {
             var bew = CurrentBewerking();
             if (bew?.Parent == null) return;
@@ -589,9 +607,12 @@ namespace Controls
             x.ShowDialog(bew.Parent);
         }
 
-        private void mainMenu1_Load(object sender, EventArgs e)
+        public void ShowVerpakkingForm()
         {
-
+            var bew = CurrentBewerking();
+            if (bew?.Parent == null) return;
+            var x = new VerpakkingInstructieForm(bew);
+            x.ShowDialog();
         }
     }
 }

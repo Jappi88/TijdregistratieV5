@@ -877,6 +877,18 @@ namespace Controls
             return true;
         }
 
+        private void UpdateListObjects<T>(List<T> objects)
+        {
+            var xobjects = objects;
+            if (objects == null || objects.Count == ProductieLijst.Items.Count) return;
+            ProductieLijst.BeginUpdate();
+            var sel = ProductieLijst.SelectedObject;
+            ProductieLijst.SetObjects(objects);
+            ProductieLijst.SelectedObject = sel;
+            ProductieLijst.SelectedItem?.EnsureVisible();
+            ProductieLijst.EndUpdate();
+        }
+
         public void UpdateProductieList(bool reload, bool showwaitui)
         {
             if (_loadingproductielist || Manager.Opties == null || !CanLoad) return;
@@ -907,16 +919,14 @@ namespace Controls
                                 var xprods = !reload && CustomList && Producties != null
                                     ? Producties.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
                                         .ToList()
-                                    : Producties = await Manager.GetProducties(states, true, !IsBewerkingView);
-                                if (ValidHandler != null)
-                                    xprods = xprods.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
-                                        .ToList();
-                                else
+                                    : Producties = await Manager.GetProducties(states, true,true, ValidHandler);
+                                //if (ValidHandler != null)
+                                //    xprods = xprods.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
+                                //        .ToList();
+                                //else
                                     xprods = xprods.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter(), states, true))
                                         .ToList();
-                                ProductieLijst.BeginUpdate();
-                                ProductieLijst.SetObjects(xprods);
-                                ProductieLijst.EndUpdate();
+                                UpdateListObjects(xprods);
                             }
                         }
                         else if (CanLoad)
@@ -924,15 +934,13 @@ namespace Controls
                             var bws = !reload && CustomList && Bewerkingen != null
                                 ? Bewerkingen.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
                                     .ToList()
-                                : Bewerkingen = await Manager.GetBewerkingen(states, true);
-                            if (ValidHandler != null)
-                                bws = bws.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
-                                    .ToList();
-                            else
+                                : Bewerkingen = await Manager.GetBewerkingen(states, true,ValidHandler);
+                            //if (ValidHandler != null)
+                            //    bws = bws.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
+                            //        .ToList();
+                            //else
                                 bws = bws.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter())).ToList();
-                            ProductieLijst.BeginUpdate();
-                            ProductieLijst.SetObjects(bws);
-                            ProductieLijst.EndUpdate();
+                            UpdateListObjects(bws);
                         }
 
                         var xgroups = ProductieLijst.Groups.Cast<ListViewGroup>().ToList();
@@ -947,27 +955,16 @@ namespace Controls
                             }
 
                         
-                        if (xfocused != null)
-                        {
-                            ProductieLijst.FocusedObject = xfocused;
-                            ProductieLijst.FocusedItem?.EnsureVisible();
-                        }
+                        //if (xfocused != null)
+                        //{
+                        //    ProductieLijst.FocusedObject = xfocused;
+                        //    ProductieLijst.FocusedItem?.EnsureVisible();
+                        //}
 
-                        ProductieLijst.SelectedObject = selected1;
-                        if (xfocused == null)
-                            ProductieLijst.SelectedItem?.EnsureVisible();
+                        //ProductieLijst.SelectedObject = selected1;
+                        //if (xfocused == null)
+                        //    ProductieLijst.SelectedItem?.EnsureVisible();
 
-                        for (int i = 0; i < 10; i++)
-                        {
-                            if (ProductieLijst.LowLevelScrollPosition.X != xscroloffset.X ||
-                                ProductieLijst.LowLevelScrollPosition.Y != xscroloffset.Y)
-                            {
-                                ProductieLijst.LowLevelScroll(xscroloffset.X - ProductieLijst.LowLevelScrollPosition.X, xscroloffset.Y - ProductieLijst.LowLevelScrollPosition.Y);
-                                Application.DoEvents();
-                            }
-                            else 
-                                break;
-                        }
                         SetButtonEnable();
                         if (xlistcount != ProductieLijst.Items.Count)
                             OnItemCountChanged();

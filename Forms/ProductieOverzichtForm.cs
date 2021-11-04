@@ -160,7 +160,7 @@ namespace ProductieManager.Forms
                     var bws = await Manager.GetBewerkingen(new ViewState[] {ViewState.Gestopt, ViewState.Gestart},
                         true);
                     var gestart = bws.Where(x => x.State == ProductieState.Gestart).ToList();
-                    bws = bws.Where(x => x.State == ProductieState.Gestopt).ToList();
+                    bws = bws.Where(x => x.State == ProductieState.Gestopt).Distinct(new BewerkingDistinctComparer()).ToList();
                     List<Bewerking> xremove = new List<Bewerking>();
                     if (gestart.Count > 0)
                     {

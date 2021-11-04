@@ -586,37 +586,29 @@ namespace ProductieManager.Rpm.Productie
         /// <param name="incform">true als de productie ook die aangegeven status moet zijn, false je alleen wilt verkrijgen op basis van een geldige bewerking</param>
         /// <param name="loaddb">true als je de producties als standaard wilt laden.</param>
         /// <returns></returns>
-        public async Task<List<ProductieFormulier>> GetProducties(LoadedType type, ViewState[] states, bool filter, bool incform)
+        public async Task<List<ProductieFormulier>> GetProducties(LoadedType type, ViewState[] states, bool filter, IsValidHandler validhandler)
         {
-            return await GetProducties(type, filter);
+            return await GetProducties(type, filter, validhandler);
         }
 
-        public async Task<List<Bewerking>> GetBewerkingen(LoadedType type, ViewState[] states, bool filter)
+        public async Task<List<Bewerking>> GetBewerkingen(LoadedType type, ViewState[] states, bool filter, IsValidHandler validhandler)
         {
-            var prods = await GetProducties(type, false);
+            var prods = await GetProducties(type, false, validhandler);
             var bws = GetBewerkingen(prods, type, states, filter);
             return bws;
         }
 
         private List<Bewerking> GetBewerkingen(List<ProductieFormulier>  producties, LoadedType type, ViewState[] states, bool filter)
         {
-            var bws = new List<Bewerking>();
-            for (int i = 0; i < producties.Count; i++)
-            {
-                var prod = producties[i];
-                if (type == LoadedType.Producties && prod.State == ProductieState.Gereed) continue;
-                if (prod?.Bewerkingen == null || prod.Bewerkingen.Length == 0) continue;
-                foreach (var bw in prod.Bewerkingen)
-                {
-                    if (filter && (!states.Any(x => bw.IsValidState(x)) || !bw.IsAllowed())) continue;
-                    bws.Add(bw);
-                }
-            }
-
-            return bws;
+            return (from prod in producties
+                where type != LoadedType.Producties || prod.State != ProductieState.Gereed
+                where prod?.Bewerkingen != null && prod.Bewerkingen.Length != 0
+                from bw in prod.Bewerkingen
+                where !filter || (states.Any(bw.IsValidState) && bw.IsAllowed())
+                select bw).ToList();
         }
 
-        private async Task<List<ProductieFormulier>> GetProducties(LoadedType type, bool filter)
+        private async Task<List<ProductieFormulier>> GetProducties(LoadedType type, bool filter, IsValidHandler validhandler)
         {
             var prods = new List<ProductieFormulier>();
             //Manager.DbBeginUpdate();
@@ -629,10 +621,10 @@ namespace ProductieManager.Rpm.Productie
                     // break;
                     case LoadedType.Gereed:
                         //  IsValidHandler validhandler = filter ? Functions.IsAllowed : null;
-                        prods = await Manager.Database.GetAllProducties(true, filter, null);
+                        prods = await Manager.Database.GetAllProducties(true, filter, validhandler);
                         break;
                     case LoadedType.Producties:
-                        prods = await Manager.Database.GetAllProducties(false, filter, null);
+                        prods = await Manager.Database.GetAllProducties(false, filter, validhandler);
                         break;
                     case LoadedType.None:
                         prods = new List<ProductieFormulier>();

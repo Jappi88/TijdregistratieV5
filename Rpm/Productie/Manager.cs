@@ -675,13 +675,14 @@ namespace Rpm.Productie
         }
 
         /// <summary>
-            /// Verkrijg alle producties
-            /// </summary>
-            /// <param name="states">Verkrijg producties op basis van de gekozen status lijst</param>
-            /// <param name="filter">true als je wilt dat de producties worden gefiltered volgens een geldige bewerking</param>
-            /// <param name="incform">true als de productie ook die aangegeven status moet zijn, false je alleen wilt verkrijgen op basis van een geldige bewerking</param>
-            /// <returns>Lijst van productieformulieren</returns>
-            public static Task<List<ProductieFormulier>> GetProducties(ViewState[] states, bool filter, bool incform)
+        /// Verkrijg alle producties
+        /// </summary>
+        /// <param name="states">Verkrijg producties op basis van de gekozen status lijst</param>
+        /// <param name="filter">true als je wilt dat de producties worden gefiltered volgens een geldige bewerking</param>
+        /// <param name="incform">true als de productie ook die aangegeven status moet zijn, false je alleen wilt verkrijgen op basis van een geldige bewerking</param>
+        /// <param name="handler"></param>
+        /// <returns>Lijst van productieformulieren</returns>
+        public static Task<List<ProductieFormulier>> GetProducties(ViewState[] states, bool filter, bool incform, IsValidHandler handler)
         {
             return Task.Run(async () =>
             {
@@ -696,7 +697,7 @@ namespace Rpm.Productie
                         : ProductieProvider.LoadedType.Producties;
                 }
 
-                var xitems = await ProductieProvider.GetProducties(type, states, filter,incform);
+                var xitems = await ProductieProvider.GetProducties(type, states, filter,handler);
                 return xitems;
             });
         }
@@ -706,8 +707,9 @@ namespace Rpm.Productie
         /// </summary>
         /// <param name="states">Een lijst van de states waarvan de bewerkingen aan moeten voldoen</param>
         /// <param name="filter">True voor als je de bewerkingen wilt laten filteren volgens de basis filter instellingen</param>
+        /// <param name="handler"></param>
         /// <returns>Een taak die op de achtergrond de bewerkinglijst samen stelt</returns>
-        public static Task<List<Bewerking>> GetBewerkingen(ViewState[] states, bool filter)
+        public static Task<List<Bewerking>> GetBewerkingen(ViewState[] states, bool filter, IsValidHandler handler = null)
         {
             return Task.Run(async () =>
             {
@@ -717,7 +719,7 @@ namespace Rpm.Productie
                     type = ProductieProvider.LoadedType.Gereed;
                 if (states.Any(x => x is ViewState.Alles))
                     type = ProductieProvider.LoadedType.Alles;
-                var xitems = await ProductieProvider.GetBewerkingen(type, states, filter);
+                var xitems = await ProductieProvider.GetBewerkingen(type, states, filter, handler);
                 return xitems;
             });
         }
@@ -813,7 +815,7 @@ namespace Rpm.Productie
         /// <returns>Een taak die op de achtergrond de productieformulieren verkrijgt</returns>
         public static Task<List<ProductieFormulier>> GetProducties(ViewState state, bool filter, bool incform)
         {
-            return GetProducties(new[] {state}, filter, incform);
+            return GetProducties(new[] {state}, filter, incform,null);
         }
 
         /// <summary>
@@ -824,7 +826,7 @@ namespace Rpm.Productie
         {
             return Task.Run(async () =>
             {
-                var prods = await GetProducties(new[] {ViewState.Gestart, ViewState.Gestopt}, true, false);
+                var prods = await GetProducties(new[] {ViewState.Gestart, ViewState.Gestopt}, true, false,null);
                 return prods.Any(x => x.IsOnderbroken());
             });
         }

@@ -5,6 +5,7 @@ using Rpm.Misc;
 using Rpm.SqlLite;
 using Rpm.Various;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -13,6 +14,20 @@ using System.Threading.Tasks;
 
 namespace Rpm.Productie
 {
+    public class BewerkingDistinctComparer : IEqualityComparer<Bewerking>
+    {
+        public bool Equals(Bewerking x, Bewerking y)
+        {
+            return x?.ProductieNr == y?.ProductieNr;
+        }
+
+        public int GetHashCode(Bewerking obj)
+        {
+            return obj?.ProductieNr?.GetHashCode() ?? -1;
+        }
+    }
+
+
     [DataContract]
     public sealed class Bewerking : IProductieBase
     {

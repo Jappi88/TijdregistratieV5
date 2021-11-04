@@ -130,9 +130,6 @@ namespace Rpm.Settings
             //Weergave
             PersoneelAfdelingFilter = "";
             ProductieWeergaveFilters = new ViewState[] { };
-            _viewbewdata = new byte[] { };
-            _viewproddata = new byte[] { };
-            _viewrecentproddata = new byte[] { };
             _viewwerkplekdata = new byte[] { };
             _viewvaarddata = new byte[] { };
             _viewstoringdata = new byte[] { };
@@ -278,12 +275,6 @@ namespace Rpm.Settings
 
         //weergave
         public string PersoneelAfdelingFilter { get; set; }
-        [ExcludeFromSerialization]
-        public byte[] _viewproddata { get; set; }
-        [ExcludeFromSerialization]
-        public byte[] _viewrecentproddata { get; set; }
-        [ExcludeFromSerialization]
-        public byte[] _viewbewdata { get; set; }
         public byte[] _viewwerkplekdata { get; set; }
         public byte[] _viewvaarddata { get; set; }
         public byte[] _viewstoringdata { get; set; }
@@ -295,30 +286,6 @@ namespace Rpm.Settings
         public DateTime LastGereedStop { get; set; }
         public Dictionary<string,LastFormScreenInfo> LastFormInfo { get; set; }
 
-        [BsonIgnore]
-        [ExcludeFromSerialization]
-        public byte[] ViewDataProductieState
-        {
-            get => _viewproddata?.DeCompress();
-            set => _viewproddata = value?.Compress();
-        }
-
-        [BsonIgnore]
-        [ExcludeFromSerialization]
-        public byte[] ViewDataBewerkingenState
-        {
-            get => _viewbewdata?.DeCompress();
-            set => _viewbewdata = value?.Compress();
-        }
-
-        [ExcludeFromSerialization]
-        public byte[] ViewDataRecentProductieState
-        {
-            get => _viewrecentproddata?.DeCompress();
-            set => _viewrecentproddata = value?.Compress();
-        }
-
-        [BsonIgnore]
         [ExcludeFromSerialization]
         public byte[] ViewDataWerkplekState
         {

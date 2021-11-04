@@ -44,6 +44,8 @@ namespace Forms
             this.productieForm1.SelectedBewerking = null;
             this.productieForm1.Size = new System.Drawing.Size(757, 482);
             this.productieForm1.TabIndex = 0;
+            this.productieForm1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.StartProductie_KeyDown);
+            this.productieForm1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.StartProductie_KeyPress);
             // 
             // StartProductie
             // 
@@ -63,6 +65,8 @@ namespace Forms
             this.Text = "StartProductie";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.StartProductie_FormClosing);
             this.Shown += new System.EventHandler(this.StartProductie_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.StartProductie_KeyDown);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.StartProductie_KeyPress);
             this.ResumeLayout(false);
 
         }
