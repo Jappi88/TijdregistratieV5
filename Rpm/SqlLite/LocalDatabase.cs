@@ -1575,7 +1575,10 @@ namespace Rpm.SqlLite
                     {
                         var xdiffers = new List<string>();
                         if (!Manager.Opties.xPublicInstancePropertiesEqual(xset, xdiffers))
+                        {
+                            Manager.Opties = xset;
                             Manager.SettingsChanged(this, true);
+                        }
                     }
                 }
                 catch (Exception x)

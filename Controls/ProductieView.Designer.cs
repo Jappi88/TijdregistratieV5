@@ -662,7 +662,7 @@ namespace Controls
             menuButton5.Name = "xcreateexcel";
             menuButton5.Text = "Excel Overzicht";
             menuButton5.Tooltip = "Maak excel overzicht";
-            menuButton6.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton6.AccesLevel = Rpm.Various.AccesType.ProductieAdvance;
             menuButton6.CombineImage = null;
             menuButton6.CombineScale = 1.5D;
             menuButton6.ContextMenu = null;
@@ -673,7 +673,7 @@ namespace Controls
             menuButton6.Name = "xupdatedb";
             menuButton6.Text = "Update Database";
             menuButton6.Tooltip = "Update database vanuit adere locaties";
-            menuButton7.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton7.AccesLevel = Rpm.Various.AccesType.ProductieAdvance;
             menuButton7.CombineImage = null;
             menuButton7.CombineScale = 1.5D;
             menuButton7.ContextMenu = null;

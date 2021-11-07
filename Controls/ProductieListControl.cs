@@ -11,16 +11,12 @@ using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.Various;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Runtime.Remoting.Contexts;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
-using Various;
 using static Forms.RangeCalculatorForm;
 using Comparer = Rpm.Various.Comparer;
 using Timer = System.Timers.Timer;
@@ -159,7 +155,7 @@ namespace Controls
                         xsearch.TextChanged -= xsearchbox_TextChanged;
                         xsearch.TextChanged += xsearchbox_TextChanged;
                         InitImageList();
-                        InitColumns();
+                        InitColumns(Manager.Opties);
                         IsLoaded = true;
                     }));
                 }
@@ -251,9 +247,11 @@ namespace Controls
                 xtoolstripaanbevolenpersonen.Enabled = enable1;
                 zoekToolStripMenuItem.Enabled = enable3;
                 verpakkingsInstructieToolStripMenuItem.Enabled = enable1;
-                verwijderFiltersToolStripMenuItem.Visible = Manager.Opties?.Filters?.Any(x =>
-                    x.IsTempFilter && x.ListNames.Any(s =>
-                        string.Equals(s, ListName, StringComparison.CurrentCultureIgnoreCase))) ?? false;
+                kopiërenToolStripMenuItem.Enabled = !_selectedSubitem.IsDefault() && _selectedSubitem.Value != null;
+                //resetToolStripMenuItem.Visible = Manager.Opties?.Filters?.Any(x =>
+                //    x.IsTempFilter && x.ListNames.Any(s =>
+                //        string.Equals(s, ListName, StringComparison.CurrentCultureIgnoreCase))) ?? false;
+
             }
             catch (Exception e)
             {
@@ -439,7 +437,6 @@ namespace Controls
             return true;
         }
 
-
         private OLVColumn SetColumnsInfo(ref OLVColumn column, ExcelColumnEntry columnEntry)
         {
             try
@@ -537,26 +534,26 @@ namespace Controls
             }
         }
 
-        private void InitColumns()
+        private void InitColumns(UserSettings settings)
         {
             try
             {
-                var xcols = Manager.Opties?.ExcelColumns?.FirstOrDefault(x =>
+                var xcols = settings?.ExcelColumns?.FirstOrDefault(x =>
                     x.ListNames.Any(
                         listname => string.Equals(listname, ListName, StringComparison.CurrentCultureIgnoreCase)));
                 OLVColumn xsort = null;
                 if (xcols == null)
                 {
-                    xcols = Manager.Opties?.ExcelColumns?.FirstOrDefault(x =>
+                    xcols = settings?.ExcelColumns?.FirstOrDefault(x =>
                         string.Equals(x.Name, ListName, StringComparison.CurrentCultureIgnoreCase));
                     if (xcols != null)
                     {
                         xcols.SetSelected(true, ListName);
                     }
-                    else if (Manager.Opties?.ExcelColumns != null)
+                    else if (settings?.ExcelColumns != null)
                     {
                         xcols = ExcelSettings.CreateSettings(ListName,false);
-                        Manager.Opties.ExcelColumns.Add(xcols);
+                        settings.ExcelColumns.Add(xcols);
                     }
                 }
                 if (xcols?.Columns != null)
@@ -647,7 +644,7 @@ namespace Controls
             if (sender is ExcelSettings settings)
             {
                 if (settings.IsUsed(ListName))
-                    this.BeginInvoke(new Action(InitColumns));
+                    this.BeginInvoke(new Action(()=> InitColumns(Manager.Opties)));
             }
         }
 
@@ -704,6 +701,7 @@ namespace Controls
             return 0 + xbase;
         }
 
+        #region ProductieLijstGetters
         private object ImageGetter(object sender)
         {
             return GetProductieImageIndex(sender as IProductieBase);
@@ -729,7 +727,6 @@ namespace Controls
 
             return "N.V.T.";
         }
-
 
         private object LastChangedGetter(object sender)
         {
@@ -809,6 +806,7 @@ namespace Controls
                 return "Zonder Bewerkingen";
             return group;
         }
+        #endregion ProductieLijstGetters
 
         #endregion Init Methods
 
@@ -879,14 +877,16 @@ namespace Controls
 
         private void UpdateListObjects<T>(List<T> objects)
         {
-            var xobjects = objects;
-            if (objects == null || objects.Count == ProductieLijst.Items.Count) return;
-            ProductieLijst.BeginUpdate();
-            var sel = ProductieLijst.SelectedObject;
-            ProductieLijst.SetObjects(objects);
-            ProductieLijst.SelectedObject = sel;
-            ProductieLijst.SelectedItem?.EnsureVisible();
-            ProductieLijst.EndUpdate();
+            if (objects != null && objects.Count != ProductieLijst.Items.Count)
+            {
+                ProductieLijst.BeginUpdate();
+                var sel = ProductieLijst.SelectedObject;
+                ProductieLijst.SetObjects(objects);
+                ProductieLijst.SelectedObject = sel;
+                ProductieLijst.SelectedItem?.EnsureVisible();
+                ProductieLijst.EndUpdate();
+                OnItemCountChanged();
+            }
         }
 
         public void UpdateProductieList(bool reload, bool showwaitui)
@@ -919,11 +919,11 @@ namespace Controls
                                 var xprods = !reload && CustomList && Producties != null
                                     ? Producties.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
                                         .ToList()
-                                    : Producties = await Manager.GetProducties(states, true,true, ValidHandler);
-                                //if (ValidHandler != null)
-                                //    xprods = xprods.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
-                                //        .ToList();
-                                //else
+                                    : Producties = await Manager.GetProducties(states, true,true, null);
+                                if (ValidHandler != null)
+                                    xprods = xprods.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
+                                        .ToList();
+                                else
                                     xprods = xprods.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter(), states, true))
                                         .ToList();
                                 UpdateListObjects(xprods);
@@ -934,11 +934,11 @@ namespace Controls
                             var bws = !reload && CustomList && Bewerkingen != null
                                 ? Bewerkingen.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
                                     .ToList()
-                                : Bewerkingen = await Manager.GetBewerkingen(states, true,ValidHandler);
-                            //if (ValidHandler != null)
-                            //    bws = bws.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
-                            //        .ToList();
-                            //else
+                                : Bewerkingen = await Manager.GetBewerkingen(states, true,null);
+                            if (ValidHandler != null)
+                                bws = bws.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
+                                    .ToList();
+                            else
                                 bws = bws.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter())).ToList();
                             UpdateListObjects(bws);
                         }
@@ -953,8 +953,9 @@ namespace Controls
                                 if (groups1.Any(t => !@group.Collapsed && t.Header == @group.Header))
                                     @group.Collapsed = true;
                             }
-
-                        
+                        _selectedItem = ProductieLijst.SelectedObject;
+                        SetButtonEnable();
+                        OnSelectedItemChanged();
                         //if (xfocused != null)
                         //{
                         //    ProductieLijst.FocusedObject = xfocused;
@@ -964,10 +965,6 @@ namespace Controls
                         //ProductieLijst.SelectedObject = selected1;
                         //if (xfocused == null)
                         //    ProductieLijst.SelectedItem?.EnsureVisible();
-
-                        SetButtonEnable();
-                        if (xlistcount != ProductieLijst.Items.Count)
-                            OnItemCountChanged();
                     }
                     catch (Exception e)
                     {
@@ -1306,7 +1303,16 @@ namespace Controls
             {
                 if (!_enableEntryFilter) return;
                 if (sender is ProductieListControl xc && string.Equals(xc.ListName, ListName))
-                    BeginInvoke(new MethodInvoker(() => { UpdateProductieList(true,false); }));
+                {
+                    var xfilters = Manager.Opties.Filters.Where(x =>
+                        x.ListNames.Any(l => string.Equals(ListName, l, StringComparison.CurrentCultureIgnoreCase))).ToList();
+                    var reload = false;
+                    if (xfilters.Count == 0)
+                        reload = true;
+                    else
+                        reload = !xfilters.All(x => x.IsTempFilter);
+                    BeginInvoke(new MethodInvoker(() => { UpdateProductieList(reload,false); }));
+                }
             }
             catch (Exception exception)
             {
@@ -1322,7 +1328,7 @@ namespace Controls
                 BeginInvoke(new MethodInvoker(() =>
                 {
                     if (IsDisposed) return;
-                    InitColumns();
+                    InitColumns(settings);
                     if (CanLoad)
                         UpdateProductieList(true,false);
                 }));
@@ -2831,23 +2837,32 @@ namespace Controls
             }
         }
 
-        private void filterOpToolStripMenuItem_Click(object sender, EventArgs e)
+        private void FilterOp(FilterType type, KeyValuePair<string, object> value)
         {
-            if (!_selectedSubitem.IsDefault() && Manager.Opties?.Filters != null)
+            if (!value.IsDefault() && Manager.Opties?.Filters != null)
             {
-                var fe = FilterEntry.CreateNewFromValue(this._selectedSubitem.Key,
-                    this._selectedSubitem.Value, FilterType.GelijkAan);
+                var fe = FilterEntry.CreateNewFromValue(value.Key,
+                    value.Value, type);
                 fe.OperandType = Operand.ALS;
                 var xold = Manager.Opties.Filters.FirstOrDefault(x =>
                     x.ListNames.Any(f => string.Equals(f, ListName, StringComparison.CurrentCultureIgnoreCase)) &&
                     x.Filters.Any(s => s.Equals(fe)));
                 if (xold != null) return;
-                var xf = new Filter() {IsTempFilter = true, Name = fe.PropertyName};
+                var xf = new Filter() { IsTempFilter = true, Name = fe.PropertyName };
                 xf.ListNames.Add(ListName);
                 xf.Filters.Add(fe);
                 _selectedSubitem = new KeyValuePair<string, object>();
+                InitFilterToolStripItems();
                 Manager.Opties.Filters.Add(xf);
                 Manager.OnFilterChanged(this);
+            }
+        }
+
+        private void filterOpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!_selectedSubitem.IsDefault() && sender is ToolStripMenuItem {Tag: FilterType type})
+            {
+                FilterOp(type, _selectedSubitem);
             }
         }
 
@@ -2864,43 +2879,102 @@ namespace Controls
 
         private void xProductieLijst1_CellRightClick(object sender, CellRightClickEventArgs e)
         {
-            if (e.SubItem == null) return;
-            _selectedSubitem = new KeyValuePair<string, object>(e.Column.AspectName, e.SubItem.ModelValue);
             if (e.SubItem?.ModelValue is not null)
-            {
-                xfiltertoolstripitem.Visible = true;
-                var xval = e.SubItem.ModelValue.ToString();
-                if(xval.Length > 12)
-                    xval = xval.Substring(0,12) + "...";
-                xfiltertoolstripitem.Text = $"Filter op [{e.Column.Text}] '{xval}'";
-            }
+                _selectedSubitem = new KeyValuePair<string, object>(e.Column.AspectName, e.SubItem.ModelValue);
             else
+                _selectedSubitem = new KeyValuePair<string, object>();
+            InitFilterToolStripItems();
+        }
+
+        private void InitFilterToolStripItems()
+        {
+            var xitems = xfiltertoolstripitem.DropDownItems;
+            for (int i = 0; i < xitems.Count; i++)
             {
-                xfiltertoolstripitem.Visible = false;
+                var xitem = xitems[i];
+                if (xitem.Tag != null && xitem.Tag.GetType() == typeof(FilterType))
+                    xfiltertoolstripitem.DropDownItems.RemoveAt(i--);
             }
+            if (!_selectedSubitem.IsDefault())
+            {
+                var xv = FilterEntry.GetFilterTypesByType(_selectedSubitem.Value == null? typeof(string) : _selectedSubitem.Value.GetType());
+                if (xv.Count == 0) return;
+                var xval = _selectedSubitem.Value?.ToString() ?? "";
+                if (xval.Length > 8)
+                    xval = xval.Substring(0, 8) + "...";
+               
+                foreach (var type in xv)
+                {
+                    var xtype = Enum.GetName(typeof(FilterType), type);
+                    var xtxt = $"Als [{_selectedSubitem.Key}] {xtype} '{xval}'";
+                    var xf = (ToolStripMenuItem)xfiltertoolstripitem.DropDownItems[xtype];
+                    if (xf == null)
+                    {
+                        xf = new ToolStripMenuItem(xtxt, null, filterOpToolStripMenuItem_Click);
+                        xf.Tag = type;
+                        xf.ShortcutKeys = GetShortCut(type);
+                        xf.Name = xtype;
+                        xfiltertoolstripitem.DropDownItems.Add(xf);
+                    }
+                    else xf.Text = xtxt;
+
+                }
+            }
+        }
+
+        private Keys GetShortCut(FilterType type)
+        {
+            switch (type)
+            {
+                case FilterType.None:
+                    return Keys.None;
+                case FilterType.BegintMet:
+                    return Keys.Alt | Keys.B;
+                case FilterType.EindigtMet:
+                    return Keys.Alt | Keys.E;
+                case FilterType.GelijkAan:
+                    return Keys.Alt | Keys.F;
+                case FilterType.NietGelijkAan:
+                    return Keys.Alt | Keys.O;
+                case FilterType.Bevat:
+                    return Keys.Alt | Keys.W;
+                case FilterType.BevatNiet:
+                    return Keys.Alt | Keys.N;
+                case FilterType.Kleinerdan:
+                    return Keys.Alt | Keys.K;
+                case FilterType.KleinerOfGelijkAan:
+                    return Keys.Alt | Keys.J;
+                case FilterType.Groterdan:
+                    return Keys.Alt | Keys.G;
+                case FilterType.GroterOfGelijkAan:
+                    return Keys.Alt | Keys.H;
+            }
+
+            return Keys.None;
         }
 
         private void xProductieLijst1_CellClick(object sender, CellClickEventArgs e)
         {
-            if (e.SubItem == null) return;
-            _selectedSubitem = new KeyValuePair<string, object>(e.Column.AspectName, e.SubItem.ModelValue);
             if (e.SubItem?.ModelValue is not null)
-            {
-                xfiltertoolstripitem.Visible = true;
-                var xval = e.SubItem.ModelValue.ToString();
-                if (xval.Length > 12)
-                    xval = xval.Substring(0, 12) + "...";
-                xfiltertoolstripitem.Text = $"Filter op [{e.Column.Text}] '{xval}'";
-            }
+                _selectedSubitem = new KeyValuePair<string, object>(e.Column.AspectName, e.SubItem.ModelValue);
             else
-            {
-                xfiltertoolstripitem.Visible = false;
-            }
+                _selectedSubitem = new KeyValuePair<string, object>();
+            InitFilterToolStripItems();
         }
 
         private void verwijderFiltersToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ClearTempFilters();
+        }
+
+        private void kopiërenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_selectedSubitem.IsDefault())
+                return;
+            if (string.IsNullOrEmpty(_selectedSubitem.Value?.ToString()))
+                Clipboard.Clear();
+            else
+                Clipboard.SetText(_selectedSubitem.Value.ToString());
         }
     }
 }

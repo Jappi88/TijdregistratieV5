@@ -102,7 +102,7 @@ namespace ProductieManager.Forms
             xdatepanel.Visible = xdatepanel.Enabled;
             xComboPanel.Visible = xComboPanel.Enabled;
             xcheckvalue.Visible = xcheckvalue.Enabled;
-            var xvaltypes = FilterEntry.GetFilterTypesByType(Property.PropertyType);
+            var xvaltypes = FilterEntry.GetFilterStringTypesByType(Property.PropertyType);
             foreach (var xval in xvaltypes)
             {
                 xvaluetypes.Items.Add(xval);

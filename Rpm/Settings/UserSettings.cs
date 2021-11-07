@@ -143,8 +143,12 @@ namespace Rpm.Settings
             return Task.Run(async () =>
             {
                 change ??= $"[{Username}] Intellingen Opgeslagen";
-                foreach (var selected in Manager.Opties.ExcelColumns)
-                    Manager.ColumnsSettingsChanged(selected);
+                if (string.Equals(Manager.Opties?.Username, Username, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    foreach (var selected in ExcelColumns)
+                        Manager.ColumnsSettingsChanged(selected);
+                }
+
                 if (await Manager.Database.UpSert(this, change,showmessage))
                 {
                     if (triggersaved)

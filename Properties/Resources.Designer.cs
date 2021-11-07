@@ -473,6 +473,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap copy_paste_document_file_1557 {
+            get {
+                object obj = ResourceManager.GetObject("copy_paste_document_file_1557", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Count_tool_34564 {
             get {
                 object obj = ResourceManager.GetObject("Count-tool_34564", resourceCulture);

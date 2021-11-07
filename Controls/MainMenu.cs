@@ -59,6 +59,7 @@ namespace Controls
                         Text = IsExpanded ? _menButtons[i].Text : "",
                         Tag = _menButtons[i],
                         Enabled = _menButtons[i].Enabled,
+                        Visible = _menButtons[i].Enabled,
                         Name = _menButtons[i].Name,
                         Image = _menButtons[i].Image,
                         ImageAlign = ContentAlignment.MiddleLeft,
@@ -119,8 +120,11 @@ namespace Controls
                 {
                     for (var i = 0; i < xbuttoncontainer.Controls.Count; i++)
                         if (xbuttoncontainer.Controls[i].Tag is MenuButton xmb)
+                        {
                             xbuttoncontainer.Controls[i].Enabled = xmb.AccesLevel <= AccesType.AlleenKijken ||
                                                                    user != null && xmb.AccesLevel <= user.AccesLevel;
+                            xbuttoncontainer.Controls[i].Visible = xbuttoncontainer.Controls[i].Enabled;
+                        }
                 }));
             }
             catch (Exception e)
@@ -150,6 +154,7 @@ namespace Controls
             _menButtons[index].Enabled = enable;
             var xindex = xbuttoncontainer.Controls.Count - index - 1;
             xbuttoncontainer.Controls[xindex].Enabled = enable;
+            xbuttoncontainer.Controls[xindex].Visible = enable;
             xbuttoncontainer.Invalidate();
             return true;
         }
@@ -161,6 +166,7 @@ namespace Controls
             bttn.Enabled = enable;
             var xindex = xbuttoncontainer.Controls.Count - bttn.Index - 1;
             xbuttoncontainer.Controls[xindex].Enabled = enable;
+            xbuttoncontainer.Controls[xindex].Visible = enable;
             xbuttoncontainer.Invalidate();
             return true;
         }

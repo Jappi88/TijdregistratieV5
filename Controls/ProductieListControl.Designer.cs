@@ -62,6 +62,7 @@ namespace Controls
             this.xmeldGereedToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.xdeelGereedmeldingenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.kopiërenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xverwijdertoolstrip = new System.Windows.Forms.ToolStripMenuItem();
             this.xzetterugtoolstrip = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
@@ -69,7 +70,8 @@ namespace Controls
             this.xshowproductieinfo = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.xfiltertoolstripitem = new System.Windows.Forms.ToolStripMenuItem();
-            this.verwijderFiltersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.vouwAllGroepenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ontvouwAlleGroepenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -230,6 +232,7 @@ namespace Controls
             this.xmeldGereedToolStripMenuItem1,
             this.xdeelGereedmeldingenToolStripMenuItem,
             this.toolStripSeparator6,
+            this.kopiërenToolStripMenuItem,
             this.xverwijdertoolstrip,
             this.xzetterugtoolstrip,
             this.toolStripSeparator12,
@@ -237,7 +240,6 @@ namespace Controls
             this.xshowproductieinfo,
             this.toolStripSeparator2,
             this.xfiltertoolstripitem,
-            this.verwijderFiltersToolStripMenuItem,
             this.toolStripSeparator3,
             this.vouwAllGroepenToolStripMenuItem,
             this.ontvouwAlleGroepenToolStripMenuItem});
@@ -290,7 +292,7 @@ namespace Controls
             this.productieToolStripMenuItem.Name = "productieToolStripMenuItem";
             this.productieToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
             this.productieToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
-            this.productieToolStripMenuItem.Text = "&Wijzig Productie";
+            this.productieToolStripMenuItem.Text = "Wijzig Productie";
             this.productieToolStripMenuItem.ToolTipText = "Wijzig productie";
             this.productieToolStripMenuItem.Click += new System.EventHandler(this.xwijzigformb_Click);
             // 
@@ -310,8 +312,8 @@ namespace Controls
             // 
             this.xbewleverDatumToolStripMenuItem1.Image = global::ProductieManager.Properties.Resources.systemtime_778_32_32;
             this.xbewleverDatumToolStripMenuItem1.Name = "xbewleverDatumToolStripMenuItem1";
-            this.xbewleverDatumToolStripMenuItem1.Size = new System.Drawing.Size(158, 22);
-            this.xbewleverDatumToolStripMenuItem1.Text = "&LeverDatum";
+            this.xbewleverDatumToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.xbewleverDatumToolStripMenuItem1.Text = "LeverDatum";
             this.xbewleverDatumToolStripMenuItem1.ToolTipText = "Wijzig productie leverdatum";
             this.xbewleverDatumToolStripMenuItem1.Click += new System.EventHandler(this.xbewleverDatumToolStripMenuItem1_Click);
             // 
@@ -319,8 +321,8 @@ namespace Controls
             // 
             this.aantalToolStripMenuItem1.Image = global::ProductieManager.Properties.Resources.hashtag_icon_152828_32_32;
             this.aantalToolStripMenuItem1.Name = "aantalToolStripMenuItem1";
-            this.aantalToolStripMenuItem1.Size = new System.Drawing.Size(158, 22);
-            this.aantalToolStripMenuItem1.Text = "&Aantal";
+            this.aantalToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.aantalToolStripMenuItem1.Text = "Aantal";
             this.aantalToolStripMenuItem1.ToolTipText = "Wijzig productie aantal";
             this.aantalToolStripMenuItem1.Click += new System.EventHandler(this.aantalToolStripMenuItem1_Click);
             // 
@@ -328,8 +330,8 @@ namespace Controls
             // 
             this.xbewaantalGemaaktToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Count_tool_34564;
             this.xbewaantalGemaaktToolStripMenuItem.Name = "xbewaantalGemaaktToolStripMenuItem";
-            this.xbewaantalGemaaktToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.xbewaantalGemaaktToolStripMenuItem.Text = "&Aantal Gemaakt";
+            this.xbewaantalGemaaktToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.xbewaantalGemaaktToolStripMenuItem.Text = "Aantal Gemaakt";
             this.xbewaantalGemaaktToolStripMenuItem.ToolTipText = "Wijzig aantal gemaakt";
             this.xbewaantalGemaaktToolStripMenuItem.Click += new System.EventHandler(this.xbewaantalGemaaktToolStripMenuItem_Click);
             // 
@@ -337,8 +339,8 @@ namespace Controls
             // 
             this.xbewnotitieToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Note_34576_32x32;
             this.xbewnotitieToolStripMenuItem.Name = "xbewnotitieToolStripMenuItem";
-            this.xbewnotitieToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.xbewnotitieToolStripMenuItem.Text = "&Notitie";
+            this.xbewnotitieToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.xbewnotitieToolStripMenuItem.Text = "Notitie";
             this.xbewnotitieToolStripMenuItem.ToolTipText = "Voeg/wijzig notitie";
             this.xbewnotitieToolStripMenuItem.Click += new System.EventHandler(this.xbewnotitieToolStripMenuItem_Click);
             // 
@@ -388,7 +390,7 @@ namespace Controls
             this.benodigdeMaterialenToolStripMenuItem.Name = "benodigdeMaterialenToolStripMenuItem";
             this.benodigdeMaterialenToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
             this.benodigdeMaterialenToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
-            this.benodigdeMaterialenToolStripMenuItem.Text = "&Materialen";
+            this.benodigdeMaterialenToolStripMenuItem.Text = "Materialen";
             this.benodigdeMaterialenToolStripMenuItem.ToolTipText = "Beheer materialen";
             this.benodigdeMaterialenToolStripMenuItem.Click += new System.EventHandler(this.xmaterialenb_Click);
             // 
@@ -433,7 +435,7 @@ namespace Controls
             this.xonderbrekingtoolstripbutton.Name = "xonderbrekingtoolstripbutton";
             this.xonderbrekingtoolstripbutton.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.xonderbrekingtoolstripbutton.Size = new System.Drawing.Size(268, 22);
-            this.xonderbrekingtoolstripbutton.Text = "&Onderbrekeningen";
+            this.xonderbrekingtoolstripbutton.Text = "Onderbrekeningen";
             this.xonderbrekingtoolstripbutton.ToolTipText = "Beheer onderbrekeningen";
             this.xonderbrekingtoolstripbutton.Click += new System.EventHandler(this.xonderbrekingb_Click);
             // 
@@ -444,7 +446,7 @@ namespace Controls
             this.xtoolstripbehwerktijden.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.T)));
             this.xtoolstripbehwerktijden.Size = new System.Drawing.Size(268, 22);
-            this.xtoolstripbehwerktijden.Text = "&Werk Tijden";
+            this.xtoolstripbehwerktijden.Text = "Werk Tijden";
             this.xtoolstripbehwerktijden.ToolTipText = "Beheer de werktijden";
             this.xtoolstripbehwerktijden.Click += new System.EventHandler(this.xwerktijdenb_Click);
             // 
@@ -480,13 +482,22 @@ namespace Controls
             this.toolStripSeparator6.Name = "toolStripSeparator6";
             this.toolStripSeparator6.Size = new System.Drawing.Size(265, 6);
             // 
+            // kopiërenToolStripMenuItem
+            // 
+            this.kopiërenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.copy_paste_document_file_1557;
+            this.kopiërenToolStripMenuItem.Name = "kopiërenToolStripMenuItem";
+            this.kopiërenToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.kopiërenToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.kopiërenToolStripMenuItem.Text = "Kopiëren";
+            this.kopiërenToolStripMenuItem.Click += new System.EventHandler(this.kopiërenToolStripMenuItem_Click);
+            // 
             // xverwijdertoolstrip
             // 
             this.xverwijdertoolstrip.Image = ((System.Drawing.Image)(resources.GetObject("xverwijdertoolstrip.Image")));
             this.xverwijdertoolstrip.Name = "xverwijdertoolstrip";
             this.xverwijdertoolstrip.ShortcutKeys = System.Windows.Forms.Keys.Delete;
             this.xverwijdertoolstrip.Size = new System.Drawing.Size(268, 22);
-            this.xverwijdertoolstrip.Text = "&Verwijder";
+            this.xverwijdertoolstrip.Text = "Verwijderen";
             this.xverwijdertoolstrip.ToolTipText = "verwijder geselecteerde producties";
             this.xverwijdertoolstrip.Click += new System.EventHandler(this.xverwijderb_Click);
             // 
@@ -496,7 +507,7 @@ namespace Controls
             this.xzetterugtoolstrip.Name = "xzetterugtoolstrip";
             this.xzetterugtoolstrip.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
             this.xzetterugtoolstrip.Size = new System.Drawing.Size(268, 22);
-            this.xzetterugtoolstrip.Text = "&Terug Zetten";
+            this.xzetterugtoolstrip.Text = "Terug Zetten";
             this.xzetterugtoolstrip.ToolTipText = "Zet een productie terug van een gereed of een verwijderd status";
             this.xzetterugtoolstrip.Click += new System.EventHandler(this.xzetterugb_Click);
             // 
@@ -532,21 +543,27 @@ namespace Controls
             // 
             // xfiltertoolstripitem
             // 
+            this.xfiltertoolstripitem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.resetToolStripMenuItem,
+            this.toolStripSeparator4});
             this.xfiltertoolstripitem.Image = global::ProductieManager.Properties.Resources.filter_list_21446;
             this.xfiltertoolstripitem.Name = "xfiltertoolstripitem";
-            this.xfiltertoolstripitem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
             this.xfiltertoolstripitem.Size = new System.Drawing.Size(268, 22);
-            this.xfiltertoolstripitem.Text = "Filter Op";
+            this.xfiltertoolstripitem.Text = "Filter";
             this.xfiltertoolstripitem.Click += new System.EventHandler(this.filterOpToolStripMenuItem_Click);
             // 
-            // verwijderFiltersToolStripMenuItem
+            // resetToolStripMenuItem
             // 
-            this.verwijderFiltersToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.ic_format_clear_128_28359;
-            this.verwijderFiltersToolStripMenuItem.Name = "verwijderFiltersToolStripMenuItem";
-            this.verwijderFiltersToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.R)));
-            this.verwijderFiltersToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
-            this.verwijderFiltersToolStripMenuItem.Text = "Verwijder Filters";
-            this.verwijderFiltersToolStripMenuItem.Click += new System.EventHandler(this.verwijderFiltersToolStripMenuItem_Click);
+            this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
+            this.resetToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.R)));
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.resetToolStripMenuItem.Text = "Reset";
+            this.resetToolStripMenuItem.Click += new System.EventHandler(this.verwijderFiltersToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(136, 6);
             // 
             // toolStripSeparator3
             // 
@@ -618,14 +635,14 @@ namespace Controls
             // 
             this.xbeheerfilterstoolstripbutton.Image = global::ProductieManager.Properties.Resources.filter_filters_navigation_32x32;
             this.xbeheerfilterstoolstripbutton.Name = "xbeheerfilterstoolstripbutton";
-            this.xbeheerfilterstoolstripbutton.Size = new System.Drawing.Size(147, 22);
+            this.xbeheerfilterstoolstripbutton.Size = new System.Drawing.Size(180, 22);
             this.xbeheerfilterstoolstripbutton.Text = "Beheer Regels";
             this.xbeheerfilterstoolstripbutton.ToolTipText = "Beheer filters";
             // 
             // toolStripSeparator15
             // 
             this.toolStripSeparator15.Name = "toolStripSeparator15";
-            this.toolStripSeparator15.Size = new System.Drawing.Size(144, 6);
+            this.toolStripSeparator15.Size = new System.Drawing.Size(177, 6);
             // 
             // xsearch
             // 
@@ -1179,6 +1196,8 @@ namespace Controls
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.ToolStripMenuItem xfiltertoolstripitem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripMenuItem verwijderFiltersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem kopiërenToolStripMenuItem;
     }
 }

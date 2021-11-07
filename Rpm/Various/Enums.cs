@@ -13,10 +13,10 @@ namespace Rpm.Various
         NietGelijkAan,
         Bevat,
         BevatNiet,
-        Lager,
-        LagerOfGelijkAan,
-        Hoger,
-        HogerOfGelijkAan
+        Kleinerdan,
+        KleinerOfGelijkAan,
+        Groterdan,
+        GroterOfGelijkAan
     }
 
     [Serializable]

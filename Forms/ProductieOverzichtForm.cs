@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace ProductieManager.Forms
 {
@@ -178,7 +179,7 @@ namespace ProductieManager.Forms
                                         string.Equals(x.ArtikelNr, wp.ArtikelNr,
                                             StringComparison.CurrentCultureIgnoreCase) ||
                                         IsSameProduct(x.ArtikelNr, wp.ArtikelNr) > 4);
-                                    volgende ??= xbws[xbws.Count - 1];
+                                    volgende ??= xbws[0];
                                     xreturn.Add(new WerkVolgorde() {Name = wp.Naam, Huidig = bw, Volgende = volgende});
                                     xremove.Add(volgende);
 
@@ -349,6 +350,8 @@ namespace ProductieManager.Forms
                         xreturn.Add(bw);
 
                 }
+
+                xreturn = xreturn.OrderBy(x => x.LeverDatum).ToList();
             }
             catch (Exception e)
             {

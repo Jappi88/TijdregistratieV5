@@ -95,19 +95,34 @@ namespace Rpm.Misc
             }
         }
 
-        public static List<string> GetFilterTypesByType(Type type)
+        public static List<string> GetFilterStringTypesByType(Type type)
         {
             var xvaltypes = Enum.GetNames(typeof(FilterType)).ToList();
             xvaltypes.RemoveAll(x => x.ToLower() == "none");
             if (type == typeof(string))
             {
-                xvaltypes.RemoveAll(x => x.ToLower().StartsWith("lager") || x.ToLower().StartsWith("hoger"));
+                xvaltypes.RemoveAll(x => x.ToLower().StartsWith("kleiner") || x.ToLower().StartsWith("groter"));
             }
             else if (type == typeof(bool))
-                xvaltypes.RemoveAll(x => x.ToLower().StartsWith("lager") || x.ToLower().StartsWith("hoger") || x.ToLower().StartsWith("bevat") || x.ToLower().Contains("met"));
+                xvaltypes.RemoveAll(x => x.ToLower().StartsWith("kleiner") || x.ToLower().StartsWith("groter") || x.ToLower().StartsWith("bevat") || x.ToLower().Contains("met"));
             else xvaltypes.RemoveAll(x => x.ToLower().StartsWith("bevat") || x.ToLower().Contains("met"));
 
             return xvaltypes;
+        }
+
+        public static List<FilterType> GetFilterTypesByType(Type type)
+        {
+            try
+            {
+                var xvaltypes = GetFilterStringTypesByType(type);
+            
+                return xvaltypes.Select(x => (FilterType) Enum.Parse(typeof(FilterType), x)).ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new List<FilterType>();
+            }
         }
 
         public static FilterEntry CreateNewFromValue(string propertyname, object value, FilterType filtertype)
@@ -218,19 +233,19 @@ namespace Rpm.Misc
                             case FilterType.Bevat:
                                 xisfilter = xvalue.ToLower().Contains(value0.ToLower());
                                 break;
-                            case FilterType.Lager:
+                            case FilterType.Kleinerdan:
                                 if (int.TryParse(value0, out var valueint) && int.TryParse(xvalue, out var xvalueint))
                                     xisfilter = xvalueint < valueint;
                                 break;
-                            case FilterType.LagerOfGelijkAan:
+                            case FilterType.KleinerOfGelijkAan:
                                 if (int.TryParse(value0, out var valueint2) && int.TryParse(xvalue, out var xvalueint2))
                                     xisfilter = xvalueint2 <= valueint2;
                                 break;
-                            case FilterType.Hoger:
+                            case FilterType.Groterdan:
                                 if (int.TryParse(value0, out var valueint1) && int.TryParse(xvalue, out var xvalueint1))
                                     xisfilter = xvalueint1 > valueint1;
                                 break;
-                            case FilterType.HogerOfGelijkAan:
+                            case FilterType.GroterOfGelijkAan:
                                 if (int.TryParse(value0, out var valueint3) && int.TryParse(xvalue, out var xvalueint3))
                                     xisfilter = xvalueint3 >= valueint3;
                                 break;
@@ -260,16 +275,16 @@ namespace Rpm.Misc
                             case FilterType.EindigtMet:
                                 xisfilter = xvalue.ToString().ToLower().EndsWith(GetRangeValue(value1).ToString());
                                 break;
-                            case FilterType.Lager:
+                            case FilterType.Kleinerdan:
                                 xisfilter = xvalue < GetRangeValue(value1);
                                 break;
-                            case FilterType.LagerOfGelijkAan:
+                            case FilterType.KleinerOfGelijkAan:
                                 xisfilter = xvalue <= GetRangeValue(value1);
                                 break;
-                            case FilterType.Hoger:
+                            case FilterType.Groterdan:
                                 xisfilter = xvalue > GetRangeValue(value1);
                                 break;
-                            case FilterType.HogerOfGelijkAan:
+                            case FilterType.GroterOfGelijkAan:
                                 xisfilter = xvalue >= GetRangeValue(value1);
                                 break;
                             case FilterType.NietGelijkAan:
@@ -297,16 +312,16 @@ namespace Rpm.Misc
                             case FilterType.EindigtMet:
                                 xisfilter = xvalue.ToString().ToLower().EndsWith(GetRangeValue(xdouble).ToString());
                                 break;
-                            case FilterType.Lager:
+                            case FilterType.Kleinerdan:
                                 xisfilter = xvalue < GetRangeValue(xdouble);
                                 break;
-                            case FilterType.LagerOfGelijkAan:
+                            case FilterType.KleinerOfGelijkAan:
                                 xisfilter = xvalue <= GetRangeValue(xdouble);
                                 break;
-                            case FilterType.Hoger:
+                            case FilterType.Groterdan:
                                 xisfilter = xvalue > GetRangeValue(xdouble);
                                 break;
-                            case FilterType.HogerOfGelijkAan:
+                            case FilterType.GroterOfGelijkAan:
                                 xisfilter = xvalue >= GetRangeValue(xdouble);
                                 break;
                             case FilterType.NietGelijkAan:
@@ -334,16 +349,16 @@ namespace Rpm.Misc
                             case FilterType.EindigtMet:
                                 xisfilter = xvalue.ToString().ToLower().EndsWith(GetRangeValue(xdecimal).ToString());
                                 break;
-                            case FilterType.Lager:
+                            case FilterType.Kleinerdan:
                                 xisfilter = xvalue < GetRangeValue(xdecimal);
                                 break;
-                            case FilterType.LagerOfGelijkAan:
+                            case FilterType.KleinerOfGelijkAan:
                                 xisfilter = xvalue <= GetRangeValue(xdecimal);
                                 break;
-                            case FilterType.Hoger:
+                            case FilterType.Groterdan:
                                 xisfilter = xvalue > GetRangeValue(xdecimal);
                                 break;
-                            case FilterType.HogerOfGelijkAan:
+                            case FilterType.GroterOfGelijkAan:
                                 xisfilter = xvalue >= GetRangeValue(xdecimal);
                                 break;
                             case FilterType.NietGelijkAan:
@@ -388,16 +403,16 @@ namespace Rpm.Misc
                             case FilterType.EindigtMet:
                                 xisfilter = xvalue.ToString().ToLower().EndsWith(value2.ToString());
                                 break;
-                            case FilterType.Lager:
+                            case FilterType.Kleinerdan:
                                 xisfilter = xvalue < value2;
                                 break;
-                            case FilterType.LagerOfGelijkAan:
+                            case FilterType.KleinerOfGelijkAan:
                                 xisfilter = xvalue <= value2;
                                 break;
-                            case FilterType.Hoger:
+                            case FilterType.Groterdan:
                                 xisfilter = xvalue > value2;
                                 break;
-                            case FilterType.HogerOfGelijkAan:
+                            case FilterType.GroterOfGelijkAan:
                                 xisfilter = xvalue >= value2;
                                 break;
                             case FilterType.NietGelijkAan:
@@ -425,10 +440,10 @@ namespace Rpm.Misc
                             case FilterType.Bevat:
                                 xisfilter = xvalue.ToString().Contains(value4.ToString());
                                 break;
-                            case FilterType.LagerOfGelijkAan:
-                            case FilterType.HogerOfGelijkAan:
-                            case FilterType.Lager:
-                            case FilterType.Hoger:
+                            case FilterType.KleinerOfGelijkAan:
+                            case FilterType.GroterOfGelijkAan:
+                            case FilterType.Kleinerdan:
+                            case FilterType.Groterdan:
                                 xisfilter = value4 != xvalue;
                                 break;
 
