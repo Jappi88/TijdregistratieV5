@@ -373,49 +373,75 @@ namespace Rpm.Productie
             try
             {
                 var realrooster = rooster == null || !rooster.IsValid() ? Manager.Opties.GetWerkRooster() : rooster;
-                nu = EerstVolgendeWerkdag(nu, ref rooster, realrooster, specialeRoosters);
-                var werkover = WerkTijdOver(nu.TimeOfDay, rooster);
-                long dagen = 0;
-                var tijdnavandaag = new TimeSpan();
-                var werkdag = WerkTijdOver(rooster.StartWerkdag, rooster);
-                var rest = new TimeSpan();
-                if (tijd.TotalHours >= 0 && tijd <= werkover)
+                while (tijd.TotalSeconds > 0)
                 {
-                    rest = tijd;
-                }
-                else
-                {
-                    tijdnavandaag = tijd - werkover;
-                    nu = nu.Add(werkover.Add(MoetPauzeNemen(nu.TimeOfDay, rooster)));
                     nu = EerstVolgendeWerkdag(nu, ref rooster, realrooster, specialeRoosters);
-                    rest = werkover;
-                }
+                    var werkover = WerkTijdOver(nu.TimeOfDay, rooster);
+                    var xleft = tijd > werkover ? werkover : tijd;
+                    var pauze = PauzeGehad(nu.TimeOfDay, nu.Add(xleft).TimeOfDay, rooster);
+                    nu = nu.Add(xleft);
+                    //var xpause = pauze;
+                    while (pauze.TotalSeconds > 0)
+                    {
+                        //xpause += pauze;
+                        if (nu.Add(pauze).TimeOfDay > rooster.EindWerkdag)
+                        {
+                            xleft -= (rooster.EindWerkdag - nu.Add(pauze).TimeOfDay);
+                            break;
+                        }
 
-                if (rest.Ticks < 0)
-                    werkover = werkover.Add(rest);
-                //meer dan 1 dag moeten we hier de dagen gaan berekenen
-                if (tijdnavandaag.Ticks > 0)
-                {
-                    //dagen++;
-                    dagen += tijdnavandaag.Ticks / werkdag.Ticks;
-                    rest = new TimeSpan(tijdnavandaag.Ticks % werkdag.Ticks);
-                    //rest -= werkover;
-                    for (var i = 0; i < dagen; i++)
-                        nu = EerstVolgendeWerkdag(nu.Add(werkdag.Add(MoetPauzeNemen(nu.TimeOfDay, rooster))), ref rooster, realrooster,specialeRoosters);
+                       
+                            //xleft += pauze;
+                        var xpauze = PauzeGehad(nu.TimeOfDay, nu.Add(pauze).TimeOfDay, rooster);
+                        nu = nu.Add(pauze);
+                        pauze = xpauze;
+                    }
+                    
+                    tijd -= xleft;
                 }
+                return EerstVolgendeWerkdag(nu, ref rooster, realrooster, specialeRoosters);
+                //long dagen = 0;
+                //var tijdnavandaag = new TimeSpan();
+                //var werkdag = WerkTijdOver(rooster.StartWerkdag, rooster);
+                //var rest = new TimeSpan();
+                //if (tijd.TotalHours >= 0 && tijd <= werkover)
+                //{
+                //    rest = tijd;
+                //}
+                //else
+                //{
+                //    tijdnavandaag = tijd - werkover;
+                //    nu = nu.Add(werkover.Add(MoetPauzeNemen(nu.TimeOfDay, rooster)));
+                //    nu = EerstVolgendeWerkdag(nu, ref rooster, realrooster, specialeRoosters);
+                //    rest = werkover;
+                //}
 
-                if (rest.TotalHours > 0)
-                {
-                    if (nu.TimeOfDay < rooster.StartWerkdag || nu.TimeOfDay >= rooster.EindWerkdag)
-                        nu = EerstVolgendeWerkdag(nu, ref rooster, realrooster, specialeRoosters);
-                    //als het minder dan een dag is voor de volgende dag, moeten we de tijd bij optellen bij een nieuwe werkdag
-                    var r = nu.TimeOfDay.Add(rest);
-                    r = r.Add(PauzeGehad(rooster.StartWerkdag, r, rooster));
-                    return new DateTime(nu.Year, nu.Month, nu.Day, r.Hours, r.Minutes, r.Seconds);
-                }
+                //if (rest.Ticks < 0)
+                //    werkover = werkover.Add(rest);
+                ////meer dan 1 dag moeten we hier de dagen gaan berekenen
+                //if (tijdnavandaag.Ticks > 0)
+                //{
+                //    //dagen++;
+                //    dagen += tijdnavandaag.Ticks / werkdag.Ticks;
+                //    rest = new TimeSpan(tijdnavandaag.Ticks % werkdag.Ticks);
+                //    //rest -= werkover;
+                //    for (var i = 0; i < dagen; i++)
+                //        nu = EerstVolgendeWerkdag(nu.Add(werkdag.Add(MoetPauzeNemen(nu.TimeOfDay, rooster))), ref rooster, realrooster,specialeRoosters);
+                //}
+
+                //if (rest.TotalHours > 0)
+                //{
+                //    if (nu.TimeOfDay < rooster.StartWerkdag || nu.TimeOfDay >= rooster.EindWerkdag)
+                //        nu = EerstVolgendeWerkdag(nu, ref rooster, realrooster, specialeRoosters);
+                //    //als het minder dan een dag is voor de volgende dag, moeten we de tijd bij optellen bij een nieuwe werkdag
+                //    var r = nu.TimeOfDay.Add(rest);
+                //    r = r.Add(PauzeGehad(rooster.StartWerkdag, r, rooster));
+                //    return new DateTime(nu.Year, nu.Month, nu.Day, r.Hours, r.Minutes, r.Seconds);
+                //}
             }
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine(ex);
             }
 
             return nu;

@@ -629,6 +629,7 @@ namespace Rpm.Productie
                     //    materialen.Add(mat);
                     //}
                     sections = sections.OrderBy(x => x.Rect.Bottom).Reverse().ToList();
+
                     xreturn.Materialen = GetMaterialenFromSections(sections, ref startindex);
                     startindex++;
                     if (startindex > sections.Count - 1)
@@ -834,6 +835,7 @@ namespace Rpm.Productie
             var xsections = sections.GetRange(xstart, 8);
             xsections.RemoveAll(x => x.Text.ToLower().Contains("telling na"));
             xsections = xsections.OrderBy(x => x.Rect.Left).ToList();
+
             xstart += 8;
             double xline = -1;
             Materiaal mat = null;
@@ -930,9 +932,12 @@ namespace Rpm.Productie
                         ProductieFormulier pf = null;
                         var xxlocextraction = new MyLocationTextExtractionStrategy();
                         var pdftext = PdfTextExtractor.GetTextFromPage(reader, i,xxlocextraction);
-                       
+                        var xbase = 1000 * (reader.NumberOfPages - i);
+                      
                         if(reader.NumberOfPages > 1)
                         {
+                            if (xbase > 0)
+                                xxlocextraction.myPoints.ForEach(x => x.Rect.Bottom += xbase);
                             if (i == 1)
                             {
                                 var xindex = xxlocextraction.myPoints.FindIndex(x => x.Text.ToLower().Trim().Contains("verpakkingsinstructie"));

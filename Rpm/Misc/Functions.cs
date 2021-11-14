@@ -153,7 +153,7 @@ namespace Rpm.Misc
             var xreturn = new Dictionary<string, Dictionary<string, double>>();
             try
             {
-                var weekrange = GetWeekRange(startweek, startjaar);
+                var weekrange = GetWeekRange(startweek, startjaar,null);
                 var data = bewerkingen.ToSections(iswerkplek, new TijdEntry(weekrange.StartDate, weekrange.EndDate, null));
                 var weekranges = GetWeekRanges(weekrange.StartDate, weekrange.EndDate, includethisweek, shownow);
                 var rows =(weekranges.Count > 1
@@ -1849,6 +1849,7 @@ namespace Rpm.Misc
             }
             catch (Exception e)
             {
+                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -2041,16 +2042,16 @@ namespace Rpm.Misc
             return WeekRange.WeekDays(startdate, enddate, includethisweek);
         }
 
-        public static WeekRange GetWeekRange(int startweek, int startjaar)
+        public static WeekRange GetWeekRange(int startweek, int startjaar, Rooster rooster)
         {
             var startdate = DateOfWeek(startjaar, DayOfWeek.Monday, startweek);
             var xnow = DateTime.Now;
             var enddate = DateOfWeek(xnow.Year, DayOfWeek.Friday, xnow.GetWeekNr());
-            var rooster = Manager.Opties?.GetWerkRooster();
+            rooster ??= Manager.Opties?.GetWerkRooster();
             if (rooster != null)
             {
-                startdate = startdate.Add(Manager.Opties.GetWerkRooster().StartWerkdag);
-                enddate = enddate.Add(Manager.Opties.GetWerkRooster().EindWerkdag);
+                startdate = startdate.Add(rooster.StartWerkdag);
+                enddate = enddate.Add(rooster.EindWerkdag);
             }
 
             return new WeekRange
@@ -2393,6 +2394,67 @@ namespace Rpm.Misc
             }
             catch (Exception e)
             {
+                return null;
+            }
+        }
+
+        public static string GetStringFromUrl(string url)
+        {
+            var result = string.Empty;
+            try
+            {
+                using var webClient = new System.Net.WebClient();
+                result = webClient.DownloadString(url);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return result;
+        }
+
+        public static Dictionary<string, string> GetVersionPreviews(string url)
+        {
+            var result = new Dictionary<string, string>();
+            try
+            {
+                var xvalue = GetStringFromUrl(url);
+                using var sr = new StringReader(xvalue);
+                while (sr.Peek() > -1)
+                {
+                    var line = sr.ReadLine();
+                    if (string.IsNullOrEmpty(line)) continue;
+                    if (line.StartsWith("[") && line.EndsWith("]"))
+                    {
+                        var xsplit = line.TrimStart(new char[] {'['}).TrimEnd(new char[] {']'}).Split(';');
+                        if(xsplit.Length < 2) continue;
+                        if (result.ContainsKey(xsplit[0])) continue;
+                        result.Add(xsplit[0].Trim(), xsplit[1].Trim());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return result;
+        }
+
+        public static Image ImageFromUrl(string url)
+        {
+            try
+            {
+                using var webClient = new System.Net.WebClient();
+                var result = webClient.DownloadData(url);
+                if (result == null || result.Length < 8) return null;
+                var image = Image.FromStream(new MemoryStream(result));
+                return image;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
                 return null;
             }
         }

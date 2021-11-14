@@ -260,13 +260,14 @@ namespace Forms
 
     public DialogResult ShowDialog(Bewerking bew)
     {
-        if (_choose)
+        Bewerking = bew;
+        if (Bewerking != null)
         {
-            xformbuttonpanel.Visible = true;
-            this.Text = $"Kies personeel voor productie [{bew.ArtikelNr}, {bew.ProductieNr}] {bew.Naam}";
+            this.Text =
+                $"Kies personeel voor productie [{Bewerking.ArtikelNr}, {Bewerking.ProductieNr}] {Bewerking.Naam}";
         }
 
-        Bewerking = bew;
+        xformbuttonpanel.Visible = _choose;
         EnableFilters();
         xok.Text = "&OK";
         xok.Image = Resources.check_1582;
@@ -278,12 +279,11 @@ namespace Forms
 
     public new DialogResult ShowDialog()
     {
-        if (_choose && Bewerking != null)
+        if (Bewerking != null)
         {
-            xformbuttonpanel.Visible = true;
             this.Text = $"Kies personeel voor productie [{Bewerking.ArtikelNr}, {Bewerking.ProductieNr}] {Bewerking.Naam}";
         }
-        
+        xformbuttonpanel.Visible = _choose;
         EnableFilters();
         xok.Text = "&OK";
         xok.Image = Resources.check_1582;
@@ -432,21 +432,13 @@ namespace Forms
         if (add.ShowDialog() == DialogResult.OK)
         {
             var pers = add.PersoneelLid;
-            if (await Manager.Database.PersoneelExist(pers.PersoneelNaam))
+            if (await Manager.Database.UpSert(pers, $"{pers.PersoneelNaam} Toegevoegd.") && IsAllowed(pers))
             {
-                XMessageBox.Show($"{pers.PersoneelNaam} bestaal al!", "Bestaat Al", MessageBoxButtons.OK,
-                    MessageBoxIcon.Exclamation);
-            }
-            else
-            {
-                if (await Manager.Database.UpSert(pers, $"{pers.PersoneelNaam} Toegevoegd.") && IsAllowed(pers))
-                {
-                    var xper = new PersoneelModel(pers);
-                    xuserlist.AddObject(xper);
-                    xuserlist.Sort("Kracht");
-                    xuserlist.SelectedObject = xper;
-                    xuserlist.SelectedItem?.EnsureVisible();
-                }
+                var xper = new PersoneelModel(pers);
+               // xuserlist.AddObject(xper);
+                xuserlist.Sort("Kracht");
+                xuserlist.SelectedObject = xper;
+                xuserlist.SelectedItem?.EnsureVisible();
             }
         }
     }
@@ -494,7 +486,7 @@ namespace Forms
         per.Afdeling = xafdeling.Text.Trim();
         var resort = per.IsUitzendKracht != xisuitzendcheck.Checked && IsAllowed(per);
         per.IsUitzendKracht = xisuitzendcheck.Checked;
-        if (!await UpdateKlusjes(per, oldnaam)) return false;
+        if (!await Personeel.UpdateKlusjes(per, oldnaam)) return false;
         string change = $"Wijzigingen voor {per.PersoneelNaam} succesvol!";
         bool replace = !string.Equals(oldnaam, xnaam.Text, StringComparison.CurrentCultureIgnoreCase);
         if ((replace && await Manager.Database.Replace(oldnaam, per, change)) ||
@@ -555,10 +547,26 @@ namespace Forms
         }
     }
 
-    private void xuserlist_DoubleClick(object sender, EventArgs e)
+    private async void xuserlist_DoubleClick(object sender, EventArgs e)
     {
         if (_choose)
             ChooseUser();
+        else if (xuserlist.SelectedObject is PersoneelModel model)
+        {
+            var add = new AddPersoneel(model.PersoneelLid);
+            if (add.ShowDialog() == DialogResult.OK)
+            {
+                model.PersoneelLid = add.PersoneelLid;
+                if (await Manager.Database.UpSert(model.PersoneelLid, $"{model.Naam} Aangepast!") &&
+                    IsAllowed(model.PersoneelLid))
+                {
+                    xuserlist.RefreshObject(model);
+                    xuserlist.SelectedObject = model;
+                    xuserlist.SelectedItem?.EnsureVisible();
+                    InitSelected();
+                }
+            }
+        }
     }
 
     private void xkiesvrijetijd_Click(object sender, EventArgs e)
@@ -671,33 +679,15 @@ namespace Forms
 
     private async void EditSelectedRooster()
     {
-        var bttns = new Dictionary<string, DialogResult>();
-        bttns.Add("Annuleren", DialogResult.Cancel);
-        bttns.Add("Standaard", DialogResult.No);
-        bttns.Add("Eigen Rooster", DialogResult.Yes);
         if (xuserlist.SelectedObject is PersoneelModel pers)
             try
             {
-                var dialog = XMessageBox.Show($"Wat voor rooster zou je willen gebruiken voor {pers.Naam}?\n" +
-                                              $"Kies voor {pers.Naam} een standaard of eigen rooster.\n", "Rooster",
-                    MessageBoxButtons.OK, MessageBoxIcon.Question, null, bttns);
-                if (dialog == DialogResult.Cancel) return;
-
-                switch (dialog)
+                var rs = new RoosterForm(pers.PersoneelLid.WerkRooster ?? Manager.Opties.GetWerkRooster(),
+                    $"Rooster voor {pers.Naam}");
+                if (rs.ShowDialog() == DialogResult.OK)
                 {
-                    case DialogResult.No:
-                        pers.PersoneelLid.WerkRooster = null;
-                        break;
-                    case DialogResult.Yes:
-                        var rs = new RoosterForm(pers.PersoneelLid.WerkRooster ?? Manager.Opties.GetWerkRooster(),
-                            $"Rooster voor {pers.Naam}");
-                        if (rs.ShowDialog() == DialogResult.OK)
-                        {
-                            pers.PersoneelLid.WerkRooster = rs.WerkRooster;
-                            await WijzigSelectedUser(pers);
-                        }
-
-                        break;
+                    pers.PersoneelLid.WerkRooster = rs.WerkRooster;
+                    await WijzigSelectedUser(pers);
                 }
             }
             catch (Exception ex)
@@ -868,77 +858,13 @@ namespace Forms
                 change += $"Naar: {Math.Round(model.PersoneelLid.TijdVrij().TotalHours, 2)} uur";
 
 
-                if (await UpdateKlusjes(model.PersoneelLid))
+                if (await Personeel.UpdateKlusjes(model.PersoneelLid))
                 {
                     await Manager.Database.UpSert(model.PersoneelLid.PersoneelNaam, model.PersoneelLid, change);
 
                     UpdateUserFields(model);
                 }
             }
-        }
-    }
-
-    private async Task<bool> UpdateKlusjes(Personeel persoon, string naam = null)
-    {
-        try
-        {
-            naam ??= persoon.PersoneelNaam;
-            bool flag = persoon.Klusjes.Any(x =>
-                x.Status == ProductieState.Gestart || x.Status == ProductieState.Gestopt);
-            var result = flag
-                ? XMessageBox.Show(
-                    $"Wil je alle loopende klusjes van {persoon.PersoneelNaam} ook updaten?",
-                    "Personeel Klusjes Updaten", MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question)
-                : DialogResult.No;
-            if (result == DialogResult.Cancel) return false;
-            if (result == DialogResult.Yes)
-            {
-                foreach (var klus in persoon.Klusjes)
-                {
-                    if (klus.Status == ProductieState.Verwijderd ||
-                        klus.Status == ProductieState.Gereed) continue;
-                    var werk = klus.GetWerk();
-                    if (werk == null || !werk.IsValid || werk.Bewerking == null || werk.Plek == null) continue;
-                    bool changed = false;
-                    klus.PersoneelNaam = persoon.PersoneelNaam.Trim();
-                    klus.Tijden.WerkRooster = persoon.WerkRooster;
-                    foreach (var xper in werk.Plek.Personen)
-                    {
-                        if (!string.Equals(naam, xper.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase))
-                            continue;
-                        xper.PersoneelNaam = persoon.PersoneelNaam.Trim();
-                        xper.WerkRooster = persoon.WerkRooster;
-                        xper.VrijeDagen = persoon.VrijeDagen;
-                        xper.Efficientie = persoon.Efficientie;
-                        xper.IsAanwezig = persoon.IsAanwezig;
-                        xper.IsUitzendKracht = persoon.IsUitzendKracht;
-                        foreach (var xklus in xper.Klusjes)
-                        {
-                            xklus.PersoneelNaam = xper.PersoneelNaam;
-                            xklus.Tijden.WerkRooster = xper.WerkRooster;
-                            xklus.WerkPlek = werk.Plek.Naam;
-                            xklus.Naam = werk.Bewerking.Naam;
-                            xklus.ProductieNr = werk.Bewerking.ProductieNr;
-                        }
-
-                        changed = true;
-                    }
-
-                    if (changed)
-                    {
-                        await werk.Bewerking.UpdateBewerking(null,
-                            $"{persoon.PersoneelNaam} Werkrooster aangepast op klus {klus.Path}", true);
-                    }
-                }
-            }
-
-            return true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return false;
         }
     }
 

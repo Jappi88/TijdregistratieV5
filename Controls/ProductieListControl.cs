@@ -85,8 +85,8 @@ namespace Controls
         public string ListName { get; set; }
         public bool RemoveCustomItemIfNotValid { get; set; }
         public bool CustomList { get; private set; }
-        public List<ProductieFormulier> Producties { get; private set; }
-        public List<Bewerking> Bewerkingen { get; private set; }
+        public List<ProductieFormulier> Producties { get; private set; } = new List<ProductieFormulier>();
+        public List<Bewerking> Bewerkingen { get; private set; } = new List<Bewerking>();
         public IsValidHandler ValidHandler { get; set; }
         public bool IsBewerkingView { get; set; }
         public bool CanLoad { get; set; }
@@ -891,10 +891,10 @@ namespace Controls
 
         public void UpdateProductieList(bool reload, bool showwaitui)
         {
-            if (_loadingproductielist || Manager.Opties == null || !CanLoad) return;
+            if (Manager.Opties == null || !CanLoad) return;
             try
             {
-                Invoke(new MethodInvoker(async () =>
+                Invoke(new MethodInvoker(() =>
                 {
                     if (showwaitui)
                         SetWaitUI();
@@ -919,7 +919,7 @@ namespace Controls
                                 var xprods = !reload && CustomList && Producties != null
                                     ? Producties.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
                                         .ToList()
-                                    : Producties = await Manager.GetProducties(states, true,true, null);
+                                    : Producties = Manager.GetProducties(states, true,true, null).Result;
                                 if (ValidHandler != null)
                                     xprods = xprods.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
                                         .ToList();
@@ -934,7 +934,7 @@ namespace Controls
                             var bws = !reload && CustomList && Bewerkingen != null
                                 ? Bewerkingen.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
                                     .ToList()
-                                : Bewerkingen = await Manager.GetBewerkingen(states, true,null);
+                                : Bewerkingen = Manager.GetBewerkingen(states, true,null).Result;
                             if (ValidHandler != null)
                                 bws = bws.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
                                     .ToList();
@@ -986,7 +986,8 @@ namespace Controls
 
         public bool UpdateFormulier(ProductieFormulier form)
         {
-            if (IsDisposed || Disposing || form == null || _loadingproductielist) return false;
+            if (IsDisposed || Disposing || form == null || _loadingproductielist)
+                return false;
 
             try
             {
@@ -1000,10 +1001,9 @@ namespace Controls
 
                 if (!IsBewerkingView)
                 {
-                    var isvalid = IsAllowd(form);
-                    if (ValidHandler != null)
-                        isvalid &= states.Any(form.IsValidState) && ValidHandler.Invoke(form, filter);
-                    else isvalid &= form.IsAllowed(filter, states, true);
+                    var isvalid = IsAllowd(form) && form.IsAllowed(filter, states, true);
+                    if (isvalid && ValidHandler != null)
+                        isvalid &= ValidHandler.Invoke(form, filter);
 
                     var xproducties = ProductieLijst.Objects?.Cast<ProductieFormulier>().ToList();
                     var xform = xproducties?.FirstOrDefault(x =>
@@ -1185,10 +1185,10 @@ namespace Controls
                 if (form?.Bewerkingen != null && form.Bewerkingen.Length > 0)
                     foreach (var b in form.Bewerkingen)
                     {
-                        var isvalid = IsAllowd(b);
-                        if (ValidHandler != null)
-                            isvalid &= states.Any(b.IsValidState) && ValidHandler.Invoke(b, filter ?? GetFilter());
-                        else isvalid &= states.Any(x => b.IsValidState(x)) && b.IsAllowed(filter ?? GetFilter());
+                        var isvalid = IsAllowd(b) && b.IsAllowed(filter ?? GetFilter()) && states.Any(x => b.IsValidState(x));
+                        if (isvalid && ValidHandler != null)
+                            isvalid &= ValidHandler.Invoke(b, filter ?? GetFilter());
+
                         var xb = xbewerkingen?.FirstOrDefault(x =>
                             string.Equals(x.Path, b.Path, StringComparison.CurrentCultureIgnoreCase));
                         if (xb == null && isvalid)
@@ -1200,7 +1200,8 @@ namespace Controls
                                 var index = Bewerkingen.IndexOf(b);
                                 if (index > -1)
                                     Bewerkingen[index] = b;
-                                else Bewerkingen.Add(b);
+                                else
+                                    Bewerkingen.Add(b);
                             }
 
                             changed = true;
@@ -1357,7 +1358,8 @@ namespace Controls
 
         private void _manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
         {
-            if (IsDisposed || Disposing || !IsLoaded) return;
+            if (IsDisposed || Disposing || !IsLoaded) 
+                return;
             try
             {
                 BeginInvoke(new Action(() => UpdateFormulier(changedform)));
@@ -1461,7 +1463,8 @@ namespace Controls
                     bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToList();
                 }
 
-                StartBewerkingen(bws.ToArray());
+                StartBewerkingen(bws.ToArray(),this);
+                this.Focus();
             }
         }
 
@@ -1487,10 +1490,11 @@ namespace Controls
                 }
 
                 StopBewerkingen(bws.ToArray());
+                this.Focus();
             }
         }
 
-        public static void StartBewerkingen(Bewerking[] bws)
+        public static void StartBewerkingen(Bewerking[] bws, Control sender)
         {
             var count = bws.Length;
             if (count > 0)
@@ -1507,7 +1511,7 @@ namespace Controls
                 if (valid)
                     try
                     {
-                        var mainform = Application.OpenForms["MainForm"];
+                        var mainform = sender??Application.OpenForms["MainForm"];
 
                         async void Action()
                         {
@@ -1583,13 +1587,13 @@ namespace Controls
                                                 }
 
                                                 if (werk != null)
-                                                    await werk.StartProductie(true, true);
+                                                    await werk.StartProductie(true,true);
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        await werk.StartProductie(true, true);
+                                        await werk.StartProductie(true,true);
                                     }
                                 }
                             }
@@ -2880,7 +2884,7 @@ namespace Controls
         private void xProductieLijst1_CellRightClick(object sender, CellRightClickEventArgs e)
         {
             if (e.SubItem?.ModelValue is not null)
-                _selectedSubitem = new KeyValuePair<string, object>(e.Column.AspectName, e.SubItem.ModelValue);
+                _selectedSubitem = new KeyValuePair<string, object>(e.Column.AspectName , e.Model.GetPropValue(e.Column.AspectName));
             else
                 _selectedSubitem = new KeyValuePair<string, object>();
             InitFilterToolStripItems();
@@ -2956,7 +2960,7 @@ namespace Controls
         private void xProductieLijst1_CellClick(object sender, CellClickEventArgs e)
         {
             if (e.SubItem?.ModelValue is not null)
-                _selectedSubitem = new KeyValuePair<string, object>(e.Column.AspectName, e.SubItem.ModelValue);
+                _selectedSubitem = new KeyValuePair<string, object>(e.Column.AspectName, e.Model.GetPropValue(e.Column.AspectName));
             else
                 _selectedSubitem = new KeyValuePair<string, object>();
             InitFilterToolStripItems();

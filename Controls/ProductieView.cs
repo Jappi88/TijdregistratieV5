@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AutoUpdaterDotNET;
@@ -76,6 +77,7 @@ namespace Controls
         private static OpmerkingenForm _opmerkingform;
         private static ArtikelsForm _ArtikelsForm;
         private static PersoneelsForm _PersoneelForm;
+        private static WerkplaatsIndeling _WerkplaatsIndeling;
         public bool ShowUnreadMessage { get; set; }
 
         // [NonSerialized] private Opties _opties;
@@ -367,6 +369,7 @@ namespace Controls
                     LoadStartedProducties();
                     LoadProductieLogs();
                     RunProductieRefresh();
+                    CheckForPreview(false, true);
                     //UpdateAllLists();
                     _specialRoosterWatcher?.Start();
                 }));
@@ -479,7 +482,7 @@ namespace Controls
             {
                 //await created.UpdateForm(true, false);
                 if (result == DialogResult.Yes && created.Bewerkingen.Length > 0)
-                    ProductieListControl.StartBewerkingen(created.Bewerkingen);
+                    ProductieListControl.StartBewerkingen(created.Bewerkingen,this);
                 else
                     await created.UpdateForm(true, false);
                 SelectProductieItem(created);
@@ -896,6 +899,9 @@ namespace Controls
                             break;
                         case "xquickproductie":
                             DoQuickProductie();
+                            break;
+                        case "xwerkplaatsindeling":
+                            ShowWerkplaatsIndelingWindow();
                             break;
                         case "xcreateexcel":
                             //maak een nieuwe excel aan
@@ -1687,6 +1693,25 @@ namespace Controls
             _PersoneelForm.Focus();
         }
 
+        public static void ShowWerkplaatsIndelingWindow()
+        {
+            if (_WerkplaatsIndeling == null)
+            {
+                _WerkplaatsIndeling = new WerkplaatsIndeling();
+                _WerkplaatsIndeling.FormClosed += (x, y) =>
+                {
+                    _WerkplaatsIndeling?.Dispose();
+                    _WerkplaatsIndeling = null;
+                };
+            }
+
+            _WerkplaatsIndeling.Show();
+            if (_WerkplaatsIndeling.WindowState == FormWindowState.Minimized)
+                _WerkplaatsIndeling.WindowState = FormWindowState.Normal;
+            _WerkplaatsIndeling.BringToFront();
+            _WerkplaatsIndeling.Focus();
+        }
+
         public static void ShowPersoonVaardigheden(Personeel persoon)
         {
             if (persoon == null)
@@ -1745,6 +1770,38 @@ namespace Controls
         {
             var db = new DbBewerkingChanger();
             db.ShowDialog();
+        }
+
+        public static void CheckForPreview(bool showall, bool onlyifnew)
+        {
+            try
+            {
+                var xprevs =
+                    Functions.GetVersionPreviews(Manager.LastPreviewsUrl);
+                if (xprevs.Count > 0)
+                {
+                    UpdatePreviewForm xshowform = null;
+                    if (!showall)
+                    {
+                        var xvers = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                        if (!xprevs.ContainsKey(xvers)) return;
+                        if (onlyifnew && new Version(Manager.DefaultSettings.LastPreviewVersion) >= new Version(xvers))
+                            return;
+                        xshowform = new UpdatePreviewForm(xprevs[xvers], onlyifnew);
+                    }
+                    else
+                    {
+                        var urls = xprevs.Select(x => x.Value).ToArray();
+                        xshowform = new UpdatePreviewForm(urls);
+                    }
+
+                    xshowform.ShowDialog();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         #endregion MenuButton Methods
@@ -1985,6 +2042,23 @@ namespace Controls
         private void xopmerkingentoolstripbutton_Click(object sender, EventArgs e)
         {
             ShowOpmerkingWindow();
+        }
+
+        private void xShowPreview_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var links = Functions.GetVersionPreviews(Manager.LastPreviewsUrl);
+                if (links.Count == 0)
+                    throw new Exception("Geen nieuwe aanpassingen");
+                var xpr = new UpdatePreviewForm(links.Select(x => x.Value).ToArray());
+                xpr.ShowDialog();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                XMessageBox.Show(exception.Message, "Fout", MessageBoxIcon.Error);
+            }
         }
     }
 }

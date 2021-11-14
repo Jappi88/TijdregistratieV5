@@ -56,8 +56,9 @@ namespace Rpm.Controls
                     Left -= 3;
                     if (Opacity == 0.0)
                     {
-                        this.Invoke(new Action(Close));
-                        //this.Close();
+                       // this.Invoke(new Action(Close));
+                       if (typeof(Form_Alert) == this.GetType())
+                           this.Invoke(new Action(Close));
                     }
                     break;
             }

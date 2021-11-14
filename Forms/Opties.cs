@@ -449,6 +449,7 @@ namespace Forms
             //default settings die we hier niet veranderen.
             if (_LoadedOpties != null)
             {
+                xs.LastPreviewVersion = _LoadedOpties.LastPreviewVersion;
                 xs.ExcelColumns = _LoadedOpties.ExcelColumns;
                 xs.BoundUsername = _LoadedOpties.BoundUsername;
                 xs.OntvangAdres = _LoadedOpties.OntvangAdres;
@@ -456,6 +457,8 @@ namespace Forms
                 xs.MainDB = _LoadedOpties.MainDB;
                 xs.TempMainDB = _LoadedOpties.TempMainDB;
                 xs.UpdateDatabaseVersion = _LoadedOpties.UpdateDatabaseVersion;
+
+                xs.PersoneelIndeling = _LoadedOpties.PersoneelIndeling;
 
                 xs.DeelAllesIn = _LoadedOpties.DeelAllesIn;
                 xs.DeelInPerAfdeling = _LoadedOpties.DeelInPerAfdeling;

@@ -237,6 +237,12 @@
     <Compile Include="Controls\MateriaalUI.Designer.cs">
       <DependentUpon>MateriaalUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PersoonIndeling.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PersoonIndeling.Designer.cs">
+      <DependentUpon>PersoonIndeling.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ProductieInfoUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -699,6 +705,12 @@
     <Compile Include="Forms\ProductieLijstForm.Designer.cs">
       <DependentUpon>ProductieLijstForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\UpdatePreviewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UpdatePreviewForm.Designer.cs">
+      <DependentUpon>UpdatePreviewForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\UpdateProducties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -758,6 +770,12 @@
     </Compile>
     <Compile Include="Forms\VrijeTijdForm.Designer.cs">
       <DependentUpon>VrijeTijdForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\WerkplaatsIndeling.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WerkplaatsIndeling.Designer.cs">
+      <DependentUpon>WerkplaatsIndeling.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\WerkPlekChooser.cs">
       <SubType>Form</SubType>
@@ -997,6 +1015,9 @@
     <EmbeddedResource Include="Controls\MateriaalUI.resx">
       <DependentUpon>MateriaalUI.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PersoonIndeling.resx">
+      <DependentUpon>PersoonIndeling.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ProductieInfoUI.resx">
       <DependentUpon>ProductieInfoUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -1226,6 +1247,9 @@
     <EmbeddedResource Include="Forms\ProductieLijstForm.resx">
       <DependentUpon>ProductieLijstForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UpdatePreviewForm.resx">
+      <DependentUpon>UpdatePreviewForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\UpdateProducties.resx">
       <DependentUpon>UpdateProducties.cs</DependentUpon>
     </EmbeddedResource>
@@ -1258,6 +1282,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\VrijeTijdForm.resx">
       <DependentUpon>VrijeTijdForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WerkplaatsIndeling.resx">
+      <DependentUpon>WerkplaatsIndeling.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WerkPlekChooser.resx">
       <DependentUpon>WerkPlekChooser.cs</DependentUpon>
@@ -1438,6 +1465,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\minusflat_105990.png" />
     <None Include="Resources\copy_paste_document_file_1557.png" />
     <None Include="Resources\ic_format_clear_128_28359.png" />
     <None Include="Resources\Open-folder-accept_36743.png" />

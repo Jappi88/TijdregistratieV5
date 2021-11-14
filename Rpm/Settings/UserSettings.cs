@@ -23,8 +23,7 @@ namespace Rpm.Settings
             Initdefault();
         }
 
-        [ExcludeFromSerialization]
-        public bool AutoLogin { get; set; }
+        public string LastPreviewVersion { get; set; } = "1.0.0.0";
         public string AutoLoginUsername { get; set; }
         public UserChange LastChanged { get; set; }
         public string Username { get; set; }
@@ -39,7 +38,7 @@ namespace Rpm.Settings
 
         public DatabaseUpdateEntry MainDB { get; set; }
         public DatabaseUpdateEntry TempMainDB { get; set; }
-
+        public List<string> PersoneelIndeling { get; set; }
         #region "Methods"
 
         public void Initdefault()
@@ -53,6 +52,7 @@ namespace Rpm.Settings
             SetWerkRooster(Rooster.StandaartRooster());
             NationaleFeestdagen = new DateTime[] { };
             SpecialeRoosters = new List<Rooster>();
+            PersoneelIndeling = new List<string>();
             //Taken
             ToonLijstNaNieuweTaak = true;
             TaakVoorStart = true;
@@ -83,8 +83,8 @@ namespace Rpm.Settings
 
             //database
             UpdateDatabaseVersion = "1.0.0.0";
-            CreateWeekOverzichten = true;
-            DoCurrentWeekOverzicht = true;
+            CreateWeekOverzichten = false;
+            DoCurrentWeekOverzicht = false;
             ExcelColumns = new List<ExcelSettings>();
             var xset = ExcelSettings.CreateSettings("ExcelColumns",true);
             ExcelColumns.Add(xset);

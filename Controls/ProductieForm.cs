@@ -313,7 +313,7 @@ namespace Controls
             xbewerking.SelectionChangeCommitted += xbewerking_SelectedIndexChanged;
         }
 
-        private async void StartBewerking()
+        private async void StartBewerking(Control sender)
         {
             if (Disposing || IsDisposed) return;
             if (xbewerking.SelectedItem == null || Formulier.Bewerkingen == null)
@@ -334,7 +334,7 @@ namespace Controls
                         //{
                         //    await b.StartProductie(true, true);
                         //}
-                        ProductieListControl.StartBewerkingen(new[] {b});
+                        ProductieListControl.StartBewerkingen(new[] {b},sender);
                     else if (b.State == ProductieState.Gestart) await b.StopProductie(true);
                 }
             }
@@ -464,7 +464,7 @@ namespace Controls
 
         private void xstartb_Click(object sender, EventArgs e)
         {
-            StartBewerking();
+            StartBewerking(this);
         }
 
         private void xindelingb_Click(object sender, EventArgs e)

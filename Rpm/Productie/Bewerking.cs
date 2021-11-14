@@ -456,7 +456,7 @@ namespace Rpm.Productie
             return b;
         }
 
-        public async Task<bool> StartProductie(bool email, bool newtime)
+        public async Task<bool> StartProductie(bool email, bool savepersoneel)
         {
             try
             {
@@ -488,7 +488,7 @@ namespace Rpm.Productie
                             per.ReplaceKlus(klus);
                         }
 
-                        if (klus.Start())
+                        if (klus.Start() && savepersoneel)
                         {
                             var x = await Manager.Database.GetPersoneel(per.PersoneelNaam);
                             if (x != null)
@@ -587,7 +587,7 @@ namespace Rpm.Productie
                         var klus = per.Klusjes.GetKlus(plek.Path) ??
                                    new Klus(per, plek);
 
-                        if (!klus.Stop()) continue;
+                        klus.Stop();
                         per.ReplaceKlus(klus);
                         var x = await Manager.Database.GetPersoneel(per.PersoneelNaam);
                         if (x == null) continue;
@@ -1098,6 +1098,7 @@ namespace Rpm.Productie
                 if (peruur == 0)
                     peruur = Aantal - TotaalGemaakt;
                 var tijd = (Aantal - TotaalGemaakt) / peruur;
+                var xactieve = AantalActievePersonen;
                 return Math.Round(tijd, 2);
             }
             catch

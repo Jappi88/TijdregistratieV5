@@ -31,6 +31,9 @@ namespace Rpm.Productie
     {
         #region "Variables"
         private TimeSpan _afsluittijd;
+
+        public static readonly string LastPreviewsUrl =
+            "https://www.dropbox.com/s/5rtsu7ipm4d6dp9/Preview%20Links.txt?dl=1";
         // public static LocalService LocalConnection { get; private set; }
         /// <summary>
         /// De productiechat

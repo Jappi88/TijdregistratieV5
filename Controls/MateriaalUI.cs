@@ -87,7 +87,7 @@ namespace Controls
             if (matobject is Materiaal materiaal)
                 mat = materiaal;
 
-            if (mat != null)
+            if (mat?.ArtikelNr != null)
             {
                 xomschrijving.Text = mat.Omschrijving;
                 xartikelnr.Text = mat.ArtikelNr;

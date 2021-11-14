@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Forms;
 using LiteDB;
 using Polenter.Serialization;
 using Rpm.SqlLite;
@@ -250,6 +253,75 @@ namespace Rpm.Productie
                 foreach (var v in VrijeDagen.Uren)
                     time = time.Add(Werktijd.TijdGewerkt(new TijdEntry(v.Start, v.Stop, WerkRooster), WerkRooster,null));
             return time;
+        }
+
+        public static async Task<bool> UpdateKlusjes(Personeel persoon, string naam = null)
+        {
+            try
+            {
+                naam ??= persoon.PersoneelNaam;
+                var rooster = persoon.WerkRooster;
+                if (rooster == null) return true;
+                bool flag = persoon.Klusjes.Any(x =>
+                    x.Status is ProductieState.Gestart or ProductieState.Gestopt &&  !rooster.SameTijden(x.Tijden.WerkRooster));
+                var result = flag
+                    ? XMessageBox.Show(
+                        $"Wil je alle loopende klusjes van {persoon.PersoneelNaam} ook updaten?",
+                        "Personeel Klusjes Updaten", MessageBoxButtons.YesNoCancel,
+                        MessageBoxIcon.Question)
+                    : DialogResult.No;
+                if (result == DialogResult.Cancel) return false;
+                if (result == DialogResult.Yes)
+                {
+                    foreach (var klus in persoon.Klusjes)
+                    {
+                        if (klus.Status == ProductieState.Verwijderd ||
+                            klus.Status == ProductieState.Gereed) continue;
+                        var werk = klus.GetWerk();
+                        if (werk == null || !werk.IsValid || werk.Bewerking == null || werk.Plek == null) continue;
+                        bool changed = false;
+                        klus.PersoneelNaam = persoon.PersoneelNaam.Trim();
+                        klus.Tijden.WerkRooster = persoon.WerkRooster;
+                        foreach (var xper in werk.Plek.Personen)
+                        {
+                            if (!string.Equals(naam, xper.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase))
+                                continue;
+                            xper.PersoneelNaam = persoon.PersoneelNaam.Trim();
+                            xper.WerkRooster = persoon.WerkRooster;
+                            xper.VrijeDagen = persoon.VrijeDagen;
+                            xper.Efficientie = persoon.Efficientie;
+                            xper.IsAanwezig = persoon.IsAanwezig;
+                            xper.IsUitzendKracht = persoon.IsUitzendKracht;
+                            foreach (var xklus in xper.Klusjes)
+                            {
+                                xklus.PersoneelNaam = xper.PersoneelNaam;
+                                xklus.Tijden.WerkRooster = xper.WerkRooster;
+                                var xactive = xklus.Tijden.GetInUseEntry(false);
+                                if (xactive != null)
+                                    xactive.WerkRooster = xper.WerkRooster;
+                                xklus.WerkPlek = werk.Plek.Naam;
+                                xklus.Naam = werk.Bewerking.Naam;
+                                xklus.ProductieNr = werk.Bewerking.ProductieNr;
+                            }
+
+                            changed = true;
+                        }
+
+                        if (changed)
+                        {
+                            await werk.Bewerking.UpdateBewerking(null,
+                                $"{persoon.PersoneelNaam} Werkrooster aangepast op klus {klus.Path}", true);
+                        }
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
         }
 
         public bool IngezetAanKlus(Bewerking bew, bool onlyactive, out List<Klus> klusjes)

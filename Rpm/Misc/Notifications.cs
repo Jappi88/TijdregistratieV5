@@ -51,7 +51,7 @@ namespace Rpm.Misc
                
                try
                {
-                   var visibleform = Application.OpenForms[Application.OpenForms.Count - 1];
+                   var visibleform = Application.OpenForms["Mainform"];
                    visibleform?.BeginInvoke(new MethodInvoker(() =>
                    {
                        try

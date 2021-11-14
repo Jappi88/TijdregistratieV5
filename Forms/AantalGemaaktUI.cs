@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using MetroFramework.Forms;
@@ -29,7 +30,7 @@ namespace Forms
                 if (plek != null)
                     xwerkplekken.SelectedItem = plek.Naam;
                 if (xwerkplekken.SelectedItem == null)
-                    xwerkplekken.SelectedIndex = 0;
+                    xwerkplekken.SelectedIndex = xwerkplekken.Items.Count -1;
             }
             else xaantalgemaakt.SetValue(bew.AantalGemaakt);
             xaantal.Text = bew.AantalTeMaken.ToString();
@@ -44,7 +45,7 @@ namespace Forms
             Formulier = form;
             ProductieLoadWerkplekken(form);
             if (xwerkplekken.Items.Count > 0)
-                xwerkplekken.SelectedIndex = 0;
+                xwerkplekken.SelectedIndex = xwerkplekken.Items.Count - 1;
             else xaantalgemaakt.SetValue(form.AantalGemaakt);
             xaantal.Text = form.AantalTeMaken.ToString();
             Text = $"[{form.ArtikelNr}][{form.ProductieNr}] {form.Omschrijving}";
@@ -52,35 +53,68 @@ namespace Forms
             return ShowDialog();
         }
 
+        private void SetPacketAantal(VerpakkingInstructie instructie, int aantal, int totaalaantal)
+        {
+            if (instructie == null || instructie.VerpakkenPer == 0)
+            {
+                xvaluepanel.Height = 40;
+            }
+            else
+            {
+                xvaluepanel.Height = 100;
+                xpacketvalue.ValueChanged -= Xpacketvalue_ValueChanged;
+                int xpackets = aantal <= 0? 0 : (int) Math.Ceiling((double)aantal / instructie.VerpakkenPer);
+                xpacketvalue.SetValue(xpackets);
+                xpacketlabel.Text = xpacketvalue.Value.ToString(CultureInfo.InvariantCulture);
+                xtotalpacketlabel.Text = (totaalaantal <= 0 ? 0 : (int)Math.Ceiling((double)totaalaantal / instructie.VerpakkenPer)).ToString();
+                xpacketvalue.ValueChanged += Xpacketvalue_ValueChanged;
+                var x0 = "Verpakken Per {0}";
+                var x1 = string.IsNullOrEmpty(instructie.VerpakkingType)
+                    ? x0
+                    : $"{x0} in {instructie.VerpakkingType}";
+                xPacketGroup.Text = string.Format(x1, instructie.VerpakkenPer);
+            }
+        }
+
+        private void Xpacketvalue_ValueChanged(object sender, EventArgs e)
+        {
+            var xverp = Bewerking?.VerpakkingsInstructies ?? Formulier?.VerpakkingsInstructies;
+            if (xverp == null || xverp.VerpakkenPer == 0) return;
+            var aantal = xaantalgemaakt.Value;
+            int xpackets = aantal <= 0 ? 0 : (int)Math.Ceiling((double)aantal / xverp.VerpakkenPer);
+            if (xpacketvalue.Value != xpackets)
+            {
+                xaantalgemaakt.Value = xpacketvalue.Value * xverp.VerpakkenPer;
+                Next(false);
+            }
+        }
+
+        private void AddPacket()
+        {
+            var xverp = Bewerking?.VerpakkingsInstructies ?? Formulier?.VerpakkingsInstructies;
+            if (xverp == null || xverp.VerpakkenPer == 0) return;
+
+            xaantalgemaakt.SetValue(xaantalgemaakt.Value + xverp.VerpakkenPer);
+            Next(false);
+        }
+
+        private void RemovePacket()
+        {
+            var xverp = Bewerking?.VerpakkingsInstructies ?? Formulier?.VerpakkingsInstructies;
+            if (xverp == null || xverp.VerpakkenPer == 0) return;
+
+            xaantalgemaakt.SetValue(xaantalgemaakt.Value - xverp.VerpakkenPer);
+            Next(false);
+        }
+
         private void LoadProductieText(ProductieFormulier form)
         {
             productieInfoUI1.SetInfo(form, "Wijzig Aantal Gemaakt", Color.AliceBlue, Color.White, Color.Black);
-            //var xcurpos = xwerkinfopanel.VerticalScroll.Value;
-            //xwerkinfopanel.Text = form.GetHtmlBody("Wijzig Aantal Gemaakt", null, new Size(32, 32), Color.AliceBlue,
-            //    Color.White, Color.Black);//ProductieText(form);
-            //for (int i = 0; i < 3; i++)
-            //{
-            //    xwerkinfopanel.VerticalScroll.Value = xcurpos;
-            //    Application.DoEvents();
-            //}
-            // xfieldinfo.Text = DefaultFieldText();
-            //xpersooninfo.Text = ProductiewWerkPlekken(form);
         }
 
         private void LoadBewerkingText(Bewerking bew)
         {
             productieInfoUI1.SetInfo(bew, "Wijzig Aantal Gemaakt", Color.AliceBlue, Color.White, Color.Black);
-            //var xcurpos = xwerkinfopanel.VerticalScroll.Value;
-            //xwerkinfopanel.Text = bew.GetHtmlBody("Wijzig Aantal Gemaakt", null, new Size(32, 32), Color.AliceBlue,
-            //    Color.White, Color.Black);
-            //for (int i = 0; i < 3; i++)
-            //{
-            //    xwerkinfopanel.VerticalScroll.Value = xcurpos;
-            //    Application.DoEvents();
-            //}
-            //xwerkinfo.Text = BewerkingText(bew);
-            //// xfieldinfo.Text = DefaultFieldText();
-            //xpersooninfo.Text = BewerkingPersoneelText(bew);
         }
 
         private void LoadWerkplekken(Bewerking bewerking)
@@ -202,7 +236,7 @@ namespace Forms
 
         private void xannuleer_Click(object sender, EventArgs e)
         {
-            Next();
+            Next(false);
             DialogResult = DialogResult.OK;
         }
 
@@ -232,7 +266,7 @@ namespace Forms
 
         private void Aantal_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char) Keys.Enter) Next();
+            if (e.KeyChar == (char) Keys.Enter) Next(false);
         }
 
         private void xwerkplekken_SelectedIndexChanged(object sender, EventArgs e)
@@ -243,29 +277,26 @@ namespace Forms
                 var alles = selected.ToLower() == "alle werkplekken";
                 if (Bewerking != null)
                 {
-                    if (alles)
-                    {
-                        xaantalgemaakt.SetValue(Bewerking.AantalGemaakt);
-                    }
-                    else if (Bewerking.WerkPlekken is {Count: > 0})
+                    if (!alles && Bewerking.WerkPlekken is {Count: > 0})
                     {
                         var wp = Bewerking.WerkPlekken.FirstOrDefault(t => string.Equals(t.Naam, selected, StringComparison.CurrentCultureIgnoreCase));
-                        if (wp != null) xaantalgemaakt.SetValue(wp.AantalGemaakt);
+                        if (wp != null)
+                        {
+                            xaantalgemaakt.SetValue(wp.AantalGemaakt);
+                            SetPacketAantal(Bewerking.VerpakkingsInstructies, wp.AantalGemaakt, Bewerking.Aantal);
+                        }
                     }
                     else
                     {
                         xaantalgemaakt.SetValue(Bewerking.AantalGemaakt);
+                        SetPacketAantal(Bewerking.VerpakkingsInstructies, Bewerking.AantalGemaakt, Bewerking.Aantal);
                     }
 
                     xaantalgemaaktlabel.Text = Bewerking.AantalGemaakt.ToString();
                 }
                 else if (Formulier != null)
                 {
-                    if (alles)
-                    {
-                        xaantalgemaakt.SetValue(Formulier.AantalGemaakt);
-                    }
-                    else if (Formulier.Bewerkingen is {Length: > 0})
+                    if (!alles && Formulier.Bewerkingen is {Length: > 0})
                     {
                         var b = Bewerking ?? Formulier.Bewerkingen.FirstOrDefault(t =>
                             string.Equals(t.Naam, selected, StringComparison.CurrentCultureIgnoreCase));
@@ -274,12 +305,14 @@ namespace Forms
                         {
                             xaantalgemaakt.SetValue(b.AantalGemaakt);
                             xaantalgemaaktlabel.Text = b.AantalGemaakt.ToString();
+                            SetPacketAantal(b.VerpakkingsInstructies, b.AantalGemaakt, b.Aantal);
                         }
                     }
                     else
                     {
                         xaantalgemaakt.SetValue(Formulier.AantalGemaakt);
                         xaantalgemaaktlabel.Text = Formulier.AantalGemaakt.ToString();
+                        SetPacketAantal(Formulier.VerpakkingsInstructies, Formulier.AantalGemaakt, Formulier.Aantal);
                     }
                    
                 }
@@ -289,7 +322,7 @@ namespace Forms
             }
         }
 
-        private async void Next()
+        private async void Next(bool movenext)
         {
             if (xwerkplekken.SelectedItem != null)
             {
@@ -299,10 +332,11 @@ namespace Forms
                 if (Bewerking != null)
                 {
                     var skip = false;
-                    var change = "Aantal Gemaakt Aangepast";
+                    var change = $"Aantal gemaakt aangepast naar {xaantalgemaakt.Value}";
                     if (alles && Bewerking.AantalGemaakt != (int) xaantalgemaakt.Value)
                     {
                         Bewerking.AantalGemaakt = (int) xaantalgemaakt.Value;
+                        SetPacketAantal(Bewerking.VerpakkingsInstructies, Bewerking.AantalGemaakt, Bewerking.Aantal);
                         changed = true;
                     }
 
@@ -316,6 +350,7 @@ namespace Forms
                                     $"[{wp.Path}] Aantal aangepast van {wp.AantalGemaakt} naar {xaantalgemaakt.Value}";
                                 wp.AantalGemaakt = (int) xaantalgemaakt.Value;
                                 wp.LaatstAantalUpdate = DateTime.Now;
+                                SetPacketAantal(Bewerking.VerpakkingsInstructies, wp.AantalGemaakt, Bewerking.Aantal);
                                 changed = true;
                             }
                             else
@@ -331,6 +366,7 @@ namespace Forms
                             $"[{Bewerking.Path}] Aantal aangepast van {Bewerking.AantalGemaakt} naar {xaantalgemaakt.Value}";
                         Bewerking.AantalGemaakt = (int) xaantalgemaakt.Value;
                         Bewerking.LaatstAantalUpdate = DateTime.Now;
+                        SetPacketAantal(Bewerking.VerpakkingsInstructies, Bewerking.AantalGemaakt, Bewerking.Aantal);
                         changed = true;
                     }
 
@@ -351,6 +387,7 @@ namespace Forms
                             Formulier.LaatstAantalUpdate = DateTime.Now;
                             xaantalgemaaktlabel.Text = Formulier.AantalGemaakt.ToString();
                             LoadProductieText(Formulier);
+                            SetPacketAantal(Formulier.VerpakkingsInstructies, Formulier.AantalGemaakt, Formulier.Aantal);
                             await Formulier.UpdateForm(false, false, null, change);
                         }
                     }
@@ -366,6 +403,7 @@ namespace Forms
                             b.AantalGemaakt = (int) xaantalgemaakt.Value;
                             b.LaatstAantalUpdate = DateTime.Now;
                             LoadProductieText(Formulier);
+                            SetPacketAantal(b.VerpakkingsInstructies, b.AantalGemaakt, b.Aantal);
                             await b.UpdateBewerking(null, change);
 
                             xaantalgemaaktlabel.Text = b.AantalGemaakt.ToString();
@@ -373,7 +411,7 @@ namespace Forms
                     }
                 }
 
-                if (xwerkplekken.Items.Count > 0)
+                if (xwerkplekken.Items.Count > 0 && movenext)
                 {
                     if (xwerkplekken.SelectedIndex + 1 < xwerkplekken.Items.Count)
                         xwerkplekken.SelectedIndex++;
@@ -387,12 +425,22 @@ namespace Forms
 
         private void xnextb_Click(object sender, EventArgs e)
         {
-            Next();
+            Next(false);
         }
 
         private void AantalGemaaktUI_FormClosing(object sender, FormClosingEventArgs e)
         {
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
+        }
+
+        private void xremovePacket_Click(object sender, EventArgs e)
+        {
+            RemovePacket();
+        }
+
+        private void xaddPacket_Click(object sender, EventArgs e)
+        {
+            AddPacket();
         }
     }
 }

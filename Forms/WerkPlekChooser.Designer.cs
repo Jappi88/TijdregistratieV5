@@ -120,9 +120,8 @@ namespace Forms
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(600, 225);
             this.Name = "WerkPlekChooser";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
+            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.SystemShadow;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Kies Werkplek";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);

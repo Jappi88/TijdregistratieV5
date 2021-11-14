@@ -1,22 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using Rpm.Misc;
 using Rpm.Productie;
 
 namespace Forms
 {
     public partial class AddPersoneel : MetroFramework.Forms.MetroForm
     {
+        public bool IsEditMode { get; private set; }
+
         public AddPersoneel()
         {
             InitializeComponent();
+        }
+
+        public AddPersoneel(Personeel pers) : this()
+        {
+            IsEditMode = pers != null;
+            PersoneelLid = pers?.CreateCopy();
+            xbuttonpanel.Visible = IsEditMode;
+            if (pers != null)
+            {
+                this.Text = $"Beheer {pers.PersoneelNaam}";
+                xnaam.Text = pers.PersoneelNaam;
+                xafdeling.Text = pers.Afdeling;
+                xisuitzendcheck.Checked = pers.IsUitzendKracht;
+                this.Invalidate();
+            }
         }
 
         public Personeel PersoneelLid { get; private set; }
 
         public new DialogResult ShowDialog()
         {
-            PersoneelLid = new Personeel();
+            PersoneelLid ??= new Personeel();
             return base.ShowDialog();
         }
 
@@ -29,16 +48,15 @@ namespace Forms
             }
             else
             {
-                var exist = await Manager.Database.PersoneelExist(xnaam.Text.Trim());
-                if (!exist)
-                {
-                    UpdateUser();
-                    DialogResult = DialogResult.OK;
-                }
-                else
+                if(!IsEditMode && await Manager.Database.PersoneelExist(xnaam.Text.Trim()))
                 {
                     XMessageBox.Show($"'{xnaam.Text.Trim()}' is al toegevoegd.", "Bestaat al", MessageBoxButtons.OK,
                         MessageBoxIcon.Exclamation);
+                }
+                else
+                {
+                    UpdateUser();
+                    DialogResult = DialogResult.OK;
                 }
             }
         }
@@ -77,33 +95,13 @@ namespace Forms
         {
             if (PersoneelLid != null)
             {
-                var bttns = new Dictionary<string, DialogResult>();
-                bttns.Add("Annuleren", DialogResult.Cancel);
-                bttns.Add("Standaard", DialogResult.No);
-                bttns.Add("Eigen Rooster", DialogResult.Yes);
-
                 try
                 {
                     PersoneelLid.PersoneelNaam = xnaam.Text.Trim();
-                    var dialog = XMessageBox.Show(
-                        $"Wat voor rooster zou je willen gebruiken voor '{PersoneelLid.PersoneelNaam}'?\n" +
-                        $"Kies voor '{PersoneelLid.PersoneelNaam}' een standaard of eigen rooster.\n", "Rooster",
-                        MessageBoxButtons.OK, MessageBoxIcon.Question, null, bttns);
-                    if (dialog == DialogResult.Cancel) return;
-
-                    switch (dialog)
-                    {
-                        case DialogResult.No:
-                            PersoneelLid.WerkRooster = null;
-                            break;
-                        case DialogResult.Yes:
-                            var rs = new RoosterForm(PersoneelLid.WerkRooster ?? Manager.Opties.GetWerkRooster(),
-                                $"Rooster voor {PersoneelLid.PersoneelNaam}");
-                            if (rs.ShowDialog() == DialogResult.OK) PersoneelLid.WerkRooster = rs.WerkRooster;
-                            break;
-                    }
-
-                    var xr = PersoneelLid.WerkRooster == null ? "" : " [EIGEN]";
+                    var rs = new RoosterForm(PersoneelLid.WerkRooster ?? Manager.Opties.GetWerkRooster(),
+                        $"Rooster voor {PersoneelLid.PersoneelNaam}");
+                    if (rs.ShowDialog() == DialogResult.OK) PersoneelLid.WerkRooster = rs.WerkRooster;
+                    var xr = PersoneelLid.WerkRooster.IsCustom()? "" : " [EIGEN]";
                     xrooster.Text = $"Werk Rooster{xr}";
                 }
                 catch (Exception ex)
@@ -116,6 +114,24 @@ namespace Forms
         private void xrooster_Click(object sender, EventArgs e)
         {
             EditSelectedRooster();
+        }
+
+        private void xklusjesb_Click(object sender, EventArgs e)
+        {
+            if (PersoneelLid != null)
+            {
+                var ak = new AlleKlusjes(PersoneelLid);
+                ak.ShowDialog();
+            }
+        }
+
+        private void xvaardigeheden_Click(object sender, EventArgs e)
+        {
+            if (PersoneelLid != null)
+            {
+                var vf = new VaardighedenForm(PersoneelLid);
+                vf.ShowDialog();
+            }
         }
     }
 }

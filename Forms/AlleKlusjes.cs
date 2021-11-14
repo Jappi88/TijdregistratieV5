@@ -326,12 +326,6 @@ namespace Forms
                         continue;
                     }
 
-                    if (werk.Formulier.State == ProductieState.Gereed)
-                    {
-                        invalid += $"Gereed Gemeld: {k.Path}\n";
-                        continue;
-                    }
-
                     if (werk.Formulier.State == ProductieState.Verwijderd)
                     {
                         invalid += $"Verwijderd: {k.Path}\n";

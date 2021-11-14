@@ -160,7 +160,7 @@ namespace ProductieManager.Forms
                     List<string> plekken = GetWerkplekken();
                     var bws = await Manager.GetBewerkingen(new ViewState[] {ViewState.Gestopt, ViewState.Gestart},
                         true);
-                    var gestart = bws.Where(x => x.State == ProductieState.Gestart).ToList();
+                    var gestart = bws.Where(x => x.State == ProductieState.Gestart).OrderBy(x=> x.VerwachtDatumGereed()).ToList();
                     bws = bws.Where(x => x.State == ProductieState.Gestopt).Distinct(new BewerkingDistinctComparer()).ToList();
                     List<Bewerking> xremove = new List<Bewerking>();
                     if (gestart.Count > 0)
@@ -178,7 +178,7 @@ namespace ProductieManager.Forms
                                         x.VerwachtDatumGereed() > x.LeverDatum ||
                                         string.Equals(x.ArtikelNr, wp.ArtikelNr,
                                             StringComparison.CurrentCultureIgnoreCase) ||
-                                        IsSameProduct(x.ArtikelNr, wp.ArtikelNr) > 4);
+                                        IsSameProduct(x.ArtikelNr, wp.ArtikelNr) > 5);
                                     volgende ??= xbws[0];
                                     xreturn.Add(new WerkVolgorde() {Name = wp.Naam, Huidig = bw, Volgende = volgende});
                                     xremove.Add(volgende);

@@ -85,7 +85,6 @@ namespace ProductieManager
             //Task.Run(new Action(productieView1.LoadForm));
             _splash = new SplashScreen(3000) {WindowState = FormWindowState.Normal};
             _splash.FinishedLoading += _splash_FinishedLoading;
-            _splash.FormClosed += Screen_FormClosed;
             Shown += Mainform_Shown;
             _splash.Shown += _splash_Shown;
             _splash.Show();
@@ -290,18 +289,15 @@ namespace ProductieManager
             IsLoading = false;
             while (!Manager.IsLoaded)
                 Application.DoEvents();
+            _splash.Dispose();
+            _splash = null;
             StartPosition = FormStartPosition.CenterParent;
             Show();
             this.InitLastInfo();
             Select();
             BringToFront();
-            AutoUpdater.Start();
-            productieView1.ShowUnreadMessage = true;
-            productieView1.UpdateUnreadMessages(null);
-            productieView1.UpdateUnreadOpmerkingen();
-            _splash.Dispose();
-            _splash = null;
-           
+            UpdateTitle();
+
         }
 
         private void _manager_OnRemoteMessage(RemoteMessage message, Manager instance)
@@ -330,6 +326,8 @@ namespace ProductieManager
             }
         }
 
+
+
         private void _manager_OnManagerLoaded()
         {
             this.BeginInvoke(new Action(() =>
@@ -354,10 +352,13 @@ namespace ProductieManager
 
         private async void Action()
         {
+            AutoUpdater.Start();
             await InitBootDir();
-            UpdateTitle();
             xversie.Text = $@"Versie {ProductVersion}";
             productieView1.LoadManager(_bootDir);
+            productieView1.ShowUnreadMessage = true;
+            productieView1.UpdateUnreadMessages(null);
+            productieView1.UpdateUnreadOpmerkingen();
         }
 
         private void Mainform_Shown(object sender, EventArgs e)
@@ -444,10 +445,6 @@ namespace ProductieManager
             BeginInvoke(new Action(UpdateTitle));
         }
 
-        private void Screen_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            
-        }
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
