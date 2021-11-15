@@ -58,6 +58,7 @@ namespace ProductieManager.Forms
             this.xvoorwaardenb = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.xdezeweekcheckbox = new System.Windows.Forms.CheckBox();
             this.metroPanel1.SuspendLayout();
             this.xvaluepanel.SuspendLayout();
             this.xdatepanel.SuspendLayout();
@@ -204,7 +205,7 @@ namespace ProductieManager.Forms
             this.xvaluepanel.HorizontalScrollbarSize = 10;
             this.xvaluepanel.Location = new System.Drawing.Point(20, 91);
             this.xvaluepanel.Name = "xvaluepanel";
-            this.xvaluepanel.Size = new System.Drawing.Size(535, 180);
+            this.xvaluepanel.Size = new System.Drawing.Size(535, 200);
             this.xvaluepanel.TabIndex = 7;
             this.xvaluepanel.VerticalScrollbarBarColor = true;
             this.xvaluepanel.VerticalScrollbarHighlightOnWheel = false;
@@ -212,13 +213,14 @@ namespace ProductieManager.Forms
             // 
             // xdatepanel
             // 
+            this.xdatepanel.Controls.Add(this.xdezeweekcheckbox);
             this.xdatepanel.Controls.Add(this.xdatevalue);
             this.xdatepanel.Controls.Add(this.xhuidigeDatum);
             this.xdatepanel.Controls.Add(this.xhuidigeTijd);
             this.xdatepanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.xdatepanel.Location = new System.Drawing.Point(0, 142);
             this.xdatepanel.Name = "xdatepanel";
-            this.xdatepanel.Size = new System.Drawing.Size(535, 41);
+            this.xdatepanel.Size = new System.Drawing.Size(535, 52);
             this.xdatepanel.TabIndex = 11;
             this.xdatepanel.Visible = false;
             // 
@@ -230,10 +232,10 @@ namespace ProductieManager.Forms
             this.xdatevalue.CustomFormat = "dddd dd MMMM yyyy HH:mm";
             this.xdatevalue.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xdatevalue.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.xdatevalue.Location = new System.Drawing.Point(241, 6);
+            this.xdatevalue.Location = new System.Drawing.Point(231, 13);
             this.xdatevalue.MinimumSize = new System.Drawing.Size(4, 29);
             this.xdatevalue.Name = "xdatevalue";
-            this.xdatevalue.Size = new System.Drawing.Size(292, 29);
+            this.xdatevalue.Size = new System.Drawing.Size(301, 29);
             this.xdatevalue.TabIndex = 8;
             this.toolTip1.SetToolTip(this.xdatevalue, "Vul in de datum en tijd waaraan de criteria moet voldoen");
             this.xdatevalue.ValueChanged += new System.EventHandler(this.xdatevalue_ValueChanged);
@@ -242,7 +244,7 @@ namespace ProductieManager.Forms
             // 
             this.xhuidigeDatum.AutoSize = true;
             this.xhuidigeDatum.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xhuidigeDatum.Location = new System.Drawing.Point(3, 11);
+            this.xhuidigeDatum.Location = new System.Drawing.Point(104, 3);
             this.xhuidigeDatum.Name = "xhuidigeDatum";
             this.xhuidigeDatum.Size = new System.Drawing.Size(122, 21);
             this.xhuidigeDatum.TabIndex = 10;
@@ -255,7 +257,7 @@ namespace ProductieManager.Forms
             // 
             this.xhuidigeTijd.AutoSize = true;
             this.xhuidigeTijd.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xhuidigeTijd.Location = new System.Drawing.Point(131, 11);
+            this.xhuidigeTijd.Location = new System.Drawing.Point(104, 28);
             this.xhuidigeTijd.Name = "xhuidigeTijd";
             this.xhuidigeTijd.Size = new System.Drawing.Size(104, 21);
             this.xhuidigeTijd.TabIndex = 9;
@@ -414,9 +416,9 @@ namespace ProductieManager.Forms
             this.panel1.Controls.Add(this.xcriteriahtml);
             this.panel1.Controls.Add(this.xvoorwaardenb);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(20, 271);
+            this.panel1.Location = new System.Drawing.Point(20, 291);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(535, 66);
+            this.panel1.Size = new System.Drawing.Size(535, 49);
             this.panel1.TabIndex = 9;
             // 
             // xcriteriahtml
@@ -429,7 +431,7 @@ namespace ProductieManager.Forms
             this.xcriteriahtml.Location = new System.Drawing.Point(0, 42);
             this.xcriteriahtml.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.xcriteriahtml.Name = "xcriteriahtml";
-            this.xcriteriahtml.Size = new System.Drawing.Size(535, 24);
+            this.xcriteriahtml.Size = new System.Drawing.Size(535, 7);
             this.xcriteriahtml.TabIndex = 8;
             this.xcriteriahtml.Text = null;
             // 
@@ -456,7 +458,7 @@ namespace ProductieManager.Forms
             this.panel2.Controls.Add(this.xok);
             this.panel2.Controls.Add(this.xannuleren);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(20, 337);
+            this.panel2.Location = new System.Drawing.Point(20, 340);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(535, 43);
             this.panel2.TabIndex = 10;
@@ -465,11 +467,24 @@ namespace ProductieManager.Forms
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
+            // xdezeweekcheckbox
+            // 
+            this.xdezeweekcheckbox.AutoSize = true;
+            this.xdezeweekcheckbox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xdezeweekcheckbox.Location = new System.Drawing.Point(3, 13);
+            this.xdezeweekcheckbox.Name = "xdezeweekcheckbox";
+            this.xdezeweekcheckbox.Size = new System.Drawing.Size(95, 21);
+            this.xdezeweekcheckbox.TabIndex = 11;
+            this.xdezeweekcheckbox.Text = "Deze Week";
+            this.toolTip1.SetToolTip(this.xdezeweekcheckbox, "KIes dit voor als je de criteria wilt vergelijken met de huidige datum");
+            this.xdezeweekcheckbox.UseVisualStyleBackColor = true;
+            this.xdezeweekcheckbox.CheckedChanged += new System.EventHandler(this.xdezeweekcheckbox_CheckedChanged);
+            // 
             // NewFilterEntry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(575, 400);
+            this.ClientSize = new System.Drawing.Size(575, 403);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.xvaluepanel);
             this.Controls.Add(this.metroPanel1);
@@ -526,5 +541,6 @@ namespace ProductieManager.Forms
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox xhuidigeDatum;
         private MetroFramework.Controls.MetroComboBox xRangeDevider;
+        private System.Windows.Forms.CheckBox xdezeweekcheckbox;
     }
 }

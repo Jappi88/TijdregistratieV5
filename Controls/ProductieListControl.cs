@@ -877,7 +877,8 @@ namespace Controls
 
         private void UpdateListObjects<T>(List<T> objects)
         {
-            if (objects != null && objects.Count != ProductieLijst.Items.Count)
+            if (objects != null && (objects.Count != ProductieLijst.Items.Count ||
+                                    !ProductieLijst.Objects.Cast<T>().Any(x => objects.Any(o => o.Equals(x)))))
             {
                 ProductieLijst.BeginUpdate();
                 var sel = ProductieLijst.SelectedObject;
@@ -887,6 +888,37 @@ namespace Controls
                 ProductieLijst.EndUpdate();
                 OnItemCountChanged();
             }
+        }
+
+        public List<Bewerking> GetBewerkingen(bool reload, bool customfilter)
+        {
+            var states = GetCurrentViewStates();
+            var bws = !reload && CustomList && Bewerkingen != null
+                ? Bewerkingen.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
+                    .ToList()
+                : Bewerkingen = Manager.GetBewerkingen(states, true, null).Result;
+            if (customfilter && ValidHandler != null)
+                bws = bws.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
+                    .ToList();
+            else
+                bws = bws.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter())).ToList();
+            return bws;
+        }
+
+        public List<ProductieFormulier> GetProducties(bool reload, bool customfilter)
+        {
+            var states = GetCurrentViewStates();
+            var xprods = !reload && CustomList && Producties != null
+                ? Producties.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
+                    .ToList()
+                : Producties = Manager.GetProducties(states, true, true, null).Result;
+            if (customfilter && ValidHandler != null)
+                xprods = xprods.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
+                    .ToList();
+            else
+                xprods = xprods.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter(), states, true))
+                    .ToList();
+            return xprods;
         }
 
         public void UpdateProductieList(bool reload, bool showwaitui)
@@ -909,37 +941,20 @@ namespace Controls
                             .Where(x => x.Collapsed)
                             .ToArray();
                         // Manager.Opties.ProductieWeergaveFilters = GetCurrentProductieViewStates();
-                        var states = GetCurrentViewStates();
+                       
 
                         var xlistcount = ProductieLijst.Items.Count;
                         if (!IsBewerkingView)
                         {
                             if (CanLoad)
                             {
-                                var xprods = !reload && CustomList && Producties != null
-                                    ? Producties.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
-                                        .ToList()
-                                    : Producties = Manager.GetProducties(states, true,true, null).Result;
-                                if (ValidHandler != null)
-                                    xprods = xprods.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
-                                        .ToList();
-                                else
-                                    xprods = xprods.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter(), states, true))
-                                        .ToList();
+                                var xprods = GetProducties(reload,true);
                                 UpdateListObjects(xprods);
                             }
                         }
                         else if (CanLoad)
                         {
-                            var bws = !reload && CustomList && Bewerkingen != null
-                                ? Bewerkingen.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
-                                    .ToList()
-                                : Bewerkingen = Manager.GetBewerkingen(states, true,null).Result;
-                            if (ValidHandler != null)
-                                bws = bws.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
-                                    .ToList();
-                            else
-                                bws = bws.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter())).ToList();
+                            var bws = GetBewerkingen(reload,true);
                             UpdateListObjects(bws);
                         }
 

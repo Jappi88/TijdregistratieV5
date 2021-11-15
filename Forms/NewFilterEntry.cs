@@ -37,7 +37,7 @@ namespace ProductieManager.Forms
             InitializeComponent();
             xoperandtype.Enabled = useoperand;
             xoperandtype.Visible = true;
-            xvaluepanel.Height = 70;
+            xvaluepanel.Height = 90;
             Size = base.MinimumSize;
             SelectedFilter = new FilterEntry
             {
@@ -53,11 +53,12 @@ namespace ProductieManager.Forms
         public NewFilterEntry(Type type, FilterEntry entry)
         {
             InitializeComponent();
+            entry ??= new FilterEntry();
             xoperandtype.Enabled = entry.OperandType != Operand.ALS;
             xoperandtype.Visible = true;
             numericUpDown1.Value = entry.RangeValue;
-            if (entry.CompareWithProperty)
-                xVergelijkVariableCheck.Checked = true;
+            xVergelijkVariableCheck.Checked = entry.CompareWithProperty;
+            xdezeweekcheckbox.Checked = entry.DezeWeekDateTime;
             SelectedFilter = entry.CreateCopy();
             xvaluepanel.Height = 70;
             Size = base.MinimumSize;
@@ -100,6 +101,9 @@ namespace ProductieManager.Forms
             xtextvalue.Visible = xtextvalue.Enabled;
             xdecimalvalue.Visible = xdecimalvalue.Enabled;
             xdatepanel.Visible = xdatepanel.Enabled;
+            if (xdatepanel.Enabled)
+                xvaluepanel.Height = 90;
+            else xvaluepanel.Height = 70;
             xComboPanel.Visible = xComboPanel.Enabled;
             xcheckvalue.Visible = xcheckvalue.Enabled;
             var xvaltypes = FilterEntry.GetFilterStringTypesByType(Property.PropertyType);
@@ -296,7 +300,8 @@ namespace ProductieManager.Forms
                     PropertyName = Property.Name,
                     RangeValue = (int)numericUpDown1.Value,
                     Value = value,
-                    CompareWithProperty = xVergelijkVariableCheck.Checked
+                    CompareWithProperty = xVergelijkVariableCheck.Checked,
+                    DezeWeekDateTime = xdezeweekcheckbox.Checked
                 };
                 if (Enum.TryParse<RangeDeviderType>(xRangeDevider.SelectedItem.ToString(), out var xtype))
                     x.DeviderType = xtype;
@@ -511,6 +516,16 @@ namespace ProductieManager.Forms
             {
                 SaveChanges(false);
             }
+        }
+
+        private void xdezeweekcheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (xdezeweekcheckbox.Checked == !xdatevalue.Enabled)
+                return;
+            xdatevalue.Enabled = !xdezeweekcheckbox.Checked;
+            xhuidigeDatum.Enabled = !xdezeweekcheckbox.Checked;
+            xhuidigeTijd.Enabled = !xdezeweekcheckbox.Checked;
+            SaveChanges(false);
         }
     }
 }

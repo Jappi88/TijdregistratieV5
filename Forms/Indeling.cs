@@ -732,6 +732,7 @@ namespace Forms
                                 {
                                     if (x.Status == ProductieState.Gestart)
                                         x.Stop();
+                                    x.Status = bew.State;
                                 }
                                 xdbpers?.ReplaceKlus(x);
                             });

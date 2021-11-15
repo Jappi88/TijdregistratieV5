@@ -31,6 +31,7 @@ namespace Rpm.Misc
         public string PropertyName { get; set; }
         public object Value { get; set; }
         public bool CompareWithProperty { get; set; }
+        public bool DezeWeekDateTime { get; set; }
         public FilterType FilterType { get; set; }
         private Operand _fOperand;
         public Operand OldOperandType { get; set; } = Operand.None;
@@ -388,38 +389,79 @@ namespace Rpm.Misc
 
                         if (value2.TimeOfDay == new TimeSpan())
                             value2 = value2.ChangeTime(DateTime.Now.TimeOfDay);
-
+                        var weeknr = -1;
+                        var xweeknr = -1;
+                        if (DezeWeekDateTime)
+                        {
+                            var xcur = xvalue.Year - DateTime.Now.Year;
+                            weeknr = DateTime.Now.GetWeekNr();
+                            xweeknr = xvalue.GetWeekNr();
+                            if(xcur > 0)
+                                xweeknr += (52 * xcur);
+                            else if (xcur < 0)
+                                weeknr += (52 * (-xcur));
+                        }
                         switch (type)
                         {
                             case FilterType.GelijkAan:
-                                xisfilter = value2.Date == xvalue.Date && value2.TimeOfDay == xvalue.TimeOfDay;
+                                if (weeknr > -1)
+                                    xisfilter = xweeknr == weeknr;
+                                else
+                                    xisfilter = value2.Date == xvalue.Date && value2.TimeOfDay == xvalue.TimeOfDay;
                                 break;
                             case FilterType.Bevat:
-                                xisfilter = xvalue.ToString().Contains(value2.ToString());
+                                if (weeknr > -1)
+                                    xisfilter = xweeknr == weeknr;
+                                else
+                                    xisfilter = xvalue.ToString().Contains(value2.ToString());
                                 break;
                             case FilterType.BegintMet:
-                                xisfilter = xvalue.ToString().ToLower().StartsWith(value2.ToString());
+                                if (weeknr > -1)
+                                    xisfilter = xweeknr == weeknr;
+                                else
+                                    xisfilter = xvalue.ToString().ToLower().StartsWith(value2.ToString());
                                 break;
                             case FilterType.EindigtMet:
-                                xisfilter = xvalue.ToString().ToLower().EndsWith(value2.ToString());
+                                if (weeknr > -1)
+                                    xisfilter = xweeknr == weeknr;
+                                else
+                                    xisfilter = xvalue.ToString().ToLower().EndsWith(value2.ToString());
                                 break;
                             case FilterType.Kleinerdan:
-                                xisfilter = xvalue < value2;
+                                if (weeknr > -1)
+                                    xisfilter = xweeknr < weeknr;
+                                else
+                                    xisfilter = xvalue < value2;
                                 break;
                             case FilterType.KleinerOfGelijkAan:
-                                xisfilter = xvalue <= value2;
+                                if (weeknr > -1)
+                                    xisfilter = xweeknr <= weeknr;
+                                else
+                                    xisfilter = xvalue <= value2;
                                 break;
                             case FilterType.Groterdan:
-                                xisfilter = xvalue > value2;
+                                if (weeknr > -1)
+                                    xisfilter = xweeknr > weeknr;
+                                else
+                                    xisfilter = xvalue > value2;
                                 break;
                             case FilterType.GroterOfGelijkAan:
-                                xisfilter = xvalue >= value2;
+                                if (weeknr > -1)
+                                    xisfilter = xweeknr >= weeknr;
+                                else
+                                    xisfilter = xvalue >= value2;
                                 break;
                             case FilterType.NietGelijkAan:
-                                xisfilter = value2 != xvalue;
+                                if (weeknr > -1)
+                                    xisfilter = xweeknr != weeknr;
+                                else
+                                    xisfilter = value2 != xvalue;
                                 break;
                             case FilterType.BevatNiet:
-                                xisfilter = !xvalue.ToString().Contains(value2.ToString());
+                                if (weeknr > -1)
+                                    xisfilter = xweeknr != weeknr;
+                                else
+                                    xisfilter = !xvalue.ToString().Contains(value2.ToString());
                                 break;
                         }
 
@@ -475,30 +517,35 @@ namespace Rpm.Misc
                 switch (Value)
                 {
                     case string xvalue:
-                        return xvalue.ToString(CultureInfo.InvariantCulture);
+                        return $"<b>{xvalue.ToString(CultureInfo.InvariantCulture)}</b>";
                     case decimal xvalue:
-                        return xvalue.ToString(CultureInfo.InvariantCulture);
+                        return $"<b>{xvalue.ToString(CultureInfo.InvariantCulture)}</b>";
                     case double xvalue:
-                        return xvalue.ToString(CultureInfo.InvariantCulture);
+                        return $"<b>{xvalue.ToString(CultureInfo.InvariantCulture)}</b>";
                     case int xvalue:
-                        return xvalue.ToString(CultureInfo.InvariantCulture);
+                        return $"<b>{xvalue.ToString(CultureInfo.InvariantCulture)}</b>";
                     case DateTime xvalue:
                         string xreturn = "";
+                        if (DezeWeekDateTime)
+                        {
+                            var weeknr = DateTime.Now.GetWeekNr();
+                            return $"'<b>Deze Week({weeknr})</b>'";
+                        }
                         if (xvalue.Year == 9999 && xvalue.Month == 1 && xvalue.Day == 1)
-                            xreturn = "'Huidige Datum' ";
-                        else xreturn = $"'{xvalue.Date:D}' ";
+                            xreturn = "'<b>Huidige Datum</b>' ";
+                        else xreturn = $"'<b>{xvalue.Date:D}</b>' ";
                         if (xvalue.TimeOfDay > new TimeSpan())
                         {
-                            xreturn += $"'{xvalue.TimeOfDay.Hours}:{xvalue.TimeOfDay.Minutes}'";
+                            xreturn += $"'<b>{xvalue.TimeOfDay.Hours}:{xvalue.TimeOfDay.Minutes}</b>'";
                         }
                         else
-                            xreturn += "'Huidige Tijd'";
+                            xreturn += "'<b>Huidige Tijd</b>'";
                         return xreturn.Trim();
                     case Enum xvalue:
                         var xvalueenum = Enum.GetName(xvalue.GetType(), xvalue);
                         return xvalueenum;
                     case bool xvalue:
-                        return xvalue ? "WAAR" : "NIETWAAR";
+                        return $"<b>{(xvalue ? "WAAR" : "NIETWAAR")}</b>";
                 }
 
                 return null;
@@ -517,11 +564,26 @@ namespace Rpm.Misc
                 : $" ({Enum.GetName(typeof(RangeDeviderType), DeviderType)} {RangeValue})";
         }
 
+        private string StripHtmlTagsFromString(string html)
+        {
+            if (html == null) return null;
+            int index;
+            while ((index = html.IndexOf("<", StringComparison.Ordinal)) > -1)
+            {
+                int xend = html.IndexOf(">", StringComparison.Ordinal);
+                if (xend > -1)
+                    html = html.Remove(index, ((xend + 1) - index));
+            }
+
+            return html;
+
+        }
+
         public new string ToString()
         {
             try
             {
-                var value = ValueToString();
+                var value = StripHtmlTagsFromString(ValueToString());
                 var xreturn =
                     $"{Enum.GetName(typeof(Operand), OperandType)} '{PropertyName}' {Enum.GetName(typeof(FilterType), FilterType)} '{value}' {GetRangeValueString()}";
                 if (ChildEntries is {Count: > 0})
@@ -541,7 +603,7 @@ namespace Rpm.Misc
             {
                 var value = ValueToString();
                 var xreturn =
-                    $"<div>(<span Color=RoyalBlue>{Enum.GetName(typeof(Operand), OperandType)}</span> <span Color=Purple>{PropertyName}</span> <span Color=RoyalBlue>{Enum.GetName(typeof(FilterType), FilterType)}</span><span Color=Purple> {value}</span><span Color=Red> {GetRangeValueString()}</span>)</div>";
+                    $"<div>(<span Color=RoyalBlue>{Enum.GetName(typeof(Operand), OperandType)}</span> <span Color=Purple><b>{PropertyName}</b></span> <span Color=RoyalBlue>{Enum.GetName(typeof(FilterType), FilterType)}</span><span Color=Purple> {value}</span><span Color=Red> {GetRangeValueString()}</span>)</div>";
                 if (ChildEntries is {Count: > 0})
                     xreturn += "\n" + string.Join("\n", ChildEntries.Select(x => x.ToHtmlString()));
                 return xreturn;

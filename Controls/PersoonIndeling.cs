@@ -6,8 +6,10 @@ using Rpm.Various;
 using System;
 using System.Collections;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
+using ProductieManager.Rpm.Misc;
 
 namespace Controls
 {
@@ -17,7 +19,7 @@ namespace Controls
 
         public Personeel Persoon { get;  set; }
 
-        public Bewerking SelectedBewerking { get; private set; }
+        public Bewerking SelectedBewerking { get; set; }
         public bool IsSelected { get; set; }
 
         public FieldTextGetterHandler FieldTextGetter { get; set; }
@@ -66,6 +68,7 @@ namespace Controls
             if (Persoon == null)
             {
                // ximage.Image = Resources.operation;
+               xVerwijderPersoneel.Visible = false;
                 if (FieldTextGetter != null)
                     xpersoonInfo.Text = FieldTextGetter.Invoke(this);
                 else
@@ -78,7 +81,7 @@ namespace Controls
             {
                 //ximage.Image = Resources.user_customer_person_13976;
                 xknoppenpanel.Visible = SelectedBewerking != null && Persoon != null && IsSelected;
-
+                xVerwijderPersoneel.Visible = true;
                 if (Parent is GroupBox group)
                 {
                     if (SelectedBewerking != null && IsSelected)
@@ -156,10 +159,16 @@ namespace Controls
 
         private void PersoonIndeling_DragEnter(object sender, DragEventArgs e)
         {
-            var xdata = e.Data.GetData("Producties") as ArrayList;
+            var data = (GroupBox)e.Data.GetData(typeof(GroupBox));
             var falsecolor = Color.MistyRose;
             var truecolor = Color.LightGreen;
-            if (xdata != null)
+            if (data != null && data.Controls.Count > 0 && data.Controls[0] is PersoonIndeling indeling && indeling.Persoon != null)
+            {
+                this.BackColor = truecolor;
+                e.Effect = DragDropEffects.Move;
+                return;
+            }
+            if (e.Data.GetData("Producties") is ArrayList xdata)
             {
                 foreach (var x in xdata)
                 {
@@ -231,8 +240,11 @@ namespace Controls
                                 $"{Persoon} Toegevoegd op [{bew.Naam}] van {bew.Omschrijving}").Wait(2000);;
                         }
                     }
-                    this.OnMouseLeave(EventArgs.Empty);
                 }
+                BitMapCursor?.Dispose();
+                BitMapCursor = null;
+                _isDragging = false;
+                this.OnMouseLeave(EventArgs.Empty);
             }
             catch (Exception exception)
             {
@@ -305,6 +317,9 @@ namespace Controls
             //    }
             //}
 
+            string change =
+                $"{Persoon.PersoneelNaam} gestopt met {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!";
+            bool changed = false;
             foreach (var wp in SelectedBewerking.WerkPlekken)
             {
                 foreach (var xp in wp.Personen)
@@ -319,15 +334,20 @@ namespace Controls
                                 klus.Stop();
                                 klus.IsActief = false;
                                 Persoon.ReplaceKlus(klus);
+                                changed = true;
                             }
+                          
                         }
                     }
                 }
             }
+
+            if (changed)
+                Manager.Database.UpSert(Persoon, change);
             xStartKlus.Enabled = true;
             xStopKlus.Enabled = false;
-            SelectedBewerking.UpdateBewerking(null,
-                $"{Persoon.PersoneelNaam} gestopt met {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!").Wait(2000);
+            _ = SelectedBewerking.UpdateBewerking(null,
+                $"{Persoon.PersoneelNaam} UPDATE: {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!");
         }
 
         private Klus CreateKlus(Bewerking bewerking)
@@ -397,11 +417,16 @@ namespace Controls
             xStopKlus.Enabled = true;
             if (SelectedBewerking.State == ProductieState.Gestopt)
             {
-                SelectedBewerking.StartProductie(true,true).Wait(2000);
-                return;
+                _ = SelectedBewerking.StartProductie(true, true);
             }
-            SelectedBewerking.UpdateBewerking(null,
-                $"{Persoon.PersoneelNaam} gestart met {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!").Wait(2000);;
+            else
+            {
+                string change =
+                    $"{Persoon.PersoneelNaam} gestart met {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!";
+                Manager.Database?.UpSert(Persoon, change);
+                _ = SelectedBewerking.UpdateBewerking(null,
+                    $"{Persoon.PersoneelNaam} UPDATE: {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!");
+            }
         }
 
         private void xPersoonImage_DoubleClick(object sender, EventArgs e)
@@ -422,6 +447,96 @@ namespace Controls
                     break;
             }
             e.Handled = true;
+        }
+
+        private void xVerwijderPersoneel_Click(object sender, EventArgs e)
+        {
+            OnVerwijderPersoneel(EventArgs.Empty);
+        }
+
+        public event EventHandler VerwijderPersoneel;
+
+        protected void OnVerwijderPersoneel(EventArgs e)
+        {
+            VerwijderPersoneel?.Invoke(this, e);
+        }
+
+        protected override void OnClick(EventArgs e)
+        {
+            Focus();
+            base.OnClick(e);
+        }
+
+        private bool _isDragging;
+        private readonly int _DDradius = 40;
+        private int _mX;
+        private int _mY;
+       
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            Focus();
+            base.OnMouseDown(e);
+            _mX = e.X;
+            _mY = e.Y;
+            _isDragging = false;
+            //Cast the sender to control type youre using
+            //Copy the control in a bitmap
+            Bitmap bmp = new Bitmap(this.Parent.Width, this.Parent.Height);
+            this.Parent.DrawToBitmap(bmp, new Rectangle(Point.Empty, bmp.Size));
+            bmp = bmp.ChangeOpacity(0.75f);
+            //In a variable save the cursor with the image of your controler
+            this.BitMapCursor = new Cursor(bmp.GetHicon());
+            //this.DoDragDrop(this.Parent, DragDropEffects.Move);
+
+        }
+
+        private Cursor BitMapCursor;
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (!_isDragging)
+            {
+                // This is a check to see if the mouse is moving while pressed.
+                // Without this, the DragDrop is fired directly when the control is clicked, now you have to drag a few pixels first.
+                if (e.Button == MouseButtons.Left && _DDradius > 0 && Persoon != null)
+                {
+                    var num1 = _mX - e.X;
+                    var num2 = _mY - e.Y;
+                    if (num1 * num1 + num2 * num2 > _DDradius)
+                    {
+                        DoDragDrop(this.Parent, DragDropEffects.All);
+                        _isDragging = true;
+                        return;
+                    }
+                }
+
+                _isDragging = false;
+                base.OnMouseMove(e);
+            }
+        }
+
+        protected override void OnGiveFeedback(GiveFeedbackEventArgs e)
+        {
+            //Deactivate the default cursor
+            e.UseDefaultCursors = false;
+            //Use the cursor created from the bitmap
+            Cursor.Current = this.BitMapCursor;
+            base.OnGiveFeedback(e);
+        }
+
+        public void IndelingMouseDown(object sender, MouseEventArgs e)
+        {
+            this.OnMouseDown(e);
+        }
+
+        public void IndelingMouseMove(object sender, MouseEventArgs e)
+        {
+            this.OnMouseMove(e);
+        }
+
+        private void xpersoonInfo_GiveFeedback(object sender, GiveFeedbackEventArgs e)
+        {
+            this.OnGiveFeedback(e);
         }
     }
 }

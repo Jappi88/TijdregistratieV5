@@ -73,9 +73,6 @@ namespace ProductieManager
             AutoUpdater.AppTitle = "Productie Manager";
             AutoUpdater.ShowSkipButton = false;
             AutoUpdater.ApplicationExitEvent += AutoUpdater_ApplicationExitEvent;
-            Updatechecker = new Timer {Interval = 60000};
-            Updatechecker.Tick += _updatechecker_Tick;
-            Updatechecker.Start();
             Hide();
             Manager.OnSettingsChanged += ProductieView1_OnSettingsChanged;
             Manager.OnManagerLoaded += _manager_OnManagerLoaded;
@@ -365,6 +362,9 @@ namespace ProductieManager
         {
             FormShown();
             Invalidate();
+            Updatechecker = new Timer { Interval = 60000 };
+            Updatechecker.Tick += _updatechecker_Tick;
+            Updatechecker.Start();
         }
 
         private void _updatechecker_Tick(object sender, EventArgs e)
