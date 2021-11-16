@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MetroFramework;
 using Rpm.Misc;
 using Rpm.Productie;
 
@@ -10,10 +12,25 @@ namespace Forms
     public partial class UpdatePreviewForm : MetroFramework.Forms.MetroForm
     {
         private readonly bool _Isnew;
-        public UpdatePreviewForm(string link, bool isnew)
+        private readonly bool _IsHelp;
+        public bool IsValid { get; private set; }
+        public string Title
+        {
+            get => this.Text;
+            set
+            {
+                this.Text = value;
+                Invalidate();
+            }
+        }
+
+        public UpdatePreviewForm(string link, bool isnew, bool ishelp)
         {
             InitializeComponent();
+            _IsHelp = ishelp;
             _Isnew = isnew;
+            if (ishelp) Style = MetroColorStyle.Blue;
+            else Style = MetroColorStyle.Orange;
             LoadUrl(link);
         }
 
@@ -39,6 +56,7 @@ namespace Forms
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                IsValid = false;
             }
         }
 
@@ -46,6 +64,7 @@ namespace Forms
         {
             try
             {
+                if (_IsHelp) return;
                 if (this.InvokeRequired)
                     this.Invoke(new Action(() =>
                     {
@@ -57,6 +76,7 @@ namespace Forms
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                IsValid = false;
             }
         }
 
@@ -64,30 +84,28 @@ namespace Forms
         {
             try
             {
-                this.Text = $"NIEUW In {this.ProductVersion}!";
-                this.Invalidate();
                 var html = Functions.GetStringFromUrl(Url);
+                IsValid = !string.IsNullOrEmpty(html);
                 htmlPanel1.Text = html;
-                
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                IsValid = false;
             }
         }
 
         private void xLoadUrls(string[] Urls)
         {
-            this.Text = $"Alle Aanpassingen";
-            this.Invalidate();
             try
             {
                 foreach (var url in Urls)
                 {
                     var html = Functions.GetStringFromUrl(url);
                     htmlPanel1.Text += html;
+                   
                 }
-             
+                IsValid = true;
             }
             catch (Exception e)
             {
@@ -136,6 +154,52 @@ namespace Forms
 
             }));
            
+        }
+
+        private void htmlPanel1_LinkClicked(object sender, HtmlRenderer.Entities.HtmlLinkClickedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(e.Link))
+            {
+
+                if (e.Link.ToLower().StartsWith("move"))
+                {
+                    string[] xvalues = e.Link.Split(':');
+                    if (xvalues.Length > 0)
+                    {
+                        var xvalue = xvalues[xvalues.Length - 1];
+                        xvalues = xvalue.Split(',');
+                        if (xvalue.Length > 1)
+                        {
+                            if (int.TryParse(xvalues[0], out var x) && int.TryParse(xvalues[1], out var y))
+                            {
+                                for (int i = 0; i < 10; i++)
+                                {
+                                    if (htmlPanel1.HorizontalScroll.Value == x) break;
+                                    htmlPanel1.HorizontalScroll.Value = x;
+                                    htmlPanel1.Invalidate();
+                                }
+                                for (int i = 0; i < 10; i++)
+                                {
+                                    if (htmlPanel1.VerticalScroll.Value == y) break;
+                                    htmlPanel1.VerticalScroll.Value = y;
+                                    htmlPanel1.Invalidate();
+                                }
+                            }
+                        }
+                    }
+                    e.Handled = true;
+                }
+                if (e.Link.ToLower().StartsWith("find"))
+                {
+                    string[] xvalues = e.Link.Split(':');
+                    if (xvalues.Length > 0)
+                    {
+                        var xvalue = xvalues[xvalues.Length - 1];
+                        htmlPanel1.ScrollToElement(xvalue);
+                        e.Handled = true;
+                    }
+                }
+            }
         }
     }
 }

@@ -1117,7 +1117,7 @@ namespace Controls
                 xspeciaalroosterlabel.Visible = false;
                 return;
             }
-
+           
             var xtime = DateTime.Now;
             //eerst kijken of het weekend is.
             var culture = new CultureInfo("nl-NL");
@@ -1778,21 +1778,24 @@ namespace Controls
             {
                 var xprevs =
                     Functions.GetVersionPreviews(Manager.LastPreviewsUrl);
+                var xvers = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                 if (xprevs.Count > 0)
                 {
                     UpdatePreviewForm xshowform = null;
                     if (!showall)
                     {
-                        var xvers = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                        
                         if (!xprevs.ContainsKey(xvers)) return;
                         if (onlyifnew && new Version(Manager.DefaultSettings.LastPreviewVersion) >= new Version(xvers))
                             return;
-                        xshowform = new UpdatePreviewForm(xprevs[xvers], onlyifnew);
+                        xshowform = new UpdatePreviewForm(xprevs[xvers], onlyifnew,false);
+                        xshowform.Title = $"NIEUW In {xvers}!";
                     }
                     else
                     {
                         var urls = xprevs.Select(x => x.Value).ToArray();
                         xshowform = new UpdatePreviewForm(urls);
+                        xshowform.Title = $"Alle aanpassingen vanaf versie: {xprevs.LastOrDefault().Key?? xvers}";
                     }
 
                     xshowform.ShowDialog();
@@ -2048,16 +2051,27 @@ namespace Controls
         {
             try
             {
-                var links = Functions.GetVersionPreviews(Manager.LastPreviewsUrl);
-                if (links.Count == 0)
-                    throw new Exception("Geen nieuwe aanpassingen");
-                var xpr = new UpdatePreviewForm(links.Select(x => x.Value).ToArray());
-                xpr.ShowDialog();
+                CheckForPreview(true, false);
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
                 XMessageBox.Show(exception.Message, "Fout", MessageBoxIcon.Error);
+            }
+        }
+
+        private void xHelpButton_Click(object sender, EventArgs e)
+        {
+            var xhelp = new UpdatePreviewForm(Manager.HelpDropUrl, false, true);
+            xhelp.Title = "ProductieManager HelpDesk";
+            if (xhelp.IsValid)
+            {
+                xhelp.ShowDialog();
+            }
+            else
+            {
+                XMessageBox.Show("HelpDesk is tijdelijk niet beschikbaar", "Niet Beschikbaar",
+                    MessageBoxIcon.Exclamation);
             }
         }
     }

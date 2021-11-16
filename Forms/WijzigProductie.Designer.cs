@@ -106,16 +106,18 @@ namespace Forms
             this.olvColumn25 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn26 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.xgereedprocent = new System.Windows.Forms.Label();
-            this.xverwachtgereed = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.xgereedprocent = new System.Windows.Forms.Label();
+            this.xverwachtgereed = new System.Windows.Forms.Label();
             this.materiaalUI1 = new Controls.MateriaalUI();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
             this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
             this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
             this.metroTabPage3 = new MetroFramework.Controls.MetroTabPage();
+            this.metroTabPage4 = new MetroFramework.Controls.MetroTabPage();
+            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.groupBox2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -136,6 +138,7 @@ namespace Forms
             this.metroTabPage1.SuspendLayout();
             this.metroTabPage2.SuspendLayout();
             this.metroTabPage3.SuspendLayout();
+            this.metroTabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // xsluiten
@@ -584,7 +587,7 @@ namespace Forms
             this.xbewnotitie.Location = new System.Drawing.Point(13, 390);
             this.xbewnotitie.Multiline = true;
             this.xbewnotitie.Name = "xbewnotitie";
-            this.xbewnotitie.Size = new System.Drawing.Size(173, 70);
+            this.xbewnotitie.Size = new System.Drawing.Size(139, 70);
             this.xbewnotitie.TabIndex = 57;
             this.toolTip1.SetToolTip(this.xbewnotitie, "Bewerking Notitie");
             // 
@@ -1179,30 +1182,6 @@ namespace Forms
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "operation.png");
             // 
-            // xgereedprocent
-            // 
-            this.xgereedprocent.AutoSize = true;
-            this.xgereedprocent.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xgereedprocent.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.xgereedprocent.Location = new System.Drawing.Point(2, 2);
-            this.xgereedprocent.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.xgereedprocent.Name = "xgereedprocent";
-            this.xgereedprocent.Size = new System.Drawing.Size(91, 18);
-            this.xgereedprocent.TabIndex = 24;
-            this.xgereedprocent.Text = "0% Gereed";
-            // 
-            // xverwachtgereed
-            // 
-            this.xverwachtgereed.AutoSize = true;
-            this.xverwachtgereed.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xverwachtgereed.ForeColor = System.Drawing.Color.Black;
-            this.xverwachtgereed.Location = new System.Drawing.Point(2, 20);
-            this.xverwachtgereed.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.xverwachtgereed.Name = "xverwachtgereed";
-            this.xverwachtgereed.Size = new System.Drawing.Size(272, 18);
-            this.xverwachtgereed.TabIndex = 15;
-            this.xverwachtgereed.Text = "Verwacht Productie Gereedmelding";
-            // 
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.White;
@@ -1228,6 +1207,30 @@ namespace Forms
             this.panel3.Size = new System.Drawing.Size(253, 46);
             this.panel3.TabIndex = 25;
             // 
+            // xgereedprocent
+            // 
+            this.xgereedprocent.AutoSize = true;
+            this.xgereedprocent.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xgereedprocent.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.xgereedprocent.Location = new System.Drawing.Point(2, 2);
+            this.xgereedprocent.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.xgereedprocent.Name = "xgereedprocent";
+            this.xgereedprocent.Size = new System.Drawing.Size(91, 18);
+            this.xgereedprocent.TabIndex = 24;
+            this.xgereedprocent.Text = "0% Gereed";
+            // 
+            // xverwachtgereed
+            // 
+            this.xverwachtgereed.AutoSize = true;
+            this.xverwachtgereed.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xverwachtgereed.ForeColor = System.Drawing.Color.Black;
+            this.xverwachtgereed.Location = new System.Drawing.Point(2, 20);
+            this.xverwachtgereed.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.xverwachtgereed.Name = "xverwachtgereed";
+            this.xverwachtgereed.Size = new System.Drawing.Size(272, 18);
+            this.xverwachtgereed.TabIndex = 15;
+            this.xverwachtgereed.Text = "Verwacht Productie Gereedmelding";
+            // 
             // materiaalUI1
             // 
             this.materiaalUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1251,7 +1254,7 @@ namespace Forms
             this.metroTabControl1.Controls.Add(this.metroTabPage1);
             this.metroTabControl1.Controls.Add(this.metroTabPage2);
             this.metroTabControl1.Controls.Add(this.metroTabPage3);
-            this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.metroTabControl1.Controls.Add(this.metroTabPage4);
             this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
             this.metroTabControl1.Name = "metroTabControl1";
             this.metroTabControl1.SelectedIndex = 0;
@@ -1307,6 +1310,32 @@ namespace Forms
             this.metroTabPage3.VerticalScrollbarSize = 10;
             this.metroTabPage3.Visible = false;
             // 
+            // metroTabPage4
+            // 
+            this.metroTabPage4.Controls.Add(this.propertyGrid1);
+            this.metroTabPage4.HorizontalScrollbarBarColor = true;
+            this.metroTabPage4.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage4.HorizontalScrollbarSize = 10;
+            this.metroTabPage4.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage4.Name = "metroTabPage4";
+            this.metroTabPage4.Size = new System.Drawing.Size(912, 370);
+            this.metroTabPage4.TabIndex = 3;
+            this.metroTabPage4.Text = "Geavanceerd";
+            this.metroTabPage4.VerticalScrollbarBarColor = true;
+            this.metroTabPage4.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage4.VerticalScrollbarSize = 10;
+            // 
+            // propertyGrid1
+            // 
+            this.propertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.propertyGrid1.Location = new System.Drawing.Point(-4, 3);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(913, 366);
+            this.propertyGrid1.TabIndex = 2;
+            this.propertyGrid1.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid1_PropertyValueChanged);
+            // 
             // WijzigProductie
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1347,6 +1376,7 @@ namespace Forms
             this.metroTabPage1.ResumeLayout(false);
             this.metroTabPage2.ResumeLayout(false);
             this.metroTabPage3.ResumeLayout(false);
+            this.metroTabPage4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1378,8 +1408,6 @@ namespace Forms
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.NumericUpDown xaantal;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label xgereedprocent;
-        private System.Windows.Forms.Label xverwachtgereed;
         private System.Windows.Forms.Label xperuur;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DateTimePicker xbewleverdatum;
@@ -1436,5 +1464,9 @@ namespace Forms
         private MetroFramework.Controls.MetroTabPage metroTabPage2;
         private MetroFramework.Controls.MetroTabPage metroTabPage3;
         private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Label xgereedprocent;
+        private System.Windows.Forms.Label xverwachtgereed;
+        private MetroFramework.Controls.MetroTabPage metroTabPage4;
+        private System.Windows.Forms.PropertyGrid propertyGrid1;
     }
 }

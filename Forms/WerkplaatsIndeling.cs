@@ -243,7 +243,7 @@ namespace Forms
                 SetWaitUI();
                 xPersoneelIndelingPanel.SuspendLayout();
                 var xfirst = AddPersoneel(null);
-                SetSelected(null, true);
+                
                 productieListControl1.InitProductie(true, true, true, true, true, true);
 
                 if (Manager.Opties?.PersoneelIndeling != null)
@@ -259,11 +259,10 @@ namespace Forms
                         else Manager.Opties.PersoneelIndeling.RemoveAt(i--);
                     }
                 }
-               
+                
                 xfirst?.UpdateLabelText();
                 xPersoneelIndelingPanel.ResumeLayout(true);
-                xfirst?.Select();
-                xfirst?.Focus();
+                SetSelected(null, true);
             }
             catch (Exception e)
             {
@@ -554,13 +553,6 @@ namespace Forms
                             if (xindeling == null)
                             {
                                 xindeling = AddPersoneel(chose);
-                                if (Manager.Opties != null)
-                                {
-                                    Manager.Opties.PersoneelIndeling.RemoveAll(x =>
-                                        string.Equals(x, chose.PersoneelNaam,
-                                            StringComparison.CurrentCultureIgnoreCase));
-                                    Manager.Opties.PersoneelIndeling.Add(chose.PersoneelNaam);
-                                }
                             }
                         }
 
@@ -695,9 +687,6 @@ namespace Forms
                             xpers.Click -= Xpers_Click;
                             xpers.DoubleClick -= Xpers_DoubleClick;
                             xpers.VerwijderPersoneel -= Xpers_VerwijderPersoneel;
-                            Manager.Opties.PersoneelIndeling.RemoveAll(x =>
-                                string.Equals(x, personeelnaam,
-                                    StringComparison.CurrentCultureIgnoreCase));
                             break;
                         }
                     }
@@ -719,8 +708,8 @@ namespace Forms
 
         private void WerkplaatsIndeling_Shown(object sender, EventArgs e)
         {
-            LoadProducties();
             this.InitLastInfo();
+            LoadProducties();
             productieListControl1.InitEvents();
             Manager.OnPersoneelChanged += Manager_OnPersoneelChanged;
             Manager.OnPersoneelDeleted += Manager_OnPersoneelDeleted;
@@ -798,6 +787,10 @@ namespace Forms
 
         private void WerkplaatsIndeling_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (Manager.Opties != null)
+            {
+                Manager.Opties.PersoneelIndeling = GetPersonen().Select(x => x.PersoneelNaam).ToList();
+            }
             Manager.OnPersoneelChanged -= Manager_OnPersoneelChanged;
             Manager.OnPersoneelDeleted -= Manager_OnPersoneelDeleted;
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;

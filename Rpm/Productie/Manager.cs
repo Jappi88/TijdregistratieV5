@@ -34,6 +34,8 @@ namespace Rpm.Productie
 
         public static readonly string LastPreviewsUrl =
             "https://www.dropbox.com/s/5rtsu7ipm4d6dp9/Preview%20Links.txt?dl=1";
+        public static readonly string HelpDropUrl =
+            "https://www.dropbox.com/s/5xc90j20d5odya6/Help.txt?dl=1";
         // public static LocalService LocalConnection { get; private set; }
         /// <summary>
         /// De productiechat

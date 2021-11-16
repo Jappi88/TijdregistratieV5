@@ -337,6 +337,7 @@ namespace ProductieManager
 
                 }
                 _dbWatcher.WatchPath(Manager.DefaultSettings.MainDB.UpdatePath, false, true);
+                AutoUpdater.Start();
             }));
 
         }
@@ -349,7 +350,6 @@ namespace ProductieManager
 
         private async void Action()
         {
-            AutoUpdater.Start();
             await InitBootDir();
             xversie.Text = $@"Versie {ProductVersion}";
             productieView1.LoadManager(_bootDir);

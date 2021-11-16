@@ -2439,7 +2439,7 @@ namespace Rpm.Misc
                 Console.WriteLine(ex);
             }
 
-            return result;
+            return result.OrderBy(x => x.Key).ToDictionary(i => i.Key, i => i.Value);
         }
 
         public static Image ImageFromUrl(string url)

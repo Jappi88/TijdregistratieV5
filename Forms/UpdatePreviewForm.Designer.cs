@@ -42,9 +42,11 @@
             this.htmlPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.htmlPanel1.Location = new System.Drawing.Point(20, 60);
             this.htmlPanel1.Name = "htmlPanel1";
-            this.htmlPanel1.Size = new System.Drawing.Size(960, 770);
+            this.htmlPanel1.Size = new System.Drawing.Size(1160, 770);
             this.htmlPanel1.TabIndex = 0;
             this.htmlPanel1.Text = null;
+            this.htmlPanel1.UseGdiPlusTextRendering = true;
+            this.htmlPanel1.LinkClicked += new System.EventHandler<HtmlRenderer.Entities.HtmlLinkClickedEventArgs>(this.htmlPanel1_LinkClicked);
             this.htmlPanel1.StylesheetLoad += new System.EventHandler<HtmlRenderer.Entities.HtmlStylesheetLoadEventArgs>(this.htmlPanel1_StylesheetLoad);
             this.htmlPanel1.ImageLoad += new System.EventHandler<HtmlRenderer.Entities.HtmlImageLoadEventArgs>(this.htmlPanel1_ImageLoad);
             // 
@@ -57,15 +59,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1000, 850);
+            this.ClientSize = new System.Drawing.Size(1200, 850);
             this.Controls.Add(this.htmlPanel1);
             this.MinimumSize = new System.Drawing.Size(1000, 850);
             this.Name = "UpdatePreviewForm";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.ShowIcon = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Style = MetroFramework.MetroColorStyle.Orange;
-            this.Text = "Nieuw in {0}!";
+            this.Style = MetroFramework.MetroColorStyle.Yellow;
             this.Shown += new System.EventHandler(this.UpdatePreviewForm_Shown);
             this.ResumeLayout(false);
 

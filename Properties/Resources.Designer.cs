@@ -1228,6 +1228,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ios_8_Help_icon_43821 {
+            get {
+                object obj = ResourceManager.GetObject("ios-8-Help-icon_43821", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ios_8_Message_icon_64_64 {
             get {
                 object obj = ResourceManager.GetObject("ios_8_Message_icon_64_64", resourceCulture);

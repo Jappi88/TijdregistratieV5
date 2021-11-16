@@ -20,7 +20,10 @@ namespace Forms
         public WijzigProductie()
         {
             InitializeComponent();
+            metroTabControl1.TabPages[3].Visible = Manager.LogedInGebruiker != null &&
+                                                   Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieAdvance;
             Formulier = new ProductieFormulier();
+            propertyGrid1.SelectedObject = Formulier;
             xartnr.Enabled = true;
             xprodnr.Enabled = true;
             ((OLVColumn) xbewerkinglijst.Columns[0]).ImageGetter = sender => 0;
@@ -29,6 +32,9 @@ namespace Forms
         public WijzigProductie(ProductieFormulier form)
         {
             InitializeComponent();
+            metroTabControl1.TabPages[3].Visible = Manager.LogedInGebruiker != null &&
+                                                   Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieAdvance;
+            propertyGrid1.SelectedObject = form;
             Formulier = form;
             editmode = true;
             xartnr.Enabled = false;
@@ -45,7 +51,9 @@ namespace Forms
             if (changedform.State == ProductieState.Verwijderd)
                 DialogResult = DialogResult.Cancel;
             else
+            {
                 Formulier = changedform.CreateCopy();
+            }
         }
 
         public async void SetTextboxAutofill()
@@ -117,7 +125,8 @@ namespace Forms
                 return;
             materiaalUI1.InitMaterialen(p);
             AddBewerkingen(p);
-            Text = $"Productie : [{Formulier.ProductieNr}]-----[{Formulier.Omschrijving}]";
+            Text = $"Productie : [{p.ProductieNr}]-[{p.ArtikelNr}]";
+            this.Invalidate();
             xartnr.Text = p.ArtikelNr;
             xprodnr.Text = p.ProductieNr;
             xaantal.SetValue(p.Aantal);
@@ -141,7 +150,7 @@ namespace Forms
             if (b != null)
             {
                 xbewerkingen.Tag = b;
-                xbewerkingen.SelectedItem = b.Naam.Split('[')[0];
+                xbewerkingen.SelectedItem = b.Naam?.Split('[')[0];
                 xbewleverdatum.SetValue(b.LeverDatum);
                 xbewgereedop.SetValue(b.DatumGereed);
                 xbewgereed.Text = b.Paraaf;
@@ -211,7 +220,9 @@ namespace Forms
 
         private void InitForm(ProductieFormulier p)
         {
-            Text = $"Productie : [{p.ProductieNr}]-----[{p.Omschrijving}]";
+            Formulier = p;
+            Text = $"Productie : [{p.ProductieNr}]-[{p.ArtikelNr}]";
+            this.Invalidate();
             //SetTextboxAutofill();
             var bewerkingen = Manager.BewerkingenLijst.GetAllEntries().Select(x => (object) x.Naam).ToArray();
             xbewerkingen.Items.AddRange(bewerkingen);
@@ -431,6 +442,11 @@ namespace Forms
             aantal,
             aantalgemaakt,
             none
+        }
+
+        private void propertyGrid1_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            InitForm(propertyGrid1.SelectedObject as ProductieFormulier);
         }
     }
 }
