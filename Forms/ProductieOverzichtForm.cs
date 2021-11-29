@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using NPOI.XSSF.UserModel;
+using ProductieManager.Properties;
 
 namespace ProductieManager.Forms
 {
@@ -15,9 +17,11 @@ namespace ProductieManager.Forms
         public ProductieOverzichtForm()
         {
             InitializeComponent();
+            imageList1.Images.Add(Resources.iconfinder_technology);
         }
 
         public readonly List<Bewerking> Bewerkingen = new();
+        public Dictionary<string, bool> WerkPlekken = new Dictionary<string, bool>();
 
         private bool _iswaiting = false;
 
@@ -64,35 +68,44 @@ namespace ProductieManager.Forms
                 {
                     Console.WriteLine(e.Message);
                 }
-
-                if (InvokeRequired)
-                    this.Invoke(new Action(() => xloadinglabel.Visible = false));
-                else this.Visible = false;
             });
         }
 
         private void StopWaitUI()
         {
-            _iswaiting = false;
+          _iswaiting = false;
+            if (InvokeRequired)
+                this.Invoke(new Action(() => xloadinglabel.Visible = false));
+            else xloadinglabel.Visible = false;
         }
 
-        private List<string> GetWerkplekken()
+        private Dictionary<string, bool> GetWerkplekken()
         {
-            List<string> plekken = new List<string>();
+           // List<string> plekken = new List<string>();
             try
             {
-                if (Manager.Opties == null) return plekken;
+                if (Manager.Opties == null) return WerkPlekken;
                 if (Manager.Opties.ToonAlles)
-                    plekken = Manager.BewerkingenLijst.GetAlleWerkplekken();
+                {
+                    var plekken = Manager.BewerkingenLijst.GetAlleWerkplekken();
+                    foreach (var plek in plekken)
+                    {
+                        if (!WerkPlekken.ContainsKey(plek))
+                            WerkPlekken.Add(plek, true);
+                    }
+
+                    return WerkPlekken;
+                }
                 if (Manager.Opties.ToonAllesVanBeide || Manager.Opties.ToonVolgensAfdelingen)
                 {
                     if (Manager.Opties.Afdelingen is {Length: > 0})
                     {
                         foreach (var s in Manager.Opties.Afdelingen)
                         {
-                            if (plekken.Any(x => string.Equals(x, s, StringComparison.CurrentCultureIgnoreCase)))
-                                continue;
-                            plekken.Add(s);
+                            var xpleks = Manager.BewerkingenLijst.GetWerkplekken(s);
+                            foreach(var plek in xpleks)
+                                if (!WerkPlekken.ContainsKey(plek))
+                                    WerkPlekken.Add(plek, true);
                         }
                     }
                 }
@@ -107,9 +120,8 @@ namespace ProductieManager.Forms
                             if (ent == null || ent.WerkPlekken == null || ent.WerkPlekken.Count == 0) continue;
                             foreach (var plek in ent.WerkPlekken)
                             {
-                                if (plekken.Any(x => string.Equals(x, plek, StringComparison.CurrentCultureIgnoreCase)))
-                                    continue;
-                                plekken.Add(plek);
+                                if (!WerkPlekken.ContainsKey(plek))
+                                    WerkPlekken.Add(plek, true);
                             }
                         }
                     }
@@ -121,7 +133,117 @@ namespace ProductieManager.Forms
                 Console.WriteLine(e.Message);
             }
 
-            return plekken;
+            return WerkPlekken;
+        }
+
+        private List<string> GetWerkplekkenFromList()
+        {
+            List<string> xret = new List<string>();
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(() =>
+                    xret = xwerkpleklist.Items.Cast<ListViewItem>().Where(x => x.Checked).Select(x => x.Text)
+                        .ToList()));
+            else xret = xwerkpleklist.Items.Cast<ListViewItem>().Where(x => x.Checked).Select(x => x.Text).ToList();
+            return xret;
+        }
+
+        private List<string> GetWerkplekkenFromView()
+        {
+            var xreturn = new List<string>();
+            try
+            {
+                if (this.InvokeRequired)
+                    this.Invoke(new MethodInvoker(() => xreturn = xGetWerkplekkenFromView()));
+                else xreturn = xGetWerkplekkenFromView();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return xreturn;
+        }
+
+        private List<string> xGetWerkplekkenFromView()
+        {
+            var xreturn = new List<string>();
+            try
+            {
+                var xwps = xcontrolpanel.Controls.Cast<WerkPlekInfoUI>().ToList();
+                xreturn = xwps.Select(x => x.Werkplek).ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return xreturn;
+        }
+
+        private List<string> GetEmptyWerkplekkenFromView()
+        {
+            var xreturn = new List<string>();
+            try
+            {
+                if (this.InvokeRequired)
+                    this.Invoke(new MethodInvoker(() => xreturn = xGetEmptyWerkplekkenFromView()));
+                else xreturn = xGetEmptyWerkplekkenFromView();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return xreturn;
+        }
+
+        private List<string> xGetEmptyWerkplekkenFromView()
+        {
+            var xreturn = new List<string>();
+            try
+            {
+                var xwps = xcontrolpanel.Controls.Cast<WerkPlekInfoUI>().ToList();
+                xreturn = xwps.Where(x=> x.Huidig == null).Select(x => x.Werkplek).ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return xreturn;
+        }
+
+        private List<string> GetWerkplekkenFromView(string name, string bewnaam)
+        {
+            var xreturn = new List<string>();
+            try
+            {
+                if (this.InvokeRequired)
+                    this.Invoke(new MethodInvoker(() => xreturn = xGetWerkplekkenFromView(name, bewnaam)));
+                else xreturn = xGetWerkplekkenFromView(name, bewnaam);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return xreturn;
+        }
+
+        private List<string> xGetWerkplekkenFromView(string name, string bewnaam)
+        {
+            var xreturn = new List<string>();
+            try
+            {
+                var xwps = xcontrolpanel.Controls.Cast<WerkPlekInfoUI>().ToList();
+                xreturn = xwps.Where(x => string.Equals(x.Werkplek, name, StringComparison.CurrentCultureIgnoreCase) && (string.Equals(x.Huidig?.Path, bewnaam, StringComparison.CurrentCultureIgnoreCase))).Select(x => x.Werkplek).ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return xreturn;
         }
 
         public int IsSameProduct(string artikelnr1, string artikelnr2)
@@ -157,7 +279,7 @@ namespace ProductieManager.Forms
                 var xreturn = new List<WerkVolgorde>();
                 try
                 {
-                    List<string> plekken = GetWerkplekken();
+                    List<string> plekken = GetWerkplekkenFromList();
                     var bws = await Manager.GetBewerkingen(new ViewState[] {ViewState.Gestopt, ViewState.Gestart},
                         true);
                     var gestart = bws.Where(x => x.State == ProductieState.Gestart).OrderBy(x=> x.VerwachtDatumGereed()).ToList();
@@ -171,6 +293,9 @@ namespace ProductieManager.Forms
                             {
                                 try
                                 {
+                                    if (!plekken.Any(x =>
+                                            string.Equals(x, wp.Naam, StringComparison.CurrentCultureIgnoreCase)))
+                                        continue;
                                     var xbws = GetBewerkingByWerkplek(bws, wp.Naam);
                                     if (xbws.Count == 0) continue;
                                     plekken.Remove(wp.Naam);
@@ -263,23 +388,47 @@ namespace ProductieManager.Forms
                     Console.WriteLine(e.Message);
                 }
 
-                return xreturn;
+                return xreturn.OrderBy(x=> x.Huidig?.VerwachtLeverDatum??x.Volgende?.VerwachtLeverDatum).ToList();
             });
         }
 
-        private bool HasChanged(ProductieFormulier prod)
+        private bool HasChanged(ProductieFormulier prod, bool update)
         {
             try
             {
                 if (prod?.Bewerkingen == null || Bewerkingen.Count == 0) return false;
+                bool xchanged = false;
                 foreach (var bew in prod.Bewerkingen)
                 {
                     var index = Bewerkingen.IndexOf(bew);
-                    if (index > -1 && Bewerkingen[index].State != bew.State)
-                        return true;
+                    xchanged = index > -1 && Bewerkingen[index].State != bew.State;
+                    if (update && index > -1)
+                    {
+                        Bewerkingen[index] = bew;
+                    }
+
+                    if (!xchanged)
+                    {
+                        //if (bew.State == ProductieState.Gestart)
+                        //{
+
+                        //}
+                        foreach (var wp in bew.WerkPlekken)
+                        {
+                            var wps = GetWerkplekkenFromView(wp.Naam, null);
+                            xchanged = wps.Count > 0 && bew.State == ProductieState.Gestart;
+                            if (xchanged)
+                                return true;
+                            wps = GetWerkplekkenFromView(wp.Naam, bew.Path);
+                            xchanged = wps.Count > 0 && bew.State == ProductieState.Gestopt;
+                            if (xchanged)
+                                return true;
+                        }
+                    }
+                    else return true;
                 }
 
-                return false;
+                return xchanged;
             }
             catch (Exception e)
             {
@@ -298,7 +447,6 @@ namespace ProductieManager.Forms
                     if (this.IsDisposed || this.Disposing || Manager.Opties == null || _iswaiting) return;
                     StartWaitUI();
                     var items = await GetOverzicht();
-                    if (items.Count == 0) return;
                     this.Invoke(new Action(() =>
                     {
                         xcontrolpanel.SuspendLayout();
@@ -314,7 +462,7 @@ namespace ProductieManager.Forms
                                 ui.Init(x.Name, x.Huidig, x.Volgende);
                                 xcontrolpanel.Controls.Add(ui);
                                 ui.BringToFront();
-                                if(x.Huidig != null)
+                                if (x.Huidig != null)
                                     Bewerkingen.Add(x.Huidig);
                                 if (x.Volgende != null)
                                     Bewerkingen.Add(x.Volgende);
@@ -324,14 +472,26 @@ namespace ProductieManager.Forms
                         for (int i = 0; i < 4; i++)
                             xcontrolpanel.VerticalScroll.Value = xcurpos;
                         xcontrolpanel.ResumeLayout(true);
+                        if (items.Count == 0)
+                        {
+                            xloadinglabel.Text = "Geen Producties Beschikbaar";
+                            xloadinglabel.Visible = true;
+                            xloadinglabel.BringToFront();
+                        }
+                        else
+                        {
+                            xloadinglabel.Visible = false;
+                            xloadinglabel.Text = "Overzicht aanmaken...";
+                        }
+
+                        xloadinglabel.Invalidate();
                     }));
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
                 }
-
-                StopWaitUI();
+                _iswaiting = false;
             });
 
         }
@@ -363,8 +523,58 @@ namespace ProductieManager.Forms
 
         private void ProductieOverzichtForm_Shown(object sender, EventArgs e)
         {
+            LoadList();
             InitOverzicht();
             Manager.OnFormulierChanged += Manager_OnFormulierChanged;
+        }
+
+        private bool _loadinglist = false;
+        private void LoadList()
+        {
+            try
+            {
+                var wps = GetWerkplekken();
+                _loadinglist = true;
+                xwerkpleklist.Items.Clear();
+                xwerkpleklist.BeginUpdate();
+                    foreach (var wp in wps)
+                    {
+                        if (!xsearchbox.Text.Trim().ToLower().StartsWith("zoeken") &&
+                            !string.IsNullOrEmpty(xsearchbox.Text.Trim()))
+                        {
+                            var crits = xsearchbox.Text.Trim().ToLower().Split(';');
+                            if (crits.Length > 0)
+                            {
+                                bool valid = false;
+                                foreach (var crit in crits)
+                                {
+                                    if (!string.IsNullOrEmpty(crit) && wp.Key.Trim().ToLower().Contains(crit.Trim()))
+                                    {
+                                        valid = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!valid)
+                                    continue;
+                            }
+                        }
+
+                        var lv = new ListViewItem(wp.Key);
+                        lv.Tag = wp;
+                        lv.ImageIndex = 0;
+                        lv.Checked = wp.Value;
+                        xwerkpleklist.Items.Add(lv);
+                    }
+
+                    xwerkpleklist.EndUpdate();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            _loadinglist = false;
         }
 
         private void ProductieOverzichtForm_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
@@ -376,13 +586,64 @@ namespace ProductieManager.Forms
         {
             try
             {
-                if (changedform?.Bewerkingen == null ||_iswaiting || !HasChanged(changedform)) return;
+                if (changedform?.Bewerkingen == null ||_iswaiting || !HasChanged(changedform,true)) return;
                 this.BeginInvoke(new Action(InitOverzicht));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            InitOverzicht();
+        }
+
+        private void selecteerAllesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (var item in xwerkpleklist.Items)
+            {
+                if (item is ListViewItem lv)
+                    lv.Checked = true;
+            }
+        }
+
+        private void deSelecteerAllesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (var item in xwerkpleklist.Items)
+            {
+                if (item is ListViewItem lv)
+                    lv.Checked = false;
+            }
+        }
+
+        private void xsearchbox_TextChanged(object sender, EventArgs e)
+        {
+            if (!xsearchbox.Text.Trim().ToLower().StartsWith("zoeken..."))
+            {
+                LoadList();
+            }
+        }
+
+        private void xsearchbox_Enter(object sender, EventArgs e)
+        {
+            if (xsearchbox.Text.Trim().ToLower().StartsWith("zoeken..."))
+                xsearchbox.Text = "";
+        }
+
+        private void xsearchbox_Leave(object sender, EventArgs e)
+        {
+            if (xsearchbox.Text.Trim() == "")
+                xsearchbox.Text = "Zoeken...";
+        }
+
+        private void xwerkpleklist_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            if (_loadinglist) return;
+            var xitem = e.Item.Text;
+            if (WerkPlekken.ContainsKey(xitem))
+                WerkPlekken[xitem] = e.Item.Checked;
         }
     }
 }

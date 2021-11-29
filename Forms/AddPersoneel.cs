@@ -100,8 +100,9 @@ namespace Forms
                     PersoneelLid.PersoneelNaam = xnaam.Text.Trim();
                     var rs = new RoosterForm(PersoneelLid.WerkRooster ?? Manager.Opties.GetWerkRooster(),
                         $"Rooster voor {PersoneelLid.PersoneelNaam}");
-                    if (rs.ShowDialog() == DialogResult.OK) PersoneelLid.WerkRooster = rs.WerkRooster;
-                    var xr = PersoneelLid.WerkRooster.IsCustom()? "" : " [EIGEN]";
+                    if (rs.ShowDialog() == DialogResult.OK) 
+                        PersoneelLid.WerkRooster = rs.WerkRooster;
+                    var xr = PersoneelLid.WerkRooster != null && PersoneelLid.WerkRooster.IsCustom()? " [Aangepast]" : "";
                     xrooster.Text = $"Werk Rooster{xr}";
                 }
                 catch (Exception ex)

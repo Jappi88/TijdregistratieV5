@@ -305,5 +305,38 @@ namespace ProductieManager.Rpm.Misc
             graphics.Dispose();   // Releasing all resource used by graphics 
             return bmp;
         }
+
+        public static Image ImageFromUrl(string url)
+        {
+            try
+            {
+                using var webClient = new System.Net.WebClient();
+                var result = webClient.DownloadData(url);
+                if (result == null || result.Length < 8) return null;
+                var image = Image.FromStream(new MemoryStream(result));
+                return image;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public static Stream ImageStreamFromUrl(string url)
+        {
+            try
+            {
+                using var webClient = new System.Net.WebClient();
+                var result = webClient.DownloadData(url);
+                if (result == null || result.Length < 8) return null;
+                return new MemoryStream(result);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
     }
 }

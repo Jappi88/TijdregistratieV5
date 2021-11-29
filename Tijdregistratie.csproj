@@ -62,7 +62,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -125,8 +125,12 @@
     <Reference Include="CircularProgressBar">
       <HintPath>..\Libraries\CircularProgressBar.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlRenderer">
-      <HintPath>..\Libraries\HtmlRenderer.dll</HintPath>
+    <Reference Include="HtmlRenderer, Version=1.4.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Desktop\HTML-Renderer-master\Source\Demo\WinForms\bin\Release\HtmlRenderer.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlRenderer.PdfSharp">
+      <HintPath>..\..\..\Desktop\HTML-Renderer-master\Source\Demo\WinForms\bin\Release\HtmlRenderer.PdfSharp.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\Libraries\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -156,6 +160,9 @@
       <HintPath>..\Libraries\MetroFramework.Fonts.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NPOI">
       <HintPath>..\..\..\Desktop\ProductieManager\NPOI.dll</HintPath>
     </Reference>
@@ -171,6 +178,12 @@
     <Reference Include="ObjectListView">
       <HintPath>..\Libraries\ObjectListView.dll</HintPath>
     </Reference>
+    <Reference Include="PdfSharp">
+      <HintPath>..\..\..\Desktop\HTML-Renderer-master\Source\Demo\WinForms\bin\Release\PdfSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Charting">
+      <HintPath>..\..\..\Desktop\HTML-Renderer-master\Source\Demo\WinForms\bin\Release\PdfSharp.Charting.dll</HintPath>
+    </Reference>
     <Reference Include="Polenter.SharpSerializer, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Desktop\ProductieManager\Polenter.SharpSerializer.dll</HintPath>
@@ -182,6 +195,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
     <Reference Include="System.Messaging" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
@@ -856,6 +870,7 @@
     <Compile Include="Rpm\AutoUpdater\ParseUpdateInfoEventArgs.cs" />
     <Compile Include="Rpm\AutoUpdater\RegistryPersistenceProvider.cs" />
     <Compile Include="Rpm\AutoUpdater\UpdateInfoEventArgs.cs" />
+    <Compile Include="Rpm\Connection\AutoDeskHelper.cs" />
     <Compile Include="Rpm\Connection\SmtpConnectorBase.cs" />
     <Compile Include="Rpm\Connection\SmtpConnectorWithoutSsl.cs" />
     <Compile Include="Rpm\Connection\SmtpConnectorWithSsl.cs" />
@@ -1345,6 +1360,7 @@
     <None Include=".editorconfig" />
     <None Include="bin\Debug\ProductieManager.exe.config" />
     <None Include="bin\Release\ProductieManager.zip" />
+    <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
@@ -1465,6 +1481,8 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\error-notification_32x32.png" />
+    <None Include="Resources\dialog-error_36230.png" />
     <None Include="Resources\ios-8-Help-icon_43821.png" />
     <None Include="Resources\minusflat_105990.png" />
     <None Include="Resources\copy_paste_document_file_1557.png" />
@@ -1717,7 +1735,12 @@
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Desktop\HTML-Renderer-master\Source\HtmlRenderer.WinForms\HtmlRenderer.WinForms.csproj">
+      <Project>{1b058920-24b4-4140-8ae7-c8c6c38ca52d}</Project>
+      <Name>HtmlRenderer.WinForms</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Code to merge the assemblies into one:setup.exe -->
 </Project>

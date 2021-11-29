@@ -1,4 +1,6 @@
 ﻿
+using TheArtOfDev.HtmlRenderer.WinForms;
+
 namespace Controls
 {
     partial class FilterEntryEditorUI
@@ -38,7 +40,7 @@ namespace Controls
             this.xregelup = new MetroFramework.Controls.MetroButton();
             this.xdeletefilterregel = new MetroFramework.Controls.MetroButton();
             this.xwijzigfilterregel = new MetroFramework.Controls.MetroButton();
-            this.xcriteriahtml = new HtmlRenderer.HtmlPanel();
+            this.xcriteriahtml = new HtmlPanel();
             this.xvariablelijst = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.metroPanel4 = new MetroFramework.Controls.MetroPanel();
@@ -307,7 +309,7 @@ namespace Controls
         private MetroFramework.Controls.MetroButton xregelup;
         private MetroFramework.Controls.MetroButton xdeletefilterregel;
         private MetroFramework.Controls.MetroButton xwijzigfilterregel;
-        private HtmlRenderer.HtmlPanel xcriteriahtml;
+        private HtmlPanel xcriteriahtml;
         private BrightIdeasSoftware.ObjectListView xvariablelijst;
         private BrightIdeasSoftware.OLVColumn olvColumn2;
         private MetroFramework.Controls.MetroPanel metroPanel4;

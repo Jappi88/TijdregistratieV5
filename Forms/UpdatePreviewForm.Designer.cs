@@ -1,4 +1,7 @@
-﻿namespace Forms
+﻿using TheArtOfDev.HtmlRenderer.WinForms;
+using TheArtOfDev.HtmlRenderer.Core.Entities;
+
+namespace Forms
 {
     partial class UpdatePreviewForm
     {
@@ -29,7 +32,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.htmlPanel1 = new HtmlRenderer.HtmlPanel();
+            this.htmlPanel1 = new TheArtOfDev.HtmlRenderer.WinForms.HtmlPanel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
@@ -42,13 +45,11 @@
             this.htmlPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.htmlPanel1.Location = new System.Drawing.Point(20, 60);
             this.htmlPanel1.Name = "htmlPanel1";
-            this.htmlPanel1.Size = new System.Drawing.Size(1160, 770);
+            this.htmlPanel1.Size = new System.Drawing.Size(1110, 770);
             this.htmlPanel1.TabIndex = 0;
             this.htmlPanel1.Text = null;
-            this.htmlPanel1.UseGdiPlusTextRendering = true;
-            this.htmlPanel1.LinkClicked += new System.EventHandler<HtmlRenderer.Entities.HtmlLinkClickedEventArgs>(this.htmlPanel1_LinkClicked);
-            this.htmlPanel1.StylesheetLoad += new System.EventHandler<HtmlRenderer.Entities.HtmlStylesheetLoadEventArgs>(this.htmlPanel1_StylesheetLoad);
-            this.htmlPanel1.ImageLoad += new System.EventHandler<HtmlRenderer.Entities.HtmlImageLoadEventArgs>(this.htmlPanel1_ImageLoad);
+            this.htmlPanel1.StylesheetLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlStylesheetLoadEventArgs>(this.htmlPanel1_StylesheetLoad);
+            this.htmlPanel1.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.htmlPanel1_ImageLoad);
             // 
             // timer1
             // 
@@ -59,9 +60,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1200, 850);
+            this.ClientSize = new System.Drawing.Size(1150, 850);
             this.Controls.Add(this.htmlPanel1);
-            this.MinimumSize = new System.Drawing.Size(1000, 850);
+            this.MinimumSize = new System.Drawing.Size(1150, 850);
             this.Name = "UpdatePreviewForm";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.ShowIcon = false;
@@ -73,7 +74,7 @@
 
         #endregion
 
-        private HtmlRenderer.HtmlPanel htmlPanel1;
+        private HtmlPanel htmlPanel1;
         private System.Windows.Forms.Timer timer1;
     }
 }

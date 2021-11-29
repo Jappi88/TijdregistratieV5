@@ -2,10 +2,12 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Forms;
 using ProductieManager.Properties;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
+using TheArtOfDev.HtmlRenderer.Core.Entities;
 
 namespace Controls
 {
@@ -22,12 +24,12 @@ namespace Controls
 
         private string GetWerkplekOmschrijving(WerkPlek plek)
         {
-            return $"[{plek.ProductieNr}|{plek.ArtikelNr}] {plek.WerkNaam} van {plek.Omschrijving}.";
+            return $"[{plek.ProductieNr}|{plek.ArtikelNr}]<br>{plek.WerkNaam} van {plek.Omschrijving}.";
         }
 
         private string GetWerkplekOmschrijving(string plek, Bewerking werk)
         {
-            return $"<a color= black href='{werk.ProductieNr}'>[{werk.ProductieNr}|{werk.ArtikelNr}] {werk.Naam} van {werk.Omschrijving}.</a>";
+            return $"[{werk.ProductieNr}|{werk.ArtikelNr}]<br>{werk.Naam} van {werk.Omschrijving}";
         }
 
         public void Init(string werkplek, Bewerking huidig, Bewerking volgende)
@@ -36,50 +38,77 @@ namespace Controls
             Huidig = huidig;
             Volgende = volgende;
 
-            xmeebezig.Text = GetInfoHtml(werkplek, huidig, volgende);
+            xmeebezig.Text = GetHuidigHtml();
+            xvolgende.Text = GetVolgendeHtml();
         }
 
-        public string GetInfoHtml(string werkplek, Bewerking huidig, Bewerking volgende)
+        public string GetHuidigHtml()
         {
-            var ximagename = huidig != null ? "PlayIcon" : "StopIcon";
+            var ximagename = Huidig != null ? "PlayIcon" : "StopIcon";
             string ximage = $"<img width='48' height='48'  src = '{ximagename}' />\r\n";
             var xmeebzig = "";
-            var xvolgnde = "";
-            if (huidig == null)
-                xmeebzig = $"<b>{werkplek} is niet bezig!</b>";
-            else xmeebzig = $"<b>NU OP <u>{werkplek}</u></b>: {GetWerkplekOmschrijving(werkplek, huidig)}";
-            if (volgende != null)
-                xvolgnde = $"<b>VOLGENDE OP <u>{werkplek}</u></b>: {GetWerkplekOmschrijving(werkplek, volgende)}";
-            else xvolgnde = $"<b>Er is geen productie beschikbaar voor {werkplek}.</b>";
+            if (Huidig == null)
+                xmeebzig = $"<b>{Werkplek} is niet bezig!</b>";
+            else xmeebzig = $"<a color= DarkBlue href='{Huidig.ProductieNr};{Huidig.Naam};{Werkplek}'><span color= DarkRed><b><u>NU OP {Werkplek}</u></b>:</span><br> {GetWerkplekOmschrijving(Werkplek, Huidig)}</a>";
+
             var xreturn = $"<html>\r\n" +
                           $"<head>\r\n" +
                           $"<style>{IProductieBase.GetStylesheet("StyleSheet")}</style>\r\n" +
-                          $"<Title>{werkplek}</Title>\r\n" +
+                          $"<Title>{Werkplek}</Title>\r\n" +
                           $"<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
                           $"</head>\r\n" +
-                          $"<body style='background - color: {Color.White.Name}; background-gradient: {Color.White.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
-                          $"<h1 align='center' style='color: {Color.Black.Name}'>\r\n" +
-                          $"       {werkplek}\r\n" +
+                          $"<body style='background - color: {Color.White.Name}; background-gradient: {Color.White.Name}; background-gradient-angle: 180; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
+                          $"<h1 align='center' style='color: {Color.DarkBlue.Name}'>\r\n" +
+                          $"      Nu Op {Werkplek}\r\n" +
                           $"</h1>\r\n" +
-                          $"<blockquote class='whitehole'>\r\n" +
-                          $"       <p style = 'margin-top: 0px' >\r\n" +
+                          $"<hr /><br><br>" +
+                          $"       <p style = 'margin: 5px' >\r\n" +
                           $"<table border = '0' width = '100%' >\r\n" +
                           $"<tr style = 'vertical-align: top;' >\r\n" +
                           $"<td>" +
                           ximage +
-                          $"</td><td><h2><div>{xmeebzig}</div></h2></td>" +
+                          $"</td>" +
+                          $"<td><h2>{xmeebzig}</h2></td>" +
+                         $"</tr>\r\n" +
+                          $"<hr />" +
+                          $"</table >\r\n" +
+                          $"</p>\r\n" +
+                          $"</body>\r\n" +
+                          $"</html>";
+            return xreturn;
+        }
+
+        public string GetVolgendeHtml()
+        {
+            var xvolgnde = "";
+            if (Volgende != null)
+                xvolgnde = $"<a color= DarkBlue href='{Volgende.ProductieNr};{Volgende.Naam};{Werkplek}'><span color= DarkRed><b><u>VOLGENDE OP {Werkplek}</u></b>:</span><br> {GetWerkplekOmschrijving(Werkplek, Volgende)}</a>";
+            else xvolgnde = $"<b>Er is geen productie beschikbaar voor {Werkplek}.</b>";
+            var xreturn = $"<html>\r\n" +
+                          $"<head>\r\n" +
+                          $"<style>{IProductieBase.GetStylesheet("StyleSheet")}</style>\r\n" +
+                          $"<Title>{Werkplek}</Title>\r\n" +
+                          $"<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
+                          $"</head>\r\n" +
+                          $"<body style='background - color: {Color.White.Name}; background-gradient: {Color.White.Name}; background-gradient-angle: 0; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
+                          $"<h1 align='center' style='color: {Color.DarkBlue.Name}'>\r\n" +
+                          $"      Volgende Op {Werkplek}\r\n" +
+                          $"</h1>\r\n" +
+                          $"<hr /><br><br>" +
+                          $"       <p style = 'margin: 5px' >\r\n" +
+                          $"<table border = '0' width = '100%' >\r\n" +
+                          $"<tr style = 'vertical-align: top;' >\r\n" +
                           $"<td>" +
                           $"<img width='48' height='48'  src = 'VolgendeIcon' />\r\n" +
                           $"</td><td><h2>" +
                           $"<div>" +
                           $"{xvolgnde}" +
                           $"</div></h2></td>" +
-                          
+
                           $"</tr>\r\n" +
                           $"<hr />" +
                           $"</table >\r\n" +
                           $"</p>\r\n" +
-                          $"</blockquote>\r\n" +
                           $"</body>\r\n" +
                           $"</html>";
             return xreturn;
@@ -97,19 +126,31 @@ namespace Controls
                 c.BackColor = Color.White;
         }
 
-        private void xmeebezig_DoubleClick(object sender, EventArgs e)
+        private async void xmeebezig_DoubleClick(object sender, EventArgs e)
         {
             if (Huidig != null)
-                Manager.FormulierActie(new object[] {Huidig.Parent.CreateCopy(), Huidig}, MainAktie.OpenProductie);
+            {
+                var prod = await Manager.Database.GetProductie(Huidig.ProductieNr);
+                if (prod == null) return;
+                var bew = prod.Bewerkingen?.FirstOrDefault(x =>
+                    x.IsAllowed() && string.Equals(x.Naam, Huidig.Naam, StringComparison.CurrentCultureIgnoreCase));
+                Manager.FormulierActie(new object[] {prod, bew}, MainAktie.OpenProductie);
+            }
         }
 
-        private void xvolgende_DoubleClick(object sender, EventArgs e)
+        private async void xvolgende_DoubleClick(object sender, EventArgs e)
         {
             if (Volgende != null)
-                Manager.FormulierActie(new object[] {Volgende.Parent.CreateCopy(), Volgende}, MainAktie.OpenProductie);
+            {
+                var prod = await Manager.Database.GetProductie(Volgende.ProductieNr);
+                if (prod == null) return;
+                var bew = prod.Bewerkingen?.FirstOrDefault(x =>
+                    x.IsAllowed() && string.Equals(x.Naam, Volgende.Naam, StringComparison.CurrentCultureIgnoreCase));
+                Manager.FormulierActie(new object[] {prod, bew}, MainAktie.OpenProductie);
+            }
         }
 
-        private void xmeebezig_ImageLoad(object sender, HtmlRenderer.Entities.HtmlImageLoadEventArgs e)
+        private void xmeebezig_ImageLoad(object sender, HtmlImageLoadEventArgs e)
         {
             if (e.Src.Contains("Play"))
             {
@@ -121,22 +162,51 @@ namespace Controls
             }
             if (e.Src.Contains("Volgende"))
             {
-                e.Callback(Resources.arrow_right_64x64);
+                e.Callback(Resources.playcircle_start_arrow_6048);
             }
 
             e.Handled = true;
         }
 
-        private async void xmeebezig_LinkClicked(object sender, HtmlRenderer.Entities.HtmlLinkClickedEventArgs e)
+        private async void xmeebezig_LinkClicked(object sender, HtmlLinkClickedEventArgs e)
         {
+            if (Manager.LogedInGebruiker == null ||
+                Manager.LogedInGebruiker.AccesLevel < AccesType.ProductieBasis) return;
             if (!string.IsNullOrEmpty(e.Link))
             {
                 try
                 {
-                    var prod = await Manager.Database.GetProductie(e.Link);
+                    var xvals = e.Link.Split(';');
+                    if (xvals.Length < 3) return;
+                    var prod = await Manager.Database.GetProductie(xvals[0]);
                     if (prod == null) return;
-                    var bew = prod.Bewerkingen?.FirstOrDefault(x => x.IsAllowed());
-                    Manager.FormulierActie(new object[] { prod, bew }, MainAktie.OpenProductie);
+                    var bew = prod.Bewerkingen?.FirstOrDefault(x =>
+                        x.IsAllowed() && string.Equals(x.Naam, xvals[1], StringComparison.CurrentCultureIgnoreCase));
+
+                    
+                    if (bew is { State: ProductieState.Gestopt })
+                    {
+                        if (XMessageBox.Show($"Wil je {bew.Naam} van {bew.Omschrijving} starten op {xvals[2]}?", "Productie Starten",
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        {
+                            var wp = bew.GetWerkPlek(xvals[2], true);
+                            if (!wp.Personen.Any(x => x.IngezetAanKlus(bew, true, out var klusjes)))
+                            {
+                                var xpers = new PersoneelsForm(true);
+                                if (xpers.ShowDialog() == DialogResult.OK)
+                                {
+                                    var selected = xpers.SelectedPersoneel;
+                                    if (selected.Length > 0)
+                                    {
+                                        wp.AddPersonen(selected, bew);
+                                        await bew.StartProductie(true, true);
+                                    }
+                                }
+                            }
+                            else await bew.StartProductie(true, true);
+                        }
+                    }
+                    else Manager.FormulierActie(new object[] { prod, bew }, MainAktie.OpenProductie);
                 }
                 catch (Exception exception)
                 {

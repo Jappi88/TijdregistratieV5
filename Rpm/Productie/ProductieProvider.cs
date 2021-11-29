@@ -542,12 +542,12 @@ namespace ProductieManager.Rpm.Productie
             {
                 try
                 {
-                    if (Manager.Opties.GebruikLocalSync || Manager.Opties.GebruikTaken)
+                    if (Manager.LogedInGebruiker != null && (Manager.Opties.GebruikLocalSync || Manager.Opties.GebruikTaken))
                     {
                         var forms = await Manager.GetAllProductieIDs(false,false);
                         for (int i = 0; i < forms.Count; i++)
                         {
-                            if (!IsProductiesSyncing || (!Manager.Opties.GebruikLocalSync && !Manager.Opties.GebruikTaken)) break;
+                            if (Manager.LogedInGebruiker == null || !IsProductiesSyncing || (!Manager.Opties.GebruikLocalSync && !Manager.Opties.GebruikTaken)) break;
                             var prod = await Manager.Database.GetProductie(forms[i]);
                             if (prod == null || !prod.IsAllowed(null) || IsExcluded(prod))
                                 continue;
@@ -559,7 +559,9 @@ namespace ProductieManager.Rpm.Productie
                             bool save = prod.Bewerkingen != null && prod.Bewerkingen.Any(x =>
                                 string.Equals(x.GestartDoor, Manager.Opties.Username,
                                     StringComparison.CurrentCultureIgnoreCase));
-                            await prod.UpdateForm(true, false, null, "",false, false, true);
+                            prod.FormulierChanged(this);
+                            Manager.FormulierChanged(this, prod);
+                            //await prod.UpdateForm(true, false, null, "",false, false, true);
                         }
                     }
                 }

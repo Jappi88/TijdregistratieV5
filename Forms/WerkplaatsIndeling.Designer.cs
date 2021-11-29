@@ -1,4 +1,6 @@
-﻿namespace Forms
+﻿using TheArtOfDev.HtmlRenderer.WinForms;
+
+namespace Forms
 {
     partial class WerkplaatsIndeling
     {
@@ -29,14 +31,14 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.xPersoneelIndelingPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.xAddPersoneel = new System.Windows.Forms.ToolStripButton();
             this.xDeletePersoneel = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.xGeselecteerdeGebruikerLabel = new HtmlRenderer.HtmlPanel();
-            this.xloadinglabel = new System.Windows.Forms.Label();
-            this.xPersoneelIndelingPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.productieListControl1 = new Controls.ProductieListControl();
+            this.xGeselecteerdeGebruikerLabel = new TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel();
+            this.xloadinglabel = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -55,6 +57,20 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(490, 561);
             this.panel1.TabIndex = 0;
+            // 
+            // xPersoneelIndelingPanel
+            // 
+            this.xPersoneelIndelingPanel.AllowDrop = true;
+            this.xPersoneelIndelingPanel.AutoScroll = true;
+            this.xPersoneelIndelingPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xPersoneelIndelingPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.xPersoneelIndelingPanel.Location = new System.Drawing.Point(0, 39);
+            this.xPersoneelIndelingPanel.Name = "xPersoneelIndelingPanel";
+            this.xPersoneelIndelingPanel.Size = new System.Drawing.Size(490, 522);
+            this.xPersoneelIndelingPanel.TabIndex = 2;
+            this.xPersoneelIndelingPanel.WrapContents = false;
+            this.xPersoneelIndelingPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.flowLayoutPanel1_DragDrop);
+            this.xPersoneelIndelingPanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.flowLayoutPanel1_DragEnter);
             // 
             // toolStrip1
             // 
@@ -113,19 +129,36 @@
             this.splitContainer1.SplitterDistance = 490;
             this.splitContainer1.TabIndex = 1;
             // 
+            // productieListControl1
+            // 
+            this.productieListControl1.BackColor = System.Drawing.Color.White;
+            this.productieListControl1.CanLoad = false;
+            this.productieListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieListControl1.EnableEntryFiltering = true;
+            this.productieListControl1.EnableFiltering = true;
+            this.productieListControl1.EnableSync = false;
+            this.productieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productieListControl1.IsBewerkingView = true;
+            this.productieListControl1.ListName = "PersoneelIndelingLijst";
+            this.productieListControl1.Location = new System.Drawing.Point(0, 20);
+            this.productieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.productieListControl1.Name = "productieListControl1";
+            this.productieListControl1.RemoveCustomItemIfNotValid = false;
+            this.productieListControl1.SelectedItem = null;
+            this.productieListControl1.Size = new System.Drawing.Size(636, 541);
+            this.productieListControl1.TabIndex = 0;
+            this.productieListControl1.ValidHandler = null;
+            // 
             // xGeselecteerdeGebruikerLabel
             // 
-            this.xGeselecteerdeGebruikerLabel.AutoScroll = true;
-            this.xGeselecteerdeGebruikerLabel.AutoScrollMinSize = new System.Drawing.Size(636, 17);
-            this.xGeselecteerdeGebruikerLabel.BackColor = System.Drawing.SystemColors.Window;
+            this.xGeselecteerdeGebruikerLabel.BackColor = System.Drawing.Color.Transparent;
             this.xGeselecteerdeGebruikerLabel.BaseStylesheet = null;
-            this.xGeselecteerdeGebruikerLabel.Cursor = System.Windows.Forms.Cursors.Default;
             this.xGeselecteerdeGebruikerLabel.Dock = System.Windows.Forms.DockStyle.Top;
             this.xGeselecteerdeGebruikerLabel.Location = new System.Drawing.Point(0, 0);
             this.xGeselecteerdeGebruikerLabel.Name = "xGeselecteerdeGebruikerLabel";
-            this.xGeselecteerdeGebruikerLabel.Size = new System.Drawing.Size(636, 39);
-            this.xGeselecteerdeGebruikerLabel.TabIndex = 1;
-            this.xGeselecteerdeGebruikerLabel.Text = "htmlPanel1";
+            this.xGeselecteerdeGebruikerLabel.Size = new System.Drawing.Size(636, 20);
+            this.xGeselecteerdeGebruikerLabel.TabIndex = 2;
+            this.xGeselecteerdeGebruikerLabel.Text = "htmlLabel1";
             // 
             // xloadinglabel
             // 
@@ -139,40 +172,6 @@
             this.xloadinglabel.TabIndex = 31;
             this.xloadinglabel.Text = "Indeling laden...";
             this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // xPersoneelIndelingPanel
-            // 
-            this.xPersoneelIndelingPanel.AllowDrop = true;
-            this.xPersoneelIndelingPanel.AutoScroll = true;
-            this.xPersoneelIndelingPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xPersoneelIndelingPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.xPersoneelIndelingPanel.Location = new System.Drawing.Point(0, 39);
-            this.xPersoneelIndelingPanel.Name = "xPersoneelIndelingPanel";
-            this.xPersoneelIndelingPanel.Size = new System.Drawing.Size(490, 522);
-            this.xPersoneelIndelingPanel.TabIndex = 2;
-            this.xPersoneelIndelingPanel.WrapContents = false;
-            this.xPersoneelIndelingPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.flowLayoutPanel1_DragDrop);
-            this.xPersoneelIndelingPanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.flowLayoutPanel1_DragEnter);
-            // 
-            // productieListControl1
-            // 
-            this.productieListControl1.BackColor = System.Drawing.Color.White;
-            this.productieListControl1.CanLoad = false;
-            this.productieListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.productieListControl1.EnableEntryFiltering = true;
-            this.productieListControl1.EnableFiltering = true;
-            this.productieListControl1.EnableSync = false;
-            this.productieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productieListControl1.IsBewerkingView = true;
-            this.productieListControl1.ListName = "PersoneelIndelingLijst";
-            this.productieListControl1.Location = new System.Drawing.Point(0, 39);
-            this.productieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.productieListControl1.Name = "productieListControl1";
-            this.productieListControl1.RemoveCustomItemIfNotValid = false;
-            this.productieListControl1.SelectedItem = null;
-            this.productieListControl1.Size = new System.Drawing.Size(636, 522);
-            this.productieListControl1.TabIndex = 0;
-            this.productieListControl1.ValidHandler = null;
             // 
             // WerkplaatsIndeling
             // 
@@ -193,6 +192,7 @@
             this.toolStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -208,7 +208,7 @@
         private System.Windows.Forms.ToolStripButton xAddPersoneel;
         private System.Windows.Forms.ToolStripButton xDeletePersoneel;
         private System.Windows.Forms.Label xloadinglabel;
-        private HtmlRenderer.HtmlPanel xGeselecteerdeGebruikerLabel;
         private System.Windows.Forms.FlowLayoutPanel xPersoneelIndelingPanel;
+        private HtmlLabel xGeselecteerdeGebruikerLabel;
     }
 }

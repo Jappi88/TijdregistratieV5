@@ -1,4 +1,6 @@
-﻿namespace Controls
+﻿using TheArtOfDev.HtmlRenderer.WinForms;
+
+namespace Controls
 {
     partial class ProductieInfoUI
     {
@@ -30,19 +32,19 @@
         {
             this.xpanelcontainer = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.xWerkPlaatsenHtmlPanel = new HtmlRenderer.HtmlPanel();
+            this.xWerkPlaatsenHtmlPanel = new HtmlPanel();
             this.xWerkPlaatsenButton = new System.Windows.Forms.Button();
-            this.xMaterialenHtmlPanel = new HtmlRenderer.HtmlPanel();
+            this.xMaterialenHtmlPanel = new HtmlPanel();
             this.xMaterialenButton = new System.Windows.Forms.Button();
-            this.xVerpakkingHtmlPanel = new HtmlRenderer.HtmlPanel();
+            this.xVerpakkingHtmlPanel = new HtmlPanel();
             this.xVerpakkingsButton = new System.Windows.Forms.Button();
-            this.xDatumsHtmlPanel = new HtmlRenderer.HtmlPanel();
+            this.xDatumsHtmlPanel = new HtmlPanel();
             this.xProductieDatumsButton = new System.Windows.Forms.Button();
-            this.xNotitieHtmlPanel = new HtmlRenderer.HtmlPanel();
+            this.xNotitieHtmlPanel = new HtmlPanel();
             this.xNotitieButton = new System.Windows.Forms.Button();
-            this.xInforHtmlPanel = new HtmlRenderer.HtmlPanel();
+            this.xInforHtmlPanel = new HtmlPanel();
             this.xProductieInfoButton = new System.Windows.Forms.Button();
-            this.xHeaderHtmlPanel = new HtmlRenderer.HtmlPanel();
+            this.xHeaderHtmlPanel = new HtmlPanel();
             this.xProductieStatusButton = new System.Windows.Forms.Button();
             this.xpanelcontainer.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -100,7 +102,7 @@
             this.xWerkPlaatsenHtmlPanel.TabIndex = 9;
             this.xWerkPlaatsenHtmlPanel.Text = "WerkPlaatsen Html Text";
             this.xWerkPlaatsenHtmlPanel.Visible = false;
-            this.xWerkPlaatsenHtmlPanel.ImageLoad += new System.EventHandler<HtmlRenderer.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
+            this.xWerkPlaatsenHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
             this.xWerkPlaatsenHtmlPanel.DoubleClick += new System.EventHandler(this.xWerkPlaatsenButton_Click);
             // 
             // xWerkPlaatsenButton
@@ -134,7 +136,7 @@
             this.xMaterialenHtmlPanel.TabIndex = 7;
             this.xMaterialenHtmlPanel.Text = "Materialen Html Text";
             this.xMaterialenHtmlPanel.Visible = false;
-            this.xMaterialenHtmlPanel.ImageLoad += new System.EventHandler<HtmlRenderer.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
+            this.xMaterialenHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
             this.xMaterialenHtmlPanel.DoubleClick += new System.EventHandler(this.xMaterialenButton_Click);
             // 
             // xMaterialenButton
@@ -168,7 +170,7 @@
             this.xVerpakkingHtmlPanel.TabIndex = 4;
             this.xVerpakkingHtmlPanel.Text = "Verpakking Html Text";
             this.xVerpakkingHtmlPanel.Visible = false;
-            this.xVerpakkingHtmlPanel.ImageLoad += new System.EventHandler<HtmlRenderer.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
+            this.xVerpakkingHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
             this.xVerpakkingHtmlPanel.DoubleClick += new System.EventHandler(this.xVerpakkingsButton_Click);
             // 
             // xVerpakkingsButton
@@ -202,7 +204,7 @@
             this.xDatumsHtmlPanel.TabIndex = 6;
             this.xDatumsHtmlPanel.Text = "Datums Html Text";
             this.xDatumsHtmlPanel.Visible = false;
-            this.xDatumsHtmlPanel.ImageLoad += new System.EventHandler<HtmlRenderer.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
+            this.xDatumsHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
             this.xDatumsHtmlPanel.DoubleClick += new System.EventHandler(this.xProductieDatumsButton_Click);
             // 
             // xProductieDatumsButton
@@ -236,7 +238,7 @@
             this.xNotitieHtmlPanel.TabIndex = 11;
             this.xNotitieHtmlPanel.Text = "Notitie Html Text";
             this.xNotitieHtmlPanel.Visible = false;
-            this.xNotitieHtmlPanel.ImageLoad += new System.EventHandler<HtmlRenderer.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
+            this.xNotitieHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
             this.xNotitieHtmlPanel.DoubleClick += new System.EventHandler(this.xNotitieButton_Click);
             // 
             // xNotitieButton
@@ -271,7 +273,7 @@
             this.xInforHtmlPanel.TabIndex = 1;
             this.xInforHtmlPanel.Text = "Info Html Text";
             this.xInforHtmlPanel.Visible = false;
-            this.xInforHtmlPanel.ImageLoad += new System.EventHandler<HtmlRenderer.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
+            this.xInforHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
             this.xInforHtmlPanel.DoubleClick += new System.EventHandler(this.xProductieInfoButton_Click);
             // 
             // xProductieInfoButton
@@ -344,18 +346,18 @@
         #endregion
 
         private System.Windows.Forms.Panel xpanelcontainer;
-        private HtmlRenderer.HtmlPanel xWerkPlaatsenHtmlPanel;
+        private HtmlPanel xWerkPlaatsenHtmlPanel;
         private System.Windows.Forms.Button xWerkPlaatsenButton;
-        private HtmlRenderer.HtmlPanel xMaterialenHtmlPanel;
+        private HtmlPanel xMaterialenHtmlPanel;
         private System.Windows.Forms.Button xMaterialenButton;
-        private HtmlRenderer.HtmlPanel xVerpakkingHtmlPanel;
+        private HtmlPanel xVerpakkingHtmlPanel;
         private System.Windows.Forms.Button xProductieDatumsButton;
-        private HtmlRenderer.HtmlPanel xDatumsHtmlPanel;
+        private HtmlPanel xDatumsHtmlPanel;
         private System.Windows.Forms.Button xVerpakkingsButton;
-        private HtmlRenderer.HtmlPanel xInforHtmlPanel;
+        private HtmlPanel xInforHtmlPanel;
         private System.Windows.Forms.Button xProductieInfoButton;
-        private HtmlRenderer.HtmlPanel xHeaderHtmlPanel;
-        private HtmlRenderer.HtmlPanel xNotitieHtmlPanel;
+        private HtmlPanel xHeaderHtmlPanel;
+        private HtmlPanel xNotitieHtmlPanel;
         private System.Windows.Forms.Button xNotitieButton;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button xProductieStatusButton;

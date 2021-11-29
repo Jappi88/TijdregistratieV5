@@ -33,7 +33,6 @@ namespace Controls
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieView));
             Various.MenuButton menuButton1 = new Various.MenuButton();
             Various.MenuButton menuButton2 = new Various.MenuButton();
             Various.MenuButton menuButton3 = new Various.MenuButton();
@@ -47,6 +46,7 @@ namespace Controls
             Various.MenuButton menuButton11 = new Various.MenuButton();
             Various.MenuButton menuButton12 = new Various.MenuButton();
             Various.MenuButton menuButton13 = new Various.MenuButton();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieView));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.xspeciaalroosterbutton = new System.Windows.Forms.Button();
@@ -74,6 +74,7 @@ namespace Controls
             this.xsettingsb = new System.Windows.Forms.ToolStripButton();
             this.xupdateb = new System.Windows.Forms.ToolStripButton();
             this.xopmerkingentoolstripbutton = new System.Windows.Forms.ToolStripButton();
+            this.xcorruptedfilesbutton = new System.Windows.Forms.ToolStripButton();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button2 = new System.Windows.Forms.Button();
@@ -90,6 +91,7 @@ namespace Controls
             this.xtabimages = new System.Windows.Forms.ImageList(this.components);
             this.takenManager1 = new Controls.TakenManager();
             this.mainMenu1 = new Controls.MainMenu();
+            this.xconnecttest = new System.Windows.Forms.ToolStripButton();
             this.panel6.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -174,7 +176,9 @@ namespace Controls
             this.xShowPreview,
             this.xsettingsb,
             this.xupdateb,
-            this.xopmerkingentoolstripbutton});
+            this.xopmerkingentoolstripbutton,
+            this.xcorruptedfilesbutton,
+            this.xconnecttest});
             this.toolStrip2.Location = new System.Drawing.Point(5, 0);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Size = new System.Drawing.Size(1026, 39);
@@ -430,6 +434,18 @@ namespace Controls
             this.xopmerkingentoolstripbutton.Size = new System.Drawing.Size(36, 36);
             this.xopmerkingentoolstripbutton.ToolTipText = "Bekijk, wijzig of voeg toe een opmerking, vraag of een verzoek";
             this.xopmerkingentoolstripbutton.Click += new System.EventHandler(this.xopmerkingentoolstripbutton_Click);
+            // 
+            // xcorruptedfilesbutton
+            // 
+            this.xcorruptedfilesbutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xcorruptedfilesbutton.Image = global::ProductieManager.Properties.Resources.error_notification_32x32;
+            this.xcorruptedfilesbutton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xcorruptedfilesbutton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xcorruptedfilesbutton.Name = "xcorruptedfilesbutton";
+            this.xcorruptedfilesbutton.Size = new System.Drawing.Size(36, 36);
+            this.xcorruptedfilesbutton.ToolTipText = "Toon alle corrupted bestanden";
+            this.xcorruptedfilesbutton.Visible = false;
+            this.xcorruptedfilesbutton.Click += new System.EventHandler(this.xcorruptedfilesbutton_Click);
             // 
             // pictureBox2
             // 
@@ -799,6 +815,16 @@ namespace Controls
             this.mainMenu1.TabIndex = 27;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
             // 
+            // xconnecttest
+            // 
+            this.xconnecttest.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xconnecttest.Image = ((System.Drawing.Image)(resources.GetObject("xconnecttest.Image")));
+            this.xconnecttest.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xconnecttest.Name = "xconnecttest";
+            this.xconnecttest.Size = new System.Drawing.Size(23, 36);
+            this.xconnecttest.Text = "toolStripButton1";
+            this.xconnecttest.Click += new System.EventHandler(this.xconnecttest_Click);
+            // 
             // ProductieView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -871,5 +897,7 @@ namespace Controls
         private ToolStripButton xopmerkingentoolstripbutton;
         private ToolStripButton xShowPreview;
         private ToolStripButton xHelpButton;
+        private ToolStripButton xcorruptedfilesbutton;
+        private ToolStripButton xconnecttest;
     }
 }

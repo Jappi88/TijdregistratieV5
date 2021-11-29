@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using TheArtOfDev.HtmlRenderer.WinForms;
 
 namespace AutoUpdaterDotNET
 {
@@ -37,7 +38,7 @@ namespace AutoUpdaterDotNET
             this.pictureBoxIcon = new System.Windows.Forms.PictureBox();
             this.buttonSkip = new System.Windows.Forms.Button();
             this.xdescription = new System.Windows.Forms.Label();
-            this.xchangelog = new HtmlRenderer.HtmlPanel();
+            this.xchangelog = new HtmlPanel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIcon)).BeginInit();
             this.SuspendLayout();
             // 
@@ -91,8 +92,8 @@ namespace AutoUpdaterDotNET
             this.xchangelog.BaseStylesheet = null;
             this.xchangelog.Cursor = System.Windows.Forms.Cursors.Default;
             this.xchangelog.Name = "xchangelog";
-            this.xchangelog.StylesheetLoad += new System.EventHandler<HtmlRenderer.Entities.HtmlStylesheetLoadEventArgs>(this.xchangelog_StylesheetLoad);
-            this.xchangelog.ImageLoad += new System.EventHandler<HtmlRenderer.Entities.HtmlImageLoadEventArgs>(this.xchangelog_ImageLoad);
+            this.xchangelog.StylesheetLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlStylesheetLoadEventArgs>(this.xchangelog_StylesheetLoad);
+            this.xchangelog.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xchangelog_ImageLoad);
             // 
             // UpdateForm
             // 
@@ -127,6 +128,6 @@ namespace AutoUpdaterDotNET
         private System.Windows.Forms.Label labelUpdate;
         private System.Windows.Forms.PictureBox pictureBoxIcon;
         private System.Windows.Forms.Label xdescription;
-        private HtmlRenderer.HtmlPanel xchangelog;
+        private HtmlPanel xchangelog;
     }
 }

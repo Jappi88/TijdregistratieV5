@@ -1,11 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Drawing.Text;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MetroFramework;
+using PdfSharp;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
+using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
+using TheArtOfDev.HtmlRenderer.Core.Entities;
+using TheArtOfDev.HtmlRenderer.PdfSharp;
 
 namespace Forms
 {
@@ -130,7 +140,7 @@ namespace Forms
                 timer1.Start();
         }
 
-        private void htmlPanel1_StylesheetLoad(object sender, HtmlRenderer.Entities.HtmlStylesheetLoadEventArgs e)
+        private void htmlPanel1_StylesheetLoad(object sender,HtmlStylesheetLoadEventArgs e)
         {
             Task.Factory.StartNew(new Action(() =>
             {
@@ -140,11 +150,11 @@ namespace Forms
             
         }
 
-        private void htmlPanel1_ImageLoad(object sender, HtmlRenderer.Entities.HtmlImageLoadEventArgs e)
+        private void htmlPanel1_ImageLoad(object sender, HtmlImageLoadEventArgs e)
         {
             Task.Factory.StartNew(new Action(() =>
             {
-                var img = Functions.ImageFromUrl(e.Src);
+                var img = GraphicsExtensions.ImageFromUrl(e.Src);
                 if (img != null)
                 {
                     e.Callback(img);
@@ -156,50 +166,171 @@ namespace Forms
            
         }
 
-        private void htmlPanel1_LinkClicked(object sender, HtmlRenderer.Entities.HtmlLinkClickedEventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(e.Link))
+            try
             {
+                //var pages = GetHtmlPages();
+                //if (pages.Length == 0) return;
+                PdfGenerateConfig config = new PdfGenerateConfig();
+                config.PageSize = PageSize.A4;
+                config.SetMargins(5);
+                var xpage = htmlPanel1.Text.Replace("<img width = \"900\" height=\"500\"", "<img width =\"475\" height=\"250\"");
+                var pdf = PdfGenerator.GeneratePdf(xpage, config, null, OnStylesheetLoad,
+                    OnImageLoadPdfSharp);//new PdfDocument();
+                //foreach (var page in pages)
+                //{
+                //    PdfGenerator.AddPdfPages(pdf, page, config, null, OnStylesheetLoad, OnImageLoadPdfSharp);
+                //}
 
-                if (e.Link.ToLower().StartsWith("move"))
+                var ofd = new SaveFileDialog();
+                ofd.Filter = "Pdf |*.pdf";
+                ofd.Title = "Sla alles op als een PDF";
+                if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    string[] xvalues = e.Link.Split(':');
-                    if (xvalues.Length > 0)
-                    {
-                        var xvalue = xvalues[xvalues.Length - 1];
-                        xvalues = xvalue.Split(',');
-                        if (xvalue.Length > 1)
-                        {
-                            if (int.TryParse(xvalues[0], out var x) && int.TryParse(xvalues[1], out var y))
-                            {
-                                for (int i = 0; i < 10; i++)
-                                {
-                                    if (htmlPanel1.HorizontalScroll.Value == x) break;
-                                    htmlPanel1.HorizontalScroll.Value = x;
-                                    htmlPanel1.Invalidate();
-                                }
-                                for (int i = 0; i < 10; i++)
-                                {
-                                    if (htmlPanel1.VerticalScroll.Value == y) break;
-                                    htmlPanel1.VerticalScroll.Value = y;
-                                    htmlPanel1.Invalidate();
-                                }
-                            }
-                        }
-                    }
-                    e.Handled = true;
-                }
-                if (e.Link.ToLower().StartsWith("find"))
-                {
-                    string[] xvalues = e.Link.Split(':');
-                    if (xvalues.Length > 0)
-                    {
-                        var xvalue = xvalues[xvalues.Length - 1];
-                        htmlPanel1.ScrollToElement(xvalue);
-                        e.Handled = true;
-                    }
+                    pdf.Save(ofd.FileName);
+                    Process.Start(ofd.FileName);
                 }
             }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
         }
+
+        private string[] GetHtmlPages()
+        {
+            List<string> xreturn = new List<string>();
+            try
+            {
+                var html = htmlPanel1.Text;
+                var body = ReplaceInnerHtml(html, "<blockquote class=\"whitehole\">", "</blockquote>", "");
+                var content = GetInnerHtml(html, "<blockquote class=\"whitehole\">", "</blockquote>");
+                int page = 1;
+                var xstart = 0;
+                while (true)
+                {
+                    string xvar = $"<div id=\"page{page}\">";
+                    xstart = content.IndexOf(xvar, StringComparison.CurrentCultureIgnoreCase);
+                    if (xstart < 0) break;
+                    xstart += xvar.Length;
+                    var xend = content.IndexOf($"<div id=\"page{page + 1}\">",
+                        StringComparison.CurrentCultureIgnoreCase);
+                    if (xend < 0) xend = content.Length;
+                    int length = xend - xstart;
+                    var xpage = content.Substring(xstart, length);
+                    xend = xpage.LastIndexOf("</div>", StringComparison.CurrentCultureIgnoreCase);
+                    if (xend > -1)
+                    {
+                        xpage = xpage.Substring(0, xend);
+                    }
+
+                    xpage = xpage.Replace("<img width = \"900\" height=\"500\"", "<img width = \"475\" height=\"250\"");
+                    var xtitle = GetInnerHtml(xpage, "<h1", "</h1>");
+                    xpage = RemoveHtmlBlock(xpage, "<h1", "</h1>");
+                    var xbodyinfo = $"{xtitle}";
+                    var xbody = ReplaceInnerHtml(body, "<div id=\"header\">", "</div>", xbodyinfo);
+                    xbody = ReplaceInnerHtml(xbody, "<blockquote class=\"whitehole\">", "</blockquote>", xpage);
+                    xreturn.Add(xbody);
+                    page++;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return xreturn.ToArray();
+        }
+
+        private string RemoveHtmlBlock(string basehtml, string xstartvalue, string xendvalue)
+        {
+            var xhtml = basehtml;
+            string xvar = xstartvalue;
+            int xstart = xhtml.FindIndex(xvar);
+            if (xstart < 0) return xhtml;
+            int xend = xhtml.FindIndex(xendvalue);
+           
+            if (xend < 0)
+                xend = xhtml.Length;
+            else xend += xendvalue.Length;
+            xend -= xstart;
+            xhtml = xhtml.Remove(xstart, xend);
+
+            return xhtml;
+        }
+
+        private string ReplaceInnerHtml(string basehtml, string xstartvalue, string xendvalue, string newvalue)
+        {
+            var xhtml = basehtml;
+            string xvar = xstartvalue;
+            int xstart = xhtml.FindIndex(xvar);
+            if (xstart < 0) return xhtml;
+            xstart += xvar.Length;
+            int xend = xhtml.FindIndex(xendvalue);
+            if (xend < 0)
+                xend = xhtml.Length;
+            xend -= xstart;
+            xhtml = xhtml.Remove(xstart, xend).Insert(xstart, newvalue);
+
+            return xhtml;
+        }
+
+        private string GetInnerHtml(string basehtml, string xstartvalue, string xendvalue)
+        {
+            var xhtml = basehtml;
+            string xvar = xstartvalue;
+            int xstart = xhtml.FindIndex(xvar);
+            if (xstart < 0) return xhtml;
+            if (!xvar.EndsWith(">"))
+            {
+                xstart = xhtml.IndexOf('>', xstart);
+                xstart++;
+            }
+            xstart += xvar.Length;
+            int xend = xhtml.FindIndex(xendvalue);
+            if (xend < 0)
+                xend = xhtml.Length;
+            xend -= xstart;
+            xhtml = xhtml.Substring(xstart, xend);
+
+            return xhtml;
+        }
+
+        private string GetEmptyBody(string basehtml, string title, string description)
+        {
+            var xhtml = basehtml;
+            title = string.Empty;
+            string xvar = "<blockquote class=\"whitehole\">";
+            int xstart = xhtml.IndexOf(xvar, StringComparison.CurrentCultureIgnoreCase);
+            if(xstart < 0) return xhtml;
+            xstart += xvar.Length;
+            int xend = xhtml.IndexOf("<\blockquote>", StringComparison.CurrentCultureIgnoreCase);
+            if (xend < 0) 
+                xend = xhtml.Length;
+            xend -= xstart;
+            xhtml = xhtml.Remove(xstart, xend);
+            return xhtml;
+        }
+
+        public static void OnImageLoadPdfSharp(object sender, HtmlImageLoadEventArgs e)
+        {
+            var url = e.Src;
+            if (e.Src.StartsWith("http:") || e.Src.StartsWith("https:"))
+            {
+                e.Callback(XImage.FromStream(GraphicsExtensions.ImageStreamFromUrl(url)));
+            }
+        }
+
+        public static void OnStylesheetLoad(object sender, HtmlStylesheetLoadEventArgs e)
+        {
+            var url = e.Src;
+            if (e.Src.StartsWith("http:") || e.Src.StartsWith("https:"))
+            {
+                var xstyle = Functions.GetStringFromUrl(e.Src);
+                e.SetStyleSheet = xstyle;
+            }
+        }
+
     }
 }

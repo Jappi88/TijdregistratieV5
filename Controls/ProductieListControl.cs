@@ -486,9 +486,6 @@ namespace Controls
                     case "Omschrijving":
                         column.GroupKeyGetter = GroupGetter;
                         break;
-                    case "tijdover":
-                        column.AspectGetter = BewerkingTijdOverGetter;
-                        break;
                     case "laatstaantalupdate":
                         column.AspectGetter = y =>
                         {
@@ -770,14 +767,6 @@ namespace Controls
             return "N.V.T.";
         }
 
-        private object BewerkingTijdOverGetter(object sender)
-        {
-            if (sender is Bewerking bew) return bew.TijdOver() + " uur";
-            if (sender is ProductieFormulier { Bewerkingen: { } } prod)
-                return Math.Round(prod.Bewerkingen.Sum(x => x.TijdOver()), 2) + " uur";
-            return 0;
-        }
-
         private object GroupGetter(object sender)
         {
             if (sender is Bewerking bew) return bew.Naam;
@@ -877,8 +866,8 @@ namespace Controls
 
         private void UpdateListObjects<T>(List<T> objects)
         {
-            if (objects != null && (objects.Count != ProductieLijst.Items.Count ||
-                                    !ProductieLijst.Objects.Cast<T>().Any(x => objects.Any(o => o.Equals(x)))))
+            if (objects != null && (objects.Count != ProductieLijst.Items.Count || (ProductieLijst.Items.Count > 0 && 
+                                    !ProductieLijst.Objects.Cast<T>().Any(x => objects.Any(o => o.Equals(x))))))
             {
                 ProductieLijst.BeginUpdate();
                 var sel = ProductieLijst.SelectedObject;

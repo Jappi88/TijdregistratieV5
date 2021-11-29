@@ -2442,21 +2442,20 @@ namespace Rpm.Misc
             return result.OrderBy(x => x.Key).ToDictionary(i => i.Key, i => i.Value);
         }
 
-        public static Image ImageFromUrl(string url)
+        public static int FindIndex(this string text, string value)
         {
-            try
+            var index = text.IndexOf(value, StringComparison.CurrentCultureIgnoreCase);
+            if (index > -1) return index;
+            while (true)
             {
-                using var webClient = new System.Net.WebClient();
-                var result = webClient.DownloadData(url);
-                if (result == null || result.Length < 8) return null;
-                var image = Image.FromStream(new MemoryStream(result));
-                return image;
+                index = text.IndexOf(value[0], index);
+                if (index < 0) break;
+                var xval = text.Substring(index, value.Length);
+                if (xval.ToLower().StartsWith(value.ToLower())) return index;
+                index++;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return null;
-            }
+
+            return -1;
         }
 
         #endregion Misc

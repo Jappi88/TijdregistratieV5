@@ -8,9 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Forms;
+using MetroFramework.Drawing.Html;
 using ProductieManager.Properties;
 using Rpm.Misc;
 using Rpm.Productie;
+using TheArtOfDev.HtmlRenderer.Core.Entities;
 
 namespace Controls
 {
@@ -83,12 +85,12 @@ namespace Controls
             }
         }
 
-        private void htmlPanel1_StylesheetLoad(object sender, HtmlRenderer.Entities.HtmlStylesheetLoadEventArgs e)
+        private void htmlPanel1_StylesheetLoad(object sender, HtmlStylesheetLoadEventArgs e)
         {
             e.SetStyleSheet = IProductieBase.GetStylesheet(e.Src);
         }
 
-        private void htmlPanel1_ImageLoad(object sender, HtmlRenderer.Entities.HtmlImageLoadEventArgs e)
+        private void htmlPanel1_ImageLoad(object sender, HtmlImageLoadEventArgs e)
         {
             var xkey = e.Src;
             switch (xkey.ToLower().Trim())

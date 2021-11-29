@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Navigation;
 using iTextSharp.text.pdf;
+using TheArtOfDev.HtmlRenderer.Core.Entities;
 
 namespace Controls
 {
@@ -266,7 +267,7 @@ namespace Controls
             }
         }
 
-        private void xVerpakkingHtmlPanel_ImageLoad(object sender, HtmlRenderer.Entities.HtmlImageLoadEventArgs e)
+        private void xVerpakkingHtmlPanel_ImageLoad(object sender, HtmlImageLoadEventArgs e)
         {
             var xkey = e.Src;
             switch (xkey.ToLower().Trim())

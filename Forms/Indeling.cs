@@ -414,7 +414,7 @@ namespace Forms
             }
 
             var klus = GetCurrentKlus(shift, false) ?? new Klus(shift, wp);
-            klus.UpdateTijdGewerkt(xtijdgestart.Value, xtijdgestopt.Value, bew.State == ProductieState.Gestart);
+            klus.UpdateTijdGewerkt(DateTime.Now, DateTime.Now, bew.State == ProductieState.Gestart);
 
             shift.ReplaceKlus(klus);
             Bewerking.ZetPersoneelActief(shift.PersoneelNaam, wp.Naam, true);

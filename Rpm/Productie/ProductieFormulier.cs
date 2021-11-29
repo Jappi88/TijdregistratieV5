@@ -1400,13 +1400,16 @@ namespace Rpm.Productie
                 {
                     try
                     {
-                        form.GemiddeldPerUur = form.ActueelPerUur;
-                        if (form.ActueelPerUur > 0 && form.Aantal > 0)
-                            form.GemiddeldDoorlooptijd = Math.Round(form.Aantal / form.ActueelPerUur, 2);
                         if (forms != null)
                             forms = form.ArtikelNr != null ? forms.Where(x => x.ArtikelNr != null &&
                             string.Equals(x.ArtikelNr, form.ArtikelNr, StringComparison.CurrentCultureIgnoreCase)).ToList() : new List<ProductieFormulier>();
                         else forms = await Manager.Database.GetProducties(form.ArtikelNr, true, ProductieState.Gereed, true);
+                        form = await Manager.Database.GetProductie(form.ProductieNr);
+                        if (form == null) return null;
+                        form.GemiddeldPerUur = form.ActueelPerUur;
+                        if (form.ActueelPerUur > 0 && form.Aantal > 0)
+                            form.GemiddeldDoorlooptijd = Math.Round(form.Aantal / form.ActueelPerUur, 2);
+                        
 
                         form.Geproduceerd = forms.Count;
                         var gemiddeldtotaal = forms.Count > 0 ? forms.Sum(x => x.TotaalGemaakt) / forms.Count : 0;
@@ -1640,13 +1643,27 @@ namespace Rpm.Productie
             return prod;
         }
 
-        public TimeSpan TijdNodig()
+        public TimeSpan GetTijdNodig()
         {
             try
             {
                 if (Bewerkingen == null || Bewerkingen.Length == 0)
                     return new TimeSpan();
-                return TimeSpan.FromHours(Bewerkingen.Sum(x => x.TijdNodig()));
+                return TimeSpan.FromHours(Bewerkingen.Sum(x => x.GetTijdNodig()));
+            }
+            catch
+            {
+                return new TimeSpan();
+            }
+        }
+
+        public TimeSpan GetTijdOver()
+        {
+            try
+            {
+                if (Bewerkingen == null || Bewerkingen.Length == 0)
+                    return new TimeSpan();
+                return TimeSpan.FromHours(Bewerkingen.Sum(x => x.GetTijdOver()));
             }
             catch
             {

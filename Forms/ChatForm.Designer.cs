@@ -1,4 +1,6 @@
 ﻿
+using TheArtOfDev.HtmlRenderer.WinForms;
+
 namespace ProductieManager.Forms
 {
     partial class ChatForm
@@ -57,7 +59,7 @@ namespace ProductieManager.Forms
             this.xselectedusername = new System.Windows.Forms.Label();
             this.xselecteduserimage = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.xchatpanel = new HtmlRenderer.HtmlPanel();
+            this.xchatpanel = new HtmlPanel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xuserlist)).BeginInit();
@@ -394,8 +396,8 @@ namespace ProductieManager.Forms
             this.xchatpanel.Size = new System.Drawing.Size(546, 279);
             this.xchatpanel.TabIndex = 0;
             this.xchatpanel.Text = null;
-            this.xchatpanel.LinkClicked += new System.EventHandler<HtmlRenderer.Entities.HtmlLinkClickedEventArgs>(this.xchatpanel_LinkClicked);
-            this.xchatpanel.ImageLoad += new System.EventHandler<HtmlRenderer.Entities.HtmlImageLoadEventArgs>(this.xchatview_ImageLoad);
+            this.xchatpanel.LinkClicked += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlLinkClickedEventArgs>(this.xchatpanel_LinkClicked);
+            this.xchatpanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xchatview_ImageLoad);
             this.xchatpanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.xchatpanel_DragDrop);
             this.xchatpanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.xchatpanel_DragEnter);
             // 
@@ -481,7 +483,7 @@ namespace ProductieManager.Forms
         private System.Windows.Forms.ToolStripMenuItem wijzigProfielFotoToolStripMenuItem;
         private System.Windows.Forms.MenuStrip menuStrip2;
         private System.Windows.Forms.ToolStripMenuItem xselecteduserprofilebutton;
-        private HtmlRenderer.HtmlPanel xchatpanel;
+        private HtmlPanel xchatpanel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }

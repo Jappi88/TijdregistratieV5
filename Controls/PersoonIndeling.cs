@@ -10,6 +10,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using ProductieManager.Rpm.Misc;
+using TheArtOfDev.HtmlRenderer.Core.Entities;
 
 namespace Controls
 {
@@ -58,13 +59,13 @@ namespace Controls
 
         public void UpdateGebruikerInfo()
         {
-            xpersoonInfo.AutoScroll = false;
-            xpersoonInfo.HorizontalScroll.Maximum = 0;
-            xpersoonInfo.VerticalScroll.Visible = false;
-            xpersoonInfo.VerticalScroll.Enabled = false;
-            xpersoonInfo.VerticalScroll.Maximum = 0;
-            xpersoonInfo.HorizontalScroll.Visible = false;
-            xpersoonInfo.HorizontalScroll.Enabled = false;
+            //xpersoonInfo.AutoScroll = false;
+            //xpersoonInfo.HorizontalScroll.Maximum = 0;
+            //xpersoonInfo.VerticalScroll.Visible = false;
+            //xpersoonInfo.VerticalScroll.Enabled = false;
+            //xpersoonInfo.VerticalScroll.Maximum = 0;
+            //xpersoonInfo.HorizontalScroll.Visible = false;
+            //xpersoonInfo.HorizontalScroll.Enabled = false;
             if (Persoon == null)
             {
                // ximage.Image = Resources.operation;
@@ -128,8 +129,6 @@ namespace Controls
                 }
             }
 
-            
-           
         }
 
         public void SetBewerking(Bewerking bew)
@@ -434,7 +433,7 @@ namespace Controls
             this.OnDoubleClick(EventArgs.Empty);
         }
 
-        private void xpersoonInfo_ImageLoad(object sender, HtmlRenderer.Entities.HtmlImageLoadEventArgs e)
+        private void xpersoonInfo_ImageLoad(object sender, HtmlImageLoadEventArgs e)
         {
             switch (e.Src?.ToLower())
             {

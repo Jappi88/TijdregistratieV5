@@ -1,4 +1,6 @@
-﻿namespace Forms.Excel
+﻿using TheArtOfDev.HtmlRenderer.WinForms;
+
+namespace Forms.Excel
 {
     partial class KleurRegelsForm
     {
@@ -39,7 +41,7 @@
             this.xTextKleur = new System.Windows.Forms.CheckBox();
             this.xcolorPanel = new System.Windows.Forms.Panel();
             this.xKiesKleur = new System.Windows.Forms.Button();
-            this.xRegelTextPanel = new HtmlRenderer.HtmlPanel();
+            this.xRegelTextPanel = new HtmlPanel();
             this.xRegelView = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
@@ -336,7 +338,7 @@
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button xKiesKleur;
-        private HtmlRenderer.HtmlPanel xRegelTextPanel;
+        private HtmlPanel xRegelTextPanel;
         private BrightIdeasSoftware.ObjectListView xRegelView;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;

@@ -19,6 +19,18 @@ namespace Forms
             set => xlistview.SetObjects(value);
         }
 
+        public bool AllowAddItem
+        {
+            get => xAddPanel.Visible;
+            set=> xAddPanel.Visible = value;
+        }
+
+        public bool AllowOpslaan
+        {
+            get => xOpslaan.Visible;
+            set => xOpslaan.Visible = value;
+        }
+
         private void xsluiten_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
@@ -70,6 +82,7 @@ namespace Forms
                     xlistview.AddObject(txt);
                     xlistview.SelectedObject = txt;
                     xlistview.SelectedItem?.EnsureVisible();
+                    OnItemAdded(txt);
                 }
             }
         }
@@ -80,8 +93,42 @@ namespace Forms
             if (values == null || values.Length == 0) return;
             var xkey = values.Length == 1 ? values[0] : $"{values.Length} selecties";
             if (XMessageBox.Show($"Weetje zeker dat je {xkey} wilt verwijderen?", "Verwijderen",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
                 xlistview.RemoveObjects(values);
+                OnItemsRemoved(values);
+            }
+        }
+
+        public void OnItemsChanged(object items, EventArgs e)
+        {
+            try
+            {
+                if (items is string[] xitems)
+                {
+                    if (this.InvokeRequired)
+                        this.Invoke(new MethodInvoker(() => ViewedData = xitems));
+                    else ViewedData = xitems;
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+        }
+
+        public event EventHandler ItemAdded;
+
+        protected virtual void OnItemAdded(string item)
+        {
+            ItemAdded?.Invoke(item, EventArgs.Empty);
+        }
+
+        public event EventHandler ItemRemoved;
+
+        protected virtual void OnItemsRemoved(string[] items)
+        {
+            ItemRemoved?.Invoke(items, EventArgs.Empty);
         }
     }
 }

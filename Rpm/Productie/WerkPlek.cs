@@ -63,22 +63,7 @@ namespace Rpm.Productie
         }
 
         public string Naam { get; set; }
-        private string _notitie;
-        
-        [ExcludeFromSerialization]
-        public string Notitie 
-        { 
-            get=> Note?.Notitie??_notitie;
-            set
-            {
-                _notitie = value;
-                if (Note == null && !string.IsNullOrEmpty(value))
-                    Note = new NotitieEntry(value, this);
-             
-            }
 
-        }
-       // [ExcludeFromSerialization]
         public NotitieEntry Note { get; set; }
 
         public DateTime LaatstAantalUpdate { get; set; } = DateTime.Now;

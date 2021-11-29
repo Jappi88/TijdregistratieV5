@@ -188,7 +188,7 @@ namespace Forms
 
                     var x2 = pers.Count == 1 ? "persoon" : "personen";
                     var xtijdover = Math.Round(pers.Sum(GetTijdOver));
-                    var xbwtijdover = Math.Round(bws.Sum(x => x.TijdOver()), 2);
+                    var xbwtijdover = Math.Round(bws.Sum(x => x.GetTijdOver()), 2);
                     xall =
                         $"<li>Totaal <b>{bws.Count}</b> {x1} " +
                         $"<b>({xbwtijdover})</b> uur.</li>";
@@ -213,7 +213,7 @@ namespace Forms
                     var x3 = xstarted.Count == 1 ? "klus" : "klusjes";
                     var x1 = bws.Count == 1 ? "productie" : "producties";
                     xall =
-                        $"<li>Totaal <b>{bws.Count}</b> {x1} <b>({Math.Round(bws.Sum(x => x.TijdOver()), 2)})</b> uur.</li>" +
+                        $"<li>Totaal <b>{bws.Count}</b> {x1} <b>({Math.Round(bws.Sum(x => x.GetTijdOver()), 2)})</b> uur.</li>" +
                         $"<li>Ingezet op <b>{xklusjes.Count}</b> {x2} " +
                         $"waarvan <b>{Math.Round(xklusjes.Sum(x => x.TijdGewerkt(pers.VrijeDagen.ToDictionary(), pers.WerkRooster).TotalHours), 2)}</b> uur gewerkt.</li>" +
                         $"<li>Bezig met <b>{xstarted.Count}</b> {x3} " +
@@ -281,7 +281,7 @@ namespace Forms
             var x3 = bws.Count == 1 ? "Bewerking" : "Bewerkingen";
             x2 = $"<b>{xselected} {bws.Count}</b> {x3}<br>" +
                  $"Totaal <b>{Math.Round(bws.Sum(x=> x.TijdGewerkt),2)} / {Math.Round(bws.Sum(x => x.DoorloopTijd),2)}</b> uur gewerkt " +
-                 $"waarvan nog <b>{Math.Round(bws.Sum(x=> x.TijdOver()),2)}</b> uur over aan productie";
+                 $"waarvan nog <b>{Math.Round(bws.Sum(x=> x.GetTijdOver()),2)}</b> uur over aan productie";
             xGeselecteerdeGebruikerLabel.Text = x2;
             bws = productieListControl1.GetBewerkingen(false, false);
             var x1 = bws.Count == 1 ? "Bewerking" : "Bewerkingen";
@@ -626,7 +626,6 @@ namespace Forms
                 return null;
             }
         }
-
 
         public bool PersoneelExists(string pers)
         {

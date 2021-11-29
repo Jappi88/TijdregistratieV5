@@ -16,9 +16,6 @@ namespace Rpm.Productie
     [DataContract]
     public class IProductieBase
     {
-        public IProductieBase()
-        {
-        }
         [Display(Name = "Root", Description = "BASIS formulier waarvan de informatie wordt gehaald")]
         public virtual ProductieFormulier Root { get; }
 
@@ -101,7 +98,7 @@ namespace Rpm.Productie
 
         [Display(Name = "DatumGereed", Description = "Datum waarvan de productie eventueel gereed is")]
         public virtual DateTime DatumGereed { get; set; }
-
+        
         [Display(Name = "VerwachtLeverDatum", Description = "Datum waarvan wordt verwacht dat de productie klaar is")]
         public virtual DateTime VerwachtLeverDatum { get; set; }
 
@@ -126,6 +123,33 @@ namespace Rpm.Productie
 
         [Display(Name = "TijdGewerkt", Description = "Tijd gewerkt aan deze productie")]
         public virtual double TijdGewerkt { get; set; }
+
+        [Display(Name = "TijdNodig", Description = "TijdNodig is berekent op basis van de aantal nog te maken en de actuele aantal per uur")]
+
+        public virtual double TijdNodig
+        {
+            get
+            {
+                if (this is Bewerking bew)
+                    return bew.GetTijdNodig();
+                if (this is ProductieFormulier form)
+                    return Math.Round(form.GetTijdNodig().TotalHours,2);
+                return DoorloopTijd;
+            }
+        }
+
+        [Display(Name = "TijdOver", Description = "Tijd dat nog over is op basis van de aantal nog te maken en de actuele aantal per uur, gedeeld door de aantal actieve medewerkers.")]
+        public virtual double TijdOver
+        {
+            get
+            {
+                if (this is Bewerking bew)
+                    return bew.GetTijdOver();
+                if (this is ProductieFormulier form)
+                    return Math.Round(form.GetTijdOver().TotalHours, 2);
+                return DoorloopTijd;
+            }
+        }
 
         [Display(Name = "LeverDatum", Description = "Datum waarvan de productie gereed moet zijn")]
         public virtual DateTime LeverDatum { get; set; } // de datum waarop de productie klaar moet zijn

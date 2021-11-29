@@ -177,6 +177,7 @@ namespace Rpm.Productie
             _syncTimer = new Timer();
             _syncTimer.Tick += _syncTimer_Tick;
             _overzichtSyncTimer = new Timer();
+            _overzichtSyncTimer.Interval = 60000;//1 min
             _overzichtSyncTimer.Tick += _overzichtSyncTimer_Tick;
             TaskQueues.OnRunComplete += _tasks_OnRunComplete;
             TaskQueues.RunInstanceComplete += _tasks_OnRunInstanceComplete;
@@ -252,10 +253,9 @@ namespace Rpm.Productie
 
                     SystemId = DefaultSettings.SystemID;
                     if (autologin)
-                        await AutoLogin(this);
-                    if (Opties == null || loadsettings)
-                        await LoadSettings
-                    (this, raiseManagerLoadingEvents);
+                        autologin = await AutoLogin(this);
+                    if (Opties == null && (loadsettings && !autologin))
+                        await LoadSettings(this, raiseManagerLoadingEvents);
 
                     if (loadsettings)
                     {
@@ -603,7 +603,10 @@ namespace Rpm.Productie
             DbUpdater?.Start();
             _syncTimer?.Start();
             if (options.CreateWeekOverzichten)
+            {
+                _overzichtSyncTimer.Interval = options.WeekOverzichtUpdateInterval;
                 _overzichtSyncTimer?.Start();
+            } 
             else _overzichtSyncTimer?.Stop();
             //if (!options.GebruikTaken)
             //    Taken?.StopBeheer();
@@ -1403,7 +1406,7 @@ namespace Rpm.Productie
 
         private bool _isLoadingFiles;
 
-        private async void LoadUnloadedFiles()
+        private void LoadUnloadedFiles()
         {
             try
             {
@@ -1416,7 +1419,7 @@ namespace Rpm.Productie
                         files.AddRange(Directory.GetFiles(s, "*.pdf").Where(t => !t.Contains("_old")).ToArray());
                     if (files.Count > 0)
                     {
-                        await AddProductie(files.ToArray(),false, true, false);
+                        AddProductie(files.ToArray(),false, true, false);
                     }
                 }
             }

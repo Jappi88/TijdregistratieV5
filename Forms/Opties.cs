@@ -34,7 +34,6 @@ namespace Forms
             InitializeComponent();
             // _stickyWindow = new StickyWindow(this);
             metroTabControl1.SelectedIndex = 0;
-            metroTabControl2.SelectedIndex = 0;
             ((OLVColumn) xoptielist.Columns[0]).GroupKeyGetter = GroupName;
             ((OLVColumn) xoptielist.Columns[0]).ImageGetter = ImageGetter;
             imageList1.Images.Add(Resources.industry_setting_114090);

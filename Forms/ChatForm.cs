@@ -9,11 +9,13 @@ using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using Forms;
+using MetroFramework.Drawing.Html;
 using ProductieManager.Rpm.Misc;
 using ProductieManager.Rpm.Various;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
+using TheArtOfDev.HtmlRenderer.Core.Entities;
 using Various;
 using Image = System.Drawing.Image;
 using TextAlign = NPOI.XSSF.UserModel.TextAlign;
@@ -524,7 +526,7 @@ namespace ProductieManager.Forms
             }
         }
 
-        private void xchatview_ImageLoad(object sender, HtmlRenderer.Entities.HtmlImageLoadEventArgs e)
+        private void xchatview_ImageLoad(object sender, HtmlImageLoadEventArgs e)
         {
             string[] values = e.Src.Split(';');
             if (values.Length == 0) return;
@@ -567,7 +569,7 @@ namespace ProductieManager.Forms
             }
         }
 
-        private async void xchatpanel_LinkClicked(object sender, HtmlRenderer.Entities.HtmlLinkClickedEventArgs e)
+        private async void xchatpanel_LinkClicked(object sender, HtmlLinkClickedEventArgs e)
         {
             if (Manager.Database == null || Manager.Database.IsDisposed) return;
             try

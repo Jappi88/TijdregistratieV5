@@ -533,6 +533,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap dialog_error_36230 {
+            get {
+                object obj = ResourceManager.GetObject("dialog-error_36230", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap diskette_save_saveas_1514 {
             get {
                 object obj = ResourceManager.GetObject("diskette_save_saveas_1514", resourceCulture);
@@ -705,6 +715,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap error {
             get {
                 object obj = ResourceManager.GetObject("error", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap error_notification_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("error-notification_32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1821,6 +1841,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap play_button_icon_icons_com_60615 {
             get {
                 object obj = ResourceManager.GetObject("play-button_icon-icons.com_60615", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap playcircle_start_arrow_6048 {
+            get {
+                object obj = ResourceManager.GetObject("playcircle_start_arrow_6048", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

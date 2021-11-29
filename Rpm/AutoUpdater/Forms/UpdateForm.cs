@@ -3,9 +3,11 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using MetroFramework.Drawing.Html;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Productie;
+using TheArtOfDev.HtmlRenderer.Core.Entities;
 
 namespace AutoUpdaterDotNET
 {
@@ -246,14 +248,14 @@ namespace AutoUpdaterDotNET
             }
         }
 
-        private void xchangelog_StylesheetLoad(object sender, HtmlRenderer.Entities.HtmlStylesheetLoadEventArgs e)
+        private void xchangelog_StylesheetLoad(object sender, HtmlStylesheetLoadEventArgs e)
         {
             var stylesheet = IProductieBase.GetStylesheet(e.Src);
             if (stylesheet != null)
                 e.SetStyleSheet = stylesheet;
         }
 
-        private void xchangelog_ImageLoad(object sender, HtmlRenderer.Entities.HtmlImageLoadEventArgs e)
+        private void xchangelog_ImageLoad(object sender, HtmlImageLoadEventArgs e)
         {
             var ximage = GetImage(e.Src);
             if (ximage != null)

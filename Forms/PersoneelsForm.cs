@@ -29,6 +29,7 @@ namespace Forms
         ((OLVColumn) xuserlist.Columns[0]).ImageGetter = ImageGet;
         ((OLVColumn) xuserlist.Columns[0]).GroupKeyGetter = GroupGet;
         xsearchbox.ShowClearButton = true;
+        Title = choose ? "Kies Personeel" : "Beheer Personeel";
         SetAfdelingFilter();
         if (Manager.Opties != null)
         {
@@ -36,6 +37,8 @@ namespace Forms
                 xuserlist.RestoreState(Manager.Opties.ViewDataPersoneelState);
             if (!string.IsNullOrEmpty(Manager.Opties?.PersoneelAfdelingFilter))
                 xafdelingfilter.SelectedItem = Manager.Opties.PersoneelAfdelingFilter;
+            else if(xafdelingfilter.Items.Count > 0)
+                xafdelingfilter.SelectedItem = 0;
         }
 
         imageList1.Images.Add(Resources.user_customer_person_13976);
@@ -103,6 +106,8 @@ namespace Forms
         }));
     }
 
+    public string Title { get; set; }
+
     private void UpdateStatus(int index = -1)
     {
         if (index == -1)
@@ -119,16 +124,16 @@ namespace Forms
         switch (index)
         {
             case 0:
-                Text = $"Personeel Beheer: {xuserlist.Items.Count} Externe {xm}";
+                Text = $"{Title}: {xuserlist.Items.Count} Externe {xm}";
                 break;
             case 1:
-                Text = $"Personeel Beheer: {xuserlist.Items.Count} Interne {xm}";
+                Text = $"{Title}: {xuserlist.Items.Count} Interne {xm}";
                 break;
             case 2:
-                Text = $"Personeel Beheer: {xuserlist.Items.Count} {xm} Zijn Bezig";
+                Text = $"{Title}: {xuserlist.Items.Count} {xm} Zijn Bezig";
                 break;
             case 3:
-                Text = $"Personeel Beheer: {xuserlist.Items.Count} {xm} Op Verlof";
+                Text = $"{Title}: {xuserlist.Items.Count} {xm} Op Verlof";
                 break;
             default:
                 if (xuserlist.Groups is {Count: > 0})
@@ -137,11 +142,11 @@ namespace Forms
                     foreach (var group in xuserlist.Groups.Cast<ListViewGroup>())
                         value += $"| {group.Items.Count} {group.Header.Split('[')[0]}";
                     value = value.TrimStart('|', ' ');
-                    Text = $"Personeel Beheer: {value}";
+                    Text = $"{Title}: {value}";
                 }
                 else
                 {
-                    Text = $"Personeel Beheer: {xuserlist.Items.Count} Personeel Leden";
+                    Text = $"{Title}: {xuserlist.Items.Count} Personeel Leden";
                 }
 
                 break;
@@ -553,6 +558,9 @@ namespace Forms
             ChooseUser();
         else if (xuserlist.SelectedObject is PersoneelModel model)
         {
+            if (Manager.LogedInGebruiker == null || Manager.LogedInGebruiker.AccesLevel < AccesType.ProductieBasis)
+                return;
+            
             var add = new AddPersoneel(model.PersoneelLid);
             if (add.ShowDialog() == DialogResult.OK)
             {

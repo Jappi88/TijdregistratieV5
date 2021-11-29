@@ -13,6 +13,7 @@ using BrightIdeasSoftware;
 using Forms;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
+using ProductieManager.Rpm.Connection;
 using ProductieManager.Rpm.Misc;
 using ProductieManager.Rpm.Various;
 using Rpm.Mailing;
@@ -72,11 +73,12 @@ namespace Controls
         private static Producties _producties;
         private static ProductieLijsten _productielijstdock;
         private static LogForm _logform;
-        private static RangeCalculatorForm _calcform = null;
+        private static RangeCalculatorForm _calcform;
         private static ChatForm _chatform;
         private static OpmerkingenForm _opmerkingform;
         private static ArtikelsForm _ArtikelsForm;
         private static PersoneelsForm _PersoneelForm;
+        private static ProductieOverzichtForm _ProductieOverzicht;
         private static WerkplaatsIndeling _WerkplaatsIndeling;
         public bool ShowUnreadMessage { get; set; }
 
@@ -146,6 +148,7 @@ namespace Controls
             Manager.FilterChanged += Manager_FilterChanged;
             ProductieChat.MessageRecieved += ProductieChat_MessageRecieved;
             ProductieChat.GebruikerUpdate += ProductieChat_GebruikerUpdate;
+            MultipleFileDb.CorruptedFilesChanged += MultipleFileDb_CorruptedFilesChanged;
 
             _manager.OnShutdown += _manager_OnShutdown;
             //xproductieListControl1.InitEvents();
@@ -159,6 +162,43 @@ namespace Controls
             werkPlekkenUI1.InitEvents();
             werkPlekkenUI1.OnRequestOpenWerk += WerkPlekkenUI1_OnRequestOpenWerk;
             werkPlekkenUI1.OnPlekkenChanged += WerkPlekkenUI1_OnPlekkenChanged;
+        }
+
+        private void MultipleFileDb_CorruptedFilesChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.InvokeRequired)
+                    this.Invoke(new MethodInvoker(UpdateCorruptedButtonImage));
+                else UpdateCorruptedButtonImage();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+        }
+
+        private void UpdateCorruptedButtonImage()
+        {
+            try
+            {
+                var xcorrupted = MultipleFileDb.CorruptedFilePaths;
+                if (xcorrupted.Count > 0)
+                {
+                    var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White,
+                        xcorrupted.Count.ToString(),
+                        new Font("Ariel", 16, FontStyle.Bold), Color.DarkRed);
+                    xcorruptedfilesbutton.Image = Resources.error_notification_32x32.CombineImage(ximg, 1.75);
+                }
+                else
+                {
+                    xcorruptedfilesbutton.Image = Resources.error_notification_32x32;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private void Opmerkingen_OnOpmerkingenChanged(object sender, EventArgs e)
@@ -212,6 +252,7 @@ namespace Controls
                 Manager.Opmerkingen.OnOpmerkingenChanged -= Opmerkingen_OnOpmerkingenChanged;
             ProductieChat.MessageRecieved -= ProductieChat_MessageRecieved;
             ProductieChat.GebruikerUpdate -= ProductieChat_GebruikerUpdate;
+            MultipleFileDb.CorruptedFilesChanged -= MultipleFileDb_CorruptedFilesChanged;
 
             //Manager.OnDbBeginUpdate -= Manager_OnDbBeginUpdate;
             //Manager.OnDbEndUpdate -= Manager_OnDbEndUpdate;
@@ -293,7 +334,7 @@ namespace Controls
                     try
                     {
                         var name = Manager.Opties == null ? "Default" : Manager.Opties.Username;
-                        Text = @$"RealTime Productie Manager [{name}]";
+                        Text = @$"ProductieManager [{name}]";
 
 
                         //if (Manager.Opties?._viewproddata != null)
@@ -321,6 +362,7 @@ namespace Controls
                         werkPlekkenUI1.LoadPlekken(true);
                         CheckForSpecialRooster(false);
                         recentGereedMeldingenUI1.LoadBewerkingen();
+                        this.Invalidate();
                         //Manager.Taken?.StartBeheer();
                         //if (Manager.IsLoaded)
                         //    CheckForSpecialRooster(true);
@@ -347,6 +389,7 @@ namespace Controls
                 {
                     if (IsDisposed || Disposing) return;
                     xloginb.Image = user != null ? Resources.Logout_37127__1_ : Resources.Login_37128__1_;
+                    xcorruptedfilesbutton.Visible = user is {AccesLevel: AccesType.Manager};
                     OnLoginChanged?.Invoke(user, instance);
                 }));
             }
@@ -1174,7 +1217,7 @@ namespace Controls
             //eerst kijken of het weekend is.
             var culture = new CultureInfo("nl-NL");
             var day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
-            if (xtime.DayOfWeek == DayOfWeek.Saturday || xtime.DayOfWeek == DayOfWeek.Sunday)
+            if (xtime.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
             {
                 var rooster = Manager.Opties?.SpecialeRoosters?.FirstOrDefault(x => x.Vanaf.Date == DateTime.Now.Date);
                 var xreturn = rooster != null;
@@ -1209,7 +1252,7 @@ namespace Controls
                         var bwselector = new BewerkingSelectorForm(bws);
                         bwselector.Title = "Selecteer Werkplekken waarvan de rooster aangepast moet worden";
                         if (bwselector.ShowDialog() == DialogResult.OK)
-                            await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, roosterform.WerkRooster);
+                            await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
                     }
                     await Manager.Opties.Save("Speciale roosters aangepast.");
                 }
@@ -1772,6 +1815,25 @@ namespace Controls
             db.ShowDialog();
         }
 
+        public static void ShowProductieOverzicht()
+        {
+            if (_ProductieOverzicht == null)
+            {
+                _ProductieOverzicht = new ProductieOverzichtForm();
+                _ProductieOverzicht.FormClosed += (x, y) =>
+                {
+                    _ProductieOverzicht?.Dispose();
+                    _ProductieOverzicht = null;
+                };
+            }
+
+            _ProductieOverzicht.Show();
+            if (_ProductieOverzicht.WindowState == FormWindowState.Minimized)
+                _ProductieOverzicht.WindowState = FormWindowState.Normal;
+            _ProductieOverzicht.BringToFront();
+            _ProductieOverzicht.Focus();
+        }
+
         public static void CheckForPreview(bool showall, bool onlyifnew)
         {
             try
@@ -1795,7 +1857,7 @@ namespace Controls
                     {
                         var urls = xprevs.Select(x => x.Value).ToArray();
                         xshowform = new UpdatePreviewForm(urls);
-                        xshowform.Title = $"Alle aanpassingen vanaf versie: {xprevs.LastOrDefault().Key?? xvers}";
+                        xshowform.Title = $"Alle Aanpassingen In Versie: {xprevs.LastOrDefault().Key?? xvers}";
                     }
 
                     xshowform.ShowDialog();
@@ -1982,8 +2044,7 @@ namespace Controls
 
         private void xproductieoverzichtb_Click(object sender, EventArgs e)
         {
-            var prodform = new ProductieOverzichtForm();
-            prodform.ShowDialog();
+            ShowProductieOverzicht();
         }
 
         private async void xsearchprodnr_Click(object sender, EventArgs e)
@@ -2073,6 +2134,50 @@ namespace Controls
                 XMessageBox.Show("HelpDesk is tijdelijk niet beschikbaar", "Niet Beschikbaar",
                     MessageBoxIcon.Exclamation);
             }
+        }
+
+        private void xcorruptedfilesbutton_Click(object sender, EventArgs e)
+        {
+            var xlist = MultipleFileDb.CorruptedFilePaths;
+            var xweergave = new LijstWeergaveForm();
+            xweergave.AllowAddItem = false;
+            xweergave.AllowOpslaan = false;
+            xweergave.ViewedData = xlist.ToArray();
+
+            MultipleFileDb.CorruptedFilesChanged += xweergave.OnItemsChanged;
+
+            xweergave.ItemRemoved += (x, y) =>
+            {
+
+                if (x is string[] items)
+                {
+                    int deleted = 0;
+                    foreach (var item in items)
+                    {
+                        var itemname = Path.GetFileNameWithoutExtension(item);
+                        var xdir = Path.GetDirectoryName(item);
+                        var xdirname = Path.GetFileName(xdir);
+                        var xdel = Manager.Database.RemoveFromCollection(xdirname, new string[] {itemname}).Result;
+                        if(xdel > 0)
+                            MultipleFileDb.CorruptedFilePaths.Remove(item);
+                        deleted += xdel;
+                    }
+
+                    if (deleted > 0)
+                    {
+                        MultipleFileDb.OnCorruptedFilesChanged();
+                    }
+                }
+            };
+            xweergave.ShowDialog();
+            MultipleFileDb.CorruptedFilesChanged -= xweergave.OnItemsChanged;
+            xweergave.Dispose();
+        }
+
+        private void xconnecttest_Click(object sender, EventArgs e)
+        {
+            var xtek = AutoDeskHelper.GetTekeningPdfAsync("009540").Result;
+            Console.WriteLine(xtek);
         }
     }
 }

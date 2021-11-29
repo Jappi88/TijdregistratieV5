@@ -100,10 +100,14 @@ namespace Rpm.Settings
             MaxBackupCount = 100;
             OfflineDabaseTypes = new List<DbType>();
             OfflineDbSyncInterval = 1000;
+            GebruikOfflineMetSync = true;
             OfflineDabaseTypes.Add(DbType.Producties);
             OfflineDabaseTypes.Add(DbType.GereedProducties);
             OfflineDabaseTypes.Add(DbType.Medewerkers);
             OfflineDabaseTypes.Add(DbType.Opmerkingen);
+            OfflineDabaseTypes.Add(DbType.Opties);
+            OfflineDabaseTypes.Add(DbType.Messages);
+            OfflineDabaseTypes.Add(DbType.Accounts);
             //admin
             EmailClients = new List<EmailClient>();
             VerzendAdres = new List<UitgaandAdres>();

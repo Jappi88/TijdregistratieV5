@@ -226,26 +226,35 @@ namespace Forms
 
         private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
         {
-            if (changedform?.ArtikelNr != null)
+            try
             {
-                var bws = changedform.Bewerkingen?.Where(x => x.IsAllowed()).ToList();
-                if (bws == null || bws.Count == 0) return;
-                if (_Values.ContainsKey(changedform.ArtikelNr.ToLower()))
+                if (changedform?.ArtikelNr != null)
                 {
-                    var xbws = _Values[changedform.ArtikelNr.ToLower()];
-                    foreach (var bw in bws)
+                    var bws = changedform.Bewerkingen?.Where(x => x.IsAllowed()).ToList();
+                    if (bws == null || bws.Count == 0) return;
+                    if (_Values.ContainsKey(changedform.ArtikelNr.ToLower()))
                     {
-                        var index = xbws.IndexOf(bw);
-                        if (index < 0)
-                            xbws.Add(bw);
-                        else xbws[index] = bw;
+                        var xbws = _Values[changedform.ArtikelNr.ToLower()];
+                        foreach (var bw in bws)
+                        {
+                            var index = xbws.IndexOf(bw);
+                            if (index < 0)
+                                xbws.Add(bw);
+                            else xbws[index] = bw;
+                        }
+                    }
+                    else
+                    {
+                        _Values.Add(changedform.ArtikelNr.ToLower(), bws);
+                        if (this.InvokeRequired)
+                            this.Invoke(new Action(UpdateTitle));
+                        else UpdateTitle();
                     }
                 }
-                else
-                {
-                    _Values.Add(changedform.ArtikelNr.ToLower(), bws);
-                    this.Invoke(new Action(UpdateTitle));
-                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 

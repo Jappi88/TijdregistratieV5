@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Navigation;
 using Microsoft.Win32.SafeHandles;
 using Rpm.Misc;
 using Rpm.Productie;
@@ -73,8 +74,7 @@ namespace Rpm.SqlLite
                 {
                     if (e.UserState is Personeel[])
                     {
-                        var acc = e.UserState as Personeel[];
-                        if (acc is {Length: > 0})
+                        if (e.UserState is Personeel[] {Length: > 0} acc)
                         {
                             LastPersoneelUpdate = DateTime.Now;
                             foreach (var pers in acc)
@@ -82,32 +82,30 @@ namespace Rpm.SqlLite
                                     Manager.PersoneelChanged(this, pers);
                         }
                     }
-                    else if (e.UserState is ProductieFormulier[])
+                    else if (e.UserState is ProductieFormulier[] state)
                     {
-                        var acc = e.UserState as ProductieFormulier[];
-                        if (acc is {Length: > 0})
+                        if (state is {Length: > 0})
                         {
                             LastProductieUpdate = DateTime.Now;
-                            foreach (var prod in acc)
+                            foreach (var prod in state)
                                 if (e.ProgressPercentage == 0)
                                     Manager.FormulierChanged(this, prod);
                                 //else Manager.FormulierDeleted(this, prod);
                             //  Manager.LoadProducties();
                         }
                     }
-                    else if (e.UserState is UserAccount[])
+                    else if (e.UserState is UserAccount[] acc)
                     {
-                        var acc = e.UserState as UserAccount[];
                         if (acc is {Length: > 0})
                         {
                             LastAccountUpdate = DateTime.Now;
                             foreach (var account in acc) Manager.AccountChanged(this, account);
                         }
                     }
-                    else if (e.UserState is UserSettings)
+                    else if (e.UserState is UserSettings settings)
                     {
                         LastSettingUpdate = DateTime.Now;
-                        Manager.UserSettingChanged(this, e.UserState as UserSettings);
+                        Manager.UserSettingChanged(this, settings);
                     }
                     else if (e.UserState is UserChange {Change: { }} change)
                     {
@@ -177,6 +175,7 @@ namespace Rpm.SqlLite
                         prod = await ProductieFormulieren.FindOne(productienr);
                     if (prod == null && GereedFormulieren != null)
                         prod = await GereedFormulieren.FindOne(productienr);
+                    prod?.UpdateForm(true, false, null, null, false, false, false);
                     return prod;
                 }
                 catch (Exception e)
@@ -1509,6 +1508,29 @@ namespace Rpm.SqlLite
 
         #region Database
 
+        public Task<int> RemoveFromCollection(string collection,string[] items)
+        {
+            switch (collection.ToLower())
+            {
+                case "sqldatabase":
+                    return ProductieFormulieren.Delete(items);
+                case "personeeldb":
+                    return PersoneelLijst.Delete(items);
+                case "gereeddb":
+                    return GereedFormulieren.Delete(items);
+                case "settingdb":
+                    return AllSettings.Delete(items);
+                case "accountsdb":
+                    return UserAccounts.Delete(items);
+                case "logdb":
+                    return Logger.Delete(items);
+                case "versiondb":
+                    return DbVersions.Delete(items);
+            }
+
+            return Task<int>.Factory.StartNew(() => 0);
+        }
+
         public Task LoadMultiFiles()
         {
             return Task.Run(() =>
@@ -2146,117 +2168,6 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task UpdateUserActivity(bool gestart)
-        {
-            return Task.Run(async () =>
-            {
-                try
-                {
-                    var users = await GetAllPersoneel();
-                    foreach (var user in users)
-                    {
-                        bool userchanged = false;
-                        if (user.PersoneelNaam.EndsWith(" "))
-                        {
-                            user.PersoneelNaam = user.PersoneelNaam.Trim();
-                            userchanged = true;
-                        }
-                        List<Klus> toremove = new List<Klus>();
-                        
-                        var klusjes = gestart
-                            ? user.Klusjes.Where(x => x.Status == ProductieState.Gestart).ToList()
-                            : user.Klusjes.Where(x=> x.IsActief).ToList(); //.Where(x => x.Status == ProductieState.Gestart).ToArray();
-                        
-                        if (klusjes.Count > 0)
-                        {
-
-                            foreach (var klus in klusjes)
-                            {
-                                var pair = klus.GetWerk();
-                                var prod = pair?.Formulier;
-                                var bew = pair?.Bewerking;
-                                if (prod == null || bew == null)
-                                {
-                                    user.Klusjes.Remove(klus);
-                                    userchanged = true;
-                                    continue;
-                                }
-
-                                var saved = false;
-                                var plek =
-                                    bew.WerkPlekken.FirstOrDefault(x =>
-                                        string.Equals(x.Naam, klus.WerkPlek,
-                                            StringComparison.CurrentCultureIgnoreCase));
-                                if (plek == null)
-                                {
-                                    toremove.Add(klus);
-                                    continue;
-                                }
-
-                                var xolduser = plek.Personen.FirstOrDefault(x =>
-                                    string.Equals(x.PersoneelNaam, user.PersoneelNaam,
-                                        StringComparison.CurrentCultureIgnoreCase));
-                                var msg = "";
-                                if (bew.State != klus.Status)
-                                {
-                                    switch (bew.State)
-                                    {
-                                        case ProductieState.Gestopt:
-                                            klus.Stop();
-                                            saved = true;
-                                            break;
-                                        case ProductieState.Gestart:
-                                            if (klus.IsActief)
-                                            {
-                                                klus.Start();
-                                                saved = true;
-                                            }
-                                            break;
-                                        case ProductieState.Gereed:
-                                            klus.MeldGereed();
-                                            saved = true;
-                                            break;
-                                        case ProductieState.Verwijderd:
-                                            klus.Stop();
-                                            klus.Status = ProductieState.Verwijderd;
-                                            saved = true;
-                                            break;
-                                    }
-
-                                    msg =
-                                        $"{klus.Path} van {user.PersoneelNaam}  is verandert naar {Enum.GetName(typeof(ProductieState), klus.Status)}.";
-                                   
-                                }
-
-                                if (klus.Tijden.IsActief && klus.Status != ProductieState.Gestart)
-                                {
-                                    klus.Stop();
-                                    saved = true;
-                                }
-
-                                if (saved)
-                                {
-                                    userchanged = true;
-                                    if (xolduser != null && xolduser.ReplaceKlus(klus))
-                                        await bew.UpdateBewerking(null, $"{klus.Naam} klus geupdate");
-                                }
-                            }
-                        }
-                        if (userchanged || toremove.Count > 0)
-                        {
-                            foreach (var k in toremove)
-                                user.Klusjes.Remove(k);
-                            await UpSert(user, $"{user.PersoneelNaam} update");
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            });
-        }
-        
         //public Task<bool> NeedDbCheck()
         //{
         //    return Task.Run(async () => (await GetLastDbChanges()).Count > 0);

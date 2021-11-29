@@ -1,4 +1,6 @@
 ﻿
+using TheArtOfDev.HtmlRenderer.WinForms;
+
 namespace ProductieManager.Forms
 {
     partial class NewFilterEntry
@@ -54,7 +56,7 @@ namespace ProductieManager.Forms
             this.xVergelijkVariableCheck = new System.Windows.Forms.RadioButton();
             this.xVergelijkWaardeCheck = new System.Windows.Forms.RadioButton();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.xcriteriahtml = new HtmlRenderer.HtmlPanel();
+            this.xcriteriahtml = new HtmlPanel();
             this.xvoorwaardenb = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -527,7 +529,7 @@ namespace ProductieManager.Forms
         private MetroFramework.Controls.MetroCheckBox xcheckvalue;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
-        private HtmlRenderer.HtmlPanel xcriteriahtml;
+        private HtmlPanel xcriteriahtml;
         private System.Windows.Forms.Button xvoorwaardenb;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Panel xdatepanel;

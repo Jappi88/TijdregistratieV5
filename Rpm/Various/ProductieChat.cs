@@ -227,11 +227,14 @@ namespace ProductieManager.Rpm.Various
                 foreach (var file in files)
                 {
                     var ent = file.DeSerialize<UserChat>();
+                    if (Chat == null) break;
                     if (ent == null || string.Equals(Chat.UserName, ent.UserName,
                         StringComparison.CurrentCultureIgnoreCase)) continue;
                     Gebruikers.Add(ent);
                 }
 
+                if (Chat == null)
+                    Gebruikers.Clear();
                 return true;
             }
             catch (Exception e)

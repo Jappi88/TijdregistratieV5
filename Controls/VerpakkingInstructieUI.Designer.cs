@@ -1,4 +1,6 @@
 ﻿
+using TheArtOfDev.HtmlRenderer.WinForms;
+
 namespace Controls
 {
     partial class VerpakkingInstructieUI
@@ -49,7 +51,7 @@ namespace Controls
             this.xpalletsoort = new MetroFramework.Controls.MetroTextBox();
             this.xverpakkingsoort = new MetroFramework.Controls.MetroTextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.htmlPanel1 = new HtmlRenderer.HtmlPanel();
+            this.htmlPanel1 = new HtmlPanel();
             this.xeditpanel.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xaantelpercolli)).BeginInit();
@@ -403,8 +405,8 @@ namespace Controls
             this.htmlPanel1.Size = new System.Drawing.Size(427, 297);
             this.htmlPanel1.TabIndex = 11;
             this.htmlPanel1.Text = "Verpakking Instructie";
-            this.htmlPanel1.StylesheetLoad += new System.EventHandler<HtmlRenderer.Entities.HtmlStylesheetLoadEventArgs>(this.htmlPanel1_StylesheetLoad);
-            this.htmlPanel1.ImageLoad += new System.EventHandler<HtmlRenderer.Entities.HtmlImageLoadEventArgs>(this.htmlPanel1_ImageLoad);
+            this.htmlPanel1.StylesheetLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlStylesheetLoadEventArgs>(this.htmlPanel1_StylesheetLoad);
+            this.htmlPanel1.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.htmlPanel1_ImageLoad);
             // 
             // VerpakkingInstructieUI
             // 
@@ -451,6 +453,6 @@ namespace Controls
         private MetroFramework.Controls.MetroTextBox xbulklocatie;
         private MetroFramework.Controls.MetroTextBox xstandaardlocatie;
         private MetroFramework.Controls.MetroTextBox xpalletsoort;
-        private HtmlRenderer.HtmlPanel htmlPanel1;
+        private HtmlPanel htmlPanel1;
     }
 }

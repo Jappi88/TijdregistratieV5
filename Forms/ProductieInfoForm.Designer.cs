@@ -1,4 +1,6 @@
 ﻿
+using TheArtOfDev.HtmlRenderer.WinForms;
+
 namespace Forms
 {
     partial class ProductieInfoForm
@@ -34,7 +36,7 @@ namespace Forms
             this.xexport = new System.Windows.Forms.Button();
             this.xstatsb = new System.Windows.Forms.Button();
             this.xsluiten = new System.Windows.Forms.Button();
-            this.xinfopanel = new HtmlRenderer.HtmlPanel();
+            this.xinfopanel = new HtmlPanel();
             this.productieInfoUI1 = new Controls.ProductieInfoUI();
             this.panel1.SuspendLayout();
             this.xinfopanel.SuspendLayout();
@@ -162,7 +164,7 @@ namespace Forms
 
         #endregion
         private System.Windows.Forms.Panel panel1;
-        private HtmlRenderer.HtmlPanel xinfopanel;
+        private HtmlPanel xinfopanel;
         private System.Windows.Forms.Button xsluiten;
         private System.Windows.Forms.Button xstatsb;
         private System.Windows.Forms.Button xexport;

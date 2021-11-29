@@ -30,6 +30,9 @@ namespace Rpm.SqlLite
         public event FileSystemEventHandler SecondaryFileDeleted;
         public event ProgressChangedHandler ProgressChanged;
         public static List<string>CorruptedFilePaths {  get; private set; }
+
+        public static event EventHandler CorruptedFilesChanged;
+
         public MultipleFileDb(string path, bool watchdb)
         {
             CorruptedFilePaths = new List<string>();
@@ -501,7 +504,10 @@ namespace Rpm.SqlLite
                            {
                                int index =0;
                                if ((index = CorruptedFilePaths.IndexOf(filepath.ToLower())) > -1)
+                               {
                                    CorruptedFilePaths.RemoveAt(index);
+                                   OnCorruptedFilesChanged();
+                               }
                            }
                        }
 
@@ -516,7 +522,10 @@ namespace Rpm.SqlLite
                            lock (CorruptedFilePaths)
                            {
                                if (CorruptedFilePaths.IndexOf(filepath.ToLower()) < 0)
+                               {
                                    CorruptedFilePaths.Add(filepath.ToLower());
+                                   OnCorruptedFilesChanged();
+                               }
                            }
                            break;
                        }
@@ -771,6 +780,11 @@ namespace Rpm.SqlLite
         protected virtual void OnProgressChanged(ProgressArg arg)
         {
             ProgressChanged?.Invoke(this, arg);
+        }
+
+        public static void OnCorruptedFilesChanged()
+        {
+            CorruptedFilesChanged?.Invoke(CorruptedFilePaths, EventArgs.Empty);
         }
     }
 }

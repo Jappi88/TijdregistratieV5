@@ -50,6 +50,7 @@ namespace Forms
             this.productieListControl1.EnableSync = false;
             this.productieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.productieListControl1.IsBewerkingView = true;
+            this.productieListControl1.ListName = null;
             this.productieListControl1.Location = new System.Drawing.Point(12, 39);
             this.productieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.productieListControl1.Name = "productieListControl1";
@@ -76,7 +77,7 @@ namespace Forms
             this.xlijstname.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xlijstname.Location = new System.Drawing.Point(0, 0);
             this.xlijstname.Name = "xlijstname";
-            this.xlijstname.Size = new System.Drawing.Size(844, 32);
+            this.xlijstname.Size = new System.Drawing.Size(929, 32);
             this.xlijstname.TabIndex = 1;
             this.xlijstname.Text = "Productie Lijst";
             this.xlijstname.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -84,15 +85,15 @@ namespace Forms
             // xsluiten
             // 
             this.xsluiten.Dock = System.Windows.Forms.DockStyle.Right;
+            this.xsluiten.FlatAppearance.BorderSize = 0;
             this.xsluiten.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xsluiten.Location = new System.Drawing.Point(844, 0);
+            this.xsluiten.Location = new System.Drawing.Point(929, 0);
             this.xsluiten.Name = "xsluiten";
-            this.xsluiten.Size = new System.Drawing.Size(125, 32);
+            this.xsluiten.Size = new System.Drawing.Size(40, 32);
             this.xsluiten.TabIndex = 0;
-            this.xsluiten.Text = "&Sluiten";
             this.xsluiten.UseVisualStyleBackColor = true;
             this.xsluiten.Click += new System.EventHandler(this.xsluiten_Click);
             // 

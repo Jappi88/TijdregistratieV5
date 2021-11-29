@@ -1338,9 +1338,12 @@ namespace ProductieManager.Rpm.ExcelHelper
                     return 0;
                 var created = 0;
                 var send = 0;
-                if (Manager.Opties == null || !Directory.Exists(Manager.Opties.WeekOverzichtPath)) return 0;
+                if (Manager.Opties == null) return 0;
+               
                 try
                 {
+                    if (!Directory.Exists(Manager.Opties.WeekOverzichtPath))
+                        Directory.CreateDirectory(Manager.Opties.WeekOverzichtPath);
                     var opties = Manager.Opties;
                     if (!_issendingweek)
                     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -114,7 +115,9 @@ namespace Forms
                         Manager.Database.RaiseEventWhenChanged = false;
                         Manager.Database.RaiseEventWhenDeleted = false;
                         DoProgress("Updating Medewerkers...", count, 100);
-                        await Manager.Database.UpdateUserActivity(false);
+                        await UpdateUserActivity(false);
+                        if (!IsBussy || IsDisposed || Disposing)
+                            return;
                         DoProgress("Producties laden...", count, 100);
                         var files = await Manager.GetAllProductiePaths(true,true);
                         var forms = await Manager.Database.GetAllProducties(true, false);
@@ -146,6 +149,127 @@ namespace Forms
                 }
                 catch
                 {
+                }
+            });
+        }
+
+        public Task UpdateUserActivity(bool gestart)
+        {
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    var users = await Manager.Database.GetAllPersoneel();
+                    int done = 0;
+                    for (int i = 0; i < users.Count; i++)
+                    {
+                        if (!IsBussy || IsDisposed || Disposing)
+                            break;
+                        var user = users[i];
+                        DoProgress($"Updating {user.PersoneelNaam}...", i, users.Count);
+                        bool userchanged = false;
+                        if (user.PersoneelNaam.EndsWith(" "))
+                        {
+                            user.PersoneelNaam = user.PersoneelNaam.Trim();
+                            userchanged = true;
+                        }
+
+                        List<Klus> toremove = new List<Klus>();
+
+                        var klusjes = gestart
+                            ? user.Klusjes.Where(x => x.Status == ProductieState.Gestart).ToList()
+                            : user.Klusjes.ToList(); //.Where(x=> x.IsActief).ToList(); //.Where(x => x.Status == ProductieState.Gestart).ToArray();
+
+                        if (klusjes.Count > 0)
+                        {
+
+                            foreach (var klus in klusjes)
+                            {
+                                var pair = klus.GetWerk();
+                                var prod = pair?.Formulier;
+                                var bew = pair?.Bewerking;
+                                if (prod == null || bew == null)
+                                {
+                                    user.Klusjes.Remove(klus);
+                                    userchanged = true;
+                                    continue;
+                                }
+
+                                var saved = false;
+                                var plek =
+                                    bew.WerkPlekken.FirstOrDefault(x =>
+                                        string.Equals(x.Naam, klus.WerkPlek,
+                                            StringComparison.CurrentCultureIgnoreCase));
+                                if (plek == null)
+                                {
+                                    toremove.Add(klus);
+                                    continue;
+                                }
+
+                                var xolduser = plek.Personen.FirstOrDefault(x =>
+                                    string.Equals(x.PersoneelNaam, user.PersoneelNaam,
+                                        StringComparison.CurrentCultureIgnoreCase));
+                                var msg = "";
+                                if (bew.State != klus.Status)
+                                {
+                                    switch (bew.State)
+                                    {
+                                        case ProductieState.Gestopt:
+                                            klus.Stop();
+                                            saved = true;
+                                            break;
+                                        case ProductieState.Gestart:
+                                            if (klus.IsActief)
+                                            {
+                                                klus.Start();
+                                                saved = true;
+                                            }
+
+                                            break;
+                                        case ProductieState.Gereed:
+                                            klus.MeldGereed();
+                                            saved = true;
+                                            break;
+                                        case ProductieState.Verwijderd:
+                                            klus.Stop();
+                                            klus.Status = ProductieState.Verwijderd;
+                                            saved = true;
+                                            break;
+                                    }
+
+                                    msg =
+                                        $"{klus.Path} van {user.PersoneelNaam}  is verandert naar {Enum.GetName(typeof(ProductieState), klus.Status)}.";
+
+                                }
+
+                                if (klus.Tijden.IsActief && klus.Status != ProductieState.Gestart)
+                                {
+                                    klus.Stop();
+                                    saved = true;
+                                }
+
+                                if (saved)
+                                {
+                                    userchanged = true;
+                                    if (xolduser != null && xolduser.ReplaceKlus(klus))
+                                        await bew.UpdateBewerking(null, $"{klus.Naam} klus geupdate");
+                                }
+                            }
+                        }
+
+                        if (userchanged || toremove.Count > 0)
+                        {
+                            foreach (var k in toremove)
+                                user.Klusjes.Remove(k);
+                            await Manager.Database.UpSert(user, $"{user.PersoneelNaam} update");
+                        }
+
+                        done++;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
                 }
             });
         }

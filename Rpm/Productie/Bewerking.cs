@@ -64,11 +64,11 @@ namespace Rpm.Productie
             }
         }
 
-        [ExcludeFromSerialization]
-        public Dictionary<DateTime, DateTime> GewerkteTijden { get; set; } = new();
+        //[ExcludeFromSerialization]
+        //public Dictionary<DateTime, DateTime> GewerkteTijden { get; set; } = new();
 
-        [ExcludeFromSerialization]
-        public UrenLijst Tijden { get; set; }
+        //[ExcludeFromSerialization]
+        //public UrenLijst Tijden { get; set; }
 
         public override bool TeLaat => DateTime.Now > LeverDatum && State != ProductieState.Gereed;
 
@@ -172,6 +172,8 @@ namespace Rpm.Productie
             }
         }
 
+        //public override DateTime VerwachtLeverDatum => VerwachtDatumGereed();
+
         private double _TijdGewerkt;
         public override double TijdGewerkt
         {
@@ -226,6 +228,19 @@ namespace Rpm.Productie
         public override List<WerkPlek> GetWerkPlekken()
         {
             return WerkPlekken;
+        }
+
+        public WerkPlek GetWerkPlek(string name, bool createnew)
+        {
+            var wp = WerkPlekken.FirstOrDefault(x =>
+                string.Equals(name, x.Naam, StringComparison.CurrentCultureIgnoreCase));
+            if (wp == null && createnew)
+            {
+                wp = new WerkPlek(name, this);
+                WerkPlekken.Add(wp);
+            }
+
+            return wp;
         }
 
         public bool GetBemand()
@@ -570,7 +585,7 @@ namespace Rpm.Productie
             {
                 if (State == ProductieState.Gestopt)
                     return false;
-                if (State == ProductieState.Gereed || State == ProductieState.Verwijderd)
+                if (State is ProductieState.Gereed or ProductieState.Verwijderd)
                     return false;
                 TijdGestopt = DateTime.Now;
                 if (Parent != null && Parent.State != ProductieState.Gestopt)
@@ -765,51 +780,59 @@ namespace Rpm.Productie
             string notitie,
             bool update, bool sendmail, bool showmessage)
         {
-            await StopProductie(false);
-           // await MeldDeelsGereed(paraaf, aantal, notitie,null,DateTime.Now, false);
-            LaatstAantalUpdate = DateTime.Now;
-            DatumGereed = DateTime.Now;
-            GereedNote = new NotitieEntry(notitie, this) {Type = NotitieType.BewerkingGereed, Naam = paraaf};
-            Paraaf = paraaf;
-            State = ProductieState.Gereed;
-            AantalGemaakt = aantal;
-            var personen = GetPersoneel();
-            foreach (var per in personen)
-                if (per.IngezetAanKlus(this, false, out var klusjes))
-                {
-                    var count = 0;
-                    var xper = await Manager.Database.GetPersoneel(per.PersoneelNaam);
-                    foreach (var klus in klusjes)
-                        if (klus.MeldGereed())
-                            if ( xper != null && xper.ReplaceKlus(klus))
-                                count++;
+            try
+            {
+                await StopProductie(false);
+                // await MeldDeelsGereed(paraaf, aantal, notitie,null,DateTime.Now, false);
+                LaatstAantalUpdate = DateTime.Now;
+                DatumGereed = DateTime.Now;
+                GereedNote = new NotitieEntry(notitie, this) {Type = NotitieType.BewerkingGereed, Naam = paraaf};
+                Paraaf = paraaf;
+                State = ProductieState.Gereed;
+                AantalGemaakt = aantal;
+                var personen = GetPersoneel();
+                foreach (var per in personen)
+                    if (per.IngezetAanKlus(this, false, out var klusjes))
+                    {
+                        var count = 0;
+                        var xper = await Manager.Database.GetPersoneel(per.PersoneelNaam);
+                        foreach (var klus in klusjes)
+                            if (klus.MeldGereed())
+                                if ( xper != null && xper.ReplaceKlus(klus))
+                                    count++;
 
-                    if (count > 0 && xper != null) await Manager.Database.UpSert(xper, $"[{xper.PersoneelNaam}] {Path} klus gereed gemeld");
-                }
+                        if (count > 0 && xper != null) await Manager.Database.UpSert(xper, $"[{xper.PersoneelNaam}] {Path} klus gereed gemeld");
+                    }
 
-            var xa = aantal == 1 ? "stuk" : "stuks";
+                var xa = aantal == 1 ? "stuk" : "stuks";
 
-            var change =
-                $"[{Path}] {paraaf} heeft is zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u) op {WerkplekkenName}.";
+                var change =
+                    $"[{Path}] {paraaf} heeft is zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u) op {WerkplekkenName}.";
            
-            await UpdateBewerking(null, change, update,showmessage);
-            if (sendmail)
-                RemoteProductie.RespondByEmail(this, change);
+                await UpdateBewerking(null, change, update,showmessage);
+                if (sendmail)
+                    RemoteProductie.RespondByEmail(this, change);
 
-            var xcount = 0;
-            var parent = Parent;
-            if (parent.Bewerkingen != null)
-                xcount = parent.Bewerkingen.Count(t => t.State != ProductieState.Gereed);
-            if (xcount == 0)
-                await parent.MeldGereed(aantal, paraaf, notitie, false,false);
-            //else
-            //{
-            //    if (sendmail)
-            //        RemoteProductie.RespondByEmail(this, change);
-            //    await UpdateBewerking(null, change, update);
-            //}
+                var xcount = 0;
+                var parent = Parent;
+                if (parent.Bewerkingen != null)
+                    xcount = parent.Bewerkingen.Count(t => t.State != ProductieState.Gereed && !t.Equals(this));
+                if (xcount == 0)
+                    await parent.MeldGereed(aantal, paraaf, notitie, false,false);
+                //else
+                //{
+                //    if (sendmail)
+                //        RemoteProductie.RespondByEmail(this, change);
+                //    await UpdateBewerking(null, change, update);
+                //}
 
-            return true;
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
         }
 
         public Task<bool> MeldDeelsGereed(DeelsGereedMelding gereedmelding, bool update)
@@ -906,13 +929,22 @@ namespace Rpm.Productie
         public DateTime VerwachtDatumGereed()
         {
             if (State == ProductieState.Gereed) return DatumGereed;
-            var tijd = TijdOver();
+            var tijd = GetTijdOver();
             //tijd /= GetPersoneel().AantalPersTijdMultiplier();
             var rooster = Manager.Opties?.GetWerkRooster();
-            if (TotaalGemaakt >= Aantal || tijd == 0 || double.IsNaN(tijd) || double.IsInfinity(tijd))
-                return Werktijd.EerstVolgendeWerkdag(DateTime.Now,  ref rooster,rooster,Tijden?.SpecialeRoosters);
-            return Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(tijd),
-                rooster,Tijden?.SpecialeRoosters);
+            if (TotaalGemaakt >= Aantal || tijd is 0 or Double.NaN || double.IsInfinity(tijd))
+                return Werktijd.EerstVolgendeWerkdag(DateTime.Now, ref rooster, rooster,
+                    Manager.Opties?.SpecialeRoosters);
+            var xdate = Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(tijd), rooster, null);
+            foreach (var wp in WerkPlekken)
+            {
+                var x = Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(tijd),
+                    wp.Tijden.WerkRooster, wp.Tijden?.SpecialeRoosters);
+                if (x < xdate)
+                    xdate = x;
+            }
+
+            return xdate;
         }
 
         public Bewerking[] AlleBewerkingen(ProductieFormulier[] forms)
@@ -1084,7 +1116,7 @@ namespace Rpm.Productie
             return Math.Round(WerkPlekken.Sum(x => x.Tijden.TijdGewerkt(null, vanaf,tot,storingen)), 2);
         }
 
-        public double TijdNodig()
+        public double GetTijdNodig()
         {
             try
             {
@@ -1098,7 +1130,6 @@ namespace Rpm.Productie
                 if (peruur == 0)
                     peruur = Aantal - TotaalGemaakt;
                 var tijd = (Aantal - TotaalGemaakt) / peruur;
-                var xactieve = AantalActievePersonen;
                 return Math.Round(tijd, 2);
             }
             catch
@@ -1107,9 +1138,9 @@ namespace Rpm.Productie
             }
         }
 
-        public double TijdOver()
+        public double GetTijdOver()
         {
-            var tijd = TijdNodig();
+            var tijd = GetTijdNodig();
             if (tijd > 0 && IsBemand)
             {
                 var xpers = AantalActievePersonen;
@@ -1123,11 +1154,12 @@ namespace Rpm.Productie
 
         public int AantalPersonenNodig(ref DateTime startop, bool onlyifsmaller)
         {
-            var nodig = TijdNodig();
+            var nodig = GetTijdNodig();
             if (nodig == 0)
                 return 0;
+            Rooster rs = Manager.Opties?.GetWerkRooster();
             var tijdover = Werktijd
-                .TijdGewerkt(DateTime.Now, LeverDatum, Tijden?.WerkRooster,Tijden?.SpecialeRoosters);
+                .TijdGewerkt(DateTime.Now, LeverDatum, rs,Manager.Opties?.SpecialeRoosters);
             var uurover = tijdover.TotalHours;
             int pers = 1;
 
@@ -1147,9 +1179,9 @@ namespace Rpm.Productie
             //voeg start marge toe van 1 uur
             uurpp += 1;
             //startop = DateTime.Now;
-            Rooster rs = Tijden?.WerkRooster??Manager.Opties?.GetWerkRooster();
+          
             // if (uurpp > 0)
-            var xt = Werktijd.DatumVoorTijd(LeverDatum, TimeSpan.FromHours(uurpp), rs, Tijden?.SpecialeRoosters);
+            var xt = Werktijd.DatumVoorTijd(LeverDatum, TimeSpan.FromHours(uurpp), rs, Manager.Opties?.SpecialeRoosters);
             if (onlyifsmaller && xt < startop)
                 startop = xt;
             else if (!onlyifsmaller)

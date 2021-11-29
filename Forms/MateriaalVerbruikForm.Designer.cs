@@ -1,4 +1,6 @@
 ﻿
+using TheArtOfDev.HtmlRenderer.WinForms;
+
 namespace Forms
 {
     partial class MateriaalVerbruikForm
@@ -49,7 +51,7 @@ namespace Forms
             this.panel3 = new System.Windows.Forms.Panel();
             this.xsearchbox = new MetroFramework.Controls.MetroTextBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.xstatuslabel = new HtmlRenderer.HtmlPanel();
+            this.xstatuslabel = new HtmlPanel();
             this.xsluiten = new System.Windows.Forms.Button();
             this.metroToolTip1 = new MetroFramework.Components.MetroToolTip();
             this.groupBox1.SuspendLayout();
@@ -396,6 +398,6 @@ namespace Forms
         private BrightIdeasSoftware.OLVColumn olvColumn5;
         private BrightIdeasSoftware.OLVColumn olvColumn6;
         private BrightIdeasSoftware.OLVColumn olvColumn7;
-        private HtmlRenderer.HtmlPanel xstatuslabel;
+        private HtmlPanel xstatuslabel;
     }
 }

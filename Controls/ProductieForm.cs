@@ -4,8 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Forms;
-using HtmlRenderer;
-using Org.BouncyCastle.Asn1.BC;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;

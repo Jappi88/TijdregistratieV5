@@ -101,8 +101,7 @@ namespace Rpm.Productie
                     {
                         var xent = Uren[i];
                         if (xent.ExtraTijd != null) continue;
-                        var xr = xent.WerkRooster;
-                        if (xr == null && xent.InUse)
+                        if (xent.InUse)
                         {
                             xent.WerkRooster = currooster;
                             break;

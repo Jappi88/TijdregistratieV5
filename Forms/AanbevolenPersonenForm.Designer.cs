@@ -1,4 +1,6 @@
 ﻿
+using TheArtOfDev.HtmlRenderer.WinForms;
+
 namespace ProductieManager.Forms
 {
     partial class AanbevolenPersonenForm
@@ -32,9 +34,9 @@ namespace ProductieManager.Forms
             this.panel1 = new System.Windows.Forms.Panel();
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
             this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
-            this.xwerkplekkenHtmlPanel = new HtmlRenderer.HtmlPanel();
+            this.xwerkplekkenHtmlPanel = new HtmlPanel();
             this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
-            this.xpersHtmlPanel = new HtmlRenderer.HtmlPanel();
+            this.xpersHtmlPanel = new HtmlPanel();
             this.xloadinglabel = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.metroTabControl1.SuspendLayout();
@@ -161,11 +163,11 @@ namespace ProductieManager.Forms
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private HtmlRenderer.HtmlPanel xwerkplekkenHtmlPanel;
+        private HtmlPanel xwerkplekkenHtmlPanel;
         private MetroFramework.Controls.MetroTabControl metroTabControl1;
         private MetroFramework.Controls.MetroTabPage metroTabPage1;
         private MetroFramework.Controls.MetroTabPage metroTabPage2;
-        private HtmlRenderer.HtmlPanel xpersHtmlPanel;
+        private HtmlPanel xpersHtmlPanel;
         private System.Windows.Forms.Label xloadinglabel;
     }
 }
