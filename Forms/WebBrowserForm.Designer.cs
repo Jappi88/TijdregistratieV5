@@ -39,6 +39,7 @@
             this.xBrowser.Name = "xBrowser";
             this.xBrowser.Size = new System.Drawing.Size(800, 450);
             this.xBrowser.TabIndex = 0;
+            this.xBrowser.Navigated += new System.Windows.Forms.WebBrowserNavigatedEventHandler(this.xBrowser_Navigated);
             // 
             // WebBrowserForm
             // 
@@ -48,7 +49,7 @@
             this.Controls.Add(this.xBrowser);
             this.Name = "WebBrowserForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "WebBrowserForm";
+            this.Text = "Werk Tekening";
             this.ResumeLayout(false);
 
         }

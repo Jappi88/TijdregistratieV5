@@ -17,6 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
+using ProductieManager.Rpm.Connection;
 using static Forms.RangeCalculatorForm;
 using Comparer = Rpm.Various.Comparer;
 using Timer = System.Timers.Timer;
@@ -2303,6 +2304,21 @@ namespace Controls
             }
         }
 
+        private void ShowSelectedTekening()
+        {
+            if (xProductieLijst1.SelectedObject is IProductieBase prod)
+            {
+                var xart = prod.ArtikelNr;
+                var xtek = AutoDeskHelper.GetTekeningPdfAsync(xart);
+                var wb = new WebBrowserForm();
+                wb.FileToOpen = $"{xart}.pdf";
+                wb.FileDownloadUrl = AutoDeskHelper.DownloadUrl;
+                wb.Navigate(xtek);
+                // wb.Navigate("C:\\Users\\Gebruiker\\Dropbox\\ProductieManager\\Autodesk Vault.html");
+                wb.ShowDialog();
+            }
+        }
+
         public List<Bewerking> GetSelectedBewerkingen()
         {
             var xreturn = new List<Bewerking>();
@@ -2523,6 +2539,11 @@ namespace Controls
         {
             if (ProductieLijst.SelectedObject is ProductieFormulier form) form.OpenProductiePdf();
             else if (ProductieLijst.SelectedObject is Bewerking bew) bew.Parent?.OpenProductiePdf();
+        }
+
+        private void xtoonTekening_Click(object sender, EventArgs e)
+        {
+            ShowSelectedTekening();
         }
 
         #endregion MenuButton Events

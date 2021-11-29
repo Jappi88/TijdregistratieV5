@@ -125,6 +125,9 @@
     <Reference Include="CircularProgressBar">
       <HintPath>..\Libraries\CircularProgressBar.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.11.38.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>packages\HtmlAgilityPack.1.11.38\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlRenderer, Version=1.4.14.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Desktop\HTML-Renderer-master\Source\Demo\WinForms\bin\Release\HtmlRenderer.dll</HintPath>
@@ -160,9 +163,6 @@
       <HintPath>..\Libraries\MetroFramework.Fonts.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="NPOI">
       <HintPath>..\..\..\Desktop\ProductieManager\NPOI.dll</HintPath>
     </Reference>
@@ -1490,6 +1490,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\libreoffice_draw_icon_181050.png" />
     <None Include="Resources\error-notification_32x32.png" />
     <None Include="Resources\dialog-error_36230.png" />
     <None Include="Resources\ios-8-Help-icon_43821.png" />

@@ -1288,6 +1288,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap libreoffice_draw_icon_181050 {
+            get {
+                object obj = ResourceManager.GetObject("libreoffice_draw_icon_181050", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap lightning_weather_storm_2781 {
             get {
                 object obj = ResourceManager.GetObject("lightning_weather_storm_2781", resourceCulture);

@@ -33,6 +33,7 @@ namespace Controls
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieView));
             Various.MenuButton menuButton1 = new Various.MenuButton();
             Various.MenuButton menuButton2 = new Various.MenuButton();
             Various.MenuButton menuButton3 = new Various.MenuButton();
@@ -46,7 +47,6 @@ namespace Controls
             Various.MenuButton menuButton11 = new Various.MenuButton();
             Various.MenuButton menuButton12 = new Various.MenuButton();
             Various.MenuButton menuButton13 = new Various.MenuButton();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieView));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.xspeciaalroosterbutton = new System.Windows.Forms.Button();
@@ -82,16 +82,15 @@ namespace Controls
             this.button4 = new System.Windows.Forms.Button();
             this.metroTabControl = new MetroFramework.Controls.MetroTabControl();
             this.tabPage2 = new MetroFramework.Controls.MetroTabPage();
-            this.xbewerkingListControl = new Controls.ProductieListControl();
             this.tabPage3 = new MetroFramework.Controls.MetroTabPage();
-            this.werkPlekkenUI1 = new Controls.WerkPlekkenUI();
             this.tabPage4 = new MetroFramework.Controls.MetroTabPage();
-            this.recentGereedMeldingenUI1 = new Controls.RecentGereedMeldingenUI();
             this.xspeciaalroosterlabel = new System.Windows.Forms.Panel();
             this.xtabimages = new System.Windows.Forms.ImageList(this.components);
+            this.xbewerkingListControl = new Controls.ProductieListControl();
+            this.werkPlekkenUI1 = new Controls.WerkPlekkenUI();
+            this.recentGereedMeldingenUI1 = new Controls.RecentGereedMeldingenUI();
             this.takenManager1 = new Controls.TakenManager();
             this.mainMenu1 = new Controls.MainMenu();
-            this.xconnecttest = new System.Windows.Forms.ToolStripButton();
             this.panel6.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -177,8 +176,7 @@ namespace Controls
             this.xsettingsb,
             this.xupdateb,
             this.xopmerkingentoolstripbutton,
-            this.xcorruptedfilesbutton,
-            this.xconnecttest});
+            this.xcorruptedfilesbutton});
             this.toolStrip2.Location = new System.Drawing.Point(5, 0);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Size = new System.Drawing.Size(1026, 39);
@@ -532,6 +530,56 @@ namespace Controls
             this.tabPage2.VerticalScrollbarHighlightOnWheel = false;
             this.tabPage2.VerticalScrollbarSize = 10;
             // 
+            // tabPage3
+            // 
+            this.tabPage3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tabPage3.Controls.Add(this.werkPlekkenUI1);
+            this.tabPage3.HorizontalScrollbarBarColor = true;
+            this.tabPage3.HorizontalScrollbarHighlightOnWheel = false;
+            this.tabPage3.HorizontalScrollbarSize = 10;
+            this.tabPage3.Location = new System.Drawing.Point(4, 38);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(1081, 491);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Werk Plaatsen";
+            this.tabPage3.VerticalScrollbarBarColor = true;
+            this.tabPage3.VerticalScrollbarHighlightOnWheel = false;
+            this.tabPage3.VerticalScrollbarSize = 10;
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.recentGereedMeldingenUI1);
+            this.tabPage4.HorizontalScrollbarBarColor = true;
+            this.tabPage4.HorizontalScrollbarHighlightOnWheel = false;
+            this.tabPage4.HorizontalScrollbarSize = 10;
+            this.tabPage4.Location = new System.Drawing.Point(4, 38);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(1081, 491);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Recente Gereedmeldingen";
+            this.tabPage4.VerticalScrollbarBarColor = true;
+            this.tabPage4.VerticalScrollbarHighlightOnWheel = false;
+            this.tabPage4.VerticalScrollbarSize = 10;
+            // 
+            // xspeciaalroosterlabel
+            // 
+            this.xspeciaalroosterlabel.Controls.Add(this.xspeciaalroosterbutton);
+            this.xspeciaalroosterlabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.xspeciaalroosterlabel.Location = new System.Drawing.Point(0, 43);
+            this.xspeciaalroosterlabel.Name = "xspeciaalroosterlabel";
+            this.xspeciaalroosterlabel.Size = new System.Drawing.Size(1167, 54);
+            this.xspeciaalroosterlabel.TabIndex = 29;
+            this.xspeciaalroosterlabel.Visible = false;
+            // 
+            // xtabimages
+            // 
+            this.xtabimages.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("xtabimages.ImageStream")));
+            this.xtabimages.TransparentColor = System.Drawing.Color.Transparent;
+            this.xtabimages.Images.SetKeyName(0, "page_document_16748_128_128.png");
+            this.xtabimages.Images.SetKeyName(1, "operation.png");
+            this.xtabimages.Images.SetKeyName(2, "iconfinder-technologymachineelectronic32_32.png");
+            this.xtabimages.Images.SetKeyName(3, "ic_done_all_128_28243.png");
+            // 
             // xbewerkingListControl
             // 
             this.xbewerkingListControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -554,22 +602,6 @@ namespace Controls
             this.xbewerkingListControl.TabIndex = 2;
             this.xbewerkingListControl.ValidHandler = null;
             // 
-            // tabPage3
-            // 
-            this.tabPage3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.tabPage3.Controls.Add(this.werkPlekkenUI1);
-            this.tabPage3.HorizontalScrollbarBarColor = true;
-            this.tabPage3.HorizontalScrollbarHighlightOnWheel = false;
-            this.tabPage3.HorizontalScrollbarSize = 10;
-            this.tabPage3.Location = new System.Drawing.Point(4, 38);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1081, 491);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Werk Plaatsen";
-            this.tabPage3.VerticalScrollbarBarColor = true;
-            this.tabPage3.VerticalScrollbarHighlightOnWheel = false;
-            this.tabPage3.VerticalScrollbarSize = 10;
-            // 
             // werkPlekkenUI1
             // 
             this.werkPlekkenUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -584,21 +616,6 @@ namespace Controls
             this.werkPlekkenUI1.TabIndex = 0;
             this.werkPlekkenUI1.WerkPlekClicked += new System.EventHandler(this.werkPlekkenUI1_WerkPlekClicked);
             // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.recentGereedMeldingenUI1);
-            this.tabPage4.HorizontalScrollbarBarColor = true;
-            this.tabPage4.HorizontalScrollbarHighlightOnWheel = false;
-            this.tabPage4.HorizontalScrollbarSize = 10;
-            this.tabPage4.Location = new System.Drawing.Point(4, 38);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(1081, 491);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Recente Gereedmeldingen";
-            this.tabPage4.VerticalScrollbarBarColor = true;
-            this.tabPage4.VerticalScrollbarHighlightOnWheel = false;
-            this.tabPage4.VerticalScrollbarSize = 10;
-            // 
             // recentGereedMeldingenUI1
             // 
             this.recentGereedMeldingenUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -611,25 +628,6 @@ namespace Controls
             this.recentGereedMeldingenUI1.Name = "recentGereedMeldingenUI1";
             this.recentGereedMeldingenUI1.Size = new System.Drawing.Size(1076, 483);
             this.recentGereedMeldingenUI1.TabIndex = 2;
-            // 
-            // xspeciaalroosterlabel
-            // 
-            this.xspeciaalroosterlabel.Controls.Add(this.xspeciaalroosterbutton);
-            this.xspeciaalroosterlabel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.xspeciaalroosterlabel.Location = new System.Drawing.Point(0, 43);
-            this.xspeciaalroosterlabel.Name = "xspeciaalroosterlabel";
-            this.xspeciaalroosterlabel.Size = new System.Drawing.Size(1167, 54);
-            this.xspeciaalroosterlabel.TabIndex = 29;
-            this.xspeciaalroosterlabel.Visible = false;
-            // 
-            // xtabimages
-            // 
-            this.xtabimages.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("xtabimages.ImageStream")));
-            this.xtabimages.TransparentColor = System.Drawing.Color.Transparent;
-            this.xtabimages.Images.SetKeyName(0, "page_document_16748_128_128.png");
-            this.xtabimages.Images.SetKeyName(1, "operation.png");
-            this.xtabimages.Images.SetKeyName(2, "iconfinder-technologymachineelectronic32_32.png");
-            this.xtabimages.Images.SetKeyName(3, "ic_done_all_128_28243.png");
             // 
             // takenManager1
             // 
@@ -815,16 +813,6 @@ namespace Controls
             this.mainMenu1.TabIndex = 27;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
             // 
-            // xconnecttest
-            // 
-            this.xconnecttest.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xconnecttest.Image = ((System.Drawing.Image)(resources.GetObject("xconnecttest.Image")));
-            this.xconnecttest.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xconnecttest.Name = "xconnecttest";
-            this.xconnecttest.Size = new System.Drawing.Size(23, 36);
-            this.xconnecttest.Text = "toolStripButton1";
-            this.xconnecttest.Click += new System.EventHandler(this.xconnecttest_Click);
-            // 
             // ProductieView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -898,6 +886,5 @@ namespace Controls
         private ToolStripButton xShowPreview;
         private ToolStripButton xHelpButton;
         private ToolStripButton xcorruptedfilesbutton;
-        private ToolStripButton xconnecttest;
     }
 }
