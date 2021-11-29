@@ -228,6 +228,7 @@ namespace Controls
                 xproductieInfob.Enabled = enable1;
                 xexportexcel.Enabled = enable3;
                 xaanbevolenpersb.Enabled = enable1;
+                xtoonTekening.Enabled = enable1;
                 //set context menu
                 xopenProductieToolStripMenuItem.Enabled = enable3 && acces1 && verwijderd2;
                 xtoolstripstart.Enabled = acces1 && isgestopt;
@@ -249,6 +250,7 @@ namespace Controls
                 zoekToolStripMenuItem.Enabled = enable3;
                 verpakkingsInstructieToolStripMenuItem.Enabled = enable1;
                 kopiërenToolStripMenuItem.Enabled = !_selectedSubitem.IsDefault() && _selectedSubitem.Value != null;
+                werkTekeningToolStripMenuItem.Enabled = enable1;
                 //resetToolStripMenuItem.Visible = Manager.Opties?.Filters?.Any(x =>
                 //    x.IsTempFilter && x.ListNames.Any(s =>
                 //        string.Equals(s, ListName, StringComparison.CurrentCultureIgnoreCase))) ?? false;

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WebBrowserForm));
             this.xBrowser = new System.Windows.Forms.WebBrowser();
             this.SuspendLayout();
             // 
@@ -37,7 +38,7 @@
             this.xBrowser.Location = new System.Drawing.Point(0, 0);
             this.xBrowser.MinimumSize = new System.Drawing.Size(20, 20);
             this.xBrowser.Name = "xBrowser";
-            this.xBrowser.Size = new System.Drawing.Size(800, 450);
+            this.xBrowser.Size = new System.Drawing.Size(808, 523);
             this.xBrowser.TabIndex = 0;
             this.xBrowser.Navigated += new System.Windows.Forms.WebBrowserNavigatedEventHandler(this.xBrowser_Navigated);
             // 
@@ -45,8 +46,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(808, 523);
             this.Controls.Add(this.xBrowser);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "WebBrowserForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Werk Tekening";

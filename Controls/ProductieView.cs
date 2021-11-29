@@ -2173,17 +2173,5 @@ namespace Controls
             MultipleFileDb.CorruptedFilesChanged -= xweergave.OnItemsChanged;
             xweergave.Dispose();
         }
-
-        private void xconnecttest_Click(object sender, EventArgs e)
-        {
-            var xart = "009540";
-            var xtek = AutoDeskHelper.GetTekeningPdfAsync(xart);
-            var wb = new WebBrowserForm();
-            wb.FileToOpen = $"{xart}.pdf";
-            wb.FileDownloadUrl = AutoDeskHelper.DownloadUrl;
-            wb.Navigate(xtek);
-            // wb.Navigate("C:\\Users\\Gebruiker\\Dropbox\\ProductieManager\\Autodesk Vault.html");
-            wb.ShowDialog();
-        }
     }
 }
