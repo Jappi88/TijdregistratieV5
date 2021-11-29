@@ -2177,7 +2177,9 @@ namespace Controls
         private void xconnecttest_Click(object sender, EventArgs e)
         {
             var xtek = AutoDeskHelper.GetTekeningPdfAsync("009540").Result;
-            Console.WriteLine(xtek);
+            var wb = new WebBrowserForm();
+            wb.Browser.Navigate(xtek);
+            wb.ShowDialog();
         }
     }
 }

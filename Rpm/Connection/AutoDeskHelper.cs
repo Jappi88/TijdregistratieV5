@@ -18,6 +18,7 @@ namespace ProductieManager.Rpm.Connection
              try
              {
                  var url = string.Format(DeskUrl, artnr);
+                 return url;
                  using var client = new HttpClient();
                  client.BaseAddress = new Uri(url);
                  client.DefaultRequestHeaders.Accept.Clear();

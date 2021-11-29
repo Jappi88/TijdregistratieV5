@@ -785,6 +785,12 @@
     <Compile Include="Forms\VrijeTijdForm.Designer.cs">
       <DependentUpon>VrijeTijdForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\WebBrowserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WebBrowserForm.Designer.cs">
+      <DependentUpon>WebBrowserForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\WerkplaatsIndeling.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1297,6 +1303,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\VrijeTijdForm.resx">
       <DependentUpon>VrijeTijdForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WebBrowserForm.resx">
+      <DependentUpon>WebBrowserForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WerkplaatsIndeling.resx">
       <DependentUpon>WerkplaatsIndeling.cs</DependentUpon>
