@@ -943,6 +943,9 @@ namespace Controls
                         case "xquickproductie":
                             DoQuickProductie();
                             break;
+                        case "xsearchtekening":
+                            ZoekWerkTekening();
+                            break;
                         case "xwerkplaatsindeling":
                             ShowWerkplaatsIndelingWindow();
                             break;
@@ -1779,6 +1782,33 @@ namespace Controls
             ind.ShowDialog();
         }
 
+        public static void ZoekWerkTekening()
+        {
+            try
+            {
+                var tb = new TextFieldEditor();
+                tb.FieldImage = Resources.libreoffice_draw_icon_128x128;
+                tb.MultiLine = false;
+                tb.Title = "Zoek WerkTekening";
+                if (tb.ShowDialog() == DialogResult.OK)
+                {
+                    var xart = tb.SelectedText;
+                    var xtek = AutoDeskHelper.GetTekeningPdfAsync(xart);
+                    //Process.Start(xtek); 
+                    var wb = new WebBrowserForm();
+                    wb.FilesToOpen = new string[] { $"{xart}_fbr.pdf" };
+                    wb.FileDownloadUrl = AutoDeskHelper.DownloadUrl;
+                    wb.Navigate(xtek);
+                    // wb.Navigate("C:\\Users\\Gebruiker\\Dropbox\\ProductieManager\\Autodesk Vault.html");
+                    wb.ShowDialog();
+                }
+            }
+            catch (Exception e)
+            {
+                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+            }
+        }
+
         public static void ShowProductieSettings(ProductieFormulier form)
         {
             if (form == null)
@@ -2085,6 +2115,12 @@ namespace Controls
             {
                 xsearchprodnr_Click(null, EventArgs.Empty);
                 return true; // handled
+            }
+
+            if (e.Control && e.KeyCode == Keys.T)
+            {
+                mainMenu1.PressButton("xSearchTekening");
+                return true;
             }
 
             return base.ProcessCmdKey(ref msg, keyData);

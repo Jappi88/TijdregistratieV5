@@ -12,6 +12,7 @@ using Rpm.Settings;
 using Rpm.Various;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -2312,8 +2313,9 @@ namespace Controls
             {
                 var xart = prod.ArtikelNr;
                 var xtek = AutoDeskHelper.GetTekeningPdfAsync(xart);
+                //Process.Start(xtek); 
                 var wb = new WebBrowserForm();
-                wb.FileToOpen = $"{xart}.pdf";
+                wb.FilesToOpen = new string[] { $"{xart}_fbr.pdf" };
                 wb.FileDownloadUrl = AutoDeskHelper.DownloadUrl;
                 wb.Navigate(xtek);
                 // wb.Navigate("C:\\Users\\Gebruiker\\Dropbox\\ProductieManager\\Autodesk Vault.html");
