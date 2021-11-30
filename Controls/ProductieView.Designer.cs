@@ -47,7 +47,6 @@ namespace Controls
             Various.MenuButton menuButton11 = new Various.MenuButton();
             Various.MenuButton menuButton12 = new Various.MenuButton();
             Various.MenuButton menuButton13 = new Various.MenuButton();
-            Various.MenuButton menuButton14 = new Various.MenuButton();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.xspeciaalroosterbutton = new System.Windows.Forms.Button();
@@ -695,7 +694,7 @@ namespace Controls
             menuButton4.Index = 3;
             menuButton4.Name = "xSearchTekening";
             menuButton4.Text = "Zoek WerkTekening";
-            menuButton4.Tooltip = "Zoek een werktekening o.b.v een ArtikelNr";
+            menuButton4.Tooltip = "Zoek een werktekening o.b.v een artikelnr (Ctrl+T)";
             menuButton5.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
             menuButton5.CombineImage = null;
             menuButton5.CombineScale = 1.5D;
@@ -762,50 +761,39 @@ namespace Controls
             menuButton10.Name = "xstats";
             menuButton10.Text = "Toon Statistieken";
             menuButton10.Tooltip = "Toon statistieken van de afgelopen periode";
-            menuButton11.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton11.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
             menuButton11.CombineImage = null;
-            menuButton11.CombineScale = 1.25D;
+            menuButton11.CombineScale = 1.5D;
             menuButton11.ContextMenu = null;
-            menuButton11.Enabled = false;
+            menuButton11.Enabled = true;
             menuButton11.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton11.Image")));
             menuButton11.ImageSize = new System.Drawing.Size(32, 32);
             menuButton11.Index = 10;
-            menuButton11.Name = "xbekijkproductiepdf";
-            menuButton11.Text = "Bekijk Productieformulier";
-            menuButton11.Tooltip = "Open productieformulier pdf";
+            menuButton11.Name = "xroostermenubutton";
+            menuButton11.Text = "WerkRooster";
+            menuButton11.Tooltip = "Kies Werkrooster";
             menuButton12.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
             menuButton12.CombineImage = null;
             menuButton12.CombineScale = 1.5D;
             menuButton12.ContextMenu = null;
-            menuButton12.Enabled = true;
+            menuButton12.Enabled = false;
             menuButton12.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton12.Image")));
             menuButton12.ImageSize = new System.Drawing.Size(32, 32);
             menuButton12.Index = 11;
-            menuButton12.Name = "xroostermenubutton";
-            menuButton12.Text = "WerkRooster";
-            menuButton12.Tooltip = "Kies Werkrooster";
+            menuButton12.Name = "xspecialeroosterbutton";
+            menuButton12.Text = "Speciale Roosters";
+            menuButton12.Tooltip = "Beheer speciale roosters";
             menuButton13.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton13.CombineImage = null;
+            menuButton13.CombineImage = global::ProductieManager.Properties.Resources.play_button_icon_icons_com_60615;
             menuButton13.CombineScale = 1.5D;
             menuButton13.ContextMenu = null;
-            menuButton13.Enabled = false;
+            menuButton13.Enabled = true;
             menuButton13.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton13.Image")));
             menuButton13.ImageSize = new System.Drawing.Size(32, 32);
             menuButton13.Index = 12;
-            menuButton13.Name = "xspecialeroosterbutton";
-            menuButton13.Text = "Speciale Roosters";
-            menuButton13.Tooltip = "Beheer speciale roosters";
-            menuButton14.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton14.CombineImage = global::ProductieManager.Properties.Resources.play_button_icon_icons_com_60615;
-            menuButton14.CombineScale = 1.5D;
-            menuButton14.ContextMenu = null;
-            menuButton14.Enabled = true;
-            menuButton14.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton14.Image")));
-            menuButton14.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton14.Index = 13;
-            menuButton14.Name = "xopenproducties";
-            menuButton14.Text = "Gestart Producties";
-            menuButton14.Tooltip = "Open alle gestarte producties";
+            menuButton13.Name = "xopenproducties";
+            menuButton13.Text = "Gestart Producties";
+            menuButton13.Tooltip = "Open alle gestarte producties";
             this.mainMenu1.MenuButtons = new Various.MenuButton[] {
         menuButton1,
         menuButton2,
@@ -819,8 +807,7 @@ namespace Controls
         menuButton10,
         menuButton11,
         menuButton12,
-        menuButton13,
-        menuButton14};
+        menuButton13};
             this.mainMenu1.Name = "mainMenu1";
             this.mainMenu1.Size = new System.Drawing.Size(40, 533);
             this.mainMenu1.TabIndex = 27;

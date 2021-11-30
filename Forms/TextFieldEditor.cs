@@ -60,7 +60,8 @@ namespace Forms
             if (xtextfield.TextLength > 0)
             {
                 xtextfield.SelectAll();
-                            }
+            }
+
             xtextfield.Select();
             xtextfield.Focus();
         }
@@ -68,7 +69,7 @@ namespace Forms
         private void xtextfield_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.KeyCode == Keys.Enter && !MultiLine)
-                DialogResult = DialogResult.OK;
+                xok_Click(this, EventArgs.Empty);
         }
     }
 }

@@ -98,7 +98,7 @@ namespace ProductieManager.Rpm.Productie
         public void SyncProducties()
         {
             if (Manager.DefaultSettings is not {GebruikOfflineMetSync: true}) return;
-
+            if (FolderSynchronization is {Syncing: true}) return;
             if (Manager.DefaultSettings?.MainDB == null || Manager.DefaultSettings.TempMainDB == null) return;
             try
             {
@@ -203,24 +203,10 @@ namespace ProductieManager.Rpm.Productie
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                FolderSynchronization?.Stop();
             }
         }
-
-        private Task SyncDirectories(string remotepath, string localpath)
-        {
-            return Task.Factory.StartNew(() =>
-            {
-                using var roboCopyProcess = new Process();
-                roboCopyProcess.StartInfo.FileName = "robocopy.exe";
-                roboCopyProcess.StartInfo.Arguments = remotepath + " " + localpath + " /MIR /mon:1 /mot:0";
-                roboCopyProcess.StartInfo.UseShellExecute = false;
-                roboCopyProcess.StartInfo.CreateNoWindow = false;
-                roboCopyProcess.Start();
-                roboCopyProcess.WaitForExit();
-                Console.WriteLine(@"Done!");
-            });
-        }
-
+        
         private async Task xSyncDirectories(string remotepath, string localpath)
         {
             var remotedb = await Manager.GetAllProductiePaths(true, false);

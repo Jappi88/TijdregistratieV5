@@ -35,9 +35,11 @@
             // xBrowser
             // 
             this.xBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xBrowser.IsWebBrowserContextMenuEnabled = false;
             this.xBrowser.Location = new System.Drawing.Point(0, 0);
             this.xBrowser.MinimumSize = new System.Drawing.Size(20, 20);
             this.xBrowser.Name = "xBrowser";
+            this.xBrowser.ScriptErrorsSuppressed = true;
             this.xBrowser.Size = new System.Drawing.Size(808, 523);
             this.xBrowser.TabIndex = 0;
             this.xBrowser.Navigated += new System.Windows.Forms.WebBrowserNavigatedEventHandler(this.xBrowser_Navigated);
@@ -48,10 +50,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(808, 523);
             this.Controls.Add(this.xBrowser);
+            this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "WebBrowserForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Werk Tekening";
+            this.Text = "Fabrikage Tekening";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WebBrowserForm_FormClosing);
+            this.Shown += new System.EventHandler(this.WebBrowserForm_Shown);
             this.ResumeLayout(false);
 
         }

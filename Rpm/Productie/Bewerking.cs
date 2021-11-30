@@ -519,6 +519,7 @@ namespace Rpm.Productie
                         }
                     }
 
+                    plek.UpdateWerkRooster(null, true, true, false, false, false, false, true);
                     if (plek.IsActief())
                     {
                         plek.Tijden.SetStart();
@@ -527,7 +528,7 @@ namespace Rpm.Productie
 
                     plek.LaatstAantalUpdate = DateTime.Now;
                     plek.UpdateTijdGestart(); 
-                    plek.UpdateWerkRooster(null,true,true, false, false,false, false, true);
+                   
                 }
                 //if (newtime || Tijden.Count == 0)
 

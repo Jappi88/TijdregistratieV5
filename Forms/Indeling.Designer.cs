@@ -38,6 +38,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.xwerkplekken = new BrightIdeasSoftware.ObjectListView();
             this.xnaamcol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.xactief = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xrooster = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xgemaaktcol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xtijdgewerktcol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -189,6 +190,7 @@
             // xwerkplekken
             // 
             this.xwerkplekken.AllColumns.Add(this.xnaamcol);
+            this.xwerkplekken.AllColumns.Add(this.xactief);
             this.xwerkplekken.AllColumns.Add(this.xrooster);
             this.xwerkplekken.AllColumns.Add(this.xgemaaktcol);
             this.xwerkplekken.AllColumns.Add(this.xtijdgewerktcol);
@@ -199,6 +201,7 @@
             this.xwerkplekken.CellEditUseWholeCell = false;
             this.xwerkplekken.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.xnaamcol,
+            this.xactief,
             this.xrooster,
             this.xgemaaktcol,
             this.xtijdgewerktcol});
@@ -225,6 +228,7 @@
             this.xwerkplekken.ModelCanDrop += new System.EventHandler<BrightIdeasSoftware.ModelDropEventArgs>(this.xwerkplekken_ModelCanDrop);
             this.xwerkplekken.ModelDropped += new System.EventHandler<BrightIdeasSoftware.ModelDropEventArgs>(this.xwerkplekken_ModelDropped);
             this.xwerkplekken.SelectedIndexChanged += new System.EventHandler(this.xwerkplekken_SelectedIndexChanged);
+            this.xwerkplekken.DoubleClick += new System.EventHandler(this.xwerkplekken_DoubleClick);
             // 
             // xnaamcol
             // 
@@ -234,6 +238,12 @@
             this.xnaamcol.Text = "Naam";
             this.xnaamcol.ToolTipText = "Werkplek Naam";
             this.xnaamcol.Width = 117;
+            // 
+            // xactief
+            // 
+            this.xactief.Text = "Actief";
+            this.xactief.ToolTipText = "Of werkplek actief is";
+            this.xactief.Width = 80;
             // 
             // xrooster
             // 
@@ -259,9 +269,9 @@
             // 
             // xwerkplekimages
             // 
-            this.xwerkplekimages.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("xwerkplekimages.ImageStream")));
+            this.xwerkplekimages.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.xwerkplekimages.ImageSize = new System.Drawing.Size(32, 32);
             this.xwerkplekimages.TransparentColor = System.Drawing.Color.Transparent;
-            this.xwerkplekimages.Images.SetKeyName(0, "iconfinder-technologymachineelectronic32_32.png");
             // 
             // xwerkplektijden
             // 
@@ -874,5 +884,6 @@
         private System.Windows.Forms.Button xplekroosterb;
         private System.Windows.Forms.Button xwpnotitie;
         private System.Windows.Forms.Button xwerktijdnaarwerkplek;
+        private BrightIdeasSoftware.OLVColumn xactief;
     }
 }

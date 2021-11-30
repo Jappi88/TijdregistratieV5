@@ -78,6 +78,8 @@ namespace FolderSync
         /// </summary>
         public string Status;
 
+        public bool Syncing => IsRunning;
+
         /// <summary>
         /// De aantal synchronisatie taken die nog openstaan
         /// </summary>

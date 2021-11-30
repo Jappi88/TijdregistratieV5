@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using AutoUpdaterDotNET;
 using BrightIdeasSoftware;
 using Forms;
+using MetroFramework;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Connection;
@@ -46,12 +47,12 @@ namespace Controls
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DoPdfEnabled();
+            //DoPdfEnabled();
         }
 
         private void werkPlekkenUI1_WerkPlekClicked(object sender, EventArgs e)
         {
-            DoPdfEnabled();
+           // DoPdfEnabled();
         }
 
         #region Variables
@@ -122,10 +123,9 @@ namespace Controls
                 // _manager.StartMonitor();
                 FormLoaded();
             }
-#pragma warning disable CS0168 // Variable is declared but never used
             catch (Exception ex)
-#pragma warning restore CS0168 // Variable is declared but never used
             {
+                Console.WriteLine(ex);
             }
         }
 
@@ -221,7 +221,7 @@ namespace Controls
 
         private void XproductieListControl1_SelectedItemChanged(object sender, EventArgs e)
         {
-            DoPdfEnabled();
+            //DoPdfEnabled();
         }
 
         private void XproductieListControl1_ItemCountChanged(object sender, EventArgs e)
@@ -402,25 +402,28 @@ namespace Controls
         private void _manager_OnManagerLoaded()
         {
             if (IsDisposed || Disposing) return;
-            try
+            Task.Factory.StartNew(new Action(() =>
             {
-                BeginInvoke(new Action(() =>
+                try
                 {
-                    //CheckForSyncDatabase();
-                    //CheckForUpdateDatabase();
-                    CheckForSpecialRooster(true);
-                    LoadStartedProducties();
-                    LoadProductieLogs();
-                    RunProductieRefresh();
-                    CheckForPreview(false, true);
-                    //UpdateAllLists();
-                    _specialRoosterWatcher?.Start();
-                }));
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+                    this.BeginInvoke(new Action(() =>
+                    {
+                        //CheckForSyncDatabase();
+                        //CheckForUpdateDatabase();
+                        CheckForSpecialRooster(true);
+                        LoadStartedProducties();
+                        LoadProductieLogs();
+                        //RunProductieRefresh();
+                        CheckForPreview(false, true);
+                        //UpdateAllLists();
+                        _specialRoosterWatcher?.Start();
+                    }));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }));
         }
 
         private void Manager_OnFormulierActie(object[] values, MainAktie type)
@@ -1383,120 +1386,128 @@ namespace Controls
 
         public void UpdateUnreadMessages(UserChat user)
         {
-            BeginInvoke(new Action(() =>
+            if (this.InvokeRequired)
+                BeginInvoke(new Action(xUpdateUnreadMessages));
+            else xUpdateUnreadMessages();
+        }
+
+        private void xUpdateUnreadMessages()
+        {
+            try
             {
-                try
+                if (ProductieChat.Chat == null) return;
+                var unread = ProductieChat.Chat.GetAllUnreadMessages();
+                if (unread.Count > 0)
                 {
-                    if (ProductieChat.Chat == null) return;
-                    var unread = ProductieChat.Chat.GetAllUnreadMessages();
-                    if (unread.Count > 0)
-                    {
-                        var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White,
-                            unread.Count.ToString(),
-                            new Font("Ariel", 16, FontStyle.Bold), Color.DarkRed);
-                        xchatformbutton.Image = Resources.conversation_chat_32x321.CombineImage(ximg, 1.75);
-                    }
-                    else
-                    {
-                        xchatformbutton.Image = Resources.conversation_chat_32x321;
-                    }
+                    var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White,
+                        unread.Count.ToString(),
+                        new Font("Ariel", 16, FontStyle.Bold), Color.DarkRed);
+                    xchatformbutton.Image = Resources.conversation_chat_32x321.CombineImage(ximg, 1.75);
+                }
+                else
+                {
+                    xchatformbutton.Image = Resources.conversation_chat_32x321;
+                }
 
-                    if (_chatform != null)
+                if (_chatform != null)
+                {
+                    if (_chatform.WindowState == FormWindowState.Minimized)
+                        _chatform.WindowState = FormWindowState.Normal;
+                    //if (user != null)
+                    //    _chatform.SelectedUser(user);
+                    _chatform.Show();
+                    _chatform.BringToFront();
+                    _chatform.Focus();
+                }
+                else if (unread.Count > 0 && ShowUnreadMessage)
+                {
+                    _unreadMessages?.Dispose();
+                    var names = new List<string>();
+                    foreach (var msg in unread.Where(msg => msg.Afzender != null && !names.Any(x =>
+                        string.Equals(x, msg.Afzender.UserName, StringComparison.CurrentCultureIgnoreCase))))
+                        names.Add(msg.Afzender.UserName);
+
+                    if (names.Count == 0) return;
                     {
-                        if (_chatform.WindowState == FormWindowState.Minimized)
-                            _chatform.WindowState = FormWindowState.Normal;
-                        //if (user != null)
-                        //    _chatform.SelectedUser(user);
-                        _chatform.Show();
-                        _chatform.BringToFront();
-                        _chatform.Focus();
-                    }
-                    else if (unread.Count > 0 && ShowUnreadMessage)
-                    {
+                        Application.OpenForms["SplashScreen"]?.Close();
+                        var xv = names.Count == 1 ? "bericht" : "berichten";
+                        var bttns = new Dictionary<string, DialogResult>();
+                        bttns.Add("OK", DialogResult.OK);
+                        bttns.Add("Toon Bericht", DialogResult.Yes);
+                        _unreadMessages = new XMessageBox();
+                        var result = _unreadMessages.ShowDialog(
+                            $"Je hebt {unread.Count} ongelezen {xv} van {string.Join(", ", names)}",
+                            $"{unread.Count} ongelezen berichten", MessageBoxButtons.OK, MessageBoxIcon.None, null,
+                            bttns);
                         _unreadMessages?.Dispose();
-                        var names = new List<string>();
-                        foreach (var msg in unread.Where(msg => msg.Afzender != null && !names.Any(x =>
-                            string.Equals(x, msg.Afzender.UserName, StringComparison.CurrentCultureIgnoreCase))))
-                            names.Add(msg.Afzender.UserName);
-
-                        if (names.Count == 0) return;
-                        {
-                            Application.OpenForms["SplashScreen"]?.Close();
-                            var xv = names.Count == 1 ? "bericht" : "berichten";
-                            var bttns = new Dictionary<string, DialogResult>();
-                            bttns.Add("OK", DialogResult.OK);
-                            bttns.Add("Toon Bericht", DialogResult.Yes);
-                            _unreadMessages = new XMessageBox();
-                            var result = _unreadMessages.ShowDialog(
-                                $"Je hebt {unread.Count} ongelezen {xv} van {string.Join(", ", names)}",
-                                $"{unread.Count} ongelezen berichten", MessageBoxButtons.OK, MessageBoxIcon.None, null,
-                                bttns);
-                            _unreadMessages?.Dispose();
-                            _unreadMessages = null;
-                            if (result == DialogResult.Yes)
-                                ShowChatWindow(names[0]);
-                        }
+                        _unreadMessages = null;
+                        if (result == DialogResult.Yes)
+                            ShowChatWindow(names[0]);
                     }
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            }));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void UpdateUnreadOpmerkingen()
         {
-            BeginInvoke(new Action(() =>
-            {
-                try
-                {
-                    if (Manager.Opmerkingen?.OpmerkingenLijst == null) return;
-                    var unread = Manager.Opmerkingen.GetUnreadNotes();
-                    if (unread.Count > 0)
-                    {
-                        var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White,
-                            unread.Count.ToString(),
-                            new Font("Ariel", 16, FontStyle.Bold), Color.DarkRed);
-                        xopmerkingentoolstripbutton.Image = Resources.notes_office_page_papers_32x32.CombineImage(ximg, 1.75);
-                    }
-                    else
-                    {
-                        xopmerkingentoolstripbutton.Image = Resources.notes_office_page_papers_32x32;
-                    }
+            if (this.InvokeRequired)
+                BeginInvoke(new Action(xUpdateUnreadOpmerkingen));
+            else xUpdateUnreadOpmerkingen();
+        }
 
-                    if (_opmerkingform != null)
-                    {
-                        if (_opmerkingform.WindowState == FormWindowState.Minimized)
-                            _opmerkingform.WindowState = FormWindowState.Normal;
-                        //if (user != null)
-                        //    _chatform.SelectedUser(user);
-                        _opmerkingform.Show();
-                        _opmerkingform.BringToFront();
-                        _opmerkingform.Focus();
-                    }
-                    else if (unread.Count > 0 && ShowUnreadMessage)
-                    {
-                            Application.OpenForms["SplashScreen"]?.Close();
-                            var xv = unread.Count == 1 ? "opmerking" : "opmerkingen";
-                            var bttns = new Dictionary<string, DialogResult>();
-                            bttns.Add("OK", DialogResult.OK);
-                            bttns.Add("Toon Opmerkingen", DialogResult.Yes);
-                            var xmsgBox = new XMessageBox();
-                            var result = xmsgBox.ShowDialog(
-                                $"Je hebt {unread.Count} ongelezen {xv}",
-                                $"{unread.Count} ongelezen {xv}", MessageBoxButtons.OK, MessageBoxIcon.None, null,
-                                bttns);
-                            xmsgBox.Dispose();
-                            if (result == DialogResult.Yes)
-                                ShowOpmerkingWindow();
-                    }
-                }
-                catch (Exception e)
+        public void xUpdateUnreadOpmerkingen()
+        {
+            try
+            {
+                if (Manager.Opmerkingen?.OpmerkingenLijst == null) return;
+                var unread = Manager.Opmerkingen.GetUnreadNotes();
+                if (unread.Count > 0)
                 {
-                    Console.WriteLine(e);
+                    var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White,
+                        unread.Count.ToString(),
+                        new Font("Ariel", 16, FontStyle.Bold), Color.DarkRed);
+                    xopmerkingentoolstripbutton.Image = Resources.notes_office_page_papers_32x32.CombineImage(ximg, 1.75);
                 }
-            }));
+                else
+                {
+                    xopmerkingentoolstripbutton.Image = Resources.notes_office_page_papers_32x32;
+                }
+
+                if (_opmerkingform != null)
+                {
+                    if (_opmerkingform.WindowState == FormWindowState.Minimized)
+                        _opmerkingform.WindowState = FormWindowState.Normal;
+                    //if (user != null)
+                    //    _chatform.SelectedUser(user);
+                    _opmerkingform.Show();
+                    _opmerkingform.BringToFront();
+                    _opmerkingform.Focus();
+                }
+                else if (unread.Count > 0 && ShowUnreadMessage)
+                {
+                    Application.OpenForms["SplashScreen"]?.Close();
+                    var xv = unread.Count == 1 ? "opmerking" : "opmerkingen";
+                    var bttns = new Dictionary<string, DialogResult>();
+                    bttns.Add("OK", DialogResult.OK);
+                    bttns.Add("Toon Opmerkingen", DialogResult.Yes);
+                    var xmsgBox = new XMessageBox();
+                    var result = xmsgBox.ShowDialog(
+                        $"Je hebt {unread.Count} ongelezen {xv}",
+                        $"{unread.Count} ongelezen {xv}", MessageBoxButtons.OK, MessageBoxIcon.None, null,
+                        bttns);
+                    xmsgBox.Dispose();
+                    if (result == DialogResult.Yes)
+                        ShowOpmerkingWindow();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         #endregion Methods
@@ -1787,7 +1798,9 @@ namespace Controls
             try
             {
                 var tb = new TextFieldEditor();
-                tb.FieldImage = Resources.libreoffice_draw_icon_128x128;
+                tb.Style = MetroColorStyle.Yellow;
+                tb.FieldImage = Resources.libreoffice_draw_icon_128x128.CombineImage(Resources.search_locate_find_6278,
+                    ContentAlignment.BottomRight, 2.5);
                 tb.MultiLine = false;
                 tb.Title = "Zoek WerkTekening";
                 if (tb.ShowDialog() == DialogResult.OK)

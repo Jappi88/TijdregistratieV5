@@ -202,83 +202,81 @@ namespace ProductieManager
             }
         }
 
-        private Task InitBootDir(string path = null)
+        private void InitBootDir(string path = null)
         {
-            return Task.Run(() =>
+
+            _bootDir = Application.StartupPath;
+            Manager.AppRootPath = path ?? _bootDir;
+
+            if (Manager.DefaultSettings != null)
             {
-                _bootDir = Application.StartupPath;
-                Manager.AppRootPath = path ?? _bootDir;
-               
-                if (Manager.DefaultSettings != null)
+                var dbent = Manager.DefaultSettings.MainDB;
+                var tempdbent = Manager.DefaultSettings.TempMainDB;
+                dbent ??= new DatabaseUpdateEntry()
                 {
-                    var dbent = Manager.DefaultSettings.MainDB;
-                    var tempdbent = Manager.DefaultSettings.TempMainDB;
-                    dbent ??= new DatabaseUpdateEntry()
-                    {
-                        Naam = "Main Boot Dir",
-                        RootPath = Manager.DefaultSettings.MainDbPath ?? Application.StartupPath,
-                        UpdateDatabases =
-                            new List<DbType>()
-                            {
-                                DbType.Accounts,
-                                DbType.Producties,
-                                DbType.GereedProducties,
-                                DbType.Medewerkers,
-                                DbType.Opties
-                            }
-                    };
-                    tempdbent ??= new DatabaseUpdateEntry()
-                    {
-                        Naam = "Temp Boot Dir",
-                        RootPath = Application.StartupPath,
-                        UpdateDatabases =
-                            new List<DbType>()
-                            {
-                                DbType.Accounts,
-                                DbType.Producties,
-                                DbType.GereedProducties,
-                                DbType.Medewerkers,
-                                DbType.Opties
-                            }
-                    };
-                    string rootpath = null;
-                    for (int i = 0; i < 5; i++)
-                    {
-                        try
+                    Naam = "Main Boot Dir",
+                    RootPath = Manager.DefaultSettings.MainDbPath ?? Application.StartupPath,
+                    UpdateDatabases =
+                        new List<DbType>()
                         {
-                            if (Directory.Exists(dbent.UpdatePath))
-                            {
-                                rootpath = dbent.RootPath;
-                                break;
-                            }
+                            DbType.Accounts,
+                            DbType.Producties,
+                            DbType.GereedProducties,
+                            DbType.Medewerkers,
+                            DbType.Opties
                         }
-                        catch (Exception e)
+                };
+                tempdbent ??= new DatabaseUpdateEntry()
+                {
+                    Naam = "Temp Boot Dir",
+                    RootPath = Application.StartupPath,
+                    UpdateDatabases =
+                        new List<DbType>()
                         {
-                            // ignored
+                            DbType.Accounts,
+                            DbType.Producties,
+                            DbType.GereedProducties,
+                            DbType.Medewerkers,
+                            DbType.Opties
                         }
-
-                        Application.DoEvents();
+                };
+                string rootpath = null;
+                for (int i = 0; i < 5; i++)
+                {
+                    try
+                    {
+                        if (Directory.Exists(dbent.UpdatePath))
+                        {
+                            rootpath = dbent.RootPath;
+                            break;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        // ignored
                     }
 
-                    if (rootpath != null)
-                    {
-                        _bootDir = rootpath;
-                    }
-                    else
-                    {
-                        tempdbent.RootPath = _bootDir;
-                        if (tempdbent.LastUpdated < dbent.LastUpdated || tempdbent.LastUpdated.IsDefault())
-                        {
-                            tempdbent.LastUpdated = DateTime.Now;
-                        }
-
-                    }
-
-                    Manager.DefaultSettings.MainDB = dbent;
-                    Manager.DefaultSettings.TempMainDB = tempdbent;
-                    Manager.DefaultSettings.SaveAsDefault();
+                    Application.DoEvents();
                 }
-            });
+
+                if (rootpath != null)
+                {
+                    _bootDir = rootpath;
+                }
+                else
+                {
+                    tempdbent.RootPath = _bootDir;
+                    if (tempdbent.LastUpdated < dbent.LastUpdated || tempdbent.LastUpdated.IsDefault())
+                    {
+                        tempdbent.LastUpdated = DateTime.Now;
+                    }
+
+                }
+
+                Manager.DefaultSettings.MainDB = dbent;
+                Manager.DefaultSettings.TempMainDB = tempdbent;
+                Manager.DefaultSettings.SaveAsDefault();
+            }
         }
 
         private void _splash_FinishedLoading(object sender, EventArgs e)
@@ -345,17 +343,22 @@ namespace ProductieManager
         private void _splash_Shown(object sender, EventArgs e)
         {
             IsLoading = true;
-            BeginInvoke(new Action(Action));
+            Task.Factory.StartNew(new Action(Action));
+            //BeginInvoke(new Action(Action));
         }
 
-        private async void Action()
+        private void Action()
         {
-            await InitBootDir();
-            xversie.Text = $@"Versie {ProductVersion}";
-            productieView1.LoadManager(_bootDir);
-            productieView1.ShowUnreadMessage = true;
-            productieView1.UpdateUnreadMessages(null);
-            productieView1.UpdateUnreadOpmerkingen();
+            this.BeginInvoke(new Action(() =>
+            {
+                InitBootDir();
+                xversie.Text = $@"Versie {ProductVersion}";
+                productieView1.LoadManager(_bootDir);
+                productieView1.ShowUnreadMessage = true;
+                productieView1.UpdateUnreadMessages(null);
+                productieView1.UpdateUnreadOpmerkingen();
+            }));
+
         }
 
         private void Mainform_Shown(object sender, EventArgs e)

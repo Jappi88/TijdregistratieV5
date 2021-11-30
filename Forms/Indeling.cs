@@ -22,12 +22,17 @@ namespace Forms
         public Indeling()
         {
             InitializeComponent();
+
+            xwerkplekimages.Images.Add(Resources.iconfinder_technology);
+            xwerkplekimages.Images.Add(Resources.iconfinder_technology.CombineImage(Resources.check_1582, 2));
+
             imageList1.Images.Add(Resources.user_customer_person_13976);
             imageList1.Images.Add(Resources.user_customer_person_13976.CombineImage(Resources.check_1582, 2));
            
-            ((OLVColumn) xwerkplekken.Columns[0]).ImageGetter = item => 0;
-            ((OLVColumn)xwerkplekken.Columns[1]).AspectGetter = WerkplekRoosterGet;
-            ((OLVColumn)xwerkplekken.Columns[3]).AspectGetter = WerkplekTijdGewerktGet;
+            ((OLVColumn) xwerkplekken.Columns[0]).ImageGetter = WerkplekImageGet;
+            ((OLVColumn)xwerkplekken.Columns[1]).AspectGetter = WerkplekActiefGet;
+            ((OLVColumn)xwerkplekken.Columns[2]).AspectGetter = WerkplekRoosterGet;
+            ((OLVColumn)xwerkplekken.Columns[4]).AspectGetter = WerkplekTijdGewerktGet;
 
             ((OLVColumn)xshiftlist.Columns[0]).ImageGetter = ImageGet;
             ((OLVColumn)xshiftlist.Columns[2]).AspectGetter = TijdGewerktGet;
@@ -75,6 +80,30 @@ namespace Forms
             xnaampersoneel.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             xnaampersoneel.AutoCompleteCustomSource = new AutoCompleteStringCollection();
             xnaampersoneel.AutoCompleteCustomSource.AddRange(pers.Select(x => x.PersoneelNaam).ToArray());
+        }
+
+        public object WerkplekImageGet(object sender)
+        {
+            if (sender is WerkPlek wp)
+            {
+                if (wp.IsActief())
+                    return 1;
+                return 0;
+            }
+
+            return 0;
+        }
+
+        public object WerkplekActiefGet(object sender)
+        {
+            if (sender is WerkPlek wp)
+            {
+                if (wp.IsActief())
+                    return "Ja";
+                return "Nee";
+            }
+
+            return "N.V.T.";
         }
 
         public object WerkplekRoosterGet(object sender)
@@ -638,9 +667,9 @@ namespace Forms
             //klus.ZetActief(actief, Bewerking.State == ProductieState.Gestart);
             //if(actief)
             //{
-                var bew = GetCurrentBewerking();
-                bew?.ZetPersoneelActief(per.PersoneelNaam,per.Werkplek, actief);
-                //}
+            var bew = GetCurrentBewerking();
+            bew?.ZetPersoneelActief(per.PersoneelNaam, per.Werkplek, actief);
+            //}
             xshiftlist.RefreshObject(per);
             xshiftlist.SelectedObject = per;
             xshiftlist.SelectedItem?.EnsureVisible();
@@ -1301,6 +1330,18 @@ namespace Forms
 
                     xwerkplekken.RefreshObject(wp);
                 }
+            }
+        }
+
+        private void xwerkplekken_DoubleClick(object sender, EventArgs e)
+        {
+            if (xwerkplekken.SelectedObject is WerkPlek wp)
+            {
+                var checkall = !wp.IsActief();
+                foreach (var per in wp.Personen) 
+                    SetPersoneelActief(per, checkall);
+                wp.UpdateWerkplek(false);
+                xwerkplekken.RefreshObject(wp);
             }
         }
     }

@@ -1490,7 +1490,7 @@ namespace Rpm.Productie
             _syncTimer.Stop();
             try
             {
-
+                ProductieProvider?.InitOfflineDb();
 
                 if (Opties is {SluitPcAf: true} && DateTime.Now.TimeOfDay >= _afsluittijd)
                 {

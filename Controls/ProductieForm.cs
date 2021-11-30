@@ -83,7 +83,7 @@ namespace Controls
             try
             {
                 var wps = bewerking.State == ProductieState.Gestart
-                    ? "op " + string.Join(", ", bewerking.WerkPlekken.Select(x => x.Naam))
+                    ? "op " + string.Join(", ", bewerking.WerkPlekken.Where(x=> x.IsActief()).Select(x => x.Naam))
                     : "";
 
                 xstatuslabel.Text =

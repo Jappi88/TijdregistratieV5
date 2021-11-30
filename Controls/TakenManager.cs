@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using BrightIdeasSoftware;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
+using ProductieManager.Rpm.Productie;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
@@ -50,22 +51,20 @@ namespace Controls
             x.ImageGetter = ImageGetter;
             x.GroupKeyGetter = GroupGetter;
             UpdateTakenViewState(false,false);
-            DetachEvents();
-            InitEvents();
+            Manager.OnSettingsChanged += Manager_OnSettingsChanged;
         }
 
         public void InitEvents()
         {
             Manager.OnFormulierChanged += Manager_OnFormulierChanged;
             Manager.OnFormulierDeleted += Manager_OnFormulierDeleted;
-            Manager.OnSettingsChanged += Manager_OnSettingsChanged;
+           
         }
         
         public void DetachEvents()
         {
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
             Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
-            Manager.OnSettingsChanged -= Manager_OnSettingsChanged;
         }
 
         private void Manager_OnSettingsChanged(object instance, Rpm.Settings.UserSettings settings, bool reinit)
@@ -75,16 +74,13 @@ namespace Controls
                 Taken.Clear();
                 xtakenlijst.SetObjects(Taken);
                 UpdateStatus();
-                Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
-                Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
+                DetachEvents();
             }
             else if(settings.GebruikTaken && Manager.LogedInGebruiker != null)
             {
+                DetachEvents();
                 UpdateAllTaken();
-                Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
-                Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
-                Manager.OnFormulierChanged += Manager_OnFormulierChanged;
-                Manager.OnFormulierDeleted += Manager_OnFormulierDeleted;
+                InitEvents();
             }
         }
 
@@ -295,7 +291,7 @@ namespace Controls
             try
             {
                 if (this.IsDisposed || this.Disposing) return;
-                this.Invoke(new MethodInvoker(() =>
+                this.BeginInvoke(new MethodInvoker(() =>
                 {
                     try
                     {
@@ -312,21 +308,13 @@ namespace Controls
                                     Taken.RemoveAt(i--);
                             }
 
-                            xtakenlijst.BeginUpdate();
-                            var items = Taken.Where(IsAllowed).ToList();
-                            xtakenlijst.SetObjects(items);
-                            xtakenlijst.Sort();
-                            xnexttaak.Enabled = xtakenlijst.Items.Count > 0;
-                            UpdateTakenViewState(
-                                xtakenlijst.Items.Count > items.Count && Manager.Opties.ToonLijstNaNieuweTaak, false);
-                            xtakenlijst.SelectedItem?.EnsureVisible();
-                            UpdateStatus();
+
+                            LoadTaken();
                         }
                     }
                     catch (Exception e)
                     {
                     }
-                    finally { xtakenlijst.EndUpdate(); }
 
                 }));
             }
@@ -347,6 +335,7 @@ namespace Controls
                 xtakenlijst.BeginUpdate();
                 xtakenlijst.SetObjects(xtaken);
                 xtakenlijst.Sort();
+                xtakenlijst.EndUpdate();
                 xnexttaak.Enabled = xtakenlijst.Items.Count > 0;
                 UpdateTakenViewState(xtakenlijst.Items.Count > count && Manager.Opties.ToonLijstNaNieuweTaak, false);
                 xtakenlijst.SelectedObject = xselected;
@@ -357,7 +346,6 @@ namespace Controls
             {
                 Console.WriteLine(e);
             }
-            finally { xtakenlijst.EndUpdate(); }
         }
 
 
@@ -387,8 +375,7 @@ namespace Controls
 
         private void SetCheckToolItem(object sender, EventArgs e)
         {
-            var item = sender as ToolStripMenuItem;
-            if (item != null)
+            if (sender is ToolStripMenuItem item)
             {
                 item.Checked = !item.Checked;
                 LoadTaken();
