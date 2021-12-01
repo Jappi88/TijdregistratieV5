@@ -2312,12 +2312,13 @@ namespace Controls
             if (xProductieLijst1.SelectedObject is IProductieBase prod)
             {
                 var xart = prod.ArtikelNr;
-                var xtek = AutoDeskHelper.GetTekeningPdfAsync(xart);
                 //Process.Start(xtek); 
                 var wb = new WebBrowserForm();
-                wb.FilesToOpen = new string[] { $"{xart}_fbr.pdf" };
-                wb.FileDownloadUrl = AutoDeskHelper.DownloadUrl;
-                wb.Navigate(xtek);
+                wb.FilesFormatToOpen = new string[] { "{0}_fbr.pdf" };
+                wb.FilesToOpen.Add(xart);
+                wb.CloseIfNotFound = true;
+                wb.OpenIfFound = true;
+                wb.Navigate();
                 // wb.Navigate("C:\\Users\\Gebruiker\\Dropbox\\ProductieManager\\Autodesk Vault.html");
                 wb.ShowDialog();
             }

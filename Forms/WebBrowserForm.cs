@@ -1,11 +1,14 @@
 ﻿using Forms;
 using HtmlAgilityPack;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using System.Windows.Forms;
+using ProductieManager.Rpm.Connection;
 using Various;
 using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 
@@ -13,20 +16,51 @@ namespace ProductieManager.Forms
 {
     public partial class WebBrowserForm : Form
     {
-        public string[] FilesToOpen { get; set; }
-        public string FileDownloadUrl { get; set; }
+        public string[] FilesFormatToOpen { get; set; }
+        public List<string> FilesToOpen { get; set; } = new List<string>();
+        public bool CloseIfNotFound { get; set; }
+        public bool OpenIfFound { get; set; }
+        public List<string> FilesNotFound { get; } = new List<string>();
         public WebBrowserForm()
         {
             InitializeComponent();
-            Browser.ScriptErrorsSuppressed = true;
         }
 
-        public WebBrowser Browser => this.xBrowser;
-
-        public void Navigate(string url)
+        private void InitNewBrowser()
         {
-            Browser.Navigate(url);
+            this.SuspendLayout();
+            Browser?.Stop();
+            Browser?.Dispose();
+            this.Controls.Clear();
+            Browser = new WebBrowser();
+            Browser.ScriptErrorsSuppressed = true;
+            Browser.IsWebBrowserContextMenuEnabled = false;
+            Browser.Navigated += xBrowser_Navigated;
+            Browser.Dock = DockStyle.Fill;
+            this.Controls.Add(Browser);
+            this.ResumeLayout(true);
         }
+
+        public WebBrowser Browser { get; private set; }
+
+        protected string NavigatingArtNr;
+
+        public void Navigate(string artnr)
+        {
+            InitNewBrowser();
+            NavigatingArtNr = artnr;
+            var xlink = AutoDeskHelper.GetTekeningPdfLink(artnr);
+            Browser?.Navigate(xlink);
+        }
+
+        public void Navigate()
+        {
+            var xfirst = FilesToOpen?.FirstOrDefault();
+            if (xfirst == null) return;
+            Navigate(xfirst);
+        }
+
+
 
         private HtmlNodeCollection GetNodeCollection(ref bool valid)
         {
@@ -56,9 +90,11 @@ namespace ProductieManager.Forms
         }
 
         private bool _hasFound;
+
         private async void xBrowser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
-            if (_hasFound || FilesToOpen == null || FilesToOpen.Length == 0 || string.IsNullOrEmpty(FileDownloadUrl)) return;
+            if (_hasFound || FilesToOpen == null || FilesToOpen.Count == 0 ||
+                FilesFormatToOpen == null || FilesFormatToOpen.Length == 0) return;
             if (Disposing || IsDisposed) return;
             HtmlNodeCollection xelements = null;
             bool isvalid = true;
@@ -66,7 +102,7 @@ namespace ProductieManager.Forms
             {
                 for (int i = 0; i < 20; i++)
                 {
-                    
+
                     if (this.InvokeRequired)
                     {
                         this.Invoke(new MethodInvoker(() => xelements = GetNodeCollection(ref isvalid)));
@@ -78,39 +114,60 @@ namespace ProductieManager.Forms
                     Thread.Sleep(250);
                 }
             }));
-           
+
             try
             {
                 if (!isvalid)
                 {
-                    throw new Exception("Verbinding kan niet tot stand worden gebracht.\n\nControlleer je netwerkinstellingen voor of je toegang hebt tot de server.");
+                    throw new Exception(
+                        "Verbinding kan niet tot stand worden gebracht.\n\nControlleer je netwerkinstellingen voor of je toegang hebt tot de server.");
                 }
+
+                FilesToOpen.Remove(NavigatingArtNr);
+                var xnext = FilesToOpen.FirstOrDefault();
                 if (xelements == null)
-                    return;
-                string xdefname = "";
-                var xfiles = xelements.FirstOrDefault()?.ChildNodes.FirstOrDefault( x=> FilesToOpen.Any(f=> 
-                    string.Equals(x.GetAttributeValue("data-name",xdefname),f, StringComparison.CurrentCultureIgnoreCase)));
-                if (xfiles == null)
                 {
-                    XMessageBox.Show($"Geen FBR tekening gevonden voor {string.Join(", ", FilesToOpen)}",
-                        "Geen Tekening Gevonden!", MessageBoxIcon.Exclamation);
-                    if (this.InvokeRequired)
-                        this.Invoke(new MethodInvoker(this.Close));
-                    else this.Close();
+                    if (!string.IsNullOrEmpty(xnext))
+                        Navigate(xnext);
                     return;
                 }
-                if (!string.IsNullOrEmpty(FileDownloadUrl))
+
+                string xdefname = "";
+                foreach (var xf in FilesFormatToOpen)
                 {
-                    string xid = "";
-                    var id = xfiles.GetAttributeValue("data-id",xid);
-                    if (!string.IsNullOrEmpty(id))
+                    var xtitle = string.Format(xf, NavigatingArtNr);
+                    var xfiles = xelements.FirstOrDefault()?.ChildNodes.FirstOrDefault(x => 
+                        string.Equals(x.GetAttributeValue("data-name", xdefname), xtitle, StringComparison.CurrentCultureIgnoreCase));
+                    if (xfiles == null)
                     {
-                        _hasFound = true;
-                        var xlink = string.Format(FileDownloadUrl, id);
-                        var xbbtn = FindElement("a", new string[] {id });
-                        xbbtn?.InvokeMember("click",id);
+                        if (FilesNotFound.IndexOf(NavigatingArtNr) < 0)
+                            FilesNotFound.Add(NavigatingArtNr);
+                        if (CloseIfNotFound)
+                        {
+                            XMessageBox.Show($"Geen FBR tekening gevonden voor {string.Join(", ", FilesToOpen)}",
+                                "Geen Tekening Gevonden!", MessageBoxIcon.Exclamation);
+                            if (this.InvokeRequired)
+                                this.Invoke(new MethodInvoker(this.Close));
+                            else this.Close();
+                            return;
+                        }
+                    }
+                    else if (OpenIfFound)
+                    {
+                        string xid = "";
+                        var id = xfiles.GetAttributeValue("data-id", xid);
+                        if (!string.IsNullOrEmpty(id))
+                        {
+                            _hasFound = true;
+                            var xbbtn = FindElement("a", new string[] {id});
+                            xbbtn?.InvokeMember("click", id);
+                            return;
+                        }
                     }
                 }
+
+                if (!string.IsNullOrEmpty(xnext))
+                        Navigate(xnext);
             }
             catch (Exception exception)
             {

@@ -1768,6 +1768,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ooo_draw_10002 {
+            get {
+                object obj = ResourceManager.GetObject("ooo_draw_10002", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap open_file256_25211 {
             get {
                 object obj = ResourceManager.GetObject("open-file256_25211", resourceCulture);

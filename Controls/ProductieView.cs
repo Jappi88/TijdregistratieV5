@@ -390,6 +390,7 @@ namespace Controls
                     if (IsDisposed || Disposing) return;
                     xloginb.Image = user != null ? Resources.Logout_37127__1_ : Resources.Login_37128__1_;
                     xcorruptedfilesbutton.Visible = user is {AccesLevel: AccesType.Manager};
+                    xMissingTekening.Visible = user is { AccesLevel: AccesType.Manager };
                     OnLoginChanged?.Invoke(user, instance);
                 }));
             }
@@ -1806,12 +1807,13 @@ namespace Controls
                 if (tb.ShowDialog() == DialogResult.OK)
                 {
                     var xart = tb.SelectedText;
-                    var xtek = AutoDeskHelper.GetTekeningPdfAsync(xart);
                     //Process.Start(xtek); 
                     var wb = new WebBrowserForm();
-                    wb.FilesToOpen = new string[] { $"{xart}_fbr.pdf" };
-                    wb.FileDownloadUrl = AutoDeskHelper.DownloadUrl;
-                    wb.Navigate(xtek);
+                    wb.FilesFormatToOpen = new string[] { "{0}_fbr.pdf" };
+                    wb.FilesToOpen.Add(xart);
+                    wb.CloseIfNotFound = true;
+                    wb.OpenIfFound = true;
+                    wb.Navigate();
                     // wb.Navigate("C:\\Users\\Gebruiker\\Dropbox\\ProductieManager\\Autodesk Vault.html");
                     wb.ShowDialog();
                 }
@@ -2221,6 +2223,20 @@ namespace Controls
             xweergave.ShowDialog();
             MultipleFileDb.CorruptedFilesChanged -= xweergave.OnItemsChanged;
             xweergave.Dispose();
+        }
+
+        private void xMissingTekening_Click(object sender, EventArgs e)
+        {
+            var prods = Manager.Database.GetBewerkingenInArtnrSections(true, false);
+            var arts = prods.Select(x => x.Key).ToArray();
+            //Process.Start(xtek); 
+            var wb = new WebBrowserForm();
+            wb.FilesFormatToOpen = new string[] { "{0}_fbr.pdf" };
+            wb.FilesToOpen.AddRange(arts);
+            wb.Navigate();
+            // wb.Navigate("C:\\Users\\Gebruiker\\Dropbox\\ProductieManager\\Autodesk Vault.html");
+            wb.ShowDialog();
+            var notfound = wb.FilesNotFound;
         }
     }
 }
