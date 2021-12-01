@@ -1813,7 +1813,8 @@ namespace Controls
                     wb.FilesToOpen.Add(xart);
                     wb.CloseIfNotFound = true;
                     wb.OpenIfFound = true;
-                    wb.Navigate();
+                    wb.Shown += (xa, e) => wb.Navigate();
+                    //wb.Navigate();
                     // wb.Navigate("C:\\Users\\Gebruiker\\Dropbox\\ProductieManager\\Autodesk Vault.html");
                     wb.ShowDialog();
                 }
@@ -2225,18 +2226,46 @@ namespace Controls
             xweergave.Dispose();
         }
 
+        private bool _xtekeningbusy;
         private void xMissingTekening_Click(object sender, EventArgs e)
         {
-            var prods = Manager.Database.GetBewerkingenInArtnrSections(true, false);
-            var arts = prods.Select(x => x.Key).ToArray();
-            //Process.Start(xtek); 
+            if (_xtekeningbusy) return;
+            _xtekeningbusy = true;
+            var xloading = new LoadingForm();
+            xloading.StartPosition = FormStartPosition.CenterParent;
+            var progarg = xloading.Arg;
+            progarg.Message = "Producties Laden...";
+            progarg.OnChanged(this);
             var wb = new WebBrowserForm();
+            wb.ShowErrorMessage = false;
+            wb.Arg = progarg;
             wb.FilesFormatToOpen = new string[] { "{0}_fbr.pdf" };
-            wb.FilesToOpen.AddRange(arts);
-            wb.Navigate();
-            // wb.Navigate("C:\\Users\\Gebruiker\\Dropbox\\ProductieManager\\Autodesk Vault.html");
-            wb.ShowDialog();
-            var notfound = wb.FilesNotFound;
+            wb.ShowNotFoundList = true;
+            wb.StopNavigatingAfterError = false;
+            Task.Factory.StartNew(async () =>
+            {
+               
+                var prods = await Manager.Database.GetBewerkingenInArtnrSections(true, false);
+                progarg.Max = prods.Count;
+                progarg.OnChanged(this);
+                if (progarg.IsCanceled) return;
+                var arts = prods.Select(x => x.Key).ToArray();
+                //Process.Start(xtek); 
+                
+                wb.FilesToOpen.AddRange(arts);
+                wb.BeginInvoke(new MethodInvoker(() => wb.Navigate()));
+                //this.BeginInvoke(new MethodInvoker(()=> wb.ShowDialog()));
+                //this.Invoke(new MethodInvoker(() => { xloading.BringToFront();
+                //    xloading.Focus();
+                //}));
+            });
+           
+            wb.Show();
+            xloading.ShowDialog();
+            wb.Close();
+            this.BringToFront();
+            this.Focus();
+            _xtekeningbusy = false;
         }
     }
 }

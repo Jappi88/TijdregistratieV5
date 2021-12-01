@@ -62,7 +62,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -458,6 +458,12 @@
     </Compile>
     <Compile Include="Forms\LijstWeergaveForm.designer.cs">
       <DependentUpon>LijstWeergaveForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LoadingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LoadingForm.Designer.cs">
+      <DependentUpon>LoadingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MateriaalVerbruikForm.cs">
       <SubType>Form</SubType>
@@ -1139,6 +1145,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\LijstWeergaveForm.resx">
       <DependentUpon>LijstWeergaveForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LoadingForm.resx">
+      <DependentUpon>LoadingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MateriaalVerbruikForm.resx">
       <DependentUpon>MateriaalVerbruikForm.cs</DependentUpon>

@@ -58,8 +58,17 @@ namespace Rpm.Various
     {
         public string Message;
         public int Pogress;
+        public int Current;
+        public int Max;
         public ProgressType Type;
         public object Value;
         public bool IsCanceled;
+
+        public event ProgressChangedHandler Changed;
+
+        public void OnChanged(object sender)
+        {
+            Changed?.Invoke(sender, this);
+        }
     }
 }

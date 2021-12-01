@@ -290,26 +290,30 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Dictionary<string, List<Bewerking>> GetBewerkingenInArtnrSections(bool incgereed, bool filter)
+        public Task<Dictionary<string, List<Bewerking>>> GetBewerkingenInArtnrSections(bool incgereed, bool filter)
         {
-            var xreturn = new Dictionary<string, List<Bewerking>>();
-            try
+            return Task.Factory.StartNew(() =>
             {
-                var bws = Manager.Database.GetAllBewerkingen(true, true).Result;
-                foreach (var bw in bws)
+                var xreturn = new Dictionary<string, List<Bewerking>>();
+                try
                 {
-                    if (xreturn.ContainsKey(bw.ArtikelNr.ToLower()))
-                        xreturn[bw.ArtikelNr.ToLower()].Add(bw);
-                    else
-                        xreturn.Add(bw.ArtikelNr.ToLower(), new List<Bewerking>() { bw });
+                    var bws = Manager.Database.GetAllBewerkingen(true, true).Result;
+                    foreach (var bw in bws)
+                    {
+                        if (xreturn.ContainsKey(bw.ArtikelNr.ToLower()))
+                            xreturn[bw.ArtikelNr.ToLower()].Add(bw);
+                        else
+                            xreturn.Add(bw.ArtikelNr.ToLower(), new List<Bewerking>() { bw });
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
 
-            return xreturn;
+                return xreturn;
+            });
+           
         }
 
         public Task<List<ProductieFormulier>> GetAllProducties(bool incgereed, bool filter, TijdEntry bereik, IsValidHandler validhandler)
