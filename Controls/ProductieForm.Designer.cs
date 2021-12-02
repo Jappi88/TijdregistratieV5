@@ -65,6 +65,7 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.xstatusimage = new System.Windows.Forms.PictureBox();
             this.mainMenu1 = new Controls.MainMenu();
+            this.xtoonwerktekening = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.xpanelcontainer.SuspendLayout();
@@ -213,7 +214,7 @@
             this.xstatuslabel.Location = new System.Drawing.Point(40, 0);
             this.xstatuslabel.Name = "xstatuslabel";
             this.xstatuslabel.Padding = new System.Windows.Forms.Padding(5);
-            this.xstatuslabel.Size = new System.Drawing.Size(653, 45);
+            this.xstatuslabel.Size = new System.Drawing.Size(706, 45);
             this.xstatuslabel.TabIndex = 0;
             this.xstatuslabel.Text = "Status";
             this.xstatuslabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -229,7 +230,7 @@
             this.xstopb.ForeColor = System.Drawing.Color.Black;
             this.xstopb.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xstopb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xstopb.Location = new System.Drawing.Point(4, 351);
+            this.xstopb.Location = new System.Drawing.Point(4, 403);
             this.xstopb.Margin = new System.Windows.Forms.Padding(4);
             this.xstopb.Name = "xstopb";
             this.xstopb.Size = new System.Drawing.Size(177, 40);
@@ -308,7 +309,7 @@
             this.xpanelcontainer.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xpanelcontainer.Location = new System.Drawing.Point(40, 45);
             this.xpanelcontainer.Name = "xpanelcontainer";
-            this.xpanelcontainer.Size = new System.Drawing.Size(508, 270);
+            this.xpanelcontainer.Size = new System.Drawing.Size(561, 322);
             this.xpanelcontainer.TabIndex = 4;
             // 
             // productieInfoUI1
@@ -319,12 +320,13 @@
             this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
             this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
             this.productieInfoUI1.Name = "productieInfoUI1";
-            this.productieInfoUI1.Size = new System.Drawing.Size(508, 270);
+            this.productieInfoUI1.Size = new System.Drawing.Size(561, 322);
             this.productieInfoUI1.TabIndex = 0;
             // 
             // panel2
             // 
             this.panel2.ContextMenuStrip = this.contextMenuStrip1;
+            this.panel2.Controls.Add(this.xtoonwerktekening);
             this.panel2.Controls.Add(this.xverpakking);
             this.panel2.Controls.Add(this.xstopb);
             this.panel2.Controls.Add(this.xindelingb);
@@ -332,9 +334,9 @@
             this.panel2.Controls.Add(this.groupBox3);
             this.panel2.Controls.Add(this.xprogressbar);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(548, 45);
+            this.panel2.Location = new System.Drawing.Point(601, 45);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(185, 395);
+            this.panel2.Size = new System.Drawing.Size(185, 447);
             this.panel2.TabIndex = 12;
             // 
             // panel3
@@ -348,7 +350,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(733, 440);
+            this.panel3.Size = new System.Drawing.Size(786, 492);
             this.panel3.TabIndex = 6;
             // 
             // xnotepanel
@@ -357,9 +359,9 @@
             this.xnotepanel.Controls.Add(this.xnoteTextbox);
             this.xnotepanel.Controls.Add(this.xnoteButton);
             this.xnotepanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.xnotepanel.Location = new System.Drawing.Point(40, 315);
+            this.xnotepanel.Location = new System.Drawing.Point(40, 367);
             this.xnotepanel.Name = "xnotepanel";
-            this.xnotepanel.Size = new System.Drawing.Size(508, 125);
+            this.xnotepanel.Size = new System.Drawing.Size(561, 125);
             this.xnotepanel.TabIndex = 13;
             // 
             // xnoteTextbox
@@ -374,7 +376,7 @@
             this.xnoteTextbox.Name = "xnoteTextbox";
             this.xnoteTextbox.ReadOnly = true;
             this.xnoteTextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.xnoteTextbox.Size = new System.Drawing.Size(504, 90);
+            this.xnoteTextbox.Size = new System.Drawing.Size(557, 90);
             this.xnoteTextbox.TabIndex = 1;
             this.xnoteTextbox.Text = "sdfsdfsdfsdfs rkjhf r rj oqhjeoir e";
             this.xnoteTextbox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -390,7 +392,7 @@
             this.xnoteButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.xnoteButton.Location = new System.Drawing.Point(0, 0);
             this.xnoteButton.Name = "xnoteButton";
-            this.xnoteButton.Size = new System.Drawing.Size(508, 32);
+            this.xnoteButton.Size = new System.Drawing.Size(561, 32);
             this.xnoteButton.TabIndex = 0;
             this.xnoteButton.Text = "LET OP! Er is een notitie geplaatst!";
             this.xnoteButton.UseVisualStyleBackColor = false;
@@ -403,7 +405,7 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel5.Location = new System.Drawing.Point(40, 0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(693, 45);
+            this.panel5.Size = new System.Drawing.Size(746, 45);
             this.panel5.TabIndex = 5;
             // 
             // xstatusimage
@@ -547,9 +549,29 @@
         menuButton9,
         menuButton10};
             this.mainMenu1.Name = "mainMenu1";
-            this.mainMenu1.Size = new System.Drawing.Size(40, 440);
+            this.mainMenu1.Size = new System.Drawing.Size(40, 492);
             this.mainMenu1.TabIndex = 4;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
+            // 
+            // xtoonwerktekening
+            // 
+            this.xtoonwerktekening.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xtoonwerktekening.ContextMenuStrip = this.contextMenuStrip1;
+            this.xtoonwerktekening.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xtoonwerktekening.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xtoonwerktekening.ForeColor = System.Drawing.Color.Black;
+            this.xtoonwerktekening.Image = global::ProductieManager.Properties.Resources.libreoffice_draw_icon_181050;
+            this.xtoonwerktekening.Location = new System.Drawing.Point(4, 346);
+            this.xtoonwerktekening.Margin = new System.Windows.Forms.Padding(4);
+            this.xtoonwerktekening.Name = "xtoonwerktekening";
+            this.xtoonwerktekening.Size = new System.Drawing.Size(177, 40);
+            this.xtoonwerktekening.TabIndex = 5;
+            this.xtoonwerktekening.Text = "WerkTekening";
+            this.xtoonwerktekening.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xtoonwerktekening, "Toon werktekening");
+            this.xtoonwerktekening.UseVisualStyleBackColor = true;
+            this.xtoonwerktekening.Click += new System.EventHandler(this.xtoonwerktekening_Click);
             // 
             // ProductieForm
             // 
@@ -559,7 +581,7 @@
             this.Controls.Add(this.panel3);
             this.DoubleBuffered = true;
             this.Name = "ProductieForm";
-            this.Size = new System.Drawing.Size(733, 440);
+            this.Size = new System.Drawing.Size(786, 492);
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.xpanelcontainer.ResumeLayout(false);
@@ -599,5 +621,6 @@
         private System.Windows.Forms.Button xverpakking;
         private System.Windows.Forms.ToolStripMenuItem materialenToolStripMenuItem;
         private ProductieInfoUI productieInfoUI1;
+        private System.Windows.Forms.Button xtoonwerktekening;
     }
 }

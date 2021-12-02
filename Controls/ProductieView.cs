@@ -1794,7 +1794,7 @@ namespace Controls
             ind.ShowDialog();
         }
 
-        public static void ZoekWerkTekening()
+        public void ZoekWerkTekening()
         {
             try
             {
@@ -1806,23 +1806,19 @@ namespace Controls
                 tb.Title = "Zoek WerkTekening";
                 if (tb.ShowDialog() == DialogResult.OK)
                 {
-                    var xart = tb.SelectedText;
-                    //Process.Start(xtek); 
-                    var wb = new WebBrowserForm();
-                    wb.FilesFormatToOpen = new string[] { "{0}_fbr.pdf" };
-                    wb.FilesToOpen.Add(xart);
-                    wb.CloseIfNotFound = true;
-                    wb.OpenIfFound = true;
-                    wb.Shown += (xa, e) => wb.Navigate();
-                    //wb.Navigate();
-                    // wb.Navigate("C:\\Users\\Gebruiker\\Dropbox\\ProductieManager\\Autodesk Vault.html");
-                    wb.ShowDialog();
+                    Tools.ShowSelectedTekening(tb.SelectedText, TekeningClosed);
                 }
             }
             catch (Exception e)
             {
                 XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
             }
+        }
+
+        private void TekeningClosed(object sender, EventArgs e)
+        {
+            this.Parent?.BringToFront();
+            this.Parent?.Focus();
         }
 
         public static void ShowProductieSettings(ProductieFormulier form)

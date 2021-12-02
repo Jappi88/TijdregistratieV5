@@ -587,7 +587,7 @@ namespace Forms
             this.xbewnotitie.Location = new System.Drawing.Point(13, 390);
             this.xbewnotitie.Multiline = true;
             this.xbewnotitie.Name = "xbewnotitie";
-            this.xbewnotitie.Size = new System.Drawing.Size(139, 70);
+            this.xbewnotitie.Size = new System.Drawing.Size(122, 70);
             this.xbewnotitie.TabIndex = 57;
             this.toolTip1.SetToolTip(this.xbewnotitie, "Bewerking Notitie");
             // 

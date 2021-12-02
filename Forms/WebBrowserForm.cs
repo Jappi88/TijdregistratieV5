@@ -204,7 +204,7 @@ namespace ProductieManager.Forms
                             FilesNotFound.Add(NavigatingArtNr);
                         if (CloseIfNotFound)
                         {
-                            XMessageBox.Show($"Geen FBR tekening gevonden voor {string.Join(", ", FilesToOpen)}",
+                            XMessageBox.Show($"Geen 'FBR' tekening gevonden voor {NavigatingArtNr}",
                                 "Geen Tekening Gevonden!", MessageBoxIcon.Exclamation);
                             if (this.InvokeRequired)
                                 this.Invoke(new MethodInvoker(this.Close));

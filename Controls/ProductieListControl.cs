@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 using ProductieManager.Rpm.Connection;
+using Various;
 using static Forms.RangeCalculatorForm;
 using Comparer = Rpm.Various.Comparer;
 using Timer = System.Timers.Timer;
@@ -275,7 +276,7 @@ namespace Controls
             Manager.OnBewerkingDeleted += _manager_OnBewerkingDeleted;
             //Manager.OnDbBeginUpdate += Manager_OnDbBeginUpdate;
             // Manager.OnDbEndUpdate += Manager_OnDbEndUpdate;
-            Manager.OnManagerLoaded += _manager_OnManagerLoaded;
+            //Manager.OnManagerLoaded += _manager_OnManagerLoaded;
             Manager.FilterChanged += Manager_FilterChanged;
             Manager.OnColumnsSettingsChanged += Xcols_OnColumnsSettingsChanged;
         }
@@ -306,7 +307,7 @@ namespace Controls
             Manager.OnBewerkingDeleted -= _manager_OnBewerkingDeleted;
             //Manager.OnDbBeginUpdate -= Manager_OnDbBeginUpdate;
             //Manager.OnDbEndUpdate -= Manager_OnDbEndUpdate;
-            Manager.OnManagerLoaded -= _manager_OnManagerLoaded;
+            //Manager.OnManagerLoaded -= _manager_OnManagerLoaded;
             Manager.FilterChanged -= Manager_FilterChanged;
             Manager.OnColumnsSettingsChanged -= Xcols_OnColumnsSettingsChanged;
         }
@@ -1400,6 +1401,7 @@ namespace Controls
 
         private void _manager_OnManagerLoaded()
         {
+            return;
             if (IsDisposed || Disposing) return;
             try
             {
@@ -2311,17 +2313,14 @@ namespace Controls
         {
             if (xProductieLijst1.SelectedObject is IProductieBase prod)
             {
-                var xart = prod.ArtikelNr;
-                //Process.Start(xtek); 
-                var wb = new WebBrowserForm();
-                wb.FilesFormatToOpen = new string[] { "{0}_fbr.pdf" };
-                wb.FilesToOpen.Add(xart);
-                wb.CloseIfNotFound = true;
-                wb.OpenIfFound = true;
-                wb.Navigate();
-                // wb.Navigate("C:\\Users\\Gebruiker\\Dropbox\\ProductieManager\\Autodesk Vault.html");
-                wb.ShowDialog();
+                Tools.ShowSelectedTekening(prod.ArtikelNr, TekeningClosed);
             }
+        }
+
+        private void TekeningClosed(object sender, EventArgs e)
+        {
+            this.Parent?.BringToFront();
+            this.Parent?.Focus();
         }
 
         public List<Bewerking> GetSelectedBewerkingen()

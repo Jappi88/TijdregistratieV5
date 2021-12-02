@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Forms;
+using ProductieManager;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
@@ -508,6 +509,23 @@ namespace Controls
                 }
         }
 
+        private void ShowWerkTekening()
+        {
+            var bew = CurrentBewerking();
+            if (string.IsNullOrEmpty(bew?.ArtikelNr)) return;
+            Tools.ShowSelectedTekening(bew.ArtikelNr, TekeningClosed);
+        }
+
+        private void TekeningClosed(object sender, EventArgs e)
+        {
+            var form = Application.OpenForms["MainForm"];
+            form?.BringToFront();
+            form?.Focus();
+            this.Parent?.Select();
+            this.Parent?.BringToFront();
+            this.Parent?.Focus();
+        }
+
         private void xstatuslabel_SizeChanged(object sender, EventArgs e)
         {
             ResizeStatusLable();
@@ -611,6 +629,11 @@ namespace Controls
             if (bew?.Parent == null) return;
             var x = new VerpakkingInstructieForm(bew);
             x.ShowDialog();
+        }
+
+        private void xtoonwerktekening_Click(object sender, EventArgs e)
+        {
+            ShowWerkTekening();
         }
     }
 }

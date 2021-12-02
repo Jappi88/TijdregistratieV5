@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using ProductieManager;
+using ProductieManager.Forms;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
@@ -126,6 +127,24 @@ namespace Various
             catch (Exception e)
             {
                 Console.WriteLine(e);
+            }
+        }
+
+        public static void ShowSelectedTekening(string artnr, EventHandler browserclosed)
+        {
+            if(!string.IsNullOrEmpty(artnr))
+            {
+                var xart = artnr;
+                //Process.Start(xtek); 
+                var wb = new WebBrowserForm();
+                wb.FilesFormatToOpen = new string[] { "{0}_fbr.pdf" };
+                wb.FilesToOpen.Add(xart);
+                wb.CloseIfNotFound = true;
+                wb.OpenIfFound = true;
+                wb.Navigate();
+                // wb.Navigate("C:\\Users\\Gebruiker\\Dropbox\\ProductieManager\\Autodesk Vault.html");
+                wb.ShowDialog();
+                browserclosed?.Invoke(wb, EventArgs.Empty);
             }
         }
     }

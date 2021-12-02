@@ -167,19 +167,27 @@ namespace Rpm.Settings
         public static UserSettings GetDefaultSettings()
         {
             UserSettings xreturn = null;
-            try
+            var defaultpath = Application.StartupPath + "\\DefaultSettings.db";
+            for (int i = 0; i < 10; i++)
             {
-                var defaultpath = Application.StartupPath + "\\DefaultSettings.db";
-                using FileStream fs = new FileStream(defaultpath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
-                var str = new SharpSerializer();
-                xreturn = str.Deserialize(fs) as UserSettings;
-                fs.Close();
-               
+                try
+                {
+                    using FileStream fs = new FileStream(defaultpath, FileMode.Open, FileAccess.ReadWrite,
+                        FileShare.Read);
+
+                    var str = new SharpSerializer();
+                    xreturn = str.Deserialize(fs) as UserSettings;
+                    fs.Close();
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+
+                Application.DoEvents();
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+
             xreturn ??= Manager.Opties?.CreateCopy();
             if (xreturn != null)
                 xreturn.Username = "Default Settings";

@@ -109,6 +109,7 @@ namespace Rpm.Productie
         /// Huidige geladen backup informatie
         /// </summary>
         public static BackupInfo BackupInfo { get; set; }
+
         /// <summary>
         /// De basis instellingen van de applicatie
         /// </summary>
@@ -260,7 +261,7 @@ namespace Rpm.Productie
                     if (loadsettings)
                     {
                         Opmerkingen = new Opmerkingen();
-                        await Opmerkingen.Load();
+                        _= Opmerkingen.Load();
                         ProductieProvider?.InitOfflineDb();
                     }
 
@@ -360,7 +361,6 @@ namespace Rpm.Productie
                 {
                     if (x.ValidateUser(username, password,true))
                     {
-                        DefaultSettings ??= UserSettings.GetDefaultSettings();
                         var xdef = DefaultSettings;
                         xdef.AutoLoginUsername = autologin ? x.Username : null;
                         xdef.SaveAsDefault();
@@ -578,36 +578,41 @@ namespace Rpm.Productie
         {
             if (options == null)
                 return;
-            options.SystemID = SystemId;
-            var bkms = TimeSpan.FromHours(0.10).TotalMilliseconds;
-            SyncInterval = options.SyncInterval < 10000 ? 10000 : options.SyncInterval;
-            options.BackupInterval = options.BackupInterval < bkms ? bkms : options.BackupInterval;
-            if (options.CreateBackup)
-                BackupInfo?.StartBackupSyncer(options.BackupInterval);
-            //MailInterval = options.MailSyncInterval < 10000 ? 10000 : options.MailSyncInterval;
-            if (Database != null)
-                Database.NotificationEnabled = options.ToonLogNotificatie;
-            //load files sync instances
-            LoadSyncDirectories();
-            _afsluittijd = options.AfsluitTijd;
-            if (options.GebruikLocalSync || options.GebruikTaken)
+            Task.Factory.StartNew(() =>
             {
-                ProductieProvider?.StartSyncProducties();
-                ProductieProvider?.UpdateProducties();
-            }
-            if (options.DbUpdateEntries != null)
-            {
-                foreach (var ent in Opties.DbUpdateEntries)
-                    ent.LastUpdated = DateTime.MinValue;
-            }
-            DbUpdater?.Start();
-            _syncTimer?.Start();
-            if (options.CreateWeekOverzichten)
-            {
-                _overzichtSyncTimer.Interval = options.WeekOverzichtUpdateInterval;
-                _overzichtSyncTimer?.Start();
-            } 
-            else _overzichtSyncTimer?.Stop();
+                options.SystemID = SystemId;
+                var bkms = TimeSpan.FromHours(0.10).TotalMilliseconds;
+                SyncInterval = options.SyncInterval < 10000 ? 10000 : options.SyncInterval;
+                options.BackupInterval = options.BackupInterval < bkms ? bkms : options.BackupInterval;
+                if (options.CreateBackup)
+                    BackupInfo?.StartBackupSyncer(options.BackupInterval);
+                //MailInterval = options.MailSyncInterval < 10000 ? 10000 : options.MailSyncInterval;
+                if (Database != null)
+                    Database.NotificationEnabled = options.ToonLogNotificatie;
+              
+                _afsluittijd = options.AfsluitTijd;
+                if (options.GebruikLocalSync || options.GebruikTaken)
+                {
+                    ProductieProvider?.StartSyncProducties();
+                    ProductieProvider?.UpdateProducties();
+                }
+
+                if (options.DbUpdateEntries != null)
+                {
+                    foreach (var ent in Opties.DbUpdateEntries)
+                        ent.LastUpdated = DateTime.MinValue;
+                }
+                //load files sync instances
+                LoadSyncDirectories();
+                DbUpdater?.Start(DefaultSettings);
+                _syncTimer?.Start();
+                if (options.CreateWeekOverzichten)
+                {
+                    _overzichtSyncTimer.Interval = options.WeekOverzichtUpdateInterval;
+                    _overzichtSyncTimer?.Start();
+                }
+                else _overzichtSyncTimer?.Stop();
+            });
             //if (!options.GebruikTaken)
             //    Taken?.StopBeheer();
             //else Taken?.StartBeheer();
@@ -1439,7 +1444,7 @@ namespace Rpm.Productie
                 {
                     if (LogedInGebruiker != null) return false;
                     //var pcid = CpuID.ProcessorId();
-                    var xdef = UserSettings.GetDefaultSettings();
+                    var xdef = Manager.DefaultSettings ??= UserSettings.GetDefaultSettings();
                     if(!string.IsNullOrEmpty(xdef.AutoLoginUsername))
                         return await Login(xdef.AutoLoginUsername, sender);
                 }
