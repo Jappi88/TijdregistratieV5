@@ -153,7 +153,7 @@ namespace Controls
                 try
                 {
                     CanLoad = true;
-                    BeginInvoke(new MethodInvoker(() =>
+                    Invoke(new MethodInvoker(() =>
                     {
                         xsearch.TextChanged -= xsearchbox_TextChanged;
                         xsearch.TextChanged += xsearchbox_TextChanged;
@@ -505,7 +505,7 @@ namespace Controls
                             if (y is IProductieBase bw)
                             {
                                 if (bw.State == ProductieState.Gereed)
-                                    return "Is gereed!";
+                                    return bw.DatumGereed;
                                 if (bw.TotaalGemaakt >= bw.Aantal)
                                     return "Aantal Behaald!";
                                 return bw.VerwachtLeverDatum.ToString(8, "over {0} {1}", "{0} {1} geleden", false);

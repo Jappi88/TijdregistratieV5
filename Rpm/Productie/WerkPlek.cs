@@ -356,7 +356,7 @@ namespace Rpm.Productie
                 {
                     if (!Tijden.IsActief && IsActief())
                         Tijden.SetStart();
-                    else
+                    else if (Tijden.IsActief && !IsActief())
                         Tijden.SetStop();
                 }
                 else if (Tijden.IsActief)

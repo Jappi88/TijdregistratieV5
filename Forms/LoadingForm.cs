@@ -34,6 +34,7 @@ namespace Forms
                 }
                 xstatustext.Text = arg.Message;
                 xstatustext.Invalidate();
+                xsluiten.Text = arg.Type == ProgressType.ReadCompleet ? "Sluiten" : "Annuleren";
                 if (arg.Current > 0)
                 {
                     xprogressbar.Style = ProgressBarStyle.Blocks;

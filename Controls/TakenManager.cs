@@ -30,8 +30,6 @@ namespace Controls
                 true);
         }
 
-        public Manager PManager { get; private set; }
-
         public Taak SelectedItem
         {
             get => _selectedtaak;
@@ -291,32 +289,38 @@ namespace Controls
             try
             {
                 if (this.IsDisposed || this.Disposing) return;
-                this.BeginInvoke(new MethodInvoker(() =>
+                this.BeginInvoke(new MethodInvoker(MethodInvoker));
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
+        private async void MethodInvoker()
+        {
+            try
+            {
+                Taken = await TaakBeheer.GetAlleTaken();
+                if (Taken is {Count: > 0})
                 {
-                    try
+                    for (int i = 0; i < Taken.Count; i++)
                     {
-                        if (Taken is {Count: > 0})
+                        var taak = Taken[i];
+                        if (taak == null)
                         {
-                            for (int i = 0; i < Taken.Count; i++)
-                            {
-                                var taak = Taken[i];
-                                if (taak.Bewerking != null && !taak.Bewerking.IsAllowed(null))
-                                    Taken.RemoveAt(i--);
-                                else if (taak.Plek?.Werk != null && !taak.Plek.Werk.IsAllowed(null))
-                                    Taken.RemoveAt(i--);
-                                else if (taak.Formulier != null && !taak.Formulier.IsAllowed(null))
-                                    Taken.RemoveAt(i--);
-                            }
-
-
-                            LoadTaken();
+                            Taken.RemoveAt(i--);
+                            continue;
                         }
-                    }
-                    catch (Exception e)
-                    {
+                        if (taak.Bewerking != null && !taak.Bewerking.IsAllowed(null))
+                            Taken.RemoveAt(i--);
+                        else if (taak.Plek?.Werk != null && !taak.Plek.Werk.IsAllowed(null))
+                            Taken.RemoveAt(i--);
+                        else if (taak.Formulier != null && !taak.Formulier.IsAllowed(null)) Taken.RemoveAt(i--);
                     }
 
-                }));
+
+                    LoadTaken();
+                }
             }
             catch (Exception e)
             {
@@ -329,7 +333,7 @@ namespace Controls
             if (IsDisposed || xtakenlijst.IsDisposed) return;
             try
             {
-                int count = Taken.Count;
+                int count = xtakenlijst.Items.Count;
                 var xselected = xtakenlijst.SelectedObject;
                 var xtaken = Taken.Where(IsAllowed).ToList();
                 xtakenlijst.BeginUpdate();

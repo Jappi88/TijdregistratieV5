@@ -231,6 +231,12 @@
     <Compile Include="Controls\ChartView.Designer.cs">
       <DependentUpon>ChartView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CustomImageBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\CustomImageBox.Designer.cs">
+      <DependentUpon>CustomImageBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\FilterEntryEditorUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -453,6 +459,12 @@
     <Compile Include="Forms\GereedNotitieForm.Designer.cs">
       <DependentUpon>GereedNotitieForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\KlachtenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\KlachtenForm.Designer.cs">
+      <DependentUpon>KlachtenForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\LijstWeergaveForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -482,6 +494,12 @@
     </Compile>
     <Compile Include="Forms\NewFilterEntry.Designer.cs">
       <DependentUpon>NewFilterEntry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\NewKlachtForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NewKlachtForm.Designer.cs">
+      <DependentUpon>NewKlachtForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\NotitieForms.cs">
       <SubType>Form</SubType>
@@ -920,6 +938,8 @@
     <Compile Include="Rpm\FolderSync\Security\ImpersonateAsUser.cs" />
     <Compile Include="Rpm\FolderSync\Security\RestartProcessAsAdmin.cs" />
     <Compile Include="Rpm\FolderSync\SingleInstance.cs" />
+    <Compile Include="Rpm\KLachten\KlachtBeheer.cs" />
+    <Compile Include="Rpm\KLachten\KlachtEntry.cs" />
     <Compile Include="Rpm\Mailing\EmailClient.cs" />
     <Compile Include="Rpm\Mailing\EmailRespond.cs" />
     <Compile Include="Rpm\Mailing\InkomendAdres.cs" />
@@ -934,6 +954,7 @@
     <Compile Include="Rpm\ExcelHelper\ExcelColumnEntry.cs" />
     <Compile Include="Rpm\ExcelHelper\ExcelRegelEntry.cs" />
     <Compile Include="Rpm\ExcelHelper\ExcelWorkbook.cs" />
+    <Compile Include="Rpm\Misc\DrawArrow.cs" />
     <Compile Include="Rpm\Misc\Filter.cs" />
     <Compile Include="Rpm\Misc\FilterEntry.cs" />
     <Compile Include="Rpm\Misc\FingerPrint.cs" />
@@ -1143,6 +1164,9 @@
     <EmbeddedResource Include="Forms\GereedNotitieForm.resx">
       <DependentUpon>GereedNotitieForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\KlachtenForm.resx">
+      <DependentUpon>KlachtenForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\LijstWeergaveForm.resx">
       <DependentUpon>LijstWeergaveForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1157,6 +1181,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NewFilterEntry.resx">
       <DependentUpon>NewFilterEntry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NewKlachtForm.resx">
+      <DependentUpon>NewKlachtForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NotitieForms.resx">
       <DependentUpon>NotitieForms.cs</DependentUpon>
@@ -1503,6 +1530,8 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\file-warning_40447.png" />
+    <None Include="Resources\Leave-80_icon-icons.com_57305.png" />
     <None Include="Resources\ooo_draw_10002.png" />
     <None Include="Resources\libreoffice_draw_icon_128x128.png" />
     <None Include="Resources\search_locate_find_6278.png" />
@@ -1761,6 +1790,7 @@
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Code to merge the assemblies into one:setup.exe -->
 </Project>

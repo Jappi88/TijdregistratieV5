@@ -15,7 +15,7 @@ using Rpm.Various;
 
 namespace Rpm.SqlLite
 {
-    public class MultipleFileDb
+    public class MultipleFileDb : IDisposable
     {
         private FileSystemWatcher _pathwatcher;
         private FileSystemWatcher _secondarypathwatcher;
@@ -29,13 +29,12 @@ namespace Rpm.SqlLite
         public event FileSystemEventHandler SecondaryFileChanged;
         public event FileSystemEventHandler SecondaryFileDeleted;
         public event ProgressChangedHandler ProgressChanged;
-        public static List<string>CorruptedFilePaths {  get; private set; }
+        public static List<string> CorruptedFilePaths { get; private set; } = new List<string>();
 
         public static event EventHandler CorruptedFilesChanged;
 
         public MultipleFileDb(string path, bool watchdb)
         {
-            CorruptedFilePaths = new List<string>();
             _FileChangedNotifyTimer = new Timer(1000);//500 ms vertraging
             _FileChangedNotifyTimer.Elapsed += _FileChangedNotifyTimer_Elapsed;
             Path = path;
@@ -154,7 +153,7 @@ namespace Rpm.SqlLite
             }
         }
 
-        public string Path { get; }
+        public string Path { get; private set; }
 
         public List<T> GetAllEntries<T>()
         {
@@ -785,6 +784,42 @@ namespace Rpm.SqlLite
         public static void OnCorruptedFilesChanged()
         {
             CorruptedFilesChanged?.Invoke(CorruptedFilePaths, EventArgs.Empty);
+        }
+
+        public void Dispose()
+        {
+            // Dispose of unmanaged resources.
+            Dispose(true);
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
+        }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                _FileChangedNotifyTimer?.Dispose();
+                _pathwatcher?.Dispose();
+                _secondarypathwatcher?.Dispose();
+            }
+
+            // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+            // TODO: set large fields to null.
+            FileChanged = null;
+            FileDeleted = null;
+            SecondaryFileChanged = null;
+            SecondaryFileDeleted = null;
+            ProgressChanged = null;
+            SecondaryDestination = null;
+            SecondaryManagedTypes = null;
+            Path = null;
+            _disposed = true;
         }
     }
 }

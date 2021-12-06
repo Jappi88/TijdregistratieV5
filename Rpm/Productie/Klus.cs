@@ -240,11 +240,12 @@ namespace Rpm.Productie
 
         public bool ZetActief(bool actief, bool isgestart)
         {
+            IsActief = actief;
             if (!actief)
                 Stop();
             else if (isgestart)
                 Start();
-            IsActief = actief;
+           
             return IsActief;
         }
 

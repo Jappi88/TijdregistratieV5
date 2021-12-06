@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Threading.Tasks;
 using Rpm.Misc;
 
@@ -1429,6 +1430,90 @@ namespace ProductieManager.Rpm.ExcelHelper
                                "Veel leesplezier!";
 
             return omschrijving;
+        }
+
+        public static string CreateArtikelNr(string[] artikels, string filepath, string sheetname)
+        {
+            try
+            {
+                var xartikels = new List<string>();
+                if (artikels.Length > 0)
+                    xartikels = artikels.OrderBy(x => x).ToList();
+
+                var xsection = new Dictionary<string, List<string>>();
+
+                while (xartikels.Count > 0)
+                {
+                    var xfirst = xartikels[0];
+                    if (string.IsNullOrEmpty(xfirst) || xfirst.Length < 2)
+                    {
+                        xartikels.Remove(xfirst);
+                        continue;
+                    }
+
+                    var xstart = xfirst.Substring(0, 2);
+                    var xrt = xartikels.Where(x => x.ToLower().StartsWith(xstart.ToLower())).ToList();
+                    xrt.ForEach(x=> xartikels.Remove(x));
+                    if (xsection.ContainsKey(xstart))
+                        xsection[xstart].AddRange(xrt);
+                    else xsection.Add(xstart, xrt);
+                }
+
+                if (xsection.Count > 0)
+                {
+                    var workbook = new XSSFWorkbook();
+                    var sheet = workbook.CreateSheet($"{sheetname}({artikels.Length})");
+                    var rowindex = 0;
+                    var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12, IndexedColors.Black.Index);
+                    //init the columns and font
+
+                    var row = sheet.CreateRow(rowindex);
+                    var cellindex = 0;
+                    foreach (var xsec in xsection)
+                    {
+                        CreateCell(row, cellindex++, xsec.Key + $".XX..({xsec.Value.Count})", cellStyleBorder);
+                    }
+                    rowindex++;
+                    cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11, IndexedColors.Black.Index);
+                    cellindex = 0;
+                    int xrowscreated = 0;
+                    foreach (var xsec in xsection)
+                    {
+                        var xrows = rowindex;
+                        foreach (var xart in xsec.Value)
+                        {
+                            row = sheet.GetRow(xrows);
+                            if (row == null)
+                            {
+                                row = sheet.CreateRow(xrows);
+                            }
+
+                            xrows++;
+                            CreateCell(row, cellindex, xart, cellStyleBorder);
+                        }
+
+                        if (xrows > xrowscreated)
+                            xrowscreated = xrows;
+                        cellindex++;
+                    }
+                    rowindex += xrowscreated;
+                    for (var i = 0; i < xsection.Count; i++)
+                        sheet.AutoSizeColumn(i, true);
+                    using (var fs = new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.Write))
+                    {
+                        workbook.Write(fs);
+                    }
+
+                    workbook.Close();
+                }
+                else return null;
+                return filepath;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
         }
     }
 }

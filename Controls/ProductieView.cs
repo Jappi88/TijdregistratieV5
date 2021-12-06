@@ -45,16 +45,6 @@ namespace Controls
             OnFormLoaded?.Invoke(this, EventArgs.Empty);
         }
 
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //DoPdfEnabled();
-        }
-
-        private void werkPlekkenUI1_WerkPlekClicked(object sender, EventArgs e)
-        {
-           // DoPdfEnabled();
-        }
-
         #region Variables
 
         private readonly Timer _specialRoosterWatcher;
@@ -1580,8 +1570,6 @@ namespace Controls
 
         public static ProductieLijstForm ShowProductieLijstForm()
         {
-            if (Manager.LogedInGebruiker == null || Manager.LogedInGebruiker.AccesLevel < AccesType.ProductieBasis)
-                return null;
             try
             {
                 var prodform = new ProductieLijstForm(_Productelijsten.Count);
@@ -2001,7 +1989,10 @@ namespace Controls
                         var p = taak.Formulier;
                         var matform = new MateriaalForm();
                         if (matform.ShowDialog(p) == DialogResult.OK)
+                        {
+                            taak.Formulier = matform.Formulier;
                             save = true;
+                        }
                     }
 
                     break;
@@ -2015,8 +2006,10 @@ namespace Controls
                         var ind = new Indeling(taak.Formulier, taak.Bewerking);
                         ind.StartPosition = FormStartPosition.CenterParent;
                         if (ind.ShowDialog() == DialogResult.OK)
-                            //taak.Update();
+                        {
                             save = false;
+                        }//taak.Update();
+                           
                     }
 
                     break;
@@ -2029,8 +2022,15 @@ namespace Controls
                                 $"Wijzig leverdatum voor ({taak.Bewerking.Path}) {taak.Bewerking.Omschrijving}.") ==
                             DialogResult.OK)
                         {
-                            taak.Bewerking.LeverDatum = dt.SelectedValue;
-                            save = true;
+                            taak.Formulier = Manager.Database.GetProductie(taak.Bewerking.ProductieNr).Result;
+                            taak.Bewerking = taak.Formulier.Bewerkingen?.FirstOrDefault(x =>
+                                string.Equals(x.Naam, taak.Bewerking.Naam, StringComparison.CurrentCultureIgnoreCase));
+
+                            if (taak.Bewerking != null)
+                            {
+                                taak.Bewerking.LeverDatum = dt.SelectedValue;
+                                save = true;
+                            }
                         }
 
                         dt.Dispose();
@@ -2041,10 +2041,11 @@ namespace Controls
                         if (dt.ShowDialog(taak.Formulier.LeverDatum,
                             $"Wijzig leverdatum voor {taak.Formulier.Omschrijving}.") == DialogResult.OK)
                         {
-                            taak.Formulier.LeverDatum = dt.SelectedValue;
+                            taak.Formulier = Manager.Database.GetProductie(taak.Formulier.ProductieNr).Result;
                             if (taak.Formulier.Bewerkingen.Length > 0)
                                 taak.Formulier.Bewerkingen[taak.Formulier.Bewerkingen.Length - 1].LeverDatum =
                                     dt.SelectedValue;
+                            else taak.Formulier.LeverDatum = dt.SelectedValue;
                             save = true;
                         }
 
@@ -2058,9 +2059,9 @@ namespace Controls
                     {
                         var ind = new Indeling(taak.Formulier, taak.Bewerking);
                         ind.StartPosition = FormStartPosition.CenterParent;
-                        if (ind.ShowDialog() == DialogResult.OK)
-                            //taak.Update();
-                            save = false;
+                        ind.ShowDialog();
+                        // if (ind.ShowDialog() == DialogResult.OK)
+                        //taak.Update();
                     }
 
                     break;
@@ -2262,6 +2263,30 @@ namespace Controls
             this.BringToFront();
             this.Focus();
             _xtekeningbusy = false;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            var xdraw = new DrawArrow(this, Direction.Top, true, this.PointToScreen(xToolButtons.Location));
+            xdraw.Draw();
+            var xdraw1 = new DrawArrow(this, Direction.Left, true,this.PointToScreen(mainMenu1.Location));
+            xdraw1.Draw();
+            //var xdraw = new DrawArrow(this, Direction.Top, true, this.PointToScreen(xToolButtons.Location));
+            //xdraw.Draw();
+            //var xdraw = new DrawArrow(this, Direction.Top, true, this.PointToScreen(xToolButtons.Location));
+            //xdraw.Draw();
+        }
+
+        private Point FindLocation(Control ctrl, bool height)
+        {
+            if (ctrl.Parent is Form)
+                return new Point(ctrl.Location.X + (height ? 0 : ctrl.Width),
+                    ctrl.Location.Y + (height ? ctrl.Height : 0));
+
+            Point p = FindLocation(ctrl.Parent, height);
+            p.X += ctrl.Location.X;
+            p.Y += ctrl.Location.Y;
+            return p;
         }
     }
 }

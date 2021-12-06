@@ -81,13 +81,26 @@ namespace ProductieManager
             //Shown += Mainform_Shown;
             //Task.Run(new Action(productieView1.LoadForm));
             _splash = new SplashScreen(3000) {WindowState = FormWindowState.Normal};
-            _splash.FinishedLoading += _splash_FinishedLoading;
             Shown += Mainform_Shown;
             _splash.Shown += _splash_Shown;
+            _splash.Closed += _splash_Closed;
             _splash.Show();
             _dbWatcher = new PathWatcher();
             _dbWatcher.PathLocationFound += _DbWatcher_PathLocationFound;
             _dbWatcher.PathLocationLost += _DbWatcher_PathLocationLost;
+        }
+
+        private void _splash_Closed(object sender, EventArgs e)
+        {
+            IsLoading = false;
+            _splash?.Dispose();
+            _splash = null;
+            StartPosition = FormStartPosition.CenterParent;
+            Show();
+            this.InitLastInfo();
+            Select();
+            BringToFront();
+            UpdateTitle();
         }
 
         private void AutoUpdater_ApplicationExitEvent()
@@ -277,22 +290,6 @@ namespace ProductieManager
                 Manager.DefaultSettings.TempMainDB = tempdbent;
                 Manager.DefaultSettings.SaveAsDefault();
             }
-        }
-
-        private void _splash_FinishedLoading(object sender, EventArgs e)
-        { 
-            IsLoading = false;
-            while (!Manager.IsLoaded)
-                Application.DoEvents();
-            _splash.Dispose();
-            _splash = null;
-            StartPosition = FormStartPosition.CenterParent;
-            Show();
-            this.InitLastInfo();
-            Select();
-            BringToFront();
-            UpdateTitle();
-
         }
 
         private void _manager_OnRemoteMessage(RemoteMessage message, Manager instance)

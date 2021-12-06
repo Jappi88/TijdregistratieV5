@@ -3,6 +3,7 @@ using Rpm.Various;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Rpm.Productie
 {
@@ -183,6 +184,29 @@ namespace Rpm.Productie
             return xreturn;
         }
 
+        public static Task<List<Taak>> GetAlleTaken()
+        {
+            return Task.Run( () =>
+            {
+                var xtaken = new List<Taak>();
+                try
+                {
+                    var bws = Manager.Database?.GetAllBewerkingen(false, true).Result;
+                    if (bws == null || bws.Count == 0) return xtaken;
+                    foreach (var bw in bws)
+                    {
+                        var xt = GetBewerkingTaken(bw);
+                        if (xt.Count > 0)
+                            xtaken.AddRange(xt);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
 
+                return xtaken;
+            });
+        }
     }
 }

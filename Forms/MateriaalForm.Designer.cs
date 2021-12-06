@@ -112,7 +112,6 @@
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MateriaalForm";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MateriaalForm_FormClosing);
             this.Shown += new System.EventHandler(this.MateriaalForm_Shown);
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);

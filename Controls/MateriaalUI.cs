@@ -204,8 +204,7 @@ namespace Controls
                 xklaarzetimage.Image = Resources.check_1582;
             else xklaarzetimage.Image = null;
             var xchecked = xklaarzetimage.Image != null;
-            var mats = xmateriaalpanel.Tag as Materiaal[];
-            if (mats is {Length: > 0})
+            if (xmateriaalpanel.Tag is Materiaal[] {Length: > 0} mats)
             {
                 foreach (var mat in mats)
                     mat.IsKlaarGezet = xchecked;
@@ -215,8 +214,7 @@ namespace Controls
 
         private void xwijzigmatb_Click(object sender, EventArgs e)
         {
-            var mats = xmateriaalpanel.Tag as Materiaal[];
-            if (mats is {Length: > 0})
+            if (xmateriaalpanel.Tag is Materiaal[] {Length: > 0} mats)
             {
                 UpdateMateriaal(mats[0]);
                 xmateriaallijst.RefreshObject(mats[0]);
@@ -246,8 +244,7 @@ namespace Controls
 
         private void xverwijderb_Click(object sender, EventArgs e)
         {
-            var mats = xmateriaalpanel.Tag as Materiaal[];
-            if (mats is {Length: > 0})
+            if (xmateriaalpanel.Tag is Materiaal[] {Length: > 0} mats)
             {
                 string txt;
                 if (mats.Length == 1)

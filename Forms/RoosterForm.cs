@@ -11,7 +11,7 @@ namespace Forms
         public RoosterForm()
         {
             InitializeComponent();
-            ViewPeriode = true;
+            ViewPeriode = false;
         }
 
         public RoosterForm(Rooster rooster, string title = null) : this()
@@ -34,7 +34,10 @@ namespace Forms
             }
 
             if (title != null)
-                Text = title;
+            {
+                this.Text = title;
+                this.Invalidate();
+            }
         }
 
         public Rooster WerkRooster { get; set; }
@@ -47,16 +50,15 @@ namespace Forms
                 xperiodegroup.Visible = value;
                 if (value)
                 {
-                    this.MinimumSize = new Size(500, 600);
+                    this.MinimumSize = new Size(550, 600);
                     
                 }
                 else
                 {
-                    this.MinimumSize = new Size(500, 500);
+                    this.MinimumSize = new Size(550, 500);
                 }
 
                 this.Size = this.MinimumSize;
-
             }
         }
 
@@ -75,6 +77,11 @@ namespace Forms
             if (xtotdate.Checked)
                 WerkRooster.Tot = xtotdate.Value;
             DialogResult = DialogResult.OK;
+        }
+
+        private void xgebruikperiode_CheckedChanged(object sender, EventArgs e)
+        {
+            ViewPeriode = xgebruikperiode.Checked;
         }
     }
 }

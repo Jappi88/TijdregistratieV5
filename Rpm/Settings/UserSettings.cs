@@ -168,24 +168,27 @@ namespace Rpm.Settings
         {
             UserSettings xreturn = null;
             var defaultpath = Application.StartupPath + "\\DefaultSettings.db";
-            for (int i = 0; i < 10; i++)
+            if (File.Exists(defaultpath))
             {
-                try
+                for (int i = 0; i < 10; i++)
                 {
-                    using FileStream fs = new FileStream(defaultpath, FileMode.Open, FileAccess.ReadWrite,
-                        FileShare.Read);
+                    try
+                    {
+                        using FileStream fs = new FileStream(defaultpath, FileMode.Open, FileAccess.ReadWrite,
+                            FileShare.Read);
 
-                    var str = new SharpSerializer();
-                    xreturn = str.Deserialize(fs) as UserSettings;
-                    fs.Close();
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
+                        var str = new SharpSerializer();
+                        xreturn = str.Deserialize(fs) as UserSettings;
+                        fs.Close();
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
 
-                Application.DoEvents();
+                    Application.DoEvents();
+                }
             }
 
             xreturn ??= Manager.Opties?.CreateCopy();

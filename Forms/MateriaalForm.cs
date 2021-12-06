@@ -28,6 +28,9 @@ namespace Forms
 
         private void xok_Click(object sender, EventArgs e)
         {
+            Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
+            Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
+
             if (materiaalUI1.SaveMaterials())
                 DialogResult = DialogResult.OK;
             else
@@ -37,12 +40,6 @@ namespace Forms
         private void xannuleren_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
-        }
-        
-        private void MateriaalForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
-            Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
         }
 
         private void MateriaalForm_Shown(object sender, EventArgs e)

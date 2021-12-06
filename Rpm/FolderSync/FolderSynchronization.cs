@@ -372,8 +372,10 @@ namespace FolderSync
                         {
                             try
                             {
-                                if (Directory.Exists(op.Source) && Directory.Exists(op.Destination))
+                                if (Directory.Exists(op.Source))
                                 {
+                                    if (!Directory.Exists(op.Destination))
+                                        Directory.CreateDirectory(op.Destination);
                                     FolderSynchronizationScanner fss =
                                         new FolderSynchronizationScanner(op.Source, op.Destination, op.Option);
                                     await fss.Sync();

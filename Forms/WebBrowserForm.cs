@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using ProductieManager.Rpm.Connection;
+using ProductieManager.Rpm.ExcelHelper;
 using Rpm.Productie;
 using Rpm.Various;
 using Various;
@@ -63,6 +64,7 @@ namespace ProductieManager.Forms
         public void Navigate(string artnr)
         {
             Arg.Message = $"Navigeren naar {artnr}...";
+            Arg.Type = ProgressType.ReadBussy;
             Arg.OnChanged(this);
             if (Browser == null)
             {
@@ -126,6 +128,7 @@ namespace ProductieManager.Forms
             if (_hasFound || FilesToOpen == null || FilesToOpen.Count == 0 ||
                 FilesFormatToOpen == null || FilesFormatToOpen.Length == 0) return;
             if (Disposing || IsDisposed) return;
+            Arg.Type = ProgressType.ReadBussy;
             Arg.Current++;
             Arg.OnChanged(this);
             if (Arg.IsCanceled)
@@ -138,7 +141,7 @@ namespace ProductieManager.Forms
             await Task.Factory.StartNew(new Action(() =>
             {
                 
-                for (int i = 0; i < 20; i++)
+                for (int i = 0; i < 40; i++)
                 {
                     Arg.Message = $"Gegevens laden van {NavigatingArtNr}...";
                     Arg.OnChanged(this);
@@ -158,7 +161,6 @@ namespace ProductieManager.Forms
                     else xelements = GetNodeCollection(ref isvalid);
 
                     if (xelements != null || !isvalid) break;
-
                     Thread.Sleep(250);
                 }
             }));
@@ -170,15 +172,17 @@ namespace ProductieManager.Forms
             }
             try
             {
-                if (!isvalid && StopNavigatingAfterError)
+                FilesToOpen.Remove(NavigatingArtNr);
+                var xnext = FilesToOpen.FirstOrDefault();
+                bool xflag = ((StopNavigatingAfterError || xnext == null) && !isvalid);
+                if (xflag)
                 {
                     throw new Exception(
                         "Verbinding kan niet tot stand worden gebracht.\n\nControlleer je netwerkinstellingen voor of je toegang hebt tot de server.");
                 }
 
-                FilesToOpen.Remove(NavigatingArtNr);
-                var xnext = FilesToOpen.FirstOrDefault();
-                if (xelements == null)
+                
+                if (!isvalid || xelements == null)
                 {
                     if (!string.IsNullOrEmpty(xnext))
                         Navigate(xnext);
@@ -236,10 +240,14 @@ namespace ProductieManager.Forms
                 //Arg.IsCanceled = true;
                 Arg.Current = 0;
                 Arg.Message = exception.Message;
+                Arg.Type = ProgressType.ReadCompleet;
                 Arg.OnChanged(this);
                 if (ShowErrorMessage)
+                {
                     XMessageBox.Show(exception.Message, "Fout", MessageBoxIcon.Warning);
-                this.Dispose();
+                    this.Close();
+                }
+                //this.Close();
             }
         }
 
@@ -247,19 +255,13 @@ namespace ProductieManager.Forms
         {
             if (FilesNotFound is {Count: > 0})
             {
-                string xtmpfile = Path.Combine(Path.GetTempPath(), "Ont_FBR_tekeningen.txt");
+                string xtmpfile = Path.Combine(Path.GetTempPath(), "Ont_FBR_tekeningen.xlsx");
                 try
                 {
-                    using (var sw = new StreamWriter(xtmpfile))
-                    {
-                        var x1 = FilesNotFound.Count == 1 ? "tekening" : "tekeningen";
-                        sw.WriteLine($"Totaal {FilesNotFound.Count} ontbrekende fabrikage {x1}.\n");
-                        FilesNotFound = FilesNotFound.OrderBy(x=> x).ToList();
-                        FilesNotFound.ForEach(x => sw.WriteLine(x));
-                        sw.Close();
-                    }
+                    var xfp = ExcelWorkbook.CreateArtikelNr(FilesNotFound.ToArray(), xtmpfile, "Ontbr. FBR");
 
-                    Process.Start(xtmpfile);
+                    if (!string.IsNullOrEmpty(xfp))
+                        Process.Start(xfp);
                 }
                 catch (Exception e)
                 {

@@ -19,7 +19,7 @@ namespace ProductieManager.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -820,6 +820,16 @@ namespace ProductieManager.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap file_warning_40447 {
+            get {
+                object obj = ResourceManager.GetObject("file_warning_40447", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Checksum differs.
         /// </summary>
         internal static string FileIntegrityCheckFailedCaption {
@@ -1271,6 +1281,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap key_skills {
             get {
                 object obj = ResourceManager.GetObject("key-skills", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Leave_80_icon_icons_com_57305 {
+            get {
+                object obj = ResourceManager.GetObject("Leave-80_icon-icons.com_57305", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

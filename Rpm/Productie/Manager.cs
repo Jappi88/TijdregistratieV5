@@ -266,8 +266,8 @@ namespace Rpm.Productie
                     }
 
                     DbUpdater.UpdateStartupDbs();
-                    while (Mainform.IsLoading)
-                        Application.DoEvents();
+                    //while (Mainform.IsLoading)
+                    //    Application.DoEvents();
                     IsLoaded = true;
                     if (raiseManagerLoadingEvents)
                         ManagerLoaded();
@@ -318,7 +318,7 @@ namespace Rpm.Productie
         /// </summary>
         /// <param name="account">De account die aangemaakt moet worden</param>
         /// <returns>Een taak dat draait op de achtergrond</returns>
-        public Task<bool> CreateAccount(UserAccount account)
+        public static Task<bool> CreateAccount(UserAccount account)
         {
             return Database.UpSert(account);
         }

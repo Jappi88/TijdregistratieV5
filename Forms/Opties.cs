@@ -603,7 +603,7 @@ namespace Forms
             if (cr.ShowDialog() == DialogResult.OK)
             {
                 var ac = cr.Account;
-                ProductieView._manager.CreateAccount(ac).Wait();
+                Manager.CreateAccount(ac).Wait();
                 UpdateOptieList();
             }
         }

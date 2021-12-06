@@ -518,7 +518,6 @@ namespace Rpm.Productie
                             }
                         }
                     }
-
                     plek.UpdateWerkRooster(null, true, true, false, false, false, false, true);
                     if (plek.IsActief())
                     {
