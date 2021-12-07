@@ -448,6 +448,7 @@ namespace Forms
             //default settings die we hier niet veranderen.
             if (_LoadedOpties != null)
             {
+                xs.PreviewShown = _LoadedOpties.PreviewShown;
                 xs.LastPreviewVersion = _LoadedOpties.LastPreviewVersion;
                 xs.ExcelColumns = _LoadedOpties.ExcelColumns;
                 xs.BoundUsername = _LoadedOpties.BoundUsername;

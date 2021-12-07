@@ -29,6 +29,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Navigation;
 using NPOI.XSSF.UserModel.Charts;
 
 namespace Rpm.Misc
@@ -692,7 +693,7 @@ namespace Rpm.Misc
             else if (b.WerkPlekken.Count > 1)
             {
                 var wpchooser = new WerkPlekChooser(b.WerkPlekken,null);
-                wpchooser.Title = $"Kies voor {b.Naam} een werkplek om de werktijd van te wijzigen";
+                wpchooser.Title = $"Kies voor '{b.Naam}' een werkplek";
                 if (wpchooser.ShowDialog() == DialogResult.Cancel) return;
                 wp = wpchooser.Selected;
             }
@@ -707,6 +708,66 @@ namespace Rpm.Misc
             var wc = new WerktijdChanger(wp) {SaveChanges = true};
             if (wc.ShowDialog() == DialogResult.OK)
                 await b.UpdateBewerking(null, $"[{b.Path}] Werktijd Aangepast");
+        }
+
+        public static void DoOnderbreking(this Bewerking bw)
+        {
+            try
+            {
+                if (bw == null) return;
+                var wps = bw.WerkPlekken.Where(x => x.IsActief()).ToList();
+                WerkPlek wp = null;
+                if (wps.Count == 1)
+                {
+                    wp = wps[0];
+
+                }
+                else if (wps.Count > 1)
+                {
+                    var wpchooser = new WerkPlekChooser(wps, null);
+                    wpchooser.Title = $"Kies een werkplek om te onderbreken of te hervatten";
+                    if (wpchooser.ShowDialog() == DialogResult.Cancel) return;
+                    wp = wpchooser.Selected;
+                }
+
+                if (wp == null)
+                {
+                    XMessageBox.Show($"{bw.Naam} heeft geen werkplekken om te onderbreken.",
+                        "Geen Werkplekken", MessageBoxIcon.Warning);
+                    return;
+                }
+
+                var xsts = wp.Storingen.Where(x => !x.IsVerholpen).ToList();
+                if (xsts.Count > 1)
+                {
+                    var allst = new AlleStoringen();
+                    allst.InitStoringen(bw.Root, wp);
+                    allst.ShowDialog();
+                    return;
+                }
+                var xst = xsts.FirstOrDefault();
+                var xnew = new NewStoringForm(wp, xst, xst != null);
+                if (xnew.ShowDialog() == DialogResult.OK)
+                {
+                    if (xst != null)
+                    {
+                        var index = wp.Storingen.IndexOf(xst);
+                        if (index > -1)
+                        {
+                            wp.Storingen[index] = xnew.Onderbreking;
+                        }
+                        else wp.Storingen.Add(xnew.Onderbreking);
+                    }
+                    else wp.Storingen.Add(xnew.Onderbreking);
+                    xsts = wp.Storingen.Where(x => !x.IsVerholpen).ToList();
+                    var x1 = xsts.Count > 0 ? "onderbroken" : "hervat";
+                    _= bw.UpdateBewerking(null, $"'{bw.Naam}' op '{wp.Naam}' is {x1}");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         #endregion Bewerkingen
@@ -2456,6 +2517,33 @@ namespace Rpm.Misc
             }
 
             return -1;
+        }
+
+        public static Color GetProgressColor(int percentage)
+        {
+            switch (percentage)
+            {
+                case < 5:
+                    return Color.DarkRed;
+                case < 15:
+                    return Color.Red;
+                case < 25:
+                    return Color.DarkOrange;
+                case < 35:
+                    return Color.Orange;
+                case < 45:
+                    return Color.Yellow;
+                case < 75:
+                    return Color.LightGreen;
+                case < 101:
+                    return Color.Green;
+                case < 125:
+                    return Color.RoyalBlue;
+                case < 150:
+                    return Color.HotPink;
+            }
+
+            return Color.Purple;
         }
 
         #endregion Misc

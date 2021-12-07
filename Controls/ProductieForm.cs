@@ -228,6 +228,7 @@ namespace Controls
                             ? Resources.schedule_32_32.CombineImage(Resources.exclamation_warning_15590, 1.75)
                             : Resources.schedule_32_32;
                     var xstoring = mainMenu1.GetButton("xonderbreking");
+                    
                     if (xstoring != null)
                     {
                         var img = b.GetAlleStoringen(true).Length == 0
@@ -241,7 +242,8 @@ namespace Controls
                     }
 
                     //mainMenu1.Enable("xwerktijden", !b.IsBemand);
-                    mainMenu1.Enable("xopenpdf", b?.Parent != null && b.Parent.ContainsProductiePdf());
+                    mainMenu1.Enable("xopenpdf", b.Parent != null && b.Parent.ContainsProductiePdf());
+                    //update de start knop
                     switch (b.State)
                     {
                         case ProductieState.Gestopt:
@@ -252,7 +254,7 @@ namespace Controls
                                 xstartb.Image = Resources.play_button_icon_icons_com_60615;
                             }
 
-                            xprogressbar.ProgressColor = Color.DarkOrange;
+                            
                             xstatuslabel.ForeColor = Color.DarkRed;
                             xstatusimage.Image = Resources.stop_red256_24890;
                             xprogressbar.Text = "GESTOPT";
@@ -264,8 +266,6 @@ namespace Controls
                                 xstartb.Text = "Stop";
                                 xstartb.Image = Resources.stop_red256_24890;
                             }
-
-                            xprogressbar.ProgressColor = Color.Green;
                             xstatuslabel.ForeColor = Color.DarkGreen;
                             xstatusimage.Image = Resources.play_button_icon_icons_com_60615;
                             xprogressbar.Text = b.GereedPercentage().ToString();
@@ -277,8 +277,6 @@ namespace Controls
                                 xstartb.Enabled = false;
                                 xstartb.Image = Resources.check_1582;
                             }
-
-                            xprogressbar.ProgressColor = Color.Green;
                             xstatuslabel.ForeColor = Color.DodgerBlue;
                             xstatusimage.Image = Resources.check_1582;
                             xprogressbar.Text = b.GereedPercentage().ToString();
@@ -286,7 +284,43 @@ namespace Controls
                         case ProductieState.Verwijderd:
                             break;
                     }
+
+                    //update progressbar
+                    var xpcolor = Color.DarkRed;
+                    switch (b.State)
+                    {
+                        case ProductieState.Gestopt:
+                            xpcolor = Color.DarkRed;
+                            break;
+                        case ProductieState.Gestart:
+                            xpcolor = Color.Green;
+                            break;
+                        case ProductieState.Gereed:
+                            xpcolor = Color.RoyalBlue;
+                            break;
+                        case ProductieState.Verwijderd:
+                            xpcolor = Color.Red;
+                            break;
+                    }
+                    xprogressbar.ForeColor = xpcolor;
+                    xOnderbreek.Enabled = b.State is ProductieState.Gestart or ProductieState.Gestopt;
+                    //update de onderbrekingknop
+                    var xstoringen = b.GetStoringen(true);
+                    if (xstoringen.Length > 0)
+                    {
+                        xprogressbar.Style = ProgressBarStyle.Marquee;
+                        xOnderbreek.Text = "Hervatten";
+                        xOnderbreek.Image = Resources.playcircle_32x32;
+                    }
+                    else
+                    {
+                        xprogressbar.Style = ProgressBarStyle.Blocks;
+                        xOnderbreek.Text = "Onderbreek";
+                        xOnderbreek.Image = Resources.Stop_Hand__32x32;
+                    }
+
                     int xpercent = (int) b.GereedPercentage();
+                    xprogressbar.ProgressColor = Functions.GetProgressColor(xpercent);
                     xprogressbar.Value = (xpercent > xprogressbar.Maximum? xprogressbar.Maximum : xpercent);
                     xprogressbar.Text = b.GereedPercentage() + "%";
                     var tg = b.TijdAanGewerkt();
@@ -424,13 +458,13 @@ namespace Controls
                 }
         }
 
-        private void ShowSelectedBewStoringen()
+        private void ShowSelectedBewStoringen(WerkPlek selected = null)
         {
             var b = CurrentBewerking();
             if (b != null)
             {
                 var allst = new AlleStoringen();
-                allst.InitStoringen(b.Root);
+                allst.InitStoringen(b.Root, selected);
                 allst.ShowDialog();
             }
         }
@@ -634,6 +668,11 @@ namespace Controls
         private void xtoonwerktekening_Click(object sender, EventArgs e)
         {
             ShowWerkTekening();
+        }
+
+        private void xOnderbreek_Click(object sender, EventArgs e)
+        {
+            CurrentBewerking()?.DoOnderbreking();
         }
     }
 }

@@ -285,7 +285,6 @@ namespace Forms
                     var xpers = Werklplek.Personen.Where(x => x.IngezetAanKlus(Werklplek.Path,true)).ToList();
                     if (xpers.Count > 0)
                     {
-                        isgestart = true;
                         var x0 = xpers.Count == 1 ? xpers[0].PersoneelNaam : $"Er zijn {xpers.Count}";
                         var x1 = xpers.Count == 1 ? "is" : "medewerkers";
                         var x2 = xpers.Count == 1 ? xpers[0].PersoneelNaam : "ze";
@@ -300,7 +299,7 @@ namespace Forms
                 }
                 Werklplek.Tijden.WerkRooster = rooster;
                 Werklplek.Tijden.SpecialeRoosters = SpecialeRoosters;
-                Werklplek.Tijden.SetUren(tijden, isgestart, true);
+                Werklplek.Tijden.SetUren(tijden, Werklplek.Werk.State == ProductieState.Gestart, true);
                 //Werklplek.Tijden.UpdateUrenRooster(true,false);
                 Werklplek.UpdateWerkRooster(rooster,false, false,result == DialogResult.Yes, SaveChanges,false, true, false);
             }

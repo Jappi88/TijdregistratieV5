@@ -13,35 +13,53 @@ namespace Forms
     {
         private Storing _onderbreking;
 
-        public NewStoringForm(WerkPlek plek) : this(plek, null)
-        {
-        }
-
-        public NewStoringForm(WerkPlek plek, Storing storing)
+        public NewStoringForm()
         {
             InitializeComponent();
-            IsEdit = storing != null;
-            //pak all soort storingen
-            Text = $@"Alle Onderbrekeningen van {plek.Path}";
-            var storingen = Functions.LoadSoortStoringen("SoortStilstanden.txt").Select(x => (object) x).ToArray();
-            xsoortstoringen.Items.AddRange(storingen);
-            SetOnderbreking(plek, storing);
         }
 
-        public bool IsEdit { get; }
+        public NewStoringForm(WerkPlek plek) : this(plek, null)
+        {
+
+        }
+
+        public NewStoringForm(WerkPlek plek, Storing storing):this()
+        {
+            
+            var storingen = Functions.LoadSoortStoringen("SoortStilstanden.txt").Select(x => (object)x).ToArray();
+            xsoortstoringen.Items.AddRange(storingen);
+            SetOnderbreking(plek, storing, storing?.IsVerholpen ?? false);
+        }
+
+        public NewStoringForm(WerkPlek plek, Storing storing, bool isverholpen) : this()
+        {
+
+            var storingen = Functions.LoadSoortStoringen("SoortStilstanden.txt").Select(x => (object)x).ToArray();
+            xsoortstoringen.Items.AddRange(storingen);
+            SetOnderbreking(plek, storing, isverholpen);
+        }
+
+        public bool IsEdit { get; private set; }
 
         public WerkPlek Plek { get; private set; }
 
         public Storing Onderbreking
         {
             get => _onderbreking;
-            set => SetOnderbreking(Plek, value);
+            set => SetOnderbreking(Plek, value,_onderbreking.IsVerholpen);
         }
 
-        public void SetOnderbreking(WerkPlek plek, Storing storing)
+        public void SetOnderbreking(WerkPlek plek, Storing storing, bool isverholpen)
         {
+            IsEdit = storing != null;
+            //pak all soort storingen
+            Text = $@"Alle Onderbrekeningen van {plek.Path}";
+            this.Invalidate();
             Plek = plek;
             _onderbreking = storing == null ? new Storing() : storing.CreateCopy();
+            _onderbreking.IsVerholpen = isverholpen;
+            if (isverholpen)
+                _onderbreking.Gestopt = DateTime.Now;
             _onderbreking.WerkRooster = plek.Tijden.WerkRooster;
             _onderbreking.Path = plek.Path;
             _onderbreking.WerkPlek = plek.Naam;
@@ -66,6 +84,8 @@ namespace Forms
             xnaambeeindiger.Enabled = Onderbreking.IsVerholpen;
             xomschrijving.Text = x.Omschrijving;
             xactie.Text = x.Oplossing;
+            if (_onderbreking.IsVerholpen)
+                xnaambeeindiger.Select();
             UpdateStatusLabel();
             SetTextFieldEnable();
         }

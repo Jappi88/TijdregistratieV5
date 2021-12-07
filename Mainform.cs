@@ -101,6 +101,7 @@ namespace ProductieManager
             Select();
             BringToFront();
             UpdateTitle();
+            productieView1.ShowStartupForms();
         }
 
         private void AutoUpdater_ApplicationExitEvent()

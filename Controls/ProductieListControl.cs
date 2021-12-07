@@ -12,13 +12,11 @@ using Rpm.Settings;
 using Rpm.Various;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
-using ProductieManager.Rpm.Connection;
 using Various;
 using static Forms.RangeCalculatorForm;
 using Comparer = Rpm.Various.Comparer;
@@ -30,7 +28,7 @@ namespace Controls
     {
         private bool _enableEntryFilter;
         private bool _enableFilter;
-        private object _selectedItem;
+        //private object _selectedItem;
 
         public ProductieListControl()
         {
@@ -65,7 +63,6 @@ namespace Controls
             if (Disposing || IsDisposed) return;
             BeginInvoke(new Action(() =>
             {
-                _selectedItem = ProductieLijst.SelectedObject;
                 SetButtonEnable();
                 OnSelectedItemChanged();
             }));
@@ -73,10 +70,9 @@ namespace Controls
 
         public object SelectedItem
         {
-            get => _selectedItem;
+            get => ProductieLijst.SelectedObject;
             set
             {
-                _selectedItem = value;
                 ProductieLijst.SelectedObject = value;
                 ProductieLijst.SelectedItem?.EnsureVisible();
             }
@@ -195,6 +191,15 @@ namespace Controls
                         }
                     else bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToList();
                 }
+
+                if (SelectedItem is Bewerking bw && acces1 && bw.State is ProductieState.Gestart or ProductieState.Gestopt)
+                {
+                    xonderbreek.Enabled = true;
+                    var xont = bw.GetStoringen(true);
+                    xonderbreek.Image =
+                        xont.Length == 0 ? Resources.Stop_Hand__32x32 : Resources.playcircle_32x32;
+                }
+                else xonderbreek.Enabled = false;
 
                 var isprod = !IsBewerkingView;
                 var verwijderd1 = enable3 && isprod
@@ -663,6 +668,7 @@ namespace Controls
             ximagelist.Images.Add(img.CombineImage(Resources.play_button_icon_icons_com_60615, 2.5)); //play document
             ximagelist.Images.Add(img.CombineImage(Resources.delete_1577, 2)); //deleted document
             ximagelist.Images.Add(img.CombineImage(Resources.check_1582, 2)); // checked document
+            ximagelist.Images.Add(img.CombineImage(Resources.Stop_Hand__32x32, 1.5));// onderbroken document
 
             var imgscale = 1.75;
             //zelfde afbeeldingen, maar dan met de note icon
@@ -678,12 +684,16 @@ namespace Controls
                 .CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); //deleted document
             ximagelist.Images.Add(img.CombineImage(Resources.check_1582, 2)
                 .CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); // checked document
+            ximagelist.Images.Add(img.CombineImage(Resources.Stop_Hand__32x32, 1.5)
+                .CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); // onderbroken document
         }
 
         private int GetProductieImageIndex(IProductieBase productie)
         {
             if (productie == null) return 0;
-            var xbase = string.IsNullOrEmpty(productie.Note?.Notitie) ? 0 : 6;
+            var xbase = string.IsNullOrEmpty(productie.Note?.Notitie) ? 0 : 7;
+            if (productie.GetStoringen(true).Length > 0)
+                return 6 + xbase;
             switch (productie.State)
             {
                 case ProductieState.Gestopt:
@@ -962,7 +972,6 @@ namespace Controls
                                 if (groups1.Any(t => !@group.Collapsed && t.Header == @group.Header))
                                     @group.Collapsed = true;
                             }
-                        _selectedItem = ProductieLijst.SelectedObject;
                         SetButtonEnable();
                         OnSelectedItemChanged();
                         //if (xfocused != null)
@@ -3008,6 +3017,14 @@ namespace Controls
                 Clipboard.Clear();
             else
                 Clipboard.SetText(_selectedSubitem.Value.ToString());
+        }
+
+        private void xonderbreek_Click(object sender, EventArgs e)
+        {
+            if (SelectedItem is Bewerking bw)
+            {
+                bw.DoOnderbreking();
+            }
         }
     }
 }

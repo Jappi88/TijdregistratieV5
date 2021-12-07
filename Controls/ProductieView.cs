@@ -1,4 +1,18 @@
-﻿using System;
+﻿using AutoUpdaterDotNET;
+using BrightIdeasSoftware;
+using Forms;
+using MetroFramework;
+using ProductieManager.Forms;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
+using ProductieManager.Rpm.Various;
+using Rpm.Mailing;
+using Rpm.Misc;
+using Rpm.Productie;
+using Rpm.Settings;
+using Rpm.SqlLite;
+using Rpm.Various;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -8,21 +22,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AutoUpdaterDotNET;
-using BrightIdeasSoftware;
-using Forms;
-using MetroFramework;
-using ProductieManager.Forms;
-using ProductieManager.Properties;
-using ProductieManager.Rpm.Connection;
-using ProductieManager.Rpm.Misc;
-using ProductieManager.Rpm.Various;
-using Rpm.Mailing;
-using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Settings;
-using Rpm.SqlLite;
-using Rpm.Various;
 using Various;
 
 namespace Controls
@@ -393,28 +392,27 @@ namespace Controls
         private void _manager_OnManagerLoaded()
         {
             if (IsDisposed || Disposing) return;
-            Task.Factory.StartNew(new Action(() =>
+            _specialRoosterWatcher?.Start();
+        }
+
+        public void ShowStartupForms()
+        {
+            try
             {
-                try
-                {
-                    this.BeginInvoke(new Action(() =>
-                    {
-                        //CheckForSyncDatabase();
-                        //CheckForUpdateDatabase();
-                        CheckForSpecialRooster(true);
-                        LoadStartedProducties();
-                        LoadProductieLogs();
-                        //RunProductieRefresh();
-                        CheckForPreview(false, true);
-                        //UpdateAllLists();
-                        _specialRoosterWatcher?.Start();
-                    }));
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            }));
+                    //CheckForSyncDatabase();
+                    //CheckForUpdateDatabase();
+                    CheckForSpecialRooster(true);
+                    LoadStartedProducties();
+                    //LoadProductieLogs();
+                    //RunProductieRefresh();
+                    CheckForPreview(false, true);
+                    //UpdateAllLists();
+                    
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private void Manager_OnFormulierActie(object[] values, MainAktie type)
@@ -1878,7 +1876,7 @@ namespace Controls
                     {
                         
                         if (!xprevs.ContainsKey(xvers)) return;
-                        if (onlyifnew && new Version(Manager.DefaultSettings.LastPreviewVersion) >= new Version(xvers))
+                        if (onlyifnew && Manager.DefaultSettings.PreviewShown)
                             return;
                         xshowform = new UpdatePreviewForm(xprevs[xvers], onlyifnew,false);
                         xshowform.Title = $"NIEUW In {xvers}!";

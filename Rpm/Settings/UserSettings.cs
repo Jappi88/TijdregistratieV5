@@ -39,6 +39,8 @@ namespace Rpm.Settings
         public DatabaseUpdateEntry MainDB { get; set; }
         public DatabaseUpdateEntry TempMainDB { get; set; }
         public List<string> PersoneelIndeling { get; set; }
+
+        public bool PreviewShown { get; set; }
         #region "Methods"
 
         public void Initdefault()

@@ -1898,6 +1898,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap playcircle_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("playcircle_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap playcircle_start_arrow_6048 {
             get {
                 object obj = ResourceManager.GetObject("playcircle_start_arrow_6048", resourceCulture);
@@ -2061,6 +2071,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap stats_15267_32x32 {
             get {
                 object obj = ResourceManager.GetObject("stats_15267_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Stop_Hand__32x32 {
+            get {
+                object obj = ResourceManager.GetObject("Stop_Hand _32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

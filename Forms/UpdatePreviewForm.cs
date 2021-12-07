@@ -128,6 +128,8 @@ namespace Forms
             if (Manager.DefaultSettings != null)
             {
                 Manager.DefaultSettings.LastPreviewVersion = this.ProductVersion.ToString();
+                Manager.DefaultSettings.PreviewShown = true;
+                Manager.DefaultSettings.SaveAsDefault();
                 timer1.Stop();
             }
         }

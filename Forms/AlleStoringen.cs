@@ -68,7 +68,7 @@ namespace Forms
             werkPlekStoringen1.InitStoringen(Selected);
         }
 
-        public async void InitStoringen(ProductieFormulier productie = null)
+        public async void InitStoringen(ProductieFormulier productie = null, WerkPlek selected = null)
         {
             try
             {
@@ -97,7 +97,10 @@ namespace Forms
                 xwerkplekken.SetObjects(Collection);
                 if (xwerkplekken.Items.Count > 0 && xwerkplekken.SelectedObject == null)
                 {
-                    var first = Collection.FirstOrDefault();
+                    var first = selected == null
+                        ? Collection.FirstOrDefault()
+                        : Collection.FirstOrDefault(x =>
+                            string.Equals(x.Key, selected.Naam, StringComparison.CurrentCultureIgnoreCase));
                     if (first.IsDefault())
                         xwerkplekken.SelectedObject = null;
                     else xwerkplekken.SelectedObject = first;

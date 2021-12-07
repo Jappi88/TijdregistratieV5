@@ -1530,6 +1530,9 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\playcircle_32x32.png" />
+    <None Include="Resources\Stop_Hand _32x32.png" />
+    <None Include="Resources\like_thumbs_up_icon_178899.png" />
     <None Include="Resources\file-warning_40447.png" />
     <None Include="Resources\Leave-80_icon-icons.com_57305.png" />
     <None Include="Resources\ooo_draw_10002.png" />

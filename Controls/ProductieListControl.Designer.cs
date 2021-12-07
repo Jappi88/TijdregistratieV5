@@ -53,6 +53,7 @@ namespace Controls
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.benodigdeMaterialenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.verpakkingsInstructieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.werkTekeningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xafkeurstoolstrip = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.xtoolstripbehwerkplekken = new System.Windows.Forms.ToolStripMenuItem();
@@ -119,7 +120,7 @@ namespace Controls
             this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.werkTekeningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.xonderbreek = new System.Windows.Forms.ToolStripButton();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst1)).BeginInit();
             this.xproductieLijstcontext.SuspendLayout();
@@ -408,6 +409,14 @@ namespace Controls
             this.verpakkingsInstructieToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.verpakkingsInstructieToolStripMenuItem.Text = "VerpakkingsInstructie";
             this.verpakkingsInstructieToolStripMenuItem.Click += new System.EventHandler(this.xverpakkingb_Click);
+            // 
+            // werkTekeningToolStripMenuItem
+            // 
+            this.werkTekeningToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.libreoffice_draw_icon_181050;
+            this.werkTekeningToolStripMenuItem.Name = "werkTekeningToolStripMenuItem";
+            this.werkTekeningToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.werkTekeningToolStripMenuItem.Text = "Werk Tekening";
+            this.werkTekeningToolStripMenuItem.Click += new System.EventHandler(this.xtoonTekening_Click);
             // 
             // xafkeurstoolstrip
             // 
@@ -720,6 +729,7 @@ namespace Controls
             this.toolStrip2.BackColor = System.Drawing.Color.White;
             this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.xonderbreek,
             this.xstartb,
             this.xstopb,
             this.xopenproductieb,
@@ -1105,13 +1115,16 @@ namespace Controls
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
-            // werkTekeningToolStripMenuItem
+            // xonderbreek
             // 
-            this.werkTekeningToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.libreoffice_draw_icon_181050;
-            this.werkTekeningToolStripMenuItem.Name = "werkTekeningToolStripMenuItem";
-            this.werkTekeningToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
-            this.werkTekeningToolStripMenuItem.Text = "Werk Tekening";
-            this.werkTekeningToolStripMenuItem.Click += new System.EventHandler(this.xtoonTekening_Click);
+            this.xonderbreek.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xonderbreek.Image = global::ProductieManager.Properties.Resources.Stop_Hand__32x32;
+            this.xonderbreek.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xonderbreek.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xonderbreek.Name = "xonderbreek";
+            this.xonderbreek.Size = new System.Drawing.Size(36, 36);
+            this.xonderbreek.ToolTipText = "Onderbreek of hervat een productie";
+            this.xonderbreek.Click += new System.EventHandler(this.xonderbreek_Click);
             // 
             // ProductieListControl
             // 
@@ -1229,5 +1242,6 @@ namespace Controls
         private System.Windows.Forms.ToolStripMenuItem kopiërenToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton xtoonTekening;
         private System.Windows.Forms.ToolStripMenuItem werkTekeningToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton xonderbreek;
     }
 }
