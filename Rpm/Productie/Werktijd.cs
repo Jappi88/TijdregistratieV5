@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace Rpm.Productie
 {
@@ -458,9 +459,7 @@ namespace Rpm.Productie
                 while (tijdover.TotalHours > 0)
                 {
                     xdag = EerstVorigeWerkdag(xdag, ref xrooster, rooster, specialeRoosters);
-
-              
-                    var xtijdover = WerkTijdOver(xdag.TimeOfDay, xrooster);
+                   var xtijdover = WerkTijdOver(xdag.TimeOfDay, xrooster);
                     var xfulldag = WerkTijdOver(xrooster.StartWerkdag, xrooster);
 
                     //xdag = new DateTime(xdag.Year, xdag.Month, xdag.Day, xrooster.EindWerkdag.Hours,

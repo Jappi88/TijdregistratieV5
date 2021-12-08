@@ -68,6 +68,7 @@ namespace Controls
         {
             if (sender is DateTimePicker nrc)
             {
+                var max = new TimeSpan(1, 0, 0);
                 switch (nrc.Name)
                 {
                     case "xstartwerkdag":
@@ -86,12 +87,18 @@ namespace Controls
                         _rooster.StartPauze3 = xstartpauze3.Value.TimeOfDay;
                         break;
                     case "xduurpauze1":
+                        if (nrc.Value.TimeOfDay >= max)
+                            nrc.Value = nrc.Value.Date + max;
                         _rooster.DuurPauze1 = xduurpauze1.Value.TimeOfDay;
                         break;
                     case "xduurpauze2":
+                        if (nrc.Value.TimeOfDay >= max)
+                            nrc.Value = nrc.Value.Date + max;
                         _rooster.DuurPauze2 = xduurpauze2.Value.TimeOfDay;
                         break;
                     case "xduurpauze3":
+                        if (nrc.Value.TimeOfDay >= max)
+                            nrc.Value = nrc.Value.Date + max;
                         _rooster.DuurPauze3 = xduurpauze3.Value.TimeOfDay;
                         break;
                 }

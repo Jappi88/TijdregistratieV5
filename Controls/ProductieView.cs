@@ -355,6 +355,8 @@ namespace Controls
                         //Manager.Taken?.StartBeheer();
                         //if (Manager.IsLoaded)
                         //    CheckForSpecialRooster(true);
+                        if (_specialRoosterWatcher != null && !_specialRoosterWatcher.Enabled)
+                            _specialRoosterWatcher.Start();
                     }
                     catch (Exception e)
                     {
@@ -392,7 +394,8 @@ namespace Controls
         private void _manager_OnManagerLoaded()
         {
             if (IsDisposed || Disposing) return;
-            _specialRoosterWatcher?.Start();
+            this.BeginInvoke(new Action(()=> _specialRoosterWatcher?.Start()));
+
         }
 
         public void ShowStartupForms()
