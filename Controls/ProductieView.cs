@@ -139,6 +139,9 @@ namespace Controls
             ProductieChat.GebruikerUpdate += ProductieChat_GebruikerUpdate;
             MultipleFileDb.CorruptedFilesChanged += MultipleFileDb_CorruptedFilesChanged;
 
+            Manager.KlachtChanged += Klachten_KlachtChanged;
+            Manager.KlachtDeleted += Klachten_KlachtChanged;
+
             _manager.OnShutdown += _manager_OnShutdown;
             //xproductieListControl1.InitEvents();
             xbewerkingListControl.InitEvents();
@@ -151,6 +154,50 @@ namespace Controls
             werkPlekkenUI1.InitEvents();
             werkPlekkenUI1.OnRequestOpenWerk += WerkPlekkenUI1_OnRequestOpenWerk;
             werkPlekkenUI1.OnPlekkenChanged += WerkPlekkenUI1_OnPlekkenChanged;
+        }
+
+        private void Klachten_KlachtChanged(object sender, EventArgs e)
+        {
+            UpdateKlachtButton();
+        }
+
+        private void UpdateKlachtButton()
+        {
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(xUpdateKlachtButton));
+            else xUpdateKlachtButton();
+        }
+
+        private void xUpdateKlachtButton()
+        {
+            try
+            {
+                var xkl = Manager.Klachten?.GetUnreadKlachten();
+                if (xkl is {Count: > 0})
+                {
+                    var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White,
+                        xkl.Count.ToString(),
+                        new Font("Ariel", 16, FontStyle.Bold), Color.DarkRed);
+                    xklachten.Image = Resources.Leave_80_icon_icons_com_57305.CombineImage(ximg, 1.75);
+                    var xopen = Application.OpenForms["KlachtenForm"];
+                    if (xopen != null) return;
+                    var x0 = xkl.Count == 1 ? "is" : "zijn";
+                    var x1 = xkl.Count == 1 ? "klacht" : "klachten";
+                    if (XMessageBox.Show($"Er {x0} {xkl.Count} nieuwe {x1}!\n\n" +
+                                         $"Nu bekijken?", $"Nieuwe {x1}", MessageBoxButtons.YesNo, Resources.Leave_80_icon_icons_com_57305_128x128, MetroColorStyle.Red) == DialogResult.Yes)
+                    {
+                        xklachten_Click(this, EventArgs.Empty);
+                    }
+                }
+                else
+                {
+                    xklachten.Image = Resources.Leave_80_icon_icons_com_57305;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private void MultipleFileDb_CorruptedFilesChanged(object sender, EventArgs e)
@@ -394,7 +441,7 @@ namespace Controls
         private void _manager_OnManagerLoaded()
         {
             if (IsDisposed || Disposing) return;
-            this.BeginInvoke(new Action(()=> _specialRoosterWatcher?.Start()));
+            this.BeginInvoke(new Action(() => { _specialRoosterWatcher?.Start();}));
 
         }
 
@@ -402,15 +449,17 @@ namespace Controls
         {
             try
             {
-                    //CheckForSyncDatabase();
-                    //CheckForUpdateDatabase();
-                    CheckForSpecialRooster(true);
+                //CheckForSyncDatabase();
+                //CheckForUpdateDatabase();
+                CheckForPreview(false, true);
+                CheckForSpecialRooster(true);
                     LoadStartedProducties();
                     //LoadProductieLogs();
                     //RunProductieRefresh();
-                    CheckForPreview(false, true);
+
+                    UpdateKlachtButton();
                     //UpdateAllLists();
-                    
+
             }
             catch (Exception e)
             {
@@ -2120,7 +2169,6 @@ namespace Controls
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-
         {
             var e = new KeyEventArgs(keyData);
 
@@ -2288,6 +2336,12 @@ namespace Controls
             p.X += ctrl.Location.X;
             p.Y += ctrl.Location.Y;
             return p;
+        }
+
+        private void xklachten_Click(object sender, EventArgs e)
+        {
+            var kl = new KlachtenForm();
+            kl.ShowDialog();
         }
     }
 }

@@ -164,5 +164,10 @@ namespace Forms
         {
             Console.WriteLine(e.KeyChar);
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

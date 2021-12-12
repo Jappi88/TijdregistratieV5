@@ -713,6 +713,18 @@ namespace Controls
             return 0 + xbase;
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            var e = new KeyEventArgs(keyData);
+            if (e.Control && e.KeyCode == Keys.L)
+            {
+                xListColumnsButton_Click(this, EventArgs.Empty);
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
         #region ProductieLijstGetters
         private object ImageGetter(object sender)
         {

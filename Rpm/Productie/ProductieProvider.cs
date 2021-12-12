@@ -98,7 +98,7 @@ namespace ProductieManager.Rpm.Productie
         public void SyncProducties()
         {
             if (Manager.DefaultSettings is not {GebruikOfflineMetSync: true}) return;
-            if (FolderSynchronization is {Syncing: true}) return;
+            //if (FolderSynchronization is {Syncing: true}) return;
             if (Manager.DefaultSettings?.MainDB == null || Manager.DefaultSettings.TempMainDB == null) return;
             try
             {
@@ -162,6 +162,16 @@ namespace ProductieManager.Rpm.Productie
                                 localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\AccountsDb";
                                 remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\AccountsDb";
                                 Manager.Database?.UserAccounts?.MultiFiles?.SetSecondaryPath(
+                                    localproductiepath, new SecondaryManageType[]
+                                    {
+                                        SecondaryManageType.Write,
+                                        SecondaryManageType.Read
+                                    });
+                                break;
+                            case DbType.Klachten:
+                                localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\Klachten";
+                                remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\Klachten";
+                                Manager.Klachten?.Database?.SetSecondaryPath(
                                     localproductiepath, new SecondaryManageType[]
                                     {
                                         SecondaryManageType.Write,

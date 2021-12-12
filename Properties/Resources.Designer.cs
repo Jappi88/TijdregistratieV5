@@ -1298,6 +1298,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Leave_80_icon_icons_com_57305_128x128 {
+            get {
+                object obj = ResourceManager.GetObject("Leave_80_icon_icons_com_57305_128x128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Letters512_44202_32x32 {
             get {
                 object obj = ResourceManager.GetObject("Letters512_44202_32x32", resourceCulture);

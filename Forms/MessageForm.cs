@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using MetroFramework;
 using ProductieManager.Properties;
@@ -33,6 +34,16 @@ namespace Forms
             return new XMessageBox().ShowDialog(message, title, buttons, icon, chooseitems, custombuttons);
         }
 
+        public static DialogResult Show(string message, string title, MessageBoxButtons buttons, Image icon)
+        {
+            return new XMessageBox().ShowDialog(message, title, buttons, MessageBoxIcon.Information,null, null,icon);
+        }
+        public static DialogResult Show(string message, string title, MessageBoxButtons buttons, Image icon, MetroColorStyle style)
+        {
+            return new XMessageBox().ShowDialog(message, title, buttons, MessageBoxIcon.Information, null, null, icon,style);
+        }
+
+
         public static DialogResult Show(string message, string title, MessageBoxIcon icon,
             string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null)
         {
@@ -60,13 +71,15 @@ namespace Forms
         }
 
         public DialogResult ShowDialog(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon,
-            string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null)
+            string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null,
+            Image customImage = null, MetroColorStyle style = MetroColorStyle.Default)
         {
             Text = title;
             xmessage.Text = message;
             var maxSize = new Size(xmessage.Width, int.MaxValue);
             var textheight = TextRenderer.MeasureText(xmessage.Text, xmessage.Font, maxSize).Height;
             Height = textheight + 200;
+            MinimumSize = new Size(this.Width, this.Height);
             if (custombuttons is {Count: > 0})
             {
                 var done = 0;
@@ -165,39 +178,46 @@ namespace Forms
                 }
             }
 
-            switch (icon)
+            if (customImage != null)
+                xmessageicon.Image = customImage;
+            else
             {
-                case MessageBoxIcon.None:
-                    xmessageicon.Image = Resources.ios_8_Message_icon_64_64;
-                    break;
-                case MessageBoxIcon.Question:
-                    xmessageicon.Image = Resources.help_question_1566;
-                    this.Style = MetroColorStyle.Purple;
-                    break;
-                case MessageBoxIcon.Exclamation:
-                    xmessageicon.Image = Resources.exclamation_warning_15590__1_;
-                    this.Style = MetroColorStyle.Yellow;
-                    break;
-                case MessageBoxIcon.Information:
-                    xmessageicon.Image = Resources.information_info_1565;
-                    this.Style = MetroColorStyle.Blue;
-                    break;
-                case MessageBoxIcon.Error:
-                    xmessageicon.Image = Resources.exit_close_error_15565;
-                    this.Style = MetroColorStyle.Red;
-                    break;
+                switch (icon)
+                {
+                    case MessageBoxIcon.None:
+                        xmessageicon.Image = Resources.ios_8_Message_icon_64_64;
+                        break;
+                    case MessageBoxIcon.Question:
+                        xmessageicon.Image = Resources.help_question_1566;
+                        this.Style = MetroColorStyle.Purple;
+                        break;
+                    case MessageBoxIcon.Exclamation:
+                        xmessageicon.Image = Resources.exclamation_warning_15590__1_;
+                        this.Style = MetroColorStyle.Yellow;
+                        break;
+                    case MessageBoxIcon.Information:
+                        xmessageicon.Image = Resources.information_info_1565;
+                        this.Style = MetroColorStyle.Blue;
+                        break;
+                    case MessageBoxIcon.Error:
+                        xmessageicon.Image = Resources.exit_close_error_15565;
+                        this.Style = MetroColorStyle.Red;
+                        break;
+                }
             }
-
+            if (style != MetroColorStyle.Default)
+                this.Style = style;
             xchooser.Items.Clear();
             xchooserpanel.Visible = chooseitems is {Length: > 0};
             if (chooseitems is {Length: > 0})
             {
-                xchooser.Items.AddRange(chooseitems.Select(x=> (object)x).ToArray());
+                xchooser.Items.AddRange(chooseitems.Select(x => (object) x).ToArray());
                 if (xchooser.Items.Count > 0)
                     xchooser.SelectedIndex = 0;
                 Height += 50;
             }
 
+            this.Invalidate();
             return ShowDialog();
         }
     }

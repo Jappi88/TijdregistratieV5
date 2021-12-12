@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Rpm.ViewModels;
 
 namespace Rpm.Productie
 {
@@ -488,6 +489,7 @@ namespace Rpm.Productie
                 }
 
                 xdag = EerstVorigeWerkdag(xdag, ref xrooster, rooster, specialeRoosters);
+                
                 xreturn = xdag;
             }
             catch (Exception v)

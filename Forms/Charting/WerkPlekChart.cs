@@ -8,13 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Forms
+namespace Forms.Charting
 {
-    public partial class KlachtenForm : MetroFramework.Forms.MetroForm 
+    public partial class WerkPlekChart : UserControl
     {
-        public KlachtenForm()
+        public WerkPlekChart()
         {
             InitializeComponent();
+        }
+
+        private void WerkPlekChart_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

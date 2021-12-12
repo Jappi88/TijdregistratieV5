@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using LiteDB;
 using Polenter.Serialization;
 using Rpm.Misc;
+using Rpm.Productie.AantalHistory;
 using Rpm.Various;
 
 namespace Rpm.Productie
@@ -74,7 +75,7 @@ namespace Rpm.Productie
         public string WerkNaam => Werk?.Naam;
         public string ArtikelNr => Werk?.ArtikelNr;
         public string ProductieNr => Werk?.ProductieNr;
-
+        public AantalHistory.AantallenRecords AantalHistory { get; private set; } = new AantallenRecords();
         public DateTime FriendlyVerwachtGereed =>
             Werk?.VerwachtDatumGereed() ?? DateTime.Now;
 
@@ -101,8 +102,29 @@ namespace Rpm.Productie
                 {
                     _aantalgemaakt = value;
                     Werk?.UpdateAantal();
+                    AantalHistory?.UpdateAantal(value);
                 }
             }
+        }
+
+        public int GetAantalGemaakt(DateTime start, DateTime stop,ref double tijd ,  bool predict)
+        {
+           
+            if (AantalHistory == null)
+            {
+                return _aantalgemaakt;
+            }
+           
+            return AantalHistory.AantalGemaakt(start, stop,ref tijd, Tijden, predict);
+        }
+
+        public int GetActueelAantalGemaakt(ref double tijd)
+        {
+            if (AantalHistory == null)
+            {
+                return _aantalgemaakt;
+            }
+            return AantalHistory.AantalGemaakt(Tijden, ref tijd,true, -1,GetStoringen());
         }
 
         public int TotaalGemaakt

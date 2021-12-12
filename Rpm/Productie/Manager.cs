@@ -1,25 +1,27 @@
 ﻿using Microsoft.Win32.SafeHandles;
-using ProductieManager;
+using ProductieManager.Rpm.ExcelHelper;
 using ProductieManager.Rpm.Productie;
+using ProductieManager.Rpm.Settings;
 using ProductieManager.Rpm.Various;
+using Rpm.Klachten;
 using Rpm.Mailing;
 using Rpm.Misc;
+using Rpm.Opmerking;
 using Rpm.Settings;
 using Rpm.SqlLite;
 using Rpm.Various;
 using System;
+using System.Timers;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Polenter.Serialization.Advanced;
-using ProductieManager.Rpm.ExcelHelper;
-using ProductieManager.Rpm.Settings;
-using Rpm.Opmerking;
+using Timer = System.Timers.Timer;
 
 namespace Rpm.Productie
 {
@@ -37,6 +39,7 @@ namespace Rpm.Productie
         public static readonly string HelpDropUrl =
             "https://www.dropbox.com/s/5xc90j20d5odya6/Help.txt?dl=1";
         // public static LocalService LocalConnection { get; private set; }
+        public static KlachtBeheer Klachten { get; private set; }
         /// <summary>
         /// De productiechat
         /// </summary>
@@ -95,8 +98,8 @@ namespace Rpm.Productie
 
         // [NonSerialized] private readonly Timer _emailcheckTimer = new();
 
-        [NonSerialized] private Timer _syncTimer = new();
-        [NonSerialized] private Timer _overzichtSyncTimer = new();
+        [NonSerialized] private Timer _syncTimer;
+        [NonSerialized] private Timer _overzichtSyncTimer;
         /// <summary>
         /// De geladen gebruiker opties
         /// </summary>
@@ -117,7 +120,7 @@ namespace Rpm.Productie
         /// <summary>
         /// De interval in miliseconden waarvan de applicatie de producties op de achtergrond synchroniseerd
         /// </summary>
-        public int SyncInterval
+        public double SyncInterval
         {
             get => _syncTimer.Interval;
             set => _syncTimer.Interval = value;
@@ -173,13 +176,12 @@ namespace Rpm.Productie
             //_backemailchecker.RunWorkerCompleted += _worker_RunWorkerCompleted;
 
             OnManagerLoaded += Manager_OnManagerLoaded;
-
             //_emailcheckTimer.Tick += _timer_Tick;
             _syncTimer = new Timer();
-            _syncTimer.Tick += _syncTimer_Tick;
+            _syncTimer.Elapsed += _syncTimer_Tick;
             _overzichtSyncTimer = new Timer();
             _overzichtSyncTimer.Interval = 60000;//1 min
-            _overzichtSyncTimer.Tick += _overzichtSyncTimer_Tick;
+            _overzichtSyncTimer.Elapsed += _overzichtSyncTimer_Tick;
             TaskQueues.OnRunComplete += _tasks_OnRunComplete;
             TaskQueues.RunInstanceComplete += _tasks_OnRunInstanceComplete;
         }
@@ -242,7 +244,9 @@ namespace Rpm.Productie
                     ProductieProvider = new ProductieProvider();
                     // LocalConnection = new LocalService();
                     //Server = new SqlDatabase();
-
+                    Klachten = new KlachtBeheer(DbPath);
+                    Klachten.KlachtChanged += OnKlachtChanged;
+                    Klachten.KlachtDeleted += OnKlachtDeleted;
                     DbUpdater = new DatabaseUpdater();
                     BackupInfo = BackupInfo.Load();
                     BewerkingenLijst = new BewerkingLijst();
@@ -605,14 +609,15 @@ namespace Rpm.Productie
                 //load files sync instances
                 LoadSyncDirectories();
                 DbUpdater?.Start(DefaultSettings);
-                _syncTimer?.Start();
-                if (options.CreateWeekOverzichten)
-                {
-                    _overzichtSyncTimer.Interval = options.WeekOverzichtUpdateInterval;
-                    _overzichtSyncTimer?.Start();
-                }
-                else _overzichtSyncTimer?.Stop();
+               
             });
+            _syncTimer?.Start();
+            if (options.CreateWeekOverzichten)
+            {
+                _overzichtSyncTimer.Interval = options.WeekOverzichtUpdateInterval;
+                _overzichtSyncTimer?.Start();
+            }
+            else _overzichtSyncTimer?.Stop();
             //if (!options.GebruikTaken)
             //    Taken?.StopBeheer();
             //else Taken?.StartBeheer();
@@ -1495,7 +1500,8 @@ namespace Rpm.Productie
             _syncTimer.Stop();
             try
             {
-                ProductieProvider?.InitOfflineDb();
+                if (ProductieProvider.FolderSynchronization is not {Syncing: true})
+                    ProductieProvider?.InitOfflineDb();
 
                 if (Opties is {SluitPcAf: true} && DateTime.Now.TimeOfDay >= _afsluittijd)
                 {
@@ -1873,6 +1879,18 @@ namespace Rpm.Productie
             return result ?? DialogResult.None;
         }
 
+        public static event EventHandler KlachtChanged;
+        private static void OnKlachtChanged(object sender, EventArgs e)
+        {
+            KlachtChanged?.Invoke(sender, e);
+        }
+
+        public static event EventHandler KlachtDeleted;
+        private static void OnKlachtDeleted(object sender, EventArgs e)
+        {
+            KlachtDeleted?.Invoke(sender, e);
+        }
+
         #region Threadsafe RespondMessage
 
         private static object _messageLocker = new();
@@ -1968,16 +1986,41 @@ namespace Rpm.Productie
             if (_disposed) return;
 
             _fileWatchers = null;
-
+            Klachten?.Dispose();
+            Klachten = null;
+            DisposeEvents();
             if (disposing)
-                // Dispose managed state (managed objects).
                 _safeHandle?.Dispose();
 
             _disposed = true;
         }
 
+        private void DisposeEvents()
+        {
+            KlachtChanged = null;
+            KlachtDeleted = null;
+            OnManagerLoaded = null;
+            OnAccountChanged = null;
+            OnBewerkingChanged = null;
+            OnBewerkingDeleted = null;
+            OnProductiesLoaded = null;
+            OnColumnsSettingsChanged = null;
+            OnDbBeginUpdate = null;
+            OnProductiesLoaded = null;
+            OnPersoneelChanged = null;
+            OnPersoneelDeleted = null;
+            OnFormulierActie = null;
+            OnFormulierChanged = null;
+            OnFormulierDeleted = null;
+            OnDbEndUpdate = null;
+            OnLoginChanged = null;
+            OnSettingsChanged = null;
+            OnSettingsChanging = null;
+        }
+
         #endregion Disposing
 
-       
+
+
     }
 }

@@ -1747,6 +1747,15 @@ namespace Rpm.Productie
             return Math.Round(tijd, 2);
         }
 
+        public int GetAantalGemaakt(DateTime start, DateTime stop,ref double tijd, bool predict)
+        {
+            var xtijd = tijd;
+
+            var xret = Bewerkingen?.Sum(x => x.GetAantalGemaakt(start, stop,ref xtijd, predict)) ?? 0;
+            tijd = xtijd;
+            return xret;
+        }
+
         public double TotaalGewerkteUren(List<ProductieFormulier> forms)
         {
             try

@@ -215,7 +215,23 @@ namespace Rpm.Productie
         [Display(Name = "Geproduceerd", Description = "Aantal keer waarvan deze productie totaal is geproduceert")]
         public virtual int Geproduceerd { get; set; }
 
-        private decimal GetAfwijking()
+        [Display(Name = "ActueelAantalGemaakt",
+            Description =
+                "Het aantal dat gemaakt zou moeten zijn berekent op basis van de door gegeven aantallen.")]
+        public virtual int ActueelAantalGemaakt => GetActueelAantalGemaakt();
+
+        public virtual int GetActueelAantalGemaakt(ref double tijd)
+        {
+            tijd += TijdGewerkt;
+            return AantalGemaakt;
+        }
+
+        public int GetActueelAantalGemaakt()
+        {
+            double xtijd = 0;
+            return GetActueelAantalGemaakt(ref xtijd);
+        }
+        public decimal GetAfwijking()
         {
             try
             {
@@ -228,7 +244,7 @@ namespace Rpm.Productie
             }
         }
 
-        private decimal GetGemiddeldAfwijking()
+        public decimal GetGemiddeldAfwijking()
         {
             try
             {
@@ -610,6 +626,7 @@ Color textcolor, bool useimage)
                           $"{(State != ProductieState.Gereed ? $"Verwachte Leverdatum: <span style = 'color:{GetValidColor(VerwachtLeverDatum < LeverDatum).Name}> {VerwachtLeverDatum:f}</span>." : $"Gereed Gemeld Op: <span style = 'color:{GetValidColor(true).Name}>{DatumGereed:f}</span>.")}\r\n" +
                           $"</h2><hr />\r\n<h2>" +
                           $"Aantal Gemaakt: <u>{TotaalGemaakt}</u> / {Aantal} <span style = 'color: {GetPositiveColorByPercentage((decimal) Gereed).Name}'>({Gereed}%)</span><br>" +
+                          $"<ul><li><u>Actueel</u> Aantal Gemaakt: <b><u>{ActueelAantalGemaakt}</u></b> / {Aantal}</li></ul>" +
                           $"Tijd Gewerkt: <u>{TijdGewerkt}</u> / {Math.Round(DoorloopTijd, 2)} uur <span style = 'color:{GetPositiveColorByPercentage((decimal) TijdGewerktPercentage).Name}'>({TijdGewerktPercentage}%)</span><br>" +
                           $"Per Uur: <u>{ActueelPerUur}</u> i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span><br><br>" +
                           $"<span style = 'color: {Color.DarkRed.Name}'><u>{Opmerking}</u></span><br>" +

@@ -12,6 +12,7 @@
         Logs,
         Versions,
         Messages,
+        Klachten,
         Alles,
         None
     }

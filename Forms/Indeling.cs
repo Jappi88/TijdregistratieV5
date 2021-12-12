@@ -1042,7 +1042,17 @@ namespace Forms
                         string.Equals(klus.Path, x.Path, StringComparison.CurrentCultureIgnoreCase));
                     if (wp != null)
                     {
-
+                        if (wp.Werk is {IsBemand: false})
+                        {
+                            var msg = $"'{wp.WerkNaam}' is een onbemande bewerking.\n" +
+                                      $"Werktijd van '{per.PersoneelNaam}' wijzigen heeft daarom geen effect op de gewerkte tijd van '{wp.Naam}'...\n\n" +
+                                      $"Zou je de werktijd van '{per.PersoneelNaam}' door willen geven aan '{wp.Naam}'?";
+                            if (XMessageBox.Show(msg, $"{wp.WerkNaam} is Onbemand", MessageBoxButtons.YesNo,
+                                    MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                            {
+                                wp.Tijden.UpdateLijst(klus.Tijden);
+                            }
+                        }
                         //wp.Tijden.WerkRooster = klus.Tijden.WerkRooster.CreateCopy();
                         LoadWerkPlekken(wp);
                     }

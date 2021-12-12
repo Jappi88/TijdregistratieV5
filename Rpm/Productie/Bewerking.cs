@@ -64,6 +64,22 @@ namespace Rpm.Productie
             }
         }
 
+        public int GetAantalGemaakt(DateTime start, DateTime stop,ref double tijd, bool predict)
+        {
+            double xtijd = tijd;
+            var xret = WerkPlekken.Sum(x => x.GetAantalGemaakt(start, stop,ref xtijd, predict));
+            tijd = xtijd;
+            return xret;
+        }
+
+        public override int GetActueelAantalGemaakt(ref double tijd)
+        {
+            var xtijd = tijd;
+            var xret = WerkPlekken.Sum(x => x.GetActueelAantalGemaakt(ref xtijd));
+            tijd = xtijd;
+            return xret;
+        }
+
         //[ExcludeFromSerialization]
         //public Dictionary<DateTime, DateTime> GewerkteTijden { get; set; } = new();
 

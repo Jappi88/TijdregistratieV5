@@ -674,5 +674,12 @@ namespace Controls
         {
             CurrentBewerking()?.DoOnderbreking();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var bw = CurrentBewerking();
+            if (bw == null) return;
+            new AantalMonitorForm(bw).ShowDialog();
+        }
     }
 }

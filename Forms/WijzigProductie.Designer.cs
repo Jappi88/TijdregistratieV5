@@ -181,7 +181,7 @@ namespace Forms
             this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox2.Size = new System.Drawing.Size(912, 370);
+            this.groupBox2.Size = new System.Drawing.Size(979, 462);
             this.groupBox2.TabIndex = 18;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Productie Info";
@@ -194,7 +194,7 @@ namespace Forms
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(2, 24);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(908, 344);
+            this.panel4.Size = new System.Drawing.Size(975, 436);
             this.panel4.TabIndex = 46;
             // 
             // panel5
@@ -220,7 +220,7 @@ namespace Forms
             this.panel5.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(293, 344);
+            this.panel5.Size = new System.Drawing.Size(293, 436);
             this.panel5.TabIndex = 58;
             // 
             // label1
@@ -448,7 +448,7 @@ namespace Forms
             this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox3.Size = new System.Drawing.Size(610, 342);
+            this.groupBox3.Size = new System.Drawing.Size(677, 434);
             this.groupBox3.TabIndex = 20;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Omschrijving";
@@ -464,7 +464,7 @@ namespace Forms
             this.xbeschrijving.Multiline = true;
             this.xbeschrijving.Name = "xbeschrijving";
             this.xbeschrijving.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.xbeschrijving.Size = new System.Drawing.Size(606, 71);
+            this.xbeschrijving.Size = new System.Drawing.Size(673, 163);
             this.xbeschrijving.TabIndex = 19;
             // 
             // label5
@@ -473,7 +473,7 @@ namespace Forms
             this.label5.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.Red;
-            this.label5.Location = new System.Drawing.Point(2, 92);
+            this.label5.Location = new System.Drawing.Point(2, 184);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(62, 24);
@@ -486,12 +486,12 @@ namespace Forms
             this.xnotitie.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.xnotitie.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xnotitie.ForeColor = System.Drawing.Color.Black;
-            this.xnotitie.Location = new System.Drawing.Point(2, 116);
+            this.xnotitie.Location = new System.Drawing.Point(2, 208);
             this.xnotitie.Margin = new System.Windows.Forms.Padding(2);
             this.xnotitie.Multiline = true;
             this.xnotitie.Name = "xnotitie";
             this.xnotitie.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.xnotitie.Size = new System.Drawing.Size(606, 100);
+            this.xnotitie.Size = new System.Drawing.Size(673, 100);
             this.xnotitie.TabIndex = 17;
             // 
             // label6
@@ -500,7 +500,7 @@ namespace Forms
             this.label6.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.Green;
-            this.label6.Location = new System.Drawing.Point(2, 216);
+            this.label6.Location = new System.Drawing.Point(2, 308);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(131, 24);
@@ -513,12 +513,12 @@ namespace Forms
             this.xgereednotitie.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.xgereednotitie.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xgereednotitie.ForeColor = System.Drawing.Color.Black;
-            this.xgereednotitie.Location = new System.Drawing.Point(2, 240);
+            this.xgereednotitie.Location = new System.Drawing.Point(2, 332);
             this.xgereednotitie.Margin = new System.Windows.Forms.Padding(2);
             this.xgereednotitie.Multiline = true;
             this.xgereednotitie.Name = "xgereednotitie";
             this.xgereednotitie.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.xgereednotitie.Size = new System.Drawing.Size(606, 100);
+            this.xgereednotitie.Size = new System.Drawing.Size(673, 100);
             this.xgereednotitie.TabIndex = 20;
             // 
             // xbeweditgroup
@@ -532,7 +532,7 @@ namespace Forms
             this.xbeweditgroup.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xbeweditgroup.Name = "xbeweditgroup";
             this.xbeweditgroup.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.xbeweditgroup.Size = new System.Drawing.Size(336, 370);
+            this.xbeweditgroup.Size = new System.Drawing.Size(336, 462);
             this.xbeweditgroup.TabIndex = 27;
             this.xbeweditgroup.TabStop = false;
             this.xbeweditgroup.Text = "Nieuwe Bewerking";
@@ -564,7 +564,7 @@ namespace Forms
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 21);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(330, 347);
+            this.panel1.Size = new System.Drawing.Size(330, 439);
             this.panel1.TabIndex = 52;
             // 
             // label17
@@ -587,7 +587,7 @@ namespace Forms
             this.xbewnotitie.Location = new System.Drawing.Point(13, 390);
             this.xbewnotitie.Multiline = true;
             this.xbewnotitie.Name = "xbewnotitie";
-            this.xbewnotitie.Size = new System.Drawing.Size(122, 70);
+            this.xbewnotitie.Size = new System.Drawing.Size(293, 67);
             this.xbewnotitie.TabIndex = 57;
             this.toolTip1.SetToolTip(this.xbewnotitie, "Bewerking Notitie");
             // 
@@ -897,7 +897,7 @@ namespace Forms
             this.xverwijderbewerking.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xverwijderbewerking.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xverwijderbewerking.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xverwijderbewerking.Location = new System.Drawing.Point(531, 21);
+            this.xverwijderbewerking.Location = new System.Drawing.Point(598, 21);
             this.xverwijderbewerking.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xverwijderbewerking.Name = "xverwijderbewerking";
             this.xverwijderbewerking.Size = new System.Drawing.Size(40, 40);
@@ -921,7 +921,7 @@ namespace Forms
             this.groupBox4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox4.Size = new System.Drawing.Size(576, 370);
+            this.groupBox4.Size = new System.Drawing.Size(643, 462);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Bewerkingen";
@@ -979,7 +979,7 @@ namespace Forms
             this.xbewerkinglijst.OwnerDraw = false;
             this.xbewerkinglijst.ShowItemCountOnGroups = true;
             this.xbewerkinglijst.ShowItemToolTips = true;
-            this.xbewerkinglijst.Size = new System.Drawing.Size(564, 299);
+            this.xbewerkinglijst.Size = new System.Drawing.Size(631, 391);
             this.xbewerkinglijst.SmallImageList = this.imageList1;
             this.xbewerkinglijst.SpaceBetweenGroups = 10;
             this.xbewerkinglijst.TabIndex = 26;
@@ -1189,10 +1189,10 @@ namespace Forms
             this.panel2.Controls.Add(this.xgereedprocent);
             this.panel2.Controls.Add(this.xverwachtgereed);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(20, 472);
+            this.panel2.Location = new System.Drawing.Point(20, 569);
             this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(920, 46);
+            this.panel2.Size = new System.Drawing.Size(987, 46);
             this.panel2.TabIndex = 25;
             // 
             // panel3
@@ -1201,7 +1201,7 @@ namespace Forms
             this.panel3.Controls.Add(this.xsluiten);
             this.panel3.Controls.Add(this.xOpslaan);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.Location = new System.Drawing.Point(667, 0);
+            this.panel3.Location = new System.Drawing.Point(734, 0);
             this.panel3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(253, 46);
@@ -1241,7 +1241,7 @@ namespace Forms
             this.materiaalUI1.Formulier = null;
             this.materiaalUI1.Location = new System.Drawing.Point(3, 3);
             this.materiaalUI1.Name = "materiaalUI1";
-            this.materiaalUI1.Size = new System.Drawing.Size(906, 364);
+            this.materiaalUI1.Size = new System.Drawing.Size(980, 463);
             this.materiaalUI1.TabIndex = 0;
             // 
             // toolTip1
@@ -1251,6 +1251,9 @@ namespace Forms
             // 
             // metroTabControl1
             // 
+            this.metroTabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.metroTabControl1.Controls.Add(this.metroTabPage1);
             this.metroTabControl1.Controls.Add(this.metroTabPage2);
             this.metroTabControl1.Controls.Add(this.metroTabPage3);
@@ -1258,7 +1261,7 @@ namespace Forms
             this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
             this.metroTabControl1.Name = "metroTabControl1";
             this.metroTabControl1.SelectedIndex = 0;
-            this.metroTabControl1.Size = new System.Drawing.Size(920, 412);
+            this.metroTabControl1.Size = new System.Drawing.Size(987, 504);
             this.metroTabControl1.TabIndex = 26;
             this.metroTabControl1.UseSelectable = true;
             // 
@@ -1270,7 +1273,7 @@ namespace Forms
             this.metroTabPage1.HorizontalScrollbarSize = 10;
             this.metroTabPage1.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage1.Name = "metroTabPage1";
-            this.metroTabPage1.Size = new System.Drawing.Size(912, 370);
+            this.metroTabPage1.Size = new System.Drawing.Size(979, 462);
             this.metroTabPage1.TabIndex = 0;
             this.metroTabPage1.Text = "Productie Info";
             this.metroTabPage1.VerticalScrollbarBarColor = true;
@@ -1286,7 +1289,7 @@ namespace Forms
             this.metroTabPage2.HorizontalScrollbarSize = 10;
             this.metroTabPage2.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage2.Name = "metroTabPage2";
-            this.metroTabPage2.Size = new System.Drawing.Size(912, 370);
+            this.metroTabPage2.Size = new System.Drawing.Size(979, 462);
             this.metroTabPage2.TabIndex = 1;
             this.metroTabPage2.Text = "Bewerkingen";
             this.metroTabPage2.VerticalScrollbarBarColor = true;
@@ -1302,7 +1305,7 @@ namespace Forms
             this.metroTabPage3.HorizontalScrollbarSize = 10;
             this.metroTabPage3.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage3.Name = "metroTabPage3";
-            this.metroTabPage3.Size = new System.Drawing.Size(912, 370);
+            this.metroTabPage3.Size = new System.Drawing.Size(979, 462);
             this.metroTabPage3.TabIndex = 2;
             this.metroTabPage3.Text = "Materialen";
             this.metroTabPage3.VerticalScrollbarBarColor = true;
@@ -1318,7 +1321,7 @@ namespace Forms
             this.metroTabPage4.HorizontalScrollbarSize = 10;
             this.metroTabPage4.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage4.Name = "metroTabPage4";
-            this.metroTabPage4.Size = new System.Drawing.Size(912, 370);
+            this.metroTabPage4.Size = new System.Drawing.Size(979, 462);
             this.metroTabPage4.TabIndex = 3;
             this.metroTabPage4.Text = "Geavanceerd";
             this.metroTabPage4.VerticalScrollbarBarColor = true;
@@ -1332,7 +1335,7 @@ namespace Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.propertyGrid1.Location = new System.Drawing.Point(-4, 3);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(913, 366);
+            this.propertyGrid1.Size = new System.Drawing.Size(980, 458);
             this.propertyGrid1.TabIndex = 2;
             this.propertyGrid1.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid1_PropertyValueChanged);
             // 
@@ -1340,7 +1343,7 @@ namespace Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(960, 538);
+            this.ClientSize = new System.Drawing.Size(1027, 635);
             this.Controls.Add(this.metroTabControl1);
             this.Controls.Add(this.panel2);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

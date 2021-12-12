@@ -1,15 +1,12 @@
-﻿using System;
+﻿using iTextSharp.text.pdf;
+using Rpm.Productie;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using iTextSharp.text.pdf;
-using Rpm.Productie;
-using Rpm.Various;
+using Polenter.Serialization;
 
-namespace ProductieManager.Rpm.KLachten
+namespace Rpm.Klachten
 {
     public class KlachtEntry
     {
@@ -18,12 +15,54 @@ namespace ProductieManager.Rpm.KLachten
         public List<string> Bijlages { get; set; } = new List<string>();
         public string Melder { get; set; }
         public string Afzender { get; set; }
-        public string Ontvanger { get; set; }
+        public List<string> Ontvangers { get; set; }
         public string Omschrijving { get; set; }
         public List<string> ProductieNrs { get; set; } = new XfaForm.Stack2<string>();
         public DateTime DatumGeplaatst { get; set; } = DateTime.Now;
-        public bool IsGelezen { get; set; }
+        public DateTime DatumKlacht { get; set; }
 
+        [ExcludeFromSerialization]
+        public bool IsGelezen
+        {
+            get
+            {
+                return string.Equals(Afzender, Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase) || 
+                       GelezenDoor != null && GelezenDoor.Any(x =>
+                    string.Equals(x, Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase));
+            }
+            set
+            {
+                GelezenDoor.RemoveAll(x =>
+                    string.Equals(x, Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase));
+                if (value && !string.IsNullOrEmpty(Manager.Opties?.Username))
+                {
+                    GelezenDoor.Add(Manager.Opties.Username);
+                }
+            }
+        }
+
+        public List<string> GelezenDoor { get; set; } = new List<string>();
+
+        public bool IsValid =>  AllowEdit ||
+                                Ontvangers == null || Ontvangers.Count == 0 ||
+                                Ontvangers.Any(x => x.ToLower() == "iedereen") || Ontvangers.Any(x => string.Equals(x,
+                                    Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase));
+
+                                public bool AllowEdit => string.Equals(Afzender, Manager.Opties?.Username,
+                                    StringComparison.CurrentCultureIgnoreCase);
+        public string GetKlachtInfoHtml()
+        {
+            var xreturn = 
+                   $"<body>" +
+                   $"<h1 align='left' color='{Color.DarkRed.Name}' style='font-size: x-large; margin:.0em;'><b>{Onderwerp}</b></h3>" +
+                   $"<h1 align='left' color='{Color.DarkRed.Name}' style='font-size: x-normal; margin:.4em;'><b>'{Melder}'</b> heeft een klacht ingedient op {DatumKlacht:D}</h1>";
+            var pr = ProductieNrs.Count > 0
+                ? $"[{string.Join(", ", ProductieNrs.Select(x => $"<a href='{x}'><span style = 'color: {Color.DarkOrange.Name}'>{x}</span></a>"))}]"
+                : "";
+            xreturn += $"<h1 align='bottom' color='{Color.DarkRed.Name}' style='font-size: x-small;'>{pr} Geplaatst op {DatumGeplaatst:f} door <b>'{Afzender}'</b></h1>" +
+                   $"</body>";
+            return xreturn;
+        }
 
         public string ToHtml()
         {
@@ -33,10 +72,10 @@ namespace ProductieManager.Rpm.KLachten
                                 $"<img width='{64}' height='{64}'  src = 'ProductieWarningicon' />\r\n" +
                                 $"</td>";
                 string prods = ProductieNrs.Count > 0
-                    ? $"{string.Join("\r\n", ProductieNrs.Select(x => $"<span style = 'color: {Color.DarkOrange.Name}'><a href='{x}'>{x}</a></span>"))}"
+                    ? $"{string.Join(", ", ProductieNrs.Select(x => $"<a href='{x}'><span style = 'color: {Color.DarkOrange.Name}'>{x}</span></a>"))}"
                     : "";
                 string imgs = Bijlages.Count > 0
-                    ? $"{string.Join("\r\n", Bijlages.Select(x => $"<img width = \"75%\" height=\"500\" padding=\"10;10;10;10\"src=\"{x}\"/>"))}"
+                    ? $"{string.Join("<br>", Bijlages.Select(x => $"<img padding='10;10;10;10' src='{x}'/>"))}"
                     : "";
                 var xreturn = $"<html>\r\n" +
              $"<head>\r\n" +
@@ -45,22 +84,22 @@ namespace ProductieManager.Rpm.KLachten
              $"<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
              $"</head>\r\n" +
              $"<body style='background - color: white; background-gradient: white; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
-             $"<h1 align='center' style='color: black'>\r\n" +
-             $"       {Onderwerp}\r\n" +
+             $"<h1 align='center'>\r\n" +
+             $"        <span Color='Maroon' style='font-size: x-large;'>{Onderwerp}</span>\r\n " +
              $"        <br/>\r\n" +
-             $"        <span style=\'font-size: x-small;\'>{DatumGeplaatst}</span>\r\n " +
+             $"        <span Color='navy' style='font-size: x-small;'>Geplaatst op {DatumGeplaatst:f}</span>\r\n " +
              $"</h1>\r\n" +
              $"<blockquote class='whitehole'>\r\n" +
              $"       <p style = 'margin-top: 0px' >\r\n" +
              $"<table border = '0' width = '100%' >\r\n" +
              $"<tr style = 'vertical-align: top;' >\r\n" +
-             ximage +
+            // ximage +
              $"<td>" +
              $"<div>\r\n" +
-             $"Klacht gemeld door <b>'{Melder}'</b>.<br><br>" +
-             $"{imgs}" +
+             $"<h2>Klacht van '{Melder}' gemeld door <b>'{Afzender}'</b>.</h2><br><br>" +
+             $"{imgs}<br><hr />" +
              $"<b>{Omschrijving?.Replace("\n", " <br> ")}</b><br><br>" +
-             $"<b>Geproduceerd</b> :<br>" +
+             $" <span Color='Maroon' style='font-size: x-medium;'><b>Geproduceert: </b></span><br>\r\n " +
              $"{prods}\r\n" +
              $"</div>\r\n" +
              $"<hr />" +
@@ -78,6 +117,19 @@ namespace ProductieManager.Rpm.KLachten
                 Console.WriteLine(e);
                 return null;
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return (obj is KlachtEntry entry && entry.ID == ID) ||
+                   (obj is int id && id == ID) ||
+                   obj is string xvalue &&
+                   string.Equals(xvalue, ID.ToString(), StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        public override int GetHashCode()
+        {
+            return ID;
         }
     }
 }

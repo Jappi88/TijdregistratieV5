@@ -167,8 +167,8 @@ namespace ProductieManager.Rpm.ExcelHelper
                                 columns.Add(charcol.Key);
                         var style = CreateStyle(workbook, true, HorizontalAlignment.Center, 18, IndexedColors.Black.Index);
                         var omschrijving = $"{xinfo} {fields[fieldindex]} van de afgelopen {overzichten.Count} {xwk}.";
-                       // CreateHeader(sheet, omschrijving, rowindex, 2, 0, columns.Count + 1, style);
-                        //rowindex += 2;
+                        CreateHeader(sheet, omschrijving, rowindex, 2, 0, columns.Count + 1, style);
+                        rowindex += 2;
                         var rowstart = rowindex;
                         //create column font
                         style = CreateStyle(workbook, true, HorizontalAlignment.Left, 12, IndexedColors.Black.Index);
@@ -530,7 +530,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                         lastid = bw.ArtikelNr;
                     }
                     var tg = bereik == null ? bw.TijdAanGewerkt() : bw.TijdAanGewerkt(bereik.Start, bereik.Stop);
-                    //if (tg <= 0) continue;
+                    if (bereik != null && tg <= 0) continue;
                     row = sheet.CreateRow(rowindex);
                     row.HeightInPoints = 15;
                     //Fill Green if Passing Score
@@ -1057,14 +1057,11 @@ namespace ProductieManager.Rpm.ExcelHelper
         public static object GetValue(Bewerking bew, string value, TijdEntry vanaf)
         {
             if (bew == null || string.IsNullOrEmpty(value)) return null;
-            var prop = bew.GetPropValue(value);
-            if (prop == null)
-            {
-                return "N.V.T.";
-            }
-
+            double xtijd = 0;
             switch (value.ToLower())
             {
+                case "actueelaantalgemaakt":
+                    return vanaf == null ? bew.ActueelAantalGemaakt : bew.GetAantalGemaakt(vanaf.Start, vanaf.Stop,ref xtijd, true);
                 case "tijdgewerkt":
                     return vanaf == null ? bew.TijdAanGewerkt() : bew.TijdAanGewerkt(vanaf.Start, vanaf.Stop);
                 case "werkplekken":
@@ -1077,6 +1074,11 @@ namespace ProductieManager.Rpm.ExcelHelper
                     if (pers.Length > 0)
                         return string.Join(", ", pers);
                     return "Geen Personeel";
+            }
+            var prop = bew.GetPropValue(value);
+            if (prop == null)
+            {
+                return "N.V.T.";
             }
             return prop;
         }

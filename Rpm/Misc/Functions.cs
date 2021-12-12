@@ -191,7 +191,15 @@ namespace Rpm.Misc
                         // value = Math.Round(value, 0, MidpointRounding.AwayFromZero);
                         //tabledata.Add(prod.Key, value);
                         val += value;
-                        xreturn[rows[xrowindex]].Add(prod.Key, value);
+                        if (xreturn.ContainsKey(rows[xrowindex]) && !string.IsNullOrEmpty(prod.Key))
+                        {
+                            if (xreturn[rows[xrowindex]].ContainsKey(prod.Key))
+                            {
+                                xreturn[rows[xrowindex]][prod.Key] +=  value;
+                            }
+                            else xreturn[rows[xrowindex]].Add(prod.Key, value);
+                        }
+                        
                     }
 
                     if (val <= 0)

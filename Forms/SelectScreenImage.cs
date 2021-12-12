@@ -21,7 +21,6 @@ namespace ProductieManager.Forms
         public SelectScreenImage()
         {
             InitializeComponent();
-
             this.Opacity = .5D; //Make trasparent
             this.DoubleBuffered = true;
             this.SetStyle(ControlStyles.ResizeRedraw, true); // this is to avoid visual artifacts
@@ -95,6 +94,7 @@ namespace ProductieManager.Forms
 
         private void btnCaptureThis_Click(object sender, EventArgs e)
         {
+
             this.Hide();
             ScreenImageForm save = new ScreenImageForm(this.Location.X, this.Location.Y, this.Width, this.Height, this.Size);
 

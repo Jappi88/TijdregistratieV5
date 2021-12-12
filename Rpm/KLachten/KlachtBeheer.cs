@@ -1,31 +1,30 @@
-﻿using System;
+﻿using Rpm.Productie;
+using Rpm.SqlLite;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Rpm.SqlLite;
+using Rpm.Various;
 
-namespace ProductieManager.Rpm.KLachten
+namespace Rpm.Klachten
 {
-    public delegate void KlachtHandler(object sender, KlachtEntry entry);
-
-    public class KlachtBeheer
+    public class KlachtBeheer : IDisposable
     {
+        public bool Disposed => _disposed;
         public MultipleFileDb Database { get; private set; }
         public readonly string RootPath;
 
         public KlachtBeheer(string path)
         {
-            RootPath = path;
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            Database = new MultipleFileDb(path, true);
+            RootPath = Path.Combine(path, "Klachten");
+            if (!Directory.Exists(RootPath))
+                Directory.CreateDirectory(RootPath);
+            Database = new MultipleFileDb(RootPath, true);
             Database.FileChanged += Database_Changed;
             Database.FileDeleted += Database_FileDeleted;
         }
 
-        public string GetBijlageFolder()
+        public string GetBijlagesFolder()
         {
             string xb = Path.Combine(RootPath, "Bijlages");
             if (!Directory.Exists(xb))
@@ -33,12 +32,71 @@ namespace ProductieManager.Rpm.KLachten
             return xb;
         }
 
+        public string GetBijlageFolder(KlachtEntry entry)
+        {
+            string xb = Path.Combine(RootPath, "Bijlages", entry.ID.ToString());
+            if (!Directory.Exists(xb))
+                Directory.CreateDirectory(xb);
+            return xb;
+        }
+
+        public int UpdateBijlages(KlachtEntry entry, bool rename)
+        {
+            if (entry?.Bijlages == null || entry.Bijlages.Count == 0) return 0;
+            int xdone = 0;
+            try
+            {
+                var xpath = GetBijlageFolder(entry);
+                for(int i = 0; i < entry.Bijlages.Count;i++)
+                {
+                    var bijlage = entry.Bijlages[i];
+                    var fn = Path.GetFileName(bijlage);
+                    var fnext = Path.GetFileNameWithoutExtension(bijlage);
+                    string xnewpath = Path.Combine(xpath, fn);
+                    if (string.Equals(bijlage, xnewpath, StringComparison.CurrentCultureIgnoreCase))
+                        continue;
+                    if (rename)
+                    {
+                        var xnum = 0;
+                        var xpp = xnewpath;
+                        var xext = Path.GetExtension(xnewpath);
+                        while (File.Exists(xpp))
+                            xpp = Path.Combine(xpath, $"{fnext}_{xnum++}{xext}");
+                        xnewpath = xpp;
+                    }
+
+                    File.Copy(bijlage, xnewpath, true);
+                    entry.Bijlages[i] = xnewpath;
+                }
+
+                var files = Directory.GetFiles(xpath);
+                var remove = files.Where(x =>
+                    !entry.Bijlages.Any(f => string.Equals(x, f, StringComparison.CurrentCultureIgnoreCase))).ToList();
+                remove.ForEach(r =>
+                {
+                    try
+                    {
+                        File.Delete(r);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+               
+            }
+            return xdone;
+        }
+
         public string[] GetBijlages(KlachtEntry entry)
         {
-            var xpath = GetBijlageFolder();
-            string xb = Path.Combine(xpath, entry.ID.ToString());
-            if (!Directory.Exists(xb)) return new string[] { };
-            return Directory.GetFiles(xb);
+            var xpath = GetBijlageFolder(entry);
+            if (!Directory.Exists(xpath)) return new string[] { };
+            return Directory.GetFiles(xpath);
         }
 
 
@@ -55,12 +113,39 @@ namespace ProductieManager.Rpm.KLachten
             }
         }
 
-        public bool SaveKlacht(KlachtEntry entry)
+        public bool SaveKlacht(KlachtEntry entry, bool savebijlages)
         {
             try
             {
                 if (entry == null || Database == null) return false;
+                if (savebijlages && entry.Bijlages is {Count: > 0})
+                {
+                    UpdateBijlages(entry, false);
+
+                }
                 return Database.Upsert<KlachtEntry>(entry.ID.ToString(), entry, false);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        public bool RemoveKlacht(KlachtEntry entry)
+        {
+            try
+            {
+                if (entry == null || Database == null) return false;
+                if(Database.Delete(entry.ID.ToString()))
+                {
+                    var xbf = GetBijlageFolder(entry);
+                    if (Directory.Exists(xbf))
+                        Directory.Delete(xbf, true);
+                    return true;
+                }
+
+                return false;
             }
             catch (Exception e)
             {
@@ -75,7 +160,7 @@ namespace ProductieManager.Rpm.KLachten
             try
             {
                 if (Database == null) return xklachten;
-                xklachten = Database.GetAllEntries<KlachtEntry>();
+                xklachten = Database.GetAllEntries<KlachtEntry>().Where(x=> x.IsValid).ToList();
             }
             catch (Exception e)
             {
@@ -91,7 +176,7 @@ namespace ProductieManager.Rpm.KLachten
 
         private void Database_FileDeleted(object sender, FileSystemEventArgs e)
         {
-            OnKlachtDeleted(this);
+            OnKlachtDeleted(Path.GetFileNameWithoutExtension(e.FullPath));
         }
 
         private void Database_Changed(object sender, FileSystemEventArgs e)
@@ -120,6 +205,27 @@ namespace ProductieManager.Rpm.KLachten
         protected virtual void OnKlachtDeleted(object sender)
         {
             KlachtDeleted?.Invoke(sender, EventArgs.Empty);
+        }
+
+        public void Dispose()
+        {
+            // Dispose of unmanaged resources.
+            Dispose(true);
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
+        }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            Database?.Dispose();
+            Database = null;
+            _disposed = true;
         }
     }
 }

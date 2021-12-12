@@ -16,6 +16,14 @@ namespace Rpm.Productie
             WerkRooster = rooster;
         }
 
+        public TijdEntry(DateTime start, DateTime stop)
+        {
+            Omschrijving = string.Empty;
+            Start = start;
+            Stop = stop;
+            ID = start.GetHashCode();
+        }
+
         public TijdEntry(DateTime start, DateTime stop, Rooster rooster)
         {
             Omschrijving = string.Empty;

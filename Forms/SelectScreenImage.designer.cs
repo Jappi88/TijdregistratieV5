@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.panelDrag = new System.Windows.Forms.Panel();
-            this.btnCaptureThis = new System.Windows.Forms.Button();
             this.xannuleren = new System.Windows.Forms.Button();
+            this.btnCaptureThis = new System.Windows.Forms.Button();
             this.panelDrag.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,20 +49,6 @@
             this.panelDrag.TabIndex = 0;
             this.panelDrag.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelDrag_MouseDown);
             // 
-            // btnCaptureThis
-            // 
-            this.btnCaptureThis.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCaptureThis.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCaptureThis.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCaptureThis.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCaptureThis.Location = new System.Drawing.Point(379, 325);
-            this.btnCaptureThis.Name = "btnCaptureThis";
-            this.btnCaptureThis.Size = new System.Drawing.Size(119, 33);
-            this.btnCaptureThis.TabIndex = 0;
-            this.btnCaptureThis.Text = "ScreenShot!";
-            this.btnCaptureThis.UseVisualStyleBackColor = true;
-            this.btnCaptureThis.Click += new System.EventHandler(this.btnCaptureThis_Click);
-            // 
             // xannuleren
             // 
             this.xannuleren.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -77,6 +63,20 @@
             this.xannuleren.UseVisualStyleBackColor = true;
             this.xannuleren.Click += new System.EventHandler(this.xannuleren_Click);
             // 
+            // btnCaptureThis
+            // 
+            this.btnCaptureThis.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCaptureThis.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCaptureThis.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCaptureThis.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCaptureThis.Location = new System.Drawing.Point(379, 325);
+            this.btnCaptureThis.Name = "btnCaptureThis";
+            this.btnCaptureThis.Size = new System.Drawing.Size(119, 33);
+            this.btnCaptureThis.TabIndex = 0;
+            this.btnCaptureThis.Text = "ScreenShot!";
+            this.btnCaptureThis.UseVisualStyleBackColor = true;
+            this.btnCaptureThis.Click += new System.EventHandler(this.btnCaptureThis_Click);
+            // 
             // SelectScreenImage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -86,7 +86,7 @@
             this.Controls.Add(this.panelDrag);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "SelectScreenImage";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Select Area";
             this.panelDrag.ResumeLayout(false);
             this.ResumeLayout(false);

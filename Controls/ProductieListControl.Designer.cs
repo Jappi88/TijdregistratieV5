@@ -86,6 +86,7 @@ namespace Controls
             this.xListColumnsButton = new System.Windows.Forms.Button();
             this.panel7 = new System.Windows.Forms.Panel();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.xonderbreek = new System.Windows.Forms.ToolStripButton();
             this.xstartb = new System.Windows.Forms.ToolStripButton();
             this.xstopb = new System.Windows.Forms.ToolStripButton();
             this.xopenproductieb = new System.Windows.Forms.ToolStripButton();
@@ -120,7 +121,6 @@ namespace Controls
             this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.xonderbreek = new System.Windows.Forms.ToolStripButton();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst1)).BeginInit();
             this.xproductieLijstcontext.SuspendLayout();
@@ -709,7 +709,7 @@ namespace Controls
             this.xListColumnsButton.Name = "xListColumnsButton";
             this.xListColumnsButton.Size = new System.Drawing.Size(34, 33);
             this.xListColumnsButton.TabIndex = 10;
-            this.toolTip1.SetToolTip(this.xListColumnsButton, "Beheer Lijst Columns");
+            this.toolTip1.SetToolTip(this.xListColumnsButton, "Beheer Lijst Columns (Ctrl+L)");
             this.xListColumnsButton.UseVisualStyleBackColor = true;
             this.xListColumnsButton.Click += new System.EventHandler(this.xListColumnsButton_Click);
             // 
@@ -758,6 +758,17 @@ namespace Controls
             this.toolStrip2.Size = new System.Drawing.Size(1149, 39);
             this.toolStrip2.TabIndex = 30;
             this.toolStrip2.Text = "toolStrip2";
+            // 
+            // xonderbreek
+            // 
+            this.xonderbreek.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xonderbreek.Image = global::ProductieManager.Properties.Resources.Stop_Hand__32x32;
+            this.xonderbreek.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xonderbreek.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xonderbreek.Name = "xonderbreek";
+            this.xonderbreek.Size = new System.Drawing.Size(36, 36);
+            this.xonderbreek.ToolTipText = "Onderbreek of hervat een productie";
+            this.xonderbreek.Click += new System.EventHandler(this.xonderbreek_Click);
             // 
             // xstartb
             // 
@@ -1114,17 +1125,6 @@ namespace Controls
             // toolTip1
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            // 
-            // xonderbreek
-            // 
-            this.xonderbreek.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xonderbreek.Image = global::ProductieManager.Properties.Resources.Stop_Hand__32x32;
-            this.xonderbreek.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xonderbreek.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xonderbreek.Name = "xonderbreek";
-            this.xonderbreek.Size = new System.Drawing.Size(36, 36);
-            this.xonderbreek.ToolTipText = "Onderbreek of hervat een productie";
-            this.xonderbreek.Click += new System.EventHandler(this.xonderbreek_Click);
             // 
             // ProductieListControl
             // 

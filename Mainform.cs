@@ -102,6 +102,7 @@ namespace ProductieManager
             BringToFront();
             UpdateTitle();
             productieView1.ShowStartupForms();
+            AutoUpdater.Start();
         }
 
         private void AutoUpdater_ApplicationExitEvent()
@@ -333,7 +334,7 @@ namespace ProductieManager
 
                 }
                 _dbWatcher.WatchPath(Manager.DefaultSettings.MainDB.UpdatePath, false, true);
-                AutoUpdater.Start();
+               
             }));
 
         }
