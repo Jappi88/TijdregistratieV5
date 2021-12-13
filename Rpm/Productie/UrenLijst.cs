@@ -56,7 +56,7 @@ namespace Rpm.Productie
                     Add(tijd.CreateCopy());
                 }
 
-                UpdateUrenRooster(false,null);
+                //UpdateUrenRooster(false,null);
                 if (isactief && !isbussy)
                     UpdateTijdGewerkt(DateTime.Now, DateTime.Now, true);
                 

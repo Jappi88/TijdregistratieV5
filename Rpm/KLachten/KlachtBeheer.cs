@@ -10,6 +10,7 @@ namespace Rpm.Klachten
 {
     public class KlachtBeheer : IDisposable
     {
+        public static readonly string KlachtDbVersion = "1.0.0.0";
         public bool Disposed => _disposed;
         public MultipleFileDb Database { get; private set; }
         public readonly string RootPath;
@@ -19,7 +20,7 @@ namespace Rpm.Klachten
             RootPath = Path.Combine(path, "Klachten");
             if (!Directory.Exists(RootPath))
                 Directory.CreateDirectory(RootPath);
-            Database = new MultipleFileDb(RootPath, true);
+            Database = new MultipleFileDb(RootPath, true, KlachtDbVersion, DbType.Klachten);
             Database.FileChanged += Database_Changed;
             Database.FileDeleted += Database_FileDeleted;
         }

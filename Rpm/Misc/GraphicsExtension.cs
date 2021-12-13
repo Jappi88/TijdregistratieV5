@@ -86,36 +86,7 @@ namespace ProductieManager.Rpm.Misc
             return image;
         }
 
-        public static Image WriteTextWithCircle(this Image image, string text, ContentAlignment alignment, Font font, Brush textbrush, Brush circlebrush)
-        {
-            try
-            {
-                
-                //var rectf = new RectangleF(location.X, location.Y, image.Width, image.Height); //rectf for My Text
-                using (var g = Graphics.FromImage(image))
-                {
-                    //g.DrawRectangle(new Pen(Color.Red, 2), 655, 460, 535, 90); 
-                    int radius = (int) g.MeasureString(text, font).Width -6;
-                    g.SmoothingMode = SmoothingMode.AntiAlias;
-                    //g.DrawString(text,
-                    //    font,
-                    //    brush, location);
-                    //I am drawing a oval around my text.
-                    //g.DrawArc(new Pen(Color.Red, 3), 90, 235, 150, 50, 0, 360);
-                    Point location = GetAlignmentLocation(alignment, image.Size, radius, radius);
-                    g.FillCircle(circlebrush, location.X, location.Y, radius);
-                    //g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    //g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                    //location = GetAlignmentLocation(alignment, image.Size, radius / 2, 0);
-                    g.DrawString(text, font, textbrush, location.X / 2 , 0);
-                }
-            }
-            catch
-            {
-            }
 
-            return image;
-        }
 
         public static Bitmap DrawUserCircle(Size PicSize, Brush Brush, string Text, Font font, Color BackColor)
         {
@@ -143,6 +114,36 @@ namespace ProductieManager.Rpm.Misc
             int posX = Convert.ToInt32((PicSize.Width - stringSize.Width) / 2); //<- Calcula la posicion para centrar el Texto
             int posY = Convert.ToInt32((PicSize.Height - stringSize.Height) / 2);
                 
+            g.DrawString(Text, font, Brush, new Point(posX, posY));
+            return Canvas;
+        }
+
+        public static Bitmap DrawUserText(Size PicSize, Brush Brush, string Text, Font font)
+        {
+
+            Bitmap Canvas = new Bitmap(PicSize.Width, PicSize.Height);
+            Graphics g = Graphics.FromImage(Canvas);
+
+
+           // Rectangle outerRect = new Rectangle(-1, -1, image.Width + 1, image.Height + 1);
+           // Rectangle rect = Rectangle.Inflate(outerRect, -2, -2);
+
+            g.InterpolationMode = InterpolationMode.HighQualityBilinear;
+            g.CompositingQuality = CompositingQuality.HighQuality;
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            //using GraphicsPath path = new GraphicsPath();
+            //g.FillEllipse(new SolidBrush(BackColor),
+             //   new RectangleF(0, 0, image.Width, image.Height));
+
+           // path.AddEllipse(rect);
+            //g.FillPath(Brushes.Transparent, path);
+
+            SizeF stringSize = g.MeasureString(Text, font);                                                                              
+            int posX = Convert.ToInt32((Canvas.Width - stringSize.Width) / 2); 
+            int posY = Convert.ToInt32((Canvas.Height - stringSize.Height) / 2);
+
             g.DrawString(Text, font, Brush, new Point(posX, posY));
             return Canvas;
         }

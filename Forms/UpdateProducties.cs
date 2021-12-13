@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -136,7 +137,7 @@ namespace Forms
                         {
                             var opties = Manager.DefaultSettings??UserSettings.GetDefaultSettings();
                             IsFinished = true;
-                            opties.UpdateDatabaseVersion = LocalDatabase.DbVersion;
+                            opties.UpdateDatabaseVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                             opties.SaveAsDefault();
                             string x1 = count == 1 ? "update" : "updates";
                             DoProgress($"{count} {x1} Uitgevoerd!", 100);

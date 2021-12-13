@@ -37,10 +37,15 @@ namespace Forms
             this.xok = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
             this.ximage = new System.Windows.Forms.PictureBox();
+            this.xextrafieldcheck = new System.Windows.Forms.CheckBox();
+            this.xsecondaryPanel = new System.Windows.Forms.Panel();
+            this.xdescriptiontext = new System.Windows.Forms.Label();
+            this.xsecondarytextbox = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ximage)).BeginInit();
+            this.xsecondaryPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // xtextfield
@@ -50,7 +55,7 @@ namespace Forms
             this.xtextfield.Location = new System.Drawing.Point(5, 15);
             this.xtextfield.Name = "xtextfield";
             this.xtextfield.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.xtextfield.Size = new System.Drawing.Size(391, 29);
+            this.xtextfield.Size = new System.Drawing.Size(466, 29);
             this.xtextfield.TabIndex = 0;
             this.xtextfield.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xtextfield_KeyDown);
             // 
@@ -58,9 +63,9 @@ namespace Forms
             // 
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(129, 134);
+            this.panel1.Location = new System.Drawing.Point(129, 144);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(401, 46);
+            this.panel1.Size = new System.Drawing.Size(476, 46);
             this.panel1.TabIndex = 9;
             // 
             // panel2
@@ -68,7 +73,7 @@ namespace Forms
             this.panel2.Controls.Add(this.xanuleren);
             this.panel2.Controls.Add(this.xok);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(149, 0);
+            this.panel2.Location = new System.Drawing.Point(224, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(252, 46);
             this.panel2.TabIndex = 3;
@@ -103,12 +108,13 @@ namespace Forms
             // 
             // panel3
             // 
+            this.panel3.Controls.Add(this.xsecondaryPanel);
             this.panel3.Controls.Add(this.xtextfield);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(129, 60);
             this.panel3.Name = "panel3";
             this.panel3.Padding = new System.Windows.Forms.Padding(5, 15, 5, 15);
-            this.panel3.Size = new System.Drawing.Size(401, 74);
+            this.panel3.Size = new System.Drawing.Size(476, 84);
             this.panel3.TabIndex = 10;
             // 
             // ximage
@@ -118,23 +124,68 @@ namespace Forms
             this.ximage.Image = global::ProductieManager.Properties.Resources.text_edit_14943;
             this.ximage.Location = new System.Drawing.Point(20, 60);
             this.ximage.Name = "ximage";
-            this.ximage.Size = new System.Drawing.Size(109, 120);
+            this.ximage.Size = new System.Drawing.Size(109, 130);
             this.ximage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.ximage.TabIndex = 8;
             this.ximage.TabStop = false;
+            // 
+            // xextrafieldcheck
+            // 
+            this.xextrafieldcheck.AutoSize = true;
+            this.xextrafieldcheck.Dock = System.Windows.Forms.DockStyle.Top;
+            this.xextrafieldcheck.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xextrafieldcheck.Location = new System.Drawing.Point(0, 0);
+            this.xextrafieldcheck.Name = "xextrafieldcheck";
+            this.xextrafieldcheck.Size = new System.Drawing.Size(466, 25);
+            this.xextrafieldcheck.TabIndex = 1;
+            this.xextrafieldcheck.Text = "Geavanceerd";
+            this.xextrafieldcheck.UseVisualStyleBackColor = true;
+            this.xextrafieldcheck.CheckedChanged += new System.EventHandler(this.xextrafieldcheck_CheckedChanged);
+            // 
+            // xsecondaryPanel
+            // 
+            this.xsecondaryPanel.Controls.Add(this.xsecondarytextbox);
+            this.xsecondaryPanel.Controls.Add(this.xdescriptiontext);
+            this.xsecondaryPanel.Controls.Add(this.xextrafieldcheck);
+            this.xsecondaryPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.xsecondaryPanel.Location = new System.Drawing.Point(5, 47);
+            this.xsecondaryPanel.Name = "xsecondaryPanel";
+            this.xsecondaryPanel.Size = new System.Drawing.Size(466, 22);
+            this.xsecondaryPanel.TabIndex = 2;
+            this.xsecondaryPanel.Visible = false;
+            // 
+            // xdescriptiontext
+            // 
+            this.xdescriptiontext.Dock = System.Windows.Forms.DockStyle.Top;
+            this.xdescriptiontext.Location = new System.Drawing.Point(0, 25);
+            this.xdescriptiontext.Name = "xdescriptiontext";
+            this.xdescriptiontext.Size = new System.Drawing.Size(466, 29);
+            this.xdescriptiontext.TabIndex = 3;
+            this.xdescriptiontext.Text = "description";
+            // 
+            // xsecondarytextbox
+            // 
+            this.xsecondarytextbox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xsecondarytextbox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xsecondarytextbox.Location = new System.Drawing.Point(0, 54);
+            this.xsecondarytextbox.Name = "xsecondarytextbox";
+            this.xsecondarytextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.xsecondarytextbox.Size = new System.Drawing.Size(466, 29);
+            this.xsecondarytextbox.TabIndex = 4;
+            this.xsecondarytextbox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xtextfield_KeyDown);
             // 
             // TextFieldEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(550, 200);
+            this.ClientSize = new System.Drawing.Size(625, 210);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.ximage);
             this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.MinimumSize = new System.Drawing.Size(550, 200);
+            this.MinimumSize = new System.Drawing.Size(625, 210);
             this.Name = "TextFieldEditor";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -145,6 +196,8 @@ namespace Forms
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ximage)).EndInit();
+            this.xsecondaryPanel.ResumeLayout(false);
+            this.xsecondaryPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -157,5 +210,9 @@ namespace Forms
         private System.Windows.Forms.PictureBox ximage;
         private System.Windows.Forms.TextBox xtextfield;
         private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Label xdescriptiontext;
+        private System.Windows.Forms.Panel xsecondaryPanel;
+        private System.Windows.Forms.CheckBox xextrafieldcheck;
+        private System.Windows.Forms.TextBox xsecondarytextbox;
     }
 }

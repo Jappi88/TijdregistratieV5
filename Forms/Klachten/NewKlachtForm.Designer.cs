@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.xmessagebox = new System.Windows.Forms.RichTextBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.xsluiten = new System.Windows.Forms.Button();
@@ -50,6 +49,7 @@
             this.xproductiesstrip = new System.Windows.Forms.MenuStrip();
             this.xaddproductie = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.xmessagebox = new System.Windows.Forms.TextBox();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.xbijlagestrip.SuspendLayout();
@@ -58,16 +58,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.xproductiesstrip.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // xmessagebox
-            // 
-            this.xmessagebox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xmessagebox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xmessagebox.Location = new System.Drawing.Point(20, 220);
-            this.xmessagebox.Name = "xmessagebox";
-            this.xmessagebox.Size = new System.Drawing.Size(661, 228);
-            this.xmessagebox.TabIndex = 11;
-            this.xmessagebox.Text = "Vul in een klacht omschrijving";
             // 
             // panel2
             // 
@@ -298,8 +288,24 @@
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
+            // xmessagebox
+            // 
+            this.xmessagebox.AllowDrop = true;
+            this.xmessagebox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xmessagebox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xmessagebox.Location = new System.Drawing.Point(23, 223);
+            this.xmessagebox.Multiline = true;
+            this.xmessagebox.Name = "xmessagebox";
+            this.xmessagebox.Size = new System.Drawing.Size(658, 219);
+            this.xmessagebox.TabIndex = 15;
+            this.xmessagebox.DragDrop += new System.Windows.Forms.DragEventHandler(this.Xmessagebox_DragDrop);
+            this.xmessagebox.DragEnter += new System.Windows.Forms.DragEventHandler(this.Xmessagebox_DragEnter);
+            // 
             // NewKlachtForm
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(701, 512);
@@ -314,6 +320,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Style = MetroFramework.MetroColorStyle.Red;
             this.Text = "Nieuwe Klacht";
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Xmessagebox_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Xmessagebox_DragEnter);
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.xbijlagestrip.ResumeLayout(false);
@@ -331,8 +339,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.RichTextBox xmessagebox;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button xsluiten;
@@ -353,5 +359,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DateTimePicker xdateklacht;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.TextBox xmessagebox;
     }
 }

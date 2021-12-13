@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Timers;
 using LiteDB;
@@ -58,7 +59,7 @@ namespace Rpm.SqlLite
                     LocalDbCollection = LocalDb.GetCollection<T>(CollectionName);
                     break;
                 case DbInstanceType.MultipleFiles:
-                    MultiFiles = new MultipleFileDb(rootpath,watchdatabase);
+                    MultiFiles = new MultipleFileDb(rootpath, watchdatabase, Assembly.GetExecutingAssembly().GetName().Version.ToString(), Type);
                     CollectionName = DbName;
                     if (watchdatabase)
                     {

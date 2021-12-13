@@ -23,6 +23,11 @@ namespace Rpm.SqlLite
 
         //private static readonly object _locker = new object();
         public string SecondaryDestination { get; private set; }
+        public DbVersion Version { get; private set; }
+        private bool _canread;
+        public bool CanRead { get=> _canread && !_disposed;
+            private set => _canread = value;
+        }
         public SecondaryManageType[] SecondaryManagedTypes { get; private set; }
         public event FileSystemEventHandler FileChanged;
         public event FileSystemEventHandler FileDeleted;
@@ -33,13 +38,14 @@ namespace Rpm.SqlLite
 
         public static event EventHandler CorruptedFilesChanged;
 
-        public MultipleFileDb(string path, bool watchdb)
+        public MultipleFileDb(string path, bool watchdb, string version, DbType type)
         {
             _FileChangedNotifyTimer = new Timer(1000);//500 ms vertraging
             _FileChangedNotifyTimer.Elapsed += _FileChangedNotifyTimer_Elapsed;
             Path = path;
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
+            InitVersion(version, type);
             if (watchdb)
             {
                 _pathwatcher = new FileSystemWatcher(Path);
@@ -49,6 +55,49 @@ namespace Rpm.SqlLite
                 _pathwatcher.Changed += _pathwatcher_Changed;
                 _pathwatcher.Deleted += _pathwatcher_Deleted;
             }
+        }
+
+        private void InitVersion(string version, DbType type)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(Path)) return;
+                var dbfile = System.IO.Path.Combine(Path, "Version.db");
+                bool done = false;
+                if (File.Exists(dbfile))
+                {
+                    try
+                    {
+                        Version = dbfile.DeSerialize<DbVersion>();
+                        if (Version == null) throw new Exception("Unable to parse 'Version' db");
+                        var xdbversion = new Version(Version.Version);
+                        var xnewversion = new Version(version);
+                        if (xnewversion > xdbversion)
+                        {
+                            Version.Version = version;
+                            Version.Serialize(dbfile);
+                        }
+                        done = true;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        done = false;
+                    }
+                }
+                if (!done)
+                {
+                    Version = new DbVersion() {DateChanged = DateTime.Now, DbType = type, Version = version};
+                    Version.Serialize(dbfile);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            _canread = Version != null &&
+                       string.Equals(version, Version.Version, StringComparison.CurrentCultureIgnoreCase);
         }
 
         private readonly List<string> _changes = new List<string>();
@@ -161,6 +210,7 @@ namespace Rpm.SqlLite
             var xreturn = new List<T>();
             try
             {
+                if (!CanRead) return xreturn;
                 string path = GetReadPath(true);
                 var files = Directory.GetFiles(path, "*.rpm");
 
@@ -183,6 +233,7 @@ namespace Rpm.SqlLite
         {
             try
             {
+                if(!CanRead) return new List<string>();
                 string path = GetReadPath(checksecondary);
                 return Directory.GetFiles(path, "*.rpm").Select(System.IO.Path.GetFileNameWithoutExtension).ToList();
             }
@@ -197,6 +248,7 @@ namespace Rpm.SqlLite
         {
             try
             {
+                if (!CanRead) return new List<string>();
                 string path = GetReadPath(checksecondary);
                 return Directory.GetFiles(path, "*.rpm").ToList();
             }
@@ -211,90 +263,93 @@ namespace Rpm.SqlLite
         {
             //lock (_locker)
             //{
-                var xreturn = new List<T>();
-                try
+            var xreturn = new List<T>();
+            try
+            {
+                if (!CanRead) return xreturn;
+                foreach (var id in ids)
                 {
-
-                    foreach (var id in ids)
-                    {
-                        var xent = GetEntry<T>(id);
-                        if (xent != null)
-                            xreturn.Add(xent);
-                    }
-
-
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
+                    var xent = GetEntry<T>(id);
+                    if (xent != null)
+                        xreturn.Add(xent);
                 }
 
-                return xreturn;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return xreturn;
             //}
         }
 
         public List<T> GetEntries<T>(DateTime vanaf, DateTime tot, IsValidHandler validhandler)
         {
-           //lock (_locker)
-           //{
-               var xreturn = new List<T>();
-               try
-               {
-                   string path = GetReadPath(true);
-                   var files = Directory.GetFiles(path, "*.rpm");
-                   foreach (var file in files)
-                   {
+            //lock (_locker)
+            //{
+            var xreturn = new List<T>();
+            try
+            {
+                if (!CanRead) return xreturn;
+                string path = GetReadPath(true);
+                var files = Directory.GetFiles(path, "*.rpm");
+                foreach (var file in files)
+                {
 
-                       var xent = GetInstanceFromFile<T>(file, null, false, new TijdEntry(vanaf, tot, null));
-                       if (xent != null)
-                       {
-                           if (validhandler != null && !validhandler.Invoke(xent, null)) continue;
-                           xreturn.Add(xent);
-                       }
-                   }
+                    var xent = GetInstanceFromFile<T>(file, null, false, new TijdEntry(vanaf, tot, null));
+                    if (xent != null)
+                    {
+                        if (validhandler != null && !validhandler.Invoke(xent, null)) continue;
+                        xreturn.Add(xent);
+                    }
+                }
 
 
-               }
-               catch (Exception ex)
-               {
-                   Console.WriteLine(ex);
-               }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
 
-               return xreturn;
-           //}
+            return xreturn;
+            //}
         }
 
         public List<T> GetEntries<T>(IsValidHandler validhandler)
         {
             //lock (_locker)
-           // {
-                var xreturn = new List<T>();
-                try
+            // {
+            var xreturn = new List<T>();
+            try
+            {
+                if (!CanRead) return xreturn;
+                string path = GetReadPath(true);
+                var files = Directory.GetFiles(path, "*.rpm");
+                foreach (var file in files)
                 {
-                    string path = GetReadPath(true);
-                    var files = Directory.GetFiles(path, "*.rpm");
-                    foreach (var file in files)
-                    {
 
-                        var xent = GetInstanceFromFile<T>(file);
-                        if (xent != null)
-                        {
-                            if (validhandler != null && !validhandler.Invoke(xent, null)) continue;
-                            xreturn.Add(xent);
-                        }
+                    var xent = GetInstanceFromFile<T>(file);
+                    if (xent != null)
+                    {
+                        if (validhandler != null && !validhandler.Invoke(xent, null)) continue;
+                        xreturn.Add(xent);
                     }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
 
-                return xreturn;
+            return xreturn;
             //}
         }
 
         public T GetEntry<T>(string id)
         {
+            if (!CanRead) return default;
             string path = GetReadPath(true,$"{id}.rpm");
             path = $"{path}\\{id}.rpm";
             return GetInstanceFromFile<T>(path);
@@ -305,6 +360,7 @@ namespace Rpm.SqlLite
             //lock (_locker)
             //{
                 var xreturn = new List<T>();
+                if (!CanRead) return xreturn;
                 string xpath = GetReadPath(false);
                 if (criterias != null)
                 {
@@ -432,6 +488,7 @@ namespace Rpm.SqlLite
             //{
                 try
                 {
+                    if (!CanRead) return false;
                     if (string.IsNullOrEmpty(filepath)) return false;
                     //string tmp = Manager.TempPath + "\\" + System.IO.Path.GetRandomFileName();
                     byte[] bytes = null;
@@ -475,64 +532,66 @@ namespace Rpm.SqlLite
             //}
         }
 
-        public static T GetInstanceFromFile<T>(string filepath, string criteria = null, bool fullmatch = false, TijdEntry bereik = null)
+        public static T GetInstanceFromFile<T>(string filepath, string criteria = null, bool fullmatch = false,
+            TijdEntry bereik = null)
         {
 
-           //lock (_locker)
-           //{
-               T xreturn = default;
-               for (int i = 0; i < 5; i++)
-               {
-                   bool xbreak = false;
-                   try
-                   {
-                       if (!File.Exists(filepath)) return default;
-                       using var fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                       var packet = ReadPacket(fs);
-                       var ser = new SharpSerializer(true);
-                       T xent = default;
-                       if (bereik != null && packet != null &&
-                           !(packet.Changed >= bereik.Start && packet.Changed <= bereik.Stop))
-                           return xent;
-                       if (packet == null || string.IsNullOrEmpty(criteria) ||
-                           packet.ContainsCriteria(criteria, fullmatch))
-                       {
-                           xbreak = true;
-                           xreturn = (T)ser.Deserialize(fs);
-                           lock (CorruptedFilePaths)
-                           {
-                               int index =0;
-                               if ((index = CorruptedFilePaths.IndexOf(filepath.ToLower())) > -1)
-                               {
-                                   CorruptedFilePaths.RemoveAt(index);
-                                   OnCorruptedFilesChanged();
-                               }
-                           }
-                       }
+            //lock (_locker)
+            //{
+            T xreturn = default;
+            for (int i = 0; i < 5; i++)
+            {
+                bool xbreak = false;
+                try
+                {
+                    if (!File.Exists(filepath)) return default;
+                    using var fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    var packet = ReadPacket(fs);
+                    var ser = new SharpSerializer(true);
+                    T xent = default;
+                    if (bereik != null && packet != null &&
+                        !(packet.Changed >= bereik.Start && packet.Changed <= bereik.Stop))
+                        return xent;
+                    if (packet == null || string.IsNullOrEmpty(criteria) ||
+                        packet.ContainsCriteria(criteria, fullmatch))
+                    {
+                        xbreak = true;
+                        xreturn = (T) ser.Deserialize(fs);
+                        lock (CorruptedFilePaths)
+                        {
+                            int index = 0;
+                            if ((index = CorruptedFilePaths.IndexOf(filepath.ToLower())) > -1)
+                            {
+                                CorruptedFilePaths.RemoveAt(index);
+                                OnCorruptedFilesChanged();
+                            }
+                        }
+                    }
 
-                       fs.Close();
-                       return xreturn;
-                   }
-                   catch (Exception e)
-                   {
-                       xreturn = default;
-                       if (xbreak)
-                       {
-                           lock (CorruptedFilePaths)
-                           {
-                               if (CorruptedFilePaths.IndexOf(filepath.ToLower()) < 0)
-                               {
-                                   CorruptedFilePaths.Add(filepath.ToLower());
-                                   OnCorruptedFilesChanged();
-                               }
-                           }
-                           break;
-                       }
-                   }
-               }
+                    fs.Close();
+                    return xreturn;
+                }
+                catch (Exception e)
+                {
+                    xreturn = default;
+                    if (xbreak)
+                    {
+                        lock (CorruptedFilePaths)
+                        {
+                            if (CorruptedFilePaths.IndexOf(filepath.ToLower()) < 0)
+                            {
+                                CorruptedFilePaths.Add(filepath.ToLower());
+                                OnCorruptedFilesChanged();
+                            }
+                        }
 
-               return xreturn;
-           //}
+                        break;
+                    }
+                }
+            }
+
+            return xreturn;
+            //}
         }
 
         public bool Replace<T>(string id, T newitem, bool onlylocal)
@@ -558,6 +617,7 @@ namespace Rpm.SqlLite
         {
             try
             {
+                if (!CanRead) return false;
                 var paths = GetWritePaths(onlylocal);
                 if (paths.Length == 0) return false;
                 var xfirst = paths[0];
@@ -613,6 +673,7 @@ namespace Rpm.SqlLite
         {
             try
             {
+                if (!CanRead) return false;
                 var paths = GetWritePaths(false);
                 foreach (var path in paths)
                 {
@@ -643,6 +704,7 @@ namespace Rpm.SqlLite
             var done = 0;
             try
             {
+                if (!CanRead) return 0;
 
                 foreach (var id in ids)
                 {
@@ -664,6 +726,7 @@ namespace Rpm.SqlLite
             int max = 0;
             try
             {
+                if (!CanRead) return 0;
                 var paths = GetWritePaths(false);
                 DoProgress("Entries laden...", 0, 0, null, ProgressType.WriteBussy);
                 foreach (var path in paths)
@@ -809,6 +872,8 @@ namespace Rpm.SqlLite
                 _secondarypathwatcher?.Dispose();
             }
 
+            _canread = false;
+            Version = null;
             // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
             // TODO: set large fields to null.
             FileChanged = null;

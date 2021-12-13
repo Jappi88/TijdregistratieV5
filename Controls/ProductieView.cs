@@ -22,6 +22,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xaml;
 using Various;
 
 namespace Controls
@@ -175,9 +176,11 @@ namespace Controls
                 var xkl = Manager.Klachten?.GetUnreadKlachten();
                 if (xkl is {Count: > 0})
                 {
+                    string cnt = xkl.Count > 99 ? "99+" : xkl.Count.ToString();
+                    int fs = cnt.Length < 2 ? 16 : cnt.Length < 3 ? 14 : cnt.Length < 4 ? 12 : 10;
                     var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White,
-                        xkl.Count.ToString(),
-                        new Font("Ariel", 16, FontStyle.Bold), Color.DarkRed);
+                        cnt,
+                        new Font("Ariel", fs, FontStyle.Bold), Color.DarkRed);
                     xklachten.Image = Resources.Leave_80_icon_icons_com_57305.CombineImage(ximg, 1.75);
                     var xopen = Application.OpenForms["KlachtenForm"];
                     if (xopen != null) return;
@@ -191,7 +194,18 @@ namespace Controls
                 }
                 else
                 {
-                    xklachten.Image = Resources.Leave_80_icon_icons_com_57305;
+                    xkl = Manager.Klachten?.GetAlleKlachten();
+                    if (xkl is {Count: > 0})
+                    {
+                        var cnt = xkl.Count > 99 ? "99+" : xkl.Count.ToString();
+                        int fs = cnt.Length < 2? 16: cnt.Length < 3? 14 : cnt.Length < 4? 12 : 10;
+                        var ximg = GraphicsExtensions.DrawUserText(new Size(32, 32), Brushes.LightCoral,
+                            cnt,
+                            new Font("Ariel", fs, FontStyle.Bold));
+                        xklachten.Image = Resources.Leave_80_icon_icons_com_57305.CombineImage(ximg, 1.75);
+                    }
+                    else
+                        xklachten.Image = Resources.Leave_80_icon_icons_com_57305;
                 }
             }
             catch (Exception e)
@@ -1371,22 +1385,22 @@ namespace Controls
             }
         }
 
-        public static void CheckForUpdateDatabase()
-        {
-            var opties = Manager.DefaultSettings ?? UserSettings.GetDefaultSettings();
-            if (opties != null && new Version(LocalDatabase.DbVersion) > new Version(opties.UpdateDatabaseVersion))
-            {
-                var splash = Application.OpenForms["SplashScreen"];
-                splash?.Close();
+        //public static void CheckForUpdateDatabase()
+        //{
+        //    var opties = Manager.DefaultSettings ?? UserSettings.GetDefaultSettings();
+        //    if (opties != null && new Version(LocalDatabase.DbVersion) > new Version(opties.UpdateDatabaseVersion))
+        //    {
+        //        var splash = Application.OpenForms["SplashScreen"];
+        //        splash?.Close();
 
-                var prod = new UpdateProducties {CloseWhenFinished = true, ShowStop = false, StartWhenShown = true};
-                if (prod.ShowDialog() == DialogResult.OK)
-                {
-                    opties.UpdateDatabaseVersion = LocalDatabase.DbVersion;
-                    opties.SaveAsDefault();
-                }
-            }
-        }
+        //        var prod = new UpdateProducties {CloseWhenFinished = true, ShowStop = false, StartWhenShown = true};
+        //        if (prod.ShowDialog() == DialogResult.OK)
+        //        {
+        //            opties.UpdateDatabaseVersion = LocalDatabase.DbVersion;
+        //            opties.SaveAsDefault();
+        //        }
+        //    }
+        //}
 
         private async void LoadStartedProducties()
         {
@@ -1920,24 +1934,25 @@ namespace Controls
             {
                 var xprevs =
                     Functions.GetVersionPreviews(Manager.LastPreviewsUrl);
-                var xvers = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                var xvers = Assembly.GetExecutingAssembly().GetName().Version;
                 if (xprevs.Count > 0)
                 {
                     UpdatePreviewForm xshowform = null;
                     if (!showall)
                     {
                         
-                        if (!xprevs.ContainsKey(xvers)) return;
-                        if (onlyifnew && Manager.DefaultSettings.PreviewShown)
+                        if (!xprevs.ContainsKey(xvers.ToString())) return;
+                        bool isnew = new Version(Manager.DefaultSettings.LastPreviewVersion) < xvers;
+                        if (onlyifnew && (Manager.DefaultSettings.PreviewShown && !isnew))
                             return;
-                        xshowform = new UpdatePreviewForm(xprevs[xvers], onlyifnew,false);
+                        xshowform = new UpdatePreviewForm(xprevs[xvers.ToString()], onlyifnew,false);
                         xshowform.Title = $"NIEUW In {xvers}!";
                     }
                     else
                     {
                         var urls = xprevs.Select(x => x.Value).ToArray();
                         xshowform = new UpdatePreviewForm(urls);
-                        xshowform.Title = $"Alle Aanpassingen In Versie: {xprevs.LastOrDefault().Key?? xvers}";
+                        xshowform.Title = $"Alle Aanpassingen In Versie: {xprevs.LastOrDefault().Key?? xvers.ToString()}";
                     }
 
                     xshowform.ShowDialog();
@@ -2152,14 +2167,27 @@ namespace Controls
                 tb.FieldImage = Resources.search_page_document_128x128;
                 tb.MultiLine = false;
                 tb.Title = "Zoek productienr";
+                tb.EnableSecondaryField = true;
+                tb.SecondaryDescription = "Vul in een Artikelnr, bewerking naam of een stukje omschrijving";
                 if (tb.ShowDialog() == DialogResult.OK)
                 {
-                    var xsel = tb.SelectedText.Trim();
-                    var prod = await Manager.Database.GetProductie(xsel);
-                    if (prod == null)
-                        throw new Exception($"Er is geen productie gevonden met '{xsel}'.");
-                    var bw = prod.Bewerkingen?.FirstOrDefault(x => x.IsAllowed());
-                    Manager.FormulierActie(new object[] {prod, bw}, MainAktie.OpenProductie);
+                    if (tb.UseSecondary)
+                    {
+                        var calcform = new RangeCalculatorForm();
+                        var rf = new RangeCalculatorForm.RangeFilter();
+                        rf.Enabled = true;
+                        rf.Criteria = tb.SecondaryText.Trim();
+                        calcform.Show(rf);
+                    }
+                    else
+                    {
+                        var xsel = tb.SelectedText.Trim();
+                        var prod = await Manager.Database.GetProductie(xsel);
+                        if (prod == null)
+                            throw new Exception($"Er is geen productie gevonden met '{xsel}'.");
+                        var bw = prod.Bewerkingen?.FirstOrDefault(x => x.IsAllowed());
+                        Manager.FormulierActie(new object[] {prod, bw}, MainAktie.OpenProductie);
+                    }
                 }
             }
             catch (Exception ex)

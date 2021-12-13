@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,6 +22,24 @@ namespace Forms.Klachten
         {
             InitializeComponent();
             InitKlacht(entry);
+        }
+
+        private void Xmessagebox_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetData("Producties") is ArrayList collection)
+            {
+                var data = collection.Cast<IProductieBase>().ToList();
+                foreach (var xd in data)
+                    AddProductieStrip(xd.ProductieNr);
+            }
+        }
+
+        private void Xmessagebox_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetData("Producties") is ArrayList)
+                e.Effect = DragDropEffects.Link;
+            else
+                e.Effect = DragDropEffects.None;
         }
 
         public void InitKlacht(KlachtEntry klacht)
@@ -109,21 +128,35 @@ namespace Forms.Klachten
 
         private void AddProductieStrip()
         {
-            var xt = new TextFieldEditor();
-            xt.FieldImage = Resources.page_document_16748_128_128;
-            xt.Title = "Vul in een ProductieNr";
-            if (xt.ShowDialog() == DialogResult.OK)
+            var tb = new TextFieldEditor();
+            tb.FieldImage = Resources.page_document_16748_128_128;
+            tb.Title = "Vul in een ProductieNr";
+            tb.EnableSecondaryField = true;
+            tb.SecondaryCheckBoxText = "Producties Zoeken";
+            tb.SecondaryDescription = "Vul in een Artikelnr, bewerking naam of een stukje omschrijving";
+            if (tb.ShowDialog() == DialogResult.OK)
             {
-                var name = xt.SelectedText;
-                var xprod = Manager.Database.GetProductie(name).Result;
-                if (xprod == null)
+                if (tb.UseSecondary)
                 {
-                    if (XMessageBox.Show($"ProductieNr '{name}' bestaat niet, wil je alsnog toevoegen?",
-                            "ProductieNr bestaat niet", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
-                        DialogResult.No) return;
+                    var calcform = new RangeCalculatorForm();
+                    var rf = new RangeCalculatorForm.RangeFilter();
+                    rf.Enabled = true;
+                    rf.Criteria = tb.SecondaryText.Trim();
+                    calcform.Show(rf);
                 }
+                else
+                {
+                    var name = tb.SelectedText;
+                    var xprod = Manager.Database.GetProductie(name).Result;
+                    if (xprod == null)
+                    {
+                        if (XMessageBox.Show($"ProductieNr '{name}' bestaat niet, wil je alsnog toevoegen?",
+                                "ProductieNr bestaat niet", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
+                            DialogResult.No) return;
+                    }
 
-                AddProductieStrip(name);
+                    AddProductieStrip(name);
+                }
             }
         }
 

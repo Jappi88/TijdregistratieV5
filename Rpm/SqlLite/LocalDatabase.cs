@@ -17,7 +17,8 @@ namespace Rpm.SqlLite
 {
     public class LocalDatabase : IDisposable
     {
-        public static readonly string DbVersion = "2.3.0.0";
+        //public static readonly string DbVersion = Version;
+
         public LocalDatabase(Manager instance, string pcid, string path, bool createnew)
         {
             OwnerId = pcid;
@@ -1974,7 +1975,7 @@ namespace Rpm.SqlLite
                         "DbVersions", false);
                     var prods = await prodsdb.FindAll();
                     foreach (var prod in prods)
-                        await DbVersions.Upsert(prod.Name, prod,false);
+                        await DbVersions.Upsert(Enum.GetName(typeof(DbType),prod.DbType), prod,false);
                     Directory.Move(dbpath, dbpath + "_migrated");
                 }
             });
@@ -2096,51 +2097,51 @@ namespace Rpm.SqlLite
             });
         }
 
-        public async void CheckVersions(DbType type)
-        {
-            if (IsDisposed || DbVersions == null)
-                return;
-            double cur = 1;
-            var version = await DbVersions.FindOne(Enum.GetName(typeof(DbType), type)) ?? new DbVersion
-            { Version = cur, Name = Enum.GetName(typeof(DbType), type) };
-            switch (type)
-            {
-                case DbType.Producties:
-                    cur = 2; // huidige productie db versie
-                    if (version.Version < cur && cur > 1)
-                        try
-                        {
-                            var prods = await ProductieFormulieren.FindAll();
-                            foreach (var prod in prods)
-                            {
-                                if (prod.State == ProductieState.Verwijderd) continue;
-                                await prod.UpdateVersion();
-                            }
+        //public async void CheckVersions(DbType type)
+        //{
+        //    if (IsDisposed || DbVersions == null)
+        //        return;
+        //    double cur = 1;
+        //    var version = await DbVersions.FindOne(Enum.GetName(typeof(DbType), type)) ?? new DbVersion
+        //    { Version = cur, Name = Enum.GetName(typeof(DbType), type) };
+        //    switch (type)
+        //    {
+        //        case DbType.Producties:
+        //            cur = 2; // huidige productie db versie
+        //            if (version.Version < cur && cur > 1)
+        //                try
+        //                {
+        //                    var prods = await ProductieFormulieren.FindAll();
+        //                    foreach (var prod in prods)
+        //                    {
+        //                        if (prod.State == ProductieState.Verwijderd) continue;
+        //                        await prod.UpdateVersion();
+        //                    }
 
-                            version.Version = cur;
-                            await DbVersions.Upsert(version.Name, version,false);
-                        }
-                        catch
-                        {
-                        }
+        //                    version.Version = cur;
+        //                    await DbVersions.Upsert(version.Name, version,false);
+        //                }
+        //                catch
+        //                {
+        //                }
 
-                    break;
-                case DbType.Changes:
-                    break;
-                case DbType.Medewerkers:
-                    break;
-                case DbType.GereedProducties:
-                    break;
-                case DbType.Opties:
-                    break;
-                case DbType.Accounts:
-                    break;
-                case DbType.Logs:
-                    break;
-                case DbType.Versions:
-                    break;
-            }
-        }
+        //            break;
+        //        case DbType.Changes:
+        //            break;
+        //        case DbType.Medewerkers:
+        //            break;
+        //        case DbType.GereedProducties:
+        //            break;
+        //        case DbType.Opties:
+        //            break;
+        //        case DbType.Accounts:
+        //            break;
+        //        case DbType.Logs:
+        //            break;
+        //        case DbType.Versions:
+        //            break;
+        //    }
+        //}
 
         public void Close(DbType type)
         {

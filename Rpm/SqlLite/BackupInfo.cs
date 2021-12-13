@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.IO.Compression;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using ICSharpCode.SharpZipLib.Checksum;
@@ -52,7 +53,7 @@ namespace Rpm.SqlLite
 
         public BackupInfo()
         {
-            DbVersion = LocalDatabase.DbVersion;
+            DbVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         public void StartBackupSyncer(double interval)

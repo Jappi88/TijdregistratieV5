@@ -1,11 +1,12 @@
-﻿using LiteDB;
+﻿using System;
+using LiteDB;
 
 namespace Rpm.SqlLite
 {
     public class DbVersion
     {
-        public double Version { get; set; }
-
-        [BsonId] public string Name { get; set; }
+        public string Version { get; set; }
+        public DbType DbType { get; set; }
+        public DateTime DateChanged { get; set; }
     }
 }
