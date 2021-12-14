@@ -1,12 +1,11 @@
-﻿using System;
+﻿using ProductieManager.Rpm.Mailing;
+using Rpm.Productie;
+using Rpm.Various;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Mail;
-using ProductieManager.Rpm.Mailing;
-using Rpm.Productie;
-using Rpm.Various;
 using MailMessage = System.Net.Mail.MailMessage;
 
 namespace Rpm.Mailing
@@ -21,7 +20,7 @@ namespace Rpm.Mailing
         //        // Gmail IMAP4 server is "imap.gmail.com"
         //        var oServer = new MailServer("imap.gmail.com",
         //            "valk.rpm@gmail.com",
-        //            "RPM_Productie",
+        //            "XXXXXXXXXX",
         //            ServerProtocol.Imap4);
 
         //        // Enable SSL connection.
