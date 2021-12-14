@@ -61,6 +61,7 @@ namespace Controls
             this.notitieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
+            this.xactueelgemaakt = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.xwerkpleklist)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -76,6 +77,7 @@ namespace Controls
             this.xwerkpleklist.AllColumns.Add(this.xtijdgestartc);
             this.xwerkpleklist.AllColumns.Add(this.xtijdgewerktc);
             this.xwerkpleklist.AllColumns.Add(this.xaantalc);
+            this.xwerkpleklist.AllColumns.Add(this.xactueelgemaakt);
             this.xwerkpleklist.AllColumns.Add(this.xaantalupdatec);
             this.xwerkpleklist.AllColumns.Add(this.xtotaalgemaaktc);
             this.xwerkpleklist.AllColumns.Add(this.xactueelperuurc);
@@ -97,6 +99,7 @@ namespace Controls
             this.xtijdgestartc,
             this.xtijdgewerktc,
             this.xaantalc,
+            this.xactueelgemaakt,
             this.xaantalupdatec,
             this.xtotaalgemaaktc,
             this.xactueelperuurc,
@@ -110,6 +113,7 @@ namespace Controls
             this.xwerkpleklist.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xwerkpleklist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xwerkpleklist.FullRowSelect = true;
+            this.xwerkpleklist.GridLines = true;
             this.xwerkpleklist.HeaderWordWrap = true;
             this.xwerkpleklist.HideSelection = false;
             this.xwerkpleklist.LargeImageList = this.imageList1;
@@ -314,7 +318,7 @@ namespace Controls
             this.toolStripSeparator2,
             this.notitieToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(193, 198);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(193, 176);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // openProductieToolStripMenuItem
@@ -404,6 +408,15 @@ namespace Controls
             this.panel2.Size = new System.Drawing.Size(977, 580);
             this.panel2.TabIndex = 2;
             // 
+            // xactueelgemaakt
+            // 
+            this.xactueelgemaakt.AspectName = "ActueelAantalGemaakt";
+            this.xactueelgemaakt.IsEditable = false;
+            this.xactueelgemaakt.Text = "Actueel Gemaakt";
+            this.xactueelgemaakt.ToolTipText = "Actuele aantal dat hoort gemaakt te zijn op basis van de tempo";
+            this.xactueelgemaakt.Width = 200;
+            this.xactueelgemaakt.WordWrap = true;
+            // 
             // WerkPlekkenUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -451,5 +464,6 @@ namespace Controls
         private BrightIdeasSoftware.OLVColumn xaantalupdatec;
         private System.Windows.Forms.ToolStripMenuItem xafkeurstoolstrip;
         private BrightIdeasSoftware.OLVColumn xprodnrc;
+        private BrightIdeasSoftware.OLVColumn xactueelgemaakt;
     }
 }

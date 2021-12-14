@@ -107,6 +107,17 @@ namespace Rpm.Productie
             }
         }
 
+        [ExcludeFromSerialization]
+        public override string ProductSoort
+        {
+            get => Parent?.ProductSoort;
+            set
+            {
+                if (Parent != null)
+                    Parent.ProductSoort = value;
+            }
+        }
+
         public override DateTime TijdGestopt
         {
             get => GestoptOp();

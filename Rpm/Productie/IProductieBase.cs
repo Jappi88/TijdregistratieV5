@@ -214,6 +214,8 @@ namespace Rpm.Productie
 
         [Display(Name = "Geproduceerd", Description = "Aantal keer waarvan deze productie totaal is geproduceert")]
         public virtual int Geproduceerd { get; set; }
+        [Display(Name = "ProductSoort", Description = "Soort product zoals: 'Solar','Horti' of 'Techno'")]
+        public virtual string ProductSoort { get; set; }
 
         [Display(Name = "ActueelAantalGemaakt",
             Description =
@@ -337,6 +339,21 @@ namespace Rpm.Productie
             if (valid)
                 return Color.DarkGreen;
             return Color.Red;
+        }
+
+        public Color GetProductSoortColor()
+        {
+            if(string.IsNullOrEmpty(ProductSoort))return Color.Black;
+            switch (ProductSoort.ToLower())
+            {
+                case "horti":
+                    return Color.FromArgb(9, 122, 192);
+                case "solar":
+                    return Color.FromArgb(251, 186, 40);
+                case "techno":
+                    return Color.FromArgb(54, 162, 63);
+            }
+            return Color.Black;
         }
 
         public static string GetStylesheet(string src)
@@ -603,6 +620,9 @@ Color textcolor, bool useimage)
                 : $"<td width = '32' style = 'padding: 5px 5px 0 0' >\r\n" +
                   $"<img width='{imagesize.Width}' height='{imagesize.Height}'  src = 'data:image/png;base64,{image.Base64Encoded()}' />\r\n" +
                   $"</td>";
+            var xcolor = GetProductSoortColor();
+            var xrgb = $"rgb({xcolor.R}, {xcolor.G}, {xcolor.B})'";
+            string prodsoort = string.IsNullOrEmpty(ProductSoort) ? "" : $"<span color='{xrgb}'><b>[{ProductSoort}]</b></span>";
             if (!useimage) ximage = "";
             var xreturn = $"<html>\r\n" +
                           $"<head>\r\n" +
@@ -612,7 +632,7 @@ Color textcolor, bool useimage)
                           $"</head>\r\n" +
                           $"<body style='background - color: {backcolor.Name}; background-gradient: {backgroundgradient.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
                           $"<h1 align='center' style='color: {textcolor.Name}'>\r\n" +
-                          $"       {title}\r\n" +
+                          $"      {prodsoort} {title}\r\n" +
                           $"        <br/>\r\n" +
                           $"       {(this is Bewerking ? Naam + "<br>" : "")}\r\n" +
                           $"        <span style=\'font-size: x-small;\'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +

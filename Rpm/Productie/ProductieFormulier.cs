@@ -600,6 +600,24 @@ namespace Rpm.Productie
                     string xomschrijving = string.Join("\n",
                         sections.GetRange(startindex, endindex - startindex).Select(x => x.Text));
                     xreturn.Omschrijving = xomschrijving;
+
+                    startindex = sections.FindIndex(0, x => x.Text.ToLower().StartsWith("productie:"));
+                    if (startindex > -1)
+                    {
+                        switch (char.ToLower(sections[startindex].Text.Last()))
+                        {
+                            case 'h':
+                                xreturn.ProductSoort = "Horti";
+                                break;
+                            case 's':
+                                xreturn.ProductSoort = "Solar";
+                                break;
+                            case 't':
+                                xreturn.ProductSoort = "Techno";
+                                break;
+                        }
+                    }
+
                     startindex = endindex + 1;
                     //doorlooptijd
                     if (startindex > sections.Count - 1) return xreturn;

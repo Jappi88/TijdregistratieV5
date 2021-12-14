@@ -11,7 +11,9 @@ namespace Rpm.Productie.AantalHistory
 
         public DateTime DateChanged { get; set; }
 
-        private DateTime _endDate;
+        internal DateTime _endDate;
+
+        public bool IsActive => _endDate.IsDefault();
 
         public DateTime EndDate
         {

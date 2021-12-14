@@ -122,6 +122,7 @@ namespace Forms
             this.Name = "WerkPlekChooser";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.SystemShadow;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Kies Werkplek";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);

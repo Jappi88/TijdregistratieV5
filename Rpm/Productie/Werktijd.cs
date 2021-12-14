@@ -217,7 +217,7 @@ namespace Rpm.Productie
                                 vrijend = stop;
                             //if (vrijstart < start)
                             //    vrijstart = start;
-                            vrij += TijdGewerkt(new TijdEntry(vrijstart, vrijend, rooster), rooster,specialeRoosters, xdict);
+                            vrij += TijdGewerkt(new TijdEntry(vrijstart, vrijend, realrooster), realrooster,specialeRoosters, xdict);
                             xdict.Add(v.Key, v.Value);
                         }
                     }

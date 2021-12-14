@@ -102,9 +102,20 @@ namespace Rpm.Productie
                 {
                     _aantalgemaakt = value;
                     Werk?.UpdateAantal();
-                    AantalHistory?.UpdateAantal(value);
+                    AantalHistory?.UpdateAantal(value,
+                        (Werk?.State ?? ProductieState.Gestopt) == ProductieState.Gestart);
                 }
             }
+        }
+
+        public int ActueelAantalGemaakt
+        {
+            get
+            {
+                double xdt = 0;
+                var xt = GetActueelAantalGemaakt(ref xdt);
+                return xt;
+            } 
         }
 
         public int GetAantalGemaakt(DateTime start, DateTime stop,ref double tijd ,  bool predict)
@@ -385,6 +396,7 @@ namespace Rpm.Productie
                     Tijden.SetStop();
                 if (updaterooster)
                     Tijden?.UpdateUrenRooster(false, null);
+                AantalHistory?.SetActive((Werk?.State ?? ProductieState.Gestopt) == ProductieState.Gestart);
                 CalculatePerUur(false);
                 return true;
             }
