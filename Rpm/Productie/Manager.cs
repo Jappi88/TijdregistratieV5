@@ -1500,7 +1500,7 @@ namespace Rpm.Productie
             _syncTimer.Stop();
             try
             {
-                if (ProductieProvider.FolderSynchronization is not {Syncing: true})
+                if (ProductieProvider.FolderSynchronization is {Syncing: false})
                     ProductieProvider?.InitOfflineDb();
 
                 if (Opties is {SluitPcAf: true} && DateTime.Now.TimeOfDay >= _afsluittijd)

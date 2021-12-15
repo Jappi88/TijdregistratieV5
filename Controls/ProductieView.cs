@@ -22,7 +22,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xaml;
 using Various;
 
 namespace Controls
@@ -463,16 +462,20 @@ namespace Controls
         {
             try
             {
-                //CheckForSyncDatabase();
-                //CheckForUpdateDatabase();
-                CheckForPreview(false, true);
-                CheckForSpecialRooster(true);
+                this.BeginInvoke(new Action(() =>
+                {
+//CheckForSyncDatabase();
+                    //CheckForUpdateDatabase();
+                    CheckForPreview(false, true);
+                    CheckForSpecialRooster(true);
                     LoadStartedProducties();
                     //LoadProductieLogs();
                     //RunProductieRefresh();
 
                     UpdateKlachtButton();
                     //UpdateAllLists();
+                }));
+
 
             }
             catch (Exception e)

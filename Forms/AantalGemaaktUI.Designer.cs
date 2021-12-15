@@ -50,10 +50,10 @@
             this.xaantal = new System.Windows.Forms.Label();
             this.xaantalgemaakt = new System.Windows.Forms.NumericUpDown();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.productieInfoUI1 = new Controls.ProductieInfoUI();
             this.xvaluepanel = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.productieInfoUI1 = new Controls.ProductieInfoUI();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -296,17 +296,6 @@
             this.panel4.Size = new System.Drawing.Size(692, 412);
             this.panel4.TabIndex = 5;
             // 
-            // productieInfoUI1
-            // 
-            this.productieInfoUI1.BackColor = System.Drawing.Color.White;
-            this.productieInfoUI1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
-            this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
-            this.productieInfoUI1.Name = "productieInfoUI1";
-            this.productieInfoUI1.Size = new System.Drawing.Size(692, 312);
-            this.productieInfoUI1.TabIndex = 2;
-            // 
             // xvaluepanel
             // 
             this.xvaluepanel.Controls.Add(this.panel3);
@@ -334,6 +323,18 @@
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip1.ToolTipTitle = "Aantal Gemaakt";
+            // 
+            // productieInfoUI1
+            // 
+            this.productieInfoUI1.AutoScroll = true;
+            this.productieInfoUI1.BackColor = System.Drawing.Color.White;
+            this.productieInfoUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
+            this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
+            this.productieInfoUI1.Name = "productieInfoUI1";
+            this.productieInfoUI1.Size = new System.Drawing.Size(692, 312);
+            this.productieInfoUI1.TabIndex = 2;
             // 
             // AantalGemaaktUI
             // 
@@ -387,7 +388,6 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private MetroFramework.Controls.MetroComboBox xwerkplekken;
         private MetroFramework.Controls.MetroButton xnextb;
-        private Controls.ProductieInfoUI productieInfoUI1;
         private System.Windows.Forms.GroupBox xPacketGroup;
         private System.Windows.Forms.Label xpacketlabel;
         private MetroFramework.Controls.MetroButton xremovePacket;
@@ -395,5 +395,6 @@
         private System.Windows.Forms.Label xtotalpacketlabel;
         private System.Windows.Forms.NumericUpDown xpacketvalue;
         private MetroFramework.Controls.MetroButton xaddPacket;
+        private Controls.ProductieInfoUI productieInfoUI1;
     }
 }

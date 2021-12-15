@@ -150,9 +150,9 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xloadinglabel.BackColor = System.Drawing.Color.Transparent;
             this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xloadinglabel.Location = new System.Drawing.Point(3, 73);
+            this.xloadinglabel.Location = new System.Drawing.Point(3, 76);
             this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(1143, 561);
+            this.xloadinglabel.Size = new System.Drawing.Size(1143, 558);
             this.xloadinglabel.TabIndex = 29;
             this.xloadinglabel.Text = "Producties Laden...";
             this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -196,7 +196,7 @@ namespace Controls
             this.xProductieLijst1.UseExplorerTheme = true;
             this.xProductieLijst1.UseFilterIndicator = true;
             this.xProductieLijst1.UseFiltering = true;
-            this.xProductieLijst1.UseHotItem = true;
+            this.xProductieLijst1.UseHotControls = false;
             this.xProductieLijst1.UseTranslucentHotItem = true;
             this.xProductieLijst1.UseTranslucentSelection = true;
             this.xProductieLijst1.View = System.Windows.Forms.View.Details;

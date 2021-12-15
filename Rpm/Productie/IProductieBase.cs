@@ -217,6 +217,9 @@ namespace Rpm.Productie
         [Display(Name = "ProductSoort", Description = "Soort product zoals: 'Solar','Horti' of 'Techno'")]
         public virtual string ProductSoort { get; set; }
 
+        [Display(Name = "ControlePunten", Description = "Punten waar je vooral op moet controleren")]
+        public virtual string ControlePunten { get; set; }
+
         [Display(Name = "ActueelAantalGemaakt",
             Description =
                 "Het aantal dat gemaakt zou moeten zijn berekent op basis van de door gegeven aantallen.")]
@@ -453,7 +456,7 @@ namespace Rpm.Productie
               $"<h1 align='center' style='color: {textcolor.Name}'>\r\n" +
               $"       {title}\r\n" +
               $"        <br/>\r\n" +
-              $"        <span style=\'font-size: x-small;\'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +
+              $"        <span style='font-size: x-small;'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +
               $"</h1>\r\n" +
               $"<blockquote class='whitehole'>\r\n" +
               $"       <p style = 'margin-top: 0px' >\r\n" +
@@ -461,14 +464,16 @@ namespace Rpm.Productie
               $"<tr style = 'vertical-align: top;' >\r\n" +
               ximage + 
               $"<td>" +
-              $"<div>\r\n" +
+              $"<ul>\r\n" +
               string.Join("<br>", GetMaterialen().Select(x =>
-                  ($"<div Color=RoyalBlue>[{x.ArtikelNr}] {x.Omschrijving}</div>" +
+                  ($"<li>" +
+                   $"<div Color=RoyalBlue>[{x.ArtikelNr}] {x.Omschrijving}</div>" +
                    $"<div>Locatie: <b>{x.Locatie}</b></div>" +
                    $"<div>Verbuik Per Eenheid: <b>{Math.Round(x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
                    $"<div>Verbuik: <b>{Math.Round(TotaalGemaakt * x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
-                   $"<div>Aantal Afkeur: <b>{Math.Round(x.AantalAfkeur, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)} ({x.AfKeurProcent()})</b></div>"))) +
-              $"</div>\r\n" +
+                   $"<div>Aantal Afkeur: <b>{Math.Round(x.AantalAfkeur, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)} ({x.AfKeurProcent()})</b></div>" +
+                   $"</li>"))) +
+              $"</ul>\r\n" +
               $"<hr />" +
               $"</td>" +
               $"</tr>\r\n" +
@@ -537,7 +542,7 @@ namespace Rpm.Productie
                           $"<h1 align='center' style='color: {textcolor.Name}'>\r\n" +
                           $"       {title}\r\n" +
                           $"        <br/>\r\n" +
-                          $"        <span style=\'font-size: x-small;\'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +
+                          $"        <span style='font-size: x-small;'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +
                           $"</h1>\r\n" +
                           $"<blockquote class='whitehole'>\r\n" +
                           $"       <p style = 'margin-top: 0px' >\r\n" +
@@ -575,20 +580,21 @@ Color textcolor, bool useimage)
             var xreturn = $"<html>\r\n" +
                           $"<head>\r\n" +
                           $"<style>{GetStylesheet("StyleSheet")}</style>\r\n" +
-                          $"<Title>{title}</Title>\r\n" +
+                          $"<Title>{ArtikelNr}</Title>\r\n" +
                           $"<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
                           $"</head>\r\n" +
                           $"<body style='background - color: {backcolor.Name}; background-gradient: {backgroundgradient.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
                           $"<h1 align='center' style='color: {textcolor.Name}'>\r\n" +
-                          $"       {title}\r\n" +
+                          $"      {title}\r\n" +
                           $"        <br/>\r\n" +
+                          $"       {(this is Bewerking ? Naam + "<br>" : "")}\r\n" +
                           $"        <span style=\'font-size: x-small;\'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +
                           $"</h1>\r\n" +
                           $"<blockquote class='whitehole'>\r\n" +
-                          $"       <p style = 'margin-top: 0px' >\r\n" +
+                          $"       <p style = 'margin-top: 0px' 'margin-bottom: 0px'>\r\n" +
                           $"<table border = '0' width = '100%' >\r\n" +
                           $"<tr style = 'vertical-align: top;' >\r\n" +
-                          ximage + 
+                          ximage +
                           $"<td>" +
                           $"<div>\r\n" +
                           string.Join("<br>", GetWerkPlekken().Select(x =>
@@ -599,9 +605,10 @@ Color textcolor, bool useimage)
                                $"Actueel Per Uur: <b>{x.PerUur} i.p.v. {x.PerUurBase}</b><br>" +
                                $"Notitie: <b>{x.Note?.Notitie?.Replace("\n", "<br>") ?? "Geen Notitie."}</b><br>" +
                                $"</div>"))) +
-                          $"</div>\r\n" +
+                          
+                          "</div>" +
                           $"<hr />" +
-                          $"</td>" +
+                          "</td>" +
                           $"</tr>\r\n" +
                           $"</table >\r\n" +
                           $"</p>\r\n" +
@@ -642,7 +649,9 @@ Color textcolor, bool useimage)
                           $"<table border = '0' width = '100%' >\r\n" +
                           $"<tr style = 'vertical-align: top;' >\r\n" +
                           ximage +
-                          $"<td><div><h2>" +
+                          $"<td><div>" +
+                          $"<h2>Leverdatum: <span style = 'color: {GetValidColor(LeverDatum > DateTime.Now).Name}>{LeverDatum:f}</span>.</h2>" +
+                          $"<h2>" +
                           $"{(State != ProductieState.Gereed ? $"Verwachte Leverdatum: <span style = 'color:{GetValidColor(VerwachtLeverDatum < LeverDatum).Name}> {VerwachtLeverDatum:f}</span>." : $"Gereed Gemeld Op: <span style = 'color:{GetValidColor(true).Name}>{DatumGereed:f}</span>.")}\r\n" +
                           $"</h2><hr />\r\n<h2>" +
                           $"Aantal Gemaakt: <u>{TotaalGemaakt}</u> / {Aantal} <span style = 'color: {GetPositiveColorByPercentage((decimal) Gereed).Name}'>({Gereed}%)</span><br>" +
@@ -650,10 +659,9 @@ Color textcolor, bool useimage)
                           $"Tijd Gewerkt: <u>{TijdGewerkt}</u> / {Math.Round(DoorloopTijd, 2)} uur <span style = 'color:{GetPositiveColorByPercentage((decimal) TijdGewerktPercentage).Name}'>({TijdGewerktPercentage}%)</span><br>" +
                           $"Per Uur: <u>{ActueelPerUur}</u> i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span><br><br>" +
                           $"<span style = 'color: {Color.DarkRed.Name}'><u>{Opmerking}</u></span><br>" +
-                          $"</h2><hr />\r\n<h2><br>" +
-                          $"Leverdatum: <span style = 'color: {GetValidColor(LeverDatum > DateTime.Now).Name}>{LeverDatum:f}</span>." +
-                          $"</h2>" +
-        $"<hr />" + 
+                          $"<span style = 'color: {Color.DarkRed.Name}'><u>{ControlePunten}</u></span><br>" +
+                          $"</h2><hr />\r\n" +
+                          $"<hr />" + 
          "</div>" + 
          "</td>" +
         $"</tr>\r\n" +

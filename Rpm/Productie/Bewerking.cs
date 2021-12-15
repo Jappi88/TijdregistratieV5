@@ -110,7 +110,7 @@ namespace Rpm.Productie
         [ExcludeFromSerialization]
         public override string ProductSoort
         {
-            get => Parent?.ProductSoort;
+            get => Parent?.ProductSoort ?? String.Empty;
             set
             {
                 if (Parent != null)
@@ -218,6 +218,17 @@ namespace Rpm.Productie
         {
             get => (Parent == null ? base.Omschrijving : Parent.Omschrijving);//.WrapText(150);
             set => base.Omschrijving = value;
+        }
+
+        [ExcludeFromSerialization]
+        public override string ControlePunten
+        {
+            get => Parent?.ControlePunten??String.Empty;
+            set
+            {
+                if (Parent != null)
+                    Parent.ControlePunten = value;
+            }
         }
 
         public override string Opmerking { get; set; }

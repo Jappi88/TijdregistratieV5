@@ -97,7 +97,7 @@ namespace ProductieManager.Rpm.Productie
 
         public void SyncProducties()
         {
-            if (Manager.DefaultSettings is not {GebruikOfflineMetSync: true}) return;
+            //if (Manager.DefaultSettings is not {GebruikOfflineMetSync: true}) return;
             //if (FolderSynchronization is {Syncing: true}) return;
             if (Manager.DefaultSettings?.MainDB == null || Manager.DefaultSettings.TempMainDB == null) return;
             try
@@ -110,8 +110,14 @@ namespace ProductieManager.Rpm.Productie
                     Directory.Exists(Manager.DefaultSettings.MainDB.UpdatePath) &&
                     Directory.Exists(Manager.DefaultSettings.TempMainDB.UpdatePath))
                 {
-                    FolderSynchronization?.Stop();
-                    if (Manager.DefaultSettings.OfflineDabaseTypes.Count == 0) return;
+                    //FolderSynchronization?.Stop();
+                    if (Manager.DefaultSettings.OfflineDabaseTypes.Count == 0)
+                    {
+                        FolderSynchronization?.Stop();
+                        return;
+                    }
+
+                    FolderSynchronization.ClearScans();
                     foreach (var xkey in Manager.DefaultSettings.OfflineDabaseTypes)
                     {
                         string localproductiepath = string.Empty;

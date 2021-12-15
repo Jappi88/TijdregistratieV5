@@ -40,6 +40,7 @@ namespace Controls
             this.xtijdgestartc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xtijdgewerktc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xaantalc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.xactueelgemaakt = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xaantalupdatec = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xtotaalgemaaktc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xactueelperuurc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -47,7 +48,6 @@ namespace Controls
             this.xleverdatumc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xverwachtgereed = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xpathc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.xnotitiec = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openProductieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWerkplekToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,7 +61,7 @@ namespace Controls
             this.notitieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
-            this.xactueelgemaakt = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.xnotec = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.xwerkpleklist)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -85,7 +85,7 @@ namespace Controls
             this.xwerkpleklist.AllColumns.Add(this.xleverdatumc);
             this.xwerkpleklist.AllColumns.Add(this.xverwachtgereed);
             this.xwerkpleklist.AllColumns.Add(this.xpathc);
-            this.xwerkpleklist.AllColumns.Add(this.xnotitiec);
+            this.xwerkpleklist.AllColumns.Add(this.xnotec);
             this.xwerkpleklist.AllowColumnReorder = true;
             this.xwerkpleklist.AlternateRowBackColor = System.Drawing.Color.AliceBlue;
             this.xwerkpleklist.CellEditUseWholeCell = false;
@@ -107,7 +107,7 @@ namespace Controls
             this.xleverdatumc,
             this.xverwachtgereed,
             this.xpathc,
-            this.xnotitiec});
+            this.xnotec});
             this.xwerkpleklist.ContextMenuStrip = this.contextMenuStrip1;
             this.xwerkpleklist.Cursor = System.Windows.Forms.Cursors.Default;
             this.xwerkpleklist.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -140,7 +140,7 @@ namespace Controls
             this.xwerkpleklist.UseExplorerTheme = true;
             this.xwerkpleklist.UseFilterIndicator = true;
             this.xwerkpleklist.UseFiltering = true;
-            this.xwerkpleklist.UseHotItem = true;
+            this.xwerkpleklist.UseHotControls = false;
             this.xwerkpleklist.UseTranslucentHotItem = true;
             this.xwerkpleklist.UseTranslucentSelection = true;
             this.xwerkpleklist.View = System.Windows.Forms.View.Details;
@@ -233,6 +233,15 @@ namespace Controls
             this.xaantalc.Width = 130;
             this.xaantalc.WordWrap = true;
             // 
+            // xactueelgemaakt
+            // 
+            this.xactueelgemaakt.AspectName = "ActueelAantalGemaakt";
+            this.xactueelgemaakt.IsEditable = false;
+            this.xactueelgemaakt.Text = "Actueel Gemaakt";
+            this.xactueelgemaakt.ToolTipText = "Actuele aantal dat hoort gemaakt te zijn op basis van de tempo";
+            this.xactueelgemaakt.Width = 200;
+            this.xactueelgemaakt.WordWrap = true;
+            // 
             // xaantalupdatec
             // 
             this.xaantalupdatec.AspectName = "LaatstAantalUpdate";
@@ -295,14 +304,6 @@ namespace Controls
             this.xpathc.ToolTipText = "De volledige naam van de klus";
             this.xpathc.Width = 150;
             this.xpathc.WordWrap = true;
-            // 
-            // xnotitiec
-            // 
-            this.xnotitiec.AspectName = "Notitie";
-            this.xnotitiec.Text = "Notitie";
-            this.xnotitiec.ToolTipText = "Notitie";
-            this.xnotitiec.Width = 150;
-            this.xnotitiec.WordWrap = true;
             // 
             // contextMenuStrip1
             // 
@@ -408,14 +409,14 @@ namespace Controls
             this.panel2.Size = new System.Drawing.Size(977, 580);
             this.panel2.TabIndex = 2;
             // 
-            // xactueelgemaakt
+            // xnotec
             // 
-            this.xactueelgemaakt.AspectName = "ActueelAantalGemaakt";
-            this.xactueelgemaakt.IsEditable = false;
-            this.xactueelgemaakt.Text = "Actueel Gemaakt";
-            this.xactueelgemaakt.ToolTipText = "Actuele aantal dat hoort gemaakt te zijn op basis van de tempo";
-            this.xactueelgemaakt.Width = 200;
-            this.xactueelgemaakt.WordWrap = true;
+            this.xnotec.AspectName = "Notitie";
+            this.xnotec.IsEditable = false;
+            this.xnotec.Text = "Notitie";
+            this.xnotec.ToolTipText = "Werkplek notitie";
+            this.xnotec.Width = 150;
+            this.xnotec.WordWrap = true;
             // 
             // WerkPlekkenUI
             // 
@@ -454,7 +455,6 @@ namespace Controls
         private System.Windows.Forms.ToolStripMenuItem werkTijdToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem notitieToolStripMenuItem;
         private BrightIdeasSoftware.OLVColumn xactueelperuurc;
-        private BrightIdeasSoftware.OLVColumn xnotitiec;
         private BrightIdeasSoftware.OLVColumn xpathc;
         private BrightIdeasSoftware.OLVColumn xtotaalgemaaktc;
         private BrightIdeasSoftware.OLVColumn xperuurc;
@@ -465,5 +465,6 @@ namespace Controls
         private System.Windows.Forms.ToolStripMenuItem xafkeurstoolstrip;
         private BrightIdeasSoftware.OLVColumn xprodnrc;
         private BrightIdeasSoftware.OLVColumn xactueelgemaakt;
+        private BrightIdeasSoftware.OLVColumn xnotec;
     }
 }

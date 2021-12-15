@@ -1320,8 +1320,9 @@ namespace ProductieManager.Rpm.ExcelHelper
                         if (newcreated?.Length > 0) bestaande.AddRange(newcreated);
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                 }
 
                 return bestaande;

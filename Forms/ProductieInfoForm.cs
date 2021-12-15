@@ -58,7 +58,7 @@ namespace Forms
         {
             if (plek == null || plek.Werk == null) return;
             Text = $@"Werk Info [{plek.Werk.ArtikelNr} => {plek.Werk.ProductieNr}]";
-            productieInfoUI1.SetInfo(plek.Werk, $"{plek.Naam}: {plek.Werk.Omschrijving}", Color.Black, Color.Purple, Color.White);
+            productieInfoUI1.SetInfo(plek.Werk, $"{plek.Naam}: {plek.Werk.Omschrijving}", Color.White, Color.White, Color.Black);
             productieInfoUI1.Visible = true;
             //xinfopanel.Text = plek.Werk.GetHtmlBody($"{plek.Naam}: {plek.Werk.Omschrijving}",
             //    Resources.iconfinder_technology, new Size(64, 64), Color.Black, Color.Purple, Color.White);

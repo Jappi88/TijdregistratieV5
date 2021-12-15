@@ -66,6 +66,9 @@ namespace FolderSync
             /// </summary>
         protected Task MonitorThread;
 
+            public List<FolderSynchronizationScannerItem> ScanFolders { get; set; } =
+                new List<FolderSynchronizationScannerItem>();
+
             /// <summary>
             /// De interval waarvan de synchronisatie moet plaatsvinden in miliseconden 
             /// </summary>
@@ -179,6 +182,7 @@ namespace FolderSync
             }
             lock (ScanQueue)
             {
+                ScanFolders?.Clear();
                 ScanQueue?.Clear();
             }
             lock (SyncQueue)
@@ -266,6 +270,7 @@ namespace FolderSync
         {
             SyncThread = Task.Factory.StartNew(StartSyncing);
         }
+
         /// <summary>
         /// Start het monitoren van de folders
         /// </summary>
@@ -273,126 +278,49 @@ namespace FolderSync
         {
             while (true)
             {
-                
-                if (IsPausedMonitor) MonitorIsPaused.WaitOne();
-                if (IsRunning == false || Manager.Opties == null || Manager.DefaultSettings is not
-                {
-                    GebruikOfflineMetSync: true
-                })
-                {
-                    break;
-                }
 
-                while (true)
+                try
                 {
-                    FolderSynchronizationScannerItem op;
-                    lock (MonitorQueue)
-                    {
-                        if (MonitorQueue.Count == 0) break;
-                        op = MonitorQueue.Dequeue();
-                    }
-
-                    if (op != null)
-                    {
-                        try
+                    if (IsPausedMonitor) MonitorIsPaused.WaitOne();
+                    if (IsRunning == false || Manager.Opties == null || Manager.DefaultSettings is not
                         {
-                            if (Directory.Exists(op.Source) && Directory.Exists(op.Destination))
-                            {
-                                lock (ScanQueue)
-                                {
-                                    ScanQueue.Enqueue(op);
-                                }
-
-                            }
-                            else
-                            {
-                                if (op.Monitor)
-                                {
-                                    lock (MonitorQueue)
-                                    {
-                                        MonitorQueue.Enqueue(op);
-                                    }
-                                }
-
-                            }
-
-                            Status = string.Empty;
-                        }
-                        catch (Exception ex)
-                        {
-                            Status = ex.Message;
-                        }
-                    }
-                }
-                await Task.Delay(1000);
-            }
-        }
-        /// <summary>
-        /// Starten het scannen naar gewijzigde bestanden
-        /// </summary>
-        protected async void StartScanning()
-        {
-            while (true)
-            {
-                if (IsPausedScan) ScanIsPaused.WaitOne();
-                if (IsRunning == false || Manager.Opties == null || Manager.DefaultSettings is not
-                {
-                    GebruikOfflineMetSync: true
-                })
-                {
-                    break;
-                }
-
-                //if (_SyncQueue != null)
-                //{
-                //    lock (_SyncQueue)
-                //    {
-                //        if (_SyncQueue.Count > 0) continue;
-                //    }
-                //}
-                FolderSynchronizationScannerItem[] items = null;
-                if (ScanQueue != null)
-                {
-                    lock (ScanQueue)
+                            GebruikOfflineMetSync: true
+                        })
                     {
-                        items = ScanQueue.ToArray();
+                        break;
                     }
 
                     while (true)
                     {
                         FolderSynchronizationScannerItem op;
-                        lock (ScanQueue)
+                        lock (MonitorQueue)
                         {
-                            if (ScanQueue == null || ScanQueue.Count == 0) break;
-                            op = ScanQueue.Dequeue();
+                            if (MonitorQueue.Count == 0) break;
+                            op = MonitorQueue.Dequeue();
                         }
-
 
                         if (op != null)
                         {
                             try
                             {
-                                if (Directory.Exists(op.Source))
+                                if (Directory.Exists(op.Source) && Directory.Exists(op.Destination))
                                 {
-                                    if (!Directory.Exists(op.Destination))
-                                        Directory.CreateDirectory(op.Destination);
-                                    FolderSynchronizationScanner fss =
-                                        new FolderSynchronizationScanner(op.Source, op.Destination, op.Option);
-                                    await fss.Sync();
-                                    if (fss.SyncCollection.Operations.Count > 0)
+                                    lock (ScanQueue)
                                     {
-                                        lock (SyncQueue)
-                                        {
-                                            //_SyncQueue.Clear();
-                                            foreach (FileOperation fo in fss.SyncCollection.Operations)
-                                            {
-                                                if (!SyncQueue.Contains(fo))
-                                                    SyncQueue.Enqueue(fo);
-                                            }
-                                        }
-
-                                        //await Task.Delay(fss.SyncCollection.Operations.Count * 10);
+                                        ScanQueue.Enqueue(op);
                                     }
+
+                                }
+                                else
+                                {
+                                    if (op.Monitor)
+                                    {
+                                        lock (MonitorQueue)
+                                        {
+                                            MonitorQueue.Enqueue(op);
+                                        }
+                                    }
+
                                 }
 
                                 Status = string.Empty;
@@ -401,15 +329,105 @@ namespace FolderSync
                             {
                                 Status = ex.Message;
                             }
-
                         }
-
-                        await Task.Delay(Interval);
                     }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
 
-                if(items is {Length: > 0})
-                    foreach (var item in items)
+            await Task.Delay(1000);
+        }
+
+        /// <summary>
+        /// Starten het scannen naar gewijzigde bestanden
+        /// </summary>
+        protected async void StartScanning()
+        {
+            while (true)
+            {   
+                //FolderSynchronizationScannerItem[] items = null;
+                try
+                {
+                    if (IsPausedScan) ScanIsPaused.WaitOne();
+                    if (IsRunning == false || Manager.Opties == null || Manager.DefaultSettings is not
+                        {
+                            GebruikOfflineMetSync: true
+                        })
+                    {
+                        Stop();
+                        break;
+                    }
+
+                    //if (_SyncQueue != null)
+                    //{
+                    //    lock (_SyncQueue)
+                    //    {
+                    //        if (_SyncQueue.Count > 0) continue;
+                    //    }
+                    //}
+                 
+                    if (ScanQueue != null)
+                    {
+                        while (true)
+                        {
+                            FolderSynchronizationScannerItem op;
+                            lock (ScanQueue)
+                            {
+                                if (ScanQueue == null || ScanQueue.Count == 0) break;
+                                op = ScanQueue.Dequeue();
+                            }
+
+
+                            if (op != null)
+                            {
+                                try
+                                {
+                                    if (Directory.Exists(op.Source))
+                                    {
+                                        if (!Directory.Exists(op.Destination))
+                                            Directory.CreateDirectory(op.Destination);
+                                        FolderSynchronizationScanner fss =
+                                            new FolderSynchronizationScanner(op.Source, op.Destination, op.Option);
+                                        await fss.Sync();
+                                        if (fss.SyncCollection.Operations.Count > 0)
+                                        {
+                                            lock (SyncQueue)
+                                            {
+                                                //_SyncQueue.Clear();
+                                                foreach (FileOperation fo in fss.SyncCollection.Operations)
+                                                {
+                                                    if (!SyncQueue.Contains(fo))
+                                                        SyncQueue.Enqueue(fo);
+                                                }
+                                            }
+
+                                            //await Task.Delay(fss.SyncCollection.Operations.Count * 10);
+                                        }
+                                    }
+
+                                    Status = string.Empty;
+                                }
+                                catch (Exception ex)
+                                {
+                                    Status = ex.Message;
+                                }
+
+                            }
+
+                            await Task.Delay(Interval);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+
+                if(ScanFolders is {Count: > 0})
+                    foreach (var item in ScanFolders)
                     {
                         lock (ScanQueue)
                         {
@@ -427,37 +445,44 @@ namespace FolderSync
         {
             while(IsRunning)
             {
-                if (IsPausedSync) SyncIsPaused.WaitOne();
-                if (IsRunning == false || Manager.Opties == null || Manager.DefaultSettings is not
+                try
                 {
-                    GebruikOfflineMetSync: true
-                })
-                {
-                    IsRunning = false;
-                    break;
-                }
-                while (IsRunning)
-                {
-                    FileOperation op;
-                    lock (SyncQueue)
+                    if (IsPausedSync) SyncIsPaused.WaitOne();
+                    if (IsRunning == false || Manager.Opties == null || Manager.DefaultSettings is not
+                        {
+                            GebruikOfflineMetSync: true
+                        })
                     {
-                        if (SyncQueue.Count == 0)
-                            break;
-                        op = SyncQueue.Dequeue();
+                        IsRunning = false;
+                        break;
                     }
+                    while (IsRunning)
+                    {
+                        FileOperation op;
+                        lock (SyncQueue)
+                        {
+                            if (SyncQueue.Count == 0)
+                                break;
+                            op = SyncQueue.Dequeue();
+                        }
 
-                    if (op != null)
-                    {
-                        try
+                        if (op != null)
                         {
-                            op.DoOperation();
-                            Status = string.Empty;
-                        }
-                        catch (Exception ex)
-                        {
-                            Status = ex.Message;
+                            try
+                            {
+                                op.DoOperation();
+                                Status = string.Empty;
+                            }
+                            catch (Exception ex)
+                            {
+                                Status = ex.Message;
+                            }
                         }
                     }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
                 }
                 await Task.Delay(Interval);
             }
@@ -469,11 +494,20 @@ namespace FolderSync
         public void AddScan(FolderSynchronizationScannerItem item)
         {
             if (item == null || ScanQueue == null) return;
-            lock (ScanQueue)
+            lock (ScanFolders)
             {
-                if (!ScanQueue.Any(x =>
+                if (!ScanFolders.Any(x =>
                     string.Equals(x.Destination, item.Destination, StringComparison.CurrentCultureIgnoreCase)))
-                    ScanQueue.Enqueue(item);
+                    ScanFolders.Add(item);
+            }
+        }
+
+        public void ClearScans()
+        {
+            if (ScanFolders == null) return;
+            lock (ScanFolders)
+            {
+                ScanFolders.Clear();
             }
         }
 

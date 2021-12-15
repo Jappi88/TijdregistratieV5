@@ -213,11 +213,6 @@ namespace Rpm.Productie
             return false;
         }
 
-        protected bool Equals(Taak other)
-        {
-            return HashCode == other.HashCode;
-        }
-
         public override int GetHashCode()
         {
             return HashCode;

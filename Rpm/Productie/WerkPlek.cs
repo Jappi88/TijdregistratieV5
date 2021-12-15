@@ -67,6 +67,8 @@ namespace Rpm.Productie
 
         public NotitieEntry Note { get; set; }
 
+        public string Notitie => Note?.Notitie?? String.Empty;
+
         public DateTime LaatstAantalUpdate { get; set; } = DateTime.Now;
 
         public string Path => Werk?.Path == null ? Naam : Werk.Path + "\\" + Naam;

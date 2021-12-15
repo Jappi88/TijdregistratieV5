@@ -36,7 +36,7 @@ namespace Forms
             this.xexport = new System.Windows.Forms.Button();
             this.xstatsb = new System.Windows.Forms.Button();
             this.xsluiten = new System.Windows.Forms.Button();
-            this.xinfopanel = new HtmlPanel();
+            this.xinfopanel = new TheArtOfDev.HtmlRenderer.WinForms.HtmlPanel();
             this.productieInfoUI1 = new Controls.ProductieInfoUI();
             this.panel1.SuspendLayout();
             this.xinfopanel.SuspendLayout();
@@ -117,7 +117,7 @@ namespace Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xinfopanel.AutoScroll = true;
-            this.xinfopanel.AutoScrollMinSize = new System.Drawing.Size(743, 17);
+            this.xinfopanel.AutoScrollMinSize = new System.Drawing.Size(743, 20);
             this.xinfopanel.BackColor = System.Drawing.SystemColors.Window;
             this.xinfopanel.BaseStylesheet = "";
             this.xinfopanel.Controls.Add(this.productieInfoUI1);

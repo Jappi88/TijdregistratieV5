@@ -102,10 +102,17 @@ namespace Forms
 
         private void StartProductie_Shown(object sender, EventArgs e)
         {
-            UpdateFields(Formulier);
-            BringToFront();
-            Focus();
-            InitEvents();
+            try
+            {
+                UpdateFields(Formulier);
+                BringToFront();
+                Focus();
+                InitEvents();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
         }
 
         private void InitEvents()

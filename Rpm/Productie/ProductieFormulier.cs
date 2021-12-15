@@ -527,8 +527,12 @@ namespace Rpm.Productie
                         }
                         else
                         {
-                            opmerking += xname + " \n";
-                            opmerking = opmerking.TrimStart(new char[] { ' ', '\n' });
+                            if (!xname.ToLower().StartsWith("paraaf") && !
+                                    xname.Contains("......"))
+                            {
+                                opmerking += xname + " \n";
+                                opmerking = opmerking.TrimStart(new char[] {' ', '\n'});
+                            }
                         }
                         xstart++;
                     }
@@ -652,9 +656,25 @@ namespace Rpm.Productie
                     startindex++;
                     if (startindex > sections.Count - 1)
                         return xreturn;
+                    int xend1 = sections.FindIndex(startindex, x => x.Text.ToLower().StartsWith("controlepunten"));
+                   
                     int xend = sections.FindIndex(startindex, x => x.Text.ToLower().Contains("verpakkingsinstructie"));
                     if (xend < 0)
                         xend = sections.Count;
+                    if (xend1 > -1 && xend > xend1)
+                    {
+                        string xcontrolpunten = String.Empty;
+                        var xsec = sections.GetRange(xend1, xend - xend1);
+                        foreach (var sec in xsec)
+                        {
+                            if (sec.Text.ToLower().StartsWith("paraaf") ||
+                                sec.Text.Contains("......")) continue;
+                            xcontrolpunten += sec.Text.Trim() + "\n";
+                        }
+
+                        xreturn.ControlePunten = xcontrolpunten.TrimEnd('\n');
+                        xend = xend1;
+                    }
                     var xsections = sections.GetRange(startindex, xend - startindex);//.OrderBy(x => x.Rect.Left).ThenBy(x => x.Rect.Bottom).ToList();
                     Dictionary<string, BewerkingEntry> bws = GetBewerkingenFromSections(xsections);
   
