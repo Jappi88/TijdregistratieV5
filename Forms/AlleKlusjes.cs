@@ -359,7 +359,7 @@ namespace Forms
                 try
                 {
                     var prodform = _formuis?.FirstOrDefault(x => !x.IsDisposed && x.Formulier.Equals(form));
-                    prodform?.UpdateFields(form);
+                    prodform?.UpdateFields(form,null);
                 }
                 catch (ObjectDisposedException)
                 {

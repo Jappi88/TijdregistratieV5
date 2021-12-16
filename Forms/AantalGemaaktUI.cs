@@ -53,6 +53,10 @@ namespace Forms
             return ShowDialog();
         }
 
+
+
+
+
         private void SetPacketAantal(VerpakkingInstructie instructie, int aantal, int totaalaantal)
         {
             if (instructie == null || instructie.VerpakkenPer == 0)
@@ -63,7 +67,7 @@ namespace Forms
             {
                 xvaluepanel.Height = 100;
                 xpacketvalue.ValueChanged -= Xpacketvalue_ValueChanged;
-                int xpackets = aantal <= 0? 0 : (int) Math.Ceiling((double)aantal / instructie.VerpakkenPer);
+                int xpackets = aantal <= 0 ? 0 : (int)Math.Ceiling((double)aantal / instructie.VerpakkenPer);
                 xpacketvalue.SetValue(xpackets);
                 xpacketlabel.Text = xpacketvalue.Value.ToString(CultureInfo.InvariantCulture);
                 xtotalpacketlabel.Text = (totaalaantal <= 0 ? 0 : (int)Math.Ceiling((double)totaalaantal / instructie.VerpakkenPer)).ToString();
@@ -107,16 +111,6 @@ namespace Forms
             Next(false);
         }
 
-        private void LoadProductieText(ProductieFormulier form)
-        {
-            productieInfoUI1.SetInfo(form, "Wijzig Aantal Gemaakt", Color.AliceBlue, Color.White, Color.Black);
-        }
-
-        private void LoadBewerkingText(Bewerking bew)
-        {
-            productieInfoUI1.SetInfo(bew, "Wijzig Aantal Gemaakt", Color.AliceBlue, Color.White, Color.Black);
-        }
-
         private void LoadWerkplekken(Bewerking bewerking)
         {
             xwerkplekken.Items.Clear();
@@ -147,126 +141,13 @@ namespace Forms
             }
         }
 
-        private string ProductieText(ProductieFormulier form)
-        {
-            var value = $"Controlleer '{form.Omschrijving}' op kwaliteit en aantal.\n\n";
-            var tijd = form.TijdAanGewerkt();
-            var peruur = tijd > 0 && form.TotaalGemaakt > 0 ? Math.Round(form.TotaalGemaakt / tijd, 0) : 0;
-            value += $"Aantal Gemaakt: {form.AantalGemaakt} van de {form.AantalTeMaken}\n" +
-                     $"Actueel Per Uur: {peruur} i.p.v. {form.PerUur}";//"\n\n" + DefaultFieldText();
-            return value;
-        }
-
-        private string ProductiewWerkPlekken(ProductieFormulier form)
-        {
-            var value = "";
-            if (form is {Bewerkingen: {Length: > 0}})
-                foreach (var bew in form.Bewerkingen)
-                {
-                    value += $"[{bew.Naam}]\n";
-                    value += BewerkingPersoneelText(bew);
-                    value += "\n";
-                }
-
-            return value;
-        }
-
-        private string BewerkingText(Bewerking bew)
-        {
-            var value = $"Controlleer {bew.Omschrijving} ({bew.Naam}) op kwaliteit en aantal.\n\n";
-            var tijd = bew.TijdAanGewerkt();
-            var peruur = tijd > 0 && bew.TotaalGemaakt > 0 ? Math.Round(bew.TotaalGemaakt / tijd, 0) : 0;
-            value += $"Aantal Gemaakt: {bew.AantalGemaakt} van de {bew.AantalTeMaken}\n" +
-                     $"Actueel Per Uur: {peruur} i.p.v. {bew.PerUur}";//"\n\n" + DefaultFieldText();
-            return value;
-        }
-
-        private string BewerkingPersoneelText(Bewerking bew)
-        {
-            var werkplek = "";
-            if (bew.WerkPlekken is {Count: > 0})
-            {
-                string.Join(", ",
-                    bew.WerkPlekken.SelectMany(x =>
-                        x.Personen.Select(x => x.PersoneelNaam + (x.Actief ? "" : "[Niet Actief]"))));
-                foreach (var werk in bew.WerkPlekken)
-                {
-                    var personen = string.Join(", ",
-                        werk.Personen.Select(x => x.PersoneelNaam + (x.Actief ? "" : "[Niet Actief]")));
-
-                    var xvalue = werk.Personen.Count == 1 ? "heeft" : "hebben";
-                    if (personen.Length > 0)
-                        werkplek +=
-                            $"{personen} {xvalue} op  '{werk.Naam}' {werk.AantalGemaakt} gemaakt in {werk.TijdAanGewerkt()} uur\n";
-                }
-
-                werkplek = werkplek.TrimStart(',', ' ');
-            }
-
-            return werkplek;
-        }
-
-        private string DefaultFieldText()
-        {
-            return "LET OP!!\n" +
-                   "* Contolleer het product goed volgens de tekening.\n" +
-                   "* Maak steekproeven op producten die al zijn verpakt.\n" +
-                   "* Controlleer of de juiste stikkers en verpakking wordt gebruikt.\n" +
-                   "* Controlleer of de aantallen kloppen.\n\n" +
-                   "Vul het aantal in die je hebt gecontrolleerd, en druk op 'OK'\n";
-        }
-
-        private void xopslaan_Click(object sender, EventArgs e)
-        {
-            var xok = true;
-            if (Bewerking != null && xaantalgemaakt.Value == Bewerking.AantalGemaakt)
-            {
-                xok = false;
-                XMessageBox.Show(
-                    "Aantal dat je invult is hetzelfde als de oude aantal... en is daarom niet nodig.\nAnnuleer of vul in een aantal dat groter is dan de oude.",
-                    "Onzin", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-            else if (Bewerking != null && Bewerking.AantalGemaakt > xaantalgemaakt.Value)
-            {
-                xok = XMessageBox.Show("Aantal dat je invult is kleiner dan de oude aantal...\n" +
-                                       "Kan zijn dat je je vergist had en daarom wil corrigeren, \nWeetje zeker dat je door wilt gaan?",
-                    "Aantal Gemaakt", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
-            }
-        }
-
-        private void xannuleer_Click(object sender, EventArgs e)
-        {
-            Next(false);
-            DialogResult = DialogResult.OK;
-        }
-
-        private void AantalUI_Shown(object sender, EventArgs e)
-        {
-            Manager.OnFormulierChanged += Manager_OnFormulierChanged;
-            xaantalgemaakt.Select();
-            xaantalgemaakt.Focus();
-            xaantalgemaakt.Select(0, xaantalgemaakt.Value.ToString().Length);
-        }
-
-        private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
-        {
-            var prodnr = Bewerking?.ProductieNr ?? Formulier?.ProductieNr;
-            if (changedform == null || !string.Equals(changedform.ProductieNr, prodnr)) return;
-            if (Bewerking != null)
-            {
-                var xbew = changedform.Bewerkingen.FirstOrDefault(x => x.Equals(Bewerking));
-                if (xbew != null)
-                    Bewerking = xbew;
-            }
-            else
-            {
-                Formulier = changedform;
-            }
-        }
-
         private void Aantal_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char) Keys.Enter) Next(false);
+            if (e.KeyChar == (char) Keys.Enter)
+            {
+                Next(false);
+                e.Handled = true;
+            }
         }
 
         private void xwerkplekken_SelectedIndexChanged(object sender, EventArgs e)
@@ -428,11 +309,6 @@ namespace Forms
             Next(false);
         }
 
-        private void AantalGemaaktUI_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
-        }
-
         private void xremovePacket_Click(object sender, EventArgs e)
         {
             RemovePacket();
@@ -441,6 +317,51 @@ namespace Forms
         private void xaddPacket_Click(object sender, EventArgs e)
         {
             AddPacket();
+        }
+
+
+        private void xannuleer_Click(object sender, EventArgs e)
+        {
+            Next(false);
+            DialogResult = DialogResult.OK;
+        }
+
+        private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
+        {
+            var prodnr = Bewerking?.ProductieNr ?? Formulier?.ProductieNr;
+            if (changedform == null || !string.Equals(changedform.ProductieNr, prodnr)) return;
+            if (Bewerking != null)
+            {
+                var xbew = changedform.Bewerkingen.FirstOrDefault(x => x.Equals(Bewerking));
+                if (xbew != null)
+                    Bewerking = xbew;
+            }
+            else
+            {
+                Formulier = changedform;
+            }
+        }
+
+        private void LoadProductieText(ProductieFormulier form)
+        {
+            productieInfoUI1.SetInfo(form, "Wijzig Aantal Gemaakt", Color.AliceBlue, Color.White, Color.Black);
+        }
+
+        private void LoadBewerkingText(Bewerking bew)
+        {
+            productieInfoUI1.SetInfo(bew, "Wijzig Aantal Gemaakt", Color.AliceBlue, Color.White, Color.Black);
+        }
+
+        private void AantalUI_Shown(object sender, EventArgs e)
+        {
+            Manager.OnFormulierChanged += Manager_OnFormulierChanged;
+            xaantalgemaakt.Select();
+            xaantalgemaakt.Focus();
+            xaantalgemaakt.Select(0, xaantalgemaakt.Value.ToString().Length);
+        }
+        private void AantalGemaaktUI_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
         }
     }
 }

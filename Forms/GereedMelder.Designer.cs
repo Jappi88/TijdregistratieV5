@@ -278,12 +278,14 @@
             // 
             // productieInfoUI1
             // 
+            this.productieInfoUI1.AutoScroll = true;
             this.productieInfoUI1.BackColor = System.Drawing.Color.White;
             this.productieInfoUI1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
             this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
             this.productieInfoUI1.Name = "productieInfoUI1";
+            this.productieInfoUI1.ShowAantal = false;
             this.productieInfoUI1.Size = new System.Drawing.Size(806, 317);
             this.productieInfoUI1.TabIndex = 9;
             // 

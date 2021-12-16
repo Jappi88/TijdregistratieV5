@@ -279,7 +279,11 @@ namespace Rpm.Productie
 
         public virtual Storing[] GetStoringen(bool onlyactive)
         {
-            return Root?.GetAlleStoringen(onlyactive).ToArray();
+            if (this is Bewerking bew)
+                return bew.GetAlleStoringen(onlyactive);
+            if (this is ProductieFormulier prod)
+                return prod.GetAlleStoringen(onlyactive).ToArray();
+            return new Storing[] { };
         }
 
         public virtual async Task<bool> Update(string change, bool save, bool raiseevent)
@@ -629,7 +633,9 @@ Color textcolor, bool useimage)
                   $"</td>";
             var xcolor = GetProductSoortColor();
             var xrgb = $"rgb({xcolor.R}, {xcolor.G}, {xcolor.B})'";
-            string prodsoort = string.IsNullOrEmpty(ProductSoort) ? "" : $"<span color='{xrgb}'><b>[{ProductSoort}]</b></span>";
+            string prodsoort = string.IsNullOrEmpty(ProductSoort)
+                ? ""
+                : $"<span color='{xrgb}'><b>[{ProductSoort}]</b></span>";
             if (!useimage) ximage = "";
             var xreturn = $"<html>\r\n" +
                           $"<head>\r\n" +
@@ -661,16 +667,15 @@ Color textcolor, bool useimage)
                           $"<span style = 'color: {Color.DarkRed.Name}'><u>{Opmerking}</u></span><br>" +
                           $"<span style = 'color: {Color.DarkRed.Name}'><u>{ControlePunten}</u></span><br>" +
                           $"</h2><hr />\r\n" +
-                          $"<hr />" + 
-         "</div>" + 
-         "</td>" +
-        $"</tr>\r\n" +
-        $"</table >\r\n" +
-        $"</p>\r\n" +
-        $"</blockquote>\r\n" +
-        $"</body>\r\n" +
-        $"</html>";
-        return xreturn;
+                          "</div>" +
+                          "</td>" +
+                          $"</tr>\r\n" +
+                          $"</table >\r\n" +
+                          $"</p>\r\n" +
+                          $"</blockquote>\r\n" +
+                          $"</body>\r\n" +
+                          $"</html>";
+            return xreturn;
         }
 
         public Bitmap GetImageFromResources()

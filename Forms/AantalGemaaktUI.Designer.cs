@@ -30,9 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AantalGemaaktUI));
-            this.xannuleer = new MetroFramework.Controls.MetroButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.xwerkplekken = new MetroFramework.Controls.MetroComboBox();
@@ -66,18 +66,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
-            // xannuleer
-            // 
-            this.xannuleer.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.xannuleer.FontSize = MetroFramework.MetroButtonSize.Medium;
-            this.xannuleer.Location = new System.Drawing.Point(3, 0);
-            this.xannuleer.Name = "xannuleer";
-            this.xannuleer.Size = new System.Drawing.Size(107, 34);
-            this.xannuleer.TabIndex = 1;
-            this.xannuleer.Text = "&Sluiten";
-            this.xannuleer.UseSelectable = true;
-            this.xannuleer.Click += new System.EventHandler(this.xannuleer_Click);
-            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.panel2);
@@ -89,12 +77,28 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.xannuleer);
+            this.panel2.Controls.Add(this.button1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel2.Location = new System.Drawing.Point(697, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(113, 37);
             this.panel2.TabIndex = 3;
+            // 
+            // button1
+            // 
+            this.button1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.Location = new System.Drawing.Point(0, 0);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(113, 37);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "Sluiten";
+            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.xannuleer_Click);
             // 
             // panel5
             // 
@@ -302,9 +306,9 @@
             this.xvaluepanel.Controls.Add(this.panel5);
             this.xvaluepanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.xvaluepanel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xvaluepanel.Location = new System.Drawing.Point(0, 312);
+            this.xvaluepanel.Location = new System.Drawing.Point(0, 311);
             this.xvaluepanel.Name = "xvaluepanel";
-            this.xvaluepanel.Size = new System.Drawing.Size(692, 100);
+            this.xvaluepanel.Size = new System.Drawing.Size(692, 101);
             this.xvaluepanel.TabIndex = 1;
             // 
             // pictureBox1
@@ -333,7 +337,8 @@
             this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
             this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
             this.productieInfoUI1.Name = "productieInfoUI1";
-            this.productieInfoUI1.Size = new System.Drawing.Size(692, 312);
+            this.productieInfoUI1.ShowAantal = false;
+            this.productieInfoUI1.Size = new System.Drawing.Size(692, 311);
             this.productieInfoUI1.TabIndex = 2;
             // 
             // AantalGemaaktUI
@@ -372,7 +377,6 @@
         }
 
         #endregion
-        private MetroFramework.Controls.MetroButton xannuleer;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
@@ -395,6 +399,7 @@
         private System.Windows.Forms.Label xtotalpacketlabel;
         private System.Windows.Forms.NumericUpDown xpacketvalue;
         private MetroFramework.Controls.MetroButton xaddPacket;
+        private System.Windows.Forms.Button button1;
         private Controls.ProductieInfoUI productieInfoUI1;
     }
 }

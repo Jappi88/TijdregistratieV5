@@ -28,7 +28,7 @@ namespace Controls
             InitializeComponent();
         }
 
-        public void InitFields(VerpakkingInstructie verpakking, bool editmode, string title)
+        public void InitFields(VerpakkingInstructie verpakking, bool editmode, string title, Color color, Color textcolor)
         {
             IsEditmode = editmode;
             _VerpakkingInstructie = (verpakking == null ? new VerpakkingInstructie() : verpakking.CreateCopy());
@@ -54,7 +54,7 @@ namespace Controls
                 xeditpanel.Visible = false;
                 htmlPanel1.Visible = true;
                 htmlPanel1.Text =
-                    _VerpakkingInstructie.CreateHtmlText(title, Color.White, Color.SaddleBrown, Color.White,true);
+                    _VerpakkingInstructie.CreateHtmlText(title, Color.White, color, textcolor, true);
             }
         }
 

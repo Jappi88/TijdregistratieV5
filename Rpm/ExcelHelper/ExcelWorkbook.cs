@@ -1273,8 +1273,9 @@ namespace ProductieManager.Rpm.ExcelHelper
                                     workbook.Close();
                                     aangemaakt.Add(overzicht);
                                 }
-                                catch (Exception)
+                                catch (Exception e)
                                 {
+                                   Console.WriteLine(e.Message);
                                 }
 
                     return aangemaakt.ToArray();

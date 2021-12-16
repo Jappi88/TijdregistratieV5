@@ -198,7 +198,7 @@ namespace Forms
             xoverzichtbereikgroup.Enabled = x.CreateWeekOverzichten;
             xdocurrentweekoverzicht.Checked = x.DoCurrentWeekOverzicht;
 
-            var selected = x.ExcelColumns?.FirstOrDefault(x => x.IsUsed("ExcelColumns"));
+            var selected = x.ExcelColumns?.FirstOrDefault(s => s.IsExcelSettings && s.IsUsed("ExcelColumns"));
             if (selected != null)
             {
                 xcolumnsStatusLabel.Text = $@"Opties Geselecteerd: {selected.Name}";

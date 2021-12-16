@@ -54,7 +54,7 @@ namespace Forms
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(10);
-            this.panel1.Size = new System.Drawing.Size(743, 475);
+            this.panel1.Size = new System.Drawing.Size(867, 518);
             this.panel1.TabIndex = 11;
             // 
             // xexport
@@ -65,7 +65,7 @@ namespace Forms
             this.xexport.ForeColor = System.Drawing.Color.Black;
             this.xexport.Image = global::ProductieManager.Properties.Resources.microsoft_excel_22733;
             this.xexport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xexport.Location = new System.Drawing.Point(299, 434);
+            this.xexport.Location = new System.Drawing.Point(423, 477);
             this.xexport.Name = "xexport";
             this.xexport.Size = new System.Drawing.Size(152, 35);
             this.xexport.TabIndex = 7;
@@ -83,7 +83,7 @@ namespace Forms
             this.xstatsb.ForeColor = System.Drawing.Color.Black;
             this.xstatsb.Image = global::ProductieManager.Properties.Resources.Statics_Icon_32_32;
             this.xstatsb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xstatsb.Location = new System.Drawing.Point(457, 434);
+            this.xstatsb.Location = new System.Drawing.Point(581, 477);
             this.xstatsb.Name = "xstatsb";
             this.xstatsb.Size = new System.Drawing.Size(152, 35);
             this.xstatsb.TabIndex = 6;
@@ -102,7 +102,7 @@ namespace Forms
             this.xsluiten.ForeColor = System.Drawing.Color.Black;
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xsluiten.Location = new System.Drawing.Point(615, 434);
+            this.xsluiten.Location = new System.Drawing.Point(739, 477);
             this.xsluiten.Name = "xsluiten";
             this.xsluiten.Size = new System.Drawing.Size(115, 35);
             this.xsluiten.TabIndex = 5;
@@ -117,26 +117,30 @@ namespace Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xinfopanel.AutoScroll = true;
-            this.xinfopanel.AutoScrollMinSize = new System.Drawing.Size(743, 20);
+            this.xinfopanel.AutoScrollMinSize = new System.Drawing.Size(867, 20);
             this.xinfopanel.BackColor = System.Drawing.SystemColors.Window;
             this.xinfopanel.BaseStylesheet = "";
             this.xinfopanel.Controls.Add(this.productieInfoUI1);
             this.xinfopanel.Cursor = System.Windows.Forms.Cursors.Default;
             this.xinfopanel.Location = new System.Drawing.Point(0, 0);
             this.xinfopanel.Name = "xinfopanel";
-            this.xinfopanel.Size = new System.Drawing.Size(743, 428);
+            this.xinfopanel.Size = new System.Drawing.Size(867, 471);
             this.xinfopanel.TabIndex = 0;
             this.xinfopanel.Text = "Productie Info";
             // 
             // productieInfoUI1
             // 
+            this.productieInfoUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.productieInfoUI1.AutoScroll = true;
             this.productieInfoUI1.BackColor = System.Drawing.Color.White;
-            this.productieInfoUI1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
             this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
             this.productieInfoUI1.Name = "productieInfoUI1";
-            this.productieInfoUI1.Size = new System.Drawing.Size(743, 428);
+            this.productieInfoUI1.ShowAantal = false;
+            this.productieInfoUI1.Size = new System.Drawing.Size(863, 470);
             this.productieInfoUI1.TabIndex = 0;
             // 
             // ProductieInfoForm
@@ -145,7 +149,7 @@ namespace Forms
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.CancelButton = this.xsluiten;
-            this.ClientSize = new System.Drawing.Size(763, 545);
+            this.ClientSize = new System.Drawing.Size(887, 588);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

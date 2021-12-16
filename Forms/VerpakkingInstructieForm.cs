@@ -1,6 +1,7 @@
 ﻿using ProductieManager.Properties;
 using Rpm.Productie;
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -21,7 +22,7 @@ namespace Forms
             var xmsg = $"Verpakking Instructie voor [{_productie.ArtikelNr}]{_productie.Omschrijving}";
             this.Text = xmsg;
             this.Invalidate();
-            verpakkingInstructieUI1.InitFields(_productie?.VerpakkingsInstructies, editmode,xmsg);
+            verpakkingInstructieUI1.InitFields(_productie?.VerpakkingsInstructies, editmode,xmsg,Color.SaddleBrown, Color.White);
             if (verpakkingInstructieUI1.IsEditmode)
             {
                 xsluiten.Text = "Annuleren";

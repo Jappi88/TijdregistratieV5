@@ -43,8 +43,11 @@ namespace Controls
                 _bewerking = value;
                 if (Disposing || IsDisposed) return;
                 if (value != null)
+                {
                     xbewerking.SelectedItem = xbewerking.Items.Cast<string>()
                         .FirstOrDefault(t => string.Equals(t, value.Naam, StringComparison.CurrentCultureIgnoreCase));
+                    UpdateFields();
+                }
             }
         }
 
@@ -55,7 +58,7 @@ namespace Controls
             {
                 Formulier = form;
                 if (InvokeRequired)
-                    BeginInvoke(new Action(UpdateFields));
+                    Invoke(new Action(UpdateFields));
                 else
                     UpdateFields();
             }
@@ -434,9 +437,10 @@ namespace Controls
             var b = CurrentBewerking();
             if (b != null)
             {
-                var aantal = new AantalGemaaktUI();
-                aantal.Width = Width + 10;
-                aantal.ShowDialog(Formulier, b);
+                productieInfoUI1.ShowAantal = !productieInfoUI1.ShowAantal;
+                //var aantal = new AantalGemaaktUI();
+                //aantal.Width = Width + 10;
+                //aantal.ShowDialog(Formulier, b);
             }
         }
 

@@ -29,8 +29,7 @@ namespace Rpm.Productie
                             $"<img width='{64}' height='{64}'  src = 'Verpakkingicon' />\r\n" +
                             $"</td>";
             if (!useimage) ximage = "";
-            string value = $"<div>" +
-                           $"<h2>Verpakking</h2>" +
+            string value = $"<h2>Verpakking</h2>" +
                            $"<div>";
             if (!string.IsNullOrEmpty(x.VerpakkingType))
                 value += $"Verpakking Soort: <b>{x.VerpakkingType?.Trim()}</b><br>";
@@ -68,8 +67,7 @@ namespace Rpm.Productie
             if (!string.IsNullOrEmpty(x.BulkLocatie))
                 value += $"Bulk Locatie: <b>{x.BulkLocatie?.Trim()}</b>";
             value += $"</div>" +
-                     $"<hr />" +
-                     $"</div>";
+                     $"<hr />";
 
                      var xreturn = $"<html>\r\n" +
                                    $"<head>\r\n" +

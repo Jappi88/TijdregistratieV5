@@ -12,6 +12,7 @@ namespace Forms
 {
     public partial class StartProductie : DockContent
     {
+        private Bewerking _selected;
         public StartProductie(ProductieFormulier formulier, Bewerking bewerking)
         {
             InitializeComponent();
@@ -22,9 +23,7 @@ namespace Forms
             //    ControlStyles.SupportsTransparentBackColor,
             //    true);
             Formulier = formulier;
-            productieForm1.SetParent(formulier);
-            productieForm1.SelectedBewerking = bewerking;
-            productieForm1.OnCloseButtonPressed += ProductieForm1_OnCloseButtonPressed;
+            _selected = bewerking;
         }
 
         public ProductieFormulier Formulier { get; set; }
@@ -50,8 +49,8 @@ namespace Forms
                 {
                    
                     if (InvokeRequired)
-                        this.BeginInvoke(new Action(()=> UpdateFields(changedform)));
-                    else UpdateFields(changedform);
+                        this.BeginInvoke(new Action(()=> UpdateFields(changedform,null)));
+                    else UpdateFields(changedform,null);
                 }
                 catch (Exception e)
                 {
@@ -68,7 +67,7 @@ namespace Forms
             else Focus();
         }
 
-        public void UpdateFields(ProductieFormulier formulier)
+        public void UpdateFields(ProductieFormulier formulier, Bewerking selected)
         {
             if (Disposing || IsDisposed) return;
             if (formulier == null)
@@ -87,6 +86,8 @@ namespace Forms
                 {
                     Text = $"[{Formulier.ProductieNr}]";
                     productieForm1.SetParent(Formulier);
+                    if (selected != null)
+                        productieForm1.SelectedBewerking = selected;
                     var plekken = productieForm1.SelectedBewerking?.WerkPlekken;
                     if (plekken is {Count: > 0})
                         TabText = $"{string.Join(",",plekken.Select(x=> x.Naam))} [{Formulier.ProductieNr}, {Formulier.ArtikelNr}]";
@@ -104,10 +105,10 @@ namespace Forms
         {
             try
             {
-                UpdateFields(Formulier);
                 BringToFront();
                 Focus();
                 InitEvents();
+                UpdateFields(Formulier, _selected);
             }
             catch (Exception exception)
             {
@@ -120,6 +121,7 @@ namespace Forms
             Manager.OnSettingsChanged += _manager_OnSettingsChanged;
             Manager.OnFormulierChanged += Formulier_OnFormulierChanged;
             Manager.OnFormulierDeleted += Manager_OnFormulierDeleted;
+            productieForm1.OnCloseButtonPressed += ProductieForm1_OnCloseButtonPressed;
         }
 
         private void DetachEvents()
@@ -127,6 +129,7 @@ namespace Forms
             Manager.OnSettingsChanged -= _manager_OnSettingsChanged;
             Manager.OnFormulierChanged -= Formulier_OnFormulierChanged;
             Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
+            productieForm1.OnCloseButtonPressed -= ProductieForm1_OnCloseButtonPressed;
         }
 
         private void _manager_OnSettingsChanged(object instance, UserSettings settings, bool init)
@@ -160,21 +163,6 @@ namespace Forms
             catch (Exception e)
             {
             }
-        }
-
-        private void StartProductie_KeyDown(object sender, KeyEventArgs e)
-        {
-            Console.WriteLine(e.KeyValue);
-        }
-
-        private void StartProductie_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            Console.WriteLine(e.KeyChar);
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
