@@ -130,6 +130,9 @@
   <data name="succeslog" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\succeslog.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="clock_go" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\clock_go.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="stop_red256_24890" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\stop-red256_24890 (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -313,8 +316,8 @@
   <data name="update" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\update.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="clock_go" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\clock_go.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="playcircle_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\playcircle_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="profile_picture_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\profile_picture_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -324,9 +327,6 @@
   </data>
   <data name="microsoft_excel_22733_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\microsoft_excel_22733_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="notification-done_114461" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\notification-done_114461.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="search_locate_find_6278" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\search_locate_find_6278.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -456,6 +456,9 @@
   </data>
   <data name="diskette_save_saveas_1514" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\diskette_save_saveas_1514.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ic_send_128_28719" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ic_send_128_28719.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="FileIntegrityCheckFailedCaption" xml:space="preserve">
     <value>Checksum differs</value>
@@ -631,8 +634,8 @@
   <data name="3844443-disable-eye-inactive-see-show-view-watch_110296" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\3844443-disable-eye-inactive-see-show-view-watch_110296.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ic_send_128_28719" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ic_send_128_28719.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="notification-done_114461" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\notification-done_114461.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="undoarrow_undo_1534" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\undoarrow_undo_1534.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -694,6 +697,9 @@
   <data name="systemtime_778" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\systemtime_778.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Leave_80_icon_icons_com_57305_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Leave-80_icon-icons.com_57305_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="tasks_23349_48x48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tasks_23349_48x48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -729,6 +735,9 @@
   </data>
   <data name="search_page_document_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\search_page_document_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Stop_Hand _32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Stop_Hand _32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="arrow_up_16741_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow_up_16741_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -784,9 +793,6 @@
   <data name="internal_3430" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\internal_3430.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="pngegg (1)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\pngegg (1)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="help_question_1566" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\help_question_1566.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -840,14 +846,5 @@
   </data>
   <data name="notedescription_office_page_paper_107752" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\notedescription-office-page-paper_107752.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Stop_Hand _32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Stop_Hand _32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="playcircle_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\playcircle_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Leave_80_icon_icons_com_57305_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Leave-80_icon-icons.com_57305_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

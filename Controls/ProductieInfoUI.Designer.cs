@@ -87,7 +87,7 @@ namespace Controls
             this.metroTabControl1.Multiline = true;
             this.metroTabControl1.Name = "metroTabControl1";
             this.metroTabControl1.SelectedIndex = 0;
-            this.metroTabControl1.Size = new System.Drawing.Size(769, 488);
+            this.metroTabControl1.Size = new System.Drawing.Size(685, 396);
             this.metroTabControl1.Style = MetroFramework.MetroColorStyle.Red;
             this.metroTabControl1.TabIndex = 12;
             this.metroTabControl1.UseSelectable = true;
@@ -101,7 +101,7 @@ namespace Controls
             this.metroTabPage1.HorizontalScrollbarSize = 2;
             this.metroTabPage1.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage1.Name = "metroTabPage1";
-            this.metroTabPage1.Size = new System.Drawing.Size(761, 446);
+            this.metroTabPage1.Size = new System.Drawing.Size(677, 354);
             this.metroTabPage1.TabIndex = 6;
             this.metroTabPage1.Text = "Productie Status";
             this.metroTabPage1.VerticalScrollbarBarColor = true;
@@ -114,13 +114,13 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xHeaderHtmlPanel.AutoScroll = true;
-            this.xHeaderHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(754, 20);
+            this.xHeaderHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(670, 20);
             this.xHeaderHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xHeaderHtmlPanel.BaseStylesheet = null;
             this.xHeaderHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
             this.xHeaderHtmlPanel.Location = new System.Drawing.Point(4, 4);
             this.xHeaderHtmlPanel.Name = "xHeaderHtmlPanel";
-            this.xHeaderHtmlPanel.Size = new System.Drawing.Size(754, 439);
+            this.xHeaderHtmlPanel.Size = new System.Drawing.Size(670, 347);
             this.xHeaderHtmlPanel.TabIndex = 0;
             this.xHeaderHtmlPanel.Text = "Header Html Text";
             this.xHeaderHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
@@ -133,7 +133,7 @@ namespace Controls
             this.metroTabPage2.HorizontalScrollbarSize = 2;
             this.metroTabPage2.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage2.Name = "metroTabPage2";
-            this.metroTabPage2.Size = new System.Drawing.Size(761, 446);
+            this.metroTabPage2.Size = new System.Drawing.Size(677, 354);
             this.metroTabPage2.TabIndex = 1;
             this.metroTabPage2.Text = "Productie Info";
             this.metroTabPage2.VerticalScrollbarBarColor = true;
@@ -146,13 +146,13 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xInforHtmlPanel.AutoScroll = true;
-            this.xInforHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(755, 20);
+            this.xInforHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(732, 20);
             this.xInforHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xInforHtmlPanel.BaseStylesheet = null;
             this.xInforHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
             this.xInforHtmlPanel.Location = new System.Drawing.Point(3, 3);
             this.xInforHtmlPanel.Name = "xInforHtmlPanel";
-            this.xInforHtmlPanel.Size = new System.Drawing.Size(755, 437);
+            this.xInforHtmlPanel.Size = new System.Drawing.Size(732, 576);
             this.xInforHtmlPanel.TabIndex = 1;
             this.xInforHtmlPanel.Text = "Info Html Text";
             this.xInforHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
@@ -165,7 +165,7 @@ namespace Controls
             this.metroTabPage3.HorizontalScrollbarSize = 2;
             this.metroTabPage3.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage3.Name = "metroTabPage3";
-            this.metroTabPage3.Size = new System.Drawing.Size(761, 446);
+            this.metroTabPage3.Size = new System.Drawing.Size(677, 354);
             this.metroTabPage3.TabIndex = 2;
             this.metroTabPage3.Text = "Notities";
             this.metroTabPage3.VerticalScrollbarBarColor = true;
@@ -178,13 +178,13 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xNotitieHtmlPanel.AutoScroll = true;
-            this.xNotitieHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(755, 20);
+            this.xNotitieHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(732, 20);
             this.xNotitieHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xNotitieHtmlPanel.BaseStylesheet = null;
             this.xNotitieHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
             this.xNotitieHtmlPanel.Location = new System.Drawing.Point(3, 3);
             this.xNotitieHtmlPanel.Name = "xNotitieHtmlPanel";
-            this.xNotitieHtmlPanel.Size = new System.Drawing.Size(755, 437);
+            this.xNotitieHtmlPanel.Size = new System.Drawing.Size(732, 576);
             this.xNotitieHtmlPanel.TabIndex = 11;
             this.xNotitieHtmlPanel.Text = "Notitie Html Text";
             this.xNotitieHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
@@ -197,7 +197,7 @@ namespace Controls
             this.metroTabPage4.HorizontalScrollbarSize = 2;
             this.metroTabPage4.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage4.Name = "metroTabPage4";
-            this.metroTabPage4.Size = new System.Drawing.Size(761, 446);
+            this.metroTabPage4.Size = new System.Drawing.Size(677, 354);
             this.metroTabPage4.TabIndex = 7;
             this.metroTabPage4.Text = "Datums";
             this.metroTabPage4.VerticalScrollbarBarColor = true;
@@ -210,46 +210,52 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xDatumsHtmlPanel.AutoScroll = true;
-            this.xDatumsHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(755, 20);
+            this.xDatumsHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(732, 20);
             this.xDatumsHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xDatumsHtmlPanel.BaseStylesheet = null;
-            this.xDatumsHtmlPanel.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.xDatumsHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
             this.xDatumsHtmlPanel.Location = new System.Drawing.Point(3, 3);
             this.xDatumsHtmlPanel.Name = "xDatumsHtmlPanel";
             this.xDatumsHtmlPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.xDatumsHtmlPanel.Size = new System.Drawing.Size(755, 437);
+            this.xDatumsHtmlPanel.Size = new System.Drawing.Size(732, 576);
             this.xDatumsHtmlPanel.TabIndex = 6;
             this.xDatumsHtmlPanel.Text = "Datums Html Text";
             this.xDatumsHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
             // 
             // metroTabPage6
             // 
+            this.metroTabPage6.AutoScroll = true;
             this.metroTabPage6.Controls.Add(this.verpakkingInstructieUI1);
+            this.metroTabPage6.HorizontalScrollbar = true;
             this.metroTabPage6.HorizontalScrollbarBarColor = true;
             this.metroTabPage6.HorizontalScrollbarHighlightOnWheel = false;
             this.metroTabPage6.HorizontalScrollbarSize = 2;
             this.metroTabPage6.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage6.Name = "metroTabPage6";
-            this.metroTabPage6.Size = new System.Drawing.Size(761, 446);
+            this.metroTabPage6.Size = new System.Drawing.Size(677, 354);
             this.metroTabPage6.TabIndex = 5;
             this.metroTabPage6.Text = "Verpakking";
+            this.metroTabPage6.VerticalScrollbar = true;
             this.metroTabPage6.VerticalScrollbarBarColor = true;
             this.metroTabPage6.VerticalScrollbarHighlightOnWheel = false;
             this.metroTabPage6.VerticalScrollbarSize = 3;
             // 
             // verpakkingInstructieUI1
             // 
-            this.verpakkingInstructieUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.verpakkingInstructieUI1.AllowEditMode = false;
+            this.verpakkingInstructieUI1.AutoScroll = true;
             this.verpakkingInstructieUI1.BackColor = System.Drawing.Color.White;
+            this.verpakkingInstructieUI1.BodyColor = System.Drawing.Color.Empty;
+            this.verpakkingInstructieUI1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.verpakkingInstructieUI1.IsEditmode = false;
-            this.verpakkingInstructieUI1.Location = new System.Drawing.Point(4, 4);
-            this.verpakkingInstructieUI1.Margin = new System.Windows.Forms.Padding(4);
+            this.verpakkingInstructieUI1.Location = new System.Drawing.Point(0, 0);
             this.verpakkingInstructieUI1.Name = "verpakkingInstructieUI1";
-            this.verpakkingInstructieUI1.Padding = new System.Windows.Forms.Padding(6, 7, 6, 7);
-            this.verpakkingInstructieUI1.Size = new System.Drawing.Size(753, 441);
+            this.verpakkingInstructieUI1.Padding = new System.Windows.Forms.Padding(5);
+            this.verpakkingInstructieUI1.Productie = null;
+            this.verpakkingInstructieUI1.Size = new System.Drawing.Size(677, 354);
             this.verpakkingInstructieUI1.TabIndex = 2;
+            this.verpakkingInstructieUI1.TextColor = System.Drawing.Color.Empty;
+            this.verpakkingInstructieUI1.Title = null;
             // 
             // metroTabPage5
             // 
@@ -259,7 +265,7 @@ namespace Controls
             this.metroTabPage5.HorizontalScrollbarSize = 2;
             this.metroTabPage5.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage5.Name = "metroTabPage5";
-            this.metroTabPage5.Size = new System.Drawing.Size(761, 446);
+            this.metroTabPage5.Size = new System.Drawing.Size(677, 354);
             this.metroTabPage5.TabIndex = 8;
             this.metroTabPage5.Text = "Materialen";
             this.metroTabPage5.VerticalScrollbarBarColor = true;
@@ -272,13 +278,13 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xMaterialenHtmlPanel.AutoScroll = true;
-            this.xMaterialenHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(755, 20);
+            this.xMaterialenHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(732, 20);
             this.xMaterialenHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xMaterialenHtmlPanel.BaseStylesheet = null;
-            this.xMaterialenHtmlPanel.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.xMaterialenHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
             this.xMaterialenHtmlPanel.Location = new System.Drawing.Point(3, 3);
             this.xMaterialenHtmlPanel.Name = "xMaterialenHtmlPanel";
-            this.xMaterialenHtmlPanel.Size = new System.Drawing.Size(755, 437);
+            this.xMaterialenHtmlPanel.Size = new System.Drawing.Size(732, 576);
             this.xMaterialenHtmlPanel.TabIndex = 7;
             this.xMaterialenHtmlPanel.Text = "Materialen Html Text";
             this.xMaterialenHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
@@ -291,7 +297,7 @@ namespace Controls
             this.metroTabPage7.HorizontalScrollbarSize = 2;
             this.metroTabPage7.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage7.Name = "metroTabPage7";
-            this.metroTabPage7.Size = new System.Drawing.Size(761, 446);
+            this.metroTabPage7.Size = new System.Drawing.Size(677, 354);
             this.metroTabPage7.TabIndex = 9;
             this.metroTabPage7.Text = "WerkPlaatsen";
             this.metroTabPage7.VerticalScrollbarBarColor = true;
@@ -304,13 +310,13 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xWerkPlaatsenHtmlPanel.AutoScroll = true;
-            this.xWerkPlaatsenHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(755, 20);
+            this.xWerkPlaatsenHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(732, 20);
             this.xWerkPlaatsenHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xWerkPlaatsenHtmlPanel.BaseStylesheet = null;
-            this.xWerkPlaatsenHtmlPanel.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.xWerkPlaatsenHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
             this.xWerkPlaatsenHtmlPanel.Location = new System.Drawing.Point(3, 3);
             this.xWerkPlaatsenHtmlPanel.Name = "xWerkPlaatsenHtmlPanel";
-            this.xWerkPlaatsenHtmlPanel.Size = new System.Drawing.Size(755, 437);
+            this.xWerkPlaatsenHtmlPanel.Size = new System.Drawing.Size(732, 576);
             this.xWerkPlaatsenHtmlPanel.TabIndex = 9;
             this.xWerkPlaatsenHtmlPanel.Text = "WerkPlaatsen Html Text";
             this.xWerkPlaatsenHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
@@ -323,9 +329,9 @@ namespace Controls
             this.xaantalpanel.Controls.Add(this.xnextb);
             this.xaantalpanel.Controls.Add(this.xaantalgemaakt);
             this.xaantalpanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.xaantalpanel.Location = new System.Drawing.Point(0, 488);
+            this.xaantalpanel.Location = new System.Drawing.Point(0, 396);
             this.xaantalpanel.Name = "xaantalpanel";
-            this.xaantalpanel.Size = new System.Drawing.Size(769, 100);
+            this.xaantalpanel.Size = new System.Drawing.Size(685, 100);
             this.xaantalpanel.TabIndex = 13;
             this.xaantalpanel.Visible = false;
             // 
@@ -341,7 +347,7 @@ namespace Controls
             this.xPacketGroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xPacketGroup.Location = new System.Drawing.Point(74, 42);
             this.xPacketGroup.Name = "xPacketGroup";
-            this.xPacketGroup.Size = new System.Drawing.Size(494, 55);
+            this.xPacketGroup.Size = new System.Drawing.Size(410, 55);
             this.xPacketGroup.TabIndex = 9;
             this.xPacketGroup.TabStop = false;
             this.xPacketGroup.Text = "Aantal Kisten, Bakken, Dozen of pakketten";
@@ -475,7 +481,7 @@ namespace Controls
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ProductieInfoUI";
-            this.Size = new System.Drawing.Size(769, 588);
+            this.Size = new System.Drawing.Size(685, 496);
             this.metroTabControl1.ResumeLayout(false);
             this.metroTabPage1.ResumeLayout(false);
             this.metroTabPage2.ResumeLayout(false);

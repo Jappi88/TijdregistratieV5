@@ -74,6 +74,7 @@ namespace Controls
             this.xsettingsb = new System.Windows.Forms.ToolStripButton();
             this.xupdateb = new System.Windows.Forms.ToolStripButton();
             this.xopmerkingentoolstripbutton = new System.Windows.Forms.ToolStripButton();
+            this.xverpakkingen = new System.Windows.Forms.ToolStripButton();
             this.xklachten = new System.Windows.Forms.ToolStripButton();
             this.xcorruptedfilesbutton = new System.Windows.Forms.ToolStripButton();
             this.xMissingTekening = new System.Windows.Forms.ToolStripButton();
@@ -178,6 +179,7 @@ namespace Controls
             this.xsettingsb,
             this.xupdateb,
             this.xopmerkingentoolstripbutton,
+            this.xverpakkingen,
             this.xklachten,
             this.xcorruptedfilesbutton,
             this.xMissingTekening});
@@ -436,6 +438,17 @@ namespace Controls
             this.xopmerkingentoolstripbutton.Size = new System.Drawing.Size(36, 36);
             this.xopmerkingentoolstripbutton.ToolTipText = "Bekijk, wijzig of voeg toe een opmerking, vraag of een verzoek";
             this.xopmerkingentoolstripbutton.Click += new System.EventHandler(this.xopmerkingentoolstripbutton_Click);
+            // 
+            // xverpakkingen
+            // 
+            this.xverpakkingen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xverpakkingen.Image = global::ProductieManager.Properties.Resources.Box_1_35524;
+            this.xverpakkingen.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xverpakkingen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xverpakkingen.Name = "xverpakkingen";
+            this.xverpakkingen.Size = new System.Drawing.Size(36, 36);
+            this.xverpakkingen.ToolTipText = "Alle aangepaste verpakkingen";
+            this.xverpakkingen.Click += new System.EventHandler(this.xverpakkingen_Click);
             // 
             // xklachten
             // 
@@ -913,5 +926,6 @@ namespace Controls
         private ToolStripButton xcorruptedfilesbutton;
         private ToolStripButton xMissingTekening;
         private ToolStripButton xklachten;
+        private ToolStripButton xverpakkingen;
     }
 }

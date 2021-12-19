@@ -303,7 +303,7 @@ namespace Rpm.Productie
             }
         }
       
-        private Color GetNegativeColorByPercentage(decimal percentage)
+        public static Color GetNegativeColorByPercentage(decimal percentage)
         {
             if (percentage <= -25)
                 return Color.Red;
@@ -322,7 +322,7 @@ namespace Rpm.Productie
             return Color.Black;
         }
 
-        private Color GetPositiveColorByPercentage(decimal percentage)
+        public static Color GetPositiveColorByPercentage(decimal percentage)
         {
             if (percentage <= 25)
                 return Color.Red;
@@ -341,7 +341,7 @@ namespace Rpm.Productie
             return Color.Black;
         }
 
-        private Color GetValidColor(bool valid)
+        public static Color GetValidColor(bool valid)
         {
             if (valid)
                 return Color.DarkGreen;

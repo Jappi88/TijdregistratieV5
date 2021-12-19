@@ -1,4 +1,4 @@
-﻿namespace Forms
+﻿namespace Forms.GereedMelden
 {
     partial class GereedMelder
     {

@@ -142,6 +142,9 @@ namespace Controls
             Manager.KlachtChanged += Klachten_KlachtChanged;
             Manager.KlachtDeleted += Klachten_KlachtChanged;
 
+            Manager.VerpakkingChanged += Manager_VerpakkingChanged; 
+            Manager.VerpakkingDeleted += Manager_VerpakkingDeleted;
+
             _manager.OnShutdown += _manager_OnShutdown;
             //xproductieListControl1.InitEvents();
             xbewerkingListControl.InitEvents();
@@ -156,6 +159,16 @@ namespace Controls
             werkPlekkenUI1.OnPlekkenChanged += WerkPlekkenUI1_OnPlekkenChanged;
         }
 
+        private void Manager_VerpakkingDeleted(object sender, EventArgs e)
+        {
+           UpdateVerpakkingenButton();
+        }
+
+        private void Manager_VerpakkingChanged(object sender, EventArgs e)
+        {
+            UpdateVerpakkingenButton();
+        }
+
         private void Klachten_KlachtChanged(object sender, EventArgs e)
         {
             UpdateKlachtButton();
@@ -166,6 +179,13 @@ namespace Controls
             if (this.InvokeRequired)
                 this.Invoke(new MethodInvoker(xUpdateKlachtButton));
             else xUpdateKlachtButton();
+        }
+
+        private void UpdateVerpakkingenButton()
+        {
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(xUpdateVerpakkingenButton));
+            else xUpdateVerpakkingenButton();
         }
 
         private void xUpdateKlachtButton()
@@ -205,6 +225,31 @@ namespace Controls
                     }
                     else
                         xklachten.Image = Resources.Leave_80_icon_icons_com_57305;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        private void xUpdateVerpakkingenButton()
+        {
+            try
+            {
+                var xkl = Manager.Verpakkingen?.Database?.Count()??0;
+                if (xkl > 0)
+                {
+                    string cnt = xkl > 99 ? "99+" : xkl.ToString();
+                    int fs = cnt.Length < 2 ? 16 : cnt.Length < 3 ? 14 : cnt.Length < 4 ? 12 : 10;
+                    var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White,
+                        cnt,
+                        new Font("Ariel", fs, FontStyle.Bold), Color.DarkRed);
+                    xverpakkingen.Image = Resources.Box_1_35524.CombineImage(ximg, 1.75);
+                }
+                else
+                {
+                    xverpakkingen.Image = Resources.Box_1_35524;
                 }
             }
             catch (Exception e)
@@ -306,6 +351,13 @@ namespace Controls
             //Manager.OnDbBeginUpdate -= Manager_OnDbBeginUpdate;
             //Manager.OnDbEndUpdate -= Manager_OnDbEndUpdate;
             Manager.OnManagerLoaded -= _manager_OnManagerLoaded;
+
+            Manager.KlachtChanged -= Klachten_KlachtChanged;
+            Manager.KlachtDeleted -= Klachten_KlachtChanged;
+
+            Manager.VerpakkingChanged -= Manager_VerpakkingChanged;
+            Manager.VerpakkingDeleted -= Manager_VerpakkingDeleted;
+
             _manager.OnShutdown -= _manager_OnShutdown;
             //xproductieListControl1.DetachEvents();
             xbewerkingListControl.DetachEvents();
@@ -473,6 +525,7 @@ namespace Controls
                     //RunProductieRefresh();
 
                     UpdateKlachtButton();
+                    UpdateVerpakkingenButton();
                     //UpdateAllLists();
                 }));
 
@@ -2373,6 +2426,12 @@ namespace Controls
         {
             var kl = new KlachtenForm();
             kl.ShowDialog();
+        }
+
+        private void xverpakkingen_Click(object sender, EventArgs e)
+        {
+            var vr = new VerpakkingenForm();
+            vr.ShowDialog();
         }
     }
 }

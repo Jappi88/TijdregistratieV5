@@ -15,15 +15,16 @@ namespace Forms
             InitializeComponent();
             _productie = productie;
             InitUI(false);
+            var xmsg = $"Verpakking Instructie voor [{_productie.ArtikelNr}]{_productie.Omschrijving}";
+            this.Text = xmsg;
+            this.Invalidate();
+            verpakkingInstructieUI1.AllowEditMode = false;
+            verpakkingInstructieUI1.InitFields(_productie?.VerpakkingsInstructies, false, xmsg, Color.SaddleBrown, Color.White,_productie);
         }
 
         private void InitUI(bool editmode)
         {
-            var xmsg = $"Verpakking Instructie voor [{_productie.ArtikelNr}]{_productie.Omschrijving}";
-            this.Text = xmsg;
-            this.Invalidate();
-            verpakkingInstructieUI1.InitFields(_productie?.VerpakkingsInstructies, editmode,xmsg,Color.SaddleBrown, Color.White);
-            if (verpakkingInstructieUI1.IsEditmode)
+            if (editmode)
             {
                 xsluiten.Text = "Annuleren";
                 xwijzig.Text = "Opslaan";
@@ -35,6 +36,7 @@ namespace Forms
                 xwijzig.Image = Resources.edit__52382;
                 xsluiten.Text = "Sluiten";
             }
+            verpakkingInstructieUI1.UpdateFields(editmode,_productie);
         }
 
         private void xsluiten_Click(object sender, EventArgs e)
@@ -47,14 +49,13 @@ namespace Forms
                 DialogResult = DialogResult.Cancel;
         }
 
-        private async void xwijzig_Click(object sender, EventArgs e)
+        private void xwijzig_Click(object sender, EventArgs e)
         {
             if (_productie == null) return;
             if(verpakkingInstructieUI1.IsEditmode)
             {
-                _productie.VerpakkingsInstructies = verpakkingInstructieUI1.VerpakkingInstructie;
-                InitUI(false);
-                await _productie.Update($"VerpakkingsInstructies aangepast voor [{_productie.ArtikelNr}]{_productie.Omschrijving}", true, true);
+                if (verpakkingInstructieUI1.SaveChanges())
+                    InitUI(false);
             }
             else
                 InitUI(true);
@@ -96,8 +97,10 @@ namespace Forms
                                         {
                                             _productie = changedform;
                                         }
+
                                         if (!verpakkingInstructieUI1.IsEditmode)
                                             InitUI(false);
+                                        else verpakkingInstructieUI1.Productie = _productie;
                                     }));
                 }
                 catch (Exception ex)

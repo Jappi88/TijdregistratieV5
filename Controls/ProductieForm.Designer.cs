@@ -39,6 +39,8 @@
             Various.MenuButton menuButton7 = new Various.MenuButton();
             Various.MenuButton menuButton8 = new Various.MenuButton();
             Various.MenuButton menuButton9 = new Various.MenuButton();
+            Various.MenuButton menuButton10 = new Various.MenuButton();
+            Various.MenuButton menuButton11 = new Various.MenuButton();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.aantalTeMakenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.leverdatumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,7 +59,6 @@
             this.xtoonwerktekening = new System.Windows.Forms.Button();
             this.xOnderbreek = new System.Windows.Forms.Button();
             this.xpanelcontainer = new System.Windows.Forms.Panel();
-            this.productieInfoUI1 = new Controls.ProductieInfoUI();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.xnotepanel = new System.Windows.Forms.Panel();
@@ -65,6 +66,7 @@
             this.xnoteButton = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
             this.xstatusimage = new System.Windows.Forms.PictureBox();
+            this.productieInfoUI1 = new Controls.ProductieInfoUI();
             this.mainMenu1 = new Controls.MainMenu();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -214,7 +216,7 @@
             this.xstatuslabel.Location = new System.Drawing.Point(40, 0);
             this.xstatuslabel.Name = "xstatuslabel";
             this.xstatuslabel.Padding = new System.Windows.Forms.Padding(5);
-            this.xstatuslabel.Size = new System.Drawing.Size(707, 45);
+            this.xstatuslabel.Size = new System.Drawing.Size(778, 45);
             this.xstatuslabel.TabIndex = 0;
             this.xstatuslabel.Text = "Status";
             this.xstatuslabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -230,7 +232,7 @@
             this.xstopb.ForeColor = System.Drawing.Color.Black;
             this.xstopb.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xstopb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xstopb.Location = new System.Drawing.Point(4, 438);
+            this.xstopb.Location = new System.Drawing.Point(4, 498);
             this.xstopb.Margin = new System.Windows.Forms.Padding(4);
             this.xstopb.Name = "xstopb";
             this.xstopb.Size = new System.Drawing.Size(167, 35);
@@ -355,21 +357,8 @@
             this.xpanelcontainer.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xpanelcontainer.Location = new System.Drawing.Point(40, 45);
             this.xpanelcontainer.Name = "xpanelcontainer";
-            this.xpanelcontainer.Size = new System.Drawing.Size(572, 352);
+            this.xpanelcontainer.Size = new System.Drawing.Size(643, 412);
             this.xpanelcontainer.TabIndex = 4;
-            // 
-            // productieInfoUI1
-            // 
-            this.productieInfoUI1.AutoScroll = true;
-            this.productieInfoUI1.BackColor = System.Drawing.Color.White;
-            this.productieInfoUI1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
-            this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
-            this.productieInfoUI1.Name = "productieInfoUI1";
-            this.productieInfoUI1.ShowAantal = true;
-            this.productieInfoUI1.Size = new System.Drawing.Size(572, 352);
-            this.productieInfoUI1.TabIndex = 0;
             // 
             // panel2
             // 
@@ -383,9 +372,9 @@
             this.panel2.Controls.Add(this.groupBox3);
             this.panel2.Controls.Add(this.xprogressbar);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(612, 45);
+            this.panel2.Location = new System.Drawing.Point(683, 45);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(175, 477);
+            this.panel2.Size = new System.Drawing.Size(175, 537);
             this.panel2.TabIndex = 12;
             // 
             // panel3
@@ -399,7 +388,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(787, 522);
+            this.panel3.Size = new System.Drawing.Size(858, 582);
             this.panel3.TabIndex = 6;
             // 
             // xnotepanel
@@ -408,9 +397,9 @@
             this.xnotepanel.Controls.Add(this.xnoteTextbox);
             this.xnotepanel.Controls.Add(this.xnoteButton);
             this.xnotepanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.xnotepanel.Location = new System.Drawing.Point(40, 397);
+            this.xnotepanel.Location = new System.Drawing.Point(40, 457);
             this.xnotepanel.Name = "xnotepanel";
-            this.xnotepanel.Size = new System.Drawing.Size(572, 125);
+            this.xnotepanel.Size = new System.Drawing.Size(643, 125);
             this.xnotepanel.TabIndex = 13;
             // 
             // xnoteTextbox
@@ -425,7 +414,7 @@
             this.xnoteTextbox.Name = "xnoteTextbox";
             this.xnoteTextbox.ReadOnly = true;
             this.xnoteTextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.xnoteTextbox.Size = new System.Drawing.Size(568, 90);
+            this.xnoteTextbox.Size = new System.Drawing.Size(639, 90);
             this.xnoteTextbox.TabIndex = 1;
             this.xnoteTextbox.Text = "sdfsdfsdfsdfs rkjhf r rj oqhjeoir e";
             this.xnoteTextbox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -441,7 +430,7 @@
             this.xnoteButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.xnoteButton.Location = new System.Drawing.Point(0, 0);
             this.xnoteButton.Name = "xnoteButton";
-            this.xnoteButton.Size = new System.Drawing.Size(572, 32);
+            this.xnoteButton.Size = new System.Drawing.Size(643, 32);
             this.xnoteButton.TabIndex = 0;
             this.xnoteButton.Text = "LET OP! Er is een notitie geplaatst!";
             this.xnoteButton.UseVisualStyleBackColor = false;
@@ -454,7 +443,7 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel5.Location = new System.Drawing.Point(40, 0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(747, 45);
+            this.panel5.Size = new System.Drawing.Size(818, 45);
             this.panel5.TabIndex = 5;
             // 
             // xstatusimage
@@ -467,6 +456,20 @@
             this.xstatusimage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.xstatusimage.TabIndex = 1;
             this.xstatusimage.TabStop = false;
+            // 
+            // productieInfoUI1
+            // 
+            this.productieInfoUI1.AllowVerpakkingEdit = false;
+            this.productieInfoUI1.AutoScroll = true;
+            this.productieInfoUI1.BackColor = System.Drawing.Color.White;
+            this.productieInfoUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
+            this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
+            this.productieInfoUI1.Name = "productieInfoUI1";
+            this.productieInfoUI1.ShowAantal = true;
+            this.productieInfoUI1.Size = new System.Drawing.Size(643, 412);
+            this.productieInfoUI1.TabIndex = 0;
             // 
             // mainMenu1
             // 
@@ -575,6 +578,28 @@
             menuButton9.Name = "xopenpdf";
             menuButton9.Text = "Productie Pdf";
             menuButton9.Tooltip = "Open productieformulier als pdf";
+            menuButton10.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton10.CombineImage = null;
+            menuButton10.CombineScale = 1.5D;
+            menuButton10.ContextMenu = null;
+            menuButton10.Enabled = true;
+            menuButton10.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton10.Image")));
+            menuButton10.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton10.Index = 9;
+            menuButton10.Name = "xundo";
+            menuButton10.Text = "Terug Zetten";
+            menuButton10.Tooltip = "Zet een verwijderd of een gereed productie terug naar de normale status";
+            menuButton11.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton11.CombineImage = null;
+            menuButton11.CombineScale = 1.5D;
+            menuButton11.ContextMenu = null;
+            menuButton11.Enabled = true;
+            menuButton11.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton11.Image")));
+            menuButton11.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton11.Index = 10;
+            menuButton11.Name = "xdelete";
+            menuButton11.Text = "Verwijderen";
+            menuButton11.Tooltip = "Productie Verwijderen";
             this.mainMenu1.MenuButtons = new Various.MenuButton[] {
         menuButton1,
         menuButton2,
@@ -584,9 +609,11 @@
         menuButton6,
         menuButton7,
         menuButton8,
-        menuButton9};
+        menuButton9,
+        menuButton10,
+        menuButton11};
             this.mainMenu1.Name = "mainMenu1";
-            this.mainMenu1.Size = new System.Drawing.Size(40, 522);
+            this.mainMenu1.Size = new System.Drawing.Size(40, 582);
             this.mainMenu1.TabIndex = 4;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
             // 
@@ -598,7 +625,7 @@
             this.Controls.Add(this.panel3);
             this.DoubleBuffered = true;
             this.Name = "ProductieForm";
-            this.Size = new System.Drawing.Size(787, 522);
+            this.Size = new System.Drawing.Size(858, 582);
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.xpanelcontainer.ResumeLayout(false);

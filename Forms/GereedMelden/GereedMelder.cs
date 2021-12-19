@@ -6,12 +6,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Input;
-using MetroFramework.Properties;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
-using Resources = ProductieManager.Properties.Resources;
 
-namespace Forms
+namespace Forms.GereedMelden
 {
     public partial class GereedMelder : MetroFramework.Forms.MetroForm
     {
@@ -44,7 +41,7 @@ namespace Forms
         }
 
         public string Naam { get; set; }
-        public string Notitie { get; set; }
+        public string Notitie { get; set; } = string.Empty;
 
         public DialogResult ShowDialog(ProductieFormulier form)
         {
@@ -82,11 +79,22 @@ namespace Forms
                 "Gereed Melden",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+
                 if(_prod.TotaalGemaakt < _prod.Aantal)
                 {
                     var xt = new GereedNotitieForm();
                     if (xt.ShowDialog(_prod) == DialogResult.Cancel) return;
                     Notitie = xt.Reden;
+                }
+
+                var afwijking = _prod.GetAfwijking();
+                if (afwijking is < -10 or > 10)
+                {
+                    var xt = new GereedAfwijkingForm();
+                    if (xt.ShowDialog(_prod) == DialogResult.Cancel) return;
+                    if (string.IsNullOrEmpty(Notitie))
+                        Notitie = xt.Reden;
+                    else Notitie += "\n\n" + xt.Reden;
                 }
                 if (_prod is ProductieFormulier form)
                 {

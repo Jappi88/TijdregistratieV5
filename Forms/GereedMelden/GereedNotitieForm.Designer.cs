@@ -1,5 +1,5 @@
 ﻿
-namespace Forms
+namespace Forms.GereedMelden
 {
     partial class GereedNotitieForm
     {
@@ -33,25 +33,25 @@ namespace Forms
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GereedNotitieForm));
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.xredentextbox = new System.Windows.Forms.TextBox();
+            this.xmaterialen = new System.Windows.Forms.ListView();
+            this.xcolumn1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.xcolmn2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.xanderscheck = new System.Windows.Forms.RadioButton();
+            this.xvollepalletcheck = new System.Windows.Forms.RadioButton();
+            this.xmateriaalopcheck = new System.Windows.Forms.RadioButton();
             this.xfieldmessage = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.xcolumn1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.xcolmn2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.xmaterialen = new System.Windows.Forms.ListView();
-            this.xredentextbox = new System.Windows.Forms.TextBox();
-            this.xmateriaalopcheck = new System.Windows.Forms.RadioButton();
-            this.xvollepalletcheck = new System.Windows.Forms.RadioButton();
-            this.xanderscheck = new System.Windows.Forms.RadioButton();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel4.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -77,11 +77,101 @@ namespace Forms
             this.panel3.Size = new System.Drawing.Size(625, 3);
             this.panel3.TabIndex = 4;
             // 
+            // xredentextbox
+            // 
+            this.xredentextbox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xredentextbox.Location = new System.Drawing.Point(0, 0);
+            this.xredentextbox.Multiline = true;
+            this.xredentextbox.Name = "xredentextbox";
+            this.xredentextbox.Size = new System.Drawing.Size(625, 3);
+            this.xredentextbox.TabIndex = 0;
+            this.xredentextbox.Visible = false;
+            // 
+            // xmaterialen
+            // 
+            this.xmaterialen.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.xmaterialen.CheckBoxes = true;
+            this.xmaterialen.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.xcolumn1,
+            this.xcolmn2});
+            this.xmaterialen.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xmaterialen.FullRowSelect = true;
+            this.xmaterialen.HideSelection = false;
+            this.xmaterialen.LargeImageList = this.imageList1;
+            this.xmaterialen.Location = new System.Drawing.Point(0, 0);
+            this.xmaterialen.Name = "xmaterialen";
+            this.xmaterialen.ShowGroups = false;
+            this.xmaterialen.ShowItemToolTips = true;
+            this.xmaterialen.Size = new System.Drawing.Size(625, 3);
+            this.xmaterialen.SmallImageList = this.imageList1;
+            this.xmaterialen.TabIndex = 1;
+            this.xmaterialen.UseCompatibleStateImageBehavior = false;
+            this.xmaterialen.View = System.Windows.Forms.View.Details;
+            this.xmaterialen.Visible = false;
+            // 
+            // xcolumn1
+            // 
+            this.xcolumn1.Text = "ArtikelNr";
+            this.xcolumn1.Width = 202;
+            // 
+            // xcolmn2
+            // 
+            this.xcolmn2.Text = "Omschrijving";
+            this.xcolmn2.Width = 401;
+            // 
             // imageList1
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "3605318-bolt-bolts-construction-rivet-screw-screws_107870.png");
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.xanderscheck);
+            this.panel2.Controls.Add(this.xvollepalletcheck);
+            this.panel2.Controls.Add(this.xmateriaalopcheck);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.panel2.Location = new System.Drawing.Point(132, 103);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(625, 29);
+            this.panel2.TabIndex = 3;
+            // 
+            // xanderscheck
+            // 
+            this.xanderscheck.AutoSize = true;
+            this.xanderscheck.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xanderscheck.Location = new System.Drawing.Point(433, 2);
+            this.xanderscheck.Name = "xanderscheck";
+            this.xanderscheck.Size = new System.Drawing.Size(175, 21);
+            this.xanderscheck.TabIndex = 4;
+            this.xanderscheck.Text = "Andere reden, namelijk:";
+            this.xanderscheck.UseVisualStyleBackColor = true;
+            this.xanderscheck.CheckedChanged += new System.EventHandler(this.xanderscheck_CheckedChanged);
+            // 
+            // xvollepalletcheck
+            // 
+            this.xvollepalletcheck.AutoSize = true;
+            this.xvollepalletcheck.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xvollepalletcheck.Location = new System.Drawing.Point(184, 2);
+            this.xvollepalletcheck.Name = "xvollepalletcheck";
+            this.xvollepalletcheck.Size = new System.Drawing.Size(236, 21);
+            this.xvollepalletcheck.TabIndex = 3;
+            this.xvollepalletcheck.Text = "Geëindigd op een volle pallet/bak";
+            this.xvollepalletcheck.UseVisualStyleBackColor = true;
+            this.xvollepalletcheck.CheckedChanged += new System.EventHandler(this.xvollepalletcheck_CheckedChanged);
+            // 
+            // xmateriaalopcheck
+            // 
+            this.xmateriaalopcheck.AutoSize = true;
+            this.xmateriaalopcheck.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xmateriaalopcheck.Location = new System.Drawing.Point(6, 2);
+            this.xmateriaalopcheck.Name = "xmateriaalopcheck";
+            this.xmateriaalopcheck.Size = new System.Drawing.Size(170, 21);
+            this.xmateriaalopcheck.TabIndex = 2;
+            this.xmateriaalopcheck.Text = "Materiaal op, namelijk:";
+            this.xmateriaalopcheck.UseVisualStyleBackColor = true;
+            this.xmateriaalopcheck.CheckedChanged += new System.EventHandler(this.xmateriaalopcheck_CheckedChanged);
             // 
             // xfieldmessage
             // 
@@ -146,96 +236,6 @@ namespace Forms
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // xcolumn1
-            // 
-            this.xcolumn1.Text = "ArtikelNr";
-            this.xcolumn1.Width = 202;
-            // 
-            // xcolmn2
-            // 
-            this.xcolmn2.Text = "Omschrijving";
-            this.xcolmn2.Width = 401;
-            // 
-            // xmaterialen
-            // 
-            this.xmaterialen.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.xmaterialen.CheckBoxes = true;
-            this.xmaterialen.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.xcolumn1,
-            this.xcolmn2});
-            this.xmaterialen.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xmaterialen.FullRowSelect = true;
-            this.xmaterialen.HideSelection = false;
-            this.xmaterialen.LargeImageList = this.imageList1;
-            this.xmaterialen.Location = new System.Drawing.Point(0, 0);
-            this.xmaterialen.Name = "xmaterialen";
-            this.xmaterialen.ShowGroups = false;
-            this.xmaterialen.ShowItemToolTips = true;
-            this.xmaterialen.Size = new System.Drawing.Size(625, 3);
-            this.xmaterialen.SmallImageList = this.imageList1;
-            this.xmaterialen.TabIndex = 1;
-            this.xmaterialen.UseCompatibleStateImageBehavior = false;
-            this.xmaterialen.View = System.Windows.Forms.View.Details;
-            this.xmaterialen.Visible = false;
-            // 
-            // xredentextbox
-            // 
-            this.xredentextbox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xredentextbox.Location = new System.Drawing.Point(0, 0);
-            this.xredentextbox.Multiline = true;
-            this.xredentextbox.Name = "xredentextbox";
-            this.xredentextbox.Size = new System.Drawing.Size(625, 3);
-            this.xredentextbox.TabIndex = 0;
-            this.xredentextbox.Visible = false;
-            // 
-            // xmateriaalopcheck
-            // 
-            this.xmateriaalopcheck.AutoSize = true;
-            this.xmateriaalopcheck.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xmateriaalopcheck.Location = new System.Drawing.Point(6, 2);
-            this.xmateriaalopcheck.Name = "xmateriaalopcheck";
-            this.xmateriaalopcheck.Size = new System.Drawing.Size(170, 21);
-            this.xmateriaalopcheck.TabIndex = 2;
-            this.xmateriaalopcheck.Text = "Materiaal op, namelijk:";
-            this.xmateriaalopcheck.UseVisualStyleBackColor = true;
-            this.xmateriaalopcheck.CheckedChanged += new System.EventHandler(this.xmateriaalopcheck_CheckedChanged);
-            // 
-            // xvollepalletcheck
-            // 
-            this.xvollepalletcheck.AutoSize = true;
-            this.xvollepalletcheck.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xvollepalletcheck.Location = new System.Drawing.Point(196, 2);
-            this.xvollepalletcheck.Name = "xvollepalletcheck";
-            this.xvollepalletcheck.Size = new System.Drawing.Size(210, 21);
-            this.xvollepalletcheck.TabIndex = 3;
-            this.xvollepalletcheck.Text = "Geëindigd op volle pallet/bak";
-            this.xvollepalletcheck.UseVisualStyleBackColor = true;
-            this.xvollepalletcheck.CheckedChanged += new System.EventHandler(this.xvollepalletcheck_CheckedChanged);
-            // 
-            // xanderscheck
-            // 
-            this.xanderscheck.AutoSize = true;
-            this.xanderscheck.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xanderscheck.Location = new System.Drawing.Point(433, 2);
-            this.xanderscheck.Name = "xanderscheck";
-            this.xanderscheck.Size = new System.Drawing.Size(175, 21);
-            this.xanderscheck.TabIndex = 4;
-            this.xanderscheck.Text = "Andere reden, namelijk:";
-            this.xanderscheck.UseVisualStyleBackColor = true;
-            this.xanderscheck.CheckedChanged += new System.EventHandler(this.xanderscheck_CheckedChanged);
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.xanderscheck);
-            this.panel2.Controls.Add(this.xvollepalletcheck);
-            this.panel2.Controls.Add(this.xmateriaalopcheck);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.panel2.Location = new System.Drawing.Point(132, 103);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(625, 29);
-            this.panel2.TabIndex = 3;
-            // 
             // GereedNotitieForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -256,10 +256,10 @@ namespace Forms
             this.panel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.panel4.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.panel4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

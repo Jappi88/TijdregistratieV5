@@ -184,6 +184,16 @@ namespace ProductieManager.Rpm.Productie
                                         SecondaryManageType.Read
                                     });
                                 break;
+                            case DbType.Verpakkingen:
+                                localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\Verpaking";
+                                remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\Verpaking";
+                                Manager.Klachten?.Database?.SetSecondaryPath(
+                                    localproductiepath, new SecondaryManageType[]
+                                    {
+                                        SecondaryManageType.Write,
+                                        SecondaryManageType.Read
+                                    });
+                                break;
                             case DbType.Messages:
                                 localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\Chat";
                                 remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\Chat";

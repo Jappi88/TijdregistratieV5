@@ -197,6 +197,7 @@ namespace Controls
             this.xProductieLijst1.UseFilterIndicator = true;
             this.xProductieLijst1.UseFiltering = true;
             this.xProductieLijst1.UseHotControls = false;
+            this.xProductieLijst1.UseHotItem = true;
             this.xProductieLijst1.UseTranslucentHotItem = true;
             this.xProductieLijst1.UseTranslucentSelection = true;
             this.xProductieLijst1.View = System.Windows.Forms.View.Details;
@@ -940,11 +941,11 @@ namespace Controls
             // xmaterialenb
             // 
             this.xmaterialenb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xmaterialenb.Image = global::ProductieManager.Properties.Resources.Box_1_35524;
+            this.xmaterialenb.Image = global::ProductieManager.Properties.Resources.pngegg__1_;
             this.xmaterialenb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xmaterialenb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xmaterialenb.Name = "xmaterialenb";
-            this.xmaterialenb.Size = new System.Drawing.Size(36, 36);
+            this.xmaterialenb.Size = new System.Drawing.Size(47, 36);
             this.xmaterialenb.ToolTipText = "Beheer materialen";
             this.xmaterialenb.Click += new System.EventHandler(this.xmaterialenb_Click);
             // 

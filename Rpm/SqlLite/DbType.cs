@@ -13,6 +13,7 @@
         Versions,
         Messages,
         Klachten,
+        Verpakkingen,
         Alles,
         None
     }

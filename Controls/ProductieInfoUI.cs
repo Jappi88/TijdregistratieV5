@@ -1,17 +1,14 @@
 ﻿using ProductieManager.Properties;
+using Rpm.Misc;
 using Rpm.Productie;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using System.Windows.Navigation;
-using iTextSharp.text.pdf;
-using NPOI.HSSF.Record;
-using Rpm.Misc;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
+using TheArtOfDev.HtmlRenderer.WinForms;
 
 namespace Controls
 {
@@ -27,6 +24,13 @@ namespace Controls
             get => xaantalpanel.Visible;
             set => xaantalpanel.Visible = value;
         }
+
+        public bool AllowVerpakkingEdit
+        {
+            get => verpakkingInstructieUI1.AllowEditMode;
+            set => verpakkingInstructieUI1.AllowEditMode = value;
+        }
+
         public ProductieInfoUI()
         {
             InitializeComponent();
@@ -46,114 +50,65 @@ namespace Controls
                         ProductieLoadWerkplekken(form);
                 }
 
-                int curpos = 0;
-                if (metroTabControl1.SelectedIndex == 0)
+                
+                string txt = String.Empty;
+                HtmlPanel panel = null;
+                switch (metroTabControl1.SelectedIndex)
                 {
-                    //Header Html
-                    curpos = xHeaderHtmlPanel.VerticalScroll.Value;
-                    xHeaderHtmlPanel.Text = Productie.GetHeaderHtmlBody(Title,
-                        Productie.GetImageFromResources(),
-                        new Size(64, 64), BackColor, BackColorGradient, TextColor, true);
-
-                    for (var i = 0; i < 3; i++)
-                    {
-                        xHeaderHtmlPanel.VerticalScroll.Value = curpos;
-                       // Application.DoEvents();
-                    }
-                    return;
+                    case 0:
+                        //Header Html
+                        panel = xHeaderHtmlPanel;
+                        txt = Productie.GetHeaderHtmlBody(Title,
+                            Productie.GetImageFromResources(),
+                            new Size(64, 64), BackColor, BackColorGradient, TextColor, true);
+                        break;
+                    case 1:
+                        //ProductieInfo
+                        panel = xInforHtmlPanel;
+                        txt = Productie.GetProductieInfoHtml("Productie Info",
+                            BackColor, BackColorGradient, TextColor, true);
+                        break;
+                    case 2:
+                        //Notities
+                        panel = xNotitieHtmlPanel;
+                        txt = Productie.GetNotitiesHtml("Notities",
+                            BackColor, BackColorGradient, TextColor, true);
+                        break;
+                    case 3:
+                        //ProductieDatums
+                        panel = xDatumsHtmlPanel;
+                        txt = Productie.GetDatumsHtml("Productie Datums",
+                            BackColor, BackColorGradient, TextColor, true);
+                        break;
+                    case 4:
+                        verpakkingInstructieUI1.AllowEditMode = true;
+                        if (!verpakkingInstructieUI1.IsEditmode)
+                            verpakkingInstructieUI1.InitFields(Productie.VerpakkingsInstructies,
+                                verpakkingInstructieUI1.IsEditmode,
+                                "VerpakkingsInstructies", Color.White, Color.Black, Productie);
+                        else verpakkingInstructieUI1.Productie = Productie;
+                        break;
+                    case 5:
+                        //Materialen
+                        panel = xMaterialenHtmlPanel;
+                        txt = Productie.GetMaterialenHtml("Materialen",
+                            BackColor, BackColorGradient, TextColor, true);
+                        break;
+                    case 6:
+                        //WerkPlaatsen
+                        panel = xWerkPlaatsenHtmlPanel;
+                        txt = Productie.GetWerkplekkenHtml("Werk Plaatsen",
+                            BackColor, BackColorGradient, TextColor, true);
+                        break;
                 }
 
-                if (metroTabControl1.SelectedIndex == 1)
+                if (panel != null)
                 {
-                    //ProductieInfo
-                    curpos = xInforHtmlPanel.VerticalScroll.Value;
-                    xInforHtmlPanel.Text = Productie.GetProductieInfoHtml("Productie Info",
-                        BackColor, BackColorGradient, TextColor, true);
-
+                    int curpos = panel.VerticalScroll.Value;
+                    panel.Text = txt;
                     for (var i = 0; i < 3; i++)
                     {
-                        xInforHtmlPanel.VerticalScroll.Value = curpos;
-                        //Application.DoEvents();
-                    }
-                    return;
-                }
-
-                if (metroTabControl1.SelectedIndex == 2)
-                {
-
-                    //Notities
-                    curpos = xNotitieHtmlPanel.VerticalScroll.Value;
-                    xNotitieHtmlPanel.Text = Productie.GetNotitiesHtml("Notities",
-                        BackColor, BackColorGradient, TextColor, true);
-
-                    for (var i = 0; i < 3; i++)
-                    {
-                        xNotitieHtmlPanel.VerticalScroll.Value = curpos;
-                       // Application.DoEvents();
-                    }
-                    return;
-                }
-
-                if (metroTabControl1.SelectedIndex == 3)
-                {
-                    //ProductieDatums
-                    curpos = xDatumsHtmlPanel.VerticalScroll.Value;
-                    xDatumsHtmlPanel.Text = Productie.GetDatumsHtml("Productie Datums",
-                        BackColor, BackColorGradient, TextColor, true);
-
-                    for (var i = 0; i < 3; i++)
-                    {
-                        xDatumsHtmlPanel.VerticalScroll.Value = curpos;
-                        //Application.DoEvents();
-                    }
-                    return;
-                }
-
-                if (metroTabControl1.SelectedIndex == 4)
-                {
-                    verpakkingInstructieUI1.InitFields(Productie.VerpakkingsInstructies, false,
-                        "VerpakkingsInstructies", Color.White, Color.Black);
-                    ////VerpakkingsInstructies
-                    //curpos = xVerpakkingHtmlPanel.VerticalScroll.Value;
-                    //xVerpakkingHtmlPanel.Text = Productie.GetVerpakkingHtmlText(null, "VerpakkingsInstructies",
-                    //    BackColor, BackColorGradient, TextColor, true);
-
-                    //for (var i = 0; i < 3; i++)
-                    //{
-                    //    xVerpakkingHtmlPanel.VerticalScroll.Value = curpos;
-                    //    ///Application.DoEvents();
-                    //}
-                    //return;
-                }
-
-                if (metroTabControl1.SelectedIndex == 5)
-                {
-
-                    //Materialen
-                    curpos = xMaterialenHtmlPanel.VerticalScroll.Value;
-                    xMaterialenHtmlPanel.Text = Productie.GetMaterialenHtml("Materialen",
-                        BackColor, BackColorGradient, TextColor, true);
-
-                    for (var i = 0; i < 3; i++)
-                    {
-                        xMaterialenHtmlPanel.VerticalScroll.Value = curpos;
-                        //Application.DoEvents();
-                    }
-
-                    return;
-                }
-
-                if (metroTabControl1.SelectedIndex == 6)
-                {
-                    //WerkPlaatsen
-                    curpos = xWerkPlaatsenHtmlPanel.VerticalScroll.Value;
-                    xWerkPlaatsenHtmlPanel.Text = Productie.GetWerkplekkenHtml("Werk Plaatsen",
-                        BackColor, BackColorGradient, TextColor, true);
-
-                    for (var i = 0; i < 3; i++)
-                    {
-                        xWerkPlaatsenHtmlPanel.VerticalScroll.Value = curpos;
-                        //Application.DoEvents();
+                        panel.VerticalScroll.Value = curpos;
                     }
                 }
             }
@@ -228,8 +183,12 @@ namespace Controls
             {
                 xPacketGroup.Visible = true;
                 xaantalpanel.Height = 100;
-                if (aantal > -1)
+                bool changed = xPacketGroup.Tag is VerpakkingInstructie xold && !xold.Equals(instructie);
+                if (aantal > -1 || changed)
                 {
+                    xPacketGroup.Tag = instructie;
+                    if (aantal == -1)
+                        aantal = GetAantal();
                     xpacketvalue.ValueChanged -= Xpacketvalue_ValueChanged;
                     int xpackets = aantal <= 0 ? 0 : (int) Math.Ceiling((double) aantal / instructie.VerpakkenPer);
                     xpacketvalue.SetValue(xpackets);

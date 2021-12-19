@@ -476,10 +476,16 @@
     <Compile Include="Forms\FilterEditor.Designer.cs">
       <DependentUpon>FilterEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\GereedNotitieForm.cs">
+    <Compile Include="Forms\GereedMelden\GereedAfwijkingForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\GereedNotitieForm.Designer.cs">
+    <Compile Include="Forms\GereedMelden\GereedAfwijkingForm.Designer.cs">
+      <DependentUpon>GereedAfwijkingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\GereedMelden\GereedNotitieForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GereedMelden\GereedNotitieForm.Designer.cs">
       <DependentUpon>GereedNotitieForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Klachten\KlachtControl.cs">
@@ -698,10 +704,10 @@
     <Compile Include="Forms\DbUpdater.Designer.cs">
       <DependentUpon>DbUpdater.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\GereedMelder.cs">
+    <Compile Include="Forms\GereedMelden\GereedMelder.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\GereedMelder.Designer.cs">
+    <Compile Include="Forms\GereedMelden\GereedMelder.Designer.cs">
       <DependentUpon>GereedMelder.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\LogForm.cs">
@@ -835,6 +841,12 @@
     </Compile>
     <Compile Include="Forms\VaardighedenForm.Designer.cs">
       <DependentUpon>VaardighedenForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\VerpakkingenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VerpakkingenForm.Designer.cs">
+      <DependentUpon>VerpakkingenForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\VerpakkingInstructieForm.cs">
       <SubType>Form</SubType>
@@ -1044,7 +1056,8 @@
     <Compile Include="Rpm\Productie\TaskManager.cs" />
     <Compile Include="Rpm\Productie\TijdEntry.cs" />
     <Compile Include="Rpm\Productie\UrenLijst.cs" />
-    <Compile Include="Rpm\Productie\VerpakkingInstructie.cs" />
+    <Compile Include="Rpm\Productie\Verpakking\VerpakkingBeheer.cs" />
+    <Compile Include="Rpm\Productie\Verpakking\VerpakkingInstructie.cs" />
     <Compile Include="Rpm\Productie\Werk.cs" />
     <Compile Include="Rpm\Productie\WerkPlek.cs" />
     <Compile Include="Rpm\Productie\Werktijd.cs" />
@@ -1207,7 +1220,10 @@
       <DependentUpon>FilterEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\GereedNotitieForm.resx">
+    <EmbeddedResource Include="Forms\GereedMelden\GereedAfwijkingForm.resx">
+      <DependentUpon>GereedAfwijkingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GereedMelden\GereedNotitieForm.resx">
       <DependentUpon>GereedNotitieForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Klachten\KlachtControl.resx">
@@ -1318,7 +1334,7 @@
     <EmbeddedResource Include="Forms\DbUpdater.resx">
       <DependentUpon>DbUpdater.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\GereedMelder.resx">
+    <EmbeddedResource Include="Forms\GereedMelden\GereedMelder.resx">
       <DependentUpon>GereedMelder.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\LogForm.resx">
@@ -1386,6 +1402,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\VaardighedenForm.resx">
       <DependentUpon>VaardighedenForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VerpakkingenForm.resx">
+      <DependentUpon>VerpakkingenForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\VerpakkingInstructieForm.resx">
       <DependentUpon>VerpakkingInstructieForm.cs</DependentUpon>
@@ -1585,6 +1604,8 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\box_package_icon_64x64.png" />
+    <None Include="Resources\empty_box_package_icon_32x32.png" />
     <None Include="Resources\Leave-80_icon-icons.com_57305_128x128.png" />
     <None Include="Resources\playcircle_32x32.png" />
     <None Include="Resources\Stop_Hand _32x32.png" />

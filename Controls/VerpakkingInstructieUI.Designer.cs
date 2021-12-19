@@ -33,6 +33,9 @@ namespace Controls
         {
             this.components = new System.ComponentModel.Container();
             this.xeditpanel = new System.Windows.Forms.Panel();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.xbulklocatie = new MetroFramework.Controls.MetroTextBox();
+            this.xstandaardlocatie = new MetroFramework.Controls.MetroTextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.xaantelpercolli = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
@@ -44,41 +47,126 @@ namespace Controls
             this.label1 = new System.Windows.Forms.Label();
             this.xverpakkenper = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.xbulklocatie = new MetroFramework.Controls.MetroTextBox();
-            this.xstandaardlocatie = new MetroFramework.Controls.MetroTextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.xpalletsoort = new MetroFramework.Controls.MetroTextBox();
             this.xverpakkingsoort = new MetroFramework.Controls.MetroTextBox();
+            this.htmlPanel1 = new TheArtOfDev.HtmlRenderer.WinForms.HtmlPanel();
+            this.xwijzigPanel = new System.Windows.Forms.Panel();
+            this.xsluiten = new System.Windows.Forms.Button();
+            this.xwijzig = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.htmlPanel1 = new HtmlPanel();
             this.xeditpanel.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xaantelpercolli)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xdozenpercolli)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xdozenperlaag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xlagenpercolli)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xverpakkenper)).BeginInit();
-            this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.xwijzigPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // xeditpanel
             // 
-            this.xeditpanel.Controls.Add(this.groupBox2);
+            this.xeditpanel.AutoScroll = true;
             this.xeditpanel.Controls.Add(this.groupBox3);
+            this.xeditpanel.Controls.Add(this.groupBox2);
             this.xeditpanel.Controls.Add(this.groupBox1);
             this.xeditpanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xeditpanel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xeditpanel.Location = new System.Drawing.Point(5, 5);
             this.xeditpanel.Name = "xeditpanel";
-            this.xeditpanel.Size = new System.Drawing.Size(430, 300);
+            this.xeditpanel.Size = new System.Drawing.Size(538, 303);
             this.xeditpanel.TabIndex = 0;
+            this.xeditpanel.Visible = false;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.xbulklocatie);
+            this.groupBox3.Controls.Add(this.xstandaardlocatie);
+            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox3.Location = new System.Drawing.Point(0, 207);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(538, 86);
+            this.groupBox3.TabIndex = 3;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Locatie";
+            // 
+            // xbulklocatie
+            // 
+            this.xbulklocatie.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            // 
+            // 
+            this.xbulklocatie.CustomButton.Image = null;
+            this.xbulklocatie.CustomButton.Location = new System.Drawing.Point(504, 1);
+            this.xbulklocatie.CustomButton.Name = "";
+            this.xbulklocatie.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.xbulklocatie.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.xbulklocatie.CustomButton.TabIndex = 1;
+            this.xbulklocatie.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.xbulklocatie.CustomButton.UseSelectable = true;
+            this.xbulklocatie.CustomButton.Visible = false;
+            this.xbulklocatie.Lines = new string[0];
+            this.xbulklocatie.Location = new System.Drawing.Point(6, 57);
+            this.xbulklocatie.MaxLength = 32767;
+            this.xbulklocatie.Name = "xbulklocatie";
+            this.xbulklocatie.PasswordChar = '\0';
+            this.xbulklocatie.PromptText = "Type in een bulk locatie...";
+            this.xbulklocatie.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.xbulklocatie.SelectedText = "";
+            this.xbulklocatie.SelectionLength = 0;
+            this.xbulklocatie.SelectionStart = 0;
+            this.xbulklocatie.ShortcutsEnabled = true;
+            this.xbulklocatie.ShowClearButton = true;
+            this.xbulklocatie.Size = new System.Drawing.Size(526, 23);
+            this.xbulklocatie.TabIndex = 8;
+            this.toolTip1.SetToolTip(this.xbulklocatie, "Type in een bulk locatie");
+            this.xbulklocatie.UseSelectable = true;
+            this.xbulklocatie.WaterMark = "Type in een bulk locatie...";
+            this.xbulklocatie.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.xbulklocatie.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            // 
+            // xstandaardlocatie
+            // 
+            this.xstandaardlocatie.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            // 
+            // 
+            this.xstandaardlocatie.CustomButton.Image = null;
+            this.xstandaardlocatie.CustomButton.Location = new System.Drawing.Point(504, 1);
+            this.xstandaardlocatie.CustomButton.Name = "";
+            this.xstandaardlocatie.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.xstandaardlocatie.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.xstandaardlocatie.CustomButton.TabIndex = 1;
+            this.xstandaardlocatie.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.xstandaardlocatie.CustomButton.UseSelectable = true;
+            this.xstandaardlocatie.CustomButton.Visible = false;
+            this.xstandaardlocatie.Lines = new string[0];
+            this.xstandaardlocatie.Location = new System.Drawing.Point(6, 28);
+            this.xstandaardlocatie.MaxLength = 32767;
+            this.xstandaardlocatie.Name = "xstandaardlocatie";
+            this.xstandaardlocatie.PasswordChar = '\0';
+            this.xstandaardlocatie.PromptText = "Type in een standaard locatie...";
+            this.xstandaardlocatie.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.xstandaardlocatie.SelectedText = "";
+            this.xstandaardlocatie.SelectionLength = 0;
+            this.xstandaardlocatie.SelectionStart = 0;
+            this.xstandaardlocatie.ShortcutsEnabled = true;
+            this.xstandaardlocatie.ShowClearButton = true;
+            this.xstandaardlocatie.Size = new System.Drawing.Size(526, 23);
+            this.xstandaardlocatie.TabIndex = 7;
+            this.toolTip1.SetToolTip(this.xstandaardlocatie, "Type in een standaard locatie");
+            this.xstandaardlocatie.UseSelectable = true;
+            this.xstandaardlocatie.WaterMark = "Type in een standaard locatie...";
+            this.xstandaardlocatie.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.xstandaardlocatie.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.xaantelpercolli);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.xdozenpercolli);
@@ -89,9 +177,10 @@ namespace Controls
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.xverpakkenper);
             this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Location = new System.Drawing.Point(3, 91);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox2.Location = new System.Drawing.Point(0, 89);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(424, 118);
+            this.groupBox2.Size = new System.Drawing.Size(538, 118);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Verpakking Aantallen";
@@ -107,7 +196,7 @@ namespace Controls
             0});
             this.xaantelpercolli.Name = "xaantelpercolli";
             this.xaantelpercolli.Size = new System.Drawing.Size(92, 25);
-            this.xaantelpercolli.TabIndex = 10;
+            this.xaantelpercolli.TabIndex = 6;
             this.toolTip1.SetToolTip(this.xaantelpercolli, "Aantal producten per colli");
             // 
             // label5
@@ -131,7 +220,7 @@ namespace Controls
             0});
             this.xdozenpercolli.Name = "xdozenpercolli";
             this.xdozenpercolli.Size = new System.Drawing.Size(92, 25);
-            this.xdozenpercolli.TabIndex = 8;
+            this.xdozenpercolli.TabIndex = 4;
             this.toolTip1.SetToolTip(this.xdozenpercolli, "De aantal dozen per colli");
             // 
             // label4
@@ -155,7 +244,7 @@ namespace Controls
             0});
             this.xdozenperlaag.Name = "xdozenperlaag";
             this.xdozenperlaag.Size = new System.Drawing.Size(92, 25);
-            this.xdozenperlaag.TabIndex = 6;
+            this.xdozenperlaag.TabIndex = 3;
             this.toolTip1.SetToolTip(this.xdozenperlaag, "De aantal dozen/bakken per colli");
             // 
             // label3
@@ -179,7 +268,7 @@ namespace Controls
             0});
             this.xlagenpercolli.Name = "xlagenpercolli";
             this.xlagenpercolli.Size = new System.Drawing.Size(92, 25);
-            this.xlagenpercolli.TabIndex = 4;
+            this.xlagenpercolli.TabIndex = 2;
             this.toolTip1.SetToolTip(this.xlagenpercolli, "De aantal lagen op een colli");
             // 
             // label1
@@ -203,7 +292,7 @@ namespace Controls
             0});
             this.xverpakkenper.Name = "xverpakkenper";
             this.xverpakkenper.Size = new System.Drawing.Size(92, 25);
-            this.xverpakkenper.TabIndex = 2;
+            this.xverpakkenper.TabIndex = 5;
             this.toolTip1.SetToolTip(this.xverpakkenper, "Aantal per verpakking (doos,bak ect)");
             // 
             // label2
@@ -216,100 +305,14 @@ namespace Controls
             this.label2.TabIndex = 0;
             this.label2.Text = "Verpakken Per: ";
             // 
-            // groupBox3
-            // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox3.Controls.Add(this.xbulklocatie);
-            this.groupBox3.Controls.Add(this.xstandaardlocatie);
-            this.groupBox3.Location = new System.Drawing.Point(3, 215);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(424, 86);
-            this.groupBox3.TabIndex = 3;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Locatie";
-            // 
-            // xbulklocatie
-            // 
-            this.xbulklocatie.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            // 
-            // 
-            // 
-            this.xbulklocatie.CustomButton.Image = null;
-            this.xbulklocatie.CustomButton.Location = new System.Drawing.Point(390, 1);
-            this.xbulklocatie.CustomButton.Name = "";
-            this.xbulklocatie.CustomButton.Size = new System.Drawing.Size(21, 21);
-            this.xbulklocatie.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.xbulklocatie.CustomButton.TabIndex = 1;
-            this.xbulklocatie.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.xbulklocatie.CustomButton.UseSelectable = true;
-            this.xbulklocatie.CustomButton.Visible = false;
-            this.xbulklocatie.Lines = new string[0];
-            this.xbulklocatie.Location = new System.Drawing.Point(6, 57);
-            this.xbulklocatie.MaxLength = 32767;
-            this.xbulklocatie.Name = "xbulklocatie";
-            this.xbulklocatie.PasswordChar = '\0';
-            this.xbulklocatie.PromptText = "Type in een bulk locatie...";
-            this.xbulklocatie.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.xbulklocatie.SelectedText = "";
-            this.xbulklocatie.SelectionLength = 0;
-            this.xbulklocatie.SelectionStart = 0;
-            this.xbulklocatie.ShortcutsEnabled = true;
-            this.xbulklocatie.ShowClearButton = true;
-            this.xbulklocatie.Size = new System.Drawing.Size(412, 23);
-            this.xbulklocatie.TabIndex = 2;
-            this.toolTip1.SetToolTip(this.xbulklocatie, "Type in een bulk locatie");
-            this.xbulklocatie.UseSelectable = true;
-            this.xbulklocatie.WaterMark = "Type in een bulk locatie...";
-            this.xbulklocatie.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-            this.xbulklocatie.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
-            // 
-            // xstandaardlocatie
-            // 
-            this.xstandaardlocatie.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            // 
-            // 
-            // 
-            this.xstandaardlocatie.CustomButton.Image = null;
-            this.xstandaardlocatie.CustomButton.Location = new System.Drawing.Point(390, 1);
-            this.xstandaardlocatie.CustomButton.Name = "";
-            this.xstandaardlocatie.CustomButton.Size = new System.Drawing.Size(21, 21);
-            this.xstandaardlocatie.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.xstandaardlocatie.CustomButton.TabIndex = 1;
-            this.xstandaardlocatie.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.xstandaardlocatie.CustomButton.UseSelectable = true;
-            this.xstandaardlocatie.CustomButton.Visible = false;
-            this.xstandaardlocatie.Lines = new string[0];
-            this.xstandaardlocatie.Location = new System.Drawing.Point(6, 28);
-            this.xstandaardlocatie.MaxLength = 32767;
-            this.xstandaardlocatie.Name = "xstandaardlocatie";
-            this.xstandaardlocatie.PasswordChar = '\0';
-            this.xstandaardlocatie.PromptText = "Type in een standaard locatie...";
-            this.xstandaardlocatie.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.xstandaardlocatie.SelectedText = "";
-            this.xstandaardlocatie.SelectionLength = 0;
-            this.xstandaardlocatie.SelectionStart = 0;
-            this.xstandaardlocatie.ShortcutsEnabled = true;
-            this.xstandaardlocatie.ShowClearButton = true;
-            this.xstandaardlocatie.Size = new System.Drawing.Size(412, 23);
-            this.xstandaardlocatie.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.xstandaardlocatie, "Type in een standaard locatie");
-            this.xstandaardlocatie.UseSelectable = true;
-            this.xstandaardlocatie.WaterMark = "Type in een standaard locatie...";
-            this.xstandaardlocatie.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-            this.xstandaardlocatie.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
-            // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.xpalletsoort);
             this.groupBox1.Controls.Add(this.xverpakkingsoort);
-            this.groupBox1.Location = new System.Drawing.Point(3, -4);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(424, 89);
+            this.groupBox1.Size = new System.Drawing.Size(538, 89);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Verpakking Soort";
@@ -322,7 +325,7 @@ namespace Controls
             // 
             // 
             this.xpalletsoort.CustomButton.Image = null;
-            this.xpalletsoort.CustomButton.Location = new System.Drawing.Point(390, 1);
+            this.xpalletsoort.CustomButton.Location = new System.Drawing.Point(504, 1);
             this.xpalletsoort.CustomButton.Name = "";
             this.xpalletsoort.CustomButton.Size = new System.Drawing.Size(21, 21);
             this.xpalletsoort.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -342,7 +345,7 @@ namespace Controls
             this.xpalletsoort.SelectionStart = 0;
             this.xpalletsoort.ShortcutsEnabled = true;
             this.xpalletsoort.ShowClearButton = true;
-            this.xpalletsoort.Size = new System.Drawing.Size(412, 23);
+            this.xpalletsoort.Size = new System.Drawing.Size(526, 23);
             this.xpalletsoort.TabIndex = 1;
             this.toolTip1.SetToolTip(this.xpalletsoort, "Type in een pallet soort");
             this.xpalletsoort.UseSelectable = true;
@@ -358,7 +361,7 @@ namespace Controls
             // 
             // 
             this.xverpakkingsoort.CustomButton.Image = null;
-            this.xverpakkingsoort.CustomButton.Location = new System.Drawing.Point(390, 1);
+            this.xverpakkingsoort.CustomButton.Location = new System.Drawing.Point(504, 1);
             this.xverpakkingsoort.CustomButton.Name = "";
             this.xverpakkingsoort.CustomButton.Size = new System.Drawing.Size(21, 21);
             this.xverpakkingsoort.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -378,7 +381,7 @@ namespace Controls
             this.xverpakkingsoort.SelectionStart = 0;
             this.xverpakkingsoort.ShortcutsEnabled = true;
             this.xverpakkingsoort.ShowClearButton = true;
-            this.xverpakkingsoort.Size = new System.Drawing.Size(412, 23);
+            this.xverpakkingsoort.Size = new System.Drawing.Size(526, 23);
             this.xverpakkingsoort.TabIndex = 0;
             this.toolTip1.SetToolTip(this.xverpakkingsoort, "Type in een verpakking soort");
             this.xverpakkingsoort.UseSelectable = true;
@@ -386,39 +389,81 @@ namespace Controls
             this.xverpakkingsoort.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.xverpakkingsoort.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
+            // htmlPanel1
+            // 
+            this.htmlPanel1.AutoScroll = true;
+            this.htmlPanel1.BackColor = System.Drawing.SystemColors.Window;
+            this.htmlPanel1.BaseStylesheet = null;
+            this.htmlPanel1.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.htmlPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.htmlPanel1.Location = new System.Drawing.Point(5, 5);
+            this.htmlPanel1.Name = "htmlPanel1";
+            this.htmlPanel1.Size = new System.Drawing.Size(538, 303);
+            this.htmlPanel1.TabIndex = 11;
+            this.htmlPanel1.StylesheetLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlStylesheetLoadEventArgs>(this.htmlPanel1_StylesheetLoad);
+            this.htmlPanel1.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.htmlPanel1_ImageLoad);
+            // 
+            // xwijzigPanel
+            // 
+            this.xwijzigPanel.Controls.Add(this.xsluiten);
+            this.xwijzigPanel.Controls.Add(this.xwijzig);
+            this.xwijzigPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.xwijzigPanel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xwijzigPanel.Location = new System.Drawing.Point(5, 308);
+            this.xwijzigPanel.Name = "xwijzigPanel";
+            this.xwijzigPanel.Size = new System.Drawing.Size(538, 40);
+            this.xwijzigPanel.TabIndex = 1;
+            this.xwijzigPanel.Visible = false;
+            // 
+            // xsluiten
+            // 
+            this.xsluiten.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xsluiten.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xsluiten.Location = new System.Drawing.Point(269, 3);
+            this.xsluiten.Name = "xsluiten";
+            this.xsluiten.Size = new System.Drawing.Size(135, 34);
+            this.xsluiten.TabIndex = 9;
+            this.xsluiten.Text = "Annuleren";
+            this.xsluiten.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTip1.SetToolTip(this.xsluiten, "Sluit venster");
+            this.xsluiten.UseVisualStyleBackColor = true;
+            this.xsluiten.Click += new System.EventHandler(this.xsluiten_Click);
+            // 
+            // xwijzig
+            // 
+            this.xwijzig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xwijzig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xwijzig.Image = global::ProductieManager.Properties.Resources.edit__52382;
+            this.xwijzig.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xwijzig.Location = new System.Drawing.Point(410, 3);
+            this.xwijzig.Name = "xwijzig";
+            this.xwijzig.Size = new System.Drawing.Size(122, 35);
+            this.xwijzig.TabIndex = 10;
+            this.xwijzig.Text = "Wijzig";
+            this.xwijzig.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTip1.SetToolTip(this.xwijzig, "Wijzig gegevens");
+            this.xwijzig.UseVisualStyleBackColor = true;
+            this.xwijzig.Click += new System.EventHandler(this.xwijzig_Click);
+            // 
             // toolTip1
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
-            // htmlPanel1
-            // 
-            this.htmlPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.htmlPanel1.AutoScroll = true;
-            this.htmlPanel1.AutoScrollMinSize = new System.Drawing.Size(427, 17);
-            this.htmlPanel1.BackColor = System.Drawing.SystemColors.Window;
-            this.htmlPanel1.BaseStylesheet = null;
-            this.htmlPanel1.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.htmlPanel1.Location = new System.Drawing.Point(8, 8);
-            this.htmlPanel1.Name = "htmlPanel1";
-            this.htmlPanel1.Size = new System.Drawing.Size(427, 297);
-            this.htmlPanel1.TabIndex = 11;
-            this.htmlPanel1.Text = "Verpakking Instructie";
-            this.htmlPanel1.StylesheetLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlStylesheetLoadEventArgs>(this.htmlPanel1_StylesheetLoad);
-            this.htmlPanel1.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.htmlPanel1_ImageLoad);
-            // 
             // VerpakkingInstructieUI
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.xeditpanel);
             this.Controls.Add(this.htmlPanel1);
+            this.Controls.Add(this.xwijzigPanel);
             this.Name = "VerpakkingInstructieUI";
             this.Padding = new System.Windows.Forms.Padding(5);
-            this.Size = new System.Drawing.Size(440, 310);
+            this.Size = new System.Drawing.Size(548, 353);
             this.xeditpanel.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xaantelpercolli)).EndInit();
@@ -426,8 +471,8 @@ namespace Controls
             ((System.ComponentModel.ISupportInitialize)(this.xdozenperlaag)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xlagenpercolli)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xverpakkenper)).EndInit();
-            this.groupBox3.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
+            this.xwijzigPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -454,5 +499,8 @@ namespace Controls
         private MetroFramework.Controls.MetroTextBox xstandaardlocatie;
         private MetroFramework.Controls.MetroTextBox xpalletsoort;
         private HtmlPanel htmlPanel1;
+        private System.Windows.Forms.Panel xwijzigPanel;
+        private System.Windows.Forms.Button xwijzig;
+        private System.Windows.Forms.Button xsluiten;
     }
 }

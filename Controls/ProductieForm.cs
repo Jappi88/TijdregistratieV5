@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using Forms;
-using ProductieManager;
+﻿using Forms;
+using Forms.GereedMelden;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
@@ -12,6 +7,11 @@ using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 using Various;
 
 namespace Controls
@@ -224,6 +224,7 @@ namespace Controls
                                 break;
                         }
 
+                    mainMenu1.Enable("xundo", b.State == ProductieState.Gereed || b.State == ProductieState.Verwijderd);
                     var xrooster = mainMenu1.GetButton("xrooster");
                     if (xrooster != null)
                         xrooster.Image = b.WerkPlekken.Any(x =>
@@ -544,7 +545,34 @@ namespace Controls
                     case "xopenpdf":
                         ShowProductiePdf();
                         break;
+                    case "xundo":
+                        UndoBewerking();
+                        break;
+                    case "xdelete":
+                        RemoveBewerking();
+                        break;
                 }
+        }
+
+        private void RemoveBewerking()
+        {
+            var xselected = CurrentBewerking();
+            if (xselected == null) return;
+            var res = XMessageBox.Show("Wil je de geselecteerde producties helemaal verwijderen?\n\n" +
+                                   "Click op 'Ja' als je helemaal van de database wilt verwijderen.\n" +
+                                   "Click op 'Nee' als je alleen op een verwijderde status wilt te zetten.", "",
+            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            if (res != DialogResult.Cancel)
+            {
+                xselected.RemoveBewerking(res == DialogResult.No, res == DialogResult.Yes);
+            }
+        }
+
+        private void UndoBewerking()
+        {
+            var xselected = CurrentBewerking();
+            if (xselected == null) return;
+            xselected.Undo();
         }
 
         private void ShowWerkTekening()

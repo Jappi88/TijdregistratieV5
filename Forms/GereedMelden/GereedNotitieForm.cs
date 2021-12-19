@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Forms
+namespace Forms.GereedMelden
 {
     public partial class GereedNotitieForm : MetroFramework.Forms.MetroForm
     {

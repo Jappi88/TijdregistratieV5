@@ -15,9 +15,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using ICSharpCode.SharpZipLib;
-using NPOI.SS.Formula.Functions;
 
 namespace Rpm.Productie
 {
@@ -741,14 +738,16 @@ namespace Rpm.Productie
 
                     xsections = xordered;
                     //xsections.Reverse();
-                    var xinstructie = new VerpakkingInstructie();
-                    
+                    var xinstructie = new VerpakkingInstructie
+                    {
+                        ArtikelNr = xreturn.ArtikelNr?.Trim(),
+                        ProductOmschrijving = xreturn.Omschrijving?.Trim()
+                    };
                     xstart = xsections.FindIndex(0,
                         x => Enumerable.Range((int)x.Rect.Left,2).Contains(25) && Enumerable.Range((int)x.Rect.Bottom, 2).Contains(74));
                     if (xstart > -1)
                         xinstructie.VerpakkingType = xsections[xstart].Text.Trim();
                     //verpakkingtype;
-                    xstart = 0;
                     xstart = xsections.FindIndex(0,
                         x => x.Text.ToLower().Trim().StartsWith("bulk locatie"));
                     if (xstart > -1)

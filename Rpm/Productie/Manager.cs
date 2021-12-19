@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using ProductieManager.Rpm.ExcelHelper;
 using ProductieManager.Rpm.Productie;
+using ProductieManager.Rpm.Productie.Verpakking;
 using ProductieManager.Rpm.Settings;
 using ProductieManager.Rpm.Various;
 using Rpm.Klachten;
@@ -11,14 +12,12 @@ using Rpm.Settings;
 using Rpm.SqlLite;
 using Rpm.Various;
 using System;
-using System.Timers;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Timer = System.Timers.Timer;
@@ -39,6 +38,7 @@ namespace Rpm.Productie
         public static readonly string HelpDropUrl =
             "https://www.dropbox.com/s/5xc90j20d5odya6/Help.txt?dl=1";
         // public static LocalService LocalConnection { get; private set; }
+        public static VerpakkingBeheer Verpakkingen { get; private set; }
         public static KlachtBeheer Klachten { get; private set; }
         /// <summary>
         /// De productiechat
@@ -247,6 +247,11 @@ namespace Rpm.Productie
                     Klachten = new KlachtBeheer(DbPath);
                     Klachten.KlachtChanged += OnKlachtChanged;
                     Klachten.KlachtDeleted += OnKlachtDeleted;
+
+                    Verpakkingen = new VerpakkingBeheer(DbPath);
+                    Verpakkingen.VerpakkingChanged += OnVerpakkingChanged;
+                    Verpakkingen.VerpakkingDeleted += OnVerpakkingDeleted;
+
                     DbUpdater = new DatabaseUpdater();
                     BackupInfo = BackupInfo.Load();
                     BewerkingenLijst = new BewerkingLijst();
@@ -612,12 +617,12 @@ namespace Rpm.Productie
                
             });
             _syncTimer?.Start();
-            if (options.CreateWeekOverzichten)
+            _overzichtSyncTimer?.Stop();
+            if (_overzichtSyncTimer != null && options.CreateWeekOverzichten)
             {
                 _overzichtSyncTimer.Interval = options.WeekOverzichtUpdateInterval;
                 _overzichtSyncTimer?.Start();
             }
-            else _overzichtSyncTimer?.Stop();
             //if (!options.GebruikTaken)
             //    Taken?.StopBeheer();
             //else Taken?.StartBeheer();
@@ -656,12 +661,12 @@ namespace Rpm.Productie
                            
                             changedhandler?.Invoke(null, xprog);
                             if (xprog.IsCanceled) break;
-                            var xold = Manager.Database.GetProductie(prod.ProductieNr).Result;
+                            var xold = Database?.GetProductie(prod.ProductieNr).Result;
                             if (xold == null)
                             {
                                 if (addifnotexists)
                                 {
-                                    if (Manager.Database.UpSert(prod).Result)
+                                    if (AddProductie(prod, true).Result.Action == MessageAction.NieweProductie)
                                         xreturn++;
                                 }
 
@@ -863,6 +868,7 @@ namespace Rpm.Productie
         /// Voeg toe een nieuwe productieformulier
         /// </summary>
         /// <param name="prod">De productieformulier om toe te voegen</param>
+        /// <param name="updateifexist"></param>
         /// <returns>Een taak die op de achtergrond een productie toevoegd</returns>
         public static Task<RemoteMessage> AddProductie(ProductieFormulier prod, bool updateifexist)
         {
@@ -900,13 +906,33 @@ namespace Rpm.Productie
 
                     }
                     var xa = prod.Aantal == 1 ? "stuk" : "stuks";
-                   // prod = await ProductieFormulier.UpdateDoorloopTijd(prod);
-                   if (!await Database.UpSert(prod,
+                    // prod = await ProductieFormulier.UpdateDoorloopTijd(prod);
+                    try
+                    {
+                        if (prod.VerpakkingsInstructies != null && Verpakkingen is { Disposed: false })
+                        {
+                            var xver = Verpakkingen.GetVerpakking(prod.ArtikelNr);
+                            if (xver != null)
+                            {
+                                bool thesame = xver.CompareTo(prod.VerpakkingsInstructies);
+                                if (!thesame)
+                                {
+                                    prod.VerpakkingsInstructies = xver;
+                                }
+                                else Verpakkingen.RemoveVerpakking(prod.ArtikelNr);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                    if (!await Database.UpSert(prod,
                        $"[{prod.ArtikelNr}|{prod.ProductieNr}] Nieuwe productie toegevoegd({prod.Aantal} {xa}) met doorlooptijd van {prod.DoorloopTijd} uur."))
                        return new RemoteMessage($"Het is niet gelukt om {prod.ProductieNr} toe te voegen!",
                            MessageAction.None,
                            MsgType.Fout, null, prod, prod.ProductieNr);
-                   xprod = await Database.GetProductie(prod.ProductieNr);
+                    xprod = await Database.GetProductie(prod.ProductieNr);
                    if (xprod != null)
                    {
                        prod = xprod;
@@ -1525,13 +1551,16 @@ namespace Rpm.Productie
             _syncTimer.Start();
         }
 
+        private bool _isCreatingOverzicht;
         private async void _overzichtSyncTimer_Tick(object sender, EventArgs e)
         {
             _overzichtSyncTimer.Stop();
+            if (_isCreatingOverzicht) return;
+            _isCreatingOverzicht = true;
             //laten we controleren naar de instellingen en daar na handelen
             if (Opties is {CreateWeekOverzichten: true})
                 await ExcelWorkbook.UpdateWeekOverzichten();
-
+            _isCreatingOverzicht = false;
             _overzichtSyncTimer.Start();
         }
 
@@ -1889,6 +1918,18 @@ namespace Rpm.Productie
         private static void OnKlachtDeleted(object sender, EventArgs e)
         {
             KlachtDeleted?.Invoke(sender, e);
+        }
+
+        public static event EventHandler VerpakkingChanged;
+        private static void OnVerpakkingChanged(object sender, EventArgs e)
+        {
+            VerpakkingChanged?.Invoke(sender, e);
+        }
+
+        public static event EventHandler VerpakkingDeleted;
+        private static void OnVerpakkingDeleted(object sender, EventArgs e)
+        {
+            VerpakkingDeleted?.Invoke(sender, e);
         }
 
         #region Threadsafe RespondMessage
