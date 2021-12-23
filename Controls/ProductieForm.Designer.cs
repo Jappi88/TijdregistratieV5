@@ -59,6 +59,7 @@
             this.xtoonwerktekening = new System.Windows.Forms.Button();
             this.xOnderbreek = new System.Windows.Forms.Button();
             this.xpanelcontainer = new System.Windows.Forms.Panel();
+            this.productieInfoUI1 = new Controls.ProductieInfoUI();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.xnotepanel = new System.Windows.Forms.Panel();
@@ -66,7 +67,6 @@
             this.xnoteButton = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
             this.xstatusimage = new System.Windows.Forms.PictureBox();
-            this.productieInfoUI1 = new Controls.ProductieInfoUI();
             this.mainMenu1 = new Controls.MainMenu();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -360,6 +360,21 @@
             this.xpanelcontainer.Size = new System.Drawing.Size(643, 412);
             this.xpanelcontainer.TabIndex = 4;
             // 
+            // productieInfoUI1
+            // 
+            this.productieInfoUI1.AllowVerpakkingEdit = false;
+            this.productieInfoUI1.AutoScroll = true;
+            this.productieInfoUI1.BackColor = System.Drawing.Color.White;
+            this.productieInfoUI1.ContextMenuStrip = this.contextMenuStrip1;
+            this.productieInfoUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
+            this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
+            this.productieInfoUI1.Name = "productieInfoUI1";
+            this.productieInfoUI1.ShowAantal = true;
+            this.productieInfoUI1.Size = new System.Drawing.Size(643, 412);
+            this.productieInfoUI1.TabIndex = 0;
+            // 
             // panel2
             // 
             this.panel2.ContextMenuStrip = this.contextMenuStrip1;
@@ -456,20 +471,6 @@
             this.xstatusimage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.xstatusimage.TabIndex = 1;
             this.xstatusimage.TabStop = false;
-            // 
-            // productieInfoUI1
-            // 
-            this.productieInfoUI1.AllowVerpakkingEdit = false;
-            this.productieInfoUI1.AutoScroll = true;
-            this.productieInfoUI1.BackColor = System.Drawing.Color.White;
-            this.productieInfoUI1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
-            this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
-            this.productieInfoUI1.Name = "productieInfoUI1";
-            this.productieInfoUI1.ShowAantal = true;
-            this.productieInfoUI1.Size = new System.Drawing.Size(643, 412);
-            this.productieInfoUI1.TabIndex = 0;
             // 
             // mainMenu1
             // 

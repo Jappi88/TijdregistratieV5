@@ -56,19 +56,14 @@ namespace Controls
             Productie = productie;
             if (Productie != null)
                 VerpakkingInstructie = Productie.VerpakkingsInstructies?.CreateCopy();
-            if (VerpakkingInstructie == null)
-            {
-                htmlPanel1.Text = "";
-                return;
-            }
-            if (IsEditmode)
+            if (IsEditmode && VerpakkingInstructie != null)
             {
                 xeditpanel.Visible = true;
                 htmlPanel1.Visible = false;
 
-                var x = _VerpakkingInstructie;
-                xverpakkingsoort.Text = x?.VerpakkingType?.Trim() ?? "";
-                xpalletsoort.Text = x?.PalletSoort?.Trim() ?? "";
+                var x = VerpakkingInstructie;
+                xverpakkingsoort.Text = x.VerpakkingType?.Trim() ?? "";
+                xpalletsoort.Text = x.PalletSoort?.Trim() ?? "";
                 xstandaardlocatie.Text = x.StandaardLocatie?.Trim() ?? "";
                 xbulklocatie.Text = x.BulkLocatie?.Trim() ?? "";
 
@@ -88,7 +83,7 @@ namespace Controls
                 xeditpanel.Visible = false;
                 htmlPanel1.Visible = true;
                 htmlPanel1.Text =
-                    _VerpakkingInstructie.CreateHtmlText(Title, Color.White, BodyColor, TextColor, true);
+                    _VerpakkingInstructie?.CreateHtmlText(Title, Color.White, BodyColor, TextColor, true) ?? "";
                 xwijzig.Text = "Wijzig";
                 xwijzig.Image = Resources.edit__52382;
             }

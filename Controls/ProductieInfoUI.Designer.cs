@@ -118,6 +118,7 @@ namespace Controls
             this.xHeaderHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xHeaderHtmlPanel.BaseStylesheet = null;
             this.xHeaderHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xHeaderHtmlPanel.IsContextMenuEnabled = false;
             this.xHeaderHtmlPanel.Location = new System.Drawing.Point(4, 4);
             this.xHeaderHtmlPanel.Name = "xHeaderHtmlPanel";
             this.xHeaderHtmlPanel.Size = new System.Drawing.Size(670, 347);
@@ -146,13 +147,15 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xInforHtmlPanel.AutoScroll = true;
-            this.xInforHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(732, 20);
+            this.xInforHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(671, 20);
             this.xInforHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xInforHtmlPanel.BaseStylesheet = null;
             this.xInforHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xInforHtmlPanel.IsContextMenuEnabled = false;
+            this.xInforHtmlPanel.IsSelectionEnabled = false;
             this.xInforHtmlPanel.Location = new System.Drawing.Point(3, 3);
             this.xInforHtmlPanel.Name = "xInforHtmlPanel";
-            this.xInforHtmlPanel.Size = new System.Drawing.Size(732, 576);
+            this.xInforHtmlPanel.Size = new System.Drawing.Size(671, 348);
             this.xInforHtmlPanel.TabIndex = 1;
             this.xInforHtmlPanel.Text = "Info Html Text";
             this.xInforHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
@@ -178,13 +181,15 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xNotitieHtmlPanel.AutoScroll = true;
-            this.xNotitieHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(732, 20);
+            this.xNotitieHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(674, 20);
             this.xNotitieHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xNotitieHtmlPanel.BaseStylesheet = null;
             this.xNotitieHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xNotitieHtmlPanel.IsContextMenuEnabled = false;
+            this.xNotitieHtmlPanel.IsSelectionEnabled = false;
             this.xNotitieHtmlPanel.Location = new System.Drawing.Point(3, 3);
             this.xNotitieHtmlPanel.Name = "xNotitieHtmlPanel";
-            this.xNotitieHtmlPanel.Size = new System.Drawing.Size(732, 576);
+            this.xNotitieHtmlPanel.Size = new System.Drawing.Size(674, 348);
             this.xNotitieHtmlPanel.TabIndex = 11;
             this.xNotitieHtmlPanel.Text = "Notitie Html Text";
             this.xNotitieHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
@@ -210,14 +215,16 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xDatumsHtmlPanel.AutoScroll = true;
-            this.xDatumsHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(732, 20);
+            this.xDatumsHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(671, 20);
             this.xDatumsHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xDatumsHtmlPanel.BaseStylesheet = null;
             this.xDatumsHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xDatumsHtmlPanel.IsContextMenuEnabled = false;
+            this.xDatumsHtmlPanel.IsSelectionEnabled = false;
             this.xDatumsHtmlPanel.Location = new System.Drawing.Point(3, 3);
             this.xDatumsHtmlPanel.Name = "xDatumsHtmlPanel";
             this.xDatumsHtmlPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.xDatumsHtmlPanel.Size = new System.Drawing.Size(732, 576);
+            this.xDatumsHtmlPanel.Size = new System.Drawing.Size(671, 348);
             this.xDatumsHtmlPanel.TabIndex = 6;
             this.xDatumsHtmlPanel.Text = "Datums Html Text";
             this.xDatumsHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
@@ -278,13 +285,15 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xMaterialenHtmlPanel.AutoScroll = true;
-            this.xMaterialenHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(732, 20);
+            this.xMaterialenHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(671, 20);
             this.xMaterialenHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xMaterialenHtmlPanel.BaseStylesheet = null;
             this.xMaterialenHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xMaterialenHtmlPanel.IsContextMenuEnabled = false;
+            this.xMaterialenHtmlPanel.IsSelectionEnabled = false;
             this.xMaterialenHtmlPanel.Location = new System.Drawing.Point(3, 3);
             this.xMaterialenHtmlPanel.Name = "xMaterialenHtmlPanel";
-            this.xMaterialenHtmlPanel.Size = new System.Drawing.Size(732, 576);
+            this.xMaterialenHtmlPanel.Size = new System.Drawing.Size(671, 348);
             this.xMaterialenHtmlPanel.TabIndex = 7;
             this.xMaterialenHtmlPanel.Text = "Materialen Html Text";
             this.xMaterialenHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
@@ -310,13 +319,15 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xWerkPlaatsenHtmlPanel.AutoScroll = true;
-            this.xWerkPlaatsenHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(732, 20);
+            this.xWerkPlaatsenHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(671, 20);
             this.xWerkPlaatsenHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xWerkPlaatsenHtmlPanel.BaseStylesheet = null;
             this.xWerkPlaatsenHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xWerkPlaatsenHtmlPanel.IsContextMenuEnabled = false;
+            this.xWerkPlaatsenHtmlPanel.IsSelectionEnabled = false;
             this.xWerkPlaatsenHtmlPanel.Location = new System.Drawing.Point(3, 3);
             this.xWerkPlaatsenHtmlPanel.Name = "xWerkPlaatsenHtmlPanel";
-            this.xWerkPlaatsenHtmlPanel.Size = new System.Drawing.Size(732, 576);
+            this.xWerkPlaatsenHtmlPanel.Size = new System.Drawing.Size(671, 349);
             this.xWerkPlaatsenHtmlPanel.TabIndex = 9;
             this.xWerkPlaatsenHtmlPanel.Text = "WerkPlaatsen Html Text";
             this.xWerkPlaatsenHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);

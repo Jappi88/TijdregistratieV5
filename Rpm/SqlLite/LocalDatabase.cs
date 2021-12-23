@@ -325,16 +325,17 @@ namespace Rpm.SqlLite
                     return new List<ProductieFormulier>();
                 var prods = new List<ProductieFormulier>();
                 if (ProductieFormulieren != null)
+                {
+                    prods = await ProductieFormulieren.FindAll(validhandler);
                     if (bereik != null)
-                        prods = await ProductieFormulieren.FindAll(bereik.Start, bereik.Stop, validhandler);
-                else prods = await ProductieFormulieren.FindAll(validhandler);
+                        prods = prods.Where(x => x.HeeftGewerkt(bereik)).ToList();
+                }
 
                 if (incgereed && GereedFormulieren != null)
                 {
-                    var xprods = new List<ProductieFormulier>();
+                    var xprods = await GereedFormulieren.FindAll(validhandler);
                     if (bereik != null)
-                        xprods = await GereedFormulieren.FindAll(bereik.Start, bereik.Stop, validhandler);
-                    else xprods = await GereedFormulieren.FindAll(validhandler);
+                        xprods = prods.Where(x => x.HeeftGewerkt(bereik)).ToList();
                     if (xprods.Count > 0)
                         prods.AddRange(xprods);
                 }
@@ -350,21 +351,8 @@ namespace Rpm.SqlLite
             {
                 if (IsDisposed)
                     return new List<Bewerking>();
-                var prods = new List<ProductieFormulier>();
-                if (ProductieFormulieren != null)
-                    if (bereik != null)
-                        prods = await ProductieFormulieren.FindAll(bereik.Start, bereik.Stop, validhandler);
-                    else prods = await ProductieFormulieren.FindAll(validhandler);
-
-                if ((state == ViewState.Alles || state == ViewState.Gereed) && GereedFormulieren != null)
-                {
-                    var xprods = new List<ProductieFormulier>();
-                    if (bereik != null)
-                        xprods = await GereedFormulieren.FindAll(bereik.Start, bereik.Stop, validhandler);
-                    else xprods = await GereedFormulieren.FindAll(validhandler);
-                    if (xprods.Count > 0)
-                        prods.AddRange(xprods);
-                }
+                var prods = await GetAllProducties(state is ViewState.Alles or ViewState.Gereed, filter,
+                    bereik, validhandler);
 
                 var bws = new List<Bewerking>();
                 foreach (var pr in prods)
@@ -377,6 +365,7 @@ namespace Rpm.SqlLite
                             if (filter && !bw.IsAllowed(null,state))
                                 continue;
                             if (validhandler != null && !validhandler.Invoke(bw, null)) continue;
+                            if (bereik != null && !bw.HeeftGewerkt(bereik)) continue;
                             bws.Add(bw);
                         }
                 }
@@ -1517,7 +1506,7 @@ namespace Rpm.SqlLite
                 if (Logger != null && !IsDisposed)
                     try
                     {
-                        var found = await Logger.FindAll(from, to,validhandler);
+                        var found = await Logger.FindAll(new TijdEntry(from, to),validhandler);
                         if (found.Any())
                             logs.AddRange(found);
                         logs.Sort((x, y) => DateTime.Compare(x.Added, y.Added));
@@ -2237,7 +2226,7 @@ namespace Rpm.SqlLite
                         DoProgress(changed, "Instellingen laden...", count, max);
                         try
                         {
-                            var xs = await database.AllSettings.FindAll(dbentry.LastUpdated, DateTime.MaxValue,null);
+                            var xs = await database.AllSettings.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue),null);
                             if (xs is {Count: > 0})
                             {
                                 max = xs.Count;
@@ -2274,7 +2263,7 @@ namespace Rpm.SqlLite
                         token.Token.ThrowIfCancellationRequested();
                         try
                         {
-                            var xs1 = await database.UserAccounts.FindAll(dbentry.LastUpdated, DateTime.MaxValue,null);
+                            var xs1 = await database.UserAccounts.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue),null);
                             if (xs1 is {Count: > 0})
                             {
                                 //count = 0;
@@ -2311,7 +2300,7 @@ namespace Rpm.SqlLite
                         token.Token.ThrowIfCancellationRequested();
                         try
                         {
-                            var xs2 = await database.PersoneelLijst.FindAll(dbentry.LastUpdated, DateTime.MaxValue,null);
+                            var xs2 = await database.PersoneelLijst.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue),null);
                             if (xs2 is {Count: > 0})
                             {
                                 // count = 0;
@@ -2358,8 +2347,7 @@ namespace Rpm.SqlLite
                         try
                         {
                            
-                            var xs3 = await database.ProductieFormulieren?.FindAll(dbentry.LastUpdated,
-                                DateTime.MaxValue,null);
+                            var xs3 = await database.ProductieFormulieren?.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue), null);
                             if (xs3 is {Count: > 0})
                             {
                                 max += xs3.Count;
@@ -2395,8 +2383,7 @@ namespace Rpm.SqlLite
                         token.Token.ThrowIfCancellationRequested();
                         try
                         {
-                            var xs3 = await database.GereedFormulieren?.FindAll(dbentry.LastUpdated,
-                                DateTime.MaxValue,null);
+                            var xs3 = await database.GereedFormulieren?.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue), null);
                             if (xs3 is {Count: > 0})
                             {
                                 max += xs3.Count;

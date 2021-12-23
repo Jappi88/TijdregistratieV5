@@ -55,7 +55,7 @@ namespace Forms.GereedMelden
             this.panel1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.panel1.Location = new System.Drawing.Point(10, 60);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(757, 235);
+            this.panel1.Size = new System.Drawing.Size(843, 332);
             this.panel1.TabIndex = 0;
             // 
             // panel3
@@ -65,7 +65,7 @@ namespace Forms.GereedMelden
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(132, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(625, 235);
+            this.panel3.Size = new System.Drawing.Size(711, 332);
             this.panel3.TabIndex = 4;
             // 
             // xredenen
@@ -83,11 +83,12 @@ namespace Forms.GereedMelden
             this.xredenen.Name = "xredenen";
             this.xredenen.ShowGroups = false;
             this.xredenen.ShowItemToolTips = true;
-            this.xredenen.Size = new System.Drawing.Size(625, 148);
+            this.xredenen.Size = new System.Drawing.Size(711, 245);
             this.xredenen.SmallImageList = this.imageList1;
             this.xredenen.TabIndex = 1;
             this.xredenen.UseCompatibleStateImageBehavior = false;
             this.xredenen.View = System.Windows.Forms.View.Details;
+            this.xredenen.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.xredenen_ItemChecked);
             // 
             // xcolumn1
             // 
@@ -108,7 +109,7 @@ namespace Forms.GereedMelden
             this.xfieldmessage.Dock = System.Windows.Forms.DockStyle.Top;
             this.xfieldmessage.Location = new System.Drawing.Point(0, 0);
             this.xfieldmessage.Name = "xfieldmessage";
-            this.xfieldmessage.Size = new System.Drawing.Size(625, 87);
+            this.xfieldmessage.Size = new System.Drawing.Size(711, 87);
             this.xfieldmessage.TabIndex = 2;
             this.xfieldmessage.Text = "htmlLabel1";
             // 
@@ -118,7 +119,7 @@ namespace Forms.GereedMelden
             this.pictureBox1.Image = global::ProductieManager.Properties.Resources.Private_80_icon_icons_com_57286;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(132, 235);
+            this.pictureBox1.Size = new System.Drawing.Size(132, 332);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -128,9 +129,9 @@ namespace Forms.GereedMelden
             this.panel4.Controls.Add(this.button2);
             this.panel4.Controls.Add(this.button1);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(10, 295);
+            this.panel4.Location = new System.Drawing.Point(10, 392);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(757, 45);
+            this.panel4.Size = new System.Drawing.Size(843, 45);
             this.panel4.TabIndex = 1;
             // 
             // button2
@@ -139,7 +140,7 @@ namespace Forms.GereedMelden
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.Image = global::ProductieManager.Properties.Resources.check_1582;
-            this.button2.Location = new System.Drawing.Point(495, 2);
+            this.button2.Location = new System.Drawing.Point(581, 2);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(128, 38);
             this.button2.TabIndex = 13;
@@ -154,7 +155,7 @@ namespace Forms.GereedMelden
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.button1.Location = new System.Drawing.Point(629, 2);
+            this.button1.Location = new System.Drawing.Point(715, 2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(125, 38);
             this.button1.TabIndex = 12;
@@ -167,12 +168,10 @@ namespace Forms.GereedMelden
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(777, 350);
+            this.ClientSize = new System.Drawing.Size(863, 447);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel4);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(777, 600);
             this.MinimumSize = new System.Drawing.Size(777, 350);
             this.Name = "GereedAfwijkingForm";
             this.Padding = new System.Windows.Forms.Padding(10, 60, 10, 10);

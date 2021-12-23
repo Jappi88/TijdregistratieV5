@@ -79,14 +79,15 @@ namespace Forms.GereedMelden
                 "Gereed Melden",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-
-                if(_prod.TotaalGemaakt < _prod.Aantal)
+                _prod.AantalGemaakt = (int)xaantal.Value;
+                if (_prod.TotaalGemaakt < _prod.Aantal)
                 {
                     var xt = new GereedNotitieForm();
                     if (xt.ShowDialog(_prod) == DialogResult.Cancel) return;
                     Notitie = xt.Reden;
                 }
 
+                
                 var afwijking = _prod.GetAfwijking();
                 if (afwijking is < -10 or > 10)
                 {
@@ -94,7 +95,7 @@ namespace Forms.GereedMelden
                     if (xt.ShowDialog(_prod) == DialogResult.Cancel) return;
                     if (string.IsNullOrEmpty(Notitie))
                         Notitie = xt.Reden;
-                    else Notitie += "\n\n" + xt.Reden;
+                    else Notitie += $"\n\nDe reden voor een te hoge 'PerUur' afwijking van '{afwijking}%':\n\n" + xt.Reden?.Trim().Split(':').LastOrDefault()?.Trim();
                 }
                 if (_prod is ProductieFormulier form)
                 {

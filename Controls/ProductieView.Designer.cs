@@ -33,7 +33,6 @@ namespace Controls
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieView));
             Various.MenuButton menuButton1 = new Various.MenuButton();
             Various.MenuButton menuButton2 = new Various.MenuButton();
             Various.MenuButton menuButton3 = new Various.MenuButton();
@@ -47,6 +46,7 @@ namespace Controls
             Various.MenuButton menuButton11 = new Various.MenuButton();
             Various.MenuButton menuButton12 = new Various.MenuButton();
             Various.MenuButton menuButton13 = new Various.MenuButton();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieView));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.xspeciaalroosterbutton = new System.Windows.Forms.Button();
@@ -94,6 +94,7 @@ namespace Controls
             this.xtabimages = new System.Windows.Forms.ImageList(this.components);
             this.takenManager1 = new Controls.TakenManager();
             this.mainMenu1 = new Controls.MainMenu();
+            this.xMaakWeekOverzichtToolstrip = new System.Windows.Forms.ToolStripButton();
             this.panel6.SuspendLayout();
             this.xToolButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -182,7 +183,8 @@ namespace Controls
             this.xverpakkingen,
             this.xklachten,
             this.xcorruptedfilesbutton,
-            this.xMissingTekening});
+            this.xMissingTekening,
+            this.xMaakWeekOverzichtToolstrip});
             this.xToolButtons.Location = new System.Drawing.Point(5, 0);
             this.xToolButtons.Name = "xToolButtons";
             this.xToolButtons.Size = new System.Drawing.Size(1026, 39);
@@ -851,6 +853,16 @@ namespace Controls
             this.mainMenu1.TabIndex = 27;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
             // 
+            // xMaakWeekOverzichtToolstrip
+            // 
+            this.xMaakWeekOverzichtToolstrip.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xMaakWeekOverzichtToolstrip.Image = ((System.Drawing.Image)(resources.GetObject("xMaakWeekOverzichtToolstrip.Image")));
+            this.xMaakWeekOverzichtToolstrip.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xMaakWeekOverzichtToolstrip.Name = "xMaakWeekOverzichtToolstrip";
+            this.xMaakWeekOverzichtToolstrip.Size = new System.Drawing.Size(23, 36);
+            this.xMaakWeekOverzichtToolstrip.Text = "Creëer Week Overzicht";
+            this.xMaakWeekOverzichtToolstrip.Click += new System.EventHandler(this.xMaakWeekOverzichtToolstrip_Click);
+            // 
             // ProductieView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -927,5 +939,6 @@ namespace Controls
         private ToolStripButton xMissingTekening;
         private ToolStripButton xklachten;
         private ToolStripButton xverpakkingen;
+        private ToolStripButton xMaakWeekOverzichtToolstrip;
     }
 }

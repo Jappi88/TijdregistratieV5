@@ -203,6 +203,22 @@ namespace Rpm.Productie
             return dt;
         }
 
+        public DateTime GestartOp(TijdEntry bereik)
+        {
+            if (Tijden?.Uren == null)
+                return _gestartop;
+            DateTime xret = default;
+            foreach (var uur in Tijden.Uren)
+            {
+                var t = uur.CreateRange(bereik.Start, bereik.Stop);
+                if (t == null) continue;
+                if (xret.IsDefault() || t.Start < xret)
+                    xret = t.Start;
+            }
+
+            return xret;
+        }
+
         public DateTime GestoptOp()
         {
             if (Werk == null)
@@ -221,6 +237,23 @@ namespace Rpm.Productie
                     dt = per.GestoptOp(this);
             return dt;
         }
+
+        public DateTime GestoptOp(TijdEntry bereik)
+        {
+            if (Tijden?.Uren == null)
+                return _gestoptop;
+            DateTime xret = default;
+            foreach (var uur in Tijden.Uren)
+            {
+                var t = uur.CreateRange(bereik.Start, bereik.Stop);
+                if (t == null) continue;
+               
+                if (t.Stop > xret)
+                    xret = t.Stop;
+            }
+            return xret;
+        }
+
 
         public void UpdateStoringWerkplekken()
         {
@@ -483,6 +516,20 @@ namespace Rpm.Productie
                         .TotalHours);
 
             return Math.Round(tijd, 2);
+        }
+
+        public bool HeeftGewerkt(TijdEntry bereik)
+        {
+            try
+            {
+                if (Tijden == null || Tijden.Count == 0) return false;
+                return Tijden.ContainsBereik(bereik);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
         }
 
         public Dictionary<DateTime, DateTime> GetStoringen()

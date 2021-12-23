@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Rpm.Productie;
+using Rpm.Various;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Rpm.Various;
 
 namespace Rpm.SqlLite
 {
@@ -12,9 +12,9 @@ namespace Rpm.SqlLite
         public Task<T> FindOne(string id);
         public Task<List<T>> FindAll();
         public Task<List<T>> FindAll(IsValidHandler validhandler);
+        public Task<List<T>> FindAll(TijdEntry bereik, IsValidHandler validhandler);
         public Task<List<string>> GetAllIDs(bool checksecondary);
         public Task<List<string>> GetAllPaths(bool checksecondary);
-        public Task<List<T>> FindAll(DateTime vanaf, DateTime tot, IsValidHandler validhandler);
         public Task<List<T>> FindAll(string[] ids);
         public Task<List<T>> FindAll(string criteria, bool fullmatch);
         public Task<bool> Replace(string oldid, T newitem, bool onlylocal);

@@ -42,11 +42,11 @@ namespace Forms.GereedMelden
             this.xanderscheck = new System.Windows.Forms.RadioButton();
             this.xvollepalletcheck = new System.Windows.Forms.RadioButton();
             this.xmateriaalopcheck = new System.Windows.Forms.RadioButton();
-            this.xfieldmessage = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.xfieldmessage = new TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -57,8 +57,6 @@ namespace Forms.GereedMelden
             // panel1
             // 
             this.panel1.Controls.Add(this.panel3);
-            this.panel1.Controls.Add(this.panel2);
-            this.panel1.Controls.Add(this.xfieldmessage);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -69,21 +67,23 @@ namespace Forms.GereedMelden
             // 
             // panel3
             // 
-            this.panel3.Controls.Add(this.xredentextbox);
             this.panel3.Controls.Add(this.xmaterialen);
+            this.panel3.Controls.Add(this.xredentextbox);
+            this.panel3.Controls.Add(this.panel2);
+            this.panel3.Controls.Add(this.xfieldmessage);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(132, 132);
+            this.panel3.Location = new System.Drawing.Point(132, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(625, 3);
+            this.panel3.Size = new System.Drawing.Size(625, 135);
             this.panel3.TabIndex = 4;
             // 
             // xredentextbox
             // 
             this.xredentextbox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xredentextbox.Location = new System.Drawing.Point(0, 0);
+            this.xredentextbox.Location = new System.Drawing.Point(0, 136);
             this.xredentextbox.Multiline = true;
             this.xredentextbox.Name = "xredentextbox";
-            this.xredentextbox.Size = new System.Drawing.Size(625, 3);
+            this.xredentextbox.Size = new System.Drawing.Size(625, 0);
             this.xredentextbox.TabIndex = 0;
             this.xredentextbox.Visible = false;
             // 
@@ -98,11 +98,11 @@ namespace Forms.GereedMelden
             this.xmaterialen.FullRowSelect = true;
             this.xmaterialen.HideSelection = false;
             this.xmaterialen.LargeImageList = this.imageList1;
-            this.xmaterialen.Location = new System.Drawing.Point(0, 0);
+            this.xmaterialen.Location = new System.Drawing.Point(0, 136);
             this.xmaterialen.Name = "xmaterialen";
             this.xmaterialen.ShowGroups = false;
             this.xmaterialen.ShowItemToolTips = true;
-            this.xmaterialen.Size = new System.Drawing.Size(625, 3);
+            this.xmaterialen.Size = new System.Drawing.Size(625, 0);
             this.xmaterialen.SmallImageList = this.imageList1;
             this.xmaterialen.TabIndex = 1;
             this.xmaterialen.UseCompatibleStateImageBehavior = false;
@@ -132,9 +132,9 @@ namespace Forms.GereedMelden
             this.panel2.Controls.Add(this.xmateriaalopcheck);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.panel2.Location = new System.Drawing.Point(132, 103);
+            this.panel2.Location = new System.Drawing.Point(0, 108);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(625, 29);
+            this.panel2.Size = new System.Drawing.Size(625, 28);
             this.panel2.TabIndex = 3;
             // 
             // xanderscheck
@@ -172,18 +172,6 @@ namespace Forms.GereedMelden
             this.xmateriaalopcheck.Text = "Materiaal op, namelijk:";
             this.xmateriaalopcheck.UseVisualStyleBackColor = true;
             this.xmateriaalopcheck.CheckedChanged += new System.EventHandler(this.xmateriaalopcheck_CheckedChanged);
-            // 
-            // xfieldmessage
-            // 
-            this.xfieldmessage.Dock = System.Windows.Forms.DockStyle.Top;
-            this.xfieldmessage.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xfieldmessage.Location = new System.Drawing.Point(132, 0);
-            this.xfieldmessage.Name = "xfieldmessage";
-            this.xfieldmessage.Size = new System.Drawing.Size(625, 103);
-            this.xfieldmessage.TabIndex = 1;
-            this.xfieldmessage.Text = "Je hebt {0} minder gemaakt dan de gevraagde aantal...\r\nWat is de reden dat je {1}" +
-    " eerder wilt afsluiten?";
-            this.xfieldmessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pictureBox1
             // 
@@ -236,6 +224,17 @@ namespace Forms.GereedMelden
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // xfieldmessage
+            // 
+            this.xfieldmessage.AutoSize = false;
+            this.xfieldmessage.BackColor = System.Drawing.SystemColors.Window;
+            this.xfieldmessage.BaseStylesheet = null;
+            this.xfieldmessage.Dock = System.Windows.Forms.DockStyle.Top;
+            this.xfieldmessage.Location = new System.Drawing.Point(0, 0);
+            this.xfieldmessage.Name = "xfieldmessage";
+            this.xfieldmessage.Size = new System.Drawing.Size(625, 108);
+            this.xfieldmessage.TabIndex = 3;
+            // 
             // GereedNotitieForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -268,7 +267,6 @@ namespace Forms.GereedMelden
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Label xfieldmessage;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button button2;
@@ -282,5 +280,6 @@ namespace Forms.GereedMelden
         private System.Windows.Forms.RadioButton xanderscheck;
         private System.Windows.Forms.RadioButton xvollepalletcheck;
         private System.Windows.Forms.RadioButton xmateriaalopcheck;
+        private TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel xfieldmessage;
     }
 }

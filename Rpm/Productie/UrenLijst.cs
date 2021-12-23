@@ -128,6 +128,22 @@ namespace Rpm.Productie
             }
         }
 
+        public bool ContainsBereik(TijdEntry bereik)
+        {
+            try
+            {
+                if (Count == 0) return false;
+                return Uren.Any(x =>
+                    (x.Start >= bereik.Start && x.Start < bereik.Stop) ||
+                    x.Stop > bereik.Start && x.Stop <= bereik.Stop);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
         public TijdEntry Add(TijdEntry entry)
         {
             bool x = false;
@@ -420,6 +436,8 @@ namespace Rpm.Productie
                 {
                     tijden.Add(xtmp);
                     tijd += xtmp.TijdGewerkt(rooster, exclude, SpecialeRoosters);
+                    if(xtmp.Stop > tot)
+                        Console.WriteLine("here!");
                 }
             });
             if (tijden.Count == 0)

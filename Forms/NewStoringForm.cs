@@ -57,9 +57,10 @@ namespace Forms
             this.Invalidate();
             Plek = plek;
             _onderbreking = storing == null ? new Storing() : storing.CreateCopy();
-            _onderbreking.IsVerholpen = isverholpen;
-            if (isverholpen)
+           
+            if (isverholpen && !_onderbreking.IsVerholpen)
                 _onderbreking.Gestopt = DateTime.Now;
+            _onderbreking.IsVerholpen = isverholpen;
             _onderbreking.WerkRooster = plek.Tijden.WerkRooster;
             _onderbreking.Path = plek.Path;
             _onderbreking.WerkPlek = plek.Naam;

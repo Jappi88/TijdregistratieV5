@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Timers;
 using LiteDB;
+using Rpm.Productie;
 using Rpm.Various;
 
 namespace Rpm.SqlLite
@@ -242,6 +243,37 @@ namespace Rpm.SqlLite
             });
         }
 
+        public Task<List<T>> FindAll(TijdEntry bereik, IsValidHandler validhandler)
+        {
+            return Task.Run(async () =>
+            {
+                var xreturn = new List<T>();
+                try
+                {
+                    switch (InstanceType)
+                    {
+                        case DbInstanceType.LiteDb:
+                            if (LocalDbCollection == null) throw new NullReferenceException();
+                            xreturn = GetQueryItems(LocalDbCollection.Query());
+                            break;
+                        case DbInstanceType.MultipleFiles:
+                            if (MultiFiles == null) throw new NullReferenceException();
+                            xreturn = MultiFiles.GetEntries<T>(validhandler);
+                            break;
+                        case DbInstanceType.Server:
+                            if (ServerDb == null) throw new NullReferenceException();
+                            xreturn = await ServerDb.GetAllInstances<T>();
+                            break;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+
+                return xreturn;
+            });
+        }
+
         public Task<List<string>> GetAllIDs(bool checksecondary)
         {
             return Task.Run(() =>
@@ -359,37 +391,6 @@ namespace Rpm.SqlLite
                             break;
                         case DbInstanceType.Server:
                             if (ServerDb == null) throw new NullReferenceException();
-                            break;
-                    }
-                }
-                catch
-                {
-                }
-
-                return xreturn;
-            });
-        }
-
-        public Task<List<T>> FindAll(DateTime vanaf, DateTime tot, IsValidHandler validhandler)
-        {
-            return Task.Run(async () =>
-            {
-                var xreturn = new List<T>();
-                try
-                {
-                    switch (InstanceType)
-                    {
-                        case DbInstanceType.LiteDb:
-                            if (LocalDbCollection == null) throw new NullReferenceException();
-                            xreturn = LocalDbCollection.FindAll().ToList();
-                            break;
-                        case DbInstanceType.MultipleFiles:
-                            if (MultiFiles == null) throw new NullReferenceException();
-                            xreturn = MultiFiles.GetEntries<T>(vanaf, tot,validhandler);
-                            break;
-                        case DbInstanceType.Server:
-                            if (ServerDb == null) throw new NullReferenceException();
-                            xreturn = await ServerDb.GetLatestEntries<T>(Type, vanaf, tot);
                             break;
                     }
                 }

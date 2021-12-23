@@ -62,7 +62,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -278,6 +278,12 @@
     <Compile Include="Controls\MateriaalUI.Designer.cs">
       <DependentUpon>MateriaalUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ObjectEditorUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ObjectEditorUI.Designer.cs">
+      <DependentUpon>ObjectEditorUI.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PersoonIndeling.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -458,6 +464,12 @@
     <Compile Include="Forms\EmailHostForm.Designer.cs">
       <DependentUpon>EmailHostForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Excel\CreateWeekExcelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Excel\CreateWeekExcelForm.Designer.cs">
+      <DependentUpon>CreateWeekExcelForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Excel\ExcelOptiesForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -589,6 +601,12 @@
     </Compile>
     <Compile Include="Forms\NiewProductieForm.Designer.cs">
       <DependentUpon>NiewProductieForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ObjectEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectEditForm.Designer.cs">
+      <DependentUpon>ObjectEditForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\OpenTakenForm.cs">
       <SubType>Form</SubType>
@@ -1123,6 +1141,9 @@
     <EmbeddedResource Include="Controls\MateriaalUI.resx">
       <DependentUpon>MateriaalUI.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ObjectEditorUI.resx">
+      <DependentUpon>ObjectEditorUI.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\PersoonIndeling.resx">
       <DependentUpon>PersoonIndeling.cs</DependentUpon>
     </EmbeddedResource>
@@ -1210,6 +1231,9 @@
     <EmbeddedResource Include="Forms\EmailHostForm.resx">
       <DependentUpon>EmailHostForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Excel\CreateWeekExcelForm.resx">
+      <DependentUpon>CreateWeekExcelForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Excel\ExcelOptiesForm.resx">
       <DependentUpon>ExcelOptiesForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1276,6 +1300,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NiewProductieForm.resx">
       <DependentUpon>NiewProductieForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectEditForm.resx">
+      <DependentUpon>ObjectEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OpenTakenForm.resx">
       <DependentUpon>OpenTakenForm.cs</DependentUpon>

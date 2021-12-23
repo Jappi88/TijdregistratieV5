@@ -9,11 +9,17 @@ using Rpm.Various;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Resources;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
+using NPOI.SS.Formula.Functions;
+using NPOI.XWPF.UserModel;
 using Rpm.Misc;
+using ICell = NPOI.SS.UserModel.ICell;
 
 // ReSharper disable All
 
@@ -24,81 +30,6 @@ namespace ProductieManager.Rpm.ExcelHelper
     /// </summary>
     public static class ExcelWorkbook
     {
-        ///// <summary>
-        ///// De productie Columns
-        ///// </summary>
-        //public static string[] ProductieColumns =
-        //{
-        //    "ArtikelNr", "ProductieNr", "Omschrijving", "Bewerking Naam", "Status",
-        //    "Start Datum", "Eind Datum", "Tijd Gewerkt(uur)", "Productie Aantal",
-        //    "Aantal Gemaakt", "Actueel P/u", "Per Uur","Afwijking P/u(%)","Gemiddeld Actueel P/u", "Gemiddeld Afwijking P/u(%)", "Aantal Personen",
-        //    "Werkplekken", "Personen"
-        //};
-
-        ///// <summary>
-        ///// Verkrijg een column beschrijving
-        ///// </summary>
-        ///// <param name="colmn">De naam van de column</param>
-        ///// <returns>De column omschrijving</returns>
-        //public static string GetProductieColumnOmschrijving(string colmn)
-        //{
-        //    var x = ProductieColumns.FirstOrDefault(x =>
-        //        string.Equals(x, colmn, StringComparison.CurrentCultureIgnoreCase));
-        //    if (string.IsNullOrEmpty(x)) return colmn;
-        //    switch (x.ToLower())
-        //    {
-        //        case "productienr":
-        //            return "Unieke nr dat de productie representeerd.";
-        //        case "artikelnr":
-        //            return "Product artikel nummer.";
-        //        case "omschrijving":
-        //            return "De omschrijving van de productie.";
-        //        case "bewerking naam":
-        //            return "Bewerking naam.";
-        //        case "status":
-        //            return "Huidige status van de bewerking (Gestart,gestopt,gereed of verwijderd).";
-        //        case "start datum":
-        //            return "De datum waarop de bewerking is gestart.";
-        //        case "eind datum":
-        //            return "De tijd waarop de bewerking is gestopt.";
-        //        case "tijd gewerkt":
-        //            return "De aantal gewerkte uren aan de bewerking.";
-        //        case "productie aantal":
-        //            return "Aantal om te produceren";
-        //        case "aantal gemaakt":
-        //            return "Aantal gemaakt";
-        //        case "actueel p/u":
-        //            return "Actuele aantal per uur";
-        //        case "per uur":
-        //            return "Aantal per uur dat bekend is volgens de productie formulier";
-        //        case "afwijking p/u":
-        //            return
-        //                "Percentage afwijking tussen de actuele aantal per uur en de aantal die bekend is.";
-        //        case "gemiddeld actueel p/u":
-        //            return "Dit is de gemiddelde actuele aantal per uur op basis van alle bewerkingen met de zelfde artikel nummer en de bewerking naam";
-        //        case "afwijking gemiddeld p/u":
-        //            return "Percentage afwijking van de gemiddeld actuele per uur op basis van wat er bekend is";
-        //        case "aantal personen":
-        //            return "De aantal personen gewerkt aan de bewerking";
-        //        case "werkplekken":
-        //            return "De werkplaatsen gebruikt voor de bewerking";
-        //        case "personen":
-        //            return "De personen die aan de bewerking hebben gewerkt";
-        //    }
-
-        //    return colmn;
-        //}
-
-        ///// <summary>
-        ///// De productie columns die verborgen moeten worden
-        ///// </summary>
-        //public static string[] HiddenProductieColumns =
-        //{
-        //    "ProductieNr", "Omschrijving",
-        //    "Start Datum", "Eind Datum", "Productie Aantal",
-        //    "Productie Aantal", "Per Uur",
-        //    "Personen"
-        //};
 
         /// <summary>
         /// De storing columns
@@ -110,12 +41,58 @@ namespace ProductieManager.Rpm.ExcelHelper
             "Productie Omschrijving"
         };
 
+        public static string[] WerkPlekColumns =
+        {
+            "ArtikelNr", "ProductieNr",  "Status", "Naam", "Omschrijving", "Aantal", "Aantal Gemaakt","PerUur","Actueel P/u", "Gestart Op",
+            "Gestopt Op", "Tijd Gewerkt","Personen", "#Storingen"
+        };
+
+        public static object GetValue(WerkPlek plek, string value, TijdEntry bereik)
+        {
+            if (plek == null || string.IsNullOrEmpty(value)) return null;
+            double xtijd = 0;
+            switch (value.ToLower())
+            {
+                case "peruur":
+                    return plek.PerUurBase;
+                case "actueel p/u":
+                    return plek.PerUur;
+                case "aantal":
+                    return plek.Werk.Aantal;
+                case "aantal gemaakt":
+                    return bereik == null ? plek.ActueelAantalGemaakt : plek.GetAantalGemaakt(bereik.Start, bereik.Stop, ref xtijd, true);
+                case "gestart op":
+                    return plek.GestartOp(bereik);
+                case "gestopt op":
+                    return plek.GestoptOp(bereik);
+                case "tijd gewerkt":
+                    return bereik == null ? plek.TijdAanGewerkt() : plek.TijdAanGewerkt(bereik.Start, bereik.Stop);
+                case "personen":
+                    return plek.PersonenLijst;
+                case "#storingen":
+                    return plek.Storingen.Count;
+                case "status":
+                    return Enum.GetName(typeof(ProductieState), plek.Werk.State);
+            }
+            var prop = plek.GetPropValue(value);
+            if (prop == null)
+            {
+                return "N.V.T.";
+            }
+            return prop;
+        }
+
 
         /// <summary>
         /// Verborgen storing columns
         /// </summary>
         public static string[] HiddenStoringColumns =
         {
+        };
+
+        public static string[] HiddenWerkPlekColumns =
+        {
+            "Naam", "PerUur"
         };
 
         private static ICellStyle GetBorderStyle(XSSFWorkbook workbook)
@@ -386,17 +363,22 @@ namespace ProductieManager.Rpm.ExcelHelper
             {
                 for (var i = startrow; i < startrow + rows; i++)
                 {
-                    var row = sheet.CreateRow(i);
+                    var row = sheet.GetRow(i)??sheet.CreateRow(i);
                     for (var j = startcell; j < startcell + cells; j++)
                         row.CreateCell(j);
                 }
 
                 var cra = new CellRangeAddress(startrow, startrow + rows - 1, startcell, startcell + cells - 1);
                 sheet.AddMergedRegion(cra);
-
+                int xwidth = 2;
+                RegionUtil.SetBorderTop(xwidth, cra, sheet);
+                RegionUtil.SetBorderBottom(xwidth, cra, sheet);
+                RegionUtil.SetBorderLeft(xwidth, cra, sheet);
+                RegionUtil.SetBorderRight(xwidth, cra, sheet);
                 var cell = sheet.GetRow(startrow).GetCell(startcell);
                 cell.CellStyle = style;
                 cell.SetCellValue(header);
+               
             }
         }
 
@@ -408,9 +390,10 @@ namespace ProductieManager.Rpm.ExcelHelper
         /// <param name="textalign">Waar de tekst lokatie zou moeten zijn</param>
         /// <param name="fontheight">De grootte van de tekst</param>
         /// <param name="fontcolor">Text kleur</param>
+        /// <param name="border"></param>
         /// <returns>De nieuw aangemaakte style met de opgegeven argumenten</returns>
         public static ICellStyle CreateStyle(XSSFWorkbook workbook, bool isbold, HorizontalAlignment textalign,
-            int fontheight, short fontcolor)
+            int fontheight, short fontcolor, BorderStyle border = BorderStyle.None)
         {
             var cellStyleBorder = GetBorderStyle(workbook);
             cellStyleBorder.Alignment = textalign;
@@ -420,6 +403,10 @@ namespace ProductieManager.Rpm.ExcelHelper
             cellStylefont.Color = fontcolor;
             cellStylefont.FontHeightInPoints = fontheight;
             cellStyleBorder.SetFont(cellStylefont);
+            cellStyleBorder.BorderBottom = border;
+            cellStyleBorder.BorderLeft = border;
+            cellStyleBorder.BorderRight = border;
+            cellStyleBorder.BorderTop = border;
             return cellStyleBorder;
         }
 
@@ -462,6 +449,244 @@ namespace ProductieManager.Rpm.ExcelHelper
         //}
 
         public delegate bool IsRunningHandler(ProgressArg arg);
+
+        public static bool CreateColumns(XSSFWorkbook workbook, ISheet sheet,int startrow, int startcell, List<ExcelColumnEntry> columns)
+        {
+            try
+            {
+                var row = sheet.GetRow(startrow)??sheet.CreateRow(startrow);
+
+                var cellindex = startcell;
+                var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12, IndexedColors.Black.Index, BorderStyle.Medium);
+                foreach (var xrow in columns)
+                {
+                    CreateCell(row, cellindex++, xrow.ColumnText, cellStyleBorder);
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        public static bool CreateColumns(XSSFWorkbook workbook, ISheet sheet, int startrow, int startcell, string[] columns)
+        {
+            try
+            {
+                var row = sheet.GetRow(startrow) ?? sheet.CreateRow(startrow);
+
+                var cellindex = startcell;
+                var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12, IndexedColors.Black.Index, BorderStyle.Medium);
+                foreach (var xrow in columns)
+                {
+                    CreateCell(row, cellindex++, xrow, cellStyleBorder);
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        public static bool FillColumnsData(XSSFWorkbook workbook, ISheet sheet, int startrow, int startcell, List<ExcelColumnEntry> columns, Bewerking bewerking, TijdEntry bereik)
+        {
+            try
+            {
+                var row = sheet.GetRow(startrow) ?? sheet.CreateRow(startrow);
+                var cellindex = startcell;
+                var cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11, HSSFColor.Black.Index, BorderStyle.Hair);
+                bool defstyle = true;
+                foreach (var xcolmn in columns)
+                {
+                    var value = GetValue(bewerking, xcolmn.Naam, bereik);
+                    short xcolcolor = -1;
+                    short xtxtcolor = -1;
+                    if (xcolmn.ColorType != ColorRuleType.None)
+                    {
+
+                        if (xcolmn.ColorType == ColorRuleType.Static)
+                        {
+                            xcolcolor = xcolmn.ColumnColorIndex;
+                            xtxtcolor = xcolmn.ColumnTextColorIndex;
+                        }
+                        else if (xcolmn.ColorType == ColorRuleType.Dynamic)
+                        {
+                            foreach (var regel in xcolmn.KleurRegels)
+                            {
+                                if (regel.Filter.ContainsFilter(bewerking))
+                                {
+                                    if (regel.IsFontColor)
+                                        xtxtcolor = regel.ColorIndex;
+                                    else
+                                        xcolcolor = regel.ColorIndex;
+                                }
+                            }
+                        }
+                    }
+                    if (xtxtcolor > -1 || xcolcolor > -1 || !string.IsNullOrEmpty(xcolmn.ColumnFormat))
+                    {
+                        cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11,
+                            xtxtcolor == -1 ? HSSFColor.Black.Index : xtxtcolor);
+                        cellStyleBorder.FillBackgroundColor = xcolcolor == -1 ? HSSFColor.COLOR_NORMAL : xcolcolor;
+                        cellStyleBorder.FillPattern = FillPattern.SolidForeground;
+                        cellStyleBorder.FillForegroundColor = xcolcolor == -1 ? HSSFColor.COLOR_NORMAL : xcolcolor;
+                        if (!string.IsNullOrEmpty(xcolmn.ColumnFormat))
+                        {
+                            IDataFormat dataFormatCustom = workbook.CreateDataFormat();
+                            cellStyleBorder.DataFormat = dataFormatCustom.GetFormat(xcolmn.ColumnFormat);
+                        }
+                        defstyle = false;
+                    }
+                    else if (!defstyle)
+                    {
+                        cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11,
+                            HSSFColor.Black.Index);
+                        cellStyleBorder.FillBackgroundColor = HSSFColor.COLOR_NORMAL;
+                        cellStyleBorder.FillPattern = FillPattern.SolidForeground;
+                        cellStyleBorder.FillForegroundColor = HSSFColor.COLOR_NORMAL;
+                        cellStyleBorder.DataFormat = 0;
+                        defstyle = true;
+                    }
+                    var cell = CreateCell(row, cellindex++, value, cellStyleBorder);
+
+                    //if (!string.IsNullOrEmpty(format))
+                    //{
+                    //    cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11);
+                    //    cellStyleBorder.DataFormat = workbook.CreateDataFormat().GetFormat(format);
+                    //}
+                    //else cellStyleBorder.DataFormat = 0;
+
+
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+
+        public static bool FillColumnsData(XSSFWorkbook workbook, ISheet sheet, int startrow, int startcell, WerkPlek plek, TijdEntry bereik)
+        {
+            try
+            {
+                var row = sheet.GetRow(startrow) ?? sheet.CreateRow(startrow);
+                var cellindex = startcell;
+                var cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11, HSSFColor.Black.Index, BorderStyle.Double);
+                cellStyleBorder.FillBackgroundColor = IProductieBase.GetProductieStateExcelColorIndex(plek.Werk.State);
+                cellStyleBorder.FillPattern = FillPattern.SolidForeground;
+                cellStyleBorder.FillForegroundColor = cellStyleBorder.FillBackgroundColor;
+                foreach (var xcolmn in WerkPlekColumns)
+                {
+                    var value = GetValue(plek, xcolmn, bereik);
+                    var cell = CreateCell(row, cellindex++, value, cellStyleBorder);
+                    
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+
+        public static bool CreateColumnsFormulas(XSSFWorkbook workbook, ISheet sheet, int startrow,int rows, int startcell, List<ExcelColumnEntry> columns)
+        {
+            try
+            {
+                var row = sheet.GetRow(startrow) ?? sheet.CreateRow(startrow);
+
+                var cellindex = startcell;
+                //Laten we nu wat extra velden aanmaken om het totale te kunnen weergeven van sommige velden.
+                //hier maken we de cel styles aan!
+                var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12, IndexedColors.Black.Index, BorderStyle.Medium);
+                cellStyleBorder.FillBackgroundColor = HSSFColor.LightTurquoise.Index;
+                cellStyleBorder.FillPattern = FillPattern.SolidForeground;
+                cellStyleBorder.FillForegroundColor = cellStyleBorder.FillBackgroundColor;
+                CreateCell(row, 0, "Totaal", cellStyleBorder);
+                var xcurindex = startcell;
+                foreach (var xcol in columns)
+                {
+                    if (xcol.Type == CalculationType.None) continue;
+                    //if (handler != null && !handler.Invoke()) return sheet;
+                    cellindex = GetProductieColumnIndex(xcol.Naam);
+                    if (cellindex == -1) continue;
+                    var xss = GetColumnName(cellindex);
+                    switch (xcol.Type)
+                    {
+                        case CalculationType.SOM:
+                            CreateCellFormula(row, cellindex, $"SUM({xss}{startrow - rows}:{xss}{startrow})", cellStyleBorder);
+                            break;
+                        case CalculationType.Gemiddeld:
+                            CreateCellFormula(row, cellindex, $"ROUND(SUM({xss}{startrow - rows}:{xss}{startrow}) / {rows},0)",
+                                cellStyleBorder);
+                            break;
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        public static bool CreateColumnsWerkplekFormulas(XSSFWorkbook workbook, ISheet sheet, int startrow, int rows, int startcell)
+        {
+            try
+            {
+                var row = sheet.GetRow(startrow) ?? sheet.CreateRow(startrow);
+
+                var cellindex = startcell;
+                //Laten we nu wat extra velden aanmaken om het totale te kunnen weergeven van sommige velden.
+                //hier maken we de cel styles aan!
+                var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12, IndexedColors.Black.Index, BorderStyle.Medium);
+                cellStyleBorder.FillBackgroundColor = HSSFColor.LightTurquoise.Index;
+                cellStyleBorder.FillPattern = FillPattern.SolidForeground;
+                cellStyleBorder.FillForegroundColor = cellStyleBorder.FillBackgroundColor;
+                CreateCell(row, 0, "Totaal", cellStyleBorder);
+                var xcurindex = startcell;
+                foreach (var xcol in WerkPlekColumns)
+                {
+                    cellindex = GetWerkplekColumnIndex(xcol);
+                    if (cellindex == -1) continue;
+                    var xss = GetColumnName(cellindex);
+                    switch (xcol.ToLower())
+                    {
+                        case "aantal gemaakt":
+                        case "aantal":
+                        case "#storingen":
+                        case "tijd gewerkt":
+                            CreateCellFormula(row, cellindex, $"SUM({xss}{startrow - rows}:{xss}{startrow})", cellStyleBorder);
+                            break;
+                        case "peruur":
+                        case "actueel p/u":
+                            CreateCellFormula(row, cellindex, $"ROUND(SUM({xss}{startrow - rows}:{xss}{startrow}) / {rows},0)",
+                                cellStyleBorder);
+                            break;
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
 
         /// <summary>
         /// Maak aan een niew productie sheet binnen een bepaald tijd periode
@@ -922,6 +1147,14 @@ namespace ProductieManager.Rpm.ExcelHelper
             return -1;
         }
 
+        private static int GetWerkplekColumnIndex(string naam)
+        {
+            for (var i = 0; i < WerkPlekColumns.Length; i++)
+                if (string.Equals(WerkPlekColumns[i], naam, StringComparison.CurrentCultureIgnoreCase))
+                    return i;
+            return -1;
+        }
+
         private static int GetStoringColumnIndex(string naam)
         {
             for (var i = 0; i < StoringColumns.Length; i++)
@@ -1083,6 +1316,8 @@ namespace ProductieManager.Rpm.ExcelHelper
             }
             return prop;
         }
+
+
 
         /// <summary>
         /// Maak aan een nieuwe overzicht
@@ -1421,20 +1656,226 @@ namespace ProductieManager.Rpm.ExcelHelper
         private static string CreateOverzichtMailBody(WeekOverzicht overzicht)
         {
             var omschrijving = "Beste Collega,\n\n" +
-                               $"U bent aangemeld voor een wekelijks overzicht door de Productie Manager voor {overzicht.Afdeling}.\n" +
+                               $"U bent aangemeld voor een wekelijks overzicht van de 'ProductieManager' voor '{overzicht.Afdeling}'.\n" +
                                "Als u deze mails niet wenst te ontvangen, dan kunt u dat aangeven bij Ihab zodat hij u kan afmelden.\n\n" +
-                               $"Dit overzicht is voor week {overzicht.WeekNr} {overzicht.Jaar} en geld alleen voor {overzicht.Afdeling}.\n" +
+                               $"Dit overzicht is voor week {overzicht.WeekNr} {overzicht.Jaar} en geld alleen voor '{overzicht.Afdeling}'.\n" +
                                "In de bijlage is er een Excel bestand met het weekoverzicht en de statistieken van de afgelopen weken.\n\n" +
-                               $"In de eerste sheet zijn alle producties van week {overzicht.WeekNr} te zien, waarvan veel velden zijn verborgen om de overzicht te bewaren.\n" +
-                               "Zo kunt u zien wat er is geproduceerd, wat de gemiddelde zijn en door wie het is gedaan.\n" +
-                               "Als er onderbrekingen zijn zoals storingen, onderhoudt en schoonmaak, dan is daar een aparte sheet voor.\n" +
-                               "Zo kunt u alle onderbrekingen gedetailleerd zien van heel de week.\n" +
-                               "Dit overzicht is hooguit een beeld van hoe de Productie Manager is bijgehouden.\n" +
+                               $"In de eerste sheet zijn alle producties van week {overzicht.WeekNr} te zien, waarvan aantal velden zijn verborgen om de overzicht te bewaren.\n" +
+                               "Zo kunt u zien wat er is geproduceerd, wat de gemiddelde zijn, en door wie.\n" +
+                               "Als er onderbrekeningen zijn zoals storingen, onderhoudt of schoonmaak, dan is daar een aparte sheet voor.\n" +
+                               "Zo kunt u alle onderbrekeningen gedetailleerd zien van heel de week.\n" +
+                               "Dit overzicht is hooguit een beeld van hoe de 'ProductieManager' is bijgehouden.\n" +
                                "Hoe beter het wordt bijgehouden, hoe nauwkeuriger het Excel overzicht.\n\n" +
                                "Mocht er vragen zijn tot betrekking van dit mail, of het weekoverzicht dat kunt u dat aangeven bij Ihab.\n" +
                                "Veel leesplezier!";
 
             return omschrijving;
+        }
+
+        public static string CleanSheetName(string name)
+        {
+           // string illegal = "\"M\"\\a/ry/ h**ad:>> a\\/:*?\"| li*tt|le|| la\"mb.?";
+            string invalid = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+
+            foreach (char c in invalid)
+            {
+                name = name.Replace(c.ToString(), "_");
+            }
+
+            return name;
+        }
+
+        public static Task<bool> CreateDagelijksProductieOverzicht(int weeknr, int jaar, string filepath)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    var xafdeling = Manager.Opties?.Username;
+                    var xrooster = Manager.Opties?.GetWerkRooster();
+                    if (string.IsNullOrEmpty(xafdeling) || xrooster == null) return false;
+                    //eerst de dagen pakken waarvan we een overzicht willen maken.
+                    //eerste werkdag/tijd
+                    var xstartweek = Functions.DateOfWeek(jaar, DayOfWeek.Monday, weeknr);
+                    //eerste werkdag/tijd
+                    var xeidnweek = Functions.DateOfWeek(jaar, DayOfWeek.Saturday, weeknr);
+                    xstartweek = xstartweek.Add(xrooster.StartWerkdag);
+                    //laatste werkdag/tijd
+                    xeidnweek = xeidnweek.Add(xrooster.EindWerkdag);
+                    //we verkrijgen alle producties
+                    var producties = Manager.Database
+                        .GetBewerkingen(ViewState.Alles, true, null, null).Result;
+                    if (producties.Count == 0) return false;
+                    var xwerkplekken = new Dictionary<string, List<WerkPlek>>();
+                    foreach (var prod in producties)
+                    {
+                        foreach (var wp in prod.WerkPlekken)
+                        {
+                            string clean = CleanSheetName(wp.Naam).ToLower();
+                            if (xwerkplekken.ContainsKey(clean))
+                                xwerkplekken[clean].Add(wp);
+                            else xwerkplekken.Add(clean, new List<WerkPlek>() {wp});
+                        }
+                    }
+
+                    if (xwerkplekken.Count == 0) return false;
+                    xwerkplekken = xwerkplekken.OrderBy(x => x.Key)
+                        .ToDictionary(s=> s.Key, s=> s.Value);
+                    var workbook = new XSSFWorkbook();
+                   
+                    var xdagspan = WerkPlekColumns.Length;
+                    int sheetindex = 0;
+                    foreach (var wp in xwerkplekken)
+                    {
+                        if (wp.Value == null || wp.Value.Count == 0) continue;
+                        ISheet sheet = null;
+                        var xstyle = CreateStyle(workbook, true, HorizontalAlignment.Left, 28,
+                            IndexedColors.Black.Index, BorderStyle.None);
+                        var rowindex = 4;
+                        int cur = 0;
+                        int xstartCell = 0;
+                        int currow = rowindex;
+                        var xcurdag = xstartweek;
+                        List<Storing> storingen = new List<Storing>();
+                        while (xcurdag.Date <= xeidnweek.Date)
+                        {
+                            //var dag = Enum.GetName(typeof(DayOfWeek), xcurdag.DayOfWeek);
+                            var xenddag = new DateTime(xcurdag.Year, xcurdag.Month, xcurdag.Day,
+                                xrooster.EindWerkdag.Hours, xrooster.EindWerkdag.Minutes, 0);
+                            var xbereik = new TijdEntry(xcurdag, xenddag);
+                            var xbws = wp.Value.Where(x => x.HeeftGewerkt(xbereik)).OrderBy(x=> x.GestartOp(xbereik)).ToList();
+                            if (xbws.Count > 0)
+                            {
+                                if (sheet == null)
+                                {
+                                    sheet = workbook.CreateSheet(CleanSheetName(wp.Value.First().Naam));
+                                    CreateHeader(sheet,
+                                        $"{(char.ToUpper(xafdeling[0]) + xafdeling.Substring(1, xafdeling.Length - 1))} Tijd Registratie Voor '{wp.Key}' In Week {weeknr} {jaar}",
+                                        0, 4, 0, xdagspan, xstyle);
+                                }
+                               
+                                xstyle = CreateStyle(workbook, true, HorizontalAlignment.Center, 20,
+                                    IndexedColors.Black.Index, BorderStyle.None);
+                                CreateHeader(sheet, xcurdag.ToString("f"), currow, 2, xstartCell, xdagspan, xstyle);
+                                currow += 2;
+                                //write producties
+                                int added = 0;
+                                
+                                if (CreateColumns(workbook, sheet, currow, xstartCell, WerkPlekColumns))
+                                {
+                                    currow++;
+                                    foreach (var bw in xbws)
+                                    {
+                                        if (FillColumnsData(workbook, sheet, currow, xstartCell, bw,
+                                                new TijdEntry(xcurdag, xenddag)))
+                                        {
+                                            currow++;
+                                            cur++;
+                                            added++;
+                                        }
+
+                                        if (bw.Storingen.Count > 0)
+                                            storingen.AddRange(bw.Storingen);
+                                    }
+
+                                    if (CreateColumnsWerkplekFormulas(workbook, sheet, currow, added, xstartCell))
+                                        currow++;
+                                    
+                                }
+                            }
+                            
+                            xcurdag = xcurdag.AddDays(1);
+                            rowindex = currow;
+                        }
+                        xcurdag = xstartweek;
+                        //storingen
+                        if (storingen.Count > 0)
+                        {
+                            xdagspan = StoringColumns.Length;
+                            while (xcurdag.Date <= xeidnweek.Date)
+                            {
+                                //var dag = Enum.GetName(typeof(DayOfWeek), xcurdag.DayOfWeek);
+                                var xenddag = new DateTime(xcurdag.Year, xcurdag.Month, xcurdag.Day,
+                                    xrooster.EindWerkdag.Hours, xrooster.EindWerkdag.Minutes, 0);
+                                var xbereik = new TijdEntry(xcurdag, xenddag);
+                                var xstoringen = storingen.Where(x => x.GetTotaleTijd(xbereik.Start, xbereik.Stop) > 0)
+                                    .ToList();
+                                if (xstoringen.Count > 0)
+                                {
+                                    currow += 2;
+                                    var x1 = xstoringen.Count == 1 ? "storing" : "storingen";
+                                    CreateHeader(sheet, $"{xstoringen.Count} {x1} op {xcurdag.ToString("f")}", currow, 2,
+                                        xstartCell, xdagspan, xstyle);
+                                    currow += 2;
+                                    if (CreateColumns(workbook, sheet, currow, xstartCell, StoringColumns))
+                                    {
+                                        currow++;
+                                        rowindex = currow;
+                                        var xststyle = CreateStyle(workbook, false, HorizontalAlignment.Left, 11,
+                                            HSSFColor.Black.Index, BorderStyle.Double);
+                                        IRow row = null;
+                                        int cellindex = 0;
+                                        foreach (var st in xstoringen)
+                                        {
+                                            row = sheet.CreateRow(currow);
+                                            row.HeightInPoints = 15;
+                                            var formatting =
+                                                CreateStoringRowConditionalFormatRules(sheet, currow + 1,
+                                                    StoringColumns.Length);
+                                            cellindex = xstartCell;
+                                            foreach (var col in StoringColumns)
+                                                CreateCell(row, cellindex++, GetValue(st, col, xbereik), xststyle);
+
+                                            currow++;
+                                        }
+
+                                        var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12,
+                                            IndexedColors.Black.Index, BorderStyle.Medium);
+                                        cellStyleBorder.FillBackgroundColor = HSSFColor.LightTurquoise.Index;
+                                        cellStyleBorder.FillPattern = FillPattern.SolidForeground;
+                                        cellStyleBorder.FillForegroundColor = cellStyleBorder.FillBackgroundColor;
+                                        row = sheet.CreateRow(currow);
+                                        CreateCell(row, 0, "Totaal", cellStyleBorder);
+                                        //totaal tijd gewerkt.
+                                        cellindex = GetStoringColumnIndex("totaal tijd");
+                                        if (cellindex > -1)
+                                        {
+                                            var xs = GetColumnName(cellindex);
+                                            CreateCellFormula(row, cellindex, $"SUM({xs}{rowindex}:{xs}{currow})",
+                                                cellStyleBorder);
+                                        }
+
+                                        currow++;
+                                    }
+
+                                }
+
+                                xcurdag = xcurdag.AddDays(1);
+                                rowindex = currow;
+                            }
+                        }
+
+                        if (sheet == null) continue;
+                        for (var i = 0; i < WerkPlekColumns.Length; i++)
+                            sheet.AutoSizeColumn(i, false);
+                        sheet = null;
+                    }
+
+                    using (var fs = new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.Write))
+                    {
+                        workbook.Write(fs);
+                    }
+
+                    workbook.Close();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return false;
+                }
+            });
+
         }
 
         public static string CreateArtikelNr(string[] artikels, string filepath, string sheetname)

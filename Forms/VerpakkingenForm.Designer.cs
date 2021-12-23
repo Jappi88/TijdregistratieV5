@@ -38,9 +38,12 @@
             this.xsearch = new MetroFramework.Controls.MetroTextBox();
             this.xdelete = new System.Windows.Forms.Button();
             this.verpakkingInstructieUI1 = new Controls.VerpakkingInstructieUI();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.verwijderenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xVerpakkingen)).BeginInit();
             this.panel2.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -62,6 +65,7 @@
             this.xVerpakkingen.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn1,
             this.olvColumn2});
+            this.xVerpakkingen.ContextMenuStrip = this.contextMenuStrip1;
             this.xVerpakkingen.Cursor = System.Windows.Forms.Cursors.Default;
             this.xVerpakkingen.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xVerpakkingen.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -181,6 +185,22 @@
             this.verpakkingInstructieUI1.TextColor = System.Drawing.Color.Empty;
             this.verpakkingInstructieUI1.Title = null;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.verwijderenToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(160, 26);
+            // 
+            // verwijderenToolStripMenuItem
+            // 
+            this.verwijderenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.verwijderenToolStripMenuItem.Name = "verwijderenToolStripMenuItem";
+            this.verwijderenToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.verwijderenToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.verwijderenToolStripMenuItem.Text = "Verwijderen";
+            this.verwijderenToolStripMenuItem.Click += new System.EventHandler(this.xdelete_Click);
+            // 
             // VerpakkingenForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -198,6 +218,7 @@
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xVerpakkingen)).EndInit();
             this.panel2.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -213,5 +234,7 @@
         private BrightIdeasSoftware.OLVColumn olvColumn2;
         private System.Windows.Forms.ImageList imageList1;
         private Controls.VerpakkingInstructieUI verpakkingInstructieUI1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem verwijderenToolStripMenuItem;
     }
 }

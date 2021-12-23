@@ -4,6 +4,7 @@ using Rpm.Misc;
 using Rpm.Productie;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Forms.GereedMelden
@@ -33,7 +34,24 @@ namespace Forms.GereedMelden
         {
             if (productie == null) return;
             int xaantal = productie.Aantal - productie.TotaalGemaakt;
-            xfieldmessage.Text = string.Format(xfieldmessage.Text, xaantal, $"'{productie.Naam}'");
+            var x0 = productie.TotaalGemaakt == 1 ? "is" : "zijn";
+            var x1 = productie.TotaalGemaakt == 1 ? "stuk" : "stuks";
+            var x2 = xaantal == 1 ? "is" : "zijn";
+            var x3 = xaantal == 1 ? "stuk" : "stuks";
+            var xcolor = IProductieBase.GetPositiveColorByPercentage((decimal) productie.Gereed);
+            string xmsg =
+                $"<h3>" +
+                $"<span color='DarkRed'>" +
+                $"Er is " +
+                $"<span color='{xcolor.Name}'>" +
+                $"{productie.TotaalGemaakt}/ {productie.Aantal}" +
+                $"</span> geproduceerd.<br>" +
+                $"Dat is <u><span color='{xcolor.Name}'>{xaantal}</span></u> minder dan gevraagd...<br>" +
+                $"Wat is de reden dat er minder is geproduceerd?" +
+                $"</span>" +
+                $"</h3>";
+               
+            xfieldmessage.Text = xmsg;
         }
 
         private void xmateriaalopcheck_CheckedChanged(object sender, System.EventArgs e)
@@ -42,11 +60,12 @@ namespace Forms.GereedMelden
             if (xmateriaalopcheck.Checked)
             {
                 var mats = _Productie.GetMaterialen();
-                if (mats.Count > 1)
+                if (mats.Count > 0)
                 {
-                    this.MaximumSize = new System.Drawing.Size(this.MaximumSize.Width, 500);
+                    int height = 280 + (mats.Count * 32);
                     xmaterialen.Visible = true;
-                    this.MinimumSize = new System.Drawing.Size(this.MinimumSize.Width, 350);
+                    this.MaximumSize = new Size();
+                    this.MinimumSize = new System.Drawing.Size(this.MinimumSize.Width, height);
                     this.Size = this.MinimumSize;
                 }
                 else
@@ -72,8 +91,8 @@ namespace Forms.GereedMelden
             else
             {
                 xmaterialen.Visible = false;
-                this.MaximumSize = new System.Drawing.Size(this.MaximumSize.Width, 250);
                 this.MinimumSize = new System.Drawing.Size(this.MinimumSize.Width, 250);
+                this.MaximumSize = MinimumSize;
                 this.Height = 250;
             }
         }
@@ -82,8 +101,8 @@ namespace Forms.GereedMelden
         {
             if (xvollepalletcheck.Checked)
             {
-                this.MaximumSize = new System.Drawing.Size(this.MaximumSize.Width, 250);
                 this.MinimumSize = new System.Drawing.Size(this.MinimumSize.Width, 250);
+                this.MaximumSize = MinimumSize;
                 this.Height = 250;
                 xredentextbox.Visible = false;
                 xmaterialen.Visible = false;
@@ -94,7 +113,7 @@ namespace Forms.GereedMelden
         {
             if (xanderscheck.Checked)
             {
-                this.MaximumSize = new System.Drawing.Size(this.MaximumSize.Width, 500);
+                this.MaximumSize = new Size();
                 this.MinimumSize = new System.Drawing.Size(this.MinimumSize.Width, 350);
                 this.Height = 350;
                 xredentextbox.Visible = true;
@@ -103,6 +122,9 @@ namespace Forms.GereedMelden
             }
             else
             {
+                this.MinimumSize = new System.Drawing.Size(this.MinimumSize.Width, 250);
+                this.MaximumSize = MinimumSize;
+                this.Height = 250;
                 xredentextbox.Visible = false;
             }
         }
@@ -162,11 +184,6 @@ namespace Forms.GereedMelden
             {
                 XMessageBox.Show(ex.Message, "Fout", MessageBoxIcon.Error);
             }
-
-        }
-
-        private void xmaterialen_ItemChecked(object sender, ItemCheckedEventArgs e)
-        {
 
         }
     }

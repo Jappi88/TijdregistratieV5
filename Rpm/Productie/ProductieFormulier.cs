@@ -38,9 +38,7 @@ namespace Rpm.Productie
         }
 
         #region "Variables"
-
-        public const double CurrentVersie = 2.1;
-
+        
         internal ProductieState _state;
 
         public override ProductieState State
@@ -73,10 +71,10 @@ namespace Rpm.Productie
         }
 
         internal double _versie;
-
+        [ExcludeFromSerialization]
         public double Versie
         {
-            get => _versie <= 0 ? CurrentVersie : _versie;
+            get => _versie;
             private set => _versie = value;
         } //= _Versie;
 
@@ -423,8 +421,6 @@ namespace Rpm.Productie
                                     }
                                 }
                         }
-
-                    _versie = CurrentVersie;
                     await UpdateForm(true, false, null, $"[{ProductieNr}]Productie geupdate naar versie {_versie}");
                     return true;
                 }

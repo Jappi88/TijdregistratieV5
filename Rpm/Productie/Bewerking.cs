@@ -216,7 +216,7 @@ namespace Rpm.Productie
 
         public override string Omschrijving
         {
-            get => (Parent == null ? base.Omschrijving : Parent.Omschrijving);//.WrapText(150);
+            get => (string.IsNullOrEmpty(base.Omschrijving) ? Parent?.Omschrijving : base.Omschrijving);//.WrapText(150);
             set => base.Omschrijving = value;
         }
 
@@ -473,7 +473,6 @@ namespace Rpm.Productie
             if (Parent != null)
             {
                 Aantal = Parent.Aantal;
-                Omschrijving = Parent.Omschrijving;
                 ArtikelNr = Parent.ArtikelNr;
                 ProductieNr = Parent.ProductieNr;
 
@@ -821,13 +820,11 @@ namespace Rpm.Productie
             try
             {
                 await StopProductie(false);
-                // await MeldDeelsGereed(paraaf, aantal, notitie,null,DateTime.Now, false);
-                LaatstAantalUpdate = DateTime.Now;
+                AantalGemaakt = aantal;
                 DatumGereed = DateTime.Now;
                 GereedNote = new NotitieEntry(notitie, this) {Type = NotitieType.BewerkingGereed, Naam = paraaf};
                 Paraaf = paraaf;
                 State = ProductieState.Gereed;
-                AantalGemaakt = aantal;
                 var personen = GetPersoneel();
                 foreach (var per in personen)
                     if (per.IngezetAanKlus(this, false, out var klusjes))
@@ -1490,6 +1487,7 @@ namespace Rpm.Productie
                 _gemaakt = aantal;
                 if (Parent != null)
                     Parent.LaatstAantalUpdate = DateTime.Now;
+                LaatstAantalUpdate = DateTime.Now;
             }
 
             if (WerkPlekken != null)

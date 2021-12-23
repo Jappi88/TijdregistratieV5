@@ -8,8 +8,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using NPOI.HSSF.Util;
 
 namespace Rpm.Productie
 {
@@ -209,7 +211,7 @@ namespace Rpm.Productie
         [Display(Name = "GemiddeldProcentAfwijkingPerUur", Description = "Aantal procent afwijking tussen de gemiddelde gemeten en de basis aantal per uur")]
         public virtual decimal GemiddeldProcentAfwijkingPerUur => GetGemiddeldAfwijking();
 
-        [Display(Name = "GestartDoor", Description = "Naam/Afdeling van diegene de productie heeft gestart")]
+        [Display(Name = "GestartDoor", Description = "Naam/Afdeling die de productie heeft gestart")]
         public virtual string GestartDoor { get; set; }
 
         [Display(Name = "Geproduceerd", Description = "Aantal keer waarvan deze productie totaal is geproduceert")]
@@ -236,6 +238,30 @@ namespace Rpm.Productie
             double xtijd = 0;
             return GetActueelAantalGemaakt(ref xtijd);
         }
+
+        public bool HeeftGewerkt(TijdEntry bereik)
+        {
+            try
+            {
+                if (this is Bewerking bew)
+                {
+                    return bew.WerkPlekken?.Any(x => x.HeeftGewerkt(bereik))??false;
+                }
+
+                if (this is ProductieFormulier prod)
+                {
+                    return prod.Bewerkingen?.Any(x => x.HeeftGewerkt(bereik)) ?? false;
+                }
+
+                return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
         public decimal GetAfwijking()
         {
             try
@@ -361,6 +387,22 @@ namespace Rpm.Productie
                     return Color.FromArgb(54, 162, 63);
             }
             return Color.Black;
+        }
+
+        public static short GetProductieStateExcelColorIndex(ProductieState state)
+        {
+            switch (state)
+            {
+                case ProductieState.Gestopt:
+                    return HSSFColor.LightYellow.Index;
+                case ProductieState.Gestart:
+                    return HSSFColor.LightCornflowerBlue.Index;
+                case ProductieState.Gereed:
+                    return HSSFColor.LightGreen.Index;
+                case ProductieState.Verwijderd:
+                    return HSSFColor.LightOrange.Index;
+            }
+            return HSSFColor.COLOR_NORMAL;
         }
 
         public static string GetStylesheet(string src)

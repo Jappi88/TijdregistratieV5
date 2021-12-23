@@ -167,6 +167,7 @@ namespace Forms
         private void xVerpakkingen_SelectedIndexChanged(object sender, EventArgs e)
         {
             xdelete.Enabled = xVerpakkingen.SelectedObjects.Count > 0;
+            verwijderenToolStripMenuItem.Enabled = xdelete.Enabled;
             if (xVerpakkingen.SelectedObject is VerpakkingInstructie xverp)
             {
                 verpakkingInstructieUI1.AllowEditMode = true;

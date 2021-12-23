@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using MetroFramework;
 
 namespace Forms.GereedMelden
 {
@@ -49,10 +50,13 @@ namespace Forms.GereedMelden
                         redens.Add($"Problemen met {mat.Omschrijving}({mat.ArtikelNr}).");
                     }
 
-                    var wps = productie.GetWerkPlekken();
-                    foreach (var wp in wps)
+                    if (productie is Bewerking {IsBemand: false})
                     {
-                        redens.Add($"'{wp.Naam}' Functioneert niet als behoren.");
+                        var wps = productie.GetWerkPlekken();
+                        foreach (var wp in wps)
+                        {
+                            redens.Add($"'{wp.Naam}' Functioneert niet als behoren.");
+                        }
                     }
 
                     var pers = productie.GetPersonen(false);
@@ -64,10 +68,13 @@ namespace Forms.GereedMelden
                 }
                 else
                 {
-                    var wps = productie.GetWerkPlekken();
-                    foreach (var wp in wps)
+                    if (productie is Bewerking {IsBemand: false})
                     {
-                        redens.Add($"'{wp.Naam}' Heeft boven verwachting gepresteerd");
+                        var wps = productie.GetWerkPlekken();
+                        foreach (var wp in wps)
+                        {
+                            redens.Add($"'{wp.Naam}' Heeft boven verwachting gepresteerd");
+                        }
                     }
 
                     var pers = productie.GetPersonen(false);
@@ -78,6 +85,7 @@ namespace Forms.GereedMelden
                    
                 }
                 redens.Add("Alle tijden kloppen, en alles is gewoon goed gegaan.");
+                redens.Add("Andere reden, namelijk: ");
                 foreach (var xreden in redens)
                 {
                     var lv = new ListViewItem(xreden);
@@ -136,9 +144,25 @@ namespace Forms.GereedMelden
 
         }
 
-        private void xmaterialen_ItemChecked(object sender, ItemCheckedEventArgs e)
+        private void xredenen_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-
+            if (e.Item.Checked && e.Item.Text.ToLower().StartsWith("andere"))
+            {
+                var xvalue = e.Item.Text.Split(':').LastOrDefault()?.Trim();
+                var txt = new TextFieldEditor();
+                txt.UseSecondary = false;
+                txt.EnableSecondaryField = false;
+                txt.MultiLine = true;
+                txt.Style = MetroColorStyle.Red;
+                txt.Title = "Vul in een geldige reden voor de afwijking";
+                txt.SelectedText = xvalue;
+                if (txt.ShowDialog() == DialogResult.OK && txt.SelectedText.Trim().Length > 1)
+                {
+                    e.Item.Text = $"Andere reden, namelijk: {txt.SelectedText}";
+                    e.Item.Tag = e.Item.Text;
+                }
+                else e.Item.Checked = false;
+            }
         }
     }
 }

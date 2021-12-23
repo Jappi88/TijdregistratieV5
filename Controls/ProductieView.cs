@@ -22,6 +22,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Forms.Excel;
 using Various;
 
 namespace Controls
@@ -2432,6 +2433,12 @@ namespace Controls
         {
             var vr = new VerpakkingenForm();
             vr.ShowDialog();
+        }
+
+        private void xMaakWeekOverzichtToolstrip_Click(object sender, EventArgs e)
+        {
+            var xf = new CreateWeekExcelForm();
+            xf.ShowDialog();
         }
     }
 }

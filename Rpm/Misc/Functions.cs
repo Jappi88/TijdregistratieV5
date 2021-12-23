@@ -2136,7 +2136,7 @@ namespace Rpm.Misc
 
         public static DateTime DateOfWeek(int year, DayOfWeek day, int week)
         {
-            var startOfYear = new DateTime(year, 1, 1);
+            var startOfYear = new DateTime(year, 1, 1,0,0,0);
 
             // The +7 and %7 stuff is to avoid negative numbers etc.
             var daysToFirstCorrectDay = ((int) day - (int) startOfYear.DayOfWeek + 7) % 7;

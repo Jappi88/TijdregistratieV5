@@ -36,16 +36,16 @@ namespace Forms
             this.xanuleren = new System.Windows.Forms.Button();
             this.xok = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.ximage = new System.Windows.Forms.PictureBox();
-            this.xextrafieldcheck = new System.Windows.Forms.CheckBox();
             this.xsecondaryPanel = new System.Windows.Forms.Panel();
-            this.xdescriptiontext = new System.Windows.Forms.Label();
             this.xsecondarytextbox = new System.Windows.Forms.TextBox();
+            this.xdescriptiontext = new System.Windows.Forms.Label();
+            this.xextrafieldcheck = new System.Windows.Forms.CheckBox();
+            this.ximage = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ximage)).BeginInit();
             this.xsecondaryPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ximage)).BeginInit();
             this.SuspendLayout();
             // 
             // xtextfield
@@ -117,17 +117,37 @@ namespace Forms
             this.panel3.Size = new System.Drawing.Size(476, 84);
             this.panel3.TabIndex = 10;
             // 
-            // ximage
+            // xsecondaryPanel
             // 
-            this.ximage.BackColor = System.Drawing.Color.Transparent;
-            this.ximage.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ximage.Image = global::ProductieManager.Properties.Resources.text_edit_14943;
-            this.ximage.Location = new System.Drawing.Point(20, 60);
-            this.ximage.Name = "ximage";
-            this.ximage.Size = new System.Drawing.Size(109, 130);
-            this.ximage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.ximage.TabIndex = 8;
-            this.ximage.TabStop = false;
+            this.xsecondaryPanel.Controls.Add(this.xsecondarytextbox);
+            this.xsecondaryPanel.Controls.Add(this.xdescriptiontext);
+            this.xsecondaryPanel.Controls.Add(this.xextrafieldcheck);
+            this.xsecondaryPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.xsecondaryPanel.Location = new System.Drawing.Point(5, 47);
+            this.xsecondaryPanel.Name = "xsecondaryPanel";
+            this.xsecondaryPanel.Size = new System.Drawing.Size(466, 22);
+            this.xsecondaryPanel.TabIndex = 2;
+            this.xsecondaryPanel.Visible = false;
+            // 
+            // xsecondarytextbox
+            // 
+            this.xsecondarytextbox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xsecondarytextbox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xsecondarytextbox.Location = new System.Drawing.Point(0, 54);
+            this.xsecondarytextbox.Name = "xsecondarytextbox";
+            this.xsecondarytextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.xsecondarytextbox.Size = new System.Drawing.Size(466, 29);
+            this.xsecondarytextbox.TabIndex = 4;
+            this.xsecondarytextbox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xtextfield_KeyDown);
+            // 
+            // xdescriptiontext
+            // 
+            this.xdescriptiontext.Dock = System.Windows.Forms.DockStyle.Top;
+            this.xdescriptiontext.Location = new System.Drawing.Point(0, 25);
+            this.xdescriptiontext.Name = "xdescriptiontext";
+            this.xdescriptiontext.Size = new System.Drawing.Size(466, 29);
+            this.xdescriptiontext.TabIndex = 3;
+            this.xdescriptiontext.Text = "description";
             // 
             // xextrafieldcheck
             // 
@@ -142,37 +162,17 @@ namespace Forms
             this.xextrafieldcheck.UseVisualStyleBackColor = true;
             this.xextrafieldcheck.CheckedChanged += new System.EventHandler(this.xextrafieldcheck_CheckedChanged);
             // 
-            // xsecondaryPanel
+            // ximage
             // 
-            this.xsecondaryPanel.Controls.Add(this.xsecondarytextbox);
-            this.xsecondaryPanel.Controls.Add(this.xdescriptiontext);
-            this.xsecondaryPanel.Controls.Add(this.xextrafieldcheck);
-            this.xsecondaryPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.xsecondaryPanel.Location = new System.Drawing.Point(5, 47);
-            this.xsecondaryPanel.Name = "xsecondaryPanel";
-            this.xsecondaryPanel.Size = new System.Drawing.Size(466, 22);
-            this.xsecondaryPanel.TabIndex = 2;
-            this.xsecondaryPanel.Visible = false;
-            // 
-            // xdescriptiontext
-            // 
-            this.xdescriptiontext.Dock = System.Windows.Forms.DockStyle.Top;
-            this.xdescriptiontext.Location = new System.Drawing.Point(0, 25);
-            this.xdescriptiontext.Name = "xdescriptiontext";
-            this.xdescriptiontext.Size = new System.Drawing.Size(466, 29);
-            this.xdescriptiontext.TabIndex = 3;
-            this.xdescriptiontext.Text = "description";
-            // 
-            // xsecondarytextbox
-            // 
-            this.xsecondarytextbox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xsecondarytextbox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xsecondarytextbox.Location = new System.Drawing.Point(0, 54);
-            this.xsecondarytextbox.Name = "xsecondarytextbox";
-            this.xsecondarytextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.xsecondarytextbox.Size = new System.Drawing.Size(466, 29);
-            this.xsecondarytextbox.TabIndex = 4;
-            this.xsecondarytextbox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xtextfield_KeyDown);
+            this.ximage.BackColor = System.Drawing.Color.Transparent;
+            this.ximage.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ximage.Image = global::ProductieManager.Properties.Resources.text_edit_14943;
+            this.ximage.Location = new System.Drawing.Point(20, 60);
+            this.ximage.Name = "ximage";
+            this.ximage.Size = new System.Drawing.Size(109, 130);
+            this.ximage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.ximage.TabIndex = 8;
+            this.ximage.TabStop = false;
             // 
             // TextFieldEditor
             // 
@@ -195,9 +195,9 @@ namespace Forms
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ximage)).EndInit();
             this.xsecondaryPanel.ResumeLayout(false);
             this.xsecondaryPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ximage)).EndInit();
             this.ResumeLayout(false);
 
         }

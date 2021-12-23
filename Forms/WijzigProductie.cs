@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
+using MetroFramework;
+using MetroFramework.Controls;
+using MetroFramework.Forms;
+using PdfSharp.Drawing;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
@@ -13,32 +19,25 @@ namespace Forms
     public partial class WijzigProductie : MetroFramework.Forms.MetroForm
     {
         private readonly bool editmode;
-
-        private changetype _change;
+        
         internal string[] prods = { };
 
         public WijzigProductie()
         {
             InitializeComponent();
-            metroTabControl1.TabPages[3].Visible = Manager.LogedInGebruiker != null &&
-                                                   Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieAdvance;
             Formulier = new ProductieFormulier();
-            propertyGrid1.SelectedObject = Formulier;
-            xartnr.Enabled = true;
-            xprodnr.Enabled = true;
+            objectEditorUI1.ExcludeItems.AddRange(new[] {"state","naam" });
             ((OLVColumn) xbewerkinglijst.Columns[0]).ImageGetter = sender => 0;
         }
+
+
 
         public WijzigProductie(ProductieFormulier form)
         {
             InitializeComponent();
-            metroTabControl1.TabPages[3].Visible = Manager.LogedInGebruiker != null &&
-                                                   Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieAdvance;
-            propertyGrid1.SelectedObject = form;
             Formulier = form;
             editmode = true;
-            xartnr.Enabled = false;
-            xprodnr.Enabled = false;
+            objectEditorUI1.ExcludeItems.AddRange(new[] { "productienr", "artikelnr","state","naam" });
             ((OLVColumn) xbewerkinglijst.Columns[0]).ImageGetter = sender => 0;
         }
 
@@ -52,19 +51,13 @@ namespace Forms
                 DialogResult = DialogResult.Cancel;
             else
             {
-                Formulier = changedform.CreateCopy();
+                {
+                    Formulier = changedform.CreateCopy();
+                   // dynamicObjectEditor1.Instance = Formulier;
+                }
             }
         }
 
-        public async void SetTextboxAutofill()
-        {
-            var sourceName = new AutoCompleteStringCollection();
-            prods = (await Manager.Database.GetAllProducties(true,true)).Select(x => x.ProductieNr).ToArray();
-            sourceName.AddRange(prods);
-            xartnr.AutoCompleteCustomSource = sourceName;
-            xartnr.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            xartnr.AutoCompleteSource = AutoCompleteSource.CustomSource;
-        }
 
         private async void AddBewerkingen(ProductieFormulier form)
         {
@@ -99,22 +92,7 @@ namespace Forms
 
         public bool SetFormInfo()
         {
-            var haveform = Formulier != null;
-            if (!haveform)
-                Formulier = new ProductieFormulier();
-
-            Formulier.ArtikelNr = xartnr.Text;
-            Formulier.ProductieNr = xprodnr.Text;
-            Formulier.Aantal = (int) xaantal.Value;
-            Formulier.Omschrijving =
-                xbeschrijving.Text.Trim().Length == 0 ? "Geen Product Omschrijving" : xbeschrijving.Text;
-            Formulier.Note = new NotitieEntry(xnotitie.Text.Trim(), Formulier);
-            Formulier.LeverDatum = xdatumgereed.Value;
-            Formulier.DatumGereed = xprodgereedop.Value;
-            Formulier.GereedNote = new NotitieEntry(xgereednotitie.Text.Trim(), Formulier){Type = NotitieType.ProductieGereed};
-            Formulier.AantalGemaakt = (int) xprodaantalgemaakt.Value;
-            Formulier.TijdGewerkt = (int) xprodtijdgewerkt.Value;
-            Formulier.Paraaf = xprodparaaf.Text;
+            Formulier = ((ProductieFormulier)objectEditorUI1.Instance)?? new ProductieFormulier();
             materiaalUI1.SaveMaterials();
             return true;
         }
@@ -126,23 +104,8 @@ namespace Forms
             materiaalUI1.InitMaterialen(p);
             AddBewerkingen(p);
             Text = $"Productie : [{p.ProductieNr}]-[{p.ArtikelNr}]";
+            objectEditorUI1.InitInstance(p);
             this.Invalidate();
-            xartnr.Text = p.ArtikelNr;
-            xprodnr.Text = p.ProductieNr;
-            xaantal.SetValue(p.Aantal);
-            xbeschrijving.Text = p.Omschrijving;
-            xnotitie.Text = p.Note?.Notitie;
-            xgereednotitie.Text = p.GereedNote?.Notitie;
-            xprodgereedop.SetValue(p.DatumGereed);
-            xprodparaaf.Text = p.Paraaf;
-            xprodaantalgemaakt.SetValue(p.AantalGemaakt);
-            xprodtijdgewerkt.SetValue((decimal) p.TijdGewerkt);
-            var rooster = Manager.Opties.GetWerkRooster();
-            if (p.LeverDatum < xdatumgereed.MinDate || p.LeverDatum > xdatumgereed.MaxDate)
-                p.LeverDatum = Werktijd.EerstVolgendeWerkdag(DateTime.Now, ref rooster,rooster,null);
-            xdatumgereed.SetValue(p.LeverDatum);
-
-            UpdateDatum();
         }
 
         private void SetBewFields(Bewerking b)
@@ -151,66 +114,11 @@ namespace Forms
             {
                 xbewerkingen.Tag = b;
                 xbewerkingen.SelectedItem = b.Naam?.Split('[')[0];
-                xbewleverdatum.SetValue(b.LeverDatum);
-                xbewgereedop.SetValue(b.DatumGereed);
-                xbewgereed.Text = b.Paraaf;
-                xbewstatus.SelectedItem = Enum.GetName(typeof(ProductieState), b.State);
-                xbewtijdgewerkt.SetValue((decimal) b.TijdGewerkt);
-                xbewnotitie.Text = b.Note?.Notitie;
-                xbewperuur.Text = Math.Round(b.Aantal / b.DoorloopTijd, 1).ToString("0 Per Uur");
-                xbewalgemaakt.SetValue(b.AantalGemaakt);
-                xbewdoorlooptijd.SetValue((decimal) b.DoorloopTijd);
             }
             else
             {
                 xbewerkingen.Tag = null;
             }
-        }
-
-        private void xaantal_ValueChanged(object sender, EventArgs e)
-        {
-            if (_change != changetype.bewperuur)
-            {
-                _change = changetype.aantal;
-                if (xaantal.Value > 0 && xbewdoorlooptijd.Value > 0)
-                    xbewperuur.Text = Math.Round(xaantal.Value / xbewdoorlooptijd.Value, 1).ToString("0 Per Uur");
-            }
-
-            _change = changetype.none;
-            UpdateDatum();
-        }
-
-        private void xbewdoorlooptijd_ValueChanged(object sender, EventArgs e)
-        {
-            if (_change != changetype.bewperuur)
-            {
-                _change = changetype.doorlooptijd;
-                if (xaantal.Value > 0 && xbewdoorlooptijd.Value > 0)
-                    xbewperuur.Text = Math.Round(xaantal.Value / xbewdoorlooptijd.Value, 1).ToString("0 Per Uur");
-            }
-
-            _change = changetype.none;
-            UpdateDatum();
-        }
-
-        private void xaantalgemaakt_ValueChanged(object sender, EventArgs e)
-        {
-            _change = changetype.aantalgemaakt;
-            UpdateDatum();
-        }
-
-        private void UpdateDatum()
-        {
-            var bws = GetBewerkingen();
-            var gedaan = bws.Length == 0 ? 0 : bws.Sum(t => t.AantalGemaakt) / bws.Length;
-            var doorloop = bws.Length == 0
-                ? (double) (xaantal.Value / 100)
-                : bws.Sum(t => t.DoorloopTijd);
-            xperuur.Text = $"{Formulier.ProductenPerUur((int) xaantal.Value, doorloop).ToString()} Per Uur";
-            xgereedprocent.Text = Formulier.GereedPercentage((double) xaantal.Value, gedaan) + "% Gereed";
-            xverwachtgereed.Text = "Gereed op " + Formulier
-                .VerwachtDatumGereed(DateTime.Now, doorloop, (int) xaantal.Value, gedaan, bws)
-                .ToString("dddd d MMMM yyyy HH:mm");
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -220,7 +128,7 @@ namespace Forms
 
         private void InitForm(ProductieFormulier p)
         {
-            Formulier = p;
+            Formulier = p?.CreateCopy();
             Text = $"Productie : [{p.ProductieNr}]-[{p.ArtikelNr}]";
             this.Invalidate();
             //SetTextboxAutofill();
@@ -231,23 +139,23 @@ namespace Forms
 
         private async void button2_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(xartnr.Text))
+            if (string.IsNullOrEmpty(Formulier?.ArtikelNr))
             {
                 XMessageBox.Show("Vul een geldige artikel nummer in a.u.b", "ArtikelNr", MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }
-            else if (string.IsNullOrEmpty(xprodnr.Text))
+            else if (string.IsNullOrEmpty(Formulier?.ProductieNr))
             {
                 XMessageBox.Show("Vul een geldige productie nummer in a.u.b", "ProductieNr", MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }
-            else if (!editmode && prods.Any(t => string.Equals(t, xprodnr.Text, StringComparison.CurrentCultureIgnoreCase)))
+            else if (!editmode && prods.Any(t => string.Equals(t, Formulier?.ProductieNr, StringComparison.CurrentCultureIgnoreCase)))
             {
                 XMessageBox.Show(
-                    $"Productie {xprodnr.Text} bestaat al en kan daarom niet nogmaals gebruikt worden!\nProbeer een andere nummer a.u.b",
+                    $"Productie {Formulier?.ProductieNr} bestaat al en kan daarom niet nogmaals gebruikt worden!\nProbeer een andere nummer a.u.b",
                     "ProductieNr", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            else if (xaantal.Value <= 0)
+            else if (Formulier.Aantal <= 0)
             {
                 XMessageBox.Show("Aantal moet meer zijn dan 0!\n Vul eerst een geldige aantal in a.u.b", "Aantal",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -273,54 +181,11 @@ namespace Forms
                     if (x.ShowDialog() == DialogResult.OK)
                     {
                         xbewerkinglijst.RefreshObject(b);
-                        UpdateDatum();
                     }
 
                     break;
                 }
             }
-        }
-
-        private async Task<bool> UpdateSelectedItem()
-        {
-            if (xbewerkingen.Tag == null)
-                return false;
-            if (xbewerkingen.Text.Trim().Replace(" ", "").Length < 5)
-            {
-                XMessageBox.Show("Vul eerst een geldige bewerking in voordat je verder gaat", "Ongeldige Bewerking",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return false;
-            }
-
-            if (!(xbewerkingen.Tag is Bewerking b)) return false;
-            var count = 0;
-            if ((count += xbewerkinglijst.Objects.Cast<Bewerking>().Sum(x =>
-                string.Equals(x.Naam, xbewerkingen.Text.Trim().Split('[')[0],
-                    StringComparison.CurrentCultureIgnoreCase)
-                    ? 1
-                    : 0)) > 1)
-            {
-                b.Naam = xbewerkingen.SelectedItem + $"[{count}]";
-            }
-            else
-            {
-                b.Naam = xbewerkingen.Text;
-            }
-
-            b.Parent = Formulier;
-            b.DoorloopTijd = (double) xbewdoorlooptijd.Value;
-            b.AantalGemaakt = (int) xbewalgemaakt.Value;
-            b.LeverDatum = xbewleverdatum.Value;
-            b.DatumGereed = xbewgereedop.Value;
-            b.Paraaf = xbewgereed.Text;
-            b.TijdGewerkt = (double) xbewtijdgewerkt.Value;
-            b.State = (ProductieState) Enum.Parse(typeof(ProductieState), xbewstatus.SelectedItem.ToString());
-            b.Note = new NotitieEntry(xbewnotitie.Text, b);
-            await b.UpdateBewerking(null, "Bewerking Update", false);
-            xbewerkinglijst.RefreshObject(b);
-            xbewerkinglijst.SelectedObject = b;
-            xbewerkinglijst.SelectedItem?.EnsureVisible();
-            return true;
         }
 
         private async Task<bool> Save()
@@ -329,16 +194,6 @@ namespace Forms
             Formulier.Bewerkingen = GetBewerkingen();
             await Formulier.UpdateForm(true, false, null, $"[{Formulier.ProductieNr}] Bewerkingen Gewijzigd");
             return true;
-        }
-
-        private async void xpasbewaan_Click(object sender, EventArgs e)
-        {
-            //update bewerking;
-            //if (await UpdateSelectedItem())
-            //    XMessageBox.Show("Wijzingen zijn doorgevoerd!", "Opgeslagen", MessageBoxButtons.OK,
-            //        MessageBoxIcon.Information);
-            await UpdateSelectedItem();
-            UpdateDatum();
         }
 
         private async void xvoegbewtoe_Click(object sender, EventArgs e)
@@ -356,7 +211,7 @@ namespace Forms
             if (xbewerkinglijst.Objects != null && (count += xbewerkinglijst.Objects.Cast<Bewerking>()
                     .Sum(x => x.Naam.ToLower().Split('[')[0] == xbewerkingen.Text.ToLower() ? 1 : 0)) >
                 0) naam = xbewerkingen.SelectedItem + $"[{count}]";
-            var bw = await new Bewerking((double) xbewdoorlooptijd.Value).CreateNewInstance(Formulier);
+            var bw = await new Bewerking((double) Formulier.DoorloopTijd).CreateNewInstance(Formulier);
             bw.Naam = naam ?? xbewerkingen.SelectedItem.ToString();
             bw.DatumToegevoegd = DateTime.Now;
             xbewerkinglijst.AddObject(bw);
@@ -371,9 +226,6 @@ namespace Forms
         {
             InitForm(Formulier);
             Manager.OnFormulierChanged += Form_OnFormulierChanged;
-            xaantal.ValueChanged += xaantal_ValueChanged;
-            xbewalgemaakt.ValueChanged += xaantalgemaakt_ValueChanged;
-            xbewdoorlooptijd.ValueChanged += xbewdoorlooptijd_ValueChanged;
         }
 
         private void xverwijderbewerking_Click(object sender, EventArgs e)
@@ -400,8 +252,7 @@ namespace Forms
             {
                 xbewerkingen.Tag = null;
             }
-
-            xpasbewaan.Enabled = xbewerkinglijst.SelectedObject != null;
+            
             xverwijderbewerking.Enabled = xbewerkinglijst.SelectedObjects.Count > 0;
             xwerkplekken.Enabled = xbewerkinglijst.SelectedObject != null;
             xbeheeronderbrekeningen.Enabled = xbewerkinglijst.SelectedObject != null;
@@ -418,35 +269,24 @@ namespace Forms
             }
         }
 
-        private async void xbewopslaan_Click(object sender, EventArgs e)
+        private void xedit_Click(object sender, EventArgs e)
         {
-            try
+            if (xbewerkinglijst.SelectedObject is Bewerking bew)
             {
-                if (await UpdateSelectedItem())
+                var xform = new ObjectEditForm();
+                xform.Title = $"Wijzig {bew.Path}";
+                xform.ExcludeItems.AddRange(new[] {"productienr","artikelnr","verwachtleverdatum"});
+                xform.Init(bew);
+                if (xform.ShowDialog() == DialogResult.OK)
                 {
-                    UpdateDatum();
-                    await Save();
+                    xbewerkinglijst.RefreshObject(xform.Instance);
                 }
             }
-            catch (Exception exception)
-            {
-                XMessageBox.Show(exception.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
-        private enum changetype
+        private void xbewerkinglijst_DoubleClick(object sender, EventArgs e)
         {
-            doorlooptijd,
-            bewperuur,
-            peruur,
-            aantal,
-            aantalgemaakt,
-            none
-        }
-
-        private void propertyGrid1_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
-        {
-            InitForm(propertyGrid1.SelectedObject as ProductieFormulier);
+            xedit_Click(sender,e);
         }
     }
 }
