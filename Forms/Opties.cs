@@ -636,8 +636,7 @@ namespace Forms
             }
             else
             {
-               Manager.LogOut(this);
-                XMessageBox.Show("Jij bent uitgelogd!", "uitgelogd", MessageBoxButtons.OK, MessageBoxIcon.Information);
+               Manager.LogOut(this,true);
             }
         }
 

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using LiteDB;
 using Polenter.Serialization;
@@ -68,10 +70,30 @@ namespace Rpm.Productie
             if (string.IsNullOrEmpty(Path)) return 0;
             var werk = Plek??Werk.FromPath(Path)?.Plek;
             if (werk == null) return 0;
+            if (vanaf.TimeOfDay == new TimeSpan() && WerkRooster != null)
+                vanaf = vanaf.Add(WerkRooster.StartWerkdag);
             var gestopt = IsVerholpen ? Gestopt : DateTime.Now;
+            if (tot.TimeOfDay == new TimeSpan() && WerkRooster != null)
+                tot = tot.Add(WerkRooster.EindWerkdag);
             if (gestopt > tot) gestopt = tot;
             var gestart = Gestart < vanaf ? vanaf : Gestart;
             return Math.Round(Werktijd.TijdGewerkt(gestart, gestopt, werk.Tijden?.WerkRooster, werk.Tijden?.SpecialeRoosters).TotalHours, 2);
+        }
+
+        public DateTime GestartOp(TijdEntry bereik, List<Rooster> specialeroosters)
+        {
+            if (bereik == null) return Gestart;
+            var xspr = specialeroosters?.FirstOrDefault(x => x.Vanaf.Date == Gestart.Date) ?? WerkRooster;
+            return new TijdEntry(Gestart,Gestopt).CreateRange(bereik.Start, bereik.Stop,xspr, specialeroosters)?.Start??new DateTime();
+        }
+
+        public DateTime GestoptOp(TijdEntry bereik, List<Rooster> specialeroosters)
+        {
+            var stop = IsVerholpen ? Gestopt : DateTime.Now;
+            if (bereik == null)
+                return stop;
+            var xspr = specialeroosters?.FirstOrDefault(x => x.Vanaf.Date == stop.Date)??WerkRooster;
+            return new TijdEntry(Gestart, stop).CreateRange(bereik.Start, bereik.Stop,xspr,specialeroosters).Stop;
         }
 
         public new string ToString()

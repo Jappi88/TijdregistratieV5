@@ -1131,7 +1131,7 @@ namespace Rpm.Productie
             {
                 if (WerkPlekken is {Count: > 0})
                     foreach (var wp in WerkPlekken)
-                        tijd += wp.TijdAanGewerkt(vanaf, tot);
+                        tijd += wp.TijdAanGewerkt(vanaf, tot,true);
 
                 if (tijd < 0 || double.IsInfinity(tijd)) tijd = 0;
             }

@@ -293,7 +293,7 @@ namespace Forms
 
         private void xaddklacht_Click(object sender, EventArgs e)
         {
-            var xklacht = new NewKlachtForm();
+            var xklacht = new NewKlachtForm(false);
             if (xklacht.ShowDialog() == DialogResult.OK)
             {
                 xklacht.Klacht.Afzender = Manager.Opties?.Username;
@@ -305,7 +305,7 @@ namespace Forms
         {
             var xs = SelectedKlacht;
             if (xs?.Klacht == null) return;
-            var xklacht = new NewKlachtForm(xs.Klacht);
+            var xklacht = new NewKlachtForm(false, xs.Klacht);
             if (xklacht.ShowDialog() == DialogResult.OK)
             {
                 xklacht.Klacht.GelezenDoor.Clear();

@@ -297,6 +297,7 @@ namespace ProductieManager.Forms
                     return;
                 }
 
+                xuserlist.BeginUpdate();
                 var selected = SelectedUser();
                 var toremove = xuserlist.Objects?.Cast<UserChat>().ToList() ?? new List<UserChat>();
                 xuserimages.Images.Clear();
@@ -311,13 +312,13 @@ namespace ProductieManager.Forms
                     xuserlist.SetObjects(toremove);
                 }
 
-                for(int i = 0; i < ProductieChat.Gebruikers.Count; i++)
+                for (int i = 0; i < ProductieChat.Gebruikers.Count; i++)
                 {
                     var user = ProductieChat.Gebruikers[i];
                     if (_Selected != null &&
                         string.Equals(user.UserName, _Selected, StringComparison.CurrentCultureIgnoreCase))
                         selected = user;
-                    var img = user.GetProfielImage()??Properties.Resources.avatardefault_92824;
+                    var img = user.GetProfielImage() ?? Properties.Resources.avatardefault_92824;
                     LoadedUserImages.Images.Add(user.UserName, img);
                     int unread = ProductieChat.Chat.UnreadMessages(user.UserName);
                     if (unread > 0)
@@ -347,11 +348,16 @@ namespace ProductieManager.Forms
                     xuserlist.RemoveObjects(toremove);
                 xuserlist.SelectedObject = selected;
                 xuserlist.SelectedItem?.EnsureVisible();
+               
                 // LoadSelectedUser();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+            }
+            finally
+            {
+                xuserlist.EndUpdate();
             }
         }
 
@@ -373,7 +379,8 @@ namespace ProductieManager.Forms
                   (user.LastOnline.Date == DateTime.Now.Date
                       ? user.LastOnline.ToShortTimeString()
                       : user.LastOnline.ToString("f"));
-            LoadConversation(true);
+            if (user != null)
+                LoadConversation(true);
         }
 
         private UserChat SelectedUser()

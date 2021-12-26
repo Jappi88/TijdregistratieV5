@@ -108,7 +108,7 @@ namespace ProductieManager.Forms.Klachten
         private void xedit_Click(object sender, EventArgs e)
         {
             if (Klacht == null) return;
-            var xklacht = new NewKlachtForm(Klacht);
+            var xklacht = new NewKlachtForm(false, Klacht);
             if (xklacht.ShowDialog() == DialogResult.OK)
             {
                 xklacht.Klacht.GelezenDoor.Clear();

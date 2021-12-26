@@ -24,7 +24,7 @@ namespace Forms
         {
             if (productie == null) return;
             Text = $@"Productie Info [{productie.ArtikelNr} => {productie.ProductieNr}]";
-            productieInfoUI1.SetInfo(productie, productie.Omschrijving, Color.Black, Color.Purple, Color.White);
+            productieInfoUI1.SetInfo(productie, productie.Omschrijving, Color.White, Color.White, Color.Black);
             productieInfoUI1.Visible = true;
             //xinfopanel.Text = productie.GetHtmlBody(productie.Omschrijving, productie.GetImageFromResources(),
             //    new Size(64, 64), Color.Black, Color.Purple, Color.White);
@@ -47,7 +47,7 @@ namespace Forms
         {
             if (bew == null) return;
             Text = $@"Werk Info [{bew.ArtikelNr} => {bew.ProductieNr}]";
-            productieInfoUI1.SetInfo(bew, bew.Omschrijving, Color.Black, Color.Purple, Color.White);
+            productieInfoUI1.SetInfo(bew, bew.Omschrijving, Color.White, Color.White, Color.Black);
             productieInfoUI1.Visible = true;
             //xinfopanel.Text = bew.GetHtmlBody($"{bew.Naam} van: {bew.Omschrijving}", bew.GetImageFromResources(),
             //    new Size(64, 64), Color.Black, Color.Purple, Color.White);
@@ -124,8 +124,8 @@ namespace Forms
                           $"<Title>{title}</Title>\r\n" +
                           "<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
                           "</head>\r\n" +
-                          $"<body style='background - color: {Color.White.Name}; background-gradient: {Color.MediumPurple.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 50px 0px'>\r\n" +
-                          $"<h1 align='center' style='color: {Color.White.Name}'>\r\n" +
+                          $"<body style='background - color: {Color.White.Name}; background-gradient: {Color.White.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 50px 0px'>\r\n" +
+                          $"<h1 align='center' style='color: {Color.Black.Name}'>\r\n" +
                           $"       {title}\r\n" +
                           "        <br/>\r\n" +
                           $"        <span style=\'font-size: x-small;\'>{xinfo}</span>\r\n " +

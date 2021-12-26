@@ -68,12 +68,11 @@ namespace Forms
                 {
                     foreach (ListViewItem lv in listView1.SelectedItems)
                     {
-                        var us = lv.Tag as UserAccount;
-                        if (us != null)
+                        if (lv.Tag is UserAccount us)
                         {
                             if (Manager.LogedInGebruiker != null &&
                                 string.Equals(Manager.LogedInGebruiker.Username, us.Username, StringComparison.CurrentCultureIgnoreCase))
-                                Manager.LogOut(this);
+                                Manager.LogOut(this,true);
                             if (await Manager.Database.DeleteAccount(us.Username))
                                 lv.Remove();
                         }
@@ -160,7 +159,7 @@ namespace Forms
                             string.Equals(Manager.LogedInGebruiker.Username, account.Username, StringComparison.CurrentCultureIgnoreCase))
                         {
                             Manager.LogedInGebruiker.AccesLevel = current;
-                            Manager.LoginChanged(this);
+                            Manager.LoginChanged(this,false);
                         }
                     }
             }

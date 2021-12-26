@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Navigation;
 using Microsoft.Win32.SafeHandles;
+using ProductieManager.Rpm.ExcelHelper;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;

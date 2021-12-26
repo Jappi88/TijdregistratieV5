@@ -3,6 +3,9 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Windows.Forms;
+using MetroFramework.Forms;
+using Rpm.Misc;
 
 namespace ProductieManager.Rpm.Misc
 {
@@ -50,6 +53,30 @@ namespace ProductieManager.Rpm.Misc
             }
 
             return destImage;
+        }
+
+        public static void ShowImageFromBytes(this byte[] image)
+        {
+            try
+            {
+                if (!image.IsImage()) return;
+                var ximg = Image.FromStream(new MemoryStream(image));
+                var xform = new MetroForm();
+                xform.StartPosition = FormStartPosition.CenterParent;
+                xform.ShadowType = MetroFormShadowType.AeroShadow;
+                xform.Size = ximg.Size;
+                xform.DisplayHeader = false;
+                var picbox = new PictureBox();
+                picbox.Image = ximg;
+                picbox.Dock = DockStyle.Fill;
+                picbox.SizeMode = PictureBoxSizeMode.StretchImage;
+                xform.Controls.Add(picbox);
+                xform.ShowDialog();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public static Bitmap CombineImage(this Bitmap a, Bitmap b, double scale)

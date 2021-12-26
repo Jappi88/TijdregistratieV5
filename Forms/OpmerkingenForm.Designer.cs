@@ -248,6 +248,7 @@ namespace Forms
             this.xOpmerkingenTree.TabIndex = 1;
             this.xOpmerkingenTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.xOpmerkingenTree_AfterSelect);
             this.xOpmerkingenTree.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.xOpmerkingenTree_NodeMouseClick);
+            this.xOpmerkingenTree.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.xOpmerkingenTree_NodeMouseDoubleClick);
             // 
             // contextMenuStrip1
             // 

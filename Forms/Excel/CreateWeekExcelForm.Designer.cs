@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.xcolumnsStatusLabel = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.xopenexcel = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -39,47 +37,26 @@
             this.xweeknr = new System.Windows.Forms.NumericUpDown();
             this.xjaar = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
+            this.xfiltersStrip = new System.Windows.Forms.MenuStrip();
+            this.xfiltertoolstrip = new System.Windows.Forms.ToolStripMenuItem();
+            this.xbeheerfilterstoolstripbutton = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
             this.xbezig = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xweeknr)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xjaar)).BeginInit();
+            this.xfiltersStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // xcolumnsStatusLabel
-            // 
-            this.xcolumnsStatusLabel.AutoSize = true;
-            this.xcolumnsStatusLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xcolumnsStatusLabel.ForeColor = System.Drawing.Color.DarkRed;
-            this.xcolumnsStatusLabel.Location = new System.Drawing.Point(146, 146);
-            this.xcolumnsStatusLabel.Name = "xcolumnsStatusLabel";
-            this.xcolumnsStatusLabel.Size = new System.Drawing.Size(279, 21);
-            this.xcolumnsStatusLabel.TabIndex = 18;
-            this.xcolumnsStatusLabel.Text = "Geen column  instellingen gekozen";
-            // 
-            // button1
-            // 
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.Black;
-            this.button1.Image = global::ProductieManager.Properties.Resources.mimetypes_excel_32x32;
-            this.button1.Location = new System.Drawing.Point(150, 93);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(231, 50);
-            this.button1.TabIndex = 17;
-            this.button1.Text = "Kies Columns Opties";
-            this.button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // xopenexcel
             // 
-            this.xopenexcel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.xopenexcel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.xopenexcel.AutoSize = true;
             this.xopenexcel.Checked = true;
             this.xopenexcel.CheckState = System.Windows.Forms.CheckState.Checked;
             this.xopenexcel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xopenexcel.Location = new System.Drawing.Point(395, 180);
+            this.xopenexcel.Location = new System.Drawing.Point(382, 141);
             this.xopenexcel.Name = "xopenexcel";
             this.xopenexcel.Size = new System.Drawing.Size(95, 21);
             this.xopenexcel.TabIndex = 14;
@@ -88,9 +65,10 @@
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(150, 60);
+            this.label1.Location = new System.Drawing.Point(150, 139);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(57, 21);
             this.label1.TabIndex = 1;
@@ -102,20 +80,19 @@
             this.pictureBox1.Image = global::ProductieManager.Properties.Resources.microsoft_excel_22733_128x128;
             this.pictureBox1.Location = new System.Drawing.Point(20, 60);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(124, 147);
+            this.pictureBox1.Size = new System.Drawing.Size(124, 195);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 11;
             this.pictureBox1.TabStop = false;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.xbezig);
             this.panel1.Controls.Add(this.xsluiten);
             this.panel1.Controls.Add(this.xOpslaan);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(20, 207);
+            this.panel1.Location = new System.Drawing.Point(144, 210);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(470, 45);
+            this.panel1.Size = new System.Drawing.Size(346, 45);
             this.panel1.TabIndex = 12;
             // 
             // xsluiten
@@ -125,7 +102,7 @@
             this.xsluiten.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.ForeColor = System.Drawing.Color.Black;
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xsluiten.Location = new System.Drawing.Point(348, 3);
+            this.xsluiten.Location = new System.Drawing.Point(224, 3);
             this.xsluiten.Name = "xsluiten";
             this.xsluiten.Size = new System.Drawing.Size(119, 38);
             this.xsluiten.TabIndex = 6;
@@ -141,7 +118,7 @@
             this.xOpslaan.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xOpslaan.ForeColor = System.Drawing.Color.Black;
             this.xOpslaan.Image = global::ProductieManager.Properties.Resources.diskette_save_saveas_1514;
-            this.xOpslaan.Location = new System.Drawing.Point(223, 3);
+            this.xOpslaan.Location = new System.Drawing.Point(99, 3);
             this.xOpslaan.Name = "xOpslaan";
             this.xOpslaan.Size = new System.Drawing.Size(119, 38);
             this.xOpslaan.TabIndex = 7;
@@ -152,8 +129,9 @@
             // 
             // xweeknr
             // 
+            this.xweeknr.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.xweeknr.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xweeknr.Location = new System.Drawing.Point(213, 58);
+            this.xweeknr.Location = new System.Drawing.Point(213, 137);
             this.xweeknr.Maximum = new decimal(new int[] {
             52,
             0,
@@ -165,8 +143,9 @@
             // 
             // xjaar
             // 
+            this.xjaar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.xjaar.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xjaar.Location = new System.Drawing.Point(316, 58);
+            this.xjaar.Location = new System.Drawing.Point(316, 137);
             this.xjaar.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -188,43 +167,85 @@
             // 
             // label2
             // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(269, 60);
+            this.label2.Location = new System.Drawing.Point(269, 139);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(41, 21);
             this.label2.TabIndex = 19;
             this.label2.Text = "Jaar";
             // 
-            // xbezig
+            // xfiltersStrip
             // 
-            this.xbezig.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.xfiltersStrip.AllowMerge = false;
+            this.xfiltersStrip.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.xfiltersStrip.AutoSize = false;
+            this.xfiltersStrip.BackColor = System.Drawing.Color.Transparent;
+            this.xfiltersStrip.Dock = System.Windows.Forms.DockStyle.None;
+            this.xfiltersStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.xfiltertoolstrip});
+            this.xfiltersStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+            this.xfiltersStrip.Location = new System.Drawing.Point(148, 60);
+            this.xfiltersStrip.Name = "xfiltersStrip";
+            this.xfiltersStrip.ShowItemToolTips = true;
+            this.xfiltersStrip.Size = new System.Drawing.Size(342, 74);
+            this.xfiltersStrip.TabIndex = 21;
+            this.xfiltersStrip.Text = "menuStrip1";
+            // 
+            // xfiltertoolstrip
+            // 
+            this.xfiltertoolstrip.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.xbeheerfilterstoolstripbutton,
+            this.toolStripSeparator15});
+            this.xfiltertoolstrip.Image = global::ProductieManager.Properties.Resources.filter_icon_icons_com_70971;
+            this.xfiltertoolstrip.Name = "xfiltertoolstrip";
+            this.xfiltertoolstrip.Size = new System.Drawing.Size(98, 20);
+            this.xfiltertoolstrip.Text = "Filter Regels";
+            this.xfiltertoolstrip.ToolTipText = "Kies productie filter";
+            this.xfiltertoolstrip.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.xfiltersStripItem_DropDownItemClicked);
+            // 
+            // xbeheerfilterstoolstripbutton
+            // 
+            this.xbeheerfilterstoolstripbutton.Image = global::ProductieManager.Properties.Resources.filter_filters_navigation_32x32;
+            this.xbeheerfilterstoolstripbutton.Name = "xbeheerfilterstoolstripbutton";
+            this.xbeheerfilterstoolstripbutton.Size = new System.Drawing.Size(180, 22);
+            this.xbeheerfilterstoolstripbutton.Text = "Beheer Regels";
+            this.xbeheerfilterstoolstripbutton.ToolTipText = "Beheer filters";
+            // 
+            // toolStripSeparator15
+            // 
+            this.toolStripSeparator15.Name = "toolStripSeparator15";
+            this.toolStripSeparator15.Size = new System.Drawing.Size(177, 6);
+            // 
+            // xbezig
+            // 
+            this.xbezig.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.xbezig.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xbezig.ForeColor = System.Drawing.Color.DarkGreen;
-            this.xbezig.Location = new System.Drawing.Point(3, 3);
+            this.xbezig.Location = new System.Drawing.Point(144, 180);
             this.xbezig.Name = "xbezig";
-            this.xbezig.Size = new System.Drawing.Size(214, 38);
+            this.xbezig.Size = new System.Drawing.Size(346, 30);
             this.xbezig.TabIndex = 8;
-            this.xbezig.Text = "Status";
             this.xbezig.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CreateWeekExcelForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(510, 272);
+            this.ClientSize = new System.Drawing.Size(510, 275);
+            this.Controls.Add(this.xbezig);
+            this.Controls.Add(this.xfiltersStrip);
             this.Controls.Add(this.xjaar);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.xweeknr);
-            this.Controls.Add(this.xcolumnsStatusLabel);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.xopenexcel);
-            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.panel1);
-            this.MinimumSize = new System.Drawing.Size(510, 272);
+            this.Controls.Add(this.pictureBox1);
+            this.MinimumSize = new System.Drawing.Size(510, 275);
             this.Name = "CreateWeekExcelForm";
             this.Style = MetroFramework.MetroColorStyle.Green;
             this.Text = "Creëer Week Overzicht";
@@ -232,14 +253,14 @@
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xweeknr)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xjaar)).EndInit();
+            this.xfiltersStrip.ResumeLayout(false);
+            this.xfiltersStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Label xcolumnsStatusLabel;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox xopenexcel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -249,6 +270,10 @@
         private System.Windows.Forms.NumericUpDown xweeknr;
         private System.Windows.Forms.NumericUpDown xjaar;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.MenuStrip xfiltersStrip;
+        private System.Windows.Forms.ToolStripMenuItem xfiltertoolstrip;
+        private System.Windows.Forms.ToolStripMenuItem xbeheerfilterstoolstripbutton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
         private System.Windows.Forms.Label xbezig;
     }
 }

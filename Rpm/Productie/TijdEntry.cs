@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Rpm.Productie
 {
@@ -57,16 +58,23 @@ namespace Rpm.Productie
         public bool InUse { get; set; }
         public ExtraTijd ExtraTijd { get; set; }
 
-        public TijdEntry CreateRange(DateTime start, DateTime stop)
+        public TijdEntry CreateRange(DateTime start, DateTime stop, Rooster rooster, List<Rooster> specialeroosters)
         {
+            rooster ??= WerkRooster;
             var xstart = Start;
+            var xstartrooster = specialeroosters?.FirstOrDefault(x => x.Vanaf.Date == start.Date)??rooster;
+            var xstoprooster = specialeroosters?.FirstOrDefault(x => x.Vanaf.Date == start.Date)??rooster;
+            if (xstartrooster != null && start.TimeOfDay == new TimeSpan())
+                start = start.Add(xstartrooster.StartWerkdag);
             var xstop = Stop;
+            if (xstoprooster != null && stop.TimeOfDay == new TimeSpan())
+                stop = stop.Add(xstoprooster.EindWerkdag);
             if (start < xstart && stop < xstart || start > xstop && stop > xstop) return null;
             if (xstart < start)
                 xstart = start;
             if (xstop > stop)
                 xstop = stop;
-            return new TijdEntry(xstart, xstop, WerkRooster);
+            return new TijdEntry(xstart, xstop, rooster);
         }
 
         public double TijdGewerkt(Rooster rooster, Dictionary<DateTime, DateTime> exclude, List<Rooster> speciaaleRoosters, double extratijd = 0)

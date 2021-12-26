@@ -319,9 +319,7 @@ namespace ProductieManager
                 Console.WriteLine(e);
             }
         }
-
-
-
+        
         private void _manager_OnManagerLoaded()
         {
             this.BeginInvoke(new Action(() =>
@@ -505,9 +503,12 @@ namespace ProductieManager
 
                 this.SetLastInfo();
                 Manager.DefaultSettings?.SaveAsDefault();
-                Manager.SaveSettings(Manager.Opties, false, false, true);
+               
                 Manager.ProductieProvider?.StopSync();
                 Manager.ProductieProvider?.DisableOfflineDb();
+                if (Manager.LogedInGebruiker != null)
+                    Manager.LogOut(this,false);
+                else Manager.SaveSettings(Manager.Opties, false, false, true);
                 productieView1.DetachEvents();
                 //  _updatechecker?.Stop();
                 // _updatechecker = null;

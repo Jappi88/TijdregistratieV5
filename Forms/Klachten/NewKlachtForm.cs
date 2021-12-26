@@ -1,27 +1,42 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using ProductieManager.Forms;
+﻿using ProductieManager.Forms;
 using ProductieManager.Properties;
-using ProductieManager.Rpm.Mailing;
 using ProductieManager.Rpm.Misc;
 using ProductieManager.Rpm.Various;
 using Rpm.Klachten;
 using Rpm.Misc;
 using Rpm.Productie;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using MetroFramework;
+using Rpm.Opmerking;
 
 namespace Forms.Klachten
 {
     public partial class NewKlachtForm : MetroFramework.Forms.MetroForm
     {
         public KlachtEntry Klacht { get; private set; }
-        public NewKlachtForm(KlachtEntry entry = null)
+        public OpmerkingEntry Opmerking { get; set; }
+        public NewKlachtForm(bool isopmerking, object value = null)
         {
             InitializeComponent();
-            InitKlacht(entry);
+            if (value is KlachtEntry klacht)
+            {
+                InitKlacht(klacht);
+            }
+            else if (value is OpmerkingEntry opmerking)
+            {
+                InitOpmerking(opmerking);
+            }
+            else
+            {
+                if (isopmerking)
+                    InitOpmerking(null);
+                else InitKlacht(null);
+            }
         }
 
         private void Xmessagebox_DragDrop(object sender, DragEventArgs e)
@@ -45,6 +60,10 @@ namespace Forms.Klachten
         public void InitKlacht(KlachtEntry klacht)
         {
             Klacht = klacht ?? new KlachtEntry();
+            xDatePanel.Visible = true;
+            ximagebox.Image = Resources.file_warning_40447;
+            xplaatsen.Image = Resources.Leave_80_icon_icons_com_57305;
+            this.Style = MetroColorStyle.Red;
             InitOntvangers();
             InitProducties();
             InitBijlages();
@@ -56,7 +75,32 @@ namespace Forms.Klachten
                 xplaatsen.Text = "Wijzig Klacht";
             }
             else xplaatsen.Text = "Klacht Plaatsen";
+
+            this.Text = xplaatsen.Text;
+            this.Invalidate();
             xmessagebox.Text = klacht?.Omschrijving;
+        }
+
+        public void InitOpmerking(OpmerkingEntry opmerking)
+        {
+            Opmerking = opmerking ?? new OpmerkingEntry();
+            xDatePanel.Visible = false;
+            ximagebox.Image = Resources.note_document_64x64;
+            xplaatsen.Image = Resources.noterespond_general_32x32;
+            this.Style = MetroColorStyle.Teal;
+            InitOntvangers();
+            InitProducties();
+            InitBijlages();
+            xonderwerp.Text = Opmerking?.Title;
+            xafzender.Text = Opmerking?.Afzender;
+            if (opmerking != null)
+            {
+                xplaatsen.Text = "Wijzig Opmerking";
+            }
+            else xplaatsen.Text = "Opmerking Plaatsen";
+            this.Text = xplaatsen.Text;
+            this.Invalidate();
+            xmessagebox.Text = Opmerking?.Opmerking;
         }
 
         private void InitOntvangers()
@@ -81,6 +125,12 @@ namespace Forms.Klachten
             {
                 foreach(var ont in Klacht.Ontvangers)
                     AddOntvangerStrip(ont);
+                return;
+            }
+            if (Opmerking?.Ontvangers != null && Opmerking.Ontvangers.Count > 0)
+            {
+                foreach (var ont in Opmerking.Ontvangers)
+                    AddOntvangerStrip(ont);
             }
         }
 
@@ -91,6 +141,12 @@ namespace Forms.Klachten
             if (Klacht?.Bijlages != null && Klacht.Bijlages.Count > 0)
             {
                 foreach (var ont in Klacht.Bijlages) AddBijlageStrip(ont);
+                return;
+            }
+            if (Opmerking?.Bijlages != null && Opmerking.Bijlages.Count > 0)
+            {
+                foreach (var ont in Opmerking.Bijlages) 
+                    AddBijlageStrip(ont.Key);
             }
         }
 
@@ -376,15 +432,47 @@ namespace Forms.Klachten
         {
             if (ValidateInput())
             {
-                Klacht.Ontvangers = GetOntvangers();
-                Klacht.Bijlages = GetBijlages();
-                Klacht.ProductieNrs = GetProducties();
-                Klacht.Onderwerp = xonderwerp.Text.Trim();
-                Klacht.Omschrijving = xmessagebox.Text.Trim();
-                Klacht.Melder = xafzender.Text.Trim();
-                Klacht.DatumKlacht = xdateklacht.Value;
-                Klacht.IsGelezen = false;
-                DialogResult = DialogResult.OK;
+                var ontvangers = GetOntvangers();
+                var bijlages = GetBijlages();
+                var prods = GetProducties();
+                if (Klacht != null)
+                {
+                    Klacht.Ontvangers = ontvangers;
+                    Klacht.Bijlages = bijlages;
+                    Klacht.ProductieNrs = prods;
+                    Klacht.Onderwerp = xonderwerp.Text.Trim();
+                    Klacht.Omschrijving = xmessagebox.Text.Trim();
+                    Klacht.Melder = xafzender.Text.Trim();
+                    Klacht.DatumKlacht = xdateklacht.Value;
+                    Klacht.IsGelezen = false;
+                    DialogResult = DialogResult.OK;
+                }
+                else if (Opmerking != null)
+                {
+                    Opmerking.Ontvangers = ontvangers;
+                    var xbl = new Dictionary<string, byte[]>();
+                    foreach (var xb in bijlages)
+                    {
+                        var xname = Path.GetFileName(xb);
+                        byte[] data = null;
+                        if (Opmerking.Bijlages.ContainsKey(xname))
+                            data = Opmerking.Bijlages[xname];
+                        if (data == null && File.Exists(xb))
+                        {
+                            data = File.ReadAllBytes(xb);
+                           
+                        }
+                        if (data != null && !xbl.ContainsKey(xname))
+                            xbl.Add(xname, data);
+                    }
+                    Opmerking.Bijlages = xbl;
+                    Opmerking.Producties = prods;
+                    Opmerking.Title = xonderwerp.Text.Trim();
+                    Opmerking.Opmerking = xmessagebox.Text.Trim();
+                    Opmerking.Afzender = xafzender.Text.Trim();
+                    Opmerking.SetIsGelezen(false);
+                    DialogResult = DialogResult.OK;
+                }
             }
         }
     }

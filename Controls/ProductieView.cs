@@ -1123,7 +1123,7 @@ namespace Controls
         {
             if (Manager.LogedInGebruiker != null)
             {
-                Manager.LogOut(this);
+                Manager.LogOut(this,true);
             }
             else
             {

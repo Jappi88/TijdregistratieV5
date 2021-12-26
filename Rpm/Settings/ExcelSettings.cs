@@ -18,7 +18,7 @@ namespace ProductieManager.Rpm.Settings
         [ExcludeFromSerialization]
         public bool IsSelected { get; set; }
         public bool ShowGroups { get; set; }
-
+        public string GroupBy { get; set; }
         public bool SetSelected(bool selected, string listname)
         {
             var index = ListNames.IndexOf(listname);

@@ -14,7 +14,8 @@ namespace Rpm.Opmerking
         public string Title { get; set; }
         public string Opmerking { get; set; }
         public DateTime GeplaatstOp { get; set; }
-
+        public Dictionary<string, byte[]> Bijlages { get; set; } = new Dictionary<string, byte[]>();
+        public List<string> Producties { get; set; }
 
         public bool IsGelezen =>
             string.Equals(Afzender, Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase) ||
@@ -62,22 +63,27 @@ namespace Rpm.Opmerking
                 string.Equals(x.ReactieVan, Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public void SetIsGelezen()
+        public void SetIsGelezen(bool gelezen)
         {
             Reacties ??= new List<ReactieEntry>();
             //var reas = Reacties.Where(x => !x.GelezenDoor.Any(s=> 
             //    string.Equals(s, Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase)));
             var xrea = Reacties.FirstOrDefault(x =>
                 string.Equals(Manager.Opties?.Username, x.ReactieVan, StringComparison.CurrentCultureIgnoreCase));
-            if (xrea == null)
+            if (!gelezen && xrea != null)
+            {
+                Reacties.Remove(xrea);
+            }
+            else if (xrea == null && gelezen)
                 Reacties.Add(new ReactieEntry());
-            else
+            else if(gelezen)
                 xrea.SetGelezen();
             foreach (var rea in Reacties)
             {
                 rea.GelezenDoor.RemoveAll(x =>
                     string.Equals(x, Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase));
-                rea.GelezenDoor.Add(Manager.Opties?.Username);
+                if (gelezen)
+                    rea.GelezenDoor.Add(Manager.Opties?.Username);
             }
             //if (rea == null)
             //{

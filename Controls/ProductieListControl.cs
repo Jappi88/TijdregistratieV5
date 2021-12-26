@@ -438,6 +438,8 @@ namespace Controls
                 }
                 
             }
+
+            xcols.GroupBy = ProductieLijst.AlwaysGroupByColumn?.AspectName;
             xcols.ShowGroups = ProductieLijst.ShowGroups;
             xcols.Columns = xcols.Columns.OrderBy(x => x.ColumnIndex).ToList();
             if (raisesettingchanged)
@@ -570,16 +572,17 @@ namespace Controls
                     {
                         xcols.SetDefaultColumns();
                     }
-
                     ProductieLijst.ShowGroups = xcols.ShowGroups;
                     ProductieLijst.BeginUpdate();
-                    
+                    OLVColumn groucolumn = null;
                     var xcurcols = ProductieLijst.AllColumns.Cast<OLVColumn>().ToList();
                     for (int i = 0; i < xcurcols.Count; i++)
                     {
                         var xcurcol = xcurcols[i];
-                        var xcol = xcols.Columns.FirstOrDefault(x => string.Equals(x.Naam, xcurcol.AspectName));
-                        
+                        var xcol = xcols.Columns.FirstOrDefault(x => string.Equals(x.Naam, xcurcol.AspectName, StringComparison.CurrentCultureIgnoreCase));
+                        if (!string.IsNullOrEmpty(xcols.GroupBy) && string.Equals(xcols.GroupBy, xcurcol.AspectName,
+                                StringComparison.CurrentCultureIgnoreCase))
+                            groucolumn = xcurcol;
                         if (xcol == null)
                         {
                             ProductieLijst.AllColumns.RemoveAt(i);
@@ -609,9 +612,13 @@ namespace Controls
                             xsort = col;
                             col.Sortable = true;
                         }
+                        if (!string.IsNullOrEmpty(xcols.GroupBy) && string.Equals(xcols.GroupBy, col.AspectName,
+                                StringComparison.CurrentCultureIgnoreCase))
+                            groucolumn = col;
                         ProductieLijst.AllColumns.Add(col);
                     }
 
+                    ProductieLijst.AlwaysGroupByColumn = groucolumn;
                     ProductieLijst.EndUpdate();
                 }
                 else

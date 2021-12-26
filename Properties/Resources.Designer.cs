@@ -233,6 +233,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap attachment_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("attachment_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap augmented_reality_calendar_schedule_mountain_32x32 {
             get {
                 object obj = ResourceManager.GetObject("augmented_reality_calendar_schedule_mountain_32x32", resourceCulture);
@@ -1631,6 +1641,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap Note_34576_32x32 {
             get {
                 object obj = ResourceManager.GetObject("Note_34576_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap note_document_64x64 {
+            get {
+                object obj = ResourceManager.GetObject("note_document_64x64", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

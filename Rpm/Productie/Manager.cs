@@ -374,13 +374,13 @@ namespace Rpm.Productie
                         xdef.AutoLoginUsername = autologin ? x.Username : null;
                         xdef.SaveAsDefault();
                         LogedInGebruiker = x;
-                        LoginChanged(sender);
+                        LoginChanged(sender,true);
                         return true;
                     }
 
                     LogedInGebruiker = null;
 
-                    LoginChanged(sender);
+                    LoginChanged(sender,false);
                     return false;
                 }
 
@@ -406,7 +406,7 @@ namespace Rpm.Productie
                         LogedInGebruiker = x;
                         x.OsID = SystemId;
                         await Database?.UpSert(x, $"{x.Username} Ingelogd!");
-                        LoginChanged(sender);
+                        LoginChanged(sender,true);
                         return true;
                     }
 
@@ -423,12 +423,12 @@ namespace Rpm.Productie
         /// Log uit
         /// </summary>
         /// <param name="sender">De afzender die deze taak oproept</param>
-        public static void LogOut(object sender)
+        public static void LogOut(object sender, bool raiseevent)
         {
             if (LogedInGebruiker != null)
             {
                 LogedInGebruiker = null;
-                LoginChanged(sender);
+                LoginChanged(sender, raiseevent);
             }
         }
 
@@ -464,7 +464,7 @@ namespace Rpm.Productie
             var optiesid = Opties?.Username != null ? Opties.Username.ToLower().StartsWith("default")? $"Default[{Opties.SystemID}]" : Opties.Username : null;
             string name = LogedInGebruiker == null ? "Default" : LogedInGebruiker.Username;
             if (Opties != null && !string.Equals(optiesid, id, StringComparison.CurrentCultureIgnoreCase))
-                SaveSettings(Opties, false, true);
+                SaveSettings(Opties, false, true,true);
 
             try
             {
@@ -1756,9 +1756,9 @@ namespace Rpm.Productie
         /// Roep op dat de logged in gebruiker is gewijzigd
         /// </summary>
         /// <param name="sender">de afzender die dit oproept</param>
-        public static async void LoginChanged(object sender)
+        public static async void LoginChanged(object sender, bool raiseevent)
         {
-            await LoadSettings(sender,true);
+            await LoadSettings(sender,raiseevent);
             if (LogedInGebruiker == null)
                 ProductieChat?.LogOut();
             else
@@ -1968,7 +1968,7 @@ namespace Rpm.Productie
                     if (message.Value is UserAccount acc)
                     {
                         if (LogedInGebruiker != null && string.Equals(LogedInGebruiker.Username, acc.Username, StringComparison.CurrentCultureIgnoreCase))
-                            LogOut(null);
+                            LogOut(null,true);
                     }
 
                     break;
@@ -2004,7 +2004,8 @@ namespace Rpm.Productie
         public void Dispose()
         {
             IsLoaded = false;
-            LogOut(null);
+            if (LogedInGebruiker != null)
+                LogOut(null, false);
             //_emailcheckTimer?.Stop();
             //_emailcheckTimer?.Dispose();
             //_backemailchecker?.CancelAsync();

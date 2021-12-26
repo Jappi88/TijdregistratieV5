@@ -12,6 +12,7 @@ using System.Runtime.Remoting.Contexts;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using NPOI.HSSF.Util;
+using NPOI.SS.UserModel;
 
 namespace Rpm.Productie
 {
@@ -374,10 +375,10 @@ namespace Rpm.Productie
             return Color.Red;
         }
 
-        public Color GetProductSoortColor()
+        public static Color GetProductSoortColor(string soort)
         {
-            if(string.IsNullOrEmpty(ProductSoort))return Color.Black;
-            switch (ProductSoort.ToLower())
+            if(string.IsNullOrEmpty(soort))return Color.Black;
+            switch (soort.ToLower())
             {
                 case "horti":
                     return Color.FromArgb(9, 122, 192);
@@ -385,6 +386,8 @@ namespace Rpm.Productie
                     return Color.FromArgb(251, 186, 40);
                 case "techno":
                     return Color.FromArgb(54, 162, 63);
+                case "red":
+                    return Color.FromArgb(199, 17, 39);
             }
             return Color.Black;
         }
@@ -394,15 +397,16 @@ namespace Rpm.Productie
             switch (state)
             {
                 case ProductieState.Gestopt:
-                    return HSSFColor.LightYellow.Index;
+                    return IndexedColors.LightYellow.Index;
                 case ProductieState.Gestart:
-                    return HSSFColor.LightCornflowerBlue.Index;
+                    return IndexedColors.LightCornflowerBlue.Index;
                 case ProductieState.Gereed:
-                    return HSSFColor.LightGreen.Index;
+                    return IndexedColors.LightGreen.Index;
                 case ProductieState.Verwijderd:
-                    return HSSFColor.LightOrange.Index;
+                    return IndexedColors.LightOrange.Index;
             }
-            return HSSFColor.COLOR_NORMAL;
+
+            return IndexedColors.White.Index;
         }
 
         public static string GetStylesheet(string src)
@@ -673,7 +677,7 @@ Color textcolor, bool useimage)
                 : $"<td width = '32' style = 'padding: 5px 5px 0 0' >\r\n" +
                   $"<img width='{imagesize.Width}' height='{imagesize.Height}'  src = 'data:image/png;base64,{image.Base64Encoded()}' />\r\n" +
                   $"</td>";
-            var xcolor = GetProductSoortColor();
+            var xcolor = GetProductSoortColor(ProductSoort);
             var xrgb = $"rgb({xcolor.R}, {xcolor.G}, {xcolor.B})'";
             string prodsoort = string.IsNullOrEmpty(ProductSoort)
                 ? ""

@@ -62,7 +62,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -1631,6 +1631,8 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\note_document_64x64.png" />
+    <None Include="Resources\attachment_32x32.png" />
     <None Include="Resources\box_package_icon_64x64.png" />
     <None Include="Resources\empty_box_package_icon_32x32.png" />
     <None Include="Resources\Leave-80_icon-icons.com_57305_128x128.png" />

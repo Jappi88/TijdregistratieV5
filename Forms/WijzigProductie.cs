@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using BrightIdeasSoftware;
-using MetroFramework;
-using MetroFramework.Controls;
-using MetroFramework.Forms;
-using PdfSharp.Drawing;
+﻿using BrightIdeasSoftware;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Forms
 {
@@ -28,6 +22,7 @@ namespace Forms
             Formulier = new ProductieFormulier();
             objectEditorUI1.ExcludeItems.AddRange(new[] {"state","naam" });
             ((OLVColumn) xbewerkinglijst.Columns[0]).ImageGetter = sender => 0;
+            metroTabControl1.SelectedIndex = 0;
         }
 
 
@@ -39,6 +34,7 @@ namespace Forms
             editmode = true;
             objectEditorUI1.ExcludeItems.AddRange(new[] { "productienr", "artikelnr","state","naam" });
             ((OLVColumn) xbewerkinglijst.Columns[0]).ImageGetter = sender => 0;
+            metroTabControl1.SelectedIndex = 0;
         }
 
         public ProductieFormulier Formulier { get; private set; }

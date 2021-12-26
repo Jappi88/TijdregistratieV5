@@ -114,7 +114,7 @@ namespace Rpm.Misc
                         if (bew.WerkPlekken == null || bew.WerkPlekken.Count == 0) continue;
                         foreach (var wp in bew.WerkPlekken)
                         {
-                            if (wp.TijdAanGewerkt(periode.Start, periode.Stop) <= 0) continue;
+                            if (wp.TijdAanGewerkt(periode.Start, periode.Stop,true) <= 0) continue;
                             if (!xreturn.ContainsKey(wp.Naam))
                                 xreturn.Add(wp.Naam, new List<object> {wp});
                             else xreturn[wp.Naam].Add(wp);
@@ -221,7 +221,7 @@ namespace Rpm.Misc
             {
                 case "tijd gewerkt":
                     if (iswerkplek)
-                        return Math.Round(producties.Sum(x => ((WerkPlek) x).TijdAanGewerkt(bereik.Start, bereik.Stop)),
+                        return Math.Round(producties.Sum(x => ((WerkPlek) x).TijdAanGewerkt(bereik.Start, bereik.Stop,true)),
                             2);
 
                     return Math.Round(producties.Sum(x => ((Bewerking) x).TijdAanGewerkt(bereik.Start, bereik.Stop)),
@@ -233,7 +233,7 @@ namespace Rpm.Misc
                         {
                             var prod = (WerkPlek) xprod;
                             if (prod == null || prod.TotaalGemaakt == 0) continue;
-                            var tg = prod.TijdAanGewerkt(bereik.Start, bereik.Stop);
+                            var tg = prod.TijdAanGewerkt(bereik.Start, bereik.Stop,true);
                             var totaltg = prod.TijdAanGewerkt();
                             if (tg <= 0) continue;
                             var percentage = tg / totaltg * 100;
@@ -1870,6 +1870,14 @@ namespace Rpm.Misc
 
             return s;
         }
+
+        public static string FirstCharToUpper(this string input) =>
+            input switch
+            {
+                null => throw new ArgumentNullException(nameof(input)),
+                "" => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
+                _ => input[0].ToString().ToUpper() + input.Substring(1)
+            };
 
         #endregion Conversions
 

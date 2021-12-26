@@ -40,7 +40,6 @@ namespace Controls
             this.metroTabPage4 = new MetroFramework.Controls.MetroTabPage();
             this.xDatumsHtmlPanel = new TheArtOfDev.HtmlRenderer.WinForms.HtmlPanel();
             this.metroTabPage6 = new MetroFramework.Controls.MetroTabPage();
-            this.verpakkingInstructieUI1 = new Controls.VerpakkingInstructieUI();
             this.metroTabPage5 = new MetroFramework.Controls.MetroTabPage();
             this.xMaterialenHtmlPanel = new TheArtOfDev.HtmlRenderer.WinForms.HtmlPanel();
             this.metroTabPage7 = new MetroFramework.Controls.MetroTabPage();
@@ -57,6 +56,7 @@ namespace Controls
             this.xwerkplekken = new MetroFramework.Controls.MetroComboBox();
             this.xnextb = new MetroFramework.Controls.MetroButton();
             this.xaantalgemaakt = new System.Windows.Forms.NumericUpDown();
+            this.verpakkingInstructieUI1 = new Controls.VerpakkingInstructieUI();
             this.metroTabControl1.SuspendLayout();
             this.metroTabPage1.SuspendLayout();
             this.metroTabPage2.SuspendLayout();
@@ -110,18 +110,16 @@ namespace Controls
             // 
             // xHeaderHtmlPanel
             // 
-            this.xHeaderHtmlPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.xHeaderHtmlPanel.AutoScroll = true;
-            this.xHeaderHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(670, 20);
+            this.xHeaderHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(677, 20);
             this.xHeaderHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xHeaderHtmlPanel.BaseStylesheet = null;
             this.xHeaderHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xHeaderHtmlPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xHeaderHtmlPanel.IsContextMenuEnabled = false;
-            this.xHeaderHtmlPanel.Location = new System.Drawing.Point(4, 4);
+            this.xHeaderHtmlPanel.Location = new System.Drawing.Point(0, 0);
             this.xHeaderHtmlPanel.Name = "xHeaderHtmlPanel";
-            this.xHeaderHtmlPanel.Size = new System.Drawing.Size(670, 347);
+            this.xHeaderHtmlPanel.Size = new System.Drawing.Size(677, 354);
             this.xHeaderHtmlPanel.TabIndex = 0;
             this.xHeaderHtmlPanel.Text = "Header Html Text";
             this.xHeaderHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
@@ -143,19 +141,17 @@ namespace Controls
             // 
             // xInforHtmlPanel
             // 
-            this.xInforHtmlPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.xInforHtmlPanel.AutoScroll = true;
-            this.xInforHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(671, 20);
+            this.xInforHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(677, 20);
             this.xInforHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xInforHtmlPanel.BaseStylesheet = null;
             this.xInforHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xInforHtmlPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xInforHtmlPanel.IsContextMenuEnabled = false;
             this.xInforHtmlPanel.IsSelectionEnabled = false;
-            this.xInforHtmlPanel.Location = new System.Drawing.Point(3, 3);
+            this.xInforHtmlPanel.Location = new System.Drawing.Point(0, 0);
             this.xInforHtmlPanel.Name = "xInforHtmlPanel";
-            this.xInforHtmlPanel.Size = new System.Drawing.Size(671, 348);
+            this.xInforHtmlPanel.Size = new System.Drawing.Size(677, 354);
             this.xInforHtmlPanel.TabIndex = 1;
             this.xInforHtmlPanel.Text = "Info Html Text";
             this.xInforHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
@@ -177,19 +173,17 @@ namespace Controls
             // 
             // xNotitieHtmlPanel
             // 
-            this.xNotitieHtmlPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.xNotitieHtmlPanel.AutoScroll = true;
-            this.xNotitieHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(674, 20);
+            this.xNotitieHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(677, 20);
             this.xNotitieHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xNotitieHtmlPanel.BaseStylesheet = null;
             this.xNotitieHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xNotitieHtmlPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xNotitieHtmlPanel.IsContextMenuEnabled = false;
             this.xNotitieHtmlPanel.IsSelectionEnabled = false;
-            this.xNotitieHtmlPanel.Location = new System.Drawing.Point(3, 3);
+            this.xNotitieHtmlPanel.Location = new System.Drawing.Point(0, 0);
             this.xNotitieHtmlPanel.Name = "xNotitieHtmlPanel";
-            this.xNotitieHtmlPanel.Size = new System.Drawing.Size(674, 348);
+            this.xNotitieHtmlPanel.Size = new System.Drawing.Size(677, 354);
             this.xNotitieHtmlPanel.TabIndex = 11;
             this.xNotitieHtmlPanel.Text = "Notitie Html Text";
             this.xNotitieHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
@@ -211,20 +205,18 @@ namespace Controls
             // 
             // xDatumsHtmlPanel
             // 
-            this.xDatumsHtmlPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.xDatumsHtmlPanel.AutoScroll = true;
-            this.xDatumsHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(671, 20);
+            this.xDatumsHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(677, 20);
             this.xDatumsHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xDatumsHtmlPanel.BaseStylesheet = null;
             this.xDatumsHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xDatumsHtmlPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xDatumsHtmlPanel.IsContextMenuEnabled = false;
             this.xDatumsHtmlPanel.IsSelectionEnabled = false;
-            this.xDatumsHtmlPanel.Location = new System.Drawing.Point(3, 3);
+            this.xDatumsHtmlPanel.Location = new System.Drawing.Point(0, 0);
             this.xDatumsHtmlPanel.Name = "xDatumsHtmlPanel";
             this.xDatumsHtmlPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.xDatumsHtmlPanel.Size = new System.Drawing.Size(671, 348);
+            this.xDatumsHtmlPanel.Size = new System.Drawing.Size(677, 354);
             this.xDatumsHtmlPanel.TabIndex = 6;
             this.xDatumsHtmlPanel.Text = "Datums Html Text";
             this.xDatumsHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
@@ -247,23 +239,6 @@ namespace Controls
             this.metroTabPage6.VerticalScrollbarHighlightOnWheel = false;
             this.metroTabPage6.VerticalScrollbarSize = 3;
             // 
-            // verpakkingInstructieUI1
-            // 
-            this.verpakkingInstructieUI1.AllowEditMode = false;
-            this.verpakkingInstructieUI1.AutoScroll = true;
-            this.verpakkingInstructieUI1.BackColor = System.Drawing.Color.White;
-            this.verpakkingInstructieUI1.BodyColor = System.Drawing.Color.Empty;
-            this.verpakkingInstructieUI1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.verpakkingInstructieUI1.IsEditmode = false;
-            this.verpakkingInstructieUI1.Location = new System.Drawing.Point(0, 0);
-            this.verpakkingInstructieUI1.Name = "verpakkingInstructieUI1";
-            this.verpakkingInstructieUI1.Padding = new System.Windows.Forms.Padding(5);
-            this.verpakkingInstructieUI1.Productie = null;
-            this.verpakkingInstructieUI1.Size = new System.Drawing.Size(677, 354);
-            this.verpakkingInstructieUI1.TabIndex = 2;
-            this.verpakkingInstructieUI1.TextColor = System.Drawing.Color.Empty;
-            this.verpakkingInstructieUI1.Title = null;
-            // 
             // metroTabPage5
             // 
             this.metroTabPage5.Controls.Add(this.xMaterialenHtmlPanel);
@@ -281,19 +256,17 @@ namespace Controls
             // 
             // xMaterialenHtmlPanel
             // 
-            this.xMaterialenHtmlPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.xMaterialenHtmlPanel.AutoScroll = true;
-            this.xMaterialenHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(671, 20);
+            this.xMaterialenHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(677, 20);
             this.xMaterialenHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xMaterialenHtmlPanel.BaseStylesheet = null;
             this.xMaterialenHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xMaterialenHtmlPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xMaterialenHtmlPanel.IsContextMenuEnabled = false;
             this.xMaterialenHtmlPanel.IsSelectionEnabled = false;
-            this.xMaterialenHtmlPanel.Location = new System.Drawing.Point(3, 3);
+            this.xMaterialenHtmlPanel.Location = new System.Drawing.Point(0, 0);
             this.xMaterialenHtmlPanel.Name = "xMaterialenHtmlPanel";
-            this.xMaterialenHtmlPanel.Size = new System.Drawing.Size(671, 348);
+            this.xMaterialenHtmlPanel.Size = new System.Drawing.Size(677, 354);
             this.xMaterialenHtmlPanel.TabIndex = 7;
             this.xMaterialenHtmlPanel.Text = "Materialen Html Text";
             this.xMaterialenHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
@@ -315,19 +288,17 @@ namespace Controls
             // 
             // xWerkPlaatsenHtmlPanel
             // 
-            this.xWerkPlaatsenHtmlPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.xWerkPlaatsenHtmlPanel.AutoScroll = true;
-            this.xWerkPlaatsenHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(671, 20);
+            this.xWerkPlaatsenHtmlPanel.AutoScrollMinSize = new System.Drawing.Size(677, 20);
             this.xWerkPlaatsenHtmlPanel.BackColor = System.Drawing.SystemColors.Window;
             this.xWerkPlaatsenHtmlPanel.BaseStylesheet = null;
             this.xWerkPlaatsenHtmlPanel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xWerkPlaatsenHtmlPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xWerkPlaatsenHtmlPanel.IsContextMenuEnabled = false;
             this.xWerkPlaatsenHtmlPanel.IsSelectionEnabled = false;
-            this.xWerkPlaatsenHtmlPanel.Location = new System.Drawing.Point(3, 3);
+            this.xWerkPlaatsenHtmlPanel.Location = new System.Drawing.Point(0, 0);
             this.xWerkPlaatsenHtmlPanel.Name = "xWerkPlaatsenHtmlPanel";
-            this.xWerkPlaatsenHtmlPanel.Size = new System.Drawing.Size(671, 349);
+            this.xWerkPlaatsenHtmlPanel.Size = new System.Drawing.Size(677, 354);
             this.xWerkPlaatsenHtmlPanel.TabIndex = 9;
             this.xWerkPlaatsenHtmlPanel.Text = "WerkPlaatsen Html Text";
             this.xWerkPlaatsenHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
@@ -479,6 +450,23 @@ namespace Controls
             this.xaantalgemaakt.Size = new System.Drawing.Size(120, 29);
             this.xaantalgemaakt.TabIndex = 4;
             this.xaantalgemaakt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xaantalgemaakt_KeyDown);
+            // 
+            // verpakkingInstructieUI1
+            // 
+            this.verpakkingInstructieUI1.AllowEditMode = false;
+            this.verpakkingInstructieUI1.AutoScroll = true;
+            this.verpakkingInstructieUI1.BackColor = System.Drawing.Color.White;
+            this.verpakkingInstructieUI1.BodyColor = System.Drawing.Color.Empty;
+            this.verpakkingInstructieUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.verpakkingInstructieUI1.IsEditmode = false;
+            this.verpakkingInstructieUI1.Location = new System.Drawing.Point(0, 0);
+            this.verpakkingInstructieUI1.Name = "verpakkingInstructieUI1";
+            this.verpakkingInstructieUI1.Padding = new System.Windows.Forms.Padding(5);
+            this.verpakkingInstructieUI1.Productie = null;
+            this.verpakkingInstructieUI1.Size = new System.Drawing.Size(677, 354);
+            this.verpakkingInstructieUI1.TabIndex = 2;
+            this.verpakkingInstructieUI1.TextColor = System.Drawing.Color.Empty;
+            this.verpakkingInstructieUI1.Title = null;
             // 
             // ProductieInfoUI
             // 

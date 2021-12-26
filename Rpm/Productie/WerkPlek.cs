@@ -210,7 +210,7 @@ namespace Rpm.Productie
             DateTime xret = default;
             foreach (var uur in Tijden.Uren)
             {
-                var t = uur.CreateRange(bereik.Start, bereik.Stop);
+                var t = uur.CreateRange(bereik.Start, bereik.Stop, Tijden.WerkRooster, Tijden.SpecialeRoosters);
                 if (t == null) continue;
                 if (xret.IsDefault() || t.Start < xret)
                     xret = t.Start;
@@ -245,7 +245,7 @@ namespace Rpm.Productie
             DateTime xret = default;
             foreach (var uur in Tijden.Uren)
             {
-                var t = uur.CreateRange(bereik.Start, bereik.Stop);
+                var t = uur.CreateRange(bereik.Start, bereik.Stop, Tijden.WerkRooster, Tijden.SpecialeRoosters);
                 if (t == null) continue;
                
                 if (t.Stop > xret)
@@ -493,26 +493,32 @@ namespace Rpm.Productie
             }
         }
 
-        public double TijdAanGewerkt()
+        public double TijdAanGewerkt(bool includestoringen = true)
         {
             double tijd = 0;
+            Dictionary<DateTime, DateTime> xstoringen = new Dictionary<DateTime, DateTime>();
+            if (includestoringen)
+                xstoringen = GetStoringen();
             if (Werk is {IsBemand: false})
-                tijd = Tijden.TijdGewerkt(null, GetStoringen());
+                tijd = Tijden.TijdGewerkt(null, xstoringen);
             else
                 tijd = Personen.Sum(x =>
-                    x.TijdAanGewerkt(GetStoringen(), this, x.WerkRooster ?? Tijden?.WerkRooster).TotalHours);
+                    x.TijdAanGewerkt(xstoringen, this, x.WerkRooster ?? Tijden?.WerkRooster).TotalHours);
 
             return Math.Round(tijd, 2);
         }
 
-        public double TijdAanGewerkt(DateTime vanaf, DateTime tot)
+        public double TijdAanGewerkt(DateTime vanaf, DateTime tot, bool includestoringen)
         {
             double tijd = 0;
+            Dictionary<DateTime, DateTime> xstoringen = new Dictionary<DateTime, DateTime>();
+            if (includestoringen)
+                xstoringen = GetStoringen();
             if (Werk is {IsBemand: false})
-                tijd = Tijden.TijdGewerkt(null, vanaf, tot, GetStoringen());
+                tijd = Tijden.TijdGewerkt(null, vanaf, tot, xstoringen);
             else
                 tijd = Personen.Sum(x =>
-                    x.TijdAanGewerkt(GetStoringen(), this, vanaf, tot, x.WerkRooster ?? Tijden?.WerkRooster)
+                    x.TijdAanGewerkt(xstoringen, this, vanaf, tot, x.WerkRooster ?? Tijden?.WerkRooster)
                         .TotalHours);
 
             return Math.Round(tijd, 2);

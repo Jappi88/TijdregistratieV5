@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NPOI.XSSF.Util;
 
 namespace Rpm.Productie
 {
@@ -133,9 +134,33 @@ namespace Rpm.Productie
             try
             {
                 if (Count == 0) return false;
+                var xstart = bereik.Start;
+                var xstop = bereik.Stop;
+                if (bereik.Start.TimeOfDay == new TimeSpan())
+                {
+                    var xstartr = SpecialeRoosters.FirstOrDefault(x => x.Vanaf.Date == bereik.Start.Date) ??
+                                  WerkRooster;
+                    if (xstartr != null)
+                        xstart = bereik.Start.Add(xstartr.StartWerkdag);
+                }
+                if (bereik.Stop.TimeOfDay == new TimeSpan())
+                {
+                    var xstartr = SpecialeRoosters.FirstOrDefault(x => x.Vanaf.Date == bereik.Stop.Date) ??
+                                  WerkRooster;
+                    if (xstartr != null)
+                        xstop = bereik.Stop.Add(xstartr.EindWerkdag);
+                }
+                foreach (var uur in Uren)
+                {
+                   
+                    if (uur.Start >= xstart && uur.Start < xstop)
+                        return true;
+                    if (uur.Start <= xstart && uur.Stop > xstop)
+                        return true;
+                }
                 return Uren.Any(x =>
-                    (x.Start >= bereik.Start && x.Start < bereik.Stop) ||
-                    x.Stop > bereik.Start && x.Stop <= bereik.Stop);
+                    (x.Start >= xstart && x.Start < xstop) ||
+                    x.Stop > xstart && x.Stop <= xstop);
             }
             catch (Exception e)
             {
@@ -431,13 +456,11 @@ namespace Rpm.Productie
             double tijd = 0;
             xtijden.ForEach(x =>
             {
-                var xtmp = x.CreateRange(Vanaf, tot);
+                var xtmp = x.CreateRange(Vanaf, tot, x.WerkRooster??WerkRooster, SpecialeRoosters);
                 if (xtmp != null)
                 {
                     tijden.Add(xtmp);
                     tijd += xtmp.TijdGewerkt(rooster, exclude, SpecialeRoosters);
-                    if(xtmp.Stop > tot)
-                        Console.WriteLine("here!");
                 }
             });
             if (tijden.Count == 0)
