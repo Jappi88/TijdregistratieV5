@@ -103,18 +103,20 @@ namespace Controls
 
         private void Xwerkpleklist_CellToolTipShowing(object sender, ToolTipShowingEventArgs e)
         {
-            var wp = e.Model as WerkPlek;
-            if (wp != null)
+            if (e.Model is WerkPlek wp)
             {
                 e.Title = e.SubItem.Text;
                 e.Text = $"{wp.Path}";
 
                 var xrs = wp.Storingen?.Count(x => !x.IsVerholpen);
+                var first = wp.Storingen?.FirstOrDefault(x => !x.IsVerholpen);
                 var x1 = xrs == 1 ? "onderbrekening" : "onderbrekeningen";
                 var x2 = xrs == 1 ? "staat" : "staan";
                 var msg = $"{wp.Werk.Omschrijving}\nMedewerkers: {wp.PersonenLijst}";
-                if (xrs > 0)
+                if (xrs > 1)
                     msg += $"\nLet op!!\nEr {x2} {xrs} {x1} open!";
+                else if(xrs ==1 && first != null)
+                    msg += $"\nLet op!!\n{first.StoringType} {(string.IsNullOrEmpty(first.Omschrijving)? "" : first.Omschrijving.Trim())} staat al {first.TotaalTijd} uur open...";
                 e.Text += msg;
             }
         }

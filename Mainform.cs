@@ -190,7 +190,7 @@ namespace ProductieManager
                     }
                 }
 
-                productieView1.LoadManager(Manager.DefaultSettings.TempMainDB.RootPath);
+                productieView1.LoadManager(Manager.DefaultSettings.TempMainDB.RootPath,false);
             }
             catch (Exception ex)
             {
@@ -332,7 +332,7 @@ namespace ProductieManager
 
                 }
                 _dbWatcher.WatchPath(Manager.DefaultSettings.MainDB.UpdatePath, false, true);
-               
+                UpdateTitle();
             }));
 
         }
@@ -350,7 +350,7 @@ namespace ProductieManager
             {
                 InitBootDir();
                 xversie.Text = $@"Versie {ProductVersion}";
-                productieView1.LoadManager(_bootDir);
+                productieView1.LoadManager(_bootDir,true);
                 productieView1.ShowUnreadMessage = true;
                 productieView1.UpdateUnreadMessages(null);
                 productieView1.UpdateUnreadOpmerkingen();

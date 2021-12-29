@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Rpm.Misc;
 
 namespace Rpm.Productie.AantalHistory
@@ -42,6 +43,29 @@ namespace Rpm.Productie.AantalHistory
             if (LastAantal > Aantal)
                 return LastAantal - Aantal;
             return Aantal - LastAantal;
+        }
+
+        public bool ContainsBereik(TijdEntry bereik, Rooster rooster, List<Rooster> specialeroosters)
+        {
+            if (bereik == null) return true;
+            var xstart = bereik.Start;
+            var xstop = bereik.Stop;
+            if (bereik.Start.TimeOfDay == new TimeSpan())
+            {
+                var xstartr = specialeroosters?.FirstOrDefault(x => x.Vanaf.Date == bereik.Start.Date) ??
+                              rooster;
+                if (xstartr != null)
+                    xstart = bereik.Start.Add(xstartr.StartWerkdag);
+            }
+            if (bereik.Stop.TimeOfDay == new TimeSpan())
+            {
+                var xstartr = specialeroosters?.FirstOrDefault(x => x.Vanaf.Date == bereik.Stop.Date) ??
+                              rooster;
+                if (xstartr != null)
+                    xstop = bereik.Stop.Add(xstartr.EindWerkdag);
+            }
+
+            return new TijdEntry(DateChanged, EndDate).ContainsBereik(new TijdEntry(xstart, xstop));
         }
 
         public double GetPerUur(UrenLijst uren, Dictionary<DateTime, DateTime> exclude = null)

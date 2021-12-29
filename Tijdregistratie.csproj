@@ -386,23 +386,35 @@
     <Compile Include="Forms\AanbevolenPersonenForm.Designer.cs">
       <DependentUpon>AanbevolenPersonenForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AantalChanger.cs">
+    <Compile Include="Forms\Aantal\AantalChanger.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\AantalChanger.Designer.cs">
+    <Compile Include="Forms\Aantal\AantalChanger.Designer.cs">
       <DependentUpon>AantalChanger.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AantalGemaaktUI.cs">
+    <Compile Include="Forms\Aantal\AantalGemaaktPlaatsen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\AantalGemaaktUI.Designer.cs">
+    <Compile Include="Forms\Aantal\AantalGemaaktPlaatsen.Designer.cs">
+      <DependentUpon>AantalGemaaktPlaatsen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Aantal\AantalGemaaktUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Aantal\AantalGemaaktUI.Designer.cs">
       <DependentUpon>AantalGemaaktUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AantalMonitorForm.cs">
+    <Compile Include="Forms\Aantal\AantalMonitorForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\AantalMonitorForm.Designer.cs">
+    <Compile Include="Forms\Aantal\AantalMonitorForm.Designer.cs">
       <DependentUpon>AantalMonitorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Aantal\Controls\AantalChangerUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Aantal\Controls\AantalChangerUI.Designer.cs">
+      <DependentUpon>AantalChangerUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\AboutBox1.cs">
       <SubType>Form</SubType>
@@ -440,6 +452,7 @@
     <Compile Include="Forms\BewerkingSelectorForm.Designer.cs">
       <DependentUpon>BewerkingSelectorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Charting\ChartAantalSerie.cs" />
     <Compile Include="Forms\ChatForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1192,14 +1205,17 @@
     <EmbeddedResource Include="Forms\AanbevolenPersonenForm.resx">
       <DependentUpon>AanbevolenPersonenForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AantalChanger.resx">
+    <EmbeddedResource Include="Forms\Aantal\AantalChanger.resx">
       <DependentUpon>AantalChanger.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AantalGemaaktUI.resx">
+    <EmbeddedResource Include="Forms\Aantal\AantalGemaaktUI.resx">
       <DependentUpon>AantalGemaaktUI.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AantalMonitorForm.resx">
+    <EmbeddedResource Include="Forms\Aantal\AantalMonitorForm.resx">
       <DependentUpon>AantalMonitorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Aantal\Controls\AantalChangerUI.resx">
+      <DependentUpon>AantalChangerUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AboutBox1.resx">
       <DependentUpon>AboutBox1.cs</DependentUpon>

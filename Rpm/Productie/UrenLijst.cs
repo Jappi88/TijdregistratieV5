@@ -113,6 +113,12 @@ namespace Rpm.Productie
             }
         }
 
+        public Rooster GetTodayRooster()
+        {
+            var dt = DateTime.Now;
+            return SpecialeRoosters?.FirstOrDefault(x => x.Vanaf.Date == dt.Date) ?? WerkRooster;
+        }
+
         public bool Remove(TijdEntry entry)
         {
             lock (Uren)

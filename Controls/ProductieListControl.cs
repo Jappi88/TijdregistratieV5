@@ -2728,7 +2728,10 @@ namespace Controls
                                 : $"staan {openstaand.Count} onderbrekeningen";
                             var xstmessage = "Let Op!\n" +
                                              $"Er {xs} open!";
-                            e.Text += "\n\n" + xstmessage;
+                            var first = openstaand.FirstOrDefault(x => !x.IsVerholpen);
+                             if (openstaand.Count == 1 && first != null)
+                                 xstmessage += $"\n{first.StoringType} {(string.IsNullOrEmpty(first.Omschrijving) ? "" : first.Omschrijving.Trim())} van {first.TotaalTijd} uur";
+                             e.Text += "\n\n" + xstmessage;
                         }
                     }
                 }
@@ -2744,6 +2747,9 @@ namespace Controls
                         var xs = open.Length == 1 ? "staat 1 onderbreking" : $"staan {open.Length} onderbrekeningen";
                         var xstmessage = "Let Op!\n" +
                                          $"Er {xs} open!";
+                        var first = open.FirstOrDefault(x => !x.IsVerholpen);
+                        if (open.Length == 1 && first != null)
+                            xstmessage += $"\n{first.StoringType} {(string.IsNullOrEmpty(first.Omschrijving) ? "" : first.Omschrijving.Trim())} van {first.TotaalTijd} uur";
                         e.Text += "\n\n" + xstmessage;
                     }
                 }

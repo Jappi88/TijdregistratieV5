@@ -23,6 +23,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Forms.Excel;
+using NPOI.OpenXmlFormats.Dml.Diagram;
 using Various;
 
 namespace Controls
@@ -81,14 +82,17 @@ namespace Controls
 
         #region Manager
 
-        private async void InitManager(string path, bool autologin)
+        private async void InitManager(string path, bool autologin, bool disposeold)
         {
             try
             {
-                //if (_manager == null)
-                _manager?.Dispose();
-                if (_manager == null)
+                if (_manager == null || disposeold)
+                {
+                    _manager?.Dispose();
+                    //if (_manager == null)
                     _manager = new Manager(false);
+                }
+
                 DetachEvents();
                 //BeginInvoke(new MethodInvoker(() => _manager.Load()));
                 //BeginInvoke(new MethodInvoker(_manager.StartMonitor));
@@ -119,9 +123,9 @@ namespace Controls
             }
         }
 
-        public void LoadManager(string path, bool autologin = true)
+        public void LoadManager(string path, bool disposeOld, bool autologin = true)
         {
-            InitManager(path, autologin);
+            InitManager(path, autologin, disposeOld);
         }
 
         public void InitEvents()
@@ -954,28 +958,27 @@ namespace Controls
             }
         }
 
-        private static async void DoLoadDbInstance()
+        private void DoLoadDbInstance()
         {
             try
             {
                 var msgbox = new XMessageBox();
-                var msg = "Kies een database dat je zou willen laden";
+                var msg = "Kies een database om te laden";
                 var bttns = new Dictionary<string, DialogResult>();
                 bttns.Add("Annuleren", DialogResult.Cancel);
-                bttns.Add("Laad Database", DialogResult.OK);
+                bttns.Add("Database Laden", DialogResult.OK);
                 bttns.Add("Kies Folder", DialogResult.Yes);
                 var dbs = Manager.DefaultSettings?.DbUpdateEntries ??
                           UserSettings.GetDefaultSettings()?.DbUpdateEntries ?? new List<DatabaseUpdateEntry>();
                 var dbnames = dbs.Select(x => x.Naam).ToList();
-                dbnames.Insert(0, "Eigen Database");
-                var result = msgbox.ShowDialog(msg, "Laad Database", MessageBoxButtons.YesNoCancel,
+                dbnames.Insert(0, "Standaard Database");
+                var result = msgbox.ShowDialog(msg, "Database Laden", MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Information, dbnames.ToArray(), bttns);
                 if (result == DialogResult.Cancel) return;
                 string path = null;
-                string name = null;
                 if (result == DialogResult.OK)
                 {
-                    if (msgbox.SelectedValue != null && msgbox.SelectedValue.ToLower() == "eigen database")
+                    if (msgbox.SelectedValue != null && msgbox.SelectedValue.ToLower() == "standaard database")
                     {
                         var stng = Manager.DefaultSettings ?? UserSettings.GetDefaultSettings();
                         if (Directory.Exists(stng.MainDB.RootPath))
@@ -987,7 +990,6 @@ namespace Controls
                         var ent = dbs.FirstOrDefault(x =>
                             string.Equals(x.Naam, msgbox.SelectedValue, StringComparison.CurrentCultureIgnoreCase));
                         path = ent?.RootPath;
-                        name = ent?.Naam;
                     }
                 }
 
@@ -1013,7 +1015,8 @@ namespace Controls
                     //    if (opties != null)
                     //        Manager.Opties = opties;
                     //}
-                    await _manager.Load(path, true, true, true);
+                    LoadManager(path,false);
+                    //await _manager.Load(path, true, true, true);
                 }
             }
             catch (Exception e)
@@ -1060,6 +1063,9 @@ namespace Controls
                             break;
                         case "xsearchtekening":
                             ZoekWerkTekening();
+                            break;
+                        case "xchangeaantal":
+                            DoAantalGemaakt();
                             break;
                         case "xwerkplaatsindeling":
                             ShowWerkplaatsIndelingWindow();
@@ -1917,6 +1923,28 @@ namespace Controls
                 {
                     Tools.ShowSelectedTekening(tb.SelectedText, TekeningClosed);
                 }
+            }
+            catch (Exception e)
+            {
+                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+            }
+        }
+
+        public async void DoAantalGemaakt()
+        {
+            try
+            {
+                if (Manager.Database == null || Manager.Database.IsDisposed)
+                    return;
+                var bws = await Manager.Database.GetBewerkingen(ViewState.Gestart, true,null, null);
+                var wps = new List<WerkPlek>();
+                foreach (var bw in bws)
+                {
+                    var xwps = bw.WerkPlekken?.Where(x => x.IsActief()).ToArray();
+                    if (xwps != null && xwps.Any())
+                        wps.AddRange(xwps);
+                }
+                
             }
             catch (Exception e)
             {

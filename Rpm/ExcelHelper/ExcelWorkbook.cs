@@ -13,6 +13,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
 using ICell = NPOI.SS.UserModel.ICell;
 
 // ReSharper disable All
@@ -37,8 +39,23 @@ namespace ProductieManager.Rpm.ExcelHelper
 
         public static string[] WerkPlekColumns =
         {
-            "ArtikelNr", "ProductieNr", "Status", "Naam", "Omschrijving", "Totaal Aantal", "Aantal Gemaakt","PDC P/u","Actueel P/u","Gemiddeld P/u", "Gestart Op",
+            "ArtikelNr", "ProductieNr", "Status", "Naam", "Omschrijving", "Totaal Aantal","Totaal Gemaakt", "Actueel Gemaakt", "PDC P/u","Actueel P/u","Gemiddeld P/u", "Gestart Op",
             "Gestopt Op", "Tijd Gewerkt","Tijd Actief", "#Storingen","#Ombouw","Tijd Storingen","Tijd Ombouw","Personen"
+        };
+
+        
+
+
+        /// <summary>
+        /// Verborgen storing columns
+        /// </summary>
+        public static string[] HiddenStoringColumns =
+        {
+        };
+
+        public static string[] HiddenWerkPlekColumns =
+        {
+            "Naam","ProductieNr"
         };
 
         public static object GetValue(WerkPlek plek, string value, TijdEntry bereik)
@@ -52,11 +69,17 @@ namespace ProductieManager.Rpm.ExcelHelper
                 case "actueel p/u":
                     return plek.PerUur;
                 case "gemiddeld p/u":
-                    return plek.Werk?.GemiddeldActueelPerUur??plek.PerUur;
+                    return plek.Werk?.GemiddeldActueelPerUur ?? plek.PerUur;
                 case "totaal aantal":
                     return plek.Werk.Aantal;
-                case "aantal gemaakt":
-                    return bereik == null ? plek.ActueelAantalGemaakt : plek.GetAantalGemaakt(bereik.Start, bereik.Stop, ref xtijd, true);
+                case "actueel gemaakt":
+                    return bereik == null
+                        ? plek.ActueelAantalGemaakt
+                        : plek.GetAantalGemaakt(bereik.Start, bereik.Stop, ref xtijd, false);
+                case "totaal gemaakt":
+                    return bereik == null
+                        ? plek.Werk?.TotaalGemaakt ?? plek.AantalGemaakt
+                        : plek.GetAantalGemaakt(DateTime.MinValue, bereik.Stop, ref xtijd, false);
                 case "gestart op":
                     if (bereik.Start.Date == bereik.Stop.Date)
                         return plek.GestartOp(bereik).ToString("HH:mm");
@@ -66,46 +89,46 @@ namespace ProductieManager.Rpm.ExcelHelper
                         return plek.GestoptOp(bereik).ToString("HH:mm");
                     return plek.GestoptOp(bereik).ToString();
                 case "tijd gewerkt":
-                    return bereik == null ? plek.TijdAanGewerkt() : plek.TijdAanGewerkt(bereik.Start, bereik.Stop,true);
+                    return bereik == null
+                        ? plek.TijdAanGewerkt()
+                        : plek.TijdAanGewerkt(bereik.Start, bereik.Stop, true);
                 case "tijd actief":
-                    return bereik == null ? plek.TijdAanGewerkt(false) : plek.TijdAanGewerkt(bereik.Start, bereik.Stop,false);
+                    return bereik == null
+                        ? plek.TijdAanGewerkt(false)
+                        : plek.TijdAanGewerkt(bereik.Start, bereik.Stop, false);
                 case "personen":
                     return plek.PersonenLijst;
                 case "#storingen":
                     return plek.Storingen.Where(x =>
+                        (bereik != null && x.GetTotaleTijd(bereik.Start, bereik.Stop) > 0) &&
                         !string.IsNullOrEmpty(x.StoringType) && !x.StoringType.ToLower().Contains("ombouw")).Count();
                 case "#ombouw":
                     return plek.Storingen.Where(x =>
+                        (bereik != null && x.GetTotaleTijd(bereik.Start, bereik.Stop) > 0) &&
                         !string.IsNullOrEmpty(x.StoringType) && x.StoringType.ToLower().Contains("ombouw")).Count();
                 case "tijd storingen":
                     return plek.Storingen.Where(x =>
-                        !string.IsNullOrEmpty(x.StoringType) && !x.StoringType.ToLower().Contains("ombouw")).Sum(x=> bereik == null? x.TotaalTijd : x.GetTotaleTijd(bereik.Start, bereik.Stop));
+                        (bereik != null && x.GetTotaleTijd(bereik.Start, bereik.Stop) > 0) &&
+                        !string.IsNullOrEmpty(x.StoringType) && !x.StoringType.ToLower().Contains("ombouw")).Sum(x =>
+                        bereik == null ? x.TotaalTijd : x.GetTotaleTijd(bereik.Start, bereik.Stop));
                 case "tijd ombouw":
                     return plek.Storingen.Where(x =>
-                        !string.IsNullOrEmpty(x.StoringType) && x.StoringType.ToLower().Contains("ombouw")).Sum(x => bereik == null ? x.TotaalTijd : x.GetTotaleTijd(bereik.Start, bereik.Stop));
+                        (bereik != null && x.GetTotaleTijd(bereik.Start, bereik.Stop) > 0) &&
+                        !string.IsNullOrEmpty(x.StoringType) && x.StoringType.ToLower().Contains("ombouw")).Sum(x =>
+                        bereik == null ? x.TotaalTijd : x.GetTotaleTijd(bereik.Start, bereik.Stop));
                 case "status":
                     return Enum.GetName(typeof(ProductieState), plek.Werk.State);
             }
+
             var prop = plek.GetPropValue(value);
             if (prop == null)
             {
                 return "N.V.T.";
             }
+
             return prop;
         }
 
-
-        /// <summary>
-        /// Verborgen storing columns
-        /// </summary>
-        public static string[] HiddenStoringColumns =
-        {
-        };
-
-        public static string[] HiddenWerkPlekColumns =
-        {
-            "Naam", "PerUur"
-        };
 
         private static ICellStyle GetBorderStyle(XSSFWorkbook workbook)
         {
@@ -691,8 +714,9 @@ namespace ProductieManager.Rpm.ExcelHelper
                     var xss = GetColumnName(cellindex);
                     switch (xcol.ToLower())
                     {
-                        case "aantal gemaakt":
+                        case "actueel gemaakt":
                         case "totaal aantal":
+                        case "totaal gemaakt":
                         case "#storingen":
                         case "#ombouw":
                         case "tijd storingen":
@@ -745,7 +769,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                 //border layaout
                 //var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Center, 18, IndexedColors.Black.Index);
                 var rowindex = 0;
-                var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12, IndexedColors.Black.Index);
+                var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12, IndexedColors.Black.Index, BorderStyle.Medium);
                 //init the columns and font
                 
                 var row = sheet.CreateRow(rowindex);
@@ -793,7 +817,7 @@ namespace ProductieManager.Rpm.ExcelHelper
 
                     //var formatting = CreateRowConditionalFormatRules(sheet, rowindex + 1, ProductieColumns.Length);
                     cellindex = 0;
-                    cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11,HSSFColor.Black.Index);
+                    cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11,HSSFColor.Black.Index, BorderStyle.Double);
                     cellStyleBorder.FillBackgroundColor =  rowcolor;
                     cellStyleBorder.FillPattern = FillPattern.SolidForeground;
                     cellStyleBorder.FillForegroundColor = rowcolor;
@@ -829,7 +853,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                         if (xtxtcolor > -1 || xcolcolor > -1 || !string.IsNullOrEmpty(xcolmn.ColumnFormat))
                         {
                             cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11,
-                                xtxtcolor == -1 ? HSSFColor.Black.Index : xtxtcolor);
+                                xtxtcolor == -1 ? HSSFColor.Black.Index : xtxtcolor, BorderStyle.Double);
                             cellStyleBorder.FillBackgroundColor = xcolcolor == -1 ? rowcolor : xcolcolor;
                             cellStyleBorder.FillPattern = FillPattern.SolidForeground;
                             cellStyleBorder.FillForegroundColor = xcolcolor == -1 ? rowcolor : xcolcolor;
@@ -843,7 +867,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                         else if (!defstyle)
                         {
                             cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11,
-                                HSSFColor.Black.Index);
+                                HSSFColor.Black.Index, BorderStyle.Double);
                             cellStyleBorder.FillBackgroundColor = rowcolor;
                             cellStyleBorder.FillPattern = FillPattern.SolidForeground;
                             cellStyleBorder.FillForegroundColor = rowcolor;
@@ -875,7 +899,7 @@ namespace ProductieManager.Rpm.ExcelHelper
 
                 //Laten we nu wat extra velden aanmaken om het totale te kunnen weergeven van sommige velden.
                 //hier maken we de cel styles aan!
-                cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12, IndexedColors.Black.Index);
+                cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12, IndexedColors.Black.Index, BorderStyle.Medium);
 
                 //hier gaan we de cells aanmaken.
                 row = sheet.CreateRow(rowindex);
@@ -1454,6 +1478,7 @@ namespace ProductieManager.Rpm.ExcelHelper
         /// </summary>
         /// <param name="overzichten">Een serie overzichten die gemaakt moeten worden</param>
         /// <param name="createoverzicht">True voor als je ook de statistieken wilt maken</param>
+        /// <param name="handler"></param>
         /// <returns>Een taak die op de achtergrond excel bestanden aanmaakt</returns>
         public static Task<WeekOverzicht[]> CreateWeekOverzicht(WeekOverzicht[] overzichten, bool createoverzicht, IsRunningHandler handler)
         {
@@ -1466,85 +1491,24 @@ namespace ProductieManager.Rpm.ExcelHelper
                         return aangemaakt.ToArray();
                     var arg = new ProgressArg();
                     arg.Type = ProgressType.WriteBussy;
-                    arg.Message = "Bewerkingen Verzamelen...";
-                    if (handler != null && !handler.Invoke(arg)) return aangemaakt.ToArray();
-                    var bewerkingen = await Manager.Database.GetAllBewerkingen(true,true);
-                    arg.Message = "Locatie aanmaken...";
-                    if (handler != null && !handler.Invoke(arg)) return aangemaakt.ToArray();
-                        var rootpath = Manager.Opties.WeekOverzichtPath;
-                    if (!Directory.Exists(rootpath))
-                        Directory.CreateDirectory(rootpath);
-                    if (bewerkingen.Count > 0)
+                        var rootpath = Path.Combine(Manager.Opties.WeekOverzichtPath, Manager.Opties.Username);
+                        if (!Directory.Exists(rootpath))
+                            Directory.CreateDirectory(rootpath);
                         if (overzichten != null)
                             foreach (var overzicht in overzichten)
                                 try
                                 {
                                     arg.Message = $"Overzicht '{overzicht.ToString()}' aanmaken...";
                                     if (handler != null && !handler.Invoke(arg)) break;
-                                    var xbws = new List<Bewerking>();
-                                    var startweek =
-                                        Functions.DateOfWeek(overzicht.Jaar, DayOfWeek.Monday, overzicht.WeekNr);
-                                    var endweek = startweek.DateOfWeek(DayOfWeek.Sunday);
-                                    if (Manager.Opties?.WerkRooster != null)
-                                        startweek = startweek.Add(Manager.Opties.WerkRooster.StartWerkdag);
-
-                                    if (Manager.Opties?.WerkRooster != null)
-                                        endweek = endweek.Add(Manager.Opties.WerkRooster.EindWerkdag);
-                                    var storingen = new List<Storing>();
-                                    //var xbewerkingen = new List<Bewerking>();
-                                    for (var i = 0; i < bewerkingen.Count; i++)
-                                    {
-                                        arg.Message =
-                                            $"Bewerkingen verzamelen voor '{overzicht.ToString()}'({i}/{bewerkingen.Count})...";
-                                        arg.Pogress = i == 0 ? 0 : (int) (((double) (i / bewerkingen.Count)) * 100);
-                                        if (handler != null && !handler.Invoke(arg)) break;
-                                        var bw = bewerkingen[i];
-                                        var sts = bw.GetAlleStoringen(startweek, endweek);
-                                        if (sts?.Length > 0)
-                                            storingen.AddRange(sts);
-                                        if (bw.TijdAanGewerkt(startweek, endweek) > 0)
-                                            xbws.Add(bw);
-                                    }
-
-                                    if (xbws.Count == 0 && storingen.Count == 0) continue;
-                                    xbws = xbws.OrderBy(x => x.ArtikelNr).ToList();
-                                    storingen = storingen.OrderBy(x => x.WerkPlek).ToList();
                                     var weekNum = overzicht.WeekNr;
                                     var year = overzicht.Jaar;
                                     var afdeling = overzicht.Afdeling ?? "Hele";
                                     var sheetname = overzicht.ToString();
                                     var path = $"{rootpath}\\{sheetname}.xlsx";
-
-                                    var omschrijving = $"Week {weekNum} {year} {afdeling} productie overzicht";
-
-                                    var workbook = new XSSFWorkbook();
-
-                                    var sheet = CreateProductieOverzicht(workbook, new TijdEntry(startweek, endweek, null), sheetname, xbws,handler);
-                                    if (sheet == null) continue;
-                                    arg.Message =
-                                        $"Statistieken aanmaken...";
-                                    bool flag = handler != null && !handler.Invoke(arg);
-                                    if (!flag && storingen.Count > 0)
-                                    {
-                                        //Creeer een niew tapblad als er storingen zijn.
-                                        sheetname = $"Week {weekNum} {year} Storingen";
-                                        omschrijving = $"Week {weekNum} {year} {afdeling} Storing Overzicht";
-                                        CreateStoringOverzicht(workbook, storingen, sheetname,new TijdEntry(startweek, endweek, null));
-                                    }
-
-                                    if (!flag && createoverzicht)
-                                    {
-                                        CreateOverzichtChartSheet(workbook, bewerkingen, false);
-                                        CreateOverzichtChartSheet(workbook, bewerkingen, true);
-                                    }
-
-                                    using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                                    {
-                                        workbook.Write(fs);
-                                    }
-
-                                    workbook.Close();
-                                    aangemaakt.Add(overzicht);
+                                    if (await CreateDagelijksProductieOverzicht(overzicht.WeekNr, overzicht.Jaar, path,
+                                            handler,
+                                            null))
+                                        aangemaakt.Add(overzicht);
                                 }
                                 catch (Exception e)
                                 {
@@ -1590,7 +1554,7 @@ namespace ProductieManager.Rpm.ExcelHelper
 
                     if (tobecreated.Count > 0)
                     {
-                        var newcreated = await ExcelWorkbook.CreateWeekOverzicht(tobecreated.ToArray(), true,handler);
+                        var newcreated = await CreateWeekOverzicht(tobecreated.ToArray(), true,handler);
                         if (newcreated?.Length > 0) bestaande.AddRange(newcreated);
                     }
                 }
@@ -1620,14 +1584,15 @@ namespace ProductieManager.Rpm.ExcelHelper
                
                 try
                 {
-                    if (!Directory.Exists(Manager.Opties.WeekOverzichtPath))
-                        Directory.CreateDirectory(Manager.Opties.WeekOverzichtPath);
+                    var path = Path.Combine(Manager.Opties.WeekOverzichtPath, Manager.Opties.Username);
+                    if (!Directory.Exists(path))
+                        Directory.CreateDirectory(path);
                     var opties = Manager.Opties;
                     if (!_issendingweek)
                     {
                         _issendingweek = true;
 
-                        var files = Directory.GetFiles(Manager.Opties.WeekOverzichtPath);
+                        var files = Directory.GetFiles(path);
                         var overzichten = new List<WeekOverzicht>();
 
                         foreach (var file in files)
@@ -1659,14 +1624,14 @@ namespace ProductieManager.Rpm.ExcelHelper
                                     if (adres.VanafYear > overzicht.Jaar) continue;
                                     if (adres.VanafWeek > overzicht.WeekNr && adres.VanafYear >= overzicht.Jaar)
                                         continue;
-                                    var path = $"{opties.WeekOverzichtPath}\\{overzicht.ToString()}.xlsx";
+                                    var fpath = $"{opties.WeekOverzichtPath}\\{overzicht.ToString()}.xlsx";
                                     if (File.Exists(path))
                                     {
                                         var omschrijving =
                                             $"Week {overzicht.WeekNr} {overzicht.Jaar} {overzicht.Afdeling} overzicht";
                                         var msg = CreateOverzichtMailBody(overzicht);
                                         if (RemoteProductie.SendEmail(adres.Adres, omschrijving, msg,
-                                            new List<string>() { path }, false,false))
+                                            new List<string>() { fpath }, false,false))
                                         {
                                             adres.VerzondenWeekOverzichten.Add(overzicht);
                                             send++;
@@ -1695,13 +1660,9 @@ namespace ProductieManager.Rpm.ExcelHelper
             var omschrijving = "Beste Collega,\n\n" +
                                $"U bent aangemeld voor een wekelijks overzicht van de 'ProductieManager' voor '{overzicht.Afdeling}'.\n" +
                                "Als u deze mails niet wenst te ontvangen, dan kunt u dat aangeven bij Ihab zodat hij u kan afmelden.\n\n" +
-                               $"Dit overzicht is voor week {overzicht.WeekNr} {overzicht.Jaar} en geld alleen voor '{overzicht.Afdeling}'.\n" +
-                               "In de bijlage is er een Excel bestand met het weekoverzicht en de statistieken van de afgelopen weken.\n\n" +
-                               $"In de eerste sheet zijn alle producties van week {overzicht.WeekNr} te zien, waarvan aantal velden zijn verborgen om de overzicht te bewaren.\n" +
-                               "Zo kunt u zien wat er is geproduceerd, wat de gemiddelde zijn, en door wie.\n" +
-                               "Als er onderbrekeningen zijn zoals storingen, onderhoudt of schoonmaak, dan is daar een aparte sheet voor.\n" +
-                               "Zo kunt u alle onderbrekeningen gedetailleerd zien van heel de week.\n" +
-                               "Dit overzicht is hooguit een beeld van hoe de 'ProductieManager' is bijgehouden.\n" +
+                               $"Dit overzicht is voor week {overzicht.WeekNr} {overzicht.Jaar} en geld alleen voor '{overzicht.Afdeling}'.\n\n" +
+                             
+                               $"Dit overzicht is hooguit een beeld van hoe de 'ProductieManager' is bijgehouden in week {overzicht.WeekNr}.\n" +
                                "Hoe beter het wordt bijgehouden, hoe nauwkeuriger het Excel overzicht.\n\n" +
                                "Mocht er vragen zijn tot betrekking van dit mail, of het weekoverzicht dat kunt u dat aangeven bij Ihab.\n" +
                                "Veel leesplezier!";
@@ -1726,6 +1687,28 @@ namespace ProductieManager.Rpm.ExcelHelper
         public static short ColorToIndex(System.Drawing.Color color)
         {
             return new XSSFColor(new byte[]{color.R, color.G, color.B}).Index;
+        }
+
+        public static bool InserImage(XSSFWorkbook workbook,ISheet sheet, Image image, int colindex, int rowindex)
+        {
+            try
+            {
+                if (sheet == null || workbook == null) return false;
+                int pictureIndex = workbook.AddPicture(image.ToByteArray(), PictureType.JPEG);
+                ICreationHelper helper = workbook.GetCreationHelper();
+                IDrawing drawing = sheet.CreateDrawingPatriarch();
+                IClientAnchor anchor = helper.CreateClientAnchor();
+                anchor.Col1 = colindex;//0 index based column
+                anchor.Row1 = rowindex;//0 index based row
+                IPicture picture = drawing.CreatePicture(anchor, pictureIndex);
+                picture.Resize();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
         }
 
         public static Task<bool> CreateDagelijksProductieOverzicht(int weeknr, int jaar, string filepath, IsRunningHandler handler, List<Filter> filters)
@@ -1801,7 +1784,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                         ISheet sheet = null;
                         var xstyle = CreateStyle(workbook, true, HorizontalAlignment.Center, 28,
                             IndexedColors.Black.Index, BorderStyle.None);
-                        var rowindex = 4;
+                        var rowindex = 5;
                         int cur = 0;
                         int xstartCell = 0;
                         int currow = rowindex;
@@ -1826,7 +1809,8 @@ namespace ProductieManager.Rpm.ExcelHelper
                                     sheet = workbook.CreateSheet(CleanSheetName(wp.Value.First().Naam));
                                     CreateHeader(sheet,
                                         $"{xafdeling.FirstCharToUpper()} Tijd Registratie Voor '{wp.Key.FirstCharToUpper()}' In Week {weeknr} {jaar}",
-                                        0, 4, 0, xdagspan, xstyle);
+                                        0, rowindex, 0, xdagspan, xstyle);
+                                   
                                 }
 
                                 xstyle = CreateStyle(workbook, true, HorizontalAlignment.Center, 20,
@@ -1880,7 +1864,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                                 sheet = workbook.CreateSheet(CleanSheetName(wp.Value.First().Naam));
                                 CreateHeader(sheet,
                                     $"{xafdeling.FirstCharToUpper()} Tijd Registratie Voor '{wp.Key.FirstCharToUpper()}' In Week {weeknr} {jaar}",
-                                    0, 4, 0, xdagspan, xstyle);
+                                    0, 5, 0, xdagspan, xstyle);
                             }
 
                             xstyle = (XSSFCellStyle)CreateStyle(workbook, true, HorizontalAlignment.Center, 24,
@@ -1925,11 +1909,14 @@ namespace ProductieManager.Rpm.ExcelHelper
                         {
                             for (var i = 0; i < WerkPlekColumns.Length; i++)
                                 sheet.AutoSizeColumn(i);
+                            InserImage(workbook, sheet, (Image)Resources.logo_vanderValk, xdagspan - 2, 1);
+                            for (var i = 0; i < HiddenWerkPlekColumns.Length; i++)
+                                sheet.SetColumnHidden(GetWerkplekColumnIndex(HiddenWerkPlekColumns[i]), true);
                             sheet = null;
                         }
 
                         xcurdag = xstartweek;
-                        currow = 4;
+                        currow = 5;
                         //storingen
                         if (storingen.Count > 0)
                         {
@@ -1961,7 +1948,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                                             IndexedColors.Black.Index, BorderStyle.None);
                                         CreateHeader(storingsheet,
                                             $"{xafdeling.FirstCharToUpper()} Storingen van '{wp.Key.FirstCharToUpper()}' In Week {weeknr} {jaar}",
-                                            0, 4, 0, xdagspan, xstyle);
+                                            0, 5, 0, xdagspan, xstyle);
                                     }
 
                                     xstyle = CreateStyle(workbook, true, HorizontalAlignment.Center, 20,
@@ -2037,7 +2024,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                                         IndexedColors.Black.Index, BorderStyle.None);
                                     CreateHeader(storingsheet,
                                         $"{xafdeling.FirstCharToUpper()} Storingen van '{wp.Key.FirstCharToUpper()}' In Week {weeknr} {jaar}",
-                                        0, 4, 0, xdagspan, xstyle);
+                                        0, 5, 0, xdagspan, xstyle);
                                 }
 
                                 xstyle = CreateStyle(workbook, true, HorizontalAlignment.Center, 24,
@@ -2097,6 +2084,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                             if (storingsheet == null) continue;
                             for (var i = 0; i < StoringColumns.Length; i++)
                                 storingsheet.AutoSizeColumn(i);
+                            InserImage(workbook, storingsheet, (Image)Resources.logo_vanderValk, xdagspan - 1, 1);
                             storingsheet = null;
                         }
                     }

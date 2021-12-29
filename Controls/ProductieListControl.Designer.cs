@@ -150,9 +150,9 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xloadinglabel.BackColor = System.Drawing.Color.Transparent;
             this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xloadinglabel.Location = new System.Drawing.Point(3, 76);
+            this.xloadinglabel.Location = new System.Drawing.Point(3, 128);
             this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(1143, 558);
+            this.xloadinglabel.Size = new System.Drawing.Size(1068, 506);
             this.xloadinglabel.TabIndex = 29;
             this.xloadinglabel.Text = "Producties Laden...";
             this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -653,14 +653,14 @@ namespace Controls
             // 
             this.xbeheerfilterstoolstripbutton.Image = global::ProductieManager.Properties.Resources.filter_filters_navigation_32x32;
             this.xbeheerfilterstoolstripbutton.Name = "xbeheerfilterstoolstripbutton";
-            this.xbeheerfilterstoolstripbutton.Size = new System.Drawing.Size(180, 22);
+            this.xbeheerfilterstoolstripbutton.Size = new System.Drawing.Size(147, 22);
             this.xbeheerfilterstoolstripbutton.Text = "Beheer Regels";
             this.xbeheerfilterstoolstripbutton.ToolTipText = "Beheer filters";
             // 
             // toolStripSeparator15
             // 
             this.toolStripSeparator15.Name = "toolStripSeparator15";
-            this.toolStripSeparator15.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator15.Size = new System.Drawing.Size(144, 6);
             // 
             // xsearch
             // 

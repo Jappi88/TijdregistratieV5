@@ -174,14 +174,18 @@ namespace Rpm.Productie
         {
             //_backemailchecker.DoWork += _worker_DoWork;
             //_backemailchecker.RunWorkerCompleted += _worker_RunWorkerCompleted;
-
+            OnManagerLoaded -= Manager_OnManagerLoaded;
             OnManagerLoaded += Manager_OnManagerLoaded;
             //_emailcheckTimer.Tick += _timer_Tick;
+            _syncTimer?.Dispose();
             _syncTimer = new Timer();
             _syncTimer.Elapsed += _syncTimer_Tick;
+            _overzichtSyncTimer?.Dispose();
             _overzichtSyncTimer = new Timer();
             _overzichtSyncTimer.Interval = 60000;//1 min
             _overzichtSyncTimer.Elapsed += _overzichtSyncTimer_Tick;
+            TaskQueues.OnRunComplete -= _tasks_OnRunComplete;
+            TaskQueues.RunInstanceComplete -= _tasks_OnRunInstanceComplete;
             TaskQueues.OnRunComplete += _tasks_OnRunComplete;
             TaskQueues.RunInstanceComplete += _tasks_OnRunInstanceComplete;
         }
@@ -203,6 +207,9 @@ namespace Rpm.Productie
         private void LoadPath(string rootpath)
         {
             AppRootPath = rootpath;
+            var xyearpath = Path.Combine(AppRootPath, DateTime.Now.Year.ToString());
+            if (Directory.Exists(xyearpath))
+                AppRootPath = xyearpath;
             DbPath = Path.Combine(AppRootPath, "RPM_Data");
             TempPath = Path.Combine(AppRootPath, "Temp");
             BackupPath = Path.Combine(AppRootPath, "Backup");
@@ -264,7 +271,7 @@ namespace Rpm.Productie
                     SystemId = DefaultSettings.SystemID;
                     if (autologin)
                         autologin = await AutoLogin(this);
-                    if (Opties == null && (loadsettings && !autologin))
+                    if (loadsettings && !autologin)
                         await LoadSettings(this, raiseManagerLoadingEvents);
 
                     if (loadsettings)

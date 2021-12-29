@@ -102,13 +102,26 @@ namespace ProductieManager.Rpm.Productie
             if (Manager.DefaultSettings?.MainDB == null || Manager.DefaultSettings.TempMainDB == null) return;
             try
             {
+                var path1 = Manager.AppRootPath??string.Empty;
+                var path2 = Manager.DefaultSettings.TempMainDB.RootPath;
+                var xtmp = Path.Combine(path2, DateTime.Now.Year.ToString());
+                if (Path.GetFileName(path1) == Path.GetFileName(xtmp))
+                {
+                    path2 = xtmp;
+                }
+
+                path1 = Path.Combine(path1, "RPM_Data");
+                path2 = Path.Combine(path2, "RPM_Data");
+                if (!Directory.Exists(path2))
+                {
+                    Directory.CreateDirectory(path2);
+                }
                 if (Manager.DefaultSettings.GebruikOfflineMetSync &&
-                    !string.IsNullOrEmpty(Manager.DefaultSettings.MainDB.UpdatePath) &&
-                    !string.IsNullOrEmpty(Manager.DefaultSettings.TempMainDB.UpdatePath) &&
-                    !string.Equals(Manager.DefaultSettings.TempMainDB.UpdatePath,
-                        Manager.DefaultSettings.MainDB.UpdatePath, StringComparison.CurrentCultureIgnoreCase) &&
-                    Directory.Exists(Manager.DefaultSettings.MainDB.UpdatePath) &&
-                    Directory.Exists(Manager.DefaultSettings.TempMainDB.UpdatePath))
+                    !string.IsNullOrEmpty(path1) &&
+                    !string.IsNullOrEmpty(path2) &&
+                    !string.Equals(path1,path2, StringComparison.CurrentCultureIgnoreCase) &&
+                    Directory.Exists(path1) &&
+                    Directory.Exists(path2))
                 {
                     //FolderSynchronization?.Stop();
                     if (Manager.DefaultSettings.OfflineDabaseTypes.Count == 0)
@@ -125,8 +138,8 @@ namespace ProductieManager.Rpm.Productie
                         switch (xkey)
                         {
                             case DbType.Producties:
-                                localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\SqlDatabase";
-                                remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\SqlDatabase";
+                                localproductiepath = path2 + $"\\SqlDatabase";
+                                remoteproductiepath = path1 + $"\\SqlDatabase";
                                 Manager.Database?.ProductieFormulieren?.MultiFiles?.SetSecondaryPath(
                                     localproductiepath, new SecondaryManageType[]
                                     {
@@ -135,8 +148,8 @@ namespace ProductieManager.Rpm.Productie
                                     });
                                 break;
                             case DbType.Medewerkers:
-                                localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\PersoneelDb";
-                                remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\PersoneelDb";
+                                localproductiepath = path2 + $"\\PersoneelDb";
+                                remoteproductiepath = path1 + $"\\PersoneelDb";
                                 Manager.Database?.PersoneelLijst?.MultiFiles?.SetSecondaryPath(
                                     localproductiepath, new SecondaryManageType[]
                                     {
@@ -145,8 +158,8 @@ namespace ProductieManager.Rpm.Productie
                                     });
                                 break;
                             case DbType.GereedProducties:
-                                localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\GereedDb";
-                                remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\GereedDb";
+                                localproductiepath = path2 + $"\\GereedDb";
+                                remoteproductiepath = path1 + $"\\GereedDb";
                                 Manager.Database?.GereedFormulieren?.MultiFiles?.SetSecondaryPath(
                                     localproductiepath, new SecondaryManageType[]
                                     {
@@ -155,8 +168,8 @@ namespace ProductieManager.Rpm.Productie
                                     });
                                 break;
                             case DbType.Opties:
-                                localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\SettingDb";
-                                remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\SettingDb";
+                                localproductiepath = path2 + $"\\SettingDb";
+                                remoteproductiepath = path1 + $"\\SettingDb";
                                 Manager.Database?.AllSettings?.MultiFiles?.SetSecondaryPath(
                                     localproductiepath, new SecondaryManageType[]
                                     {
@@ -165,8 +178,8 @@ namespace ProductieManager.Rpm.Productie
                                     });
                                 break;
                             case DbType.Accounts:
-                                localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\AccountsDb";
-                                remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\AccountsDb";
+                                localproductiepath = path2 + $"\\AccountsDb";
+                                remoteproductiepath = path1 + $"\\AccountsDb";
                                 Manager.Database?.UserAccounts?.MultiFiles?.SetSecondaryPath(
                                     localproductiepath, new SecondaryManageType[]
                                     {
@@ -175,8 +188,8 @@ namespace ProductieManager.Rpm.Productie
                                     });
                                 break;
                             case DbType.Klachten:
-                                localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\Klachten";
-                                remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\Klachten";
+                                localproductiepath = path2 + $"\\Klachten";
+                                remoteproductiepath = path1 + $"\\Klachten";
                                 Manager.Klachten?.Database?.SetSecondaryPath(
                                     localproductiepath, new SecondaryManageType[]
                                     {
@@ -185,8 +198,8 @@ namespace ProductieManager.Rpm.Productie
                                     });
                                 break;
                             case DbType.Verpakkingen:
-                                localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\Verpaking";
-                                remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\Verpaking";
+                                localproductiepath = path2 + $"\\Verpaking";
+                                remoteproductiepath = path1 + $"\\Verpaking";
                                 Manager.Klachten?.Database?.SetSecondaryPath(
                                     localproductiepath, new SecondaryManageType[]
                                     {
@@ -195,12 +208,12 @@ namespace ProductieManager.Rpm.Productie
                                     });
                                 break;
                             case DbType.Messages:
-                                localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\Chat";
-                                remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\Chat";
+                                localproductiepath = path2 + $"\\Chat";
+                                remoteproductiepath = path1 + $"\\Chat";
                                 break;
                             case DbType.Opmerkingen:
-                                localproductiepath = Manager.DefaultSettings.TempMainDB.UpdatePath + $"\\Opmerkingen";
-                                remoteproductiepath = Manager.DefaultSettings.MainDB.UpdatePath + $"\\Opmerkingen";
+                                localproductiepath = path2 + $"\\Opmerkingen";
+                                remoteproductiepath = path1 + $"\\Opmerkingen";
                                 break;
 
                         }

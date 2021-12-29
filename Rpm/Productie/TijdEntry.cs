@@ -82,6 +82,13 @@ namespace Rpm.Productie
             return Math.Round(Werktijd.TijdGewerkt(this, rooster, speciaaleRoosters, exclude, extratijd).TotalHours, 2);
         }
 
+        public bool ContainsBereik(TijdEntry bereik)
+        {
+            if (bereik == null) return true;
+            return (bereik.Start >= Start && bereik.Start < Stop) ||
+                   (bereik.Stop >= Start && bereik.Start < Stop);
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is TijdEntry entry)

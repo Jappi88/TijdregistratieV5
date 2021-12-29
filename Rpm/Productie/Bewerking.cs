@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Rpm.Productie.AantalHistory;
 
 namespace Rpm.Productie
 {
@@ -1251,6 +1252,14 @@ namespace Rpm.Productie
                     }
 
             return done ? aantal : _gemaakt;
+        }
+
+        public AantalRecord[] GetAantalRecords()
+        {
+            var xret = new List<AantalRecord>();
+            foreach (var wp in WerkPlekken)
+                xret.AddRange(wp.AantalHistory.Aantallen);
+            return xret.ToArray();
         }
 
         public Task<Dictionary<string, List<Klus>>> GetAanbevolenPersonen()

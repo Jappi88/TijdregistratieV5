@@ -143,20 +143,26 @@ namespace Rpm.Productie.AantalHistory
             return AantalGemaakt(xfirst.DateChanged, stop,ref tijd, uren, predictaantal);
         }
 
+        public AantalRecord[] GetRecords(TijdEntry bereik, Rooster rooster, List<Rooster> specialeroosters)
+        {
+            if (bereik == null) return Aantallen.ToArray();
+            return Aantallen.Where(x => x.ContainsBereik(bereik, rooster, specialeroosters)).ToArray();
+        }
+
         public int AantalGemaakt(DateTime start, DateTime stop, ref double tijd, UrenLijst uren, bool predictaantal, int peruur = -1, Dictionary<DateTime, DateTime> exclude = null)
         {
             try
             {
                 int gemaakt = 0;
-              
-                var xaantallen = Aantallen.Where(x => start < x.EndDate &&
-                                                      stop >= x.DateChanged).OrderBy(x=> x.Aantal).ToList();
+
+                var xaantallen = Aantallen.Where(x => x.ContainsBereik(new TijdEntry(start, stop), uren?.WerkRooster, uren?.SpecialeRoosters))
+                    .OrderBy(x => x.Aantal).ToList();
                 
                 Dictionary<DateTime, DateTime> exc = exclude ?? new Dictionary<DateTime, DateTime>();
 
                 foreach (var x in xaantallen)
                 {
-                    if (!x.IsActive && x.DateChanged >= start && x.EndDate <= stop)
+                    if (!x.IsActive)
                     {
                         gemaakt += x.GetGemaakt();
                         tijd += x.GetTijdGewerkt(uren);

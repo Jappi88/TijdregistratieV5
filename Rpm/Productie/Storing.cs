@@ -93,7 +93,8 @@ namespace Rpm.Productie
             if (bereik == null)
                 return stop;
             var xspr = specialeroosters?.FirstOrDefault(x => x.Vanaf.Date == stop.Date)??WerkRooster;
-            return new TijdEntry(Gestart, stop).CreateRange(bereik.Start, bereik.Stop,xspr,specialeroosters).Stop;
+            return new TijdEntry(Gestart, stop).CreateRange(bereik.Start, bereik.Stop, xspr, specialeroosters)?.Stop ??
+                   stop;
         }
 
         public new string ToString()
