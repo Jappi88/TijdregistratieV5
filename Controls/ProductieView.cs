@@ -23,7 +23,9 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Forms.Excel;
+using MetroFramework.Forms;
 using NPOI.OpenXmlFormats.Dml.Diagram;
+using ProductieManager.Forms.Aantal.Controls;
 using Various;
 
 namespace Controls
@@ -1937,14 +1939,43 @@ namespace Controls
                 if (Manager.Database == null || Manager.Database.IsDisposed)
                     return;
                 var bws = await Manager.Database.GetBewerkingen(ViewState.Gestart, true,null, null);
-                var wps = new List<WerkPlek>();
-                foreach (var bw in bws)
+                var xform = new MetroForm();
+                xform.Style = MetroColorStyle.Green;
+                xform.StartPosition = FormStartPosition.CenterParent;
+                xform.ShadowType = MetroFormShadowType.AeroShadow;
+                var height = 80;
+                if (bws.Count == 0)
                 {
-                    var xwps = bw.WerkPlekken?.Where(x => x.IsActief()).ToArray();
-                    if (xwps != null && xwps.Any())
-                        wps.AddRange(xwps);
+                    xform.Text = "Geen Actieve Producties";
                 }
-                
+                else
+                {
+                    var x1 = bws.Count == 1 ? "Productie" : "Producties";
+                    xform.Text = $"Wijzig AantalGemaakt Van {bws.Count} Actieve {x1}";
+
+                    var panel = new Panel {Dock = DockStyle.Fill, AutoScroll = true};
+                   
+                    foreach (var bw in bws)
+                    {
+                        var group = new GroupBox();
+                        group.ForeColor = Color.DarkGreen;
+                        group.Text = $"{bw.ArtikelNr}, {bw.ProductieNr} | {bw.Naam} Van {bw.Omschrijving}";
+                        group.Font = new Font(this.Font.FontFamily, 12, FontStyle.Bold);
+                        group.Dock = DockStyle.Top;
+
+                        var xaantal = new AantalChangerUI();
+                        xaantal.LoadAantalGemaakt(bw);
+                        group.Size = new Size(xaantal.Width + 25, xaantal.Height + 25);
+                        xaantal.Dock = DockStyle.Fill;
+                        group.Controls.Add(xaantal);
+                        panel.Controls.Add(group);
+                        height += group.Height;
+                    }
+                    xform.Controls.Add(panel);
+                }
+                xform.Size = new Size(650, height);
+                xform.Invalidate();
+                xform.ShowDialog();
             }
             catch (Exception e)
             {
@@ -2052,189 +2083,6 @@ namespace Controls
         #endregion MenuButton Methods
 
         #region Menu Button Events
-
-        #endregion Menu Button Events
-
-        #region Taken Lijst
-
-        private void takenManager1_OnTaakClicked(Taak taak)
-        {
-            if (taak?.Formulier != null)
-            {
-                if (taak.Plek != null)
-                {
-                    werkPlekkenUI1.xwerkpleklist.SelectedObject = taak.Plek;
-                    if (werkPlekkenUI1.xwerkpleklist.SelectedItem != null)
-                    {
-                        metroTabControl.SelectedIndex = 1;
-                        werkPlekkenUI1.xwerkpleklist.SelectedItem.EnsureVisible();
-                        return;
-                    }
-                }
-
-                if (taak.Bewerking != null)
-                {
-                    xbewerkingListControl.SelectedItem = taak.Bewerking;
-                    if (xbewerkingListControl.SelectedItem != null) metroTabControl.SelectedIndex = 0;
-                }
-                //else
-                //{
-                    //xproductieListControl1.SelectedItem = taak.Formulier;
-                    //if (xproductieListControl1.SelectedItem != null) metroTabControl.SelectedIndex = 0;
-                //}
-            }
-        }
-
-        private async void takenManager1_OnTaakUitvoeren(Taak taak)
-        {
-            var save = false;
-            switch (taak.Type)
-            {
-                case AktieType.ControleCheck:
-                    if (taak.Bewerking != null)
-                    {
-                        var xui = new AantalGemaaktUI();
-                        if (xui.ShowDialog(taak.Formulier, taak.Bewerking, taak.Plek) == DialogResult.OK)
-                            //taak.Update();
-                            save = false;
-                    }
-
-                    break;
-
-                case AktieType.Beginnen:
-                    if (taak.Formulier != null)
-                    {
-                        var p = taak.Formulier;
-                        if (p.State != ProductieState.Verwijderd && p.State != ProductieState.Gereed)
-                            ShowProductieForm(p, true, taak.Bewerking);
-                    }
-
-                    break;
-
-                case AktieType.GereedMelden:
-                    if (taak.Formulier != null)
-                    {
-                        var p = taak.Formulier;
-                        if (p.State != ProductieState.Verwijderd && p.State != ProductieState.Gereed)
-                            ProductieListControl.MeldGereed(p);
-                        //taak.Update();
-                    }
-
-                    break;
-
-                case AktieType.BewerkingGereed:
-                    if (taak.Bewerking != null)
-                    {
-                        var b = taak.Bewerking;
-                        if (b.State != ProductieState.Verwijderd && b.State != ProductieState.Gereed)
-                            ProductieListControl.MeldBewerkingGereed(b);
-                        //taak.Update();
-                    }
-
-                    break;
-
-                case AktieType.KlaarZetten:
-                    if (taak.Formulier != null)
-                    {
-                        var p = taak.Formulier;
-                        var matform = new MateriaalForm();
-                        if (matform.ShowDialog(p) == DialogResult.OK)
-                        {
-                            taak.Formulier = matform.Formulier;
-                            save = true;
-                        }
-                    }
-
-                    break;
-
-                case AktieType.Stoppen:
-                    break;
-
-                case AktieType.PersoneelChange:
-                    if (taak.Bewerking != null)
-                    {
-                        var ind = new Indeling(taak.Formulier, taak.Bewerking);
-                        ind.StartPosition = FormStartPosition.CenterParent;
-                        if (ind.ShowDialog() == DialogResult.OK)
-                        {
-                            save = false;
-                        }//taak.Update();
-                           
-                    }
-
-                    break;
-
-                case AktieType.Telaat:
-                    if (taak.Bewerking != null)
-                    {
-                        var dt = new DatumChanger();
-                        if (dt.ShowDialog(taak.Bewerking.LeverDatum,
-                                $"Wijzig leverdatum voor ({taak.Bewerking.Path}) {taak.Bewerking.Omschrijving}.") ==
-                            DialogResult.OK)
-                        {
-                            taak.Formulier = Manager.Database.GetProductie(taak.Bewerking.ProductieNr).Result;
-                            taak.Bewerking = taak.Formulier.Bewerkingen?.FirstOrDefault(x =>
-                                string.Equals(x.Naam, taak.Bewerking.Naam, StringComparison.CurrentCultureIgnoreCase));
-
-                            if (taak.Bewerking != null)
-                            {
-                                taak.Bewerking.LeverDatum = dt.SelectedValue;
-                                save = true;
-                            }
-                        }
-
-                        dt.Dispose();
-                    }
-                    else if (taak.Formulier != null)
-                    {
-                        var dt = new DatumChanger();
-                        if (dt.ShowDialog(taak.Formulier.LeverDatum,
-                            $"Wijzig leverdatum voor {taak.Formulier.Omschrijving}.") == DialogResult.OK)
-                        {
-                            taak.Formulier = Manager.Database.GetProductie(taak.Formulier.ProductieNr).Result;
-                            if (taak.Formulier.Bewerkingen.Length > 0)
-                                taak.Formulier.Bewerkingen[taak.Formulier.Bewerkingen.Length - 1].LeverDatum =
-                                    dt.SelectedValue;
-                            else taak.Formulier.LeverDatum = dt.SelectedValue;
-                            save = true;
-                        }
-
-                        dt.Dispose();
-                    }
-
-                    break;
-
-                case AktieType.PersoneelVrij:
-                    if (taak.Bewerking != null)
-                    {
-                        var ind = new Indeling(taak.Formulier, taak.Bewerking);
-                        ind.StartPosition = FormStartPosition.CenterParent;
-                        ind.ShowDialog();
-                        // if (ind.ShowDialog() == DialogResult.OK)
-                        //taak.Update();
-                    }
-
-                    break;
-                case AktieType.Onderbreking:
-                    if (taak.Plek != null)
-                    {
-                        var st = new StoringForm(taak.Plek);
-                        st.ShowDialog();
-                    }
-
-                    break;
-                case AktieType.None:
-                    break;
-            }
-
-            if (save && taak.Formulier != null)
-                await taak.Formulier.UpdateForm(true, false, null, $"[{taak.GetPath()}] Taak Uitgevoerd");
-            else if (save)
-                taak.Bewerking?.UpdateBewerking(null, $"[{taak.GetPath()}] Taak Uitgevoerd");
-        }
-
-        #endregion Taken Lijst
-
         private void xproductieoverzichtb_Click(object sender, EventArgs e)
         {
             ShowProductieOverzicht();
@@ -2468,5 +2316,188 @@ namespace Controls
             var xf = new CreateWeekExcelForm();
             xf.ShowDialog();
         }
+        #endregion Menu Button Events
+
+        #region Taken Lijst
+
+        private void takenManager1_OnTaakClicked(Taak taak)
+        {
+            if (taak?.Formulier != null)
+            {
+                if (taak.Plek != null)
+                {
+                    werkPlekkenUI1.xwerkpleklist.SelectedObject = taak.Plek;
+                    if (werkPlekkenUI1.xwerkpleklist.SelectedItem != null)
+                    {
+                        metroTabControl.SelectedIndex = 1;
+                        werkPlekkenUI1.xwerkpleklist.SelectedItem.EnsureVisible();
+                        return;
+                    }
+                }
+
+                if (taak.Bewerking != null)
+                {
+                    xbewerkingListControl.SelectedItem = taak.Bewerking;
+                    if (xbewerkingListControl.SelectedItem != null) metroTabControl.SelectedIndex = 0;
+                }
+                //else
+                //{
+                    //xproductieListControl1.SelectedItem = taak.Formulier;
+                    //if (xproductieListControl1.SelectedItem != null) metroTabControl.SelectedIndex = 0;
+                //}
+            }
+        }
+
+        private async void takenManager1_OnTaakUitvoeren(Taak taak)
+        {
+            var save = false;
+            switch (taak.Type)
+            {
+                case AktieType.ControleCheck:
+                    if (taak.Bewerking != null)
+                    {
+                        var xui = new AantalGemaaktUI();
+                        if (xui.ShowDialog(taak.Formulier, taak.Bewerking, taak.Plek) == DialogResult.OK)
+                            //taak.Update();
+                            save = false;
+                    }
+
+                    break;
+
+                case AktieType.Beginnen:
+                    if (taak.Formulier != null)
+                    {
+                        var p = taak.Formulier;
+                        if (p.State != ProductieState.Verwijderd && p.State != ProductieState.Gereed)
+                            ShowProductieForm(p, true, taak.Bewerking);
+                    }
+
+                    break;
+
+                case AktieType.GereedMelden:
+                    if (taak.Formulier != null)
+                    {
+                        var p = taak.Formulier;
+                        if (p.State != ProductieState.Verwijderd && p.State != ProductieState.Gereed)
+                            ProductieListControl.MeldGereed(p);
+                        //taak.Update();
+                    }
+
+                    break;
+
+                case AktieType.BewerkingGereed:
+                    if (taak.Bewerking != null)
+                    {
+                        var b = taak.Bewerking;
+                        if (b.State != ProductieState.Verwijderd && b.State != ProductieState.Gereed)
+                            ProductieListControl.MeldBewerkingGereed(b);
+                        //taak.Update();
+                    }
+
+                    break;
+
+                case AktieType.KlaarZetten:
+                    if (taak.Formulier != null)
+                    {
+                        var p = taak.Formulier;
+                        var matform = new MateriaalForm();
+                        if (matform.ShowDialog(p) == DialogResult.OK)
+                        {
+                            taak.Formulier = matform.Formulier;
+                            save = true;
+                        }
+                    }
+
+                    break;
+
+                case AktieType.Stoppen:
+                    break;
+
+                case AktieType.PersoneelChange:
+                    if (taak.Bewerking != null)
+                    {
+                        var ind = new Indeling(taak.Formulier, taak.Bewerking);
+                        ind.StartPosition = FormStartPosition.CenterParent;
+                        if (ind.ShowDialog() == DialogResult.OK)
+                        {
+                            save = false;
+                        }//taak.Update();
+                           
+                    }
+
+                    break;
+
+                case AktieType.Telaat:
+                    if (taak.Bewerking != null)
+                    {
+                        var dt = new DatumChanger();
+                        if (dt.ShowDialog(taak.Bewerking.LeverDatum,
+                                $"Wijzig leverdatum voor ({taak.Bewerking.Path}) {taak.Bewerking.Omschrijving}.") ==
+                            DialogResult.OK)
+                        {
+                            taak.Formulier = Manager.Database.GetProductie(taak.Bewerking.ProductieNr).Result;
+                            taak.Bewerking = taak.Formulier.Bewerkingen?.FirstOrDefault(x =>
+                                string.Equals(x.Naam, taak.Bewerking.Naam, StringComparison.CurrentCultureIgnoreCase));
+
+                            if (taak.Bewerking != null)
+                            {
+                                taak.Bewerking.LeverDatum = dt.SelectedValue;
+                                save = true;
+                            }
+                        }
+
+                        dt.Dispose();
+                    }
+                    else if (taak.Formulier != null)
+                    {
+                        var dt = new DatumChanger();
+                        if (dt.ShowDialog(taak.Formulier.LeverDatum,
+                            $"Wijzig leverdatum voor {taak.Formulier.Omschrijving}.") == DialogResult.OK)
+                        {
+                            taak.Formulier = Manager.Database.GetProductie(taak.Formulier.ProductieNr).Result;
+                            if (taak.Formulier.Bewerkingen.Length > 0)
+                                taak.Formulier.Bewerkingen[taak.Formulier.Bewerkingen.Length - 1].LeverDatum =
+                                    dt.SelectedValue;
+                            else taak.Formulier.LeverDatum = dt.SelectedValue;
+                            save = true;
+                        }
+
+                        dt.Dispose();
+                    }
+
+                    break;
+
+                case AktieType.PersoneelVrij:
+                    if (taak.Bewerking != null)
+                    {
+                        var ind = new Indeling(taak.Formulier, taak.Bewerking);
+                        ind.StartPosition = FormStartPosition.CenterParent;
+                        ind.ShowDialog();
+                        // if (ind.ShowDialog() == DialogResult.OK)
+                        //taak.Update();
+                    }
+
+                    break;
+                case AktieType.Onderbreking:
+                    if (taak.Plek != null)
+                    {
+                        var st = new StoringForm(taak.Plek);
+                        st.ShowDialog();
+                    }
+
+                    break;
+                case AktieType.None:
+                    break;
+            }
+
+            if (save && taak.Formulier != null)
+                await taak.Formulier.UpdateForm(true, false, null, $"[{taak.GetPath()}] Taak Uitgevoerd");
+            else if (save)
+                taak.Bewerking?.UpdateBewerking(null, $"[{taak.GetPath()}] Taak Uitgevoerd");
+        }
+
+        #endregion Taken Lijst
+
+
     }
 }

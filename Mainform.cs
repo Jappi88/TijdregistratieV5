@@ -149,7 +149,7 @@ namespace ProductieManager
                 bool found = false;
                 for (int i = 0; i < 5; i++)
                 {
-                    if (Directory.Exists(Manager.DefaultSettings.MainDB.UpdatePath))
+                    if (Directory.Exists(Manager.DefaultSettings.MainDB.RootPath))
                     {
                         found = true;
                         break;
@@ -260,7 +260,7 @@ namespace ProductieManager
                 {
                     try
                     {
-                        if (Directory.Exists(dbent.UpdatePath))
+                        if (Directory.Exists(dbent.RootPath))
                         {
                             rootpath = dbent.RootPath;
                             break;
