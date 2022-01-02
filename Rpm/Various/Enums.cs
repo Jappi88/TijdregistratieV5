@@ -107,7 +107,11 @@ namespace Rpm.Various
         OpenStoringen,
         OpenAlleStoringen,
         OpenVaardigheden,
-        OpenAlleVaardigheden
+        OpenAlleVaardigheden,
+        OpenAantalGemaaktProducties,
+        MeldBewerkingGereed,
+        StartBewerking,
+        StopBewerking
     }
 
     [Serializable]

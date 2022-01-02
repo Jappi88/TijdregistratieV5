@@ -371,7 +371,7 @@ namespace Controls
                         //{
                         //    await b.StartProductie(true, true);
                         //}
-                        ProductieListControl.StartBewerkingen(new[] {b},sender);
+                        ProductieListControl.StartBewerkingen(new[] {b});
                     else if (b.State == ProductieState.Gestart) await b.StopProductie(true);
                 }
             }

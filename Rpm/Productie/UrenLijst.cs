@@ -85,11 +85,13 @@ namespace Rpm.Productie
                             var xent = Uren[i];
                             if (xent.ExtraTijd != null || !xent.InUse) continue;
                             var xspc = Manager.Opties?.SpecialeRoosters
-                                ?.Where(x => (x.Vanaf.Date >= xent.Start.Date && x.Vanaf.Date <= xent.Stop.Date) && (
-                                             xent.Stop.TimeOfDay >= x.StartWerkdag && ((x.Vanaf.Date != xent.Start.Date || (xent.Start.TimeOfDay <= x.EindWerkdag))))).ToList();
+                                ?.Where(x => new TijdEntry(x.Vanaf.Date, x.Vanaf.Date.Add(x.EindWerkdag)).ContainsBereik(xent)).ToList();
+                            //var xspc = Manager.Opties?.SpecialeRoosters
+                             //   ?.Where(x => (x.Vanaf.Date >= xent.Start.Date && x.Vanaf.Date <= xent.Stop.Date) && (
+                                           //  xent.Stop.TimeOfDay >= x.StartWerkdag && ((x.Vanaf.Date != xent.Start.Date || (xent.Start.TimeOfDay <= x.EindWerkdag))))).ToList();
                             xspc = xspc?.Where(x => SpecialeRoosters.All(s => s.Vanaf.Date != x.Vanaf.Date)).ToList();
 
-                            if (xspc != null)
+                            if (xspc is {Count: > 0})
                                 SpecialeRoosters.AddRange(xspc);
                         }
                     }

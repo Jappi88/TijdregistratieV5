@@ -248,6 +248,18 @@
     <Compile Include="Controls\ChartView.Designer.cs">
       <DependentUpon>ChartView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Combineer\Controls\CombineerEntryUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Combineer\Controls\CombineerEntryUI.Designer.cs">
+      <DependentUpon>CombineerEntryUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Combineer\Controls\CombineerUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Combineer\Controls\CombineerUI.Designer.cs">
+      <DependentUpon>CombineerUI.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CustomImageBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -392,11 +404,11 @@
     <Compile Include="Forms\Aantal\AantalChanger.Designer.cs">
       <DependentUpon>AantalChanger.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Aantal\AantalGemaaktPlaatsen.cs">
+    <Compile Include="Forms\Aantal\AantalGemaaktProducties.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Aantal\AantalGemaaktPlaatsen.Designer.cs">
-      <DependentUpon>AantalGemaaktPlaatsen.cs</DependentUpon>
+    <Compile Include="Forms\Aantal\AantalGemaaktProducties.Designer.cs">
+      <DependentUpon>AantalGemaaktProducties.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Aantal\AantalGemaaktUI.cs">
       <SubType>Form</SubType>
@@ -464,6 +476,12 @@
     </Compile>
     <Compile Include="Forms\ColorPickerForm.Designer.cs">
       <DependentUpon>ColorPickerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Combineer\NewCombineerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Combineer\NewCombineerForm.Designer.cs">
+      <DependentUpon>NewCombineerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\EditCriteriaForm.cs">
       <SubType>Form</SubType>
@@ -1059,6 +1077,7 @@
     <Compile Include="Rpm\Productie\AantalHistory\AantalHistory.cs" />
     <Compile Include="Rpm\Productie\AantalHistory\AantalRecord.cs" />
     <Compile Include="Rpm\Productie\Bewerking.cs" />
+    <Compile Include="Rpm\Productie\CombineerEntry.cs" />
     <Compile Include="Rpm\Productie\DeelsGereedMelding.cs" />
     <Compile Include="Rpm\Productie\ExtraTijd.cs" />
     <Compile Include="Rpm\Productie\IProductieBase.cs" />
@@ -1142,6 +1161,12 @@
     <EmbeddedResource Include="Controls\ChartView.resx">
       <DependentUpon>ChartView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Combineer\Controls\CombineerEntryUI.resx">
+      <DependentUpon>CombineerEntryUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Combineer\Controls\CombineerUI.resx">
+      <DependentUpon>CombineerUI.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\FilterEntryEditorUI.resx">
       <DependentUpon>FilterEntryEditorUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -1208,6 +1233,9 @@
     <EmbeddedResource Include="Forms\Aantal\AantalChanger.resx">
       <DependentUpon>AantalChanger.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Aantal\AantalGemaaktProducties.resx">
+      <DependentUpon>AantalGemaaktProducties.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Aantal\AantalGemaaktUI.resx">
       <DependentUpon>AantalGemaaktUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -1240,6 +1268,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ColorPickerForm.resx">
       <DependentUpon>ColorPickerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Combineer\NewCombineerForm.resx">
+      <DependentUpon>NewCombineerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EditCriteriaForm.resx">
       <DependentUpon>EditCriteriaForm.cs</DependentUpon>
@@ -1647,6 +1678,8 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\UnMerge-arrows_32x32.png" />
+    <None Include="Resources\Merge-arrows_128x128.png" />
     <None Include="Resources\note_document_64x64.png" />
     <None Include="Resources\attachment_32x32.png" />
     <None Include="Resources\box_package_icon_64x64.png" />

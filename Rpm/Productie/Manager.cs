@@ -1528,14 +1528,54 @@ namespace Rpm.Productie
             _isbusy = false;
         }
 
+        private static bool _isChecking;
+
+        public static async void CheckForAantalChange()
+        {
+            if (_isChecking) return;
+            _isChecking = true;
+            // Task.Factory.StartNew(async () =>
+            // {
+            try
+            {
+                var form = Application.OpenForms["AantalGemaaktProducties"];
+                if (form == null && Database is {IsDisposed: false})
+                {
+                    var bws = await Database.GetBewerkingen(ViewState.Gestart, true, null, null);
+                    var rooster = Opties.GetWerkRooster();
+                    var einddag = DateTime.Now.Date.Add(rooster.EindWerkdag);
+                    int mins = Opties.MinVoorControle;
+                    if (DateTime.Now.AddMinutes(15) >= einddag && DateTime.Now < einddag)
+                    {
+                        mins = 15;
+                    }
+
+                    bws = bws.Where(x => x.LaatstAantalUpdate.AddMinutes(mins) < DateTime.Now && string.Equals(
+                        x.GestartDoor, Manager.Opties.Username,
+                        StringComparison.CurrentCultureIgnoreCase)).ToList();
+
+
+                    if (bws.Count > 0)
+                    {
+                        FormulierActie(new object[] {bws, mins}, MainAktie.OpenAantalGemaaktProducties);
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            _isChecking = false;
+            // });
+        }
+
         private void _syncTimer_Tick(object sender, EventArgs e)
         {
             _syncTimer.Stop();
             try
             {
-                if (ProductieProvider.FolderSynchronization is {Syncing: false})
-                    ProductieProvider?.InitOfflineDb();
-
                 if (Opties is {SluitPcAf: true} && DateTime.Now.TimeOfDay >= _afsluittijd)
                 {
                     var tijd = new TimeSpan();
@@ -1548,6 +1588,13 @@ namespace Rpm.Productie
                             Application.Exit();
                         }
                     }
+                }
+                else
+                {
+                    if (ProductieProvider.FolderSynchronization is { Syncing: false })
+                        ProductieProvider?.InitOfflineDb();
+
+                    CheckForAantalChange();
                 }
             }
             catch (Exception s)

@@ -1340,7 +1340,7 @@ namespace Forms
             xtakengroup.Enabled = xgebruiktaken.Checked;
         }
 
-        private async void xspeciaalroosterb_Click(object sender, EventArgs e)
+        private void xspeciaalroosterb_Click(object sender, EventArgs e)
         {
             var sproosters = new SpeciaalWerkRoostersForm(xspeciaalroosterb.Tag as List<Rooster>);
             if (sproosters.ShowDialog() == DialogResult.OK)
@@ -1349,15 +1349,15 @@ namespace Forms
                 var acces1 = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
                 if (acces1 && sproosters.Roosters.Count > 0)
                 {
-                    var bws = await Manager.GetBewerkingen(new ViewState[] { ViewState.Gestart }, true);
+                    var bws = Manager.GetBewerkingen(new ViewState[] { ViewState.Gestart }, true).Result;
                     bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
                         StringComparison.CurrentCultureIgnoreCase)).ToList();
                     if (bws.Count > 0)
                     {
-                        var bwselector = new BewerkingSelectorForm(bws);
+                        var bwselector = new BewerkingSelectorForm(bws,true,true);
                         bwselector.Title = "Selecteer Wekplekken waarvan de rooster aangepast moet worden";
                         if (bwselector.ShowDialog() == DialogResult.OK)
-                            await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
+                            _= Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
                     }
                 }
             }

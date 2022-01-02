@@ -4,6 +4,7 @@ using Rpm.Productie;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
@@ -22,6 +23,8 @@ namespace Forms.GereedMelden
                                          "Als alles goed is nagelopen en in orde is, dan kan je verder gaan met gereedmelden.";
 
         private IProductieBase _prod;
+
+        public string ParentCombi { get; set; }
 
         public GereedMelder()
         {
@@ -105,6 +108,36 @@ namespace Forms.GereedMelden
                 }
                 else if (_prod is Bewerking bew)
                 {
+                    var xcombies = bew.Combies.Where(x =>
+                        !string.Equals(x.Path, ParentCombi, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                    if (xcombies.Count > 0)
+                    {
+                        var x0 = xcombies.Count == 1 ? "is" : "zijn";
+                        var x1 = xcombies.Count == 1 ? "productie" : "producties";
+                        var result = XMessageBox.Show($"Er {x0} {xcombies.Count} gecombineerde {x1}...\n\n" +
+                                                      $"Wil je die ook gereedmelden?", "Gereed Melden",
+                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                        if (result == DialogResult.Cancel) return;
+                        for(int i =0; i < xcombies.Count; i++)
+                        {
+                            var combi = xcombies[i];
+                            var xbw = Werk.FromPath(combi.Path)?.Bewerking;
+                            if (xbw == null)
+                            {
+                                continue;
+                            }
+
+                            if (result == DialogResult.No)
+                                _=bew.StopProductie(true);
+                            else
+                            {
+                                var gereedmelder = new GereedMelder();
+                                gereedmelder.ParentCombi = bew.Path;
+                                gereedmelder.ShowDialog(xbw);
+                            }
+                        }
+                    }
+
                     Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
                     await bew.MeldBewerkingGereed(xparaaf.Text.Trim(), (int) xaantal.Value, Notitie, true,true,true);
                     ProductieManager.Properties.Settings.Default.Paraaf = xparaaf.Text.Trim();
@@ -149,33 +182,16 @@ namespace Forms.GereedMelden
             if (_prod == null)
                 return;
             if (this.IsDisposed || this.Disposing) return;
-            this.Invoke(new Action( () =>
-            {
-                //string xfieldinfo =
-                //    $"Je staat op het punt {_prod.Naam} gereed te melden met {_prod.TotaalGemaakt} stuk(s) van de {_prod.Aantal}.";
-                //if (_prod.TotaalGemaakt > _prod.Aantal)
-                //    xfieldinfo = $"Je staat op het punt {_prod.Naam} gereed te melden met {_prod.TotaalGemaakt - _prod.Aantal} stuk(s) extra!";
-                //var bericht =
-                //    $"{xfieldinfo}\n" +
-                //    $"* Totaal {_prod.TijdGewerkt} / {_prod.DoorloopTijd} uur aan gewerkt met {_prod.ActueelPerUur} i.p.v. {_prod.PerUur} per uur.\n" +
-                //    $"* Er is {_prod.TotaalGemaakt} van de {_prod.Aantal} gemaakt.\n" +
-                //    $"* Er is {_prod.DeelsGereed} deels gereed gemeld.";
-                //xtextfield1.Text = bericht;
-                //xtextfield2.Text = _prod.Omschrijving;
-                var result = _prod.Update(null, false,false).Result;
-                this.Text = @$"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
-                this.Invalidate();
-                //var curpos = xinfofield.VerticalScroll.Value;
-                //xinfofield.Text = _prod.GetHtmlBody(this.Text,Resources.notification_done_114461,
-                //    new Size(64, 64), Color.White,
-                //    Color.White, Color.DarkGreen);
-                //for (int i = 0; i < 4; i++)
-                //    xinfofield.VerticalScroll.Value = curpos;
-                productieInfoUI1.SetInfo(_prod, this.Text, Color.White,
-                    Color.White, Color.DarkGreen);
+            this.Text = @$"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
+            this.Invalidate();
+            productieInfoUI1.SetInfo(_prod, this.Text, Color.White,
+                Color.White, Color.DarkGreen);
+            //this.BeginInvoke(new Action( () =>
+            //{
+               
                 
 
-            }));
+            //}));
             // xtextfield3.Text = Melding;
         }
 

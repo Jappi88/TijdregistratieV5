@@ -1502,7 +1502,7 @@ namespace Controls
                     bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToList();
                 }
 
-                StartBewerkingen(bws.ToArray(),this);
+                StartBewerkingen(bws.ToArray());
                 this.Focus();
             }
         }
@@ -1533,7 +1533,7 @@ namespace Controls
             }
         }
 
-        public static void StartBewerkingen(Bewerking[] bws, Control sender)
+        public static void StartBewerkingen(Bewerking[] bws)
         {
             var count = bws.Length;
             if (count > 0)
@@ -1550,95 +1550,104 @@ namespace Controls
                 if (valid)
                     try
                     {
-                        var mainform = sender??Application.OpenForms["MainForm"];
+                        //var mainform = sender??Application.OpenForms["MainForm"];
 
-                        async void Action()
+                       // async void Action()
+                        //{
+                        for (var i = 0; i < bws.Length; i++)
                         {
-                            for (var i = 0; i < bws.Length; i++)
+                            var parent = bws[i].GetParent();
+                            var werk = bws[i];
+                            if (werk == null) continue;
+
+                            if (werk.State != ProductieState.Gestart)
                             {
-                                var parent = bws[i].GetParent();
-                                var werk = bws[i];
-                                if (werk == null) continue;
-
-                                if (werk.State != ProductieState.Gestart)
+                                if (werk.AantalActievePersonen == 0)
                                 {
-                                    if (werk.AantalActievePersonen == 0)
+                                    var pers = new PersoneelsForm(true);
+                                    if (pers.ShowDialog(werk) == DialogResult.OK)
                                     {
-                                        var pers = new PersoneelsForm(true);
-                                        if (pers.ShowDialog(werk) == DialogResult.OK)
+                                        if (pers.SelectedPersoneel is {Length: > 0})
                                         {
-                                            if (pers.SelectedPersoneel is {Length: > 0})
+                                            foreach (var per in pers.SelectedPersoneel) per.Klusjes?.Clear();
+                                            var afzonderlijk = false;
+                                            if (pers.SelectedPersoneel.Length > 1 && werk.IsBemand)
                                             {
-                                                foreach (var per in pers.SelectedPersoneel) per.Klusjes?.Clear();
-                                                var afzonderlijk = false;
-                                                if (pers.SelectedPersoneel.Length > 1 && werk.IsBemand)
-                                                {
-                                                    var result = XMessageBox.Show($"Je hebt {pers.SelectedPersoneel.Length} medewerkers geselecteerd," + " wil je ze allemaal afzonderlijk indelen?", "Indeling", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                                                    if (result == DialogResult.Cancel) return;
-                                                    afzonderlijk = result == DialogResult.Yes;
-                                                }
+                                                var result = XMessageBox.Show(
+                                                    $"Je hebt {pers.SelectedPersoneel.Length} medewerkers geselecteerd," +
+                                                    " wil je ze allemaal afzonderlijk indelen?", "Indeling",
+                                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                                if (result == DialogResult.Cancel) return;
+                                                afzonderlijk = result == DialogResult.Yes;
+                                            }
 
-                                                if (!werk.IsBemand || !afzonderlijk)
+                                            if (!werk.IsBemand || !afzonderlijk)
+                                            {
+                                                var klusui = new NieuwKlusForm(parent, pers.SelectedPersoneel, true,
+                                                    false, werk);
+                                                if (klusui.ShowDialog() != DialogResult.OK) return;
+                                                var pair = klusui.SelectedKlus.GetWerk(parent);
+                                                var prod = pair.Formulier;
+                                                werk = pair.Bewerking;
+                                                if (werk is {IsBemand: false} && klusui.SelectedKlus?.Tijden?.Count > 0)
+                                                    foreach (var wp in werk.WerkPlekken)
+                                                        wp.Tijden = klusui.SelectedKlus.Tijden.CreateCopy();
+
+                                                //var xwp = werk.WerkPlekken.FirstOrDefault(x =>
+                                                //    string.Equals(klusui.SelectedKlus.Path, x.Path, StringComparison.CurrentCultureIgnoreCase));
+                                                //if(xwp != null && xwp.Personen.Count > 0)
+                                                //    foreach (var per in xwp.Personen)
+                                                //        per.ReplaceKlus(klusui.SelectedKlus);
+                                            }
+                                            else
+                                            {
+                                                foreach (var per in pers.SelectedPersoneel)
                                                 {
-                                                    var klusui = new NieuwKlusForm(parent, pers.SelectedPersoneel, true, false, werk);
-                                                    if (klusui.ShowDialog() != DialogResult.OK) return;
+                                                    var klusui = new NieuwKlusForm(parent, per, true, false, werk);
+                                                    if (klusui.ShowDialog() != DialogResult.OK) break;
+                                                    //klusui.Persoon.CopyTo(ref per);
                                                     var pair = klusui.SelectedKlus.GetWerk(parent);
                                                     var prod = pair.Formulier;
                                                     werk = pair.Bewerking;
-                                                    if (werk is {IsBemand: false} && klusui.SelectedKlus?.Tijden?.Count > 0)
-                                                        foreach (var wp in werk.WerkPlekken)
-                                                            wp.Tijden = klusui.SelectedKlus.Tijden.CreateCopy();
-
-                                                    //var xwp = werk.WerkPlekken.FirstOrDefault(x =>
-                                                    //    string.Equals(klusui.SelectedKlus.Path, x.Path, StringComparison.CurrentCultureIgnoreCase));
-                                                    //if(xwp != null && xwp.Personen.Count > 0)
-                                                    //    foreach (var per in xwp.Personen)
-                                                    //        per.ReplaceKlus(klusui.SelectedKlus);
-                                                }
-                                                else
-                                                {
-                                                    foreach (var per in pers.SelectedPersoneel)
+                                                    //Bewerking werk = parent.Bewerkingen.FirstOrDefault(x => x.Path.ToLower() == xp.WerktAan.ToLower());
+                                                    if (werk != null)
                                                     {
-                                                        var klusui = new NieuwKlusForm(parent, per, true, false, werk);
-                                                        if (klusui.ShowDialog() != DialogResult.OK) break;
-                                                        //klusui.Persoon.CopyTo(ref per);
-                                                        var pair = klusui.SelectedKlus.GetWerk(parent);
-                                                        var prod = pair.Formulier;
-                                                        werk = pair.Bewerking;
-                                                        //Bewerking werk = parent.Bewerkingen.FirstOrDefault(x => x.Path.ToLower() == xp.WerktAan.ToLower());
-                                                        if (werk != null)
+                                                        per.ReplaceKlus(klusui.SelectedKlus);
+                                                        var wp = werk.WerkPlekken.FirstOrDefault(x =>
+                                                            string.Equals(x.Naam, klusui.SelectedKlus.WerkPlek,
+                                                                StringComparison.CurrentCultureIgnoreCase));
+                                                        if (wp == null)
                                                         {
-                                                            per.ReplaceKlus(klusui.SelectedKlus);
-                                                            var wp = werk.WerkPlekken.FirstOrDefault(x => string.Equals(x.Naam, klusui.SelectedKlus.WerkPlek, StringComparison.CurrentCultureIgnoreCase));
-                                                            if (wp == null)
-                                                            {
-                                                                wp = new WerkPlek(per, klusui.SelectedKlus.WerkPlek, werk);
-                                                                werk.WerkPlekken.Add(wp);
-                                                            }
-                                                            else
-                                                            {
-                                                                wp.AddPersoon(per, werk);
-                                                            }
-
-                                                            if (wp.Werk.UpdateBewerking(null, $"{wp.Path} indeling aangepast", false, false).Result) werk.CopyTo(ref bws[i]);
+                                                            wp = new WerkPlek(per, klusui.SelectedKlus.WerkPlek, werk);
+                                                            werk.WerkPlekken.Add(wp);
                                                         }
+                                                        else
+                                                        {
+                                                            wp.AddPersoon(per, werk);
+                                                        }
+
+                                                        if (wp.Werk.UpdateBewerking(null,
+                                                                $"{wp.Path} indeling aangepast", false, false)
+                                                            .Result) werk.CopyTo(ref bws[i]);
                                                     }
                                                 }
-
-                                                if (werk != null)
-                                                    await werk.StartProductie(true,true);
                                             }
+
+                                            if (werk != null)
+                                                _ = werk.StartProductie(true, true);
                                         }
                                     }
-                                    else
-                                    {
-                                        await werk.StartProductie(true,true);
-                                    }
+                                }
+                                else
+                                {
+                                    _=werk.StartProductie(true, true);
                                 }
                             }
                         }
+                        //  }
+                        //}
 
-                        mainform?.BeginInvoke(new Action( Action));
+                        //mainform?.BeginInvoke(new Action( Action));
                     }
                     catch (Exception exception)
                     {

@@ -1777,7 +1777,8 @@ namespace Rpm.Productie
                 tijd += Werktijd.TijdGewerkt(TijdGestart, gestopt, null,null).TotalHours;
             else
                 tijd = Bewerkingen.Sum(x => x.TijdAanGewerkt());
-            return Math.Round(tijd, 2);
+            if (tijd <= 0) return 0;
+            return Math.Round(((tijd / 100) * Activiteit), 2);
         }
 
         public int GetAantalGemaakt(DateTime start, DateTime stop,ref double tijd, bool predict)

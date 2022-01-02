@@ -21,12 +21,13 @@ namespace ProductieManager.Forms.Aantal.Controls
 
         public void LoadAantalGemaakt(IProductieBase productie)
         {
-            Productie = productie;
-            SetPacketAantal(productie.VerpakkingsInstructies, -1, productie.Aantal);
+            
             if (productie is Bewerking bew)
                 LoadWerkplekken(bew);
             else if (productie is ProductieFormulier form)
                 ProductieLoadWerkplekken(form);
+            Productie = productie;
+            SetPacketAantal(productie.VerpakkingsInstructies, -1, productie.Aantal);
         }
 
         private void SetPacketAantal(VerpakkingInstructie instructie, int aantal, int totaalaantal)
@@ -102,6 +103,7 @@ namespace ProductieManager.Forms.Aantal.Controls
 
         private void LoadWerkplekken(Bewerking bewerking)
         {
+            xwerkplekken.Tag = bewerking;
             if (bewerking != null && bewerking.WerkPlekken.Count > 0)
             {
                 var wps = bewerking.WerkPlekken.Select(x => x.Naam).ToList();
@@ -133,7 +135,7 @@ namespace ProductieManager.Forms.Aantal.Controls
                 if (xwerkplekken.SelectedItem == null)
                     xwerkplekken.SelectedIndex = 0;
             }
-            else UpdateAantalGemaakt();
+            else UpdateAantalGemaakt(bewerking);
         }
 
         private void ProductieLoadWerkplekken(ProductieFormulier formulier)
@@ -209,62 +211,79 @@ namespace ProductieManager.Forms.Aantal.Controls
             return 0;
         }
 
-        public void UpdateAantalGemaakt()
+        private void SelectValue()
+        {
+            xaantalgemaakt.Select(0, xaantalgemaakt.Value.ToString(CultureInfo.InvariantCulture).Length);
+            xaantalgemaakt.Focus();
+        }
+
+        public void UpdateAantalGemaakt(IProductieBase productie)
         {
             if (xwerkplekken.SelectedItem != null)
             {
                 var selected = xwerkplekken.SelectedItem.ToString();
                 var alles = selected.ToLower() == "alle werkplekken";
-                if (Productie is Bewerking Bewerking)
+                if (productie is Bewerking Bewerking)
                 {
                     if (!alles && Bewerking.WerkPlekken is { Count: > 0 })
                     {
                         var wp = Bewerking.WerkPlekken.FirstOrDefault(t => string.Equals(t.Naam, selected, StringComparison.CurrentCultureIgnoreCase));
-                        if (wp != null && wp.AantalGemaakt != xaantalgemaakt.Value)
+                        if (wp != null && wp.AantalGemaakt != (int) (xaantalgemaakt.Tag ?? 0))
                         {
+
                             xaantalgemaakt.SetValue(wp.AantalGemaakt);
+                            xaantalgemaakt.Tag = wp.AantalGemaakt;
                             SetPacketAantal(Bewerking.VerpakkingsInstructies, wp.AantalGemaakt, Bewerking.Aantal);
+                            SelectValue();
                         }
-                        else return;
                     }
-                    else if (Bewerking.AantalGemaakt != xaantalgemaakt.Value)
+                    else if (Productie == null || Bewerking.AantalGemaakt != (int)(xaantalgemaakt.Tag ?? 0))
                     {
                         xaantalgemaakt.SetValue(Bewerking.AantalGemaakt);
+                        xaantalgemaakt.Tag = Bewerking.AantalGemaakt;
                         SetPacketAantal(Bewerking.VerpakkingsInstructies, Bewerking.AantalGemaakt, Bewerking.Aantal);
+                        SelectValue();
                     }
-                    else return;
 
                 }
-                else if (Productie is ProductieFormulier Formulier)
+                else if (productie is ProductieFormulier Formulier)
                 {
+                    xaantalLabel.Text = $"{(Formulier.AantalGemaakt > 0 ? Formulier.AantalGemaakt.ToString("##.###") : "0")}/ " +
+                                        $"{(Formulier.Aantal > 0 ? Formulier.Aantal.ToString("##.###") : "0")}";
                     if (!alles && Formulier.Bewerkingen is { Length: > 0 })
                     {
                         var b = Formulier.Bewerkingen.FirstOrDefault(t =>
                             string.Equals(t.Naam, selected, StringComparison.CurrentCultureIgnoreCase));
 
-                        if (b != null && b.AantalGemaakt != xaantalgemaakt.Value)
+                        if (b != null && b.AantalGemaakt != (int)(xaantalgemaakt.Tag ?? 0))
                         {
                             xaantalgemaakt.SetValue(b.AantalGemaakt);
+                            xaantalgemaakt.Tag = b.AantalGemaakt;
                             SetPacketAantal(b.VerpakkingsInstructies, b.AantalGemaakt, b.Aantal);
+                            SelectValue();
                         }
-                        else return;
                     }
-                    else if (Formulier.AantalGemaakt != xaantalgemaakt.Value)
+                    else if (Productie == null || Formulier.AantalGemaakt != (int)(xaantalgemaakt.Tag ?? 0))
                     {
                         xaantalgemaakt.SetValue(Formulier.AantalGemaakt);
+                          xaantalgemaakt.Tag = Formulier.AantalGemaakt;
                         SetPacketAantal(Formulier.VerpakkingsInstructies, Formulier.AantalGemaakt, Formulier.Aantal);
+                        SelectValue();
                     }
-                    else return;
                 }
-
-                xaantalgemaakt.Select(0, xaantalgemaakt.Value.ToString(CultureInfo.InvariantCulture).Length);
-                xaantalgemaakt.Focus();
             }
+
+            if (productie != null)
+                xaantalLabel.Text =
+                    $"{(productie.AantalGemaakt > 0 ? productie.AantalGemaakt.ToString("##.###") : "0")}/ " +
+                    $"{(productie.Aantal > 0 ? productie.Aantal.ToString("##.###") : "0")}";
+            else xaantalLabel.Text = "";
         }
 
         private void xwerkplekken_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateAantalGemaakt();
+            if (xwerkplekken.Tag is IProductieBase prod)
+                UpdateAantalGemaakt(prod);
         }
 
         private async void Next(bool movenext)

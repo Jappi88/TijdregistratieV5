@@ -22,6 +22,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Forms.Aantal;
 using Forms.Excel;
 using MetroFramework.Forms;
 using NPOI.OpenXmlFormats.Dml.Diagram;
@@ -164,6 +165,44 @@ namespace Controls
             werkPlekkenUI1.InitEvents();
             werkPlekkenUI1.OnRequestOpenWerk += WerkPlekkenUI1_OnRequestOpenWerk;
             werkPlekkenUI1.OnPlekkenChanged += WerkPlekkenUI1_OnPlekkenChanged;
+        }
+
+        public void DetachEvents()
+        {
+            Manager.OnSettingsChanged -= _manager_OnSettingsChanged;
+            Manager.OnFormulierActie -= Manager_OnFormulierActie;
+            // Manager.OnProductiesLoaded -= Manager_OnProductiesChanged;
+            //Manager.DbUpdater.DbEntryUpdated -= DbUpdater_DbEntryUpdated;
+            Manager.OnLoginChanged -= _manager_OnLoginChanged;
+            Manager.OnSettingsChanging -= _manager_OnSettingsChanging;
+            Manager.FilterChanged -= Manager_FilterChanged;
+            if (Manager.Opmerkingen != null)
+                Manager.Opmerkingen.OnOpmerkingenChanged -= Opmerkingen_OnOpmerkingenChanged;
+            ProductieChat.MessageRecieved -= ProductieChat_MessageRecieved;
+            ProductieChat.GebruikerUpdate -= ProductieChat_GebruikerUpdate;
+            MultipleFileDb.CorruptedFilesChanged -= MultipleFileDb_CorruptedFilesChanged;
+
+            //Manager.OnDbBeginUpdate -= Manager_OnDbBeginUpdate;
+            //Manager.OnDbEndUpdate -= Manager_OnDbEndUpdate;
+            Manager.OnManagerLoaded -= _manager_OnManagerLoaded;
+
+            Manager.KlachtChanged -= Klachten_KlachtChanged;
+            Manager.KlachtDeleted -= Klachten_KlachtChanged;
+
+            Manager.VerpakkingChanged -= Manager_VerpakkingChanged;
+            Manager.VerpakkingDeleted -= Manager_VerpakkingDeleted;
+
+            _manager.OnShutdown -= _manager_OnShutdown;
+            //xproductieListControl1.DetachEvents();
+            xbewerkingListControl.DetachEvents();
+            //productieListControl1.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
+            xbewerkingListControl.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
+            recentGereedMeldingenUI1.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
+            //xproductieListControl1.SelectedItemChanged -= XproductieListControl1_SelectedItemChanged;
+            xbewerkingListControl.SelectedItemChanged -= XproductieListControl1_SelectedItemChanged;
+            werkPlekkenUI1.DetachEvents();
+            werkPlekkenUI1.OnRequestOpenWerk -= WerkPlekkenUI1_OnRequestOpenWerk;
+            werkPlekkenUI1.OnPlekkenChanged -= WerkPlekkenUI1_OnPlekkenChanged;
         }
 
         private void Manager_VerpakkingDeleted(object sender, EventArgs e)
@@ -340,43 +379,7 @@ namespace Controls
             UpdateUnreadMessages(message?.Afzender);
         }
 
-        public void DetachEvents()
-        {
-            Manager.OnSettingsChanged -= _manager_OnSettingsChanged;
-            Manager.OnFormulierActie -= Manager_OnFormulierActie;
-            // Manager.OnProductiesLoaded -= Manager_OnProductiesChanged;
-            //Manager.DbUpdater.DbEntryUpdated -= DbUpdater_DbEntryUpdated;
-            Manager.OnLoginChanged -= _manager_OnLoginChanged;
-            Manager.OnSettingsChanging -= _manager_OnSettingsChanging;
-            Manager.FilterChanged -= Manager_FilterChanged;
-            if (Manager.Opmerkingen != null)
-                Manager.Opmerkingen.OnOpmerkingenChanged -= Opmerkingen_OnOpmerkingenChanged;
-            ProductieChat.MessageRecieved -= ProductieChat_MessageRecieved;
-            ProductieChat.GebruikerUpdate -= ProductieChat_GebruikerUpdate;
-            MultipleFileDb.CorruptedFilesChanged -= MultipleFileDb_CorruptedFilesChanged;
-
-            //Manager.OnDbBeginUpdate -= Manager_OnDbBeginUpdate;
-            //Manager.OnDbEndUpdate -= Manager_OnDbEndUpdate;
-            Manager.OnManagerLoaded -= _manager_OnManagerLoaded;
-
-            Manager.KlachtChanged -= Klachten_KlachtChanged;
-            Manager.KlachtDeleted -= Klachten_KlachtChanged;
-
-            Manager.VerpakkingChanged -= Manager_VerpakkingChanged;
-            Manager.VerpakkingDeleted -= Manager_VerpakkingDeleted;
-
-            _manager.OnShutdown -= _manager_OnShutdown;
-            //xproductieListControl1.DetachEvents();
-            xbewerkingListControl.DetachEvents();
-            //productieListControl1.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
-            xbewerkingListControl.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
-            recentGereedMeldingenUI1.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
-            //xproductieListControl1.SelectedItemChanged -= XproductieListControl1_SelectedItemChanged;
-            xbewerkingListControl.SelectedItemChanged -= XproductieListControl1_SelectedItemChanged;
-            werkPlekkenUI1.DetachEvents();
-            werkPlekkenUI1.OnRequestOpenWerk -= WerkPlekkenUI1_OnRequestOpenWerk;
-            werkPlekkenUI1.OnPlekkenChanged -= WerkPlekkenUI1_OnPlekkenChanged;
-        }
+      
 
         private DialogResult _manager_OnShutdown(Manager instance, ref TimeSpan verlengtijd)
         {
@@ -544,80 +547,99 @@ namespace Controls
             }
         }
 
+        public void DoActie(object[] values, MainAktie type)
+        {
+            var flag = values is {Length: > 0};
+            switch (type)
+            {
+                case MainAktie.OpenProductie:
+                    if (flag)
+                    {
+                        var form =
+                            (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
+                        var bew = (Bewerking) values.FirstOrDefault(x => x is Bewerking);
+                        if (form != null)
+                            ShowProductieForm(form, true, bew);
+                    }
+
+                    break;
+                case MainAktie.OpenIndeling:
+                    if (flag)
+                    {
+                        var form =
+                            (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
+                        ShowWerkplekken(form);
+                    }
+
+                    break;
+                case MainAktie.OpenProductieWijziging:
+                    if (flag)
+                    {
+                        var form =
+                            (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
+                        ShowProductieSettings(form);
+                    }
+
+                    break;
+                case MainAktie.OpenInstellingen:
+                    ShowOptieWidow();
+                    break;
+                case MainAktie.OpenRangeSearcher:
+                    ShowCalculatieWindow();
+                    break;
+                case MainAktie.OpenPersoneel:
+                    ShowPersoneelWindow();
+                    break;
+                case MainAktie.OpenStoringen:
+                    if (flag)
+                    {
+                        var bew = (Bewerking) values.FirstOrDefault(x => x is Bewerking);
+                        if (bew != null)
+                            ShowBewStoringen(bew);
+                    }
+
+                    break;
+                case MainAktie.OpenAlleStoringen:
+                    ShowOnderbrekeningenWidow();
+                    break;
+                case MainAktie.OpenVaardigheden:
+                    if (flag)
+                    {
+                        var per = (Personeel) values.FirstOrDefault(x => x is Personeel);
+                        if (per != null)
+                            ShowPersoonVaardigheden(per);
+                    }
+
+                    break;
+                case MainAktie.OpenAlleVaardigheden:
+                    ShowAlleVaardighedenWidow();
+                    break;
+                case MainAktie.OpenAantalGemaaktProducties:
+                    if (values.FirstOrDefault() is List<Bewerking> bws && values.LastOrDefault() is int mins)
+                        DoAantalGemaakt(bws, mins);
+                    break;
+                case MainAktie.StartBewerking:
+                    if (values.FirstOrDefault() is Bewerking bew2)
+                        ProductieListControl.StartBewerkingen(new Bewerking[] {bew2});
+                    break;
+                case MainAktie.StopBewerking:
+                    if (values.FirstOrDefault() is Bewerking bew3)
+                        _= bew3.StopProductie(true);
+                    break;
+            }
+        }
+
         private void Manager_OnFormulierActie(object[] values, MainAktie type)
         {
             if (IsDisposed || Disposing) return;
             try
             {
-                BeginInvoke(new Action(() =>
-                {
-                    var flag = values is {Length: > 0};
-                    switch (type)
+                if (InvokeRequired)
+                    BeginInvoke(new Action(() =>
                     {
-                        case MainAktie.OpenProductie:
-                            if (flag)
-                            {
-                                var form =
-                                    (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
-                                var bew = (Bewerking) values.FirstOrDefault(x => x is Bewerking);
-                                if (form != null)
-                                    ShowProductieForm(form, true, bew);
-                            }
-
-                            break;
-                        case MainAktie.OpenIndeling:
-                            if (flag)
-                            {
-                                var form =
-                                    (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
-                                ShowWerkplekken(form);
-                            }
-
-                            break;
-                        case MainAktie.OpenProductieWijziging:
-                            if (flag)
-                            {
-                                var form =
-                                    (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
-                                ShowProductieSettings(form);
-                            }
-
-                            break;
-                        case MainAktie.OpenInstellingen:
-                            ShowOptieWidow();
-                            break;
-                        case MainAktie.OpenRangeSearcher:
-                            ShowCalculatieWindow();
-                            break;
-                        case MainAktie.OpenPersoneel:
-                            ShowPersoneelWindow();
-                            break;
-                        case MainAktie.OpenStoringen:
-                            if (flag)
-                            {
-                                var bew = (Bewerking) values.FirstOrDefault(x => x is Bewerking);
-                                if (bew != null)
-                                    ShowBewStoringen(bew);
-                            }
-
-                            break;
-                        case MainAktie.OpenAlleStoringen:
-                            ShowOnderbrekeningenWidow();
-                            break;
-                        case MainAktie.OpenVaardigheden:
-                            if (flag)
-                            {
-                                var per = (Personeel) values.FirstOrDefault(x => x is Personeel);
-                                if (per != null)
-                                    ShowPersoonVaardigheden(per);
-                            }
-
-                            break;
-                        case MainAktie.OpenAlleVaardigheden:
-                            ShowAlleVaardighedenWidow();
-                            break;
-                    }
-                }));
+                        DoActie(values, type);
+                    }));
+                else DoActie(values, type);
             }
             catch (Exception e)
             {
@@ -646,7 +668,7 @@ namespace Controls
             {
                 //await created.UpdateForm(true, false);
                 if (result == DialogResult.Yes && created.Bewerkingen.Length > 0)
-                    ProductieListControl.StartBewerkingen(created.Bewerkingen,this);
+                    ProductieListControl.StartBewerkingen(created.Bewerkingen);
                 else
                     await created.UpdateForm(true, false);
                 SelectProductieItem(created);
@@ -830,12 +852,12 @@ namespace Controls
             else if (item is Bewerking bew)
             {
                 xbewerkingListControl.SelectedItem = bew;
-                metroTabControl.SelectedIndex = 1;
+                metroTabControl.SelectedIndex = 0;
             }
             else if (item is WerkPlek plek)
             {
                 werkPlekkenUI1.SelectedWerkplek = plek;
-                metroTabControl.SelectedIndex = 2;
+                metroTabControl.SelectedIndex = 1;
             }
         }
 
@@ -879,7 +901,7 @@ namespace Controls
 
                     if (bws.Count > 0)
                     {
-                        var bwselector = new BewerkingSelectorForm(bws);
+                        var bwselector = new BewerkingSelectorForm(bws,true,true);
                         bwselector.Title = "Selecteer Werkplekken waarvan de rooster aangepast moet worden";
                         if (bwselector.ShowDialog() == DialogResult.OK)
                             await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, roosterform.WerkRooster);
@@ -1375,7 +1397,7 @@ namespace Controls
                         StringComparison.CurrentCultureIgnoreCase)).ToList();
                     if (bws.Count > 0)
                     {
-                        var bwselector = new BewerkingSelectorForm(bws);
+                        var bwselector = new BewerkingSelectorForm(bws,true,true);
                         bwselector.Title = "Selecteer Werkplekken waarvan de rooster aangepast moet worden";
                         if (bwselector.ShowDialog() == DialogResult.OK)
                             await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
@@ -1412,7 +1434,7 @@ namespace Controls
                         StringComparison.CurrentCultureIgnoreCase)).ToList();
                     if (bws.Count > 0)
                     {
-                        var bwselector = new BewerkingSelectorForm(bws);
+                        var bwselector = new BewerkingSelectorForm(bws,true,true);
                         bwselector.Title = "Selecteer Werkplekken waarvan de rooster aangepast moet worden";
                         if (bwselector.ShowDialog() == DialogResult.OK)
                             await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
@@ -1932,50 +1954,23 @@ namespace Controls
             }
         }
 
-        public async void DoAantalGemaakt()
+        private static AantalGemaaktProducties _gemaaktform;
+        public static async void DoAantalGemaakt(List<Bewerking> bewerkingen = null, int lastchangedminutes = -1)
         {
             try
             {
                 if (Manager.Database == null || Manager.Database.IsDisposed)
                     return;
-                var bws = await Manager.Database.GetBewerkingen(ViewState.Gestart, true,null, null);
-                var xform = new MetroForm();
-                xform.Style = MetroColorStyle.Green;
-                xform.StartPosition = FormStartPosition.CenterParent;
-                xform.ShadowType = MetroFormShadowType.AeroShadow;
-                var height = 80;
-                if (bws.Count == 0)
+                if (_gemaaktform != null) return;
+                var bws = bewerkingen??await Manager.Database.GetBewerkingen(ViewState.Gestart, true,null, null); ;
+                _gemaaktform = new AantalGemaaktProducties(bws, lastchangedminutes);
+                _gemaaktform.FormClosed += (o,e) =>
                 {
-                    xform.Text = "Geen Actieve Producties";
-                }
-                else
-                {
-                    var x1 = bws.Count == 1 ? "Productie" : "Producties";
-                    xform.Text = $"Wijzig AantalGemaakt Van {bws.Count} Actieve {x1}";
+                    _gemaaktform?.Dispose();
+                    _gemaaktform = null;
+                };
+                _gemaaktform.ShowDialog();
 
-                    var panel = new Panel {Dock = DockStyle.Fill, AutoScroll = true};
-                   
-                    foreach (var bw in bws)
-                    {
-                        var group = new GroupBox();
-                        group.ForeColor = Color.DarkGreen;
-                        group.Text = $"{bw.ArtikelNr}, {bw.ProductieNr} | {bw.Naam} Van {bw.Omschrijving}";
-                        group.Font = new Font(this.Font.FontFamily, 12, FontStyle.Bold);
-                        group.Dock = DockStyle.Top;
-
-                        var xaantal = new AantalChangerUI();
-                        xaantal.LoadAantalGemaakt(bw);
-                        group.Size = new Size(xaantal.Width + 25, xaantal.Height + 25);
-                        xaantal.Dock = DockStyle.Fill;
-                        group.Controls.Add(xaantal);
-                        panel.Controls.Add(group);
-                        height += group.Height;
-                    }
-                    xform.Controls.Add(panel);
-                }
-                xform.Size = new Size(650, height);
-                xform.Invalidate();
-                xform.ShowDialog();
             }
             catch (Exception e)
             {

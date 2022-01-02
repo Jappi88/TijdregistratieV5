@@ -49,6 +49,11 @@ namespace Controls
                 }
                 string txt = String.Empty;
                 HtmlPanel panel = null;
+                if (Productie is Bewerking bew && bew.Combies.Count > 0)
+                {
+                    metroTabControl1.TabPages[1].Text = $"Combinaties[{bew.Combies.Count}]";
+                }
+                else metroTabControl1.TabPages[1].Text = "Combineren";
                 switch (metroTabControl1.SelectedIndex)
                 {
                     case 0:
@@ -59,24 +64,27 @@ namespace Controls
                             new Size(64, 64), BackColor, BackColorGradient, TextColor, true);
                         break;
                     case 1:
+                        combineerUI1.UpdateBewerking(Productie as Bewerking);
+                        break;
+                    case 2:
                         //ProductieInfo
                         panel = xInforHtmlPanel;
                         txt = Productie.GetProductieInfoHtml("Productie Info",
                             BackColor, BackColorGradient, TextColor, true);
                         break;
-                    case 2:
+                    case 3:
                         //Notities
                         panel = xNotitieHtmlPanel;
                         txt = Productie.GetNotitiesHtml("Notities",
                             BackColor, BackColorGradient, TextColor, true);
                         break;
-                    case 3:
+                    case 4:
                         //ProductieDatums
                         panel = xDatumsHtmlPanel;
                         txt = Productie.GetDatumsHtml("Productie Datums",
                             BackColor, BackColorGradient, TextColor, true);
                         break;
-                    case 4:
+                    case 5:
                         verpakkingInstructieUI1.AllowEditMode = true;
                         if (!verpakkingInstructieUI1.IsEditmode)
                             verpakkingInstructieUI1.InitFields(Productie.VerpakkingsInstructies,
@@ -84,19 +92,19 @@ namespace Controls
                                 "VerpakkingsInstructies", Color.White, Color.Black, Productie);
                         else verpakkingInstructieUI1.Productie = Productie;
                         break;
-                    case 5:
+                    case 6:
                         //Materialen
                         panel = xMaterialenHtmlPanel;
                         txt = Productie.GetMaterialenHtml("Materialen",
                             BackColor, BackColorGradient, TextColor, true);
                         break;
-                    case 6:
+                    case 7:
                         //WerkPlaatsen
                         panel = xWerkPlaatsenHtmlPanel;
                         txt = Productie.GetWerkplekkenHtml("Werk Plaatsen",
                             BackColor, BackColorGradient, TextColor, true);
                         break;
-                    case 7:
+                    case 8:
                         //charts
                         break;
                 }
@@ -127,7 +135,10 @@ namespace Controls
                 HtmlBackColor = backColor;
                 BackColorGradient = backGroundGradient;
                 TextColor = textColor;
-                UpdateView();
+                if (InvokeRequired)
+                    this.BeginInvoke(new MethodInvoker(UpdateView));
+                else
+                    UpdateView();
             }
             catch (Exception e)
             {

@@ -40,7 +40,7 @@ namespace ProductieManager.Rpm.ExcelHelper
         public static string[] WerkPlekColumns =
         {
             "ArtikelNr", "ProductieNr", "Status", "Naam", "Omschrijving", "Totaal Aantal","Totaal Gemaakt", "Actueel Gemaakt", "PDC P/u","Actueel P/u","Gemiddeld P/u", "Gestart Op",
-            "Gestopt Op", "Tijd Gewerkt","Tijd Actief", "#Storingen","#Ombouw","Tijd Storingen","Tijd Ombouw","Personen"
+            "Gestopt Op", "Tijd Gewerkt","Tijd Actief","Activiteit", "#Storingen","#Ombouw","Tijd Storingen","Tijd Ombouw","Personen"
         };
 
         
@@ -55,7 +55,7 @@ namespace ProductieManager.Rpm.ExcelHelper
 
         public static string[] HiddenWerkPlekColumns =
         {
-            "Naam","ProductieNr"
+            "Naam","ProductieNr","Activiteit"
         };
 
         public static object GetValue(WerkPlek plek, string value, TijdEntry bereik)
@@ -64,6 +64,8 @@ namespace ProductieManager.Rpm.ExcelHelper
             double xtijd = 0;
             switch (value.ToLower())
             {
+                case "activiteit":
+                    return (plek.Werk.Activiteit / 100).ToString("P");
                 case "pdc p/u":
                     return plek.PerUurBase;
                 case "actueel p/u":

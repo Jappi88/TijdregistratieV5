@@ -72,6 +72,7 @@ namespace Rpm.Productie
         public DateTime LaatstAantalUpdate { get; set; } = DateTime.Now;
 
         public string Path => Werk?.Path == null ? Naam : Werk.Path + "\\" + Naam;
+        public double Activiteit { get; set; } = 100;
 
         public string Omschrijving => Werk?.Omschrijving;
         public string WerkNaam => Werk?.Naam;
@@ -504,8 +505,8 @@ namespace Rpm.Productie
             else
                 tijd = Personen.Sum(x =>
                     x.TijdAanGewerkt(xstoringen, this, x.WerkRooster ?? Tijden?.WerkRooster).TotalHours);
-
-            return Math.Round(tijd, 2);
+            if (tijd <= 0) return 0;
+            return Math.Round(((tijd / 100) * Activiteit), 2);
         }
 
         public double TijdAanGewerkt(DateTime vanaf, DateTime tot, bool includestoringen)
@@ -520,8 +521,8 @@ namespace Rpm.Productie
                 tijd = Personen.Sum(x =>
                     x.TijdAanGewerkt(xstoringen, this, vanaf, tot, x.WerkRooster ?? Tijden?.WerkRooster)
                         .TotalHours);
-
-            return Math.Round(tijd, 2);
+            if (tijd <= 0) return 0;
+            return Math.Round(((tijd / 100) * Activiteit), 2);
         }
 
         public bool HeeftGewerkt(TijdEntry bereik)

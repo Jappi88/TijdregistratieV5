@@ -65,6 +65,10 @@ namespace Rpm.Productie
         [Display(Name = "GemiddeldDoorlooptijd", Description = "DoorloopTijd berekent op basis van de Aantal om te maken en de Gemiddelde Aantal Per Uur")]
         public virtual double GemiddeldDoorlooptijd { get; set; }
 
+        [Display(Name = "Activiteit",
+            Description =
+                "Het aantal procent van hoe actief de productie is. hoe lager de percentage, hoe minder tijd gewerkt")]
+        public virtual double Activiteit { get; } = 100;
         //[Display(Name = "VerpakkingsInstructies", Description = "VerpakkingsInformatie over hoe de geproduceerde product verpakt moet worden")]
         //[ExcludeFromSerialization]
         //public virtual VerpakkingInstructie VerpakkingInstries
@@ -475,6 +479,7 @@ namespace Rpm.Productie
               $"Per Uur: <b>{ActueelPerUur} i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span></b><br>" +
               $"Gemiddeld Per Uur: <b>{GemiddeldActueelPerUur} i.p.v. {GemiddeldPerUur} <span style = 'color: {GetNegativeColorByPercentage(GemiddeldProcentAfwijkingPerUur).Name}'>({GemiddeldProcentAfwijkingPerUur}%)</span></b><br>" +
               $"Tijd Gewerkt: <b>{TijdGewerkt} uur</b><br>" +
+              $"Activiteit: <b>{TijdGewerkt} uur</b><br>" +
               $"Aantal Aanbevolen Personen: <b>{AanbevolenPersonen}</b><br>" +
               $"Opmerking: <b>{Opmerking?.Replace("\n", "<br>") ?? "Geen Opmerking."}</b><br><br>" +
               $"</div>\r\n" +
@@ -709,6 +714,7 @@ Color textcolor, bool useimage)
                           $"Aantal Gemaakt: <u>{TotaalGemaakt}</u> / {Aantal} <span style = 'color: {GetPositiveColorByPercentage((decimal) Gereed).Name}'>({Gereed}%)</span><br>" +
                           $"<ul><li><u>Actueel</u> Aantal Gemaakt: <b><u>{ActueelAantalGemaakt}</u></b> / {Aantal}</li></ul>" +
                           $"Tijd Gewerkt: <u>{TijdGewerkt}</u> / {Math.Round(DoorloopTijd, 2)} uur <span style = 'color:{GetPositiveColorByPercentage((decimal) TijdGewerktPercentage).Name}'>({TijdGewerktPercentage}%)</span><br>" +
+                          $"{((int)Activiteit != 100? $"<ul><li>Draait Op <b><u>{Activiteit}%</u></b></li></ul>" : "")}" +
                           $"Per Uur: <u>{ActueelPerUur}</u> i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span><br><br>" +
                           $"<span style = 'color: {Color.DarkRed.Name}'><u>{Opmerking}</u></span><br>" +
                           $"<span style = 'color: {Color.DarkRed.Name}'><u>{ControlePunten}</u></span><br>" +

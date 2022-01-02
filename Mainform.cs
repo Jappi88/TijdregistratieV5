@@ -260,7 +260,7 @@ namespace ProductieManager
                 {
                     try
                     {
-                        if (Directory.Exists(dbent.RootPath))
+                        if (Directory.Exists(dbent.UpdatePath))
                         {
                             rootpath = dbent.RootPath;
                             break;
@@ -312,7 +312,7 @@ namespace ProductieManager
                 //if (InvokeRequired)
                 //    BeginInvoke(new Action(msg.Notify));
                 //else
-                    msg.Notify(this);
+                    msg.Notify();
             }
             catch (Exception e)
             {

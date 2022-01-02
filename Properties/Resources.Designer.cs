@@ -1438,6 +1438,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Merge_arrows_128x128 {
+            get {
+                object obj = ResourceManager.GetObject("Merge-arrows_128x128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap message_send_32x32 {
             get {
                 object obj = ResourceManager.GetObject("message_send_32x32", resourceCulture);
@@ -2261,6 +2271,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap undoarrow_undo_1534 {
             get {
                 object obj = ResourceManager.GetObject("undoarrow_undo_1534", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap UnMerge_arrows_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("UnMerge-arrows_32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -19,20 +19,18 @@ namespace Rpm.Misc
         /// </summary>
         /// <param name="message">De bericht die getoond moet worden</param>
         /// <param name="title">De titel van de notificatie</param>
-        /// <param name="parent">De scherm die de notificatie toont</param>
-        public static void Notify(this RemoteMessage message, string title, Form parent)
+        public static void Notify(this RemoteMessage message, string title)
         {
-            message?.Message?.Alert( title, message.MessageType, parent);
+            message?.Message?.Alert( title, message.MessageType);
         }
 
         /// <summary>
         /// Toon  notificatie
         /// </summary>
         /// <param name="message">De bericht die getoond moet worden</param>
-        /// <param name="parent">De scherm die de notificatie toont</param>
-        public static void Notify(this RemoteMessage message, Form parent)
+        public static void Notify(this RemoteMessage message)
         {
-            message.Message.Alert(message.Title,message.MessageType,parent);
+            message.Message.Alert(message.Title,message.MessageType);
         }
 
        /// <summary>
@@ -41,9 +39,8 @@ namespace Rpm.Misc
        /// <param name="msg">De bericht die getoond moet worden</param>
        /// <param name="title">De titel van de notificatie</param>
        /// <param name="type">De soort notificatie</param>
-       /// <param name="parent">De scherm die de notificatie toont</param>
        /// <param name="closed">Een event die je kan koppelen als de notificatie is afgesloten</param>
-        public static void Alert(this string msg, string title, MsgType type, Form parent, FormClosedEventHandler closed = null)
+        public static void Alert(this string msg, string title, MsgType type, FormClosedEventHandler closed = null)
        {
            Task.Run(() =>
            {
@@ -52,7 +49,7 @@ namespace Rpm.Misc
                try
                {
                    var visibleform = Application.OpenForms["Mainform"];
-                   visibleform?.BeginInvoke(new MethodInvoker(() =>
+                   visibleform?.Invoke(new MethodInvoker(() =>
                    {
                        try
                        {
