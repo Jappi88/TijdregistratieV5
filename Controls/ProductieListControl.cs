@@ -1369,7 +1369,7 @@ namespace Controls
                     if (IsDisposed) return;
                     InitColumns(settings);
                     if (CanLoad)
-                        UpdateProductieList(true,false);
+                        UpdateProductieList(true,true);
                 }));
             }
             catch (Exception e)

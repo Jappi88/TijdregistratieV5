@@ -992,10 +992,23 @@ namespace Controls
                 bttns.Add("Annuleren", DialogResult.Cancel);
                 bttns.Add("Database Laden", DialogResult.OK);
                 bttns.Add("Kies Folder", DialogResult.Yes);
-                var dbs = Manager.DefaultSettings?.DbUpdateEntries ??
-                          UserSettings.GetDefaultSettings()?.DbUpdateEntries ?? new List<DatabaseUpdateEntry>();
-                var dbnames = dbs.Select(x => x.Naam).ToList();
-                dbnames.Insert(0, "Standaard Database");
+                //var dbs = Manager.DefaultSettings?.DbUpdateEntries ??
+                          //UserSettings.GetDefaultSettings()?.DbUpdateEntries ?? new List<DatabaseUpdateEntry>();
+                          var dbnames = new List<string>();
+                var xroot = Path.GetDirectoryName(Manager.AppRootPath);
+                if (Directory.Exists(xroot))
+                {
+                    var dirs = Directory.GetDirectories(xroot);
+                    foreach (var dir in dirs)
+                    {
+                        if (Directory.Exists(Path.Combine(dir, "RPM_Data")))
+                        {
+                            dbnames.Add(dir);
+                        }
+                    }
+                }
+
+                dbnames.Add( "Standaard Database");
                 var result = msgbox.ShowDialog(msg, "Database Laden", MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Information, dbnames.ToArray(), bttns);
                 if (result == DialogResult.Cancel) return;
@@ -1011,9 +1024,9 @@ namespace Controls
                     }
                     else
                     {
-                        var ent = dbs.FirstOrDefault(x =>
-                            string.Equals(x.Naam, msgbox.SelectedValue, StringComparison.CurrentCultureIgnoreCase));
-                        path = ent?.RootPath;
+                        var ent = dbnames.FirstOrDefault(x =>
+                            string.Equals(x, msgbox.SelectedValue, StringComparison.CurrentCultureIgnoreCase));
+                        path = ent;
                     }
                 }
 
@@ -1039,7 +1052,7 @@ namespace Controls
                     //    if (opties != null)
                     //        Manager.Opties = opties;
                     //}
-                    LoadManager(path,false);
+                    LoadManager(path,true);
                     //await _manager.Load(path, true, true, true);
                 }
             }

@@ -479,7 +479,7 @@ namespace Rpm.Productie
               $"Per Uur: <b>{ActueelPerUur} i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span></b><br>" +
               $"Gemiddeld Per Uur: <b>{GemiddeldActueelPerUur} i.p.v. {GemiddeldPerUur} <span style = 'color: {GetNegativeColorByPercentage(GemiddeldProcentAfwijkingPerUur).Name}'>({GemiddeldProcentAfwijkingPerUur}%)</span></b><br>" +
               $"Tijd Gewerkt: <b>{TijdGewerkt} uur</b><br>" +
-              $"Activiteit: <b>{TijdGewerkt} uur</b><br>" +
+              $"Activiteit: <b>{Activiteit}%</b><br>" +
               $"Aantal Aanbevolen Personen: <b>{AanbevolenPersonen}</b><br>" +
               $"Opmerking: <b>{Opmerking?.Replace("\n", "<br>") ?? "Geen Opmerking."}</b><br><br>" +
               $"</div>\r\n" +

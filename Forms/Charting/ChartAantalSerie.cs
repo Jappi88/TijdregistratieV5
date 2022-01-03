@@ -41,7 +41,7 @@ namespace ProductieManager.Forms.Charting
                         Values.Add(new ObservableValue(aantal));
                     else
                         Values[i].Value = aantal;
-                    label.Add(record.EndDate.ToString(""));
+                    label.Add(record.GetGestopt().ToString(""));
                 }
 
                 //int index = 0;

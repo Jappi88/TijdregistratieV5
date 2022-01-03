@@ -22,65 +22,68 @@ namespace Rpm.Productie.AantalHistory
 
         public void SetActive(bool active, AantalRecord record = null)
         {
-            var xent = record??Aantallen.LastOrDefault();
+            var xent = record ?? Aantallen.LastOrDefault();
             if (xent == null)
             {
                 return;
             }
 
-            if (!active)
+            //if (!active)
+            // {
+
+            foreach (var xt in Aantallen)
             {
-                foreach (var xt in Aantallen)
-                {
-                    if (xt._endDate.IsDefault())
-                        xt._endDate = DateTime.Now;
-                }
+                if (xt._endDate.IsDefault())
+                    xt._endDate = DateTime.Now;
             }
-            else
-                xent._endDate = default;
+            // }
+
+            xent._endDate = active ? default : DateTime.Now;
         }
 
         public bool UpdateAantal(int aantal, bool active)
         {
             try
             {
-                if (aantal > 0 && Aantallen.Any(x => x.Aantal == aantal)) return false;
-                Aantallen.RemoveAll(x => x.Aantal >= aantal);
-                var xent = Aantallen.Count > 1
-                    ? Aantallen.LastOrDefault(x => !x._endDate.IsDefault() &&
-                                                   DateTime.Now >= x._endDate.Subtract(TimeSpan.FromMinutes(2)) &&
-                                                   DateTime.Now <= x._endDate.AddMinutes(2))
-                    : null;
-                if (xent != null)
+                lock (Aantallen)
                 {
-                    var xindex = Aantallen.IndexOf(xent);
-                    xent.Aantal = aantal;
-                    xent.DateChanged = DateTime.Now;
-                    if (xindex > 0)
+                    if (aantal > 0 && Aantallen.Any(x => x.Aantal == aantal)) return false;
+                    Aantallen.RemoveAll(x => x.Aantal >= aantal);
+                    var xent = Aantallen.Count > 1
+                        ? Aantallen.LastOrDefault(x => DateTime.Now >= x.DateChanged.Subtract(TimeSpan.FromMinutes(2)) &&
+                                                       DateTime.Now <= x.DateChanged.AddMinutes(2))
+                        : null;
+                    if (xent != null)
                     {
-                        Aantallen[xindex - 1].LastAantal = aantal;
-                        Aantallen[xindex - 1].EndDate = DateTime.Now;
+                        var xindex = Aantallen.IndexOf(xent);
+                        xent.Aantal = aantal;
+                        xent.DateChanged = DateTime.Now;
+                        if (xindex > 0)
+                        {
+                            Aantallen[xindex - 1].LastAantal = aantal;
+                            Aantallen[xindex - 1].EndDate = DateTime.Now;
+                        }
+                        else
+                        {
+                            xent = new AantalRecord(aantal);
+                            xent.LastAantal = aantal;
+                            Aantallen.Add(xent);
+                        }
                     }
                     else
                     {
-                        xent.LastAantal = aantal;
-                        xent.EndDate = DateTime.Now;
+
+                        var xlast = Aantallen.LastOrDefault();
+                        if (xlast != null)
+                        {
+                            xlast.LastAantal = aantal;
+                            xlast.DateChanged = DateTime.Now;
+                            xlast.EndDate = default;
+                        }
+
                         xent = new AantalRecord(aantal);
                         Aantallen.Add(xent);
                     }
-                }
-                else
-                {
-                   
-                    var xlast = Aantallen.LastOrDefault();
-                    if (xlast != null)
-                    {
-                        xlast.LastAantal = aantal;
-                        xlast.EndDate = DateTime.Now;
-                    }
-
-                    xent = new AantalRecord(aantal);
-                    Aantallen.Add(xent);
                 }
 
                 SetActive(active);
@@ -169,11 +172,11 @@ namespace Rpm.Productie.AantalHistory
 
                         if (exc.ContainsKey(x.DateChanged))
                         {
-                            if (x.EndDate > exc[x.DateChanged])
-                                exc[x.DateChanged] = x.EndDate;
+                            if (x.GetGestopt() > exc[x.DateChanged])
+                                exc[x.DateChanged] = x.GetGestopt();
                         }
                         else
-                            exc.Add(x.DateChanged, x.EndDate);
+                            exc.Add(x.DateChanged, x.GetGestopt());
                     }
 
                 }

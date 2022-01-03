@@ -33,6 +33,8 @@ namespace Controls
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
             this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
             this.xHeaderHtmlPanel = new TheArtOfDev.HtmlRenderer.WinForms.HtmlPanel();
+            this.metroTabPage8 = new MetroFramework.Controls.MetroTabPage();
+            this.combineerUI1 = new Controls.CombineerUI();
             this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
             this.xInforHtmlPanel = new TheArtOfDev.HtmlRenderer.WinForms.HtmlPanel();
             this.metroTabPage3 = new MetroFramework.Controls.MetroTabPage();
@@ -46,17 +48,18 @@ namespace Controls
             this.metroTabPage7 = new MetroFramework.Controls.MetroTabPage();
             this.xWerkPlaatsenHtmlPanel = new TheArtOfDev.HtmlRenderer.WinForms.HtmlPanel();
             this.aantalChangerUI1 = new ProductieManager.Forms.Aantal.Controls.AantalChangerUI();
-            this.metroTabPage8 = new MetroFramework.Controls.MetroTabPage();
-            this.combineerUI1 = new Controls.CombineerUI();
+            this.metroTabPage9 = new MetroFramework.Controls.MetroTabPage();
+            this.alleWerkPlekAantalHistoryUI1 = new Forms.Aantal.Controls.AlleWerkPlekAantalHistoryUI();
             this.metroTabControl1.SuspendLayout();
             this.metroTabPage1.SuspendLayout();
+            this.metroTabPage8.SuspendLayout();
             this.metroTabPage2.SuspendLayout();
             this.metroTabPage3.SuspendLayout();
             this.metroTabPage4.SuspendLayout();
             this.metroTabPage6.SuspendLayout();
             this.metroTabPage5.SuspendLayout();
             this.metroTabPage7.SuspendLayout();
-            this.metroTabPage8.SuspendLayout();
+            this.metroTabPage9.SuspendLayout();
             this.SuspendLayout();
             // 
             // metroTabControl1
@@ -69,6 +72,7 @@ namespace Controls
             this.metroTabControl1.Controls.Add(this.metroTabPage6);
             this.metroTabControl1.Controls.Add(this.metroTabPage5);
             this.metroTabControl1.Controls.Add(this.metroTabPage7);
+            this.metroTabControl1.Controls.Add(this.metroTabPage9);
             this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl1.Location = new System.Drawing.Point(0, 0);
             this.metroTabControl1.Multiline = true;
@@ -86,9 +90,9 @@ namespace Controls
             this.metroTabPage1.HorizontalScrollbarBarColor = true;
             this.metroTabPage1.HorizontalScrollbarHighlightOnWheel = false;
             this.metroTabPage1.HorizontalScrollbarSize = 2;
-            this.metroTabPage1.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage1.Location = new System.Drawing.Point(4, 72);
             this.metroTabPage1.Name = "metroTabPage1";
-            this.metroTabPage1.Size = new System.Drawing.Size(677, 354);
+            this.metroTabPage1.Size = new System.Drawing.Size(677, 320);
             this.metroTabPage1.TabIndex = 6;
             this.metroTabPage1.Text = "Productie Status";
             this.metroTabPage1.VerticalScrollbarBarColor = true;
@@ -106,10 +110,36 @@ namespace Controls
             this.xHeaderHtmlPanel.IsContextMenuEnabled = false;
             this.xHeaderHtmlPanel.Location = new System.Drawing.Point(0, 0);
             this.xHeaderHtmlPanel.Name = "xHeaderHtmlPanel";
-            this.xHeaderHtmlPanel.Size = new System.Drawing.Size(677, 354);
+            this.xHeaderHtmlPanel.Size = new System.Drawing.Size(677, 320);
             this.xHeaderHtmlPanel.TabIndex = 0;
             this.xHeaderHtmlPanel.Text = "Header Html Text";
             this.xHeaderHtmlPanel.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xVerpakkingHtmlPanel_ImageLoad);
+            // 
+            // metroTabPage8
+            // 
+            this.metroTabPage8.Controls.Add(this.combineerUI1);
+            this.metroTabPage8.HorizontalScrollbarBarColor = true;
+            this.metroTabPage8.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage8.HorizontalScrollbarSize = 8;
+            this.metroTabPage8.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage8.Name = "metroTabPage8";
+            this.metroTabPage8.Size = new System.Drawing.Size(677, 354);
+            this.metroTabPage8.TabIndex = 10;
+            this.metroTabPage8.Text = "Combineer";
+            this.metroTabPage8.VerticalScrollbarBarColor = true;
+            this.metroTabPage8.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage8.VerticalScrollbarSize = 9;
+            // 
+            // combineerUI1
+            // 
+            this.combineerUI1.BackColor = System.Drawing.Color.White;
+            this.combineerUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.combineerUI1.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.combineerUI1.Location = new System.Drawing.Point(0, 0);
+            this.combineerUI1.Name = "combineerUI1";
+            this.combineerUI1.Padding = new System.Windows.Forms.Padding(5);
+            this.combineerUI1.Size = new System.Drawing.Size(677, 354);
+            this.combineerUI1.TabIndex = 2;
             // 
             // metroTabPage2
             // 
@@ -318,30 +348,31 @@ namespace Controls
             this.aantalChangerUI1.Size = new System.Drawing.Size(685, 100);
             this.aantalChangerUI1.TabIndex = 0;
             // 
-            // metroTabPage8
+            // metroTabPage9
             // 
-            this.metroTabPage8.Controls.Add(this.combineerUI1);
-            this.metroTabPage8.HorizontalScrollbarBarColor = true;
-            this.metroTabPage8.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage8.HorizontalScrollbarSize = 10;
-            this.metroTabPage8.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage8.Name = "metroTabPage8";
-            this.metroTabPage8.Size = new System.Drawing.Size(677, 354);
-            this.metroTabPage8.TabIndex = 10;
-            this.metroTabPage8.Text = "Combineer";
-            this.metroTabPage8.VerticalScrollbarBarColor = true;
-            this.metroTabPage8.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage8.VerticalScrollbarSize = 10;
+            this.metroTabPage9.Controls.Add(this.alleWerkPlekAantalHistoryUI1);
+            this.metroTabPage9.HorizontalScrollbarBarColor = true;
+            this.metroTabPage9.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage9.HorizontalScrollbarSize = 10;
+            this.metroTabPage9.Location = new System.Drawing.Point(4, 72);
+            this.metroTabPage9.Name = "metroTabPage9";
+            this.metroTabPage9.Size = new System.Drawing.Size(677, 320);
+            this.metroTabPage9.TabIndex = 11;
+            this.metroTabPage9.Text = "Aantal Geschiedenis";
+            this.metroTabPage9.VerticalScrollbarBarColor = true;
+            this.metroTabPage9.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage9.VerticalScrollbarSize = 10;
             // 
-            // combineerUI1
+            // alleWerkPlekAantalHistoryUI1
             // 
-            this.combineerUI1.BackColor = System.Drawing.Color.White;
-            this.combineerUI1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.combineerUI1.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.combineerUI1.Location = new System.Drawing.Point(0, 0);
-            this.combineerUI1.Name = "combineerUI1";
-            this.combineerUI1.Size = new System.Drawing.Size(677, 354);
-            this.combineerUI1.TabIndex = 2;
+            this.alleWerkPlekAantalHistoryUI1.BackColor = System.Drawing.Color.White;
+            this.alleWerkPlekAantalHistoryUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.alleWerkPlekAantalHistoryUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.alleWerkPlekAantalHistoryUI1.Location = new System.Drawing.Point(0, 0);
+            this.alleWerkPlekAantalHistoryUI1.Margin = new System.Windows.Forms.Padding(4);
+            this.alleWerkPlekAantalHistoryUI1.Name = "alleWerkPlekAantalHistoryUI1";
+            this.alleWerkPlekAantalHistoryUI1.Size = new System.Drawing.Size(677, 320);
+            this.alleWerkPlekAantalHistoryUI1.TabIndex = 2;
             // 
             // ProductieInfoUI
             // 
@@ -358,13 +389,14 @@ namespace Controls
             this.Size = new System.Drawing.Size(685, 496);
             this.metroTabControl1.ResumeLayout(false);
             this.metroTabPage1.ResumeLayout(false);
+            this.metroTabPage8.ResumeLayout(false);
             this.metroTabPage2.ResumeLayout(false);
             this.metroTabPage3.ResumeLayout(false);
             this.metroTabPage4.ResumeLayout(false);
             this.metroTabPage6.ResumeLayout(false);
             this.metroTabPage5.ResumeLayout(false);
             this.metroTabPage7.ResumeLayout(false);
-            this.metroTabPage8.ResumeLayout(false);
+            this.metroTabPage9.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -388,5 +420,7 @@ namespace Controls
         private ProductieManager.Forms.Aantal.Controls.AantalChangerUI aantalChangerUI1;
         private MetroFramework.Controls.MetroTabPage metroTabPage8;
         private CombineerUI combineerUI1;
+        private MetroFramework.Controls.MetroTabPage metroTabPage9;
+        private Forms.Aantal.Controls.AlleWerkPlekAantalHistoryUI alleWerkPlekAantalHistoryUI1;
     }
 }

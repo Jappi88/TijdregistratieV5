@@ -109,6 +109,10 @@ namespace ProductieManager.Rpm.Productie
                 {
                     path2 = xtmp;
                 }
+                else
+                {
+                    path2 = Path.Combine(path2, Path.GetFileName(path1));
+                }
 
                 path1 = Path.Combine(path1, "RPM_Data");
                 path2 = Path.Combine(path2, "RPM_Data");

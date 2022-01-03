@@ -28,6 +28,7 @@ namespace Controls
                      ControlStyles.AllPaintingInWmPaint |
                      ControlStyles.SupportsTransparentBackColor,
                 true);
+            Manager.OnSettingsChanged += Manager_OnSettingsChanged;
         }
 
         public Taak SelectedItem
@@ -49,7 +50,7 @@ namespace Controls
             x.ImageGetter = ImageGetter;
             x.GroupKeyGetter = GroupGetter;
             UpdateTakenViewState(false,false);
-            Manager.OnSettingsChanged += Manager_OnSettingsChanged;
+           
         }
 
         public void InitEvents()

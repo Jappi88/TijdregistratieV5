@@ -2084,14 +2084,13 @@ namespace Rpm.Productie
             _fileWatchers = null;
             Klachten?.Dispose();
             Klachten = null;
-            DisposeEvents();
             if (disposing)
                 _safeHandle?.Dispose();
 
             _disposed = true;
         }
 
-        private void DisposeEvents()
+        public void DisposeEvents()
         {
             KlachtChanged = null;
             KlachtDeleted = null;

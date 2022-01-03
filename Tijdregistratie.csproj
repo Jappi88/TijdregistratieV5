@@ -248,6 +248,18 @@
     <Compile Include="Controls\ChartView.Designer.cs">
       <DependentUpon>ChartView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Aantal\Controls\AantalGemaaktHistoryUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Aantal\Controls\AantalGemaaktHistoryUI.Designer.cs">
+      <DependentUpon>AantalGemaaktHistoryUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Aantal\Controls\AlleWerkPlekAantalHistoryUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Aantal\Controls\AlleWerkPlekAantalHistoryUI.Designer.cs">
+      <DependentUpon>AlleWerkPlekAantalHistoryUI.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Combineer\Controls\CombineerEntryUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1160,6 +1172,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ChartView.resx">
       <DependentUpon>ChartView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Aantal\Controls\AantalGemaaktHistoryUI.resx">
+      <DependentUpon>AantalGemaaktHistoryUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Aantal\Controls\AlleWerkPlekAantalHistoryUI.resx">
+      <DependentUpon>AlleWerkPlekAantalHistoryUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Combineer\Controls\CombineerEntryUI.resx">
       <DependentUpon>CombineerEntryUI.cs</DependentUpon>

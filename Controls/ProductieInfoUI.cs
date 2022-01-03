@@ -105,7 +105,8 @@ namespace Controls
                             BackColor, BackColorGradient, TextColor, true);
                         break;
                     case 8:
-                        //charts
+                        //Aantal Geschiedenis
+                        alleWerkPlekAantalHistoryUI1.UpdateBewerking(Productie as Bewerking);
                         break;
                 }
 

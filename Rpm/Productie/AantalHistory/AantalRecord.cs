@@ -7,29 +7,34 @@ namespace Rpm.Productie.AantalHistory
 {
     public class AantalRecord
     {
+        public int ID { get; private set; }
         public int Aantal { get; set; }
         public int LastAantal { get; set; }
+        public int Gemaakt => GetGemaakt();
 
         public DateTime DateChanged { get; set; }
 
         internal DateTime _endDate;
 
         public bool IsActive => _endDate.IsDefault();
+        
 
         public DateTime EndDate
         {
-            get
-            {
-                if (_endDate.IsDefault())
-                    return DateTime.Now;
-                return _endDate;
-            }
+            get => _endDate;
             set => _endDate = value;
+        }
+
+        public DateTime GetGestopt()
+        {
+            if (IsActive) return DateTime.Now;
+            return EndDate;
         }
 
         public AantalRecord()
         {
             DateChanged = DateTime.Now;
+            ID = DateChanged.GetHashCode();
         }
 
         public AantalRecord(int aantal) : this()
@@ -65,7 +70,7 @@ namespace Rpm.Productie.AantalHistory
                     xstop = bereik.Stop.Add(xstartr.EindWerkdag);
             }
 
-            return new TijdEntry(DateChanged, EndDate).ContainsBereik(new TijdEntry(xstart, xstop));
+            return new TijdEntry(DateChanged, GetGestopt()).ContainsBereik(new TijdEntry(xstart, xstop));
         }
 
         public double GetPerUur(UrenLijst uren, Dictionary<DateTime, DateTime> exclude = null)
@@ -79,7 +84,19 @@ namespace Rpm.Productie.AantalHistory
         public double GetTijdGewerkt(UrenLijst uren, Dictionary<DateTime, DateTime> exclude = null)
         {
             return Math.Round(
-                Werktijd.TijdGewerkt(new TijdEntry(DateChanged, EndDate), uren?.WerkRooster, uren?.SpecialeRoosters,exclude).TotalHours, 2);
+                Werktijd.TijdGewerkt(new TijdEntry(DateChanged, GetGestopt()), uren?.WerkRooster, uren?.SpecialeRoosters,exclude).TotalHours, 2);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is AantalRecord record)
+                return record.ID == ID;
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return ID;
         }
     }
 }
