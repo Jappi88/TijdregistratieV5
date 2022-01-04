@@ -79,8 +79,7 @@ namespace Rpm.Productie.AantalHistory
                         if (xlast != null)
                         {
                             xlast.LastAantal = aantal;
-                            xlast.DateChanged = DateTime.Now;
-                            xlast.EndDate = default;
+                            xlast.EndDate = DateTime.Now;
                         }
 
                         xent = new AantalRecord(aantal);

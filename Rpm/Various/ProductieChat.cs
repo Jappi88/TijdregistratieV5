@@ -50,7 +50,7 @@ namespace ProductieManager.Rpm.Various
         public static string[] GetWritePaths(bool onlylocal)
         {
             var xreturn = new List<string>();
-            string remote = Manager.DefaultSettings?.MainDB?.UpdatePath;
+            string remote = Manager.Database.RootPath;
             string local = Manager.DefaultSettings?.TempMainDB?.UpdatePath;
             if (string.IsNullOrEmpty(local))
                 local = AppDomain.CurrentDomain.BaseDirectory + "\\RPM_Data";

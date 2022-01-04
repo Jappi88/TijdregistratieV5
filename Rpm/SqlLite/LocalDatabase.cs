@@ -58,6 +58,7 @@ namespace Rpm.SqlLite
         //public string AccountDbFileName { get; private set; }
         //public string LogDbFileName { get; private set; }
         //public string DbVersionFileName { get; private set; }
+
         public IDbCollection<Personeel> PersoneelLijst { get; private set; }
         public IDbCollection<ProductieFormulier> ProductieFormulieren { get; private set; }
         public IDbCollection<UserAccount> UserAccounts { get; private set; }
