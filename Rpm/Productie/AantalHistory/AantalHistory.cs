@@ -37,8 +37,10 @@ namespace Rpm.Productie.AantalHistory
                     xt._endDate = DateTime.Now;
             }
             // }
-
-            xent._endDate = active ? default : DateTime.Now;
+            if (active)
+                xent._endDate = default;
+            else if (xent.IsActive)
+                xent._endDate = DateTime.Now;
         }
 
         public bool UpdateAantal(int aantal, bool active)
