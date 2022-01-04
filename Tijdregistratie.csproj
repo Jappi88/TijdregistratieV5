@@ -260,6 +260,12 @@
     <Compile Include="Forms\Aantal\Controls\AlleWerkPlekAantalHistoryUI.Designer.cs">
       <DependentUpon>AlleWerkPlekAantalHistoryUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Aantal\NewAantalRecordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Aantal\NewAantalRecordForm.Designer.cs">
+      <DependentUpon>NewAantalRecordForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Combineer\Controls\CombineerEntryUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1179,6 +1185,9 @@
     <EmbeddedResource Include="Forms\Aantal\Controls\AlleWerkPlekAantalHistoryUI.resx">
       <DependentUpon>AlleWerkPlekAantalHistoryUI.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Aantal\NewAantalRecordForm.resx">
+      <DependentUpon>NewAantalRecordForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Combineer\Controls\CombineerEntryUI.resx">
       <DependentUpon>CombineerEntryUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -1696,6 +1705,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\users_clients_group_16774.png" />
     <None Include="Resources\UnMerge-arrows_32x32.png" />
     <None Include="Resources\Merge-arrows_128x128.png" />
     <None Include="Resources\note_document_64x64.png" />

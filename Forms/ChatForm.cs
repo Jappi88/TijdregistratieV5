@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
@@ -24,7 +25,7 @@ namespace ProductieManager.Forms
 {
     public partial class ChatForm : Form
     {
-        public ImageList LoadedUserImages { get; private set; } = new ImageList();
+        //public ImageList LoadedUserImages { get; private set; } = new ImageList();
 
         public ChatForm()
         {
@@ -38,8 +39,8 @@ namespace ProductieManager.Forms
             ((OLVColumn) xuserlist.Columns[0]).AspectGetter = ProfileNameGet;
             ((OLVColumn) xuserlist.Columns[1]).AspectGetter = ProfileStatusGet;
             ((OLVColumn) xuserlist.Columns[2]).AspectGetter = ProfileLastSeenGet;
-            LoadedUserImages.ColorDepth = ColorDepth.Depth32Bit;
-            LoadedUserImages.ImageSize = new Size(64, 64);
+           // LoadedUserImages.ColorDepth = ColorDepth.Depth32Bit;
+            //LoadedUserImages.ImageSize = new Size(64, 64);
         }
 
         private object ProfileNameGet(object user)
@@ -71,10 +72,20 @@ namespace ProductieManager.Forms
         private object ProfileLastSeenGet(object user)
         {
             if (user is UserChat chat)
+            {
+                if (string.Equals(chat.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    var count = ProductieChat.Gebruikers.Count - 1;
+                    string x1 = count == 1 ? "Gebruiker" : "Gebruikers";
+                    return $"Totaal {count} {x1}";
+                }
+
                 return (chat.IsOnline ? "Online vanaf " : "Laatst online op ") +
                        (chat.LastOnline.Date == DateTime.Now.Date
                            ? chat.LastOnline.ToShortTimeString()
                            : chat.LastOnline.ToString("f"));
+            }
+
             return "n.v.t.";
         }
 
@@ -259,8 +270,10 @@ namespace ProductieManager.Forms
 
                 LoadProfiles();
                 var selected = SelectedUser();
-                if (selected != null && string.Equals(selected.UserName, message.Afzender.UserName,
-                    StringComparison.CurrentCultureIgnoreCase))
+                if (selected != null && (string.Equals(selected.UserName, message.Afzender.UserName,
+                        StringComparison.CurrentCultureIgnoreCase) || string.Equals(selected.UserName,
+                        message.Ontvanger,
+                        StringComparison.CurrentCultureIgnoreCase)))
                     LoadConversation(true);
 
             }));
@@ -301,15 +314,17 @@ namespace ProductieManager.Forms
                 var selected = SelectedUser();
                 var toremove = xuserlist.Objects?.Cast<UserChat>().ToList() ?? new List<UserChat>();
                 xuserimages.Images.Clear();
-                xuserimages.Images.Add("Iedereen", Properties.Resources.users_12820);
-                LoadedUserImages.Images.Clear();
-                LoadedUserImages.Images.Add(ProductieChat.Chat.UserName, ProductieChat.Chat.GetProfielImage());
-                LoadedUserImages.Images.Add("Iedereen", Properties.Resources.users_12820);
-                if (toremove.Count == 0)
+               // xuserimages.Images.Add("Iedereen", Properties.Resources.users_clients_group_16774);
+                //LoadedUserImages.Images.Clear();
+               // LoadedUserImages.Images.Add(ProductieChat.Chat.UserName, ProductieChat.Chat.GetProfielImage());
+                //LoadedUserImages.Images.Add("Iedereen", Properties.Resources.users_clients_group_16774);
+
+                if (!ProductieChat.Gebruikers.Any(x => string.Equals(x.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase)))
                 {
-                    toremove.Add(new UserChat()
-                        {UserName = "Iedereen", IsOnline = true, ProfielImage = ProductieChat.GroupChatImagePath});
-                    xuserlist.SetObjects(toremove);
+                    var iedereen = new UserChat()
+                        { UserName = "Iedereen", IsOnline = true, ProfielImage = ProductieChat.GroupChatImagePath };
+                    ProductieChat.Gebruikers.Add(iedereen);
+                    ProductieChat.Gebruikers = ProductieChat.Gebruikers.OrderBy(x => x.UserName).ToList();
                 }
 
                 for (int i = 0; i < ProductieChat.Gebruikers.Count; i++)
@@ -319,7 +334,7 @@ namespace ProductieManager.Forms
                         string.Equals(user.UserName, _Selected, StringComparison.CurrentCultureIgnoreCase))
                         selected = user;
                     var img = user.GetProfielImage() ?? Properties.Resources.avatardefault_92824;
-                    LoadedUserImages.Images.Add(user.UserName, img);
+                    //LoadedUserImages.Images.Add(user.UserName, img);
                     int unread = ProductieChat.Chat.UnreadMessages(user.UserName);
                     if (unread > 0)
                     {
@@ -336,7 +351,9 @@ namespace ProductieManager.Forms
 
                     var old = toremove.FirstOrDefault(x => x.Equals(user));
                     if (old == null)
+                    {
                         xuserlist.AddObject(user);
+                    }
                     else
                     {
                         xuserlist.RefreshObject(user);
@@ -345,24 +362,28 @@ namespace ProductieManager.Forms
                 }
 
                 if (toremove.Count > 0)
+                {
                     xuserlist.RemoveObjects(toremove);
+                }
+                xuserlist.EndUpdate();
                 xuserlist.SelectedObject = selected;
                 xuserlist.SelectedItem?.EnsureVisible();
-               
+                if (xuserlist.SelectedObject == null && xuserlist.Items.Count > 0)
+                {
+                    xuserlist.LowLevelScroll(0, -100);
+                    //xuserlist.Items[0].EnsureVisible();
+                }
                 // LoadSelectedUser();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
-            finally
-            {
-                xuserlist.EndUpdate();
-            }
         }
 
         private void LoadSelectedUser()
         {
+            if (Manager.ProductieChat == null || Manager.LogedInGebruiker == null) return;
             var user = SelectedUser();
             xselecteduserprofilebutton.Visible = user != null;
             xselecteduserimage.Image = user?.GetProfielImage();
@@ -373,12 +394,27 @@ namespace ProductieManager.Forms
                 : user.IsOnline
                     ? Properties.Resources.Online_32
                     : Properties.Resources.offline_32x32;
-            xselecteduserdate.Text = user == null
-                ? null
-                : (user.IsOnline ? "Online vanaf " : "Laatst online geweest op ") +
-                  (user.LastOnline.Date == DateTime.Now.Date
-                      ? user.LastOnline.ToShortTimeString()
-                      : user.LastOnline.ToString("f"));
+            if (string.Equals(user?.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase))
+            {
+                var users = ProductieChat.Gebruikers.Where(x => !string.Equals(Manager.LogedInGebruiker.Username,
+                    x.UserName, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                var onlineusers = ProductieChat.Gebruikers.Where(x => x.IsOnline && !string.Equals(Manager.LogedInGebruiker.Username,
+                    x.UserName, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                var x0 = users.Count == 1 ? $"gebruiker" : "gebruikers";
+                var x1 = onlineusers.Count == 1 ? $"gebruiker" : "gebruikers";
+
+                xselecteduserdate.Text = $"Stuur bericht naar {users.Count} {x0}, waarvan online: {onlineusers.Count} {x1}";
+            }
+            else
+            {
+                xselecteduserdate.Text = user == null
+                    ? null
+                    : (user.IsOnline ? "Online vanaf " : "Laatst online geweest op ") +
+                      (user.LastOnline.Date == DateTime.Now.Date
+                          ? user.LastOnline.ToShortTimeString()
+                          : user.LastOnline.ToString("f"));
+            }
+
             if (user != null)
                 LoadConversation(true);
         }
@@ -425,11 +461,10 @@ namespace ProductieManager.Forms
                             if (notifyuser)
                                 selected.Save();
                             xchatpanel.Text = msg;
-                            for (int i = 0; i < 3; i++)
+                            for (int i = 0; i < 5; i++)
                             {
                                 xchatpanel.VerticalScroll.Value =
                                     scrolltoend ? xchatpanel.VerticalScroll.Maximum : curpos;
-                                Application.DoEvents();
                             }
                         }
                         else xchatpanel.Text = "";
@@ -537,7 +572,7 @@ namespace ProductieManager.Forms
         {
             string[] values = e.Src.Split(';');
             if (values.Length == 0) return;
-            var xmg = LoadedUserImages.Images[values[0]];
+            var xmg = xuserimages.Images[values[0]];
             if (xmg == null)
             {
                 switch (values[0])

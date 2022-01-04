@@ -29,7 +29,8 @@ namespace ProductieManager.Rpm.Productie
         public List<IProductieBase> ExcludeProducties { get; set; } = new List<IProductieBase>();
         public static FolderSynchronization FolderSynchronization { get; private set; } = new FolderSynchronization();
        // public static Synchronisation MicSync { get; private set; } = new Synchronisation();
-
+       public string AppRootPath { get; private set; }
+       public string SecondaryRootPath { get; private set; }
         public void StartSyncProducties()
         {
             if (IsProductiesSyncing) return;
@@ -75,9 +76,9 @@ namespace ProductieManager.Rpm.Productie
 
         public void InitOfflineDb()
         {
-            if (Manager.DefaultSettings.GebruikOfflineMetSync && !string.Equals(Manager.DbPath,
-                    Manager.DefaultSettings.TempMainDB.UpdatePath, StringComparison.CurrentCultureIgnoreCase) &&
-                Directory.Exists(Manager.DefaultSettings.TempMainDB.UpdatePath))
+            if (Manager.DefaultSettings.GebruikOfflineMetSync && !string.Equals(Manager.AppRootPath,
+                    Manager.DefaultSettings.TempMainDB.RootPath, StringComparison.CurrentCultureIgnoreCase) &&
+                Directory.Exists(Manager.DefaultSettings.TempMainDB.RootPath))
             {
                
                 SyncProducties();
@@ -116,6 +117,8 @@ namespace ProductieManager.Rpm.Productie
 
                 path1 = Path.Combine(path1, "RPM_Data");
                 path2 = Path.Combine(path2, "RPM_Data");
+                AppRootPath = path1;
+                SecondaryRootPath = path2;
                 if (!Directory.Exists(path2))
                 {
                     Directory.CreateDirectory(path2);

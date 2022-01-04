@@ -75,7 +75,10 @@ namespace Forms.Aantal.Controls
                         xold.Text = plek.Naam;
                         xold.Tag = plek;
                         var xhistory = new AantalGemaaktHistoryUI();
-                        xhistory.Dock = DockStyle.Fill;
+                        xhistory.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right |
+                                          AnchorStyles.Top;
+                        xhistory.Size = new Size(xold.Width - 5, xold.Height - 5);
+                        xhistory.Location = new Point(2, 2);
                         xhistory.UpdateList(plek);
                         xold.Controls.Add(xhistory);
                         xWerkplekTabs.TabPages.Add(xold);

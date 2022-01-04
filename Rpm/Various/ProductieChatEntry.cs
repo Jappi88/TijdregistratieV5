@@ -38,12 +38,18 @@ namespace ProductieManager.Rpm.Various
                     if (string.IsNullOrEmpty(ontv)) continue;
 
                     var xfirst = paths[0];
-                    var xfile = Path.Combine(xfirst, "Chat", ontv, "Berichten", $"{ID}.rpm");
+                    var xpath = Path.Combine(xfirst, "Chat", ontv, "Berichten");
+                    if (!Directory.Exists(xpath))
+                        Directory.CreateDirectory(xpath);
+                    var xfile = Path.Combine(xpath, $"{ID}.rpm");
                     if (this.Serialize(xfile))
                     {
                         for (int i = 1; i < paths.Length; i++)
                         {
-                            var path2 = Path.Combine(paths[i], "Chat", ontv, "Berichten", $"{ID}.rpm");
+                            xpath = Path.Combine(paths[i], "Chat", ontv, "Berichten");
+                            if (!Directory.Exists(xpath))
+                                Directory.CreateDirectory(xpath);
+                            var path2 = Path.Combine(xpath, $"{ID}.rpm");
                             for (int j = 0; j < 5; j++)
                             {
                                 try

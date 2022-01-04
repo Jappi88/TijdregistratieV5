@@ -1581,7 +1581,8 @@ namespace Controls
                     foreach (var msg in unread.Where(msg => msg.Afzender != null && !names.Any(x =>
                         string.Equals(x, msg.Afzender.UserName, StringComparison.CurrentCultureIgnoreCase))))
                         names.Add(msg.Afzender.UserName);
-
+                    bool iedereen = unread.Any(x =>
+                        string.Equals(x.Ontvanger, "iedereen", StringComparison.CurrentCultureIgnoreCase));
                     if (names.Count == 0) return;
                     {
                         Application.OpenForms["SplashScreen"]?.Close();
@@ -1597,7 +1598,7 @@ namespace Controls
                         _unreadMessages?.Dispose();
                         _unreadMessages = null;
                         if (result == DialogResult.Yes)
-                            ShowChatWindow(names[0]);
+                            ShowChatWindow(iedereen ? "Iedereen" : names[0]);
                     }
                 }
             }

@@ -198,17 +198,17 @@ namespace Forms
             xoverzichtbereikgroup.Enabled = x.CreateWeekOverzichten;
             xdocurrentweekoverzicht.Checked = x.DoCurrentWeekOverzicht;
 
-            var selected = x.ExcelColumns?.FirstOrDefault(s => s.IsExcelSettings && s.IsUsed("ExcelColumns"));
-            if (selected != null)
-            {
-                xcolumnsStatusLabel.Text = $@"Opties Geselecteerd: {selected.Name}";
-                xcolumnsStatusLabel.ForeColor = Color.DarkGreen;
-            }
-            else
-            {
-                xcolumnsStatusLabel.Text = $@"Geen Opties Geselecteerd!";
-                xcolumnsStatusLabel.ForeColor = Color.DarkRed;
-            }
+            //var selected = x.ExcelColumns?.FirstOrDefault(s => s.IsExcelSettings && s.IsUsed("ExcelColumns"));
+            //if (selected != null)
+            //{
+            //    xcolumnsStatusLabel.Text = $@"Opties Geselecteerd: {selected.Name}";
+            //    xcolumnsStatusLabel.ForeColor = Color.DarkGreen;
+            //}
+            //else
+            //{
+            //    xcolumnsStatusLabel.Text = $@"Geen Opties Geselecteerd!";
+            //    xcolumnsStatusLabel.ForeColor = Color.DarkRed;
+            //}
 
             xmaakvanafweek.SetValue(x.VanafWeek);
             xmaakvanafjaar.SetValue(x.VanafJaar);
@@ -1565,28 +1565,28 @@ namespace Forms
             }
         }
 
-        private void xKiesExcelColumnButton_Click(object sender, EventArgs e)
-        {
-            if (_LoadedOpties == null) return;
-            var xf = new ExcelOptiesForm();
-            xf.LoadOpties(_LoadedOpties, "ExcelColumns",true);
-            if (xf.ShowDialog() == DialogResult.OK)
-            {
-                Manager.UpdateExcelColumns(_LoadedOpties, xf.Settings,true);
-                _LoadedOpties.Save("ExcelColumns Aangepast!");
-            }
-            var selected = _LoadedOpties.ExcelColumns?.FirstOrDefault(x => x.IsUsed("ExcelColumns") && x.IsExcelSettings);
-            if (selected != null)
-            {
-                xcolumnsStatusLabel.Text = $@"Opties Geselecteerd: {selected.Name}";
-                xcolumnsStatusLabel.ForeColor = Color.DarkGreen;
-            }
-            else
-            {
-                xcolumnsStatusLabel.Text = $@"Geen Opties Geselecteerd!";
-                xcolumnsStatusLabel.ForeColor = Color.DarkRed;
-            }
+        //private void xKiesExcelColumnButton_Click(object sender, EventArgs e)
+        //{
+        //    if (_LoadedOpties == null) return;
+        //    var xf = new ExcelOptiesForm();
+        //    xf.LoadOpties(_LoadedOpties, "ExcelColumns",true);
+        //    if (xf.ShowDialog() == DialogResult.OK)
+        //    {
+        //        Manager.UpdateExcelColumns(_LoadedOpties, xf.Settings,true);
+        //        _LoadedOpties.Save("ExcelColumns Aangepast!");
+        //    }
+        //    var selected = _LoadedOpties.ExcelColumns?.FirstOrDefault(x => x.IsUsed("ExcelColumns") && x.IsExcelSettings);
+        //    if (selected != null)
+        //    {
+        //        xcolumnsStatusLabel.Text = $@"Opties Geselecteerd: {selected.Name}";
+        //        xcolumnsStatusLabel.ForeColor = Color.DarkGreen;
+        //    }
+        //    else
+        //    {
+        //        xcolumnsStatusLabel.Text = $@"Geen Opties Geselecteerd!";
+        //        xcolumnsStatusLabel.ForeColor = Color.DarkRed;
+        //    }
 
-        }
+        //}
     }
 }

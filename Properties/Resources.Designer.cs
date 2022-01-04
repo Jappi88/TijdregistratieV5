@@ -2414,6 +2414,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap users_clients_group_16774 {
+            get {
+                object obj = ResourceManager.GetObject("users_clients_group_16774", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap van_der_valk_solar_logo {
             get {
                 object obj = ResourceManager.GetObject("van der valk solar logo", resourceCulture);

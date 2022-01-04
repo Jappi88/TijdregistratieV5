@@ -72,6 +72,7 @@ namespace Rpm.Productie
         /// De applicatie basis lokatie
         /// </summary>
         public static string AppRootPath;
+        public static string SecondaryAppRootPath;
         /// <summary>
         /// De locatie van de basis database
         /// </summary>
@@ -194,6 +195,8 @@ namespace Rpm.Productie
         {
             if (!Directory.Exists(DbPath))
                 Directory.CreateDirectory(DbPath);
+            if (!string.IsNullOrEmpty(SecondaryAppRootPath) && !Directory.Exists(SecondaryAppRootPath))
+                Directory.CreateDirectory(SecondaryAppRootPath);
             if (!Directory.Exists(TempPath))
                 Directory.CreateDirectory(TempPath);
             if (!Directory.Exists(BackupPath))
@@ -207,9 +210,15 @@ namespace Rpm.Productie
         private void LoadPath(string rootpath)
         {
             AppRootPath = rootpath;
+            SecondaryAppRootPath = DefaultSettings?.TempMainDB?.RootPath;
             var xyearpath = Path.Combine(AppRootPath, DateTime.Now.Year.ToString());
             if (Directory.Exists(xyearpath))
+            {
                 AppRootPath = xyearpath;
+                if(!string.IsNullOrEmpty(SecondaryAppRootPath))
+                    SecondaryAppRootPath = Path.Combine(SecondaryAppRootPath, DateTime.Now.Year.ToString());
+            }
+            
             DbPath = Path.Combine(AppRootPath, "RPM_Data");
             TempPath = Path.Combine(AppRootPath, "Temp");
             BackupPath = Path.Combine(AppRootPath, "Backup");

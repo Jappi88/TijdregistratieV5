@@ -59,7 +59,7 @@ namespace ProductieManager.Forms
             this.xselectedusername = new System.Windows.Forms.Label();
             this.xselecteduserimage = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.xchatpanel = new HtmlPanel();
+            this.xchatpanel = new TheArtOfDev.HtmlRenderer.WinForms.HtmlPanel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xuserlist)).BeginInit();
@@ -124,7 +124,7 @@ namespace ProductieManager.Forms
             this.olvColumn1.IsTileViewColumn = true;
             this.olvColumn1.ShowTextInHeader = false;
             this.olvColumn1.Text = "";
-            this.olvColumn1.Width = 50;
+            this.olvColumn1.Width = 0;
             this.olvColumn1.WordWrap = true;
             // 
             // olvColumn2

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Timers;
 
 namespace ProductieManager.Rpm.Various
 {
@@ -14,10 +15,11 @@ namespace ProductieManager.Rpm.Various
         public static string ChatPath;
         public static string ProfielPath;
         public static string BerichtenPath;
+        public static string PublicLobyPath;
         public static string GroupChatImagePath { get; set; }
 
         public static string GebruikerPath { get; set; }
-
+        private FileSystemWatcher _PublicberichtenWatcher;
         private FileSystemWatcher _berichtenWatcher;
         private FileSystemWatcher _gebruikerWatcher;
         public static bool LoggedIn { get; private set; }
@@ -26,19 +28,75 @@ namespace ProductieManager.Rpm.Various
         public static bool RaiseNewMessageEvent { get; set; } = true;
         public static bool RaiseUserUpdateEvent { get; set; } = true;
 
-        public static List<UserChat> Gebruikers { get; private set; }
+        public static List<UserChat> Gebruikers { get; set; }
+
+        private readonly Timer _FileChangedNotifyTimer;
 
         public ProductieChat()
         {
+            _FileChangedNotifyTimer = new Timer(1000);//500 ms vertraging
+            _FileChangedNotifyTimer.Elapsed += _FileChangedNotifyTimer_Elapsed;
+        }
 
+        private readonly List<string> _changes = new List<string>();
+        private void _FileChangedNotifyTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            _FileChangedNotifyTimer?.Stop();
+            if (_changes == null) return;
+            try
+            {
+                lock (_changes)
+                {
+                    for (int i = 0; i < _changes.Count; i++)
+                    {
+                        try
+                        {
+                            var x = _changes[i];
+                            //if (x.ToLower().EndsWith("iedereen.rpm"))
+                            //{
+                            //    _changes.RemoveAt(i--);
+                            //    continue;
+                            //}
+                            var dirname = Path.GetDirectoryName(x);
+                            if (dirname != null && dirname.ToLower().EndsWith("berichten"))
+                            {
+                                var ent = x.DeSerialize<ProductieChatEntry>();
+                                if (ent != null)
+                                {
+                                    OnMessageRecieved(ent);
+                                }
+                            }
+                            else
+                            {
+                                var ent = x.DeSerialize<UserChat>();
+                                if (ent != null)
+                                {
+                                    UpdateGebruikers();
+                                    OnGebruikerUpdate(ent);
+                                }
+                            }
+                            _changes.RemoveAt(i--);
+                        }
+                        catch (Exception exception)
+                        {
+                            Console.WriteLine(exception);
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
         }
 
         public static string GetReadPath(bool checksecondary, string filename = null)
         {
-            string remote = Manager.DefaultSettings?.MainDB?.UpdatePath;
-            string local = Manager.DefaultSettings?.TempMainDB?.UpdatePath;
+            string remote = Manager.DbPath;
+            string local = Manager.SecondaryAppRootPath;
             if (string.IsNullOrEmpty(local))
                 local = AppDomain.CurrentDomain.BaseDirectory + "\\RPM_Data";
+            else local = Path.Combine(local, "RPM_Data");
             var x = checksecondary && !string.IsNullOrEmpty(local)
                     && (((!string.IsNullOrEmpty(filename) && File.Exists(local + $"\\{filename}"))
                          || Directory.Exists(local)))
@@ -50,10 +108,11 @@ namespace ProductieManager.Rpm.Various
         public static string[] GetWritePaths(bool onlylocal)
         {
             var xreturn = new List<string>();
-            string remote = Manager.Database.RootPath;
-            string local = Manager.DefaultSettings?.TempMainDB?.UpdatePath;
+            string remote = Manager.DbPath;
+            string local = Manager.SecondaryAppRootPath;
             if (string.IsNullOrEmpty(local))
                 local = AppDomain.CurrentDomain.BaseDirectory + "\\RPM_Data";
+            else local = Path.Combine(local, "RPM_Data");
 
             if (!string.IsNullOrEmpty(local) &&
                 !string.Equals(local, remote, StringComparison.CurrentCultureIgnoreCase) &&
@@ -80,12 +139,13 @@ namespace ProductieManager.Rpm.Various
                     Directory.CreateDirectory(xpath);
                 ProfielPath = Path.Combine(xpath, Manager.LogedInGebruiker.Username);
                 BerichtenPath = Path.Combine(xpath,Manager.LogedInGebruiker.Username, "Berichten");
+                PublicLobyPath = Path.Combine(xpath, "Iedereen", "Berichten");
                 GroupChatImagePath = Path.Combine(xpath, "GroupChatImage.png");
                 if (!File.Exists(GroupChatImagePath) || !GroupChatImagePath.IsImageFile())
                 {
                     try
                     {
-                        var data = Properties.Resources.users_12820.ToByteArray();
+                        var data = Properties.Resources.users_clients_group_16774.ToByteArray();
                         File.WriteAllBytes(GroupChatImagePath, data);
                     }
                     catch (Exception e)
@@ -121,15 +181,21 @@ namespace ProductieManager.Rpm.Various
                 }
                 Chat.Save();
                 UpdateGebruikers();
+                _PublicberichtenWatcher = new FileSystemWatcher(PublicLobyPath);
+                _PublicberichtenWatcher.EnableRaisingEvents = true;
+                _PublicberichtenWatcher.Changed += _berichtenWatcher_Changed;
+                _PublicberichtenWatcher.Filter = "*.rpm";
+
                 _berichtenWatcher = new FileSystemWatcher(BerichtenPath);
                 _berichtenWatcher.EnableRaisingEvents = true;
                 _berichtenWatcher.Changed += _berichtenWatcher_Changed;
                 _berichtenWatcher.Filter = "*.rpm";
+
                 _gebruikerWatcher = new FileSystemWatcher(ChatPath);
                 _gebruikerWatcher.EnableRaisingEvents = true;
                 _gebruikerWatcher.Filter = "*.rpm";
                 _gebruikerWatcher.NotifyFilter = NotifyFilters.LastWrite;
-                _gebruikerWatcher.Changed += _gebruikerWatcher_Changed;
+                _gebruikerWatcher.Changed += _berichtenWatcher_Changed;
                 LoggedIn = true;
                 OnGebruikerUpdate(Chat);
                 return true;
@@ -156,6 +222,8 @@ namespace ProductieManager.Rpm.Various
                 }
 
                 Gebruikers?.Clear();
+                _PublicberichtenWatcher?.Dispose();
+                _PublicberichtenWatcher = null;
                 _berichtenWatcher?.Dispose();
                 _berichtenWatcher = null;
                 _gebruikerWatcher?.Dispose();
@@ -235,6 +303,7 @@ namespace ProductieManager.Rpm.Various
 
                 if (Chat == null)
                     Gebruikers.Clear();
+                else Gebruikers = Gebruikers.OrderBy(x => x.UserName).ToList();
                 return true;
             }
             catch (Exception e)
@@ -252,35 +321,19 @@ namespace ProductieManager.Rpm.Various
                 try
                 {
                     if (Chat == null || !LoggedIn || !RaiseNewMessageEvent) return;
-                    var ent = e.FullPath.DeSerialize<ProductieChatEntry>();
-                    if (ent == null) return;
-                    OnMessageRecieved(ent);
+                    _FileChangedNotifyTimer?.Stop();
+                    lock (_changes)
+                    {
+                        if (!_changes.Any(x => string.Equals(x, e.FullPath, StringComparison.CurrentCultureIgnoreCase)))
+                            _changes.Add(e.FullPath);
+                    }
+                    _FileChangedNotifyTimer?.Start();
                 }
                 catch (Exception exception)
                 {
                     Console.WriteLine(exception);
                 }
             }
-        }
-
-        private void _gebruikerWatcher_Changed(object sender, FileSystemEventArgs e)
-        {
-            lock (_locker)
-            {
-                try
-                {
-                    if (Chat == null || !LoggedIn || !RaiseUserUpdateEvent) return;
-                    var ent = e.FullPath.DeSerialize<UserChat>();
-                    if (ent == null) return;
-                    UpdateGebruikers();
-                    OnGebruikerUpdate(ent);
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception);
-                }
-            }
-          
         }
 
         public static List<ProductieChatEntry> GetConversation(UserChat user, bool privatemessages)

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
@@ -25,18 +27,33 @@ namespace ProductieManager.Rpm.Various
         {
             var xreturn = new List<ProductieChatEntry>();
             if (string.IsNullOrEmpty(UserName)) return xreturn;
-            string path = Path.Combine(ProductieChat.GetReadPath(true), "Chat", UserName, "Berichten");
+            string xname = string.Equals(afzender, "iedereen", StringComparison.CurrentCultureIgnoreCase)
+                ? afzender
+                : UserName;
+            string path = Path.Combine(ProductieChat.GetReadPath(true), "Chat", xname, "Berichten");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            string[] files = Directory.GetFiles(path, "*.rpm", SearchOption.TopDirectoryOnly);
+            List<string> files = Directory.GetFiles(path, "*.rpm", SearchOption.TopDirectoryOnly).ToList();
+            if (string.IsNullOrEmpty(afzender) && Directory.Exists(ProductieChat.PublicLobyPath))
+            {
+                var publicfiles = Directory.GetFiles(ProductieChat.PublicLobyPath, "*.rpm", SearchOption.TopDirectoryOnly);
+                if (publicfiles.Length > 0)
+                    files.AddRange(publicfiles);
+            }
             try
             {
                 foreach (var file in files)
                 {
                     var ent = file.DeSerialize<ProductieChatEntry>();
                     if (ent?.Afzender == null) continue;
-                    if (!string.IsNullOrEmpty(afzender) && !string.Equals(ent.Afzender.UserName, afzender,
-                        StringComparison.CurrentCultureIgnoreCase)) continue;
+                    if (!string.IsNullOrEmpty(afzender) &&
+                        !string.Equals(afzender, "iedereen", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        if (!string.Equals(ent.Afzender.UserName, afzender,
+                                StringComparison.CurrentCultureIgnoreCase)) continue;
+
+                    }
+
                     if (onlyunread && ent.IsGelezen)
                         continue;
                     xreturn.Add(ent);
@@ -104,11 +121,21 @@ namespace ProductieManager.Rpm.Various
 
         public Bitmap GetProfielImage()
         {
-            if (Manager.LogedInGebruiker == null) return null;
-            var xfile = Path.Combine(ProductieChat.GetReadPath(true), "Chat", UserName, "ProfielFoto.png");
-            if (!File.Exists(xfile))
-                return null;
-            return Image.FromStream(new MemoryStream(File.ReadAllBytes(xfile))).ResizeImage(64,64);
+            try
+            {
+                if (Manager.LogedInGebruiker == null) return null;
+                if(File.Exists(ProfielImage))
+                    return Image.FromStream(new MemoryStream(File.ReadAllBytes(ProfielImage))).ResizeImage(64, 64);
+                var xfile = Path.Combine(ProductieChat.GetReadPath(true), "Chat", UserName, "ProfielFoto.png");
+                if (!File.Exists(xfile))
+                    return Resources.avatardefault_92824;
+                return Image.FromStream(new MemoryStream(File.ReadAllBytes(xfile))).ResizeImage(64, 64);
+
+            }
+            catch (Exception exception)
+            {
+                return Resources.avatardefault_92824;
+            }
         }
 
         public override bool Equals(object obj)

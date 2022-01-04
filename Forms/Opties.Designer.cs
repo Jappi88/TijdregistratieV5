@@ -191,8 +191,6 @@
             this.label15 = new System.Windows.Forms.Label();
             this.xExcelTabPage = new MetroFramework.Controls.MetroTabPage();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.xcolumnsStatusLabel = new System.Windows.Forms.Label();
-            this.xKiesExcelColumnButton = new System.Windows.Forms.Button();
             this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
             this.xsynctabpage = new MetroFramework.Controls.MetroTabPage();
             this.panel9 = new System.Windows.Forms.Panel();
@@ -2571,40 +2569,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.BackColor = System.Drawing.Color.White;
-            this.panel2.Controls.Add(this.xcolumnsStatusLabel);
-            this.panel2.Controls.Add(this.xKiesExcelColumnButton);
             this.panel2.Controls.Add(this.xoverzichtbereikgroup);
             this.panel2.Controls.Add(this.xmaakoverichtenaan);
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(687, 420);
             this.panel2.TabIndex = 9;
-            // 
-            // xcolumnsStatusLabel
-            // 
-            this.xcolumnsStatusLabel.AutoSize = true;
-            this.xcolumnsStatusLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xcolumnsStatusLabel.ForeColor = System.Drawing.Color.DarkRed;
-            this.xcolumnsStatusLabel.Location = new System.Drawing.Point(5, 192);
-            this.xcolumnsStatusLabel.Name = "xcolumnsStatusLabel";
-            this.xcolumnsStatusLabel.Size = new System.Drawing.Size(279, 21);
-            this.xcolumnsStatusLabel.TabIndex = 35;
-            this.xcolumnsStatusLabel.Text = "Geen column  instellingen gekozen";
-            // 
-            // xKiesExcelColumnButton
-            // 
-            this.xKiesExcelColumnButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xKiesExcelColumnButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xKiesExcelColumnButton.ForeColor = System.Drawing.Color.Black;
-            this.xKiesExcelColumnButton.Image = global::ProductieManager.Properties.Resources.mimetypes_excel_32x32;
-            this.xKiesExcelColumnButton.Location = new System.Drawing.Point(5, 216);
-            this.xKiesExcelColumnButton.Name = "xKiesExcelColumnButton";
-            this.xKiesExcelColumnButton.Size = new System.Drawing.Size(231, 38);
-            this.xKiesExcelColumnButton.TabIndex = 34;
-            this.xKiesExcelColumnButton.Text = "Kies Columns Opties";
-            this.xKiesExcelColumnButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.xKiesExcelColumnButton.UseVisualStyleBackColor = true;
-            this.xKiesExcelColumnButton.Click += new System.EventHandler(this.xKiesExcelColumnButton_Click);
             // 
             // metroTabPage1
             // 
@@ -3260,8 +3230,6 @@
         private MetroFramework.Controls.MetroTabPage xExcelTabPage;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.CheckBox xtoonproductieNaToevoegen;
-        private System.Windows.Forms.Label xcolumnsStatusLabel;
-        private System.Windows.Forms.Button xKiesExcelColumnButton;
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.NumericUpDown xniewaantaluur;
         private System.Windows.Forms.Label label22;

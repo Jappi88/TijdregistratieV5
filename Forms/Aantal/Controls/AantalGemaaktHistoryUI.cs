@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing.Text;
 using System.Linq;
+using System.Windows.Documents;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using ProductieManager.Properties;
@@ -136,6 +137,7 @@ namespace Forms.Aantal.Controls
             bool actief = sel.IsActive;
             if (Plek.AantalHistory.Aantallen.Remove(sel))
             {
+                xHistoryList.RemoveObject(sel);
                 if (actief)
                 {
                     var xlast = Plek.AantalHistory.Aantallen.LastOrDefault();
@@ -153,11 +155,52 @@ namespace Forms.Aantal.Controls
             {
                 AccesLevel: > AccesType.ProductieBasis
             };
+            wijzigenToolStripMenuItem.Enabled = Selected != null && Manager.LogedInGebruiker is
+            {
+                AccesLevel: > AccesType.ProductieBasis
+            };
+            toevoegenToolStripMenuItem.Enabled = Manager.LogedInGebruiker is
+            {
+                AccesLevel: > AccesType.ProductieBasis
+            };
         }
 
         private void xHistoryList_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateButtons();
+        }
+
+        private void toevoegenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Plek?.Werk == null) return;
+            var xnew = new NewAantalRecordForm();
+            if (xnew.ShowDialog() == DialogResult.OK)
+            {
+                Plek.AantalHistory.Aantallen.Insert(0, xnew.SelectedRecord);
+                xHistoryList.InsertObjects(0, new List<AantalRecord>() {xnew.SelectedRecord});
+                Plek.Werk.UpdateBewerking(null, $"[{Plek.Path}]\n" +
+                                                $"Nieuwe 'Aantal Record' toegevoegd!");
+            }
+        }
+
+        private void wijzigenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selected = Selected;
+            if (selected != null && Plek?.Werk != null)
+            {
+                var xnew = new NewAantalRecordForm(selected);
+                if (xnew.ShowDialog() == DialogResult.OK)
+                {
+                    var index = Plek.AantalHistory.Aantallen.IndexOf(selected);
+                    if (index > -1)
+                    {
+                        Plek.AantalHistory.Aantallen[index] = xnew.SelectedRecord;
+                        xHistoryList.RefreshObject(xnew.SelectedRecord);
+                        Plek.Werk.UpdateBewerking(null, $"[{Plek.Path}]\n" +
+                                                        $"'Aantal Record' Gewijzigd!");
+                    }
+                }
+            }
         }
     }
 }
