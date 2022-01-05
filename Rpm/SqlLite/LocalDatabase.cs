@@ -364,7 +364,7 @@ namespace Rpm.SqlLite
                     foreach (var bw in pr.Bewerkingen)
                         if (bw != null)
                         {
-                            if (filter && !bw.IsAllowed(null,state))
+                            if (filter && !bw.IsAllowed(null, state))
                                 continue;
                             if (validhandler != null && !validhandler.Invoke(bw, null)) continue;
                             if (bereik != null && !bw.HeeftGewerkt(bereik)) continue;

@@ -1,6 +1,8 @@
 ﻿using AutoUpdaterDotNET;
 using BrightIdeasSoftware;
 using Forms;
+using Forms.Aantal;
+using Forms.Excel;
 using MetroFramework;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
@@ -22,11 +24,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Forms.Aantal;
-using Forms.Excel;
-using MetroFramework.Forms;
-using NPOI.OpenXmlFormats.Dml.Diagram;
-using ProductieManager.Forms.Aantal.Controls;
 using Various;
 
 namespace Controls

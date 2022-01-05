@@ -373,7 +373,8 @@ namespace ProductieManager.Forms
                     xuserlist.LowLevelScroll(0, -100);
                     //xuserlist.Items[0].EnsureVisible();
                 }
-                // LoadSelectedUser();
+
+                LoadSelectedUser();
             }
             catch (Exception e)
             {
@@ -397,8 +398,10 @@ namespace ProductieManager.Forms
             if (string.Equals(user?.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase))
             {
                 var users = ProductieChat.Gebruikers.Where(x => !string.Equals(Manager.LogedInGebruiker.Username,
+                    x.UserName, StringComparison.CurrentCultureIgnoreCase) && !string.Equals("iedereen",
                     x.UserName, StringComparison.CurrentCultureIgnoreCase)).ToList();
                 var onlineusers = ProductieChat.Gebruikers.Where(x => x.IsOnline && !string.Equals(Manager.LogedInGebruiker.Username,
+                    x.UserName, StringComparison.CurrentCultureIgnoreCase) && !string.Equals("iedereen",
                     x.UserName, StringComparison.CurrentCultureIgnoreCase)).ToList();
                 var x0 = users.Count == 1 ? $"gebruiker" : "gebruikers";
                 var x1 = onlineusers.Count == 1 ? $"gebruiker" : "gebruikers";

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using ProductieManager.Forms.Aantal.Controls;
+using Rpm.Misc;
 using Rpm.Various;
 
 namespace Forms.Aantal
@@ -36,8 +37,7 @@ namespace Forms.Aantal
         {
             try
             {
-                var height = 120;
-                var bws = Bewerkingen.OrderBy(x => x.WerkPlekken.FirstOrDefault()?.Naam ?? x.Naam).Reverse().ToList();
+                var bws = Bewerkingen.Where(x=> x.IsAllowed()).OrderBy(x => x.WerkPlekken.FirstOrDefault()?.Naam ?? x.Naam).Reverse().ToList();
                 if (bws.Count == 0)
                 {
                     Title = "Geen Actieve Producties";
@@ -53,7 +53,7 @@ namespace Forms.Aantal
                         AddGroup(bw);
                     }
 
-                    UpdateHeight();
+                   // UpdateHeight();
                 }
             }
             catch (Exception e)

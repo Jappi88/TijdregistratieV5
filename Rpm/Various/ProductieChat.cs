@@ -158,6 +158,8 @@ namespace ProductieManager.Rpm.Various
                     Directory.CreateDirectory(ProfielPath);
                 if (!Directory.Exists(BerichtenPath))
                     Directory.CreateDirectory(BerichtenPath);
+                if (!Directory.Exists(PublicLobyPath))
+                    Directory.CreateDirectory(PublicLobyPath);
                 GebruikerPath = Path.Combine(xpath, $"{Manager.LogedInGebruiker.Username}.rpm");
 
                 try
@@ -181,6 +183,7 @@ namespace ProductieManager.Rpm.Various
                 }
                 Chat.Save();
                 UpdateGebruikers();
+               
                 _PublicberichtenWatcher = new FileSystemWatcher(PublicLobyPath);
                 _PublicberichtenWatcher.EnableRaisingEvents = true;
                 _PublicberichtenWatcher.Changed += _berichtenWatcher_Changed;
