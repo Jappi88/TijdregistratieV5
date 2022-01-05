@@ -14,6 +14,7 @@
         Messages,
         Klachten,
         Verpakkingen,
+        ArtikelRecords,
         Alles,
         None
     }

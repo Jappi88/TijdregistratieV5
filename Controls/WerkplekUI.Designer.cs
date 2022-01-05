@@ -48,6 +48,7 @@ namespace Controls
             this.xleverdatumc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xverwachtgereed = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xpathc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.xnotec = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openProductieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWerkplekToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,11 +58,11 @@ namespace Controls
             this.werkTijdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.wijzigAantalGemaaktToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aantalGeschiedenisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.notitieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
-            this.xnotec = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.xwerkpleklist)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -141,6 +142,7 @@ namespace Controls
             this.xwerkpleklist.UseFilterIndicator = true;
             this.xwerkpleklist.UseFiltering = true;
             this.xwerkpleklist.UseHotControls = false;
+            this.xwerkpleklist.UseHotItem = true;
             this.xwerkpleklist.UseTranslucentHotItem = true;
             this.xwerkpleklist.UseTranslucentSelection = true;
             this.xwerkpleklist.View = System.Windows.Forms.View.Details;
@@ -305,6 +307,15 @@ namespace Controls
             this.xpathc.Width = 150;
             this.xpathc.WordWrap = true;
             // 
+            // xnotec
+            // 
+            this.xnotec.AspectName = "Notitie";
+            this.xnotec.IsEditable = false;
+            this.xnotec.Text = "Notitie";
+            this.xnotec.ToolTipText = "Werkplek notitie";
+            this.xnotec.Width = 150;
+            this.xnotec.WordWrap = true;
+            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -316,10 +327,11 @@ namespace Controls
             this.werkTijdToolStripMenuItem,
             this.toolStripSeparator1,
             this.wijzigAantalGemaaktToolStripMenuItem,
+            this.aantalGeschiedenisToolStripMenuItem,
             this.toolStripSeparator2,
             this.notitieToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(193, 176);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(193, 198);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // openProductieToolStripMenuItem
@@ -381,6 +393,14 @@ namespace Controls
             this.wijzigAantalGemaaktToolStripMenuItem.Text = "&Wijzig Aantal gemaakt";
             this.wijzigAantalGemaaktToolStripMenuItem.Click += new System.EventHandler(this.wijzigAantalGemaaktToolStripMenuItem_Click);
             // 
+            // aantalGeschiedenisToolStripMenuItem
+            // 
+            this.aantalGeschiedenisToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.history_icon_157130_32x32;
+            this.aantalGeschiedenisToolStripMenuItem.Name = "aantalGeschiedenisToolStripMenuItem";
+            this.aantalGeschiedenisToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.aantalGeschiedenisToolStripMenuItem.Text = "Aantal Geschiedenis";
+            this.aantalGeschiedenisToolStripMenuItem.Click += new System.EventHandler(this.aantalGeschiedenisToolStripMenuItem_Click);
+            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -408,15 +428,6 @@ namespace Controls
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(977, 580);
             this.panel2.TabIndex = 2;
-            // 
-            // xnotec
-            // 
-            this.xnotec.AspectName = "Notitie";
-            this.xnotec.IsEditable = false;
-            this.xnotec.Text = "Notitie";
-            this.xnotec.ToolTipText = "Werkplek notitie";
-            this.xnotec.Width = 150;
-            this.xnotec.WordWrap = true;
             // 
             // WerkPlekkenUI
             // 
@@ -466,5 +477,6 @@ namespace Controls
         private BrightIdeasSoftware.OLVColumn xprodnrc;
         private BrightIdeasSoftware.OLVColumn xactueelgemaakt;
         private BrightIdeasSoftware.OLVColumn xnotec;
+        private System.Windows.Forms.ToolStripMenuItem aantalGeschiedenisToolStripMenuItem;
     }
 }

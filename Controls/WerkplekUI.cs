@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using Forms;
+using Forms.Aantal;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
@@ -519,6 +520,15 @@ namespace Controls
         private void xafkeurstoolstrip_Click(object sender, EventArgs e)
         {
             ShowSelectedAfkeur();
+        }
+
+        private void aantalGeschiedenisToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (xwerkpleklist.SelectedObject is WerkPlek plek)
+            {
+                var xaantal = new AantalHistoryForm(plek);
+                xaantal.ShowDialog();
+            }
         }
     }
 }

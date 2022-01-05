@@ -222,6 +222,16 @@ namespace ProductieManager.Rpm.Productie
                                 localproductiepath = path2 + $"\\Opmerkingen";
                                 remoteproductiepath = path1 + $"\\Opmerkingen";
                                 break;
+                            case DbType.ArtikelRecords:
+                                localproductiepath = path2 + $"\\ArtikelRecords";
+                                remoteproductiepath = path1 + $"\\ArtikelRecords";
+                                Manager.ArtikelRecords?.Database?.SetSecondaryPath(
+                                    localproductiepath, new SecondaryManageType[]
+                                    {
+                                        SecondaryManageType.Write,
+                                        SecondaryManageType.Read
+                                    });
+                                break;
 
                         }
 

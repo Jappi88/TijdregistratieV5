@@ -228,6 +228,7 @@ namespace Forms
             xoffberichtencheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Messages) > -1;
             xoffopmerkingcheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Opmerkingen) > -1;
             xoffklachtencheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Klachten) > -1;
+            xartikelrecords.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.ArtikelRecords) > -1;
         }
 
         private void UpdateEmailHostControls()
@@ -448,6 +449,10 @@ namespace Forms
             if (xoffklachtencheckbox.Checked)
             {
                 Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Klachten);
+            }
+            if (xartikelrecords.Checked)
+            {
+                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.ArtikelRecords);
             }
             //default settings die we hier niet veranderen.
             if (_LoadedOpties != null)

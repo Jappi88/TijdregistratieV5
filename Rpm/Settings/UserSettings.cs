@@ -110,6 +110,8 @@ namespace Rpm.Settings
             OfflineDabaseTypes.Add(DbType.Opties);
             OfflineDabaseTypes.Add(DbType.Messages);
             OfflineDabaseTypes.Add(DbType.Accounts);
+            OfflineDabaseTypes.Add(DbType.ArtikelRecords);
+            OfflineDabaseTypes.Add(DbType.Klachten);
             //admin
             EmailClients = new List<EmailClient>();
             VerzendAdres = new List<UitgaandAdres>();

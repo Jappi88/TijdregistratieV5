@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
+using MetroFramework;
 using Rpm.Mailing;
 using Rpm.Misc;
 using Rpm.Productie;
@@ -51,7 +53,7 @@ namespace Rpm.Various
 
     public delegate DialogResult RequestRespondDialogHandler(object sender, string message, string title,
         MessageBoxButtons buttons, MessageBoxIcon icon,
-        string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null);
+        string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null, Image customImage = null, MetroColorStyle style = MetroColorStyle.Default);
 
 
     public class ProgressArg

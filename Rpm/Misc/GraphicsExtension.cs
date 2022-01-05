@@ -55,6 +55,19 @@ namespace ProductieManager.Rpm.Misc
             return destImage;
         }
 
+        public static Image ImageFromBytes(this byte[] data)
+        {
+            try
+            {
+                if (data == null) return null;
+                return Image.FromStream(new MemoryStream(data));
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         public static void ShowImageFromBytes(this byte[] image)
         {
             try

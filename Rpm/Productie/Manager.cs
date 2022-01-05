@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -38,6 +39,7 @@ namespace Rpm.Productie
         public static readonly string HelpDropUrl =
             "https://www.dropbox.com/s/5xc90j20d5odya6/Help.txt?dl=1";
         // public static LocalService LocalConnection { get; private set; }
+        public static ArtikelRecords.ArtikelRecords ArtikelRecords { get; set; }
         public static VerpakkingBeheer Verpakkingen { get; private set; }
         public static KlachtBeheer Klachten { get; private set; }
         /// <summary>
@@ -285,6 +287,8 @@ namespace Rpm.Productie
 
                     if (loadsettings)
                     {
+                        ArtikelRecords?.Dispose();
+                        ArtikelRecords = new ArtikelRecords.ArtikelRecords(DbPath);
                         Opmerkingen = new Opmerkingen();
                         _= Opmerkingen.Load();
                         ProductieProvider?.InitOfflineDb();
@@ -1539,7 +1543,7 @@ namespace Rpm.Productie
 
         private static bool _isChecking;
 
-        public static async void CheckForAantalChange()
+        public static void CheckForAantalChange()
         {
             if (_isChecking) return;
             _isChecking = true;
@@ -1550,18 +1554,25 @@ namespace Rpm.Productie
                 var form = Application.OpenForms["AantalGemaaktProducties"];
                 if (form == null && Database is {IsDisposed: false})
                 {
-                    var bws = await Database.GetBewerkingen(ViewState.Gestart, true, null, null);
-                    var rooster = Opties.GetWerkRooster();
-                    var einddag = DateTime.Now.Date.Add(rooster.EindWerkdag);
+                    List<Bewerking> bws = new List<Bewerking>();
                     int mins = Opties.MinVoorControle;
-                    if (DateTime.Now.AddMinutes(15) >= einddag && DateTime.Now < einddag)
+                    Task.Factory.StartNew(() =>
                     {
-                        mins = 15;
-                    }
+                        bws = Database.GetBewerkingen(ViewState.Gestart, true, null, null).Result;
 
-                    bws = bws.Where(x => x.LaatstAantalUpdate.AddMinutes(mins) < DateTime.Now && string.Equals(
-                        x.GestartDoor, Manager.Opties.Username,
-                        StringComparison.CurrentCultureIgnoreCase)).ToList();
+                        var rooster = Opties.GetWerkRooster();
+                        var einddag = DateTime.Now.Date.Add(rooster.EindWerkdag);
+                       
+                        if (DateTime.Now.AddMinutes(15) >= einddag && DateTime.Now < einddag)
+                        {
+                            mins = 15;
+                        }
+
+                        bws = bws.Where(x => x.LaatstAantalUpdate.AddMinutes(mins) < DateTime.Now && string.Equals(
+                            x.GestartDoor, Manager.Opties.Username,
+                            StringComparison.CurrentCultureIgnoreCase)).ToList();
+                    }).Wait(60000);
+                    
 
 
                     if (bws.Count > 0)
@@ -1964,10 +1975,10 @@ namespace Rpm.Productie
         /// <param name="chooseitems">Een reeks keuzes die je eventueel kan geven</param>
         /// <param name="custombuttons">Aangepaste knoppen die je eventueel kan laten zien</param>
         /// <returns></returns>
-        public static DialogResult OnRequestRespondDialog(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon, string[] chooseitems, Dictionary<string, DialogResult> custombuttons)
+        public static DialogResult OnRequestRespondDialog(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon, string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null, Image customImage = null)
         {
             var result = RequestRespondDialog?.Invoke(null, message, title, buttons, icon, chooseitems,
-                custombuttons);
+                custombuttons, customImage);
             return result ?? DialogResult.None;
         }
 

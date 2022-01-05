@@ -988,6 +988,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap history_icon_157130_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("history_icon_157130_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ic_done_128_28244 {
             get {
                 object obj = ResourceManager.GetObject("ic_done_128_28244", resourceCulture);
@@ -2261,6 +2271,26 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap Time_machine__40675_128_128 {
             get {
                 object obj = ResourceManager.GetObject("Time_machine__40675_128_128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap time_management_tasks_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("time_management_tasks_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap time_management_tasks_64x64 {
+            get {
+                object obj = ResourceManager.GetObject("time_management_tasks_64x64", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

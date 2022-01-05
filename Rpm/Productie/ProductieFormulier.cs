@@ -1757,6 +1757,7 @@ namespace Rpm.Productie
                     $"[{ProductieNr.ToUpper()}|{ArtikelNr}] {paraaf} heeft is zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u).";
                
                 await UpdateForm(false, false, null, change,true,showmessage);
+                Manager.ArtikelRecords?.UpdateWaardes(this);
                 _ = UpdateDoorloopTijd(null, this, null, false, true,false);
                 if (sendmail)
                     RemoteProductie.RespondByEmail(this, change);

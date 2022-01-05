@@ -24,6 +24,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Forms.ArtikelRecords;
 using Various;
 
 namespace Controls
@@ -150,6 +151,8 @@ namespace Controls
             Manager.VerpakkingChanged += Manager_VerpakkingChanged; 
             Manager.VerpakkingDeleted += Manager_VerpakkingDeleted;
 
+            Manager.RequestRespondDialog += Manager_RequestRespondDialog;
+
             _manager.OnShutdown += _manager_OnShutdown;
             //xproductieListControl1.InitEvents();
             xbewerkingListControl.InitEvents();
@@ -157,11 +160,26 @@ namespace Controls
             xbewerkingListControl.ItemCountChanged += XproductieListControl1_ItemCountChanged;
             recentGereedMeldingenUI1.ItemCountChanged += XproductieListControl1_ItemCountChanged;
             //xproductieListControl1.SelectedItemChanged += XproductieListControl1_SelectedItemChanged;
-            xbewerkingListControl.SelectedItemChanged += XproductieListControl1_SelectedItemChanged;
-            xbewerkingListControl.SelectedItemChanged += XproductieListControl1_SelectedItemChanged;
             werkPlekkenUI1.InitEvents();
             werkPlekkenUI1.OnRequestOpenWerk += WerkPlekkenUI1_OnRequestOpenWerk;
             werkPlekkenUI1.OnPlekkenChanged += WerkPlekkenUI1_OnPlekkenChanged;
+        }
+
+        private DialogResult Manager_RequestRespondDialog(object sender, string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon, string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null, Image customImage = null, MetroColorStyle style = MetroColorStyle.Default)
+        {
+            var xret = DialogResult.Cancel;
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(() =>
+                    xret = DoOpmerking(sender, message, title, buttons, icon, chooseitems, custombuttons, customImage, style)));
+            else xret = DoOpmerking(sender, message, title, buttons, icon, chooseitems, custombuttons, customImage, style);
+            return xret;
+        }
+
+        private DialogResult DoOpmerking(object sender, string message, string title, MessageBoxButtons buttons,
+            MessageBoxIcon icon, string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null,
+            Image customImage = null, MetroColorStyle style = MetroColorStyle.Default)
+        {
+            return XMessageBox.Show(message, title, buttons, icon, chooseitems, custombuttons, customImage, style);
         }
 
         public void DetachEvents()
@@ -175,6 +193,7 @@ namespace Controls
             Manager.FilterChanged -= Manager_FilterChanged;
             if (Manager.Opmerkingen != null)
                 Manager.Opmerkingen.OnOpmerkingenChanged -= Opmerkingen_OnOpmerkingenChanged;
+            Manager.RequestRespondDialog -= Manager_RequestRespondDialog;
             ProductieChat.MessageRecieved -= ProductieChat_MessageRecieved;
             ProductieChat.GebruikerUpdate -= ProductieChat_GebruikerUpdate;
             MultipleFileDb.CorruptedFilesChanged -= MultipleFileDb_CorruptedFilesChanged;
@@ -195,8 +214,6 @@ namespace Controls
             //productieListControl1.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
             xbewerkingListControl.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
             recentGereedMeldingenUI1.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
-            //xproductieListControl1.SelectedItemChanged -= XproductieListControl1_SelectedItemChanged;
-            xbewerkingListControl.SelectedItemChanged -= XproductieListControl1_SelectedItemChanged;
             werkPlekkenUI1.DetachEvents();
             werkPlekkenUI1.OnRequestOpenWerk -= WerkPlekkenUI1_OnRequestOpenWerk;
             werkPlekkenUI1.OnPlekkenChanged -= WerkPlekkenUI1_OnPlekkenChanged;
@@ -354,11 +371,6 @@ namespace Controls
             {
                 Console.WriteLine(exception);
             }
-        }
-
-        private void XproductieListControl1_SelectedItemChanged(object sender, EventArgs e)
-        {
-            //DoPdfEnabled();
         }
 
         private void XproductieListControl1_ItemCountChanged(object sender, EventArgs e)
@@ -632,7 +644,7 @@ namespace Controls
             try
             {
                 if (InvokeRequired)
-                    BeginInvoke(new Action(() =>
+                    Invoke(new Action(() =>
                     {
                         DoActie(values, type);
                     }));
@@ -1973,7 +1985,7 @@ namespace Controls
                 if (Manager.Database == null || Manager.Database.IsDisposed)
                     return;
                 if (_gemaaktform != null) return;
-                var bws = bewerkingen??await Manager.Database.GetBewerkingen(ViewState.Gestart, true,null, null); ;
+                var bws = bewerkingen??await Manager.Database.GetBewerkingen(ViewState.Gestart, true,null, null);
                 _gemaaktform = new AantalGemaaktProducties(bws, lastchangedminutes);
                 _gemaaktform.FormClosed += (o,e) =>
                 {
@@ -2502,8 +2514,13 @@ namespace Controls
                 taak.Bewerking?.UpdateBewerking(null, $"[{taak.GetPath()}] Taak Uitgevoerd");
         }
 
+
         #endregion Taken Lijst
 
-
+        private void xArtikelRecordsToolstripButton_Click(object sender, EventArgs e)
+        {
+            var artikels = new ArtikelRecordsForm();
+            artikels.ShowDialog();
+        }
     }
 }

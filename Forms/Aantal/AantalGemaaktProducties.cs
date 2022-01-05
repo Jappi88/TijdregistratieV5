@@ -33,11 +33,14 @@ namespace Forms.Aantal
             LoadProducties();
         }
 
+        private bool xloading = false;
         private void LoadProducties()
         {
             try
             {
-                var bws = Bewerkingen.Where(x=> x.IsAllowed()).OrderBy(x => x.WerkPlekken.FirstOrDefault()?.Naam ?? x.Naam).Reverse().ToList();
+                if (xloading) return;
+                xloading = true;
+                var bws = GetBewerkingen();
                 if (bws.Count == 0)
                 {
                     Title = "Geen Actieve Producties";
@@ -53,13 +56,15 @@ namespace Forms.Aantal
                         AddGroup(bw);
                     }
 
-                   // UpdateHeight();
+                    UpdateHeight();
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
+
+            xloading = false;
         }
 
         private GroupBox AddGroup(Bewerking bw)
@@ -87,12 +92,20 @@ namespace Forms.Aantal
             }
         }
 
+        private List<Bewerking> GetBewerkingen()
+        {
+            return Bewerkingen.Where(x => x.IsAllowed() && string.Equals(
+                x.GestartDoor, Manager.Opties.Username,
+                StringComparison.CurrentCultureIgnoreCase)).OrderBy(x => x.WerkPlekken.FirstOrDefault()?.Naam ?? x.Naam).Reverse().ToList();
+        }
+
         private void UpdateProducties()
         {
             try
             {
-
-                var bws = Bewerkingen.OrderBy(x => x.WerkPlekken.FirstOrDefault()?.Naam ?? x.Naam).Reverse().ToList();
+                if (xloading) return;
+                xloading = true;
+                var bws = GetBewerkingen();
                 if (bws.Count == 0)
                 {
                     Title = "Geen Actieve Producties";
@@ -133,17 +146,14 @@ namespace Forms.Aantal
 
                     xcontainer.ResumeLayout(true);
                     UpdateHeight();
-                    if (xcontainer.Controls.Count == 0)
-                    {
-                        this.Close();
-                        this.Dispose();
-                    }
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
+
+            xloading = false;
         }
 
         public void UpdateProductie(ProductieFormulier form)
@@ -160,9 +170,12 @@ namespace Forms.Aantal
                     foreach (var bw in form.Bewerkingen)
                     {
                         var index = Bewerkingen.IndexOf(bw);
+                        bool bwvalid = bw.State == ProductieState.Gestart && bw.IsAllowed() && string.Equals(
+                            bw.GestartDoor, Manager.Opties?.Username,
+                            StringComparison.CurrentCultureIgnoreCase);
                         if (index == -1)
                         {
-                            if (bw.State == ProductieState.Gestart)
+                            if (bwvalid)
                             {
                                 if (LastchangedMinutes > -1)
                                 {
@@ -182,10 +195,13 @@ namespace Forms.Aantal
                         }
                         else
                         {
-                            if (bw.State == ProductieState.Gestart)
+                            if (bwvalid)
                                 Bewerkingen[index] = bw;
-                            else Bewerkingen.RemoveAt(index);
-                            init = true;
+                            else
+                            {
+                                Bewerkingen.RemoveAt(index);
+                                init = true;
+                            }
                         }
                     }
                 }
@@ -199,8 +215,14 @@ namespace Forms.Aantal
                                                                bw.LaatstAantalUpdate.AddMinutes(
                                                                    LastchangedMinutes) < DateTime.Now))
                     {
-                        Bewerkingen.Add(bw);
-                        init = true;
+                        bool bwvalid = bw.State == ProductieState.Gestart && bw.IsAllowed() && string.Equals(
+                            bw.GestartDoor, Manager.Opties?.Username,
+                            StringComparison.CurrentCultureIgnoreCase);
+                        if (bwvalid)
+                        {
+                            Bewerkingen.Add(bw);
+                            init = true;
+                        }
                     }
                 }
             }
@@ -221,8 +243,11 @@ namespace Forms.Aantal
                 }
             }
 
-            this.Height = height;
-            this.Invalidate();
+            if (height < 750)
+            {
+                this.Height = height;
+                this.Invalidate();
+            }
         }
 
         private void AantalGemaaktProducties_Shown(object sender, EventArgs e)

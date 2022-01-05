@@ -29,9 +29,11 @@ namespace Forms
         }
 
         public static DialogResult Show(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon,
-            string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null)
+            string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null, Image custImage = null,
+            MetroColorStyle style = MetroColorStyle.Default)
         {
-            return new XMessageBox().ShowDialog(message, title, buttons, icon, chooseitems, custombuttons);
+            return new XMessageBox().ShowDialog(message, title, buttons, icon, chooseitems, custombuttons, custImage,
+                style);
         }
 
         public static DialogResult Show(string message, string title, MessageBoxButtons buttons, Image icon)

@@ -41,16 +41,16 @@
             this.xcontainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xcontainer.Location = new System.Drawing.Point(20, 60);
             this.xcontainer.Name = "xcontainer";
-            this.xcontainer.Size = new System.Drawing.Size(681, 2);
+            this.xcontainer.Size = new System.Drawing.Size(742, 313);
             this.xcontainer.TabIndex = 0;
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.xsluiten);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(20, 62);
+            this.panel2.Location = new System.Drawing.Point(20, 373);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(681, 32);
+            this.panel2.Size = new System.Drawing.Size(742, 32);
             this.panel2.TabIndex = 0;
             // 
             // xsluiten
@@ -61,7 +61,7 @@
             this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xsluiten.Location = new System.Drawing.Point(589, 0);
+            this.xsluiten.Location = new System.Drawing.Point(650, 0);
             this.xsluiten.Name = "xsluiten";
             this.xsluiten.Size = new System.Drawing.Size(92, 32);
             this.xsluiten.TabIndex = 0;
@@ -73,7 +73,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(721, 114);
+            this.ClientSize = new System.Drawing.Size(782, 425);
             this.Controls.Add(this.xcontainer);
             this.Controls.Add(this.panel2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

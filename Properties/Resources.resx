@@ -154,9 +154,6 @@
   <data name="user_add_12818" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\user_add_12818.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="search_locate_find_6278" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\search_locate_find_6278.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="window_16756_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\window_16756_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -202,14 +199,17 @@
   <data name="texteditor_note_notes_pencil_detext_9967_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\texteditor_note_notes_pencil_detext_9967_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ic_format_clear_128_28359" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ic_format_clear_128_28359.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="key-skills" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\key-skills.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="add_1588" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\add_insert_plus_1588.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="attachment_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\attachment_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="education_school_memo_pad_notes_reminder_task_icon_133450" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\education_school_memo_pad_notes_reminder_task_icon_133450.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="info" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\info.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -223,8 +223,8 @@
   <data name="arrow_right_16742_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow_right_16742_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Time_machine__40675_128_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Time_machine__40675_128_128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="user_customer_person_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\user_customer_person_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ic_done_128_28244" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ic_done_128_28244.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -268,11 +268,17 @@
   <data name="Statics_Icon_32_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Statics_Icon_32_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Time_machine__40675_128_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Time_machine__40675_128_128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="icons8-collapse-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icons8-collapse-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="bluewarningexclamationmark_azul_advertenci_12454 (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\bluewarningexclamationmark_azul_advertenci_12454 (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="emblemimportant_103451" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\emblemimportant_103451.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="filter_list_21446" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\filter_list_21446.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -340,8 +346,8 @@
   <data name="microsoft_excel_22733_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\microsoft_excel_22733_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="user_customer_person_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\user_customer_person_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="search_locate_find_6278" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\search_locate_find_6278.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Box_1_35524" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Box_1_35524.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -357,9 +363,6 @@
   </data>
   <data name="bluewarningexclamationmark_azul_advertenci_12454" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\bluewarningexclamationmark_azul_advertenci_12454.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="education_school_memo_pad_notes_reminder_task_icon_133450" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\education_school_memo_pad_notes_reminder_task_icon_133450.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="4137161-building-construction-industry-setting_114090 (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\4137161-building-construction-industry-setting_114090 (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -388,6 +391,9 @@
   <data name="schedule_32_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\schedule_32_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="users_clients_group_16774" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\users_clients_group_16774.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Open-folder-accept_36743" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Open-folder-accept_36743.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -399,6 +405,9 @@
   </data>
   <data name="icons8-minimize-window-321" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icons8-minimize-window-321.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="history_icon_157130_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\history_icon_157130_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="infolog" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\infolog.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -451,6 +460,9 @@
   <data name="download_database_21022_128_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\download_database_21022_128_128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="attachment_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\attachment_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="exclamation_warning_24x24" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\exclamation_warning_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -459,9 +471,6 @@
   </data>
   <data name="text_edit_14943" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\text_edit_14943.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ic_send_128_28719" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ic_send_128_28719.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Merge-arrows_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Merge-arrows_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -492,6 +501,9 @@
   </data>
   <data name="user_rotation_102346_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\user_rotation_102346_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="note_office_page_paper_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\note-office-page-paper_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="clock_go1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\clock_go1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -540,9 +552,6 @@
   </data>
   <data name="icons8-minimize-window-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icons8-minimize-window-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="search_page_document_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\search_page_document_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="New_Window_36860" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\New_Window_36860.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -601,8 +610,8 @@
   <data name="Note_34576_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Note_34576_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="emblemimportant_103451" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\emblemimportant_103451.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="notification-done_114461" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\notification-done_114461.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="lightning_weather_storm_2781" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\lightning_weather_storm_2781.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -640,8 +649,8 @@
   <data name="3844443-disable-eye-inactive-see-show-view-watch_110296" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\3844443-disable-eye-inactive-see-show-view-watch_110296.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="notification-done_114461" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\notification-done_114461.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ic_send_128_28719" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ic_send_128_28719.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="undoarrow_undo_1534" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\undoarrow_undo_1534.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -736,8 +745,8 @@
   <data name="file_warning_40447" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\file-warning_40447.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="note_office_page_paper_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\note-office-page-paper_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="search_page_document_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\search_page_document_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Stop_Hand _32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Stop_Hand _32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -832,8 +841,8 @@
   <data name="filter_filters_navigation_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\filter_filters_navigation_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ic_format_clear_128_28359" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ic_format_clear_128_28359.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="UnMerge-arrows_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\UnMerge-arrows_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="dialog-error_36230" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dialog-error_36230.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -853,10 +862,10 @@
   <data name="notedescription_office_page_paper_107752" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\notedescription-office-page-paper_107752.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="UnMerge-arrows_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\UnMerge-arrows_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="time_management_tasks_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\time_management_tasks_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="users_clients_group_16774" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\users_clients_group_16774.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="time_management_tasks_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\time_management_tasks_64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

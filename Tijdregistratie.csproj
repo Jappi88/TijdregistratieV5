@@ -248,6 +248,12 @@
     <Compile Include="Controls\ChartView.Designer.cs">
       <DependentUpon>ChartView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Aantal\AantalHistoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Aantal\AantalHistoryForm.Designer.cs">
+      <DependentUpon>AantalHistoryForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Aantal\Controls\AantalGemaaktHistoryUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -265,6 +271,12 @@
     </Compile>
     <Compile Include="Forms\Aantal\NewAantalRecordForm.Designer.cs">
       <DependentUpon>NewAantalRecordForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ArtikelRecords\ArtikelRecordsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ArtikelRecords\ArtikelRecordsForm.Designer.cs">
+      <DependentUpon>ArtikelRecordsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Combineer\Controls\CombineerEntryUI.cs">
       <SubType>UserControl</SubType>
@@ -1094,6 +1106,9 @@
     <Compile Include="Rpm\Opmerking\Opmerkingen.cs" />
     <Compile Include="Rpm\Productie\AantalHistory\AantalHistory.cs" />
     <Compile Include="Rpm\Productie\AantalHistory\AantalRecord.cs" />
+    <Compile Include="Rpm\Productie\ArtikelRecords\ArtikelOpmerking.cs" />
+    <Compile Include="Rpm\Productie\ArtikelRecords\ArtikelRecord.cs" />
+    <Compile Include="Rpm\Productie\ArtikelRecords\ArtikelRecords.cs" />
     <Compile Include="Rpm\Productie\Bewerking.cs" />
     <Compile Include="Rpm\Productie\CombineerEntry.cs" />
     <Compile Include="Rpm\Productie\DeelsGereedMelding.cs" />
@@ -1179,6 +1194,9 @@
     <EmbeddedResource Include="Controls\ChartView.resx">
       <DependentUpon>ChartView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Aantal\AantalHistoryForm.resx">
+      <DependentUpon>AantalHistoryForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Aantal\Controls\AantalGemaaktHistoryUI.resx">
       <DependentUpon>AantalGemaaktHistoryUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -1187,6 +1205,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Aantal\NewAantalRecordForm.resx">
       <DependentUpon>NewAantalRecordForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ArtikelRecords\ArtikelRecordsForm.resx">
+      <DependentUpon>ArtikelRecordsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Combineer\Controls\CombineerEntryUI.resx">
       <DependentUpon>CombineerEntryUI.cs</DependentUpon>
@@ -1705,6 +1726,9 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\time_management_tasks_64x64.png" />
+    <None Include="Resources\time_management_tasks_32x32.png" />
+    <None Include="Resources\history_icon_157130_32x32.png" />
     <None Include="Resources\users_clients_group_16774.png" />
     <None Include="Resources\UnMerge-arrows_32x32.png" />
     <None Include="Resources\Merge-arrows_128x128.png" />
