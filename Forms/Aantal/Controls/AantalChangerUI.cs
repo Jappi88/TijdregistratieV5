@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Forms;
 using Rpm.Misc;
 using Rpm.Productie;
 
@@ -87,8 +88,8 @@ namespace ProductieManager.Forms.Aantal.Controls
         {
             var xverp = Productie?.VerpakkingsInstructies;
             if (xverp == null || xverp.VerpakkenPer == 0) return;
-
-            xaantalgemaakt.SetValue(xaantalgemaakt.Value + xverp.VerpakkenPer);
+            var xnewaantal = xaantalgemaakt.Value + xverp.VerpakkenPer;
+            xaantalgemaakt.SetValue(xnewaantal);
             Next(false);
         }
 
@@ -286,10 +287,30 @@ namespace ProductieManager.Forms.Aantal.Controls
                 UpdateAantalGemaakt(prod);
         }
 
+        private bool DoLogicalTest()
+        {
+            if (Productie == null) return false;
+            if (Productie.AantalGemaakt == 0) return true;
+            var xnewvalues = (double)xaantalgemaakt.Value;
+            var actueel = (double)Productie.ActueelAantalGemaakt;
+            double perDiff = Math.Round((xnewvalues - actueel) / ((actueel + xnewvalues) / 2) * 100.0, 2);
+            if (perDiff is < -50 or > 50)
+            {
+                var result = XMessageBox.Show(
+                    $"Aantal van '{xnewvalues}' wijkt teveel af van {actueel}!\n\n" +
+                    $"Dit is berekent op basis van de tempo en je zet er namelijk met {perDiff}% naast!\n\n" +
+                    $"Als je echt zeker bent, wil je dan doorgaan met het wijzigen van de aantal?", "Hoge Afwijking", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
+                if (result != DialogResult.Yes) return false;
+            }
+
+            return true;
+        }
+
         private async void Next(bool movenext)
         {
             if (xwerkplekken.SelectedItem != null)
             {
+                if (!DoLogicalTest()) return;
                 var selected = xwerkplekken.SelectedItem.ToString();
                 var alles = selected.ToLower() == "alle werkplekken";
                 var changed = false;

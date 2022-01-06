@@ -6,6 +6,7 @@ using System.Windows.Navigation;
 using MetroFramework.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
+using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
 
@@ -13,9 +14,12 @@ namespace Forms
 {
     public partial class BewerkingSelectorForm : MetroForm
     {
+        public bool ShowWerkPlekken { get; set; }
+
         public BewerkingSelectorForm(ViewState[] bewerkingstates, bool filter, bool showwerkplekken, bool checkall)
         {
             InitializeComponent();
+            ShowWerkPlekken = showwerkplekken;
             LoadBewerkingen(bewerkingstates, filter, showwerkplekken, checkall);
         }
 
@@ -32,18 +36,20 @@ namespace Forms
         public BewerkingSelectorForm(List<Bewerking> bws, bool showwerkplekken, bool checkall)
         {
             InitializeComponent();
+            Bewerkingen = bws;
             ListBewerkingen(bws, showwerkplekken, checkall);
         }
 
         public List<WerkPlek> SelectedWerkplekken { get; private set; } = new List<WerkPlek>();
         public List<Bewerking> SelectedBewerkingen { get; private set; } = new List<Bewerking>();
+        public List<Bewerking> Bewerkingen { get; private set; } = new List<Bewerking>();
 
         private async void LoadBewerkingen(ViewState[] bewerkingstates, bool filter, bool showwerkplekken, bool checkall)
         {
             try
             {
-                var bws = await Manager.GetBewerkingen(bewerkingstates, filter);
-                ListBewerkingen(bws,showwerkplekken, checkall);
+                Bewerkingen = await Manager.GetBewerkingen(bewerkingstates, filter);
+                ListBewerkingen(Bewerkingen, showwerkplekken, checkall);
             }
             catch (Exception e)
             {
@@ -65,6 +71,7 @@ namespace Forms
                 imageList1.Images.Add(Resources.operation);
                 foreach (var bw in bws)
                 {
+                    if (!bw.IsAllowed(xsearchbox.Text.ToLower().Replace("zoeken...", "").Trim())) continue;
                     if (showwerkplekken)
                     {
                         foreach (var wp in bw.WerkPlekken)
@@ -150,6 +157,27 @@ namespace Forms
             foreach(var item in xbewerkinglijst.Items)
                 if (item is ListViewItem lv)
                     lv.Checked = false;
+        }
+
+        private void xsearchArtikel_Enter(object sender, EventArgs e)
+        {
+            if (string.Equals(xsearchbox.Text.Trim(), "zoeken...", StringComparison.CurrentCultureIgnoreCase))
+                xsearchbox.Text = "";
+        }
+
+        private string _Filter = String.Empty;
+        private void xsearchArtikel_TextChanged(object sender, System.EventArgs e)
+        {
+            string filter = xsearchbox.Text.Replace("Zoeken...", "").Trim().ToLower();
+            if (string.Equals(filter, _Filter, StringComparison.CurrentCultureIgnoreCase)) return;
+            ListBewerkingen(Bewerkingen, ShowWerkPlekken, ShowWerkPlekken);
+            _Filter = filter;
+        }
+
+        private void xsearchArtikel_Leave(object sender, EventArgs e)
+        {
+            if (xsearchbox.Text.Trim() == "")
+                xsearchbox.Text = @"Zoeken...";
         }
     }
 }

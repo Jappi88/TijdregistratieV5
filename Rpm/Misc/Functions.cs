@@ -31,6 +31,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Navigation;
 using NPOI.XSSF.UserModel.Charts;
+using NPOI.XWPF.UserModel;
 
 namespace Rpm.Misc
 {
@@ -769,6 +770,28 @@ namespace Rpm.Misc
                     else wp.Storingen.Add(xnew.Onderbreking);
                     xsts = wp.Storingen.Where(x => !x.IsVerholpen).ToList();
                     var x1 = xsts.Count > 0 ? "onderbroken" : "hervat";
+
+                    if (bw.Combies.Count > 0 && xnew.Onderbreking != null)
+                    {
+                        foreach (var comb in bw.Combies)
+                        {
+                            var werk = Werk.FromPath(comb.Path);
+                            if (werk?.Bewerking == null) continue;
+                            var xwp = werk.Bewerking.WerkPlekken?.FirstOrDefault(x =>
+                                string.Equals(x.Naam, wp.Naam, StringComparison.CurrentCultureIgnoreCase));
+                            if (xwp == null) continue;
+                            xst = xnew.Onderbreking.CreateCopy();
+                            xst.Path = xwp.Path;
+                            xwp.Storingen ??= new List<Storing>();
+                            var xindex = xwp.Storingen.IndexOf(xst);
+                            if (xindex > -1)
+                                xwp.Storingen[xindex] = xst;
+                            else xwp.Storingen.Add(xst);
+                            _ = xwp.Werk.UpdateBewerking(null, $"'{xwp.Werk.Naam}' op '{xwp.Naam}' is {x1}");
+                        }
+                    }
+
+                 
                     _= bw.UpdateBewerking(null, $"'{bw.Naam}' op '{wp.Naam}' is {x1}");
                 }
             }

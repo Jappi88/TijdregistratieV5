@@ -1571,7 +1571,8 @@ namespace Rpm.Productie
 
         public bool ContainsProductiePdf()
         {
-            return File.Exists($"{Manager.ProductieFormPath}\\{ProductieNr}.pdf");
+            string xfile = System.IO.Path.Combine(Manager.ProductieFormPath, $"{ProductieNr}.pdf");
+            return File.Exists(xfile);
         }
 
         public void OpenProductiePdf()

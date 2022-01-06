@@ -153,6 +153,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Alle_Opmerkingen_32x321 {
+            get {
+                object obj = ResourceManager.GetObject("Alle_Opmerkingen_32x321", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Apps_menu_editor_icon_31767 {
             get {
                 object obj = ResourceManager.GetObject("Apps-menu-editor-icon_31767", resourceCulture);
@@ -506,6 +516,26 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap Count_tool_34564__1_ {
             get {
                 object obj = ResourceManager.GetObject("Count-tool_34564 (1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap default_opmerking_16757_256x256 {
+            get {
+                object obj = ResourceManager.GetObject("default_opmerking_16757_256x256", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap default_opmerking_16757_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("default_opmerking_16757_32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

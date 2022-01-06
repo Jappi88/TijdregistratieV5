@@ -179,7 +179,9 @@ namespace Controls
             MessageBoxIcon icon, string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null,
             Image customImage = null, MetroColorStyle style = MetroColorStyle.Default)
         {
-            return XMessageBox.Show(message, title, buttons, icon, chooseitems, custombuttons, customImage, style);
+            var xmsg = new XMessageBox();
+            xmsg.StartPosition = FormStartPosition.CenterParent;
+            return xmsg.ShowDialog(message, title, buttons, icon, chooseitems, custombuttons, customImage, style);
         }
 
         public void DetachEvents()
@@ -545,6 +547,7 @@ namespace Controls
 
                     UpdateKlachtButton();
                     UpdateVerpakkingenButton();
+                    Manager.ArtikelRecords?.CheckForOpmerkingen(true);
                     //UpdateAllLists();
                 }));
 

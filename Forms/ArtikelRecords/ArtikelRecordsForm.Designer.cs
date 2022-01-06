@@ -41,25 +41,30 @@
             this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.xalgemeen = new System.Windows.Forms.Button();
+            this.xdeleteartikel = new System.Windows.Forms.Button();
+            this.xopmerkingen = new System.Windows.Forms.Button();
+            this.xaddartikel = new System.Windows.Forms.Button();
             this.xsearchbox = new MetroFramework.Controls.MetroTextBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xArtikelList)).BeginInit();
-            this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.xArtikelList);
-            this.panel1.Controls.Add(this.xsearchbox);
+            this.panel1.Controls.Add(this.panel3);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(23, 78);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(824, 365);
+            this.panel1.Size = new System.Drawing.Size(715, 323);
             this.panel1.TabIndex = 0;
             // 
             // xArtikelList
@@ -88,12 +93,12 @@
             this.xArtikelList.GridLines = true;
             this.xArtikelList.HideSelection = false;
             this.xArtikelList.LargeImageList = this.imageList1;
-            this.xArtikelList.Location = new System.Drawing.Point(0, 30);
+            this.xArtikelList.Location = new System.Drawing.Point(0, 38);
             this.xArtikelList.Margin = new System.Windows.Forms.Padding(4);
             this.xArtikelList.Name = "xArtikelList";
             this.xArtikelList.ShowGroups = false;
             this.xArtikelList.ShowItemToolTips = true;
-            this.xArtikelList.Size = new System.Drawing.Size(824, 335);
+            this.xArtikelList.Size = new System.Drawing.Size(715, 285);
             this.xArtikelList.SmallImageList = this.imageList1;
             this.xArtikelList.TabIndex = 0;
             this.xArtikelList.TintSortColumn = true;
@@ -104,6 +109,8 @@
             this.xArtikelList.UseHotItem = true;
             this.xArtikelList.UseTranslucentHotItem = true;
             this.xArtikelList.View = System.Windows.Forms.View.Details;
+            this.xArtikelList.SelectedIndexChanged += new System.EventHandler(this.xArtikelList_SelectedIndexChanged);
+            this.xArtikelList.DoubleClick += new System.EventHandler(this.xopmerkingen_Click);
             // 
             // olvColumn1
             // 
@@ -178,13 +185,87 @@
             this.imageList1.ImageSize = new System.Drawing.Size(32, 32);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.xalgemeen);
+            this.panel3.Controls.Add(this.xdeleteartikel);
+            this.panel3.Controls.Add(this.xopmerkingen);
+            this.panel3.Controls.Add(this.xaddartikel);
+            this.panel3.Controls.Add(this.xsearchbox);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(0, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(715, 38);
+            this.panel3.TabIndex = 10;
+            // 
+            // xalgemeen
+            // 
+            this.xalgemeen.Enabled = false;
+            this.xalgemeen.FlatAppearance.BorderSize = 0;
+            this.xalgemeen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xalgemeen.Image = global::ProductieManager.Properties.Resources.Alle_Opmerkingen_32x321;
+            this.xalgemeen.Location = new System.Drawing.Point(3, 1);
+            this.xalgemeen.Name = "xalgemeen";
+            this.xalgemeen.Size = new System.Drawing.Size(34, 34);
+            this.xalgemeen.TabIndex = 13;
+            this.toolTip1.SetToolTip(this.xalgemeen, "Beheer alle algemene opmerkingen");
+            this.xalgemeen.UseVisualStyleBackColor = true;
+            this.xalgemeen.Click += new System.EventHandler(this.xalgemeen_Click);
+            // 
+            // xdeleteartikel
+            // 
+            this.xdeleteartikel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xdeleteartikel.Enabled = false;
+            this.xdeleteartikel.FlatAppearance.BorderSize = 0;
+            this.xdeleteartikel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xdeleteartikel.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.xdeleteartikel.Location = new System.Drawing.Point(636, 1);
+            this.xdeleteartikel.Name = "xdeleteartikel";
+            this.xdeleteartikel.Size = new System.Drawing.Size(34, 34);
+            this.xdeleteartikel.TabIndex = 12;
+            this.toolTip1.SetToolTip(this.xdeleteartikel, "Verwijder geselecteerde Artikel");
+            this.xdeleteartikel.UseVisualStyleBackColor = true;
+            this.xdeleteartikel.Click += new System.EventHandler(this.xdeleteartikel_Click);
+            // 
+            // xopmerkingen
+            // 
+            this.xopmerkingen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xopmerkingen.Enabled = false;
+            this.xopmerkingen.FlatAppearance.BorderSize = 0;
+            this.xopmerkingen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xopmerkingen.Image = global::ProductieManager.Properties.Resources.default_opmerking_16757_32x32;
+            this.xopmerkingen.Location = new System.Drawing.Point(676, 1);
+            this.xopmerkingen.Name = "xopmerkingen";
+            this.xopmerkingen.Size = new System.Drawing.Size(34, 34);
+            this.xopmerkingen.TabIndex = 11;
+            this.toolTip1.SetToolTip(this.xopmerkingen, "Beheer Algemene Opmerkingen");
+            this.xopmerkingen.UseVisualStyleBackColor = true;
+            this.xopmerkingen.Click += new System.EventHandler(this.xopmerkingen_Click);
+            // 
+            // xaddartikel
+            // 
+            this.xaddartikel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xaddartikel.Enabled = false;
+            this.xaddartikel.FlatAppearance.BorderSize = 0;
+            this.xaddartikel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xaddartikel.Image = global::ProductieManager.Properties.Resources.add_Blue_circle_32x32;
+            this.xaddartikel.Location = new System.Drawing.Point(596, 1);
+            this.xaddartikel.Name = "xaddartikel";
+            this.xaddartikel.Size = new System.Drawing.Size(34, 34);
+            this.xaddartikel.TabIndex = 10;
+            this.toolTip1.SetToolTip(this.xaddartikel, "Voeg een nieuwe Artikel toe");
+            this.xaddartikel.UseVisualStyleBackColor = true;
+            this.xaddartikel.Click += new System.EventHandler(this.xaddartikel_Click);
+            // 
             // xsearchbox
             // 
+            this.xsearchbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             // 
             // 
             // 
             this.xsearchbox.CustomButton.Image = null;
-            this.xsearchbox.CustomButton.Location = new System.Drawing.Point(796, 2);
+            this.xsearchbox.CustomButton.Location = new System.Drawing.Point(517, 2);
             this.xsearchbox.CustomButton.Name = "";
             this.xsearchbox.CustomButton.Size = new System.Drawing.Size(25, 25);
             this.xsearchbox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -192,11 +273,10 @@
             this.xsearchbox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
             this.xsearchbox.CustomButton.UseSelectable = true;
             this.xsearchbox.CustomButton.Visible = false;
-            this.xsearchbox.Dock = System.Windows.Forms.DockStyle.Top;
             this.xsearchbox.FontSize = MetroFramework.MetroTextBoxSize.Medium;
             this.xsearchbox.Lines = new string[] {
         "Zoeken..."};
-            this.xsearchbox.Location = new System.Drawing.Point(0, 0);
+            this.xsearchbox.Location = new System.Drawing.Point(44, 4);
             this.xsearchbox.Margin = new System.Windows.Forms.Padding(4);
             this.xsearchbox.MaxLength = 32767;
             this.xsearchbox.Name = "xsearchbox";
@@ -207,7 +287,7 @@
             this.xsearchbox.SelectionStart = 0;
             this.xsearchbox.ShortcutsEnabled = true;
             this.xsearchbox.ShowClearButton = true;
-            this.xsearchbox.Size = new System.Drawing.Size(824, 30);
+            this.xsearchbox.Size = new System.Drawing.Size(545, 30);
             this.xsearchbox.TabIndex = 9;
             this.xsearchbox.Text = "Zoeken...";
             this.xsearchbox.UseSelectable = true;
@@ -219,45 +299,40 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.panel3);
+            this.panel2.Controls.Add(this.button1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(23, 443);
+            this.panel2.Location = new System.Drawing.Point(23, 401);
             this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(824, 36);
+            this.panel2.Padding = new System.Windows.Forms.Padding(5);
+            this.panel2.Size = new System.Drawing.Size(715, 42);
             this.panel2.TabIndex = 5;
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.button1);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.Location = new System.Drawing.Point(692, 0);
-            this.panel3.Margin = new System.Windows.Forms.Padding(4);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(132, 36);
-            this.panel3.TabIndex = 3;
             // 
             // button1
             // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button1.Dock = System.Windows.Forms.DockStyle.Right;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(0, 0);
+            this.button1.Location = new System.Drawing.Point(601, 5);
             this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(132, 36);
+            this.button1.Size = new System.Drawing.Size(109, 32);
             this.button1.TabIndex = 0;
             this.button1.Text = "Sluiten";
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // toolTip1
+            // 
+            this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            // 
             // ArtikelRecordsForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(870, 505);
+            this.ClientSize = new System.Drawing.Size(761, 469);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -267,13 +342,14 @@
             this.Padding = new System.Windows.Forms.Padding(23, 78, 23, 26);
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Style = MetroFramework.MetroColorStyle.Purple;
             this.Text = "Artikel Records";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ArtikelRecordsForm_FormClosing);
             this.Shown += new System.EventHandler(this.ArtikelRecordsForm_Shown);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xArtikelList)).EndInit();
-            this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -283,7 +359,6 @@
         private System.Windows.Forms.Panel panel1;
         private BrightIdeasSoftware.ObjectListView xArtikelList;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button button1;
         private MetroFramework.Controls.MetroTextBox xsearchbox;
         private System.Windows.Forms.ImageList imageList1;
@@ -295,5 +370,11 @@
         private BrightIdeasSoftware.OLVColumn olvColumn6;
         private BrightIdeasSoftware.OLVColumn olvColumn8;
         private BrightIdeasSoftware.OLVColumn olvColumn7;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Button xaddartikel;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Button xopmerkingen;
+        private System.Windows.Forms.Button xdeleteartikel;
+        private System.Windows.Forms.Button xalgemeen;
     }
 }

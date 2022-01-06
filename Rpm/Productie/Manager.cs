@@ -21,6 +21,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MetroFramework;
 using Timer = System.Timers.Timer;
 
 namespace Rpm.Productie
@@ -1022,19 +1023,31 @@ namespace Rpm.Productie
                             {
                                 try
                                 {
-                                    string fpath = ProductieFormPath + $"\\{prod.ProductieNr}.pdf";
+                                    string fpath = Path.Combine(ProductieFormPath, $"{prod.ProductieNr}.pdf");
                                     if (!string.Equals(fpath, pdffile, StringComparison.CurrentCultureIgnoreCase))
                                     {
-                                        if (delete)
+                                        for (int i = 0; i < 5; i++)
                                         {
+                                            try
+                                            {
+                                                if (delete)
+                                                {
 
-                                            if (File.Exists(fpath))
-                                                File.Delete(pdffile);
-                                            else
-                                                File.Move(pdffile, fpath);
+                                                    if (File.Exists(fpath))
+                                                        File.Delete(pdffile);
+                                                    else
+                                                        File.Move(pdffile, fpath);
+                                                }
+                                                else
+                                                    File.Copy(pdffile, fpath, true);
+
+                                                if (File.Exists(fpath)) break;
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                Console.WriteLine(e);
+                                            }
                                         }
-                                        else
-                                            File.Copy(pdffile, ProductieFormPath + $"\\{prod.ProductieNr}.pdf", true);
                                     }
                                 }
                                 catch (Exception e)
@@ -1543,6 +1556,7 @@ namespace Rpm.Productie
 
         private static bool _isChecking;
 
+        private static DateTime _lastchecked = default;
         public static void CheckForAantalChange()
         {
             if (_isChecking) return;
@@ -1556,28 +1570,32 @@ namespace Rpm.Productie
                 {
                     List<Bewerking> bws = new List<Bewerking>();
                     int mins = Opties.MinVoorControle;
-                    Task.Factory.StartNew(() =>
+                    if (_lastchecked.AddMinutes(2) < DateTime.Now)
                     {
-                        bws = Database.GetBewerkingen(ViewState.Gestart, true, null, null).Result;
-
-                        var rooster = Opties.GetWerkRooster();
-                        var einddag = DateTime.Now.Date.Add(rooster.EindWerkdag);
-                       
-                        if (DateTime.Now.AddMinutes(15) >= einddag && DateTime.Now < einddag)
+                        
+                        Task.Factory.StartNew(() =>
                         {
-                            mins = 15;
-                        }
+                            bws = Database.GetBewerkingen(ViewState.Gestart, true, null, null).Result;
 
-                        bws = bws.Where(x => x.LaatstAantalUpdate.AddMinutes(mins) < DateTime.Now && string.Equals(
-                            x.GestartDoor, Manager.Opties.Username,
-                            StringComparison.CurrentCultureIgnoreCase)).ToList();
-                    }).Wait(60000);
-                    
+                            var rooster = Opties.GetWerkRooster();
+                            var einddag = DateTime.Now.Date.Add(rooster.EindWerkdag);
 
+                            if (DateTime.Now.AddMinutes(15) >= einddag && DateTime.Now < einddag)
+                            {
+                                mins = 15;
+                            }
+
+                            bws = bws.Where(x => x.LaatstAantalUpdate.AddMinutes(mins) < DateTime.Now && string.Equals(
+                                x.GestartDoor, Manager.Opties.Username,
+                                StringComparison.CurrentCultureIgnoreCase)).ToList();
+                        }).Wait(60000);
+
+                    }
 
                     if (bws.Count > 0)
                     {
                         FormulierActie(new object[] {bws, mins}, MainAktie.OpenAantalGemaaktProducties);
+                        _lastchecked = DateTime.Now;
                     }
                 }
 
@@ -1974,11 +1992,13 @@ namespace Rpm.Productie
         /// <param name="icon">De bericht afbeelding</param>
         /// <param name="chooseitems">Een reeks keuzes die je eventueel kan geven</param>
         /// <param name="custombuttons">Aangepaste knoppen die je eventueel kan laten zien</param>
+        /// <param name="customImage"></param>
+        /// <param name="style"></param>
         /// <returns></returns>
-        public static DialogResult OnRequestRespondDialog(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon, string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null, Image customImage = null)
+        public static DialogResult OnRequestRespondDialog(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon, string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null, Image customImage = null, MetroColorStyle style = MetroColorStyle.Default)
         {
             var result = RequestRespondDialog?.Invoke(null, message, title, buttons, icon, chooseitems,
-                custombuttons, customImage);
+                custombuttons, customImage,style);
             return result ?? DialogResult.None;
         }
 

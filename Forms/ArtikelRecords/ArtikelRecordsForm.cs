@@ -8,6 +8,7 @@ using ProductieManager.Properties;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Productie.ArtikelRecords;
+using Rpm.Various;
 
 namespace Forms.ArtikelRecords
 {
@@ -34,6 +35,23 @@ namespace Forms.ArtikelRecords
             this.Close();
         }
 
+        public void EnableButton()
+        {
+            xdeleteartikel.Enabled = xArtikelList.SelectedObjects.Count > 0 && Manager.LogedInGebruiker is
+            {
+                AccesLevel: >= AccesType.ProductieAdvance
+            };
+            xaddartikel.Enabled = Manager.LogedInGebruiker is
+            {
+                AccesLevel: >= AccesType.ProductieAdvance
+            };
+            xalgemeen.Enabled = Manager.LogedInGebruiker is
+            {
+                AccesLevel: >= AccesType.ProductieBasis
+            };
+            xopmerkingen.Enabled = xArtikelList.SelectedObjects.Count == 1;
+        }
+
         public void LoadArtikels(bool reloaddb)
         {
             try
@@ -44,6 +62,7 @@ namespace Forms.ArtikelRecords
                 xArtikelList.BeginUpdate();
                 xArtikelList.SetObjects(Records.Where(IsAllowed));
                 xArtikelList.EndUpdate();
+                EnableButton();
                 string x1 = Records.Count == 1 ? "Artikel" : "Artikels";
                 this.Text = $"Totaal {Records.Count} {x1}";
                 this.Invalidate();
@@ -72,6 +91,7 @@ namespace Forms.ArtikelRecords
                     string.Equals(artnr, x.ArtikelNr, StringComparison.CurrentCultureIgnoreCase)).ToList();
                 xArtikelList.RemoveObjects(xremove);
                 Records.RemoveAll(x => string.Equals(artnr, x.ArtikelNr, StringComparison.CurrentCultureIgnoreCase));
+                EnableButton();
             }
             catch (Exception e)
             {
@@ -106,6 +126,7 @@ namespace Forms.ArtikelRecords
                 if (index > -1)
                     Records[index] = record;
                 else Records.Add(record);
+                EnableButton();
             }
             catch (Exception e)
             {
@@ -179,6 +200,83 @@ namespace Forms.ArtikelRecords
             Manager.ArtikelRecords.ArtikelChanged += Database_InstanceChanged;
             Manager.ArtikelRecords.ArtikelDeleted += Database_InstanceDeleted;
             LoadArtikels(true);
+        }
+
+        private void xArtikelList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            EnableButton();
+        }
+
+        private void xaddartikel_Click(object sender, EventArgs e)
+        {
+            if (Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieAdvance})
+            {
+                var xnew = new NewArtikelRecord();
+                if (xnew.ShowDialog() == DialogResult.OK)
+                {
+                    if (Manager.ArtikelRecords?.Database == null) return;
+                    var xs = xnew.SelectedRecord;
+                    bool exist = Manager.ArtikelRecords.Database.Exists(xs.ArtikelNr);
+                    if (exist)
+                    {
+                        XMessageBox.Show($"Artikelnr '{xs.ArtikelNr}' bestaat al!", "Bestaat Al",
+                            MessageBoxIcon.Exclamation);
+                        return;
+                    }
+
+                    if (IsAllowed(xs))
+                    {
+                        xArtikelList.AddObject(xs);
+                        xArtikelList.SelectedObject = xs;
+                        xArtikelList.SelectedItem?.EnsureVisible();
+                    }
+                    Manager.ArtikelRecords.Database.Upsert(xs.ArtikelNr, xs, false);
+
+                }
+            }
+        }
+
+        private void xdeleteartikel_Click(object sender, EventArgs e)
+        {
+            if (Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieAdvance })
+            {
+                if (xArtikelList.SelectedObjects.Count > 0)
+                {
+                    var xremove = xArtikelList.SelectedObjects.Cast<ArtikelRecord>().ToList();
+                    if (xremove.Count == 0) return;
+                    var x1 = xremove.Count == 1 ? "artikel" : "artikelen";
+                    if (XMessageBox.Show($"Weetje zeker dat je {xremove.Count} {x1} wilt verwijderen?", "Verwijderen",
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                    {
+                        foreach (var xr in xremove)
+                        {
+                            xArtikelList.RemoveObject(xr);
+                            Manager.ArtikelRecords?.Database?.Delete(xr.ArtikelNr);
+                        }
+
+                        EnableButton();
+                    }
+                }
+            }
+        }
+
+        private void xopmerkingen_Click(object sender, EventArgs e)
+        {
+            if (xArtikelList.SelectedObject is ArtikelRecord record)
+            {
+                var xop = new ArtikelOpmerkingenForm(record);
+                xop.ShowDialog();
+            }
+        }
+
+        private void xalgemeen_Click(object sender, EventArgs e)
+        {
+            if (Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis})
+            {
+                var xop = new ArtikelOpmerkingenForm();
+                xop.LoadAlgemeenOpmerkingen();
+                xop.ShowDialog();
+            }
         }
     }
 }

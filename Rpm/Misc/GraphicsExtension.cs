@@ -27,6 +27,7 @@ namespace ProductieManager.Rpm.Misc
 
         public static byte[] ToByteArray(this Image imageIn)
         {
+            if (imageIn == null) return null;
             using var ms = new MemoryStream();
             imageIn.Save(ms, imageIn.RawFormat);
             return ms.ToArray();

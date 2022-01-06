@@ -13,6 +13,8 @@ namespace Forms.Aantal
         {
             InitializeComponent();
             Plek = plek;
+            this.Text = $"Aantal Geschiedenis Van {Plek.Path}";
+            this.Invalidate();
             LoadWerkplekken();
         }
 

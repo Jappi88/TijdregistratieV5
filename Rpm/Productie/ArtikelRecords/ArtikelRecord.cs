@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rpm.Productie.ArtikelRecords
 {
@@ -34,6 +30,13 @@ namespace Rpm.Productie.ArtikelRecords
         {
             Vanaf = DateTime.Now;
             LaatstGeupdate = DateTime.Now;
+        }
+
+        public string GetOpmerking(ArtikelOpmerking opmerking)
+        {
+            if (string.IsNullOrEmpty(opmerking?.Opmerking)) return string.Empty;
+            return string.Format(opmerking.Opmerking, ArtikelNr, Omschrijving, AantalGemaakt, TijdGewerkt, PerUur,
+                UpdatedProducties.Count);
         }
 
         public override bool Equals(object obj)

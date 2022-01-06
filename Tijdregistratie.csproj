@@ -272,11 +272,29 @@
     <Compile Include="Forms\Aantal\NewAantalRecordForm.Designer.cs">
       <DependentUpon>NewAantalRecordForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ArtikelRecords\ArtikelOpmerkingenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ArtikelRecords\ArtikelOpmerkingenForm.Designer.cs">
+      <DependentUpon>ArtikelOpmerkingenForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ArtikelRecords\ArtikelOpmerkingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ArtikelRecords\ArtikelOpmerkingForm.Designer.cs">
+      <DependentUpon>ArtikelOpmerkingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ArtikelRecords\ArtikelRecordsForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ArtikelRecords\ArtikelRecordsForm.Designer.cs">
       <DependentUpon>ArtikelRecordsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ArtikelRecords\NewArtikelRecord.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ArtikelRecords\NewArtikelRecord.Designer.cs">
+      <DependentUpon>NewArtikelRecord.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Combineer\Controls\CombineerEntryUI.cs">
       <SubType>UserControl</SubType>
@@ -482,10 +500,10 @@
     <Compile Include="Forms\AlleNotitiesForm.Designer.cs">
       <DependentUpon>AlleNotitiesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ArtikelsForm.cs">
+    <Compile Include="Forms\ArtikelRecords\ArtikelsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ArtikelsForm.Designer.cs">
+    <Compile Include="Forms\ArtikelRecords\ArtikelsForm.Designer.cs">
       <DependentUpon>ArtikelsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BewerkingSelectorForm.cs">
@@ -1206,8 +1224,17 @@
     <EmbeddedResource Include="Forms\Aantal\NewAantalRecordForm.resx">
       <DependentUpon>NewAantalRecordForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ArtikelRecords\ArtikelOpmerkingenForm.resx">
+      <DependentUpon>ArtikelOpmerkingenForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ArtikelRecords\ArtikelOpmerkingForm.resx">
+      <DependentUpon>ArtikelOpmerkingForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ArtikelRecords\ArtikelRecordsForm.resx">
       <DependentUpon>ArtikelRecordsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ArtikelRecords\NewArtikelRecord.resx">
+      <DependentUpon>NewArtikelRecord.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Combineer\Controls\CombineerEntryUI.resx">
       <DependentUpon>CombineerEntryUI.cs</DependentUpon>
@@ -1305,7 +1332,7 @@
     <EmbeddedResource Include="Forms\AlleNotitiesForm.resx">
       <DependentUpon>AlleNotitiesForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ArtikelsForm.resx">
+    <EmbeddedResource Include="Forms\ArtikelRecords\ArtikelsForm.resx">
       <DependentUpon>ArtikelsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BewerkingSelectorForm.resx">
@@ -1726,6 +1753,10 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\default_opmerking_16757_256x256.png" />
+    <None Include="Resources\Alle_Opmerkingen_32x321.png" />
+    <None Include="Resources\Alle_Opmerkingen_32x32.png" />
+    <None Include="Resources\default_opmerking_16757_32x32.png" />
     <None Include="Resources\time_management_tasks_64x64.png" />
     <None Include="Resources\time_management_tasks_32x32.png" />
     <None Include="Resources\history_icon_157130_32x32.png" />

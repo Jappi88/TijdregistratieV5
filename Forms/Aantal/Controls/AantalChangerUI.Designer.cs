@@ -120,7 +120,7 @@
             this.xaantalLabel.Name = "xaantalLabel";
             this.xaantalLabel.Size = new System.Drawing.Size(127, 37);
             this.xaantalLabel.TabIndex = 7;
-            this.xaantalLabel.Text = "100000 / 100000";
+            this.xaantalLabel.Text = "0/ 0";
             this.xaantalLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // xPacketGroup
@@ -131,6 +131,7 @@
             this.xPacketGroup.Controls.Add(this.xpacketvalue);
             this.xPacketGroup.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.xPacketGroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xPacketGroup.ForeColor = System.Drawing.Color.DarkRed;
             this.xPacketGroup.Location = new System.Drawing.Point(68, 45);
             this.xPacketGroup.Name = "xPacketGroup";
             this.xPacketGroup.Size = new System.Drawing.Size(514, 55);

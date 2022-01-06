@@ -41,16 +41,17 @@
             this.xcontainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xcontainer.Location = new System.Drawing.Point(20, 60);
             this.xcontainer.Name = "xcontainer";
-            this.xcontainer.Size = new System.Drawing.Size(742, 313);
+            this.xcontainer.Size = new System.Drawing.Size(742, 304);
             this.xcontainer.TabIndex = 0;
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.xsluiten);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(20, 373);
+            this.panel2.Location = new System.Drawing.Point(20, 364);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(742, 32);
+            this.panel2.Padding = new System.Windows.Forms.Padding(5);
+            this.panel2.Size = new System.Drawing.Size(742, 41);
             this.panel2.TabIndex = 0;
             // 
             // xsluiten
@@ -61,9 +62,9 @@
             this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xsluiten.Location = new System.Drawing.Point(650, 0);
+            this.xsluiten.Location = new System.Drawing.Point(645, 5);
             this.xsluiten.Name = "xsluiten";
-            this.xsluiten.Size = new System.Drawing.Size(92, 32);
+            this.xsluiten.Size = new System.Drawing.Size(92, 31);
             this.xsluiten.TabIndex = 0;
             this.xsluiten.Text = "Sluiten";
             this.xsluiten.TextAlign = System.Drawing.ContentAlignment.MiddleRight;

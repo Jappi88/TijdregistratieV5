@@ -42,6 +42,7 @@ namespace Forms
             this.panel1 = new System.Windows.Forms.Panel();
             this.xok = new System.Windows.Forms.Button();
             this.xannuleren = new System.Windows.Forms.Button();
+            this.xsearchbox = new MetroFramework.Controls.MetroTextBox();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -62,10 +63,10 @@ namespace Forms
             this.xbewerkinglijst.HideSelection = false;
             this.xbewerkinglijst.HoverSelection = true;
             this.xbewerkinglijst.LargeImageList = this.imageList1;
-            this.xbewerkinglijst.Location = new System.Drawing.Point(10, 60);
+            this.xbewerkinglijst.Location = new System.Drawing.Point(10, 90);
             this.xbewerkinglijst.Name = "xbewerkinglijst";
             this.xbewerkinglijst.ShowItemToolTips = true;
-            this.xbewerkinglijst.Size = new System.Drawing.Size(860, 454);
+            this.xbewerkinglijst.Size = new System.Drawing.Size(860, 383);
             this.xbewerkinglijst.SmallImageList = this.imageList1;
             this.xbewerkinglijst.TabIndex = 0;
             this.xbewerkinglijst.UseCompatibleStateImageBehavior = false;
@@ -160,13 +161,53 @@ namespace Forms
             this.xannuleren.UseVisualStyleBackColor = true;
             this.xannuleren.Click += new System.EventHandler(this.xannuleren_Click);
             // 
+            // xsearchbox
+            // 
+            // 
+            // 
+            // 
+            this.xsearchbox.CustomButton.Image = null;
+            this.xsearchbox.CustomButton.Location = new System.Drawing.Point(832, 2);
+            this.xsearchbox.CustomButton.Name = "";
+            this.xsearchbox.CustomButton.Size = new System.Drawing.Size(25, 25);
+            this.xsearchbox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.xsearchbox.CustomButton.TabIndex = 1;
+            this.xsearchbox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.xsearchbox.CustomButton.UseSelectable = true;
+            this.xsearchbox.CustomButton.Visible = false;
+            this.xsearchbox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.xsearchbox.FontSize = MetroFramework.MetroTextBoxSize.Medium;
+            this.xsearchbox.Lines = new string[] {
+        "Zoeken..."};
+            this.xsearchbox.Location = new System.Drawing.Point(10, 60);
+            this.xsearchbox.Margin = new System.Windows.Forms.Padding(4);
+            this.xsearchbox.MaxLength = 32767;
+            this.xsearchbox.Name = "xsearchbox";
+            this.xsearchbox.PasswordChar = '\0';
+            this.xsearchbox.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.xsearchbox.SelectedText = "";
+            this.xsearchbox.SelectionLength = 0;
+            this.xsearchbox.SelectionStart = 0;
+            this.xsearchbox.ShortcutsEnabled = true;
+            this.xsearchbox.ShowClearButton = true;
+            this.xsearchbox.Size = new System.Drawing.Size(860, 30);
+            this.xsearchbox.TabIndex = 10;
+            this.xsearchbox.Text = "Zoeken...";
+            this.xsearchbox.UseSelectable = true;
+            this.xsearchbox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.xsearchbox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.xsearchbox.TextChanged += new System.EventHandler(this.xsearchArtikel_TextChanged);
+            this.xsearchbox.Enter += new System.EventHandler(this.xsearchArtikel_Enter);
+            this.xsearchbox.Leave += new System.EventHandler(this.xsearchArtikel_Leave);
+            // 
             // BewerkingSelectorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(880, 524);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.xbewerkinglijst);
+            this.Controls.Add(this.xsearchbox);
+            this.Controls.Add(this.panel1);
             this.Name = "BewerkingSelectorForm";
             this.Padding = new System.Windows.Forms.Padding(10, 60, 10, 10);
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
@@ -193,5 +234,6 @@ namespace Forms
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem selecteerAllesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deselecteerAllesToolStripMenuItem;
+        private MetroFramework.Controls.MetroTextBox xsearchbox;
     }
 }

@@ -114,7 +114,6 @@ namespace Controls
                     XMessageBox.Show("Geen producties om te combineren");
                     return;
                 }
-
                 var xbwselector = new BewerkingSelectorForm(prods, false, false);
                 if (xbwselector.ShowDialog() == DialogResult.OK)
                 {

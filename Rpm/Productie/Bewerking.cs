@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using PdfSharp.Drawing;
 using Rpm.Productie.AantalHistory;
 
 namespace Rpm.Productie
@@ -1595,31 +1596,58 @@ namespace Rpm.Productie
                         continue;
                     }
 
-                    if (bew.State == State || bew.State is ProductieState.Gereed or ProductieState.Verwijderd) continue;
-                    switch (State)
+                    if (bew.State != State && bew.State != ProductieState.Gereed &&
+                        bew.State != ProductieState.Verwijderd)
                     {
-                        case ProductieState.Gestopt:
-                            _ = bew.StopProductie(true);
-                            break;
-                        case ProductieState.Gestart:
-                            if (!bew.WerkPlekken.Any(x => x.IsActief()))
-                            {
-                                var pers = GetPersoneel();
-                                foreach (var per in pers)
+                        switch (State)
+                        {
+                            case ProductieState.Gestopt:
+                                _ = bew.StopProductie(true);
+                                break;
+                            case ProductieState.Gestart:
+                                if (!bew.WerkPlekken.Any(x => x.IsActief()))
                                 {
-                                    per.WerktAan = bew.Path;
-                                    var klus = per.Klusjes.FirstOrDefault();
-                                    if (klus != null)
+                                    var pers = GetPersoneel();
+                                    foreach (var per in pers)
                                     {
-                                        klus.ProductieNr = bew.ProductieNr;
-                                        klus.Naam = bew.Naam;
-                                        klus.Tijden.Uren.Clear();
+                                        per.WerktAan = bew.Path;
+                                        var klus = per.Klusjes.FirstOrDefault();
+                                        if (klus != null)
+                                        {
+                                            klus.ProductieNr = bew.ProductieNr;
+                                            klus.Naam = bew.Naam;
+                                            klus.Tijden.Uren.Clear();
+                                        }
+
+                                        bew.AddPersoneel(per, per.Werkplek);
                                     }
-                                    bew.AddPersoneel(per, per.Werkplek);
+                                }
+
+                                Manager.FormulierActie(new object[] {bew}, MainAktie.StartBewerking);
+                                break;
+                        }
+
+                        //sync storingen
+                        foreach (var wp in WerkPlekken)
+                        {
+                            var xw = bew.WerkPlekken.FirstOrDefault(x => x.Equals(wp));
+                            if (xw != null)
+                            {
+                                xw.Storingen ??= new List<Storing>();
+                                foreach (var xst in wp.Storingen)
+                                {
+                                    var xxst = xst.CreateCopy();
+                                    xxst.Path = xw.Path;
+                                    var xindex = xw.Storingen.IndexOf(xxst);
+                                    if (xindex > -1)
+                                        xw.Storingen[xindex] = xxst;
+                                    else xw.Storingen.Add(xxst);
+                                    xw.Werk.UpdateBewerking(null, $"[{xw.Path}]\n" +
+                                                                  $"Onderbreking update");
                                 }
                             }
-                            Manager.FormulierActie(new object[] {bew}, MainAktie.StartBewerking);
-                            break;
+
+                        }
                     }
                 }
 
