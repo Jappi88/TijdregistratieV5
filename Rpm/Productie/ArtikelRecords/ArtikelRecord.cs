@@ -9,7 +9,9 @@ namespace Rpm.Productie.ArtikelRecords
         public string Omschrijving { get; set; }
         public DateTime Vanaf { get; set; }
         public DateTime LaatstGeupdate { get; set; }
+        public decimal VorigeAantalGemaakt { get; set; }
         public decimal AantalGemaakt { get; set; }
+        public double VorigeTijdGewerkt { get; set; }
         public double TijdGewerkt { get; set; }
         public List<string> UpdatedProducties { get; set; } = new List<string>();
         public List<ArtikelOpmerking> Opmerkingen { get; set; } = new List<ArtikelOpmerking>();

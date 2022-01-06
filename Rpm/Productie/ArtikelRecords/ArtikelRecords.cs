@@ -82,7 +82,9 @@ namespace Rpm.Productie.ArtikelRecords
                             string.Equals(form.ProductieNr, x, StringComparison.CurrentCultureIgnoreCase)))
                         return;
                     file.Omschrijving = form.Omschrijving;
+                    file.VorigeAantalGemaakt = form.AantalGemaakt;
                     file.AantalGemaakt += form.TotaalGemaakt;
+                    file.VorigeTijdGewerkt = form.TijdGewerkt;
                     file.TijdGewerkt += form.TijdAanGewerkt();
                     file.LaatstGeupdate = DateTime.Now;
                     
@@ -232,16 +234,14 @@ namespace Rpm.Productie.ArtikelRecords
 
                             break;
                         case ArtikelFilter.HerhaalElke:
-                            if (op.GelezenDoor.ContainsKey(Manager.Opties.Username))
-                                op.GelezenDoor.Remove(Manager.Opties.Username);
                             switch (op.FilterSoort)
                             {
                                 case ArtikelFilterSoort.AantalGemaakt:
-                                    if ((record.AantalGemaakt % op.FilterWaarde) != 0)
+                                    if (((record.AantalGemaakt - record.VorigeAantalGemaakt) / op.FilterWaarde) < 1)
                                         continue;
                                     break;
                                 case ArtikelFilterSoort.TijdGewerkt:
-                                    if (((decimal)record.TijdGewerkt % op.FilterWaarde) != 0)
+                                    if (((decimal)(record.TijdGewerkt - record.VorigeTijdGewerkt) / op.FilterWaarde) < 1)
                                         continue;
                                     break;
                             }

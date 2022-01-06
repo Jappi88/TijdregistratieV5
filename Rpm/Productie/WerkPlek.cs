@@ -506,7 +506,9 @@ namespace Rpm.Productie
                 tijd = Personen.Sum(x =>
                     x.TijdAanGewerkt(xstoringen, this, x.WerkRooster ?? Tijden?.WerkRooster).TotalHours);
             if (tijd <= 0) return 0;
-            return Math.Round(((tijd / 100) * Activiteit), 2);
+            if ((int)Activiteit != 100)
+                return Math.Round(((tijd / 100) * Activiteit), 2);
+            return Math.Round(((tijd / 100) * Werk?.Activiteit??Activiteit), 2);
         }
 
         public double TijdAanGewerkt(DateTime vanaf, DateTime tot, bool includestoringen)
@@ -522,7 +524,9 @@ namespace Rpm.Productie
                     x.TijdAanGewerkt(xstoringen, this, vanaf, tot, x.WerkRooster ?? Tijden?.WerkRooster)
                         .TotalHours);
             if (tijd <= 0) return 0;
-            return Math.Round(((tijd / 100) * Activiteit), 2);
+            if ((int)Activiteit != 100)
+                return Math.Round(((tijd / 100) * Activiteit), 2);
+            return Math.Round(((tijd / 100) * Werk?.Activiteit ?? Activiteit), 2);
         }
 
         public bool HeeftGewerkt(TijdEntry bereik)
