@@ -35,7 +35,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
-            this.xwerkplekken = new MetroFramework.Controls.MetroComboBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.xPacketGroup = new System.Windows.Forms.GroupBox();
             this.xaddPacket = new MetroFramework.Controls.MetroButton();
@@ -50,10 +49,11 @@
             this.xaantal = new System.Windows.Forms.Label();
             this.xaantalgemaakt = new System.Windows.Forms.NumericUpDown();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.productieInfoUI1 = new Controls.ProductieInfoUI();
             this.xvaluepanel = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.productieInfoUI1 = new Controls.ProductieInfoUI();
+            this.xwerkplekken = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -70,7 +70,7 @@
             // 
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(20, 472);
+            this.panel1.Location = new System.Drawing.Point(20, 463);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(810, 37);
             this.panel1.TabIndex = 4;
@@ -102,8 +102,8 @@
             // 
             // panel5
             // 
-            this.panel5.Controls.Add(this.label3);
             this.panel5.Controls.Add(this.xwerkplekken);
+            this.panel5.Controls.Add(this.label3);
             this.panel5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.panel5.Location = new System.Drawing.Point(6, 3);
             this.panel5.Name = "panel5";
@@ -119,19 +119,6 @@
             this.label3.Size = new System.Drawing.Size(78, 21);
             this.label3.TabIndex = 7;
             this.label3.Text = "WerkPlek";
-            // 
-            // xwerkplekken
-            // 
-            this.xwerkplekken.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xwerkplekken.FormattingEnabled = true;
-            this.xwerkplekken.ItemHeight = 23;
-            this.xwerkplekken.Location = new System.Drawing.Point(84, 4);
-            this.xwerkplekken.Name = "xwerkplekken";
-            this.xwerkplekken.Size = new System.Drawing.Size(229, 29);
-            this.xwerkplekken.TabIndex = 5;
-            this.xwerkplekken.UseSelectable = true;
-            this.xwerkplekken.SelectedIndexChanged += new System.EventHandler(this.xwerkplekken_SelectedIndexChanged);
             // 
             // panel3
             // 
@@ -297,8 +284,22 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(138, 60);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(692, 412);
+            this.panel4.Size = new System.Drawing.Size(692, 403);
             this.panel4.TabIndex = 5;
+            // 
+            // productieInfoUI1
+            // 
+            this.productieInfoUI1.AllowVerpakkingEdit = false;
+            this.productieInfoUI1.AutoScroll = true;
+            this.productieInfoUI1.BackColor = System.Drawing.Color.White;
+            this.productieInfoUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
+            this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
+            this.productieInfoUI1.Name = "productieInfoUI1";
+            this.productieInfoUI1.ShowAantal = false;
+            this.productieInfoUI1.Size = new System.Drawing.Size(692, 302);
+            this.productieInfoUI1.TabIndex = 2;
             // 
             // xvaluepanel
             // 
@@ -306,7 +307,7 @@
             this.xvaluepanel.Controls.Add(this.panel5);
             this.xvaluepanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.xvaluepanel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xvaluepanel.Location = new System.Drawing.Point(0, 311);
+            this.xvaluepanel.Location = new System.Drawing.Point(0, 302);
             this.xvaluepanel.Name = "xvaluepanel";
             this.xvaluepanel.Size = new System.Drawing.Size(692, 101);
             this.xvaluepanel.TabIndex = 1;
@@ -318,7 +319,7 @@
             this.pictureBox1.Image = global::ProductieManager.Properties.Resources.Count_tool_34564__1_;
             this.pictureBox1.Location = new System.Drawing.Point(20, 60);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(118, 412);
+            this.pictureBox1.Size = new System.Drawing.Size(118, 403);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
@@ -328,24 +329,21 @@
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip1.ToolTipTitle = "Aantal Gemaakt";
             // 
-            // productieInfoUI1
+            // xwerkplekken
             // 
-            this.productieInfoUI1.AutoScroll = true;
-            this.productieInfoUI1.BackColor = System.Drawing.Color.White;
-            this.productieInfoUI1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
-            this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
-            this.productieInfoUI1.Name = "productieInfoUI1";
-            this.productieInfoUI1.ShowAantal = false;
-            this.productieInfoUI1.Size = new System.Drawing.Size(692, 311);
-            this.productieInfoUI1.TabIndex = 2;
+            this.xwerkplekken.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xwerkplekken.FormattingEnabled = true;
+            this.xwerkplekken.Location = new System.Drawing.Point(87, 4);
+            this.xwerkplekken.Name = "xwerkplekken";
+            this.xwerkplekken.Size = new System.Drawing.Size(226, 29);
+            this.xwerkplekken.TabIndex = 7;
+            this.xwerkplekken.SelectedIndexChanged += new System.EventHandler(this.xwerkplekken_SelectedIndexChanged);
             // 
             // AantalGemaaktUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(850, 529);
+            this.ClientSize = new System.Drawing.Size(850, 520);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.panel1);
@@ -390,7 +388,6 @@
         private System.Windows.Forms.Label xaantalgemaaktlabel;
         private System.Windows.Forms.Panel xvaluepanel;
         private System.Windows.Forms.ToolTip toolTip1;
-        private MetroFramework.Controls.MetroComboBox xwerkplekken;
         private MetroFramework.Controls.MetroButton xnextb;
         private System.Windows.Forms.GroupBox xPacketGroup;
         private System.Windows.Forms.Label xpacketlabel;
@@ -401,5 +398,6 @@
         private MetroFramework.Controls.MetroButton xaddPacket;
         private System.Windows.Forms.Button button1;
         private Controls.ProductieInfoUI productieInfoUI1;
+        private System.Windows.Forms.ComboBox xwerkplekken;
     }
 }

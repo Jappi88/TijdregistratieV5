@@ -30,7 +30,6 @@
         {
             this.xaantalpanel = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.xwerkplekken = new MetroFramework.Controls.MetroComboBox();
             this.xaantalgemaakt = new System.Windows.Forms.NumericUpDown();
             this.xnextb = new MetroFramework.Controls.MetroButton();
             this.xaantalLabel = new System.Windows.Forms.Label();
@@ -40,6 +39,7 @@
             this.xremovePacket = new MetroFramework.Controls.MetroButton();
             this.xpacketvalue = new System.Windows.Forms.NumericUpDown();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.xwerkplekken = new System.Windows.Forms.ComboBox();
             this.xaantalpanel.SuspendLayout();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xaantalgemaakt)).BeginInit();
@@ -71,19 +71,6 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(514, 37);
             this.panel5.TabIndex = 10;
-            // 
-            // xwerkplekken
-            // 
-            this.xwerkplekken.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xwerkplekken.FormattingEnabled = true;
-            this.xwerkplekken.ItemHeight = 23;
-            this.xwerkplekken.Location = new System.Drawing.Point(3, 3);
-            this.xwerkplekken.Name = "xwerkplekken";
-            this.xwerkplekken.Size = new System.Drawing.Size(235, 29);
-            this.xwerkplekken.TabIndex = 5;
-            this.xwerkplekken.UseSelectable = true;
-            this.xwerkplekken.SelectedIndexChanged += new System.EventHandler(this.xwerkplekken_SelectedIndexChanged);
             // 
             // xaantalgemaakt
             // 
@@ -198,6 +185,18 @@
             this.pictureBox1.TabIndex = 11;
             this.pictureBox1.TabStop = false;
             // 
+            // xwerkplekken
+            // 
+            this.xwerkplekken.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xwerkplekken.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xwerkplekken.FormattingEnabled = true;
+            this.xwerkplekken.Location = new System.Drawing.Point(3, 2);
+            this.xwerkplekken.Name = "xwerkplekken";
+            this.xwerkplekken.Size = new System.Drawing.Size(235, 29);
+            this.xwerkplekken.TabIndex = 15;
+            this.xwerkplekken.SelectedIndexChanged += new System.EventHandler(this.xwerkplekken_SelectedIndexChanged);
+            // 
             // AantalChangerUI
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -228,9 +227,9 @@
         private System.Windows.Forms.NumericUpDown xpacketvalue;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel5;
-        private MetroFramework.Controls.MetroComboBox xwerkplekken;
         private MetroFramework.Controls.MetroButton xnextb;
         private System.Windows.Forms.NumericUpDown xaantalgemaakt;
         private System.Windows.Forms.Label xaantalLabel;
+        private System.Windows.Forms.ComboBox xwerkplekken;
     }
 }

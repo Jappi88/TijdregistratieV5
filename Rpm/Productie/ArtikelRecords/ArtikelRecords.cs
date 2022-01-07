@@ -237,13 +237,17 @@ namespace Rpm.Productie.ArtikelRecords
                             switch (op.FilterSoort)
                             {
                                 case ArtikelFilterSoort.AantalGemaakt:
-                                    if (((record.AantalGemaakt - record.VorigeAantalGemaakt) / op.FilterWaarde) < 1)
+                                    var xoldaantal = (int) (record.VorigeAantalGemaakt / op.FilterWaarde);
+                                    var xnewaantal = (int)(record.AantalGemaakt / op.FilterWaarde);
+                                    if (xoldaantal <= xnewaantal)
                                         continue;
                                     break;
                                 case ArtikelFilterSoort.TijdGewerkt:
-                                    if (((decimal)(record.TijdGewerkt - record.VorigeTijdGewerkt) / op.FilterWaarde) < 1)
-                                        continue;
-                                    break;
+                                    var xoldtijd = (int)(record.VorigeTijdGewerkt / (double)op.FilterWaarde);
+                                    var xnewtijd = (int)(record.TijdGewerkt / (double)op.FilterWaarde);
+                                    if (xoldtijd <= xnewtijd)
+                                        break;
+                                    continue;
                             }
 
                             break;
@@ -258,10 +262,13 @@ namespace Rpm.Productie.ArtikelRecords
                             string.Equals("iedereen", x, StringComparison.CurrentCultureIgnoreCase) ||
                             string.Equals(Manager.Opties.Username, x, StringComparison.CurrentCultureIgnoreCase)))
                     {
+                        var bttns = new Dictionary<string, DialogResult>();
+                        bttns.Add("Begrepen", DialogResult.Yes);
+                        bttns.Add("Sluiten", DialogResult.No);
                         //Opmerking Tonen
                         if (Manager.OnRequestRespondDialog(record.GetOpmerking(op), $"Opmerking Van {op.GeplaatstDoor}",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information, null, null,
-                                op.ImageData?.ImageFromBytes()??Resources.default_opmerking_16757_256x256, MetroColorStyle.Purple) == DialogResult.OK)
+                                MessageBoxButtons.OK, MessageBoxIcon.Information, null, bttns,
+                                op.ImageData?.ImageFromBytes()??Resources.default_opmerking_16757_256x256, MetroColorStyle.Purple) == DialogResult.Yes)
                         {
                             if (Manager.Opties?.Username == null)
                                 return;

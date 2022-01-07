@@ -288,8 +288,11 @@ namespace Forms.ArtikelRecords
                     TijdGewerkt = 50
                 };
                 testrec.UpdatedProducties.AddRange(new List<string>() { "test1", "test2"});
+                var bttns = new Dictionary<string, DialogResult>();
+                bttns.Add("Begrepen", DialogResult.Yes);
+                bttns.Add("Sluiten", DialogResult.No);
                 var xop = testrec.GetOpmerking(op);
-                Manager.OnRequestRespondDialog(xop, "Voorbeeld Opmerking", MessageBoxButtons.OK, MessageBoxIcon.Information, null, null,
+                Manager.OnRequestRespondDialog(xop, "Voorbeeld Opmerking", MessageBoxButtons.OK, MessageBoxIcon.Information, null, bttns,
                     xImage.Image??Resources.default_opmerking_16757_256x256, MetroColorStyle.Purple);
             }
         }

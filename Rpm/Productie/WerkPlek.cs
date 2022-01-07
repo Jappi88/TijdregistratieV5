@@ -206,6 +206,24 @@ namespace Rpm.Productie
 
         public DateTime GestartOp(TijdEntry bereik)
         {
+            if (Werk.IsBemand)
+            {
+                var dt = new DateTime();
+                foreach (var per in Personen)
+                {
+                    var xgestart = per.GestartOp(this);
+                    var xgestopt = per.GestoptOp(this);
+                    var xb = new TijdEntry(xgestart, xgestopt);
+                    var t = xb.CreateRange(bereik.Start, bereik.Stop, Tijden.WerkRooster, Tijden.SpecialeRoosters);
+                    if (t == null) continue;
+                    if (t.Start < dt || dt.IsDefault())
+                        dt = t.Start;
+
+                }
+
+                return dt;
+            }
+
             if (Tijden?.Uren == null)
                 return _gestartop;
             DateTime xret = default;
@@ -241,6 +259,23 @@ namespace Rpm.Productie
 
         public DateTime GestoptOp(TijdEntry bereik)
         {
+            if (Werk.IsBemand)
+            {
+                var dt = new DateTime();
+                foreach (var per in Personen)
+                {
+                    var xgestart = per.GestartOp(this);
+                    var xgestopt = per.GestoptOp(this);
+                    var xb = new TijdEntry(xgestart, xgestopt);
+                    var t = xb.CreateRange(bereik.Start, bereik.Stop, Tijden.WerkRooster, Tijden.SpecialeRoosters);
+                    if (t == null) continue;
+                    if (t.Stop > dt)
+                        dt = t.Stop;
+
+                }
+
+                return dt;
+            }
             if (Tijden?.Uren == null)
                 return _gestoptop;
             DateTime xret = default;

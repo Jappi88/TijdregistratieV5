@@ -326,6 +326,24 @@ namespace ProductieManager.Forms
                     ProductieChat.Gebruikers.Add(iedereen);
                     ProductieChat.Gebruikers = ProductieChat.Gebruikers.OrderBy(x => x.UserName).ToList();
                 }
+                //load eerst de default gebruiker.
+                if (ProductieChat.Chat != null)
+                {
+                    var img = ProductieChat.Chat.GetProfielImage() ?? Properties.Resources.avatardefault_92824;
+                    int unread = ProductieChat.Chat.UnreadMessages(ProductieChat.Chat.UserName);
+                    if (unread > 0)
+                    {
+                        var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White, unread.ToString(),
+                            new Font("Ariel", 16, FontStyle.Bold), Color.DarkRed);
+                        img = img.CombineImage(ximg, ContentAlignment.BottomLeft, 2.5);
+                    }
+
+                    if (ProductieChat.Chat.IsOnline)
+                        img = img.CombineImage(Properties.Resources.Online_32, 3.5);
+                    else
+                        img = img.CombineImage(Properties.Resources.offline_32x32, 3.5);
+                    xuserimages.Images.Add(ProductieChat.Chat.UserName, img);
+                }
 
                 for (int i = 0; i < ProductieChat.Gebruikers.Count; i++)
                 {
