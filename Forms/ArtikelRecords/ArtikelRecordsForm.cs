@@ -211,27 +211,34 @@ namespace Forms.ArtikelRecords
         {
             if (Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieAdvance})
             {
-                var xnew = new NewArtikelRecord();
-                if (xnew.ShowDialog() == DialogResult.OK)
+                try
                 {
-                    if (Manager.ArtikelRecords?.Database == null) return;
-                    var xs = xnew.SelectedRecord;
-                    bool exist = Manager.ArtikelRecords.Database.Exists(xs.ArtikelNr);
-                    if (exist)
+                    var xnew = new NewArtikelRecord();
+                    if (xnew.ShowDialog() == DialogResult.OK)
                     {
-                        XMessageBox.Show($"Artikelnr '{xs.ArtikelNr}' bestaat al!", "Bestaat Al",
-                            MessageBoxIcon.Exclamation);
-                        return;
-                    }
+                        if (Manager.ArtikelRecords?.Database == null) return;
+                        var xs = xnew.SelectedRecord;
+                        bool exist = Manager.ArtikelRecords.Database.Exists(xs.ArtikelNr);
+                        if (exist)
+                        {
+                            XMessageBox.Show($"Artikelnr '{xs.ArtikelNr}' bestaat al!", "Bestaat Al",
+                                MessageBoxIcon.Exclamation);
+                            return;
+                        }
 
-                    if (IsAllowed(xs))
-                    {
-                        xArtikelList.AddObject(xs);
-                        xArtikelList.SelectedObject = xs;
-                        xArtikelList.SelectedItem?.EnsureVisible();
-                    }
-                    Manager.ArtikelRecords.Database.Upsert(xs.ArtikelNr, xs, false);
+                        if (IsAllowed(xs))
+                        {
+                            xArtikelList.AddObject(xs);
+                            xArtikelList.SelectedObject = xs;
+                            xArtikelList.SelectedItem?.EnsureVisible();
+                        }
+                        Manager.ArtikelRecords.Database.Upsert(xs.ArtikelNr, xs, false);
 
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
                 }
             }
         }
@@ -242,19 +249,26 @@ namespace Forms.ArtikelRecords
             {
                 if (xArtikelList.SelectedObjects.Count > 0)
                 {
-                    var xremove = xArtikelList.SelectedObjects.Cast<ArtikelRecord>().ToList();
-                    if (xremove.Count == 0) return;
-                    var x1 = xremove.Count == 1 ? "artikel" : "artikelen";
-                    if (XMessageBox.Show($"Weetje zeker dat je {xremove.Count} {x1} wilt verwijderen?", "Verwijderen",
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                    try
                     {
-                        foreach (var xr in xremove)
+                        var xremove = xArtikelList.SelectedObjects.Cast<ArtikelRecord>().ToList();
+                        if (xremove.Count == 0) return;
+                        var x1 = xremove.Count == 1 ? "artikel" : "artikelen";
+                        if (XMessageBox.Show($"Weetje zeker dat je {xremove.Count} {x1} wilt verwijderen?", "Verwijderen",
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                         {
-                            xArtikelList.RemoveObject(xr);
-                            Manager.ArtikelRecords?.Database?.Delete(xr.ArtikelNr);
-                        }
+                            foreach (var xr in xremove)
+                            {
+                                xArtikelList.RemoveObject(xr);
+                                Manager.ArtikelRecords?.Database?.Delete(xr.ArtikelNr);
+                            }
 
-                        EnableButton();
+                            EnableButton();
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine(exception);
                     }
                 }
             }

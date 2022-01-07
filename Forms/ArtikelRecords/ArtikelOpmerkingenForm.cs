@@ -75,7 +75,7 @@ namespace Forms.ArtikelRecords
             }
         }
 
-        public void SaveOpmerkingen()
+        public bool SaveOpmerkingen()
         {
             try
             {
@@ -90,10 +90,13 @@ namespace Forms.ArtikelRecords
                 {
                     Manager.ArtikelRecords?.SaveOpmerkingen(Opmerkingen);
                 }
+
+                return true;
             }
             catch (Exception e)
             {
                 XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                return false;
             }
         }
 
@@ -188,6 +191,7 @@ namespace Forms.ArtikelRecords
         {
             try
             {
+                if (this.IsDisposed || Disposing) return;
                 if (e.Name.ToLower().StartsWith("algemeen"))
                     if (Record != null)
                         return;
@@ -233,8 +237,9 @@ namespace Forms.ArtikelRecords
 
         private void xOK_Click(object sender, EventArgs e)
         {
-            SaveOpmerkingen();
+          
             DialogResult = DialogResult.OK;
+            SaveOpmerkingen();
         }
 
         private void xAddOpmerking_Click(object sender, EventArgs e)
