@@ -33,6 +33,7 @@ namespace ProductieManager.Forms.Aantal.Controls
 
         private void SetPacketAantal(VerpakkingInstructie instructie, int aantal, int totaalaantal)
         {
+
             if (instructie == null || instructie.VerpakkenPer == 0)
             {
                 this.MinimumSize = new Size(xaantalgemaakt.MinimumSize.Width, 45);
@@ -220,6 +221,7 @@ namespace ProductieManager.Forms.Aantal.Controls
 
         public void UpdateAantalGemaakt(IProductieBase productie)
         {
+            UpdateAantalStatusLabel(productie);
             if (xwerkplekken.SelectedItem != null)
             {
                 var selected = xwerkplekken.SelectedItem.ToString();
@@ -273,7 +275,10 @@ namespace ProductieManager.Forms.Aantal.Controls
                     }
                 }
             }
+        }
 
+        public void UpdateAantalStatusLabel(IProductieBase productie)
+        {
             if (productie != null)
                 xaantalLabel.Text =
                     $"{(productie.AantalGemaakt > 0 ? productie.AantalGemaakt.ToString("##.###") : "0")}/ " +
@@ -293,7 +298,7 @@ namespace ProductieManager.Forms.Aantal.Controls
             if (Productie.AantalGemaakt == 0) return true;
             var xnewvalues = (double)xaantalgemaakt.Value;
             var actueel = (double)Productie.ActueelAantalGemaakt;
-            double perDiff = Math.Round((xnewvalues - actueel) / ((actueel + xnewvalues) / 2) * 100.0, 2);
+            double perDiff = actueel.GetPercentageDifference(xnewvalues);
             if (perDiff is < -50 or > 50)
             {
                 var result = XMessageBox.Show(
@@ -394,9 +399,8 @@ namespace ProductieManager.Forms.Aantal.Controls
                         xwerkplekken.SelectedIndex++;
                     else xwerkplekken.SelectedIndex = 0;
                 }
-
-                xaantalgemaakt.Select(0, xaantalgemaakt.Value.ToString(CultureInfo.CurrentCulture).Length);
-                xaantalgemaakt.Focus();
+                UpdateAantalStatusLabel(Productie);
+                SelectValue();
             }
         }
 

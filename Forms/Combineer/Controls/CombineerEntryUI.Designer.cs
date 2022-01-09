@@ -30,12 +30,13 @@
         {
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.xCombiPeriode = new System.Windows.Forms.Button();
             this.xOpenProductie = new System.Windows.Forms.Button();
+            this.xOnkoppel = new System.Windows.Forms.Button();
             this.xupdate = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.xactiviteit = new System.Windows.Forms.NumericUpDown();
-            this.xOnkoppel = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.xgroup = new System.Windows.Forms.GroupBox();
@@ -47,17 +48,33 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.xCombiPeriode);
             this.panel1.Controls.Add(this.xOpenProductie);
+            this.panel1.Controls.Add(this.xOnkoppel);
             this.panel1.Controls.Add(this.xupdate);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.xactiviteit);
-            this.panel1.Controls.Add(this.xOnkoppel);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(3, 49);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(517, 43);
+            this.panel1.Size = new System.Drawing.Size(561, 43);
             this.panel1.TabIndex = 0;
+            // 
+            // xCombiPeriode
+            // 
+            this.xCombiPeriode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xCombiPeriode.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xCombiPeriode.Image = global::ProductieManager.Properties.Resources.systemtime_778_32_32;
+            this.xCombiPeriode.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xCombiPeriode.Location = new System.Drawing.Point(228, 3);
+            this.xCombiPeriode.Name = "xCombiPeriode";
+            this.xCombiPeriode.Size = new System.Drawing.Size(41, 37);
+            this.xCombiPeriode.TabIndex = 6;
+            this.xCombiPeriode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTip1.SetToolTip(this.xCombiPeriode, "Kies Actieve Periode");
+            this.xCombiPeriode.UseVisualStyleBackColor = true;
+            this.xCombiPeriode.Click += new System.EventHandler(this.xCombiPeriode_Click);
             // 
             // xOpenProductie
             // 
@@ -66,15 +83,32 @@
             this.xOpenProductie.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xOpenProductie.Image = global::ProductieManager.Properties.Resources.window_16756_32x32;
             this.xOpenProductie.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xOpenProductie.Location = new System.Drawing.Point(248, 3);
+            this.xOpenProductie.Location = new System.Drawing.Point(293, 3);
             this.xOpenProductie.Name = "xOpenProductie";
-            this.xOpenProductie.Size = new System.Drawing.Size(120, 37);
+            this.xOpenProductie.Size = new System.Drawing.Size(122, 37);
             this.xOpenProductie.TabIndex = 5;
             this.xOpenProductie.Text = "Productie";
             this.xOpenProductie.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolTip1.SetToolTip(this.xOpenProductie, "Toon productie");
+            this.toolTip1.SetToolTip(this.xOpenProductie, "Toon Productie");
             this.xOpenProductie.UseVisualStyleBackColor = true;
             this.xOpenProductie.Click += new System.EventHandler(this.xOpenProductie_Click);
+            // 
+            // xOnkoppel
+            // 
+            this.xOnkoppel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xOnkoppel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xOnkoppel.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xOnkoppel.Image = global::ProductieManager.Properties.Resources.UnMerge_arrows_32x32;
+            this.xOnkoppel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xOnkoppel.Location = new System.Drawing.Point(421, 3);
+            this.xOnkoppel.Name = "xOnkoppel";
+            this.xOnkoppel.Size = new System.Drawing.Size(140, 37);
+            this.xOnkoppel.TabIndex = 0;
+            this.xOnkoppel.Text = "Ontkoppelen";
+            this.xOnkoppel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTip1.SetToolTip(this.xOnkoppel, "Onkoppel Productie");
+            this.xOnkoppel.UseVisualStyleBackColor = true;
+            this.xOnkoppel.Click += new System.EventHandler(this.xOnkoppel_Click);
             // 
             // xupdate
             // 
@@ -131,23 +165,6 @@
             0,
             131072});
             // 
-            // xOnkoppel
-            // 
-            this.xOnkoppel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xOnkoppel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xOnkoppel.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xOnkoppel.Image = global::ProductieManager.Properties.Resources.UnMerge_arrows_32x32;
-            this.xOnkoppel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xOnkoppel.Location = new System.Drawing.Point(374, 3);
-            this.xOnkoppel.Name = "xOnkoppel";
-            this.xOnkoppel.Size = new System.Drawing.Size(140, 37);
-            this.xOnkoppel.TabIndex = 0;
-            this.xOnkoppel.Text = "Ontkoppelen";
-            this.xOnkoppel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolTip1.SetToolTip(this.xOnkoppel, "Onkoppel productie");
-            this.xOnkoppel.UseVisualStyleBackColor = true;
-            this.xOnkoppel.Click += new System.EventHandler(this.xOnkoppel_Click);
-            // 
             // pictureBox1
             // 
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
@@ -171,7 +188,7 @@
             this.xgroup.ForeColor = System.Drawing.Color.SteelBlue;
             this.xgroup.Location = new System.Drawing.Point(92, 10);
             this.xgroup.Name = "xgroup";
-            this.xgroup.Size = new System.Drawing.Size(523, 95);
+            this.xgroup.Size = new System.Drawing.Size(567, 95);
             this.xgroup.TabIndex = 3;
             this.xgroup.TabStop = false;
             // 
@@ -186,7 +203,7 @@
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "CombineerEntryUI";
             this.Padding = new System.Windows.Forms.Padding(10);
-            this.Size = new System.Drawing.Size(625, 115);
+            this.Size = new System.Drawing.Size(669, 115);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xactiviteit)).EndInit();
@@ -208,5 +225,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown xactiviteit;
         private System.Windows.Forms.GroupBox xgroup;
+        private System.Windows.Forms.Button xCombiPeriode;
     }
 }

@@ -249,6 +249,7 @@ namespace Forms.ArtikelRecords
             if (newopmerking.ShowDialog() == DialogResult.OK)
             {
                 var xop = newopmerking.SelectedOpmerking;
+                xop.IsAlgemeen = Record == null;
                 Opmerkingen.Add(xop);
                 if (IsAllowed(xop))
                     xOpmerkingenList.AddObject(xop);
@@ -266,6 +267,7 @@ namespace Forms.ArtikelRecords
                 if (newopmerking.ShowDialog() == DialogResult.OK)
                 {
                     var xop = newopmerking.SelectedOpmerking;
+                    xop.IsAlgemeen = Record == null;
                     var index = Opmerkingen.IndexOf(op);
                     if (index > -1)
                         Opmerkingen[index] = xop;

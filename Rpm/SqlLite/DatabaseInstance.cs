@@ -564,7 +564,7 @@ namespace Rpm.SqlLite
                             break;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
-                            return MultipleFileDb.FromPath<T>(filepath);
+                            return MultipleFileDb.FromPath<T>(filepath,true);
                         case DbInstanceType.Server:
                             if (ServerDb == null) throw new NullReferenceException();
                             break;

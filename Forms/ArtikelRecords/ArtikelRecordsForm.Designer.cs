@@ -200,13 +200,14 @@
             // 
             // xalgemeen
             // 
+            this.xalgemeen.Dock = System.Windows.Forms.DockStyle.Left;
             this.xalgemeen.Enabled = false;
             this.xalgemeen.FlatAppearance.BorderSize = 0;
             this.xalgemeen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xalgemeen.Image = global::ProductieManager.Properties.Resources.Alle_Opmerkingen_32x321;
-            this.xalgemeen.Location = new System.Drawing.Point(3, 1);
+            this.xalgemeen.Location = new System.Drawing.Point(0, 0);
             this.xalgemeen.Name = "xalgemeen";
-            this.xalgemeen.Size = new System.Drawing.Size(34, 34);
+            this.xalgemeen.Size = new System.Drawing.Size(34, 38);
             this.xalgemeen.TabIndex = 13;
             this.toolTip1.SetToolTip(this.xalgemeen, "Beheer alle algemene opmerkingen");
             this.xalgemeen.UseVisualStyleBackColor = true;
@@ -238,7 +239,7 @@
             this.xopmerkingen.Name = "xopmerkingen";
             this.xopmerkingen.Size = new System.Drawing.Size(34, 34);
             this.xopmerkingen.TabIndex = 11;
-            this.toolTip1.SetToolTip(this.xopmerkingen, "Beheer Algemene Opmerkingen");
+            this.toolTip1.SetToolTip(this.xopmerkingen, "Artikel Opmerkingen");
             this.xopmerkingen.UseVisualStyleBackColor = true;
             this.xopmerkingen.Click += new System.EventHandler(this.xopmerkingen_Click);
             // 

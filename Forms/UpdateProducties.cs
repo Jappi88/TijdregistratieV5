@@ -126,7 +126,7 @@ namespace Forms
                         {
                             if (!IsBussy || IsDisposed || Disposing)
                                 break;
-                            ProductieFormulier form = await MultipleFileDb.FromPath<ProductieFormulier>(file);
+                            ProductieFormulier form = await MultipleFileDb.FromPath<ProductieFormulier>(file,true);
                             if (form == null) continue;
                             await form.UpdateForm(true, true, forms, null, true, false, true, true);
                             count++;

@@ -131,7 +131,7 @@ namespace Rpm.Productie
             get { return GetPersoneel().Count(x => x.IngezetAanKlus(this, true, out _)); }
         }
 
-        public override double Activiteit => (100 - Combies.Sum(x => x.Activiteit));
+        public override double Activiteit => (100 - Combies.Where(x=> x.IsRunning).Sum(x => x.Activiteit));
 
         public int AantalPersonen
         {
@@ -478,7 +478,7 @@ namespace Rpm.Productie
                 AanbevolenPersonen = AantalPersonenNodig(ref dt, false);
                 StartOp = dt;
                 if (AantalActievePersonen == 0 && State == ProductieState.Gestart)
-                    _= StopProductie(true).Result;
+                    _= StopProductie(true,true).Result;
                 if (save)
                     LastChanged = LastChanged.UpdateChange(change, DbType.Producties);
                 if (Parent != null)
@@ -520,7 +520,7 @@ namespace Rpm.Productie
             return b;
         }
 
-        public Task<bool> StartProductie(bool email, bool savepersoneel)
+        public Task<bool> StartProductie(bool email, bool savepersoneel, bool updatecombies)
         {
             return Task.Run(  () =>
             {
@@ -588,7 +588,7 @@ namespace Rpm.Productie
 
                     GestartDoor = Manager.Opties.Username;
                    
-                    if(UpdateBewerking(null, $"[{Path}] Bewerking Gestart").Result)
+                    if(UpdateBewerking(null, $"[{Path}] Bewerking Gestart").Result && updatecombies)
                         UpdateCombies();
                     if (email)
                         RemoteProductie.RespondByEmail(this,
@@ -597,7 +597,7 @@ namespace Rpm.Productie
                 }
                 catch(Exception ex)
                 {
-                    _ = StopProductie(false);
+                    _ = StopProductie(false,true);
                     return false;
                 }
             });
@@ -634,7 +634,7 @@ namespace Rpm.Productie
             }
         }
 
-        public async Task<bool> StopProductie(bool email)
+        public async Task<bool> StopProductie(bool email, bool updatecombis)
         {
             try
             {
@@ -665,7 +665,7 @@ namespace Rpm.Productie
                         _ = Manager.Database.UpSert(x, $"[{x.PersoneelNaam}] uit werk [{Path}] gehaald");
                     }
                 }
-                if(await UpdateBewerking(null, $"[{Path}] Bewerking Gestopt"))
+                if(await UpdateBewerking(null, $"[{Path}] Bewerking Gestopt") && updatecombis)
                     UpdateCombies();
                 if (email)
                     RemoteProductie.RespondByEmail(this,
@@ -724,7 +724,7 @@ namespace Rpm.Productie
                     return false;
                 }
 
-                if (State == ProductieState.Gestart) await StopProductie(false);
+                if (State == ProductieState.Gestart) await StopProductie(false,true);
                 foreach (var per in personen)
                 {
                     if (per.IngezetAanKlus(this, false, out var klusjes))
@@ -827,60 +827,64 @@ namespace Rpm.Productie
             return parent;
         }
 
-        public async Task<bool> MeldBewerkingGereed(string paraaf, int aantal,
+        public Task<bool> MeldBewerkingGereed(string paraaf, int aantal,
             string notitie,
             bool update, bool sendmail, bool showmessage)
         {
-            try
+            return Task.Factory.StartNew(() =>
             {
-                await StopProductie(false);
-                AantalGemaakt = aantal;
-                DatumGereed = DateTime.Now;
-                GereedNote = new NotitieEntry(notitie, this) {Type = NotitieType.BewerkingGereed, Naam = paraaf};
-                Paraaf = paraaf;
-                State = ProductieState.Gereed;
-                var personen = GetPersoneel();
-                foreach (var per in personen)
-                    if (per.IngezetAanKlus(this, false, out var klusjes))
-                    {
-                        var count = 0;
-                        var xper = await Manager.Database.GetPersoneel(per.PersoneelNaam);
-                        foreach (var klus in klusjes)
-                            if (klus.MeldGereed())
-                                if ( xper != null && xper.ReplaceKlus(klus))
-                                    count++;
+                try
+                {
+                    _ = StopProductie(false, true);
+                    AantalGemaakt = aantal;
+                    DatumGereed = DateTime.Now;
+                    GereedNote = new NotitieEntry(notitie, this) {Type = NotitieType.BewerkingGereed, Naam = paraaf};
+                    Paraaf = paraaf;
+                    State = ProductieState.Gereed;
+                    var personen = GetPersoneel();
+                    foreach (var per in personen)
+                        if (per.IngezetAanKlus(this, false, out var klusjes))
+                        {
+                            var count = 0;
+                            var xper = Manager.Database.GetPersoneel(per.PersoneelNaam).Result;
+                            foreach (var klus in klusjes)
+                                if (klus.MeldGereed())
+                                    if (xper != null && xper.ReplaceKlus(klus))
+                                        count++;
 
-                        if (count > 0 && xper != null) await Manager.Database.UpSert(xper, $"[{xper.PersoneelNaam}] {Path} klus gereed gemeld");
-                    }
+                            if (count > 0 && xper != null)
+                                _ = Manager.Database.UpSert(xper, $"[{xper.PersoneelNaam}] {Path} klus gereed gemeld");
+                        }
 
-                var xa = aantal == 1 ? "stuk" : "stuks";
+                    var xa = aantal == 1 ? "stuk" : "stuks";
 
-                var change =
-                    $"[{Path}] {paraaf} heeft is zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u) op {WerkplekkenName}.";
-                _= UpdateBewerking(null, change, update,showmessage);
-                if (sendmail)
-                    RemoteProductie.RespondByEmail(this, change);
+                    var change =
+                        $"[{Path}] {paraaf} heeft is zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u) op {WerkplekkenName}.";
+                    _ = UpdateBewerking(null, change, update, showmessage);
+                    if (sendmail)
+                        RemoteProductie.RespondByEmail(this, change);
 
-                var xcount = 0;
-                var parent = Parent;
-                if (parent.Bewerkingen != null)
-                    xcount = parent.Bewerkingen.Count(t => t.State != ProductieState.Gereed && !t.Equals(this));
-                if (xcount == 0)
-                    _= parent.MeldGereed(aantal, paraaf, notitie, false,false);
-                //else
-                //{
-                //    if (sendmail)
-                //        RemoteProductie.RespondByEmail(this, change);
-                //    await UpdateBewerking(null, change, update);
-                //}
+                    var xcount = 0;
+                    var parent = Parent;
+                    if (parent.Bewerkingen != null)
+                        xcount = parent.Bewerkingen.Count(t => t.State != ProductieState.Gereed && !t.Equals(this));
+                    if (xcount == 0)
+                        return parent.MeldGereed(aantal, paraaf, notitie, false, false).Result;
+                    //else
+                    //{
+                    //    if (sendmail)
+                    //        RemoteProductie.RespondByEmail(this, change);
+                    //    await UpdateBewerking(null, change, update);
+                    //}
 
-                return true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return false;
-            }
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return false;
+                }
+            });
         }
 
         public Task<bool> MeldDeelsGereed(DeelsGereedMelding gereedmelding, bool update)
@@ -1116,53 +1120,29 @@ namespace Rpm.Productie
             //if (!string.IsNullOrEmpty(GestartDoor) && !string.Equals(GestartDoor, Manager.Opties.Username,
             //    StringComparison.CurrentCultureIgnoreCase))
             //    return TijdGewerkt;
-            double tijd = 0;
-            if (!IsBemand)
-            {
-                tijd = CalculateMachineTijd();
-            }
-            else
-            {
-                if (WerkPlekken is {Count: > 0})
-                    foreach (var wp in WerkPlekken)
-                        tijd += wp.TijdAanGewerkt();
-
-                if (tijd < 0 || double.IsInfinity(tijd)) tijd = 0;
-            }
-
+            double tijd = CalculateMachineTijd();
             if (tijd <= 0) return 0;
-            return Math.Round(((tijd / 100) * Activiteit), 2);
+            return tijd;
         }
 
         public double TijdAanGewerkt(DateTime vanaf, DateTime tot)
         {
-            double tijd = 0;
-            if (!IsBemand)
-            {
-                tijd = CalculateMachineTijd(vanaf, tot);
-            }
-            else
-            {
-                if (WerkPlekken is {Count: > 0})
-                    foreach (var wp in WerkPlekken)
-                        tijd += wp.TijdAanGewerkt(vanaf, tot,true);
-
-                if (tijd < 0 || double.IsInfinity(tijd)) tijd = 0;
-            }
+            double tijd = CalculateMachineTijd(vanaf, tot);
             if (tijd <= 0) return 0;
-            return Math.Round(((tijd / 100) * Activiteit), 2);
+            return tijd;
         }
 
         public double CalculateMachineTijd()
         {
-            var storingen = WerkPlekken.ToArray().CreateStoringDictionary();
-            return Math.Round(WerkPlekken.Sum(x=> x.Tijden.TijdGewerkt(null, storingen)),2);
+            //var storingen = WerkPlekken.ToArray().CreateStoringDictionary();
+            var xtijd = WerkPlekken.Sum(x=> x.TijdAanGewerkt(true));
+            return Math.Round(xtijd,2);
         }
 
         public double CalculateMachineTijd(DateTime vanaf, DateTime tot)
         {
-            var storingen = WerkPlekken.ToArray().CreateStoringDictionary();
-            return Math.Round(WerkPlekken.Sum(x => x.Tijden.TijdGewerkt(null, vanaf,tot,storingen)), 2);
+            var xtijd = WerkPlekken.Sum(x => x.TijdAanGewerkt(vanaf,tot,true));
+            return Math.Round(xtijd,2);
         }
 
         public double GetTijdNodig()
@@ -1590,7 +1570,8 @@ namespace Rpm.Productie
                 for (int i = 0; i < Combies.Count; i++)
                 {
                     var combi = Combies[i];
-                    var bew = Werk.FromPath(combi.Path)?.Bewerking;
+                    if (!combi.IsRunning) continue;
+                    var bew = combi.GetProductie();
                     if (bew == null)
                     {
                         continue;
@@ -1602,7 +1583,7 @@ namespace Rpm.Productie
                         switch (State)
                         {
                             case ProductieState.Gestopt:
-                                _ = bew.StopProductie(true);
+                                _ = bew.StopProductie(true,true);
                                 break;
                             case ProductieState.Gestart:
                                 if (!bew.WerkPlekken.Any(x => x.IsActief()))

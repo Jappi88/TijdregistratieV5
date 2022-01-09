@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Windows.Navigation;
 using LiteDB;
+using NPOI.OpenXmlFormats.Wordprocessing;
 using Polenter.Serialization;
 using Rpm.Misc;
 using Rpm.Productie.AantalHistory;
@@ -213,8 +215,9 @@ namespace Rpm.Productie
                 {
                     var xgestart = per.GestartOp(this);
                     var xgestopt = per.GestoptOp(this);
+                    var bereikstop = bereik.Stop.TimeOfDay == new TimeSpan()? DateTime.Now : bereik.Stop;
                     var xb = new TijdEntry(xgestart, xgestopt);
-                    var t = xb.CreateRange(bereik.Start, bereik.Stop, Tijden.WerkRooster, Tijden.SpecialeRoosters);
+                    var t = xb.CreateRange(bereik.Start, bereikstop, Tijden.WerkRooster, Tijden.SpecialeRoosters);
                     if (t == null) continue;
                     if (t.Start < dt || dt.IsDefault())
                         dt = t.Start;
@@ -267,7 +270,8 @@ namespace Rpm.Productie
                     var xgestart = per.GestartOp(this);
                     var xgestopt = per.GestoptOp(this);
                     var xb = new TijdEntry(xgestart, xgestopt);
-                    var t = xb.CreateRange(bereik.Start, bereik.Stop, Tijden.WerkRooster, Tijden.SpecialeRoosters);
+                    var bereikstop = bereik.Stop.TimeOfDay == new TimeSpan() ? DateTime.Now : bereik.Stop;
+                    var t = xb.CreateRange(bereik.Start, bereikstop, Tijden.WerkRooster, Tijden.SpecialeRoosters);
                     if (t == null) continue;
                     if (t.Stop > dt)
                         dt = t.Stop;
@@ -529,7 +533,7 @@ namespace Rpm.Productie
             }
         }
 
-        public double TijdAanGewerkt(bool includestoringen = true)
+        public double TijdAanGewerkt(bool includestoringen = true, bool calculatecombis = true)
         {
             double tijd = 0;
             Dictionary<DateTime, DateTime> xstoringen = new Dictionary<DateTime, DateTime>();
@@ -540,13 +544,22 @@ namespace Rpm.Productie
             else
                 tijd = Personen.Sum(x =>
                     x.TijdAanGewerkt(xstoringen, this, x.WerkRooster ?? Tijden?.WerkRooster).TotalHours);
+            if (Werk != null && Werk.Combies.Count > 0 && calculatecombis)
+            {
+                for (int i = 0; i < Werk.Combies.Count; i++)
+                {
+                    var combi = Werk.Combies[i];
+                    var xstop = combi.IsRunning ? DateTime.Now : combi.Periode.Stop;
+                    var combitijd = TijdAanGewerkt(combi.Periode.Start, xstop, true, false);
+                    tijd = (tijd - combitijd) + ((combitijd / 100) * (100 - combi.Activiteit));
+                }
+            }
+
             if (tijd <= 0) return 0;
-            if ((int)Activiteit != 100)
-                return Math.Round(((tijd / 100) * Activiteit), 2);
-            return Math.Round(((tijd / 100) * Werk?.Activiteit??Activiteit), 2);
+            return Math.Round(((tijd / 100) * Activiteit), 2);
         }
 
-        public double TijdAanGewerkt(DateTime vanaf, DateTime tot, bool includestoringen)
+        public double TijdAanGewerkt(DateTime vanaf, DateTime tot, bool includestoringen, bool calculatecombis = true)
         {
             double tijd = 0;
             Dictionary<DateTime, DateTime> xstoringen = new Dictionary<DateTime, DateTime>();
@@ -558,10 +571,36 @@ namespace Rpm.Productie
                 tijd = Personen.Sum(x =>
                     x.TijdAanGewerkt(xstoringen, this, vanaf, tot, x.WerkRooster ?? Tijden?.WerkRooster)
                         .TotalHours);
+            if (Werk != null && Werk.Combies.Count > 0 && calculatecombis)
+            {
+                for (int i = 0; i < Werk.Combies.Count; i++)
+                {
+                    var combi = Werk.Combies[i];
+                    var xstart = combi.Periode.Start < vanaf ? vanaf : combi.Periode.Start;
+                    var xstop = combi.IsRunning ? DateTime.Now : combi.Periode.Stop;
+                    if (xstop > tot)
+                        xstop = tot;
+                    var combitijd = TijdAanGewerkt(xstart, xstop, true, false);
+                    tijd = (tijd - combitijd) + ((combitijd / 100) * (100 - combi.Activiteit));
+                }
+            }
+
             if (tijd <= 0) return 0;
-            if ((int)Activiteit != 100)
-                return Math.Round(((tijd / 100) * Activiteit), 2);
-            return Math.Round(((tijd / 100) * Werk?.Activiteit ?? Activiteit), 2);
+            return Math.Round(((tijd / 100) * Activiteit), 2);
+        }
+
+        public int LaatsAantalUpdateMinutes()
+        {
+            var xstoringen = GetStoringen();
+            var tijd = TimeSpan.FromHours(Tijden.TijdGewerkt(null, LaatstAantalUpdate, DateTime.Now, xstoringen)).Minutes;
+            return tijd;
+        }
+
+        public bool NeedsAantalUpdate(int interval)
+        {
+            if (Storingen != null && Storingen.Any(x => !x.IsVerholpen)) return false;
+            var xtijd = LaatsAantalUpdateMinutes();
+            return xtijd > interval;
         }
 
         public bool HeeftGewerkt(TijdEntry bereik)

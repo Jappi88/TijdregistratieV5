@@ -199,11 +199,11 @@ namespace Controls
                                     if (selected.Length > 0)
                                     {
                                         wp.AddPersonen(selected, bew);
-                                        await bew.StartProductie(true, true);
+                                        await bew.StartProductie(true, true,true);
                                     }
                                 }
                             }
-                            else await bew.StartProductie(true, true);
+                            else await bew.StartProductie(true, true,true);
                         }
                     }
                     else Manager.FormulierActie(new object[] { prod, bew }, MainAktie.OpenProductie);

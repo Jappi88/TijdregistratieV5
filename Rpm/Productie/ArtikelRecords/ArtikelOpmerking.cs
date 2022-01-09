@@ -25,6 +25,7 @@ namespace Rpm.Productie.ArtikelRecords
         public int ID { get; private set; }
         public string GeplaatstDoor { get; set; } = string.Empty;
         public DateTime GeplaatstOp { get; set; }
+        public string Title { get; set; } = string.Empty;
         public string Opmerking { get; set; } = string.Empty;
         public ArtikelFilter Filter { get; set; } = ArtikelFilter.GelijkAan;
         public ArtikelFilterSoort FilterSoort { get; set; } = ArtikelFilterSoort.AantalGemaakt; 
@@ -32,6 +33,7 @@ namespace Rpm.Productie.ArtikelRecords
         public byte[] ImageData { get; set; }
         public List<string> OpmerkingVoor { get; set; } = new List<string>();
         public Dictionary<string, DateTime> GelezenDoor { get; set; } = new Dictionary<string, DateTime>();
+        public bool IsAlgemeen { get; set; }
 
         public string Ontvangers => string.Join(", ", OpmerkingVoor);
 

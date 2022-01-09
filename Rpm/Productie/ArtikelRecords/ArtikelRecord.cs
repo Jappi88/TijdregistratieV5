@@ -37,7 +37,14 @@ namespace Rpm.Productie.ArtikelRecords
         public string GetOpmerking(ArtikelOpmerking opmerking)
         {
             if (string.IsNullOrEmpty(opmerking?.Opmerking)) return string.Empty;
-            return string.Format(opmerking.Opmerking, ArtikelNr, Omschrijving, AantalGemaakt, TijdGewerkt, PerUur,
+            return string.Format(opmerking.Opmerking, ArtikelNr, Omschrijving, opmerking.FilterWaarde, AantalGemaakt, TijdGewerkt, PerUur,
+                UpdatedProducties.Count);
+        }
+
+        public string GetTitle(ArtikelOpmerking opmerking)
+        {
+            if (string.IsNullOrEmpty(opmerking?.Opmerking)) return string.Empty;
+            return string.Format(opmerking.Title, ArtikelNr, Omschrijving,opmerking.FilterWaarde, AantalGemaakt, TijdGewerkt, PerUur,
                 UpdatedProducties.Count);
         }
 

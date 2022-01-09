@@ -8,11 +8,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Contexts;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
+using PdfSharp.Charting;
+using Rpm.Misc;
 
 namespace Rpm.Productie
 {
@@ -413,6 +416,23 @@ namespace Rpm.Productie
             return IndexedColors.White.Index;
         }
 
+        public static Color GetProductieStateColor(ProductieState state)
+        {
+            switch (state)
+            {
+                case ProductieState.Gestopt:
+                    return Color.LightYellow;
+                case ProductieState.Gestart:
+                    return Color.FromArgb(255, 235, 255);
+                case ProductieState.Gereed:
+                    return Color.FromArgb(200, 255, 200);
+                case ProductieState.Verwijderd:
+                    return Color.Goldenrod;
+            }
+
+            return Color.White;
+        }
+
         public static string GetStylesheet(string src)
         {
             if (src == "StyleSheet")
@@ -479,7 +499,7 @@ namespace Rpm.Productie
               $"Per Uur: <b>{ActueelPerUur} i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span></b><br>" +
               $"Gemiddeld Per Uur: <b>{GemiddeldActueelPerUur} i.p.v. {GemiddeldPerUur} <span style = 'color: {GetNegativeColorByPercentage(GemiddeldProcentAfwijkingPerUur).Name}'>({GemiddeldProcentAfwijkingPerUur}%)</span></b><br>" +
               $"Tijd Gewerkt: <b>{TijdGewerkt} uur</b><br>" +
-              $"Activiteit: <b>{Activiteit}%</b><br>" +
+              $"{CombiesHtml()}" +
               $"Aantal Aanbevolen Personen: <b>{AanbevolenPersonen}</b><br>" +
               $"Opmerking: <b>{Opmerking?.Replace("\n", "<br>") ?? "Geen Opmerking."}</b><br><br>" +
               $"</div>\r\n" +
@@ -493,6 +513,31 @@ namespace Rpm.Productie
               $"</html>";
             return xreturn;
         }
+
+        public string CombiesHtml()
+        {
+            try
+            {
+                if (this is Bewerking {Combies: {Count: > 0}} bew)
+                {
+                    var xvalue = $"<ul>" +
+                                 $"{string.Join("\n", bew.Combies.Select(x => $"<li>Combinatie van {x.Activiteit}% tussen '{x.Periode.Start:M-d-yy HH:mm}' en '{(x.IsRunning ? DateTime.Now : x.Periode.Stop):M-d-yy HH:mm}'</li>"))}";
+
+                    xvalue += $"<li>Huidige Activiteit: <u>{bew.Activiteit}%</u></li>";
+                    
+                    xvalue += "</ul>";
+                    return xvalue;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return $"";
+        }
+
 
         public string GetMaterialenHtml(string title, Color backcolor, Color backgroundgradient,
     Color textcolor, bool useimage)
@@ -714,7 +759,7 @@ Color textcolor, bool useimage)
                           $"Aantal Gemaakt: <u>{TotaalGemaakt}</u> / {Aantal} <span style = 'color: {GetPositiveColorByPercentage((decimal) Gereed).Name}'>({Gereed}%)</span><br>" +
                           $"<ul><li><u>Actueel</u> Aantal Gemaakt: <b><u>{ActueelAantalGemaakt}</u></b> / {Aantal}</li></ul>" +
                           $"Tijd Gewerkt: <u>{TijdGewerkt}</u> / {Math.Round(DoorloopTijd, 2)} uur <span style = 'color:{GetPositiveColorByPercentage((decimal) TijdGewerktPercentage).Name}'>({TijdGewerktPercentage}%)</span><br>" +
-                          $"{((int)Activiteit != 100? $"<ul><li>Draait Op <b><u>{Activiteit}%</u></b></li></ul>" : "")}" +
+                          $"{CombiesHtml()}" +
                           $"Per Uur: <u>{ActueelPerUur}</u> i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span><br><br>" +
                           $"<span style = 'color: {Color.DarkRed.Name}'><u>{Opmerking}</u></span><br>" +
                           $"<span style = 'color: {Color.DarkRed.Name}'><u>{ControlePunten}</u></span><br>" +

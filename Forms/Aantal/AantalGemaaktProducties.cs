@@ -99,7 +99,7 @@ namespace Forms.Aantal
                 StringComparison.CurrentCultureIgnoreCase)).OrderBy(x => x.WerkPlekken.FirstOrDefault()?.Naam ?? x.Naam).Reverse().ToList();
         }
 
-        private void UpdateProducties()
+        private void UpdateProducties(bool closeifnocounts)
         {
             try
             {
@@ -127,14 +127,22 @@ namespace Forms.Aantal
                     {
                         var ui = aantallen.FirstOrDefault(x => x.Productie.Equals(bw));
                         GroupBox group = null;
-                        if (ui == null)
+                        bool valid = bw.State == ProductieState.Gestart && string.Equals(bw.GestartDoor,
+                            Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase);
+                        if (ui == null && valid)
                         {
                             group = AddGroup(bw);
                         }
                         else
                         {
-                            group = ui.Parent as GroupBox;
-                            ui.LoadAantalGemaakt(bw);
+                            group = ui?.Parent as GroupBox;
+                            if (group != null && !valid)
+                            {
+                                xcontainer.Controls.Remove(group);
+                                groups.Remove(group);
+                            }
+                            else
+                                ui?.LoadAantalGemaakt(bw);
 
                         }
 
@@ -147,6 +155,11 @@ namespace Forms.Aantal
                     xcontainer.ResumeLayout(true);
                     UpdateHeight();
                 }
+                if (closeifnocounts && xcontainer.Controls.Count == 0)
+                {
+                    this.Close();
+                    this.Dispose();
+                }
             }
             catch (Exception e)
             {
@@ -158,6 +171,7 @@ namespace Forms.Aantal
 
         public void UpdateProductie(ProductieFormulier form)
         {
+            if (this.IsDisposed || this.Disposing) return;
             bool valid = form is {State: ProductieState.Gestart};
             bool init = false;
             if (Bewerkingen != null && Bewerkingen.Any(x => string.Equals(x.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase)))
@@ -179,7 +193,7 @@ namespace Forms.Aantal
                             {
                                 if (LastchangedMinutes > -1)
                                 {
-                                    if (bw.LaatstAantalUpdate.AddMinutes(LastchangedMinutes) < DateTime.Now)
+                                    if (bw.WerkPlekken.Any(x=> x.NeedsAantalUpdate(LastchangedMinutes)))
                                     {
                                         Bewerkingen.Add(bw);
                                         init = true;
@@ -228,7 +242,9 @@ namespace Forms.Aantal
             }
 
             if (init)
-                UpdateProducties();
+            {
+                UpdateProducties(true);
+            }
         }
 
         private void UpdateHeight()

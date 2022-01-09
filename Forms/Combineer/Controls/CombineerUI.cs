@@ -80,15 +80,16 @@ namespace Controls
             var msg = "";
             if (Productie != null)
             {
-                string xcount = Productie.Combies.Count == 0 ? "geen" : Productie.Combies.Count.ToString();
-                string x0 = Productie.Combies.Count == 1 ? "is" : "zijn";
-                string x1 = Productie.Combies.Count == 1 ? "productie" : "producties";
-                string x2 = Productie.Combies.Count == 0
+                var combs = Productie.Combies.Where(x => x.IsRunning).ToList();
+                string xcount = combs.Count == 0 ? "geen" : combs.Count.ToString();
+                string x0 = combs.Count == 1 ? "is" : "zijn";
+                string x1 = combs.Count == 1 ? "combinatie" : "combinaties";
+                string x2 = combs.Count == 0
                     ? ""
-                    : $"met totaal {Productie.Combies.Sum(x => x.Activiteit)}% aan activiteit.";
+                    : $"met totaal {combs.Sum(x => x.Activiteit)}% aan activiteit.";
 
-                string title = Productie.Combies.Count > 0
-                    ? $"Er {x0} {xcount} {x1} gecombineerd {x2}"
+                string title = combs.Count > 0
+                    ? $"Er {x0} {xcount} actieve {x1} {x2}"
                     : $"Combineer producties met {Productie.Naam} van {Productie.Omschrijving}";
 
                 msg = $"<span color='darkred'><b>{title}</b><br>" +
@@ -132,10 +133,10 @@ namespace Controls
                             item.Combies.Add(new CombineerEntry()
                             {
                                 ProductieNr = Productie.ProductieNr, BewerkingNaam = Productie.Naam,
-                                Activiteit = 100 - xnew.SelectedEntry.Activiteit
+                                Activiteit = 100 - xnew.SelectedEntry.Activiteit, Periode = new TijdEntry(DateTime.Now, default)
                             });
                             var msg = $"[{item.ArtikelNr} | {item.ProductieNr}] toegevoegd als combinatie.\n" +
-                                  $"Activiteit is gewijzigd naar {item.Activiteit}%";
+                                  $"Activiteit is gewijzigd!";
                             if (item.UpdateBewerking(null, msg).Result)
                                 added.Add(item);
                             Task.Delay(500).Wait();

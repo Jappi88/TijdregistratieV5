@@ -10,7 +10,6 @@ using Rpm.Various;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Drawing;
@@ -29,9 +28,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Navigation;
-using NPOI.XSSF.UserModel.Charts;
-using NPOI.XWPF.UserModel;
 
 namespace Rpm.Misc
 {
@@ -2558,7 +2554,7 @@ namespace Rpm.Misc
             return -1;
         }
 
-        public static Color GetProgressColor(int percentage)
+        public static Color GetProgressColor(double percentage)
         {
             switch (percentage)
             {
@@ -2583,6 +2579,11 @@ namespace Rpm.Misc
             }
 
             return Color.Purple;
+        }
+
+        public static double GetPercentageDifference(this double a, double b)
+        {
+            return (b - a) == 0 ? 0 : Math.Round((((b - a) / (a == 0 ? b : a)) * 100), 2);
         }
 
         #endregion Misc

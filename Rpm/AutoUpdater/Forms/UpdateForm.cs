@@ -2,8 +2,10 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using MetroFramework.Drawing.Html;
+using Org.BouncyCastle.Crypto;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Productie;
@@ -19,9 +21,13 @@ namespace AutoUpdaterDotNET
         {
             _args = args;
             InitializeComponent();
+        }
+
+        private async void LoadFields()
+        {
             buttonSkip.Visible = AutoUpdater.ShowSkipButton;
             buttonRemindLater.Visible = AutoUpdater.ShowRemindLaterButton;
-           // var resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdateForm));
+            // var resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdateForm));
 
             var curversion = new Version(_args.CurrentVersion);
             bool isnew = curversion > _args.InstalledVersion;
@@ -29,79 +35,28 @@ namespace AutoUpdaterDotNET
                 ? $"Een nieuwe versie van {AutoUpdater.AppTitle} is beschikbaar!"
                 : $"Er is geen nieuwe update beschikbaar voor {AutoUpdater.AppTitle}.";
             this.Text = labelUpdate.Text;
-           xdescription.Text = isnew? $"{AutoUpdater.AppTitle} {_args.CurrentVersion} is nu beschikbaar." +
-                $" Jij hebt versie {_args.InstalledVersion} geinstalleerd. Wil je nu downloaden?" : 
-                $"Huidige versie van {AutoUpdater.AppTitle} is {_args.CurrentVersion}.";
-           buttonUpdate.Text = isnew ? "Update" : "Download";
+            xdescription.Text = isnew ? $"{AutoUpdater.AppTitle} {_args.CurrentVersion} is nu beschikbaar." +
+                 $" Jij hebt versie {_args.InstalledVersion} geinstalleerd. Wil je nu downloaden?" :
+                 $"Huidige versie van {AutoUpdater.AppTitle} is {_args.CurrentVersion}.";
+            buttonUpdate.Text = isnew ? "Update" : "Download";
 
-           if (string.IsNullOrEmpty(_args.ChangelogURL))
-           {
-               var reduceHeight = xchangelog.Height;
-               xchangelog.Hide();
-               Height -= reduceHeight;
-           }
-           else
-           {
-               xchangelog.Text = ChangeLogTxtToHtml(_args.ChangelogURL, labelUpdate.Text, curversion.ToString());
-               //if (null != AutoUpdater.BasicAuthChangeLog)
-               //{
-               //    webBrowser.Navigate(_args.ChangelogURL, "", null,
-               //        $"Authorization: {AutoUpdater.BasicAuthChangeLog}");
-               //}
-               //else
-               //{
+            if (string.IsNullOrEmpty(_args.ChangelogURL))
+            {
+                var reduceHeight = xchangelog.Height;
+                xchangelog.Hide();
+                Height -= reduceHeight;
+            }
+            else
+            {
+                xchangelog.Text =
+                    ChangeLogTxtToHtml(_args.ChangelogURL, labelUpdate.Text, curversion.ToString());
 
-               //}
-           }
-
+            }
             if (AutoUpdater.Mandatory && AutoUpdater.UpdateMode == Mode.Forced)
             {
                 ControlBox = false;
             }
         }
-
-        //private void UseLatestIE()
-        //{
-        //    int ieValue = 0;
-        //    switch (webBrowser.Version.Major)
-        //    {
-        //        case 11:
-        //            ieValue = 11001;
-        //            break;
-        //        case 10:
-        //            ieValue = 10001;
-        //            break;
-        //        case 9:
-        //            ieValue = 9999;
-        //            break;
-        //        case 8:
-        //            ieValue = 8888;
-        //            break;
-        //        case 7:
-        //            ieValue = 7000;
-        //            break;
-        //    }
-
-        //    if (ieValue != 0)
-        //    {
-        //        try
-        //        {
-        //            using (RegistryKey registryKey =
-        //                Registry.CurrentUser.OpenSubKey(
-        //                    @"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION",
-        //                    true))
-        //            {
-        //                registryKey?.SetValue(Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName),
-        //                    ieValue,
-        //                    RegistryValueKind.DWord);
-        //            }
-        //        }
-        //        catch (Exception)
-        //        {
-        //            // ignored
-        //        }
-        //    }
-        //}
 
         private void UpdateFormLoad(object sender, EventArgs e)
         {
@@ -257,7 +212,7 @@ namespace AutoUpdaterDotNET
 
         private void xchangelog_ImageLoad(object sender, HtmlImageLoadEventArgs e)
         {
-            var ximage = GetImage(e.Src);
+            Image ximage = GetImage(e.Src);
             if (ximage != null)
                 e.Callback(ximage);
         }
@@ -276,6 +231,11 @@ namespace AutoUpdaterDotNET
                 default:
                     return Resources.verbeteringen_32x32.ResizeImage(16, 16);
             }
+        }
+
+        private void UpdateForm_Shown(object sender, EventArgs e)
+        {
+            LoadFields();
         }
     }
 }

@@ -1184,7 +1184,7 @@ namespace Rpm.Productie
                         if (prod.Bewerkingen != null)
                             foreach (var b in prod.Bewerkingen)
                             {
-                                if (b.State == ProductieState.Gestart) await b.StopProductie(true);
+                                if (b.State == ProductieState.Gestart) await b.StopProductie(true,true);
                                 b.State = ProductieState.Verwijderd;
                                 b.DatumVerwijderd = DateTime.Now;
                             }
@@ -1258,7 +1258,7 @@ namespace Rpm.Productie
                                 foreach (var b in current.Bewerkingen)
                                 {
                                     if (b.State == ProductieState.Gestart)
-                                        await b.StopProductie(true);
+                                        await b.StopProductie(true,true);
                                     b.State = ProductieState.Verwijderd;
                                     b.DatumVerwijderd = DateTime.Now;
                                     var personeel = b.Personen;
@@ -1570,7 +1570,7 @@ namespace Rpm.Productie
                 {
                     List<Bewerking> bws = new List<Bewerking>();
                     int mins = Opties.MinVoorControle;
-                    if (_lastchecked.AddMinutes(2) < DateTime.Now)
+                    if (_lastchecked.AddMinutes(5) < DateTime.Now)
                     {
                         
                         Task.Factory.StartNew(() =>
@@ -1585,7 +1585,7 @@ namespace Rpm.Productie
                                 mins = 15;
                             }
 
-                            bws = bws.Where(x => x.LaatstAantalUpdate.AddMinutes(mins) < DateTime.Now && string.Equals(
+                            bws = bws.Where(x => x.WerkPlekken.Any(w=> w.NeedsAantalUpdate(mins)) && string.Equals(
                                 x.GestartDoor, Manager.Opties.Username,
                                 StringComparison.CurrentCultureIgnoreCase)).ToList();
                         }).Wait(60000);

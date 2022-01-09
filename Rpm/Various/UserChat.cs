@@ -56,6 +56,9 @@ namespace ProductieManager.Rpm.Various
 
                     if (onlyunread && ent.IsGelezen)
                         continue;
+                    if (onlyunread && string.Equals(ent.Afzender.UserName, UserName,
+                            StringComparison.CurrentCultureIgnoreCase))
+                        continue;
                     xreturn.Add(ent);
                 }
             }

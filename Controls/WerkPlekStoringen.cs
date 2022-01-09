@@ -309,14 +309,14 @@ namespace Controls
 
                     plek = Plek.Value.FirstOrDefault(x =>
                         string.Equals(x.Werk.Path, bc.SelectedItem, StringComparison.OrdinalIgnoreCase));
-                    wps = plek.Werk.WerkPlekken;
+                    wps = plek?.Werk.WerkPlekken;
                 }
                 else if (bws.Length == 1)
                 {
                     wps = wps.Union(wps).ToList();
                 }
 
-                if (wps.Count > 0)
+                if (wps is {Count: > 0})
                 {
                     if (wps.Count == 1)
                     {
@@ -355,14 +355,13 @@ namespace Controls
             VerwijderSelected();
         }
 
-        public async void WijzigSelected()
+        public void WijzigSelected()
         {
             var acces1 = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
             if (!acces1) return;
             if (!Plek.IsDefault() && xskillview.SelectedObject != null)
             {
-                var st = xskillview.SelectedObject as Storing;
-                if (st != null)
+                if (xskillview.SelectedObject is Storing st)
                 {
                     var plek = Plek.Value.FirstOrDefault(x =>
                         x.Storingen != null && x.Storingen.Any(s => s.InstanceId == st.InstanceId));
@@ -373,10 +372,13 @@ namespace Controls
                         if (sf.ShowDialog() == DialogResult.OK)
                         {
                             xskillview.RefreshObject(sf.Onderbreking);
-                            plek.Storingen = xskillview.Objects.Cast<Storing>().Union(plek.Storingen).ToList();
-                            await plek.Werk.UpdateBewerking(null,
+                            var xindex = plek.Storingen.IndexOf(sf.Onderbreking);
+                            if (xindex > -1)
+                                plek.Storingen[xindex] = sf.Onderbreking;
+                            //plek.Storingen = xskillview.Objects.Cast<Storing>().Where(x=> string.Equals(x.Path, plek.Path, StringComparison.CurrentCultureIgnoreCase)).Union(plek.Storingen).ToList();
+                            plek.Werk.UpdateBewerking(null,
                                 $"Onderbreking aangepast door '{sf.Onderbreking.GemeldDoor} op {plek.Path}'");
-                            xskillview.SetObjects(plek.Storingen);
+                            //xskillview.SetObjects(plek.Storingen);
                             xskillview.SelectedObject = sf.Onderbreking;
                             xskillview.SelectedItem?.EnsureVisible();
                             if (!isverholpen && st.IsVerholpen)
@@ -468,8 +470,7 @@ namespace Controls
 
         private void xskillview_CellToolTipShowing(object sender, ToolTipShowingEventArgs e)
         {
-            var wp = e.Model as Storing;
-            if (wp != null)
+            if (e.Model is Storing wp)
             {
                 e.Title = $"[{wp.StoringType}]{wp.Path}";
                 e.Text = wp.Omschrijving;
@@ -481,6 +482,24 @@ namespace Controls
         private void xskillview_DoubleClick(object sender, EventArgs e)
         {
             WijzigSelected();
+        }
+
+        private void toonProductieToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var acces1 = Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieBasis };
+            if (!acces1) return;
+            if (!Plek.IsDefault() && xskillview.SelectedObject != null)
+            {
+                if (xskillview.SelectedObject is Storing st)
+                {
+                    var plek = Plek.Value.FirstOrDefault(x =>
+                        x.Storingen != null && x.Storingen.Any(s => s.InstanceId == st.InstanceId));
+                    if (plek?.Werk != null)
+                    {
+                        Manager.FormulierActie(new object[] {plek.Werk.Parent, plek.Werk}, MainAktie.OpenProductie);
+                    }
+                }
+            }
         }
     }
 }

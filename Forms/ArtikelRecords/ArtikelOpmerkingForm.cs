@@ -144,6 +144,7 @@ namespace Forms.ArtikelRecords
                 xvalue = Enum.GetName(typeof(ArtikelFilterSoort), opmerking.FilterSoort);
                 xFilterTypeCombo.SelectedItem = xvalue;
                 xFilterWaarde.SetValue(opmerking.FilterWaarde);
+                xtitletextbox.Text = opmerking.Title;
                 xOpmerking.Text = opmerking.Opmerking;
                 xImage.Image = opmerking.ImageData?.ImageFromBytes();
                 xGelezenDoorList.SetObjects(opmerking.GelezenDoor);
@@ -170,10 +171,13 @@ namespace Forms.ArtikelRecords
                     throw new Exception("Kies onvanger(s) a.u.b.");
                 if (xFilterWaarde.Value == 0)
                     throw new Exception("Vul in een waarde dat niet gelijk is aan '0' a.u.b.");
-                if (string.IsNullOrEmpty(xOpmerking.Text.Trim()))
-                    throw new Exception("Vul in een geldige opmerking a.u.b.");
+                if (xtitletextbox.Text.Trim().Length < 6)
+                    throw new Exception("Vul in een geldige Title a.u.b.");
+                if (xOpmerking.Text.Trim().Length < 6)
+                    throw new Exception("Vul in een geldige Opmerking a.u.b.");
                 SelectedOpmerking.FilterWaarde = xFilterWaarde.Value;
-                SelectedOpmerking.Opmerking = xOpmerking.Text;
+                SelectedOpmerking.Opmerking = xOpmerking.Text.Trim();
+                SelectedOpmerking.Title = xtitletextbox.Text.Trim();
                 SelectedOpmerking.ImageData = xImage.Image?.ToByteArray();
                 SelectedOpmerking.GelezenDoor = xGelezenDoorList.SelectedObjects.Cast<KeyValuePair<string, DateTime>>()
                     .ToDictionary(x => x.Key, x=> x.Value);
@@ -206,7 +210,8 @@ namespace Forms.ArtikelRecords
                 if (string.IsNullOrEmpty(xOpmerking.Text.Trim()))
                     throw new Exception("Vul in een geldige opmerking a.u.b.");
                 record.FilterWaarde = xFilterWaarde.Value;
-                record.Opmerking = xOpmerking.Text;
+                record.Opmerking = xOpmerking.Text.Trim();
+                record.Title = xtitletextbox.Text.Trim();
                 record.ImageData = xImage.Image?.ToByteArray();
                 record.OpmerkingVoor = ontvangers;
                 return record;
@@ -240,7 +245,7 @@ namespace Forms.ArtikelRecords
             {
                 var ofd = new OpenFileDialog();
                 ofd.Title = "Kies een Afbeelding";
-                ofd.Filter = "Alles|*.*|Png|*.png|JPG|*.jpg";
+                ofd.Filter = "Alles|*.*|Png|*.png|JPG|*.jpg|GIF|*.gif";
                 ofd.Multiselect = false;
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
@@ -289,10 +294,10 @@ namespace Forms.ArtikelRecords
                 };
                 testrec.UpdatedProducties.AddRange(new List<string>() { "test1", "test2"});
                 var bttns = new Dictionary<string, DialogResult>();
-                bttns.Add("Begrepen", DialogResult.Yes);
                 bttns.Add("Sluiten", DialogResult.No);
+                bttns.Add("Begrepen", DialogResult.Yes);
                 var xop = testrec.GetOpmerking(op);
-                Manager.OnRequestRespondDialog(xop, "Voorbeeld Opmerking", MessageBoxButtons.OK, MessageBoxIcon.Information, null, bttns,
+                Manager.OnRequestRespondDialog(xop, testrec.GetTitle(op), MessageBoxButtons.OK, MessageBoxIcon.Information, null, bttns,
                     xImage.Image??Resources.default_opmerking_16757_256x256, MetroColorStyle.Purple);
             }
         }

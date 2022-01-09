@@ -37,8 +37,6 @@ namespace Rpm.Productie
         public TijdEntry()
         {
             Omschrijving = string.Empty;
-            Start = DateTime.Now;
-            Stop = DateTime.Now;
             ID = Start.GetHashCode();
         }
 

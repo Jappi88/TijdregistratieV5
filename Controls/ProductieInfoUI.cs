@@ -117,6 +117,7 @@ namespace Controls
                     for (var i = 0; i < 3; i++)
                     {
                         panel.VerticalScroll.Value = curpos;
+                        panel.Update();
                     }
                 }
             }

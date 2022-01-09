@@ -125,6 +125,10 @@
   <data name="labelUpdate.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 12pt, style=Bold</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="labelUpdate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="labelUpdate.Location" type="System.Drawing.Point, System.Drawing">
     <value>149, 7</value>
   </data>
@@ -152,7 +156,6 @@
   <data name="&gt;&gt;labelUpdate.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="buttonUpdate.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Right</value>
   </data>
@@ -161,6 +164,9 @@
   </data>
   <data name="buttonUpdate.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 11.25pt</value>
+  </data>
+  <data name="buttonUpdate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="buttonUpdate.Location" type="System.Drawing.Point, System.Drawing">
     <value>663, 409</value>
@@ -204,6 +210,9 @@
   <data name="buttonRemindLater.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 11.25pt</value>
   </data>
+  <data name="buttonRemindLater.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="buttonRemindLater.Location" type="System.Drawing.Point, System.Drawing">
     <value>498, 409</value>
   </data>
@@ -237,6 +246,9 @@
   <data name="&gt;&gt;buttonRemindLater.ZOrder" xml:space="preserve">
     <value>6</value>
   </data>
+  <data name="pictureBoxIcon.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="pictureBoxIcon.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 7</value>
   </data>
@@ -269,6 +281,9 @@
   </data>
   <data name="buttonSkip.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 11.25pt</value>
+  </data>
+  <data name="buttonSkip.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="buttonSkip.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 409</value>
@@ -309,6 +324,9 @@
   <data name="xdescription.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 12pt</value>
   </data>
+  <data name="xdescription.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="xdescription.Location" type="System.Drawing.Point, System.Drawing">
     <value>149, 34</value>
   </data>
@@ -337,7 +355,7 @@
     <value>True</value>
   </data>
   <data name="xchangelog.AutoScrollMinSize" type="System.Drawing.Size, System.Drawing">
-    <value>810, 17</value>
+    <value>810, 20</value>
   </data>
   <data name="xchangelog.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 94</value>
@@ -355,7 +373,7 @@
     <value>xchangelog</value>
   </data>
   <data name="&gt;&gt;xchangelog.Type" xml:space="preserve">
-    <value>HtmlRenderer.HtmlPanel, HtmlRenderer, Version=1.4.14.0, Culture=neutral, PublicKeyToken=null</value>
+    <value>TheArtOfDev.HtmlRenderer.WinForms.HtmlPanel, HtmlRenderer.WinForms, Version=1.5.1.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;xchangelog.Parent" xml:space="preserve">
     <value>$this</value>

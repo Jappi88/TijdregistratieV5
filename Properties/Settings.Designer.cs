@@ -34,5 +34,17 @@ namespace ProductieManager.Properties {
                 this["Paraaf"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StoringMelder {
+            get {
+                return ((string)(this["StoringMelder"]));
+            }
+            set {
+                this["StoringMelder"] = value;
+            }
+        }
     }
 }

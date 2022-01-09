@@ -3,7 +3,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
 using Forms;
+using Forms.Combineer;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
@@ -25,27 +29,7 @@ namespace Controls
             {
                 ParentProductie = parent;
                 Productie = bewerking;
-                if (ParentProductie == null || Productie == null)
-                {
-                    xgroup.Text = "";
-                    xOnkoppel.Enabled = false;
-                    xupdate.Enabled = false;
-                }
-                else
-                {
-                    xgroup.Text =
-                        $"Productie '{ParentProductie.ProductieNr} {ParentProductie.Naam}' is gekoppeld aan '{Productie.ProductieNr} {Productie.Naam}'";
-                    var combi = ParentProductie.Combies.FirstOrDefault(x =>
-                        string.Equals(x.Path, Productie.Path,
-                            StringComparison.CurrentCultureIgnoreCase));
-                    if (combi != null && (decimal) combi.Activiteit != (decimal)(xactiviteit.Tag??0m))
-                    {
-                        xactiviteit.SetValue((decimal) combi.Activiteit);
-                        xactiviteit.Tag = xactiviteit.Value;
-                    }
-                    xupdate.Enabled = true;
-                    xOnkoppel.Enabled = true;
-                }
+                UpdateFields();
             }
             catch (Exception e)
             {
@@ -53,13 +37,50 @@ namespace Controls
             }
         }
 
-        private void xupdate_Click(object sender, EventArgs e)
+        private void UpdateFields()
         {
-            if (ParentProductie == null || Productie == null) return;
-            var total = (decimal) ParentProductie.Combies
-                .Where(x => !string.Equals(x.Path, Productie.Path, StringComparison.CurrentCultureIgnoreCase))
+            if (ParentProductie == null || Productie == null)
+            {
+                xgroup.Text = "";
+                xCombiPeriode.Enabled = false;
+                xOnkoppel.Enabled = false;
+                xupdate.Enabled = false;
+            }
+            else
+            {
+                xgroup.Text =
+                    $"Productie '{ParentProductie.ProductieNr} {ParentProductie.Naam}' is gekoppeld aan '{Productie.ProductieNr} {Productie.Naam}'";
+                var combi = ParentProductie.Combies.FirstOrDefault(x =>
+                    string.Equals(x.Path, Productie.Path,
+                        StringComparison.CurrentCultureIgnoreCase));
+                if (combi != null && (decimal)combi.Activiteit != (decimal)(xactiviteit.Tag ?? 0m))
+                {
+                    xactiviteit.SetValue((decimal)combi.Activiteit);
+                    xactiviteit.Tag = xactiviteit.Value;
+                }
+
+                var ximg = Resources.systemtime_778_32_32;
+                if (combi != null)
+                {
+                    if (combi.IsRunning)
+                        ximg = ximg.CombineImage(Resources.play_button_icon_icons_com_60615, ContentAlignment.BottomLeft, 1.5);
+                    else ximg = ximg.CombineImage(Resources.check_1582, ContentAlignment.BottomLeft, 1.5);
+                }
+
+                xCombiPeriode.Image = ximg;
+                xupdate.Enabled = true;
+                xOnkoppel.Enabled = true;
+            }
+        }
+
+
+        private bool DoCheck(ref decimal current)
+        {
+            if (ParentProductie == null || Productie == null) return false;
+            var total = (decimal)ParentProductie.Combies
+                .Where(x => !string.Equals(x.Path, Productie.Path, StringComparison.CurrentCultureIgnoreCase) && x.IsRunning)
                 .Sum(x => x.Activiteit);
-            var cur =  xactiviteit.Value;
+            var cur = xactiviteit.Value;
             if ((total + cur) >= 100)
             {
                 XMessageBox.Show(
@@ -67,11 +88,11 @@ namespace Controls
                     $"Het totale activiteit van de gecombineerde producties zijn {(total + cur)}%", "Te Hoog",
                     MessageBoxIcon.Exclamation);
                 xactiviteit.SetValue((decimal)xactiviteit.Tag);
-                return;
+                return false;
             }
             cur = 100 - cur;
-            total = (decimal) Productie.Combies
-                .Where(x => !string.Equals(x.Path, ParentProductie.Path, StringComparison.CurrentCultureIgnoreCase))
+            total = (decimal)Productie.Combies
+                .Where(x => !string.Equals(x.Path, ParentProductie.Path, StringComparison.CurrentCultureIgnoreCase) && x.IsRunning)
                 .Sum(x => x.Activiteit);
             if ((total + cur) >= 100)
             {
@@ -80,9 +101,17 @@ namespace Controls
                                  $"Om deze productie te kunnen combineren, dien je de resterende activiteit van { (100 - cur)}% op te kunnen vangen.\n\n" +
                                  $"Je komt {extra}% te kort om te kunnen combineren.", "Geen Ruimte", MessageBoxIcon.Exclamation);
                 xactiviteit.SetValue((decimal)xactiviteit.Tag);
-                return;
+                return false;
             }
 
+            return true;
+        }
+
+        private void xupdate_Click(object sender, EventArgs e)
+        {
+
+            var cur = xactiviteit.Value;
+            if (!DoCheck(ref cur)) return;
             
             var parentcombi = ParentProductie.Combies.FirstOrDefault(x =>
                 string.Equals(Path.Combine(x.ProductieNr, x.BewerkingNaam), Productie.Path,
@@ -90,25 +119,25 @@ namespace Controls
             var combi = Productie.Combies.FirstOrDefault(x =>
                 string.Equals(Path.Combine(x.ProductieNr, x.BewerkingNaam), ParentProductie.Path,
                     StringComparison.CurrentCultureIgnoreCase));
-            if (combi != null && cur != (decimal) combi.Activiteit)
+            if (parentcombi != null && cur != (decimal)parentcombi.Activiteit)
             {
 
-                string msg = $"[GECOMBINEERD][{Productie.ProductieNr}|{Productie.ArtikelNr}]\n" +
-                             $"Activiteit aangepast van {combi.Activiteit}% naar {cur}%";
-                combi.Activiteit = (double) cur;
+                string msg = $"[{ParentProductie.ProductieNr}|{ParentProductie.ArtikelNr}]\n" +
+                             $"Activiteit aangepast van {parentcombi.Activiteit}% naar {cur}%";
+                parentcombi.Activiteit = (double) cur;
                 // ParentProductie.Activiteit = (double)xparentactiviteit;
-                _ = Productie.UpdateBewerking(null, msg);
+                _ = ParentProductie.UpdateBewerking(null, msg);
             }
-            var xparentactiviteit = xactiviteit.Value;
-            if (parentcombi != null && xparentactiviteit != (decimal)parentcombi.Activiteit)
+            var xparentactiviteit = 100 - xactiviteit.Value;
+            if (combi != null && xparentactiviteit != (decimal)combi.Activiteit)
             {
                 
 
-                string msg = $"[{ParentProductie.ProductieNr}|{ParentProductie.ArtikelNr}]\n" +
-                             $"Activiteit aangepast van {parentcombi.Activiteit}% naar {xparentactiviteit}%";
-                parentcombi.Activiteit = (double)xparentactiviteit;
+                string msg = $"[GECOMBINEERD][{Productie.ProductieNr}|{Productie.ArtikelNr}]\n" +
+                             $"Activiteit aangepast van {combi.Activiteit}% naar {xparentactiviteit}%";
+                combi.Activiteit = (double)xparentactiviteit;
                 //Productie.Activiteit = (double)cur;
-                _ = ParentProductie.UpdateBewerking(null, msg);
+                _ = Productie.UpdateBewerking(null, msg);
             }
         }
 
@@ -121,6 +150,10 @@ namespace Controls
         private void xOnkoppel_Click(object sender, EventArgs e)
         {
             if (ParentProductie == null || Productie == null) return;
+            if (XMessageBox.Show(
+                    $"Weetje zeker dat je de combinatie van '{Productie.Omschrijving}'({Productie.ProductieNr}) wilt ontkoppelen?",
+                    "Combinatie Ontkoppelen", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
+                DialogResult.No) return;
             if (ParentProductie.Combies.RemoveAll(x =>
                     string.Equals(x.ProductieNr, Productie.ProductieNr, StringComparison.CurrentCultureIgnoreCase)) > 0)
             {
@@ -135,6 +168,37 @@ namespace Controls
                 string msg = $"[{ParentProductie.ProductieNr}|{ParentProductie.ArtikelNr}] {ParentProductie.Omschrijving}\n" +
                              $"Productie is onkoppeld!";
                 _ = Productie.UpdateBewerking(null, msg);
+            }
+        }
+
+        private void xCombiPeriode_Click(object sender, EventArgs e)
+        {
+            var parentcombi = ParentProductie?.Combies.FirstOrDefault(x =>
+                string.Equals(Path.Combine(x.ProductieNr, x.BewerkingNaam), Productie.Path,
+                    StringComparison.CurrentCultureIgnoreCase));
+            if (parentcombi != null)
+            {
+                var period = parentcombi.Periode.CreateCopy();
+                var xdt = new CombineerPeriodeForm(period.CreateCopy());
+                if (xdt.ShowDialog() == DialogResult.OK)
+                {
+                    var xindex = ParentProductie.Combies.IndexOf(parentcombi);
+                    if (xindex > -1)
+                    {
+                        ParentProductie.Combies[xindex].Periode = xdt.SelectedPeriode;
+                        var cur = xactiviteit.Value;
+                        if (xdt.SelectedPeriode.Stop.IsDefault() && !DoCheck(ref cur))
+                        {
+                            ParentProductie.Combies[xindex].Periode = period;
+                            return;
+                        }
+
+                        UpdateFields();
+                        ParentProductie.UpdateBewerking(null,
+                            $"[{parentcombi.ProductieNr}] {parentcombi.BewerkingNaam}\n" +
+                            $"Periode Aangepast!");
+                    }
+                }
             }
         }
     }

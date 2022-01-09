@@ -482,10 +482,14 @@ namespace ProductieManager.Forms
                             if (notifyuser)
                                 selected.Save();
                             xchatpanel.Text = msg;
+                            var xpos = scrolltoend ? xchatpanel.VerticalScroll.Maximum : curpos;
                             for (int i = 0; i < 5; i++)
                             {
-                                xchatpanel.VerticalScroll.Value =
-                                    scrolltoend ? xchatpanel.VerticalScroll.Maximum : curpos;
+                                xchatpanel.VerticalScroll.Value = xpos;
+                                xchatpanel.Update();
+                                //Application.DoEvents();
+                                if (xchatpanel.VerticalScroll.Value == xpos)
+                                    break;
                             }
                         }
                         else xchatpanel.Text = "";

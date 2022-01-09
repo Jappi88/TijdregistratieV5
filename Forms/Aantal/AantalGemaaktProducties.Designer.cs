@@ -41,14 +41,14 @@
             this.xcontainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xcontainer.Location = new System.Drawing.Point(20, 60);
             this.xcontainer.Name = "xcontainer";
-            this.xcontainer.Size = new System.Drawing.Size(742, 304);
+            this.xcontainer.Size = new System.Drawing.Size(742, 48);
             this.xcontainer.TabIndex = 0;
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.xsluiten);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(20, 364);
+            this.panel2.Location = new System.Drawing.Point(20, 108);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(5);
             this.panel2.Size = new System.Drawing.Size(742, 41);
@@ -74,7 +74,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(782, 425);
+            this.ClientSize = new System.Drawing.Size(782, 169);
             this.Controls.Add(this.xcontainer);
             this.Controls.Add(this.panel2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

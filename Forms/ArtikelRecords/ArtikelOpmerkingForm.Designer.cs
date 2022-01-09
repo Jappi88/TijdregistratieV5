@@ -38,6 +38,8 @@
             this.xGelezenDoorList = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.verwijderenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xGelezenDoorImageList = new System.Windows.Forms.ImageList(this.components);
             this.xControlContainer = new System.Windows.Forms.Panel();
             this.xontvangerstrip = new System.Windows.Forms.MenuStrip();
@@ -51,17 +53,16 @@
             this.xOpmerking = new MetroFramework.Controls.MetroTextBox();
             this.xFilterTypeCombo = new MetroFramework.Controls.MetroComboBox();
             this.xFilterCombo = new MetroFramework.Controls.MetroComboBox();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.verwijderenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.xtitletextbox = new MetroFramework.Controls.MetroTextBox();
             this.panel2.SuspendLayout();
             this.xGelezenDoorPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xGelezenDoorList)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.xControlContainer.SuspendLayout();
             this.xontvangerstrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xFilterWaarde)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xImage)).BeginInit();
-            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel2
@@ -70,11 +71,11 @@
             this.panel2.Controls.Add(this.xok);
             this.panel2.Controls.Add(this.xsluiten);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(20, 515);
+            this.panel2.Location = new System.Drawing.Point(20, 530);
             this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(5);
-            this.panel2.Size = new System.Drawing.Size(745, 42);
+            this.panel2.Size = new System.Drawing.Size(598, 42);
             this.panel2.TabIndex = 6;
             // 
             // xVoorbeeld
@@ -84,7 +85,7 @@
             this.xVoorbeeld.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xVoorbeeld.Image = global::ProductieManager.Properties.Resources.default_opmerking_16757_32x32;
             this.xVoorbeeld.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xVoorbeeld.Location = new System.Drawing.Point(319, 5);
+            this.xVoorbeeld.Location = new System.Drawing.Point(172, 5);
             this.xVoorbeeld.Margin = new System.Windows.Forms.Padding(4);
             this.xVoorbeeld.Name = "xVoorbeeld";
             this.xVoorbeeld.Size = new System.Drawing.Size(135, 32);
@@ -101,7 +102,7 @@
             this.xok.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xok.Image = global::ProductieManager.Properties.Resources.check_1582;
             this.xok.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xok.Location = new System.Drawing.Point(462, 5);
+            this.xok.Location = new System.Drawing.Point(315, 5);
             this.xok.Margin = new System.Windows.Forms.Padding(4);
             this.xok.Name = "xok";
             this.xok.Size = new System.Drawing.Size(135, 32);
@@ -119,7 +120,7 @@
             this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xsluiten.Location = new System.Drawing.Point(605, 5);
+            this.xsluiten.Location = new System.Drawing.Point(458, 5);
             this.xsluiten.Margin = new System.Windows.Forms.Padding(4);
             this.xsluiten.Name = "xsluiten";
             this.xsluiten.Size = new System.Drawing.Size(135, 32);
@@ -133,10 +134,10 @@
             // 
             this.xGelezenDoorPanel.Controls.Add(this.xGelezenDoorList);
             this.xGelezenDoorPanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.xGelezenDoorPanel.Location = new System.Drawing.Point(557, 60);
+            this.xGelezenDoorPanel.Location = new System.Drawing.Point(447, 60);
             this.xGelezenDoorPanel.Name = "xGelezenDoorPanel";
             this.xGelezenDoorPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.xGelezenDoorPanel.Size = new System.Drawing.Size(208, 455);
+            this.xGelezenDoorPanel.Size = new System.Drawing.Size(171, 470);
             this.xGelezenDoorPanel.TabIndex = 7;
             // 
             // xGelezenDoorList
@@ -159,7 +160,7 @@
             this.xGelezenDoorList.Name = "xGelezenDoorList";
             this.xGelezenDoorList.ShowGroups = false;
             this.xGelezenDoorList.ShowItemToolTips = true;
-            this.xGelezenDoorList.Size = new System.Drawing.Size(198, 445);
+            this.xGelezenDoorList.Size = new System.Drawing.Size(161, 460);
             this.xGelezenDoorList.SmallImageList = this.xGelezenDoorImageList;
             this.xGelezenDoorList.TabIndex = 9;
             this.xGelezenDoorList.UseAlternatingBackColors = true;
@@ -188,6 +189,23 @@
             this.olvColumn2.Text = "";
             this.olvColumn2.Width = 0;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.verwijderenToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(160, 26);
+            // 
+            // verwijderenToolStripMenuItem
+            // 
+            this.verwijderenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.verwijderenToolStripMenuItem.Name = "verwijderenToolStripMenuItem";
+            this.verwijderenToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.verwijderenToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.verwijderenToolStripMenuItem.Text = "Verwijderen";
+            this.verwijderenToolStripMenuItem.ToolTipText = "Verwijder gebruikers die de opmerking hebben gelezen";
+            this.verwijderenToolStripMenuItem.Click += new System.EventHandler(this.verwijderenToolStripMenuItem_Click);
+            // 
             // xGelezenDoorImageList
             // 
             this.xGelezenDoorImageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
@@ -197,6 +215,7 @@
             // xControlContainer
             // 
             this.xControlContainer.AutoScroll = true;
+            this.xControlContainer.Controls.Add(this.xtitletextbox);
             this.xControlContainer.Controls.Add(this.xontvangerstrip);
             this.xControlContainer.Controls.Add(this.label2);
             this.xControlContainer.Controls.Add(this.label1);
@@ -208,7 +227,7 @@
             this.xControlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xControlContainer.Location = new System.Drawing.Point(20, 60);
             this.xControlContainer.Name = "xControlContainer";
-            this.xControlContainer.Size = new System.Drawing.Size(537, 455);
+            this.xControlContainer.Size = new System.Drawing.Size(427, 470);
             this.xControlContainer.TabIndex = 8;
             // 
             // xontvangerstrip
@@ -226,7 +245,7 @@
             this.xontvangerstrip.Location = new System.Drawing.Point(3, 5);
             this.xontvangerstrip.Name = "xontvangerstrip";
             this.xontvangerstrip.ShowItemToolTips = true;
-            this.xontvangerstrip.Size = new System.Drawing.Size(528, 37);
+            this.xontvangerstrip.Size = new System.Drawing.Size(418, 37);
             this.xontvangerstrip.TabIndex = 9;
             this.xontvangerstrip.Text = "menuStrip1";
             // 
@@ -246,7 +265,7 @@
             // 
             this.xnieuweontvanger.Image = global::ProductieManager.Properties.Resources.users_12820;
             this.xnieuweontvanger.Name = "xnieuweontvanger";
-            this.xnieuweontvanger.Size = new System.Drawing.Size(180, 22);
+            this.xnieuweontvanger.Size = new System.Drawing.Size(125, 22);
             this.xnieuweontvanger.Tag = "Iedereen";
             this.xnieuweontvanger.Text = "Iedereen";
             this.xnieuweontvanger.ToolTipText = "Voeg een nieuwe ontvanger toe";
@@ -254,13 +273,15 @@
             // 
             // label2
             // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(3, 160);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(380, 40);
+            this.label2.Size = new System.Drawing.Size(415, 40);
             this.label2.TabIndex = 7;
-            this.label2.Text = "Gebruik voor ArtikelNr: \'{0}\', Omschrijving: \'{1}\', Aantal: \'{2}\', TijdGewerkt: \'" +
-    "{3}\', PerUur: \'{4}\', Aantal Producties: \'{5}\'";
+            this.label2.Text = "Info Velden: ArtikelNr: \'{0}\', Omschrijving: \'{1}\', Filterwaarde: \'{2}\',  Aantal:" +
+    " \'{3}\', TijdGewerkt: \'{4}\', PerUur: \'{5}\', Aantal Producties: \'{6}\'";
             // 
             // label1
             // 
@@ -269,7 +290,7 @@
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(3, 108);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(528, 21);
+            this.label1.Size = new System.Drawing.Size(418, 21);
             this.label1.TabIndex = 6;
             this.label1.Text = "Vul in een waarde om mee te vergelijken";
             // 
@@ -290,7 +311,7 @@
             0,
             -2147483648});
             this.xFilterWaarde.Name = "xFilterWaarde";
-            this.xFilterWaarde.Size = new System.Drawing.Size(528, 25);
+            this.xFilterWaarde.Size = new System.Drawing.Size(418, 25);
             this.xFilterWaarde.TabIndex = 3;
             // 
             // groupBox1
@@ -301,9 +322,9 @@
             this.groupBox1.Controls.Add(this.xImage);
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.ForeColor = System.Drawing.Color.DarkRed;
-            this.groupBox1.Location = new System.Drawing.Point(3, 282);
+            this.groupBox1.Location = new System.Drawing.Point(3, 321);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(528, 166);
+            this.groupBox1.Size = new System.Drawing.Size(418, 142);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "DoubleClick Voor Een Eigen Afbeelding";
@@ -314,7 +335,7 @@
             this.xImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xImage.Location = new System.Drawing.Point(3, 21);
             this.xImage.Name = "xImage";
-            this.xImage.Size = new System.Drawing.Size(522, 142);
+            this.xImage.Size = new System.Drawing.Size(412, 118);
             this.xImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.xImage.TabIndex = 0;
             this.xImage.TabStop = false;
@@ -330,9 +351,9 @@
             // 
             // 
             this.xOpmerking.CustomButton.Image = null;
-            this.xOpmerking.CustomButton.Location = new System.Drawing.Point(456, 1);
+            this.xOpmerking.CustomButton.Location = new System.Drawing.Point(338, 1);
             this.xOpmerking.CustomButton.Name = "";
-            this.xOpmerking.CustomButton.Size = new System.Drawing.Size(71, 71);
+            this.xOpmerking.CustomButton.Size = new System.Drawing.Size(79, 79);
             this.xOpmerking.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.xOpmerking.CustomButton.TabIndex = 1;
             this.xOpmerking.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
@@ -340,7 +361,7 @@
             this.xOpmerking.CustomButton.Visible = false;
             this.xOpmerking.FontSize = MetroFramework.MetroTextBoxSize.Medium;
             this.xOpmerking.Lines = new string[0];
-            this.xOpmerking.Location = new System.Drawing.Point(3, 203);
+            this.xOpmerking.Location = new System.Drawing.Point(3, 234);
             this.xOpmerking.MaxLength = 32767;
             this.xOpmerking.Multiline = true;
             this.xOpmerking.Name = "xOpmerking";
@@ -352,7 +373,7 @@
             this.xOpmerking.SelectionStart = 0;
             this.xOpmerking.ShortcutsEnabled = true;
             this.xOpmerking.ShowClearButton = true;
-            this.xOpmerking.Size = new System.Drawing.Size(528, 73);
+            this.xOpmerking.Size = new System.Drawing.Size(418, 81);
             this.xOpmerking.TabIndex = 4;
             this.xOpmerking.UseSelectable = true;
             this.xOpmerking.WaterMark = "Vul in de opmerking die je wilt laten zien";
@@ -368,7 +389,7 @@
             this.xFilterTypeCombo.Location = new System.Drawing.Point(3, 77);
             this.xFilterTypeCombo.Name = "xFilterTypeCombo";
             this.xFilterTypeCombo.PromptText = "Welke waarde wil je vergelijken?";
-            this.xFilterTypeCombo.Size = new System.Drawing.Size(528, 29);
+            this.xFilterTypeCombo.Size = new System.Drawing.Size(418, 29);
             this.xFilterTypeCombo.Style = MetroFramework.MetroColorStyle.Green;
             this.xFilterTypeCombo.TabIndex = 1;
             this.xFilterTypeCombo.UseSelectable = true;
@@ -383,36 +404,56 @@
             this.xFilterCombo.Location = new System.Drawing.Point(3, 45);
             this.xFilterCombo.Name = "xFilterCombo";
             this.xFilterCombo.PromptText = "Wanneer wil je de Opmerking laten zien?";
-            this.xFilterCombo.Size = new System.Drawing.Size(528, 29);
+            this.xFilterCombo.Size = new System.Drawing.Size(418, 29);
             this.xFilterCombo.Style = MetroFramework.MetroColorStyle.Green;
             this.xFilterCombo.TabIndex = 0;
             this.xFilterCombo.UseSelectable = true;
             // 
-            // contextMenuStrip1
+            // xtitletextbox
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.verwijderenToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 48);
+            this.xtitletextbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             // 
-            // verwijderenToolStripMenuItem
             // 
-            this.verwijderenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.verwijderenToolStripMenuItem.Name = "verwijderenToolStripMenuItem";
-            this.verwijderenToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.verwijderenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.verwijderenToolStripMenuItem.Text = "Verwijderen";
-            this.verwijderenToolStripMenuItem.ToolTipText = "Verwijder gebruikers die de opmerking hebben gelezen";
-            this.verwijderenToolStripMenuItem.Click += new System.EventHandler(this.verwijderenToolStripMenuItem_Click);
+            // 
+            this.xtitletextbox.CustomButton.Image = null;
+            this.xtitletextbox.CustomButton.Location = new System.Drawing.Point(397, 1);
+            this.xtitletextbox.CustomButton.Name = "";
+            this.xtitletextbox.CustomButton.Size = new System.Drawing.Size(23, 23);
+            this.xtitletextbox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.xtitletextbox.CustomButton.TabIndex = 1;
+            this.xtitletextbox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.xtitletextbox.CustomButton.UseSelectable = true;
+            this.xtitletextbox.CustomButton.Visible = false;
+            this.xtitletextbox.FontSize = MetroFramework.MetroTextBoxSize.Medium;
+            this.xtitletextbox.Lines = new string[0];
+            this.xtitletextbox.Location = new System.Drawing.Point(0, 203);
+            this.xtitletextbox.MaxLength = 32767;
+            this.xtitletextbox.Name = "xtitletextbox";
+            this.xtitletextbox.PasswordChar = '\0';
+            this.xtitletextbox.PromptText = "Vul in de opmerking title";
+            this.xtitletextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.xtitletextbox.SelectedText = "";
+            this.xtitletextbox.SelectionLength = 0;
+            this.xtitletextbox.SelectionStart = 0;
+            this.xtitletextbox.ShortcutsEnabled = true;
+            this.xtitletextbox.ShowClearButton = true;
+            this.xtitletextbox.Size = new System.Drawing.Size(421, 25);
+            this.xtitletextbox.TabIndex = 10;
+            this.xtitletextbox.UseSelectable = true;
+            this.xtitletextbox.WaterMark = "Vul in de opmerking title";
+            this.xtitletextbox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.xtitletextbox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // ArtikelOpmerkingForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(785, 577);
+            this.ClientSize = new System.Drawing.Size(638, 592);
             this.Controls.Add(this.xControlContainer);
             this.Controls.Add(this.xGelezenDoorPanel);
             this.Controls.Add(this.panel2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(638, 592);
             this.Name = "ArtikelOpmerkingForm";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -422,13 +463,13 @@
             this.panel2.ResumeLayout(false);
             this.xGelezenDoorPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xGelezenDoorList)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.xControlContainer.ResumeLayout(false);
             this.xontvangerstrip.ResumeLayout(false);
             this.xontvangerstrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xFilterWaarde)).EndInit();
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xImage)).EndInit();
-            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -458,5 +499,6 @@
         private System.Windows.Forms.ToolStripMenuItem xnieuweontvanger;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem verwijderenToolStripMenuItem;
+        private MetroFramework.Controls.MetroTextBox xtitletextbox;
     }
 }

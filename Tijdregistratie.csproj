@@ -296,6 +296,12 @@
     <Compile Include="Forms\ArtikelRecords\NewArtikelRecord.Designer.cs">
       <DependentUpon>NewArtikelRecord.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Combineer\CombineerPeriodeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Combineer\CombineerPeriodeForm.Designer.cs">
+      <DependentUpon>CombineerPeriodeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Combineer\Controls\CombineerEntryUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1235,6 +1241,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ArtikelRecords\NewArtikelRecord.resx">
       <DependentUpon>NewArtikelRecord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Combineer\CombineerPeriodeForm.resx">
+      <DependentUpon>CombineerPeriodeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Combineer\Controls\CombineerEntryUI.resx">
       <DependentUpon>CombineerEntryUI.cs</DependentUpon>

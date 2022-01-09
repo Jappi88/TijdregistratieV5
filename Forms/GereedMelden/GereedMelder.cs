@@ -76,7 +76,7 @@ namespace Forms.GereedMelden
             return ShowDialog();
         }
 
-        private async void MeldGereed()
+        private void MeldGereed()
         {
             if (DoCheck() && XMessageBox.Show(Melding,
                 "Gereed Melden",
@@ -103,13 +103,14 @@ namespace Forms.GereedMelden
                 if (_prod is ProductieFormulier form)
                 {
                     Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
-                    await form.MeldGereed((int)xaantal.Value, xparaaf.Text.Trim(), Notitie,true,true);
-                    DialogResult = DialogResult.OK;
+                    if (form.MeldGereed((int) xaantal.Value, xparaaf.Text.Trim(), Notitie, true, true).Result)
+                        DialogResult = DialogResult.OK;
+
                 }
                 else if (_prod is Bewerking bew)
                 {
                     var xcombies = bew.Combies.Where(x =>
-                        !string.Equals(x.Path, ParentCombi, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                        !string.Equals(x.Path, ParentCombi, StringComparison.CurrentCultureIgnoreCase) && x.IsRunning).ToList();
                     if (xcombies.Count > 0)
                     {
                         var x0 = xcombies.Count == 1 ? "is" : "zijn";
@@ -121,14 +122,26 @@ namespace Forms.GereedMelden
                         for(int i =0; i < xcombies.Count; i++)
                         {
                             var combi = xcombies[i];
-                            var xbw = Werk.FromPath(combi.Path)?.Bewerking;
+                            combi.IsRunning = false;
+                            var xbw = combi.GetProductie();
                             if (xbw == null)
                             {
                                 continue;
                             }
 
+                            var xcombi = xbw.Combies?.FirstOrDefault(x => string.Equals(x.Path, bew.Path, StringComparison.CurrentCultureIgnoreCase));
+                            if (xcombi != null)
+                            {
+                                xcombi.IsRunning = false;
+                                if (result != DialogResult.No)
+                                {
+                                    if (!xbw.UpdateBewerking(null,
+                                                $"[{bew.Path}] Combinatie is op inactief gezet in '{xbw.Path}'")
+                                            .Result) return;
+                                }
+                            }
                             if (result == DialogResult.No)
-                                _=bew.StopProductie(true);
+                                _= xbw.StopProductie(true,true);
                             else
                             {
                                 var gereedmelder = new GereedMelder();
@@ -139,10 +152,13 @@ namespace Forms.GereedMelden
                     }
 
                     Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
-                    await bew.MeldBewerkingGereed(xparaaf.Text.Trim(), (int) xaantal.Value, Notitie, true,true,true);
-                    ProductieManager.Properties.Settings.Default.Paraaf = xparaaf.Text.Trim();
-                    ProductieManager.Properties.Settings.Default.Save();
-                    DialogResult = DialogResult.OK;
+                    if (bew.MeldBewerkingGereed(xparaaf.Text.Trim(), (int) xaantal.Value, Notitie, true, true, true)
+                        .Result)
+                    {
+                        ProductieManager.Properties.Settings.Default.Paraaf = xparaaf.Text.Trim();
+                        ProductieManager.Properties.Settings.Default.Save();
+                        DialogResult = DialogResult.OK;
+                    }
                 }
                 else DialogResult = DialogResult.Cancel;
             }

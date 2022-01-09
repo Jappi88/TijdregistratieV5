@@ -65,6 +65,7 @@ namespace Forms
             if (!Visible)
                 base.Show(dock, DockState.Document);
             else Focus();
+            BringToFront();
         }
 
         public void UpdateFields(ProductieFormulier formulier, Bewerking selected)

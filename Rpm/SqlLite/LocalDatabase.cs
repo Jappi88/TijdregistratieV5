@@ -197,7 +197,7 @@ namespace Rpm.SqlLite
                 try
                 {
                     if (!File.Exists(path)) return null;
-                    return MultipleFileDb.FromPath<ProductieFormulier>(path);
+                    return MultipleFileDb.FromPath<ProductieFormulier>(path,false);
                 }
                 catch (Exception e)
                 {
@@ -1691,15 +1691,19 @@ namespace Rpm.SqlLite
             //}
         }
 
-        private async void ProductieFormulieren_InstanceChanged(object sender, FileSystemEventArgs e)
+        private void ProductieFormulieren_InstanceChanged(object sender, FileSystemEventArgs e)
         {
             //lock (_locker1)
             //{
                 try
                 {
                     if (ProductieFormulieren == null || !RaiseEventWhenChanged) return;
-                    var id = Path.GetFileNameWithoutExtension(e.FullPath);
-                    var prod = await MultipleFileDb.FromPath<ProductieFormulier>(e.FullPath);
+                    ProductieFormulier prod = null;
+                    Task.Factory.StartNew(() =>
+                    {
+                        prod = MultipleFileDb.FromPath<ProductieFormulier>(e.FullPath, false).Result;
+                    }).Wait(60000);
+
                     if (prod != null && prod.IsAllowed(null))
                         Manager.FormulierChanged(this, prod);
                 }

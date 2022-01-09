@@ -472,7 +472,7 @@ namespace Rpm.Productie
                 }
             });
             if (tijden.Count == 0)
-                return Math.Round(extra.Sum(x => x.ExtraUren(null, rooster)),2);
+                return extra.Sum(x => x.ExtraUren(null, rooster));
             
             tijden.ForEach(x =>
             {
@@ -493,7 +493,7 @@ namespace Rpm.Productie
                 tijd += xt.ExtraUren(new TijdEntry(start, stop, rooster), rooster);
             }
 
-            return Math.Round(tijd,2);
+            return tijd;
         }
 
         public int UpdateLijst(UrenLijst from)

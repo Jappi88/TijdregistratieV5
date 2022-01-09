@@ -636,7 +636,7 @@ namespace Controls
                     break;
                 case MainAktie.StopBewerking:
                     if (values.FirstOrDefault() is Bewerking bew3)
-                        _= bew3.StopProductie(true);
+                        _= bew3.StopProductie(true,true);
                     break;
             }
         }

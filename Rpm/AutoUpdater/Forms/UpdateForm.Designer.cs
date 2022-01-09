@@ -38,7 +38,7 @@ namespace AutoUpdaterDotNET
             this.pictureBoxIcon = new System.Windows.Forms.PictureBox();
             this.buttonSkip = new System.Windows.Forms.Button();
             this.xdescription = new System.Windows.Forms.Label();
-            this.xchangelog = new HtmlPanel();
+            this.xchangelog = new TheArtOfDev.HtmlRenderer.WinForms.HtmlPanel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIcon)).BeginInit();
             this.SuspendLayout();
             // 
@@ -114,6 +114,7 @@ namespace AutoUpdaterDotNET
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.UpdateForm_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.UpdateForm_FormClosed);
             this.Load += new System.EventHandler(this.UpdateFormLoad);
+            this.Shown += new System.EventHandler(this.UpdateForm_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIcon)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

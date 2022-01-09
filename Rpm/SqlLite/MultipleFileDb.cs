@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
+using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser.clipper;
 using NPOI.SS.Formula.Functions;
 using Polenter.Serialization;
@@ -34,6 +35,7 @@ namespace Rpm.SqlLite
         public event FileSystemEventHandler SecondaryFileChanged;
         public event FileSystemEventHandler SecondaryFileDeleted;
         public event ProgressChangedHandler ProgressChanged;
+        public bool MonitorCorrupted { get; set; } = true;
         public static List<string> CorruptedFilePaths { get; private set; } = new List<string>();
 
         public static event EventHandler CorruptedFilesChanged;
@@ -204,7 +206,7 @@ namespace Rpm.SqlLite
 
         public string Path { get; private set; }
 
-        public List<T> GetAllEntries<T>()
+        public List<T> GetAllEntries<T>(List<string> skip = default)
         {
 
             var xreturn = new List<T>();
@@ -212,11 +214,15 @@ namespace Rpm.SqlLite
             {
                 if (!CanRead) return xreturn;
                 string path = GetReadPath(true);
-                var files = Directory.GetFiles(path, "*.rpm");
-
+                var files = Directory.GetFiles(path, "*.rpm").ToList();
+                if (skip is {Count: > 0})
+                {
+                    files.RemoveAll(x => skip.Any(s => string.Equals(System.IO.Path.GetFileNameWithoutExtension(x), s,
+                        StringComparison.CurrentCultureIgnoreCase)));
+                }
                 foreach (var file in files)
                 {
-                    var xent = GetInstanceFromFile<T>(file);
+                    var xent = GetInstanceFromFile<T>(file, MonitorCorrupted);
                     if (xent != null)
                         xreturn.Add(xent);
                 }
@@ -298,7 +304,7 @@ namespace Rpm.SqlLite
                 foreach (var file in files)
                 {
 
-                    var xent = GetInstanceFromFile<T>(file, null, false, new TijdEntry(vanaf, tot, null));
+                    var xent = GetInstanceFromFile<T>(file,MonitorCorrupted, null, false, new TijdEntry(vanaf, tot, null));
                     if (xent != null)
                     {
                         if (validhandler != null && !validhandler.Invoke(xent, null)) continue;
@@ -330,7 +336,7 @@ namespace Rpm.SqlLite
                 foreach (var file in files)
                 {
 
-                    var xent = GetInstanceFromFile<T>(file);
+                    var xent = GetInstanceFromFile<T>(file, MonitorCorrupted);
                     if (xent != null)
                     {
                         if (validhandler != null && !validhandler.Invoke(xent, null)) continue;
@@ -352,7 +358,7 @@ namespace Rpm.SqlLite
             if (!CanRead) return default;
             string path = GetReadPath(true,$"{id}.rpm");
             path = $"{path}\\{id}.rpm";
-            return GetInstanceFromFile<T>(path);
+            return GetInstanceFromFile<T>(path, MonitorCorrupted);
         }
 
         public List<T> FindEntries<T>(string criterias, bool fullmatch)
@@ -370,7 +376,7 @@ namespace Rpm.SqlLite
                         var path = $"{xpath}\\{crit}.rpm";
                         if (File.Exists(path))
                         {
-                            var xent = GetInstanceFromFile<T>(path);
+                            var xent = GetInstanceFromFile<T>(path, MonitorCorrupted);
                             if (xent != null)
                                 xreturn.Add(xent);
                             criterias = criterias.Replace(crit, "");
@@ -388,7 +394,7 @@ namespace Rpm.SqlLite
                     if (!string.IsNullOrEmpty(id))
                         path = $"{xpath}\\{id}.rpm";
                     if (path == null) continue;
-                    var ent = GetInstanceFromFile<T>(path, criterias, fullmatch);
+                    var ent = GetInstanceFromFile<T>(path,MonitorCorrupted, criterias, fullmatch);
                     if (ent != null)
                         xreturn.Add(ent);
                 }
@@ -532,7 +538,7 @@ namespace Rpm.SqlLite
             //}
         }
 
-        public static T GetInstanceFromFile<T>(string filepath, string criteria = null, bool fullmatch = false,
+        public static T GetInstanceFromFile<T>(string filepath, bool monitorcorrupted = true,string criteria = null, bool fullmatch = false,
             TijdEntry bereik = null)
         {
 
@@ -557,13 +563,16 @@ namespace Rpm.SqlLite
                     {
                         xbreak = true;
                         xreturn = (T) ser.Deserialize(fs);
-                        lock (CorruptedFilePaths)
+                        if (monitorcorrupted)
                         {
-                            int index = 0;
-                            if ((index = CorruptedFilePaths.IndexOf(filepath.ToLower())) > -1)
+                            lock (CorruptedFilePaths)
                             {
-                                CorruptedFilePaths.RemoveAt(index);
-                                OnCorruptedFilesChanged();
+                                int index = 0;
+                                if ((index = CorruptedFilePaths.IndexOf(filepath.ToLower())) > -1)
+                                {
+                                    CorruptedFilePaths.RemoveAt(index);
+                                    OnCorruptedFilesChanged();
+                                }
                             }
                         }
                     }
@@ -574,7 +583,7 @@ namespace Rpm.SqlLite
                 catch (Exception e)
                 {
                     xreturn = default;
-                    if (xbreak)
+                    if (xbreak && monitorcorrupted)
                     {
                         lock (CorruptedFilePaths)
                         {
@@ -653,14 +662,14 @@ namespace Rpm.SqlLite
             }
         }
 
-        public static Task<T> FromPath<T>(string path)
+        public static Task<T> FromPath<T>(string path, bool monitorcorrupted)
         {
             return Task.Factory.StartNew(() =>
             {
 
                 try
                 {
-                    return GetInstanceFromFile<T>(path);
+                    return GetInstanceFromFile<T>(path, monitorcorrupted);
                 }
                 catch (Exception e)
                 {

@@ -75,7 +75,7 @@ namespace Forms.Combineer
             }
 
             var gcd = xhoofdvalue.Value;
-            var xtotal = (decimal)_parent.Combies.Sum(x => x.Activiteit);
+            var xtotal = (decimal)_parent.Combies.Where(x=> x.IsRunning).Sum(x => x.Activiteit);
             if ((xtotal + gcd) >= 100)
             {
                 var extra = (xtotal + gcd + 1) - 100;
@@ -85,7 +85,7 @@ namespace Forms.Combineer
             }
 
             gcd = 100 - gcd;
-            xtotal = (decimal)_productie.Combies.Sum(x => x.Activiteit);
+            xtotal = (decimal)_productie.Combies.Where(x=> x.IsRunning).Sum(x => x.Activiteit);
             if ((xtotal + gcd) >= 100)
             {
                 var extra = (xtotal + gcd + 1) - 100;
@@ -100,6 +100,7 @@ namespace Forms.Combineer
                 ProductieNr = _productie.ProductieNr,
                 Activiteit = (double)xhoofdvalue.Value
             };
+            SelectedEntry.Periode.Start = DateTime.Now;
             DialogResult = DialogResult.OK;
         }
 

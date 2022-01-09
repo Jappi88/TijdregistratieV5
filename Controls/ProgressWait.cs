@@ -102,5 +102,11 @@ namespace Controls
             get => xprogress.Text;
             set => xprogress.Text = value;
         }
+
+        public int ProgressValue
+        {
+            get => xprogress.Value;
+            set => xprogress.Value = value;
+        }
     }
 }

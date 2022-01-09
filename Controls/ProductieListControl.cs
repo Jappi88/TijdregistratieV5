@@ -18,9 +18,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using Various;
 using static Forms.RangeCalculatorForm;
 using Comparer = Rpm.Various.Comparer;
+using ContentAlignment = System.Drawing.ContentAlignment;
 using Timer = System.Timers.Timer;
 
 namespace Controls
@@ -1400,7 +1402,9 @@ namespace Controls
                 return;
             try
             {
-                BeginInvoke(new Action(() => UpdateFormulier(changedform)));
+                if (this.InvokeRequired)
+                    this.BeginInvoke(new MethodInvoker(() => UpdateFormulier(changedform)));
+                else UpdateFormulier(changedform);
             }
             catch (Exception e)
             {
@@ -1634,13 +1638,13 @@ namespace Controls
                                             }
 
                                             if (werk != null)
-                                                _ = werk.StartProductie(true, true);
+                                                _ = werk.StartProductie(true, true,true);
                                         }
                                     }
                                 }
                                 else
                                 {
-                                    _=werk.StartProductie(true, true);
+                                    _=werk.StartProductie(true, true,true);
                                 }
                             }
                         }
@@ -1666,7 +1670,7 @@ namespace Controls
                 foreach (var bw in bws)
                     if (bw.State == ProductieState.Gestart)
                     {
-                        var action = new Task<bool>(() => bw.StopProductie(true).Result);
+                        var action = new Task<bool>(() => bw.StopProductie(true,true).Result);
                         xdic.Add($"Stoppen van '{bw.Path}'...", action);
                     }
 

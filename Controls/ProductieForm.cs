@@ -338,7 +338,7 @@ namespace Controls
                     Text =
                         $"{Formulier.ArtikelNr} [{Formulier.ProductieNr}][{Enum.GetName(typeof(ProductieState), b.State)?.ToUpper()}]";
                     if (pers == 0 && b.State == ProductieState.Gestart)
-                        b.StopProductie(true).Wait();
+                        b.StopProductie(true,true).Wait();
                     CreateTextField(b);
                 }
             }
@@ -372,7 +372,7 @@ namespace Controls
                         //    await b.StartProductie(true, true);
                         //}
                         ProductieListControl.StartBewerkingen(new[] {b});
-                    else if (b.State == ProductieState.Gestart) await b.StopProductie(true);
+                    else if (b.State == ProductieState.Gestart) await b.StopProductie(true,true);
                 }
             }
             catch (Exception ex)

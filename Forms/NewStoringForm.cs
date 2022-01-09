@@ -56,7 +56,7 @@ namespace Forms
             Text = $@"Alle Onderbrekeningen van {plek.Path}";
             this.Invalidate();
             Plek = plek;
-            _onderbreking = storing == null ? new Storing() : storing.CreateCopy();
+            _onderbreking = storing == null ? new Storing() { GemeldDoor = Settings.Default.StoringMelder} : storing.CreateCopy();
            
             if (isverholpen && !_onderbreking.IsVerholpen)
                 _onderbreking.Gestopt = DateTime.Now;
@@ -250,6 +250,9 @@ namespace Forms
                         xsoortstoringen.Items.Insert(0, value);
                     }
                 }
+
+                Settings.Default.StoringMelder = xnaammelder.Text;
+                Settings.Default.Save();
                 Functions.SaveStoringen(xcur, "SoortStilstanden.txt");
             }
             catch (Exception e)

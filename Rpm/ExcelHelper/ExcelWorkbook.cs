@@ -40,7 +40,7 @@ namespace ProductieManager.Rpm.ExcelHelper
         public static string[] WerkPlekColumns =
         {
             "ArtikelNr", "ProductieNr", "Status", "Naam", "Omschrijving", "Totaal Aantal","Totaal Gemaakt", "Actueel Gemaakt", "PDC P/u","Actueel P/u","Gemiddeld P/u", "Gestart Op",
-            "Gestopt Op", "Tijd Gewerkt","Tijd Actief","Activiteit", "#Storingen","#Ombouw","Tijd Storingen","Tijd Ombouw","Personen"
+            "Gestopt Op", "Tijd Gewerkt","Tijd Actief","Combinaties", "#Storingen","#Ombouw","Tijd Storingen","Tijd Ombouw","Personen"
         };
 
         
@@ -55,7 +55,7 @@ namespace ProductieManager.Rpm.ExcelHelper
 
         public static string[] HiddenWerkPlekColumns =
         {
-            "Naam","ProductieNr","Activiteit"
+            "Naam","Combinaties"
         };
 
         public static object GetValue(WerkPlek plek, string value, TijdEntry bereik)
@@ -64,14 +64,16 @@ namespace ProductieManager.Rpm.ExcelHelper
             double xtijd = 0;
             switch (value.ToLower())
             {
-                case "activiteit":
-                    return (plek.Werk.Activiteit / 100).ToString("P");
+                case "combinaties":
+                    if (plek.Werk.Combies.Count == 0)
+                        return "N.V.T.";
+                    return string.Join(", ", plek.Werk.Combies.Select(x => $"{x.ProductieNr}({x.Activiteit})%"));
                 case "pdc p/u":
                     return plek.PerUurBase;
                 case "actueel p/u":
                     return plek.PerUur;
                 case "gemiddeld p/u":
-                    return plek.Werk?.GemiddeldActueelPerUur ?? plek.PerUur;
+                    return (int)(plek.Werk?.GemiddeldActueelPerUur ?? plek.PerUur);
                 case "totaal aantal":
                     return plek.Werk.Aantal;
                 case "actueel gemaakt":
@@ -550,6 +552,7 @@ namespace ProductieManager.Rpm.ExcelHelper
             try
             {
                 var row = sheet.GetRow(startrow) ?? sheet.CreateRow(startrow);
+                row.HeightInPoints = 30f;
                 var cellindex = startcell;
                 var cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11, IndexedColors.Black.Index, BorderStyle.Hair);
                 bool defstyle = true;
@@ -624,20 +627,46 @@ namespace ProductieManager.Rpm.ExcelHelper
             }
         }
 
+        private static ICellStyle GetPerUurStyle(XSSFWorkbook workbook, double baseperuur, int peruur, Color backcolor)
+        {
+            var xdiffer = Math.Round(baseperuur.GetPercentageDifference(peruur), 1);
+            var xdfstring = xdiffer < 0 ? xdiffer.ToString() : "+" + xdiffer.ToString();
+            //CreateCellConditionalFormatRules(sheet, startrow + 1, "pdc p/u", xcolmn);
+            var txtcolor = xdiffer < 0 ? IndexedColors.Maroon.Index : IndexedColors.DarkGreen.Index;
+            var xbackcolor = xdiffer < 0 ? Color.LightPink : Color.FromArgb(200, 255, 200);
+            if (!backcolor.IsEmpty)
+                xbackcolor = backcolor;
+            var txtformatcolor = xdiffer < 0 ? "red" : "color10";
+            IDataFormat dataFormatCustom = workbook.CreateDataFormat();
+            var xstyle = CreateStyle(workbook, false, HorizontalAlignment.Center, 11, txtcolor, BorderStyle.Double, xbackcolor);
+            xstyle.DataFormat = dataFormatCustom.GetFormat($"[{txtformatcolor}]####0\" ({xdfstring}%)\"");
+            return xstyle;
+        }
+
 
         public static bool FillColumnsData(XSSFWorkbook workbook, ISheet sheet, int startrow, int startcell, WerkPlek plek, TijdEntry bereik)
         {
             try
             {
                 var row = sheet.GetRow(startrow) ?? sheet.CreateRow(startrow);
+                row.HeightInPoints = 30f;
                 var cellindex = startcell;
-                var cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Center, 11, IndexedColors.Black.Index, BorderStyle.Double);
-                cellStyleBorder.FillBackgroundColor = IProductieBase.GetProductieStateExcelColorIndex(plek.Werk.State);
-                cellStyleBorder.FillPattern = FillPattern.SolidForeground;
-                cellStyleBorder.FillForegroundColor = cellStyleBorder.FillBackgroundColor;
+                var cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Center, 11, IndexedColors.Black.Index, BorderStyle.Double, IProductieBase.GetProductieStateColor(plek.Werk.State));
                 foreach (var xcolmn in WerkPlekColumns)
                 {
                     var value = GetValue(plek, xcolmn, bereik);
+                    switch (xcolmn.ToLower())
+                    {
+                        case "actueel p/u":
+                        case "gemiddeld p/u":
+                            if (value is int xint)
+                            {
+                                var xstyle = GetPerUurStyle(workbook, plek.PerUurBase, xint, IProductieBase.GetProductieStateColor(plek.Werk.State));
+                                CreateCell(row, cellindex++, value, xstyle);
+                                continue;
+                            }
+                            break;
+                    }
                     var cell = CreateCell(row, cellindex++, value, cellStyleBorder);
                     
                 }
@@ -999,6 +1028,47 @@ namespace ProductieManager.Rpm.ExcelHelper
                     rules.Add(rule);
                 }
                 string range = $"{GetColumnName(0)}{rowindex}:{GetColumnName(cellcount - 1)}{rowindex}";
+                CellRangeAddress[] cfRange = { CellRangeAddress.ValueOf(range) };
+                formatting.AddConditionalFormatting(cfRange, rules.ToArray());
+                return formatting;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public static ISheetConditionalFormatting CreateCellConditionalFormatRules(ISheet sheet, int rowindex,
+            string cellbasevalue, string cellvalue)
+        {
+            try
+            {
+                var formatting = sheet.SheetConditionalFormatting;
+                List<IConditionalFormattingRule> rules = new List<IConditionalFormattingRule>();
+                //basevalue
+                var cellbaseindex = GetWerkplekColumnIndex(cellbasevalue);
+                var xcolbasename = $"${GetColumnName(cellbaseindex)}${rowindex}";
+                //value
+                var cellindex = GetWerkplekColumnIndex(cellvalue);
+                var xcolname = $"${GetColumnName(cellindex)}${rowindex}";
+
+                var rule1 = formatting.CreateConditionalFormattingRule(
+                    $"{xcolname} > {xcolbasename}");
+
+                var rulepatern = rule1.CreatePatternFormatting();
+                rulepatern.FillBackgroundColor = IndexedColors.LightGreen.Index;
+                rulepatern.FillForegroundColor = IndexedColors.DarkGreen.Index;
+                rulepatern.FillPattern = FillPattern.SolidForeground;
+                rules.Add(rule1);
+                var rule2 = formatting.CreateConditionalFormattingRule(
+                    $"{xcolname} < {xcolbasename}");
+                rulepatern = rule2.CreatePatternFormatting();
+                rulepatern.FillBackgroundColor = IndexedColors.Yellow.Index;
+                rulepatern.FillForegroundColor = IndexedColors.DarkRed.Index;
+                rulepatern.FillPattern = FillPattern.SolidForeground;
+                rules.Add(rule2);
+                string range = $"{xcolname}:{xcolname}";
                 CellRangeAddress[] cfRange = { CellRangeAddress.ValueOf(range) };
                 formatting.AddConditionalFormatting(cfRange, rules.ToArray());
                 return formatting;
@@ -1910,7 +1980,19 @@ namespace ProductieManager.Rpm.ExcelHelper
                         if (sheet != null)
                         {
                             for (var i = 0; i < WerkPlekColumns.Length; i++)
-                                sheet.AutoSizeColumn(i);
+                            {
+                                switch (i)
+                                {
+                                    case 9:
+                                    case 10:
+                                        sheet.SetColumnWidth(i,200 * 24);
+                                        break;
+                                    default:
+                                        sheet.AutoSizeColumn(i);
+                                        break;
+                                }
+                                
+                            }
                             InserImage(workbook, sheet, (Image)Resources.logo_vanderValk, xdagspan - 2, 1);
                             for (var i = 0; i < HiddenWerkPlekColumns.Length; i++)
                                 sheet.SetColumnHidden(GetWerkplekColumnIndex(HiddenWerkPlekColumns[i]), true);
@@ -1976,7 +2058,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                                             arg.Message = $"Sheet aanmaken voor '{wp.Key}'...";
                                             if (handler != null && !handler.Invoke(arg)) return false;
                                             row = storingsheet.CreateRow(currow);
-                                            row.HeightInPoints = 15;
+                                            row.HeightInPoints = 30;
                                             var formatting =
                                                 CreateStoringRowConditionalFormatRules(storingsheet, currow + 1,
                                                     StoringColumns.Length);
@@ -2050,7 +2132,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                                         arg.Message = $"Sheet aanmaken voor '{wp.Key}'...";
                                         if (handler != null && !handler.Invoke(arg)) return false;
                                         row = storingsheet.CreateRow(currow);
-                                        row.HeightInPoints = 15;
+                                        row.HeightInPoints = 30;
                                         var formatting =
                                             CreateStoringRowConditionalFormatRules(storingsheet, currow + 1,
                                                 StoringColumns.Length);

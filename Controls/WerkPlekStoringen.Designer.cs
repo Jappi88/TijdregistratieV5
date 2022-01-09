@@ -46,6 +46,7 @@ namespace Controls
             this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toonProductieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wijzigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.verwijderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -248,12 +249,24 @@ namespace Controls
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toonProductieToolStripMenuItem,
             this.wijzigToolStripMenuItem,
             this.toolStripSeparator1,
             this.verwijderToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(168, 86);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(183, 124);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // toonProductieToolStripMenuItem
+            // 
+            this.toonProductieToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.window_16756_32x32;
+            this.toonProductieToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toonProductieToolStripMenuItem.Name = "toonProductieToolStripMenuItem";
+            this.toonProductieToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
+            this.toonProductieToolStripMenuItem.Size = new System.Drawing.Size(182, 38);
+            this.toonProductieToolStripMenuItem.Text = "&Productie";
+            this.toonProductieToolStripMenuItem.ToolTipText = "Toon productie venster";
+            this.toonProductieToolStripMenuItem.Click += new System.EventHandler(this.toonProductieToolStripMenuItem_Click);
             // 
             // wijzigToolStripMenuItem
             // 
@@ -261,7 +274,7 @@ namespace Controls
             this.wijzigToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.wijzigToolStripMenuItem.Name = "wijzigToolStripMenuItem";
             this.wijzigToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
-            this.wijzigToolStripMenuItem.Size = new System.Drawing.Size(167, 38);
+            this.wijzigToolStripMenuItem.Size = new System.Drawing.Size(182, 38);
             this.wijzigToolStripMenuItem.Text = "&Wijzig";
             this.wijzigToolStripMenuItem.ToolTipText = "Wijzig geselecteerde onderbreking";
             this.wijzigToolStripMenuItem.Click += new System.EventHandler(this.wijzigToolStripMenuItem_Click);
@@ -269,7 +282,7 @@ namespace Controls
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(164, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(179, 6);
             // 
             // verwijderToolStripMenuItem
             // 
@@ -277,7 +290,7 @@ namespace Controls
             this.verwijderToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.verwijderToolStripMenuItem.Name = "verwijderToolStripMenuItem";
             this.verwijderToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.verwijderToolStripMenuItem.Size = new System.Drawing.Size(167, 38);
+            this.verwijderToolStripMenuItem.Size = new System.Drawing.Size(182, 38);
             this.verwijderToolStripMenuItem.Text = "Verwijder";
             this.verwijderToolStripMenuItem.ToolTipText = "Verwijder geselecteerde onderbrekeningen";
             this.verwijderToolStripMenuItem.Click += new System.EventHandler(this.verwijderToolStripMenuItem_Click);
@@ -470,5 +483,6 @@ namespace Controls
         private System.Windows.Forms.ToolStripMenuItem wijzigToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem verwijderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toonProductieToolStripMenuItem;
     }
 }

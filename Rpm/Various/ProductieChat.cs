@@ -345,7 +345,10 @@ namespace ProductieManager.Rpm.Various
             try
             {
                 if (user == null) return xreturn;
-                var usermessages = user.GetMessagesFromAfzender(privatemessages ? Chat.UserName: null);
+
+                var usermessages = string.Equals(user.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase)
+                    ? new List<ProductieChatEntry>()
+                    : user.GetMessagesFromAfzender(privatemessages ? Chat.UserName : null);
                 var mymessages = Chat.GetMessagesFromAfzender(privatemessages ? user.UserName : null);
                 if(mymessages.Count > 0)
                     usermessages.AddRange(mymessages);

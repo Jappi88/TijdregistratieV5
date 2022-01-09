@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Productie.ArtikelRecords;
@@ -19,8 +20,16 @@ namespace Forms.ArtikelRecords
         {
             InitializeComponent();
             imageList1.Images.Add(Resources.time_management_tasks_64x64);
+            imageList1.Images.Add(Resources.time_management_tasks_64x64.CombineImage(Resources.Note_msgIcon_32x32,1.75));
             ((OLVColumn) xArtikelList.Columns[7]).AspectGetter = AantalproductiesGetter;
-            ((OLVColumn) xArtikelList.Columns[0]).ImageGetter = (x) => 0;
+            ((OLVColumn) xArtikelList.Columns[0]).ImageGetter = ImageGetter;
+        }
+
+        private object ImageGetter(object item)
+        {
+            if (item is ArtikelRecord record)
+                return record.Opmerkingen.Count > 0 ? 1 : 0;
+            return 0;
         }
 
         private object AantalproductiesGetter(object item)
@@ -58,7 +67,8 @@ namespace Forms.ArtikelRecords
             {
                 if (Manager.ArtikelRecords?.Database == null) return;
                 if (reloaddb)
-                    Records = Manager.ArtikelRecords.Database.GetAllEntries<ArtikelRecord>();
+                    Records = Manager.ArtikelRecords.Database.GetAllEntries<ArtikelRecord>(new List<string>()
+                        {"algemeen"});
                 xArtikelList.BeginUpdate();
                 xArtikelList.SetObjects(Records.Where(IsAllowed));
                 xArtikelList.EndUpdate();
@@ -77,6 +87,7 @@ namespace Forms.ArtikelRecords
         {
             if (Manager.ArtikelRecords?.Database == null) return;
             var xname = Path.GetFileNameWithoutExtension(e.FullPath);
+            if (xname.ToLower().StartsWith("algemeen")) return;
             if (this.InvokeRequired)
                 this.Invoke(new MethodInvoker(() => DeleteFromList(xname)));
             else DeleteFromList(xname);
@@ -151,6 +162,7 @@ namespace Forms.ArtikelRecords
             try
             {
                 var xname = Path.GetFileNameWithoutExtension(e.FullPath);
+                if (xname.ToLower().StartsWith("algemeen")) return;
                 var xrecord = Manager.ArtikelRecords.Database.GetEntry<ArtikelRecord>(xname);
                 if (xrecord != null)
                 {
@@ -260,6 +272,7 @@ namespace Forms.ArtikelRecords
                             foreach (var xr in xremove)
                             {
                                 xArtikelList.RemoveObject(xr);
+                                Records.Remove(xr);
                                 Manager.ArtikelRecords?.Database?.Delete(xr.ArtikelNr);
                             }
 

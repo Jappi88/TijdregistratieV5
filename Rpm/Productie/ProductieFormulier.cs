@@ -1725,50 +1725,54 @@ namespace Rpm.Productie
 
             return Bewerkingen.FirstOrDefault(x => x.IsAllowed());
         }
-        public async Task<bool> MeldGereed(int aantal, string paraaf, string notitie, bool sendmail, bool showmessage)
+        public Task<bool> MeldGereed(int aantal, string paraaf, string notitie, bool sendmail, bool showmessage)
         {
-            try
+            return Task.Factory.StartNew(() =>
             {
-                //if (State == ProductieState.Gereed) return true;
-                if (State == ProductieState.Verwijderd)
-                    throw new Exception(
-                        "Productie is verwijderd en kan daarom niet gereed gemeld worden.\nVoeg de productie opnieuw toe, en probeer het opnieuw.");
-
-                DatumGereed = DateTime.Now;
-                AantalGemaakt = aantal;
-                LaatstAantalUpdate = DateTime.Now;
-                Paraaf = paraaf;
-                GereedNote = new NotitieEntry(notitie,this) {Naam = paraaf, Type = NotitieType.ProductieGereed};
-
-                double tijd = 0;
-                foreach (var b in Bewerkingen)
+                try
                 {
-                    if (!b.IsAllowed(null)) continue;
-                    if (b.State != ProductieState.Verwijderd && b.State != ProductieState.Gereed)
-                        await b.MeldBewerkingGereed(paraaf, aantal, notitie, false,false,false);
-                    tijd += b.TijdGewerkt;
+                    //if (State == ProductieState.Gereed) return true;
+                    if (State == ProductieState.Verwijderd)
+                        throw new Exception(
+                            "Productie is verwijderd en kan daarom niet gereed gemeld worden.\nVoeg de productie opnieuw toe, en probeer het opnieuw.");
+
+                    DatumGereed = DateTime.Now;
+                    AantalGemaakt = aantal;
+                    LaatstAantalUpdate = DateTime.Now;
+                    Paraaf = paraaf;
+                    GereedNote = new NotitieEntry(notitie, this) {Naam = paraaf, Type = NotitieType.ProductieGereed};
+
+                    double tijd = 0;
+                    foreach (var b in Bewerkingen)
+                    {
+                        if (!b.IsAllowed(null)) continue;
+                        if (b.State != ProductieState.Verwijderd && b.State != ProductieState.Gereed)
+                            if (b.MeldBewerkingGereed(paraaf, aantal, notitie, false, false, false).Result)
+                                tijd += b.TijdGewerkt;
+                    }
+
+                    if (tijd > 0 && TotaalGemaakt > 0)
+                        ActueelPerUur = Math.Round(TotaalGemaakt / tijd);
+                    State = ProductieState.Gereed;
+                    TijdGewerkt = tijd;
+                    var xa = TotaalGemaakt == 1 ? "stuk" : "stuks";
+                    var change =
+                        $"[{ProductieNr.ToUpper()}|{ArtikelNr}] {paraaf} heeft is zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u).";
+
+                    _ = UpdateForm(false, false, null, change, true, showmessage);
+                    Manager.ArtikelRecords?.UpdateWaardes(this);
+                    _ = UpdateDoorloopTijd(null, this, null, false, true, false);
+                    if (sendmail)
+                        RemoteProductie.RespondByEmail(this, change);
+
+                    return true;
                 }
-
-                if (tijd > 0 && TotaalGemaakt > 0)
-                    ActueelPerUur = Math.Round(TotaalGemaakt / tijd);
-                State = ProductieState.Gereed;
-                TijdGewerkt = tijd;
-                var xa = TotaalGemaakt == 1 ? "stuk" : "stuks";
-                var change =
-                    $"[{ProductieNr.ToUpper()}|{ArtikelNr}] {paraaf} heeft is zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u).";
-               
-                await UpdateForm(false, false, null, change,true,showmessage);
-                Manager.ArtikelRecords?.UpdateWaardes(this);
-                _ = UpdateDoorloopTijd(null, this, null, false, true,false);
-                if (sendmail)
-                    RemoteProductie.RespondByEmail(this, change);
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return false;
+                }
+            });
         }
 
         public double TijdAanGewerkt()
