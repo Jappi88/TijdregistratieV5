@@ -22,7 +22,12 @@ namespace Forms
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(xgebruikersname.Text) ||
+            if (Manager.Database?.UserAccounts == null)
+            {
+                XMessageBox.Show("Database is niet geladen!", "Database Niet Geladen", MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+            }
+            else if (string.IsNullOrWhiteSpace(xgebruikersname.Text) ||
                 xgebruikersname.Text == "Vul in een gebruikersnaam..." || xgebruikersname.Text.Trim().Length == 0)
             {
                 XMessageBox.Show("Vul in een geldige gebruikersnaam", "Ongeldige GebruikersNaam", MessageBoxButtons.OK,

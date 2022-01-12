@@ -31,6 +31,7 @@ namespace Forms
 
         private async void ListUsers()
         {
+            if (Manager.Database?.UserAccounts == null) return;
             listView1.BeginUpdate();
             listView1.Items.Clear();
             var acc = await Manager.Database.GetAllAccounts();

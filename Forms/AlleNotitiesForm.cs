@@ -19,7 +19,7 @@ namespace ProductieManager.Forms
             ((OLVColumn) xnotitielist.Columns[0]).ImageGetter = (item) => 0;
             foreach (var col in xnotitielist.Columns.Cast<OLVColumn>())
                 col.GroupKeyGetter = GroupKey;
-            if (Manager.Opties._viewallenotitiesdata != null)
+            if (Manager.Opties?._viewallenotitiesdata != null)
                 xnotitielist.RestoreState(Manager.Opties.AlleNotitiesState);
             LoadNotities();
         }
@@ -55,7 +55,7 @@ namespace ProductieManager.Forms
         private bool _isbusy = false;
         private async void LoadNotities()
         {
-            if (_isbusy) return;
+            if (_isbusy || Manager.Database?.ProductieFormulieren == null) return;
             _isbusy = true;
             string filter = xsearchbox.Text.Trim().ToLower();
             bool xs = !string.IsNullOrEmpty(filter) && !filter.Contains("zoeken...");
@@ -226,7 +226,8 @@ namespace ProductieManager.Forms
         {
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged; 
             Manager.OnSettingsChanged -= Manager_OnSettingsChanged;
-            Manager.Opties.AlleNotitiesState = xnotitielist.SaveState();
+            if (Manager.Opties != null)
+                Manager.Opties.AlleNotitiesState = xnotitielist.SaveState();
         }
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)

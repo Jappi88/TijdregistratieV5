@@ -308,6 +308,7 @@ namespace Forms
 
     private void SetAfdelingFilter()
     {
+        if(Manager.Database?.PersoneelLijst == null) return;
         xafdelingfilter.Items.Clear();
         xafdelingfilter.Items.Add("Iedereen");
         var pers = Manager.Database.GetAllPersoneel().Result;
@@ -751,6 +752,7 @@ namespace Forms
     {
         try
         {
+            if (Manager.Database?.PersoneelLijst == null) return false;
             var filter = b ?? Currentfilter();
             if (filter != null)
             {

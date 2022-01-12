@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Polenter.Serialization;
+using Rpm.Misc;
+using Rpm.Productie;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using LiteDB;
-using Polenter.Serialization;
-using Rpm.Misc;
-using Rpm.Productie;
 
 namespace Rpm.SqlLite
 {
@@ -216,11 +215,6 @@ namespace Rpm.SqlLite
                 string filename = $"{Manager.DbPath}\\BewerkingLijst.db";
                 if (File.Exists(filename))
                 {
-                    var db = new LiteDatabase(new ConnectionString(filename)
-                        {Connection = ConnectionType.Shared});
-                    var instance = db.GetCollection<BewerkingEntry>("BewerkingEntries");
-                    Entries = instance.FindAll().ToList();
-                    db.Dispose();
                     try
                     {
                         File.Delete(filename);

@@ -2494,6 +2494,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap vdv_animatedlogo {
+            get {
+                object obj = ResourceManager.GetObject("vdv_animatedlogo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap VdV_Logos {
             get {
                 object obj = ResourceManager.GetObject("VdV_Logos", resourceCulture);

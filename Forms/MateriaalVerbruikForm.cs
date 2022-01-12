@@ -87,11 +87,12 @@ namespace Forms
                     var xafkeur = new Dictionary<string, double>();
                     foreach (var item in items)
                     {
+                        var verbruik = item.Verbruik;
                         if (xverbruik.ContainsKey(item.Eenheid))
-                            xverbruik[item.Eenheid] += item.Verbruik;
-                        else if (item.Verbruik > 0)
+                            xverbruik[item.Eenheid] += verbruik;
+                        else if (verbruik > 0)
                         {
-                            xverbruik.Add(item.Eenheid, item.Verbruik);
+                            xverbruik.Add(item.Eenheid, verbruik);
                         }
 
                         if (xafkeur.ContainsKey(item.Eenheid))
@@ -105,7 +106,7 @@ namespace Forms
                     if (xverbruik.Count > 0)
                     {
                         xstatuslabel.Text +=
-                            $"<div Color= Green><b>Totaal {string.Join(", ", xverbruik.Select(x => $"{x.Value} {x.Key}"))} verbruikt.</b></div>";
+                            $"<div Color= DarkGreen><b>Totaal {string.Join(", ", xverbruik.Select(x => $"{x.Value} {x.Key}"))} verbruikt.</b></div>";
                     }
 
                     if (xafkeur.Count > 0)

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Windows.Navigation;
-using LiteDB;
-using NPOI.OpenXmlFormats.Wordprocessing;
-using Polenter.Serialization;
+﻿using Polenter.Serialization;
 using Rpm.Misc;
 using Rpm.Productie.AantalHistory;
 using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Rpm.Productie
 {
@@ -43,9 +40,9 @@ namespace Rpm.Productie
         {
         }
 
-        [BsonId(true)] public int Id { get; set; }
+        public int Id { get; set; }
 
-        [BsonRef]
+        
         public Bewerking Werk { get; set; }
 
         public UrenLijst Tijden { get; set; } = new UrenLijst();
@@ -108,7 +105,7 @@ namespace Rpm.Productie
                     _aantalgemaakt = value;
                     Werk?.UpdateAantal();
                     AantalHistory?.UpdateAantal(value,
-                        (Werk?.State ?? ProductieState.Gestopt) == ProductieState.Gestart);
+                        (Werk?.State ?? ProductieState.Gestopt) == ProductieState.Gestart,Tijden);
                 }
             }
         }
@@ -368,6 +365,20 @@ namespace Rpm.Productie
             }
         }
 
+        public double GetPerUur(TijdEntry bereik)
+        {
+            if (AantalHistory.Aantallen.Count > 0)
+            {
+                var xtijd = 0d;
+                var gemaakt = GetAantalGemaakt(bereik.Start, bereik.Stop, ref xtijd, false);
+
+                var pu = xtijd > 0 && gemaakt > 0 ? gemaakt / xtijd : 0;
+                return Math.Round(pu, 0);
+            }
+
+            return 0;
+        }
+
         public bool UpdateStoring(Storing storing)
         {
             if (Storingen == null || storing == null) return false;
@@ -589,11 +600,18 @@ namespace Rpm.Productie
             return Math.Round(((tijd / 100) * Activiteit), 2);
         }
 
-        public int LaatsAantalUpdateMinutes()
+        public double LaatsAantalUpdateMinutes()
         {
             var xstoringen = GetStoringen();
-            var tijd = TimeSpan.FromHours(Tijden.TijdGewerkt(null, LaatstAantalUpdate, DateTime.Now, xstoringen)).Minutes;
+            var tijd = TimeSpan.FromHours(Tijden.TijdGewerkt(null, LaatstAantalUpdate, DateTime.Now, xstoringen)).TotalMinutes;
             return tijd;
+        }
+
+        public double ControleRatio()
+        {
+            var xvalue = AantalHistory.Aantallen.Where(x => x.Gemaakt > 0).ToList();
+            var xratio = TijdGewerkt.GetPercentageDifference(xvalue.Count * 1.5d);
+            return xratio;
         }
 
         public bool NeedsAantalUpdate(int interval)

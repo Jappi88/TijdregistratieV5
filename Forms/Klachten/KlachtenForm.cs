@@ -293,6 +293,7 @@ namespace Forms
 
         private void xaddklacht_Click(object sender, EventArgs e)
         {
+            if (Manager.Klachten == null) return;
             var xklacht = new NewKlachtForm(false);
             if (xklacht.ShowDialog() == DialogResult.OK)
             {
@@ -303,6 +304,7 @@ namespace Forms
 
         private void xeditklacht_Click(object sender, EventArgs e)
         {
+            if (Manager.Klachten == null) return;
             var xs = SelectedKlacht;
             if (xs?.Klacht == null) return;
             var xklacht = new NewKlachtForm(false, xs.Klacht);
@@ -315,6 +317,7 @@ namespace Forms
 
         private void xdeleteklacht_Click(object sender, EventArgs e)
         {
+            if (Manager.Klachten == null) return;
             var xs = SelectedKlacht;
             if (xs?.Klacht == null) return;
             if (XMessageBox.Show($"Weetje zeker dat je '{xs.Klacht.Onderwerp}' wilt verwijderen?", "Verwijderen",
@@ -324,6 +327,7 @@ namespace Forms
 
         private void xsearchbox_TextChanged(object sender, EventArgs e)
         {
+            if (Manager.Klachten == null) return;
             if (xsearchbox.Text.Trim().ToLower().StartsWith("zoeken")) return;
             LoadEntries();
         }

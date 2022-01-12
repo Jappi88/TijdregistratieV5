@@ -68,20 +68,26 @@ namespace ProductieManager
                 ControlStyles.AllPaintingInWmPaint |
                 ControlStyles.OptimizedDoubleBuffer,
                 true);
+            Shown += Mainform_Shown;
             //StickyWindow.RegisterExternalReferenceForm(this);
+             LoadManager();
+        }
+
+        private void LoadManager()
+        {
             AutoUpdater.AppCastURL = "https://www.dropbox.com/s/3bnp0so9o1mj8at/UpdateInfo.xml?dl=1";
             AutoUpdater.AppTitle = "Productie Manager";
             AutoUpdater.ShowSkipButton = false;
             AutoUpdater.ApplicationExitEvent += AutoUpdater_ApplicationExitEvent;
+            this.WindowState = FormWindowState.Minimized;
             Hide();
             Manager.OnSettingsChanged += ProductieView1_OnSettingsChanged;
             Manager.OnManagerLoaded += _manager_OnManagerLoaded;
             Manager.OnRemoteMessage += _manager_OnRemoteMessage;
-            
+
             //Shown += Mainform_Shown;
             //Task.Run(new Action(productieView1.LoadForm));
             _splash = new SplashScreen(3000) {WindowState = FormWindowState.Normal};
-            Shown += Mainform_Shown;
             _splash.Shown += _splash_Shown;
             _splash.Closed += _splash_Closed;
             _splash.Show();

@@ -1,5 +1,4 @@
-﻿using LiteDB;
-using Polenter.Serialization;
+﻿using Polenter.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +37,7 @@ namespace Rpm.Productie
             WerkRooster = rooster;
         }
 
-        [BsonId(true)] public ObjectId Id { get; set; }
+        public int Id { get; set; }
         public int InstanceId { get; set; }
 
         public Rooster WerkRooster { get; set; }

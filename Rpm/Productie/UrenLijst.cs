@@ -306,11 +306,22 @@ namespace Rpm.Productie
 
             if (!changed)
             {
-                lock (Uren)
+                xent = Uren.LastOrDefault(x => x.Stop.AddMinutes(2) > entry.Start);
+                if (xent != null)
                 {
-                    if (entry.InUse)
-                        Uren.ForEach(x => x.InUse = false);
-                    Uren.Add(entry.CreateCopy());
+                    xent.InUse = entry.InUse;
+                    xent.Stop = entry.Stop;
+                    xent.WerkRooster = entry.WerkRooster;
+                }
+                else
+                {
+                    lock (Uren)
+                    {
+                        if (entry.InUse)
+                            Uren.ForEach(x => x.InUse = false);
+
+                        Uren.Add(entry.CreateCopy());
+                    }
                 }
             }
 

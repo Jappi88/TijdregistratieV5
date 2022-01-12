@@ -258,12 +258,8 @@ namespace Forms.Aantal
                         height += group.Height;
                 }
             }
-
-            if (height < 750)
-            {
-                this.Height = height;
-                this.Invalidate();
-            }
+            this.Height = height < 750? height : 750;
+            this.Invalidate();
         }
 
         private void AantalGemaaktProducties_Shown(object sender, EventArgs e)

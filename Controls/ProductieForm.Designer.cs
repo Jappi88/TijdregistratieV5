@@ -175,7 +175,7 @@
             this.xprogressbar.InnerColor = System.Drawing.Color.White;
             this.xprogressbar.InnerMargin = 5;
             this.xprogressbar.InnerWidth = 5;
-            this.xprogressbar.Location = new System.Drawing.Point(12, 59);
+            this.xprogressbar.Location = new System.Drawing.Point(18, 56);
             this.xprogressbar.Margin = new System.Windows.Forms.Padding(4);
             this.xprogressbar.MarqueeAnimationSpeed = 2000;
             this.xprogressbar.Name = "xprogressbar";
@@ -185,7 +185,7 @@
             this.xprogressbar.ProgressColor = System.Drawing.Color.ForestGreen;
             this.xprogressbar.ProgressWidth = 15;
             this.xprogressbar.SecondaryFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xprogressbar.Size = new System.Drawing.Size(154, 144);
+            this.xprogressbar.Size = new System.Drawing.Size(142, 130);
             this.xprogressbar.StartAngle = 270;
             this.xprogressbar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.xprogressbar.SubscriptColor = System.Drawing.Color.FromArgb(((int)(((byte)(166)))), ((int)(((byte)(166)))), ((int)(((byte)(166)))));
@@ -232,7 +232,7 @@
             this.xstopb.ForeColor = System.Drawing.Color.Black;
             this.xstopb.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xstopb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xstopb.Location = new System.Drawing.Point(4, 498);
+            this.xstopb.Location = new System.Drawing.Point(4, 431);
             this.xstopb.Margin = new System.Windows.Forms.Padding(4);
             this.xstopb.Name = "xstopb";
             this.xstopb.Size = new System.Drawing.Size(167, 35);
@@ -253,7 +253,7 @@
             this.xindelingb.ForeColor = System.Drawing.Color.Black;
             this.xindelingb.Image = global::ProductieManager.Properties.Resources.iconfinder_technologymachineelectronic32_32;
             this.xindelingb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xindelingb.Location = new System.Drawing.Point(5, 213);
+            this.xindelingb.Location = new System.Drawing.Point(5, 194);
             this.xindelingb.Margin = new System.Windows.Forms.Padding(4);
             this.xindelingb.Name = "xindelingb";
             this.xindelingb.Size = new System.Drawing.Size(167, 35);
@@ -274,7 +274,7 @@
             this.xstartb.ForeColor = System.Drawing.Color.Black;
             this.xstartb.Image = global::ProductieManager.Properties.Resources.play_button_icon_icons_com_60615;
             this.xstartb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xstartb.Location = new System.Drawing.Point(4, 252);
+            this.xstartb.Location = new System.Drawing.Point(4, 233);
             this.xstartb.Margin = new System.Windows.Forms.Padding(4);
             this.xstartb.Name = "xstartb";
             this.xstartb.Size = new System.Drawing.Size(167, 35);
@@ -295,7 +295,7 @@
             this.xverpakking.ForeColor = System.Drawing.Color.Black;
             this.xverpakking.Image = global::ProductieManager.Properties.Resources.package_box_10801;
             this.xverpakking.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xverpakking.Location = new System.Drawing.Point(4, 330);
+            this.xverpakking.Location = new System.Drawing.Point(4, 311);
             this.xverpakking.Margin = new System.Windows.Forms.Padding(4);
             this.xverpakking.Name = "xverpakking";
             this.xverpakking.Size = new System.Drawing.Size(167, 35);
@@ -316,7 +316,7 @@
             this.xtoonwerktekening.ForeColor = System.Drawing.Color.Black;
             this.xtoonwerktekening.Image = global::ProductieManager.Properties.Resources.libreoffice_draw_icon_181050;
             this.xtoonwerktekening.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xtoonwerktekening.Location = new System.Drawing.Point(4, 369);
+            this.xtoonwerktekening.Location = new System.Drawing.Point(4, 350);
             this.xtoonwerktekening.Margin = new System.Windows.Forms.Padding(4);
             this.xtoonwerktekening.Name = "xtoonwerktekening";
             this.xtoonwerktekening.Size = new System.Drawing.Size(167, 35);
@@ -337,7 +337,7 @@
             this.xOnderbreek.ForeColor = System.Drawing.Color.Black;
             this.xOnderbreek.Image = global::ProductieManager.Properties.Resources.Stop_Hand__32x32;
             this.xOnderbreek.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xOnderbreek.Location = new System.Drawing.Point(4, 291);
+            this.xOnderbreek.Location = new System.Drawing.Point(4, 272);
             this.xOnderbreek.Margin = new System.Windows.Forms.Padding(4);
             this.xOnderbreek.Name = "xOnderbreek";
             this.xOnderbreek.Size = new System.Drawing.Size(167, 35);
@@ -357,7 +357,7 @@
             this.xpanelcontainer.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xpanelcontainer.Location = new System.Drawing.Point(40, 45);
             this.xpanelcontainer.Name = "xpanelcontainer";
-            this.xpanelcontainer.Size = new System.Drawing.Size(643, 412);
+            this.xpanelcontainer.Size = new System.Drawing.Size(643, 345);
             this.xpanelcontainer.TabIndex = 4;
             // 
             // productieInfoUI1
@@ -372,7 +372,7 @@
             this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
             this.productieInfoUI1.Name = "productieInfoUI1";
             this.productieInfoUI1.ShowAantal = true;
-            this.productieInfoUI1.Size = new System.Drawing.Size(643, 412);
+            this.productieInfoUI1.Size = new System.Drawing.Size(643, 345);
             this.productieInfoUI1.TabIndex = 0;
             // 
             // panel2
@@ -389,7 +389,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel2.Location = new System.Drawing.Point(683, 45);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(175, 537);
+            this.panel2.Size = new System.Drawing.Size(175, 470);
             this.panel2.TabIndex = 12;
             // 
             // panel3
@@ -403,7 +403,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(858, 582);
+            this.panel3.Size = new System.Drawing.Size(858, 515);
             this.panel3.TabIndex = 6;
             // 
             // xnotepanel
@@ -412,7 +412,7 @@
             this.xnotepanel.Controls.Add(this.xnoteTextbox);
             this.xnotepanel.Controls.Add(this.xnoteButton);
             this.xnotepanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.xnotepanel.Location = new System.Drawing.Point(40, 457);
+            this.xnotepanel.Location = new System.Drawing.Point(40, 390);
             this.xnotepanel.Name = "xnotepanel";
             this.xnotepanel.Size = new System.Drawing.Size(643, 125);
             this.xnotepanel.TabIndex = 13;
@@ -614,7 +614,7 @@
         menuButton10,
         menuButton11};
             this.mainMenu1.Name = "mainMenu1";
-            this.mainMenu1.Size = new System.Drawing.Size(40, 582);
+            this.mainMenu1.Size = new System.Drawing.Size(40, 515);
             this.mainMenu1.TabIndex = 4;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
             // 
@@ -626,7 +626,7 @@
             this.Controls.Add(this.panel3);
             this.DoubleBuffered = true;
             this.Name = "ProductieForm";
-            this.Size = new System.Drawing.Size(858, 582);
+            this.Size = new System.Drawing.Size(858, 515);
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.xpanelcontainer.ResumeLayout(false);

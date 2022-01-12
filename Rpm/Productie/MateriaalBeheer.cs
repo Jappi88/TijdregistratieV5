@@ -13,7 +13,9 @@ namespace ProductieManager.Rpm.Productie
         {
             return Task.Run(async () =>
             {
+               
                 var xreturn = new Dictionary<string, MateriaalEntryInfo> ();
+                if (Manager.Database?.ProductieFormulieren == null) return xreturn;
                 try
                 {
                     progressChanged?.Invoke(null,
@@ -44,8 +46,10 @@ namespace ProductieManager.Rpm.Productie
                                 xmatinfo = xreturn[mat.ArtikelNr];
                             else
                             {
-                                xmatinfo = new MateriaalEntryInfo();
-                                xmatinfo.ID = xreturn.Count;
+                                xmatinfo = new MateriaalEntryInfo
+                                {
+                                    ID = xreturn.Count
+                                };
                                 xreturn.Add(mat.ArtikelNr, xmatinfo);
                             }
                             xmatinfo.ArtikelNr = mat.ArtikelNr;

@@ -1,6 +1,5 @@
 ﻿using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
-using LiteDB;
 using Polenter.Serialization;
 using ProductieManager.Rpm.Various;
 using Rpm.Mailing;
@@ -46,8 +45,6 @@ namespace Rpm.Productie
             get => GetCurrentState();
             set => _state = value;
         }
-
-        [BsonId]
         public override string ProductieNr
         {
             get => base.ProductieNr;
@@ -1503,54 +1500,74 @@ namespace Rpm.Productie
             }
         }
 
-        public async Task<bool> UpdateForm(bool updatebewerking, bool updategemiddeld,
+        public bool UpdateValues(List<ProductieFormulier> forms, bool updatebewerkingen)
+        {
+            try
+            {
+                if(Manager.Database?.ProductieFormulieren == null) return false;
+                if (State != ProductieState.Verwijderd)
+                    VerwachtLeverDatum = VerwachtDatumGereed();
+                else if (State == ProductieState.Gereed)
+                    VerwachtLeverDatum = DatumGereed;
+                if (updatebewerkingen)
+                    if (Bewerkingen is { Length: > 0 })
+                        foreach (var b in Bewerkingen)
+                        {
+                            if (!b.IsAllowed(null)) continue;
+                            b.UpdateBewerking(forms, $"[{b.Path}] Bewerking Update", false);
+                        }
+
+                var peruur = ActueelProductenPerUur();
+                if (peruur > 0)
+                    ActueelPerUur = (int)peruur;
+                if (GemiddeldActueelPerUur == 0)
+                    GemiddeldActueelPerUur = ActueelPerUur;
+                GemiddeldDoorlooptijd = GemiddeldDoorlooptijd > 0 ? GemiddeldDoorlooptijd : DoorloopTijd;
+                var st = DateTime.Now;
+                AanbevolenPersonen = AantalPersonenNodig(ref st);
+                StartOp = st;
+                TijdGewerkt = TijdAanGewerkt();
+                Gereed = GereedPercentage();
+                TijdGewerktPercentage = GetTijdGewerktPercentage();
+                if (GemiddeldPerUur <= 0)
+                    GemiddeldPerUur = ActueelPerUur;
+                if (TotaalTijdGewerkt <= 0)
+                    TotaalTijdGewerkt = TijdGewerkt;
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        public Task<bool> UpdateForm(bool updatebewerking, bool updategemiddeld,
             List<ProductieFormulier> formulieren = null, string change = "Update Formulier",
             bool save = true, bool showmessage = true, bool raiseevent = true, bool onlylocal = false)
         {
-
-            try
+            return Task.Run(() =>
             {
-                var forms = formulieren;
-                if (updategemiddeld)
+                try
                 {
-                    await UpdateDoorloopTijd(formulieren, this, change, false, raiseevent,onlylocal);
-                    return true;
-                }
-                else
-                {
-                    if (State != ProductieState.Verwijderd)
-                        VerwachtLeverDatum = VerwachtDatumGereed();
-                    else if (State == ProductieState.Gereed)
-                        VerwachtLeverDatum = DatumGereed;
+                    if (Manager.Database?.ProductieFormulieren == null) return false;
+                    var forms = formulieren;
+                    if (updategemiddeld)
+                    {
+                        forms ??= Manager.Database.GetAllGereedProducties()?.Result;
+                        UpdateDoorloopTijd(forms, this, change, false, raiseevent, onlylocal);
+                        return true;
+                    }
 
-                    if (updatebewerking)
-                        if (Bewerkingen is {Length: > 0})
-                            foreach (var b in Bewerkingen)
-                            {
-                                if (!b.IsAllowed(null)) continue;
-                                await b.UpdateBewerking(forms, $"[{b.Path}] Bewerking Update", false);
-                            }
+                    UpdateValues(forms, updatebewerking);
 
-                    var peruur = ActueelProductenPerUur();
-                    if (peruur > 0)
-                        ActueelPerUur = (int)peruur;
-                    GemiddeldDoorlooptijd = GemiddeldDoorlooptijd > 0 ? GemiddeldDoorlooptijd : DoorloopTijd;
-                    var st = DateTime.Now;
-                    AanbevolenPersonen = AantalPersonenNodig(ref st);
-                    StartOp = st;
-                    TijdGewerkt = TijdAanGewerkt();
-                    Gereed = GereedPercentage();
-                    TijdGewerktPercentage = GetTijdGewerktPercentage();
-                    if (GemiddeldPerUur <= 0)
-                        GemiddeldPerUur = ActueelPerUur;
-                    if (TotaalTijdGewerkt <= 0)
-                        TotaalTijdGewerkt = TijdGewerkt;
 
                     if (save)
-                    { 
-                        await Manager.Database.UpSert(this, change, showmessage,onlylocal);
+                    {
+                        return Manager.Database?.UpSert(this, change, showmessage, onlylocal)?.Result??false;
                     }
-                    else if (raiseevent)
+
+                    if (raiseevent)
                     {
                         Manager.FormulierChanged(this, this);
                         FormulierChanged(this);
@@ -1558,16 +1575,24 @@ namespace Rpm.Productie
 
                     return true;
                 }
-            }
-            catch
-            {
-                return false;
-            }
+                catch
+                {
+                    return false;
+                }
+            });
+
         }
 
         #endregion "Data Management"
 
         #region "Public Methods"
+
+        public double ControleRatio()
+        {
+            if (Bewerkingen is {Length: > 0})
+                return Bewerkingen.Sum(x => x.ControleRatio()) / Bewerkingen.Length;
+            return 0;
+        }
 
         public bool ContainsProductiePdf()
         {

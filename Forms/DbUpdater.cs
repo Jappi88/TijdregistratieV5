@@ -130,7 +130,7 @@ namespace Forms
                 xnaam.Text = item.Naam;
                 xupdatewhenstartup.Checked = item.UpdateMetStartup;
                 xaautoupdate.Checked = item.AutoUpdate;
-                xinterval.Value = Manager.Opties.DbUpdateInterval;
+                xinterval.Value = Manager.Opties?.DbUpdateInterval??1000;
                 if (item.UpdateDatabases == null)
                     item.UpdateDatabases = new List<DbType>();
                 var xitems = item.UpdateDatabases;

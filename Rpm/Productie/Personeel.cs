@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Forms;
+using Polenter.Serialization;
+using Rpm.Misc;
+using Rpm.SqlLite;
+using Rpm.Various;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Forms;
-using LiteDB;
-using Polenter.Serialization;
-using Rpm.SqlLite;
-using Rpm.Misc;
-using Rpm.Various;
 
 namespace Rpm.Productie
 {
@@ -41,7 +40,7 @@ namespace Rpm.Productie
 
         [ExcludeFromSerialization] public int ImageIndex { get; set; }
 
-        [BsonId] public string PersoneelNaam { get; set; }
+        public string PersoneelNaam { get; set; }
         public string Afdeling { get; set; }
         public string Werkplek { get; set; }
         public double Efficientie { get; set; } = 100;

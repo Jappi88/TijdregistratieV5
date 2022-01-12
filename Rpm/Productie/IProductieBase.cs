@@ -33,15 +33,19 @@ namespace Rpm.Productie
 
         [Display(Name = "Aantal", Description = "Totaal aantal dat geproduceerd moet worden")]
         public virtual int Aantal { get; set; }
+
         [Display(Name = "Eenheid", Description = "Productie eenheid")]
         public virtual string Eenheid { get; set; }
-        [Display(Name = "GemiddeldAantalGemaakt", Description = "Gemiddelde Aantal gemaakt van alle bewerkingen van dit ArtikelNr")]
+
+        [Display(Name = "GemiddeldAantalGemaakt",
+            Description = "Gemiddelde Aantal gemaakt van alle bewerkingen van dit ArtikelNr")]
         public virtual int GemiddeldAantalGemaakt { get; set; }
 
         [Display(Name = "AantalGemaakt", Description = "Aantal gemaakt waarvan de deels gereedmeldingen verekend zijn")]
         public virtual int AantalGemaakt { get; set; }
 
-        [Display(Name = "AantalTeMaken", Description = "Aantal om te produceren waarvan de deels gereedmeldingen verekend zijn")]
+        [Display(Name = "AantalTeMaken",
+            Description = "Aantal om te produceren waarvan de deels gereedmeldingen verekend zijn")]
         public virtual int AantalTeMaken { get; }
 
         [Display(Name = "TotaalGemaakt", Description = "Aantal gemaakt inclusief alle deels gereedmeldingen")]
@@ -59,13 +63,17 @@ namespace Rpm.Productie
         [Display(Name = "ProductieNr", Description = "Een unieke productie nummer")]
         public virtual string ProductieNr { get; set; }
 
-        [Display(Name = "Naam", Description = "Een naam van de huidige productie. Een Formulier zal een ProductieNr weergeven, een bewerking de BewerkingNaam")]
+        [Display(Name = "Naam",
+            Description =
+                "Een naam van de huidige productie. Een Formulier zal een ProductieNr weergeven, een bewerking de BewerkingNaam")]
         public virtual string Naam { get; set; }
 
-        [Display(Name = "DoorloopTijd", Description = "Tijd wat op de Productieformulier staat dat nodig is voor de productie")]
+        [Display(Name = "DoorloopTijd",
+            Description = "Tijd wat op de Productieformulier staat dat nodig is voor de productie")]
         public virtual double DoorloopTijd { get; set; }
 
-        [Display(Name = "GemiddeldDoorlooptijd", Description = "DoorloopTijd berekent op basis van de Aantal om te maken en de Gemiddelde Aantal Per Uur")]
+        [Display(Name = "GemiddeldDoorlooptijd",
+            Description = "DoorloopTijd berekent op basis van de Aantal om te maken en de Gemiddelde Aantal Per Uur")]
         public virtual double GemiddeldDoorlooptijd { get; set; }
 
         [Display(Name = "Activiteit",
@@ -80,7 +88,8 @@ namespace Rpm.Productie
         //    set => _verpakking = value;
         //}
 
-        [Display(Name = "VerpakkingsInstructies", Description = "VerpakkingsInformatie over hoe de geproduceerde product verpakt moet worden")]
+        [Display(Name = "VerpakkingsInstructies",
+            Description = "VerpakkingsInformatie over hoe de geproduceerde product verpakt moet worden")]
         public virtual VerpakkingInstructie VerpakkingsInstructies { get; set; }
 
         [Display(Name = "VerpakkingsType", Description = "Verpakkingtype van het geproduceerde product")]
@@ -88,8 +97,10 @@ namespace Rpm.Productie
 
         [Display(Name = "PalletSoort", Description = "Palletsoort dat gebruikt dient te worden")]
         public virtual string PalletSoort => VerpakkingsInstructies?.PalletSoort ?? "n.v.t.";
+
         [Display(Name = "BulkLocatie", Description = "Bulk Locatie voor het geproduceerde product")]
         public virtual string BulkLocatie => VerpakkingsInstructies?.BulkLocatie ?? "n.v.t";
+
         [Display(Name = "StandaardLocatie", Description = "Standaard Locatie voor het geproduceerde product")]
         public virtual string StandaardLocatie => VerpakkingsInstructies?.StandaardLocatie ?? "n.v.t.";
 
@@ -108,7 +119,7 @@ namespace Rpm.Productie
 
         [Display(Name = "DatumGereed", Description = "Datum waarvan de productie eventueel gereed is")]
         public virtual DateTime DatumGereed { get; set; }
-        
+
         [Display(Name = "VerwachtLeverDatum", Description = "Datum waarvan wordt verwacht dat de productie klaar is")]
         public virtual DateTime VerwachtLeverDatum { get; set; }
 
@@ -128,13 +139,14 @@ namespace Rpm.Productie
         public virtual double TotaalTijdGewerkt { get; set; }
 
         [Display(Name = "Personen", Description = "Personen ingezet die werken aan deze productie")]
-        [ExcludeFromSerialization] 
+        [ExcludeFromSerialization]
         public virtual Personeel[] Personen { get; set; }
 
         [Display(Name = "TijdGewerkt", Description = "Tijd gewerkt aan deze productie")]
         public virtual double TijdGewerkt { get; set; }
 
-        [Display(Name = "TijdNodig", Description = "TijdNodig is berekent op basis van de aantal nog te maken en de actuele aantal per uur")]
+        [Display(Name = "TijdNodig",
+            Description = "TijdNodig is berekent op basis van de aantal nog te maken en de actuele aantal per uur")]
 
         public virtual double TijdNodig
         {
@@ -143,12 +155,14 @@ namespace Rpm.Productie
                 if (this is Bewerking bew)
                     return bew.GetTijdNodig();
                 if (this is ProductieFormulier form)
-                    return Math.Round(form.GetTijdNodig().TotalHours,2);
+                    return Math.Round(form.GetTijdNodig().TotalHours, 2);
                 return DoorloopTijd;
             }
         }
 
-        [Display(Name = "TijdOver", Description = "Tijd dat nog over is op basis van de aantal nog te maken en de actuele aantal per uur, gedeeld door de aantal actieve medewerkers.")]
+        [Display(Name = "TijdOver",
+            Description =
+                "Tijd dat nog over is op basis van de aantal nog te maken en de actuele aantal per uur, gedeeld door de aantal actieve medewerkers.")]
         public virtual double TijdOver
         {
             get
@@ -181,7 +195,7 @@ namespace Rpm.Productie
 
 
         [Display(Name = "Path", Description = "Aanduidig waar de productie zich begeeft in de formulier")]
-        [ExcludeFromSerialization] 
+        [ExcludeFromSerialization]
         public virtual string Path { get; set; }
 
         [Display(Name = "Paraaf", Description = "Persoon die heeft gereed gemeld")]
@@ -195,28 +209,45 @@ namespace Rpm.Productie
 
         [Display(Name = "Gereed", Description = "Aantal percentage gereed")]
         public virtual double Gereed { get; set; }
+
         [Display(Name = "TijdGewerktPercentage", Description = "Procent TijdGewerkt t.o.v. de Doorlooptijd")]
         public virtual double TijdGewerktPercentage { get; set; }
 
         [Display(Name = "DeelsGereed", Description = "Aantal deels gereed gemeld")]
         public virtual int DeelsGereed { get; }
 
-        [Display(Name = "GemiddeldPerUur", Description = "Gemiddelde van de basis p/u volgens alle producties met dit ArtikelNr")]
-        public virtual double GemiddeldPerUur { get; set; }
+        private double _GemiddeldPerUur { get; set; }
+        [Display(Name = "GemiddeldPerUur",
+            Description = "Gemiddelde van de basis p/u volgens alle producties met dit ArtikelNr")]
+        [ExcludeFromSerialization]
+        public virtual double GemiddeldPerUur
+        {
+            get => _GemiddeldPerUur <= 0 ? PerUur : _GemiddeldPerUur;
+            set => _GemiddeldPerUur = value;
+        }
 
-        [Display(Name = "GemiddeldActueelPerUur", Description = "Gemiddelde GEMETEN aantal per uur volgens alle producties met dit ArtikelNr")]
-        public virtual double GemiddeldActueelPerUur { get; set; }
-
+       
+        private double _GemiddeldActueelPerUur { get; set; }
+        [Display(Name = "GemiddeldActueelPerUur",
+            Description = "Gemiddelde GEMETEN aantal per uur volgens alle producties met dit ArtikelNr")]
+        [ExcludeFromSerialization]
+        public virtual double GemiddeldActueelPerUur
+        {
+            get => _GemiddeldActueelPerUur <= 0 ? ActueelPerUur : _GemiddeldActueelPerUur;
+            set => _GemiddeldActueelPerUur = value;
+        }
         [Display(Name = "ActueelPerUur", Description = "Gemeten aantal per uur voor deze productie")]
         public virtual double ActueelPerUur { get; set; }
 
         [Display(Name = "PerUur", Description = "Aantal per uur volgens de ProductieFormulier")]
         public virtual double PerUur => Aantal > 0 && DoorloopTijd > 0 ? (int) (Aantal / DoorloopTijd) : 0;
 
-        [Display(Name = "ProcentAfwijkingPerUur", Description = "Aantal procent afwijking tussen de gemeten en de basis aantal per uur")]
+        [Display(Name = "ProcentAfwijkingPerUur",
+            Description = "Aantal procent afwijking tussen de gemeten en de basis aantal per uur")]
         public virtual decimal ProcentAfwijkingPerUur => GetAfwijking();
 
-        [Display(Name = "GemiddeldProcentAfwijkingPerUur", Description = "Aantal procent afwijking tussen de gemiddelde gemeten en de basis aantal per uur")]
+        [Display(Name = "GemiddeldProcentAfwijkingPerUur",
+            Description = "Aantal procent afwijking tussen de gemiddelde gemeten en de basis aantal per uur")]
         public virtual decimal GemiddeldProcentAfwijkingPerUur => GetGemiddeldAfwijking();
 
         [Display(Name = "GestartDoor", Description = "Naam/Afdeling die de productie heeft gestart")]
@@ -224,11 +255,23 @@ namespace Rpm.Productie
 
         [Display(Name = "Geproduceerd", Description = "Aantal keer waarvan deze productie totaal is geproduceert")]
         public virtual int Geproduceerd { get; set; }
+
         [Display(Name = "ProductSoort", Description = "Soort product zoals: 'Solar','Horti' of 'Techno'")]
         public virtual string ProductSoort { get; set; }
 
         [Display(Name = "ControlePunten", Description = "Punten waar je vooral op moet controleren")]
         public virtual string ControlePunten { get; set; }
+
+        [Display(Name = "ControleRatio", Description = "Controle Ratio, Percentage van hoevaak de aantallen worden door gegeven op basis van 1.5 uur")]
+        public virtual double ControleRatio
+        {
+            get
+            {
+                if (this is Bewerking bew) return bew.ControleRatio();
+                if (this is ProductieFormulier prod) return prod.ControleRatio();
+                return 0;
+            }
+        }
 
         [Display(Name = "ActueelAantalGemaakt",
             Description =
@@ -320,20 +363,20 @@ namespace Rpm.Productie
             return new Storing[] { };
         }
 
-        public virtual async Task<bool> Update(string change, bool save, bool raiseevent)
+        public virtual Task<bool> Update(string change, bool save, bool raiseevent)
         {
             try
             {
                 if (this is Bewerking bew)
-                    return await bew.UpdateBewerking(null, change, save);
+                    return bew.UpdateBewerking(null, change, save);
                 if (this is ProductieFormulier form)
-                    return await form.UpdateForm(true, false, null, change, save,save,raiseevent);
-                return false;
+                    return form.UpdateForm(true, false, null, change, save,save,raiseevent);
+                return Task.FromResult<bool>(false);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return false;
+                return Task.FromResult<bool>(false);
             }
         }
       
@@ -650,15 +693,15 @@ namespace Rpm.Productie
                           $"<tr style = 'vertical-align: top;' >\r\n" +
                           ximage +
                           $"<td>" +
-                          $"<div>\r\n" +
-                          $"Leverdatum is Op: <b>{LeverDatum:f}</b><br>" +
-                          $"Uiterlijk starten Op: <b>{StartOp:f}</b><br>" +
-                          $"Aantal Gewijzigd Op: <b>{LaatstAantalUpdate:f}</b><br>" +
-                          $"Toegevoegd Op: <b>{DatumToegevoegd:f}</b><br>" +
-                          $"Gestart Op: <b>{TijdGestart:f}</b><br>" +
-                          $"Gestopt Op: <b>{(State == ProductieState.Gestart ? "Is nog bezig." : TijdGestopt.ToString("f"))}</b><br>" +
-                          $"Gereed Gemeld op: <b>{(State != ProductieState.Gereed ? "Nog niet gereed gemeld." : (DatumGereed.ToString("f")))}</b><br>" +
-                          $"</div>\r\n" +
+                          $"<ul>\r\n" +
+                          $"<li>Leverdatum is Op: <b>{LeverDatum:f}</b></li>" +
+                          $"<li>Uiterlijk starten Op: <b>{StartOp:f}</b></li>" +
+                          $"<li>Aantal Gewijzigd Op: <b>{LaatstAantalUpdate:f}</b></li>" +
+                          $"<li>Toegevoegd Op: <b>{DatumToegevoegd:f}</b></li>" +
+                          $"<li>Gestart Op: <b>{TijdGestart:f}</b></li>" +
+                          $"<li>Gestopt Op: <b>{(State == ProductieState.Gestart ? "Is nog bezig." : TijdGestopt.ToString("f"))}</b></li>" +
+                          $"<li>Gereed Gemeld op: <b>{(State != ProductieState.Gereed ? "Nog niet gereed gemeld." : (DatumGereed.ToString("f")))}</b></li>" +
+                          $"</ul>\r\n" +
                           $"<hr />" +
                           $"</td>" +
                           $"</tr>\r\n" +
@@ -732,6 +775,7 @@ Color textcolor, bool useimage)
             string prodsoort = string.IsNullOrEmpty(ProductSoort)
                 ? ""
                 : $"<span color='{xrgb}'><b>[{ProductSoort}]</b></span>";
+            var ratio = ControleRatio;
             if (!useimage) ximage = "";
             var xreturn = $"<html>\r\n" +
                           $"<head>\r\n" +
@@ -760,7 +804,8 @@ Color textcolor, bool useimage)
                           $"<ul><li><u>Actueel</u> Aantal Gemaakt: <b><u>{ActueelAantalGemaakt}</u></b> / {Aantal}</li></ul>" +
                           $"Tijd Gewerkt: <u>{TijdGewerkt}</u> / {Math.Round(DoorloopTijd, 2)} uur <span style = 'color:{GetPositiveColorByPercentage((decimal) TijdGewerktPercentage).Name}'>({TijdGewerktPercentage}%)</span><br>" +
                           $"{CombiesHtml()}" +
-                          $"Per Uur: <u>{ActueelPerUur}</u> i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span><br><br>" +
+                          $"Per Uur: <u>{ActueelPerUur}</u> i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span><br>" +
+                          $"Controle Ratio: <span style = 'color: {GetNegativeColorByPercentage((decimal)ratio).Name}'>{(ratio > 0 ? $"+{ratio}" : ratio)}%</span><br><br>" +
                           $"<span style = 'color: {Color.DarkRed.Name}'><u>{Opmerking}</u></span><br>" +
                           $"<span style = 'color: {Color.DarkRed.Name}'><u>{ControlePunten}</u></span><br>" +
                           $"</h2><hr />\r\n" +

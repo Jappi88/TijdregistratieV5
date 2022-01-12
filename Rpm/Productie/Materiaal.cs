@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using LiteDB;
 
 namespace Rpm.Productie
 {
@@ -18,9 +17,9 @@ namespace Rpm.Productie
             Parent = form;
         }
         public int ID { get; set; }
-        [BsonRef] public ProductieFormulier Parent { get; set; }
+        public ProductieFormulier Parent { get; set; }
 
-        [BsonId] public string Path => (Parent == null ? "" : Parent.ProductieNr) + $"\\Materialen\\{ArtikelNr}";
+        public string Path => (Parent == null ? "" : Parent.ProductieNr) + $"\\Materialen\\{ArtikelNr}";
 
         public string ArtikelNr { get; set; }
         public string Omschrijving { get; set; }

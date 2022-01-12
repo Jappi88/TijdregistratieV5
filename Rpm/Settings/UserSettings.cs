@@ -1,5 +1,4 @@
-﻿using LiteDB;
-using Polenter.Serialization;
+﻿using Polenter.Serialization;
 using ProductieManager.Rpm.Mailing;
 using ProductieManager.Rpm.Settings;
 using Rpm.Mailing;
@@ -150,6 +149,7 @@ namespace Rpm.Settings
         {
             return Task.Run(async () =>
             {
+                if (Manager.Database?.AllSettings == null) return false;
                 change ??= $"[{Username}] Intellingen Opgeslagen";
                 if (string.Equals(Manager.Opties?.Username, Username, StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -315,32 +315,28 @@ namespace Rpm.Settings
             get => _viewwerkplekdata?.DeCompress();
             set => _viewwerkplekdata = value?.Compress();
         }
-
-        [BsonIgnore]
+        
         [ExcludeFromSerialization]
         public byte[] ViewDataVaardighedenState
         {
             get => _viewvaarddata?.DeCompress();
             set => _viewvaarddata = value?.Compress();
         }
-
-        [BsonIgnore]
+        
         [ExcludeFromSerialization]
         public byte[] ViewDataStoringenState
         {
             get => _viewstoringdata?.DeCompress();
             set => _viewstoringdata = value?.Compress();
         }
-
-        [BsonIgnore]
+        
         [ExcludeFromSerialization]
         public byte[] ViewDataPersoneelState
         {
             get => _viewpersoneeldata?.DeCompress();
             set => _viewpersoneeldata = value?.Compress();
         }
-
-        [BsonIgnore]
+        
         [ExcludeFromSerialization]
         public byte[] AlleNotitiesState
         {

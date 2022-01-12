@@ -27,7 +27,14 @@ namespace Rpm.Productie.AantalHistory
 
         public DateTime GetGestopt()
         {
-            if (IsActive) return DateTime.Now;
+            if (IsActive)
+            {
+                var dt = DateTime.Now;
+                var xt = DateChanged;
+                if (xt.Date != dt.Date)
+                    return new DateTime(xt.Year, xt.Month, xt.Day, DateChanged.Hour, DateChanged.Minute, 0);
+                return dt;
+            }
             return EndDate;
         }
 

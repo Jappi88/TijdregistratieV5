@@ -288,6 +288,7 @@ namespace Forms.GereedMelden
         private void xaantal_ValueChanged(object sender, EventArgs e)
         {
             _prod.AantalGemaakt = (int)xaantal.Value;
+            _prod.Update(null, false, false).Wait(1000);
             SetString();
         }
 

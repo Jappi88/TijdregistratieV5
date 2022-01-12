@@ -263,6 +263,7 @@ namespace Forms
 
         private void xOpslaan_Click(object sender, EventArgs e)
         {
+            if (Manager.Opmerkingen == null) return;
             Manager.Opmerkingen.SetNotes(Opmerkingen);
             foreach (var r in _removed)
                 Manager.Opmerkingen?.Remove(r);
@@ -433,7 +434,8 @@ namespace Forms
 
         private void OpmerkingenForm_Shown(object sender, EventArgs e)
         {
-            Manager.Opmerkingen.OnOpmerkingenChanged += Opmerkingen_OnOpmerkingenChanged;
+            if (Manager.Opmerkingen != null)
+                Manager.Opmerkingen.OnOpmerkingenChanged += Opmerkingen_OnOpmerkingenChanged;
         }
 
         private void Opmerkingen_OnOpmerkingenChanged(object sender, EventArgs e)
@@ -444,13 +446,14 @@ namespace Forms
 
         private void OpmerkingenForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Manager.Opmerkingen.OnOpmerkingenChanged -= Opmerkingen_OnOpmerkingenChanged;
+            if (Manager.Opmerkingen != null)
+                Manager.Opmerkingen.OnOpmerkingenChanged -= Opmerkingen_OnOpmerkingenChanged;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             timer1.Stop();
-            if (xselectedopmerkingpanel.Tag is OpmerkingEntry entry)
+            if (Manager.Opmerkingen != null && xselectedopmerkingpanel.Tag is OpmerkingEntry entry)
             {
                 entry.SetIsGelezen(true);
                 Manager.Opmerkingen.SetNotes(Opmerkingen);

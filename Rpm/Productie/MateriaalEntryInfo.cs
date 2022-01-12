@@ -15,7 +15,7 @@ namespace ProductieManager.Rpm.Productie
         public string Omschrijving { get; set; }
         public string Eenheid { get; set; }
         public double Afkeur => Materialen.Sum(x => x.AantalAfkeur);
-        public double Verbruik => Math.Round(Materialen.Sum(x => x.AantalPerStuk * (x.Parent?.TotaalGemaakt ?? 0)),2);
+        public double Verbruik => Math.Round(Materialen.Sum(x => x.Aantal),2);
         public double PerEenHeid => Materialen.Count == 0 ? 0 : Math.Round(Materialen.Sum(x => x.AantalPerStuk) / Materialen.Count,2);
         public int AantalProducties => Materialen.Count;
     }

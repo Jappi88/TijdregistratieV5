@@ -24,7 +24,7 @@ namespace Rpm.SqlLite
 
         public string User { get; set; }
 
-        [BsonId] public string PcId { get; set; }
+         public string PcId { get; set; }
 
         public string Change { get; set; }
         public DateTime TimeChanged { get; set; }

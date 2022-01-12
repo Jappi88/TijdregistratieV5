@@ -42,8 +42,8 @@ namespace Forms
 
             InitAutoInfilTextbox();
             xnaampersoneel.TextChanged += xnaampersoneel_TextChanged;
-            xtijdgestart.ValueChanged += xtijdgestart_ValueChanged;
-            xtijdgestopt.ValueChanged += xtijdgestopt_ValueChanged;
+            //xtijdgestart.ValueChanged += xtijdgestart_ValueChanged;
+            //xtijdgestopt.ValueChanged += xtijdgestopt_ValueChanged;
             _textTimer.Tick += _textTimer_Tick;
         }
 
@@ -285,11 +285,11 @@ namespace Forms
 
         private void ClearFields()
         {
-            xnaampersoneel.TextChanged -= xnaampersoneel_TextChanged;
-            xnaampersoneel.Text = "";
+            //xnaampersoneel.TextChanged -= xnaampersoneel_TextChanged;
+            //xnaampersoneel.Text = "";
             xnaampersoneel.Tag = null;
             xactiefimage.Image = null;
-            xnaampersoneel.TextChanged += xnaampersoneel_TextChanged;
+            //xnaampersoneel.TextChanged += xnaampersoneel_TextChanged;
         }
 
         private void SetFields(Personeel shift, bool init, bool initname)
@@ -309,37 +309,37 @@ namespace Forms
             else xwerkplekken.SelectedItem?.EnsureVisible();
 
             xnaampersoneel.TextChanged -= xnaampersoneel_TextChanged;
-            xtijdgestart.ValueChanged -= xtijdgestart_ValueChanged;
-            xtijdgestopt.ValueChanged -= xtijdgestopt_ValueChanged;
+            //xtijdgestart.ValueChanged -= xtijdgestart_ValueChanged;
+            //xtijdgestopt.ValueChanged -= xtijdgestopt_ValueChanged;
 
             var klus = GetCurrentKlus(s, false);
-            if (initname)
-                xnaampersoneel.Text = s.PersoneelNaam.Trim();
+            //if (initname)
+            //    xnaampersoneel.Text = s.PersoneelNaam.Trim();
             xnaampersoneel.Tag = s;
             if (s.Efficientie == 0)
                 s.Efficientie = 100;
             if (klus != null)
             {
-                var xtijd = klus.Tijden.Uren.FirstOrDefault(x=> x.InUse)??klus.Tijden.GetLastStopEntry(true);
-                if (init)
-                {
-                    xtijd.Stop = xtijdgestopt.Value;
-                }
-                else if (klus.Tijden.Count > 0)
-                {
-                    xtijdgestart.SetValue(xtijd.Start);
-                    xtijdgestopt.SetValue(xtijd.Stop);
-                    if (klus.Status == ProductieState.Gestart)
-                    {
-                        xgestoptlabel.Text = "Momenteel actief!";
-                        xtijdgestopt.Enabled = false;
-                    }
-                    else
-                    {
-                        xgestoptlabel.Text = "Tijd Gestopt";
-                        xtijdgestopt.Enabled = true;
-                    }
-                }
+                //var xtijd = klus.Tijden.Uren.FirstOrDefault(x=> x.InUse)??klus.Tijden.GetLastStopEntry(true);
+                //if (init)
+                //{
+                //    xtijd.Stop = xtijdgestopt.Value;
+                //}
+                //else if (klus.Tijden.Count > 0)
+                //{
+                //    xtijdgestart.SetValue(xtijd.Start);
+                //    xtijdgestopt.SetValue(xtijd.Stop);
+                //    //if (klus.Status == ProductieState.Gestart)
+                //    //{
+                //    //    xgestoptlabel.Text = "Momenteel actief!";
+                //    //    xtijdgestopt.Enabled = false;
+                //    //}
+                //    //else
+                //    //{
+                //    //    xgestoptlabel.Text = "Tijd Gestopt";
+                //    //    xtijdgestopt.Enabled = true;
+                //    //}
+                //}
 
                 xactiefimage.Image = !klus.IsActief
                     ? null
@@ -347,8 +347,8 @@ namespace Forms
             }
 
             xnaampersoneel.TextChanged += xnaampersoneel_TextChanged;
-            xtijdgestart.ValueChanged += xtijdgestart_ValueChanged;
-            xtijdgestopt.ValueChanged += xtijdgestopt_ValueChanged;
+            //xtijdgestart.ValueChanged += xtijdgestart_ValueChanged;
+            //xtijdgestopt.ValueChanged += xtijdgestopt_ValueChanged;
         }
 
         private void xannuleren_Click(object sender, EventArgs e)
@@ -368,9 +368,7 @@ namespace Forms
             var personen = xshiftlist.Objects?.Cast<Personeel>().ToArray();
             if (personen == null || string.IsNullOrEmpty(xnaampersoneel.Text.Trim()) ||
                 personen.Any(x =>
-                    string.Equals(x.PersoneelNaam, xnaampersoneel.Text, StringComparison.CurrentCultureIgnoreCase)) ||
-                !string.Equals((xnaampersoneel.Tag as Personeel)?.PersoneelNaam, xnaampersoneel.Text,
-                    StringComparison.CurrentCultureIgnoreCase))
+                    string.Equals(x.PersoneelNaam, xnaampersoneel.Text, StringComparison.CurrentCultureIgnoreCase)))
             {
                 var pers = KiesPersoneel();
                 if (pers?.Length > 0)
@@ -964,10 +962,17 @@ namespace Forms
                         xent.Stop = xtijdgestopt.Value;
                         xent.InUse = Bewerking.State == ProductieState.Gestart && klus.IsActief;
                         klus.UpdateTijdGewerkt(xent);
-
+                        
                         xshiftlist.RefreshObject(per);
                         if (Bewerking != null)
+                        {
+                            if (Bewerking.IsBemand)
+                            {
+                                var wp = GetWerkPlek(per, false);
+                                wp?.Tijden?.UpdateTijdGewerkt(xent);
+                            }
                             xwerkplekken.RefreshObjects(Bewerking.WerkPlekken);
+                        }
                     }
                 }
             //}
@@ -995,6 +1000,9 @@ namespace Forms
                         xent.Stop = xtijdgestopt.Value;
                         xent.InUse = Bewerking.State == ProductieState.Gestart && klus.IsActief;
                         klus.UpdateTijdGewerkt(xent);
+                        var wp = GetWerkPlek(per, false);
+                        if (wp?.Werk != null && wp.Werk.IsBemand)
+                            wp.Tijden?.UpdateTijdGewerkt(xent);
 
                         xshiftlist.RefreshObject(per);
 
@@ -1002,7 +1010,9 @@ namespace Forms
                 }
 
                 if (Bewerking != null)
+                {
                     xwerkplekken.RefreshObjects(Bewerking.WerkPlekken);
+                }
             }
             // }
         }
@@ -1018,6 +1028,10 @@ namespace Forms
                 {
                     WerkPlek wp = bew.WerkPlekken.FirstOrDefault(x => 
                     string.Equals(x.Naam, xklus.SelectedKlus.WerkPlek, StringComparison.CurrentCultureIgnoreCase));
+                    if (wp?.Werk != null && wp.Werk.IsBemand)
+                    {
+                        wp.Tijden.UpdateLijst(xklus.SelectedKlus.Tijden);
+                    }
                     LoadWerkPlekken(wp);
                     //LoadShifts();
                     xshiftlist.SelectedObject = per;
@@ -1042,13 +1056,20 @@ namespace Forms
                         string.Equals(klus.Path, x.Path, StringComparison.CurrentCultureIgnoreCase));
                     if (wp != null)
                     {
-                        if (wp.Werk is {IsBemand: false})
+                        if (wp.Werk != null)
                         {
-                            var msg = $"'{wp.WerkNaam}' is een onbemande bewerking.\n" +
-                                      $"Werktijd van '{per.PersoneelNaam}' wijzigen heeft daarom geen effect op de gewerkte tijd van '{wp.Naam}'...\n\n" +
-                                      $"Zou je de werktijd van '{per.PersoneelNaam}' door willen geven aan '{wp.Naam}'?";
-                            if (XMessageBox.Show(msg, $"{wp.WerkNaam} is Onbemand", MessageBoxButtons.YesNo,
-                                    MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                            if (!wp.Werk.IsBemand)
+                            {
+                                var msg = $"'{wp.WerkNaam}' is een onbemande bewerking.\n" +
+                                          $"Werktijd van '{per.PersoneelNaam}' wijzigen heeft daarom geen effect op de gewerkte tijd van '{wp.Naam}'...\n\n" +
+                                          $"Zou je de werktijd van '{per.PersoneelNaam}' door willen geven aan '{wp.Naam}'?";
+                                if (XMessageBox.Show(msg, $"{wp.WerkNaam} is Onbemand", MessageBoxButtons.YesNo,
+                                        MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                                {
+                                    wp.Tijden.UpdateLijst(klus.Tijden);
+                                }
+                            }
+                            else
                             {
                                 wp.Tijden.UpdateLijst(klus.Tijden);
                             }

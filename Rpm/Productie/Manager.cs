@@ -386,6 +386,9 @@ namespace Rpm.Productie
         {
             return Task.Run(async () =>
             {
+                if (Manager.Database?.UserAccounts == null)
+                    throw new Exception("Database is niet geladen!\n\n" +
+                                        "Kan niet inloggen als de database niet is geladen");
                 var x = await Database.GetAccount(username);
                 if (x != null)
                 {
@@ -479,7 +482,7 @@ namespace Rpm.Productie
         /// <returns>Een taak voor het laden van de instellingen</returns>
         public static async Task<bool> LoadSettings(object sender, bool raiseEvent)
         {
-            if (Database.IsDisposed) return false;
+            if (Database == null || Database.IsDisposed) return false;
             var os = SystemId;
             var id = LogedInGebruiker == null ? $"Default[{os}]" : LogedInGebruiker.Username;
             var optiesid = Opties?.Username != null ? Opties.Username.ToLower().StartsWith("default")? $"Default[{Opties.SystemID}]" : Opties.Username : null;
@@ -1566,7 +1569,7 @@ namespace Rpm.Productie
             try
             {
                 var form = Application.OpenForms["AantalGemaaktProducties"];
-                if (form == null && Database is {IsDisposed: false})
+                if (form == null && Database is {IsDisposed: false} && Manager.LogedInGebruiker != null)
                 {
                     List<Bewerking> bws = new List<Bewerking>();
                     int mins = Opties.MinVoorControle;
@@ -1585,9 +1588,9 @@ namespace Rpm.Productie
                                 mins = 15;
                             }
 
-                            bws = bws.Where(x => x.WerkPlekken.Any(w=> w.NeedsAantalUpdate(mins)) && string.Equals(
+                            bws = bws.Where(x => string.Equals(
                                 x.GestartDoor, Manager.Opties.Username,
-                                StringComparison.CurrentCultureIgnoreCase)).ToList();
+                                StringComparison.CurrentCultureIgnoreCase) && x.WerkPlekken.Any(w=> w.NeedsAantalUpdate(mins))).ToList();
                         }).Wait(60000);
 
                     }

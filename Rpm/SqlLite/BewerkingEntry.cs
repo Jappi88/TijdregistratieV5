@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Polenter.Serialization;
+using System;
 using System.Collections.Generic;
-using LiteDB;
-using Polenter.Serialization;
 
 namespace Rpm.SqlLite
 {
@@ -31,7 +30,7 @@ namespace Rpm.SqlLite
         public bool IsBemand { get; set; }
         [ExcludeFromSerialization]
         public bool IsExtern { get; set; }
-        [BsonId] public string Naam { get; set; }
+        public string Naam { get; set; }
 
         public string NewName { get; set; }
         [ExcludeFromSerialization]

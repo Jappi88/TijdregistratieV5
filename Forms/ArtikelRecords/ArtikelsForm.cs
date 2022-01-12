@@ -91,6 +91,7 @@ namespace Forms
         {
             try
             {
+                if (Manager.Database?.ProductieFormulieren == null) return;
                 SetWaitUI();
                 productieListControl1.InitProductie(true, true, true, true, false, false);
                 _Values.Clear();

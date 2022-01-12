@@ -1,16 +1,15 @@
-﻿using System;
+﻿using Polenter.Serialization;
+using Rpm.Mailing;
+using Rpm.Misc;
+using Rpm.Productie;
+using Rpm.SqlLite;
+using Rpm.Various;
+using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text;
-using LiteDB;
-using Polenter.Serialization;
-using Rpm.Mailing;
-using Rpm.SqlLite;
-using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Various;
 
 namespace Rpm.Settings
 {
@@ -38,8 +37,7 @@ namespace Rpm.Settings
         public UserChange LastChanged { get; set; }
 
         public string _pass { get; set; }
-
-        [BsonIgnore]
+        
         [ExcludeFromSerialization]
         public string Password
         {

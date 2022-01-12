@@ -39,8 +39,8 @@ namespace ProductieManager.Rpm.ExcelHelper
 
         public static string[] WerkPlekColumns =
         {
-            "ArtikelNr", "ProductieNr", "Status", "Naam", "Omschrijving", "Totaal Aantal","Totaal Gemaakt", "Actueel Gemaakt", "PDC P/u","Actueel P/u","Gemiddeld P/u", "Gestart Op",
-            "Gestopt Op", "Tijd Gewerkt","Tijd Actief","Combinaties", "#Storingen","#Ombouw","Tijd Storingen","Tijd Ombouw","Personen"
+            "ArtikelNr", "ProductieNr", "Status", "Naam", "Omschrijving", "Totaal Aantal","Totaal Gemaakt", "Actueel Gemaakt", "PDC P/u","Actueel P/u","Gemiddeld P/u","#Geproduceerd", "Gestart Op",
+            "Gestopt Op", "Tijd Gewerkt","Tijd Actief","Combinaties", "#Storingen","#Ombouw","Tijd Storingen","Tijd Ombouw", "Tijd Schoonmaak","Personen"
         };
 
         
@@ -55,13 +55,14 @@ namespace ProductieManager.Rpm.ExcelHelper
 
         public static string[] HiddenWerkPlekColumns =
         {
-            "Naam","Combinaties"
+            "Naam","Status", "Combinaties","#Geproduceerd"
         };
 
         public static object GetValue(WerkPlek plek, string value, TijdEntry bereik)
         {
             if (plek == null || string.IsNullOrEmpty(value)) return null;
             double xtijd = 0;
+            bereik?.UpdateStartStop(plek.Tijden);
             switch (value.ToLower())
             {
                 case "combinaties":
@@ -71,9 +72,13 @@ namespace ProductieManager.Rpm.ExcelHelper
                 case "pdc p/u":
                     return plek.PerUurBase;
                 case "actueel p/u":
-                    return plek.PerUur;
+                    if (bereik == null)
+                        return plek.PerUur;
+                    return (int)plek.GetPerUur(bereik);
                 case "gemiddeld p/u":
                     return (int)(plek.Werk?.GemiddeldActueelPerUur ?? plek.PerUur);
+                case "#geproduceerd":
+                    return plek.Werk?.Geproduceerd ?? 0;
                 case "totaal aantal":
                     return plek.Werk.Aantal;
                 case "actueel gemaakt":
@@ -113,7 +118,12 @@ namespace ProductieManager.Rpm.ExcelHelper
                 case "tijd storingen":
                     return plek.Storingen.Where(x =>
                         (bereik != null && x.GetTotaleTijd(bereik.Start, bereik.Stop) > 0) &&
-                        !string.IsNullOrEmpty(x.StoringType) && !x.StoringType.ToLower().Contains("ombouw")).Sum(x =>
+                        !string.IsNullOrEmpty(x.StoringType) && !x.StoringType.ToLower().Contains("ombouw") && !x.StoringType.ToLower().Contains("schoonmaak")).Sum(x =>
+                        bereik == null ? x.TotaalTijd : x.GetTotaleTijd(bereik.Start, bereik.Stop));
+                case "tijd schoonmaak":
+                    return plek.Storingen.Where(x =>
+                        (bereik != null && x.GetTotaleTijd(bereik.Start, bereik.Stop) > 0) &&
+                        !string.IsNullOrEmpty(x.StoringType) && x.StoringType.ToLower().Contains("schoonmaak")).Sum(x =>
                         bereik == null ? x.TotaalTijd : x.GetTotaleTijd(bereik.Start, bereik.Stop));
                 case "tijd ombouw":
                     return plek.Storingen.Where(x =>
@@ -632,11 +642,12 @@ namespace ProductieManager.Rpm.ExcelHelper
             var xdiffer = Math.Round(baseperuur.GetPercentageDifference(peruur), 1);
             var xdfstring = xdiffer < 0 ? xdiffer.ToString() : "+" + xdiffer.ToString();
             //CreateCellConditionalFormatRules(sheet, startrow + 1, "pdc p/u", xcolmn);
-            var txtcolor = xdiffer < 0 ? IndexedColors.Maroon.Index : IndexedColors.DarkGreen.Index;
+            var txtcolor = IndexedColors.Black.Index;//xdiffer < 0 ? IndexedColors.Maroon.Index : IndexedColors.DarkGreen.Index;
             var xbackcolor = xdiffer < 0 ? Color.LightPink : Color.FromArgb(200, 255, 200);
             if (!backcolor.IsEmpty)
                 xbackcolor = backcolor;
-            var txtformatcolor = xdiffer < 0 ? "red" : "color10";
+            var txtformatcolor = xdiffer < -10 ? "red" : xdiffer > 10? "color5" : "color10";
+
             IDataFormat dataFormatCustom = workbook.CreateDataFormat();
             var xstyle = CreateStyle(workbook, false, HorizontalAlignment.Center, 11, txtcolor, BorderStyle.Double, xbackcolor);
             xstyle.DataFormat = dataFormatCustom.GetFormat($"[{txtformatcolor}]####0\" ({xdfstring}%)\"");
@@ -741,7 +752,8 @@ namespace ProductieManager.Rpm.ExcelHelper
                 foreach (var xcol in WerkPlekColumns)
                 {
                     cellindex = GetWerkplekColumnIndex(xcol);
-                    if (cellindex == -1) continue;
+                    if (cellindex == -1)
+                        continue;
                     var xss = GetColumnName(cellindex);
                     switch (xcol.ToLower())
                     {
@@ -752,6 +764,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                         case "#ombouw":
                         case "tijd storingen":
                         case "tijd ombouw":
+                        case "tijd schoonmaak":
                         case "tijd gewerkt":
                         case "tijd actief":
                             CreateCellFormula(row, cellindex, $"SUM({xss}{startrow - rows}:{xss}{startrow})", cellStyleBorder);
@@ -1872,7 +1885,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                             var xbereik = new TijdEntry(xcurdag, xenddag);
 
                             var xbws = wp.Value.OrderBy(x => x.TijdGestart).ToList();
-                            xbws = xbws.Where(x => x.HeeftGewerkt(xbereik))
+                            xbws = xbws.Where(x => x.TijdAanGewerkt(xbereik.Start, xbereik.Stop, false,false) > 0)
                                 .ToList();
                             if (xbws.Count > 0)
                             {
@@ -1922,7 +1935,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                         }
 
                         var bereik = new TijdEntry(xstartweek, xeidnweek);
-                        var bws = wp.Value.Where(x => x.HeeftGewerkt(bereik)).OrderBy(x => x.TijdGestart)
+                        var bws = wp.Value.Where(x => x.TijdAanGewerkt(bereik.Start, bereik.Stop, false, false) > 0).OrderBy(x => x.TijdGestart)
                             .ToList();
                         var x1 = bws.Count == 1 ? "Productie" : "Producties";
                         if (bws.Count > 0)

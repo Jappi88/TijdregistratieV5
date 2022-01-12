@@ -116,9 +116,9 @@
             this.label4.ForeColor = System.Drawing.Color.Black;
             this.label4.Location = new System.Drawing.Point(318, 60);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(120, 21);
+            this.label4.Size = new System.Drawing.Size(129, 21);
             this.label4.TabIndex = 6;
-            this.label4.Text = "Toegang Level";
+            this.label4.Text = "Gebruiker Level";
             // 
             // xtoegangslevel
             // 
@@ -134,8 +134,10 @@
             this.xtoegangslevel.Location = new System.Drawing.Point(322, 84);
             this.xtoegangslevel.Name = "xtoegangslevel";
             this.xtoegangslevel.Size = new System.Drawing.Size(172, 29);
+            this.xtoegangslevel.Style = MetroFramework.MetroColorStyle.Purple;
             this.xtoegangslevel.TabIndex = 7;
             this.xtoegangslevel.UseSelectable = true;
+            this.xtoegangslevel.UseStyleColors = true;
             // 
             // button1
             // 
@@ -167,7 +169,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(510, 280);
+            this.ClientSize = new System.Drawing.Size(514, 281);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.xtoegangslevel);
@@ -185,6 +187,7 @@
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Style = MetroFramework.MetroColorStyle.Pink;
             this.Text = "Maak Account Aan";
             this.ResumeLayout(false);
             this.PerformLayout();

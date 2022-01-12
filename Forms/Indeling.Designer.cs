@@ -111,7 +111,7 @@
             this.xindelinggroup.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xindelinggroup.Name = "xindelinggroup";
             this.xindelinggroup.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.xindelinggroup.Size = new System.Drawing.Size(511, 498);
+            this.xindelinggroup.Size = new System.Drawing.Size(459, 500);
             this.xindelinggroup.TabIndex = 0;
             this.xindelinggroup.TabStop = false;
             // 
@@ -123,7 +123,7 @@
             this.xwerkplekgroup.Controls.Add(this.panel4);
             this.xwerkplekgroup.Location = new System.Drawing.Point(3, 85);
             this.xwerkplekgroup.Name = "xwerkplekgroup";
-            this.xwerkplekgroup.Size = new System.Drawing.Size(506, 413);
+            this.xwerkplekgroup.Size = new System.Drawing.Size(455, 396);
             this.xwerkplekgroup.TabIndex = 25;
             this.xwerkplekgroup.TabStop = false;
             this.xwerkplekgroup.Text = "Werkplek / Machine";
@@ -143,7 +143,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(3, 22);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(500, 388);
+            this.panel4.Size = new System.Drawing.Size(449, 371);
             this.panel4.TabIndex = 30;
             // 
             // xwpnotitie
@@ -215,7 +215,7 @@
             this.xwerkplekken.Name = "xwerkplekken";
             this.xwerkplekken.ShowGroups = false;
             this.xwerkplekken.ShowItemToolTips = true;
-            this.xwerkplekken.Size = new System.Drawing.Size(497, 332);
+            this.xwerkplekken.Size = new System.Drawing.Size(447, 296);
             this.xwerkplekken.SmallImageList = this.xwerkplekimages;
             this.xwerkplekken.TabIndex = 27;
             this.xwerkplekken.UseCompatibleStateImageBehavior = false;
@@ -355,7 +355,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(3, 21);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(505, 64);
+            this.groupBox1.Size = new System.Drawing.Size(453, 64);
             this.groupBox1.TabIndex = 24;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Bewerking";
@@ -368,7 +368,7 @@
             this.xbewerking.Location = new System.Drawing.Point(3, 22);
             this.xbewerking.Margin = new System.Windows.Forms.Padding(4);
             this.xbewerking.Name = "xbewerking";
-            this.xbewerking.Size = new System.Drawing.Size(499, 29);
+            this.xbewerking.Size = new System.Drawing.Size(447, 29);
             this.xbewerking.TabIndex = 2;
             this.xbewerking.UseSelectable = true;
             this.xbewerking.SelectedIndexChanged += new System.EventHandler(this.xbewerking_SelectedIndexChanged);
@@ -395,11 +395,12 @@
             // 
             // panel3
             // 
+            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.panel3.Controls.Add(this.xactiefimage);
             this.panel3.Controls.Add(this.xactieflabel);
-            this.panel3.Location = new System.Drawing.Point(308, 12);
+            this.panel3.Location = new System.Drawing.Point(357, 5);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(60, 83);
+            this.panel3.Size = new System.Drawing.Size(60, 90);
             this.panel3.TabIndex = 20;
             this.panel3.Click += new System.EventHandler(this.xactiefimage_Click);
             this.panel3.MouseEnter += new System.EventHandler(this.xactiefimage_MouseEnter);
@@ -411,7 +412,7 @@
             this.xactiefimage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xactiefimage.Location = new System.Drawing.Point(0, 19);
             this.xactiefimage.Name = "xactiefimage";
-            this.xactiefimage.Size = new System.Drawing.Size(60, 64);
+            this.xactiefimage.Size = new System.Drawing.Size(60, 71);
             this.xactiefimage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.xactiefimage.TabIndex = 14;
             this.xactiefimage.TabStop = false;
@@ -478,7 +479,7 @@
             this.xpersoneelgroep.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xpersoneelgroep.Name = "xpersoneelgroep";
             this.xpersoneelgroep.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.xpersoneelgroep.Size = new System.Drawing.Size(697, 452);
+            this.xpersoneelgroep.Size = new System.Drawing.Size(627, 454);
             this.xpersoneelgroep.TabIndex = 1;
             this.xpersoneelgroep.TabStop = false;
             this.xpersoneelgroep.Text = "Personeel";
@@ -500,7 +501,7 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel5.Location = new System.Drawing.Point(3, 21);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(691, 429);
+            this.panel5.Size = new System.Drawing.Size(621, 431);
             this.panel5.TabIndex = 30;
             // 
             // xroosterb
@@ -510,7 +511,7 @@
             this.xroosterb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xroosterb.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xroosterb.Image = global::ProductieManager.Properties.Resources.schedule_32_32;
-            this.xroosterb.Location = new System.Drawing.Point(492, 5);
+            this.xroosterb.Location = new System.Drawing.Point(423, 5);
             this.xroosterb.Name = "xroosterb";
             this.xroosterb.Size = new System.Drawing.Size(190, 40);
             this.xroosterb.TabIndex = 23;
@@ -525,7 +526,7 @@
             this.xtijdengewerkt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xtijdengewerkt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xtijdengewerkt.Image = global::ProductieManager.Properties.Resources.business_color_progress_icon_icons_com_53437;
-            this.xtijdengewerkt.Location = new System.Drawing.Point(590, 55);
+            this.xtijdengewerkt.Location = new System.Drawing.Point(423, 55);
             this.xtijdengewerkt.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xtijdengewerkt.Name = "xtijdengewerkt";
             this.xtijdengewerkt.Size = new System.Drawing.Size(43, 40);
@@ -538,10 +539,9 @@
             // 
             // xedituser
             // 
-            this.xedituser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xedituser.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xedituser.Image = global::ProductieManager.Properties.Resources.businessapplication_edit_male_user;
-            this.xedituser.Location = new System.Drawing.Point(541, 55);
+            this.xedituser.Location = new System.Drawing.Point(309, 55);
             this.xedituser.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xedituser.Name = "xedituser";
             this.xedituser.Size = new System.Drawing.Size(43, 40);
@@ -557,7 +557,7 @@
             this.xverwijder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xverwijder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xverwijder.Image = global::ProductieManager.Properties.Resources.delete_delete_deleteusers_delete_male_user_maleclient_2348;
-            this.xverwijder.Location = new System.Drawing.Point(639, 56);
+            this.xverwijder.Location = new System.Drawing.Point(472, 55);
             this.xverwijder.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xverwijder.Name = "xverwijder";
             this.xverwijder.Size = new System.Drawing.Size(43, 40);
@@ -602,7 +602,7 @@
             this.xshiftlist.ShowGroups = false;
             this.xshiftlist.ShowItemCountOnGroups = true;
             this.xshiftlist.ShowItemToolTips = true;
-            this.xshiftlist.Size = new System.Drawing.Size(685, 322);
+            this.xshiftlist.Size = new System.Drawing.Size(616, 305);
             this.xshiftlist.SmallImageList = this.imageList1;
             this.xshiftlist.TabIndex = 4;
             this.xshiftlist.TileSize = new System.Drawing.Size(300, 110);
@@ -686,10 +686,9 @@
             // 
             // xvoegindeling
             // 
-            this.xvoegindeling.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xvoegindeling.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xvoegindeling.Image = global::ProductieManager.Properties.Resources.user_add_12818;
-            this.xvoegindeling.Location = new System.Drawing.Point(492, 56);
+            this.xvoegindeling.Location = new System.Drawing.Point(309, 11);
             this.xvoegindeling.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xvoegindeling.Name = "xvoegindeling";
             this.xvoegindeling.Size = new System.Drawing.Size(43, 40);
@@ -704,9 +703,9 @@
             this.panel1.Controls.Add(this.xwerktijdnaarwerkplek);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 452);
+            this.panel1.Location = new System.Drawing.Point(0, 454);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(697, 46);
+            this.panel1.Size = new System.Drawing.Size(627, 46);
             this.panel1.TabIndex = 5;
             // 
             // xwerktijdnaarwerkplek
@@ -721,7 +720,7 @@
             this.xwerktijdnaarwerkplek.Location = new System.Drawing.Point(0, 0);
             this.xwerktijdnaarwerkplek.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xwerktijdnaarwerkplek.Name = "xwerktijdnaarwerkplek";
-            this.xwerktijdnaarwerkplek.Size = new System.Drawing.Size(447, 46);
+            this.xwerktijdnaarwerkplek.Size = new System.Drawing.Size(377, 46);
             this.xwerktijdnaarwerkplek.TabIndex = 5;
             this.xwerktijdnaarwerkplek.Text = "Werktijd Naar Werkplek";
             this.xwerktijdnaarwerkplek.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -733,7 +732,7 @@
             this.panel2.Controls.Add(this.xokb);
             this.panel2.Controls.Add(this.xannuleren);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(447, 0);
+            this.panel2.Location = new System.Drawing.Point(377, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(250, 46);
             this.panel2.TabIndex = 4;
@@ -788,21 +787,21 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.xpersoneelgroep);
             this.splitContainer1.Panel2.Controls.Add(this.panel1);
-            this.splitContainer1.Size = new System.Drawing.Size(1212, 498);
-            this.splitContainer1.SplitterDistance = 511;
+            this.splitContainer1.Size = new System.Drawing.Size(1090, 500);
+            this.splitContainer1.SplitterDistance = 459;
             this.splitContainer1.TabIndex = 2;
             // 
             // Indeling
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1252, 578);
+            this.ClientSize = new System.Drawing.Size(1130, 580);
             this.Controls.Add(this.splitContainer1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.Black;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MinimumSize = new System.Drawing.Size(1055, 535);
+            this.MinimumSize = new System.Drawing.Size(1130, 580);
             this.Name = "Indeling";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

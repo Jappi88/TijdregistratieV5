@@ -127,6 +127,7 @@ namespace Rpm.Productie
         public bool CompareTo(VerpakkingInstructie verpakking)
         {
             var verp = verpakking;
+            if (verp == null) return false;
             if (!string.Equals(ArtikelNr, verp.ArtikelNr, StringComparison.CurrentCultureIgnoreCase))
                 return false;
             if (!string.Equals(VerpakkingType, verp.VerpakkingType, StringComparison.CurrentCultureIgnoreCase))

@@ -1,18 +1,15 @@
-﻿using LiteDB;
-using Polenter.Serialization;
+﻿using Polenter.Serialization;
 using Rpm.Mailing;
 using Rpm.Misc;
+using Rpm.Productie.AantalHistory;
 using Rpm.SqlLite;
 using Rpm.Various;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using PdfSharp.Drawing;
-using Rpm.Productie.AantalHistory;
 
 namespace Rpm.Productie
 {
@@ -46,7 +43,7 @@ namespace Rpm.Productie
             DoorloopTijd = doorlooptijd;
         }
 
-        [BsonId(true)] public int Id { get; set; }
+        public int Id { get; set; }
 
         public List<WerkPlek> WerkPlekken { get; set; } = new();
         public override string WerkplekkenName => string.Join(", ", WerkPlekken.Select(x => x.Naam));
@@ -239,7 +236,7 @@ namespace Rpm.Productie
 
         public override string Path => ProductieNr + "\\" + Naam;
 
-        [BsonRef] public ProductieFormulier Parent { get; set; }
+        public ProductieFormulier Parent { get; set; }
         public override  ProductieFormulier Root => Parent;
 
         private string _note;
@@ -268,6 +265,13 @@ namespace Rpm.Productie
         }
 
         public List<CombineerEntry> Combies { get; set; } = new List<CombineerEntry>();
+
+        public double ControleRatio()
+        {
+            if (WerkPlekken.Count > 0)
+                return WerkPlekken.Sum(x => x.ControleRatio()) / WerkPlekken.Count;
+            return 0;
+        }
 
         public override List<WerkPlek> GetWerkPlekken()
         {
@@ -471,6 +475,8 @@ namespace Rpm.Productie
                 ActueelPerUur = ActueelProductenPerUur();
                 if (GemiddeldPerUur <= 0)
                     GemiddeldPerUur = ActueelPerUur;
+                if (GemiddeldActueelPerUur <= 0)
+                    GemiddeldActueelPerUur = ActueelPerUur;
                 VerwachtLeverDatum = VerwachtDatumGereed();
                 Gereed = GereedPercentage();
                 TijdGewerktPercentage = GetTijdGewerktPercentage();
@@ -570,13 +576,14 @@ namespace Rpm.Productie
                             }
                         }
 
-                        plek.UpdateWerkRooster(null, true, true, false, false, false, false, true);
+                        
                         if (plek.IsActief())
                         {
                             plek.Tijden.SetStart();
                             plek.TijdGestart = DateTime.Now;
                         }
 
+                        plek.UpdateWerkRooster(null, true, true, false, false, false, false, true);
                         plek.LaatstAantalUpdate = DateTime.Now;
                         plek.UpdateTijdGestart();
 

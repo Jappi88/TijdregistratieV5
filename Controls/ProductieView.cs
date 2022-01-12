@@ -25,6 +25,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Forms.ArtikelRecords;
+using Org.BouncyCastle.Asn1.Cmp;
+using Rpm.DailyUpdate;
 using Various;
 
 namespace Controls
@@ -38,6 +40,13 @@ namespace Controls
             _specialRoosterWatcher = new Timer();
             _specialRoosterWatcher.Interval = 60000; //1 minuut;
             _specialRoosterWatcher.Tick += (x, y) => CheckForSpecialRooster(false);
+            DailyMessage = new Daily();
+            DailyMessage.DailyCreated += DailyMessage_DailyCreated;
+        }
+
+        private void DailyMessage_DailyCreated(object sender, EventArgs e)
+        {
+           Console.WriteLine(DailyMessage?.CreatedDaily);
         }
 
         public event EventHandler OnFormLoaded;
@@ -73,6 +82,8 @@ namespace Controls
         private static PersoneelsForm _PersoneelForm;
         private static ProductieOverzichtForm _ProductieOverzicht;
         private static WerkplaatsIndeling _WerkplaatsIndeling;
+
+        private Daily DailyMessage;
         public bool ShowUnreadMessage { get; set; }
 
         // [NonSerialized] private Opties _opties;
@@ -209,8 +220,8 @@ namespace Controls
 
             Manager.VerpakkingChanged -= Manager_VerpakkingChanged;
             Manager.VerpakkingDeleted -= Manager_VerpakkingDeleted;
-
-            _manager.OnShutdown -= _manager_OnShutdown;
+            if (_manager != null)
+                _manager.OnShutdown -= _manager_OnShutdown;
             //xproductieListControl1.DetachEvents();
             xbewerkingListControl.DetachEvents();
             //productieListControl1.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
@@ -531,13 +542,34 @@ namespace Controls
 
         }
 
+        private void InitDBCorupptedMonitor()
+        {
+            try
+            {
+                if (Manager.Database?.ProductieFormulieren?.MultiFiles != null)
+                    Manager.Database.ProductieFormulieren.MultiFiles.MonitorCorrupted = true;
+                if (Manager.Database?.GereedFormulieren?.MultiFiles != null)
+                    Manager.Database.GereedFormulieren.MultiFiles.MonitorCorrupted = true;
+                if (Manager.Database?.UserAccounts?.MultiFiles != null)
+                    Manager.Database.UserAccounts.MultiFiles.MonitorCorrupted = true;
+                if (Manager.Database?.AllSettings?.MultiFiles != null)
+                    Manager.Database.AllSettings.MultiFiles.MonitorCorrupted = true;
+                if (Manager.Database?.PersoneelLijst?.MultiFiles != null)
+                    Manager.Database.PersoneelLijst.MultiFiles.MonitorCorrupted = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         public void ShowStartupForms()
         {
             try
             {
                 this.BeginInvoke(new Action(() =>
                 {
-//CheckForSyncDatabase();
+                    //CheckForSyncDatabase();
                     //CheckForUpdateDatabase();
                     CheckForPreview(false, true);
                     CheckForSpecialRooster(true);
@@ -548,6 +580,8 @@ namespace Controls
                     UpdateKlachtButton();
                     UpdateVerpakkingenButton();
                     Manager.ArtikelRecords?.CheckForOpmerkingen(true);
+                    InitDBCorupptedMonitor();
+                    DailyMessage.CreateDaily();
                     //UpdateAllLists();
                 }));
 
@@ -671,6 +705,12 @@ namespace Controls
 
         private async void DoQuickProductie()
         {
+            if (Manager.BewerkingenLijst == null || Manager.Database?.ProductieFormulieren == null)
+            {
+                XMessageBox.Show("Kan geen productie aanmaken, omdat de Database niet is geladen.", "Database niet geladen!", MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+                return;
+            }
             var xnewform = new NiewProductieForm();
             var result = xnewform.ShowDialog();
             if (result == DialogResult.Cancel) return;
@@ -1082,6 +1122,12 @@ namespace Controls
                     switch (menubutton.Name.ToLower())
                     {
                         case "xniewproductie":
+                            if (Manager.Database?.ProductieFormulieren == null)
+                            {
+                                XMessageBox.Show("Kan geen productie aanmaken, omdat de Database niet is geladen.", "Database niet geladen!", MessageBoxButtons.OK,
+                                    MessageBoxIcon.Exclamation);
+                                return;
+                            }
                             var AddProduction = new WijzigProductie();
                             if (AddProduction.ShowDialog() == DialogResult.OK)
                                 BeginInvoke(new MethodInvoker(async () =>
@@ -1093,7 +1139,12 @@ namespace Controls
 
                             break;
                         case "xopenproductie":
-
+                            if (Manager.Database?.ProductieFormulieren == null)
+                            {
+                                XMessageBox.Show("Kan geen productie toevoegen, omdat de Database niet is geladen.", "Database niet geladen!", MessageBoxButtons.OK,
+                                    MessageBoxIcon.Exclamation);
+                                return;
+                            }
                             var ofd = new OpenFileDialog
                             {
                                 Title = @"Open Productie Formulier(en)",

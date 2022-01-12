@@ -43,7 +43,7 @@ namespace Rpm.Productie.AantalHistory
                 xent._endDate = DateTime.Now;
         }
 
-        public bool UpdateAantal(int aantal, bool active)
+        public bool UpdateAantal(int aantal, bool active, UrenLijst tijden)
         {
             try
             {
@@ -76,13 +76,24 @@ namespace Rpm.Productie.AantalHistory
                     {
 
                         var xlast = Aantallen.LastOrDefault();
+                        var xstart = DateTime.Now;
                         if (xlast != null)
                         {
                             xlast.LastAantal = aantal;
-                            xlast.EndDate = DateTime.Now;
+                            if (xlast.DateChanged.Date != DateTime.Now)
+                            {
+                                var dt = xlast.DateChanged;
+                                xlast.EndDate = new DateTime(dt.Year, dt.Month, dt.Day, 23, 59, 0);
+                                Rooster rs = tijden?.WerkRooster ??
+                                             Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
+                                xstart = Werktijd.EerstVolgendeWerkdag(xstart, ref rs, rs, tijden?.SpecialeRoosters);
+                            }
+                            else
+                                xlast.EndDate = xstart;
                         }
 
                         xent = new AantalRecord(aantal);
+                        xent.DateChanged = xstart;
                         Aantallen.Add(xent);
                     }
                 }

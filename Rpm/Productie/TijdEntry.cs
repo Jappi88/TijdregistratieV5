@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Polenter.Serialization;
 
 namespace Rpm.Productie
 {
@@ -43,7 +44,6 @@ namespace Rpm.Productie
         public int ID { get; set; }
         public string Omschrijving { get; set; }
         public DateTime Start { get; set; }
-
         public DateTime Stop
         {
             get => InUse ? DateTime.Now : _gestopt;
@@ -73,6 +73,29 @@ namespace Rpm.Productie
             if (xstop > stop)
                 xstop = stop;
             return new TijdEntry(xstart, xstop, rooster);
+        }
+
+        public void UpdateStartStop(UrenLijst lijst)
+        {
+            if (lijst == null) return;
+            try
+            {
+                var xrs = lijst.WerkRooster??Manager.Opties?.GetWerkRooster()??Rooster.StandaartRooster();
+                if (Start.TimeOfDay == new TimeSpan())
+                {
+                    var sp = lijst.SpecialeRoosters?.FirstOrDefault(x => x.Vanaf.Date == Start.Date);
+                    Start = Start.Add(sp?.StartWerkdag ?? xrs.StartWerkdag);
+                }
+                if (Stop.TimeOfDay == new TimeSpan())
+                {
+                    var sp = lijst.SpecialeRoosters?.FirstOrDefault(x => x.Vanaf.Date == Stop.Date);
+                    Stop = Stop.Add(sp?.EindWerkdag ?? xrs.EindWerkdag);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public double TijdGewerkt(Rooster rooster, Dictionary<DateTime, DateTime> exclude, List<Rooster> speciaaleRoosters, double extratijd = 0)

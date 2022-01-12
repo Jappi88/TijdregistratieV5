@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
 using TheArtOfDev.HtmlRenderer.WinForms;
@@ -48,7 +49,7 @@ namespace Controls
                    aantalChangerUI1.LoadAantalGemaakt(Productie);
                 }
                 string txt = String.Empty;
-                HtmlPanel panel = null;
+                int index = -1;
                 if (Productie is Bewerking bew && bew.Combies.Count > 0)
                 {
                     metroTabControl1.TabPages[1].Text = $"Combinaties[{bew.Combies.Count}]";
@@ -58,7 +59,7 @@ namespace Controls
                 {
                     case 0:
                         //Header Html
-                        panel = xHeaderHtmlPanel;
+                        index = 0;
                         txt = Productie.GetHeaderHtmlBody(Title,
                             Productie.GetImageFromResources(),
                             new Size(64, 64), BackColor, BackColorGradient, TextColor, true);
@@ -68,19 +69,19 @@ namespace Controls
                         break;
                     case 2:
                         //ProductieInfo
-                        panel = xInforHtmlPanel;
+                        index = 2;
                         txt = Productie.GetProductieInfoHtml("Productie Info",
                             BackColor, BackColorGradient, TextColor, true);
                         break;
                     case 3:
                         //Notities
-                        panel = xNotitieHtmlPanel;
+                        index = 3;
                         txt = Productie.GetNotitiesHtml("Notities",
                             BackColor, BackColorGradient, TextColor, true);
                         break;
                     case 4:
                         //ProductieDatums
-                        panel = xDatumsHtmlPanel;
+                        index = 4;
                         txt = Productie.GetDatumsHtml("Productie Datums",
                             BackColor, BackColorGradient, TextColor, true);
                         break;
@@ -94,13 +95,13 @@ namespace Controls
                         break;
                     case 6:
                         //Materialen
-                        panel = xMaterialenHtmlPanel;
+                        index = 6;
                         txt = Productie.GetMaterialenHtml("Materialen",
                             BackColor, BackColorGradient, TextColor, true);
                         break;
                     case 7:
                         //WerkPlaatsen
-                        panel = xWerkPlaatsenHtmlPanel;
+                        index = 7;
                         txt = Productie.GetWerkplekkenHtml("Werk Plaatsen",
                             BackColor, BackColorGradient, TextColor, true);
                         break;
@@ -110,20 +111,65 @@ namespace Controls
                         break;
                 }
 
-                if (panel != null)
+                if (index > -1)
                 {
-                    int curpos = panel.VerticalScroll.Value;
-                    panel.Text = txt;
-                    for (var i = 0; i < 3; i++)
+                    var xpanel = metroTabControl1.TabPages[index].Controls.Find($"htmlpanel_{index}", false)
+                        .FirstOrDefault() as HtmlPanel;
+                    bool xinit = xpanel == null;
+                    xpanel ??= new HtmlPanel()
                     {
-                        panel.VerticalScroll.Value = curpos;
-                        panel.Update();
+                        IsContextMenuEnabled = false,
+                        IsSelectionEnabled = false,
+                        Name = $"htmlpanel_{index}"
+                    };
+                    if (xinit)
+                    {
+                        xpanel.ImageLoad += xVerpakkingHtmlPanel_ImageLoad;
+                    }
+                    xpanel.Dock = DockStyle.Fill;
+                    if (!string.Equals(xpanel.Text, txt, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        metroTabControl1.TabPages[index].SuspendLayout();
+                        metroTabControl1.TabPages[index].Controls.Remove(xpanel);
+                        var curpos = xpanel.VerticalScroll.Value;
+                        xpanel.Text = txt;
+                        if (curpos > 0)
+                        {
+                            for (var i = 0; i < 5; i++)
+                            {
+                                xpanel.VerticalScroll.Value = curpos;
+                            }
+                        }
+                        metroTabControl1.TabPages[index].Controls.Add(xpanel);
+                        metroTabControl1.TabPages[index].ResumeLayout(true);
+                        //panel.AutoScrollPosition.Offset(curpos);
+                        //panel.Invalidate();
                     }
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+            }
+        }
+
+        private void CopyControl(Control sourceControl, Control targetControl)
+        {
+            // make sure these are the same
+            if (sourceControl.GetType() != targetControl.GetType())
+            {
+                throw new Exception("Incorrect control types");
+            }
+
+            foreach (PropertyInfo sourceProperty in sourceControl.GetType().GetProperties())
+            {
+                object newValue = sourceProperty.GetValue(sourceControl, null);
+
+                MethodInfo mi = sourceProperty.GetSetMethod(true);
+                if (mi != null)
+                {
+                    sourceProperty.SetValue(targetControl, newValue, null);
+                }
             }
         }
 

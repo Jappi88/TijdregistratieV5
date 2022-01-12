@@ -42,15 +42,14 @@ namespace Forms
             this.productieForm1.Location = new System.Drawing.Point(0, 0);
             this.productieForm1.Name = "productieForm1";
             this.productieForm1.SelectedBewerking = null;
-            this.productieForm1.Size = new System.Drawing.Size(889, 535);
+            this.productieForm1.Size = new System.Drawing.Size(861, 485);
             this.productieForm1.TabIndex = 0;
             // 
             // StartProductie
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(889, 535);
+            this.ClientSize = new System.Drawing.Size(861, 485);
             this.CloseButton = false;
             this.CloseButtonVisible = false;
             this.ControlBox = false;

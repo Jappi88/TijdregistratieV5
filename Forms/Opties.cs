@@ -514,6 +514,7 @@ namespace Forms
 
         private bool SetSettings()
         {
+            if (Manager.Opties == null) return false;
             var settings = CreateInstance(Manager.Opties.Username);
             Manager.SaveSettings(settings, true, true);
             _LoadedOpties = settings;
@@ -536,7 +537,7 @@ namespace Forms
         private bool SaveAndClose()
         {
             Manager.OnSettingsChanged -= _manager_OnSettingsChanged;
-            SetSettings();
+            if (!SetSettings()) return false;
             if (_locatieGewijzigd)
             {
                 string db = xdblocatie.Text.Trim();
@@ -1568,6 +1569,11 @@ namespace Forms
                 }
 
             }
+        }
+
+        private void xfiltertype_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
 
         //private void xKiesExcelColumnButton_Click(object sender, EventArgs e)
