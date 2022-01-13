@@ -246,6 +246,13 @@ namespace Forms.ArtikelRecords
         {
             Opmerkingen ??= new List<ArtikelOpmerking>();
             var newopmerking = new ArtikelOpmerkingForm();
+            if (Record != null)
+                newopmerking.Title = $"{Record.ArtikelNr} Melding Aanmaken";
+            else
+            {
+                newopmerking.Title = $"Algemene Melding Aanmaken";
+            }
+            newopmerking.EnableWerkplekCheckbox = Record == null;
             if (newopmerking.ShowDialog() == DialogResult.OK)
             {
                 var xop = newopmerking.SelectedOpmerking;
@@ -264,6 +271,7 @@ namespace Forms.ArtikelRecords
             {
                 if (!op.IsFromMe) return;
                 var newopmerking = new ArtikelOpmerkingForm(op);
+                newopmerking.EnableWerkplekCheckbox = Record == null;
                 if (newopmerking.ShowDialog() == DialogResult.OK)
                 {
                     var xop = newopmerking.SelectedOpmerking;
@@ -285,7 +293,7 @@ namespace Forms.ArtikelRecords
             {
                 var xremove = xOpmerkingenList.SelectedObjects.Cast<ArtikelOpmerking>().Where(x => x.IsFromMe).ToList();
                 if (xremove.Count == 0) return;
-                var x1 = xremove.Count == 1 ? "opmerking" : "opmerkingen";
+                var x1 = xremove.Count == 1 ? "melding" : "meldingen";
                 if (XMessageBox.Show($"Weetje zeker dat je {xremove.Count} {x1} wilt verwijderen?", "Verwijderen",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {

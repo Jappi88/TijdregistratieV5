@@ -53,9 +53,16 @@ namespace Forms.Excel
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 StartWait();
-                if (await ExcelWorkbook.CreateDagelijksProductieOverzicht((int) xweeknr.Value, (int) xjaar.Value,
-                        ofd.FileName, IsRunning, GetActiveFilters()) && File.Exists(ofd.FileName) && xopenexcel.Checked)
-                    Process.Start(ofd.FileName);
+                try
+                {
+                    if (await ExcelWorkbook.CreateDagelijksProductieOverzicht((int) xweeknr.Value, (int) xjaar.Value,
+                            ofd.FileName, IsRunning, GetActiveFilters()) && File.Exists(ofd.FileName) && xopenexcel.Checked)
+                        Process.Start(ofd.FileName);
+                }
+                catch (Exception exception)
+                {
+                    XMessageBox.Show(exception.Message, "Fout", MessageBoxIcon.Error);
+                }
                 StopWait();
             }
         }

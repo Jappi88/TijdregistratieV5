@@ -1786,6 +1786,9 @@ namespace Rpm.Productie
 
                     _ = UpdateForm(false, false, null, change, true, showmessage);
                     Manager.ArtikelRecords?.UpdateWaardes(this);
+                    var wps = GetWerkPlekken();
+                    foreach (var wp in wps)
+                        Manager.ArtikelRecords?.UpdateWaardes(wp);
                     _ = UpdateDoorloopTijd(null, this, null, false, true, false);
                     if (sendmail)
                         RemoteProductie.RespondByEmail(this, change);

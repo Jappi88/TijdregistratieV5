@@ -55,7 +55,7 @@ namespace ProductieManager.Rpm.ExcelHelper
 
         public static string[] HiddenWerkPlekColumns =
         {
-            "Naam","Status", "Combinaties","#Geproduceerd"
+            "Naam","Status", "Combinaties","#Geproduceerd", "Totaal Gemaakt"
         };
 
         public static object GetValue(WerkPlek plek, string value, TijdEntry bereik)
@@ -2008,7 +2008,10 @@ namespace ProductieManager.Rpm.ExcelHelper
                             }
                             InserImage(workbook, sheet, (Image)Resources.logo_vanderValk, xdagspan - 2, 1);
                             for (var i = 0; i < HiddenWerkPlekColumns.Length; i++)
-                                sheet.SetColumnHidden(GetWerkplekColumnIndex(HiddenWerkPlekColumns[i]), true);
+                            {
+                                var xindex = GetWerkplekColumnIndex(HiddenWerkPlekColumns[i]);
+                                sheet.SetColumnHidden(xindex, true);
+                            }
                             sheet = null;
                         }
 
@@ -2201,7 +2204,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
-                    return false;
+                    throw;
                 }
             });
 

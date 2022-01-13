@@ -15,7 +15,7 @@ namespace Rpm.Productie.ArtikelRecords
         public double TijdGewerkt { get; set; }
         public List<string> UpdatedProducties { get; set; } = new List<string>();
         public List<ArtikelOpmerking> Opmerkingen { get; set; } = new List<ArtikelOpmerking>();
-
+        public bool IsWerkplek { get; set; }
         public int PerUur => GetPerUur();
 
        public int GetPerUur()

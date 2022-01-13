@@ -104,8 +104,7 @@ namespace Rpm.Productie
                 {
                     _aantalgemaakt = value;
                     Werk?.UpdateAantal();
-                    AantalHistory?.UpdateAantal(value,
-                        (Werk?.State ?? ProductieState.Gestopt) == ProductieState.Gestart,Tijden);
+                    AantalHistory?.UpdateAantal(value,Tijden);
                 }
             }
         }
@@ -127,8 +126,8 @@ namespace Rpm.Productie
             {
                 return _aantalgemaakt;
             }
-           
-            return AantalHistory.AantalGemaakt(start, stop,ref tijd, Tijden, predict);
+
+            return AantalHistory.AantalGemaakt(start, stop, ref tijd, Tijden, predict, -1, GetStoringen());
         }
 
         public int GetActueelAantalGemaakt(ref double tijd)
@@ -482,7 +481,7 @@ namespace Rpm.Productie
                     Tijden.SetStop();
                 if (updaterooster)
                     Tijden?.UpdateUrenRooster(false, null);
-                AantalHistory?.SetActive((Werk?.State ?? ProductieState.Gestopt) == ProductieState.Gestart);
+                //AantalHistory?.SetActive((Werk?.State ?? ProductieState.Gestopt) == ProductieState.Gestart);
                 CalculatePerUur(false);
                 return true;
             }
@@ -610,7 +609,10 @@ namespace Rpm.Productie
         public double ControleRatio()
         {
             var xvalue = AantalHistory.Aantallen.Where(x => x.Gemaakt > 0).ToList();
-            var xratio = TijdGewerkt.GetPercentageDifference(xvalue.Count * 1.5d);
+            var xtijd = TijdGewerkt;
+            if (Werk is {IsBemand: true})
+                xtijd /= Personen.Count;
+            var xratio = xtijd.GetPercentageDifference(xvalue.Count * 1.5d);
             return xratio;
         }
 

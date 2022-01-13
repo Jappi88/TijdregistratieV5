@@ -27,7 +27,7 @@ namespace Forms.ArtikelRecords
         public ArtikelOpmerkingForm(ArtikelOpmerking opmerking):this()
         {
             if (opmerking == null) return;
-            Title = $"Wijzig Opmerking van '{opmerking.GeplaatstDoor}'";
+            Title = $"Wijzig Melding van '{opmerking.GeplaatstDoor}'";
             xok.Text = "Opslaan";
             xok.Image = Resources.diskette_save_saveas_1514;
             xok.Invalidate();
@@ -44,6 +44,12 @@ namespace Forms.ArtikelRecords
             }
         }
 
+        public bool EnableWerkplekCheckbox
+        {
+            get => xfilterOp.Visible;
+            set => xfilterOp.Visible = value;
+        }
+
         public void InitCombos()
         {
             try
@@ -54,6 +60,9 @@ namespace Forms.ArtikelRecords
                 xvalues = Enum.GetNames(typeof(ArtikelFilterSoort)).Select(x => (object)x).ToArray();
                 xFilterTypeCombo.Items.Clear();
                 xFilterTypeCombo.Items.AddRange(xvalues);
+                xvalues = Enum.GetNames(typeof(FilterOp)).Select(x => (object)x).ToArray();
+                xfilterOp.Items.Clear();
+                xfilterOp.Items.AddRange(xvalues);
             }
             catch (Exception e)
             {
@@ -148,6 +157,7 @@ namespace Forms.ArtikelRecords
                 xOpmerking.Text = opmerking.Opmerking;
                 xImage.Image = opmerking.ImageData?.ImageFromBytes();
                 xGelezenDoorList.SetObjects(opmerking.GelezenDoor);
+                xfilterOp.SelectedIndex = (int)opmerking.FilterOp;
             }
             catch (Exception e)
             {
@@ -166,6 +176,9 @@ namespace Forms.ArtikelRecords
                 if (xFilterTypeCombo.SelectedIndex > -1)
                     SelectedOpmerking.FilterSoort = (ArtikelFilterSoort)xFilterTypeCombo.SelectedIndex;
                 else throw new Exception("Kies een FilterSoort a.u.b.");
+                if (xfilterOp.SelectedIndex > -1)
+                    SelectedOpmerking.FilterOp = (FilterOp)xfilterOp.SelectedIndex;
+                else throw new Exception("Kies waarop je wilt filteren a.u.b.");
                 var ontvangers = GetOntvangers();
                 if(ontvangers.Count == 0)
                     throw new Exception("Kies onvanger(s) a.u.b.");
@@ -174,7 +187,7 @@ namespace Forms.ArtikelRecords
                 if (xtitletextbox.Text.Trim().Length < 6)
                     throw new Exception("Vul in een geldige Title a.u.b.");
                 if (xOpmerking.Text.Trim().Length < 6)
-                    throw new Exception("Vul in een geldige Opmerking a.u.b.");
+                    throw new Exception("Vul in een geldige melding a.u.b.");
                 SelectedOpmerking.FilterWaarde = xFilterWaarde.Value;
                 SelectedOpmerking.Opmerking = xOpmerking.Text.Trim();
                 SelectedOpmerking.Title = xtitletextbox.Text.Trim();
@@ -202,13 +215,16 @@ namespace Forms.ArtikelRecords
                 if (xFilterTypeCombo.SelectedIndex > -1)
                     record.FilterSoort = (ArtikelFilterSoort)xFilterTypeCombo.SelectedIndex;
                 else throw new Exception("Kies een FilterSoort a.u.b.");
+                if (xfilterOp.SelectedIndex > -1)
+                    record.FilterOp = (FilterOp)xfilterOp.SelectedIndex;
+                else throw new Exception("Kies waarop je wilt filteren a.u.b.");
                 var ontvangers = GetOntvangers();
                 if (ontvangers.Count == 0)
                     throw new Exception("Kies onvanger(s) a.u.b.");
                 if (xFilterWaarde.Value == 0)
                     throw new Exception("Vul in een waarde dat niet gelijk is aan '0' a.u.b.");
                 if (string.IsNullOrEmpty(xOpmerking.Text.Trim()))
-                    throw new Exception("Vul in een geldige opmerking a.u.b.");
+                    throw new Exception("Vul in een geldige melding a.u.b.");
                 record.FilterWaarde = xFilterWaarde.Value;
                 record.Opmerking = xOpmerking.Text.Trim();
                 record.Title = xtitletextbox.Text.Trim();

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel2 = new System.Windows.Forms.Panel();
+            this.xwerkplekcheck = new MetroFramework.Controls.MetroCheckBox();
             this.xok = new System.Windows.Forms.Button();
             this.xsluiten = new System.Windows.Forms.Button();
             this.xartikelnr = new MetroFramework.Controls.MetroTextBox();
@@ -38,15 +39,31 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.xwerkplekcheck);
             this.panel2.Controls.Add(this.xok);
             this.panel2.Controls.Add(this.xsluiten);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(20, 215);
+            this.panel2.Location = new System.Drawing.Point(20, 176);
             this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(5);
-            this.panel2.Size = new System.Drawing.Size(475, 42);
+            this.panel2.Size = new System.Drawing.Size(469, 42);
             this.panel2.TabIndex = 7;
+            // 
+            // xwerkplekcheck
+            // 
+            this.xwerkplekcheck.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xwerkplekcheck.FontSize = MetroFramework.MetroCheckBoxSize.Tall;
+            this.xwerkplekcheck.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.xwerkplekcheck.Location = new System.Drawing.Point(5, 5);
+            this.xwerkplekcheck.Name = "xwerkplekcheck";
+            this.xwerkplekcheck.Size = new System.Drawing.Size(105, 32);
+            this.xwerkplekcheck.Style = MetroFramework.MetroColorStyle.Purple;
+            this.xwerkplekcheck.TabIndex = 9;
+            this.xwerkplekcheck.Text = "Werkplek";
+            this.xwerkplekcheck.UseSelectable = true;
+            this.xwerkplekcheck.UseStyleColors = true;
+            this.xwerkplekcheck.CheckedChanged += new System.EventHandler(this.xwerkplekcheck_CheckedChanged);
             // 
             // xok
             // 
@@ -55,7 +72,7 @@
             this.xok.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xok.Image = global::ProductieManager.Properties.Resources.check_1582;
             this.xok.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xok.Location = new System.Drawing.Point(192, 5);
+            this.xok.Location = new System.Drawing.Point(186, 5);
             this.xok.Margin = new System.Windows.Forms.Padding(4);
             this.xok.Name = "xok";
             this.xok.Size = new System.Drawing.Size(135, 32);
@@ -73,7 +90,7 @@
             this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xsluiten.Location = new System.Drawing.Point(335, 5);
+            this.xsluiten.Location = new System.Drawing.Point(329, 5);
             this.xsluiten.Margin = new System.Windows.Forms.Padding(4);
             this.xsluiten.Name = "xsluiten";
             this.xsluiten.Size = new System.Drawing.Size(135, 32);
@@ -89,7 +106,7 @@
             // 
             // 
             this.xartikelnr.CustomButton.Image = null;
-            this.xartikelnr.CustomButton.Location = new System.Drawing.Point(445, 2);
+            this.xartikelnr.CustomButton.Location = new System.Drawing.Point(439, 2);
             this.xartikelnr.CustomButton.Name = "";
             this.xartikelnr.CustomButton.Size = new System.Drawing.Size(27, 27);
             this.xartikelnr.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -104,19 +121,18 @@
             this.xartikelnr.MaxLength = 32767;
             this.xartikelnr.Name = "xartikelnr";
             this.xartikelnr.PasswordChar = '\0';
-            this.xartikelnr.PromptText = "Vul in een ArtikelNr";
+            this.xartikelnr.PromptText = "Vul in een ArtikelNr of een Werkplek naam";
             this.xartikelnr.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.xartikelnr.SelectedText = "";
             this.xartikelnr.SelectionLength = 0;
             this.xartikelnr.SelectionStart = 0;
             this.xartikelnr.ShortcutsEnabled = true;
             this.xartikelnr.ShowClearButton = true;
-            this.xartikelnr.Size = new System.Drawing.Size(475, 32);
-            this.xartikelnr.Style = MetroFramework.MetroColorStyle.Green;
+            this.xartikelnr.Size = new System.Drawing.Size(469, 32);
+            this.xartikelnr.Style = MetroFramework.MetroColorStyle.Purple;
             this.xartikelnr.TabIndex = 8;
             this.xartikelnr.UseSelectable = true;
-            this.xartikelnr.UseStyleColors = true;
-            this.xartikelnr.WaterMark = "Vul in een ArtikelNr";
+            this.xartikelnr.WaterMark = "Vul in een ArtikelNr of een Werkplek naam";
             this.xartikelnr.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.xartikelnr.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
@@ -126,9 +142,9 @@
             // 
             // 
             this.xomschrijving.CustomButton.Image = null;
-            this.xomschrijving.CustomButton.Location = new System.Drawing.Point(353, 1);
+            this.xomschrijving.CustomButton.Location = new System.Drawing.Point(387, 2);
             this.xomschrijving.CustomButton.Name = "";
-            this.xomschrijving.CustomButton.Size = new System.Drawing.Size(121, 121);
+            this.xomschrijving.CustomButton.Size = new System.Drawing.Size(79, 79);
             this.xomschrijving.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.xomschrijving.CustomButton.TabIndex = 1;
             this.xomschrijving.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
@@ -149,11 +165,10 @@
             this.xomschrijving.SelectionStart = 0;
             this.xomschrijving.ShortcutsEnabled = true;
             this.xomschrijving.ShowClearButton = true;
-            this.xomschrijving.Size = new System.Drawing.Size(475, 123);
-            this.xomschrijving.Style = MetroFramework.MetroColorStyle.Green;
+            this.xomschrijving.Size = new System.Drawing.Size(469, 84);
+            this.xomschrijving.Style = MetroFramework.MetroColorStyle.Purple;
             this.xomschrijving.TabIndex = 9;
             this.xomschrijving.UseSelectable = true;
-            this.xomschrijving.UseStyleColors = true;
             this.xomschrijving.WaterMark = "Vul in een Omschrijving";
             this.xomschrijving.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.xomschrijving.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
@@ -162,13 +177,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(515, 277);
+            this.ClientSize = new System.Drawing.Size(509, 238);
             this.Controls.Add(this.xomschrijving);
             this.Controls.Add(this.xartikelnr);
             this.Controls.Add(this.panel2);
             this.Name = "NewArtikelRecord";
-            this.Style = MetroFramework.MetroColorStyle.Green;
-            this.Text = "Nieuwe Artikel";
+            this.Style = MetroFramework.MetroColorStyle.Purple;
+            this.Text = "Nieuwe Artikel/ Werkplek";
             this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -181,5 +196,6 @@
         private System.Windows.Forms.Button xsluiten;
         private MetroFramework.Controls.MetroTextBox xartikelnr;
         private MetroFramework.Controls.MetroTextBox xomschrijving;
+        private MetroFramework.Controls.MetroCheckBox xwerkplekcheck;
     }
 }

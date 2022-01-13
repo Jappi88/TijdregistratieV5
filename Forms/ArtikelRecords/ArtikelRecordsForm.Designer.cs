@@ -42,18 +42,42 @@
             this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel3 = new System.Windows.Forms.Panel();
-            this.xalgemeen = new System.Windows.Forms.Button();
             this.xdeleteartikel = new System.Windows.Forms.Button();
             this.xopmerkingen = new System.Windows.Forms.Button();
             this.xaddartikel = new System.Windows.Forms.Button();
             this.xsearchbox = new MetroFramework.Controls.MetroTextBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.xalgemeen = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.xdeletewerkplek = new System.Windows.Forms.Button();
+            this.xwerkplekopmerkingen = new System.Windows.Forms.Button();
+            this.xaddwerkplek = new System.Windows.Forms.Button();
+            this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
+            this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
+            this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.xwerkpleklist = new BrightIdeasSoftware.ObjectListView();
+            this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn12 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn13 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn14 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn15 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn16 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.xsearch2 = new MetroFramework.Controls.MetroTextBox();
+            this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xArtikelList)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.metroTabControl1.SuspendLayout();
+            this.metroTabPage1.SuspendLayout();
+            this.metroTabPage2.SuspendLayout();
+            this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.xwerkpleklist)).BeginInit();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -61,10 +85,10 @@
             this.panel1.Controls.Add(this.xArtikelList);
             this.panel1.Controls.Add(this.panel3);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(23, 78);
+            this.panel1.Location = new System.Drawing.Point(5, 5);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(715, 323);
+            this.panel1.Size = new System.Drawing.Size(790, 345);
             this.panel1.TabIndex = 0;
             // 
             // xArtikelList
@@ -98,7 +122,7 @@
             this.xArtikelList.Name = "xArtikelList";
             this.xArtikelList.ShowGroups = false;
             this.xArtikelList.ShowItemToolTips = true;
-            this.xArtikelList.Size = new System.Drawing.Size(715, 285);
+            this.xArtikelList.Size = new System.Drawing.Size(790, 307);
             this.xArtikelList.SmallImageList = this.imageList1;
             this.xArtikelList.TabIndex = 0;
             this.xArtikelList.TintSortColumn = true;
@@ -187,7 +211,7 @@
             // 
             // panel3
             // 
-            this.panel3.Controls.Add(this.xalgemeen);
+            this.panel3.BackColor = System.Drawing.Color.White;
             this.panel3.Controls.Add(this.xdeleteartikel);
             this.panel3.Controls.Add(this.xopmerkingen);
             this.panel3.Controls.Add(this.xaddartikel);
@@ -195,23 +219,8 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(715, 38);
+            this.panel3.Size = new System.Drawing.Size(790, 38);
             this.panel3.TabIndex = 10;
-            // 
-            // xalgemeen
-            // 
-            this.xalgemeen.Dock = System.Windows.Forms.DockStyle.Left;
-            this.xalgemeen.Enabled = false;
-            this.xalgemeen.FlatAppearance.BorderSize = 0;
-            this.xalgemeen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xalgemeen.Image = global::ProductieManager.Properties.Resources.Alle_Opmerkingen_32x321;
-            this.xalgemeen.Location = new System.Drawing.Point(0, 0);
-            this.xalgemeen.Name = "xalgemeen";
-            this.xalgemeen.Size = new System.Drawing.Size(34, 38);
-            this.xalgemeen.TabIndex = 13;
-            this.toolTip1.SetToolTip(this.xalgemeen, "Beheer alle algemene opmerkingen");
-            this.xalgemeen.UseVisualStyleBackColor = true;
-            this.xalgemeen.Click += new System.EventHandler(this.xalgemeen_Click);
             // 
             // xdeleteartikel
             // 
@@ -220,7 +229,7 @@
             this.xdeleteartikel.FlatAppearance.BorderSize = 0;
             this.xdeleteartikel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xdeleteartikel.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xdeleteartikel.Location = new System.Drawing.Point(636, 1);
+            this.xdeleteartikel.Location = new System.Drawing.Point(711, 1);
             this.xdeleteartikel.Name = "xdeleteartikel";
             this.xdeleteartikel.Size = new System.Drawing.Size(34, 34);
             this.xdeleteartikel.TabIndex = 12;
@@ -235,11 +244,11 @@
             this.xopmerkingen.FlatAppearance.BorderSize = 0;
             this.xopmerkingen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xopmerkingen.Image = global::ProductieManager.Properties.Resources.default_opmerking_16757_32x32;
-            this.xopmerkingen.Location = new System.Drawing.Point(676, 1);
+            this.xopmerkingen.Location = new System.Drawing.Point(751, 1);
             this.xopmerkingen.Name = "xopmerkingen";
             this.xopmerkingen.Size = new System.Drawing.Size(34, 34);
             this.xopmerkingen.TabIndex = 11;
-            this.toolTip1.SetToolTip(this.xopmerkingen, "Artikel Opmerkingen");
+            this.toolTip1.SetToolTip(this.xopmerkingen, "Artikel Meldingen");
             this.xopmerkingen.UseVisualStyleBackColor = true;
             this.xopmerkingen.Click += new System.EventHandler(this.xopmerkingen_Click);
             // 
@@ -250,7 +259,7 @@
             this.xaddartikel.FlatAppearance.BorderSize = 0;
             this.xaddartikel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xaddartikel.Image = global::ProductieManager.Properties.Resources.add_Blue_circle_32x32;
-            this.xaddartikel.Location = new System.Drawing.Point(596, 1);
+            this.xaddartikel.Location = new System.Drawing.Point(671, 1);
             this.xaddartikel.Name = "xaddartikel";
             this.xaddartikel.Size = new System.Drawing.Size(34, 34);
             this.xaddartikel.TabIndex = 10;
@@ -266,7 +275,7 @@
             // 
             // 
             this.xsearchbox.CustomButton.Image = null;
-            this.xsearchbox.CustomButton.Location = new System.Drawing.Point(517, 2);
+            this.xsearchbox.CustomButton.Location = new System.Drawing.Point(632, 2);
             this.xsearchbox.CustomButton.Name = "";
             this.xsearchbox.CustomButton.Size = new System.Drawing.Size(25, 25);
             this.xsearchbox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -277,7 +286,7 @@
             this.xsearchbox.FontSize = MetroFramework.MetroTextBoxSize.Medium;
             this.xsearchbox.Lines = new string[] {
         "Zoeken..."};
-            this.xsearchbox.Location = new System.Drawing.Point(44, 4);
+            this.xsearchbox.Location = new System.Drawing.Point(4, 4);
             this.xsearchbox.Margin = new System.Windows.Forms.Padding(4);
             this.xsearchbox.MaxLength = 32767;
             this.xsearchbox.Name = "xsearchbox";
@@ -288,7 +297,7 @@
             this.xsearchbox.SelectionStart = 0;
             this.xsearchbox.ShortcutsEnabled = true;
             this.xsearchbox.ShowClearButton = true;
-            this.xsearchbox.Size = new System.Drawing.Size(545, 30);
+            this.xsearchbox.Size = new System.Drawing.Size(660, 30);
             this.xsearchbox.TabIndex = 9;
             this.xsearchbox.Text = "Zoeken...";
             this.xsearchbox.UseSelectable = true;
@@ -300,14 +309,32 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.xalgemeen);
             this.panel2.Controls.Add(this.button1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(23, 401);
+            this.panel2.Location = new System.Drawing.Point(23, 457);
             this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(5);
-            this.panel2.Size = new System.Drawing.Size(715, 42);
+            this.panel2.Size = new System.Drawing.Size(808, 42);
             this.panel2.TabIndex = 5;
+            // 
+            // xalgemeen
+            // 
+            this.xalgemeen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xalgemeen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xalgemeen.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xalgemeen.Image = global::ProductieManager.Properties.Resources.Alle_Opmerkingen_32x321;
+            this.xalgemeen.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xalgemeen.Location = new System.Drawing.Point(460, 5);
+            this.xalgemeen.Margin = new System.Windows.Forms.Padding(4);
+            this.xalgemeen.Name = "xalgemeen";
+            this.xalgemeen.Size = new System.Drawing.Size(226, 32);
+            this.xalgemeen.TabIndex = 1;
+            this.xalgemeen.Text = "Algemene Meldingen";
+            this.xalgemeen.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.xalgemeen.UseVisualStyleBackColor = true;
+            this.xalgemeen.Click += new System.EventHandler(this.xalgemeen_Click);
             // 
             // button1
             // 
@@ -316,7 +343,7 @@
             this.button1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(601, 5);
+            this.button1.Location = new System.Drawing.Point(694, 5);
             this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(109, 32);
@@ -330,27 +357,301 @@
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
+            // xdeletewerkplek
+            // 
+            this.xdeletewerkplek.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xdeletewerkplek.Enabled = false;
+            this.xdeletewerkplek.FlatAppearance.BorderSize = 0;
+            this.xdeletewerkplek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xdeletewerkplek.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.xdeletewerkplek.Location = new System.Drawing.Point(700, 1);
+            this.xdeletewerkplek.Name = "xdeletewerkplek";
+            this.xdeletewerkplek.Size = new System.Drawing.Size(34, 34);
+            this.xdeletewerkplek.TabIndex = 12;
+            this.toolTip1.SetToolTip(this.xdeletewerkplek, "Verwijder geselecteerde Werkplek");
+            this.xdeletewerkplek.UseVisualStyleBackColor = true;
+            this.xdeletewerkplek.Click += new System.EventHandler(this.xdeleteartikel_Click);
+            // 
+            // xwerkplekopmerkingen
+            // 
+            this.xwerkplekopmerkingen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xwerkplekopmerkingen.Enabled = false;
+            this.xwerkplekopmerkingen.FlatAppearance.BorderSize = 0;
+            this.xwerkplekopmerkingen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xwerkplekopmerkingen.Image = global::ProductieManager.Properties.Resources.default_opmerking_16757_32x32;
+            this.xwerkplekopmerkingen.Location = new System.Drawing.Point(740, 1);
+            this.xwerkplekopmerkingen.Name = "xwerkplekopmerkingen";
+            this.xwerkplekopmerkingen.Size = new System.Drawing.Size(34, 34);
+            this.xwerkplekopmerkingen.TabIndex = 11;
+            this.toolTip1.SetToolTip(this.xwerkplekopmerkingen, "Werkplek Meldingen");
+            this.xwerkplekopmerkingen.UseVisualStyleBackColor = true;
+            this.xwerkplekopmerkingen.Click += new System.EventHandler(this.xopmerkingen_Click);
+            // 
+            // xaddwerkplek
+            // 
+            this.xaddwerkplek.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xaddwerkplek.Enabled = false;
+            this.xaddwerkplek.FlatAppearance.BorderSize = 0;
+            this.xaddwerkplek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xaddwerkplek.Image = global::ProductieManager.Properties.Resources.add_Blue_circle_32x32;
+            this.xaddwerkplek.Location = new System.Drawing.Point(660, 1);
+            this.xaddwerkplek.Name = "xaddwerkplek";
+            this.xaddwerkplek.Size = new System.Drawing.Size(34, 34);
+            this.xaddwerkplek.TabIndex = 10;
+            this.toolTip1.SetToolTip(this.xaddwerkplek, "Voeg een nieuwe Werkplek toe");
+            this.xaddwerkplek.UseVisualStyleBackColor = true;
+            this.xaddwerkplek.Click += new System.EventHandler(this.xaddartikel_Click);
+            // 
+            // metroTabControl1
+            // 
+            this.metroTabControl1.Controls.Add(this.metroTabPage1);
+            this.metroTabControl1.Controls.Add(this.metroTabPage2);
+            this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.metroTabControl1.Location = new System.Drawing.Point(23, 60);
+            this.metroTabControl1.Name = "metroTabControl1";
+            this.metroTabControl1.SelectedIndex = 0;
+            this.metroTabControl1.Size = new System.Drawing.Size(808, 397);
+            this.metroTabControl1.Style = MetroFramework.MetroColorStyle.Purple;
+            this.metroTabControl1.TabIndex = 6;
+            this.metroTabControl1.UseSelectable = true;
+            this.metroTabControl1.UseStyleColors = true;
+            // 
+            // metroTabPage1
+            // 
+            this.metroTabPage1.Controls.Add(this.panel1);
+            this.metroTabPage1.HorizontalScrollbarBarColor = true;
+            this.metroTabPage1.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage1.HorizontalScrollbarSize = 10;
+            this.metroTabPage1.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage1.Name = "metroTabPage1";
+            this.metroTabPage1.Padding = new System.Windows.Forms.Padding(5);
+            this.metroTabPage1.Size = new System.Drawing.Size(800, 355);
+            this.metroTabPage1.TabIndex = 0;
+            this.metroTabPage1.Text = "Artikelen";
+            this.metroTabPage1.VerticalScrollbarBarColor = true;
+            this.metroTabPage1.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage1.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage2
+            // 
+            this.metroTabPage2.Controls.Add(this.panel4);
+            this.metroTabPage2.HorizontalScrollbarBarColor = true;
+            this.metroTabPage2.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage2.HorizontalScrollbarSize = 10;
+            this.metroTabPage2.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage2.Name = "metroTabPage2";
+            this.metroTabPage2.Padding = new System.Windows.Forms.Padding(5);
+            this.metroTabPage2.Size = new System.Drawing.Size(789, 344);
+            this.metroTabPage2.TabIndex = 1;
+            this.metroTabPage2.Text = "Werkplaatsen";
+            this.metroTabPage2.VerticalScrollbarBarColor = true;
+            this.metroTabPage2.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage2.VerticalScrollbarSize = 10;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.xwerkpleklist);
+            this.panel4.Controls.Add(this.panel5);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel4.Location = new System.Drawing.Point(5, 5);
+            this.panel4.Margin = new System.Windows.Forms.Padding(4);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(779, 334);
+            this.panel4.TabIndex = 2;
+            // 
+            // xwerkpleklist
+            // 
+            this.xwerkpleklist.AllColumns.Add(this.olvColumn9);
+            this.xwerkpleklist.AllColumns.Add(this.olvColumn10);
+            this.xwerkpleklist.AllColumns.Add(this.olvColumn11);
+            this.xwerkpleklist.AllColumns.Add(this.olvColumn12);
+            this.xwerkpleklist.AllColumns.Add(this.olvColumn13);
+            this.xwerkpleklist.AllColumns.Add(this.olvColumn14);
+            this.xwerkpleklist.AllColumns.Add(this.olvColumn15);
+            this.xwerkpleklist.AllColumns.Add(this.olvColumn16);
+            this.xwerkpleklist.CellEditUseWholeCell = false;
+            this.xwerkpleklist.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn9,
+            this.olvColumn10,
+            this.olvColumn11,
+            this.olvColumn12,
+            this.olvColumn13,
+            this.olvColumn14,
+            this.olvColumn15,
+            this.olvColumn16});
+            this.xwerkpleklist.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xwerkpleklist.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xwerkpleklist.FullRowSelect = true;
+            this.xwerkpleklist.GridLines = true;
+            this.xwerkpleklist.HideSelection = false;
+            this.xwerkpleklist.LargeImageList = this.imageList1;
+            this.xwerkpleklist.Location = new System.Drawing.Point(0, 38);
+            this.xwerkpleklist.Margin = new System.Windows.Forms.Padding(4);
+            this.xwerkpleklist.Name = "xwerkpleklist";
+            this.xwerkpleklist.ShowGroups = false;
+            this.xwerkpleklist.ShowItemToolTips = true;
+            this.xwerkpleklist.Size = new System.Drawing.Size(779, 296);
+            this.xwerkpleklist.SmallImageList = this.imageList1;
+            this.xwerkpleklist.TabIndex = 0;
+            this.xwerkpleklist.TintSortColumn = true;
+            this.xwerkpleklist.UseCompatibleStateImageBehavior = false;
+            this.xwerkpleklist.UseExplorerTheme = true;
+            this.xwerkpleklist.UseFilterIndicator = true;
+            this.xwerkpleklist.UseFiltering = true;
+            this.xwerkpleklist.UseHotItem = true;
+            this.xwerkpleklist.UseTranslucentHotItem = true;
+            this.xwerkpleklist.View = System.Windows.Forms.View.Details;
+            this.xwerkpleklist.SelectedIndexChanged += new System.EventHandler(this.xArtikelList_SelectedIndexChanged);
+            this.xwerkpleklist.DoubleClick += new System.EventHandler(this.xopmerkingen_Click);
+            // 
+            // olvColumn9
+            // 
+            this.olvColumn9.AspectName = "ArtikelNr";
+            this.olvColumn9.IsEditable = false;
+            this.olvColumn9.Text = "Naam";
+            this.olvColumn9.ToolTipText = "Werkplek Naam";
+            this.olvColumn9.Width = 120;
+            // 
+            // olvColumn11
+            // 
+            this.olvColumn11.AspectName = "AantalGemaakt";
+            this.olvColumn11.IsEditable = false;
+            this.olvColumn11.Text = "Gemaakt";
+            this.olvColumn11.ToolTipText = "Totaal aantal gemaakt";
+            this.olvColumn11.Width = 100;
+            // 
+            // olvColumn12
+            // 
+            this.olvColumn12.AspectName = "TijdGewerkt";
+            this.olvColumn12.AspectToStringFormat = "{0} uur";
+            this.olvColumn12.IsEditable = false;
+            this.olvColumn12.Text = "Tijd Gewerkt";
+            this.olvColumn12.ToolTipText = "Totaal tijd Gewerkt";
+            this.olvColumn12.Width = 120;
+            this.olvColumn12.WordWrap = true;
+            // 
+            // olvColumn13
+            // 
+            this.olvColumn13.AspectName = "PerUur";
+            this.olvColumn13.AspectToStringFormat = "{0} p/u";
+            this.olvColumn13.IsEditable = false;
+            this.olvColumn13.Text = "Aantal P/u";
+            this.olvColumn13.ToolTipText = "Gemiddeld aantal per uur";
+            this.olvColumn13.Width = 120;
+            this.olvColumn13.WordWrap = true;
+            // 
+            // olvColumn14
+            // 
+            this.olvColumn14.AspectName = "Vanaf";
+            this.olvColumn14.IsEditable = false;
+            this.olvColumn14.Text = "Gemeten Vanaf";
+            this.olvColumn14.ToolTipText = "De datum waarop begonnen is met meten";
+            this.olvColumn14.Width = 120;
+            this.olvColumn14.WordWrap = true;
+            // 
+            // olvColumn15
+            // 
+            this.olvColumn15.AspectName = "LaatstGeupdate";
+            this.olvColumn15.IsEditable = false;
+            this.olvColumn15.Text = "Laatst Geüpdatet";
+            this.olvColumn15.Width = 120;
+            this.olvColumn15.WordWrap = true;
+            // 
+            // olvColumn16
+            // 
+            this.olvColumn16.IsEditable = false;
+            this.olvColumn16.Text = "Aantal Producties";
+            this.olvColumn16.ToolTipText = "Aantal producties gemeten";
+            this.olvColumn16.Width = 100;
+            // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.White;
+            this.panel5.Controls.Add(this.xdeletewerkplek);
+            this.panel5.Controls.Add(this.xwerkplekopmerkingen);
+            this.panel5.Controls.Add(this.xaddwerkplek);
+            this.panel5.Controls.Add(this.xsearch2);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(779, 38);
+            this.panel5.TabIndex = 10;
+            // 
+            // xsearch2
+            // 
+            this.xsearch2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            // 
+            // 
+            this.xsearch2.CustomButton.Image = null;
+            this.xsearch2.CustomButton.Location = new System.Drawing.Point(621, 2);
+            this.xsearch2.CustomButton.Name = "";
+            this.xsearch2.CustomButton.Size = new System.Drawing.Size(25, 25);
+            this.xsearch2.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.xsearch2.CustomButton.TabIndex = 1;
+            this.xsearch2.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.xsearch2.CustomButton.UseSelectable = true;
+            this.xsearch2.CustomButton.Visible = false;
+            this.xsearch2.FontSize = MetroFramework.MetroTextBoxSize.Medium;
+            this.xsearch2.Lines = new string[] {
+        "Zoeken..."};
+            this.xsearch2.Location = new System.Drawing.Point(4, 4);
+            this.xsearch2.Margin = new System.Windows.Forms.Padding(4);
+            this.xsearch2.MaxLength = 32767;
+            this.xsearch2.Name = "xsearch2";
+            this.xsearch2.PasswordChar = '\0';
+            this.xsearch2.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.xsearch2.SelectedText = "";
+            this.xsearch2.SelectionLength = 0;
+            this.xsearch2.SelectionStart = 0;
+            this.xsearch2.ShortcutsEnabled = true;
+            this.xsearch2.ShowClearButton = true;
+            this.xsearch2.Size = new System.Drawing.Size(649, 30);
+            this.xsearch2.TabIndex = 9;
+            this.xsearch2.Text = "Zoeken...";
+            this.xsearch2.UseSelectable = true;
+            this.xsearch2.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.xsearch2.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.xsearch2.TextChanged += new System.EventHandler(this.xsearch2_TextChanged);
+            this.xsearch2.Enter += new System.EventHandler(this.xsearch2_Enter);
+            this.xsearch2.Leave += new System.EventHandler(this.xsearch2_Leave);
+            // 
+            // olvColumn10
+            // 
+            this.olvColumn10.AspectName = "Omschrijving";
+            this.olvColumn10.Text = "Omschrijving";
+            this.olvColumn10.ToolTipText = "Werkplek Omschrijving";
+            this.olvColumn10.Width = 200;
+            this.olvColumn10.WordWrap = true;
+            // 
             // ArtikelRecordsForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(761, 469);
-            this.Controls.Add(this.panel1);
+            this.ClientSize = new System.Drawing.Size(854, 525);
+            this.Controls.Add(this.metroTabControl1);
             this.Controls.Add(this.panel2);
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ArtikelRecordsForm";
-            this.Padding = new System.Windows.Forms.Padding(23, 78, 23, 26);
+            this.Padding = new System.Windows.Forms.Padding(23, 60, 23, 26);
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Style = MetroFramework.MetroColorStyle.Purple;
-            this.Text = "Artikel Records";
+            this.Text = "Artikel/ Werkplek Records";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ArtikelRecordsForm_FormClosing);
             this.Shown += new System.EventHandler(this.ArtikelRecordsForm_Shown);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xArtikelList)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            this.metroTabControl1.ResumeLayout(false);
+            this.metroTabPage1.ResumeLayout(false);
+            this.metroTabPage2.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.xwerkpleklist)).EndInit();
+            this.panel5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -377,5 +678,23 @@
         private System.Windows.Forms.Button xopmerkingen;
         private System.Windows.Forms.Button xdeleteartikel;
         private System.Windows.Forms.Button xalgemeen;
+        private MetroFramework.Controls.MetroTabControl metroTabControl1;
+        private MetroFramework.Controls.MetroTabPage metroTabPage1;
+        private MetroFramework.Controls.MetroTabPage metroTabPage2;
+        private System.Windows.Forms.Panel panel4;
+        private BrightIdeasSoftware.ObjectListView xwerkpleklist;
+        private BrightIdeasSoftware.OLVColumn olvColumn9;
+        private BrightIdeasSoftware.OLVColumn olvColumn11;
+        private BrightIdeasSoftware.OLVColumn olvColumn12;
+        private BrightIdeasSoftware.OLVColumn olvColumn13;
+        private BrightIdeasSoftware.OLVColumn olvColumn14;
+        private BrightIdeasSoftware.OLVColumn olvColumn15;
+        private BrightIdeasSoftware.OLVColumn olvColumn16;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Button xdeletewerkplek;
+        private System.Windows.Forms.Button xwerkplekopmerkingen;
+        private System.Windows.Forms.Button xaddwerkplek;
+        private MetroFramework.Controls.MetroTextBox xsearch2;
+        private BrightIdeasSoftware.OLVColumn olvColumn10;
     }
 }

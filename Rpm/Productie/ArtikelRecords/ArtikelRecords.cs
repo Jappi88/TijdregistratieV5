@@ -112,6 +112,47 @@ namespace Rpm.Productie.ArtikelRecords
             }
         }
 
+        public void UpdateWaardes(WerkPlek plek)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(plek?.Naam))
+                    return;
+                if (plek.Werk is not {State: ProductieState.Gereed}) return;
+                var file = Database.GetEntry<ArtikelRecord>(plek.Naam);
+                if (file != null)
+                {
+                    if (file.UpdatedProducties.Exists(x =>
+                            string.Equals(plek.ProductieNr, x, StringComparison.CurrentCultureIgnoreCase)))
+                        return;
+                    file.Omschrijving = "Werkplek";
+                    file.VorigeAantalGemaakt = file.AantalGemaakt;
+                    file.AantalGemaakt += plek.TotaalGemaakt;
+                    file.VorigeTijdGewerkt = plek.TijdGewerkt;
+                    file.TijdGewerkt += plek.TijdAanGewerkt();
+                    file.LaatstGeupdate = DateTime.Now;
+                    file.IsWerkplek = true;
+                }
+                else
+                {
+                    file = new ArtikelRecord()
+                    {
+                        AantalGemaakt = plek.TotaalGemaakt,
+                        ArtikelNr = plek.Naam,
+                        Omschrijving = "Werkplek",
+                        TijdGewerkt = plek.TijdAanGewerkt(),
+                        IsWerkplek = true
+                    };
+                }
+                file.UpdatedProducties.Add(plek.ProductieNr);
+                Database.Upsert(plek.Naam, file, false);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         private bool _checking = false;
 
         public async void CheckForOpmerkingen(bool includealgemeen)
@@ -153,18 +194,20 @@ namespace Rpm.Productie.ArtikelRecords
 
 
             });
-            var xopen = Application.OpenForms.Cast<Form>().Where(x =>
-                string.Equals(x.Text, "form_alert", StringComparison.CurrentCultureIgnoreCase)).ToList();
-            xopen.ForEach(x =>
+            if (xreturn.Count > 0)
             {
-                x.Invoke(new MethodInvoker(() =>
+                var xopen = Application.OpenForms.Cast<Form>().Where(x =>
+                    string.Equals(x.Text, "form_alert", StringComparison.CurrentCultureIgnoreCase)).ToList();
+                xopen.ForEach(x =>
                 {
-                    x.Close();
-                    x.Dispose();
-                }));
-
-            });
-            DoOpmerkingenRecords(xreturn);
+                    x.Invoke(new MethodInvoker(() =>
+                    {
+                        x.Close();
+                        x.Dispose();
+                    }));
+                });
+                DoOpmerkingenRecords(xreturn);
+            }
         }
 
         public Dictionary<ArtikelRecord, List<ArtikelOpmerking>> CheckForAlgemeenOpmerkingen(List<ArtikelRecord> records)
@@ -249,9 +292,18 @@ namespace Rpm.Productie.ArtikelRecords
             var xreturn = new Dictionary<ArtikelRecord, List<ArtikelOpmerking>>();
             try
             {
-               
+                if (record == null) return xreturn;
                 foreach (var op in opmerkingen)
                 {
+                    switch (op.FilterOp)
+                    {
+                        case FilterOp.Artikelen:
+                            if (record.IsWerkplek) continue;
+                            break;
+                        case FilterOp.Werkplaatsen:
+                            if (!record.IsWerkplek) continue;
+                            break;
+                    }
                     switch (op.Filter)
                     {
                         case ArtikelFilter.GelijkAan:

@@ -43,62 +43,80 @@ namespace Rpm.Productie.AantalHistory
                 xent._endDate = DateTime.Now;
         }
 
-        public bool UpdateAantal(int aantal, bool active, UrenLijst tijden)
+        public bool UpdateAantal(int aantal, UrenLijst tijden)
         {
             try
             {
                 lock (Aantallen)
                 {
-                    if (aantal > 0 && Aantallen.Any(x => x.Aantal == aantal)) return false;
-                    Aantallen.RemoveAll(x => x.Aantal >= aantal);
-                    var xent = Aantallen.Count > 1
-                        ? Aantallen.LastOrDefault(x => DateTime.Now >= x.DateChanged.Subtract(TimeSpan.FromMinutes(2)) &&
-                                                       DateTime.Now <= x.DateChanged.AddMinutes(2))
+                    if (aantal > 0 && Aantallen.Any(x => x.LastAantal == aantal)) return false;
+                    Aantallen.RemoveAll(x => x.LastAantal >= aantal);
+                    if (aantal == 0) return true;
+                    var xent = Aantallen.Count > 0
+                        ? Aantallen.LastOrDefault(x => x.IsActive ||
+                            x.EndDate.AddMinutes(5) >= DateTime.Now)
                         : null;
+                    var xlast = Aantallen.LastOrDefault();
+                    var xstart = xlast?.EndDate ?? tijden?.GetFirstStart() ?? DateTime.Now;
+                    if (xstart.IsDefault())
+                        xstart = DateTime.Now;
                     if (xent != null)
                     {
                         var xindex = Aantallen.IndexOf(xent);
-                        xent.Aantal = aantal;
-                        xent.DateChanged = DateTime.Now;
-                        if (xindex > 0)
+                        //xent.Aantal = aantal;
+                        //xent.DateChanged = DateTime.Now;
+                        if (xindex > -1)
                         {
-                            Aantallen[xindex - 1].LastAantal = aantal;
-                            Aantallen[xindex - 1].EndDate = DateTime.Now;
+                            Aantallen[xindex].LastAantal = aantal;
+                            Aantallen[xindex].EndDate = DateTime.Now;
+                            return true;
                         }
-                        else
-                        {
-                            xent = new AantalRecord(aantal);
-                            xent.LastAantal = aantal;
-                            Aantallen.Add(xent);
-                        }
+                        //else
+                        //{
+
+                        //    xent = new AantalRecord(aantal);
+                        //    xent.DateChanged = xstart;
+                        //    xent.LastAantal = aantal;
+                        //    xent.EndDate = DateTime.Now;
+                        //    Aantallen.Add(xent);
+                        //}
                     }
-                    else
+
+
+                    var xaantal = xlast?.LastAantal??0;
+                    //if (xlast != null)
+                    //{
+                    //    xlast.LastAantal = aantal;
+                    //    xstart = xlast.EndDate;
+                    //    xaantal = xlast.LastAantal;
+
+
+                    //    //if (xlast.DateChanged.Date != DateTime.Now)
+                    //    //{
+                    //    //    var dt = xlast.DateChanged;
+                    //    //    Rooster rs = tijden?.WerkRooster ??
+                    //    //                 Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
+                    //    //    xstart = Werktijd.EerstVolgendeWerkdag(xstart, ref rs, rs, tijden?.SpecialeRoosters);
+                    //    //    var xgestopt = xlast.GetGestopt();
+                    //    //    if (xstart > xlast.GetGestopt())
+                    //    //    {
+                    //    //        xlast.EndDate = new DateTime(xgestopt.Year, xgestopt.Month, xgestopt.Day, 23, 59, 0);
+                    //    //    }
+                    //    //    else xlast.EndDate = xstart;
+                    //    //}
+                    //    //else
+                    //    //    xlast.EndDate = xstart;
+                    //}
+                    xent = new AantalRecord(xaantal)
                     {
-
-                        var xlast = Aantallen.LastOrDefault();
-                        var xstart = DateTime.Now;
-                        if (xlast != null)
-                        {
-                            xlast.LastAantal = aantal;
-                            if (xlast.DateChanged.Date != DateTime.Now)
-                            {
-                                var dt = xlast.DateChanged;
-                                xlast.EndDate = new DateTime(dt.Year, dt.Month, dt.Day, 23, 59, 0);
-                                Rooster rs = tijden?.WerkRooster ??
-                                             Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
-                                xstart = Werktijd.EerstVolgendeWerkdag(xstart, ref rs, rs, tijden?.SpecialeRoosters);
-                            }
-                            else
-                                xlast.EndDate = xstart;
-                        }
-
-                        xent = new AantalRecord(aantal);
-                        xent.DateChanged = xstart;
-                        Aantallen.Add(xent);
-                    }
+                        DateChanged = xstart,
+                        EndDate = DateTime.Now,
+                        LastAantal = aantal
+                    };
+                    Aantallen.Add(xent);
                 }
 
-                SetActive(active);
+                //SetActive(active);
                 return true;
             }
             catch (Exception e)
@@ -177,20 +195,16 @@ namespace Rpm.Productie.AantalHistory
 
                 foreach (var x in xaantallen)
                 {
-                    if (!x.IsActive)
+                    gemaakt += x.GetGemaakt();
+                    tijd += x.GetTijdGewerkt(uren,exc);
+
+                    if (exc.ContainsKey(x.DateChanged))
                     {
-                        gemaakt += x.GetGemaakt();
-                        tijd += x.GetTijdGewerkt(uren);
-
-                        if (exc.ContainsKey(x.DateChanged))
-                        {
-                            if (x.GetGestopt() > exc[x.DateChanged])
-                                exc[x.DateChanged] = x.GetGestopt();
-                        }
-                        else
-                            exc.Add(x.DateChanged, x.GetGestopt());
+                        if (x.GetGestopt() > exc[x.DateChanged])
+                            exc[x.DateChanged] = x.GetGestopt();
                     }
-
+                    else
+                        exc.Add(x.DateChanged, x.GetGestopt());
                 }
 
                 var xfirst = Aantallen.FirstOrDefault();

@@ -237,9 +237,11 @@
             this.xsearchbox.ShortcutsEnabled = true;
             this.xsearchbox.ShowClearButton = true;
             this.xsearchbox.Size = new System.Drawing.Size(650, 30);
+            this.xsearchbox.Style = MetroFramework.MetroColorStyle.Purple;
             this.xsearchbox.TabIndex = 9;
             this.xsearchbox.Text = "Zoeken...";
             this.xsearchbox.UseSelectable = true;
+            this.xsearchbox.UseStyleColors = true;
             this.xsearchbox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.xsearchbox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             this.xsearchbox.TextChanged += new System.EventHandler(this.xsearchArtikel_TextChanged);
@@ -301,7 +303,7 @@
             this.Controls.Add(this.panel2);
             this.Name = "ArtikelOpmerkingenForm";
             this.Style = MetroFramework.MetroColorStyle.Purple;
-            this.Text = "Artikel Opmerkingen";
+            this.Text = "Artikel/ Werkplek Meldingen";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ArtikelOpmerkingenForm_FormClosing);
             this.Shown += new System.EventHandler(this.ArtikelOpmerkingenForm_Shown);
             this.panel1.ResumeLayout(false);

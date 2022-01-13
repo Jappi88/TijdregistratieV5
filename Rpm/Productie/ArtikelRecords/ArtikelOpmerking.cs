@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Polenter.Serialization;
 
 namespace Rpm.Productie.ArtikelRecords
 {
@@ -20,6 +21,13 @@ namespace Rpm.Productie.ArtikelRecords
         TijdGewerkt
     }
 
+    public enum FilterOp
+    {
+        Artikelen,
+        Werkplaatsen,
+        Beiden
+    }
+
     public class ArtikelOpmerking
     {
         public int ID { get; private set; }
@@ -30,6 +38,7 @@ namespace Rpm.Productie.ArtikelRecords
         public ArtikelFilter Filter { get; set; } = ArtikelFilter.GelijkAan;
         public ArtikelFilterSoort FilterSoort { get; set; } = ArtikelFilterSoort.AantalGemaakt; 
         public decimal FilterWaarde { get; set; }
+        public FilterOp FilterOp { get; set; }
         public byte[] ImageData { get; set; }
         public List<string> OpmerkingVoor { get; set; } = new List<string>();
         public Dictionary<string, DateTime> GelezenDoor { get; set; } = new Dictionary<string, DateTime>();

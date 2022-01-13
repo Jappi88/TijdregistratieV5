@@ -175,7 +175,7 @@
             this.xprogressbar.InnerColor = System.Drawing.Color.White;
             this.xprogressbar.InnerMargin = 5;
             this.xprogressbar.InnerWidth = 5;
-            this.xprogressbar.Location = new System.Drawing.Point(18, 56);
+            this.xprogressbar.Location = new System.Drawing.Point(8, 51);
             this.xprogressbar.Margin = new System.Windows.Forms.Padding(4);
             this.xprogressbar.MarqueeAnimationSpeed = 2000;
             this.xprogressbar.Name = "xprogressbar";
@@ -183,9 +183,9 @@
             this.xprogressbar.OuterMargin = -30;
             this.xprogressbar.OuterWidth = 35;
             this.xprogressbar.ProgressColor = System.Drawing.Color.ForestGreen;
-            this.xprogressbar.ProgressWidth = 15;
+            this.xprogressbar.ProgressWidth = 12;
             this.xprogressbar.SecondaryFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xprogressbar.Size = new System.Drawing.Size(142, 130);
+            this.xprogressbar.Size = new System.Drawing.Size(151, 143);
             this.xprogressbar.StartAngle = 270;
             this.xprogressbar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.xprogressbar.SubscriptColor = System.Drawing.Color.FromArgb(((int)(((byte)(166)))), ((int)(((byte)(166)))), ((int)(((byte)(166)))));
