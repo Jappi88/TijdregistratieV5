@@ -36,12 +36,11 @@
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.verwijderenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toevoegenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wijzigenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.xHistoryList)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -54,7 +53,6 @@
             this.xHistoryList.AllColumns.Add(this.olvColumn4);
             this.xHistoryList.AllColumns.Add(this.olvColumn5);
             this.xHistoryList.AllColumns.Add(this.olvColumn6);
-            this.xHistoryList.AllColumns.Add(this.olvColumn7);
             this.xHistoryList.AlternateRowBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.xHistoryList.CellEditUseWholeCell = false;
             this.xHistoryList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -63,8 +61,7 @@
             this.olvColumn3,
             this.olvColumn4,
             this.olvColumn5,
-            this.olvColumn6,
-            this.olvColumn7});
+            this.olvColumn6});
             this.xHistoryList.ContextMenuStrip = this.contextMenuStrip1;
             this.xHistoryList.Cursor = System.Windows.Forms.Cursors.Default;
             this.xHistoryList.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -118,7 +115,7 @@
             // olvColumn5
             // 
             this.olvColumn5.AspectName = "DateChanged";
-            this.olvColumn5.Text = "Aangepast Op";
+            this.olvColumn5.Text = "Gemaakt Vanaf";
             this.olvColumn5.ToolTipText = "datum en tijd van het doorgeven van het aantal";
             this.olvColumn5.Width = 150;
             this.olvColumn5.WordWrap = true;
@@ -126,14 +123,8 @@
             // olvColumn6
             // 
             this.olvColumn6.AspectName = "EndDate";
-            this.olvColumn6.Text = "Eind Datum";
+            this.olvColumn6.Text = "Gemaakt Tot";
             this.olvColumn6.Width = 150;
-            // 
-            // olvColumn7
-            // 
-            this.olvColumn7.AspectName = "IsActive";
-            this.olvColumn7.Text = "Is Actief";
-            this.olvColumn7.Width = 80;
             // 
             // contextMenuStrip1
             // 
@@ -142,7 +133,7 @@
             this.toevoegenToolStripMenuItem,
             this.wijzigenToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(160, 70);
             // 
             // verwijderenToolStripMenuItem
             // 
@@ -153,17 +144,11 @@
             this.verwijderenToolStripMenuItem.Text = "Verwijderen";
             this.verwijderenToolStripMenuItem.Click += new System.EventHandler(this.verwijderenToolStripMenuItem_Click);
             // 
-            // imageList1
-            // 
-            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.imageList1.ImageSize = new System.Drawing.Size(32, 32);
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            // 
             // toevoegenToolStripMenuItem
             // 
             this.toevoegenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.add_icon_icons_com_52393;
             this.toevoegenToolStripMenuItem.Name = "toevoegenToolStripMenuItem";
-            this.toevoegenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.toevoegenToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.toevoegenToolStripMenuItem.Text = "Toevoegen";
             this.toevoegenToolStripMenuItem.Click += new System.EventHandler(this.toevoegenToolStripMenuItem_Click);
             // 
@@ -171,9 +156,15 @@
             // 
             this.wijzigenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.edit__52382;
             this.wijzigenToolStripMenuItem.Name = "wijzigenToolStripMenuItem";
-            this.wijzigenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.wijzigenToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.wijzigenToolStripMenuItem.Text = "Wijzigen";
             this.wijzigenToolStripMenuItem.Click += new System.EventHandler(this.wijzigenToolStripMenuItem_Click);
+            // 
+            // imageList1
+            // 
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.imageList1.ImageSize = new System.Drawing.Size(32, 32);
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // AantalGemaaktHistoryUI
             // 
@@ -203,7 +194,6 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem verwijderenToolStripMenuItem;
         private BrightIdeasSoftware.OLVColumn olvColumn6;
-        private BrightIdeasSoftware.OLVColumn olvColumn7;
         private System.Windows.Forms.ToolStripMenuItem toevoegenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wijzigenToolStripMenuItem;
     }

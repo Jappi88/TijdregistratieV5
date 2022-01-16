@@ -102,13 +102,16 @@ namespace ProductieManager
             _splash?.Dispose();
             _splash = null;
             StartPosition = FormStartPosition.CenterParent;
-            Show();
+            Application.DoEvents();
+
+            this.Show();
             this.InitLastInfo();
             Select();
             BringToFront();
             UpdateTitle();
-            productieView1.ShowStartupForms();
             AutoUpdater.Start();
+            Application.DoEvents();
+            productieView1.ShowStartupForms();
         }
 
         private void AutoUpdater_ApplicationExitEvent()
@@ -328,19 +331,24 @@ namespace ProductieManager
         
         private void _manager_OnManagerLoaded()
         {
-            this.BeginInvoke(new Action(() =>
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(DoLoaded));
+            else DoLoaded();
+
+        }
+
+        private void DoLoaded()
+        {
+            if (_splash != null)
             {
-                if (_splash != null)
-                {
-                    if (_splash.CanClose)
-                        _splash.Close();
-                    else _splash.CanClose = true;
+                if (_splash.CanClose)
+                    _splash.Close();
+                else _splash.CanClose = true;
 
-                }
-                _dbWatcher.WatchPath(Manager.DefaultSettings.MainDB.UpdatePath, false, true);
-                UpdateTitle();
-            }));
+            }
 
+            _dbWatcher.WatchPath(Manager.DefaultSettings.MainDB.UpdatePath, false, true);
+            UpdateTitle();
         }
 
         private void _splash_Shown(object sender, EventArgs e)
@@ -354,12 +362,17 @@ namespace ProductieManager
         {
             this.BeginInvoke(new Action(() =>
             {
-                InitBootDir();
-                xversie.Text = $@"Versie {ProductVersion}";
-                productieView1.LoadManager(_bootDir,true);
-                productieView1.ShowUnreadMessage = true;
-                productieView1.UpdateUnreadMessages(null);
-                productieView1.UpdateUnreadOpmerkingen();
+                try
+                {
+                    InitBootDir();
+                    xversie.Text = $@"Versie {ProductVersion}";
+                    productieView1.LoadManager(_bootDir,true);
+                    productieView1.ShowUnreadMessage = true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             }));
 
         }

@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Forms.ArtikelRecords;
 using Org.BouncyCastle.Asn1.Cmp;
+using Rpm.Controls;
 using Rpm.DailyUpdate;
 using Various;
 
@@ -40,13 +41,56 @@ namespace Controls
             _specialRoosterWatcher = new Timer();
             _specialRoosterWatcher.Interval = 60000; //1 minuut;
             _specialRoosterWatcher.Tick += (x, y) => CheckForSpecialRooster(false);
-            DailyMessage = new Daily();
+            DailyMessage = new Daily
+            {
+                ImageList =
+                {
+                    ImageSize = new Size(128, 128)
+                }
+            };
             DailyMessage.DailyCreated += DailyMessage_DailyCreated;
         }
 
         private void DailyMessage_DailyCreated(object sender, EventArgs e)
         {
-           Console.WriteLine(DailyMessage?.CreatedDaily);
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(ShowDaily));
+            else ShowDaily();
+        }
+
+        private void ShowDaily()
+        {
+            try
+            {
+                if (DailyMessage.CreatedDailies.Count > 0)
+                {
+                    var xenum = Application.OpenForms.GetEnumerator();
+                    var xremove = new List<Form_Alert>();
+                    while (xenum.MoveNext())
+                    {
+                        if (xenum.Current is Form_Alert alert)
+                        {
+                            xremove.Add(alert);
+                        }
+                    }
+                    xremove.ForEach(x =>
+                    {
+                        x.Close();
+                        x.Dispose();
+                    });
+                    var xf = new DailyMessageForm(DailyMessage);
+                    xf.Height = (80 + (DailyMessage.CreatedDailies.Count * 250));
+                    if (xf.Height > 850)
+                        xf.Height = 850;
+                    xf.Width = DailyMessage.CreatedDailies.Count > 1 ? 1100 : 850;
+                    xf.HtmlText = string.Join("\r\n", DailyMessage.CreatedDailies);
+                    xf.ShowDialog();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public event EventHandler OnFormLoaded;
@@ -83,7 +127,7 @@ namespace Controls
         private static ProductieOverzichtForm _ProductieOverzicht;
         private static WerkplaatsIndeling _WerkplaatsIndeling;
 
-        private Daily DailyMessage;
+        private readonly Daily DailyMessage;
         public bool ShowUnreadMessage { get; set; }
 
         // [NonSerialized] private Opties _opties;
@@ -106,17 +150,7 @@ namespace Controls
                 }
 
                 DetachEvents();
-                //BeginInvoke(new MethodInvoker(() => _manager.Load()));
-                //BeginInvoke(new MethodInvoker(_manager.StartMonitor));
-                //await _manager.Load(path, false, false, false);
-                //CheckForUpdateDatabase();
-                //takenManager1.InitManager();
-                //xproductieListControl1.InitProductie(false, true, true, true, false, false);
-                //xbewerkingListControl.InitProductie(true, true, true, true, false, false);
-                //werkPlekkenUI1.InitUI(_manager);
-                //recentGereedMeldingenUI1.LoadBewerkingen();
-               // _manager.Dispose();
-               // _manager = new Manager(false);
+
                 _manager.InitManager();
                 //xproductieListControl1.InitProductie(false, true, true, true, false, false);
                 xbewerkingListControl.InitProductie(true, true, true, true, false, false);
@@ -138,6 +172,45 @@ namespace Controls
         public void LoadManager(string path, bool disposeOld, bool autologin = true)
         {
             InitManager(path, autologin, disposeOld);
+        }
+
+        public void ShowStartupForms()
+        {
+            try
+            {
+                if (this.Disposing || this.IsDisposed) return;
+                this.BeginInvoke(new Action(() =>
+                {
+                    try
+                    {
+                        //CheckForSyncDatabase();
+                        //CheckForUpdateDatabase();
+                        CheckForPreview(false, true);
+                        CheckForSpecialRooster(true);
+                        LoadStartedProducties();
+                        //LoadProductieLogs();
+                        //RunProductieRefresh();
+                        UpdateKlachtButton();
+                        UpdateVerpakkingenButton();
+                        Manager.ArtikelRecords?.CheckForOpmerkingen(true);
+                        InitDBCorupptedMonitor();
+                        DailyMessage.CreateDaily();
+                        UpdateUnreadMessages(null);
+                        UpdateUnreadOpmerkingen();
+                        //UpdateAllLists();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }));
+
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void InitEvents()
@@ -556,36 +629,6 @@ namespace Controls
                     Manager.Database.AllSettings.MultiFiles.MonitorCorrupted = true;
                 if (Manager.Database?.PersoneelLijst?.MultiFiles != null)
                     Manager.Database.PersoneelLijst.MultiFiles.MonitorCorrupted = true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
-        public void ShowStartupForms()
-        {
-            try
-            {
-                this.BeginInvoke(new Action(() =>
-                {
-                    //CheckForSyncDatabase();
-                    //CheckForUpdateDatabase();
-                    CheckForPreview(false, true);
-                    CheckForSpecialRooster(true);
-                    LoadStartedProducties();
-                    //LoadProductieLogs();
-                    //RunProductieRefresh();
-
-                    UpdateKlachtButton();
-                    UpdateVerpakkingenButton();
-                    Manager.ArtikelRecords?.CheckForOpmerkingen(true);
-                    InitDBCorupptedMonitor();
-                    DailyMessage.CreateDaily();
-                    //UpdateAllLists();
-                }));
-
-
             }
             catch (Exception e)
             {
@@ -1104,7 +1147,7 @@ namespace Controls
                     //    if (opties != null)
                     //        Manager.Opties = opties;
                     //}
-                    LoadManager(path,true);
+                    this.BeginInvoke(new Action(()=> LoadManager(path,true)));
                     //await _manager.Load(path, true, true, true);
                 }
             }
@@ -1434,7 +1477,7 @@ namespace Controls
             }
         }
 
-        private async void SetSpecialeRooster()
+        private void SetSpecialeRooster()
         {
             if (Manager.Opties == null) return;
             var xtime = DateTime.Now;
@@ -1468,7 +1511,7 @@ namespace Controls
                     Manager.Opties.SpecialeRoosters.Add(newrooster);
                     Manager.Opties.SpecialeRoosters = Manager.Opties.SpecialeRoosters.OrderBy(x => x.Vanaf).ToList();
 
-                    var bws = await Manager.GetBewerkingen(new ViewState[] { ViewState.Gestart }, true);
+                    var bws = Manager.GetBewerkingen(new ViewState[] { ViewState.Gestart }, true).Result;
                     bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
                         StringComparison.CurrentCultureIgnoreCase)).ToList();
                     if (bws.Count > 0)
@@ -1476,9 +1519,10 @@ namespace Controls
                         var bwselector = new BewerkingSelectorForm(bws,true,true);
                         bwselector.Title = "Selecteer Werkplekken waarvan de rooster aangepast moet worden";
                         if (bwselector.ShowDialog() == DialogResult.OK)
-                            await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
+                            Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
                     }
-                    await Manager.Opties.Save("Speciale roosters aangepast.");
+
+                    Manager.Opties.Save("Speciale roosters aangepast.");
                 }
             }
             else
@@ -2575,6 +2619,11 @@ namespace Controls
         {
             var artikels = new ArtikelRecordsForm();
             artikels.ShowDialog();
+        }
+
+        private void xShowDaily_Click(object sender, EventArgs e)
+        {
+            DailyMessage.CreateDaily(true);
         }
     }
 }

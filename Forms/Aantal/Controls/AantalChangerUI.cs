@@ -94,11 +94,11 @@ namespace ProductieManager.Forms.Aantal.Controls
             Next(false);
         }
 
+        
         private void RemovePacket()
         {
             var xverp = Productie?.VerpakkingsInstructies;
             if (xverp == null || xverp.VerpakkenPer == 0) return;
-
             xaantalgemaakt.SetValue(xaantalgemaakt.Value - xverp.VerpakkenPer);
             Next(false);
         }
@@ -315,7 +315,11 @@ namespace ProductieManager.Forms.Aantal.Controls
         {
             if (xwerkplekken.SelectedItem != null)
             {
-                if (!DoLogicalTest()) return;
+                if (!DoLogicalTest())
+                {
+                    xaantalgemaakt.SetValue((int) xaantalgemaakt.Tag);
+                    return;
+                }
                 var selected = xwerkplekken.SelectedItem.ToString();
                 var alles = selected.ToLower() == "alle werkplekken";
                 var changed = false;

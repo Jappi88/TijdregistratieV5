@@ -240,7 +240,7 @@ namespace Rpm.Productie
         /// <returns>Een taak die op de achtergrond kan draaien en "True" zal aangeven als het gelukt is</returns>
         public Task<bool> Load(string path, bool autologin, bool loadsettings, bool raiseManagerLoadingEvents)
         {
-            return Task.Run(async() =>
+            return Task.Run(() =>
             {
                 try
                 {
@@ -258,8 +258,8 @@ namespace Rpm.Productie
                     {
                         LoggerEnabled = LoggerEnabled,
                         NotificationEnabled = false
-                    };
-                    await Database.LoadMultiFiles();
+                    }; 
+                    Database.LoadMultiFiles().Wait();
                     ProductieProvider = new ProductieProvider();
                     // LocalConnection = new LocalService();
                     //Server = new SqlDatabase();
@@ -282,9 +282,9 @@ namespace Rpm.Productie
 
                     SystemId = DefaultSettings.SystemID;
                     if (autologin)
-                        autologin = await AutoLogin(this);
+                        autologin = AutoLogin(this).Result;
                     if (loadsettings && !autologin)
-                        await LoadSettings(this, raiseManagerLoadingEvents);
+                        _=LoadSettings(this, raiseManagerLoadingEvents);
 
                     if (loadsettings)
                     {
@@ -1357,7 +1357,7 @@ namespace Rpm.Productie
         /// <returns>Een taak die de productie roosters update op de achtergrond</returns>
         public static Task<int> UpdateGestarteProductieRoosters(List<WerkPlek> werkplekken, Rooster rooster)
         {
-            return Task.Run(async () =>
+            return Task.Run( () =>
             {
                 try
                 {
@@ -1373,11 +1373,11 @@ namespace Rpm.Productie
                             wp.UpdateWerkRooster(rooster, true, true, true, true, false, true, true);
 
                             changes.Add(wp.Naam);
-
-                            done++;
-                            await bw.UpdateBewerking(null,
-                                $"[{bw.ProductieNr} | {bw.ArtikelNr}] Werkrooster aangepast voor: \n" +
-                                $"{string.Join(", ", changes)}");
+                        
+                            if (bw.UpdateBewerking(null,
+                                    $"[{bw.ProductieNr} | {bw.ArtikelNr}] Werkrooster aangepast voor: \n" +
+                                    $"{string.Join(", ", changes)}").Result)
+                                done++;
                         }
 
                         return done;
@@ -1851,9 +1851,9 @@ namespace Rpm.Productie
         /// Roep op dat de logged in gebruiker is gewijzigd
         /// </summary>
         /// <param name="sender">de afzender die dit oproept</param>
-        public static async void LoginChanged(object sender, bool raiseevent)
+        public static void LoginChanged(object sender, bool raiseevent)
         {
-            await LoadSettings(sender,raiseevent);
+            _=LoadSettings(sender,raiseevent);
             if (LogedInGebruiker == null)
                 ProductieChat?.LogOut();
             else

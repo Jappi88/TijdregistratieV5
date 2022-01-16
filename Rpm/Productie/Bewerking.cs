@@ -66,6 +66,7 @@ namespace Rpm.Productie
         public int GetAantalGemaakt(DateTime start, DateTime stop,ref double tijd, bool predict)
         {
             double xtijd = tijd;
+
             var xret = WerkPlekken.Sum(x => x.GetAantalGemaakt(start, stop,ref xtijd, predict));
             tijd = xtijd;
             return xret;
@@ -266,11 +267,18 @@ namespace Rpm.Productie
 
         public List<CombineerEntry> Combies { get; set; } = new List<CombineerEntry>();
 
-        public double ControleRatio()
+        public double GetControleRatio()
         {
             if (WerkPlekken.Count > 0)
                 return WerkPlekken.Sum(x => x.ControleRatio()) / WerkPlekken.Count;
             return 0;
+
+        }
+
+        public bool StartedByMe()
+        {
+            if (string.IsNullOrEmpty(Manager.Opties?.Username)) return false;
+            return string.Equals(Manager.Opties.Username, GestartDoor, StringComparison.CurrentCultureIgnoreCase);
         }
 
         public override List<WerkPlek> GetWerkPlekken()

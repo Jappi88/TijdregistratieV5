@@ -19,9 +19,9 @@ namespace Controls
         {
             Materiaal = materiaal;
             xeenheid.Text = Materiaal.Eenheid;
-            if (Materiaal.Eenheid.ToLower().StartsWith("stuk"))
-                xvalue.DecimalPlaces = 0;
-            else xvalue.DecimalPlaces = 2;
+            //if (Materiaal.Eenheid.ToLower().StartsWith("stuk"))
+            //    xvalue.DecimalPlaces = 0;
+            //else xvalue.DecimalPlaces = 2;
             xvalue.SetValue((decimal) Materiaal.AantalAfkeur);
             xomschrijving.Text = Materiaal.Omschrijving;
             xartikelnr.Text = Materiaal.ArtikelNr;

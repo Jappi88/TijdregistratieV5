@@ -1397,12 +1397,12 @@ namespace ProductieManager.Rpm.ExcelHelper
                 case "gemeld door":
                     return storing.GemeldDoor;
                 case "gestart op":
-                    if (vanaf.Start.Date == vanaf.Stop.Date)
+                    if (vanaf != null && vanaf.Start.Date == vanaf.Stop.Date)
                         return vanaf == null ? storing.Gestart.ToString() : storing.GestartOp(vanaf, specialeroosters).ToString("HH:mm");
                     return vanaf == null ? storing.Gestart.ToString() : storing.GestartOp(vanaf, specialeroosters).ToString();
                 case "gestopt op":
                     var stop = (storing.IsVerholpen ? storing.Gestopt : DateTime.Now);
-                    if (vanaf.Start.Date == vanaf.Stop.Date)
+                    if (vanaf != null && vanaf.Start.Date == vanaf.Stop.Date)
                         return vanaf == null ? stop.ToString() : storing.GestoptOp(vanaf, specialeroosters).ToString("HH:mm");
                     return vanaf == null ? stop.ToString() : storing.GestoptOp(vanaf, specialeroosters).ToString();
                 case "totaal tijd":
@@ -1441,7 +1441,7 @@ namespace ProductieManager.Rpm.ExcelHelper
             switch (value.ToLower())
             {
                 case "actueelaantalgemaakt":
-                    return vanaf == null ? bew.ActueelAantalGemaakt : bew.GetAantalGemaakt(vanaf.Start, vanaf.Stop,ref xtijd, true);
+                    return vanaf == null ? bew.ActueelAantalGemaakt : bew.GetAantalGemaakt(vanaf.Start, vanaf.Stop,ref xtijd, bew.State == ProductieState.Gestart);
                 case "tijdgewerkt":
                     return vanaf == null ? bew.TijdAanGewerkt() : bew.TijdAanGewerkt(vanaf.Start, vanaf.Stop);
                 case "werkplekken":
@@ -1547,7 +1547,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                 }
                 catch (Exception e)
                 {
-                    return null;
+                    throw e;
                 }
             });
         }

@@ -24,6 +24,7 @@ namespace Forms.ArtikelRecords
             ((OLVColumn) xArtikelList.Columns[0]).ImageGetter = ImageGetter;
             ((OLVColumn)xwerkpleklist.Columns[7]).AspectGetter = AantalproductiesGetter;
             ((OLVColumn)xwerkpleklist.Columns[0]).ImageGetter = ImageGetter;
+            LoadArtikels(true);
         }
 
         private object ImageGetter(object item)
@@ -59,9 +60,21 @@ namespace Forms.ArtikelRecords
             {
                 AccesLevel: >= AccesType.ProductieBasis
             };
-            xopmerkingen.Enabled = xArtikelList.SelectedObjects.Count == 1;
+            xeditArtikel.Enabled = xArtikelList.SelectedObjects.Count > 0 && Manager.LogedInGebruiker is
+            {
+                AccesLevel: >= AccesType.ProductieAdvance
+            };
+            xopmerkingen.Enabled = xArtikelList.SelectedObjects.Count == 1 && Manager.LogedInGebruiker is
+            {
+                AccesLevel: >= AccesType.ProductieBasis
+            };
 
             xdeletewerkplek.Enabled = xwerkpleklist.SelectedObjects.Count > 0 && Manager.LogedInGebruiker is
+            {
+                AccesLevel: >= AccesType.ProductieAdvance
+            };
+            
+            xeditWerkplek.Enabled = xwerkpleklist.SelectedObjects.Count > 0 && Manager.LogedInGebruiker is
             {
                 AccesLevel: >= AccesType.ProductieAdvance
             };
@@ -69,7 +82,10 @@ namespace Forms.ArtikelRecords
             {
                 AccesLevel: >= AccesType.ProductieAdvance
             };
-            xwerkplekopmerkingen.Enabled = xwerkpleklist.SelectedObjects.Count == 1;
+            xwerkplekopmerkingen.Enabled = xwerkpleklist.SelectedObjects.Count == 1 && Manager.LogedInGebruiker is
+            {
+                AccesLevel: >= AccesType.ProductieAdvance
+            };
             if (updatetitle)
                 UpdateTitle();
         }
@@ -270,7 +286,6 @@ namespace Forms.ArtikelRecords
             if (Manager.ArtikelRecords?.Database == null) return;
             Manager.ArtikelRecords.ArtikelChanged += Database_InstanceChanged;
             Manager.ArtikelRecords.ArtikelDeleted += Database_InstanceDeleted;
-            LoadArtikels(true);
         }
 
         private void xArtikelList_SelectedIndexChanged(object sender, EventArgs e)
@@ -463,6 +478,49 @@ namespace Forms.ArtikelRecords
             if (string.Equals(filter, _Filter2, StringComparison.CurrentCultureIgnoreCase)) return;
             LoadArtikels(false);
             _Filter2 = filter;
+        }
+
+        private void xeditArtikel_Click(object sender, EventArgs e)
+        {
+            if (Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieAdvance })
+            {
+                try
+                {
+                    if (metroTabControl1.SelectedIndex == 0 && xArtikelList.SelectedObject is ArtikelRecord record)
+                    {
+                        var xform = new NewArtikelRecord(record);
+                        xform.AllowArtikelEdit = false;
+                        xform.AllowWerkplekEdit = false;
+                        if (xform.ShowDialog() == DialogResult.OK)
+                        {
+                            xArtikelList.RefreshObject(record);
+                            Manager.ArtikelRecords.Database.Upsert(record.ArtikelNr, record, false);
+                        }
+                    }
+                    else if(metroTabControl1.SelectedIndex == 1 && xwerkpleklist.SelectedObject is ArtikelRecord xrecord)
+                    {
+                        var xform = new NewArtikelRecord(xrecord);
+                        xform.AllowArtikelEdit = false;
+                        xform.AllowWerkplekEdit = false;
+                        if (xform.ShowDialog() == DialogResult.OK)
+                        {
+                            xwerkpleklist.RefreshObject(xrecord);
+                            Manager.ArtikelRecords.Database.Upsert(xrecord.ArtikelNr, xrecord, false);
+                        }
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                }
+            }
+        }
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            meldingenToolStripMenuItem.Enabled = metroTabControl1.SelectedIndex == 0 && xopmerkingen.Enabled || (metroTabControl1.SelectedIndex == 1 && xwerkplekopmerkingen.Enabled);
+            wijzigenToolStripMenuItem.Enabled = metroTabControl1.SelectedIndex == 0 && xeditArtikel.Enabled || (metroTabControl1.SelectedIndex == 1 && xeditWerkplek.Enabled);
+            verwijderenToolStripMenuItem.Enabled = metroTabControl1.SelectedIndex == 0 && xdeleteartikel.Enabled || (metroTabControl1.SelectedIndex == 1 && xdeletewerkplek.Enabled);
         }
     }
 }

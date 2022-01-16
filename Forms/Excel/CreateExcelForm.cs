@@ -116,11 +116,18 @@ namespace Forms
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 StartWait();
-                var producties = Bewerkingen?? await Manager.Database.GetAllBewerkingen(true,true);
-                TijdEntry te = Bewerkingen == null ? new TijdEntry(xvanafdate.Value, xtotdate.Value, null) : null;
-                var file = await ExcelWorkbook.CreateWeekOverzicht(te, producties, xcreeroverzicht.Checked, ofd.FileName,$"Overzicht vanaf {xvanafdate.Value} t/m {xtotdate.Value}",IsRunning);
-                if (file != null && File.Exists(file) && xopenexcel.Checked)
-                    Process.Start(file);
+                try
+                {
+                    var producties = Bewerkingen?? await Manager.Database.GetAllBewerkingen(true,true);
+                    TijdEntry te = Bewerkingen == null ? new TijdEntry(xvanafdate.Value, xtotdate.Value, null) : null;
+                    var file = await ExcelWorkbook.CreateWeekOverzicht(te, producties, xcreeroverzicht.Checked, ofd.FileName,$"Overzicht vanaf {xvanafdate.Value} t/m {xtotdate.Value}",IsRunning);
+                    if (file != null && File.Exists(file) && xopenexcel.Checked)
+                        Process.Start(file);
+                }
+                catch (Exception exception)
+                {
+                    XMessageBox.Show(exception.Message, "Fout", MessageBoxIcon.Error);
+                }
                 StopWait();
             }
         }

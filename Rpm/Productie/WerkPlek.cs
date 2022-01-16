@@ -119,7 +119,7 @@ namespace Rpm.Productie
             } 
         }
 
-        public int GetAantalGemaakt(DateTime start, DateTime stop,ref double tijd ,  bool predict)
+        public int GetAantalGemaakt(DateTime start, DateTime stop,ref double tijd ,bool predict)
         {
            
             if (AantalHistory == null)
@@ -127,7 +127,12 @@ namespace Rpm.Productie
                 return _aantalgemaakt;
             }
 
-            return AantalHistory.AantalGemaakt(start, stop, ref tijd, Tijden, predict, -1, GetStoringen());
+            int multiply = 1;
+            if (Werk is {IsBemand: true})
+            {
+                multiply = Personen.Where(x => x.IngezetAanKlus(Werk, true, out _)).ToList().Count;
+            }
+            return AantalHistory.AantalGemaakt(start, stop, ref tijd, Tijden, predict, multiply, - 1, GetStoringen());
         }
 
         public int GetActueelAantalGemaakt(ref double tijd)
@@ -136,7 +141,9 @@ namespace Rpm.Productie
             {
                 return _aantalgemaakt;
             }
-            return AantalHistory.AantalGemaakt(Tijden, ref tijd,true, -1,GetStoringen());
+
+            int xmultyply = (Werk?.IsBemand ?? false) ? Personen.Count : 1;
+            return AantalHistory.AantalGemaakt(Tijden, ref tijd,Werk is {State: ProductieState.Gestart },xmultyply, -1,GetStoringen());
         }
 
         public int TotaalGemaakt
@@ -611,7 +618,10 @@ namespace Rpm.Productie
             var xvalue = AantalHistory.Aantallen.Where(x => x.Gemaakt > 0).ToList();
             var xtijd = TijdGewerkt;
             if (Werk is {IsBemand: true})
-                xtijd /= Personen.Count;
+            {
+                if (Personen is {Count: > 0})
+                    xtijd /= Personen.Count;
+            }
             var xratio = xtijd.GetPercentageDifference(xvalue.Count * 1.5d);
             return xratio;
         }

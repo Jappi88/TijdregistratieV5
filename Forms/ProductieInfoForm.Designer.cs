@@ -32,30 +32,28 @@ namespace Forms
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieInfoForm));
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.xcontainer = new System.Windows.Forms.Panel();
             this.xexport = new System.Windows.Forms.Button();
             this.xstatsb = new System.Windows.Forms.Button();
             this.xsluiten = new System.Windows.Forms.Button();
-            this.xinfopanel = new TheArtOfDev.HtmlRenderer.WinForms.HtmlPanel();
             this.productieInfoUI1 = new Controls.ProductieInfoUI();
-            this.panel1.SuspendLayout();
-            this.xinfopanel.SuspendLayout();
+            this.xcontainer.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel1
+            // xcontainer
             // 
-            this.panel1.AutoScroll = true;
-            this.panel1.Controls.Add(this.xexport);
-            this.panel1.Controls.Add(this.xstatsb);
-            this.panel1.Controls.Add(this.xsluiten);
-            this.panel1.Controls.Add(this.xinfopanel);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(10, 60);
-            this.panel1.Margin = new System.Windows.Forms.Padding(0);
-            this.panel1.Name = "panel1";
-            this.panel1.Padding = new System.Windows.Forms.Padding(10);
-            this.panel1.Size = new System.Drawing.Size(867, 518);
-            this.panel1.TabIndex = 11;
+            this.xcontainer.AutoScroll = true;
+            this.xcontainer.Controls.Add(this.productieInfoUI1);
+            this.xcontainer.Controls.Add(this.xexport);
+            this.xcontainer.Controls.Add(this.xstatsb);
+            this.xcontainer.Controls.Add(this.xsluiten);
+            this.xcontainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xcontainer.Location = new System.Drawing.Point(10, 60);
+            this.xcontainer.Margin = new System.Windows.Forms.Padding(0);
+            this.xcontainer.Name = "xcontainer";
+            this.xcontainer.Padding = new System.Windows.Forms.Padding(10);
+            this.xcontainer.Size = new System.Drawing.Size(867, 518);
+            this.xcontainer.TabIndex = 11;
             // 
             // xexport
             // 
@@ -111,35 +109,20 @@ namespace Forms
             this.xsluiten.UseVisualStyleBackColor = true;
             this.xsluiten.Click += new System.EventHandler(this.xsluiten_Click);
             // 
-            // xinfopanel
-            // 
-            this.xinfopanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xinfopanel.AutoScroll = true;
-            this.xinfopanel.AutoScrollMinSize = new System.Drawing.Size(867, 20);
-            this.xinfopanel.BackColor = System.Drawing.SystemColors.Window;
-            this.xinfopanel.BaseStylesheet = "";
-            this.xinfopanel.Controls.Add(this.productieInfoUI1);
-            this.xinfopanel.Cursor = System.Windows.Forms.Cursors.Default;
-            this.xinfopanel.Location = new System.Drawing.Point(0, 0);
-            this.xinfopanel.Name = "xinfopanel";
-            this.xinfopanel.Size = new System.Drawing.Size(867, 471);
-            this.xinfopanel.TabIndex = 0;
-            this.xinfopanel.Text = "Productie Info";
-            // 
             // productieInfoUI1
             // 
             this.productieInfoUI1.AllowVerpakkingEdit = false;
+            this.productieInfoUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.productieInfoUI1.AutoScroll = true;
             this.productieInfoUI1.BackColor = System.Drawing.Color.White;
-            this.productieInfoUI1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
+            this.productieInfoUI1.Location = new System.Drawing.Point(10, 10);
             this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
             this.productieInfoUI1.Name = "productieInfoUI1";
             this.productieInfoUI1.ShowAantal = false;
-            this.productieInfoUI1.Size = new System.Drawing.Size(867, 471);
+            this.productieInfoUI1.Size = new System.Drawing.Size(847, 460);
             this.productieInfoUI1.TabIndex = 0;
             // 
             // ProductieInfoForm
@@ -149,7 +132,7 @@ namespace Forms
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.CancelButton = this.xsluiten;
             this.ClientSize = new System.Drawing.Size(887, 588);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.xcontainer);
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -159,15 +142,13 @@ namespace Forms
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.Style = MetroFramework.MetroColorStyle.Purple;
             this.Text = "Productie Info";
-            this.panel1.ResumeLayout(false);
-            this.xinfopanel.ResumeLayout(false);
+            this.xcontainer.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.Panel panel1;
-        private HtmlPanel xinfopanel;
+        private System.Windows.Forms.Panel xcontainer;
         private System.Windows.Forms.Button xsluiten;
         private System.Windows.Forms.Button xstatsb;
         private System.Windows.Forms.Button xexport;

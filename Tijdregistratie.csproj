@@ -249,6 +249,12 @@
     <Compile Include="Controls\ChartView.Designer.cs">
       <DependentUpon>ChartView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ProductieVerbruikUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ProductieVerbruikUI.Designer.cs">
+      <DependentUpon>ProductieVerbruikUI.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Aantal\AantalHistoryForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -537,6 +543,12 @@
     </Compile>
     <Compile Include="Forms\Combineer\NewCombineerForm.Designer.cs">
       <DependentUpon>NewCombineerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DailyMessageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DailyMessageForm.Designer.cs">
+      <DependentUpon>DailyMessageForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\EditCriteriaForm.cs">
       <SubType>Form</SubType>
@@ -1220,6 +1232,9 @@
     <EmbeddedResource Include="Controls\ChartView.resx">
       <DependentUpon>ChartView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ProductieVerbruikUI.resx">
+      <DependentUpon>ProductieVerbruikUI.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Aantal\AantalHistoryForm.resx">
       <DependentUpon>AantalHistoryForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1357,6 +1372,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Combineer\NewCombineerForm.resx">
       <DependentUpon>NewCombineerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DailyMessageForm.resx">
+      <DependentUpon>DailyMessageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EditCriteriaForm.resx">
       <DependentUpon>EditCriteriaForm.cs</DependentUpon>
@@ -1764,6 +1782,8 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\calculator_icon-icons.com_72046.png" />
+    <None Include="Resources\Emotes_Grades.png" />
     <None Include="Resources\vdv_animatedlogo1.gif" />
     <None Include="Resources\vdv_animatedlogo_Transparant.gif" />
     <None Include="Resources\vdv_animatedlogo.gif" />

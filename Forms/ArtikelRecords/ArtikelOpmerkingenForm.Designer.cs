@@ -302,6 +302,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
             this.Name = "ArtikelOpmerkingenForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Style = MetroFramework.MetroColorStyle.Purple;
             this.Text = "Artikel/ Werkplek Meldingen";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ArtikelOpmerkingenForm_FormClosing);

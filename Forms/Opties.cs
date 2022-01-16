@@ -210,6 +210,8 @@ namespace Forms
             //    xcolumnsStatusLabel.ForeColor = Color.DarkRed;
             //}
 
+            xtoondayli.Checked = x.ShowDaylyMessage;
+
             xmaakvanafweek.SetValue(x.VanafWeek);
             xmaakvanafjaar.SetValue(x.VanafJaar);
             xexcelinterval.SetValue((decimal) x.WeekOverzichtUpdateInterval / 60000);
@@ -359,6 +361,9 @@ namespace Forms
             xs.MinVoorControle = (int) xminvoorcontrole.Value;
             xs.TaakSyncInterval = (int) xsyncinterval.Value;
             xs.SyncInterval = (int)xsyncinterval.Value;
+
+            xs.ShowDaylyMessage = xtoondayli.Checked;
+
             //weergave
             xs.NieuwTijd = (double)xniewaantaluur.Value;
             xs.ToonAlles = xtoonalles.Checked;
@@ -551,19 +556,19 @@ namespace Forms
                         "Database Locatie Gewijzigd!",
                         MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
                     if (rsult == DialogResult.Cancel) return false;
-                    string xdb2 = Manager.DefaultSettings.MainDB.UpdatePath;
-                    if (Directory.Exists(xdb2))
-                    {
-                        var rsult2 = XMessageBox.Show("Wil je de oude gegevens kopieren naar de nieuwe database?",
-                            $"Kopieren naar {db}", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                        if (rsult2 == DialogResult.Cancel)
-                            return false;
-                        if (rsult2 == DialogResult.Yes)
-                        {
-                            if (!xdb2.CopyDirectoryTo(db + "\\RPM_Data")) return false;
+                    //string xdb2 = Manager.DefaultSettings.MainDB.UpdatePath;
+                    //if (Directory.Exists(xdb2))
+                    //{
+                    //    var rsult2 = XMessageBox.Show("Wil je de oude gegevens kopieren naar de nieuwe database?",
+                    //        $"Kopieren naar {db}", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                    //    if (rsult2 == DialogResult.Cancel)
+                    //        return false;
+                    //    if (rsult2 == DialogResult.Yes)
+                    //    {
+                    //        if (!xdb2.CopyDirectoryTo(db + "\\RPM_Data")) return false;
 
-                        }
-                    }
+                    //    }
+                    //}
 
                     if (rsult == DialogResult.Yes)
                     {

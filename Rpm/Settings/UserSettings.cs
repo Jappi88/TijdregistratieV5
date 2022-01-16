@@ -296,6 +296,7 @@ namespace Rpm.Settings
 
         #region "Gebruiker"
 
+        public bool ShowDaylyMessage { get; set; } = true;
         //weergave
         public string PersoneelAfdelingFilter { get; set; }
         public byte[] _viewwerkplekdata { get; set; }

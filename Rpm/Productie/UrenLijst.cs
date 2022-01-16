@@ -78,13 +78,15 @@ namespace Rpm.Productie
                         : rooster;
                     bool xflag = WerkRooster != null && !WerkRooster.SameTijden(currooster);
                     WerkRooster = currooster;
-                    if (dospecialrooster)
+                    if (dospecialrooster && Manager.Opties != null)
                     {
+                        int removed = SpecialeRoosters.RemoveAll(x =>
+                            Manager.Opties.SpecialeRoosters.All(p => x.Vanaf.Date != p.Vanaf.Date));
                         for (int i = 0; i < Uren.Count; i++)
                         {
                             var xent = Uren[i];
                             if (xent.ExtraTijd != null || !xent.InUse) continue;
-                            var xspc = Manager.Opties?.SpecialeRoosters
+                            var xspc = Manager.Opties.SpecialeRoosters
                                 ?.Where(x => new TijdEntry(x.Vanaf.Date, x.Vanaf.Date.Add(x.EindWerkdag)).ContainsBereik(xent)).ToList();
                             //var xspc = Manager.Opties?.SpecialeRoosters
                              //   ?.Where(x => (x.Vanaf.Date >= xent.Start.Date && x.Vanaf.Date <= xent.Stop.Date) && (

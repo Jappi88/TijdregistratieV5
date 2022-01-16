@@ -115,7 +115,7 @@
             this.xartikelnr.CustomButton.UseSelectable = true;
             this.xartikelnr.CustomButton.Visible = false;
             this.xartikelnr.Dock = System.Windows.Forms.DockStyle.Top;
-            this.xartikelnr.FontSize = MetroFramework.MetroTextBoxSize.Tall;
+            this.xartikelnr.FontSize = MetroFramework.MetroTextBoxSize.Medium;
             this.xartikelnr.Lines = new string[0];
             this.xartikelnr.Location = new System.Drawing.Point(20, 60);
             this.xartikelnr.MaxLength = 32767;
@@ -151,7 +151,7 @@
             this.xomschrijving.CustomButton.UseSelectable = true;
             this.xomschrijving.CustomButton.Visible = false;
             this.xomschrijving.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xomschrijving.FontSize = MetroFramework.MetroTextBoxSize.Tall;
+            this.xomschrijving.FontSize = MetroFramework.MetroTextBoxSize.Medium;
             this.xomschrijving.Lines = new string[0];
             this.xomschrijving.Location = new System.Drawing.Point(20, 92);
             this.xomschrijving.MaxLength = 32767;
@@ -182,6 +182,7 @@
             this.Controls.Add(this.xartikelnr);
             this.Controls.Add(this.panel2);
             this.Name = "NewArtikelRecord";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Style = MetroFramework.MetroColorStyle.Purple;
             this.Text = "Nieuwe Artikel/ Werkplek";
             this.panel2.ResumeLayout(false);

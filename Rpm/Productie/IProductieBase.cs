@@ -267,8 +267,8 @@ namespace Rpm.Productie
         {
             get
             {
-                if (this is Bewerking bew) return bew.ControleRatio();
-                if (this is ProductieFormulier prod) return prod.ControleRatio();
+                if (this is Bewerking bew) return bew.GetControleRatio();
+                if (this is ProductieFormulier prod) return prod.GetControleRatio();
                 return 0;
             }
         }
@@ -480,10 +480,29 @@ namespace Rpm.Productie
         {
             if (src == "StyleSheet")
             {
-                return @"h1, h2, h3 { color: navy; font:11pt Tahoma; }
-                    h1 { margin-bottom: .3em}
-                    h2 { margin-bottom: .3em; font:10pt Tahoma }
-                    h3 { margin-bottom: .4em }
+                return @"h1, h2, h3 { color: navy}
+                    h1 { margin-bottom: .3em; font:12pt Tahoma}
+                    h2 { margin-bottom: .3em; font:10pt Tahoma}
+                    h3 { margin-bottom: .4em; font:10pt Tahoma }
+                    ul { margin-top: .5em }
+                    ul li {margin: .5em}
+                    body { font:10pt Tahoma}
+		            pre  { border:solid 1px gray; background-color:#eee; padding:1em }
+                    a:link { text-decoration: none; }
+                    a:hover { text-decoration: underline; }
+                    .gray    { color:gray; }
+                    .example { background-color:#efefef; corner-radius:5px; padding:0.5em; }
+                    .whitehole { background-color:white; corner-radius:10px; padding:0px; }
+                    .caption { font-size: 1.1em }
+                    .comment { color: green; margin-bottom: 5px; margin-left: 3px; }
+                    .comment2 { color: green; }";
+            }
+            if (src == "StyleSheet1")
+            {
+                return @"h1, h2, h3 { color: navy}
+                    h1 { margin-bottom: .3em; font:18pt Tahoma}
+                    h2 { margin-bottom: .3em; font:14pt Tahoma}
+                    h3 { margin-bottom: .4em; font:10pt Tahoma }
                     ul { margin-top: .5em }
                     ul li {margin: .5em}
                     body { font:10pt Tahoma}
@@ -557,6 +576,42 @@ namespace Rpm.Productie
             return xreturn;
         }
 
+        public static string CreateHtmlMessage(string message, string title, Color txtcolor, Color backcolor,
+            Color backgradient, string imgname, Size imgsize)
+        {
+            string ximage = $"<td width = '{imgsize.Width}' style = 'padding: 5px 5px 0 0' >\r\n" +
+                           $"<img width='{imgsize.Width}' height='{imgsize.Height}'  src = '{imgname}' />\r\n" +
+                           $"</td>";
+            if (string.IsNullOrEmpty(imgname)) ximage = "";
+            var xreturn = $"<html>\r\n" +
+              $"<head>\r\n" +
+              $"<style>{GetStylesheet("StyleSheet1")}</style>\r\n" +
+              $"<Title>{title}</Title>\r\n" +
+              $"<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
+              $"</head>\r\n" +
+              $"<body style='background - color: {backcolor.Name}; background-gradient: {backgradient.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
+              $"<h1 align='center' style='color: {txtcolor.Name}'>\r\n" +
+              $"       {title}\r\n" +
+              $"</h1>\r\n" +
+              $"<blockquote class='whitehole'>\r\n" +
+              $"       <p style = 'margin-top: 0px' >\r\n" +
+              $"<table border = '0' width = '100%' >\r\n" +
+              $"<tr style = 'vertical-align: top;' >\r\n" +
+              ximage +
+              $"<td>" +
+              $"<div>\r\n" +
+              $"{message}"+
+              $"<hr />" +
+              $"</td>" +
+              $"</tr>\r\n" +
+              $"</table >\r\n" +
+              $"</p>\r\n" +
+              $"</blockquote>\r\n" +
+              $"</body>\r\n" +
+              $"</html>";
+            return xreturn;
+        }
+
         public string CombiesHtml()
         {
             try
@@ -613,7 +668,8 @@ namespace Rpm.Productie
                    $"<div Color=RoyalBlue>[{x.ArtikelNr}] {x.Omschrijving}</div>" +
                    $"<div>Locatie: <b>{x.Locatie}</b></div>" +
                    $"<div>Verbuik Per Eenheid: <b>{Math.Round(x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
-                   $"<div>Verbuik: <b>{Math.Round(TotaalGemaakt * x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
+                   $"<div>Verbuikt: <b>{Math.Round(TotaalGemaakt * x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
+                   $"<div>Totaal Nodig: <b>{Math.Round(Aantal * x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
                    $"<div>Aantal Afkeur: <b>{Math.Round(x.AantalAfkeur, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)} ({x.AfKeurProcent()})</b></div>" +
                    $"</li>"))) +
               $"</ul>\r\n" +

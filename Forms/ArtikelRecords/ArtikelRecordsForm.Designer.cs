@@ -59,6 +59,7 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.xwerkpleklist = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn12 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn13 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -67,7 +68,13 @@
             this.olvColumn16 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.panel5 = new System.Windows.Forms.Panel();
             this.xsearch2 = new MetroFramework.Controls.MetroTextBox();
-            this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.xeditArtikel = new System.Windows.Forms.Button();
+            this.xeditWerkplek = new System.Windows.Forms.Button();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.meldingenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wijzigenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.verwijderenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xArtikelList)).BeginInit();
             this.panel3.SuspendLayout();
@@ -78,6 +85,7 @@
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xwerkpleklist)).BeginInit();
             this.panel5.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -111,6 +119,7 @@
             this.olvColumn3,
             this.olvColumn6,
             this.olvColumn7});
+            this.xArtikelList.ContextMenuStrip = this.contextMenuStrip1;
             this.xArtikelList.Cursor = System.Windows.Forms.Cursors.Default;
             this.xArtikelList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xArtikelList.FullRowSelect = true;
@@ -212,6 +221,7 @@
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.White;
+            this.panel3.Controls.Add(this.xeditArtikel);
             this.panel3.Controls.Add(this.xdeleteartikel);
             this.panel3.Controls.Add(this.xopmerkingen);
             this.panel3.Controls.Add(this.xaddartikel);
@@ -259,7 +269,7 @@
             this.xaddartikel.FlatAppearance.BorderSize = 0;
             this.xaddartikel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xaddartikel.Image = global::ProductieManager.Properties.Resources.add_Blue_circle_32x32;
-            this.xaddartikel.Location = new System.Drawing.Point(671, 1);
+            this.xaddartikel.Location = new System.Drawing.Point(631, 1);
             this.xaddartikel.Name = "xaddartikel";
             this.xaddartikel.Size = new System.Drawing.Size(34, 34);
             this.xaddartikel.TabIndex = 10;
@@ -275,7 +285,7 @@
             // 
             // 
             this.xsearchbox.CustomButton.Image = null;
-            this.xsearchbox.CustomButton.Location = new System.Drawing.Point(632, 2);
+            this.xsearchbox.CustomButton.Location = new System.Drawing.Point(592, 2);
             this.xsearchbox.CustomButton.Name = "";
             this.xsearchbox.CustomButton.Size = new System.Drawing.Size(25, 25);
             this.xsearchbox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -297,7 +307,7 @@
             this.xsearchbox.SelectionStart = 0;
             this.xsearchbox.ShortcutsEnabled = true;
             this.xsearchbox.ShowClearButton = true;
-            this.xsearchbox.Size = new System.Drawing.Size(660, 30);
+            this.xsearchbox.Size = new System.Drawing.Size(620, 30);
             this.xsearchbox.TabIndex = 9;
             this.xsearchbox.Text = "Zoeken...";
             this.xsearchbox.UseSelectable = true;
@@ -364,7 +374,7 @@
             this.xdeletewerkplek.FlatAppearance.BorderSize = 0;
             this.xdeletewerkplek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xdeletewerkplek.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xdeletewerkplek.Location = new System.Drawing.Point(700, 1);
+            this.xdeletewerkplek.Location = new System.Drawing.Point(711, 1);
             this.xdeletewerkplek.Name = "xdeletewerkplek";
             this.xdeletewerkplek.Size = new System.Drawing.Size(34, 34);
             this.xdeletewerkplek.TabIndex = 12;
@@ -379,7 +389,7 @@
             this.xwerkplekopmerkingen.FlatAppearance.BorderSize = 0;
             this.xwerkplekopmerkingen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xwerkplekopmerkingen.Image = global::ProductieManager.Properties.Resources.default_opmerking_16757_32x32;
-            this.xwerkplekopmerkingen.Location = new System.Drawing.Point(740, 1);
+            this.xwerkplekopmerkingen.Location = new System.Drawing.Point(751, 1);
             this.xwerkplekopmerkingen.Name = "xwerkplekopmerkingen";
             this.xwerkplekopmerkingen.Size = new System.Drawing.Size(34, 34);
             this.xwerkplekopmerkingen.TabIndex = 11;
@@ -394,7 +404,7 @@
             this.xaddwerkplek.FlatAppearance.BorderSize = 0;
             this.xaddwerkplek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xaddwerkplek.Image = global::ProductieManager.Properties.Resources.add_Blue_circle_32x32;
-            this.xaddwerkplek.Location = new System.Drawing.Point(660, 1);
+            this.xaddwerkplek.Location = new System.Drawing.Point(631, 1);
             this.xaddwerkplek.Name = "xaddwerkplek";
             this.xaddwerkplek.Size = new System.Drawing.Size(34, 34);
             this.xaddwerkplek.TabIndex = 10;
@@ -441,7 +451,7 @@
             this.metroTabPage2.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage2.Name = "metroTabPage2";
             this.metroTabPage2.Padding = new System.Windows.Forms.Padding(5);
-            this.metroTabPage2.Size = new System.Drawing.Size(789, 344);
+            this.metroTabPage2.Size = new System.Drawing.Size(800, 355);
             this.metroTabPage2.TabIndex = 1;
             this.metroTabPage2.Text = "Werkplaatsen";
             this.metroTabPage2.VerticalScrollbarBarColor = true;
@@ -456,7 +466,7 @@
             this.panel4.Location = new System.Drawing.Point(5, 5);
             this.panel4.Margin = new System.Windows.Forms.Padding(4);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(779, 334);
+            this.panel4.Size = new System.Drawing.Size(790, 345);
             this.panel4.TabIndex = 2;
             // 
             // xwerkpleklist
@@ -479,6 +489,7 @@
             this.olvColumn14,
             this.olvColumn15,
             this.olvColumn16});
+            this.xwerkpleklist.ContextMenuStrip = this.contextMenuStrip1;
             this.xwerkpleklist.Cursor = System.Windows.Forms.Cursors.Default;
             this.xwerkpleklist.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xwerkpleklist.FullRowSelect = true;
@@ -490,7 +501,7 @@
             this.xwerkpleklist.Name = "xwerkpleklist";
             this.xwerkpleklist.ShowGroups = false;
             this.xwerkpleklist.ShowItemToolTips = true;
-            this.xwerkpleklist.Size = new System.Drawing.Size(779, 296);
+            this.xwerkpleklist.Size = new System.Drawing.Size(790, 307);
             this.xwerkpleklist.SmallImageList = this.imageList1;
             this.xwerkpleklist.TabIndex = 0;
             this.xwerkpleklist.TintSortColumn = true;
@@ -511,6 +522,14 @@
             this.olvColumn9.Text = "Naam";
             this.olvColumn9.ToolTipText = "Werkplek Naam";
             this.olvColumn9.Width = 120;
+            // 
+            // olvColumn10
+            // 
+            this.olvColumn10.AspectName = "Omschrijving";
+            this.olvColumn10.Text = "Omschrijving";
+            this.olvColumn10.ToolTipText = "Werkplek Omschrijving";
+            this.olvColumn10.Width = 200;
+            this.olvColumn10.WordWrap = true;
             // 
             // olvColumn11
             // 
@@ -567,6 +586,7 @@
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.White;
+            this.panel5.Controls.Add(this.xeditWerkplek);
             this.panel5.Controls.Add(this.xdeletewerkplek);
             this.panel5.Controls.Add(this.xwerkplekopmerkingen);
             this.panel5.Controls.Add(this.xaddwerkplek);
@@ -574,7 +594,7 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(779, 38);
+            this.panel5.Size = new System.Drawing.Size(790, 38);
             this.panel5.TabIndex = 10;
             // 
             // xsearch2
@@ -585,7 +605,7 @@
             // 
             // 
             this.xsearch2.CustomButton.Image = null;
-            this.xsearch2.CustomButton.Location = new System.Drawing.Point(621, 2);
+            this.xsearch2.CustomButton.Location = new System.Drawing.Point(592, 2);
             this.xsearch2.CustomButton.Name = "";
             this.xsearch2.CustomButton.Size = new System.Drawing.Size(25, 25);
             this.xsearch2.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -607,7 +627,7 @@
             this.xsearch2.SelectionStart = 0;
             this.xsearch2.ShortcutsEnabled = true;
             this.xsearch2.ShowClearButton = true;
-            this.xsearch2.Size = new System.Drawing.Size(649, 30);
+            this.xsearch2.Size = new System.Drawing.Size(620, 30);
             this.xsearch2.TabIndex = 9;
             this.xsearch2.Text = "Zoeken...";
             this.xsearch2.UseSelectable = true;
@@ -617,13 +637,78 @@
             this.xsearch2.Enter += new System.EventHandler(this.xsearch2_Enter);
             this.xsearch2.Leave += new System.EventHandler(this.xsearch2_Leave);
             // 
-            // olvColumn10
+            // xeditArtikel
             // 
-            this.olvColumn10.AspectName = "Omschrijving";
-            this.olvColumn10.Text = "Omschrijving";
-            this.olvColumn10.ToolTipText = "Werkplek Omschrijving";
-            this.olvColumn10.Width = 200;
-            this.olvColumn10.WordWrap = true;
+            this.xeditArtikel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xeditArtikel.Enabled = false;
+            this.xeditArtikel.FlatAppearance.BorderSize = 0;
+            this.xeditArtikel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xeditArtikel.Image = global::ProductieManager.Properties.Resources.edit__52382;
+            this.xeditArtikel.Location = new System.Drawing.Point(671, 1);
+            this.xeditArtikel.Name = "xeditArtikel";
+            this.xeditArtikel.Size = new System.Drawing.Size(34, 34);
+            this.xeditArtikel.TabIndex = 13;
+            this.toolTip1.SetToolTip(this.xeditArtikel, "Wijzig Artikel");
+            this.xeditArtikel.UseVisualStyleBackColor = true;
+            this.xeditArtikel.Click += new System.EventHandler(this.xeditArtikel_Click);
+            // 
+            // xeditWerkplek
+            // 
+            this.xeditWerkplek.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xeditWerkplek.Enabled = false;
+            this.xeditWerkplek.FlatAppearance.BorderSize = 0;
+            this.xeditWerkplek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xeditWerkplek.Image = global::ProductieManager.Properties.Resources.edit__52382;
+            this.xeditWerkplek.Location = new System.Drawing.Point(671, 1);
+            this.xeditWerkplek.Name = "xeditWerkplek";
+            this.xeditWerkplek.Size = new System.Drawing.Size(34, 34);
+            this.xeditWerkplek.TabIndex = 14;
+            this.toolTip1.SetToolTip(this.xeditWerkplek, "Wijzig Werkplek");
+            this.xeditWerkplek.UseVisualStyleBackColor = true;
+            this.xeditWerkplek.Click += new System.EventHandler(this.xeditArtikel_Click);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.meldingenToolStripMenuItem,
+            this.wijzigenToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.verwijderenToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 146);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // meldingenToolStripMenuItem
+            // 
+            this.meldingenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.default_opmerking_16757_32x32;
+            this.meldingenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.meldingenToolStripMenuItem.Name = "meldingenToolStripMenuItem";
+            this.meldingenToolStripMenuItem.Size = new System.Drawing.Size(196, 38);
+            this.meldingenToolStripMenuItem.Text = "Meldingen";
+            this.meldingenToolStripMenuItem.Click += new System.EventHandler(this.xopmerkingen_Click);
+            // 
+            // wijzigenToolStripMenuItem
+            // 
+            this.wijzigenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.edit__52382;
+            this.wijzigenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.wijzigenToolStripMenuItem.Name = "wijzigenToolStripMenuItem";
+            this.wijzigenToolStripMenuItem.Size = new System.Drawing.Size(196, 38);
+            this.wijzigenToolStripMenuItem.Text = "Wijzigen";
+            this.wijzigenToolStripMenuItem.Click += new System.EventHandler(this.xeditArtikel_Click);
+            // 
+            // verwijderenToolStripMenuItem
+            // 
+            this.verwijderenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.verwijderenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.verwijderenToolStripMenuItem.Name = "verwijderenToolStripMenuItem";
+            this.verwijderenToolStripMenuItem.Size = new System.Drawing.Size(196, 38);
+            this.verwijderenToolStripMenuItem.Text = "Verwijderen";
+            this.verwijderenToolStripMenuItem.Click += new System.EventHandler(this.xdeleteartikel_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(193, 6);
             // 
             // ArtikelRecordsForm
             // 
@@ -652,6 +737,7 @@
             this.panel4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xwerkpleklist)).EndInit();
             this.panel5.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -696,5 +782,12 @@
         private System.Windows.Forms.Button xaddwerkplek;
         private MetroFramework.Controls.MetroTextBox xsearch2;
         private BrightIdeasSoftware.OLVColumn olvColumn10;
+        private System.Windows.Forms.Button xeditArtikel;
+        private System.Windows.Forms.Button xeditWerkplek;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem meldingenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem wijzigenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem verwijderenToolStripMenuItem;
     }
 }

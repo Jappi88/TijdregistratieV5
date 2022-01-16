@@ -63,7 +63,7 @@ namespace Rpm.Productie
                 }
 
                 //Taken maken voor zowel een gestarte als een gestopte bewerking.
-                if (bew.State == ProductieState.Gestart || bew.State == ProductieState.Gestopt)
+                if (bew.State is ProductieState.Gestart or ProductieState.Gestopt)
                 {
                     //Taak maken voor als de bewerking te laat is.
                     if (Manager.Opties.TaakAlsTelaat && bew.TeLaat)
@@ -134,7 +134,8 @@ namespace Rpm.Productie
                                 foreach (var wp in bew.WerkPlekken)
                                 {
                                     if (!wp.IsActief()) continue;
-                                    if (wp.LaatstAantalUpdate < DateTime.Now.Subtract(TimeSpan.FromMinutes(Manager.Opties.MinVoorControle)))
+                                    var xcontrols = wp.LaatsAantalUpdateMinutes();
+                                    if (xcontrols > Manager.Opties.MinVoorControle)
                                     {
                                         xreturn.Add(new TakenLijst(wp).Controleren(TaakUrgentie.ZSM, wp));
                                     }

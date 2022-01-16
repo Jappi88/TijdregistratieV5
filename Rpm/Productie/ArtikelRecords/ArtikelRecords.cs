@@ -1,17 +1,15 @@
-﻿using ProductieManager.Rpm.Misc;
+﻿using MetroFramework;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
+using Rpm.Misc;
 using Rpm.SqlLite;
 using Rpm.Various;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MetroFramework;
-using ProductieManager.Properties;
-using Rpm.Misc;
-using Rpm.ViewModels;
 
 namespace Rpm.Productie.ArtikelRecords
 {
@@ -125,7 +123,7 @@ namespace Rpm.Productie.ArtikelRecords
                     if (file.UpdatedProducties.Exists(x =>
                             string.Equals(plek.ProductieNr, x, StringComparison.CurrentCultureIgnoreCase)))
                         return;
-                    file.Omschrijving = "Werkplek";
+                    file.Omschrijving = $"{plek.Naam} Werkplek";
                     file.VorigeAantalGemaakt = file.AantalGemaakt;
                     file.AantalGemaakt += plek.TotaalGemaakt;
                     file.VorigeTijdGewerkt = plek.TijdGewerkt;
@@ -139,7 +137,7 @@ namespace Rpm.Productie.ArtikelRecords
                     {
                         AantalGemaakt = plek.TotaalGemaakt,
                         ArtikelNr = plek.Naam,
-                        Omschrijving = "Werkplek",
+                        Omschrijving = $"{plek.Naam} Werkplek",
                         TijdGewerkt = plek.TijdAanGewerkt(),
                         IsWerkplek = true
                     };

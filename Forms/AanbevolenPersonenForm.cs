@@ -55,6 +55,7 @@ namespace ProductieManager.Forms
             catch (Exception ex)
             {
                 XMessageBox.Show(ex.Message, "Geen Aanbevelingen");
+                this.Close();
             }
             _iswaiting = false;
             this.Invalidate();
@@ -82,6 +83,7 @@ namespace ProductieManager.Forms
             catch (Exception ex)
             {
                 XMessageBox.Show(ex.Message, "Geen Aanbevelingen");
+                this.Close();
             }
             _iswaiting = false;
             this.Invalidate();

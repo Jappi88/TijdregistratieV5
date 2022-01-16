@@ -13,6 +13,19 @@ namespace Forms.ArtikelRecords
             get => xwerkplekcheck.Checked;
             set => xwerkplekcheck.Checked = value;
         }
+
+        public bool AllowArtikelEdit
+        {
+            get => xartikelnr.Enabled;
+            set => xartikelnr.Enabled = value;
+        }
+
+        public bool AllowWerkplekEdit
+        {
+            get => xwerkplekcheck.Visible;
+            set => xwerkplekcheck.Visible = value;
+        }
+
         public NewArtikelRecord()
         {
             InitializeComponent();

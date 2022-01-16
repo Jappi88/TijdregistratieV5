@@ -363,6 +363,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap calculator_icon_icons_com_72046 {
+            get {
+                object obj = ResourceManager.GetObject("calculator_icon-icons.com_72046", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap cancel_closeicon_123217 {
             get {
                 object obj = ResourceManager.GetObject("cancel_closeicon_123217", resourceCulture);
@@ -745,6 +755,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap emblemimportant_103451 {
             get {
                 object obj = ResourceManager.GetObject("emblemimportant_103451", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Emotes_Grades {
+            get {
+                object obj = ResourceManager.GetObject("Emotes_Grades", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

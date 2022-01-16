@@ -93,6 +93,7 @@ namespace Various
                     if (xvalue.WindowState == FormWindowState.Minimized)
                         xvalue.WindowState = FormWindowState.Normal;
                     form.WindowState = xvalue.WindowState;
+                    form.Invalidate();
                 }
             }
             catch (Exception e)

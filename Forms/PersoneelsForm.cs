@@ -883,7 +883,7 @@ namespace Forms
         if (e.Model is PersoneelModel wp)
         {
             e.Title = $"{wp.Naam}";
-            e.Text = "";
+            e.Text = e.SubItem.Text;
             if (wp.PersoneelLid.WerktAan != null)
                 e.Text += $"Werkt aan: {wp.WerktAan}\n";
             else if (wp.PersoneelLid.Werkplek != null)

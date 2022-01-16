@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing.Text;
-using System.Linq;
-using System.Windows.Documents;
-using System.Windows.Forms;
-using BrightIdeasSoftware;
+﻿using BrightIdeasSoftware;
 using ProductieManager.Properties;
 using Rpm.Productie;
 using Rpm.Productie.AantalHistory;
 using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace Forms.Aantal.Controls
 {
@@ -20,7 +18,6 @@ namespace Forms.Aantal.Controls
             InitializeComponent();
             ((OLVColumn) xHistoryList.Columns[3]).AspectGetter = TijdGewerktGetter;
             ((OLVColumn)xHistoryList.Columns[5]).AspectGetter = GestoptGetter;
-            ((OLVColumn)xHistoryList.Columns[6]).AspectGetter = ActiefGetter;
             //((OLVColumn) xHistoryList.Columns[0]).ImageGetter = (o) => 0;
             imageList1.Images.Add(Resources.Count_tool_34564);
         }

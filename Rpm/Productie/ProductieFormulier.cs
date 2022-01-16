@@ -939,7 +939,7 @@ namespace Rpm.Productie
 
             }
 
-            if (mat?.ArtikelNr != null)
+            if (!string.IsNullOrEmpty(mat?.ArtikelNr))
                 xreturn.Add(mat);
             startindex = xend;
             return xreturn;
@@ -1587,11 +1587,11 @@ namespace Rpm.Productie
 
         #region "Public Methods"
 
-        public double ControleRatio()
+        public double GetControleRatio()
         {
-            if (Bewerkingen is {Length: > 0})
-                return Bewerkingen.Sum(x => x.ControleRatio()) / Bewerkingen.Length;
-            return 0;
+                if (Bewerkingen is {Length: > 0})
+                    return Bewerkingen.Sum(x => x.ControleRatio) / Bewerkingen.Length;
+                return 0;
         }
 
         public bool ContainsProductiePdf()
