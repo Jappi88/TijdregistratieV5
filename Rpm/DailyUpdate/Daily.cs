@@ -230,7 +230,7 @@ namespace Rpm.DailyUpdate
             return $"<li><a color='{txtcolor.Name}' href='{x.Path}'>" +
                    $"<b><u>{x.Path} Heeft {x.WerkPlekken.Count} {x1} die iets meer controle nodig {x2}:" +
                   // $"<ul>" +
-                   $"{string.Join("\r\n", x.WerkPlekken.Where(w=> w.ControleRatio() < -15).Select(w=> $"<li>{w.Naam} is maar {w.AantalHistory.Aantallen.Count} keer gecontrolleerd in {w.TijdGewerkt} uur tijd<span color='{IProductieBase.GetNegativeColorByPercentage((decimal)w.ControleRatio()).Name}'>({x.GetControleRatio()})</span></li>"))}" +
+                   $"{string.Join("\r\n", x.WerkPlekken.Where(w=> w.ControleRatio() < -15).Select(w=> $"<li>{w.Naam} is maar {w.AantalHistory.Aantallen.Count} keer gecontrolleerd in {w.TijdGewerkt} uur tijd<span color='{IProductieBase.GetNegativeColorByPercentage((decimal)w.ControleRatio()).Name}'>({x.GetControleRatio()}%)</span></li>"))}" +
                   // $"</ul>" +
                    $"</u></b>" +
                    $"</a></li>";

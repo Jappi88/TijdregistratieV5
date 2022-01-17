@@ -910,6 +910,18 @@
     <Compile Include="Forms\ProductieLijstForm.Designer.cs">
       <DependentUpon>ProductieLijstForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Sporen\NewSpoorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Sporen\NewSpoorForm.Designer.cs">
+      <DependentUpon>NewSpoorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Sporen\SporenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Sporen\SporenForm.Designer.cs">
+      <DependentUpon>SporenForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\UpdatePreviewForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1188,6 +1200,8 @@
     <Compile Include="Rpm\Settings\LastFormScreenInfo.cs" />
     <Compile Include="Rpm\Settings\UserAccount.cs" />
     <Compile Include="Rpm\Settings\UserSettings.cs" />
+    <Compile Include="Rpm\Sporen\SporenBeheer.cs" />
+    <Compile Include="Rpm\Sporen\SpoorEntry.cs" />
     <Compile Include="Rpm\SqlLite\BackupInfo.cs" />
     <Compile Include="Rpm\SqlLite\BewerkingEntry.cs" />
     <Compile Include="Rpm\SqlLite\BewerkingLijst.cs" />
@@ -1557,6 +1571,12 @@
     <EmbeddedResource Include="Forms\ProductieLijstForm.resx">
       <DependentUpon>ProductieLijstForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Sporen\NewSpoorForm.resx">
+      <DependentUpon>NewSpoorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Sporen\SporenForm.resx">
+      <DependentUpon>SporenForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\UpdatePreviewForm.resx">
       <DependentUpon>UpdatePreviewForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1782,6 +1802,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\geometry-measure_32x32.png" />
     <None Include="Resources\calculator_icon-icons.com_72046.png" />
     <None Include="Resources\Emotes_Grades.png" />
     <None Include="Resources\vdv_animatedlogo1.gif" />

@@ -15,6 +15,7 @@
         Klachten,
         Verpakkingen,
         ArtikelRecords,
+        SpoorOverzicht,
         Alles,
         None
     }

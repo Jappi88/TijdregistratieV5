@@ -220,6 +220,7 @@
             this.panel11 = new System.Windows.Forms.Panel();
             this.xdatabasetabpage = new System.Windows.Forms.TabPage();
             this.metroPanel4 = new MetroFramework.Controls.MetroPanel();
+            this.xSpoorOverzichtCheckbox = new System.Windows.Forms.CheckBox();
             this.groupBox5.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.xgroupweergave.SuspendLayout();
@@ -2414,7 +2415,7 @@
             this.metroTabControl1.HotTrack = true;
             this.metroTabControl1.Location = new System.Drawing.Point(10, 60);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 3;
+            this.metroTabControl1.SelectedIndex = 6;
             this.metroTabControl1.ShowToolTips = true;
             this.metroTabControl1.Size = new System.Drawing.Size(744, 552);
             this.metroTabControl1.TabIndex = 1;
@@ -2629,9 +2630,9 @@
             this.xsynctabpage.HorizontalScrollbarBarColor = true;
             this.xsynctabpage.HorizontalScrollbarHighlightOnWheel = false;
             this.xsynctabpage.HorizontalScrollbarSize = 10;
-            this.xsynctabpage.Location = new System.Drawing.Point(4, 35);
+            this.xsynctabpage.Location = new System.Drawing.Point(4, 38);
             this.xsynctabpage.Name = "xsynctabpage";
-            this.xsynctabpage.Size = new System.Drawing.Size(736, 513);
+            this.xsynctabpage.Size = new System.Drawing.Size(736, 510);
             this.xsynctabpage.TabIndex = 6;
             this.xsynctabpage.Text = "Productie Sync";
             this.xsynctabpage.VerticalScrollbarBarColor = true;
@@ -2653,13 +2654,14 @@
             this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel9.Location = new System.Drawing.Point(0, 0);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(736, 513);
+            this.panel9.Size = new System.Drawing.Size(736, 510);
             this.panel9.TabIndex = 43;
             // 
             // xofflinedbgroup
             // 
             this.xofflinedbgroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.xofflinedbgroup.Controls.Add(this.xSpoorOverzichtCheckbox);
             this.xofflinedbgroup.Controls.Add(this.xartikelrecords);
             this.xofflinedbgroup.Controls.Add(this.xoffklachtencheckbox);
             this.xofflinedbgroup.Controls.Add(this.xoffopmerkingcheckbox);
@@ -2975,6 +2977,18 @@
             this.metroPanel4.VerticalScrollbarHighlightOnWheel = false;
             this.metroPanel4.VerticalScrollbarSize = 10;
             // 
+            // xSpoorOverzichtCheckbox
+            // 
+            this.xSpoorOverzichtCheckbox.AutoSize = true;
+            this.xSpoorOverzichtCheckbox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xSpoorOverzichtCheckbox.Location = new System.Drawing.Point(136, 156);
+            this.xSpoorOverzichtCheckbox.Name = "xSpoorOverzichtCheckbox";
+            this.xSpoorOverzichtCheckbox.Size = new System.Drawing.Size(121, 21);
+            this.xSpoorOverzichtCheckbox.TabIndex = 54;
+            this.xSpoorOverzichtCheckbox.Text = "Spoor Overzicht";
+            this.toolTip1.SetToolTip(this.xSpoorOverzichtCheckbox, "Synchroniseer SpoorOverzicht met de offline database");
+            this.xSpoorOverzichtCheckbox.UseVisualStyleBackColor = true;
+            // 
             // Opties
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -3271,5 +3285,6 @@
         private System.Windows.Forms.CheckBox xoffklachtencheckbox;
         private System.Windows.Forms.CheckBox xartikelrecords;
         private System.Windows.Forms.CheckBox xtoondayli;
+        private System.Windows.Forms.CheckBox xSpoorOverzichtCheckbox;
     }
 }

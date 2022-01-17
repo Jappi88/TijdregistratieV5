@@ -71,8 +71,8 @@ namespace Controls
             this.xaboutb = new System.Windows.Forms.ToolStripButton();
             this.xHelpButton = new System.Windows.Forms.ToolStripButton();
             this.xShowPreview = new System.Windows.Forms.ToolStripButton();
-            this.xsettingsb = new System.Windows.Forms.ToolStripButton();
             this.xShowDaily = new System.Windows.Forms.ToolStripButton();
+            this.xsettingsb = new System.Windows.Forms.ToolStripButton();
             this.xupdateb = new System.Windows.Forms.ToolStripButton();
             this.xopmerkingentoolstripbutton = new System.Windows.Forms.ToolStripButton();
             this.xverpakkingen = new System.Windows.Forms.ToolStripButton();
@@ -97,6 +97,7 @@ namespace Controls
             this.xtabimages = new System.Windows.Forms.ImageList(this.components);
             this.takenManager1 = new Controls.TakenManager();
             this.mainMenu1 = new Controls.MainMenu();
+            this.xSporenButton = new System.Windows.Forms.ToolStripButton();
             this.panel6.SuspendLayout();
             this.xToolButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -182,6 +183,7 @@ namespace Controls
             this.xsettingsb,
             this.xupdateb,
             this.xopmerkingentoolstripbutton,
+            this.xSporenButton,
             this.xverpakkingen,
             this.xklachten,
             this.xcorruptedfilesbutton,
@@ -397,18 +399,6 @@ namespace Controls
             this.xShowPreview.ToolTipText = "Toon laatste aanpassingen";
             this.xShowPreview.Click += new System.EventHandler(this.xShowPreview_Click);
             // 
-            // xsettingsb
-            // 
-            this.xsettingsb.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.xsettingsb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xsettingsb.Image = global::ProductieManager.Properties.Resources.ccsm_103993;
-            this.xsettingsb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xsettingsb.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xsettingsb.Name = "xsettingsb";
-            this.xsettingsb.Size = new System.Drawing.Size(36, 36);
-            this.xsettingsb.ToolTipText = "Beheer Instellingen";
-            this.xsettingsb.Click += new System.EventHandler(this.xsettingsb_Click);
-            // 
             // xShowDaily
             // 
             this.xShowDaily.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -420,6 +410,18 @@ namespace Controls
             this.xShowDaily.Size = new System.Drawing.Size(36, 36);
             this.xShowDaily.ToolTipText = "Controleer op bijzonderheden";
             this.xShowDaily.Click += new System.EventHandler(this.xShowDaily_Click);
+            // 
+            // xsettingsb
+            // 
+            this.xsettingsb.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.xsettingsb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xsettingsb.Image = global::ProductieManager.Properties.Resources.ccsm_103993;
+            this.xsettingsb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xsettingsb.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xsettingsb.Name = "xsettingsb";
+            this.xsettingsb.Size = new System.Drawing.Size(36, 36);
+            this.xsettingsb.ToolTipText = "Beheer Instellingen";
+            this.xsettingsb.Click += new System.EventHandler(this.xsettingsb_Click);
             // 
             // xupdateb
             // 
@@ -890,6 +892,17 @@ namespace Controls
             this.mainMenu1.TabIndex = 27;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
             // 
+            // xSporenButton
+            // 
+            this.xSporenButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xSporenButton.Image = global::ProductieManager.Properties.Resources.geometry_measure_32x32;
+            this.xSporenButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xSporenButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xSporenButton.Name = "xSporenButton";
+            this.xSporenButton.Size = new System.Drawing.Size(36, 36);
+            this.xSporenButton.ToolTipText = "Alle aangepaste sporen";
+            this.xSporenButton.Click += new System.EventHandler(this.xSporenButton_Click);
+            // 
             // ProductieView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -968,5 +981,6 @@ namespace Controls
         private ToolStripButton xMaakWeekOverzichtToolstrip;
         private ToolStripButton xArtikelRecordsToolstripButton;
         private ToolStripButton xShowDaily;
+        private ToolStripButton xSporenButton;
     }
 }

@@ -92,6 +92,7 @@ namespace Controls
             this.xvalue.TabIndex = 4;
             this.xvalue.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.xvalue.ValueChanged += new System.EventHandler(this.xvalue_ValueChanged);
+            this.xvalue.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.xvalue_KeyPress);
             // 
             // xeenheid
             // 

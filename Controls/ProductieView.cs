@@ -2625,5 +2625,10 @@ namespace Controls
         {
             DailyMessage.CreateDaily(true);
         }
+
+        private void xSporenButton_Click(object sender, EventArgs e)
+        {
+            new SporenForm().ShowDialog();
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using Polenter.Serialization;
 
 namespace Rpm.Productie
 {
@@ -19,8 +18,6 @@ namespace Rpm.Productie
         public int DozenOpColli { get; set; }
         public int PerLaagOpColli { get; set; }
         public int ProductenPerColli { get; set; }
-        [ExcludeFromSerialization]
-        public bool IsLijdend { get; set; }
         public DateTime LastChanged { get; set; }
 
         public VerpakkingInstructie()
@@ -168,7 +165,7 @@ namespace Rpm.Productie
 
         public override int GetHashCode()
         {
-            return ID;
+            return ArtikelNr?.GetHashCode()??0;
         }
     }
 }

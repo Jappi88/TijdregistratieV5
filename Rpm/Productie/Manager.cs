@@ -22,6 +22,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MetroFramework;
+using Rpm.Productie.Verpakking;
 using Timer = System.Timers.Timer;
 
 namespace Rpm.Productie
@@ -42,6 +43,7 @@ namespace Rpm.Productie
         // public static LocalService LocalConnection { get; private set; }
         public static ArtikelRecords.ArtikelRecords ArtikelRecords { get; set; }
         public static VerpakkingBeheer Verpakkingen { get; private set; }
+        public static SporenBeheer SporenBeheer { get; private set; }
         public static KlachtBeheer Klachten { get; private set; }
         /// <summary>
         /// De productiechat
@@ -270,6 +272,10 @@ namespace Rpm.Productie
                     Verpakkingen = new VerpakkingBeheer(DbPath);
                     Verpakkingen.VerpakkingChanged += OnVerpakkingChanged;
                     Verpakkingen.VerpakkingDeleted += OnVerpakkingDeleted;
+
+                    SporenBeheer = new SporenBeheer(DbPath);
+                    SporenBeheer.SpoorChanged += OnSpoorChanged;
+                    SporenBeheer.SpoorDeleted += OnSpoorDeleted;
 
                     DbUpdater = new DatabaseUpdater();
                     BackupInfo = BackupInfo.Load();
@@ -2027,6 +2033,18 @@ namespace Rpm.Productie
         private static void OnVerpakkingDeleted(object sender, EventArgs e)
         {
             VerpakkingDeleted?.Invoke(sender, e);
+        }
+
+        public static event EventHandler SpoorChanged;
+        private static void OnSpoorChanged(object sender, EventArgs e)
+        {
+            SpoorChanged?.Invoke(sender, e);
+        }
+
+        public static event EventHandler SpoorDeleted;
+        private static void OnSpoorDeleted(object sender, EventArgs e)
+        {
+            SpoorDeleted?.Invoke(sender, e);
         }
 
         #region Threadsafe RespondMessage

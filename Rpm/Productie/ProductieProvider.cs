@@ -214,6 +214,16 @@ namespace ProductieManager.Rpm.Productie
                                         SecondaryManageType.Read
                                     });
                                 break;
+                            case DbType.SpoorOverzicht:
+                                localproductiepath = path2 + $"\\Sporen";
+                                remoteproductiepath = path1 + $"\\Sporen";
+                                Manager.SporenBeheer?.Database?.SetSecondaryPath(
+                                    localproductiepath, new SecondaryManageType[]
+                                    {
+                                        SecondaryManageType.Write,
+                                        SecondaryManageType.Read
+                                    });
+                                break;
                             case DbType.Messages:
                                 localproductiepath = path2 + $"\\Chat";
                                 remoteproductiepath = path1 + $"\\Chat";

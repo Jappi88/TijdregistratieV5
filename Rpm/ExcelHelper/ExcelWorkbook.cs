@@ -39,8 +39,8 @@ namespace ProductieManager.Rpm.ExcelHelper
 
         public static string[] WerkPlekColumns =
         {
-            "ArtikelNr", "ProductieNr", "Status", "Naam", "Omschrijving", "Totaal Aantal","Totaal Gemaakt", "Actueel Gemaakt", "PDC P/u","Actueel P/u","Gemiddeld P/u","#Geproduceerd", "Gestart Op",
-            "Gestopt Op", "Tijd Gewerkt","Tijd Actief","Combinaties", "#Storingen","#Ombouw","Tijd Storingen","Tijd Ombouw", "Tijd Schoonmaak","Personen"
+            "ProductieNr","ArtikelNr", "Status", "Naam", "Omschrijving", "Totaal Aantal","Totaal Gemaakt", "Actueel Gemaakt", "PDC P/u","Actueel P/u","Gemiddeld P/u","#Geproduceerd", "Gestart Op",
+            "Gestopt Op", "Tijd Gewerkt","Tijd Ombouw","#Ombouw","Tijd Storingen", "#Storingen","Tijd Actief","Combinaties", "Tijd Schoonmaak","Personen"
         };
 
         

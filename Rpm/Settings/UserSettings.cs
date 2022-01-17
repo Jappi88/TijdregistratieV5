@@ -111,6 +111,7 @@ namespace Rpm.Settings
             OfflineDabaseTypes.Add(DbType.Accounts);
             OfflineDabaseTypes.Add(DbType.ArtikelRecords);
             OfflineDabaseTypes.Add(DbType.Klachten);
+            OfflineDabaseTypes.Add(DbType.SpoorOverzicht);
             //admin
             EmailClients = new List<EmailClient>();
             VerzendAdres = new List<UitgaandAdres>();
@@ -150,7 +151,7 @@ namespace Rpm.Settings
             return Task.Run(async () =>
             {
                 if (Manager.Database?.AllSettings == null) return false;
-                change ??= $"[{Username}] Intellingen Opgeslagen";
+                change ??= $"[{Username}] Instellingen Opgeslagen";
                 if (string.Equals(Manager.Opties?.Username, Username, StringComparison.CurrentCultureIgnoreCase))
                 {
                     foreach (var selected in ExcelColumns)

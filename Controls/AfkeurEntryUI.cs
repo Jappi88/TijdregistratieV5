@@ -17,6 +17,8 @@ namespace Controls
 
         public void InitMateriaal(Materiaal materiaal)
         {
+            if (Materiaal != null)
+                materiaal.AantalAfkeur = Materiaal.AantalAfkeur;
             Materiaal = materiaal;
             xeenheid.Text = Materiaal.Eenheid;
             //if (Materiaal.Eenheid.ToLower().StartsWith("stuk"))
@@ -32,7 +34,7 @@ namespace Controls
         {
             if (Materiaal == null)
             {
-                xpercent.Text = "0.00$";
+                xpercent.Text = "0.00%";
             }
             else
             {
@@ -58,6 +60,14 @@ namespace Controls
         private void xvalue_ValueChanged(object sender, EventArgs e)
         {
             UpdateAantal();
+        }
+
+        private void xvalue_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar.Equals('.') || e.KeyChar.Equals(','))
+            {
+                e.KeyChar = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.ToCharArray()[0];
+            }
         }
     }
 }
