@@ -980,6 +980,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap geometry_measure_96x96 {
+            get {
+                object obj = ResourceManager.GetObject("geometry_measure_96x96", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap graph_9_icon_icons_com_58019_32x32 {
             get {
                 object obj = ResourceManager.GetObject("graph-9_icon-icons.com_58019_32x32", resourceCulture);

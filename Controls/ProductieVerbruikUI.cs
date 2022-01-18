@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using System.Xml;
 using Forms;
 using NPOI.XSSF.UserModel.Charts;
 using Org.BouncyCastle.Asn1.Mozilla;
@@ -39,6 +40,39 @@ namespace Controls
             set=> groupBox1.Text = value;
         }
 
+        private int GetAantalSporen()
+        {
+            if (_spoor == null || xaantalsporen.Value ==1 && !string.IsNullOrEmpty(_form?.Opmerking))
+            {
+                var xindex = _form.Opmerking.IndexOf("max banen:", StringComparison.CurrentCultureIgnoreCase);
+                if (xindex > -1)
+                {
+                    string xval = "";
+                    xindex += 10;
+                    var xtmp = _form.Opmerking.Substring(xindex, _form.Opmerking.Length - xindex);
+                    bool begin = false;
+                    foreach (var xchar in xtmp)
+                    {
+                        if (char.IsDigit(xchar))
+                        {
+                            begin = true;
+                            xval += xchar;
+                        }
+                        else if (begin)
+                            break;
+                    }
+
+                    if (!int.TryParse(xval, out var sporen))
+                        sporen = (int) xaantalsporen.Value;
+                    return sporen;
+                }
+            }
+
+            return (int)xaantalsporen.Value;
+        }
+
+
+
         public SpoorEntry GetSpoorInfo()
         {
             try
@@ -49,42 +83,15 @@ namespace Controls
                     if (Manager.SporenBeheer != null)
                         spoor = Manager.SporenBeheer.GetSpoor(_form.ArtikelNr.Trim());
                 }
-
                 if (spoor == null)
                 {
-                    spoor = new SpoorEntry();
-                    if (!string.IsNullOrEmpty(_form?.Opmerking))
+                    spoor = new SpoorEntry
                     {
-                        var xindex = _form.Opmerking.IndexOf("max banen:", StringComparison.CurrentCultureIgnoreCase);
-                        if (xindex > -1)
-                        {
-                            string xval = "";
-                            xindex += 10;
-                            var xtmp = _form.Opmerking.Substring(xindex, _form.Opmerking.Length - xindex);
-                            bool begin = false;
-                            foreach (var xchar in xtmp)
-                            {
-                                if (char.IsDigit(xchar))
-                                {
-                                    begin = true;
-                                    xval += xchar;
-                                }
-                                else if (begin)
-                                    break;
-                            }
-
-                            if (int.TryParse(xval, out var xsporen))
-                            {
-                                spoor.AantalSporen = xsporen;
-                            }
-                            else spoor.AantalSporen = (int) xaantalsporen.Value;
-                        }
-                    }
-
-                    spoor.ProductLengte = xprodlengte.Value;
-                    spoor.AantalSporen = (int) xaantalsporen.Value;
-                    spoor.Aantal = (int) xproduceren.Value;
-                    spoor.UitgangsLengte = xuitganglengte.Value;
+                        ProductLengte = GetSelectedMateriaalLengte(),
+                        AantalSporen = GetAantalSporen(),
+                        Aantal = (int) xproduceren.Value,
+                        UitgangsLengte = xuitganglengte.Value
+                    };
                 }
 
                 return spoor;
@@ -109,10 +116,11 @@ namespace Controls
             {
                 _form = form;
                 xprods.Clear();
+                var xselected = xmaterialen.SelectedIndex;
                 xmaterialen.Items.Clear();
                 if (form?.Materialen == null) return;
                 xprods.AddRange(form.Materialen.Select(x => (decimal) x.AantalPerStuk * ((int)(x.Eenheid.ToLower().StartsWith("m") ? 1000 : 1))));
-                var xselected = xmaterialen.SelectedIndex;
+               
                 
                 xmaterialen.Items.AddRange(form.Materialen.Select(x => (object) $"[{x.ArtikelNr}]{x.Omschrijving} ({x.AantalPerStuk * ((int)(x.Eenheid.ToLower().StartsWith("m") ? 1000 : 1))} mm)")
                     .ToArray());
@@ -158,47 +166,48 @@ namespace Controls
                     xprodlengte.SetValue(_spoor.ProductLengte);
                 }
             }
-
+            _spoor ??= GetSpoorInfo()??new SpoorEntry();
             aantal = (int) xproduceren.Value;
+
             var xvalue = Math.Round(xprodlengte.Value / 1000, 4);
             var xtotal = Math.Round(xuitganglengte.Value / 1000, 4);
-            var xstuks = xprodlengte.Value > 0 && xuitganglengte.Value > 0
-                ? Math.Round(xprodlengte.Value / xuitganglengte.Value, 4)
-                : 0;
+            //var xstuks = xprodlengte.Value > 0 && xuitganglengte.Value > 0
+            //    ? Math.Round(xprodlengte.Value / xuitganglengte.Value, 4)
+            //    : 0;
             xprodlabel.Text = $"Productlengte({xvalue}m)";
             xlengtelabel.Text = $"Uitgangslengte({xtotal}m)";
+            xinfo.Text = _spoor.CreateHtmlText(aantal);
+            //var xprodsperlengte = xvalue > 0 ? (int) (xtotal / xvalue) : 0;
+            //var xrest = xvalue > 0 ? Math.Round((xtotal % xvalue) * 1000, 2) : 0;
+            //var xnodig = xprodsperlengte > 0 ? aantal < xprodsperlengte ? 1 : (aantal / xprodsperlengte) : 0;
 
-            var xprodsperlengte = xvalue > 0 ? (int) (xtotal / xvalue) : 0;
-            var xrest = xvalue > 0 ? Math.Round((xtotal % xvalue) * 1000, 2) : 0;
-            var xnodig = xprodsperlengte > 0 ? aantal < xprodsperlengte ? 1 : (aantal / xprodsperlengte) : 0;
-
-            if (xnodig == 0)
-            {
-                xinfo.Text = $"<span color='{Color.Navy.Name}'>" +
-                             $"Er kunnen geen producten van <b>{Math.Round(xprodlengte.Value, 2)}mm</b> gehaald worden uit <b>{xuitganglengte.Value}mm</b>!" +
-                             $"</span>";
-            }
-            else
-            {
-                if (xnodig * xprodsperlengte < aantal)
-                    xnodig++;
-                var xsporen = (int) xaantalsporen.Value;
-                var xrestsporen = (int) (xnodig % xsporen);
-                if (xnodig < xsporen)
-                {
-                    xsporen = xnodig;
-                    xrestsporen = 0;
-                }
-                var xaantalladen = xnodig > 0 ? xnodig < xsporen ? 1 : xnodig / xsporen : 0;
-                var x1 = xsporen == 1 ? "spoor" : "sporen";
-                var x2 = xrestsporen == 1 ? "spoor" : "sporen";
-                xinfo.Text = $"<span color='{Color.Navy.Name}'>" +
-                             $"Een productLengte van <b>{Math.Round(xprodlengte.Value, 2)}mm</b> is <b>{xstuks}(stuk)</b> van <b>{xuitganglengte.Value}mm</b><br><br>" +
-                             $"Met een productlengte van <b>{xvalue}m</b> heb je <b>{xnodig}</b> lengtes nodig.<br>" +
-                             $"Dat is <b>{xaantalladen}</b> keer laden met <b>{xsporen}</b> {x1}{(xrestsporen > 0 ? $" en een restlading van <b>{xrestsporen}</b> {x2}" : "")}.<br>" +
-                             $"Met <b>{xnodig}</b> lengtes kan je <b>{(xnodig * (int) xprodsperlengte)}/ {aantal}</b> producten maken.<br>" +
-                             $"Je haalt <b>{(int) xprodsperlengte}</b> producten uit <b>{xtotal} meter</b> met een reststuk van <b>{xrest}mm</b></span>";
-            }
+            //if (xnodig == 0)
+            //{
+            //    xinfo.Text = $"<span color='{Color.Navy.Name}'>" +
+            //                 $"Er kunnen geen producten van <b>{Math.Round(xprodlengte.Value, 2)}mm</b> gehaald worden uit <b>{xuitganglengte.Value}mm</b>!" +
+            //                 $"</span>";
+            //}
+            //else
+            //{
+            //    if (xnodig * xprodsperlengte < aantal)
+            //        xnodig++;
+            //    var xsporen = (int) xaantalsporen.Value;
+            //    var xrestsporen = (int) (xnodig % xsporen);
+            //    if (xnodig < xsporen)
+            //    {
+            //        xsporen = xnodig;
+            //        xrestsporen = 0;
+            //    }
+            //    var xaantalladen = xnodig > 0 ? xnodig < xsporen ? 1 : xnodig / xsporen : 0;
+            //    var x1 = xsporen == 1 ? "spoor" : "sporen";
+            //    var x2 = xrestsporen == 1 ? "spoor" : "sporen";
+            //    xinfo.Text = $"<span color='{Color.Navy.Name}'>" +
+            //                 $"Een productLengte van <b>{Math.Round(xprodlengte.Value, 2)}mm</b> is <b>{xstuks}(stuk)</b> van <b>{xuitganglengte.Value}mm</b><br><br>" +
+            //                 $"Met een productlengte van <b>{xvalue}m</b> heb je <b>{xnodig}</b> lengtes nodig.<br>" +
+            //                 $"Dat is <b>{xaantalladen}</b> keer laden met <b>{xsporen}</b> {x1}{(xrestsporen > 0 ? $" en een restlading van <b>{xrestsporen}</b> {x2}" : "")}.<br>" +
+            //                 $"Met <b>{xnodig}</b> lengtes kan je <b>{(xnodig * (int) xprodsperlengte)}/ {aantal}</b> producten maken.<br>" +
+            //                 $"Je haalt <b>{(int) xprodsperlengte}</b> producten uit <b>{xtotal} meter</b> met een reststuk van <b>{xrest}mm</b></span>";
+            //}
 
 
             if (!string.IsNullOrEmpty(_spoor?.AangepastDoor))
@@ -230,16 +239,49 @@ namespace Controls
             }
         }
 
-        private void xprodlengte_ValueChanged_1(object sender, EventArgs e)
-        {
-            UpdateFields(false);
-        }
-
         private void xprodlengte_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar.Equals('.') || e.KeyChar.Equals(','))
             {
                 e.KeyChar = ((CultureInfo)CultureInfo.CurrentCulture).NumberFormat.NumberDecimalSeparator.ToCharArray()[0];
+            }
+        }
+
+        public Materiaal GetSelectedMateriaalArtikelNr()
+        {
+            try
+            {
+                if (_form?.Materialen == null)
+                    return null;
+                var index = xmaterialen.SelectedIndex;
+                if (index > -1 && _form.Materialen.Count > index)
+                {
+                    var xmat = _form.Materialen[index];
+                    return xmat;
+                }
+
+                return null;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public decimal GetSelectedMateriaalLengte()
+        {
+            try
+            {
+                var xmat = GetSelectedMateriaalArtikelNr();
+                if (xmat == null)
+                    return xprodlengte.Value;
+                return (decimal) GetSelectedMateriaalArtikelNr().AantalPerStuk;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return 1;
             }
         }
 
@@ -258,15 +300,12 @@ namespace Controls
                 }
                 if (Manager.SporenBeheer != null && !string.IsNullOrEmpty(xart))
                 {
-                    var spoor = new SpoorEntry
-                    {
-                        ArtikelNr = xart,
-                        ProductOmschrijving = xoms,
-                        AantalSporen = (int)xaantalsporen.Value,
-                        ProductLengte = xprodlengte.Value,
-                        UitgangsLengte = xuitganglengte.Value,
-                        Aantal = (int)xproduceren.Value
-                    };
+                    var xmat = GetSelectedMateriaalArtikelNr();
+                    _spoor ??= GetSpoorInfo()??new SpoorEntry();
+                    _spoor.ArtikelNr = xart;
+                    _spoor.MateriaalArtikelNr = xmat?.ArtikelNr;
+                    _spoor.MateriaalOmschrijving = xmat?.Omschrijving;
+                    _spoor.ProductOmschrijving = xoms;
                     var xtxtform = new TextFieldEditor();
                     xtxtform.EnableSecondaryField = false;
                     xtxtform.FieldImage = Resources.user_64_64;
@@ -274,10 +313,9 @@ namespace Controls
                     xtxtform.UseSecondary = false;
                     xtxtform.Title = "Vul in je Naam";
                     if (xtxtform.ShowDialog() == DialogResult.Cancel) return;
-                    spoor.AangepastDoor = xtxtform.SelectedText.Trim().FirstCharToUpper();
-                    _spoor = spoor;
-                    Manager.SporenBeheer.SaveSpoor(spoor,
-                        $"[SPOOR][{spoor.ArtikelNr}] {spoor.ProductOmschrijving} succesvol opgeslagen!");
+                    _spoor.AangepastDoor = xtxtform.SelectedText.Trim().FirstCharToUpper();
+                    Manager.SporenBeheer.SaveSpoor(_spoor,
+                        $"[SPOOR][{_spoor.ArtikelNr}] {_spoor.ProductOmschrijving} succesvol opgeslagen!");
                     UpdateFields(false);
                 }
             }
@@ -292,6 +330,92 @@ namespace Controls
             if (e.KeyData == Keys.Enter)
             {
                 e.Handled = e.SuppressKeyPress = true;
+            }
+        }
+
+        private void xprodlengte_ValueChanged(object sender, EventArgs e)
+        {
+            if (_spoor != null)
+            {
+                _spoor.ProductLengte = xprodlengte.Value;
+
+                UpdateFields(false);
+            }
+        }
+
+        private void xuitganglengte_ValueChanged(object sender, EventArgs e)
+        {
+            if (_spoor != null)
+            {
+                _spoor.UitgangsLengte = xuitganglengte.Value;
+                UpdateFields(false);
+            }
+        }
+
+        private void xaantalsporen_ValueChanged(object sender, EventArgs e)
+        {
+            if (_spoor != null)
+            {
+                _spoor.AantalSporen = (int)xaantalsporen.Value;
+                UpdateFields(false);
+            }
+        }
+
+        private void xproduceren_ValueChanged(object sender, EventArgs e)
+        {
+            if (_spoor != null)
+            {
+                _spoor.Aantal = (int)xproduceren.Value;
+                UpdateFields(false);
+            }
+        }
+
+        private void xoptimalemaat_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var reststuk = 20m;
+                var maxlengte = 9000m;
+                var xprod = this.xprodlengte.Value;
+                if (xprod <= 0)
+                    throw new Exception("Productlengte kan niet '0' zijn!");
+                var xtxtform = new TextFieldEditor();
+                xtxtform.EnableSecondaryField = false;
+                xtxtform.FieldImage = Resources.geometry_measure_96x96;
+                xtxtform.MultiLine = false;
+                xtxtform.MinimalTextLength = 1;
+                xtxtform.SelectedText = reststuk.ToString(CultureInfo.InvariantCulture);
+                xtxtform.UseSecondary = false;
+                xtxtform.Title = "Wat is de minimale reststuk?(mm)";
+                if (xtxtform.ShowDialog() == DialogResult.Cancel) return;
+                decimal.TryParse(xtxtform.SelectedText.Trim(), out reststuk);
+                xtxtform.Title = "Wat is de maximale UitgangsLengte?(mm)";
+                xtxtform.SelectedText = maxlengte.ToString(CultureInfo.InvariantCulture);
+                if (xtxtform.ShowDialog() == DialogResult.Cancel) return;
+                decimal.TryParse(xtxtform.SelectedText.Trim(), out maxlengte);
+                xtxtform.Dispose();
+                var xcurlengte = maxlengte;
+                var xrest = (xcurlengte % xprod);
+                if (xrest >= reststuk)
+                {
+                    var dif = xrest - reststuk;
+                    xcurlengte -= dif;
+                }
+                else
+                {
+                    var xaantallen = xcurlengte - reststuk;
+                    xrest = (xaantallen % xprod);
+                    if (xrest == 0)
+                        xcurlengte = xaantallen;
+                    else
+                        xcurlengte -= xrest; // - xrest;
+                }
+
+                xuitganglengte.SetValue((int)xcurlengte);
+            }
+            catch (Exception exception)
+            {
+                XMessageBox.Show(exception.Message, "Fout", MessageBoxIcon.Error);
             }
         }
     }

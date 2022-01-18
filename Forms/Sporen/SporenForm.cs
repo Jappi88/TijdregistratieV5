@@ -59,6 +59,7 @@ namespace Forms
             }
 
             xVerpakkingen.EndUpdate();
+            EnableFields();
         }
 
         private void metroTextBox1_TextChanged(object sender, System.EventArgs e)
@@ -160,6 +161,8 @@ namespace Forms
                     }
                     else xVerpakkingen.RemoveObject(xold);
                 }
+
+                EnableFields();
             }
             catch (Exception e)
             {
@@ -174,7 +177,7 @@ namespace Forms
            // InitList(true);
         }
 
-        private void xVerpakkingen_SelectedIndexChanged(object sender, EventArgs e)
+        private void EnableFields()
         {
             xdelete.Enabled = xVerpakkingen.SelectedObjects.Count > 0;
             verwijderenToolStripMenuItem.Enabled = xdelete.Enabled;
@@ -189,6 +192,11 @@ namespace Forms
             {
                 productieVerbruikUI1.Visible = false;
             }
+        }
+
+        private void xVerpakkingen_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            EnableFields();
         }
 
         private void xdelete_Click(object sender, EventArgs e)

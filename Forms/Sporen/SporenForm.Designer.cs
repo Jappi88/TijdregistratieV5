@@ -38,9 +38,9 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
             this.xsearch = new MetroFramework.Controls.MetroTextBox();
+            this.xadd = new System.Windows.Forms.Button();
             this.xdelete = new System.Windows.Forms.Button();
             this.xcontainer = new System.Windows.Forms.Panel();
-            this.xadd = new System.Windows.Forms.Button();
             this.productieVerbruikUI1 = new Controls.ProductieVerbruikUI();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xVerpakkingen)).BeginInit();
@@ -175,6 +175,19 @@
             this.xsearch.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             this.xsearch.TextChanged += new System.EventHandler(this.metroTextBox1_TextChanged);
             // 
+            // xadd
+            // 
+            this.xadd.Dock = System.Windows.Forms.DockStyle.Right;
+            this.xadd.FlatAppearance.BorderSize = 0;
+            this.xadd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xadd.Image = global::ProductieManager.Properties.Resources.add_1588;
+            this.xadd.Location = new System.Drawing.Point(210, 0);
+            this.xadd.Name = "xadd";
+            this.xadd.Size = new System.Drawing.Size(32, 32);
+            this.xadd.TabIndex = 2;
+            this.xadd.UseVisualStyleBackColor = true;
+            this.xadd.Click += new System.EventHandler(this.xadd_Click);
+            // 
             // xdelete
             // 
             this.xdelete.Dock = System.Windows.Forms.DockStyle.Right;
@@ -197,21 +210,8 @@
             this.xcontainer.Controls.Add(this.productieVerbruikUI1);
             this.xcontainer.Location = new System.Drawing.Point(300, 60);
             this.xcontainer.Name = "xcontainer";
-            this.xcontainer.Size = new System.Drawing.Size(627, 484);
+            this.xcontainer.Size = new System.Drawing.Size(652, 484);
             this.xcontainer.TabIndex = 1;
-            // 
-            // xadd
-            // 
-            this.xadd.Dock = System.Windows.Forms.DockStyle.Right;
-            this.xadd.FlatAppearance.BorderSize = 0;
-            this.xadd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xadd.Image = global::ProductieManager.Properties.Resources.add_1588;
-            this.xadd.Location = new System.Drawing.Point(210, 0);
-            this.xadd.Name = "xadd";
-            this.xadd.Size = new System.Drawing.Size(32, 32);
-            this.xadd.TabIndex = 2;
-            this.xadd.UseVisualStyleBackColor = true;
-            this.xadd.Click += new System.EventHandler(this.xadd_Click);
             // 
             // productieVerbruikUI1
             // 
@@ -223,7 +223,7 @@
             this.productieVerbruikUI1.Padding = new System.Windows.Forms.Padding(5);
             this.productieVerbruikUI1.ShowMateriaalSelector = false;
             this.productieVerbruikUI1.ShowOpslaan = true;
-            this.productieVerbruikUI1.Size = new System.Drawing.Size(627, 484);
+            this.productieVerbruikUI1.Size = new System.Drawing.Size(652, 484);
             this.productieVerbruikUI1.TabIndex = 0;
             this.productieVerbruikUI1.Title = "Verbruik Berekenen";
             this.productieVerbruikUI1.Visible = false;
@@ -231,7 +231,7 @@
             // SporenForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(950, 564);
+            this.ClientSize = new System.Drawing.Size(975, 564);
             this.Controls.Add(this.xcontainer);
             this.Controls.Add(this.panel1);
             this.MinimumSize = new System.Drawing.Size(950, 450);

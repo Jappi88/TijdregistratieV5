@@ -35,6 +35,8 @@ namespace Controls
         public ProductieInfoUI()
         {
             InitializeComponent();
+            productieVerbruikUI1.ShowMateriaalSelector = true;
+            productieVerbruikUI1.ShowOpslaan = true;
             metroTabControl1.SelectedIndex = 0;
         }
 

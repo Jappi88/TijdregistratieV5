@@ -1802,6 +1802,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\geometry-measure_96x96.png" />
     <None Include="Resources\geometry-measure_32x32.png" />
     <None Include="Resources\calculator_icon-icons.com_72046.png" />
     <None Include="Resources\Emotes_Grades.png" />

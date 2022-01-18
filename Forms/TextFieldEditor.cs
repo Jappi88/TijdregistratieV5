@@ -27,6 +27,8 @@ namespace Forms
             }
         }
 
+        public int MinimalTextLength { get; set; } = 2;
+
         public string SecondaryDescription
         {
             get => xdescriptiontext.Text;
@@ -76,7 +78,7 @@ namespace Forms
 
         private void xok_Click(object sender, EventArgs e)
         {
-            if ((!xextrafieldcheck.Checked && xtextfield.Text.Trim().Length < 2) || (xextrafieldcheck.Checked && xsecondarytextbox.Text.Trim().Length < 2))
+            if ((!xextrafieldcheck.Checked && xtextfield.Text.Trim().Length < MinimalTextLength) || (xextrafieldcheck.Checked && xsecondarytextbox.Text.Trim().Length < MinimalTextLength))
                 XMessageBox.Show("Ongeldige waarde", "Ongeldig", MessageBoxIcon.Warning);
             else
                 DialogResult = DialogResult.OK;

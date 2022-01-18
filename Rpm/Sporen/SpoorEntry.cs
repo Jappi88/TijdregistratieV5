@@ -7,6 +7,8 @@ namespace Rpm.Productie
     {
         public int ID { get; private set; }
         public string ArtikelNr { get; set; }
+        public string MateriaalArtikelNr { get; set; }
+        public string MateriaalOmschrijving { get; set; }
         public string ProductOmschrijving { get; set; }
         public string AangepastDoor { get; set; }
         public DateTime AangepastOp { get; set; }
@@ -48,24 +50,34 @@ namespace Rpm.Productie
             if (xnodig == 0)
             {
                 xret = $"<span color='{Color.Navy.Name}'>" +
-                       $"Er kunnen geen producten van <b>{Math.Round(ProductLengte, 2)}mm</b> gehaald worden uit <b>{UitgangsLengte}mm</b>!" +
-                       $"</span>";
+                             $"Er kunnen geen producten van <b>{Math.Round(ProductLengte, 2)}mm</b> gehaald worden uit <b>{UitgangsLengte}mm</b>!" +
+                             $"</span>";
             }
             else
             {
                 if (xnodig * xprodsperlengte < aantal)
                     xnodig++;
                 var xsporen = AantalSporen;
-                var xrestsporen = (int) (xnodig % xsporen);
+                var xrestsporen = (int)(xnodig % xsporen);
+                if (xnodig < xsporen)
+                {
+                    xsporen = xnodig;
+                    xrestsporen = 0;
+                }
                 var xaantalladen = xnodig > 0 ? xnodig < xsporen ? 1 : xnodig / xsporen : 0;
                 var x1 = xsporen == 1 ? "spoor" : "sporen";
                 var x2 = xrestsporen == 1 ? "spoor" : "sporen";
+                var xmaken = (xnodig * (int) xprodsperlengte);
+                var overschot = xmaken > aantal ? (xmaken - aantal) : 0;
+                var x3 = overschot == 1 ? "product" : "producten";
+                var xoverschotmaat =overschot > 0? $"<span>Dat is een overshot van <b>{overschot}</b> {x3}<b>({Math.Round((overschot * ProductLengte) / 1000, 4)} meter).</b></span>" : "";
                 xret = $"<span color='{Color.Navy.Name}'>" +
-                       $"Een productLengte van <b>{Math.Round(ProductLengte, 2)}mm</b> is <b>{xstuks} stuks</b> van <b>{UitgangsLengte}mm</b><br><br>" +
-                       $"Met een productlengte van <b>{xvalue}m</b> heb je <b>{xnodig}</b> lengtes nodig.<br>" +
-                       $"Dat is <b>{xaantalladen}</b> keer laden met <b>{xsporen}</b> {x1}{(xrestsporen > 0 ? $" en een restlading van <b>{xrestsporen}</b> {x2}" : "")}.<br>" +
-                       $"Met <b>{xnodig}</b> lengtes kan je <b>{(xnodig * (int) xprodsperlengte)}/ {aantal}</b> producten maken.<br>" +
-                       $"Je haalt <b>{(int) xprodsperlengte}</b> producten uit <b>{xtotal} meter</b> met een reststuk van <b>{xrest}mm</b></span>";
+                             $"Een productLengte van <b>{Math.Round(ProductLengte, 2)}mm</b> is <b>{xstuks}(stuk)</b> van <b>{UitgangsLengte}mm</b><br><br>" +
+                             $"Met een productlengte van <b>{xvalue}m</b> heb je <b>{xnodig}</b> lengtes nodig.<br>" +
+                             $"Dat is <b>{xaantalladen}</b> keer laden met <b>{xsporen}</b> {x1}{(xrestsporen > 0 ? $" en een restlading van <b>{xrestsporen}</b> {x2}" : "")}.<br>" +
+                             $"Met <b>{xnodig}</b> lengtes kan je <b>{xmaken}/ {aantal}</b> producten maken.<br>" +
+                             $"{xoverschotmaat}<br>" +
+                             $"Je haalt <b>{(int)xprodsperlengte}</b> producten uit <b>{xtotal} meter</b> met een reststuk van <b>{xrest}mm</b></span>";
             }
 
             return xret;
