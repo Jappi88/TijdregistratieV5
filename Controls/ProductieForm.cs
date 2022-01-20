@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using PdfSharp.Drawing;
 using Various;
 
 namespace Controls
@@ -261,7 +262,6 @@ namespace Controls
                             
                             xstatuslabel.ForeColor = Color.DarkRed;
                             xstatusimage.Image = Resources.stop_red256_24890;
-                            xprogressbar.Text = "GESTOPT";
                             break;
                         case ProductieState.Gestart:
                             if (xstartb != null)
@@ -272,7 +272,6 @@ namespace Controls
                             }
                             xstatuslabel.ForeColor = Color.DarkGreen;
                             xstatusimage.Image = Resources.play_button_icon_icons_com_60615;
-                            xprogressbar.Text = b.GereedPercentage().ToString();
                             break;
                         case ProductieState.Gereed:
                             if (xstartb != null)
@@ -283,7 +282,6 @@ namespace Controls
                             }
                             xstatuslabel.ForeColor = Color.DodgerBlue;
                             xstatusimage.Image = Resources.check_1582;
-                            xprogressbar.Text = b.GereedPercentage().ToString();
                             break;
                         case ProductieState.Verwijderd:
                             break;
@@ -307,6 +305,7 @@ namespace Controls
                             break;
                     }
                     xprogressbar.ForeColor = xpcolor;
+                    xprogressbar.SuperscriptColor = xpcolor;
                     xOnderbreek.Enabled = b.State is ProductieState.Gestart or ProductieState.Gestopt;
                     //update de onderbrekingknop
                     var xstoringen = b.GetStoringen(true);
@@ -326,7 +325,8 @@ namespace Controls
                     int xpercent = (int) b.GereedPercentage();
                     xprogressbar.ProgressColor = Functions.GetProgressColor(xpercent);
                     xprogressbar.Value = (xpercent > xprogressbar.Maximum? xprogressbar.Maximum : xpercent);
-                    xprogressbar.Text = b.GereedPercentage() + "%";
+                    xprogressbar.Text = xpercent + "%";
+                    xprogressbar.SuperscriptText = $"{b.TotaalGemaakt}/{b.Aantal}";
                     var tg = b.TijdAanGewerkt();
                     xprogressbar.Invalidate();
                     //xstatus.Text = (string.IsNullOrEmpty(Formulier.Notitie) ? Formulier.Omschrijving : Formulier.Notitie).Replace("\n", " ");

@@ -25,6 +25,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Forms.ArtikelRecords;
+using MetroFramework.Forms;
 using Org.BouncyCastle.Asn1.Cmp;
 using Rpm.Controls;
 using Rpm.DailyUpdate;
@@ -126,6 +127,7 @@ namespace Controls
         private static PersoneelsForm _PersoneelForm;
         private static ProductieOverzichtForm _ProductieOverzicht;
         private static WerkplaatsIndeling _WerkplaatsIndeling;
+        private static MetroForm _berekenverbruik;
 
         private readonly Daily DailyMessage;
         public bool ShowUnreadMessage { get; set; }
@@ -1213,6 +1215,9 @@ namespace Controls
                         case "xwerkplaatsindeling":
                             ShowWerkplaatsIndelingWindow();
                             break;
+                        case "xverbruik":
+                            ShowBerekenVerbruikWindow();
+                            break;
                         case "xcreateexcel":
                             //maak een nieuwe excel aan
                             DoCreateExcel();
@@ -2028,6 +2033,40 @@ namespace Controls
                 _WerkplaatsIndeling.WindowState = FormWindowState.Normal;
             _WerkplaatsIndeling.BringToFront();
             _WerkplaatsIndeling.Focus();
+        }
+
+        public static void ShowBerekenVerbruikWindow()
+        {
+            if (_berekenverbruik == null)
+            {
+                _berekenverbruik = new MetroForm();
+                _berekenverbruik.Style = MetroColorStyle.Orange;
+                _berekenverbruik.StartPosition = FormStartPosition.CenterScreen;
+                _berekenverbruik.ShadowType = MetroFormShadowType.AeroShadow;
+                _berekenverbruik.MinimumSize = new Size(700, 450);
+                _berekenverbruik.Text = "Bereken Verbruik";
+                var xver = new ProductieVerbruikUI();
+                xver.Dock = DockStyle.Fill;
+                xver.ShowMateriaalSelector = false;
+                xver.ShowOpslaan = false;
+                xver.ShowSluiten = true;
+                xver.ShowOpdrukkerArtikelNr = true;
+                xver.UpdateFields(true);
+                xver.MaxUitgangsLengte = 12450;
+                xver.RestStuk = 35;
+                _berekenverbruik.Controls.Add(xver);
+                _berekenverbruik.FormClosed += (x, y) =>
+                {
+                    _berekenverbruik?.Dispose();
+                    _berekenverbruik = null;
+                };
+            }
+
+            _berekenverbruik.Show();
+            if (_berekenverbruik.WindowState == FormWindowState.Minimized)
+                _berekenverbruik.WindowState = FormWindowState.Normal;
+            _berekenverbruik.BringToFront();
+            _berekenverbruik.Focus();
         }
 
         public static void ShowPersoonVaardigheden(Personeel persoon)

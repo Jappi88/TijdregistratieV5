@@ -38,20 +38,25 @@ namespace Rpm.Productie
 
         public string CreateHtmlText(int aantal)
         {
-            var xvalue = Math.Round(ProductLengte / 1000, 4);
-            var xtotal = Math.Round(UitgangsLengte / 1000, 4);
+            var xvalue = Math.Round(ProductLengte, 4);
+            var xtotal = Math.Round(UitgangsLengte, 4);
             var xstuks = ProductLengte > 0 && UitgangsLengte > 0 ? Math.Round(ProductLengte / UitgangsLengte, 4) : 0;
-            var xret = "Geen verbruik";
+            string xret;
 
             var xprodsperlengte = xvalue > 0 ? (int) (xtotal / xvalue) : 0;
-            var xrest = xvalue > 0 ? Math.Round((xtotal % xvalue) * 1000, 2) : 0;
+            var xrest = xvalue > 0 ? Math.Round((xtotal % xvalue), 2) : 0;
             var xnodig = xprodsperlengte > 0 ? aantal < xprodsperlengte ? 1 : (aantal / xprodsperlengte) : 0;
 
             if (xnodig == 0)
             {
-                xret = $"<span color='{Color.Navy.Name}'>" +
-                             $"Er kunnen geen producten van <b>{Math.Round(ProductLengte, 2)}mm</b> gehaald worden uit <b>{UitgangsLengte}mm</b>!" +
-                             $"</span>";
+                if (ProductLengte == 0)
+                    xret = $"<span color='{Color.Navy.Name}'>" +
+                           $"Er is geen materiaal nodig voor een productlengte van <b>{ProductLengte}mm</b>." +
+                           $"</span>";
+                else
+                    xret = $"<span color='{Color.Navy.Name}'>" +
+                           $"Er kunnen geen producten van <b>{Math.Round(ProductLengte, 2)}mm</b> gehaald worden uit <b>{UitgangsLengte}mm</b>!" +
+                           $"</span>";
             }
             else
             {
@@ -70,14 +75,16 @@ namespace Rpm.Productie
                 var xmaken = (xnodig * (int) xprodsperlengte);
                 var overschot = xmaken > aantal ? (xmaken - aantal) : 0;
                 var x3 = overschot == 1 ? "product" : "producten";
-                var xoverschotmaat =overschot > 0? $"<span>Dat is een overshot van <b>{overschot}</b> {x3}<b>({Math.Round((overschot * ProductLengte) / 1000, 4)} meter).</b></span>" : "";
+                var xoverschotmaat =overschot > 0? $"Dat is een overshot van <b>{overschot}</b> {x3}<b>({Math.Round((overschot * ProductLengte) / 1000, 4)} meter).</b>" : "";
                 xret = $"<span color='{Color.Navy.Name}'>" +
-                             $"Een productLengte van <b>{Math.Round(ProductLengte, 2)}mm</b> is <b>{xstuks}(stuk)</b> van <b>{UitgangsLengte}mm</b><br><br>" +
-                             $"Met een productlengte van <b>{xvalue}m</b> heb je <b>{xnodig}</b> lengtes nodig.<br>" +
-                             $"Dat is <b>{xaantalladen}</b> keer laden met <b>{xsporen}</b> {x1}{(xrestsporen > 0 ? $" en een restlading van <b>{xrestsporen}</b> {x2}" : "")}.<br>" +
-                             $"Met <b>{xnodig}</b> lengtes kan je <b>{xmaken}/ {aantal}</b> producten maken.<br>" +
-                             $"{xoverschotmaat}<br>" +
-                             $"Je haalt <b>{(int)xprodsperlengte}</b> producten uit <b>{xtotal} meter</b> met een reststuk van <b>{xrest}mm</b></span>";
+                       $"<ul>" +
+                             $"<li>Een productLengte van <b>{Math.Round(ProductLengte, 2)}mm</b> is <b>{xstuks}(stuk)</b> van <b>{UitgangsLengte}mm</b>.</li>" +
+                             $"<li>Met een productlengte van <b>{xvalue/1000}m</b> heb je <b>{xnodig}</b> lengtes nodig.</li>" +
+                             $"Dat is <b>{xaantalladen}</b> keer laden met <b>{xsporen}</b> {x1}{(xrestsporen > 0 ? $" en een restlading van <b>{xrestsporen}</b> {x2}" : "")}." +
+                             $"<li>Met <b>{xnodig}</b> lengtes kan je <b>{xmaken}/ {aantal}</b> producten maken.</li>" +
+                             $"{xoverschotmaat}" +
+                             $"<li>Je haalt <b>{(int)xprodsperlengte}</b> producten uit <b>{xtotal / 1000} meter</b> met een reststuk van <b>{xrest}mm</b></li>" +
+                             $"</ul></span>";
             }
 
             return xret;

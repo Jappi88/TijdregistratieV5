@@ -41,22 +41,27 @@
             this.xadd = new System.Windows.Forms.Button();
             this.xdelete = new System.Windows.Forms.Button();
             this.xcontainer = new System.Windows.Forms.Panel();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.productieVerbruikUI1 = new Controls.ProductieVerbruikUI();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xVerpakkingen)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.xcontainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.xVerpakkingen);
             this.panel1.Controls.Add(this.panel2);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel1.Location = new System.Drawing.Point(20, 60);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(274, 484);
+            this.panel1.Size = new System.Drawing.Size(319, 401);
             this.panel1.TabIndex = 0;
             // 
             // xVerpakkingen
@@ -80,7 +85,7 @@
             this.xVerpakkingen.Name = "xVerpakkingen";
             this.xVerpakkingen.ShowGroups = false;
             this.xVerpakkingen.ShowItemToolTips = true;
-            this.xVerpakkingen.Size = new System.Drawing.Size(274, 452);
+            this.xVerpakkingen.Size = new System.Drawing.Size(319, 369);
             this.xVerpakkingen.SmallImageList = this.imageList1;
             this.xVerpakkingen.TabIndex = 1;
             this.xVerpakkingen.UseAlternatingBackColors = true;
@@ -136,7 +141,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(274, 32);
+            this.panel2.Size = new System.Drawing.Size(319, 32);
             this.panel2.TabIndex = 0;
             // 
             // xsearch
@@ -145,7 +150,7 @@
             // 
             // 
             this.xsearch.CustomButton.Image = null;
-            this.xsearch.CustomButton.Location = new System.Drawing.Point(180, 2);
+            this.xsearch.CustomButton.Location = new System.Drawing.Point(217, 2);
             this.xsearch.CustomButton.Name = "";
             this.xsearch.CustomButton.Size = new System.Drawing.Size(27, 27);
             this.xsearch.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -167,7 +172,7 @@
             this.xsearch.SelectionStart = 0;
             this.xsearch.ShortcutsEnabled = true;
             this.xsearch.ShowClearButton = true;
-            this.xsearch.Size = new System.Drawing.Size(210, 32);
+            this.xsearch.Size = new System.Drawing.Size(255, 32);
             this.xsearch.TabIndex = 1;
             this.xsearch.UseSelectable = true;
             this.xsearch.WaterMark = "Zoeken...";
@@ -181,7 +186,7 @@
             this.xadd.FlatAppearance.BorderSize = 0;
             this.xadd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xadd.Image = global::ProductieManager.Properties.Resources.add_1588;
-            this.xadd.Location = new System.Drawing.Point(210, 0);
+            this.xadd.Location = new System.Drawing.Point(255, 0);
             this.xadd.Name = "xadd";
             this.xadd.Size = new System.Drawing.Size(32, 32);
             this.xadd.TabIndex = 2;
@@ -195,7 +200,7 @@
             this.xdelete.FlatAppearance.BorderSize = 0;
             this.xdelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xdelete.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xdelete.Location = new System.Drawing.Point(242, 0);
+            this.xdelete.Location = new System.Drawing.Point(287, 0);
             this.xdelete.Name = "xdelete";
             this.xdelete.Size = new System.Drawing.Size(32, 32);
             this.xdelete.TabIndex = 0;
@@ -204,14 +209,30 @@
             // 
             // xcontainer
             // 
-            this.xcontainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.xcontainer.Controls.Add(this.productieVerbruikUI1);
-            this.xcontainer.Location = new System.Drawing.Point(300, 60);
+            this.xcontainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xcontainer.Location = new System.Drawing.Point(0, 0);
             this.xcontainer.Name = "xcontainer";
-            this.xcontainer.Size = new System.Drawing.Size(652, 484);
+            this.xcontainer.Size = new System.Drawing.Size(631, 401);
             this.xcontainer.TabIndex = 1;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(20, 60);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.panel1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.xcontainer);
+            this.splitContainer1.Size = new System.Drawing.Size(960, 401);
+            this.splitContainer1.SplitterDistance = 319;
+            this.splitContainer1.SplitterWidth = 10;
+            this.splitContainer1.TabIndex = 1;
             // 
             // productieVerbruikUI1
             // 
@@ -223,7 +244,8 @@
             this.productieVerbruikUI1.Padding = new System.Windows.Forms.Padding(5);
             this.productieVerbruikUI1.ShowMateriaalSelector = false;
             this.productieVerbruikUI1.ShowOpslaan = true;
-            this.productieVerbruikUI1.Size = new System.Drawing.Size(652, 484);
+            this.productieVerbruikUI1.ShowSluiten = true;
+            this.productieVerbruikUI1.Size = new System.Drawing.Size(631, 401);
             this.productieVerbruikUI1.TabIndex = 0;
             this.productieVerbruikUI1.Title = "Verbruik Berekenen";
             this.productieVerbruikUI1.Visible = false;
@@ -231,10 +253,9 @@
             // SporenForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(975, 564);
-            this.Controls.Add(this.xcontainer);
-            this.Controls.Add(this.panel1);
-            this.MinimumSize = new System.Drawing.Size(950, 450);
+            this.ClientSize = new System.Drawing.Size(1000, 481);
+            this.Controls.Add(this.splitContainer1);
+            this.MinimumSize = new System.Drawing.Size(1000, 450);
             this.Name = "SporenForm";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -247,6 +268,10 @@
             this.contextMenuStrip1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.xcontainer.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -266,5 +291,6 @@
         private System.Windows.Forms.Panel xcontainer;
         private Controls.ProductieVerbruikUI productieVerbruikUI1;
         private System.Windows.Forms.Button xadd;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }
