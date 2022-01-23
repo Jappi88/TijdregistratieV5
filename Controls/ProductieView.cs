@@ -2043,17 +2043,18 @@ namespace Controls
                 _berekenverbruik.Style = MetroColorStyle.Orange;
                 _berekenverbruik.StartPosition = FormStartPosition.CenterScreen;
                 _berekenverbruik.ShadowType = MetroFormShadowType.AeroShadow;
-                _berekenverbruik.MinimumSize = new Size(700, 450);
+                _berekenverbruik.MinimumSize = new Size(750, 550);
                 _berekenverbruik.Text = "Bereken Verbruik";
                 var xver = new ProductieVerbruikUI();
                 xver.Dock = DockStyle.Fill;
                 xver.ShowMateriaalSelector = false;
-                xver.ShowOpslaan = false;
+                xver.ShowOpslaan = true;
+                xver.ShowPerUur = true;
                 xver.ShowSluiten = true;
                 xver.ShowOpdrukkerArtikelNr = true;
                 xver.UpdateFields(true);
                 xver.MaxUitgangsLengte = 12450;
-                xver.RestStuk = 35;
+                xver.RestStuk = 50;
                 _berekenverbruik.Controls.Add(xver);
                 _berekenverbruik.FormClosed += (x, y) =>
                 {

@@ -121,6 +121,21 @@ namespace Rpm.Productie.Verpakking
             return xsporen;
         }
 
+        public List<string> GetAlleIDs()
+        {
+            List<string> xsporen = new List<string>();
+            try
+            {
+                if (Database == null) return xsporen;
+                xsporen = Database.GetAllIDs(true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return xsporen;
+        }
+
         private void Database_FileDeleted(object sender, FileSystemEventArgs e)
         {
             OnSporenDeleted(Path.GetFileNameWithoutExtension(e.FullPath));

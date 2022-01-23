@@ -305,7 +305,6 @@ namespace Controls
                             break;
                     }
                     xprogressbar.ForeColor = xpcolor;
-                    xprogressbar.SuperscriptColor = xpcolor;
                     xOnderbreek.Enabled = b.State is ProductieState.Gestart or ProductieState.Gestopt;
                     //update de onderbrekingknop
                     var xstoringen = b.GetStoringen(true);
@@ -325,8 +324,7 @@ namespace Controls
                     int xpercent = (int) b.GereedPercentage();
                     xprogressbar.ProgressColor = Functions.GetProgressColor(xpercent);
                     xprogressbar.Value = (xpercent > xprogressbar.Maximum? xprogressbar.Maximum : xpercent);
-                    xprogressbar.Text = xpercent + "%";
-                    xprogressbar.SuperscriptText = $"{b.TotaalGemaakt}/{b.Aantal}";
+                    xprogressbar.Text = $"{b.TotaalGemaakt}/{b.Aantal}\n{xpercent}%";
                     var tg = b.TijdAanGewerkt();
                     xprogressbar.Invalidate();
                     //xstatus.Text = (string.IsNullOrEmpty(Formulier.Notitie) ? Formulier.Omschrijving : Formulier.Notitie).Replace("\n", " ");

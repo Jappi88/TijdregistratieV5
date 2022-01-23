@@ -170,7 +170,7 @@
             this.xprogressbar.AnimationSpeed = 500;
             this.xprogressbar.BackColor = System.Drawing.Color.Transparent;
             this.xprogressbar.ContextMenuStrip = this.contextMenuStrip1;
-            this.xprogressbar.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xprogressbar.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xprogressbar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.xprogressbar.InnerColor = System.Drawing.Color.White;
             this.xprogressbar.InnerMargin = 5;
@@ -189,14 +189,14 @@
             this.xprogressbar.StartAngle = 270;
             this.xprogressbar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.xprogressbar.SubscriptColor = System.Drawing.Color.FromArgb(((int)(((byte)(166)))), ((int)(((byte)(166)))), ((int)(((byte)(166)))));
-            this.xprogressbar.SubscriptMargin = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.xprogressbar.SubscriptMargin = new System.Windows.Forms.Padding(0);
             this.xprogressbar.SubscriptText = "";
             this.xprogressbar.SuperscriptColor = System.Drawing.Color.Black;
-            this.xprogressbar.SuperscriptMargin = new System.Windows.Forms.Padding(-30, -5, 0, 0);
-            this.xprogressbar.SuperscriptText = "100000/1000000";
+            this.xprogressbar.SuperscriptMargin = new System.Windows.Forms.Padding(-35, -5, 0, 0);
+            this.xprogressbar.SuperscriptText = "";
             this.xprogressbar.TabIndex = 1;
             this.xprogressbar.Text = "68%";
-            this.xprogressbar.TextMargin = new System.Windows.Forms.Padding(30, 30, 0, 0);
+            this.xprogressbar.TextMargin = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.toolTip1.SetToolTip(this.xprogressbar, "Productie Voortgang");
             this.xprogressbar.Value = 68;
             // 

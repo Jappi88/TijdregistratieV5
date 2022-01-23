@@ -916,6 +916,12 @@
     <Compile Include="Forms\Sporen\NewSpoorForm.Designer.cs">
       <DependentUpon>NewSpoorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Sporen\SpoorDatabaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Sporen\SpoorDatabaseForm.Designer.cs">
+      <DependentUpon>SpoorDatabaseForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Sporen\SporenForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1129,6 +1135,8 @@
     <Compile Include="Rpm\Mailing\RemoteProductie.cs" />
     <Compile Include="Rpm\Mailing\UitgaandAdres.cs" />
     <Compile Include="Rpm\Mailing\WeekOverzicht.cs" />
+    <Compile Include="Rpm\MateriaalSoort\Opdrukker.cs" />
+    <Compile Include="Rpm\MateriaalSoort\OpdrukkerInfo.cs" />
     <Compile Include="Rpm\Misc\AssemblyInfo.cs" />
     <Compile Include="Rpm\Misc\BootLoader.cs" />
     <Compile Include="Rpm\Misc\CpuID.cs" />
@@ -1574,6 +1582,9 @@
     <EmbeddedResource Include="Forms\Sporen\NewSpoorForm.resx">
       <DependentUpon>NewSpoorForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Sporen\SpoorDatabaseForm.resx">
+      <DependentUpon>SpoorDatabaseForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Sporen\SporenForm.resx">
       <DependentUpon>SporenForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1802,6 +1813,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\maths_math_32x32.png" />
     <None Include="Resources\geometry-measure_96x96.png" />
     <None Include="Resources\geometry-measure_32x32.png" />
     <None Include="Resources\calculator_icon-icons.com_72046.png" />

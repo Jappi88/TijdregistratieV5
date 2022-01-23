@@ -83,13 +83,15 @@ namespace Forms
             // 
             this.xchooser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xchooser.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xchooser.FontSize = MetroFramework.MetroComboBoxSize.Tall;
             this.xchooser.FormattingEnabled = true;
-            this.xchooser.ItemHeight = 23;
+            this.xchooser.ItemHeight = 29;
             this.xchooser.Location = new System.Drawing.Point(0, 0);
             this.xchooser.Name = "xchooser";
-            this.xchooser.Size = new System.Drawing.Size(691, 29);
+            this.xchooser.Size = new System.Drawing.Size(691, 35);
             this.xchooser.TabIndex = 0;
             this.xchooser.UseSelectable = true;
+            this.xchooser.UseStyleColors = true;
             // 
             // xbuttonpanel
             // 

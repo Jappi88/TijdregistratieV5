@@ -65,6 +65,19 @@ namespace Rpm.Productie.ArtikelRecords
             }
         }
 
+        public ArtikelRecord GetRecord(string artnr)
+        {
+            try
+            {
+                return Database?.GetEntry<ArtikelRecord>(artnr);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
         private void Database_FileDeleted(object sender, FileSystemEventArgs e)
         {
             OnArtikelDeleted(e);
@@ -77,7 +90,7 @@ namespace Rpm.Productie.ArtikelRecords
                 if (string.IsNullOrEmpty(form?.ArtikelNr))
                     return;
                 if (form.State != ProductieState.Gereed) return;
-                var file = Database.GetEntry<ArtikelRecord>(form.ArtikelNr);
+                var file = Database?.GetEntry<ArtikelRecord>(form.ArtikelNr);
                 if (file != null)
                 {
                     if (file.UpdatedProducties.Exists(x =>

@@ -41,8 +41,8 @@
             this.xadd = new System.Windows.Forms.Button();
             this.xdelete = new System.Windows.Forms.Button();
             this.xcontainer = new System.Windows.Forms.Panel();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.productieVerbruikUI1 = new Controls.ProductieVerbruikUI();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xVerpakkingen)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -150,7 +150,7 @@
             // 
             // 
             this.xsearch.CustomButton.Image = null;
-            this.xsearch.CustomButton.Location = new System.Drawing.Point(217, 2);
+            this.xsearch.CustomButton.Location = new System.Drawing.Point(225, 2);
             this.xsearch.CustomButton.Name = "";
             this.xsearch.CustomButton.Size = new System.Drawing.Size(27, 27);
             this.xsearch.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -216,6 +216,35 @@
             this.xcontainer.Size = new System.Drawing.Size(631, 401);
             this.xcontainer.TabIndex = 1;
             // 
+            // productieVerbruikUI1
+            // 
+            this.productieVerbruikUI1.BackColor = System.Drawing.Color.White;
+            this.productieVerbruikUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieVerbruikUI1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productieVerbruikUI1.Location = new System.Drawing.Point(0, 0);
+            this.productieVerbruikUI1.MaxUitgangsLengte = new decimal(new int[] {
+            7500,
+            0,
+            0,
+            0});
+            this.productieVerbruikUI1.Name = "productieVerbruikUI1";
+            this.productieVerbruikUI1.OpdrukkerArtikel = null;
+            this.productieVerbruikUI1.Padding = new System.Windows.Forms.Padding(5);
+            this.productieVerbruikUI1.RestStuk = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.productieVerbruikUI1.ShowMateriaalSelector = false;
+            this.productieVerbruikUI1.ShowOpdrukkerArtikelNr = false;
+            this.productieVerbruikUI1.ShowOpslaan = true;
+            this.productieVerbruikUI1.ShowPerUur = true;
+            this.productieVerbruikUI1.ShowSluiten = true;
+            this.productieVerbruikUI1.Size = new System.Drawing.Size(631, 401);
+            this.productieVerbruikUI1.TabIndex = 0;
+            this.productieVerbruikUI1.Title = "Verbruik Berekenen";
+            this.productieVerbruikUI1.Visible = false;
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -233,22 +262,6 @@
             this.splitContainer1.SplitterDistance = 319;
             this.splitContainer1.SplitterWidth = 10;
             this.splitContainer1.TabIndex = 1;
-            // 
-            // productieVerbruikUI1
-            // 
-            this.productieVerbruikUI1.BackColor = System.Drawing.Color.White;
-            this.productieVerbruikUI1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.productieVerbruikUI1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productieVerbruikUI1.Location = new System.Drawing.Point(0, 0);
-            this.productieVerbruikUI1.Name = "productieVerbruikUI1";
-            this.productieVerbruikUI1.Padding = new System.Windows.Forms.Padding(5);
-            this.productieVerbruikUI1.ShowMateriaalSelector = false;
-            this.productieVerbruikUI1.ShowOpslaan = true;
-            this.productieVerbruikUI1.ShowSluiten = true;
-            this.productieVerbruikUI1.Size = new System.Drawing.Size(631, 401);
-            this.productieVerbruikUI1.TabIndex = 0;
-            this.productieVerbruikUI1.Title = "Verbruik Berekenen";
-            this.productieVerbruikUI1.Visible = false;
             // 
             // SporenForm
             // 

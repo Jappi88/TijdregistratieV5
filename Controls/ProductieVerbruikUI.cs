@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.Linq;
-using System.Windows.Forms;
-using System.Xml;
-using Forms;
-using iTextSharp.text.xml;
-using NPOI.XSSF.UserModel.Charts;
-using Org.BouncyCastle.Asn1.Mozilla;
+﻿using Forms;
 using ProductieManager.Properties;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using System.Windows.Forms;
+using Forms.Sporen;
+using Rpm.MateriaalSoort;
 
 namespace Controls
 {
@@ -45,22 +44,31 @@ namespace Controls
             }
         }
 
+        public bool ShowPerUur { get; set; }
+
         public bool ShowOpdrukkerArtikelNr
         {
             get => xopdrukkerpanel.Visible;
             set => xopdrukkerpanel.Visible = value;
         }
 
+        public Opdrukker OpdrukkerArtikel { get; set; }
+
         public ProductieVerbruikUI()
         {
             InitializeComponent();
             xmachine.SelectedIndex = 0;
             xmachine.SelectedIndexChanged += Xmachine_SelectedIndexChanged;
+            if (Manager.SporenBeheer != null)
+            {
+                xopdrukkerartikelnr.AutoCompleteCustomSource = new AutoCompleteStringCollection();
+                xopdrukkerartikelnr.AutoCompleteCustomSource.AddRange(Manager.SporenBeheer.GetAlleIDs().ToArray());
+            }
         }
 
         private void Xmachine_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateOpdrukkerArtikelNr();
+            UpdateOpdrukkerInfo();
         }
 
         public string Title
@@ -107,22 +115,29 @@ namespace Controls
             try
             {
                 SpoorEntry spoor = _spoor;
-                if (!string.IsNullOrEmpty(_form?.ArtikelNr))
+                var artikel = _form?.ArtikelNr ?? xopdrukkerartikelnr.Text;
+                if (artikel.ToLower().StartsWith("vul in een artikelnr"))
+                    artikel = _spoor?.ArtikelNr;
+                if (!string.IsNullOrEmpty(artikel))
                 {
                     if (Manager.SporenBeheer != null)
-                        spoor = Manager.SporenBeheer.GetSpoor(_form.ArtikelNr.Trim());
+                        spoor = Manager.SporenBeheer.GetSpoor(artikel.Trim());
                 }
                 if (spoor == null)
                 {
                     spoor = new SpoorEntry
                     {
+                        ArtikelNr = artikel,
                         ProductLengte = GetSelectedMateriaalLengte(),
                         AantalSporen = GetAantalSporen(),
+                        PakketAantal = (int)xperPak.Value,
                         Aantal = (int) xproduceren.Value,
-                        UitgangsLengte = xuitganglengte.Value
+                        UitgangsLengte = xuitganglengte.Value,
+                        ProductOmschrijving = _form?.Omschrijving??OpdrukkerArtikel?.GetHtmlString()
                     };
+                    if (OpdrukkerArtikel != null)
+                        spoor.PerUur = OpdrukkerArtikel.PerUur();
                 }
-
                 return spoor;
             }
             catch (Exception e)
@@ -191,12 +206,13 @@ namespace Controls
                 if (entry != null)
                     _spoor = entry;
                 else
-                    _spoor ??= GetSpoorInfo();
+                    _spoor = GetSpoorInfo();
                 if (_spoor != null)
                 {
                     xaantalsporen.SetValue(_spoor.AantalSporen);
                     xuitganglengte.SetValue(_spoor.UitgangsLengte);
                     xprodlengte.SetValue(_spoor.ProductLengte);
+                    xperPak.SetValue(_spoor.PakketAantal);
                 }
             }
             _spoor ??= GetSpoorInfo()??new SpoorEntry();
@@ -207,7 +223,7 @@ namespace Controls
 
             xprodlabel.Text = $"Productlengte({xvalue}m)";
             xlengtelabel.Text = $"Uitgangslengte({xtotal}m)";
-            xinfo.Text = _spoor.CreateHtmlText(aantal);
+            xinfo.Text = _spoor.CreateHtmlText(aantal, ShowPerUur);
 
             if (!string.IsNullOrEmpty(_spoor?.AangepastDoor))
             {
@@ -231,7 +247,7 @@ namespace Controls
                 {
                     xaantalsporen.SetValue(_spoor.AantalSporen);
                     xuitganglengte.SetValue(_spoor.UitgangsLengte);
-                    xprodlengte.SetValue(_spoor.ProductLengte * 1000);//mm
+                    xprodlengte.SetValue(_spoor.ProductLengte);//mm
                 }
                 if (xprodlengte.Value == 0)
                     xprodlengte.SetValue(xprods[xmaterialen.SelectedIndex]);
@@ -275,7 +291,10 @@ namespace Controls
                 var xmat = GetSelectedMateriaalArtikelNr();
                 if (xmat == null)
                     return xprodlengte.Value;
-                return (decimal) GetSelectedMateriaalArtikelNr().AantalPerStuk;
+                var lengte = (decimal) GetSelectedMateriaalArtikelNr().AantalPerStuk;
+                if (!xmat.Eenheid.ToLower().Contains("stuk"))
+                    lengte *= 1000;
+                return lengte;
             }
             catch (Exception e)
             {
@@ -292,11 +311,20 @@ namespace Controls
                     throw new Exception("Sporen database is niet beschikbaar!");
                 var xart = _spoor?.ArtikelNr;
                 var xoms = _spoor?.ProductOmschrijving;
-                if (string.IsNullOrEmpty(xart) && !string.IsNullOrEmpty(_form.ArtikelNr))
+                if (string.IsNullOrEmpty(xart) && !string.IsNullOrEmpty(_form?.ArtikelNr))
                 {
                     xart = _form.ArtikelNr;
                     xoms = _form.Omschrijving;
                 }
+                else
+                {
+                    if (!xopdrukkerartikelnr.Text.Trim().ToLower().StartsWith("vul in een artikelnr") &&
+                        xopdrukkerartikelnr.Text.Trim().Length > 4)
+                        xart = xopdrukkerartikelnr.Text.Trim();
+                    if (IsOpdrukkerArtikelNr() && OpdrukkerArtikel != null)
+                        xoms = OpdrukkerArtikel.GetTitle();
+                }
+
                 if (Manager.SporenBeheer != null && !string.IsNullOrEmpty(xart))
                 {
                     var xmat = GetSelectedMateriaalArtikelNr();
@@ -305,6 +333,7 @@ namespace Controls
                     _spoor.MateriaalArtikelNr = xmat?.ArtikelNr;
                     _spoor.MateriaalOmschrijving = xmat?.Omschrijving;
                     _spoor.ProductOmschrijving = xoms;
+                    _spoor.ProductHtmlOmschrijving = OpdrukkerArtikel?.GetHtmlString();
                     var xtxtform = new TextFieldEditor();
                     xtxtform.EnableSecondaryField = false;
                     xtxtform.FieldImage = Resources.user_64_64;
@@ -361,6 +390,15 @@ namespace Controls
             }
         }
 
+        private void xperPak_ValueChanged(object sender, EventArgs e)
+        {
+            if (_spoor != null)
+            {
+                _spoor.PakketAantal = (int)xperPak.Value;
+                UpdateFields(false);
+            }
+        }
+
         private void xproduceren_ValueChanged(object sender, EventArgs e)
         {
             if (_spoor != null)
@@ -374,6 +412,7 @@ namespace Controls
         public decimal OptimalUitgangsLengte(decimal prodlengte, decimal rest, decimal maxlengte)
         {
             var xcurlengte = maxlengte;
+            if (prodlengte == 0) return maxlengte;
             var xrest = (xcurlengte % prodlengte);
             if (xrest >= rest)
             {
@@ -393,13 +432,16 @@ namespace Controls
             return xcurlengte;
         }
 
+        private readonly char[] _opdrukkertypes = new char[] {'a', 'g', 's'};
 
         private void xoptimalemaat_Click(object sender, EventArgs e)
         {
             try
             {
-                var reststuk = xopdrukkerartikelnr.Text.Length >= 4 ? RestStuk : 20;
-                var maxlengte = xopdrukkerartikelnr.Text.Length >= 4 ? MaxUitgangsLengte : 7500;
+                var xfirst = xopdrukkerartikelnr.Text.ToLower().FirstOrDefault();
+                bool isopdrukker = _opdrukkertypes.Any(x => x == xfirst);
+                var reststuk =  isopdrukker? RestStuk : 20;
+                var maxlengte = isopdrukker? MaxUitgangsLengte : 7500;
                 var xprod = this.xprodlengte.Value;
                 if (xprod <= 0)
                     throw new Exception("Productlengte kan niet '0' zijn!");
@@ -434,56 +476,142 @@ namespace Controls
                 form.Close();
         }
 
-        private void UpdateOpdrukkerArtikelNr()
+        private bool IsOpdrukkerArtikelNr()
         {
-            var text = xopdrukkerartikelnr.Text.Trim();
-            if (text.Length < 4) return;
-            // var value = text.Substring(text.Length - 8, 8);
-            var buistype = text.Length >= 14 ? text.Substring(text.Length - 14, 2) : "A0";
-            var liplengte = text.Length >= 12 ? text.Substring(text.Length - 12, 2) : "42";
-            var type = text.Length >= 10 ? text.Substring(text.Length - 10, 2) : "03";
-            int index = text.Length is >= 4 and <= 8 ? 0 : text.Length - 8;
-            if (index < 0) return;
-            var hohtxt = text.Length >= 4 ? text.Substring(index, 4) : "0";
-            var raamkant = text.Length >= 6 ? text.Substring(text.Length - 4, 2) : "20";
-            var klemkant = text.Length >= 8 ? text.Substring(text.Length - 2, 2) : "20";
-
-
-            decimal xbase = xmachine.SelectedIndex <= 0 ? 80 : 60;
-
-            if (decimal.TryParse(type, out var xtype))
-            {
-                //ToDO
-                switch (xtype)
-                {
-                    case 20:
-                        break;
-                    case 40:
-                        break;
-                }
-            }
-
-            if (decimal.TryParse(hohtxt, out var hoh) && decimal.TryParse(raamkant, out var raam) &&
-                decimal.TryParse(klemkant, out var klem))
-            {
-                decimal xmarge = 10;
-                decimal maxhoek = 100;
-                var percentraam = ((raam / maxhoek) * 100);
-                var percentklem = ((klem / maxhoek) * 100);
-                xbase += ((xmarge / 100) * percentraam);
-                xbase += ((xmarge / 100) * percentklem);
-                hoh += xbase;
-                xprodlengte.SetValue(hoh);
-                var xcurlengte = OptimalUitgangsLengte(xprodlengte.Value, 35, 12450);
-                xuitganglengte.SetValue((int)xcurlengte);
-            }
+            var txt = xopdrukkerartikelnr.Text.Trim().ToLower();
+            var xfirst = txt.FirstOrDefault();
+            bool isopdrukker = _opdrukkertypes.Any(x => x == xfirst);
+            return isopdrukker;
         }
 
         private void xopdrukkerartikelnr_TextChanged(object sender, EventArgs e)
         {
             if (xopdrukkerartikelnr.Text.Length >= 4)
             {
-                UpdateOpdrukkerArtikelNr();
+                var isopdrukker = IsOpdrukkerArtikelNr();
+                if (isopdrukker)
+                {
+                    UpdateOpdrukkerInfo();
+                    UpdateFields(true, null);
+                }
+                else
+                {
+                    xmachine.Visible = false;
+                    OpdrukkerArtikel = null;
+                    UpdateFields(true, null);
+                }
+            }
+            else
+            {
+                xmachine.Visible = false;
+                OpdrukkerArtikel = null;
+            }
+
+        }
+
+        private void UpdateOpdrukkerInfo()
+        {
+            if (xmachine.SelectedIndex is < 0 or > 1)
+                return;
+            if (!IsOpdrukkerArtikelNr()) return;
+            OpdrukkerArtikel ??= new Opdrukker();
+            OpdrukkerArtikel.Machine = (OpdrukkerMachine) (xmachine.SelectedIndex);
+            OpdrukkerArtikel.UpdateOpdrukkerArtikelNr(xopdrukkerartikelnr.Text);
+            xmachine.Visible = true;
+            _spoor = GetSpoorInfo();
+            _spoor.ProductOmschrijving = OpdrukkerArtikel.GetTitle();
+            _spoor.ProductHtmlOmschrijving = OpdrukkerArtikel.GetHtmlString();
+            xprodlengte.SetValue(OpdrukkerArtikel.KnipMaat);
+            xperPak.SetValue(OpdrukkerArtikel.PakketAantal);
+            xaantalsporen.Value = xmachine.SelectedIndex == 0 ? 1 : 2;
+            var xcurlengte = OptimalUitgangsLengte(OpdrukkerArtikel.KnipMaat, 50, 12450);
+            xcurlengte = ((int)Math.Round(xcurlengte / 50.0m)) * 50;
+            xuitganglengte.SetValue((int)xcurlengte);
+        }
+
+        private void xopdrukkerartikelnr_Enter(object sender, EventArgs e)
+        {
+            if (xopdrukkerartikelnr.Text.ToLower().StartsWith("vul in een artikelnr"))
+            {
+                xopdrukkerartikelnr.CharacterCasing = CharacterCasing.Upper;
+                xopdrukkerartikelnr.Text = "";
+            }
+        }
+
+        private void xopdrukkerartikelnr_Leave(object sender, EventArgs e)
+        {
+            if (xopdrukkerartikelnr.Text.Trim().Length < 1)
+            {
+                xopdrukkerartikelnr.CharacterCasing = CharacterCasing.Normal;
+                xopdrukkerartikelnr.Text = "Vul in een ArtikelNr..";
+            }
+        }
+
+        private void xaantalafronden_Click(object sender, EventArgs e)
+        {
+            var xp = xprodlengte.Value == 0? 0 : ((int)(xuitganglengte.Value / xprodlengte.Value));
+            var restsporen = 0;
+            var restpakket = xperPak.Value > 0 ? xproduceren.Value % (xperPak.Value * xp) : 0;
+            var aantal = xproduceren.Value;
+
+            var xnodig = xp > 0 ? aantal < xp ? 1 : (aantal / xp) : 0;
+
+            if (xnodig > 0)
+            {
+                if (xnodig * xp < aantal)
+                    xnodig++;
+                var xsporen = xaantalsporen.Value;
+                restsporen = (int) (xnodig % xsporen);
+            }
+
+            var xselect = new List<string>();
+            if (restsporen > 0)
+            {
+                xselect.Add("Rond af naar Boven voor een volle Lading");
+                xselect.Add("Rond af naar Beneden voor een volle Lading");
+            }
+            if (restpakket > 0)
+            {
+                xselect.Add("Rond af naar Boven voor een volle Pakket");
+                xselect.Add("Rond af naar Beneden voor een volle Pakket");
+            }
+            if (xselect.Count == 0)
+            {
+                var x1 = xproduceren.Value == 1 ? "product" : "producten";
+                XMessageBox.Show(
+                    $"Met {xproduceren.Value} {x1} eindig je al op een volle pakket en een volle lading.");
+                return;
+            }
+
+            var xform = new XMessageBox();
+            var dlg = xform.ShowDialog($"Waar wil je de aantal van {xproduceren.Value} producten op afronden?",
+                "Aantal Afronden", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, xselect.ToArray());
+            if (dlg == DialogResult.Cancel) return;
+            var xs = xform.SelectedValue;
+            if (xs.EndsWith("Lading"))
+            {
+                var boven = xs.Contains("Boven");
+                var xpakktets = boven ? Math.Ceiling(xproduceren.Value / (xaantalsporen.Value * xp)) : Math.Floor(xproduceren.Value / (xaantalsporen.Value * xp));
+                var xp1 = (int)((xpakktets * xaantalsporen.Value) * xp);
+                xproduceren.SetValue(xp1);
+
+            }
+            else if (xs.EndsWith("Pakket"))
+            {
+                var boven = xs.Contains("Boven");
+                var xpakktets = boven ? Math.Ceiling(xproduceren.Value / (xperPak.Value * xp)) : Math.Floor(xproduceren.Value / (xperPak.Value * xp));
+                var xp1 = (int)((xpakktets * xperPak.Value) * xp);
+                xproduceren.SetValue(xp1);
+            }
+        }
+
+        private void xdatabase_Click(object sender, EventArgs e)
+        {
+            var info = OpdrukkerInfo.Load();
+            var xform = new SpoorDatabaseForm(info);
+            if (xform.ShowDialog() == DialogResult.OK)
+            {
+                info.SaveInfo();
             }
         }
     }
