@@ -1,5 +1,8 @@
 ﻿using Forms;
 using HtmlAgilityPack;
+using ProductieManager.Rpm.Connection;
+using ProductieManager.Rpm.ExcelHelper;
+using Rpm.Various;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,12 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using ProductieManager.Rpm.Connection;
-using ProductieManager.Rpm.ExcelHelper;
-using Rpm.Productie;
-using Rpm.Various;
 using Various;
 using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 

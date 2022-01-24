@@ -5,7 +5,6 @@ using System.Linq;
 using System.Management;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
-using Org.BouncyCastle.Asn1.BC;
 using ProductieManager.Properties;
 using Rpm.Misc;
 using Rpm.Productie;

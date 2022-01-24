@@ -248,6 +248,7 @@ namespace Controls
                     xaantalsporen.SetValue(_spoor.AantalSporen);
                     xuitganglengte.SetValue(_spoor.UitgangsLengte);
                     xprodlengte.SetValue(_spoor.ProductLengte);//mm
+                    xperPak.SetValue(_spoor.PakketAantal);
                 }
                 if (xprodlengte.Value == 0)
                     xprodlengte.SetValue(xprods[xmaterialen.SelectedIndex]);

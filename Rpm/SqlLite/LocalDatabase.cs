@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+using Rpm.Misc;
+using Rpm.Productie;
+using Rpm.Settings;
+using Rpm.Various;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -6,13 +11,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Navigation;
-using Microsoft.Win32.SafeHandles;
-using ProductieManager.Rpm.ExcelHelper;
-using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Settings;
-using Rpm.Various;
 
 namespace Rpm.SqlLite
 {

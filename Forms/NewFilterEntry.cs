@@ -7,7 +7,6 @@ using System.Text;
 using System.Windows.Forms;
 using Forms;
 using MetroFramework.Forms;
-using Org.BouncyCastle.Asn1.X509.Qualified;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;

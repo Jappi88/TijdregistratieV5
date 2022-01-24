@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Timers;
-using LiteDB;
 using Rpm.Productie;
 using Rpm.Various;
 
@@ -42,8 +41,8 @@ namespace Rpm.SqlLite
         public DbType Type { get; private set; }
         public DbInstanceType InstanceType { get; }
         public SqlDatabase ServerDb { get; private set; }
-        public LiteDatabase LocalDb { get; private set; }
-        public ILiteCollection<T> LocalDbCollection { get; private set; }
+        //public LiteDatabase LocalDb { get; private set; }
+        //public ILiteCollection<T> LocalDbCollection { get; private set; }
         public MultipleFileDb MultiFiles { get; private set; }
 
         private void InitInstance(bool watchdatabase)
@@ -55,9 +54,9 @@ namespace Rpm.SqlLite
             switch (InstanceType)
             {
                 case DbInstanceType.LiteDb:
-                    LocalDb = new LiteDatabase(new ConnectionString(rootpath + ".db")
-                        {Connection = ConnectionType.Shared});
-                    LocalDbCollection = LocalDb.GetCollection<T>(CollectionName);
+                    //LocalDb = new LiteDatabase(new ConnectionString(rootpath + ".db")
+                    //    {Connection = ConnectionType.Shared});
+                    //LocalDbCollection = LocalDb.GetCollection<T>(CollectionName);
                     break;
                 case DbInstanceType.MultipleFiles:
                     MultiFiles = new MultipleFileDb(rootpath, watchdatabase, Assembly.GetExecutingAssembly().GetName().Version.ToString(), Type);
@@ -137,8 +136,8 @@ namespace Rpm.SqlLite
                     switch (InstanceType)
                     {
                         case DbInstanceType.LiteDb:
-                            if (LocalDbCollection == null) throw new NullReferenceException();
-                            return LocalDbCollection.FindById(id);
+                            //if (LocalDbCollection == null) throw new NullReferenceException();
+                            //return LocalDbCollection.FindById(id);
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
                             return MultiFiles.GetEntry<T>(id);
@@ -156,31 +155,6 @@ namespace Rpm.SqlLite
             });
         }
 
-        private List<T> GetQueryItems(ILiteQueryable<T> query)
-        {
-            var xreturn = new List<T>();
-            try
-            {
-                var count = query.Count();
-                for (var i = 0; i < count; i++)
-                    try
-                    {
-                        var xvalue = query.Skip(i).First();
-                        if (xvalue != null)
-                            xreturn.Add(xvalue);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-            }
-            catch
-            {
-            }
-
-            return xreturn;
-        }
-
         public Task<List<T>> FindAll()
         {
             return Task.Run(async () =>
@@ -191,8 +165,8 @@ namespace Rpm.SqlLite
                     switch (InstanceType)
                     {
                         case DbInstanceType.LiteDb:
-                            if (LocalDbCollection == null) throw new NullReferenceException();
-                            xreturn = GetQueryItems(LocalDbCollection.Query());
+                            //if (LocalDbCollection == null) throw new NullReferenceException();
+                            //xreturn = GetQueryItems(LocalDbCollection.Query());
                             break;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
@@ -222,8 +196,8 @@ namespace Rpm.SqlLite
                     switch (InstanceType)
                     {
                         case DbInstanceType.LiteDb:
-                            if (LocalDbCollection == null) throw new NullReferenceException();
-                            xreturn = GetQueryItems(LocalDbCollection.Query());
+                            //if (LocalDbCollection == null) throw new NullReferenceException();
+                            //xreturn = GetQueryItems(LocalDbCollection.Query());
                             break;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
@@ -253,8 +227,8 @@ namespace Rpm.SqlLite
                     switch (InstanceType)
                     {
                         case DbInstanceType.LiteDb:
-                            if (LocalDbCollection == null) throw new NullReferenceException();
-                            xreturn = GetQueryItems(LocalDbCollection.Query());
+                            //if (LocalDbCollection == null) throw new NullReferenceException();
+                            //xreturn = GetQueryItems(LocalDbCollection.Query());
                             break;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
@@ -346,13 +320,13 @@ namespace Rpm.SqlLite
                     switch (InstanceType)
                     {
                         case DbInstanceType.LiteDb:
-                            if (LocalDbCollection == null) throw new NullReferenceException();
-                            foreach (var id in ids)
-                            {
-                                var xent = LocalDbCollection.FindOne(id);
-                                if (xent != null)
-                                    xreturn.Add(xent);
-                            }
+                            //if (LocalDbCollection == null) throw new NullReferenceException();
+                            //foreach (var id in ids)
+                            //{
+                            //    var xent = LocalDbCollection.FindOne(id);
+                            //    if (xent != null)
+                            //        xreturn.Add(xent);
+                            //}
 
                             break;
                         case DbInstanceType.MultipleFiles:
@@ -383,7 +357,7 @@ namespace Rpm.SqlLite
                     switch (InstanceType)
                     {
                         case DbInstanceType.LiteDb:
-                            if (LocalDbCollection == null) throw new NullReferenceException();
+                            //if (LocalDbCollection == null) throw new NullReferenceException();
                             break;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
@@ -411,9 +385,9 @@ namespace Rpm.SqlLite
                     switch (InstanceType)
                     {
                         case DbInstanceType.LiteDb:
-                            if (LocalDbCollection == null) throw new NullReferenceException();
-                            LocalDbCollection.Delete(oldid);
-                            LocalDbCollection.Upsert(oldid.TrimEnd(' '), newitem);
+                            //if (LocalDbCollection == null) throw new NullReferenceException();
+                            //LocalDbCollection.Delete(oldid);
+                            //LocalDbCollection.Upsert(oldid.TrimEnd(' '), newitem);
                             return true;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
@@ -442,8 +416,8 @@ namespace Rpm.SqlLite
                     switch (InstanceType)
                     {
                         case DbInstanceType.LiteDb:
-                            if (LocalDbCollection == null) throw new NullReferenceException();
-                            LocalDbCollection.Delete(id);
+                            //if (LocalDbCollection == null) throw new NullReferenceException();
+                            //LocalDbCollection.Delete(id);
                             return true;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
@@ -471,8 +445,8 @@ namespace Rpm.SqlLite
                     switch (InstanceType)
                     {
                         case DbInstanceType.LiteDb:
-                            if (LocalDbCollection == null) throw new NullReferenceException();
-                            return LocalDbCollection.DeleteAll();
+                            //if (LocalDbCollection == null) throw new NullReferenceException();
+                            //return LocalDbCollection.DeleteAll();
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
                             return MultiFiles.DeleteAll();
@@ -500,10 +474,10 @@ namespace Rpm.SqlLite
                     switch (InstanceType)
                     {
                         case DbInstanceType.LiteDb:
-                            if (LocalDbCollection == null) throw new NullReferenceException();
-                            foreach (var id in ids)
-                                if (LocalDbCollection.Delete(id))
-                                    done++;
+                            //if (LocalDbCollection == null) throw new NullReferenceException();
+                            //foreach (var id in ids)
+                            //    if (LocalDbCollection.Delete(id))
+                            //        done++;
                             break;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
@@ -532,8 +506,9 @@ namespace Rpm.SqlLite
                     switch (InstanceType)
                     {
                         case DbInstanceType.LiteDb:
-                            if (LocalDbCollection == null) throw new NullReferenceException();
-                            return LocalDbCollection.Upsert(id, item);
+                            //if (LocalDbCollection == null) throw new NullReferenceException();
+                            //return LocalDbCollection.Upsert(id, item);
+                            return false;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
                             return MultiFiles.Upsert(id, item,onlylocal);
@@ -560,7 +535,7 @@ namespace Rpm.SqlLite
                     switch (InstanceType)
                     {
                         case DbInstanceType.LiteDb:
-                            if (LocalDbCollection == null) throw new NullReferenceException();
+                            //if (LocalDbCollection == null) throw new NullReferenceException();
                             break;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
@@ -588,8 +563,9 @@ namespace Rpm.SqlLite
                     switch (InstanceType)
                     {
                         case DbInstanceType.LiteDb:
-                            if (LocalDbCollection == null) throw new NullReferenceException();
-                            return LocalDbCollection.Exists(id);
+                            //if (LocalDbCollection == null) throw new NullReferenceException();
+                            //return LocalDbCollection.Exists(id);
+                            return false;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
                             return MultiFiles.Exists(id);
@@ -620,8 +596,8 @@ namespace Rpm.SqlLite
                 switch (InstanceType)
                 {
                     case DbInstanceType.LiteDb:
-                        LocalDb?.Dispose();
-                        LocalDbCollection = null;
+                        //LocalDb?.Dispose();
+                        //LocalDbCollection = null;
                         break;
                     case DbInstanceType.MultipleFiles:
                         MultiFiles?.Close();
@@ -647,8 +623,9 @@ namespace Rpm.SqlLite
                     switch (InstanceType)
                     {
                         case DbInstanceType.LiteDb:
-                            if (LocalDbCollection == null) throw new NullReferenceException();
-                            return LocalDbCollection.Count();
+                            //if (LocalDbCollection == null) throw new NullReferenceException();
+                            //return LocalDbCollection.Count();
+                            return -1;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
                             return MultiFiles.Count();

@@ -14,7 +14,6 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
-using PdfSharp.Charting;
 using Rpm.Misc;
 
 namespace Rpm.Productie

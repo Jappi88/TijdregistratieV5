@@ -174,8 +174,9 @@ namespace Controls
                 xwerkpleklist.EndUpdate();
                 changed = count != xwerkpleklist.Items.Count;
             }
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine(ex.Message);
             }
             _IsLoading = false;
             if (EnableSync && Manager.Opties.AutoProductieLijstSync && !IsSyncing && startsync)
@@ -258,7 +259,7 @@ namespace Controls
                 {
                     await Task.Delay(Manager.Opties.ProductieLijstSyncInterval);
                     if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || !IsSyncing || IsDisposed || Disposing) break;
-                    LoadPlekken(false);
+                    this.BeginInvoke(new MethodInvoker(()=> LoadPlekken(false)));
                 }
             });
         }

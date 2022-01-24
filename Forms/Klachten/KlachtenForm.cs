@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using Forms.Klachten;
-using PdfSharp.Charting;
 using Rpm.Various;
 using Various;
 

@@ -461,7 +461,14 @@ namespace ProductieManager
 
         private void ProductieView1_OnSettingsChanged(object instance,UserSettings user, bool reinit)
         {
-            BeginInvoke(new Action(UpdateTitle));
+            try
+            {
+                BeginInvoke(new Action(UpdateTitle));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
 
@@ -504,6 +511,7 @@ namespace ProductieManager
         {
             try
             {
+
                 try
                 {
                     var forms = Application.OpenForms;
@@ -522,7 +530,9 @@ namespace ProductieManager
 
                 this.SetLastInfo();
                 Manager.DefaultSettings?.SaveAsDefault();
-               
+                Manager.OnSettingsChanged -= ProductieView1_OnSettingsChanged;
+                Manager.OnManagerLoaded -= _manager_OnManagerLoaded;
+                Manager.OnRemoteMessage -= _manager_OnRemoteMessage;
                 Manager.ProductieProvider?.StopSync();
                 Manager.ProductieProvider?.DisableOfflineDb();
                 if (Manager.LogedInGebruiker != null)

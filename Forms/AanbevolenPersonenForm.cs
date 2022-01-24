@@ -122,6 +122,7 @@ namespace ProductieManager.Forms
                     var tries = 0;
                     while (_iswaiting && tries < 200)
                     {
+                        if (!this.Visible) continue;
                         if (cur > 5) cur = 0;
                         var curvalue = xwv.PadRight(xwv.Length + cur, '.');
                         //xcurvalue = curvalue;
@@ -136,15 +137,19 @@ namespace ProductieManager.Forms
                         Application.DoEvents();
                         tries++;
                         cur++;
+                        if (this.IsDisposed || this.Disposing) break;
+                        if (!this.Visible) continue;
                         this.Invoke(new MethodInvoker(() => valid = !this.IsDisposed));
                         if (!valid) break;
                     }
+
+                    if (!this.IsDisposed && !this.Disposing && this.Visible)
+                        this.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
                 }
                 catch (Exception e)
                 {
                 }
 
-                this.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
             });
         }
 

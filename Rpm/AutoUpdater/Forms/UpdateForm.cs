@@ -5,7 +5,6 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MetroFramework.Drawing.Html;
-using Org.BouncyCastle.Crypto;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Productie;
