@@ -725,7 +725,7 @@ namespace Controls
             try
             {
                 if (InvokeRequired)
-                    Invoke(new Action(() =>
+                    Invoke(new MethodInvoker(() =>
                     {
                         DoActie(values, type);
                     }));

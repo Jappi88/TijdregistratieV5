@@ -139,7 +139,7 @@ namespace Rpm.Productie
                        $"<li>Met <b>{xnodig}</b> lengtes kan je <b>{xmaken}/ {aantal}</b> producten maken.</li>" +
                        $"{xoverschotmaat}" +
                        $"<li>Met <b>{xsporen}</b> {x1} is dat <b>{xaantalladen}</b> keer laden{(xrestsporen > 0 ? $" en een restlading van <b>{xrestsporen}</b> {x2}</li>" : "")}" +
-                       $"<li>Je haalt <b>{(int) xprodsperlengte}</b> producten uit <b>{xtotal / 1000} meter</b> met een reststuk van <b>{xrest}mm</b>.</li>" +
+                       $"<li>Je haalt <b>{(int) xprodsperlengte}</b> producten uit <b>{xtotal / 1000} meter</b> met een reststuk van <b>{xrest}mm({Math.Round((xrest / xtotal) * 100,4)}%)</b>.</li>" +
                        $"</ul>" +
                        $"</span>";
             }

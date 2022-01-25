@@ -53,9 +53,13 @@ namespace Controls
             this.openProductieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWerkplekToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.storingenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.xafkeurstoolstrip = new System.Windows.Forms.ToolStripMenuItem();
             this.werkTijdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.xafkeurstoolstrip = new System.Windows.Forms.ToolStripMenuItem();
+            this.storingenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.onderbrekenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hervattenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.wijzigAantalGemaaktToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aantalGeschiedenisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -322,16 +326,20 @@ namespace Controls
             this.openProductieToolStripMenuItem,
             this.openWerkplekToolStripMenuItem,
             this.toolStripSeparator3,
-            this.storingenToolStripMenuItem,
-            this.xafkeurstoolstrip,
             this.werkTijdToolStripMenuItem,
+            this.xafkeurstoolstrip,
+            this.storingenToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.onderbrekenToolStripMenuItem,
+            this.hervattenToolStripMenuItem,
+            this.toolStripSeparator5,
             this.toolStripSeparator1,
             this.wijzigAantalGemaaktToolStripMenuItem,
             this.aantalGeschiedenisToolStripMenuItem,
             this.toolStripSeparator2,
             this.notitieToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(193, 198);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(193, 276);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // openProductieToolStripMenuItem
@@ -355,13 +363,13 @@ namespace Controls
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(189, 6);
             // 
-            // storingenToolStripMenuItem
+            // werkTijdToolStripMenuItem
             // 
-            this.storingenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.onderhoud32_32;
-            this.storingenToolStripMenuItem.Name = "storingenToolStripMenuItem";
-            this.storingenToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
-            this.storingenToolStripMenuItem.Text = "&Onderbrekeningen";
-            this.storingenToolStripMenuItem.Click += new System.EventHandler(this.storingenToolStripMenuItem_Click);
+            this.werkTijdToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.business_color_progress_icon_icons_com_53437;
+            this.werkTijdToolStripMenuItem.Name = "werkTijdToolStripMenuItem";
+            this.werkTijdToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.werkTijdToolStripMenuItem.Text = "&Werk Tijden";
+            this.werkTijdToolStripMenuItem.Click += new System.EventHandler(this.werkTijdToolStripMenuItem_Click);
             // 
             // xafkeurstoolstrip
             // 
@@ -372,13 +380,41 @@ namespace Controls
             this.xafkeurstoolstrip.ToolTipText = "Vul in product afkeur";
             this.xafkeurstoolstrip.Click += new System.EventHandler(this.xafkeurstoolstrip_Click);
             // 
-            // werkTijdToolStripMenuItem
+            // storingenToolStripMenuItem
             // 
-            this.werkTijdToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.business_color_progress_icon_icons_com_53437;
-            this.werkTijdToolStripMenuItem.Name = "werkTijdToolStripMenuItem";
-            this.werkTijdToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
-            this.werkTijdToolStripMenuItem.Text = "&Werk Tijden";
-            this.werkTijdToolStripMenuItem.Click += new System.EventHandler(this.werkTijdToolStripMenuItem_Click);
+            this.storingenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.onderhoud32_32;
+            this.storingenToolStripMenuItem.Name = "storingenToolStripMenuItem";
+            this.storingenToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.storingenToolStripMenuItem.Text = "&Onderbrekeningen";
+            this.storingenToolStripMenuItem.Click += new System.EventHandler(this.storingenToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(189, 6);
+            // 
+            // onderbrekenToolStripMenuItem
+            // 
+            this.onderbrekenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Stop_Hand__32x32;
+            this.onderbrekenToolStripMenuItem.Name = "onderbrekenToolStripMenuItem";
+            this.onderbrekenToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.onderbrekenToolStripMenuItem.Text = "Onderbreken";
+            this.onderbrekenToolStripMenuItem.ToolTipText = "Werkplek onderbreken";
+            this.onderbrekenToolStripMenuItem.Click += new System.EventHandler(this.onderbrekenToolStripMenuItem_Click);
+            // 
+            // hervattenToolStripMenuItem
+            // 
+            this.hervattenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.playcircle_32x32;
+            this.hervattenToolStripMenuItem.Name = "hervattenToolStripMenuItem";
+            this.hervattenToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.hervattenToolStripMenuItem.Text = "Hervatten";
+            this.hervattenToolStripMenuItem.ToolTipText = "Werkplek hervatten";
+            this.hervattenToolStripMenuItem.Click += new System.EventHandler(this.hervattenToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(189, 6);
             // 
             // toolStripSeparator1
             // 
@@ -478,5 +514,9 @@ namespace Controls
         private BrightIdeasSoftware.OLVColumn xactueelgemaakt;
         private BrightIdeasSoftware.OLVColumn xnotec;
         private System.Windows.Forms.ToolStripMenuItem aantalGeschiedenisToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem onderbrekenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hervattenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
     }
 }

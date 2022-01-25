@@ -1566,6 +1566,7 @@ namespace Rpm.Productie
         private static bool _isChecking;
 
         private static DateTime _lastchecked = default;
+
         public static void CheckForAantalChange()
         {
             if (_isChecking) return;
@@ -1581,7 +1582,7 @@ namespace Rpm.Productie
                     int mins = Opties.MinVoorControle;
                     if (_lastchecked.AddMinutes(5) < DateTime.Now)
                     {
-                        
+
                         Task.Factory.StartNew(() =>
                         {
                             bws = Database.GetBewerkingen(ViewState.Gestart, true, null, null).Result;
@@ -1595,13 +1596,15 @@ namespace Rpm.Productie
                             }
 
                             bws = bws.Where(x => string.Equals(
-                                x.GestartDoor, Manager.Opties.Username,
-                                StringComparison.CurrentCultureIgnoreCase) && x.WerkPlekken.Any(w=> w.NeedsAantalUpdate(mins))).ToList();
+                                                     x.GestartDoor, Manager.Opties.Username,
+                                                     StringComparison.CurrentCultureIgnoreCase) &&
+                                                 x.WerkPlekken.Any(w => w.NeedsAantalUpdate(mins))).ToList();
+                            _isChecking = false;
                         }).Wait(60000);
 
                     }
 
-                    if (bws.Count > 0)
+                    if (bws.Count > 0 && !_isChecking)
                     {
                         FormulierActie(new object[] {bws, mins}, MainAktie.OpenAantalGemaaktProducties);
                         _lastchecked = DateTime.Now;
@@ -1613,8 +1616,6 @@ namespace Rpm.Productie
             {
                 Console.WriteLine(e);
             }
-
-            _isChecking = false;
             // });
         }
 

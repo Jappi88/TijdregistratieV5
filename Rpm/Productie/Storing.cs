@@ -64,9 +64,8 @@ namespace Rpm.Productie
         
         public double GetTotaleTijd(DateTime vanaf, DateTime tot)
         {
-            if (string.IsNullOrEmpty(Path)) return 0;
+           // if (string.IsNullOrEmpty(Path)) return 0;
             var werk = Plek??Werk.FromPath(Path)?.Plek;
-            if (werk == null) return 0;
             if (vanaf.TimeOfDay == new TimeSpan() && WerkRooster != null)
                 vanaf = vanaf.Add(WerkRooster.StartWerkdag);
             var gestopt = IsVerholpen ? Gestopt : DateTime.Now;
@@ -74,7 +73,7 @@ namespace Rpm.Productie
                 tot = tot.Add(WerkRooster.EindWerkdag);
             if (gestopt > tot) gestopt = tot;
             var gestart = Gestart < vanaf ? vanaf : Gestart;
-            return Math.Round(Werktijd.TijdGewerkt(gestart, gestopt, werk.Tijden?.WerkRooster, werk.Tijden?.SpecialeRoosters).TotalHours, 2);
+            return Math.Round(Werktijd.TijdGewerkt(gestart, gestopt, werk?.Tijden?.WerkRooster, werk?.Tijden?.SpecialeRoosters).TotalHours, 2);
         }
 
         public DateTime GestartOp(TijdEntry bereik, List<Rooster> specialeroosters)

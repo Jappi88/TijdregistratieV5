@@ -245,6 +245,7 @@ namespace Rpm.Productie
                 Stop();
             else if (isgestart)
                 Start();
+            else Stop();
            
             return IsActief;
         }

@@ -1,17 +1,16 @@
 ﻿using BrightIdeasSoftware;
-using Controls;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ProductieManager.Rpm.Misc;
-using System.Collections.Generic;
 
 namespace Forms
 {
@@ -41,10 +40,9 @@ namespace Forms
             ((OLVColumn)xshiftlist.Columns[6]).AspectGetter = RoosterGet;
 
             InitAutoInfilTextbox();
-            xnaampersoneel.TextChanged += xnaampersoneel_TextChanged;
+            //xnaampersoneel.TextChanged += xnaampersoneel_TextChanged;
             //xtijdgestart.ValueChanged += xtijdgestart_ValueChanged;
             //xtijdgestopt.ValueChanged += xtijdgestopt_ValueChanged;
-            _textTimer.Tick += _textTimer_Tick;
         }
 
         public Indeling(ProductieFormulier parent, Bewerking bew) : this()
@@ -292,7 +290,7 @@ namespace Forms
             //xnaampersoneel.TextChanged += xnaampersoneel_TextChanged;
         }
 
-        private void SetFields(Personeel shift, bool init, bool initname)
+        private void SetFields(Personeel shift)
         {
             var s = shift;
             if (s == null) return;
@@ -307,11 +305,6 @@ namespace Forms
             if (xwerkplekken.SelectedItem == null && xwerkplekken.Items.Count > 0)
                 xwerkplekken.SelectedIndex = 0;
             else xwerkplekken.SelectedItem?.EnsureVisible();
-
-            xnaampersoneel.TextChanged -= xnaampersoneel_TextChanged;
-            //xtijdgestart.ValueChanged -= xtijdgestart_ValueChanged;
-            //xtijdgestopt.ValueChanged -= xtijdgestopt_ValueChanged;
-
             var klus = GetCurrentKlus(s, false);
             //if (initname)
             //    xnaampersoneel.Text = s.PersoneelNaam.Trim();
@@ -320,35 +313,10 @@ namespace Forms
                 s.Efficientie = 100;
             if (klus != null)
             {
-                //var xtijd = klus.Tijden.Uren.FirstOrDefault(x=> x.InUse)??klus.Tijden.GetLastStopEntry(true);
-                //if (init)
-                //{
-                //    xtijd.Stop = xtijdgestopt.Value;
-                //}
-                //else if (klus.Tijden.Count > 0)
-                //{
-                //    xtijdgestart.SetValue(xtijd.Start);
-                //    xtijdgestopt.SetValue(xtijd.Stop);
-                //    //if (klus.Status == ProductieState.Gestart)
-                //    //{
-                //    //    xgestoptlabel.Text = "Momenteel actief!";
-                //    //    xtijdgestopt.Enabled = false;
-                //    //}
-                //    //else
-                //    //{
-                //    //    xgestoptlabel.Text = "Tijd Gestopt";
-                //    //    xtijdgestopt.Enabled = true;
-                //    //}
-                //}
-
                 xactiefimage.Image = !klus.IsActief
                     ? null
                     : Resources.check_1582;
             }
-
-            xnaampersoneel.TextChanged += xnaampersoneel_TextChanged;
-            //xtijdgestart.ValueChanged += xtijdgestart_ValueChanged;
-            //xtijdgestopt.ValueChanged += xtijdgestopt_ValueChanged;
         }
 
         private void xannuleren_Click(object sender, EventArgs e)
@@ -365,16 +333,18 @@ namespace Forms
                 return;
             }
 
+            UpdatePersoneelNaamTextbox();
             var personen = xshiftlist.Objects?.Cast<Personeel>().ToArray();
             if (personen == null || string.IsNullOrEmpty(xnaampersoneel.Text.Trim()) ||
-                personen.Any(x =>
-                    string.Equals(x.PersoneelNaam, xnaampersoneel.Text, StringComparison.CurrentCultureIgnoreCase)))
+                !(xnaampersoneel.Tag is Personeel xpers && string.Equals(xpers.PersoneelNaam, xnaampersoneel.Text,
+                    StringComparison.CurrentCultureIgnoreCase)))
             {
                 var pers = KiesPersoneel();
                 if (pers?.Length > 0)
                 {
                     foreach (var per in pers) per.Klusjes?.Clear();
-                    var klusui = new NieuwKlusForm(Formulier, pers, false,false, Bewerking);
+                    var xwp = GetCurrentWerkPlek();
+                    var klusui = new NieuwKlusForm(Formulier, pers, false, false, GetCurrentBewerking(), xwp?.Naam);
                     if (klusui.ShowDialog() == DialogResult.OK)
                     {
                         foreach (var pr in klusui.Persoon)
@@ -382,8 +352,6 @@ namespace Forms
                             //klusui.Persoon[0].CopyTo(ref pers[i]);
                             AddShift(pr);
                         }
-
-                        xshiftlist.Sort("WerkPlek");
                     }
 
                 }
@@ -398,21 +366,22 @@ namespace Forms
         {
             var bew = GetCurrentBewerking();
             var wp = GetCurrentWerkPlek();
-            var wpnaam = ChooseWerkplek(wp?.Naam);
-            if (wpnaam == null || bew == null)
-                return false;
+           // var wpnaam = ChooseWerkplek(wp?.Naam);
+            //if (wpnaam == null || bew == null)
+             //   return false;
 
             var shift = new Personeel
             {
                 TijdIngezet = DateTime.Now,
                 PersoneelNaam = xnaampersoneel.Text.Trim(),
-                Werkplek = wpnaam,
                 WerktAan = bew.Path
             };
 
             if (xnaampersoneel.Tag is Personeel xshift && string.Equals(xnaampersoneel.Text.Trim(), xshift.PersoneelNaam.Trim(),
                 StringComparison.CurrentCultureIgnoreCase))
             {
+                shift.Efficientie = xshift.Efficientie;
+                shift.PersoneelNaam = xshift.PersoneelNaam;
                 shift.WerkRooster = xshift.WerkRooster;
                 shift.VrijeDagen = xshift.VrijeDagen;
                 shift.IsUitzendKracht = xshift.IsUitzendKracht;
@@ -422,35 +391,19 @@ namespace Forms
                 return false;
             }
 
-            wp = GetWerkPlek(shift, false);
-            if (wp == null)
+            var klusui = new NieuwKlusForm(Formulier, shift, false, false, bew, wp?.Naam);
+            if (klusui.ShowDialog() == DialogResult.OK)
             {
-                wp = new WerkPlek(shift, wpnaam, bew);
-                bew.WerkPlekken.Add(wp);
-            }
-            else
-            {
-                if (wp.Personen.Any(x => string.Equals(x.PersoneelNaam, shift.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase)))
+                foreach (var pr in klusui.Persoon)
                 {
-                    if (XMessageBox.Show($"{shift.PersoneelNaam} is al toegevoegd op {wp.Naam}...\n\n" +
-                           $"Zou je {shift.PersoneelNaam} willen overschrijven?", $"{shift.PersoneelNaam} bestaat al!",
-                           MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-                        return false;
+                    //klusui.Persoon[0].CopyTo(ref pers[i]);
+                    AddShift(pr);
                 }
-                wp.AddPersoon(shift, bew);
+
+                return true;
             }
 
-            var klus = GetCurrentKlus(shift, false) ?? new Klus(shift, wp);
-            klus.UpdateTijdGewerkt(DateTime.Now, DateTime.Now, bew.State == ProductieState.Gestart);
-
-            shift.ReplaceKlus(klus);
-            Bewerking.ZetPersoneelActief(shift.PersoneelNaam, wp.Naam, true);
-            LoadShifts();
-            LoadWerkPlekken(wp);
-            xshiftlist.Sort("Werkplek");
-            xshiftlist.SelectedObject = shift;
-            xshiftlist.SelectedItem?.EnsureVisible();
-            return true;
+            return false;
         }
 
         private Bewerking GetCurrentBewerking()
@@ -567,7 +520,7 @@ namespace Forms
         {
             UpdateUsersButtons();
             if (xshiftlist.SelectedObjects.Count > 0)
-                SetFields(xshiftlist.SelectedObjects[0] as Personeel, false, true);
+                SetFields(xshiftlist.SelectedObjects[0] as Personeel);
             else ClearFields();
         }
 
@@ -576,7 +529,7 @@ namespace Forms
             xverwijder.Visible = xshiftlist.SelectedObjects.Count > 0;
             xedituser.Visible = xshiftlist.SelectedObjects.Count == 1;
             xtijdengewerkt.Visible = xshiftlist.SelectedObjects.Count == 1;
-            xroosterb.Enabled = xshiftlist.SelectedObjects.Count == 1;
+            xroosterb.Visible = xshiftlist.SelectedObjects.Count == 1;
             var wp = GetCurrentWerkPlek();
             xwerktijdnaarwerkplek.Visible = wp != null && xshiftlist.Items.Count > 0;
             if (wp != null)
@@ -616,29 +569,23 @@ namespace Forms
 
         private readonly Timer _textTimer = new Timer() { Interval = 2000 };
 
-        private void _textTimer_Tick(object sender, EventArgs e)
+        private void UpdatePersoneelNaamTextbox()
         {
-            _textTimer.Stop();
-            UpdatePersoneelNaamTextbox();
-        }
-
-        private async void UpdatePersoneelNaamTextbox()
-        {
-            var pers = await Manager.Database.GetPersoneel(xnaampersoneel.Text);
+            var pers = Manager.Database.GetPersoneel(xnaampersoneel.Text.Trim()).Result;
             if (pers != null)
             {
                 if (this.InvokeRequired)
-                    this.Invoke(new Action(() => SetFields(pers, true, true)));
+                    this.Invoke(new Action(() => SetFields(pers)));
                 else
-                    SetFields(pers, true, true);
+                    SetFields(pers);
             }
         }
 
-        private void xnaampersoneel_TextChanged(object sender, EventArgs e)
-        {
-            _textTimer.Stop();
-            _textTimer.Start();
-        }
+        //private void xnaampersoneel_TextChanged(object sender, EventArgs e)
+        //{
+        //    _textTimer.Stop();
+        //    _textTimer.Start();
+        //}
 
         private void xactiefimage_MouseEnter(object sender, EventArgs e)
         {
@@ -671,7 +618,7 @@ namespace Forms
             xshiftlist.RefreshObject(per);
             xshiftlist.SelectedObject = per;
             xshiftlist.SelectedItem?.EnsureVisible();
-            SetFields(per, false, true);
+            SetFields(per);
         }
 
         private void SetPersoneelActief()
@@ -941,82 +888,6 @@ namespace Forms
             LoadShifts();
         }
 
-        private void xtijdgestart_ValueChanged(object sender, EventArgs e)
-        {
-            if (xshiftlist.SelectedObjects.Count > 0)
-                //if(xtijdgestart.Value > DateTime.Now)
-                //    XMessageBox.Show(
-                //        "Ben je helderziend ofzo?\n\n" +
-                //        $"Je kan een start of stop tijd niet later zetten dan dat het nu is ({DateTime.Now})",
-                //        "Waarschuwing",
-                //        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                //else
-                //{
-                foreach (var per in xshiftlist.SelectedObjects.Cast<Personeel>())
-                {
-                    var klus = GetCurrentKlus(per, true);
-                    if (klus != null)
-                    {
-                        var xent = klus.GetAvailibleTijdEntry();
-                        xent.Start = xtijdgestart.Value;
-                        xent.Stop = xtijdgestopt.Value;
-                        xent.InUse = Bewerking.State == ProductieState.Gestart && klus.IsActief;
-                        klus.UpdateTijdGewerkt(xent);
-                        
-                        xshiftlist.RefreshObject(per);
-                        if (Bewerking != null)
-                        {
-                            if (Bewerking.IsBemand)
-                            {
-                                var wp = GetWerkPlek(per, false);
-                                wp?.Tijden?.UpdateTijdGewerkt(xent);
-                            }
-                            xwerkplekken.RefreshObjects(Bewerking.WerkPlekken);
-                        }
-                    }
-                }
-            //}
-        }
-
-        private void xtijdgestopt_ValueChanged(object sender, EventArgs e)
-        {
-            if (xshiftlist.SelectedObjects.Count > 0)
-            {
-                //if (xtijdgestopt.Value > DateTime.Now)
-                //    XMessageBox.Show(
-                //        "Ben je helderziend ofzo?\n\n" +
-                //        $"Je kan een start of stop tijd niet later zetten dan dat het nu is ({DateTime.Now})",
-                //        "Waarschuwing",
-                //        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                //else
-                //{
-                foreach (var per in xshiftlist.SelectedObjects.Cast<Personeel>())
-                {
-                    var klus = GetCurrentKlus(per, true);
-                    if (klus != null)
-                    {
-                        var xent = klus.GetAvailibleTijdEntry();
-                        xent.Start = xtijdgestart.Value;
-                        xent.Stop = xtijdgestopt.Value;
-                        xent.InUse = Bewerking.State == ProductieState.Gestart && klus.IsActief;
-                        klus.UpdateTijdGewerkt(xent);
-                        var wp = GetWerkPlek(per, false);
-                        if (wp?.Werk != null && wp.Werk.IsBemand)
-                            wp.Tijden?.UpdateTijdGewerkt(xent);
-
-                        xshiftlist.RefreshObject(per);
-
-                    }
-                }
-
-                if (Bewerking != null)
-                {
-                    xwerkplekken.RefreshObjects(Bewerking.WerkPlekken);
-                }
-            }
-            // }
-        }
-
         private void xedituser_Click(object sender, EventArgs e)
         {
             var per = GetCurrentPersoon();
@@ -1056,24 +927,7 @@ namespace Forms
                         string.Equals(klus.Path, x.Path, StringComparison.CurrentCultureIgnoreCase));
                     if (wp != null)
                     {
-                        if (wp.Werk != null)
-                        {
-                            if (!wp.Werk.IsBemand)
-                            {
-                                var msg = $"'{wp.WerkNaam}' is een onbemande bewerking.\n" +
-                                          $"Werktijd van '{per.PersoneelNaam}' wijzigen heeft daarom geen effect op de gewerkte tijd van '{wp.Naam}'...\n\n" +
-                                          $"Zou je de werktijd van '{per.PersoneelNaam}' door willen geven aan '{wp.Naam}'?";
-                                if (XMessageBox.Show(msg, $"{wp.WerkNaam} is Onbemand", MessageBoxButtons.YesNo,
-                                        MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                                {
-                                    wp.Tijden.UpdateLijst(klus.Tijden);
-                                }
-                            }
-                            else
-                            {
-                                wp.Tijden.UpdateLijst(klus.Tijden);
-                            }
-                        }
+                        wp.Tijden.UpdateLijst(klus.Tijden);
                         //wp.Tijden.WerkRooster = klus.Tijden.WerkRooster.CreateCopy();
                         LoadWerkPlekken(wp);
                     }
@@ -1118,13 +972,13 @@ namespace Forms
 
         private void xshiftlist_DoubleClick(object sender, EventArgs e)
         {
-            if (xshiftlist.SelectedObject == null) return;
             if (xshiftlist.SelectedObject is Personeel selected)
             {
                 var actief = ClickImage();
                 SetPersoneelActief(selected, actief);
                 xshiftlist.SelectedObject = selected;
                 xshiftlist.SelectedItem?.EnsureVisible();
+                xwerkplekken.RefreshObjects(xwerkplekken.Objects.Cast<WerkPlek>().ToArray());
             }
         }
 
@@ -1374,6 +1228,22 @@ namespace Forms
                 wp.UpdateWerkplek(false);
                 xwerkplekken.RefreshObject(wp);
             }
+        }
+
+        private void xnaampersoneel_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && xnaampersoneel.Text.Trim().Length > 2)
+            {
+                UpdatePersoneelNaamTextbox();
+                if (xnaampersoneel.Tag is Personeel)
+                    xvoegindeling_Click(sender, EventArgs.Empty);
+            }
+        }
+
+        private void xnaampersoneel_TextChanged(object sender, EventArgs e)
+        {
+            //if (xnaampersoneel.Text.Trim().Length > 2)
+            //    UpdatePersoneelNaamTextbox();
         }
     }
 }

@@ -55,18 +55,6 @@ namespace Controls
                 col.ImageGetter = ImageGetter;
                 col.GroupFormatter = (@group, parms) =>
                 {
-                    //ObjectA a = (OjectA)group.Key;
-
-                    ///* Add any processing code that you need */
-
-                    //group.Task = " . . . ";
-                    //group.Header = "Special Name: " + a.Name;
-                    //group.Subtitle = $("Object A: {a.Index}, Total Water Consumption: {a.WaterConsumption}");
-
-                    //// This is what is going to be used as a comparable in the GroupComparer below
-                    //group.Id = a.ID;
-
-                    // This will create the iComparer that is needed to create the custom sorting of the groups
                     parms.GroupComparer = Comparer<OLVGroup>.Create((x, y) =>
                         Comparer.Compare(x, y, parms.PrimarySortOrder, parms.PrimarySort ?? parms.SecondarySort));
                 };
@@ -76,24 +64,6 @@ namespace Controls
             // ((OLVColumn) xwerkpleklist.Columns[0]).ImageGetter = ImageGetter;
             xwerkpleklist.CellToolTipShowing -= Xwerkpleklist_CellToolTipShowing;
             xwerkpleklist.CellToolTipShowing += Xwerkpleklist_CellToolTipShowing;
-            //((OLVColumn) xwerkpleklist.Columns["Tijd Gewerkt"]).AspectGetter = sender =>
-            //{
-            //    var plek = (WerkPlek) sender;
-            //    return plek != null
-            //        ? $"{plek.TijdGewerkt}/{Math.Round(plek.Werk.DoorloopTijd, 2)} uur."
-            //        : "N.V.T";
-            //};
-            //((OLVColumn) xwerkpleklist.Columns["Aantal Gemaakt"]).AspectGetter = sender =>
-            //{
-            //    var plek = (WerkPlek) sender;
-            //    if (plek == null)
-            //        return "N.V.T";
-            //    var peruur = "0";
-            //    if (plek.Werk == null)
-            //        peruur = plek.AantalGemaakt.ToString();
-            //    else peruur = $"{plek.AantalGemaakt}/{plek.Werk.Aantal}";
-            //    return peruur;
-            //};
         }
 
         private void Xwerkpleklis_BeforeCreatingGroups(object sender, CreateGroupsEventArgs e)
@@ -124,8 +94,7 @@ namespace Controls
 
         public object ImageGetter(object sender)
         {
-            var st = sender as WerkPlek;
-            if (st != null) return st.Storingen != null && st.Storingen.Any(x => !x.IsVerholpen) ? 1 : 0;
+            if (sender is WerkPlek st) return st.Storingen != null && st.Storingen.Any(x => !x.IsVerholpen) ? 1 : 0;
 
             return 0;
         }
@@ -350,16 +319,17 @@ namespace Controls
             {
                 if (PManager == null)
                     return werkplekken.ToArray();
-                    if (form.Bewerkingen is {Length: > 0})
+                if (form.Bewerkingen is {Length: > 0})
+                {
+                    var bws = form.Bewerkingen.Where(x => x.State == ProductieState.Gestart).ToArray();
+                    if (bws.Length > 0)
                     {
-                        var bws = form.Bewerkingen.Where(x => x.State == ProductieState.Gestart).ToArray();
-                        if (bws.Length > 0)
-                        {
-                            foreach (var b in bws)
-                                if (b.IsAllowed(null) && b.WerkPlekken is {Count: > 0})
-                                    werkplekken.AddRange(b.WerkPlekken.Where(x => x.Personen.Any(t => t.WerktAanKlus(b, out _))));
-                        }
+                        foreach (var b in bws)
+                            if (b.IsAllowed(null) && b.WerkPlekken is {Count: > 0})
+                                werkplekken.AddRange(b.WerkPlekken.Where(x =>
+                                    x.Personen.Any(t => t.WerktAanKlus(b, out _))));
                     }
+                }
             }
             catch
             {
@@ -424,6 +394,9 @@ namespace Controls
             storingenToolStripMenuItem.Enabled = xwerkpleklist.SelectedObjects.Count == 1;
             notitieToolStripMenuItem.Enabled = xwerkpleklist.SelectedObjects.Count == 1;
             xafkeurstoolstrip.Enabled = xwerkpleklist.SelectedObjects.Count == 1;
+            aantalGeschiedenisToolStripMenuItem.Enabled = xwerkpleklist.SelectedObjects.Count == 1;
+            onderbrekenToolStripMenuItem.Enabled = xwerkpleklist.SelectedObjects.Count > 0;
+            hervattenToolStripMenuItem.Enabled = xwerkpleklist.SelectedObjects.Count > 0;
         }
 
         private void openWerkplekToolStripMenuItem_Click(object sender, EventArgs e)
@@ -529,6 +502,75 @@ namespace Controls
             {
                 var xaantal = new AantalHistoryForm(plek);
                 xaantal.ShowDialog();
+            }
+        }
+
+        private void onderbrekenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (xwerkpleklist.SelectedObjects.Count > 0)
+            {
+                var xst = new Storing();
+                var wps = xwerkpleklist.SelectedObjects.Cast<WerkPlek>().Where(x=> x.Storingen.All(s=> s.IsVerholpen)).ToList();
+                if (wps.Count == 0)
+                {
+                    XMessageBox.Show("Geselecteerde werkplekken zijn al onderbroken!", "Al Onderbroken",
+                        MessageBoxIcon.Exclamation);
+                    return;
+                }
+
+                var xstform = new NewStoringForm();
+                xstform.SetOnderbreking(null, xst, false);
+                xstform.Title = $"Onderbreek {string.Join(", ", wps.Select(x => x.Naam))}";
+                if (xstform.ShowDialog() == DialogResult.OK)
+                {
+                    xst = xstform.Onderbreking;
+                    foreach (var wp in wps)
+                    {
+                        xstform.SetOnderbreking(wp, xst, false);
+                        xst = xstform.Onderbreking;
+                        wp.Storingen.Add(xst.CreateCopy());
+                        xwerkpleklist.RefreshObject(wp);
+                        wp.Werk?.UpdateBewerking(null, $"[{wp.Path}] is Onderbroken voor {xst.StoringType}!");
+                    }
+                }
+
+            }
+        }
+
+        private void hervattenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (xwerkpleklist.SelectedObjects.Count > 0)
+            {
+              
+                var wps = xwerkpleklist.SelectedObjects.Cast<WerkPlek>().Where(x=> x.Storingen.Any(s=> !s.IsVerholpen)).ToList();
+                if (wps.Count == 0)
+                {
+                    XMessageBox.Show("Geselecteerde werkplekken zijn al bezig!", "Al Bezig",
+                        MessageBoxIcon.Exclamation);
+                    return;
+                }
+                var xwp = wps.FirstOrDefault();
+                if (xwp == null) return;
+                var xst = xwp.Storingen.FirstOrDefault(x => !x.IsVerholpen);
+                var xstform = new NewStoringForm();
+                xstform.SetOnderbreking(null, xst, true);
+                xstform.Title = $"Hervat {string.Join(", ", wps.Select(x => x.Naam))}";
+                if (xstform.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (var wp in wps)
+                    {
+                        xst = wp.Storingen.FirstOrDefault(x =>
+                            !x.IsVerholpen && string.Equals(x.StoringType, xstform.Onderbreking?.StoringType,
+                                StringComparison.CurrentCultureIgnoreCase));
+                        xstform.SetOnderbreking(wp, xst, true);
+                        var index = -1;
+                        if ((index = wp.Storingen.IndexOf(xstform.Onderbreking)) > -1)
+                            wp.Storingen[index] = xstform.Onderbreking;
+                        xwerkpleklist.RefreshObject(wp);
+                        wp.Werk?.UpdateBewerking(null, $"[{wp.Path}] is weer hervat van een {xstform.Onderbreking.StoringType}!");
+                    }
+                }
+
             }
         }
     }

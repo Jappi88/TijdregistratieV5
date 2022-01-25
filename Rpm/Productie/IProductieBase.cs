@@ -830,7 +830,7 @@ Color textcolor, bool useimage)
             string prodsoort = string.IsNullOrEmpty(ProductSoort)
                 ? ""
                 : $"<span color='{xrgb}'><b>[{ProductSoort}]</b></span>";
-            var ratio = ControleRatio;
+            var ratio = Math.Round(ControleRatio,2);
             if (!useimage) ximage = "";
             var xreturn = $"<html>\r\n" +
                           $"<head>\r\n" +

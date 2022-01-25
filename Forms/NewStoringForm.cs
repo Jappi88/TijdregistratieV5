@@ -16,6 +16,18 @@ namespace Forms
         public NewStoringForm()
         {
             InitializeComponent();
+            var storingen = Functions.LoadSoortStoringen("SoortStilstanden.txt").Select(x => (object)x).ToArray();
+            xsoortstoringen.Items.AddRange(storingen);
+        }
+
+        public string Title
+        {
+            get => this.Text;
+            set
+            {
+                this.Text = value;
+                this.Invalidate();
+            }
         }
 
         public NewStoringForm(WerkPlek plek) : this(plek, null)
@@ -25,17 +37,11 @@ namespace Forms
 
         public NewStoringForm(WerkPlek plek, Storing storing):this()
         {
-            
-            var storingen = Functions.LoadSoortStoringen("SoortStilstanden.txt").Select(x => (object)x).ToArray();
-            xsoortstoringen.Items.AddRange(storingen);
             SetOnderbreking(plek, storing, storing?.IsVerholpen ?? false);
         }
 
         public NewStoringForm(WerkPlek plek, Storing storing, bool isverholpen) : this()
         {
-
-            var storingen = Functions.LoadSoortStoringen("SoortStilstanden.txt").Select(x => (object)x).ToArray();
-            xsoortstoringen.Items.AddRange(storingen);
             SetOnderbreking(plek, storing, isverholpen);
         }
 
@@ -53,18 +59,31 @@ namespace Forms
         {
             IsEdit = storing != null;
             //pak all soort storingen
-            Text = $@"Alle Onderbrekeningen van {plek.Path}";
+            Text = $@"Alle Onderbrekeningen van {plek?.Path}";
             this.Invalidate();
             Plek = plek;
             _onderbreking = storing == null ? new Storing() { GemeldDoor = Settings.Default.StoringMelder} : storing.CreateCopy();
            
             if (isverholpen && !_onderbreking.IsVerholpen)
-                _onderbreking.Gestopt = DateTime.Now;
+                _onderbreking.Gestopt = xeindestoring.Value;
             _onderbreking.IsVerholpen = isverholpen;
-            _onderbreking.WerkRooster = plek.Tijden.WerkRooster;
-            _onderbreking.Path = plek.Path;
-            _onderbreking.WerkPlek = plek.Naam;
+            _onderbreking.WerkRooster = plek?.Tijden.WerkRooster;
+            _onderbreking.Path = plek?.Path;
+            _onderbreking.WerkPlek = plek?.Naam;
             _onderbreking.Plek = plek;
+            if (string.IsNullOrEmpty(_onderbreking.GemeldDoor))
+                _onderbreking.GemeldDoor = xnaammelder.Text.Trim();
+            if (string.IsNullOrEmpty(_onderbreking.VerholpenDoor))
+                _onderbreking.VerholpenDoor = xnaambeeindiger.Text.Trim();
+
+            if (string.IsNullOrEmpty(_onderbreking.StoringType))
+                _onderbreking.StoringType = xsoortstoringen.Text.Trim();
+            if (string.IsNullOrEmpty(_onderbreking.Omschrijving))
+                _onderbreking.Omschrijving = xomschrijving.Text.Trim();
+            if (string.IsNullOrEmpty(_onderbreking.Oplossing))
+                _onderbreking.Oplossing = xactie.Text.Trim();
+
+
             var x = _onderbreking;
             xisbeeindigd.Image = Onderbreking.IsVerholpen ? Resources.check_1582 : Resources.delete_1577;
             if (!string.IsNullOrEmpty(x.StoringType))
@@ -96,15 +115,15 @@ namespace Forms
             if (IsEdit)
             {
                 if (Onderbreking == null)
-                    this.Text = $"Wijzig onderbreking van {Plek.Path}";
-                else this.Text = $"Wijzig onderbreking van {Plek.Path} [{Onderbreking.GetTotaleTijd()} uur]";
+                    this.Text = $"Wijzig onderbreking van {Plek?.Path}";
+                else this.Text = $"Wijzig onderbreking van {Plek?.Path} [{Onderbreking?.GetTotaleTijd()} uur]";
             }
             else
             {
                 if (Onderbreking == null)
-                    this.Text = $"Voeg nieuwe onderbreking toe aan {Plek.Path}";
+                    this.Text = $"Voeg nieuwe onderbreking toe aan {Plek?.Path}";
                 else
-                    this.Text = $"Voeg nieuwe onderbreking toe aan {Plek.Path} [{Onderbreking.GetTotaleTijd()} uur]";
+                    this.Text = $"Voeg nieuwe onderbreking toe aan {Plek?.Path} [{Onderbreking?.GetTotaleTijd()} uur]";
             }
 
             if (Onderbreking != null)
@@ -148,9 +167,8 @@ namespace Forms
         private bool MustEditTextFields()
         {
             var xvalue = xsoortstoringen.Text.ToLower().Trim();
-            var enabled = !string.IsNullOrEmpty(xvalue) && !xvalue.Contains("ombouw") &&
-                          !xvalue.Contains("zaagwissel") &&
-                          !xvalue.Contains("schoonmaak");
+            var enabled = !string.IsNullOrEmpty(xvalue) && (xvalue.Contains("storing") ||
+                                                            xvalue.Contains("onderhoud"));
             return enabled;
         }
 
