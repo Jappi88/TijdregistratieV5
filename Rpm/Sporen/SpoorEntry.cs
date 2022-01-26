@@ -106,7 +106,7 @@ namespace Rpm.Productie
                         }
 
                         if (xpakket.Length > 1)
-                            xpakket += ".";
+                            xpakket += ".<br>";
                     }
                 }
 
@@ -119,29 +119,30 @@ namespace Rpm.Productie
                     {
                         double tijd = Math.Round(((double) aantal / PerUur), 2);
                         peruur =
-                            $"<h5>Gemiddeld produceer je <b>{PerUur}p/u</b>, dat is <b>{tijd} uur</b> om <b>{aantal}</b> te produceren.<br>" +
+                            $"<h5>" +
+                            $"Gemiddeld produceer je <b>{PerUur}p/u</b>, dat is <b>{tijd} uur</b> om <b>{aantal}</b> te produceren.<br>" +
                             $"Als je nu begint ben je {Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(tijd), Manager.Opties?.GetWerkRooster(), Manager.Opties?.SpecialeRoosters):f} klaar." +
                             $"</h5>";
                     }
                 }
 
                 var xoverschotmaat = overschot > 0
-                    ? $"Dat is een overshot van <b>{overschot}</b> {x3}<b>({Math.Round((overschot * ProductLengte) / 1000, 4)} meter)</b>."
+                    ? $"Dat is een overshot van <b>{overschot}</b> {x3}<b>({Math.Round((overschot * ProductLengte) / 1000, 4)} meter)</b>.<br>"
                     : "";
                 var xoms = string.IsNullOrEmpty(ProductHtmlOmschrijving) ? string.IsNullOrEmpty(ProductOmschrijving) ? "" : $"<h4>{ProductOmschrijving}</h4>" : ProductHtmlOmschrijving;
-                xret = $"<span color='{Color.Navy.Name}'>" +
-                       $"<ul>" +
+                xret = $"<p color='{Color.Navy.Name}'>" +
+                      //$"<ul>" +
                        xoms +
                        peruur +
-                       $"<li>Een productLengte van <b>{Math.Round(ProductLengte, 3)}mm</b> is <b>{xstuks}(stuk)</b> van <b>{UitgangsLengte}mm</b>.</li>" +
-                       $"<li>Met een productlengte van <b>{xvalue / 1000}m</b> heb je <b>{xnodig}</b> {l1} nodig.</li>" +
+                       $"Een productLengte van <b>{Math.Round(ProductLengte, 3)}mm</b> is <b>{xstuks}(stuk)</b> van <b>{UitgangsLengte}mm</b>.<br><br>" +
+                       $"Met een productlengte van <b>{xvalue / 1000}m</b> heb je <b>{xnodig}</b> {l1} nodig.<br>" +
                        $"{xpakket}" +
-                       $"<li>Met <b>{xnodig}</b> lengtes kan je <b>{xmaken}/ {aantal}</b> producten maken.</li>" +
+                       $"Met <b>{xnodig}</b> lengtes kan je <b>{xmaken}/ {aantal}</b> producten maken.<br>" +
                        $"{xoverschotmaat}" +
-                       $"<li>Met <b>{xsporen}</b> {x1} is dat <b>{xaantalladen}</b> keer laden{(xrestsporen > 0 ? $" en een restlading van <b>{xrestsporen}</b> {x2}</li>" : "")}" +
-                       $"<li>Je haalt <b>{(int) xprodsperlengte}</b> producten uit <b>{xtotal / 1000} meter</b> met een reststuk van <b>{xrest}mm({Math.Round((xrest / xtotal) * 100,4)}%)</b>.</li>" +
-                       $"</ul>" +
-                       $"</span>";
+                       $"Met <b>{xsporen}</b> {x1} is dat <b>{xaantalladen}</b> keer laden{(xrestsporen > 0 ? $" en een restlading van <b>{xrestsporen}</b> {x2}" : "")}.<br><br>" +
+                       $"Je haalt <b>{(int) xprodsperlengte}</b> producten uit <b>{xtotal / 1000} meter</b> met een reststuk van <b>{xrest}mm({Math.Round((xrest / xtotal) * 100,4)}%)</b>.<br>" +
+                      // $"</ul>" +
+                       $"</p>";
             }
 
             return xret;

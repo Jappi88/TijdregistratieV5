@@ -71,42 +71,10 @@ namespace Rpm.Productie.AantalHistory
                             Aantallen[xindex].EndDate = DateTime.Now;
                             return true;
                         }
-                        //else
-                        //{
-
-                        //    xent = new AantalRecord(aantal);
-                        //    xent.DateChanged = xstart;
-                        //    xent.LastAantal = aantal;
-                        //    xent.EndDate = DateTime.Now;
-                        //    Aantallen.Add(xent);
-                        //}
                     }
 
 
                     var xaantal = xlast?.LastAantal??0;
-                    //if (xlast != null)
-                    //{
-                    //    xlast.LastAantal = aantal;
-                    //    xstart = xlast.EndDate;
-                    //    xaantal = xlast.LastAantal;
-
-
-                    //    //if (xlast.DateChanged.Date != DateTime.Now)
-                    //    //{
-                    //    //    var dt = xlast.DateChanged;
-                    //    //    Rooster rs = tijden?.WerkRooster ??
-                    //    //                 Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
-                    //    //    xstart = Werktijd.EerstVolgendeWerkdag(xstart, ref rs, rs, tijden?.SpecialeRoosters);
-                    //    //    var xgestopt = xlast.GetGestopt();
-                    //    //    if (xstart > xlast.GetGestopt())
-                    //    //    {
-                    //    //        xlast.EndDate = new DateTime(xgestopt.Year, xgestopt.Month, xgestopt.Day, 23, 59, 0);
-                    //    //    }
-                    //    //    else xlast.EndDate = xstart;
-                    //    //}
-                    //    //else
-                    //    //    xlast.EndDate = xstart;
-                    //}
                     xent = new AantalRecord(xaantal)
                     {
                         DateChanged = xstart,

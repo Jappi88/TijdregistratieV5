@@ -918,11 +918,11 @@ namespace Rpm.SqlLite
 
         public Task<List<UserSettings>> GetAllSettings()
         {
-            return Task.Run(async () =>
+            return Task.Run( () =>
             {
                 if (IsDisposed || AllSettings == null)
                     return new List<UserSettings>();
-                return await AllSettings.FindAll();
+                return AllSettings.FindAll().Result;
             });
         }
 

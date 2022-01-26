@@ -41,6 +41,7 @@
             this.toevoegenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wijzigenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.xHistoryList)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -51,6 +52,7 @@
             this.xHistoryList.AllColumns.Add(this.olvColumn1);
             this.xHistoryList.AllColumns.Add(this.olvColumn3);
             this.xHistoryList.AllColumns.Add(this.olvColumn4);
+            this.xHistoryList.AllColumns.Add(this.olvColumn7);
             this.xHistoryList.AllColumns.Add(this.olvColumn5);
             this.xHistoryList.AllColumns.Add(this.olvColumn6);
             this.xHistoryList.AlternateRowBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
@@ -60,6 +62,7 @@
             this.olvColumn1,
             this.olvColumn3,
             this.olvColumn4,
+            this.olvColumn7,
             this.olvColumn5,
             this.olvColumn6});
             this.xHistoryList.ContextMenuStrip = this.contextMenuStrip1;
@@ -166,6 +169,16 @@
             this.imageList1.ImageSize = new System.Drawing.Size(32, 32);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // olvColumn7
+            // 
+            this.olvColumn7.AspectName = "";
+            this.olvColumn7.AspectToStringFormat = "{0} p/u";
+            this.olvColumn7.IsEditable = false;
+            this.olvColumn7.Text = "Per Uur";
+            this.olvColumn7.ToolTipText = "Aantal Per uur";
+            this.olvColumn7.Width = 100;
+            this.olvColumn7.WordWrap = true;
+            // 
             // AantalGemaaktHistoryUI
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -196,5 +209,6 @@
         private BrightIdeasSoftware.OLVColumn olvColumn6;
         private System.Windows.Forms.ToolStripMenuItem toevoegenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wijzigenToolStripMenuItem;
+        private BrightIdeasSoftware.OLVColumn olvColumn7;
     }
 }

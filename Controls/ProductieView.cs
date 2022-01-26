@@ -1789,12 +1789,13 @@ namespace Controls
                 return null;
             try
             {
-                var bws = pform.Bewerkingen.Where(x =>
-                    x.IsAllowed() && x.State != ProductieState.Verwijderd).ToList();
-                if (bws.Count == 0)
-                    throw new Exception(
-                        $"Kan '{pform.Omschrijving}' niet openen omdat er geen geldige bewerkingen zijn!\n\n" +
-                        "Bewerkingen zijn verwijderd of gefiltered.");
+                var bws = pform.Bewerkingen;
+                    //.Where(x =>
+                   // x.IsAllowed() && x.State != ProductieState.Verwijderd).ToList();
+               // if (bws.Count == 0)
+                   // throw new Exception(
+                 //       $"Kan '{pform.Omschrijving}' niet openen omdat er geen geldige bewerkingen zijn!\n\n" +
+                   //     "Bewerkingen zijn verwijderd of gefiltered.");
                 var productie = _formuis.FirstOrDefault(t => t.Name == pform.ProductieNr.Trim().Replace(" ", ""));
                 if (productie is {IsDisposed: false} && _producties != null && showform)
                 {

@@ -17,7 +17,8 @@ namespace Forms.Aantal.Controls
         {
             InitializeComponent();
             ((OLVColumn) xHistoryList.Columns[3]).AspectGetter = TijdGewerktGetter;
-            ((OLVColumn)xHistoryList.Columns[5]).AspectGetter = GestoptGetter;
+            ((OLVColumn)xHistoryList.Columns[4]).AspectGetter = PerUurGetter;
+            ((OLVColumn)xHistoryList.Columns[6]).AspectGetter = GestoptGetter;
             //((OLVColumn) xHistoryList.Columns[0]).ImageGetter = (o) => 0;
             imageList1.Images.Add(Resources.Count_tool_34564);
         }
@@ -28,6 +29,17 @@ namespace Forms.Aantal.Controls
             if (item is AantalRecord record)
             {
                 return record.GetTijdGewerkt(Plek.Tijden, Plek.GetStoringen());
+            }
+
+            return 0;
+        }
+
+        private object PerUurGetter(object item)
+        {
+            if (Plek == null) return 0;
+            if (item is AantalRecord record)
+            {
+                return record.GetPerUur(Plek.Tijden, Plek.GetStoringen());
             }
 
             return 0;
