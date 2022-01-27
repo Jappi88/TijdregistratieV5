@@ -23,8 +23,8 @@ namespace Rpm.Productie.ArtikelRecords
            if (AantalGemaakt == 0) return 0;
            if (TijdGewerkt == 0) return (int)AantalGemaakt;
            int peruur = (int)(AantalGemaakt / (decimal)TijdGewerkt);
-           if (UpdatedProducties.Count > 0)
-               peruur /= UpdatedProducties.Count;
+           //if (UpdatedProducties.Count > 0)
+           //    peruur /= UpdatedProducties.Count;
            return peruur;
        }
         

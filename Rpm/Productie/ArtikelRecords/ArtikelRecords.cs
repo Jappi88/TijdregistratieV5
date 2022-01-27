@@ -115,7 +115,7 @@ namespace Rpm.Productie.ArtikelRecords
                     };
                 }
                 file.UpdatedProducties.Add(form.ProductieNr);
-                Database.Upsert(form.ArtikelNr, file, false);
+                Database?.Upsert(form.ArtikelNr, file, false);
             }
             catch (Exception e)
             {
