@@ -21,6 +21,7 @@ namespace Forms.Aantal.Controls
             ((OLVColumn)xHistoryList.Columns[6]).AspectGetter = GestoptGetter;
             //((OLVColumn) xHistoryList.Columns[0]).ImageGetter = (o) => 0;
             imageList1.Images.Add(Resources.Count_tool_34564);
+            UpdateStatus();
         }
 
         private object TijdGewerktGetter(object item)
@@ -56,17 +57,37 @@ namespace Forms.Aantal.Controls
             return "N.V.T.";
         }
 
-        private object ActiefGetter(object item)
+        private void UpdateStatus()
         {
-            if (Plek == null) return "N.V.T.";
-            if (item is AantalRecord record)
+            if (xHistoryList.SelectedObjects.Count > 0)
             {
-                if (record.IsActive)
-                    return "Ja";
-                return "Nee";
+                var xitems = xHistoryList.SelectedObjects.Cast<AantalRecord>().ToList();
+                var x1 = xitems.Count == 1 ? "regel" : "regels";
+              
+                var aantal = xitems.Sum(x => x.GetGemaakt());
+                var tijd = xitems.Sum(x => x.GetTijdGewerkt(Plek?.Tijden, Plek?.GetStoringen()));
+                var pu = aantal > 0 ? tijd == 0 ? aantal : Math.Round(aantal / tijd, 0) : 0;
+                xstatuslabel.Text =
+                    $"{xitems.Count} {x1} geselecteerd met een aantal van {aantal}, gemaakt in {tijd} uur met een gemiddelde van {pu}p/u";
             }
+            else
+            {
+                var xitems = xHistoryList.Objects?.Cast<AantalRecord>().ToList();
+                if (xitems != null && xitems.Count > 0)
+                {
+                    var x1 = xitems.Count == 1 ? "regel" : "regels";
 
-            return "N.V.T.";
+                    var aantal = xitems.Sum(x => x.GetGemaakt());
+                    var tijd = xitems.Sum(x => x.GetTijdGewerkt(Plek?.Tijden, Plek?.GetStoringen()));
+                    var pu = aantal > 0 ? tijd == 0 ? aantal : Math.Round(aantal / tijd, 0) : 0;
+                    xstatuslabel.Text =
+                        $"{xitems.Count} {x1} met een aantal van {aantal}, gemaakt in {tijd} uur, met een gemiddelde van {pu}p/u";
+                }
+                else
+                {
+                    xstatuslabel.Text = "Geen aantallen doorgegeven";
+                }
+            }
         }
 
         public void UpdateList(WerkPlek plek)
@@ -100,13 +121,14 @@ namespace Forms.Aantal.Controls
                     : new List<AantalRecord>();
                 var remove = xcuritems.Where(x => !plek.AantalHistory.Aantallen.Any(a=> a.Equals(x))).ToList();
                 xHistoryList.BeginUpdate();
+                var selected = xHistoryList.SelectedObjects;
                 foreach (var item in remove)
                 {
                     xHistoryList.RemoveObject(item);
                     xcuritems.Remove(item);
                 }
 
-                var selected = xHistoryList.SelectedObject;
+                
                 foreach (var aantal in plek.AantalHistory.Aantallen)
                 {
                     var xold = xcuritems.FirstOrDefault(aantal.Equals);
@@ -115,7 +137,7 @@ namespace Forms.Aantal.Controls
                     else xHistoryList.AddObject(aantal);
                 }
 
-                xHistoryList.SelectedObject = selected;
+                xHistoryList.SelectedObjects = selected;
                 xHistoryList.SelectedItem?.EnsureVisible();
                 UpdateButtons();
             }
@@ -172,6 +194,7 @@ namespace Forms.Aantal.Controls
             {
                 AccesLevel: > AccesType.ProductieBasis
             };
+            UpdateStatus();
         }
 
         private void xHistoryList_SelectedIndexChanged(object sender, EventArgs e)

@@ -34,6 +34,7 @@
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -41,7 +42,7 @@
             this.toevoegenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wijzigenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.xstatuslabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.xHistoryList)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -76,7 +77,7 @@
             this.xHistoryList.Name = "xHistoryList";
             this.xHistoryList.ShowGroups = false;
             this.xHistoryList.ShowItemToolTips = true;
-            this.xHistoryList.Size = new System.Drawing.Size(815, 490);
+            this.xHistoryList.Size = new System.Drawing.Size(815, 491);
             this.xHistoryList.TabIndex = 0;
             this.xHistoryList.TintSortColumn = true;
             this.xHistoryList.UseAlternatingBackColors = true;
@@ -114,6 +115,16 @@
             this.olvColumn4.AspectToStringFormat = "{0} uur";
             this.olvColumn4.Text = "Tijd Gewerkt";
             this.olvColumn4.Width = 100;
+            // 
+            // olvColumn7
+            // 
+            this.olvColumn7.AspectName = "";
+            this.olvColumn7.AspectToStringFormat = "{0} p/u";
+            this.olvColumn7.IsEditable = false;
+            this.olvColumn7.Text = "Per Uur";
+            this.olvColumn7.ToolTipText = "Aantal Per uur";
+            this.olvColumn7.Width = 100;
+            this.olvColumn7.WordWrap = true;
             // 
             // olvColumn5
             // 
@@ -169,26 +180,27 @@
             this.imageList1.ImageSize = new System.Drawing.Size(32, 32);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // olvColumn7
+            // xstatuslabel
             // 
-            this.olvColumn7.AspectName = "";
-            this.olvColumn7.AspectToStringFormat = "{0} p/u";
-            this.olvColumn7.IsEditable = false;
-            this.olvColumn7.Text = "Per Uur";
-            this.olvColumn7.ToolTipText = "Aantal Per uur";
-            this.olvColumn7.Width = 100;
-            this.olvColumn7.WordWrap = true;
+            this.xstatuslabel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.xstatuslabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xstatuslabel.Location = new System.Drawing.Point(0, 491);
+            this.xstatuslabel.Name = "xstatuslabel";
+            this.xstatuslabel.Size = new System.Drawing.Size(815, 17);
+            this.xstatuslabel.TabIndex = 1;
+            this.xstatuslabel.Text = "Status";
             // 
             // AantalGemaaktHistoryUI
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.xHistoryList);
+            this.Controls.Add(this.xstatuslabel);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "AantalGemaaktHistoryUI";
-            this.Size = new System.Drawing.Size(815, 490);
+            this.Size = new System.Drawing.Size(815, 508);
             ((System.ComponentModel.ISupportInitialize)(this.xHistoryList)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -210,5 +222,6 @@
         private System.Windows.Forms.ToolStripMenuItem toevoegenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wijzigenToolStripMenuItem;
         private BrightIdeasSoftware.OLVColumn olvColumn7;
+        private System.Windows.Forms.Label xstatuslabel;
     }
 }

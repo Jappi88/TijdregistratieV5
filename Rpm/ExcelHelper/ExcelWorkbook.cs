@@ -2024,7 +2024,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                             ISheet storingsheet = null;
                             var xweekstoringen = storingen.Where(x =>
                                 string.Equals(x.WerkPlek, wp.Key, StringComparison.CurrentCultureIgnoreCase) &&
-                                x.GetTotaleTijd(weekbereik.Start, weekbereik.Stop) > 0).ToList();
+                                x.GetTotaleTijd(weekbereik.Start, weekbereik.Stop) > 0).OrderBy(x=> x.Gestart).ToList();
                             while (xcurdag.Date <= xeidnweek.Date)
                             {
 
