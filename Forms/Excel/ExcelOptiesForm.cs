@@ -56,7 +56,6 @@ namespace Forms
         }
 
         public List<ExcelSettings> Settings { get; set; }
-        public UserSettings Opties { get; private set; }
 
         public void LoadSettings(List<ExcelSettings> settings, string listname, bool isExcelColumns, ExcelSettings selected = null)
         {
@@ -73,12 +72,12 @@ namespace Forms
             xBeschikbareColumns.SetObjects(properties);
         }
 
-        public void LoadOpties(UserSettings opties, string listname, bool isExcelColumns)
+        public void LoadOpties(string listname, bool isExcelColumns, List<ExcelSettings> settings = null)
         {
             try
             {
-                Opties = opties;
-                Settings = opties.ExcelColumns.CreateCopy()?.Where(x=> x.IsExcelSettings == isExcelColumns).ToList();
+                Settings = settings??Manager.ListLayouts?.GetAlleLayouts()?.Where(x => x.IsExcelSettings == isExcelColumns)
+                    .ToList() ?? new List<ExcelSettings>();
                 LoadSettings(Settings, listname, isExcelColumns);
             }
             catch (Exception e)
@@ -580,6 +579,7 @@ namespace Forms
                         setting.IsExcelSettings = IsExcelColumnSettings;
                         setting.Name = txt;
                         xOptiesView.RefreshObject(setting);
+                        
                     }
                 }
             }
@@ -673,9 +673,8 @@ namespace Forms
 
         private void xtoepassen_Click(object sender, EventArgs e)
         {
-            if (Opties == null) return;
-            Manager.UpdateExcelColumns(Opties, Settings, IsExcelColumnSettings);
-            Opties.Save("Columns instellingen opgeslagen!");
+            if (Settings == null) return;
+            Manager.UpdateExcelColumns(Settings,true,true,IsExcelColumnSettings);
         }
     }
 }

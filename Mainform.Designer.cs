@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Mainform));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.productieView1 = new Controls.ProductieView();
             this.panel3 = new System.Windows.Forms.Panel();
             this.xstatuslabel = new System.Windows.Forms.Label();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
@@ -41,6 +40,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.sluitenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.productieView1 = new Controls.ProductieView();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -57,18 +57,6 @@
             this.panel1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel1.Size = new System.Drawing.Size(1049, 542);
             this.panel1.TabIndex = 4;
-            // 
-            // productieView1
-            // 
-            this.productieView1.BackColor = System.Drawing.Color.White;
-            this.productieView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.productieView1.Location = new System.Drawing.Point(4, 5);
-            this.productieView1.Name = "productieView1";
-            this.productieView1.ProductieRefreshInterval = 10000;
-            this.productieView1.ProductieSyncEnabled = false;
-            this.productieView1.ShowUnreadMessage = false;
-            this.productieView1.Size = new System.Drawing.Size(1041, 532);
-            this.productieView1.TabIndex = 0;
             // 
             // panel3
             // 
@@ -165,22 +153,33 @@
             this.notifyIcon1.Text = "ProductieManager draait op de achtergrond...";
             this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
             // 
+            // productieView1
+            // 
+            this.productieView1.BackColor = System.Drawing.Color.White;
+            this.productieView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieView1.Location = new System.Drawing.Point(4, 5);
+            this.productieView1.Name = "productieView1";
+            this.productieView1.ProductieRefreshInterval = 10000;
+            this.productieView1.ProductieSyncEnabled = false;
+            this.productieView1.ShowUnreadMessage = false;
+            this.productieView1.Size = new System.Drawing.Size(1041, 532);
+            this.productieView1.TabIndex = 0;
+            // 
             // Mainform
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1049, 561);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel3);
             this.DoubleBuffered = true;
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.IsMdiContainer = true;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimumSize = new System.Drawing.Size(850, 600);
             this.Name = "Mainform";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
-            this.Text = "Productie Manager";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "ProductieManager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Mainform_FormClosing);
             this.Resize += new System.EventHandler(this.Mainform_Resize);
             this.panel1.ResumeLayout(false);

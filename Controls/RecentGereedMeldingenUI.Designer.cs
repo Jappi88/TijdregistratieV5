@@ -32,16 +32,16 @@ namespace Controls
             this.components = new System.ComponentModel.Container();
             this.xstatus = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.xupdatetijdb = new System.Windows.Forms.Button();
             this.xtotgereed = new System.Windows.Forms.DateTimePicker();
             this.xvanafgereed = new System.Windows.Forms.DateTimePicker();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.productieListControl1 = new Controls.ProductieListControl();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // xstatus
@@ -64,17 +64,6 @@ namespace Controls
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1098, 88);
             this.panel1.TabIndex = 2;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pictureBox1.Image = global::ProductieManager.Properties.Resources.business_color_progress_icon_icons_com_53437;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(47, 40);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
             // 
             // panel2
             // 
@@ -125,12 +114,24 @@ namespace Controls
             this.xvanafgereed.Size = new System.Drawing.Size(225, 25);
             this.xvanafgereed.TabIndex = 6;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pictureBox1.Image = global::ProductieManager.Properties.Resources.business_color_progress_icon_icons_com_53437;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(47, 40);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
             // toolTip1
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
             // productieListControl1
             // 
+            this.productieListControl1.AutoScroll = true;
             this.productieListControl1.BackColor = System.Drawing.Color.White;
             this.productieListControl1.CanLoad = true;
             this.productieListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -162,8 +163,8 @@ namespace Controls
             this.Name = "RecentGereedMeldingenUI";
             this.Size = new System.Drawing.Size(1098, 628);
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -171,7 +172,6 @@ namespace Controls
         #endregion
 
         private System.Windows.Forms.Label xstatus;
-        private Controls.ProductieListControl productieListControl1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel2;
@@ -179,5 +179,6 @@ namespace Controls
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.DateTimePicker xtotgereed;
         private System.Windows.Forms.DateTimePicker xvanafgereed;
+        public ProductieListControl productieListControl1;
     }
 }

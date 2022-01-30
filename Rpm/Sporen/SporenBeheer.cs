@@ -127,7 +127,7 @@ namespace Rpm.Productie.Verpakking
             try
             {
                 if (Database == null) return xsporen;
-                xsporen = Database.GetAllIDs(true);
+                xsporen = Database.GetAllIDs(false);
             }
             catch (Exception e)
             {

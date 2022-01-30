@@ -147,6 +147,7 @@ namespace Forms
             // 
             // productieListControl1
             // 
+            this.productieListControl1.AutoScroll = true;
             this.productieListControl1.BackColor = System.Drawing.Color.White;
             this.productieListControl1.CanLoad = true;
             this.productieListControl1.Dock = System.Windows.Forms.DockStyle.Fill;

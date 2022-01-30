@@ -631,13 +631,15 @@ namespace Rpm.Productie
                     {
                         var xklus = xper.Klusjes.GetKlus($"{Path}\\{werkplek}");
                         xklus?.ZetActief(actief, State == ProductieState.Gestart && actief);
+                        if (actief && xklus?.Tijden != null)
+                            xwp.Tijden.UpdateLijst(xklus.Tijden);
                     }
+                    xwp.UpdateWerkplek(false);
                 }
                 if (!actief) return;
                 foreach (var wp in WerkPlekken)
                 {
                     if (string.Equals(wp.Naam, werkplek, StringComparison.CurrentCultureIgnoreCase)) continue;
-                  
                     var xpers = wp.Personen.Where(x =>
                     string.Equals(x.PersoneelNaam, personeelnaam, StringComparison.CurrentCultureIgnoreCase)).ToList();
                     foreach (var xper in xpers)

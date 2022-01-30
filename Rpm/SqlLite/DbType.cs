@@ -16,6 +16,7 @@
         Verpakkingen,
         ArtikelRecords,
         SpoorOverzicht,
+        LijstLayouts,
         Alles,
         None
     }

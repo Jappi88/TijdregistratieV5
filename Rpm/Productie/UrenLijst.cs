@@ -511,10 +511,19 @@ namespace Rpm.Productie
 
         public int UpdateLijst(UrenLijst from)
         {
-            if (@from?.Uren == null)
+            if (from?.Uren == null)
                 return -1;
             Uren ??= new List<TijdEntry>();
             var done = 0;
+            SpecialeRoosters ??= new List<Rooster>();
+            lock (SpecialeRoosters)
+            {
+                var xadd = from.SpecialeRoosters?.Where(x => SpecialeRoosters.All(s => s.Vanaf.Date != x.Vanaf.Date)).ToList();
+                if (xadd is {Count: > 0})
+                {
+                    SpecialeRoosters.AddRange(xadd);
+                }
+            }
             foreach (var tijd in from.Uren)
             {
                 var changed = false;
@@ -533,6 +542,21 @@ namespace Rpm.Productie
                             t.Omschrijving = tijd.Omschrijving;
                             t.Start = tijd.Start;
                             t.Stop = tijd.Stop;
+                            changed = true;
+                            done++;
+                            break;
+                        }
+                        if (t.ContainsBereik(tijd))
+                        {
+                            if (t.WerkRooster == null || !t.WerkRooster.IsCustom())
+                                t.WerkRooster = tijd.WerkRooster != null && tijd.WerkRooster.IsCustom()
+                                    ? tijd.WerkRooster
+                                    : WerkRooster;
+                            t.Omschrijving = tijd.Omschrijving;
+                            if (t.Start > tijd.Start)
+                                t.Start = tijd.Start;
+                            if (t.Stop < tijd.Stop)
+                                t.Stop = tijd.Stop;
                             changed = true;
                             done++;
                             break;

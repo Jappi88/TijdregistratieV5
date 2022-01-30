@@ -34,21 +34,21 @@ namespace Controls
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieView));
-            Various.MenuButton menuButton1 = new Various.MenuButton();
-            Various.MenuButton menuButton2 = new Various.MenuButton();
-            Various.MenuButton menuButton3 = new Various.MenuButton();
-            Various.MenuButton menuButton4 = new Various.MenuButton();
-            Various.MenuButton menuButton5 = new Various.MenuButton();
-            Various.MenuButton menuButton6 = new Various.MenuButton();
-            Various.MenuButton menuButton7 = new Various.MenuButton();
-            Various.MenuButton menuButton8 = new Various.MenuButton();
-            Various.MenuButton menuButton9 = new Various.MenuButton();
-            Various.MenuButton menuButton10 = new Various.MenuButton();
-            Various.MenuButton menuButton11 = new Various.MenuButton();
-            Various.MenuButton menuButton12 = new Various.MenuButton();
-            Various.MenuButton menuButton13 = new Various.MenuButton();
-            Various.MenuButton menuButton14 = new Various.MenuButton();
-            Various.MenuButton menuButton15 = new Various.MenuButton();
+            Various.MenuButton menuButton46 = new Various.MenuButton();
+            Various.MenuButton menuButton47 = new Various.MenuButton();
+            Various.MenuButton menuButton48 = new Various.MenuButton();
+            Various.MenuButton menuButton49 = new Various.MenuButton();
+            Various.MenuButton menuButton50 = new Various.MenuButton();
+            Various.MenuButton menuButton51 = new Various.MenuButton();
+            Various.MenuButton menuButton52 = new Various.MenuButton();
+            Various.MenuButton menuButton53 = new Various.MenuButton();
+            Various.MenuButton menuButton54 = new Various.MenuButton();
+            Various.MenuButton menuButton55 = new Various.MenuButton();
+            Various.MenuButton menuButton56 = new Various.MenuButton();
+            Various.MenuButton menuButton57 = new Various.MenuButton();
+            Various.MenuButton menuButton58 = new Various.MenuButton();
+            Various.MenuButton menuButton59 = new Various.MenuButton();
+            Various.MenuButton menuButton60 = new Various.MenuButton();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.xspeciaalroosterbutton = new System.Windows.Forms.Button();
@@ -135,9 +135,9 @@ namespace Controls
             this.xspeciaalroosterbutton.ForeColor = System.Drawing.Color.DarkRed;
             this.xspeciaalroosterbutton.Image = global::ProductieManager.Properties.Resources.schedule_32_32;
             this.xspeciaalroosterbutton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.xspeciaalroosterbutton.Location = new System.Drawing.Point(3, 7);
+            this.xspeciaalroosterbutton.Location = new System.Drawing.Point(3, 2);
             this.xspeciaalroosterbutton.Name = "xspeciaalroosterbutton";
-            this.xspeciaalroosterbutton.Size = new System.Drawing.Size(1161, 40);
+            this.xspeciaalroosterbutton.Size = new System.Drawing.Size(1115, 40);
             this.xspeciaalroosterbutton.TabIndex = 0;
             this.xspeciaalroosterbutton.Text = "Rooster is momenteel inactief en zal geen tijd worden gemeten";
             this.xspeciaalroosterbutton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -154,7 +154,7 @@ namespace Controls
             this.panel6.Location = new System.Drawing.Point(0, 0);
             this.panel6.Name = "panel6";
             this.panel6.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
-            this.panel6.Size = new System.Drawing.Size(1167, 43);
+            this.panel6.Size = new System.Drawing.Size(1121, 43);
             this.panel6.TabIndex = 25;
             // 
             // xToolButtons
@@ -193,7 +193,7 @@ namespace Controls
             this.xArtikelRecordsToolstripButton});
             this.xToolButtons.Location = new System.Drawing.Point(5, 0);
             this.xToolButtons.Name = "xToolButtons";
-            this.xToolButtons.Size = new System.Drawing.Size(1026, 39);
+            this.xToolButtons.Size = new System.Drawing.Size(980, 39);
             this.xToolButtons.TabIndex = 46;
             this.xToolButtons.Text = "toolStrip2";
             // 
@@ -530,7 +530,7 @@ namespace Controls
             // 
             this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Right;
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(1031, 0);
+            this.pictureBox2.Location = new System.Drawing.Point(985, 0);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(68, 43);
@@ -543,7 +543,7 @@ namespace Controls
             // 
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(1099, 0);
+            this.pictureBox1.Location = new System.Drawing.Point(1053, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(68, 43);
@@ -586,11 +586,11 @@ namespace Controls
             this.metroTabControl.Controls.Add(this.tabPage3);
             this.metroTabControl.Controls.Add(this.tabPage4);
             this.metroTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.metroTabControl.Location = new System.Drawing.Point(40, 97);
+            this.metroTabControl.Location = new System.Drawing.Point(40, 88);
             this.metroTabControl.Name = "metroTabControl";
             this.metroTabControl.SelectedIndex = 0;
             this.metroTabControl.ShowToolTips = true;
-            this.metroTabControl.Size = new System.Drawing.Size(1089, 533);
+            this.metroTabControl.Size = new System.Drawing.Size(1043, 538);
             this.metroTabControl.Style = MetroFramework.MetroColorStyle.Blue;
             this.metroTabControl.TabIndex = 28;
             this.metroTabControl.UseSelectable = true;
@@ -603,7 +603,8 @@ namespace Controls
             this.tabPage2.HorizontalScrollbarSize = 10;
             this.tabPage2.Location = new System.Drawing.Point(4, 38);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(1081, 491);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(5, 5, 5, 0);
+            this.tabPage2.Size = new System.Drawing.Size(1035, 496);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Bewerkingen";
             this.tabPage2.VerticalScrollbarBarColor = true;
@@ -619,7 +620,8 @@ namespace Controls
             this.tabPage3.HorizontalScrollbarSize = 10;
             this.tabPage3.Location = new System.Drawing.Point(4, 38);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1081, 491);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(5, 5, 5, 0);
+            this.tabPage3.Size = new System.Drawing.Size(1035, 496);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Werk Plaatsen";
             this.tabPage3.VerticalScrollbarBarColor = true;
@@ -634,7 +636,8 @@ namespace Controls
             this.tabPage4.HorizontalScrollbarSize = 10;
             this.tabPage4.Location = new System.Drawing.Point(4, 38);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(1081, 491);
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(5, 5, 5, 0);
+            this.tabPage4.Size = new System.Drawing.Size(1035, 496);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Recente Gereedmeldingen";
             this.tabPage4.VerticalScrollbarBarColor = true;
@@ -647,7 +650,7 @@ namespace Controls
             this.xspeciaalroosterlabel.Dock = System.Windows.Forms.DockStyle.Top;
             this.xspeciaalroosterlabel.Location = new System.Drawing.Point(0, 43);
             this.xspeciaalroosterlabel.Name = "xspeciaalroosterlabel";
-            this.xspeciaalroosterlabel.Size = new System.Drawing.Size(1167, 54);
+            this.xspeciaalroosterlabel.Size = new System.Drawing.Size(1121, 45);
             this.xspeciaalroosterlabel.TabIndex = 29;
             this.xspeciaalroosterlabel.Visible = false;
             // 
@@ -662,50 +665,45 @@ namespace Controls
             // 
             // xbewerkingListControl
             // 
-            this.xbewerkingListControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xbewerkingListControl.AutoScroll = true;
             this.xbewerkingListControl.BackColor = System.Drawing.Color.White;
             this.xbewerkingListControl.CanLoad = true;
-            this.xbewerkingListControl.EnableEntryFiltering = false;
+            this.xbewerkingListControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xbewerkingListControl.EnableEntryFiltering = true;
             this.xbewerkingListControl.EnableFiltering = true;
-            this.xbewerkingListControl.EnableSync = true;
+            this.xbewerkingListControl.EnableSync = false;
             this.xbewerkingListControl.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xbewerkingListControl.IsBewerkingView = false;
+            this.xbewerkingListControl.IsBewerkingView = true;
             this.xbewerkingListControl.ListName = "Bewerkingen";
-            this.xbewerkingListControl.Location = new System.Drawing.Point(3, 4);
+            this.xbewerkingListControl.Location = new System.Drawing.Point(5, 5);
             this.xbewerkingListControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.xbewerkingListControl.Name = "xbewerkingListControl";
             this.xbewerkingListControl.RemoveCustomItemIfNotValid = false;
             this.xbewerkingListControl.SelectedItem = null;
-            this.xbewerkingListControl.Size = new System.Drawing.Size(1075, 483);
+            this.xbewerkingListControl.Size = new System.Drawing.Size(1025, 491);
             this.xbewerkingListControl.TabIndex = 2;
             this.xbewerkingListControl.ValidHandler = null;
             // 
             // werkPlekkenUI1
             // 
-            this.werkPlekkenUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.werkPlekkenUI1.BackColor = System.Drawing.Color.White;
+            this.werkPlekkenUI1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.werkPlekkenUI1.EnableSync = true;
-            this.werkPlekkenUI1.Location = new System.Drawing.Point(3, 3);
+            this.werkPlekkenUI1.Location = new System.Drawing.Point(5, 5);
             this.werkPlekkenUI1.Name = "werkPlekkenUI1";
             this.werkPlekkenUI1.SelectedWerkplek = null;
-            this.werkPlekkenUI1.Size = new System.Drawing.Size(1071, 481);
+            this.werkPlekkenUI1.Size = new System.Drawing.Size(1021, 487);
             this.werkPlekkenUI1.TabIndex = 0;
             // 
             // recentGereedMeldingenUI1
             // 
-            this.recentGereedMeldingenUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.recentGereedMeldingenUI1.BackColor = System.Drawing.Color.White;
+            this.recentGereedMeldingenUI1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.recentGereedMeldingenUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.recentGereedMeldingenUI1.Location = new System.Drawing.Point(2, 4);
+            this.recentGereedMeldingenUI1.Location = new System.Drawing.Point(5, 5);
             this.recentGereedMeldingenUI1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.recentGereedMeldingenUI1.Name = "recentGereedMeldingenUI1";
-            this.recentGereedMeldingenUI1.Size = new System.Drawing.Size(1076, 483);
+            this.recentGereedMeldingenUI1.Size = new System.Drawing.Size(1025, 491);
             this.recentGereedMeldingenUI1.TabIndex = 2;
             // 
             // takenManager1
@@ -713,11 +711,11 @@ namespace Controls
             this.takenManager1.BackColor = System.Drawing.Color.White;
             this.takenManager1.Dock = System.Windows.Forms.DockStyle.Right;
             this.takenManager1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.takenManager1.Location = new System.Drawing.Point(1129, 97);
+            this.takenManager1.Location = new System.Drawing.Point(1083, 88);
             this.takenManager1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.takenManager1.Name = "takenManager1";
             this.takenManager1.SelectedItem = null;
-            this.takenManager1.Size = new System.Drawing.Size(38, 533);
+            this.takenManager1.Size = new System.Drawing.Size(38, 538);
             this.takenManager1.TabIndex = 26;
             this.takenManager1.Visible = false;
             this.takenManager1.OnTaakClicked += new Rpm.Various.TaakHandler(this.takenManager1_OnTaakClicked);
@@ -728,191 +726,191 @@ namespace Controls
             this.mainMenu1.Dock = System.Windows.Forms.DockStyle.Left;
             this.mainMenu1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mainMenu1.IsExpanded = false;
-            this.mainMenu1.Location = new System.Drawing.Point(0, 97);
+            this.mainMenu1.Location = new System.Drawing.Point(0, 88);
             this.mainMenu1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            menuButton1.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton1.CombineImage = null;
-            menuButton1.CombineScale = 0D;
-            menuButton1.ContextMenu = null;
-            menuButton1.Enabled = true;
-            menuButton1.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton1.Image")));
-            menuButton1.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton1.Index = 0;
-            menuButton1.Name = "xniewproductie";
-            menuButton1.Text = "Nieuwe Productie";
-            menuButton1.Tooltip = "Maak een nieuwe productie aan";
-            menuButton2.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton2.CombineImage = null;
-            menuButton2.CombineScale = 1.5D;
-            menuButton2.ContextMenu = null;
-            menuButton2.Enabled = true;
-            menuButton2.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton2.Image")));
-            menuButton2.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton2.Index = 1;
-            menuButton2.Name = "xopenproductie";
-            menuButton2.Text = "Open Productie";
-            menuButton2.Tooltip = "Open productie vanuit een pdf";
-            menuButton3.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton3.CombineImage = global::ProductieManager.Properties.Resources.lightning_weather_storm_2781;
-            menuButton3.CombineScale = 1.25D;
-            menuButton3.ContextMenu = null;
-            menuButton3.Enabled = true;
-            menuButton3.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton3.Image")));
-            menuButton3.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton3.Index = 2;
-            menuButton3.Name = "xquickproductie";
-            menuButton3.Text = "Simpel Productie";
-            menuButton3.Tooltip = "Maak een nieuwe simpele productie";
-            menuButton4.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
-            menuButton4.CombineImage = global::ProductieManager.Properties.Resources.search_locate_find_6278;
-            menuButton4.CombineScale = 1.5D;
-            menuButton4.ContextMenu = null;
-            menuButton4.Enabled = true;
-            menuButton4.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton4.Image")));
-            menuButton4.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton4.Index = 3;
-            menuButton4.Name = "xSearchTekening";
-            menuButton4.Text = "Zoek WerkTekening";
-            menuButton4.Tooltip = "Zoek een werktekening o.b.v een artikelnr (Ctrl+T)";
-            menuButton5.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton5.CombineImage = null;
-            menuButton5.CombineScale = 1.5D;
-            menuButton5.ContextMenu = null;
-            menuButton5.Enabled = true;
-            menuButton5.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton5.Image")));
-            menuButton5.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton5.Index = 4;
-            menuButton5.Name = "xchangeaantal";
-            menuButton5.Text = "Aantal Gemaakt";
-            menuButton5.Tooltip = "Wijzig aantal gemaakt van alle actieve werkplaatsen";
-            menuButton6.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton6.CombineImage = null;
-            menuButton6.CombineScale = 1.5D;
-            menuButton6.ContextMenu = null;
-            menuButton6.Enabled = true;
-            menuButton6.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton6.Image")));
-            menuButton6.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton6.Index = 5;
-            menuButton6.Name = "xwerkplaatsindeling";
-            menuButton6.Text = "Personeel Indeling";
-            menuButton6.Tooltip = "Beheer personeel leden en hun producties";
-            menuButton7.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
-            menuButton7.CombineImage = null;
-            menuButton7.CombineScale = 1.5D;
-            menuButton7.ContextMenu = null;
-            menuButton7.Enabled = true;
-            menuButton7.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton7.Image")));
-            menuButton7.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton7.Index = 6;
-            menuButton7.Name = "xverbruik";
-            menuButton7.Text = "Bereken Verbruik";
-            menuButton7.Tooltip = "Bereken verbruik";
-            menuButton8.AccesLevel = Rpm.Various.AccesType.ProductieAdvance;
-            menuButton8.CombineImage = null;
-            menuButton8.CombineScale = 1.5D;
-            menuButton8.ContextMenu = null;
-            menuButton8.Enabled = true;
-            menuButton8.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton8.Image")));
-            menuButton8.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton8.Index = 7;
-            menuButton8.Name = "xupdateforms";
-            menuButton8.Text = "Update Formulieren";
-            menuButton8.Tooltip = "Update producties vanuit een folder met ProductieFormulieren pdfs";
-            menuButton9.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
-            menuButton9.CombineImage = null;
-            menuButton9.CombineScale = 1.5D;
-            menuButton9.ContextMenu = null;
-            menuButton9.Enabled = true;
-            menuButton9.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton9.Image")));
-            menuButton9.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton9.Index = 8;
-            menuButton9.Name = "xcreateexcel";
-            menuButton9.Text = "Excel Overzicht";
-            menuButton9.Tooltip = "Maak excel overzicht";
-            menuButton10.AccesLevel = Rpm.Various.AccesType.ProductieAdvance;
-            menuButton10.CombineImage = null;
-            menuButton10.CombineScale = 1.5D;
-            menuButton10.ContextMenu = null;
-            menuButton10.Enabled = true;
-            menuButton10.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton10.Image")));
-            menuButton10.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton10.Index = 9;
-            menuButton10.Name = "xupdatedb";
-            menuButton10.Text = "Update Database";
-            menuButton10.Tooltip = "Update database vanuit adere locaties";
-            menuButton11.AccesLevel = Rpm.Various.AccesType.ProductieAdvance;
-            menuButton11.CombineImage = null;
-            menuButton11.CombineScale = 1.5D;
-            menuButton11.ContextMenu = null;
-            menuButton11.Enabled = true;
-            menuButton11.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton11.Image")));
-            menuButton11.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton11.Index = 10;
-            menuButton11.Name = "xlaaddb";
-            menuButton11.Text = "Laad Database";
-            menuButton11.Tooltip = "Laad een andere database";
-            menuButton12.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
-            menuButton12.CombineImage = null;
-            menuButton12.CombineScale = 1.5D;
-            menuButton12.ContextMenu = null;
-            menuButton12.Enabled = true;
-            menuButton12.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton12.Image")));
-            menuButton12.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton12.Index = 11;
-            menuButton12.Name = "xstats";
-            menuButton12.Text = "Toon Statistieken";
-            menuButton12.Tooltip = "Toon statistieken van de afgelopen periode";
-            menuButton13.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton13.CombineImage = null;
-            menuButton13.CombineScale = 1.5D;
-            menuButton13.ContextMenu = null;
-            menuButton13.Enabled = true;
-            menuButton13.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton13.Image")));
-            menuButton13.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton13.Index = 12;
-            menuButton13.Name = "xroostermenubutton";
-            menuButton13.Text = "WerkRooster";
-            menuButton13.Tooltip = "Kies Werkrooster";
-            menuButton14.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton14.CombineImage = null;
-            menuButton14.CombineScale = 1.5D;
-            menuButton14.ContextMenu = null;
-            menuButton14.Enabled = false;
-            menuButton14.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton14.Image")));
-            menuButton14.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton14.Index = 13;
-            menuButton14.Name = "xspecialeroosterbutton";
-            menuButton14.Text = "Speciale Roosters";
-            menuButton14.Tooltip = "Beheer speciale roosters";
-            menuButton15.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
-            menuButton15.CombineImage = global::ProductieManager.Properties.Resources.play_button_icon_icons_com_60615;
-            menuButton15.CombineScale = 1.5D;
-            menuButton15.ContextMenu = null;
-            menuButton15.Enabled = true;
-            menuButton15.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton15.Image")));
-            menuButton15.ImageSize = new System.Drawing.Size(32, 32);
-            menuButton15.Index = 14;
-            menuButton15.Name = "xopenproducties";
-            menuButton15.Text = "Gestart Producties";
-            menuButton15.Tooltip = "Open alle gestarte producties";
+            menuButton46.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton46.CombineImage = null;
+            menuButton46.CombineScale = 0D;
+            menuButton46.ContextMenu = null;
+            menuButton46.Enabled = true;
+            menuButton46.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton46.Image")));
+            menuButton46.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton46.Index = 0;
+            menuButton46.Name = "xniewproductie";
+            menuButton46.Text = "Nieuwe Productie";
+            menuButton46.Tooltip = "Maak een nieuwe productie aan";
+            menuButton47.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton47.CombineImage = null;
+            menuButton47.CombineScale = 1.5D;
+            menuButton47.ContextMenu = null;
+            menuButton47.Enabled = true;
+            menuButton47.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton47.Image")));
+            menuButton47.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton47.Index = 1;
+            menuButton47.Name = "xopenproductie";
+            menuButton47.Text = "Open Productie";
+            menuButton47.Tooltip = "Open productie vanuit een pdf";
+            menuButton48.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton48.CombineImage = global::ProductieManager.Properties.Resources.lightning_weather_storm_2781;
+            menuButton48.CombineScale = 1.25D;
+            menuButton48.ContextMenu = null;
+            menuButton48.Enabled = true;
+            menuButton48.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton48.Image")));
+            menuButton48.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton48.Index = 2;
+            menuButton48.Name = "xquickproductie";
+            menuButton48.Text = "Simpel Productie";
+            menuButton48.Tooltip = "Maak een nieuwe simpele productie";
+            menuButton49.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton49.CombineImage = global::ProductieManager.Properties.Resources.search_locate_find_6278;
+            menuButton49.CombineScale = 1.5D;
+            menuButton49.ContextMenu = null;
+            menuButton49.Enabled = true;
+            menuButton49.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton49.Image")));
+            menuButton49.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton49.Index = 3;
+            menuButton49.Name = "xSearchTekening";
+            menuButton49.Text = "Zoek WerkTekening";
+            menuButton49.Tooltip = "Zoek een werktekening o.b.v een artikelnr (Ctrl+T)";
+            menuButton50.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton50.CombineImage = null;
+            menuButton50.CombineScale = 1.5D;
+            menuButton50.ContextMenu = null;
+            menuButton50.Enabled = true;
+            menuButton50.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton50.Image")));
+            menuButton50.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton50.Index = 4;
+            menuButton50.Name = "xchangeaantal";
+            menuButton50.Text = "Aantal Gemaakt";
+            menuButton50.Tooltip = "Wijzig aantal gemaakt van alle actieve werkplaatsen";
+            menuButton51.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton51.CombineImage = null;
+            menuButton51.CombineScale = 1.5D;
+            menuButton51.ContextMenu = null;
+            menuButton51.Enabled = true;
+            menuButton51.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton51.Image")));
+            menuButton51.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton51.Index = 5;
+            menuButton51.Name = "xwerkplaatsindeling";
+            menuButton51.Text = "Personeel Indeling";
+            menuButton51.Tooltip = "Beheer personeel leden en hun producties";
+            menuButton52.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton52.CombineImage = null;
+            menuButton52.CombineScale = 1.5D;
+            menuButton52.ContextMenu = null;
+            menuButton52.Enabled = true;
+            menuButton52.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton52.Image")));
+            menuButton52.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton52.Index = 6;
+            menuButton52.Name = "xverbruik";
+            menuButton52.Text = "Bereken Verbruik";
+            menuButton52.Tooltip = "Bereken verbruik";
+            menuButton53.AccesLevel = Rpm.Various.AccesType.ProductieAdvance;
+            menuButton53.CombineImage = null;
+            menuButton53.CombineScale = 1.5D;
+            menuButton53.ContextMenu = null;
+            menuButton53.Enabled = true;
+            menuButton53.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton53.Image")));
+            menuButton53.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton53.Index = 7;
+            menuButton53.Name = "xupdateforms";
+            menuButton53.Text = "Update Formulieren";
+            menuButton53.Tooltip = "Update producties vanuit een folder met ProductieFormulieren pdfs";
+            menuButton54.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton54.CombineImage = null;
+            menuButton54.CombineScale = 1.5D;
+            menuButton54.ContextMenu = null;
+            menuButton54.Enabled = true;
+            menuButton54.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton54.Image")));
+            menuButton54.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton54.Index = 8;
+            menuButton54.Name = "xcreateexcel";
+            menuButton54.Text = "Excel Overzicht";
+            menuButton54.Tooltip = "Maak excel overzicht";
+            menuButton55.AccesLevel = Rpm.Various.AccesType.ProductieAdvance;
+            menuButton55.CombineImage = null;
+            menuButton55.CombineScale = 1.5D;
+            menuButton55.ContextMenu = null;
+            menuButton55.Enabled = true;
+            menuButton55.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton55.Image")));
+            menuButton55.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton55.Index = 9;
+            menuButton55.Name = "xupdatedb";
+            menuButton55.Text = "Update Database";
+            menuButton55.Tooltip = "Update database vanuit adere locaties";
+            menuButton56.AccesLevel = Rpm.Various.AccesType.ProductieAdvance;
+            menuButton56.CombineImage = null;
+            menuButton56.CombineScale = 1.5D;
+            menuButton56.ContextMenu = null;
+            menuButton56.Enabled = true;
+            menuButton56.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton56.Image")));
+            menuButton56.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton56.Index = 10;
+            menuButton56.Name = "xlaaddb";
+            menuButton56.Text = "Laad Database";
+            menuButton56.Tooltip = "Laad een andere database";
+            menuButton57.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton57.CombineImage = null;
+            menuButton57.CombineScale = 1.5D;
+            menuButton57.ContextMenu = null;
+            menuButton57.Enabled = true;
+            menuButton57.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton57.Image")));
+            menuButton57.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton57.Index = 11;
+            menuButton57.Name = "xstats";
+            menuButton57.Text = "Toon Statistieken";
+            menuButton57.Tooltip = "Toon statistieken van de afgelopen periode";
+            menuButton58.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton58.CombineImage = null;
+            menuButton58.CombineScale = 1.5D;
+            menuButton58.ContextMenu = null;
+            menuButton58.Enabled = true;
+            menuButton58.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton58.Image")));
+            menuButton58.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton58.Index = 12;
+            menuButton58.Name = "xroostermenubutton";
+            menuButton58.Text = "WerkRooster";
+            menuButton58.Tooltip = "Kies Werkrooster";
+            menuButton59.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton59.CombineImage = null;
+            menuButton59.CombineScale = 1.5D;
+            menuButton59.ContextMenu = null;
+            menuButton59.Enabled = false;
+            menuButton59.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton59.Image")));
+            menuButton59.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton59.Index = 13;
+            menuButton59.Name = "xspecialeroosterbutton";
+            menuButton59.Text = "Speciale Roosters";
+            menuButton59.Tooltip = "Beheer speciale roosters";
+            menuButton60.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton60.CombineImage = global::ProductieManager.Properties.Resources.play_button_icon_icons_com_60615;
+            menuButton60.CombineScale = 1.5D;
+            menuButton60.ContextMenu = null;
+            menuButton60.Enabled = true;
+            menuButton60.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton60.Image")));
+            menuButton60.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton60.Index = 14;
+            menuButton60.Name = "xopenproducties";
+            menuButton60.Text = "Gestart Producties";
+            menuButton60.Tooltip = "Open alle gestarte producties";
             this.mainMenu1.MenuButtons = new Various.MenuButton[] {
-        menuButton1,
-        menuButton2,
-        menuButton3,
-        menuButton4,
-        menuButton5,
-        menuButton6,
-        menuButton7,
-        menuButton8,
-        menuButton9,
-        menuButton10,
-        menuButton11,
-        menuButton12,
-        menuButton13,
-        menuButton14,
-        menuButton15};
+        menuButton46,
+        menuButton47,
+        menuButton48,
+        menuButton49,
+        menuButton50,
+        menuButton51,
+        menuButton52,
+        menuButton53,
+        menuButton54,
+        menuButton55,
+        menuButton56,
+        menuButton57,
+        menuButton58,
+        menuButton59,
+        menuButton60};
             this.mainMenu1.Name = "mainMenu1";
-            this.mainMenu1.Size = new System.Drawing.Size(40, 533);
+            this.mainMenu1.Size = new System.Drawing.Size(40, 538);
             this.mainMenu1.TabIndex = 27;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
             // 
@@ -928,7 +926,7 @@ namespace Controls
             this.Controls.Add(this.panel6);
             this.DoubleBuffered = true;
             this.Name = "ProductieView";
-            this.Size = new System.Drawing.Size(1167, 630);
+            this.Size = new System.Drawing.Size(1121, 626);
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
             this.xToolButtons.ResumeLayout(false);

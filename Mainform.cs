@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Various;
+using WeifenLuo.WinFormsUI.Docking;
 using Timer = System.Windows.Forms.Timer;
 
 namespace ProductieManager
@@ -42,7 +43,7 @@ namespace ProductieManager
         public void UpdateTitle()
         {
             string xuser = Manager.LogedInGebruiker == null ? "Niet Ingelogd" : $"Ingelogd als: {Manager.LogedInGebruiker.Username}";
-            MainAppTitle = $"Productie Manager Versie {ProductVersion} {xuser}";
+            MainAppTitle = $"ProductieManager Versie {ProductVersion} {xuser}";
             xstatuslabel.Text = $@"Database: {Manager.AppRootPath}";
         }
         /// <summary>
@@ -529,6 +530,7 @@ namespace ProductieManager
 
 
                 this.SetLastInfo();
+                productieView1.SaveLayouts();
                 Manager.DefaultSettings?.SaveAsDefault();
                 Manager.OnSettingsChanged -= ProductieView1_OnSettingsChanged;
                 Manager.OnManagerLoaded -= _manager_OnManagerLoaded;

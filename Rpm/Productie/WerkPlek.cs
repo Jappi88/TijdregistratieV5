@@ -379,6 +379,12 @@ namespace Rpm.Productie
                 var gemaakt = GetAantalGemaakt(bereik.Start, bereik.Stop, ref xtijd, false);
 
                 var pu = xtijd > 0 && gemaakt > 0 ? gemaakt / xtijd : 0;
+                if (Werk is {IsBemand: true})
+                {
+                    var xcount = Personen.Count;
+                    if (xcount > 0)
+                        pu /= xcount;
+                }
                 return Math.Round(pu, 0);
             }
 

@@ -206,7 +206,7 @@ namespace Forms
         {
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
             Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
-            productieListControl1.SaveColumns(true, Manager.Opties,false);
+            productieListControl1.SaveColumns(true);
             productieListControl1.DetachEvents();
         }
 

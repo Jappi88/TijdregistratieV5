@@ -154,11 +154,12 @@ namespace Controls
 
                 _manager.InitManager();
                 //xproductieListControl1.InitProductie(false, true, true, true, false, false);
-                xbewerkingListControl.InitProductie(true, true, true, true, false, false);
+                
                 takenManager1.InitManager();
                 werkPlekkenUI1.InitUI(_manager);
                 InitEvents();
                 await _manager.Load(path, autologin, true, true);
+                xbewerkingListControl.InitProductie(true, true, true, true, false, false);
                 if (Manager.Opmerkingen != null)
                     Manager.Opmerkingen.OnOpmerkingenChanged += Opmerkingen_OnOpmerkingenChanged;
                 // _manager.StartMonitor();
@@ -304,6 +305,12 @@ namespace Controls
             werkPlekkenUI1.DetachEvents();
             werkPlekkenUI1.OnRequestOpenWerk -= WerkPlekkenUI1_OnRequestOpenWerk;
             werkPlekkenUI1.OnPlekkenChanged -= WerkPlekkenUI1_OnPlekkenChanged;
+        }
+
+        public void SaveLayouts()
+        {
+            xbewerkingListControl.SaveColumns(false);
+            recentGereedMeldingenUI1.productieListControl1.SaveColumns(false);
         }
 
         private void Manager_VerpakkingDeleted(object sender, EventArgs e)

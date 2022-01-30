@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
+using ProductieManager.Rpm.Settings;
 using ICell = NPOI.SS.UserModel.ICell;
 
 // ReSharper disable All
@@ -709,7 +710,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                 {
                     if (xcol.Type == CalculationType.None) continue;
                     //if (handler != null && !handler.Invoke()) return sheet;
-                    cellindex = GetProductieColumnIndex(xcol.Naam);
+                    cellindex = GetProductieColumnIndex(columns, xcol.Naam);
                     if (cellindex == -1) continue;
                     var xss = GetColumnName(cellindex);
                     switch (xcol.Type)
@@ -803,7 +804,7 @@ namespace ProductieManager.Rpm.ExcelHelper
             {
                 naam += $"({producties.Count})";
                 var sheet = workbook.CreateSheet(naam);
-                var xcols = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsExcelSettings && x.IsUsed("ExcelColumns"));
+                var xcols = Manager.ListLayouts?.GetAlleLayouts()?.FirstOrDefault(x => x.IsExcelSettings && x.IsUsed("ExcelColumns"));
                 var arg = new ProgressArg();
                 arg.Type = ProgressType.WriteBussy;
                 arg.Value = workbook;
@@ -956,7 +957,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                     arg.Pogress = xcurindex == 0 ? 0 : (int)((double)(xcurindex / xcols.Columns.Count) * 100);
                     handler?.Invoke(arg);
                     //if (handler != null && !handler.Invoke()) return sheet;
-                    cellindex = GetProductieColumnIndex(xcol.Naam);
+                    cellindex = GetProductieColumnIndex(xcols.Columns, xcol.Naam);
                     if (cellindex == -1) continue;
                     var xss = GetColumnName(cellindex);
                     switch (xcol.Type)
@@ -988,7 +989,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                         sheet.SetColumnWidth(i, xcols.Columns[i].ColumnBreedte * 256);
                     }
                     if (xcols.Columns[i].IsVerborgen)
-                        sheet.SetColumnHidden(GetProductieColumnIndex(xcols.Columns[i].Naam), true);
+                        sheet.SetColumnHidden(GetProductieColumnIndex(xcols.Columns, xcols.Columns[i].Naam), true);
                 }
                 return sheet;
             }
@@ -1012,7 +1013,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                 var formatting = sheet.SheetConditionalFormatting;
                 List<IConditionalFormattingRule> rules = new List<IConditionalFormattingRule>();
                 var states = Enum.GetValues(typeof(ProductieState));
-                var cellindex = GetProductieColumnIndex("status");
+                var cellindex = 0; //GetProductieColumnIndex("status");
                 var xcolname = $"${GetColumnName(cellindex)}${rowindex}";
                 foreach (var state in states.Cast<ProductieState>())
                 {
@@ -1277,12 +1278,11 @@ namespace ProductieManager.Rpm.ExcelHelper
             }
         }
 
-        private static int GetProductieColumnIndex(string naam)
+        private static int GetProductieColumnIndex(List<ExcelColumnEntry> settings, string naam)
         {
-            var xcol = Manager.Opties?.ExcelColumns?.FirstOrDefault(x => x.IsUsed("ExcelColumns") && x.IsExcelSettings);
-            if (xcol == null) return -1;
-            for (var i = 0; i < xcol.Columns.Count; i++)
-                if (string.Equals(xcol.Columns[i].Naam, naam, StringComparison.CurrentCultureIgnoreCase))
+            if (settings == null) return -1;
+            for (var i = 0; i < settings.Count; i++)
+                if (string.Equals(settings[i].Naam, naam, StringComparison.CurrentCultureIgnoreCase))
                     return i;
             return -1;
         }

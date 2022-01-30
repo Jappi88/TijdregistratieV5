@@ -18,7 +18,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using Various;
 using static Forms.RangeCalculatorForm;
 using Comparer = Rpm.Various.Comparer;
@@ -157,7 +156,7 @@ namespace Controls
                         xsearch.TextChanged -= xsearchbox_TextChanged;
                         xsearch.TextChanged += xsearchbox_TextChanged;
                         InitImageList();
-                        InitColumns(Manager.Opties);
+                        InitColumns();
                         IsLoaded = true;
                     }));
                 }
@@ -168,6 +167,41 @@ namespace Controls
 
             if (loadproducties)
                 UpdateProductieList(reload,true);
+        }
+
+        private void UpdateStatusText()
+        {
+            try
+            {
+                string xvalue = "Totaal";
+                var xitems = new List<IProductieBase>();
+                if (ProductieLijst.SelectedObjects.Count > 0)
+                {
+                    xitems = ProductieLijst.SelectedObjects.Cast<IProductieBase>().ToList();
+                    xvalue = "Geselecteerd:";
+                }
+                else if(ProductieLijst.Objects != null)
+                {
+                    xitems = ProductieLijst.Objects.Cast<IProductieBase>().ToList();
+                    xvalue = "Totaal";
+                }
+
+                var x0 = xitems.Count == 1 ? $"({xitems[0].ArtikelNr}){xitems[0].Omschrijving}" : xitems.Count.ToString();
+                var x1 = xitems.Count == 1 ? "" : " producties";
+                var xtijd = xitems.Sum(x => x.TijdGewerkt);
+                var xtotaaltijd = xitems.Sum(x => x.DoorloopTijd);
+                var xpu = xitems.Count > 0? Math.Round(xitems.Sum(x => x.ActueelPerUur) / xitems.Count, 0) : 0;
+                var xgemaakt = xitems.Sum(x => x.TotaalGemaakt);
+                var xtotaal = xitems.Sum(x => x.Aantal);
+                string xret = $"<span color='{Color.Navy.Name}'>" +
+                              $"{xvalue} <b>{x0}</b>{x1}, Gemaakt <b>{xgemaakt}/ {xtotaal}</b>, in <b>{xtijd}/ {xtotaaltijd} uur</b>, met een gemiddelde van <b>{xpu}p/u</b>" +
+                              $"</span>";
+                xStatusLabel.Text = xret;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private void SetButtonEnable()
@@ -192,7 +226,8 @@ namespace Controls
                             if (xbws.Count > 0)
                                 bws.AddRange(xbws);
                         }
-                    else bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToList();
+                    else 
+                        bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToList();
                 }
 
                 if (SelectedItem is Bewerking bw && acces1 && bw.State is ProductieState.Gestart or ProductieState.Gestopt)
@@ -264,7 +299,7 @@ namespace Controls
                 //resetToolStripMenuItem.Visible = Manager.Opties?.Filters?.Any(x =>
                 //    x.IsTempFilter && x.ListNames.Any(s =>
                 //        string.Equals(s, ListName, StringComparison.CurrentCultureIgnoreCase))) ?? false;
-
+                UpdateStatusText();
             }
             catch (Exception e)
             {
@@ -275,7 +310,7 @@ namespace Controls
         public void InitEvents()
         {
             Manager.OnSettingsChanged += _manager_OnSettingsChanged;
-            Manager.OnSettingsChanging += Manager_OnSettingsChanging;
+           // Manager.OnSettingsChanging += Manager_OnSettingsChanging;
             Manager.OnFormulierChanged += _manager_OnFormulierChanged;
             Manager.OnFormulierDeleted += Manager_OnFormulierDeleted;
             //Manager.OnProductiesLoaded += Manager_OnProductiesChanged;
@@ -286,7 +321,7 @@ namespace Controls
             // Manager.OnDbEndUpdate += Manager_OnDbEndUpdate;
             //Manager.OnManagerLoaded += _manager_OnManagerLoaded;
             Manager.FilterChanged += Manager_FilterChanged;
-            Manager.OnColumnsSettingsChanged += Xcols_OnColumnsSettingsChanged;
+            Manager.LayoutChanged += Xcols_OnColumnsSettingsChanged;
         }
 
         private void Manager_OnSettingsChanging(object instance, ref UserSettings settings, ref bool cancel)
@@ -295,7 +330,7 @@ namespace Controls
             {
                 if (this.Disposing || IsDisposed) return;
                 var x = settings;
-                this.Invoke(new Action(() => SaveColumns(false, x, false)));
+                //this.Invoke(new Action(() => SaveColumns(false, x, false)));
             }
             catch (Exception e)
             {
@@ -306,7 +341,7 @@ namespace Controls
         public void DetachEvents()
         {
             Manager.OnSettingsChanged -= _manager_OnSettingsChanged;
-            Manager.OnSettingsChanging -= Manager_OnSettingsChanging;
+            //Manager.OnSettingsChanging -= Manager_OnSettingsChanging;
             Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
             Manager.OnFormulierChanged -= _manager_OnFormulierChanged;
             // Manager.OnProductiesLoaded -= Manager_OnProductiesChanged;
@@ -317,7 +352,7 @@ namespace Controls
             //Manager.OnDbEndUpdate -= Manager_OnDbEndUpdate;
             //Manager.OnManagerLoaded -= _manager_OnManagerLoaded;
             Manager.FilterChanged -= Manager_FilterChanged;
-            Manager.OnColumnsSettingsChanged -= Xcols_OnColumnsSettingsChanged;
+            Manager.LayoutChanged -= Xcols_OnColumnsSettingsChanged;
         }
 
         private bool _iswaiting;
@@ -378,20 +413,22 @@ namespace Controls
             _iswaiting = false;
         }
 
-        public bool SaveColumns(bool savesettings, UserSettings opties, bool raisesettingchanged)
+        public ExcelSettings SaveColumns(bool raiseevent)
         {
-            if (opties == null) return false;
-            opties.ExcelColumns ??= new List<ExcelSettings>();
-            var xcols = opties.ExcelColumns.FirstOrDefault(x =>
-                x.ListNames.Any(listname=> string.Equals(listname, ListName, StringComparison.CurrentCultureIgnoreCase)));
+            if (Manager.ListLayouts == null || Manager.ListLayouts.Disposed)
+                return null;
+            var xlist = Manager.ListLayouts.GetAlleLayouts();
+            var xname = $"{Manager.Opties?.Username}_{ListName}";
+            var xcols = xlist.FirstOrDefault(x =>
+                x.ListNames.Any(listname=> string.Equals(listname, xname, StringComparison.CurrentCultureIgnoreCase)));
             if (xcols == null)
             {
-                xcols = opties.ExcelColumns.FirstOrDefault(x =>
+                xcols = xlist.FirstOrDefault(x =>
                     string.Equals(x.Name, ListName, StringComparison.CurrentCultureIgnoreCase));
                 if (xcols == null)
                 {
                     xcols = new ExcelSettings(ListName, ListName,false);
-                    opties.ExcelColumns.Add(xcols);
+                    Manager.ListLayouts.SaveLayout(xcols, "Nieuwe Lijst Layout Aangemaakt!", raiseevent);
                 }
                 else xcols.SetSelected(true, ListName);
             }
@@ -444,12 +481,8 @@ namespace Controls
             xcols.GroupBy = ProductieLijst.AlwaysGroupByColumn?.AspectName;
             xcols.ShowGroups = ProductieLijst.ShowGroups;
             xcols.Columns = xcols.Columns.OrderBy(x => x.ColumnIndex).ToList();
-            if (raisesettingchanged)
-                Manager.ColumnsSettingsChanged(xcols);
-            //xcols.ReIndexColumns();
-            if (savesettings)
-                opties.Save("Columns Opgeslagen!", false, false, false);
-            return true;
+            Manager.ListLayouts.SaveLayout(xcols, null, raiseevent);
+            return xcols;
         }
 
         private OLVColumn SetColumnsInfo(ref OLVColumn column, ExcelColumnEntry columnEntry)
@@ -546,26 +579,28 @@ namespace Controls
             }
         }
 
-        private void InitColumns(UserSettings settings)
+        private void InitColumns()
         {
             try
             {
-                var xcols = settings?.ExcelColumns?.FirstOrDefault(x =>
-                    x.ListNames.Any(
-                        listname => string.Equals(listname, ListName, StringComparison.CurrentCultureIgnoreCase)));
+                if (Manager.ListLayouts == null || Manager.ListLayouts.Disposed)
+                    return;
+                var xlists = Manager.ListLayouts.GetAlleLayouts().Where(x=> !x.IsExcelSettings).ToList();
+                InitLayoutStrips(xlists);
+                var xcols = xlists?.FirstOrDefault(x => x.IsUsed(ListName));
                 OLVColumn xsort = null;
                 if (xcols == null)
                 {
-                    xcols = settings?.ExcelColumns?.FirstOrDefault(x =>
+                    xcols = xlists?.FirstOrDefault(x =>
                         string.Equals(x.Name, ListName, StringComparison.CurrentCultureIgnoreCase));
                     if (xcols != null)
                     {
                         xcols.SetSelected(true, ListName);
                     }
-                    else if (settings?.ExcelColumns != null)
+                    else
                     {
-                        xcols = ExcelSettings.CreateSettings(ListName,false);
-                        settings.ExcelColumns.Add(xcols);
+                        xcols = ExcelSettings.CreateSettings(ListName,false, xlists);
+                        Manager.ListLayouts.SaveLayout(xcols, "Nieuwe Lijst Layout Aangemaakt!",false);
                     }
                 }
                 if (xcols?.Columns != null)
@@ -661,7 +696,7 @@ namespace Controls
             if (sender is ExcelSettings settings)
             {
                 if (settings.IsUsed(ListName))
-                    this.BeginInvoke(new Action(()=> InitColumns(Manager.Opties)));
+                    this.BeginInvoke(new Action(InitColumns));
             }
         }
 
@@ -1058,7 +1093,8 @@ namespace Controls
                             var index = Producties.IndexOf(form);
                             if (index > -1)
                                 Producties[index] = form;
-                            else Producties.Add(form);
+                            else 
+                                Producties.Add(form);
                         }
 
                         changed = true;
@@ -1111,8 +1147,11 @@ namespace Controls
                 }
 
                 if (changed)
+                {
                     OnItemCountChanged();
-                SetButtonEnable();
+                    SetButtonEnable();
+                }
+
                 return xreturn;
             }
             catch (ObjectDisposedException)
@@ -1311,7 +1350,7 @@ namespace Controls
                     }
                     else
                     {
-                        var bws = ProductieLijst.Objects?.Cast<Bewerking>()?.Where(x =>
+                        var bws = ProductieLijst.Objects?.Cast<Bewerking>().Where(x =>
                             string.Equals(id, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase)).ToArray();
                         if (bws is {Length: > 0})
                         {
@@ -1369,7 +1408,7 @@ namespace Controls
                 BeginInvoke(new MethodInvoker(() =>
                 {
                     if (IsDisposed) return;
-                    InitColumns(settings);
+                    //InitColumns();
                     if (CanLoad)
                         UpdateProductieList(true,true);
                 }));
@@ -2594,6 +2633,114 @@ namespace Controls
 
         #endregion MenuButton Events
 
+        #region LayoutMenuStrip
+        private void LoadLayout(List<ExcelSettings> settings = null)
+        {
+            settings ??= Manager.ListLayouts?.GetAlleLayouts();
+            foreach (var tb in GetLayoutToolstripItems())
+            {
+                if (tb.Tag is ExcelSettings xs)
+                {
+                    tb.Checked = xs.IsUsed(ListName);
+                    tb.Image = tb.Checked
+                        ? Resources.layout_widget_icon_32x32.CombineImage(Resources.check_1582, 1.5) : Resources.layout_widget_icon_32x32;
+                }
+            }
+        }
+
+        public void InitLayoutStrips(List<ExcelSettings> settings = null)
+        {
+            //verwijder alle toegevoegde filters
+            //items = xfiltersStripItem.DropDownItems.Cast<ToolStripItem>().Where(x => x.Tag != null).ToList();
+            //for (int i = 0; i < items.Count; i++)
+            //    xfiltersStripItem.DropDownItems.Remove(items[i]);
+            //Voeg toe alle filters indien mogelijk
+            try
+            {
+                settings ??= Manager.ListLayouts?.GetAlleLayouts();
+                if (settings == null) return;
+                var xitems = GetLayoutToolstripItems();
+                var xremove = xitems.Where(x => x.Tag is ExcelSettings xset &&
+                        !settings.Any(s => string.Equals(s.Name, xset.Name, StringComparison.CurrentCultureIgnoreCase)))
+                    .ToList();
+                foreach (var f in settings)
+                {
+                    var xold = xitems.FirstOrDefault(x =>
+                        x.Tag is ExcelSettings set &&
+                        string.Equals(f.Name, set.Name, StringComparison.CurrentCultureIgnoreCase));
+                    if (xold == null)
+                    {
+                        var xitem = new ToolStripMenuItem(f.Name) {Tag = f};
+                        xitem.ToolTipText = f.Name;
+                        xitem.Checked = f.IsUsed(ListName);
+                        xitem.Image = xitem.Checked
+                            ? Resources.layout_widget_icon_32x32.CombineImage(Resources.check_1582, 1.5) : Resources.layout_widget_icon_32x32;
+                        xBeheerweergavetoolstrip.DropDownItems.Add(xitem);
+                    }
+                    else
+                    {
+                        xold.Tag = f;
+                        xold.ToolTipText = f.Name;
+                        xold.Checked = f.IsUsed(ListName);
+                        xold.Image = xold.Checked
+                            ? Resources.layout_widget_icon_32x32.CombineImage(Resources.check_1582, 1.5) : Resources.layout_widget_icon_32x32;
+                    }
+                    //AddLayoutToolstripItem(f);
+                }
+                xremove.ForEach(x=> xBeheerweergavetoolstrip.DropDownItems.Remove(x));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        private List<ToolStripMenuItem> GetLayoutToolstripItems()
+        {
+            var xret = new List<ToolStripMenuItem>();
+            try
+            {
+                
+                foreach (var xitem in xBeheerweergavetoolstrip.DropDownItems)
+                {
+                    if (xitem is ToolStripMenuItem ts && ts.Tag is ExcelSettings)
+                        xret.Add(ts);
+
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return xret;
+        }
+
+        private void xLayoutStripItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (e.ClickedItem.Tag is ExcelSettings setting)
+            {
+                var enabled = !setting.IsUsed(ListName);
+                if (enabled)
+                {
+                    SaveColumns(false);
+                    var xitems = Manager.ListLayouts?.GetAlleLayouts();
+                    if (xitems == null) return;
+                    xitems.ForEach(x =>
+                    {
+                        x.SetSelected(false, ListName);
+                        Manager.ListLayouts?.SaveLayout(x, null, false);
+                    });
+                }
+                setting.SetSelected(enabled, ListName);
+                Manager.ListLayouts?.SaveLayout(setting, null, false);
+              
+                LoadLayout();
+                InitColumns();
+            }
+        }
+        #endregion LayoutMenuStrip
+
         #region FilterStrip
 
         private void LoadFilter()
@@ -2808,12 +2955,12 @@ namespace Controls
         {
             var xf = new ExcelOptiesForm();
             xf.EnableCalculation = false;
-            SaveColumns(false, Manager.Opties, false);
-            xf.LoadOpties(Manager.Opties, ListName,false);
+            SaveColumns(false);
+            xf.LoadOpties(ListName,false);
             if (xf.ShowDialog() == DialogResult.OK)
             {
-                Manager.UpdateExcelColumns(xf.Settings,false);
-                Manager.Opties.Save($"{ListName} Columns Aangepast!", false, false, true);
+                Manager.UpdateExcelColumns(xf.Settings,true,true,false, new List<string>() { ListName});
+                InitColumns();
             }
         }
 
@@ -2884,7 +3031,7 @@ namespace Controls
             {
                 if (e.Header.Tag is ExcelColumnEntry entry)
                 {
-                    var xset = Manager.Opties.ExcelColumns.FirstOrDefault(x =>
+                    var xset = Manager.ListLayouts?.GetAlleLayouts().FirstOrDefault(x =>
                         x.IsUsed(ListName) && !x.IsExcelSettings);
                     if (xset == null) return;
                     //var xent = xset.Columns.FirstOrDefault(x => x.ColumnIndex == e.NewDisplayIndex);
@@ -2897,7 +3044,7 @@ namespace Controls
                     xset.Columns.Remove(entry);
                     xset.Columns.Insert(e.NewDisplayIndex, entry);
                     entry.ColumnIndex = e.NewDisplayIndex;
-                    SaveColumns(false, Manager.Opties, false);
+                    SaveColumns(false);
                     // Manager.ColumnsSettingsChanged(xset);
                 }
             }
@@ -2910,7 +3057,7 @@ namespace Controls
             if (ProductieLijst.Columns[e.ColumnIndex]?.Tag is ExcelColumnEntry entry)
             {
                 if (entry.ColumnBreedte == e.NewWidth) return;
-                SaveColumns(false, Manager.Opties, false);
+                SaveColumns(false);
                 //var xset = Manager.Opties.ExcelColumns.FirstOrDefault(x =>
                 //    x.IsUsed(ListName) && !x.IsExcelSettings);
                 //if (xset == null) return;

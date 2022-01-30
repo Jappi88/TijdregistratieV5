@@ -1,9 +1,8 @@
 ﻿using ProductieManager.Rpm.ExcelHelper;
+using Rpm.Productie;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Polenter.Serialization;
-using Rpm.Productie;
 
 namespace ProductieManager.Rpm.Settings
 {
@@ -15,29 +14,31 @@ namespace ProductieManager.Rpm.Settings
         public List<string> ListNames { get; set; }
         public DateTime Created { get; set; }
         public List<ExcelColumnEntry> Columns { get; set; }
-        [ExcludeFromSerialization]
-        public bool IsSelected { get; set; }
         public bool ShowGroups { get; set; }
         public string GroupBy { get; set; }
+
         public bool SetSelected(bool selected, string listname)
         {
-            var index = ListNames.IndexOf(listname);
+            var xname = $"{Manager.Opties?.Username}_{listname}";
+            var index = ListNames.IndexOf(xname);
             if (index > -1 && !selected)
-                ListNames.Remove(listname);
+                ListNames.RemoveAt(index);
             else if (index < 0 && selected)
-                ListNames.Add(listname);
+                ListNames.Add(xname);
             return selected;
         }
 
         public bool IsUsed(string lsitname)
         {
             if (ListNames == null) return false;
-            return ListNames.Any(x => string.Equals(x, lsitname, StringComparison.CurrentCultureIgnoreCase));
+            var xname = $"{Manager.Opties?.Username}_{lsitname}";
+            return ListNames.Any(x => string.Equals(x, xname, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public ExcelSettings()
         {
             Created = DateTime.Now;
+            ID = Created.GetHashCode();
             Columns = new List<ExcelColumnEntry>();
             Columns.Add(new ExcelColumnEntry("ArtikelNr") {AutoSize = IsExcelSettings});
             ListNames = new List<string>();
@@ -49,9 +50,10 @@ namespace ProductieManager.Rpm.Settings
 
         public ExcelSettings(string name, string listname, bool isExcel) : this()
         {
+            var xname = $"{Manager.Opties?.Username}_{listname}";
             Name = name;
             IsExcelSettings = isExcel;
-            ListNames = new List<string> {listname};
+            ListNames = new List<string> {xname};
         }
 
         public void ReIndexColumns(bool reorder = false)
@@ -67,13 +69,14 @@ namespace ProductieManager.Rpm.Settings
             }
         }
 
-        public static ExcelSettings CreateSettings(string listname, bool isExcel)
+        public static ExcelSettings CreateSettings(string listname, bool isExcel, List<ExcelSettings> settings = null)
         {
+            if (Manager.ListLayouts == null || Manager.ListLayouts.Disposed)
+                return null;
+            var xlists = settings??Manager.ListLayouts.GetAlleLayouts();
             var xreturn = new ExcelSettings(listname,isExcel);
-            int count = Manager.Opties?.ExcelColumns == null
-                ? 0
-                : Manager.Opties.ExcelColumns.Count(x =>
-                    string.Equals(x.Name, listname, StringComparison.CurrentCultureIgnoreCase));
+            int count = xlists?.Count(x =>
+                string.Equals(x.Name, listname, StringComparison.CurrentCultureIgnoreCase)) ?? 0;
             if (count > 0)
                 xreturn.Name = $@"{listname}[{count}]";
             else
@@ -81,7 +84,6 @@ namespace ProductieManager.Rpm.Settings
             xreturn.Columns = ProductieColumns.Select(x => new ExcelColumnEntry(x)).ToList();
             if(isExcel)
                 xreturn.Columns.ForEach(x=> x.AutoSize = true);
-            xreturn.ID = count;
             xreturn.ReIndexColumns();
             return xreturn;
         }

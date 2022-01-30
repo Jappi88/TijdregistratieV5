@@ -64,7 +64,8 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>9.0</LangVersion>
@@ -169,19 +170,16 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MetroFramework">
-      <HintPath>..\Libraries\MetroFramework.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+    <Reference Include="MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MetroFramework.Design">
-      <HintPath>..\Libraries\MetroFramework.Design.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+    <Reference Include="MetroFramework.Design, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.Design.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MetroFramework.Fonts">
-      <HintPath>..\Libraries\MetroFramework.Fonts.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+    <Reference Include="MetroFramework.Fonts, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.Fonts.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualBasic">
@@ -1241,6 +1239,7 @@
     <Compile Include="Rpm\Mailing\EmailHost.cs" />
     <Compile Include="Rpm\Settings\ExcelSettings.cs" />
     <Compile Include="Rpm\Settings\LastFormScreenInfo.cs" />
+    <Compile Include="Rpm\Settings\ListLayoutBeheer.cs" />
     <Compile Include="Rpm\Settings\UserAccount.cs" />
     <Compile Include="Rpm\Settings\UserSettings.cs" />
     <Compile Include="Rpm\Sporen\SporenBeheer.cs" />
@@ -1847,6 +1846,8 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\extension_file_documents_32x32.png" />
+    <None Include="Resources\layout_widget_icon_32x32.png" />
     <None Include="Resources\WinFormAnimation.dll" />
     <None Include="Resources\WeifenLuo.WinFormsUI.Docking.dll" />
     <None Include="Resources\System.Drawing.Common.dll" />

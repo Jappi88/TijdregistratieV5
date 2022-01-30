@@ -86,9 +86,7 @@ namespace Rpm.Settings
             UpdateDatabaseVersion = "1.0.0.0";
             CreateWeekOverzichten = false;
             DoCurrentWeekOverzicht = false;
-            ExcelColumns = new List<ExcelSettings>();
             var xset = ExcelSettings.CreateSettings("ExcelColumns",true);
-            ExcelColumns.Add(xset);
             WeekOverzichtPath = Manager.WeekOverzichtPath;
             WeekOverzichtUpdateInterval = (5 * 60000); //5min
             VanafWeek = 6;
@@ -152,12 +150,6 @@ namespace Rpm.Settings
             {
                 if (Manager.Database?.AllSettings == null) return false;
                 change ??= $"[{Username}] Instellingen Opgeslagen";
-                if (string.Equals(Manager.Opties?.Username, Username, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    foreach (var selected in ExcelColumns)
-                        Manager.ColumnsSettingsChanged(selected);
-                }
-
                 if (await Manager.Database.UpSert(this, change,showmessage))
                 {
                     if (triggersaved)
@@ -357,6 +349,7 @@ namespace Rpm.Settings
         public bool CreateWeekOverzichten { get; set; }
         public bool DoCurrentWeekOverzicht { get; set; }
         public int WeekOverzichtUpdateInterval { get; set; }
+        [ExcludeFromSerialization]
         public List<ExcelSettings> ExcelColumns { get; set; }
         public int VanafWeek { get; set; }
         public int VanafJaar { get; set; }

@@ -4,6 +4,7 @@ using Rpm.Productie;
 using Rpm.Various;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -343,24 +344,24 @@ namespace Forms
         private void UpdateStatusLabel()
         {
             var bws = productieListControl1.ProductieLijst.Objects?.Cast<Bewerking>().ToList();
-            var count = bws?.Count ?? 0;
-            if (count > 0 && bws != null)
-            {
-                var x1 = count == 1 ? "resulaat" : "resultaten";
-                var xvalue = $"{count} {x1} gevonden!";
-                var gemaakt = bws.Sum(x => x.AantalGemaakt);
-                var tijd = Math.Round(bws.Sum(x => x.TijdGewerkt), 2);
-                var pu = (int)(tijd > 0 && gemaakt > 0 ? gemaakt / tijd : 0);
-                var x2 = pu == 1 ? "stuk" : "stuks";
-                xvalue += $"\nAantal gemaakt: {gemaakt}.";
-                xvalue += $" in totaal {tijd} uur.";
-                xvalue += $" Dat is gemiddeld {pu} {x2} per uur.";
-                xoutput.Text = xvalue;
-            }
-            else
-            {
-                xoutput.Text = "Geen resultaten gevonden!";
-            }
+            //var count = bws?.Count ?? 0;
+            //if (count > 0 && bws != null)
+            //{
+            //    var x1 = count == 1 ? "resulaat" : "resultaten";
+            //    var xvalue = $"{count} {x1} gevonden!";
+            //    var gemaakt = bws.Sum(x => x.AantalGemaakt);
+            //    var tijd = Math.Round(bws.Sum(x => x.TijdGewerkt), 2);
+            //    var pu = (int)(tijd > 0 && gemaakt > 0 ? gemaakt / tijd : 0);
+            //    var x2 = pu == 1 ? "stuk" : "stuks";
+            //    xvalue += $"\nAantal gemaakt: {gemaakt}.";
+            //    xvalue += $" in totaal {tijd} uur.";
+            //    xvalue += $" Dat is gemiddeld {pu} {x2} per uur.";
+            //    xoutput.Text = xvalue;
+            //}
+            //else
+            //{
+            //    xoutput.Text = "Geen resultaten gevonden!";
+            //}
             if (ShowFilter.Enabled)
             {
                 var xtitle = $"Resultaten voor ";
@@ -372,9 +373,9 @@ namespace Forms
                     xtitle += $"bewerking '{ShowFilter.Bewerking}', ";
                 xtitle = xtitle.TrimEnd(new char[] { ',', ' ' });
                 if (ShowFilter.VanafCheck)
-                    xtitle += $" vanaf {ShowFilter.VanafTime.ToString()}";
+                    xtitle += $" vanaf {ShowFilter.VanafTime.ToString(CultureInfo.InvariantCulture)}";
                 if (ShowFilter.TotCheck)
-                    xtitle += $" t/m {ShowFilter.TotTime.ToString()}";
+                    xtitle += $" t/m {ShowFilter.TotTime.ToString(CultureInfo.InvariantCulture)}";
                 this.Text = xtitle;
             }
             else this.Text = "Zoek producties";
@@ -423,7 +424,7 @@ namespace Forms
         private void RangeCalculatorForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             //Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
-            productieListControl1.SaveColumns(true, Manager.Opties,false);
+            productieListControl1.SaveColumns(true);
             productieListControl1.DetachEvents();
         }
 

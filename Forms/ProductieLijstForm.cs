@@ -83,7 +83,7 @@ namespace Forms
 
         private void StartProductie_FormClosing(object sender, FormClosingEventArgs e)
         {
-            productieListControl1.SaveColumns(false, Manager.Opties,false);
+            productieListControl1.SaveColumns(true);
             productieListControl1.DetachEvents();
             Manager.FilterChanged -= Manager_FilterChanged;
         }

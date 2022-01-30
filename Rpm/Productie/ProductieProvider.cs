@@ -93,6 +93,11 @@ namespace ProductieManager.Rpm.Productie
             Manager.Database?.PersoneelLijst?.MultiFiles?.DisposeSecondayPath();
             Manager.Database?.AllSettings?.MultiFiles?.DisposeSecondayPath();
             Manager.Database?.UserAccounts?.MultiFiles?.DisposeSecondayPath();
+            Manager.ArtikelRecords?.Database?.DisposeSecondayPath();
+            Manager.Verpakkingen?.Database?.DisposeSecondayPath();
+            Manager.SporenBeheer?.Database?.DisposeSecondayPath();
+            Manager.Klachten?.Database?.DisposeSecondayPath();
+            Manager.ListLayouts?.Database?.DisposeSecondayPath();
             FolderSynchronization?.Stop();
         }
 
@@ -205,9 +210,9 @@ namespace ProductieManager.Rpm.Productie
                                     });
                                 break;
                             case DbType.Verpakkingen:
-                                localproductiepath = path2 + $"\\Verpaking";
-                                remoteproductiepath = path1 + $"\\Verpaking";
-                                Manager.Klachten?.Database?.SetSecondaryPath(
+                                localproductiepath = path2 + $"\\Verpakking";
+                                remoteproductiepath = path1 + $"\\Verpakking";
+                                Manager.Verpakkingen?.Database?.SetSecondaryPath(
                                     localproductiepath, new SecondaryManageType[]
                                     {
                                         SecondaryManageType.Write,
@@ -218,6 +223,16 @@ namespace ProductieManager.Rpm.Productie
                                 localproductiepath = path2 + $"\\Sporen";
                                 remoteproductiepath = path1 + $"\\Sporen";
                                 Manager.SporenBeheer?.Database?.SetSecondaryPath(
+                                    localproductiepath, new SecondaryManageType[]
+                                    {
+                                        SecondaryManageType.Write,
+                                        SecondaryManageType.Read
+                                    });
+                                break;
+                            case DbType.LijstLayouts:
+                                localproductiepath = path2 + $"\\LijstLayouts";
+                                remoteproductiepath = path1 + $"\\LijstLayouts";
+                                Manager.ListLayouts?.Database?.SetSecondaryPath(
                                     localproductiepath, new SecondaryManageType[]
                                     {
                                         SecondaryManageType.Write,

@@ -178,6 +178,7 @@
             this.xoffklachtencheckbox = new System.Windows.Forms.CheckBox();
             this.xartikelrecords = new System.Windows.Forms.CheckBox();
             this.xtoondayli = new System.Windows.Forms.CheckBox();
+            this.xSpoorOverzichtCheckbox = new System.Windows.Forms.CheckBox();
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
             this.xroostertab = new System.Windows.Forms.TabPage();
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
@@ -220,7 +221,7 @@
             this.panel11 = new System.Windows.Forms.Panel();
             this.xdatabasetabpage = new System.Windows.Forms.TabPage();
             this.metroPanel4 = new MetroFramework.Controls.MetroPanel();
-            this.xSpoorOverzichtCheckbox = new System.Windows.Forms.CheckBox();
+            this.xlijstlayout = new System.Windows.Forms.CheckBox();
             this.groupBox5.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.xgroupweergave.SuspendLayout();
@@ -1923,7 +1924,7 @@
             this.groupBox6.ForeColor = System.Drawing.Color.Black;
             this.groupBox6.Location = new System.Drawing.Point(754, 60);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(407, 552);
+            this.groupBox6.Size = new System.Drawing.Size(407, 558);
             this.groupBox6.TabIndex = 13;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Alle Instellingen";
@@ -1951,7 +1952,7 @@
             this.xoptielist.Name = "xoptielist";
             this.xoptielist.ShowItemCountOnGroups = true;
             this.xoptielist.ShowItemToolTips = true;
-            this.xoptielist.Size = new System.Drawing.Size(401, 480);
+            this.xoptielist.Size = new System.Drawing.Size(401, 486);
             this.xoptielist.SmallImageList = this.imageList1;
             this.xoptielist.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.xoptielist.TabIndex = 5;
@@ -2004,9 +2005,9 @@
             this.panel3.Controls.Add(this.xsluiten);
             this.panel3.Controls.Add(this.xOpslaan);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 612);
+            this.panel3.Location = new System.Drawing.Point(10, 618);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1151, 48);
+            this.panel3.Size = new System.Drawing.Size(1151, 42);
             this.panel3.TabIndex = 0;
             // 
             // xsluiten
@@ -2400,6 +2401,18 @@
         "rten van de ProductieManager");
             this.xtoondayli.UseVisualStyleBackColor = false;
             // 
+            // xSpoorOverzichtCheckbox
+            // 
+            this.xSpoorOverzichtCheckbox.AutoSize = true;
+            this.xSpoorOverzichtCheckbox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xSpoorOverzichtCheckbox.Location = new System.Drawing.Point(136, 156);
+            this.xSpoorOverzichtCheckbox.Name = "xSpoorOverzichtCheckbox";
+            this.xSpoorOverzichtCheckbox.Size = new System.Drawing.Size(121, 21);
+            this.xSpoorOverzichtCheckbox.TabIndex = 54;
+            this.xSpoorOverzichtCheckbox.Text = "Spoor Overzicht";
+            this.toolTip1.SetToolTip(this.xSpoorOverzichtCheckbox, "Synchroniseer SpoorOverzicht met de offline database");
+            this.xSpoorOverzichtCheckbox.UseVisualStyleBackColor = true;
+            // 
             // metroTabControl1
             // 
             this.metroTabControl1.Controls.Add(this.xroostertab);
@@ -2417,7 +2430,7 @@
             this.metroTabControl1.Name = "metroTabControl1";
             this.metroTabControl1.SelectedIndex = 6;
             this.metroTabControl1.ShowToolTips = true;
-            this.metroTabControl1.Size = new System.Drawing.Size(744, 552);
+            this.metroTabControl1.Size = new System.Drawing.Size(744, 558);
             this.metroTabControl1.TabIndex = 1;
             this.metroTabControl1.Theme = MetroFramework.MetroThemeStyle.Light;
             this.metroTabControl1.UseSelectable = true;
@@ -2500,9 +2513,9 @@
             // xmisctabpage
             // 
             this.xmisctabpage.Controls.Add(this.metroPanel5);
-            this.xmisctabpage.Location = new System.Drawing.Point(4, 38);
+            this.xmisctabpage.Location = new System.Drawing.Point(4, 35);
             this.xmisctabpage.Name = "xmisctabpage";
-            this.xmisctabpage.Size = new System.Drawing.Size(736, 510);
+            this.xmisctabpage.Size = new System.Drawing.Size(736, 513);
             this.xmisctabpage.TabIndex = 4;
             this.xmisctabpage.Text = "Misc";
             this.xmisctabpage.ToolTipText = "Verschillende soort instellingen";
@@ -2532,7 +2545,7 @@
             this.metroPanel5.HorizontalScrollbarSize = 10;
             this.metroPanel5.Location = new System.Drawing.Point(0, 0);
             this.metroPanel5.Name = "metroPanel5";
-            this.metroPanel5.Size = new System.Drawing.Size(736, 510);
+            this.metroPanel5.Size = new System.Drawing.Size(736, 513);
             this.metroPanel5.TabIndex = 7;
             this.metroPanel5.VerticalScrollbar = true;
             this.metroPanel5.VerticalScrollbarBarColor = true;
@@ -2632,7 +2645,7 @@
             this.xsynctabpage.HorizontalScrollbarSize = 10;
             this.xsynctabpage.Location = new System.Drawing.Point(4, 38);
             this.xsynctabpage.Name = "xsynctabpage";
-            this.xsynctabpage.Size = new System.Drawing.Size(736, 510);
+            this.xsynctabpage.Size = new System.Drawing.Size(736, 516);
             this.xsynctabpage.TabIndex = 6;
             this.xsynctabpage.Text = "Productie Sync";
             this.xsynctabpage.VerticalScrollbarBarColor = true;
@@ -2654,13 +2667,14 @@
             this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel9.Location = new System.Drawing.Point(0, 0);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(736, 510);
+            this.panel9.Size = new System.Drawing.Size(736, 516);
             this.panel9.TabIndex = 43;
             // 
             // xofflinedbgroup
             // 
             this.xofflinedbgroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.xofflinedbgroup.Controls.Add(this.xlijstlayout);
             this.xofflinedbgroup.Controls.Add(this.xSpoorOverzichtCheckbox);
             this.xofflinedbgroup.Controls.Add(this.xartikelrecords);
             this.xofflinedbgroup.Controls.Add(this.xoffklachtencheckbox);
@@ -2679,7 +2693,7 @@
             this.xofflinedbgroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xofflinedbgroup.Location = new System.Drawing.Point(3, 319);
             this.xofflinedbgroup.Name = "xofflinedbgroup";
-            this.xofflinedbgroup.Size = new System.Drawing.Size(696, 183);
+            this.xofflinedbgroup.Size = new System.Drawing.Size(679, 212);
             this.xofflinedbgroup.TabIndex = 46;
             this.xofflinedbgroup.TabStop = false;
             this.xofflinedbgroup.Text = "Offline Database Synchronisatie";
@@ -2692,7 +2706,7 @@
             this.label34.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label34.Location = new System.Drawing.Point(277, 21);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(413, 159);
+            this.label34.Size = new System.Drawing.Size(396, 188);
             this.label34.TabIndex = 49;
             this.label34.Text = resources.GetString("label34.Text");
             // 
@@ -2756,7 +2770,7 @@
             this.xproductielijstsyncgroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xproductielijstsyncgroup.Location = new System.Drawing.Point(3, 229);
             this.xproductielijstsyncgroup.Name = "xproductielijstsyncgroup";
-            this.xproductielijstsyncgroup.Size = new System.Drawing.Size(696, 57);
+            this.xproductielijstsyncgroup.Size = new System.Drawing.Size(679, 57);
             this.xproductielijstsyncgroup.TabIndex = 44;
             this.xproductielijstsyncgroup.TabStop = false;
             this.xproductielijstsyncgroup.Text = "Productielijst Synchronisatie";
@@ -2769,7 +2783,7 @@
             this.label25.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label25.Location = new System.Drawing.Point(280, 9);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(416, 48);
+            this.label25.Size = new System.Drawing.Size(399, 48);
             this.label25.TabIndex = 48;
             this.label25.Text = "Hiermee kan je bepalen om de hoeveel minuten je de lijst weergave van de producti" +
     "es kan laten refreshen.";
@@ -2821,7 +2835,7 @@
             this.xgereedproductiesyncgroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xgereedproductiesyncgroup.Location = new System.Drawing.Point(3, 139);
             this.xgereedproductiesyncgroup.Name = "xgereedproductiesyncgroup";
-            this.xgereedproductiesyncgroup.Size = new System.Drawing.Size(696, 57);
+            this.xgereedproductiesyncgroup.Size = new System.Drawing.Size(679, 57);
             this.xgereedproductiesyncgroup.TabIndex = 42;
             this.xgereedproductiesyncgroup.TabStop = false;
             this.xgereedproductiesyncgroup.Text = "Gereed Productie Synchronisatie";
@@ -2834,7 +2848,7 @@
             this.label24.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label24.Location = new System.Drawing.Point(280, 10);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(416, 44);
+            this.label24.Size = new System.Drawing.Size(399, 44);
             this.label24.TabIndex = 47;
             this.label24.Text = "Hiermee kan je bepalen hoe snel de gereed producties opnieuw worden geladen.";
             // 
@@ -2885,7 +2899,7 @@
             this.xproductiesyncgroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xproductiesyncgroup.Location = new System.Drawing.Point(3, 49);
             this.xproductiesyncgroup.Name = "xproductiesyncgroup";
-            this.xproductiesyncgroup.Size = new System.Drawing.Size(696, 57);
+            this.xproductiesyncgroup.Size = new System.Drawing.Size(679, 57);
             this.xproductiesyncgroup.TabIndex = 38;
             this.xproductiesyncgroup.TabStop = false;
             this.xproductiesyncgroup.Text = "Productie Synchronisatie";
@@ -2898,7 +2912,7 @@
             this.label23.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label23.Location = new System.Drawing.Point(280, 10);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(413, 44);
+            this.label23.Size = new System.Drawing.Size(396, 44);
             this.label23.TabIndex = 37;
             this.label23.Text = "Hiermee kan je bepalen hoe snel de producties refreshen voor de actuele informati" +
     "e.";
@@ -2977,17 +2991,17 @@
             this.metroPanel4.VerticalScrollbarHighlightOnWheel = false;
             this.metroPanel4.VerticalScrollbarSize = 10;
             // 
-            // xSpoorOverzichtCheckbox
+            // xlijstlayout
             // 
-            this.xSpoorOverzichtCheckbox.AutoSize = true;
-            this.xSpoorOverzichtCheckbox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xSpoorOverzichtCheckbox.Location = new System.Drawing.Point(136, 156);
-            this.xSpoorOverzichtCheckbox.Name = "xSpoorOverzichtCheckbox";
-            this.xSpoorOverzichtCheckbox.Size = new System.Drawing.Size(121, 21);
-            this.xSpoorOverzichtCheckbox.TabIndex = 54;
-            this.xSpoorOverzichtCheckbox.Text = "Spoor Overzicht";
-            this.toolTip1.SetToolTip(this.xSpoorOverzichtCheckbox, "Synchroniseer SpoorOverzicht met de offline database");
-            this.xSpoorOverzichtCheckbox.UseVisualStyleBackColor = true;
+            this.xlijstlayout.AutoSize = true;
+            this.xlijstlayout.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xlijstlayout.Location = new System.Drawing.Point(14, 183);
+            this.xlijstlayout.Name = "xlijstlayout";
+            this.xlijstlayout.Size = new System.Drawing.Size(97, 21);
+            this.xlijstlayout.TabIndex = 55;
+            this.xlijstlayout.Text = "Lijst Layouts";
+            this.toolTip1.SetToolTip(this.xlijstlayout, "Synchroniseer de Lijst Layouts met de offline database");
+            this.xlijstlayout.UseVisualStyleBackColor = true;
             // 
             // Opties
             // 
@@ -3286,5 +3300,6 @@
         private System.Windows.Forms.CheckBox xartikelrecords;
         private System.Windows.Forms.CheckBox xtoondayli;
         private System.Windows.Forms.CheckBox xSpoorOverzichtCheckbox;
+        private System.Windows.Forms.CheckBox xlijstlayout;
     }
 }

@@ -521,17 +521,13 @@ namespace Controls
             }
             else
             {
-                if (Width <= 40)
+                if (Width <= 50)
                 {
-                    if (collapse)
-                        Width = 650;
-                    else Width = 38;
+                    Width = collapse ? 650 : 38;
                 }
                 else
                 {
-                    if (collapse)
-                        Width = 38;
-                    else Width = 650;
+                    Width = collapse ? 38 : 650;
                 }
             }
             UpdateStatus();

@@ -45,6 +45,7 @@ namespace Rpm.Productie
         public static VerpakkingBeheer Verpakkingen { get; private set; }
         public static SporenBeheer SporenBeheer { get; private set; }
         public static KlachtBeheer Klachten { get; private set; }
+        public static ListLayoutBeheer ListLayouts { get; private set; }
         /// <summary>
         /// De productiechat
         /// </summary>
@@ -277,6 +278,10 @@ namespace Rpm.Productie
                     SporenBeheer.SpoorChanged += OnSpoorChanged;
                     SporenBeheer.SpoorDeleted += OnSpoorDeleted;
 
+                    ListLayouts = new ListLayoutBeheer(DbPath);
+                    ListLayouts.LayoutChanged += OnLayoutChanged;
+                    ListLayouts.LayoutDeleted += OnLayoutDeleted;
+
                     DbUpdater = new DatabaseUpdater();
                     BackupInfo = BackupInfo.Load();
                     BewerkingenLijst = new BewerkingLijst();
@@ -359,25 +364,39 @@ namespace Rpm.Productie
             return Database.UpSert(account);
         }
 
-        public static int UpdateExcelColumns(UserSettings opties, List<ExcelSettings> settings, bool isExcel)
+        public static int UpdateExcelColumns(List<ExcelSettings> settings, bool overwrite, bool removenotexisting, bool isexcel, List<string> exclude = null)
         {
-            if (opties == null) return -1;
-            if (opties.ExcelColumns == null)
-                opties.ExcelColumns = new List<ExcelSettings>();
-            else
-                opties.ExcelColumns.RemoveAll(x => x.IsExcelSettings == isExcel);
+            if (ListLayouts == null || ListLayouts.Disposed) return -1;
             int xreturn = 0;
             foreach (var xset in settings)
             {
-                xset.IsExcelSettings = isExcel;
-                Opties.ExcelColumns.Add(xset);
+                if (!overwrite)
+                {
+                    bool exist = ListLayouts.Exists(xset.Name);
+                    int cur = 1;
+                    while (exist)
+                    {
+                        var xlast = xset.Name.LastIndexOf('[');
+                        if (xlast > 0)
+                            xset.Name = xset.Name.Substring(0, xlast);
+                        xset.Name += $"[{cur++}]";
+                        exist = ListLayouts.Exists(xset.Name);
+                    }
+                }
+
+                bool raiseevent = exclude == null || !exclude.Any(x => xset.IsUsed(x));
+                if (ListLayouts.SaveLayout(xset, null, raiseevent))
+                    xreturn++;
+            }
+
+            if (removenotexisting)
+            {
+                var xitems = ListLayouts.GetAlleLayouts().Where(x => x.IsExcelSettings == isexcel &&
+                    !settings.Any(s => string.Equals(s.Name, x.Name, StringComparison.CurrentCultureIgnoreCase))).ToList();
+                foreach (var xitem in xitems)
+                    ListLayouts.RemoveLayout(xitem,false);
             }
             return xreturn;
-        }
-
-        public static int UpdateExcelColumns(List<ExcelSettings> settings, bool isExcel)
-        {
-            return UpdateExcelColumns(Opties, settings, isExcel);
         }
 
         /// <summary>
@@ -640,6 +659,11 @@ namespace Rpm.Productie
                 {
                     foreach (var ent in Opties.DbUpdateEntries)
                         ent.LastUpdated = DateTime.MinValue;
+                }
+
+                if (options.ExcelColumns is {Count: > 0})
+                {
+                    UpdateExcelColumns(options.ExcelColumns, false,false,false);
                 }
                 //load files sync instances
                 LoadSyncDirectories();
@@ -1986,13 +2010,6 @@ namespace Rpm.Productie
             FilterChanged?.Invoke(sender,EventArgs.Empty);
         }
 
-        public static event EventHandler OnColumnsSettingsChanged;
-
-        public static void ColumnsSettingsChanged(ExcelSettings settings)
-        {
-            OnColumnsSettingsChanged?.Invoke(settings, EventArgs.Empty);
-        }
-
         /// <summary>
         /// Roep een verzoek op om iets uit te voeren
         /// </summary>
@@ -2022,6 +2039,18 @@ namespace Rpm.Productie
         private static void OnKlachtDeleted(object sender, EventArgs e)
         {
             KlachtDeleted?.Invoke(sender, e);
+        }
+
+        public static event EventHandler LayoutChanged;
+        private static void OnLayoutChanged(object sender, EventArgs e)
+        {
+            LayoutChanged?.Invoke(sender, e);
+        }
+
+        public static event EventHandler LayoutDeleted;
+        private static void OnLayoutDeleted(object sender, EventArgs e)
+        {
+            LayoutDeleted?.Invoke(sender, e);
         }
 
         public static event EventHandler VerpakkingChanged;
@@ -2131,6 +2160,12 @@ namespace Rpm.Productie
             _syncTimer?.Dispose();
             Database?.Dispose();
             ProductieProvider?.Dispose();
+            Opmerkingen = null;
+            Klachten?.Dispose();
+            Verpakkingen?.Dispose();
+            SporenBeheer?.Dispose();
+            ArtikelRecords?.Dispose();
+            ListLayouts?.Dispose();
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -2144,8 +2179,11 @@ namespace Rpm.Productie
             if (_disposed) return;
 
             _fileWatchers = null;
-            Klachten?.Dispose();
             Klachten = null;
+            Verpakkingen = null;
+            SporenBeheer = null;
+            ListLayouts = null;
+            ArtikelRecords = null;
             if (disposing)
                 _safeHandle?.Dispose();
 
@@ -2156,12 +2194,17 @@ namespace Rpm.Productie
         {
             KlachtChanged = null;
             KlachtDeleted = null;
+            SpoorChanged = null;
+            SpoorDeleted = null;
+            VerpakkingChanged = null;
+            VerpakkingDeleted = null;
+            LayoutChanged = null;
+            LayoutDeleted = null;
             OnManagerLoaded = null;
             OnAccountChanged = null;
             OnBewerkingChanged = null;
             OnBewerkingDeleted = null;
             OnProductiesLoaded = null;
-            OnColumnsSettingsChanged = null;
             OnDbBeginUpdate = null;
             OnProductiesLoaded = null;
             OnPersoneelChanged = null;

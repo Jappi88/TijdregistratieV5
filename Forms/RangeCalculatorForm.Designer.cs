@@ -44,7 +44,6 @@ namespace Forms
             this.xwerkplekken = new System.Windows.Forms.ComboBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.xoutput = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.xsluiten = new System.Windows.Forms.Button();
             this.xverwerkb = new System.Windows.Forms.Button();
@@ -73,7 +72,7 @@ namespace Forms
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(20, 60);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(888, 105);
+            this.panel1.Size = new System.Drawing.Size(913, 124);
             this.panel1.TabIndex = 0;
             // 
             // xcriteria
@@ -225,7 +224,7 @@ namespace Forms
             this.pictureBox1.Image = global::ProductieManager.Properties.Resources.FocusEye_img_128_128;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(124, 105);
+            this.pictureBox1.Size = new System.Drawing.Size(124, 124);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
@@ -236,25 +235,14 @@ namespace Forms
             this.imageList1.ImageSize = new System.Drawing.Size(48, 48);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // xoutput
-            // 
-            this.xoutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xoutput.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xoutput.Location = new System.Drawing.Point(5, 3);
-            this.xoutput.Name = "xoutput";
-            this.xoutput.Size = new System.Drawing.Size(595, 51);
-            this.xoutput.TabIndex = 21;
-            // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.xoutput);
             this.panel2.Controls.Add(this.xsluiten);
             this.panel2.Controls.Add(this.xverwerkb);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(20, 473);
+            this.panel2.Location = new System.Drawing.Point(20, 543);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(888, 60);
+            this.panel2.Size = new System.Drawing.Size(913, 46);
             this.panel2.TabIndex = 22;
             // 
             // xsluiten
@@ -263,7 +251,7 @@ namespace Forms
             this.xsluiten.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xsluiten.Location = new System.Drawing.Point(765, 10);
+            this.xsluiten.Location = new System.Drawing.Point(790, 3);
             this.xsluiten.Name = "xsluiten";
             this.xsluiten.Size = new System.Drawing.Size(120, 38);
             this.xsluiten.TabIndex = 2;
@@ -278,7 +266,7 @@ namespace Forms
             this.xverwerkb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xverwerkb.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xverwerkb.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
-            this.xverwerkb.Location = new System.Drawing.Point(606, 10);
+            this.xverwerkb.Location = new System.Drawing.Point(631, 3);
             this.xverwerkb.Name = "xverwerkb";
             this.xverwerkb.Size = new System.Drawing.Size(153, 38);
             this.xverwerkb.TabIndex = 14;
@@ -294,9 +282,9 @@ namespace Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xprogresslabel.BackColor = System.Drawing.Color.White;
             this.xprogresslabel.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xprogresslabel.Location = new System.Drawing.Point(20, 168);
+            this.xprogresslabel.Location = new System.Drawing.Point(23, 259);
             this.xprogresslabel.Name = "xprogresslabel";
-            this.xprogresslabel.Size = new System.Drawing.Size(888, 305);
+            this.xprogresslabel.Size = new System.Drawing.Size(907, 252);
             this.xprogresslabel.TabIndex = 23;
             this.xprogresslabel.Text = "Producties laden...";
             this.xprogresslabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -304,6 +292,7 @@ namespace Forms
             // 
             // productieListControl1
             // 
+            this.productieListControl1.AutoScroll = true;
             this.productieListControl1.BackColor = System.Drawing.Color.White;
             this.productieListControl1.CanLoad = true;
             this.productieListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -311,14 +300,14 @@ namespace Forms
             this.productieListControl1.EnableFiltering = false;
             this.productieListControl1.EnableSync = false;
             this.productieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productieListControl1.IsBewerkingView = false;
+            this.productieListControl1.IsBewerkingView = true;
             this.productieListControl1.ListName = "RangeBewerkingLijst";
-            this.productieListControl1.Location = new System.Drawing.Point(20, 165);
+            this.productieListControl1.Location = new System.Drawing.Point(20, 184);
             this.productieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.productieListControl1.Name = "productieListControl1";
             this.productieListControl1.RemoveCustomItemIfNotValid = false;
             this.productieListControl1.SelectedItem = null;
-            this.productieListControl1.Size = new System.Drawing.Size(888, 308);
+            this.productieListControl1.Size = new System.Drawing.Size(913, 359);
             this.productieListControl1.TabIndex = 23;
             this.productieListControl1.ValidHandler = null;
             // 
@@ -326,7 +315,7 @@ namespace Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(928, 553);
+            this.ClientSize = new System.Drawing.Size(953, 609);
             this.Controls.Add(this.xprogresslabel);
             this.Controls.Add(this.productieListControl1);
             this.Controls.Add(this.panel2);
@@ -364,7 +353,6 @@ namespace Forms
         private System.Windows.Forms.ComboBox xwerkplekken;
         private System.Windows.Forms.Button xsluiten;
         private System.Windows.Forms.ImageList imageList1;
-        private System.Windows.Forms.Label xoutput;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label xprogresslabel;
         private Controls.ProductieListControl productieListControl1;

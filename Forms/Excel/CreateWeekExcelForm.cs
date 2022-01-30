@@ -26,17 +26,6 @@ namespace Forms.Excel
             xjaar.Value = DateTime.Now.Year;
         }
 
-        private void button1_Click(object sender, System.EventArgs e)
-        {
-            var xf = new ExcelOptiesForm();
-            xf.LoadOpties(Manager.Opties, "ExcelColumns", true);
-            if (xf.ShowDialog() == DialogResult.OK)
-            {
-                Manager.UpdateExcelColumns(xf.Settings, true);
-                Manager.Opties.Save("ExcelColumns Aangepast!", false, false, true);
-            }
-        }
-
         private async void xOpslaan_Click(object sender, System.EventArgs e)
         {
             if (IsRunning())

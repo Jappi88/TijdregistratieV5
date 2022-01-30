@@ -19,7 +19,7 @@ namespace ProductieManager.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -842,6 +842,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap extension_file_documents_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("extension_file_documents_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap external_3431 {
             get {
                 object obj = ResourceManager.GetObject("external_3431", resourceCulture);
@@ -1371,6 +1381,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap key_skills {
             get {
                 object obj = ResourceManager.GetObject("key-skills", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap layout_widget_icon_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("layout_widget_icon_32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

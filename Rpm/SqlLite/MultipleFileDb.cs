@@ -36,6 +36,7 @@ namespace Rpm.SqlLite
         public event FileSystemEventHandler SecondaryFileDeleted;
         public event ProgressChangedHandler ProgressChanged;
         public bool MonitorCorrupted { get; set; }
+        public bool RaiseChangeEvent { get; set; } = true;
         public static List<string> CorruptedFilePaths { get; private set; } = new List<string>();
 
         public static event EventHandler CorruptedFilesChanged;
@@ -135,6 +136,7 @@ namespace Rpm.SqlLite
         private void _pathwatcher_Changed(object sender, FileSystemEventArgs e)
         {
             if (!_canread) return;
+            if (!RaiseChangeEvent) return;
             _FileChangedNotifyTimer?.Stop();
             var rpath = GetReadPath(true).ToLower();
             if (!e.FullPath.ToLower().StartsWith(rpath)) return;
@@ -163,6 +165,7 @@ namespace Rpm.SqlLite
         private void _secondarypathwatcher_Changed(object sender, FileSystemEventArgs e)
         {
             if (!_canread) return;
+            if (!RaiseChangeEvent) return;
             _FileChangedNotifyTimer?.Stop();
             var rpath = GetReadPath(true).ToLower();
             if (!e.FullPath.ToLower().StartsWith(rpath)) return;
