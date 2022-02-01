@@ -302,8 +302,8 @@ namespace Forms
                     }
                     else if (!EditMode && wp.Personen.Any(x => string.Equals(x.PersoneelNaam, xpers.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase)))
                     {
-                        if (XMessageBox.Show($"{xpers.PersoneelNaam} is al toegevoegd op {wp.Naam}...\n\n" +
-                           $"Zou je {xpers.PersoneelNaam} willen overschrijven?", $"{xpers.PersoneelNaam} bestaat al!",
+                        if (XMessageBox.Show(this, $"{xpers.PersoneelNaam} is al toegevoegd op {wp.Naam}...\n\n" +
+                                                   $"Zou je {xpers.PersoneelNaam} willen overschrijven?", $"{xpers.PersoneelNaam} bestaat al!",
                            MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                             continue;
                     }

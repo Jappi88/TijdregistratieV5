@@ -225,24 +225,24 @@ namespace Forms
         private void xok_Click(object sender, EventArgs e)
         {
             if (xnaammelder.Text.Trim().Replace(" ", "").Length < 3)
-                XMessageBox.Show("Ongeldige melder naam!\n\nVul in een geldige naam en probeer het opnieuw.",
+                XMessageBox.Show(this, $"Ongeldige melder naam!\n\nVul in een geldige naam en probeer het opnieuw.",
                     "Ongeldige Naam", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else if (xsoortstoringen.Text.Trim().Replace(" ", "").Length < 4)
-                XMessageBox.Show("Ongeldige onderbreking type!\n\nVul in een geldige type en probeer het opnieuw.",
+                XMessageBox.Show(this, $"Ongeldige onderbreking type!\n\nVul in een geldige type en probeer het opnieuw.",
                     "Ongeldige Type", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else if (MustEditTextFields() && xomschrijving.Text.Trim().Replace(" ", "").Length < 4)
-                XMessageBox.Show("Ongeldige omschrijving!\n\nVul in een geldige omschrijving en probeer het opnieuw.",
+                XMessageBox.Show(this, $"Ongeldige omschrijving!\n\nVul in een geldige omschrijving en probeer het opnieuw.",
                     "Ongeldige Omschrijving", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else if (Onderbreking.IsVerholpen && xnaambeeindiger.Text.Trim().Replace(" ", "").Length < 3)
                 XMessageBox.Show(
-                    "Ongeldige beëindiger naam!\n\nVul in een geldige naam in van diegene die het heeft verholpen en probeer het opnieuw.",
+                    this,"Ongeldige beëindiger naam!\n\nVul in een geldige naam in van diegene die het heeft verholpen en probeer het opnieuw.",
                     "Ongeldige Naam", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else if (Onderbreking.IsVerholpen && MustEditTextFields() && xactie.Text.Trim().Replace(" ", "").Length < 4)
-                XMessageBox.Show(
+                XMessageBox.Show(this,
                     "Ongeldige actie omschrijving!\n\nVul in een geldige actie omschrijving en probeer het opnieuw.",
                     "Ongeldige omschrijving", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else if(Onderbreking.IsVerholpen && Onderbreking.GetTotaleTijd() <= 0)
-                XMessageBox.Show(
+                XMessageBox.Show(this,
                     "Onderbreking is verholpen, maar de totale tijd is 0 uur...\n" +
                     "Vul in een geldige tijd en probeer het opnieuw",
                     "Ongeldige Tijd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);

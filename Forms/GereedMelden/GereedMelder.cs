@@ -78,7 +78,7 @@ namespace Forms.GereedMelden
 
         private void MeldGereed()
         {
-            if (DoCheck() && XMessageBox.Show(Melding,
+            if (DoCheck() && XMessageBox.Show(this,Melding,
                 "Gereed Melden",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
@@ -115,7 +115,7 @@ namespace Forms.GereedMelden
                     {
                         var x0 = xcombies.Count == 1 ? "is" : "zijn";
                         var x1 = xcombies.Count == 1 ? "productie" : "producties";
-                        var result = XMessageBox.Show($"Er {x0} {xcombies.Count} gecombineerde {x1}...\n\n" +
+                        var result = XMessageBox.Show(this, $"Er {x0} {xcombies.Count} gecombineerde {x1}...\n\n" +
                                                       $"Wil je die ook gereedmelden?", "Gereed Melden",
                             MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                         if (result == DialogResult.Cancel) return;
@@ -169,14 +169,14 @@ namespace Forms.GereedMelden
             _prod.AantalGemaakt = (int)xaantal.Value;
             if ((_prod.TotaalGemaakt) <= 0 && xaantal.Value == 0)
             {
-                XMessageBox.Show("Je aantal kan niet 0 zijn!\nJe kan minstins maar 1 product gereedmelden",
+                XMessageBox.Show(this, $"Je aantal kan niet 0 zijn!\nJe kan minstins maar 1 product gereedmelden",
                     "Ongeldig Aantal", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
 
             if (string.IsNullOrEmpty(xparaaf.Text) || string.IsNullOrWhiteSpace(xparaaf.Text))
             {
-                XMessageBox.Show("Paraaf kan niet leeg zijn!\nVul eerst een geldige paraaf in en probeer het opnieuw.",
+                XMessageBox.Show(this, $"Paraaf kan niet leeg zijn!\nVul eerst een geldige paraaf in en probeer het opnieuw.",
                     "Ongeldig Naam", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
@@ -270,13 +270,35 @@ namespace Forms.GereedMelden
                     var xbw = changedform.Bewerkingen.FirstOrDefault(x =>
                         string.Equals(x.Naam, bew.Naam, StringComparison.CurrentCultureIgnoreCase));
                     if (xbw != null)
-                        _prod = xbw.CreateCopy();
+                    {
+                        lock (_prod)
+                        {
+                            _prod = xbw.CreateCopy();
+                            _prod.GereedNote = new NotitieEntry(Notitie, _prod);
+                            if (_prod.AantalGemaakt != (int) xaantal.Value)
+                            {
+                                _prod.AantalGemaakt = (int) xaantal.Value;
+                                _ = _prod.Update(null, false, false);
+                            }
+                        }
+                    }
+                    
                 }
                 else
-                    _prod = changedform.CreateCopy();
-                _prod.GereedNote = new NotitieEntry(Notitie, _prod);
-                if (_prod.AantalGemaakt != (int)xaantal.Value)
-                    _prod.AantalGemaakt = (int)xaantal.Value;
+                {
+                    lock (_prod)
+                    {
+                        _prod = changedform.CreateCopy();
+                        _prod.GereedNote = new NotitieEntry(Notitie, _prod);
+                        if (_prod.AantalGemaakt != (int) xaantal.Value)
+                        {
+                            _prod.AantalGemaakt = (int) xaantal.Value;
+                            _ = _prod.Update(null, false, false).Result;
+                        }
+                    }
+                }
+
+               
                 SetString();
             }
             catch (Exception e)
@@ -315,7 +337,7 @@ namespace Forms.GereedMelden
                 int aantal = (int)xaantal.Value;
                 if (aantal == 0)
                 {
-                    XMessageBox.Show("Je kan niet 0 gereedmelden!\nAantal moet minimaal 1 zijn.",
+                    XMessageBox.Show(this, $"Je kan niet 0 gereedmelden!\nAantal moet minimaal 1 zijn.",
                         "Ongeldige Aantal",
                         MessageBoxIcon.Exclamation);
                     return;
@@ -332,7 +354,7 @@ namespace Forms.GereedMelden
                    bttns.Add("Annuleren", DialogResult.Cancel);
                    bttns.Add("Gereedmelden", DialogResult.Yes);
                    bttns.Add("Deels Gereedmelden", DialogResult.OK);
-                   var xresult = XMessageBox.Show(xmsg1, "Gereed Melden", MessageBoxButtons.YesNoCancel,
+                   var xresult = XMessageBox.Show(this, xmsg1, "Gereed Melden", MessageBoxButtons.YesNoCancel,
                        MessageBoxIcon.Question, null, bttns);
                    if (xresult == DialogResult.Cancel) return;
                    if (xresult == DialogResult.Yes)
@@ -347,7 +369,7 @@ namespace Forms.GereedMelden
                     int temaken = bew.Aantal >= totaal ? bew.Aantal - totaal : 0;
                     xmsg += "Weetje zeker dat je dat wilt doen?\n" +
                             $"Je zal dan totaal {totaal} stuks deels hebben gereed gemeld, en {temaken} om nog te maken\n";
-                    if (XMessageBox.Show(xmsg, "Gereed Melden", MessageBoxButtons.YesNo,
+                    if (XMessageBox.Show(this,xmsg, "Gereed Melden", MessageBoxButtons.YesNo,
                         MessageBoxIcon.Warning) == DialogResult.No) return;
                 }
                 var wps = bew.WerkPlekken.Select(x => x.Naam).ToList();

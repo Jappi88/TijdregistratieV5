@@ -397,7 +397,7 @@ namespace Controls
             {
                 var xvalue = count == 1 ? "onderbreking" : "onderbrekeningen";
                 if (XMessageBox.Show(
-                    $"Je staat op de punt om {count} {xvalue} te verwijderen!\n\nWeet je zeker dat je dat wilt doen?\nClick op 'Nee' om te annuleren.",
+                        this, $"Je staat op de punt om {count} {xvalue} te verwijderen!\n\nWeet je zeker dat je dat wilt doen?\nClick op 'Nee' om te annuleren.",
                     "Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     DisableEvents();
@@ -426,7 +426,7 @@ namespace Controls
                     if (removed > 0)
                         ListItems();
                     else
-                        XMessageBox.Show($"Het is niet gelukt om de geselecteerde {xvalue} te verwijderen.", "Mislukt",
+                        XMessageBox.Show(this, $"Het is niet gelukt om de geselecteerde {xvalue} te verwijderen.", "Mislukt",
                             MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                     EnableEvents();

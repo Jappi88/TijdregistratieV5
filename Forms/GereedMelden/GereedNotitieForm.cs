@@ -155,7 +155,7 @@ namespace Forms.GereedMelden
                     }
                     if (xmaterialen.Items.Count > 0 && xselected.Count == 0)
                     {
-                        XMessageBox.Show("Selecteer de materialen die op zijn a.u.b", "Selecteer Materialen", MessageBoxIcon.Warning);
+                        XMessageBox.Show(this, $"Selecteer de materialen die op zijn a.u.b", "Selecteer Materialen", MessageBoxIcon.Warning);
                         return;
                     }
                     Reden = $"Materialen zijn op: {string.Join(", ", xselected)}";
@@ -168,21 +168,21 @@ namespace Forms.GereedMelden
                 {
                     if(string.IsNullOrEmpty(xredentextbox.Text.Trim()) || xredentextbox.Text.Length < 8)
                     {
-                        XMessageBox.Show("Vul in een geldige reden waarom je de productie eerder wilt afsluiten.", "Vul in een geldige reden", MessageBoxIcon.Warning);
+                        XMessageBox.Show(this, $"Vul in een geldige reden waarom je de productie eerder wilt afsluiten.", "Vul in een geldige reden", MessageBoxIcon.Warning);
                         return;
                     }
                     Reden = xredentextbox.Text.Trim();
                 }
                 else
                 {
-                    XMessageBox.Show("Kies een reden waarom je de productie eerder wilt afsluiten.", "Kies een reden", MessageBoxIcon.Warning);
+                    XMessageBox.Show(this, $"Kies een reden waarom je de productie eerder wilt afsluiten.", "Kies een reden", MessageBoxIcon.Warning);
                     return;
                 }
                 DialogResult = DialogResult.OK;
             }
             catch (Exception ex)
             {
-                XMessageBox.Show(ex.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, ex.Message, "Fout", MessageBoxIcon.Error);
             }
 
         }

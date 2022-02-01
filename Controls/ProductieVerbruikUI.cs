@@ -351,7 +351,7 @@ namespace Controls
             }
             catch (Exception exception)
             {
-                XMessageBox.Show(exception.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -467,7 +467,7 @@ namespace Controls
             }
             catch (Exception exception)
             {
-                XMessageBox.Show(exception.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -580,12 +580,12 @@ namespace Controls
             {
                 var x1 = xproduceren.Value == 1 ? "product" : "producten";
                 XMessageBox.Show(
-                    $"Met {xproduceren.Value} {x1} eindig je al op een volle pakket en een volle lading.");
+                    this, $"Met {xproduceren.Value} {x1} eindig je al op een volle pakket en een volle lading.");
                 return;
             }
 
             var xform = new XMessageBox();
-            var dlg = xform.ShowDialog($"Waar wil je de aantal van {xproduceren.Value} producten op afronden?",
+            var dlg = xform.ShowDialog(this, $"Waar wil je de aantal van {xproduceren.Value} producten op afronden?",
                 "Aantal Afronden", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, xselect.ToArray());
             if (dlg == DialogResult.Cancel) return;
             var xs = xform.SelectedValue;

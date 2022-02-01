@@ -301,7 +301,7 @@ namespace ProductieManager.Forms.Aantal.Controls
             double perDiff = actueel.GetPercentageDifference(xnewvalues);
             if (perDiff is < -50 or > 50)
             {
-                var result = XMessageBox.Show(
+                var result = XMessageBox.Show(this,
                     $"Aantal van '{xnewvalues}' wijkt teveel af van {actueel}!\n\n" +
                     $"Dit is berekent op basis van de tempo en je zet er namelijk met {perDiff}% naast!\n\n" +
                     $"Als je echt zeker bent, wil je dan doorgaan met het wijzigen van de aantal?", "Hoge Afwijking", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);

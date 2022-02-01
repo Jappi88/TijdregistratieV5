@@ -59,13 +59,13 @@ namespace ProductieManager.Forms
         {
             if (string.IsNullOrEmpty(value))
             {
-                XMessageBox.Show($"Filter naam kan niet leeg zijn!\n\nVul in een geldige filternaam en probeer het opnieuw.", "Bestaat Al", MessageBoxIcon.Exclamation);
+                XMessageBox.Show(this, $"Filter naam kan niet leeg zijn!\n\nVul in een geldige filternaam en probeer het opnieuw.", "Bestaat Al", MessageBoxIcon.Exclamation);
                 return false;
             }
             if (Filters.Any(x =>
                 string.Equals(x.Name, value, StringComparison.CurrentCultureIgnoreCase)))
             {
-                XMessageBox.Show($"{value} bestaat al!", "Bestaat Al", MessageBoxIcon.Exclamation);
+                XMessageBox.Show(this, $"{value} bestaat al!", "Bestaat Al", MessageBoxIcon.Exclamation);
                 return false;
             }
             return true;
@@ -108,7 +108,7 @@ namespace ProductieManager.Forms
         private void DeleteSelectedFilters()
         {
             if (xfilterlijst.SelectedItems.Count == 0) return;
-            if (XMessageBox.Show("Weetje zeker dat je alle geselecteerde filters wilt verwijderen?!",
+            if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde filters wilt verwijderen?!",
                 "Filters Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
                 var xselected = xfilterlijst.SelectedObjects.Cast<Filter>().ToArray();

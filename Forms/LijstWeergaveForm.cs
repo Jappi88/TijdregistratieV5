@@ -62,7 +62,7 @@ namespace Forms
             if (string.IsNullOrEmpty(txt))
             {
                 XMessageBox.Show(
-                    "Je hebt geen waarde ingevuld om toe te voegen!\nVul in een waarde dat je wilt toevoegen.",
+                    this, "Je hebt geen waarde ingevuld om toe te voegen!\nVul in een waarde dat je wilt toevoegen.",
                     "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
@@ -74,7 +74,7 @@ namespace Forms
                 }
                 else if (values.Any(x => string.Equals(txt, x, StringComparison.CurrentCultureIgnoreCase)))
                 {
-                    XMessageBox.Show($"'{txt}' Bestaat al en kan niet nogmaals worden toegevoegd.", "Bestaat Al",
+                    XMessageBox.Show(this, $"'{txt}' Bestaat al en kan niet nogmaals worden toegevoegd.", "Bestaat Al",
                         MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 else
@@ -92,7 +92,7 @@ namespace Forms
             var values = xlistview.SelectedObjects?.Cast<string>().ToArray();
             if (values == null || values.Length == 0) return;
             var xkey = values.Length == 1 ? values[0] : $"{values.Length} selecties";
-            if (XMessageBox.Show($"Weetje zeker dat je {xkey} wilt verwijderen?", "Verwijderen",
+            if (XMessageBox.Show(this, $"Weetje zeker dat je {xkey} wilt verwijderen?", "Verwijderen",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 xlistview.RemoveObjects(values);

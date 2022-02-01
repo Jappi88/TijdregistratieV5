@@ -24,35 +24,35 @@ namespace Forms
         {
             if (Manager.Database?.UserAccounts == null)
             {
-                XMessageBox.Show("Database is niet geladen!", "Database Niet Geladen", MessageBoxButtons.OK,
+                XMessageBox.Show(this, $"Database is niet geladen!", "Database Niet Geladen", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
             }
             else if (string.IsNullOrWhiteSpace(xgebruikersname.Text) ||
                 xgebruikersname.Text == "Vul in een gebruikersnaam..." || xgebruikersname.Text.Trim().Length == 0)
             {
-                XMessageBox.Show("Vul in een geldige gebruikersnaam", "Ongeldige GebruikersNaam", MessageBoxButtons.OK,
+                XMessageBox.Show(this, $"Vul in een geldige gebruikersnaam", "Ongeldige GebruikersNaam", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
             }
             else if (await Manager.Database.AccountExist(xgebruikersname.Text))
             {
-                XMessageBox.Show($"{xgebruikersname.Text} bestaat al...\nKies andere gebruiksernaam a.u.b",
+                XMessageBox.Show(this, $"{xgebruikersname.Text} bestaat al...\nKies andere gebruiksernaam a.u.b",
                     "Bestaat Al",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (xwachtwoord1.Text.Length < 6)
             {
-                XMessageBox.Show("Wachtwoord is te kort!\nJe wachtwoord moet minimaal 6 characters lang zijn.",
+                XMessageBox.Show(this, $"Wachtwoord is te kort!\nJe wachtwoord moet minimaal 6 characters lang zijn.",
                     "Ongeldige Wachtwoord", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (xwachtwoord1.Text != xwachtwoord2.Text)
             {
                 XMessageBox.Show(
-                    "De twee wachtwoorden komen niet overeen\nControlleer je wachtwoord en probeer het opnieuw.",
+                    this, "De twee wachtwoorden komen niet overeen\nControlleer je wachtwoord en probeer het opnieuw.",
                     "Ongeldige Wachtwoord", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (xtoegangslevel.SelectedIndex == -1)
             {
-                XMessageBox.Show("Vul in de toegangs level en probeer het opnieuw.", "Ongeldige ToegangsLevel",
+                XMessageBox.Show(this, $"Vul in de toegangs level en probeer het opnieuw.", "Ongeldige ToegangsLevel",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else

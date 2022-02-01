@@ -51,7 +51,7 @@ namespace Forms
             if (Productie == null) return false;
             if (Productie.TijdGewerkt <= 0)
             {
-                XMessageBox.Show("Werktijd is nog niet opgelost!\n\n" +
+                XMessageBox.Show(this, $"Werktijd is nog niet opgelost!\n\n" +
                                  "Controlleer de tijdlijnen en de werkrooster.\n" +
                                  "Controlleer of je een speciale rooster hebt toegevoegd als dit een uitzonderlijke werkdag is.",
                     "Controlleer Werktijd", MessageBoxButtons.OK, MessageBoxIcon.Stop);
@@ -59,7 +59,7 @@ namespace Forms
             }
             if (Productie.GetPersonen(true).Length == 0)
             {
-                XMessageBox.Show("Er zijn geen actieve personen!\n\n" +
+                XMessageBox.Show(this, $"Er zijn geen actieve personen!\n\n" +
                                  "Controlleer de indeling of je minstins 1 persoon op actief hebt staan.\n",
                     "Controlleer Indeling", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return false;
@@ -67,7 +67,7 @@ namespace Forms
 
             if (Productie.GetStoringen(true).Length > 0)
             {
-                XMessageBox.Show("Er staat nog 1 of meer onderbrekeningen open.\n\n" +
+                XMessageBox.Show(this, $"Er staat nog 1 of meer onderbrekeningen open.\n\n" +
                                  "Bekijk en lost de onderbrekening op voordat je verder kan.\n",
                     "Controlleer Onderbrekeningen", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return false;
@@ -145,12 +145,12 @@ namespace Forms
         private void xwerktijd_Click(object sender, EventArgs e)
         {
             if (Productie is Bewerking bew)
-                bew.ShowWerktIjden();
+                bew.ShowWerktIjden(this);
             else if(Productie is ProductieFormulier  form)
             {
                 if (form.Bewerkingen == null) return;
                 foreach (var xb in form.Bewerkingen)
-                    xb.ShowWerktIjden();
+                    xb.ShowWerktIjden(this);
             }
         }
 
@@ -169,7 +169,7 @@ namespace Forms
         private void xrooster_Click(object sender, EventArgs e)
         {
             if (Productie is Bewerking bew)
-                bew.DoBewerkingEigenRooster();
+                bew.DoBewerkingEigenRooster(this);
             
         }
     }

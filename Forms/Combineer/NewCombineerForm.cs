@@ -70,7 +70,7 @@ namespace Forms.Combineer
             if (_parent.Combies.Any(x => string.Equals(Path.Combine(x.ProductieNr, x.BewerkingNaam), _productie.Path,
                     StringComparison.CurrentCultureIgnoreCase)))
             {
-                XMessageBox.Show("Kan productie niet combineren omdat het als is gecombineerd...","Bestaat Al", MessageBoxIcon.Exclamation);
+                XMessageBox.Show(this, $"Kan productie niet combineren omdat het als is gecombineerd...","Bestaat Al", MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -79,7 +79,7 @@ namespace Forms.Combineer
             if ((xtotal + gcd) >= 100)
             {
                 var extra = (xtotal + gcd + 1) - 100;
-                XMessageBox.Show($"Er is geen ruimte meer om deze productie te combineren met {gcd}% aan activiteit...\n" +
+                XMessageBox.Show(this, $"Er is geen ruimte meer om deze productie te combineren met {gcd}% aan activiteit...\n" +
                                  $"Je hebt {extra}% meer ingevuld dan wat er gecombineerd kan worden.", "Geen Ruimte", MessageBoxIcon.Exclamation);
                 return;
             }
@@ -89,7 +89,7 @@ namespace Forms.Combineer
             if ((xtotal + gcd) >= 100)
             {
                 var extra = (xtotal + gcd + 1) - 100;
-                XMessageBox.Show($"De gekozen combi heeft al een combinaties van {xtotal}%!\n" +
+                XMessageBox.Show(this, $"De gekozen combi heeft al een combinaties van {xtotal}%!\n" +
                                  $"Je hebt {extra}% meer ingevuld dan wat er gecombineerd kan worden.\n\n" +
                                  $"Als je een productie combineert, dan dient de combinatie de resterede activiteit te kunnen opvangen.", "Geen Ruimte", MessageBoxIcon.Exclamation);
                 return;

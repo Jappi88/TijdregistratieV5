@@ -458,7 +458,7 @@ namespace Forms
     {
         if (xuserlist.SelectedObjects.Count > 0)
             if (XMessageBox.Show(
-                $"Weetje zeker dat je '{string.Join(", ", xuserlist.SelectedObjects.Cast<PersoneelModel>().Select(x => x.Naam))}' gaat verwijderen?",
+                    this, $"Weetje zeker dat je '{string.Join(", ", xuserlist.SelectedObjects.Cast<PersoneelModel>().Select(x => x.Naam))}' gaat verwijderen?",
                 "Verwijder Personeel", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
                 var delete = xuserlist.SelectedObjects.Cast<PersoneelModel>().Select(x => x.PersoneelLid).ToArray();
@@ -478,7 +478,7 @@ namespace Forms
         }
         catch (Exception ex)
         {
-            XMessageBox.Show(ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            XMessageBox.Show(this, ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -492,7 +492,7 @@ namespace Forms
         per.Afdeling = xafdeling.Text.Trim();
         var resort = per.IsUitzendKracht != xisuitzendcheck.Checked && IsAllowed(per);
         per.IsUitzendKracht = xisuitzendcheck.Checked;
-        if (!await Personeel.UpdateKlusjes(per, oldnaam)) return false;
+        if (!await Personeel.UpdateKlusjes(this,per, oldnaam)) return false;
         string change = $"Wijzigingen voor {per.PersoneelNaam} succesvol!";
         bool replace = !string.Equals(oldnaam, xnaam.Text, StringComparison.CurrentCultureIgnoreCase);
         if ((replace && await Manager.Database.Replace(oldnaam, per, change)) ||
@@ -537,7 +537,7 @@ namespace Forms
         {
             var pers = xuserlist.SelectedObjects.Cast<PersoneelModel>().Select(x => x.PersoneelLid).ToArray();
             if (pers.Any(x => x.IsVrij(DateTime.Now)))
-                XMessageBox.Show("Je hebt iemand gekozen die vrij is...!\nKies iemand anders a.u.b.",
+                XMessageBox.Show(this, $"Je hebt iemand gekozen die vrij is...!\nKies iemand anders a.u.b.",
                     "Personeel Vrij",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else
@@ -611,7 +611,7 @@ namespace Forms
                 }
                 catch (Exception ex)
                 {
-                    XMessageBox.Show(ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    XMessageBox.Show(this, ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
     }
 
@@ -701,7 +701,7 @@ namespace Forms
             }
             catch (Exception ex)
             {
-                XMessageBox.Show(ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XMessageBox.Show(this, ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
     }
 
@@ -814,7 +814,7 @@ namespace Forms
 
     private async void zetOpNonActiefToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (xuserlist.SelectedObject is PersoneelModel permodel && XMessageBox.Show($"Weet je zeker dat je {permodel.Naam} op non actief wilt zetten?",
+        if (xuserlist.SelectedObject is PersoneelModel permodel && XMessageBox.Show(this, $"Weet je zeker dat je {permodel.Naam} op non actief wilt zetten?",
             "Non Actief Zetten", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
         {
             if (await permodel.PersoneelLid.ZetOpInactief())
@@ -824,7 +824,7 @@ namespace Forms
             else
             {
                 XMessageBox.Show(
-                    $"Het is niet gelukt om {permodel.PersoneelLid.PersoneelNaam} op non actief te zetten!", "Fout",
+                    this, $"Het is niet gelukt om {permodel.PersoneelLid.PersoneelNaam} op non actief te zetten!", "Fout",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -868,7 +868,7 @@ namespace Forms
                 change += $"Naar: {Math.Round(model.PersoneelLid.TijdVrij().TotalHours, 2)} uur";
 
 
-                if (await Personeel.UpdateKlusjes(model.PersoneelLid))
+                if (await Personeel.UpdateKlusjes(this, model.PersoneelLid))
                 {
                     await Manager.Database.UpSert(model.PersoneelLid.PersoneelNaam, model.PersoneelLid, change);
 

@@ -624,7 +624,7 @@ namespace Rpm.Misc
             return xreturn?.ToArray() ?? Array.Empty<string>();
         }
 
-        public static async void DoBewerkingEigenRooster(this Bewerking bew)
+        public static async void DoBewerkingEigenRooster(this Bewerking bew, IWin32Window owner)
         {
             try
             {
@@ -644,7 +644,7 @@ namespace Rpm.Misc
                     else wp = bew.WerkPlekken?.FirstOrDefault();
                     if (wp == null)
                     {
-                        XMessageBox.Show($"{b.Naam} heeft nog geen werkplek.\n\nMaak eerst een werkplek aan voordat je de rooster kan aanpassen.", "Geen Werkplek", MessageBoxIcon.Exclamation);
+                        XMessageBox.Show(owner, $"{b.Naam} heeft nog geen werkplek.\n\nMaak eerst een werkplek aan voordat je de rooster kan aanpassen.", "Geen Werkplek", MessageBoxIcon.Exclamation);
                         return;
                     }
                     var roosterform = new RoosterForm(wp.Tijden._rooster,
@@ -657,9 +657,9 @@ namespace Rpm.Misc
                         if (flag)
                         {
                             var result = XMessageBox.Show(
-                                $"Er zijn personeel leden op {wp.Naam} die niet dezelfde rooster hebben als wat je hebt gekozen...\n" +
-                                $"De personeel bepaald natuurlijk hoe en wanneer er op {wp.Naam} wordt gewerkt.\n\n" +
-                                $"Wil je dit rooster door geven aan alle personeel leden op {wp.Naam}?",
+                                owner, $"Er zijn personeel leden op {wp.Naam} die niet dezelfde rooster hebben als wat je hebt gekozen...\n" +
+                                      $"De personeel bepaald natuurlijk hoe en wanneer er op {wp.Naam} wordt gewerkt.\n\n" +
+                                      $"Wil je dit rooster door geven aan alle personeel leden op {wp.Naam}?",
                                 "Personeel Werkrooster Wijzigen", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                             if (result == DialogResult.Cancel) return;
                             if (result == DialogResult.Yes)
@@ -681,11 +681,11 @@ namespace Rpm.Misc
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(owner, e.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
-        public static async void ShowWerktIjden(this Bewerking bew)
+        public static async void ShowWerktIjden(this Bewerking bew, IWin32Window owner)
         {
             var b = bew;
             if (b == null) return;
@@ -705,7 +705,7 @@ namespace Rpm.Misc
 
             if (wp == null)
             {
-                XMessageBox.Show($"{b.Naam} heeft geen werkplekken om daar tijden van te wijzigen!",
+                XMessageBox.Show(owner, $"{b.Naam} heeft geen werkplekken om daar tijden van te wijzigen!",
                     "Geen Werkplekken", MessageBoxIcon.Warning);
                 return;
             }
@@ -715,7 +715,7 @@ namespace Rpm.Misc
                 await b.UpdateBewerking(null, $"[{b.Path}] Werktijd Aangepast");
         }
 
-        public static void DoOnderbreking(this Bewerking bw)
+        public static void DoOnderbreking(this Bewerking bw, IWin32Window owner)
         {
             try
             {
@@ -737,8 +737,8 @@ namespace Rpm.Misc
 
                 if (wp == null)
                 {
-                    XMessageBox.Show($"{bw.Naam} heeft geen werkplekken om te onderbreken.",
-                        "Geen Werkplekken", MessageBoxIcon.Warning);
+                    XMessageBox.Show(owner, $"{bw.Naam} heeft geen indeling om te onderbreken.",
+                        "Geen Indeling", MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -1935,7 +1935,7 @@ namespace Rpm.Misc
             }
         }
 
-        public static bool CopyDirectoryTo(this string sourcedirectory, string destination)
+        public static bool CopyDirectoryTo(this string sourcedirectory, string destination, IWin32Window owner)
         {
             try
             {
@@ -1945,7 +1945,7 @@ namespace Rpm.Misc
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(owner, e.Message, "Fout", MessageBoxIcon.Error);
                 return false;
             }
         }

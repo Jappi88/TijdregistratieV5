@@ -50,7 +50,7 @@ namespace Controls
         private void DeleteSelectedCriterias()
         {
             if (xcriterialijst.SelectedItems.Count == 0) return;
-            if (XMessageBox.Show("Weetje zeker dat je alle geselecteerde criteria's wilt verwijderen?!",
+            if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde criteria's wilt verwijderen?!",
                 "Filters Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
                 var crits = xcriterialijst.SelectedObjects.Cast<FilterEntry>().ToArray();

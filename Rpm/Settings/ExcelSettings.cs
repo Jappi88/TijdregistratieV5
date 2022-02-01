@@ -16,6 +16,7 @@ namespace ProductieManager.Rpm.Settings
         public List<ExcelColumnEntry> Columns { get; set; }
         public bool ShowGroups { get; set; }
         public string GroupBy { get; set; }
+        public bool UseAsDefault { get; set; }
 
         public bool SetSelected(bool selected, string listname)
         {

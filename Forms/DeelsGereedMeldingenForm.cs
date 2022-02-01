@@ -161,7 +161,7 @@ namespace ProductieManager.Forms
         {
             if (xgereedlijst.SelectedObjects.Count > 0)
             {
-                if (XMessageBox.Show("Weetje zeker dat je alle geselecteerde gereed meldingen wilt verwijderen?\n\n" +
+                if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde gereed meldingen wilt verwijderen?\n\n" +
                                      "Er bestaat de risico dat je de tell kwijt raakt!", "Waarschuwing",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {

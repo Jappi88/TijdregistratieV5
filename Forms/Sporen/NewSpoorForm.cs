@@ -16,13 +16,13 @@ namespace Forms.Sporen
         private void button2_Click(object sender, System.EventArgs e)
         {
             if (xnaam.Text.Length < 3)
-                XMessageBox.Show("Vul in jou naam a.u.b.", "Ongeldige Naam",
+                XMessageBox.Show(this, $"Vul in jou naam a.u.b.", "Ongeldige Naam",
                     MessageBoxIcon.Exclamation);
             else if (xartikelnr.Text.Length < 5)
-                XMessageBox.Show("Vul in een geldige ArtikelNr a.u.b.", "Ongeldige ArtikelNr",
+                XMessageBox.Show(this, $"Vul in een geldige ArtikelNr a.u.b.", "Ongeldige ArtikelNr",
                     MessageBoxIcon.Exclamation);
             else if (xomschrijving.Text.Length < 5)
-                XMessageBox.Show("Vul in een geldige Omschrijving a.u.b.", "Ongeldige Omschrijving",
+                XMessageBox.Show(this, $"Vul in een geldige Omschrijving a.u.b.", "Ongeldige Omschrijving",
                     MessageBoxIcon.Exclamation);
             else
             {

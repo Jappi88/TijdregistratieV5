@@ -84,8 +84,8 @@ namespace Controls
             if ((total + cur) >= 100)
             {
                 XMessageBox.Show(
-                    "Het is niet mogelijk om de gecombineerde producties meer actief te laten zijn dan de oorspronkelijke productie...\n\n" +
-                    $"Het totale activiteit van de gecombineerde producties zijn {(total + cur)}%", "Te Hoog",
+                    this, "Het is niet mogelijk om de gecombineerde producties meer actief te laten zijn dan de oorspronkelijke productie...\n\n" +
+                          $"Het totale activiteit van de gecombineerde producties zijn {(total + cur)}%", "Te Hoog",
                     MessageBoxIcon.Exclamation);
                 xactiviteit.SetValue((decimal)xactiviteit.Tag);
                 return false;
@@ -97,7 +97,7 @@ namespace Controls
             if ((total + cur) >= 100)
             {
                 var extra = (total + cur + 1) - 100;
-                XMessageBox.Show($"De gekozen combi heeft al een combinaties van {total}%!\n" +
+                XMessageBox.Show(this, $"De gekozen combi heeft al een combinaties van {total}%!\n" +
                                  $"Om deze productie te kunnen combineren, dien je de resterende activiteit van { (100 - cur)}% op te kunnen vangen.\n\n" +
                                  $"Je komt {extra}% te kort om te kunnen combineren.", "Geen Ruimte", MessageBoxIcon.Exclamation);
                 xactiviteit.SetValue((decimal)xactiviteit.Tag);
@@ -151,7 +151,7 @@ namespace Controls
         {
             if (ParentProductie == null || Productie == null) return;
             if (XMessageBox.Show(
-                    $"Weetje zeker dat je de combinatie van '{Productie.Omschrijving}'({Productie.ProductieNr}) wilt ontkoppelen?",
+                    this, $"Weetje zeker dat je de combinatie van '{Productie.Omschrijving}'({Productie.ProductieNr}) wilt ontkoppelen?",
                     "Combinatie Ontkoppelen", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
                 DialogResult.No) return;
             if (ParentProductie.Combies.RemoveAll(x =>

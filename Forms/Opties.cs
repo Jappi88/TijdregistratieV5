@@ -91,7 +91,7 @@ namespace Forms
                 }
 
             if (exist)
-                XMessageBox.Show("Datum is al toegevoegd", "Bestaat Al", MessageBoxButtons.OK,
+                XMessageBox.Show(this, $"Datum is al toegevoegd", "Bestaat Al", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
             else
                 xfeestdagen.Items.Add(lv);
@@ -537,7 +537,7 @@ namespace Forms
 
         private void xremovefeestdag_Click(object sender, EventArgs e)
         {
-            if (XMessageBox.Show("Weetje zeker dat je alle geselecteerde datums wilt verwijderen?", "Verwijderen",
+            if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde datums wilt verwijderen?", "Verwijderen",
                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 foreach (ListViewItem lv in xfeestdagen.SelectedItems)
                     lv.Remove();
@@ -559,7 +559,7 @@ namespace Forms
                         StringComparison.CurrentCultureIgnoreCase) &&
                     Directory.Exists(db))
                 {
-                    var rsult = XMessageBox.Show("Database locatie is gewijzigd!\n" +
+                    var rsult = XMessageBox.Show(this, $"Database locatie is gewijzigd!\n" +
                                                  "Om de wijzigingen door te kunnen voeren dien je de Productie Manager opnieuw op te starten.\n\n" +
                                                  "Wil je de Productie Manager nu opnieuw opstarten?",
                         "Database Locatie Gewijzigd!",
@@ -568,7 +568,7 @@ namespace Forms
                     //string xdb2 = Manager.DefaultSettings.MainDB.UpdatePath;
                     //if (Directory.Exists(xdb2))
                     //{
-                    //    var rsult2 = XMessageBox.Show("Wil je de oude gegevens kopieren naar de nieuwe database?",
+                    //    var rsult2 = XMessageBox.Show(this, $"Wil je de oude gegevens kopieren naar de nieuwe database?",
                     //        $"Kopieren naar {db}", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                     //    if (rsult2 == DialogResult.Cancel)
                     //        return false;
@@ -613,7 +613,7 @@ namespace Forms
             Close();
             return true;
             //else
-            //    XMessageBox.Show("Er zijn geen  wijzigingen...\n\n", "Geen Wijzigingen", MessageBoxButtons.OK,
+            //    XMessageBox.Show(this, $"Er zijn geen  wijzigingen...\n\n", "Geen Wijzigingen", MessageBoxButtons.OK,
             //        MessageBoxIcon.Information);
         }
 
@@ -707,7 +707,7 @@ namespace Forms
                 {
                     if (_afdelingen.Contains(value) || _bewerkingen.Contains(value))
                     {
-                        XMessageBox.Show($"{value} is al toegevoegd", "Bestaat Al", MessageBoxButtons.OK,
+                        XMessageBox.Show(this, $"{value} is al toegevoegd", "Bestaat Al", MessageBoxButtons.OK,
                             MessageBoxIcon.Exclamation);
                     }
                     else
@@ -728,7 +728,7 @@ namespace Forms
         private void xremoveweergaveb_Click(object sender, EventArgs e)
         {
             if (xweergavelijst.SelectedItems.Count > 0)
-                if (XMessageBox.Show("Weetje zeker dat je alle geselecteerde items wilt verwijderen?", "Verwijderen",
+                if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde items wilt verwijderen?", "Verwijderen",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                     foreach (ListViewItem lv in xweergavelijst.SelectedItems)
                     {
@@ -748,7 +748,7 @@ namespace Forms
             if (IsChanged())
             {
                 var res = XMessageBox.Show(
-                    "Er zijn wijzigingen gemaakt, wil je deze opslaan?\n\nNiet opgeslagen gegevens zullen verloren gaan!",
+                    this, "Er zijn wijzigingen gemaakt, wil je deze opslaan?\n\nNiet opgeslagen gegevens zullen verloren gaan!",
                     "Opslaan", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
                 if (res == DialogResult.Cancel)
                 {
@@ -805,7 +805,7 @@ namespace Forms
             }
             catch (Exception ex)
             {
-                XMessageBox.Show(ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XMessageBox.Show(this, ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -817,7 +817,7 @@ namespace Forms
         private void xremovefolder_Click(object sender, EventArgs e)
         {
             if (xlocatielist.SelectedItems.Count > 0)
-                if (XMessageBox.Show("Weetje zeker dat je alle geselecteerde locaties wilt verwijderen?", "Verwijderen",
+                if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde locaties wilt verwijderen?", "Verwijderen",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                     foreach (ListViewItem lv in xlocatielist.SelectedItems)
                         lv.Remove();
@@ -829,7 +829,7 @@ namespace Forms
                 return;
             if (!e.Label.EmailIsValid())
             {
-                XMessageBox.Show($"'{e.Label}' is geen geldige email adres!", "Ongeldige Email", MessageBoxButtons.OK,
+                XMessageBox.Show(this, $"'{e.Label}' is geen geldige email adres!", "Ongeldige Email", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
                 e.CancelEdit = true;
             }
@@ -847,7 +847,7 @@ namespace Forms
         //        return;
         //    if (!e.Label.EmailIsValid())
         //    {
-        //        XMessageBox.Show($"'{e.Label}' is geen geldige email adres!", "Ongeldige Email", MessageBoxButtons.OK,
+        //        XMessageBox.Show(this, $"'{e.Label}' is geen geldige email adres!", "Ongeldige Email", MessageBoxButtons.OK,
         //            MessageBoxIcon.Exclamation);
         //        e.CancelEdit = true;
         //    }
@@ -869,7 +869,7 @@ namespace Forms
                 switch (e.ColumnIndex)
                 {
                     case 1: // laad instellingen
-                        if (XMessageBox.Show($"Weetje zeker dat je '{moddel.Settings.Username}' wilt Laden?", "Laden",
+                        if (XMessageBox.Show(this, $"Weetje zeker dat je '{moddel.Settings.Username}' wilt Laden?", "Laden",
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
                             DialogResult.Yes) LoadSettings(moddel.Settings, true);
                         break;
@@ -878,7 +878,7 @@ namespace Forms
                         var name = moddel.Settings.Username;
                         var id = moddel.Settings.SystemID;
                         var res = XMessageBox.Show(
-                            $"Je staat op het punt '{name}' te overschrijven met deze instellingen!\n\nWeet je zeker dat je dat wilt doen?!",
+                            this, $"Je staat op het punt '{name}' te overschrijven met deze instellingen!\n\nWeet je zeker dat je dat wilt doen?!",
                             "Overschrijf", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                         if (res != DialogResult.Yes)
                             return;
@@ -892,7 +892,7 @@ namespace Forms
                         }
                         else
                         {
-                            XMessageBox.Show("Er zijn geen  wijzigingen om op te slaan...\n\n", "Geen Wijzigingen",
+                            XMessageBox.Show(this, $"Er zijn geen  wijzigingen om op te slaan...\n\n", "Geen Wijzigingen",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
 
@@ -930,7 +930,7 @@ namespace Forms
                         }
                         catch (Exception ex)
                         {
-                            XMessageBox.Show(ex.Message, "Fout",
+                            XMessageBox.Show(this, ex.Message, "Fout",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                 }
@@ -1102,11 +1102,11 @@ namespace Forms
         //{
         //    if (string.IsNullOrEmpty(xinkomendeemailtext.Text))
         //    {
-        //        XMessageBox.Show("Vul in een geldige email adres aub");
+        //        XMessageBox.Show(this, $"Vul in een geldige email adres aub");
         //    }
         //    else if (!xinkomendeemailtext.Text.EmailIsValid())
         //    {
-        //        XMessageBox.Show("Ongelidge email adres!\nVul in een geldige email adres aub", "Ongeldige Email",
+        //        XMessageBox.Show(this, $"Ongelidge email adres!\nVul in een geldige email adres aub", "Ongeldige Email",
         //            MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         //    }
         //    else
@@ -1115,7 +1115,7 @@ namespace Forms
         //            ((InkomendAdres) x.Tag).Adres.Trim().ToLower() == xinkomendeemailtext.Text.Trim().ToLower());
         //        if (contains)
         //        {
-        //            XMessageBox.Show("Email adres bestaat al!\n Gebruik een andere email adres aub.",
+        //            XMessageBox.Show(this, $"Email adres bestaat al!\n Gebruik een andere email adres aub.",
         //                "Email Bestaat Al",
         //                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         //        }
@@ -1147,11 +1147,11 @@ namespace Forms
         {
             if (string.IsNullOrEmpty(xuitgaandemailtext.Text))
             {
-                XMessageBox.Show("Vul in een geldige email adres aub");
+                XMessageBox.Show(this, $"Vul in een geldige email adres aub");
             }
             else if (!xuitgaandemailtext.Text.EmailIsValid())
             {
-                XMessageBox.Show("Ongelidge email adres!\nVul in een geldige email adres aub", "Ongeldige Email",
+                XMessageBox.Show(this, $"Ongelidge email adres!\nVul in een geldige email adres aub", "Ongeldige Email",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
@@ -1160,7 +1160,7 @@ namespace Forms
                     ((UitgaandAdres) x.Tag).Adres.Trim().ToLower() == xuitgaandemailtext.Text.Trim().ToLower());
                 if (contains)
                 {
-                    XMessageBox.Show("Email adres bestaat al!\n Gebruik een andere email adres aub.",
+                    XMessageBox.Show(this, $"Email adres bestaat al!\n Gebruik een andere email adres aub.",
                         "Email Bestaat Al",
                         MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
@@ -1393,7 +1393,7 @@ namespace Forms
         private void xdeletecrit_Click(object sender, EventArgs e)
         {
             if (xcriterialist.SelectedItems.Count > 0)
-                if (XMessageBox.Show("Weetje zeker dat je alle geselecteerde items wilt verwijderen?", "Verwijderen",
+                if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde items wilt verwijderen?", "Verwijderen",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                     foreach (ListViewItem lv in xcriterialist.SelectedItems)
                     {
@@ -1406,13 +1406,13 @@ namespace Forms
             var value = xcriteriatextbox.Text.Trim();
             if (value.Length < 3)
             {
-                XMessageBox.Show("Ingevulde criteria is ongeldig!", "Ongeldig", MessageBoxIcon.Warning);
+                XMessageBox.Show(this, $"Ingevulde criteria is ongeldig!", "Ongeldig", MessageBoxIcon.Warning);
                 return;
             }
 
             if (xcriterialist.Items.Cast<ListViewItem>().Any(x => string.Equals(value, x.Text, StringComparison.CurrentCultureIgnoreCase)))
             {
-                XMessageBox.Show($"'{value}' is al toegevoegd!", "Bestaat Al", MessageBoxIcon.Warning);
+                XMessageBox.Show(this, $"'{value}' is al toegevoegd!", "Bestaat Al", MessageBoxIcon.Warning);
                 return;
             }
 
@@ -1459,7 +1459,7 @@ namespace Forms
             };
             if (fb.ShowDialog() == DialogResult.OK)
             {
-                (xdblocatie.Text + "\\RPM_Data").CopyDirectoryTo(fb.SelectedPath + "\\RPM_Data");
+                (xdblocatie.Text + "\\RPM_Data").CopyDirectoryTo(fb.SelectedPath + "\\RPM_Data",this);
             }
         }
 
@@ -1515,7 +1515,7 @@ namespace Forms
                 var acc = await Manager.Database.GetAccount(login.Username);
                 if (acc == null)
                 {
-                    XMessageBox.Show($"Gebruiker '{login.Username}' bestaat niet", "Gebruiker bestaat niet",
+                    XMessageBox.Show(this, $"Gebruiker '{login.Username}' bestaat niet", "Gebruiker bestaat niet",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
@@ -1539,7 +1539,7 @@ namespace Forms
                 }
                 catch (Exception exception)
                 {
-                    XMessageBox.Show(exception.Message, "Fout",
+                    XMessageBox.Show(this, exception.Message, "Fout",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
              
@@ -1557,7 +1557,7 @@ namespace Forms
                 var acc = await Manager.Database.GetAccount(login.Username);
                 if (acc == null)
                 {
-                    XMessageBox.Show($"Gebruiker '{login.Username}' bestaat niet", "Gebruiker bestaat niet",
+                    XMessageBox.Show(this, $"Gebruiker '{login.Username}' bestaat niet", "Gebruiker bestaat niet",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
@@ -1578,7 +1578,7 @@ namespace Forms
                 }
                 catch (Exception exception)
                 {
-                    XMessageBox.Show(exception.Message, "Fout",
+                    XMessageBox.Show(this, exception.Message, "Fout",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 

@@ -206,7 +206,7 @@ namespace Forms.Klachten
                     var xprod = Manager.Database.GetProductie(name).Result;
                     if (xprod == null)
                     {
-                        if (XMessageBox.Show($"ProductieNr '{name}' bestaat niet, wil je alsnog toevoegen?",
+                        if (XMessageBox.Show(this, $"ProductieNr '{name}' bestaat niet, wil je alsnog toevoegen?",
                                 "ProductieNr bestaat niet", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
                             DialogResult.No) return;
                     }
@@ -341,7 +341,7 @@ namespace Forms.Klachten
             xbuttons.Add("Annuleren", DialogResult.Cancel);
             xbuttons.Add("Bestand", DialogResult.OK);
             xbuttons.Add("Screen Capture", DialogResult.Yes);
-            var result = XMessageBox.Show("Wat voor bijlage wil je gebruiken?\n\n" +
+            var result = XMessageBox.Show(this, $"Wat voor bijlage wil je gebruiken?\n\n" +
                                           "Kies voor 'Bestand' als je een bestand wilt kiezen.\n" +
                                           "Kies voor 'Screen Capture' als je een scherm afbeelding wilt maken.",
                 "Bijlage", MessageBoxButtons.OK, MessageBoxIcon.Question, null, xbuttons);
@@ -423,7 +423,7 @@ namespace Forms.Klachten
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Aandacht Vereist!", MessageBoxIcon.Exclamation);
+                XMessageBox.Show(this, e.Message, "Aandacht Vereist!", MessageBoxIcon.Exclamation);
                 return false;
             }
         }

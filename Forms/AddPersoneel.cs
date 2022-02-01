@@ -43,14 +43,14 @@ namespace Forms
         {
             if (string.IsNullOrEmpty(xnaam.Text) || xnaam.Text.Trim().Length < 3)
             {
-                XMessageBox.Show("Ongeldige personeel naam!", "Ongeldig", MessageBoxButtons.OK,
+                XMessageBox.Show(this, $"Ongeldige personeel naam!", "Ongeldig", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
             }
             else
             {
                 if(!IsEditMode && await Manager.Database.PersoneelExist(xnaam.Text.Trim()))
                 {
-                    XMessageBox.Show($"'{xnaam.Text.Trim()}' is al toegevoegd.", "Bestaat al", MessageBoxButtons.OK,
+                    XMessageBox.Show(this, $"'{xnaam.Text.Trim()}' is al toegevoegd.", "Bestaat al", MessageBoxButtons.OK,
                         MessageBoxIcon.Exclamation);
                 }
                 else
@@ -107,7 +107,7 @@ namespace Forms
                 }
                 catch (Exception ex)
                 {
-                    XMessageBox.Show(ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    XMessageBox.Show(this, ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

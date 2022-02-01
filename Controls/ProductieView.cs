@@ -267,7 +267,7 @@ namespace Controls
         {
             var xmsg = new XMessageBox();
             xmsg.StartPosition = FormStartPosition.CenterParent;
-            return xmsg.ShowDialog(message, title, buttons, icon, chooseitems, custombuttons, customImage, style);
+            return xmsg.ShowDialog(this,message, title, buttons, icon, chooseitems, custombuttons, customImage, style);
         }
 
         public void DetachEvents()
@@ -359,7 +359,7 @@ namespace Controls
                     if (xopen != null) return;
                     var x0 = xkl.Count == 1 ? "is" : "zijn";
                     var x1 = xkl.Count == 1 ? "klacht" : "klachten";
-                    if (XMessageBox.Show($"Er {x0} {xkl.Count} nieuwe {x1}!\n\n" +
+                    if (XMessageBox.Show(this,$"Er {x0} {xkl.Count} nieuwe {x1}!\n\n" +
                                          $"Nu bekijken?", $"Nieuwe {x1}", MessageBoxButtons.YesNo, Resources.Leave_80_icon_icons_com_57305_128x128, MetroColorStyle.Red) == DialogResult.Yes)
                     {
                         xklachten_Click(this, EventArgs.Empty);
@@ -656,7 +656,7 @@ namespace Controls
                             (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
                         var bew = (Bewerking) values.FirstOrDefault(x => x is Bewerking);
                         if (form != null)
-                            ShowProductieForm(form, true, bew);
+                            ShowProductieForm(this,form, true, bew);
                     }
 
                     break;
@@ -713,11 +713,11 @@ namespace Controls
                     break;
                 case MainAktie.OpenAantalGemaaktProducties:
                     if (values.FirstOrDefault() is List<Bewerking> bws && values.LastOrDefault() is int mins)
-                        DoAantalGemaakt(bws, mins);
+                        DoAantalGemaakt(this,bws, mins);
                     break;
                 case MainAktie.StartBewerking:
                     if (values.FirstOrDefault() is Bewerking bew2)
-                        ProductieListControl.StartBewerkingen(new Bewerking[] {bew2});
+                        ProductieListControl.StartBewerkingen(this, new Bewerking[] {bew2});
                     break;
                 case MainAktie.StopBewerking:
                     if (values.FirstOrDefault() is Bewerking bew3)
@@ -758,7 +758,7 @@ namespace Controls
         {
             if (Manager.BewerkingenLijst == null || Manager.Database?.ProductieFormulieren == null)
             {
-                XMessageBox.Show("Kan geen productie aanmaken, omdat de Database niet is geladen.", "Database niet geladen!", MessageBoxButtons.OK,
+                XMessageBox.Show(this,"Kan geen productie aanmaken, omdat de Database niet is geladen.", "Database niet geladen!", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
                 return;
             }
@@ -771,7 +771,7 @@ namespace Controls
             {
                 //await created.UpdateForm(true, false);
                 if (result == DialogResult.Yes && created.Bewerkingen.Length > 0)
-                    ProductieListControl.StartBewerkingen(created.Bewerkingen);
+                    ProductieListControl.StartBewerkingen(this, created.Bewerkingen);
                 else
                     await created.UpdateForm(true, false);
                 SelectProductieItem(created);
@@ -790,7 +790,7 @@ namespace Controls
             bttns.Add("Bekijken", DialogResult.Ignore);
 
 
-            var res = XMessageBox.Show(message, "Onderbreking", MessageBoxButtons.OK, MessageBoxIcon.Question, null,
+            var res = XMessageBox.Show(this, message, "Onderbreking", MessageBoxButtons.OK, MessageBoxIcon.Question, null,
                 bttns);
             if (res == DialogResult.Cancel) return;
             var prods = await Manager.GetProducties(new[] {ViewState.Gestart, ViewState.Gestopt}, true, false,null);
@@ -813,7 +813,7 @@ namespace Controls
                         var xvalue = res == DialogResult.Ignore
                             ? "onderbrekeningen van te bekijken"
                             : "een onderbreking aan toe te voegen";
-                        XMessageBox.Show($"Er zijn geen  aangemaakte werkplekken om {xvalue}.", "Geen Werkplekken",
+                        XMessageBox.Show(this, $"Er zijn geen  aangemaakte werkplekken om {xvalue}.", "Geen Werkplekken",
                             MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
 
@@ -828,7 +828,7 @@ namespace Controls
                                     plekken.Add(plek);
                     });
                     if (plekken.Count == 0)
-                        XMessageBox.Show("Er zijn geen openstaande onderbrekeningen om te wijzigen.", "Onderbreking",
+                        XMessageBox.Show(this, $"Er zijn geen openstaande onderbrekeningen om te wijzigen.", "Onderbreking",
                             MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     break;
             }
@@ -855,7 +855,7 @@ namespace Controls
                                           "Kies een openstaande onderbreking om te wijzigen.";
 
                                 var msgbox = new XMessageBox();
-                                if (msgbox.ShowDialog(msg, "Kies Onderbreking", MessageBoxButtons.OKCancel,
+                                if (msgbox.ShowDialog(this, msg, "Kies Onderbreking", MessageBoxButtons.OKCancel,
                                     MessageBoxIcon.Information,
                                     storingen.Select(x => x.ToString()).ToArray()) == DialogResult.OK)
                                 {
@@ -900,7 +900,7 @@ namespace Controls
                                     break;
                             }
 
-                            XMessageBox.Show(msg, "Onderbreking", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            XMessageBox.Show(this, msg, "Onderbreking", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                     else if (res == DialogResult.Ignore)
@@ -1022,7 +1022,7 @@ namespace Controls
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -1036,7 +1036,7 @@ namespace Controls
                     .ToArray();
                 if (startedprods.Length == 0)
                 {
-                    XMessageBox.Show("Er zijn geen gestarte producties om te openen.", "Geen Producties",
+                    XMessageBox.Show(this, $"Er zijn geen gestarte producties om te openen.", "Geen Producties",
                         MessageBoxIcon.Exclamation);
                 }
                 else
@@ -1044,7 +1044,7 @@ namespace Controls
                     var xvalue0 = startedprods.Length == 1 ? "is" : "zijn";
                     var xvalue1 = startedprods.Length == 1 ? "productie" : "producties";
                     if (XMessageBox.Show(
-                        $"Er {xvalue0} {startedprods.Length} gestarte {xvalue1}.\n\nWil je ze allemaal openen?",
+                            this, $"Er {xvalue0} {startedprods.Length} gestarte {xvalue1}.\n\nWil je ze allemaal openen?",
                         "Open Producties", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         for (var i = 0; i < startedprods.Length; i++)
                         {
@@ -1054,14 +1054,14 @@ namespace Controls
                             {
                                 var bw = bws.FirstOrDefault(x => x.State == ProductieState.Gestart);
                                 if (bw != null)
-                                    ShowProductieForm(prod, true, bw);
+                                    ShowProductieForm(this,prod, true, bw);
                             }
                         }
                 }
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -1112,7 +1112,7 @@ namespace Controls
                 }
 
                 dbnames.Add( "Standaard Database");
-                var result = msgbox.ShowDialog(msg, "Database Laden", MessageBoxButtons.YesNoCancel,
+                var result = msgbox.ShowDialog(this, msg, "Database Laden", MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Information, dbnames.ToArray(), bttns);
                 if (result == DialogResult.Cancel) return;
                 string path = null;
@@ -1144,7 +1144,7 @@ namespace Controls
                 {
                     if (!Directory.Exists(path))
                     {
-                        XMessageBox.Show($"'{path}' bestaat niet, of is niet toegankelijk!", "Fout",
+                        XMessageBox.Show(this, $"'{path}' bestaat niet, of is niet toegankelijk!", "Fout",
                             MessageBoxIcon.Error);
                         return;
                     }
@@ -1161,7 +1161,7 @@ namespace Controls
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -1175,7 +1175,7 @@ namespace Controls
                         case "xniewproductie":
                             if (Manager.Database?.ProductieFormulieren == null)
                             {
-                                XMessageBox.Show("Kan geen productie aanmaken, omdat de Database niet is geladen.", "Database niet geladen!", MessageBoxButtons.OK,
+                                XMessageBox.Show(this, $"Kan geen productie aanmaken, omdat de Database niet is geladen.", "Database niet geladen!", MessageBoxButtons.OK,
                                     MessageBoxIcon.Exclamation);
                                 return;
                             }
@@ -1192,7 +1192,7 @@ namespace Controls
                         case "xopenproductie":
                             if (Manager.Database?.ProductieFormulieren == null)
                             {
-                                XMessageBox.Show("Kan geen productie toevoegen, omdat de Database niet is geladen.", "Database niet geladen!", MessageBoxButtons.OK,
+                                XMessageBox.Show(this, $"Kan geen productie toevoegen, omdat de Database niet is geladen.", "Database niet geladen!", MessageBoxButtons.OK,
                                     MessageBoxIcon.Exclamation);
                                 return;
                             }
@@ -1216,7 +1216,7 @@ namespace Controls
                             ZoekWerkTekening();
                             break;
                         case "xchangeaantal":
-                            DoAantalGemaakt();
+                            DoAantalGemaakt(this);
                             break;
                         case "xwerkplaatsindeling":
                             ShowWerkplaatsIndelingWindow();
@@ -1261,7 +1261,7 @@ namespace Controls
                 }
                 catch (Exception ex)
                 {
-                    XMessageBox.Show(ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    XMessageBox.Show(this, ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
         }
 
@@ -1369,7 +1369,7 @@ namespace Controls
         private void WerkPlekkenUI1_OnRequestOpenWerk(object sender, EventArgs e)
         {
             if (!(sender is Bewerking b)) return;
-            if (b.Parent != null) ShowProductieForm(b.Parent, true, b);
+            if (b.Parent != null) ShowProductieForm(this,b.Parent, true, b);
         }
 
         private void xaboutb_Click(object sender, EventArgs e)
@@ -1458,7 +1458,7 @@ namespace Controls
                         $"Het is vandaag {day}, en geen officiële werkdag.\n" +
                         "Je kan een speciale rooster toevoegen als er vandaag toch wordt gewerkt.\n\n" +
                         "Wil je een rooster nu toevoegen?\nSpeciale roosters kan je achteraf ook aanpassen in de instellingen";
-                    if (XMessageBox.Show(xmsg, "Speciaal Rooster", MessageBoxButtons.YesNo,
+                    if (XMessageBox.Show(this, xmsg, "Speciaal Rooster", MessageBoxButtons.YesNo,
                         MessageBoxIcon.Exclamation) == DialogResult.Yes)
                         SetSpecialeRooster();
                 }
@@ -1633,7 +1633,7 @@ namespace Controls
                     if (prod?.Bewerkingen == null || prod.Bewerkingen.Length == 0) continue;
                     var xs = prod.Bewerkingen.FirstOrDefault(x => x.State == ProductieState.Gestart);
                     if (xs == null) continue;
-                    ShowProductieForm(prod, true, xs);
+                    ShowProductieForm(this,prod, true, xs);
                 }
             }
         }
@@ -1710,7 +1710,7 @@ namespace Controls
                         bttns.Add("Toon Bericht", DialogResult.Yes);
                         _unreadMessages = new XMessageBox();
                         var result = _unreadMessages.ShowDialog(
-                            $"Je hebt {unread.Count} ongelezen {xv} van {string.Join(", ", names)}",
+                            this, $"Je hebt {unread.Count} ongelezen {xv} van {string.Join(", ", names)}",
                             $"{unread.Count} ongelezen berichten", MessageBoxButtons.OK, MessageBoxIcon.None, null,
                             bttns);
                         _unreadMessages?.Dispose();
@@ -1770,7 +1770,7 @@ namespace Controls
                     bttns.Add("Toon Opmerkingen", DialogResult.Yes);
                     var xmsgBox = new XMessageBox();
                     var result = xmsgBox.ShowDialog(
-                        $"Je hebt {unread.Count} ongelezen {xv}",
+                        this, $"Je hebt {unread.Count} ongelezen {xv}",
                         $"{unread.Count} ongelezen {xv}", MessageBoxButtons.OK, MessageBoxIcon.None, null,
                         bttns);
                     xmsgBox.Dispose();
@@ -1788,7 +1788,7 @@ namespace Controls
 
         #region MenuButton Methods
 
-        public static StartProductie ShowProductieForm(ProductieFormulier pform, bool showform,
+        public static StartProductie ShowProductieForm(IWin32Window owner, ProductieFormulier pform, bool showform,
             Bewerking bewerking = null)
         {
             if (pform == null || Manager.LogedInGebruiker == null ||
@@ -1847,12 +1847,12 @@ namespace Controls
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(owner, e.Message, "Fout", MessageBoxIcon.Error);
                 return null;
             }
         }
 
-        public static ProductieLijstForm ShowProductieLijstForm()
+        public static ProductieLijstForm ShowProductieLijstForm(IWin32Window owner)
         {
             try
             {
@@ -1882,7 +1882,7 @@ namespace Controls
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(owner, e.Message, "Fout", MessageBoxIcon.Error);
                 return null;
             }
         }
@@ -2118,12 +2118,12 @@ namespace Controls
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
         private static AantalGemaaktProducties _gemaaktform;
-        public static async void DoAantalGemaakt(List<Bewerking> bewerkingen = null, int lastchangedminutes = -1)
+        public static async void DoAantalGemaakt(IWin32Window owner, List<Bewerking> bewerkingen = null, int lastchangedminutes = -1)
         {
             try
             {
@@ -2142,7 +2142,7 @@ namespace Controls
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(owner, e.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -2288,7 +2288,7 @@ namespace Controls
             }
             catch (Exception ex)
             {
-                XMessageBox.Show(ex.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, ex.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -2314,7 +2314,7 @@ namespace Controls
 
         private void xopennewlijst_Click(object sender, EventArgs e)
         {
-            ShowProductieLijstForm();
+            ShowProductieLijstForm(this);
         }
 
         private void xtoonartikels_Click(object sender, EventArgs e)
@@ -2339,7 +2339,7 @@ namespace Controls
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
-                XMessageBox.Show(exception.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -2353,7 +2353,7 @@ namespace Controls
             }
             else
             {
-                XMessageBox.Show("HelpDesk is tijdelijk niet beschikbaar", "Niet Beschikbaar",
+                XMessageBox.Show(this, $"HelpDesk is tijdelijk niet beschikbaar", "Niet Beschikbaar",
                     MessageBoxIcon.Exclamation);
             }
         }
@@ -2532,7 +2532,7 @@ namespace Controls
                     {
                         var p = taak.Formulier;
                         if (p.State != ProductieState.Verwijderd && p.State != ProductieState.Gereed)
-                            ShowProductieForm(p, true, taak.Bewerking);
+                            ShowProductieForm(this,p, true, taak.Bewerking);
                     }
 
                     break;
@@ -2542,7 +2542,7 @@ namespace Controls
                     {
                         var p = taak.Formulier;
                         if (p.State != ProductieState.Verwijderd && p.State != ProductieState.Gereed)
-                            ProductieListControl.MeldGereed(p);
+                            ProductieListControl.MeldGereed(this, p);
                         //taak.Update();
                     }
 
@@ -2553,7 +2553,7 @@ namespace Controls
                     {
                         var b = taak.Bewerking;
                         if (b.State != ProductieState.Verwijderd && b.State != ProductieState.Gereed)
-                            ProductieListControl.MeldBewerkingGereed(b);
+                            ProductieListControl.MeldBewerkingGereed(this, b);
                         //taak.Update();
                     }
 

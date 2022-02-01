@@ -184,7 +184,7 @@ namespace Forms
         {
             if (xVerpakkingen.SelectedObjects.Count > 0)
             {
-                if (XMessageBox.Show("Weetje zekere dat je alle geselecteerde verpakkingen wilt verwijderen?",
+                if (XMessageBox.Show(this, $"Weetje zekere dat je alle geselecteerde verpakkingen wilt verwijderen?",
                         "Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     var xitems = xVerpakkingen.SelectedObjects.Cast<VerpakkingInstructie>();

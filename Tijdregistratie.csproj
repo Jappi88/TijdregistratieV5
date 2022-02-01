@@ -64,8 +64,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>9.0</LangVersion>
@@ -170,17 +169,17 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
-      <HintPath>packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\metroframework-modern-ui\MetroFramework\bin\Release\MetroFramework.dll</HintPath>
     </Reference>
-    <Reference Include="MetroFramework.Design, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
-      <HintPath>packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.Design.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="MetroFramework.Design, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\metroframework-modern-ui\MetroFramework.Design\bin\Release\MetroFramework.Design.dll</HintPath>
     </Reference>
-    <Reference Include="MetroFramework.Fonts, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
-      <HintPath>packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.Fonts.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="MetroFramework.Fonts, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\metroframework-modern-ui\MetroFramework.Fonts\bin\Release\MetroFramework.Fonts.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic">
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -287,6 +286,12 @@
     </Compile>
     <Compile Include="Controls\ProductieVerbruikUI.Designer.cs">
       <DependentUpon>ProductieVerbruikUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TileView\TileViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\TileView\TileViewer.Designer.cs">
+      <DependentUpon>TileViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Aantal\AantalHistoryForm.cs">
       <SubType>Form</SubType>
@@ -1291,6 +1296,9 @@
     <EmbeddedResource Include="Controls\ProductieVerbruikUI.resx">
       <DependentUpon>ProductieVerbruikUI.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TileView\TileViewer.resx">
+      <DependentUpon>TileViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Aantal\AantalHistoryForm.resx">
       <DependentUpon>AantalHistoryForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -2181,7 +2189,6 @@
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Code to merge the assemblies into one:setup.exe -->
 </Project>

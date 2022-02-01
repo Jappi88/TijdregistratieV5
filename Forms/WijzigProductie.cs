@@ -137,23 +137,23 @@ namespace Forms
         {
             if (string.IsNullOrEmpty(Formulier?.ArtikelNr))
             {
-                XMessageBox.Show("Vul een geldige artikel nummer in a.u.b", "ArtikelNr", MessageBoxButtons.OK,
+                XMessageBox.Show(this, $"Vul een geldige artikel nummer in a.u.b", "ArtikelNr", MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }
             else if (string.IsNullOrEmpty(Formulier?.ProductieNr))
             {
-                XMessageBox.Show("Vul een geldige productie nummer in a.u.b", "ProductieNr", MessageBoxButtons.OK,
+                XMessageBox.Show(this, $"Vul een geldige productie nummer in a.u.b", "ProductieNr", MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }
             else if (!editmode && prods.Any(t => string.Equals(t, Formulier?.ProductieNr, StringComparison.CurrentCultureIgnoreCase)))
             {
                 XMessageBox.Show(
-                    $"Productie {Formulier?.ProductieNr} bestaat al en kan daarom niet nogmaals gebruikt worden!\nProbeer een andere nummer a.u.b",
+                    this, $"Productie {Formulier?.ProductieNr} bestaat al en kan daarom niet nogmaals gebruikt worden!\nProbeer een andere nummer a.u.b",
                     "ProductieNr", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else if (Formulier.Aantal <= 0)
             {
-                XMessageBox.Show("Aantal moet meer zijn dan 0!\n Vul eerst een geldige aantal in a.u.b", "Aantal",
+                XMessageBox.Show(this, $"Aantal moet meer zijn dan 0!\n Vul eerst een geldige aantal in a.u.b", "Aantal",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
@@ -199,7 +199,7 @@ namespace Forms
             if (xbewerkingen.SelectedItem == null || xbewerkingen.Text.Trim().Length < 5 ||
                 xbewerkingen.Text.Trim() == "")
             {
-                XMessageBox.Show("Vul eerst een geldige bewerking in voordat je verder gaat", "Ongeldige Bewerking",
+                XMessageBox.Show(this, $"Vul eerst een geldige bewerking in voordat je verder gaat", "Ongeldige Bewerking",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
@@ -232,7 +232,7 @@ namespace Forms
 
             var xvalue = count == 1 ? "bewerking" : "bewerkingen";
             if (XMessageBox.Show(
-                $"Je staat op het punt {count} {xvalue} te verwijderen.\n\nWeet je zeker dat je door wilt gaan?\nClick 'Nee' om te annuleren.",
+                    this, $"Je staat op het punt {count} {xvalue} te verwijderen.\n\nWeet je zeker dat je door wilt gaan?\nClick 'Nee' om te annuleren.",
                 "Bewerking Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 xbewerkinglijst.RemoveObjects(xbewerkinglijst.SelectedObjects);
         }

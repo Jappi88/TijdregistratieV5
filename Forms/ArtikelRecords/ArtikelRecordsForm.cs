@@ -308,7 +308,7 @@ namespace Forms.ArtikelRecords
                         bool exist = Manager.ArtikelRecords.Database.Exists(xs.ArtikelNr);
                         if (exist)
                         {
-                            XMessageBox.Show($"Artikelnr/ Werkplek '{xs.ArtikelNr}' bestaat al!", "Bestaat Al",
+                            XMessageBox.Show(this, $"Artikelnr/ Werkplek '{xs.ArtikelNr}' bestaat al!", "Bestaat Al",
                                 MessageBoxIcon.Exclamation);
                             return;
                         }
@@ -349,7 +349,7 @@ namespace Forms.ArtikelRecords
                 if (xremove.Count == 0) return;
                 var x1 = xremove.Count == 1 ? "artikel" : "artikelen";
                 var changed = false;
-                if (XMessageBox.Show($"Weetje zeker dat je {xremove.Count} {x1} wilt verwijderen?",
+                if (XMessageBox.Show(this, $"Weetje zeker dat je {xremove.Count} {x1} wilt verwijderen?",
                         "Verwijderen",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
@@ -381,7 +381,7 @@ namespace Forms.ArtikelRecords
                 if (xremove.Count == 0) return;
                 var x1 = xremove.Count == 1 ? "werkplek" : "werkplaatsen";
                 var changed = false;
-                if (XMessageBox.Show($"Weetje zeker dat je {xremove.Count} {x1} wilt verwijderen?",
+                if (XMessageBox.Show(this, $"Weetje zeker dat je {xremove.Count} {x1} wilt verwijderen?",
                         "Verwijderen",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {

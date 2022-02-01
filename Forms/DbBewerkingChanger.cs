@@ -83,7 +83,7 @@ namespace Forms
             if (xbewerkingnaam.Text.Trim().Length < 4)
             {
                 XMessageBox.Show(
-                    $"'{xbewerkingnaam.Text}' is ongeldig!\nGebruik een geldige naam dat bestaat uit minimaal 4 characters.",
+                    this, $"'{xbewerkingnaam.Text}' is ongeldig!\nGebruik een geldige naam dat bestaat uit minimaal 4 characters.",
                     "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (_entries.Any(x =>
@@ -91,12 +91,12 @@ namespace Forms
                 string.Equals(x.NewName, xbewerkingnaam.Text.Trim(), StringComparison.CurrentCultureIgnoreCase)))
             {
                 XMessageBox.Show(
-                    $"'{xbewerkingnaam.Text}' Bestaat al!\nGebruik een andere naam dat nog niet is toegevoegd.",
+                    this, $"'{xbewerkingnaam.Text}' Bestaat al!\nGebruik een andere naam dat nog niet is toegevoegd.",
                     "Bestaat al", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
-                BewerkingEntry ent = null;
+                BewerkingEntry ent;
                 if (addnew)
                 {
                     ent = new BewerkingEntry(xbewerkingnaam.Text.Trim(), xisbemand.Checked);
@@ -121,7 +121,7 @@ namespace Forms
         private void xdelbew_Click(object sender, EventArgs e)
         {
             if (xbewlist.SelectedObjects.Count > 0)
-                if (XMessageBox.Show("Je staat op het punt alle geselecteerde bewerkingen te verwijderen...\n" +
+                if (XMessageBox.Show(this, $"Je staat op het punt alle geselecteerde bewerkingen te verwijderen...\n" +
                                      "Weetje zeker dat je door wilt gaan?!", "Verwijderen", MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
@@ -157,14 +157,14 @@ namespace Forms
             if (xwerkpleknaam.Text.Trim().Length < 4)
             {
                 XMessageBox.Show(
-                    $"'{xwerkpleknaam.Text}' is ongeldig!\nGebruik een geldige naam dat bestaat uit minimaal 4 characters.",
+                    this, $"'{xwerkpleknaam.Text}' is ongeldig!\nGebruik een geldige naam dat bestaat uit minimaal 4 characters.",
                     "Ongeldig Werkplek", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (cur.WerkPlekken.Any(wp =>
                 string.Equals(wp, xwerkpleknaam.Text.Trim(), StringComparison.CurrentCultureIgnoreCase)))
             {
                 XMessageBox.Show(
-                    $"'{xwerkpleknaam.Text}' Bestaat al!\nGebruik een andere naam dat nog niet is toegevoegd.",
+                    this, $"'{xwerkpleknaam.Text}' Bestaat al!\nGebruik een andere naam dat nog niet is toegevoegd.",
                     "Werkplek Bestaat al", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
@@ -181,7 +181,7 @@ namespace Forms
             var cur = CurrentBew();
             if (cur == null) return;
             if (xpleklist.SelectedObjects.Count > 0)
-                if (XMessageBox.Show("Je staat op het punt alle geselecteerde werkplekken te verwijderen...\n" +
+                if (XMessageBox.Show(this, $"Je staat op het punt alle geselecteerde werkplekken te verwijderen...\n" +
                                      "Weetje zeker dat je door wilt gaan?!", "Verwijderen", MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
@@ -204,14 +204,14 @@ namespace Forms
             if (xwerkpleknaam.Text.Trim().Length < 4)
             {
                 XMessageBox.Show(
-                    $"'{xwerkpleknaam.Text}' is ongeldig!\nGebruik een geldige naam dat bestaat uit minimaal 4 characters.",
+                    this, $"'{xwerkpleknaam.Text}' is ongeldig!\nGebruik een geldige naam dat bestaat uit minimaal 4 characters.",
                     "Ongeldig Werkplek", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (cur.WerkPlekken.Any(wp =>
                 string.Equals(wp, xwerkpleknaam.Text.Trim(), StringComparison.CurrentCultureIgnoreCase)))
             {
                 XMessageBox.Show(
-                    $"'{xwerkpleknaam.Text}' Bestaat al!\nGebruik een andere naam dat nog niet is toegevoegd.",
+                    this, $"'{xwerkpleknaam.Text}' Bestaat al!\nGebruik een andere naam dat nog niet is toegevoegd.",
                     "Werkplek Bestaat al", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else

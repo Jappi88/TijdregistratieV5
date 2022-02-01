@@ -95,7 +95,7 @@ namespace Forms
             {
                 string x1 = count == 1 ? "actie" : "acties";
                 if (XMessageBox.Show(
-                    $"Er staan nog {count} {x1} open!\nDeze scherm sluiten zal alle acties annuleren...\n\n" +
+                    this,$"Er staan nog {count} {x1} open!\nDeze scherm sluiten zal alle acties annuleren...\n\n" +
                     $"Weetje zeker dat je alsnog wilt sluiten?", "Alles Annuleren?", MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning) == DialogResult.No)
                 {

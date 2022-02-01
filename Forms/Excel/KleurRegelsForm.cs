@@ -115,7 +115,7 @@ namespace Forms.Excel
                 colorindex = ExcelColumnEntry.GetColorIndex(xcolorPanel.BackColor);
                 if (colorindex == -1)
                 {
-                    XMessageBox.Show("Kies een kleur waarvoor je een regel wilt.", "Kies Kleur",
+                    XMessageBox.Show(this, $"Kies een kleur waarvoor je een regel wilt.", "Kies Kleur",
                         MessageBoxIcon.Information);
                     return;
                 }
@@ -124,7 +124,7 @@ namespace Forms.Excel
                 if ((regel = xRegelView.Objects.Cast<ExcelRegelEntry>()
                         .FirstOrDefault(x => x.ColorIndex == colorindex)) != null)
                 {
-                    XMessageBox.Show("Er is al een regel gemaakt voor de huidig gekozen kleur.", "Kleur Bestaat Al",
+                    XMessageBox.Show(this, $"Er is al een regel gemaakt voor de huidig gekozen kleur.", "Kleur Bestaat Al",
                         MessageBoxIcon.Information);
                     xRegelView.SelectedObject = regel;
                     xRegelView.SelectedItem?.EnsureVisible();
@@ -136,7 +136,7 @@ namespace Forms.Excel
                 rgb = xcolorPanel.BackColor.ToArgb();
                 if (rgb is 0)
                 {
-                    XMessageBox.Show("Kies een kleur waarvoor je een regel wilt.", "Kies Kleur",
+                    XMessageBox.Show(this, $"Kies een kleur waarvoor je een regel wilt.", "Kies Kleur",
                         MessageBoxIcon.Information);
                     return;
                 }
@@ -147,7 +147,7 @@ namespace Forms.Excel
                 {
                     xRegelView.SelectedObject = regel;
                     xRegelView.SelectedItem?.EnsureVisible();
-                    XMessageBox.Show("Er is al een regel gemaakt voor de huidig gekozen kleur.", "Kleur Bestaat Al",
+                    XMessageBox.Show(this, $"Er is al een regel gemaakt voor de huidig gekozen kleur.", "Kleur Bestaat Al",
                         MessageBoxIcon.Information);
                     return;
                 }
@@ -200,7 +200,7 @@ namespace Forms.Excel
             if (xRegelView.SelectedObjects.Count > 0)
             {
 
-                if (XMessageBox.Show($"Weetje zeker dat je alle geselecteerde regels wilt verwijderen?",
+                if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde regels wilt verwijderen?",
                         "Regel(s) Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) ==
                     DialogResult.No) return;
                 var selected = xRegelView.SelectedObjects.Cast<ExcelRegelEntry>().ToList();
@@ -337,7 +337,7 @@ namespace Forms.Excel
                 }
                 catch (Exception exception)
                 {
-                    XMessageBox.Show(exception.Message, "Waarschuwing!", MessageBoxIcon.Exclamation);
+                    XMessageBox.Show(this, exception.Message, "Waarschuwing!", MessageBoxIcon.Exclamation);
                 }
             }
         }

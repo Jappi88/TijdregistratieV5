@@ -66,7 +66,7 @@ namespace Forms.ArtikelRecords
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -161,7 +161,7 @@ namespace Forms.ArtikelRecords
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -199,7 +199,7 @@ namespace Forms.ArtikelRecords
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -234,7 +234,7 @@ namespace Forms.ArtikelRecords
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
                 return null;
             }
         }
@@ -271,7 +271,7 @@ namespace Forms.ArtikelRecords
             }
             catch (Exception exception)
             {
-                XMessageBox.Show(exception.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 

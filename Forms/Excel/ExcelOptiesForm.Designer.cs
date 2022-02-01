@@ -32,6 +32,7 @@ namespace Forms
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExcelOptiesForm));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.xstandaard = new MetroFramework.Controls.MetroCheckBox();
             this.xtoepassen = new System.Windows.Forms.Button();
             this.xsluiten = new System.Windows.Forms.Button();
             this.xOpslaan = new System.Windows.Forms.Button();
@@ -109,6 +110,7 @@ namespace Forms
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.xstandaard);
             this.panel1.Controls.Add(this.xtoepassen);
             this.panel1.Controls.Add(this.xsluiten);
             this.panel1.Controls.Add(this.xOpslaan);
@@ -117,6 +119,22 @@ namespace Forms
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(892, 45);
             this.panel1.TabIndex = 2;
+            // 
+            // xstandaard
+            // 
+            this.xstandaard.AutoSize = true;
+            this.xstandaard.FontSize = MetroFramework.MetroCheckBoxSize.Medium;
+            this.xstandaard.FontWeight = MetroFramework.MetroCheckBoxWeight.Bold;
+            this.xstandaard.Location = new System.Drawing.Point(3, 14);
+            this.xstandaard.Name = "xstandaard";
+            this.xstandaard.Size = new System.Drawing.Size(163, 19);
+            this.xstandaard.Style = MetroFramework.MetroColorStyle.Green;
+            this.xstandaard.TabIndex = 9;
+            this.xstandaard.Text = "Stel In Als Standaard";
+            this.xstandaard.UseSelectable = true;
+            this.xstandaard.UseStyleColors = true;
+            this.xstandaard.Visible = false;
+            this.xstandaard.CheckedChanged += new System.EventHandler(this.xstandaard_CheckedChanged);
             // 
             // xtoepassen
             // 
@@ -827,6 +845,7 @@ namespace Forms
             this.Style = MetroFramework.MetroColorStyle.Green;
             this.Text = "Column Opties";
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -914,5 +933,6 @@ namespace Forms
         private System.Windows.Forms.Button xWijzigColumnBreedte;
         private System.Windows.Forms.NumericUpDown xColumnBreedte;
         private System.Windows.Forms.Button xtoepassen;
+        private MetroFramework.Controls.MetroCheckBox xstandaard;
     }
 }

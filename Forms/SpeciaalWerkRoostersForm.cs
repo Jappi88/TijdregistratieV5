@@ -84,7 +84,7 @@ namespace ProductieManager.Forms
                 var roosters = xroosterlist.Objects.Cast<Rooster>().ToList();
                 if (roosters.Any(x => x.Vanaf.Date == dt.SelectedValue.Date))
                 {
-                    XMessageBox.Show($"Er is al een speciale rooster op '{dt.SelectedValue:D}'", "Rooster Bestaat Al",
+                    XMessageBox.Show(this, $"Er is al een speciale rooster op '{dt.SelectedValue:D}'", "Rooster Bestaat Al",
                         MessageBoxIcon.Exclamation);
                     return;
                 }
@@ -118,7 +118,7 @@ namespace ProductieManager.Forms
                 {
                     if (dt.SelectedValue.DayOfWeek != DayOfWeek.Saturday && dt.SelectedValue.DayOfWeek != DayOfWeek.Sunday)
                     {
-                        XMessageBox.Show($"Speciale roosters zijn alleen voor een zaterdag of zondag!\n\n Je hebt '{dt.SelectedValue:D}' gekozen...", "Ongeldige Datum",
+                        XMessageBox.Show(this, $"Speciale roosters zijn alleen voor een zaterdag of zondag!\n\n Je hebt '{dt.SelectedValue:D}' gekozen...", "Ongeldige Datum",
                             MessageBoxIcon.Exclamation);
                         return;
                     }
@@ -139,7 +139,7 @@ namespace ProductieManager.Forms
         {
             if (xroosterlist.SelectedObjects?.Count > 0)
             {
-                //if (XMessageBox.Show("Wil je echt alle geselecteerde roosters verwijderen?", "Verwijderen",
+                //if (XMessageBox.Show(this, $"Wil je echt alle geselecteerde roosters verwijderen?", "Verwijderen",
                 //    MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No) return;
                 xroosterlist.RemoveObjects(xroosterlist.SelectedObjects);
                 UpdateRoosterListLabel();

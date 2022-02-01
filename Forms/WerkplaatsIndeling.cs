@@ -360,7 +360,7 @@ namespace Forms
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
                 return null;
             }
         }
@@ -382,7 +382,7 @@ namespace Forms
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                XMessageBox.Show(ex.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, ex.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -406,7 +406,7 @@ namespace Forms
             if (add.ShowDialog() == DialogResult.OK)
             {
                 xindeling.Persoon = add.PersoneelLid;
-                if (!await Personeel.UpdateKlusjes(xindeling.Persoon)) return;
+                if (!await Personeel.UpdateKlusjes(this,xindeling.Persoon)) return;
                 await Manager.Database.UpSert(xindeling.Persoon, $"{xindeling.Persoon.PersoneelNaam} Aangepast!");
             }
         }
@@ -567,7 +567,7 @@ namespace Forms
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
-                XMessageBox.Show(exception.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -660,7 +660,7 @@ namespace Forms
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                XMessageBox.Show(ex.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, ex.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 

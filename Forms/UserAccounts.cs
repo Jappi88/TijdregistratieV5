@@ -61,9 +61,9 @@ namespace Forms
             if (count > 0)
             {
                 var del = count > 1
-                    ? XMessageBox.Show("Weetje zeker dat je alle geselecteerde gebruikers wilt verwijderen?",
+                    ? XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde gebruikers wilt verwijderen?",
                         "Verwijderen", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation) == DialogResult.Yes
-                    : XMessageBox.Show($"Weetje zeker dat je {listView1.SelectedItems[0].Text} wilt verwijderen?",
+                    : XMessageBox.Show(this, $"Weetje zeker dat je {listView1.SelectedItems[0].Text} wilt verwijderen?",
                         "Verwijderen", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation) == DialogResult.Yes;
                 if (del)
                 {
@@ -137,7 +137,7 @@ namespace Forms
                         }
                         catch (Exception ex)
                         {
-                            XMessageBox.Show(ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            XMessageBox.Show(this, ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                 }
             }

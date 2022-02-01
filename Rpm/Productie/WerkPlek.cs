@@ -82,10 +82,23 @@ namespace Rpm.Productie
             Werk?.VerwachtDatumGereed() ?? DateTime.Now;
 
         [ExcludeFromSerialization]
-        public int PerUur
+        public int PerUur => GetPerUur();
+
+        public int GetPerUur()
         {
-            get => TotaalGemaakt > 0 && TijdGewerkt > 0 ? (int) (TotaalGemaakt / TijdGewerkt) : 0;
-            set => _peruur = value;
+            try
+            {
+                int aantal = TotaalGemaakt;
+                double tijd = TijdGewerkt;
+                if (TijdGewerkt > 0)
+                    return (int)(aantal / tijd);
+                return aantal;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return 0;
+            }
         }
 
         [ExcludeFromSerialization]

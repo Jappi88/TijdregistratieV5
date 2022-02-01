@@ -54,7 +54,7 @@ namespace Forms.ArtikelRecords
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -70,7 +70,7 @@ namespace Forms.ArtikelRecords
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -94,7 +94,7 @@ namespace Forms.ArtikelRecords
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -293,7 +293,7 @@ namespace Forms.ArtikelRecords
                 var xremove = xOpmerkingenList.SelectedObjects.Cast<ArtikelOpmerking>().Where(x => x.IsFromMe).ToList();
                 if (xremove.Count == 0) return;
                 var x1 = xremove.Count == 1 ? "melding" : "meldingen";
-                if (XMessageBox.Show($"Weetje zeker dat je {xremove.Count} {x1} wilt verwijderen?", "Verwijderen",
+                if (XMessageBox.Show(this, $"Weetje zeker dat je {xremove.Count} {x1} wilt verwijderen?", "Verwijderen",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     foreach (var xr in xremove)

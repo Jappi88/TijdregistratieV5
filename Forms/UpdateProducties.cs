@@ -58,7 +58,7 @@ namespace Forms
                 if (Manager.Database == null || Manager.Database.IsDisposed)
                 {
                     XMessageBox.Show(
-                        "Database is niet beschikbaar!\nZorg ervoor dat je een geldige database hebt, en restart het programma.",
+                        this, "Database is niet beschikbaar!\nZorg ervoor dat je een geldige database hebt, en restart het programma.",
                         "Ongeldige Database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 else
@@ -73,7 +73,7 @@ namespace Forms
                     OnFinished();
                     //}
                     //else if (!CloseWhenFinished)
-                    //    XMessageBox.Show("Er is zijn geen producties beschikbaar", "Productie Updates");
+                    //    XMessageBox.Show(this, $"Er is zijn geen producties beschikbaar", "Productie Updates");
                     if (CloseWhenFinished)
                         this.Close();
 

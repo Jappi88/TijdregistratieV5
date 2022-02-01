@@ -36,9 +36,9 @@ namespace ProductieManager.Forms
         private void xokb_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(xnaam.Text.Trim()))
-                XMessageBox.Show("Ongeldige paraaf!", "Ongeldig", MessageBoxIcon.Exclamation);
+                XMessageBox.Show(this, $"Ongeldige paraaf!", "Ongeldig", MessageBoxIcon.Exclamation);
             else if (xaantal.Value <= 0)
-                XMessageBox.Show("Ongeldige aantal!\nJe kunt minimaal 1 stuk gereed melden.", "Ongeldig",
+                XMessageBox.Show(this, $"Ongeldige aantal!\nJe kunt minimaal 1 stuk gereed melden.", "Ongeldig",
                     MessageBoxIcon.Exclamation);
             else
             {

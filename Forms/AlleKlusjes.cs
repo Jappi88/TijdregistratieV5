@@ -281,7 +281,7 @@ namespace Forms
                 }
                 catch (Exception ex)
                 {
-                    XMessageBox.Show(ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    XMessageBox.Show(this, ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
         }
 
@@ -292,7 +292,7 @@ namespace Forms
         private void xverwijderklusjes_Click(object sender, EventArgs e)
         {
             if (xklusjes.SelectedObjects.Count > 0)
-                if (XMessageBox.Show("Weetje zeker dat je alle geselecteerde klusjes wilt verwijderen?\n\n" +
+                if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde klusjes wilt verwijderen?\n\n" +
                                      "LET OP:\n" +
                                      "Klusjes verwijderen zal ook je gewerkte tijden weghalen en de producties beinvloeden!\n" +
                                      "Wil je toch doorgaan?", "Verwijderen", MessageBoxButtons.YesNo,
@@ -338,7 +338,7 @@ namespace Forms
 
                 if (!string.IsNullOrEmpty(invalid))
                 {
-                    XMessageBox.Show($"De volgende klus(jes) zijn niet meer geldig!\n" +
+                    XMessageBox.Show(this, $"De volgende klus(jes) zijn niet meer geldig!\n" +
                                      $"{invalid.TrimEnd(new char[] {',', ' '})}", "Ongeldig", MessageBoxIcon.Warning);
                 }
             }

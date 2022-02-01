@@ -65,7 +65,7 @@ namespace Forms
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return xreturn;

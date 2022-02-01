@@ -51,11 +51,11 @@ namespace Forms
                 return;
             if (string.IsNullOrEmpty(cur.UpdatePath) || !Directory.Exists(cur.UpdatePath))
                 XMessageBox.Show(
-                    "Opgegeven locatie bestaat niet!\nKies een geldige database locatie en probeer het opnieuw.",
+                    this, "Opgegeven locatie bestaat niet!\nKies een geldige database locatie en probeer het opnieuw.",
                     "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else if (!cur.UpdateDatabases.Any())
                 XMessageBox.Show(
-                    "Kies minstins 1 update type!",
+                    this, "Kies minstins 1 update type!",
                     "Geen Update Geselecteerd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else
                 UpdateDb();
@@ -70,7 +70,7 @@ namespace Forms
             var xtype = string.Join(", ", cur.UpdateDatabases.Select(x => Enum.GetName(typeof(DbType), x)));
             if (Manager.DbUpdater.IsBussy)
             {
-                XMessageBox.Show("Er wordt momenteel al een update uitgevoerd...\nProbeer het later nog een keer.",
+                XMessageBox.Show(this, $"Er wordt momenteel al een update uitgevoerd...\nProbeer het later nog een keer.",
                     "DbUpdater Bezig", MessageBoxIcon.Warning);
                 return;
             }
@@ -78,11 +78,11 @@ namespace Forms
             UpdateSelected();
             if (done > 0)
                 XMessageBox.Show(
-                    $"{done} Entries van {xtype} zijn succesvol geupdate!",
+                    this, $"{done} Entries van {xtype} zijn succesvol geupdate!",
                     "Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
             else
                 XMessageBox.Show(
-                    $"Geen updates beschikbaar voor {xtype}.",
+                    this, $"Geen updates beschikbaar voor {xtype}.",
                     "Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
             xannuleren.Text = "&Sluiten";
         }
@@ -220,20 +220,19 @@ namespace Forms
             if (DefaultSettings.DbUpdateEntries == null || DefaultSettings.DbUpdateEntries.Any(x =>
                 string.Equals(x.UpdatePath, xpath.Text, StringComparison.OrdinalIgnoreCase)))
             {
-                XMessageBox.Show($"'{xpath.Text}' Is al toegevoegd!", "Bestaat Al", MessageBoxButtons.OK,
+                XMessageBox.Show(this, $"'{xpath.Text}' Is al toegevoegd!", "Bestaat Al", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
             }
             else if (!Directory.Exists(xpath.Text))
             {
-                XMessageBox.Show($"'{xpath.Text}' Bestaat niet!\nKies een geldige locatie a.u.b.", "Bestaat Niet",
+                XMessageBox.Show(this, $"'{xpath.Text}' Bestaat niet!\nKies een geldige locatie a.u.b.", "Bestaat Niet",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
-                var naam = "";
                 var dg = new TextFieldEditor {Title = "Vul in de naam van de database"};
                 if (dg.ShowDialog() != DialogResult.OK) return;
-                naam = dg.SelectedText;
+                var naam = dg.SelectedText;
                 DefaultSettings.DbUpdateEntries.Add(new DatabaseUpdateEntry {Naam = naam, UpdatePath = xpath.Text});
                 var selected = xdbentrylist.SelectedObject;
                 xdbentrylist.SetObjects(DefaultSettings.DbUpdateEntries);

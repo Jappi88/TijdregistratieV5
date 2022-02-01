@@ -118,7 +118,7 @@ namespace Forms
             }
             catch (Exception exception)
             {
-                XMessageBox.Show(exception.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             
         }

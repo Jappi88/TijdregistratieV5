@@ -54,7 +54,7 @@ namespace Forms
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -110,7 +110,7 @@ namespace Forms
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
 
             
@@ -136,7 +136,7 @@ namespace Forms
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                XMessageBox.Show(ex.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, ex.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 

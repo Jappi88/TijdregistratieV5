@@ -513,7 +513,7 @@ namespace Controls
                 var wps = xwerkpleklist.SelectedObjects.Cast<WerkPlek>().Where(x=> x.Storingen.All(s=> s.IsVerholpen)).ToList();
                 if (wps.Count == 0)
                 {
-                    XMessageBox.Show("Geselecteerde werkplekken zijn al onderbroken!", "Al Onderbroken",
+                    XMessageBox.Show(this,"Geselecteerde werkplekken zijn al onderbroken!", "Al Onderbroken",
                         MessageBoxIcon.Exclamation);
                     return;
                 }
@@ -545,7 +545,7 @@ namespace Controls
                 var wps = xwerkpleklist.SelectedObjects.Cast<WerkPlek>().Where(x=> x.Storingen.Any(s=> !s.IsVerholpen)).ToList();
                 if (wps.Count == 0)
                 {
-                    XMessageBox.Show("Geselecteerde werkplekken zijn al bezig!", "Al Bezig",
+                    XMessageBox.Show(this,"Geselecteerde werkplekken zijn al bezig!", "Al Bezig",
                         MessageBoxIcon.Exclamation);
                     return;
                 }
@@ -563,7 +563,7 @@ namespace Controls
                             !x.IsVerholpen && string.Equals(x.StoringType, xstform.Onderbreking?.StoringType,
                                 StringComparison.CurrentCultureIgnoreCase));
                         xstform.SetOnderbreking(wp, xst, true);
-                        var index = -1;
+                        int index;
                         if ((index = wp.Storingen.IndexOf(xstform.Onderbreking)) > -1)
                             wp.Storingen[index] = xstform.Onderbreking;
                         xwerkpleklist.RefreshObject(wp);

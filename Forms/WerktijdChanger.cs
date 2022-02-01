@@ -187,7 +187,7 @@ namespace Forms
             var uurgewerkt = UurGewerkt(rooster);
             if (uurgewerkt <= 0 && isnew)
             {
-                XMessageBox.Show("Ongeldige tijd!\n" +
+                XMessageBox.Show(this, $"Ongeldige tijd!\n" +
                                  "Je totale uren kunnen niet '0' zijn.", "Ongeldig", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
                 return false;
@@ -290,7 +290,7 @@ namespace Forms
                         var x2 = xpers.Count == 1 ? xpers[0].PersoneelNaam : "ze";
                         var x3 = xpers.Count == 1 ? "deze werktijden" : "allemaal deze werktijden";
                         var x4 = xpers.Count == 1 ? "krijgt" : "hebben";
-                        result = XMessageBox.Show($"{x0} {x1} actief op {Werklplek.Naam}.\n\n" +
+                        result = XMessageBox.Show(this, $"{x0} {x1} actief op {Werklplek.Naam}.\n\n" +
                                                       $"Wil je {x2} {x3} geven?",
                             "Medewerkers Werktijden",
                             MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);

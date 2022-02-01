@@ -79,7 +79,7 @@ namespace Forms
         private void xok_Click(object sender, EventArgs e)
         {
             if ((!xextrafieldcheck.Checked && xtextfield.Text.Trim().Length < MinimalTextLength) || (xextrafieldcheck.Checked && xsecondarytextbox.Text.Trim().Length < MinimalTextLength))
-                XMessageBox.Show("Ongeldige waarde", "Ongeldig", MessageBoxIcon.Warning);
+                XMessageBox.Show(this, $"Ongeldige waarde", "Ongeldig", MessageBoxIcon.Warning);
             else
                 DialogResult = DialogResult.OK;
         }

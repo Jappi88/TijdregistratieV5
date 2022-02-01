@@ -328,7 +328,7 @@ namespace Forms
         {
             if (xbewerking.SelectedItem == null)
             {
-                XMessageBox.Show("Kies een bewerking eerst.", "Kies Bewerking", MessageBoxButtons.OK,
+                XMessageBox.Show(this, $"Kies een bewerking eerst.", "Kies Bewerking", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
                 return;
             }
@@ -499,7 +499,7 @@ namespace Forms
             {
                 var pers = xshiftlist.SelectedObjects.Cast<Personeel>().ToArray();
                 var naam = pers.Length > 1 ? $"alle {pers.Length} geselecteerde personen" : pers[0].PersoneelNaam;
-                if (XMessageBox.Show($"Weet je zeker dat je {naam} wilt verwijderen?", "Verwijderen",
+                if (XMessageBox.Show(this, $"Weet je zeker dat je {naam} wilt verwijderen?", "Verwijderen",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == DialogResult.Yes)
                     for (int i = 0; i < pers.Length; i++)
                     {
@@ -649,7 +649,7 @@ namespace Forms
             }
             catch (Exception ex)
             {
-                XMessageBox.Show(ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XMessageBox.Show(this, ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -765,7 +765,7 @@ namespace Forms
             {
                 var plekken = xwerkplekken.SelectedObjects.Cast<WerkPlek>().ToArray();
                 var naam = plekken.Length > 1 ? $"alle {plekken.Length} geselecteerde werkplekken" : plekken[0].Naam;
-                if (XMessageBox.Show($"Weet je zeker dat je {naam} wilt verwijderen?\n\n" +
+                if (XMessageBox.Show(this, $"Weet je zeker dat je {naam} wilt verwijderen?\n\n" +
                                      "Alle medewerkers met gewerkte uren zullen verloren gaan!", "Verwijderen",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
@@ -854,7 +854,7 @@ namespace Forms
                 if (Bewerking.WerkPlekken.Any(x => x.Naam.ToLower() == werkplek.ToLower()))
                 {
                     XMessageBox.Show(
-                        $"{werkplek} bestaat al...",
+                        this, $"{werkplek} bestaat al...",
                         "Bestaat Al", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 else
@@ -1087,9 +1087,9 @@ namespace Forms
                     if (flag)
                     {
                         var result = XMessageBox.Show(
-                            $"Er zijn personeel leden op {plek.Naam} die niet hetzelfde rooster hebben als wat jij hebt gekozen...\n" +
-                            $"De personeel bepaald natuurlijk hoe en wanneer er op {plek.Naam} wordt gewerkt.\n\n" +
-                            $"Wil je dit rooster door geven aan alle personeel leden op {plek.Naam}?",
+                            this, $"Er zijn personeel leden op {plek.Naam} die niet hetzelfde rooster hebben als wat jij hebt gekozen...\n" +
+                                  $"De personeel bepaald natuurlijk hoe en wanneer er op {plek.Naam} wordt gewerkt.\n\n" +
+                                  $"Wil je dit rooster door geven aan alle personeel leden op {plek.Naam}?",
                             "Personeel Werkrooster Wijzigen", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                         if (result == DialogResult.Cancel) return;
                         if (result == DialogResult.Yes)
@@ -1158,7 +1158,7 @@ namespace Forms
                     if (wp.Personen.Any(x =>
                         string.Equals(per.PersoneelNaam, x.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase)))
                     {
-                        var result = XMessageBox.Show($"'{per.PersoneelNaam}' bestaat al op '{wp.Naam}'!\n\n" + 
+                        var result = XMessageBox.Show(this, $"'{per.PersoneelNaam}' bestaat al op '{wp.Naam}'!\n\n" + 
                                                       $@"Zou je {per.PersoneelNaam} willen overschrijven?",$"{per.PersoneelNaam} vervangen op {wp.Naam}",
                             MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                         if (result == DialogResult.Cancel) return;
@@ -1201,7 +1201,7 @@ namespace Forms
                 if (pers.Count > 0)
                 {
                     var x1 = pers.Count == 1 ? pers[0].PersoneelNaam : $"{pers.Count} medewerkers";
-                    if (XMessageBox.Show($"Wil je alle gewerkte tijden van {x1} naar {wp.Naam} verplaatsen?",
+                    if (XMessageBox.Show(this, $"Wil je alle gewerkte tijden van {x1} naar {wp.Naam} verplaatsen?",
                             $"Tijden Naar {wp.Naam}", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) ==
                         DialogResult.Yes)
                     {

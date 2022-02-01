@@ -27,10 +27,10 @@ namespace ProductieManager.Forms
         private void xok_Click(object sender, EventArgs e)
         {
             if (!xemail.Text.Trim().EmailIsValid())
-                XMessageBox.Show("Ongeldige email!\n\nVul in een geldige email en probeer het opnieuw.",
+                XMessageBox.Show(this, $"Ongeldige email!\n\nVul in een geldige email en probeer het opnieuw.",
                     "Ongeldig Email", MessageBoxIcon.Exclamation);
             else if (xname.Text.Trim().Length < 4)
-                XMessageBox.Show("Ongeldige naam!\n\nVul in een geldige naam en probeer het opnieuw.",
+                XMessageBox.Show(this, $"Ongeldige naam!\n\nVul in een geldige naam en probeer het opnieuw.",
                     "Ongeldig Email", MessageBoxIcon.Exclamation);
             else
             {
@@ -39,7 +39,7 @@ namespace ProductieManager.Forms
                 {
                     if (clients.Any(x => string.Equals(x.Name, xname.Text.Trim(), StringComparison.CurrentCultureIgnoreCase)))
                     {
-                        XMessageBox.Show($"Gebruiker naam '{xname.Text.Trim()}' is al toegevoegd!", "Bestaat Al",
+                        XMessageBox.Show(this, $"Gebruiker naam '{xname.Text.Trim()}' is al toegevoegd!", "Bestaat Al",
                             MessageBoxIcon.Exclamation);
                         return;
                     }
@@ -47,7 +47,7 @@ namespace ProductieManager.Forms
                     if (clients.Any(
                         x => string.Equals(x.Email, xemail.Text.Trim(), StringComparison.CurrentCultureIgnoreCase)))
                     {
-                        XMessageBox.Show($"Gebruiker email '{xemail.Text.Trim()}' is al toegevoegd!", "Bestaat Al",
+                        XMessageBox.Show(this, $"Gebruiker email '{xemail.Text.Trim()}' is al toegevoegd!", "Bestaat Al",
                             MessageBoxIcon.Exclamation);
                         return;
                     }

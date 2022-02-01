@@ -226,17 +226,17 @@ namespace Controls
         private void xniewmatb_Click(object sender, EventArgs e)
         {
             if (xomschrijving.Text.Trim().Length < 4)
-                XMessageBox.Show("Ongeldige Omschrijving!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XMessageBox.Show(this, $"Ongeldige Omschrijving!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else if (xartikelnr.Text.Trim().Length < 4)
-                XMessageBox.Show("Ongeldige Artikel Nr!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XMessageBox.Show(this, $"Ongeldige Artikel Nr!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else if (string.IsNullOrEmpty(xlocatie.Text.Trim()))
-                XMessageBox.Show("Ongeldige Locatie!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XMessageBox.Show(this, $"Ongeldige Locatie!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else if (xeenheid.SelectedIndex < 0)
-                XMessageBox.Show("Ongeldige Eenheid! Kies een eenheid voor de aantallen.", "Ongeldig",
+                XMessageBox.Show(this, $"Ongeldige Eenheid! Kies een eenheid voor de aantallen.", "Ongeldig",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             else if (xmateriaallijst.Objects.Cast<Materiaal>()
                 .Any(x => x.ArtikelNr.ToLower() == xartikelnr.Text.ToLower()))
-                XMessageBox.Show("Ongeldige ArtikelNr! ArtikelNr bestaal al, gebruik een andere artikel nr a.u.b. ",
+                XMessageBox.Show(this, $"Ongeldige ArtikelNr! ArtikelNr bestaal al, gebruik een andere artikel nr a.u.b. ",
                     "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
                 xmateriaallijst.AddObject(CreateMaterial());
@@ -260,7 +260,7 @@ namespace Controls
                     txt = $"Weetje zeker dat je alle '{count}' geselecteerd materialen wilt verwijderen?";
                 }
 
-                if (XMessageBox.Show(txt, "Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
+                if (XMessageBox.Show(this, txt, "Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
                     DialogResult.Yes) xmateriaallijst.RemoveObjects(mats);
             }
         }

@@ -176,7 +176,7 @@ namespace ProductieManager
                     {"Afsluiten", DialogResult.No},
                     {"Kies DB", DialogResult.Yes}
                 };
-                var xrslt = XMessageBox.Show("Oorspronkelijke database kan niet geladen worden!\n\n" + " * Kies 'Herstart' als je de ProductieManager opnieuw wilt opstarten.\n" + " * Kies 'Offline' als je gewoon offline wilt werken.\n" + " * Kies anders voor een andere database of sluit de ProductieManager af.", "Database niet gevonden!", MessageBoxIcon.Warning, null, xbtns);
+                var xrslt = XMessageBox.Show(this, $"Oorspronkelijke database kan niet geladen worden!\n\n" + " * Kies 'Herstart' als je de ProductieManager opnieuw wilt opstarten.\n" + " * Kies 'Offline' als je gewoon offline wilt werken.\n" + " * Kies anders voor een andere database of sluit de ProductieManager af.", "Database niet gevonden!", MessageBoxIcon.Warning, null, xbtns);
                 if (xrslt == DialogResult.OK)
                 {
                     Application.Restart();

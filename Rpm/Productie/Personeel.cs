@@ -254,7 +254,7 @@ namespace Rpm.Productie
             return time;
         }
 
-        public static async Task<bool> UpdateKlusjes(Personeel persoon, string naam = null)
+        public static async Task<bool> UpdateKlusjes(IWin32Window owner, Personeel persoon, string naam = null)
         {
             try
             {
@@ -265,7 +265,7 @@ namespace Rpm.Productie
                     x.Status is ProductieState.Gestart or ProductieState.Gestopt &&  !rooster.SameTijden(x.Tijden.WerkRooster));
                 var result = flag
                     ? XMessageBox.Show(
-                        $"Wil je alle loopende klusjes van {persoon.PersoneelNaam} ook updaten?",
+                        owner, $"Wil je alle loopende klusjes van {persoon.PersoneelNaam} ook updaten?",
                         "Personeel Klusjes Updaten", MessageBoxButtons.YesNoCancel,
                         MessageBoxIcon.Question)
                     : DialogResult.No;

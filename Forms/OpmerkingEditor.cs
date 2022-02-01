@@ -36,13 +36,13 @@ namespace Forms
         {
             var ont = xontvangers.Text.Trim().Split(';').Where(x => !string.IsNullOrEmpty(x)).ToList();
             if (xtitle.Text.Trim().Length < 4 || string.Equals(xtitle.Text.Trim(), "vul in een onderwerp...", StringComparison.CurrentCultureIgnoreCase))
-                XMessageBox.Show("Vul in een geldige Title a.u.b.", "Ongeldige Title", MessageBoxIcon.Warning);
+                XMessageBox.Show(this, $"Vul in een geldige Title a.u.b.", "Ongeldige Title", MessageBoxIcon.Warning);
             else if(string.Equals(xontvangers.Text, xontvangers.Items[1].ToString(),
                 StringComparison.CurrentCultureIgnoreCase) || ont.Count == 0)
-                XMessageBox.Show("Vul in minimaal 1 ontvanger a.u.b.", "Ongeldige Ontvanger(s)", MessageBoxIcon.Warning);
+                XMessageBox.Show(this, $"Vul in minimaal 1 ontvanger a.u.b.", "Ongeldige Ontvanger(s)", MessageBoxIcon.Warning);
             else if (xopmerking.Text.Trim().Length < 8 || string.Equals(xopmerking.Text, "Vul in een vraag, opmerking of een verzoek...",
                 StringComparison.CurrentCultureIgnoreCase))
-                XMessageBox.Show("Vul in een geldige Opmerking a.u.b.", "Ongeldige Opmerking", MessageBoxIcon.Warning);
+                XMessageBox.Show(this, $"Vul in een geldige Opmerking a.u.b.", "Ongeldige Opmerking", MessageBoxIcon.Warning);
             else
             {
                 _Selected.SetOpmerking(xtitle.Text.Trim(), xopmerking.Text.Trim(), ont);

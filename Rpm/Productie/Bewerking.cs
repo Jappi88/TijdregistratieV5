@@ -582,18 +582,22 @@ namespace Rpm.Productie
                                         $"[{x.PersoneelNaam}] is gestart aan klus '{klus.Naam} op {klus.WerkPlek}'.").Result;
                                 }
                             }
+
+                            if (plek.IsActief())
+                            {
+                                plek.Tijden.UpdateLijst(klus.Tijden);
+                            }
                         }
 
-                        
+
                         if (plek.IsActief())
                         {
                             plek.Tijden.SetStart();
                             plek.TijdGestart = DateTime.Now;
+                            plek.UpdateWerkRooster(null, true, true, false, false, false, false, true);
+                            plek.LaatstAantalUpdate = DateTime.Now;
+                            plek.UpdateTijdGestart();
                         }
-
-                        plek.UpdateWerkRooster(null, true, true, false, false, false, false, true);
-                        plek.LaatstAantalUpdate = DateTime.Now;
-                        plek.UpdateTijdGestart();
 
                     }
                     //if (newtime || Tijden.Count == 0)

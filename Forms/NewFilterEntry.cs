@@ -280,7 +280,7 @@ namespace ProductieManager.Forms
                     catch (Exception exception)
                     {
                         if (showmessage)
-                            XMessageBox.Show("Ongeldige operand type!", "Ongeldig", MessageBoxButtons.OK,
+                            XMessageBox.Show(this, $"Ongeldige operand type!", "Ongeldig", MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
                         return false;
                     }
@@ -288,7 +288,7 @@ namespace ProductieManager.Forms
                 if (value == null)
                 {
                     if (showmessage)
-                        XMessageBox.Show("Ongeldige Criteria!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        XMessageBox.Show(this, $"Ongeldige Criteria!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
@@ -335,7 +335,7 @@ namespace ProductieManager.Forms
             catch (Exception e)
             {
                 if (showmessage)
-                    XMessageBox.Show(e.Message, "Ongeldige Criteria", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    XMessageBox.Show(this, e.Message, "Ongeldige Criteria", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
         }

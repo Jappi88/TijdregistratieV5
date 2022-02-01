@@ -79,17 +79,17 @@ namespace Forms
             var pass = Convert.ToBase64String(SHA1.Create().ComputeHash(Encoding.UTF8.GetBytes(xpass1.Text)));
             if (pass != Account.Password)
             {
-                XMessageBox.Show("Ongeldige Wachtwoord!\n\nWachtwoord komt niet overeen met je account.", "Ongeldig",
+                XMessageBox.Show(this, $"Ongeldige Wachtwoord!\n\nWachtwoord komt niet overeen met je account.", "Ongeldig",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (xpass2.Text.Length < 6)
             {
-                XMessageBox.Show("Ongeldige Wachtwoord!\n\nWachtwoord moet minimaal 6 karakters hebben.", "Ongeldig",
+                XMessageBox.Show(this, $"Ongeldige Wachtwoord!\n\nWachtwoord moet minimaal 6 karakters hebben.", "Ongeldig",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (xpass2.Text != xpass3.Text)
             {
-                XMessageBox.Show("Ongeldige Wachtwoord!\n\nWachtwoorden komen niet overeen met elkaar..", "Ongeldig",
+                XMessageBox.Show(this, $"Ongeldige Wachtwoord!\n\nWachtwoorden komen niet overeen met elkaar..", "Ongeldig",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else

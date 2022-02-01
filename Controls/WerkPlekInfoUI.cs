@@ -186,7 +186,7 @@ namespace Controls
                     
                     if (bew is { State: ProductieState.Gestopt })
                     {
-                        if (XMessageBox.Show($"Wil je {bew.Naam} van {bew.Omschrijving} starten op {xvals[2]}?", "Productie Starten",
+                        if (XMessageBox.Show(this, $"Wil je {bew.Naam} van {bew.Omschrijving} starten op {xvals[2]}?", "Productie Starten",
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
                             var wp = bew.GetWerkPlek(xvals[2], true);

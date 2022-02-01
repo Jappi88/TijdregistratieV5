@@ -250,7 +250,7 @@ namespace ProductieManager.Forms
         {
             if (!ProductieChat.LoggedIn || ProductieChat.Chat == null)
             {
-                XMessageBox.Show("Je bent niet ingelogd!\n\n Log in om te kunnen chatten met productie.",
+                XMessageBox.Show(this, $"Je bent niet ingelogd!\n\n Log in om te kunnen chatten met productie.",
                     "Niet Ingelogd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 this.Close();
                 return;
@@ -551,7 +551,7 @@ namespace ProductieManager.Forms
             {
                 if (!ofd.FileName.IsImageFile())
                 {
-                    XMessageBox.Show($"'{Path.GetFileName(ofd.FileName)}' is geen geldige afbeelding!",
+                    XMessageBox.Show(this, $"'{Path.GetFileName(ofd.FileName)}' is geen geldige afbeelding!",
                         "Ongeldige Afbeelding", MessageBoxIcon.Error);
                     return;
                 }
@@ -561,14 +561,14 @@ namespace ProductieManager.Forms
                     var img = Image.FromStream(new MemoryStream(File.ReadAllBytes(ofd.FileName)));
                     if (!ProductieChat.ChangeProfielImage(ofd.FileName))
                     {
-                        XMessageBox.Show("Het is niet gelukt om je profiel foto te wijzigen, probeer het later nog eens.",
+                        XMessageBox.Show(this, $"Het is niet gelukt om je profiel foto te wijzigen, probeer het later nog eens.",
                             "Ongeldige Afbeelding", MessageBoxIcon.Exclamation);
                     }
                     img = null;
                 }
                 catch (Exception exception)
                 {
-                    XMessageBox.Show(exception.Message,
+                    XMessageBox.Show(this, exception.Message,
                         "Ongeldige Afbeelding", MessageBoxIcon.Error);
                 }
 

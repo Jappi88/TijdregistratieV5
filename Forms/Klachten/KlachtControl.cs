@@ -119,7 +119,7 @@ namespace ProductieManager.Forms.Klachten
         private void xdelete_Click(object sender, EventArgs e)
         {
             if (Klacht == null) return;
-            if (XMessageBox.Show($"Weetje zeker dat je '{Klacht.Onderwerp}' wilt verwijderen?", "Verwijderen",
+            if (XMessageBox.Show(this, $"Weetje zeker dat je '{Klacht.Onderwerp}' wilt verwijderen?", "Verwijderen",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 Manager.Klachten.RemoveKlacht(Klacht);
         }

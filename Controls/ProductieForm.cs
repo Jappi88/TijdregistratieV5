@@ -369,13 +369,13 @@ namespace Controls
                         //{
                         //    await b.StartProductie(true, true);
                         //}
-                        ProductieListControl.StartBewerkingen(new[] {b});
+                        ProductieListControl.StartBewerkingen(this,new[] {b});
                     else if (b.State == ProductieState.Gestart) await b.StopProductie(true,true);
                 }
             }
             catch (Exception ex)
             {
-                XMessageBox.Show($"Kan productie niet starten!\n\n{ex.Message}", "Fout", MessageBoxButtons.OK,
+                XMessageBox.Show(this, $"Kan productie niet starten!\n\n{ex.Message}", "Fout", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
         }
@@ -457,7 +457,7 @@ namespace Controls
                 }
                 catch (Exception e)
                 {
-                    XMessageBox.Show(e.Message, "Geen Aanbevelingen");
+                    XMessageBox.Show(this, e.Message, "Geen Aanbevelingen");
                 }
         }
 
@@ -532,13 +532,13 @@ namespace Controls
                         ShowAanbevolenPersoneel();
                         break;
                     case "xrooster":
-                        CurrentBewerking()?.DoBewerkingEigenRooster();
+                        CurrentBewerking()?.DoBewerkingEigenRooster(this);
                         break;
                     case "xonderbreking":
                         ShowSelectedBewStoringen();
                         break;
                     case "xwerktijden":
-                        CurrentBewerking()?.ShowWerktIjden();
+                        CurrentBewerking()?.ShowWerktIjden(this);
                         break;
                     case "xopenpdf":
                         ShowProductiePdf();
@@ -556,7 +556,7 @@ namespace Controls
         {
             var xselected = CurrentBewerking();
             if (xselected == null) return;
-            var res = XMessageBox.Show("Wil je de geselecteerde producties helemaal verwijderen?\n\n" +
+            var res = XMessageBox.Show(this, $"Wil je de geselecteerde producties helemaal verwijderen?\n\n" +
                                    "Click op 'Ja' als je helemaal van de database wilt verwijderen.\n" +
                                    "Click op 'Nee' als je alleen op een verwijderde status wilt te zetten.", "",
             MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
@@ -702,7 +702,7 @@ namespace Controls
 
         private void xOnderbreek_Click(object sender, EventArgs e)
         {
-            CurrentBewerking()?.DoOnderbreking();
+            CurrentBewerking()?.DoOnderbreking(this);
         }
 
         private void button1_Click(object sender, EventArgs e)

@@ -99,15 +99,15 @@ namespace Forms
         {
             if (xwerkplekcheck.Checked && string.IsNullOrEmpty(xwerkplekken.Text.Trim()))
                 XMessageBox.Show(
-                    "Werkplekken is aangevinkt, maar het veld is leeg!\nvul in of kies werkplek en probeer het opniew.",
+                    this, "Werkplekken is aangevinkt, maar het veld is leeg!\nvul in of kies werkplek en probeer het opniew.",
                     "Werkplekken", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else if (xbewerkingcheck.Checked && string.IsNullOrEmpty(xbewerkingen.Text.Trim()))
                 XMessageBox.Show(
-                    "Bewerking is aangevinkt, maar het veld is leeg!\nvul in of kies een bewerking en probeer het opniew.",
+                    this, "Bewerking is aangevinkt, maar het veld is leeg!\nvul in of kies een bewerking en probeer het opniew.",
                     "Bewerking", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else if (xcriteriacheckbox.Checked && string.IsNullOrWhiteSpace(xcriteria.Text.Trim()))
                 XMessageBox.Show(
-                    "Artikelnr, productienr of een omschrijving is aangevinkt, maar het veld is leeg!\nvul in een criteria waar de productie aan moet voldoen.",
+                    this, "Artikelnr, productienr of een omschrijving is aangevinkt, maar het veld is leeg!\nvul in een criteria waar de productie aan moet voldoen.",
                     "Criteria", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else
                 return true;
@@ -271,7 +271,7 @@ namespace Forms
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message,"Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message,"Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -329,7 +329,7 @@ namespace Forms
                 }
                 catch (Exception e)
                 {
-                    XMessageBox.Show(e.Message, "Fout", MessageBoxButtons.OK,
+                    XMessageBox.Show(this, e.Message, "Fout", MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }
 

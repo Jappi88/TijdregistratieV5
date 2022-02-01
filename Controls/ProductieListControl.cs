@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
@@ -196,7 +197,7 @@ namespace Controls
                 string xret = $"<span color='{Color.Navy.Name}'>" +
                               $"{xvalue} <b>{x0}</b>{x1}, Gemaakt <b>{xgemaakt}/ {xtotaal}</b>, in <b>{xtijd}/ {xtotaaltijd} uur</b>, met een gemiddelde van <b>{xpu}p/u</b>" +
                               $"</span>";
-                xStatusLabel.Text = xret;
+                //xStatusLabel.Text = xret;
             }
             catch (Exception e)
             {
@@ -299,7 +300,7 @@ namespace Controls
                 //resetToolStripMenuItem.Visible = Manager.Opties?.Filters?.Any(x =>
                 //    x.IsTempFilter && x.ListNames.Any(s =>
                 //        string.Equals(s, ListName, StringComparison.CurrentCultureIgnoreCase))) ?? false;
-                UpdateStatusText();
+                //UpdateStatusText();
             }
             catch (Exception e)
             {
@@ -423,8 +424,7 @@ namespace Controls
                 x.ListNames.Any(listname=> string.Equals(listname, xname, StringComparison.CurrentCultureIgnoreCase)));
             if (xcols == null)
             {
-                xcols = xlist.FirstOrDefault(x =>
-                    string.Equals(x.Name, ListName, StringComparison.CurrentCultureIgnoreCase));
+                xcols = xlist.FirstOrDefault(x => x.UseAsDefault);
                 if (xcols == null)
                 {
                     xcols = new ExcelSettings(ListName, ListName,false);
@@ -586,13 +586,12 @@ namespace Controls
                 if (Manager.ListLayouts == null || Manager.ListLayouts.Disposed)
                     return;
                 var xlists = Manager.ListLayouts.GetAlleLayouts().Where(x=> !x.IsExcelSettings).ToList();
-                InitLayoutStrips(xlists);
-                var xcols = xlists?.FirstOrDefault(x => x.IsUsed(ListName));
+               
+                var xcols = xlists.FirstOrDefault(x => x.IsUsed(ListName));
                 OLVColumn xsort = null;
                 if (xcols == null)
                 {
-                    xcols = xlists?.FirstOrDefault(x =>
-                        string.Equals(x.Name, ListName, StringComparison.CurrentCultureIgnoreCase));
+                    xcols = xlists.FirstOrDefault(x=> x.UseAsDefault);
                     if (xcols != null)
                     {
                         xcols.SetSelected(true, ListName);
@@ -603,6 +602,7 @@ namespace Controls
                         Manager.ListLayouts.SaveLayout(xcols, "Nieuwe Lijst Layout Aangemaakt!",false);
                     }
                 }
+                InitLayoutStrips(xlists);
                 if (xcols?.Columns != null)
                 {
                     if (xcols.Columns.Count == 0)
@@ -1149,9 +1149,8 @@ namespace Controls
                 if (changed)
                 {
                     OnItemCountChanged();
-                    SetButtonEnable();
                 }
-
+                SetButtonEnable();
                 return xreturn;
             }
             catch (ObjectDisposedException)
@@ -1545,7 +1544,7 @@ namespace Controls
                     bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToList();
                 }
 
-                StartBewerkingen(bws.ToArray());
+                StartBewerkingen(this, bws.ToArray());
                 this.Focus();
             }
         }
@@ -1576,7 +1575,7 @@ namespace Controls
             }
         }
 
-        public static void StartBewerkingen(Bewerking[] bws)
+        public static void StartBewerkingen(IWin32Window owner, Bewerking[] bws)
         {
             var count = bws.Length;
             if (count > 0)
@@ -1584,7 +1583,7 @@ namespace Controls
                 var withnopers = bws.Count(x => x.AantalActievePersonen == 0);
                 var valid = true;
                 if (withnopers > 1)
-                    valid = XMessageBox.Show(
+                    valid = XMessageBox.Show(owner,
                         $"Je staat op het punt {withnopers} bewerkingen te starten waar geen personeel voor is ingezet.\n" +
                         "Wil je ze allemaal achter elkaar indelen?\n\n" +
                         $"Je zal dat {withnopers} keer moeten doen.\n" +
@@ -1616,7 +1615,7 @@ namespace Controls
                                             var afzonderlijk = false;
                                             if (pers.SelectedPersoneel.Length > 1 && werk.IsBemand)
                                             {
-                                                var result = XMessageBox.Show(
+                                                var result = XMessageBox.Show(owner,
                                                     $"Je hebt {pers.SelectedPersoneel.Length} medewerkers geselecteerd," +
                                                     " wil je ze allemaal afzonderlijk indelen?", "Indeling",
                                                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
@@ -1694,7 +1693,7 @@ namespace Controls
                     }
                     catch (Exception exception)
                     {
-                        XMessageBox.Show(exception.Message,
+                        XMessageBox.Show(owner, exception.Message,
                             "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
             }
@@ -1752,12 +1751,12 @@ namespace Controls
         private void MeldSelectedProductieGereed()
         {
             if (ProductieLijst.SelectedObject is ProductieFormulier p)
-                MeldGereed(p);
+                MeldGereed(this,p);
             else if (ProductieLijst.SelectedObject is Bewerking bew)
-                MeldBewerkingGereed(bew);
+                MeldBewerkingGereed(this, bew);
         }
 
-        public static bool MeldGereed(ProductieFormulier form)
+        public static bool MeldGereed(IWin32Window owner, ProductieFormulier form)
         {
             var p = form;
             if (p != null && p.State != ProductieState.Verwijderd && p.State != ProductieState.Gereed)
@@ -1766,7 +1765,7 @@ namespace Controls
                 var res = DialogResult.Yes;
                 if (bews.Length > 0)
                     res = XMessageBox.Show(
-                        "Er is één of meer bewerking(en) waarvan de aantallen niet bereikt zijn...\nWilt u toch doorgaan met gereedmelden?",
+                        owner,"Er is één of meer bewerking(en) waarvan de aantallen niet bereikt zijn...\nWilt u toch doorgaan met gereedmelden?",
                         "Niet Gereed", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (res == DialogResult.Yes)
                 {
@@ -1784,14 +1783,14 @@ namespace Controls
             return false;
         }
 
-        public static bool MeldBewerkingGereed(Bewerking bewerking)
+        public static bool MeldBewerkingGereed(IWin32Window owner, Bewerking bewerking)
         {
             var b = bewerking;
             if (b != null && b.State != ProductieState.Verwijderd && b.State != ProductieState.Gereed)
             {
                 var res = DialogResult.Yes;
                 if (b.TotaalGemaakt < b.Aantal)
-                    res = XMessageBox.Show(
+                    res = XMessageBox.Show(owner,
                         $"Aantal van '{b.Naam}' is nog niet bereikt... Je hebt maar {b.TotaalGemaakt} van de {b.Aantal} gemaakt.\nWeetje zeker dat je toch verder wilt gaan met gereedmelden?",
                         "Niet Klaar", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (res == DialogResult.Yes)
@@ -1938,7 +1937,7 @@ namespace Controls
                 else bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToList();
 
                 foreach (var bw in bws)
-                    bw.ShowWerktIjden();
+                    bw.ShowWerktIjden(this);
             }
         }
 
@@ -1970,7 +1969,7 @@ namespace Controls
                 }
                 catch (Exception e)
                 {
-                    XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                    XMessageBox.Show(this,e.Message, "Fout", MessageBoxIcon.Error);
                 }
             else
                 try
@@ -1996,7 +1995,7 @@ namespace Controls
                 }
                 catch (Exception e)
                 {
-                    XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                    XMessageBox.Show(this,e.Message, "Fout", MessageBoxIcon.Error);
                 }
         }
 
@@ -2040,7 +2039,7 @@ namespace Controls
             }
             catch (Exception exception)
             {
-                XMessageBox.Show("Er zijn geen aanbevelingen", "Geen Aanbevelingen");
+                XMessageBox.Show(this,"Er zijn geen aanbevelingen", "Geen Aanbevelingen");
             }
         }
 
@@ -2048,7 +2047,7 @@ namespace Controls
         {
             if (ProductieLijst.SelectedObjects.Count == 0)
                 return;
-            var res = XMessageBox.Show("Wil je de geselecteerde producties helemaal verwijderen?\n\n" +
+            var res = XMessageBox.Show(this,"Wil je de geselecteerde producties helemaal verwijderen?\n\n" +
                                                "Click op 'Ja' als je helemaal van de database wilt verwijderen.\n" +
                                                "Click op 'Nee' als je alleen op een verwijderde status wilt te zetten.", "",
                         MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
@@ -2093,7 +2092,7 @@ namespace Controls
                 //if (done > 0)
                 //{
                 //    string xvalue = done == 1 ? "productie" : "producties";
-                //    XMessageBox.Show($"{done} {xvalue} succesvol verwijderd!", "Verwijderd", MessageBoxButtons.OK,
+                //    XMessageBox.Show(this, $"{done} {xvalue} succesvol verwijderd!", "Verwijderd", MessageBoxButtons.OK,
                 //        MessageBoxIcon.Information);
                 //}
             }
@@ -2190,7 +2189,7 @@ namespace Controls
                 }
                 catch (Exception e)
                 {
-                    XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                    XMessageBox.Show(this,e.Message, "Fout", MessageBoxIcon.Error);
                 }
             else
                 try
@@ -2236,7 +2235,7 @@ namespace Controls
                 }
                 catch (Exception e)
                 {
-                    XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                    XMessageBox.Show(this,e.Message, "Fout", MessageBoxIcon.Error);
                 }
         }
 
@@ -2305,7 +2304,7 @@ namespace Controls
                 }
                 catch (Exception e)
                 {
-                    XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                    XMessageBox.Show(this,e.Message, "Fout", MessageBoxIcon.Error);
                 }
             else
                 try
@@ -2331,7 +2330,7 @@ namespace Controls
                 }
                 catch (Exception e)
                 {
-                    XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                    XMessageBox.Show(this,e.Message, "Fout", MessageBoxIcon.Error);
                 }
         }
 
@@ -2386,7 +2385,7 @@ namespace Controls
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this,e.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -2426,7 +2425,7 @@ namespace Controls
             }
             catch (Exception e)
             {
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this,e.Message, "Fout", MessageBoxIcon.Error);
             }
 
             return xreturn;
@@ -2703,7 +2702,7 @@ namespace Controls
                 
                 foreach (var xitem in xBeheerweergavetoolstrip.DropDownItems)
                 {
-                    if (xitem is ToolStripMenuItem ts && ts.Tag is ExcelSettings)
+                    if (xitem is ToolStripMenuItem {Tag: ExcelSettings} ts)
                         xret.Add(ts);
 
                 }
@@ -3209,8 +3208,13 @@ namespace Controls
         {
             if (SelectedItem is Bewerking bw)
             {
-                bw.DoOnderbreking();
+                bw.DoOnderbreking(this);
             }
+        }
+
+        private void xBeheerweergavetoolstrip_Click(object sender, EventArgs e)
+        {
+            xBeheerweergavetoolstrip.ShowDropDown();
         }
     }
 }

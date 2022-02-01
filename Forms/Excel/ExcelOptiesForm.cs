@@ -83,7 +83,7 @@ namespace Forms
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -254,7 +254,7 @@ namespace Forms
             {
                 var xcount = xZichtbareColumnsView.SelectedObjects.Count;
                 var x1 = xcount == 1 ? $"'{(xZichtbareColumnsView.SelectedObject as ExcelColumnEntry)?.Naam}'" : $"{xcount} columns";
-                if (XMessageBox.Show($"Weetje zeker dat je {x1} wilt verwijderen?", "Columns Verwijderen",
+                if (XMessageBox.Show(this, $"Weetje zeker dat je {x1} wilt verwijderen?", "Columns Verwijderen",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
                     return;
                 var xitems = xZichtbareColumnsView.SelectedObjects.Cast<ExcelColumnEntry>().ToArray();
@@ -279,7 +279,7 @@ namespace Forms
                 var txt = xtb.SelectedText;
                 if (Settings.Any(x => string.Equals(x.Name, txt, StringComparison.CurrentCultureIgnoreCase)))
                 {
-                    XMessageBox.Show($"'{txt}' bestaat al!", "Bestaat Al", MessageBoxIcon.Exclamation);
+                    XMessageBox.Show(this, $"'{txt}' bestaat al!", "Bestaat Al", MessageBoxIcon.Exclamation);
                 }
                 else
                 {
@@ -297,7 +297,7 @@ namespace Forms
             {
                 var xcount = xOptiesView.SelectedObjects.Count;
                 var x1 = xcount == 1 ? $"'{(xOptiesView.SelectedObject as ExcelSettings)?.Name}'" : $"{xcount} opties";
-                if (XMessageBox.Show($"Weetje zeker dat je {x1} wilt verwijderen?", "Opties Verwijderen",
+                if (XMessageBox.Show(this, $"Weetje zeker dat je {x1} wilt verwijderen?", "Opties Verwijderen",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.None)
                     return;
                 var xitems = xOptiesView.SelectedObjects.Cast<ExcelSettings>().ToArray();
@@ -308,6 +308,7 @@ namespace Forms
                 if (xc > 0)
                 {
                     xOptiesView.SetObjects(Settings);
+                    UpdateSelectedFields();
                 }
             }
         }
@@ -324,6 +325,9 @@ namespace Forms
                 xColumnBreedte.Enabled = !entry.AutoSize;
                 xautoculmncheckbox.Checked = entry.AutoSize;
                 xverborgencheckbox.Checked = entry.IsVerborgen;
+                xstandaard.Visible = true;
+                xstandaard.Checked = settings.UseAsDefault;
+                xstandaard.Text = $"{settings.Name} Als Standaard Layout";
                 switch (entry.Type)
                 {
                     case CalculationType.None:
@@ -373,6 +377,7 @@ namespace Forms
             }
             else
             {
+                xstandaard.Visible = false;
                 xColorRegelStatusLabel.Text = "";
                 xColumnTextBox.Text = "";
                 xColumnFormatTextbox.Text = "";
@@ -487,7 +492,7 @@ namespace Forms
         {
             if (IsSelectDialog && !Settings.Any(x => x.IsUsed("ExcelColumns")))
             {
-                XMessageBox.Show("Selecteer een optie om te gebruiken", "Selecteer Optie", MessageBoxIcon.Exclamation);
+                XMessageBox.Show(this, $"Selecteer een optie om te gebruiken", "Selecteer Optie", MessageBoxIcon.Exclamation);
                 return;
             }
             DialogResult = DialogResult.OK;
@@ -572,7 +577,7 @@ namespace Forms
                     if (string.Equals(setting.Name, txt, StringComparison.CurrentCultureIgnoreCase)) return;
                     if (Settings.Any(x => string.Equals(x.Name, txt, StringComparison.CurrentCultureIgnoreCase)))
                     {
-                        XMessageBox.Show($"'{txt}' bestaat al!", "Bestaat Al", MessageBoxIcon.Exclamation);
+                        XMessageBox.Show(this, $"'{txt}' bestaat al!", "Bestaat Al", MessageBoxIcon.Exclamation);
                     }
                     else
                     {
@@ -675,6 +680,26 @@ namespace Forms
         {
             if (Settings == null) return;
             Manager.UpdateExcelColumns(Settings,true,true,IsExcelColumnSettings);
+        }
+
+        private void xstandaard_CheckedChanged(object sender, EventArgs e)
+        {
+            if (xOptiesView.SelectedObject is ExcelSettings xset)
+            {
+                var xindex = Settings.IndexOf(xset);
+                if (xindex == -1) return;
+                if (xstandaard.Checked)
+                {
+                    Settings.ForEach(x =>
+                    {
+                        x.UseAsDefault = false;
+                        xOptiesView.RefreshObject(x);
+                    });
+                }
+
+                Settings[xindex].UseAsDefault = xstandaard.Checked;
+                xOptiesView.RefreshObject(Settings[xindex]);
+            }
         }
     }
 }

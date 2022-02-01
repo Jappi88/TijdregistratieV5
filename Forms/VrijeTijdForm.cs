@@ -131,7 +131,7 @@ namespace Forms
             var x = UurVrij();
             if (x <= 0)
             {
-                XMessageBox.Show("Ongeldige aanvraag!\n" +
+                XMessageBox.Show(this, $"Ongeldige aanvraag!\n" +
                                  "Je totale uren kunnen niet '0' zijn.", "Ongeldig", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
             }
@@ -162,7 +162,7 @@ namespace Forms
         private void xverwijdervrij_Click(object sender, EventArgs e)
         {
             if (xvrijetijdlist.SelectedObjects.Count > 0)
-                if (XMessageBox.Show("Weetje zeker dat je alle geselecteerde vrije uren wilt verwijderen?"
+                if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde vrije uren wilt verwijderen?"
                     , "Ongeldig", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     xvrijetijdlist.RemoveObjects(xvrijetijdlist.SelectedObjects);

@@ -46,7 +46,7 @@ namespace Forms
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -319,7 +319,7 @@ namespace Forms
             if (Manager.Klachten == null) return;
             var xs = SelectedKlacht;
             if (xs?.Klacht == null) return;
-            if (XMessageBox.Show($"Weetje zeker dat je '{xs.Klacht.Onderwerp}' wilt verwijderen?", "Verwijderen",
+            if (XMessageBox.Show(this, $"Weetje zeker dat je '{xs.Klacht.Onderwerp}' wilt verwijderen?", "Verwijderen",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 Manager.Klachten.RemoveKlacht(xs.Klacht);
         }

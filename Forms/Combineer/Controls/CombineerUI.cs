@@ -112,7 +112,7 @@ namespace Controls
                         string.Equals(c.Path, Productie.Path, StringComparison.CurrentCultureIgnoreCase)));
                 if (prods.Count == 0)
                 {
-                    XMessageBox.Show("Geen producties om te combineren");
+                    XMessageBox.Show(this, $"Geen producties om te combineren");
                     return;
                 }
                 var xbwselector = new BewerkingSelectorForm(prods, false, false);
@@ -160,7 +160,7 @@ namespace Controls
             }
             catch (Exception exception)
             {
-                XMessageBox.Show(exception.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
             }
         }
     }

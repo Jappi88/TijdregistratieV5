@@ -139,7 +139,7 @@ namespace Forms.GereedMelden
             }
             catch (Exception ex)
             {
-                XMessageBox.Show(ex.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, ex.Message, "Fout", MessageBoxIcon.Error);
             }
 
         }

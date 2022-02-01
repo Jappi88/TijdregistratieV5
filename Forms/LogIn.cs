@@ -51,7 +51,7 @@ namespace Forms
             }
             catch (Exception ex)
             {
-                XMessageBox.Show(ex.Message, "Inlog Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XMessageBox.Show(this, ex.Message, "Inlog Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

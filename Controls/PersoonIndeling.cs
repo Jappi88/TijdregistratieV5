@@ -248,7 +248,7 @@ namespace Controls
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
-                XMessageBox.Show(exception.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this,exception.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 

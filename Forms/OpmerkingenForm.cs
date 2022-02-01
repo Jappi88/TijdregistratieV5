@@ -171,7 +171,7 @@ namespace Forms
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                XMessageBox.Show(e.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -287,7 +287,7 @@ namespace Forms
                 var xcur = xOpmerkingenTree.Nodes[0].Nodes.Find(op.Title, false);
                 if (xcur.Length > 0)
                 {
-                    XMessageBox.Show($"Er bestaal al een opmerking  met de title '{op.Title}'...\n\n" +
+                    XMessageBox.Show(this, $"Er bestaal al een opmerking  met de title '{op.Title}'...\n\n" +
                                      $"Maak een opmerking met een andere Title, of sluit je aan bij de bestaande versie.",
                         "Title Bestaal Al", MessageBoxIcon.Warning);
                     xOpmerkingenTree.SelectedNode = xcur[0];
@@ -361,7 +361,7 @@ namespace Forms
                 {
                     bool flag = tn.Parent != null && tn.Parent.Text.ToLower().StartsWith("bijlage");
                     var xname = flag ? tn.Text : xent.Title;
-                    if (XMessageBox.Show($"Weetje zeker dat je '{xname}' wilt verwijderen?", "Opmerking verwijderen",
+                    if (XMessageBox.Show(this, $"Weetje zeker dat je '{xname}' wilt verwijderen?", "Opmerking verwijderen",
                             MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                     {
                         timer1.Stop();
@@ -394,7 +394,7 @@ namespace Forms
                     var xcur = xOpmerkingenTree.Nodes[0].Nodes.Find(op.Title, false);
                     if (xcur.Length > 0)
                     {
-                        XMessageBox.Show($"Er bestaal al een opmerking  met de title '{op.Title}'...\n\n" +
+                        XMessageBox.Show(this, $"Er bestaal al een opmerking  met de title '{op.Title}'...\n\n" +
                                          $"Maak een opmerking met een andere Title, of sluit je aan bij de bestaande versie.",
                             "Title Bestaal Al", MessageBoxIcon.Warning);
                         xOpmerkingenTree.SelectedNode = xcur[0];
