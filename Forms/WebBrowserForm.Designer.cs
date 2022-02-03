@@ -42,7 +42,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Fabrikage Tekening";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WebBrowserForm_FormClosing);
-            this.Shown += new System.EventHandler(this.WebBrowserForm_Shown);
             this.ResumeLayout(false);
 
         }

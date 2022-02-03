@@ -1,14 +1,14 @@
-﻿using System;
+﻿using BrightIdeasSoftware;
+using Rpm.Misc;
+using Rpm.Productie;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using BrightIdeasSoftware;
-using Rpm.Misc;
-using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class AlleVaardigheden : MetroFramework.Forms.MetroForm
+    public partial class AlleVaardigheden : Forms.MetroBase.MetroBaseForm
     {
         public readonly StickyWindow _stickyWindow;
 

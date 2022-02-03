@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace ProductieManager.Forms
+namespace Forms
 {
     public partial class SelectScreenImage : Form
     {

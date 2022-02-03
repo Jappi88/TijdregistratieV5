@@ -1,14 +1,14 @@
-﻿using System;
+﻿using BrightIdeasSoftware;
+using Rpm.Productie;
+using Rpm.SqlLite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using BrightIdeasSoftware;
-using Rpm.Productie;
-using Rpm.SqlLite;
 
 namespace Forms
 {
-    public partial class DbBewerkingChanger : MetroFramework.Forms.MetroForm
+    public partial class DbBewerkingChanger : Forms.MetroBase.MetroBaseForm
     {
        // private readonly List<BewerkingEntry> _deletedentries = new();
         private List<BewerkingEntry> _entries = new();

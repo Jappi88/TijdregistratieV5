@@ -1,10 +1,10 @@
-﻿using System.Windows.Forms;
-using Rpm.Misc;
+﻿using Rpm.Misc;
 using Rpm.Productie.AantalHistory;
+using System.Windows.Forms;
 
 namespace Forms.Aantal
 {
-    public partial class NewAantalRecordForm : MetroFramework.Forms.MetroForm
+    public partial class NewAantalRecordForm : Forms.MetroBase.MetroBaseForm
     {
         public NewAantalRecordForm()
         {

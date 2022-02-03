@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Rpm.Various;
+using System;
 using System.Windows.Forms;
-using Rpm.Various;
 
 namespace Forms
 {
-    public partial class LoadingForm : MetroFramework.Forms.MetroForm
+    public partial class LoadingForm : Forms.MetroBase.MetroBaseForm
     {
         public ProgressArg Arg { get; set; } = new ProgressArg();
 

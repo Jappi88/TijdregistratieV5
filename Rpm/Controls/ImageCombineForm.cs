@@ -8,7 +8,7 @@ using Rpm.Misc;
 
 namespace Rpm.Controls
 {
-    public partial class ImageCombineForm : MetroFramework.Forms.MetroForm
+    public partial class ImageCombineForm : Forms.MetroBase.MetroBaseForm
     {
         public ImageCombineForm()
         {

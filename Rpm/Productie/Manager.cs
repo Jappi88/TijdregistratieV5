@@ -22,6 +22,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MetroFramework;
+using Rpm.Controls;
 using Rpm.Productie.Verpakking;
 using Timer = System.Timers.Timer;
 
@@ -1591,24 +1592,22 @@ namespace Rpm.Productie
 
         private static DateTime _lastchecked = default;
 
-        public static void CheckForAantalChange()
+        public static Task CheckForAantalChange()
         {
-            if (_isChecking) return;
-            _isChecking = true;
-            // Task.Factory.StartNew(async () =>
-            // {
-            try
+            return Task.Factory.StartNew(() =>
             {
-                var form = Application.OpenForms["AantalGemaaktProducties"];
-                if (form == null && Database is {IsDisposed: false} && Manager.LogedInGebruiker != null)
+                try
                 {
-                    List<Bewerking> bws = new List<Bewerking>();
-                    int mins = Opties.MinVoorControle;
-                    if (_lastchecked.AddMinutes(5) < DateTime.Now)
+                    var form = Application.OpenForms["AantalGemaaktProducties"];
+                    if (form == null && Database is {IsDisposed: false} && Manager.LogedInGebruiker != null)
                     {
-
-                        Task.Factory.StartNew(() =>
+                        List<Bewerking> bws = new List<Bewerking>();
+                        int mins = Opties.MinVoorControle;
+                        if (_lastchecked.AddMinutes(5) < DateTime.Now)
                         {
+
+                            // Task.Factory.StartNew(() =>
+                            //{
                             bws = Database.GetBewerkingen(ViewState.Gestart, true, null, null).Result;
 
                             var rooster = Opties.GetWerkRooster();
@@ -1623,24 +1622,25 @@ namespace Rpm.Productie
                                                      x.GestartDoor, Manager.Opties.Username,
                                                      StringComparison.CurrentCultureIgnoreCase) &&
                                                  x.WerkPlekken.Any(w => w.NeedsAantalUpdate(mins))).ToList();
-                            _isChecking = false;
-                        }).Wait(60000);
+                            //_isChecking = false;
+                            //}).Wait(60000);
 
+                        }
+
+
+                        if (bws.Count > 0 && !_isChecking)
+                        {
+                            FormulierActie(new object[] {bws, mins}, MainAktie.OpenAantalGemaaktProducties);
+                            _lastchecked = DateTime.Now;
+                        }
                     }
 
-                    if (bws.Count > 0 && !_isChecking)
-                    {
-                        FormulierActie(new object[] {bws, mins}, MainAktie.OpenAantalGemaaktProducties);
-                        _lastchecked = DateTime.Now;
-                    }
                 }
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            // });
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            });
         }
 
         private void _syncTimer_Tick(object sender, EventArgs e)
@@ -1666,7 +1666,7 @@ namespace Rpm.Productie
                     if (ProductieProvider.FolderSynchronization is { Syncing: false })
                         ProductieProvider?.InitOfflineDb();
 
-                    CheckForAantalChange();
+                    CheckForAantalChange().Wait();
                 }
             }
             catch (Exception s)
@@ -1710,10 +1710,6 @@ namespace Rpm.Productie
         /// </summary>
         public static event RequestRespondDialogHandler RequestRespondDialog;
         /// <summary>
-        /// Een event om vanuit de beheerder een formulier actie laten uitvoeren
-        /// </summary>
-        public static event FormulierActieHandler OnFormulierActie;
-        /// <summary>
         /// Een event om een formulierwijziging door te geven
         /// </summary>
         public static event FormulierChangedHandler OnFormulierChanged;
@@ -1753,6 +1749,7 @@ namespace Rpm.Productie
         /// Een event voor het tonen van een bericht
         /// </summary>
         private static event RemoteMessageHandler _remoteMessage;
+        private static event FormulierActieHandler _formulierActie;
         /// <summary>
         /// Veilig event voor het oproepen van een bericht
         /// </summary>
@@ -1771,6 +1768,28 @@ namespace Rpm.Productie
                 lock (_messageLocker)
                 {
                     _remoteMessage -= value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Een event om vanuit de beheerder een formulier actie laten uitvoeren
+        /// </summary>
+        public static event FormulierActieHandler OnFormulierActie
+        {
+            add
+            {
+                lock (_actieLocker)
+                {
+                    _formulierActie += value;
+                }
+            }
+
+            remove
+            {
+                lock (_actieLocker)
+                {
+                    _formulierActie -= value;
                 }
             }
         }
@@ -1909,7 +1928,14 @@ namespace Rpm.Productie
         /// <param name="type">De soort aktie die ondernomen moet worden</param>
         public static void FormulierActie(object[] values, MainAktie type)
         {
-            OnFormulierActie?.Invoke(values, type);
+            FormulierActieHandler handler;
+
+            lock (_actieLocker)
+            {
+                handler = _formulierActie;
+            }
+
+            handler?.Invoke(values, type);
         }
 
         /// <summary>
@@ -2080,7 +2106,7 @@ namespace Rpm.Productie
         #region Threadsafe RespondMessage
 
         private static object _messageLocker = new();
-
+        private static object _actieLocker = new();
         /// <summary>
         /// Roep op om een bericht te laten zien
         /// </summary>
@@ -2209,7 +2235,6 @@ namespace Rpm.Productie
             OnProductiesLoaded = null;
             OnPersoneelChanged = null;
             OnPersoneelDeleted = null;
-            OnFormulierActie = null;
             OnFormulierChanged = null;
             OnFormulierDeleted = null;
             OnDbEndUpdate = null;

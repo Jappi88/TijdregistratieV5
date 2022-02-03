@@ -230,6 +230,58 @@ namespace Rpm.SqlLite
             });
         }
 
+        public Task<List<ProductieFormulier>> GetProducties(List<string> ids)
+        {
+            return Task.Run(() =>
+            {
+                var xret = new List<ProductieFormulier>();
+                try
+                {
+                    foreach (var id in ids)
+                    {
+                        var xprod = Manager.Database?.GetProductie(id).Result;
+                        if (xprod == null) continue;
+                        xret.Add(xprod);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+
+                return xret;
+            });
+        }
+
+        public Task<List<Bewerking>> GetBewerkingen(List<string> ids, bool filter)
+        {
+            return Task.Run(() =>
+            {
+                var xret = new List<Bewerking>();
+                try
+                {
+                    foreach (var id in ids)
+                    {
+                        var xprod = Manager.Database?.GetProductie(id).Result;
+                        if (xprod?.Bewerkingen == null) continue;
+                        foreach (var bw in xprod.Bewerkingen)
+                        {
+                            if (filter && !bw.IsAllowed())
+                                continue;
+                            xret.Add(bw);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+
+                return xret;
+            });
+        }
+
+
         public Task<List<ProductieFormulier>> GetAllProducties(bool incgereed, bool filter)
         {
             return GetAllProducties(incgereed, filter, null);

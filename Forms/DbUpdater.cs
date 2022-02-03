@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Windows.Forms;
-using BrightIdeasSoftware;
-using ProductieManager;
+﻿using BrightIdeasSoftware;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.SqlLite;
 using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class DbUpdater : MetroFramework.Forms.MetroForm
+    public partial class DbUpdater : Forms.MetroBase.MetroBaseForm
     {
         public UserSettings DefaultSettings { get; private set; }
         private readonly CancellationTokenSource _token = new();

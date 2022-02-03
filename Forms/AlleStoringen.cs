@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using BrightIdeasSoftware;
+﻿using BrightIdeasSoftware;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class AlleStoringen : MetroFramework.Forms.MetroForm
+    public partial class AlleStoringen : Forms.MetroBase.MetroBaseForm
     {
         public readonly StickyWindow _stickyWindow;
         private TijdEntry Bereik { get; set; }

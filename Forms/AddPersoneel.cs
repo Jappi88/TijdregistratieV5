@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Windows.Forms;
-using Rpm.Misc;
+﻿using Rpm.Misc;
 using Rpm.Productie;
+using System;
+using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class AddPersoneel : MetroFramework.Forms.MetroForm
+    public partial class AddPersoneel : Forms.MetroBase.MetroBaseForm
     {
         public bool IsEditMode { get; private set; }
 

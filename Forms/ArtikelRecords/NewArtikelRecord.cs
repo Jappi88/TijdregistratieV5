@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Rpm.Productie.ArtikelRecords;
+using System;
 using System.Windows.Forms;
-using Rpm.Productie.ArtikelRecords;
 
 namespace Forms.ArtikelRecords
 {
-    public partial class NewArtikelRecord : MetroFramework.Forms.MetroForm
+    public partial class NewArtikelRecord : Forms.MetroBase.MetroBaseForm
     {
         public ArtikelRecord SelectedRecord { get; set; } = new ArtikelRecord();
 

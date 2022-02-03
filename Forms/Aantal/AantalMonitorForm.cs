@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Rpm.Productie;
+using System;
 using System.Linq;
 using System.Windows.Forms;
-using NPOI.Util;
-using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class AantalMonitorForm : MetroFramework.Forms.MetroForm
+    public partial class AantalMonitorForm : Forms.MetroBase.MetroBaseForm
     {
         public Bewerking Werk { get; private set; }
         //public SeriesCollection Series

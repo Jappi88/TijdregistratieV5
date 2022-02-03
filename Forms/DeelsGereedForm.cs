@@ -1,13 +1,13 @@
-﻿using System;
-using System.Windows.Forms;
-using Forms;
+﻿using Forms;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
+using System;
+using System.Windows.Forms;
 
-namespace ProductieManager.Forms
+namespace Forms
 {
-    public partial class DeelsGereedForm : MetroFramework.Forms.MetroForm
+    public partial class DeelsGereedForm : Forms.MetroBase.MetroBaseForm
     {
         public DeelsGereedMelding GereedMelding { get; private set; } = new DeelsGereedMelding();
         private Bewerking _werk;

@@ -291,17 +291,10 @@ namespace ProductieManager.Forms
             {
                 ShowNotFountList();
             }
-            this.SetLastInfo();
             if (Browser is {Disposing: false, IsDisposed: false})
                 Browser.Dispose();
             if (!this.Disposing && !this.IsDisposed)
                 this.Dispose();
         }
-
-        private void WebBrowserForm_Shown(object sender, EventArgs e)
-        {
-            this.InitLastInfo();
-        }
-
     }
 }

@@ -1,17 +1,17 @@
-﻿using ProductieManager.Forms.Klachten;
+﻿using Forms.Klachten;
+using ProductieManager.Forms.Klachten;
 using Rpm.Klachten;
 using Rpm.Productie;
+using Rpm.Various;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Forms.Klachten;
-using Rpm.Various;
 using Various;
 
 namespace Forms
 {
-    public partial class KlachtenForm : MetroFramework.Forms.MetroForm 
+    public partial class KlachtenForm : Forms.MetroBase.MetroBaseForm 
     {
         public KlachtenForm()
         {
@@ -265,7 +265,6 @@ namespace Forms
 
         private void KlachtenForm_Shown(object sender, EventArgs e)
         {
-            this.InitLastInfo();
             LoadEntries();
             Manager.KlachtChanged += Klachten_KlachtChanged;
             Manager.KlachtDeleted += Klachten_KlachtDeleted;
@@ -273,7 +272,6 @@ namespace Forms
 
         private void KlachtenForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            this.SetLastInfo();
             Manager.KlachtChanged -= Klachten_KlachtChanged;
             Manager.KlachtDeleted -= Klachten_KlachtDeleted;
         }

@@ -1,13 +1,13 @@
-﻿using System;
+﻿using ProductieManager.Rpm.Misc;
+using Rpm.Productie;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ProductieManager.Rpm.Misc;
-using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class NiewProductieForm : MetroFramework.Forms.MetroForm
+    public partial class NiewProductieForm : Forms.MetroBase.MetroBaseForm
     {
         public ProductieFormulier CreatedFormulier { get; private set; }
 

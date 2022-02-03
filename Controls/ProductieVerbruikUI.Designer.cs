@@ -48,7 +48,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.xmaterialen = new System.Windows.Forms.ComboBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.xdatabase = new System.Windows.Forms.Button();
             this.xaangepastdoor = new TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel();
             this.xrekenmachine = new System.Windows.Forms.Button();
             this.xopslaan = new System.Windows.Forms.Button();
@@ -59,6 +58,7 @@
             this.xmachine = new MetroFramework.Controls.MetroComboBox();
             this.xopdrukkerartikelnr = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.xtoonwerktekening = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -83,7 +83,7 @@
             this.groupBox1.ForeColor = System.Drawing.Color.Navy;
             this.groupBox1.Location = new System.Drawing.Point(5, 5);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(890, 532);
+            this.groupBox1.Size = new System.Drawing.Size(886, 557);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Verbruik Berekenen";
@@ -97,7 +97,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 58);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(884, 436);
+            this.panel3.Size = new System.Drawing.Size(880, 456);
             this.panel3.TabIndex = 17;
             // 
             // xinfo
@@ -109,7 +109,7 @@
             this.xinfo.IsContextMenuEnabled = false;
             this.xinfo.Location = new System.Drawing.Point(205, 29);
             this.xinfo.Name = "xinfo";
-            this.xinfo.Size = new System.Drawing.Size(679, 407);
+            this.xinfo.Size = new System.Drawing.Size(675, 427);
             this.xinfo.TabIndex = 16;
             this.xinfo.Text = null;
             // 
@@ -132,7 +132,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 29);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(205, 407);
+            this.panel1.Size = new System.Drawing.Size(205, 427);
             this.panel1.TabIndex = 15;
             // 
             // xaantalafronden
@@ -357,7 +357,7 @@
             this.xmaterialen.FormattingEnabled = true;
             this.xmaterialen.Location = new System.Drawing.Point(0, 0);
             this.xmaterialen.Name = "xmaterialen";
-            this.xmaterialen.Size = new System.Drawing.Size(884, 29);
+            this.xmaterialen.Size = new System.Drawing.Size(880, 29);
             this.xmaterialen.TabIndex = 7;
             this.toolTip1.SetToolTip(this.xmaterialen, "Kies material product lengte");
             this.xmaterialen.SelectedIndexChanged += new System.EventHandler(this.xmaterialen_SelectedIndexChanged);
@@ -365,35 +365,17 @@
             // panel2
             // 
             this.panel2.AutoScroll = true;
-            this.panel2.Controls.Add(this.xdatabase);
+            this.panel2.Controls.Add(this.xtoonwerktekening);
             this.panel2.Controls.Add(this.xaangepastdoor);
             this.panel2.Controls.Add(this.xrekenmachine);
             this.panel2.Controls.Add(this.xopslaan);
             this.panel2.Controls.Add(this.xbuttonseperator);
             this.panel2.Controls.Add(this.xsluiten);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(3, 494);
+            this.panel2.Location = new System.Drawing.Point(3, 514);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(884, 35);
+            this.panel2.Size = new System.Drawing.Size(880, 40);
             this.panel2.TabIndex = 16;
-            // 
-            // xdatabase
-            // 
-            this.xdatabase.BackColor = System.Drawing.Color.White;
-            this.xdatabase.Dock = System.Windows.Forms.DockStyle.Left;
-            this.xdatabase.FlatAppearance.BorderSize = 0;
-            this.xdatabase.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xdatabase.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xdatabase.Image = global::ProductieManager.Properties.Resources.ccsm_103993;
-            this.xdatabase.Location = new System.Drawing.Point(153, 0);
-            this.xdatabase.Name = "xdatabase";
-            this.xdatabase.Size = new System.Drawing.Size(35, 35);
-            this.xdatabase.TabIndex = 15;
-            this.xdatabase.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolTip1.SetToolTip(this.xdatabase, "Database");
-            this.xdatabase.UseVisualStyleBackColor = false;
-            this.xdatabase.Visible = false;
-            this.xdatabase.Click += new System.EventHandler(this.xdatabase_Click);
             // 
             // xaangepastdoor
             // 
@@ -405,23 +387,22 @@
             this.xaangepastdoor.BaseStylesheet = null;
             this.xaangepastdoor.IsContextMenuEnabled = false;
             this.xaangepastdoor.IsSelectionEnabled = false;
-            this.xaangepastdoor.Location = new System.Drawing.Point(194, 3);
+            this.xaangepastdoor.Location = new System.Drawing.Point(278, 3);
             this.xaangepastdoor.Name = "xaangepastdoor";
-            this.xaangepastdoor.Size = new System.Drawing.Size(464, 29);
+            this.xaangepastdoor.Size = new System.Drawing.Size(376, 34);
             this.xaangepastdoor.TabIndex = 12;
             this.xaangepastdoor.Text = null;
             // 
             // xrekenmachine
             // 
             this.xrekenmachine.BackColor = System.Drawing.Color.White;
-            this.xrekenmachine.Dock = System.Windows.Forms.DockStyle.Left;
             this.xrekenmachine.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xrekenmachine.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xrekenmachine.Image = global::ProductieManager.Properties.Resources.calculator_icon_icons_com_72046;
             this.xrekenmachine.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xrekenmachine.Location = new System.Drawing.Point(0, 0);
+            this.xrekenmachine.Location = new System.Drawing.Point(0, 2);
             this.xrekenmachine.Name = "xrekenmachine";
-            this.xrekenmachine.Size = new System.Drawing.Size(153, 35);
+            this.xrekenmachine.Size = new System.Drawing.Size(154, 35);
             this.xrekenmachine.TabIndex = 10;
             this.xrekenmachine.Text = "Rekenmachine";
             this.xrekenmachine.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -437,9 +418,9 @@
             this.xopslaan.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xopslaan.Image = global::ProductieManager.Properties.Resources.diskette_save_saveas_1514;
             this.xopslaan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xopslaan.Location = new System.Drawing.Point(664, 0);
+            this.xopslaan.Location = new System.Drawing.Point(660, 0);
             this.xopslaan.Name = "xopslaan";
-            this.xopslaan.Size = new System.Drawing.Size(110, 35);
+            this.xopslaan.Size = new System.Drawing.Size(110, 40);
             this.xopslaan.TabIndex = 11;
             this.xopslaan.Text = "Opslaan";
             this.xopslaan.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -450,9 +431,9 @@
             // xbuttonseperator
             // 
             this.xbuttonseperator.Dock = System.Windows.Forms.DockStyle.Right;
-            this.xbuttonseperator.Location = new System.Drawing.Point(774, 0);
+            this.xbuttonseperator.Location = new System.Drawing.Point(770, 0);
             this.xbuttonseperator.Name = "xbuttonseperator";
-            this.xbuttonseperator.Size = new System.Drawing.Size(5, 35);
+            this.xbuttonseperator.Size = new System.Drawing.Size(5, 40);
             this.xbuttonseperator.TabIndex = 14;
             this.xbuttonseperator.Visible = false;
             // 
@@ -465,9 +446,9 @@
             this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xsluiten.Location = new System.Drawing.Point(779, 0);
+            this.xsluiten.Location = new System.Drawing.Point(775, 0);
             this.xsluiten.Name = "xsluiten";
-            this.xsluiten.Size = new System.Drawing.Size(105, 35);
+            this.xsluiten.Size = new System.Drawing.Size(105, 40);
             this.xsluiten.TabIndex = 13;
             this.xsluiten.Text = "Sluiten";
             this.xsluiten.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -482,7 +463,7 @@
             this.xopdrukkerpanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.xopdrukkerpanel.Location = new System.Drawing.Point(3, 25);
             this.xopdrukkerpanel.Name = "xopdrukkerpanel";
-            this.xopdrukkerpanel.Size = new System.Drawing.Size(884, 33);
+            this.xopdrukkerpanel.Size = new System.Drawing.Size(880, 33);
             this.xopdrukkerpanel.TabIndex = 0;
             this.xopdrukkerpanel.Visible = false;
             // 
@@ -493,7 +474,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(884, 31);
+            this.panel4.Size = new System.Drawing.Size(880, 31);
             this.panel4.TabIndex = 14;
             // 
             // xmachine
@@ -504,7 +485,7 @@
             this.xmachine.Items.AddRange(new object[] {
             "Opdrukker 1",
             "Opdrukker 2"});
-            this.xmachine.Location = new System.Drawing.Point(671, 0);
+            this.xmachine.Location = new System.Drawing.Point(667, 0);
             this.xmachine.Name = "xmachine";
             this.xmachine.Size = new System.Drawing.Size(213, 29);
             this.xmachine.TabIndex = 5;
@@ -519,7 +500,7 @@
             this.xopdrukkerartikelnr.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xopdrukkerartikelnr.Location = new System.Drawing.Point(0, 0);
             this.xopdrukkerartikelnr.Name = "xopdrukkerartikelnr";
-            this.xopdrukkerartikelnr.Size = new System.Drawing.Size(884, 29);
+            this.xopdrukkerartikelnr.Size = new System.Drawing.Size(880, 29);
             this.xopdrukkerartikelnr.TabIndex = 6;
             this.xopdrukkerartikelnr.Text = "Vul in een ArtikelNr...";
             this.toolTip1.SetToolTip(this.xopdrukkerartikelnr, "Vul in een product artikel nummer");
@@ -531,6 +512,24 @@
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
+            // xtoonwerktekening
+            // 
+            this.xtoonwerktekening.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xtoonwerktekening.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xtoonwerktekening.ForeColor = System.Drawing.Color.Black;
+            this.xtoonwerktekening.Image = global::ProductieManager.Properties.Resources.libreoffice_draw_icon_181050;
+            this.xtoonwerktekening.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xtoonwerktekening.Location = new System.Drawing.Point(161, 2);
+            this.xtoonwerktekening.Margin = new System.Windows.Forms.Padding(4);
+            this.xtoonwerktekening.Name = "xtoonwerktekening";
+            this.xtoonwerktekening.Size = new System.Drawing.Size(110, 35);
+            this.xtoonwerktekening.TabIndex = 15;
+            this.xtoonwerktekening.Text = "Tekening";
+            this.xtoonwerktekening.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTip1.SetToolTip(this.xtoonwerktekening, "Toon werktekening");
+            this.xtoonwerktekening.UseVisualStyleBackColor = true;
+            this.xtoonwerktekening.Click += new System.EventHandler(this.xtoonwerktekening_Click);
+            // 
             // ProductieVerbruikUI
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -540,7 +539,7 @@
             this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "ProductieVerbruikUI";
             this.Padding = new System.Windows.Forms.Padding(5);
-            this.Size = new System.Drawing.Size(900, 542);
+            this.Size = new System.Drawing.Size(896, 567);
             this.groupBox1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -589,6 +588,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown xperPak;
         private System.Windows.Forms.Button xaantalafronden;
-        private System.Windows.Forms.Button xdatabase;
+        private System.Windows.Forms.Button xtoonwerktekening;
     }
 }

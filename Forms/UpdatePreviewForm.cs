@@ -19,7 +19,7 @@ using TheArtOfDev.HtmlRenderer.PdfSharp;
 
 namespace Forms
 {
-    public partial class UpdatePreviewForm : MetroFramework.Forms.MetroForm
+    public partial class UpdatePreviewForm : Forms.MetroBase.MetroBaseForm
     {
         private readonly bool _Isnew;
         private readonly bool _IsHelp;

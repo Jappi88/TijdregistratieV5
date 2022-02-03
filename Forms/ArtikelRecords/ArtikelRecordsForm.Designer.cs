@@ -40,8 +40,16 @@
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toonProductiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.meldingenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wijzigenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.verwijderenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel3 = new System.Windows.Forms.Panel();
+            this.xeditArtikel = new System.Windows.Forms.Button();
             this.xdeleteartikel = new System.Windows.Forms.Button();
             this.xopmerkingen = new System.Windows.Forms.Button();
             this.xaddartikel = new System.Windows.Forms.Button();
@@ -53,6 +61,7 @@
             this.xdeletewerkplek = new System.Windows.Forms.Button();
             this.xwerkplekopmerkingen = new System.Windows.Forms.Button();
             this.xaddwerkplek = new System.Windows.Forms.Button();
+            this.xeditWerkplek = new System.Windows.Forms.Button();
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
             this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
             this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
@@ -68,15 +77,9 @@
             this.olvColumn16 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.panel5 = new System.Windows.Forms.Panel();
             this.xsearch2 = new MetroFramework.Controls.MetroTextBox();
-            this.xeditArtikel = new System.Windows.Forms.Button();
-            this.xeditWerkplek = new System.Windows.Forms.Button();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.meldingenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.wijzigenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.verwijderenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xArtikelList)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.metroTabControl1.SuspendLayout();
@@ -85,7 +88,6 @@
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xwerkpleklist)).BeginInit();
             this.panel5.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -212,6 +214,65 @@
             this.olvColumn7.ToolTipText = "Aantal producties gemeten";
             this.olvColumn7.Width = 100;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toonProductiesToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.meldingenToolStripMenuItem,
+            this.wijzigenToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.verwijderenToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 190);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // toonProductiesToolStripMenuItem
+            // 
+            this.toonProductiesToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.documents_32x32;
+            this.toonProductiesToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toonProductiesToolStripMenuItem.Name = "toonProductiesToolStripMenuItem";
+            this.toonProductiesToolStripMenuItem.Size = new System.Drawing.Size(196, 38);
+            this.toonProductiesToolStripMenuItem.Text = "Toon Producties";
+            this.toonProductiesToolStripMenuItem.Click += new System.EventHandler(this.toonProductiesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(193, 6);
+            // 
+            // meldingenToolStripMenuItem
+            // 
+            this.meldingenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.default_opmerking_16757_32x32;
+            this.meldingenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.meldingenToolStripMenuItem.Name = "meldingenToolStripMenuItem";
+            this.meldingenToolStripMenuItem.Size = new System.Drawing.Size(196, 38);
+            this.meldingenToolStripMenuItem.Text = "Meldingen";
+            this.meldingenToolStripMenuItem.Click += new System.EventHandler(this.xopmerkingen_Click);
+            // 
+            // wijzigenToolStripMenuItem
+            // 
+            this.wijzigenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.edit__52382;
+            this.wijzigenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.wijzigenToolStripMenuItem.Name = "wijzigenToolStripMenuItem";
+            this.wijzigenToolStripMenuItem.Size = new System.Drawing.Size(196, 38);
+            this.wijzigenToolStripMenuItem.Text = "Wijzigen";
+            this.wijzigenToolStripMenuItem.Click += new System.EventHandler(this.xeditArtikel_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(193, 6);
+            // 
+            // verwijderenToolStripMenuItem
+            // 
+            this.verwijderenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.verwijderenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.verwijderenToolStripMenuItem.Name = "verwijderenToolStripMenuItem";
+            this.verwijderenToolStripMenuItem.Size = new System.Drawing.Size(196, 38);
+            this.verwijderenToolStripMenuItem.Text = "Verwijderen";
+            this.verwijderenToolStripMenuItem.Click += new System.EventHandler(this.xdeleteartikel_Click);
+            // 
             // imageList1
             // 
             this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
@@ -231,6 +292,21 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(790, 38);
             this.panel3.TabIndex = 10;
+            // 
+            // xeditArtikel
+            // 
+            this.xeditArtikel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xeditArtikel.Enabled = false;
+            this.xeditArtikel.FlatAppearance.BorderSize = 0;
+            this.xeditArtikel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xeditArtikel.Image = global::ProductieManager.Properties.Resources.edit__52382;
+            this.xeditArtikel.Location = new System.Drawing.Point(671, 1);
+            this.xeditArtikel.Name = "xeditArtikel";
+            this.xeditArtikel.Size = new System.Drawing.Size(34, 34);
+            this.xeditArtikel.TabIndex = 13;
+            this.toolTip1.SetToolTip(this.xeditArtikel, "Wijzig Artikel");
+            this.xeditArtikel.UseVisualStyleBackColor = true;
+            this.xeditArtikel.Click += new System.EventHandler(this.xeditArtikel_Click);
             // 
             // xdeleteartikel
             // 
@@ -412,6 +488,21 @@
             this.xaddwerkplek.UseVisualStyleBackColor = true;
             this.xaddwerkplek.Click += new System.EventHandler(this.xaddartikel_Click);
             // 
+            // xeditWerkplek
+            // 
+            this.xeditWerkplek.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xeditWerkplek.Enabled = false;
+            this.xeditWerkplek.FlatAppearance.BorderSize = 0;
+            this.xeditWerkplek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xeditWerkplek.Image = global::ProductieManager.Properties.Resources.edit__52382;
+            this.xeditWerkplek.Location = new System.Drawing.Point(671, 1);
+            this.xeditWerkplek.Name = "xeditWerkplek";
+            this.xeditWerkplek.Size = new System.Drawing.Size(34, 34);
+            this.xeditWerkplek.TabIndex = 14;
+            this.toolTip1.SetToolTip(this.xeditWerkplek, "Wijzig Werkplek");
+            this.xeditWerkplek.UseVisualStyleBackColor = true;
+            this.xeditWerkplek.Click += new System.EventHandler(this.xeditArtikel_Click);
+            // 
             // metroTabControl1
             // 
             this.metroTabControl1.Controls.Add(this.metroTabPage1);
@@ -448,10 +539,10 @@
             this.metroTabPage2.HorizontalScrollbarBarColor = true;
             this.metroTabPage2.HorizontalScrollbarHighlightOnWheel = false;
             this.metroTabPage2.HorizontalScrollbarSize = 10;
-            this.metroTabPage2.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage2.Location = new System.Drawing.Point(4, 35);
             this.metroTabPage2.Name = "metroTabPage2";
             this.metroTabPage2.Padding = new System.Windows.Forms.Padding(5);
-            this.metroTabPage2.Size = new System.Drawing.Size(800, 355);
+            this.metroTabPage2.Size = new System.Drawing.Size(800, 358);
             this.metroTabPage2.TabIndex = 1;
             this.metroTabPage2.Text = "Werkplaatsen";
             this.metroTabPage2.VerticalScrollbarBarColor = true;
@@ -466,7 +557,7 @@
             this.panel4.Location = new System.Drawing.Point(5, 5);
             this.panel4.Margin = new System.Windows.Forms.Padding(4);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(790, 345);
+            this.panel4.Size = new System.Drawing.Size(790, 348);
             this.panel4.TabIndex = 2;
             // 
             // xwerkpleklist
@@ -501,7 +592,7 @@
             this.xwerkpleklist.Name = "xwerkpleklist";
             this.xwerkpleklist.ShowGroups = false;
             this.xwerkpleklist.ShowItemToolTips = true;
-            this.xwerkpleklist.Size = new System.Drawing.Size(790, 307);
+            this.xwerkpleklist.Size = new System.Drawing.Size(790, 310);
             this.xwerkpleklist.SmallImageList = this.imageList1;
             this.xwerkpleklist.TabIndex = 0;
             this.xwerkpleklist.TintSortColumn = true;
@@ -637,79 +728,6 @@
             this.xsearch2.Enter += new System.EventHandler(this.xsearch2_Enter);
             this.xsearch2.Leave += new System.EventHandler(this.xsearch2_Leave);
             // 
-            // xeditArtikel
-            // 
-            this.xeditArtikel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xeditArtikel.Enabled = false;
-            this.xeditArtikel.FlatAppearance.BorderSize = 0;
-            this.xeditArtikel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xeditArtikel.Image = global::ProductieManager.Properties.Resources.edit__52382;
-            this.xeditArtikel.Location = new System.Drawing.Point(671, 1);
-            this.xeditArtikel.Name = "xeditArtikel";
-            this.xeditArtikel.Size = new System.Drawing.Size(34, 34);
-            this.xeditArtikel.TabIndex = 13;
-            this.toolTip1.SetToolTip(this.xeditArtikel, "Wijzig Artikel");
-            this.xeditArtikel.UseVisualStyleBackColor = true;
-            this.xeditArtikel.Click += new System.EventHandler(this.xeditArtikel_Click);
-            // 
-            // xeditWerkplek
-            // 
-            this.xeditWerkplek.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xeditWerkplek.Enabled = false;
-            this.xeditWerkplek.FlatAppearance.BorderSize = 0;
-            this.xeditWerkplek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xeditWerkplek.Image = global::ProductieManager.Properties.Resources.edit__52382;
-            this.xeditWerkplek.Location = new System.Drawing.Point(671, 1);
-            this.xeditWerkplek.Name = "xeditWerkplek";
-            this.xeditWerkplek.Size = new System.Drawing.Size(34, 34);
-            this.xeditWerkplek.TabIndex = 14;
-            this.toolTip1.SetToolTip(this.xeditWerkplek, "Wijzig Werkplek");
-            this.xeditWerkplek.UseVisualStyleBackColor = true;
-            this.xeditWerkplek.Click += new System.EventHandler(this.xeditArtikel_Click);
-            // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.meldingenToolStripMenuItem,
-            this.wijzigenToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.verwijderenToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 146);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
-            // 
-            // meldingenToolStripMenuItem
-            // 
-            this.meldingenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.default_opmerking_16757_32x32;
-            this.meldingenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.meldingenToolStripMenuItem.Name = "meldingenToolStripMenuItem";
-            this.meldingenToolStripMenuItem.Size = new System.Drawing.Size(196, 38);
-            this.meldingenToolStripMenuItem.Text = "Meldingen";
-            this.meldingenToolStripMenuItem.Click += new System.EventHandler(this.xopmerkingen_Click);
-            // 
-            // wijzigenToolStripMenuItem
-            // 
-            this.wijzigenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.edit__52382;
-            this.wijzigenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.wijzigenToolStripMenuItem.Name = "wijzigenToolStripMenuItem";
-            this.wijzigenToolStripMenuItem.Size = new System.Drawing.Size(196, 38);
-            this.wijzigenToolStripMenuItem.Text = "Wijzigen";
-            this.wijzigenToolStripMenuItem.Click += new System.EventHandler(this.xeditArtikel_Click);
-            // 
-            // verwijderenToolStripMenuItem
-            // 
-            this.verwijderenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.verwijderenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.verwijderenToolStripMenuItem.Name = "verwijderenToolStripMenuItem";
-            this.verwijderenToolStripMenuItem.Size = new System.Drawing.Size(196, 38);
-            this.verwijderenToolStripMenuItem.Text = "Verwijderen";
-            this.verwijderenToolStripMenuItem.Click += new System.EventHandler(this.xdeleteartikel_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(193, 6);
-            // 
             // ArtikelRecordsForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -729,6 +747,7 @@
             this.Shown += new System.EventHandler(this.ArtikelRecordsForm_Shown);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xArtikelList)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.metroTabControl1.ResumeLayout(false);
@@ -737,7 +756,6 @@
             this.panel4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xwerkpleklist)).EndInit();
             this.panel5.ResumeLayout(false);
-            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -789,5 +807,7 @@
         private System.Windows.Forms.ToolStripMenuItem wijzigenToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem verwijderenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toonProductiesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }

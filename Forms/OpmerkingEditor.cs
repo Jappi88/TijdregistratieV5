@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Rpm.Opmerking;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Rpm.Opmerking;
 
 namespace Forms
 {
-    public partial class OpmerkingEditor : MetroFramework.Forms.MetroForm
+    public partial class OpmerkingEditor : Forms.MetroBase.MetroBaseForm
     {
         private OpmerkingEntry _Selected;
         public OpmerkingEntry SelectedEntry

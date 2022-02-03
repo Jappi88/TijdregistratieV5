@@ -1,7 +1,4 @@
-﻿using BrightIdeasSoftware;
-using ProductieManager.Properties;
-using Rpm.Misc;
-using Rpm.Productie;
+﻿using Rpm.Productie;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Forms.GereedMelden
 {
-    public partial class GereedNotitieForm : MetroFramework.Forms.MetroForm
+    public partial class GereedNotitieForm : Forms.MetroBase.MetroBaseForm
     {
         private IProductieBase _Productie;
         public GereedNotitieForm()

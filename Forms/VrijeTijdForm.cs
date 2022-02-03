@@ -7,7 +7,7 @@ using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class VrijeTijdForm : MetroFramework.Forms.MetroForm
+    public partial class VrijeTijdForm : Forms.MetroBase.MetroBaseForm
     {
         public VrijeTijdForm()
         {

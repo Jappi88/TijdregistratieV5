@@ -1,16 +1,15 @@
-﻿using System;
+﻿using BrightIdeasSoftware;
+using ProductieManager.Properties;
+using Rpm.Productie;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using BrightIdeasSoftware;
-using ProductieManager.Properties;
-using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class VerpakkingenForm : MetroFramework.Forms.MetroForm
+    public partial class VerpakkingenForm : Forms.MetroBase.MetroBaseForm
     {
         private List<VerpakkingInstructie> Verpakkingen { get; set; } = new List<VerpakkingInstructie>();
         public VerpakkingenForm()

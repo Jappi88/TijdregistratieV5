@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Forms
 {
-    internal partial class AboutBox1 : MetroFramework.Forms.MetroForm
+    internal partial class AboutBox1 : Forms.MetroBase.MetroBaseForm
     {
         public AboutBox1()
         {

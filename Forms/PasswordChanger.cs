@@ -8,7 +8,7 @@ using Rpm.Settings;
 
 namespace Forms
 {
-    public partial class PasswordChanger : MetroFramework.Forms.MetroForm
+    public partial class PasswordChanger : Forms.MetroBase.MetroBaseForm
     {
         public PasswordChanger()
         {

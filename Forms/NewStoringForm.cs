@@ -1,15 +1,14 @@
-﻿using System;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Documents;
-using System.Windows.Forms;
-using ProductieManager.Properties;
+﻿using ProductieManager.Properties;
 using Rpm.Misc;
 using Rpm.Productie;
+using System;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class NewStoringForm : MetroFramework.Forms.MetroForm
+    public partial class NewStoringForm : Forms.MetroBase.MetroBaseForm
     {
         private Storing _onderbreking;
 

@@ -1,4 +1,4 @@
-﻿namespace ProductieManager.Forms
+﻿namespace Forms
 {
     partial class ScreenImageForm
     {

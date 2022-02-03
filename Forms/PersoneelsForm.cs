@@ -18,7 +18,7 @@ using Various;
 
 namespace Forms
 {
-    public partial class PersoneelsForm : MetroFramework.Forms.MetroForm
+    public partial class PersoneelsForm : Forms.MetroBase.MetroBaseForm
 
     {
     private readonly bool _choose;
@@ -936,7 +936,6 @@ namespace Forms
 
     private void PersoneelsForm_FormClosing(object sender, FormClosingEventArgs e)
     {
-        this.SetLastInfo();
         if (Manager.Opties != null)
             Manager.Opties.ViewDataPersoneelState = xuserlist.SaveState();
         Manager.OnSettingsChanged -= PManager_OnSettingsChanged;
@@ -944,12 +943,7 @@ namespace Forms
         Manager.OnPersoneelDeleted -= Manager_OnPersoneelDeleted;
     }
 
-    private void Form_Load(object sender, EventArgs e)
-    {
-        this.InitLastInfo();
-    }
-
-        private void CollapseGroups(bool collapsed)
+    private void CollapseGroups(bool collapsed)
     {
         foreach (ListViewGroup group in xuserlist.Groups)
             ((OLVGroup) @group.Tag).Collapsed = collapsed;

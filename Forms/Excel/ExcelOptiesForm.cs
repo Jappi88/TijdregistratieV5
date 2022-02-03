@@ -1,23 +1,20 @@
-﻿using NPOI.SS.UserModel;
+﻿using BrightIdeasSoftware;
+using Forms.Excel;
+using ProductieManager.Properties;
 using ProductieManager.Rpm.ExcelHelper;
 using ProductieManager.Rpm.Settings;
 using Rpm.Misc;
 using Rpm.Productie;
-using Rpm.Settings;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Documents.DocumentStructures;
 using System.Windows.Forms;
-using BrightIdeasSoftware;
-using Forms.Excel;
-using ProductieManager.Properties;
 
 namespace Forms
 {
-    public partial class ExcelOptiesForm : MetroFramework.Forms.MetroForm
+    public partial class ExcelOptiesForm : Forms.MetroBase.MetroBaseForm
     {
         public ExcelOptiesForm()
         {

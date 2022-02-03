@@ -36,32 +36,32 @@ namespace Forms
             // 
             // productieForm1
             // 
+            this.productieForm1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.productieForm1.BackColor = System.Drawing.Color.White;
-            this.productieForm1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.productieForm1.Formulier = null;
-            this.productieForm1.Location = new System.Drawing.Point(0, 0);
+            this.productieForm1.Location = new System.Drawing.Point(10, 10);
             this.productieForm1.Name = "productieForm1";
             this.productieForm1.SelectedBewerking = null;
-            this.productieForm1.Size = new System.Drawing.Size(861, 485);
+            this.productieForm1.Size = new System.Drawing.Size(876, 548);
             this.productieForm1.TabIndex = 0;
             // 
             // StartProductie
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(861, 485);
+            this.ClientSize = new System.Drawing.Size(896, 568);
             this.CloseButton = false;
             this.CloseButtonVisible = false;
             this.ControlBox = false;
             this.Controls.Add(this.productieForm1);
-            this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "StartProductie";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "StartProductie";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.StartProductie_FormClosing);
             this.Shown += new System.EventHandler(this.StartProductie_Shown);
+            this.Controls.SetChildIndex(this.productieForm1, 0);
             this.ResumeLayout(false);
 
         }

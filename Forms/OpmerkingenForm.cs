@@ -1,8 +1,11 @@
-﻿using ProductieManager.Properties;
+﻿using Forms.Klachten;
+using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
+using Rpm.Mailing;
 using Rpm.Misc;
 using Rpm.Opmerking;
 using Rpm.Productie;
+using Rpm.Various;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,13 +13,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Forms.Klachten;
-using Rpm.Mailing;
-using Rpm.Various;
 
 namespace Forms
 {
-    public partial class OpmerkingenForm : MetroFramework.Forms.MetroForm
+    public partial class OpmerkingenForm : Forms.MetroBase.MetroBaseForm
     {
         public List<OpmerkingEntry> Opmerkingen { get; set; }
 

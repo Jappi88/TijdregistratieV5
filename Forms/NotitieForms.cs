@@ -1,11 +1,11 @@
-﻿using System;
-using System.Windows.Forms;
-using Rpm.Productie;
+﻿using Rpm.Productie;
 using Rpm.Various;
+using System;
+using System.Windows.Forms;
 
-namespace ProductieManager.Forms
+namespace Forms
 {
-    public partial class NotitieForms : MetroFramework.Forms.MetroForm
+    public partial class NotitieForms : Forms.MetroBase.MetroBaseForm
     {
         public NotitieEntry Notitie { get; set; }
         public NotitieForms()

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using MetroFramework.Forms;
+using ProductieManager.Forms.MetroDock;
 using ProductieManager.Properties;
 using Rpm.Misc;
 using Rpm.Productie;
@@ -10,7 +12,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Forms
 {
-    public partial class StartProductie : DockContent
+    public partial class StartProductie : DockInstance
     {
         private Bewerking _selected;
         public StartProductie(ProductieFormulier formulier, Bewerking bewerking)
@@ -24,6 +26,8 @@ namespace Forms
             //    true);
             Formulier = formulier;
             _selected = bewerking;
+            DisplayHeader = false;
+            ShadowType = MetroFormShadowType.AeroShadow;
         }
 
         public ProductieFormulier Formulier { get; set; }

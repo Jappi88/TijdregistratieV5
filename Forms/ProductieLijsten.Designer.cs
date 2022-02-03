@@ -47,9 +47,6 @@ namespace Forms
             this.MinimumSize = new System.Drawing.Size(750, 510);
             this.Name = "ProductieLijsten";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Producties_FormClosing);
-            this.Load += new System.EventHandler(this.Producties_Load);
-            this.Shown += new System.EventHandler(this.Producties_Shown);
             this.ResumeLayout(false);
 
         }

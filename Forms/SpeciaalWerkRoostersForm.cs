@@ -5,11 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Forms;
 
-namespace ProductieManager.Forms
+namespace Forms
 {
-    public partial class SpeciaalWerkRoostersForm : MetroFramework.Forms.MetroForm
+    public partial class SpeciaalWerkRoostersForm : Forms.MetroBase.MetroBaseForm
     {
         public List<Rooster> Roosters { get; set; }
         public SpeciaalWerkRoostersForm()

@@ -1,4 +1,5 @@
 ﻿using Controls;
+using ProductieManager.Properties;
 using Rpm.Productie;
 using Rpm.Various;
 using System;
@@ -6,13 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
-using NPOI.XSSF.UserModel;
-using ProductieManager.Properties;
 
-namespace ProductieManager.Forms
+namespace Forms
 {
-    public partial class ProductieOverzichtForm : MetroFramework.Forms.MetroForm
+    public partial class ProductieOverzichtForm : Forms.MetroBase.MetroBaseForm
     {
         public ProductieOverzichtForm()
         {

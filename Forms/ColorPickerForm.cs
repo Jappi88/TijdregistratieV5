@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Forms;
-using BrightIdeasSoftware;
 using Image = System.Drawing.Image;
 using ListViewItem = System.Windows.Forms.ListViewItem;
 
 namespace Forms
 {
-    public partial class ColorPickerForm : MetroFramework.Forms.MetroForm
+    public partial class ColorPickerForm : Forms.MetroBase.MetroBaseForm
     {
         public ColorPickerForm()
         {

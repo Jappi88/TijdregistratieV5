@@ -79,9 +79,9 @@ namespace Forms
             this.xanuleren.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xanuleren.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xanuleren.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xanuleren.Location = new System.Drawing.Point(129, 1);
+            this.xanuleren.Location = new System.Drawing.Point(129, 2);
             this.xanuleren.Name = "xanuleren";
-            this.xanuleren.Size = new System.Drawing.Size(120, 38);
+            this.xanuleren.Size = new System.Drawing.Size(120, 36);
             this.xanuleren.TabIndex = 3;
             this.xanuleren.Text = "&Annuleren";
             this.xanuleren.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -93,9 +93,9 @@ namespace Forms
             this.xok.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xok.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xok.Image = global::ProductieManager.Properties.Resources.check_1582;
-            this.xok.Location = new System.Drawing.Point(3, 1);
+            this.xok.Location = new System.Drawing.Point(3, 2);
             this.xok.Name = "xok";
-            this.xok.Size = new System.Drawing.Size(120, 38);
+            this.xok.Size = new System.Drawing.Size(120, 36);
             this.xok.TabIndex = 2;
             this.xok.Text = "&OK";
             this.xok.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -124,8 +124,6 @@ namespace Forms
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(460, 220);
             this.Name = "BewerkingChooser";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Kies Bewerking";
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);

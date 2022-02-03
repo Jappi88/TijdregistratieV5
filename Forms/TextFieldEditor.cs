@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class TextFieldEditor : MetroFramework.Forms.MetroForm
+    public partial class TextFieldEditor : Forms.MetroBase.MetroBaseForm
     {
         public TextFieldEditor()
         {

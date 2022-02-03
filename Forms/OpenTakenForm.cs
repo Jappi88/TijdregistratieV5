@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Rpm.Misc;
+using Rpm.Productie;
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Rpm.Misc;
-using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class OpenTakenForm : MetroFramework.Forms.MetroForm
+    public partial class OpenTakenForm : Forms.MetroBase.MetroBaseForm
     {
         public IProductieBase Productie { get; private set; }
 

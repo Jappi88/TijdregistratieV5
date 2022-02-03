@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Rpm.Misc;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
-using Rpm.Misc;
+using ProductieManager.Forms;
 
-namespace ProductieManager.Forms
+namespace Forms
 {
-    public partial class ScreenImageForm : MetroFramework.Forms.MetroForm
+    public partial class ScreenImageForm : Forms.MetroBase.MetroBaseForm
     {
         Bitmap bmp;
         public string SavedImagePath { get; set; }

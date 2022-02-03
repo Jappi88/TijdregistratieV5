@@ -1,17 +1,13 @@
-﻿using System;
+﻿using ProductieManager.Properties;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ProductieManager.Properties;
 
 namespace Forms
 {
-    public partial class MethodsForm : MetroFramework.Forms.MetroForm
+    public partial class MethodsForm : Forms.MetroBase.MetroBaseForm
     {
         //public List<Task<bool>> TasksList { get; private set; }
         public MethodsForm(Dictionary<string, Task<bool>> tasks)

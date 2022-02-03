@@ -212,17 +212,6 @@ namespace Forms
             return new Size(width, height);
         }
 
-        private void Producties_Shown(object sender, EventArgs e)
-        {
-            //BringToFront();
-            //Focus();
-        }
-
-        private void Producties_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            this.SetLastInfo();
-        }
-
         private DockStyle GetDockStyle(int index)
         {
             switch (index)
@@ -260,11 +249,6 @@ namespace Forms
                 curindex++;
                 //content.DockHandler.DockTo(pane, DockStyle.Right, i);
             }
-        }
-
-        private void Producties_Load(object sender, EventArgs e)
-        {
-            this.InitLastInfo();
         }
     }
 }

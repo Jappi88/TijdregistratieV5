@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Rpm.Productie;
+using System;
 using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-using Rpm.Productie;
 
 namespace Forms.Aantal
 {
-    public partial class AantalHistoryForm : MetroFramework.Forms.MetroForm
+    public partial class AantalHistoryForm : Forms.MetroBase.MetroBaseForm
     {
         public WerkPlek Plek { get; private set; }
         public AantalHistoryForm(WerkPlek plek)

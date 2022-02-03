@@ -3021,7 +3021,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Opties";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Opties_FormClosing);
-            this.Load += new System.EventHandler(this.Form_Load);
             this.Shown += new System.EventHandler(this.Opties_Shown);
             this.groupBox5.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);

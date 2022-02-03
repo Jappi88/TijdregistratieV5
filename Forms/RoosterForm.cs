@@ -6,7 +6,7 @@ using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class RoosterForm : MetroFramework.Forms.MetroForm
+    public partial class RoosterForm : Forms.MetroBase.MetroBaseForm
     {
         public RoosterForm()
         {

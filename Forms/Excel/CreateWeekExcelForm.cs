@@ -1,21 +1,19 @@
-﻿using ProductieManager.Properties;
+﻿using ProductieManager.Forms;
+using ProductieManager.Properties;
 using ProductieManager.Rpm.ExcelHelper;
 using Rpm.Misc;
 using Rpm.Productie;
+using Rpm.Various;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using ProductieManager.Forms;
-using Rpm.Various;
 
 namespace Forms.Excel
 {
-    public partial class CreateWeekExcelForm : MetroFramework.Forms.MetroForm
+    public partial class CreateWeekExcelForm : Forms.MetroBase.MetroBaseForm
     {
         private string ListName = "ExcelWeekOverzicht";
         public CreateWeekExcelForm()

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Windows.Forms;
-using Rpm.Misc;
+﻿using Rpm.Misc;
 using Rpm.Productie;
+using System;
+using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class AddExtraTijdForm : MetroFramework.Forms.MetroForm
+    public partial class AddExtraTijdForm : Forms.MetroBase.MetroBaseForm
     {
         private readonly TijdEntry _entry;
 

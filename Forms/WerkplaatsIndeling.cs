@@ -13,7 +13,7 @@ using Various;
 
 namespace Forms
 {
-    public partial class WerkplaatsIndeling : MetroFramework.Forms.MetroForm
+    public partial class WerkplaatsIndeling : Forms.MetroBase.MetroBaseForm
     {
         public Personeel SelectedPersoneel { get; private set; }
         public WerkplaatsIndeling()
@@ -707,7 +707,6 @@ namespace Forms
 
         private void WerkplaatsIndeling_Shown(object sender, EventArgs e)
         {
-            this.InitLastInfo();
             LoadProducties();
             productieListControl1.InitEvents();
             Manager.OnPersoneelChanged += Manager_OnPersoneelChanged;
@@ -794,7 +793,6 @@ namespace Forms
             Manager.OnPersoneelDeleted -= Manager_OnPersoneelDeleted;
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
             productieListControl1.DetachEvents();
-            this.SetLastInfo();
         }
 
         private void flowLayoutPanel1_DragDrop(object sender, DragEventArgs e)

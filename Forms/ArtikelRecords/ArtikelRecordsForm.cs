@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace Forms.ArtikelRecords
 {
-    public partial class ArtikelRecordsForm : MetroFramework.Forms.MetroForm
+    public partial class ArtikelRecordsForm : Forms.MetroBase.MetroBaseForm
     {
         public List<ArtikelRecord> Records = new List<ArtikelRecord>();
         public ArtikelRecordsForm()
@@ -47,6 +47,14 @@ namespace Forms.ArtikelRecords
         }
 
         public void EnableButton(bool updatetitle)
+        {
+            if (this.IsDisposed || this.Disposing) return;
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(() => xEnableButton(updatetitle)));
+            else xEnableButton(updatetitle);
+        }
+
+        public void xEnableButton(bool updatetitle)
         {
             xdeleteartikel.Enabled = xArtikelList.SelectedObjects.Count > 0 && Manager.LogedInGebruiker is
             {
@@ -230,7 +238,6 @@ namespace Forms.ArtikelRecords
 
         }
 
-
         private void Database_InstanceChanged(object sender, System.IO.FileSystemEventArgs e)
         {
             if (Manager.ArtikelRecords?.Database == null) return;
@@ -277,8 +284,8 @@ namespace Forms.ArtikelRecords
         private void ArtikelRecordsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (Manager.ArtikelRecords?.Database == null) return;
-            Manager.ArtikelRecords.Database.FileChanged -= Database_InstanceChanged;
-            Manager.ArtikelRecords.Database.FileDeleted -= Database_InstanceDeleted;
+            Manager.ArtikelRecords.ArtikelChanged -= Database_InstanceChanged;
+            Manager.ArtikelRecords.ArtikelDeleted -= Database_InstanceDeleted;
         }
 
         private void ArtikelRecordsForm_Shown(object sender, System.EventArgs e)
@@ -518,9 +525,87 @@ namespace Forms.ArtikelRecords
 
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            meldingenToolStripMenuItem.Enabled = metroTabControl1.SelectedIndex == 0 && xopmerkingen.Enabled || (metroTabControl1.SelectedIndex == 1 && xwerkplekopmerkingen.Enabled);
-            wijzigenToolStripMenuItem.Enabled = metroTabControl1.SelectedIndex == 0 && xeditArtikel.Enabled || (metroTabControl1.SelectedIndex == 1 && xeditWerkplek.Enabled);
-            verwijderenToolStripMenuItem.Enabled = metroTabControl1.SelectedIndex == 0 && xdeleteartikel.Enabled || (metroTabControl1.SelectedIndex == 1 && xdeletewerkplek.Enabled);
+            meldingenToolStripMenuItem.Enabled = metroTabControl1.SelectedIndex == 0 && xopmerkingen.Enabled ||
+                                                 (metroTabControl1.SelectedIndex == 1 && xwerkplekopmerkingen.Enabled);
+            wijzigenToolStripMenuItem.Enabled = metroTabControl1.SelectedIndex == 0 && xeditArtikel.Enabled ||
+                                                (metroTabControl1.SelectedIndex == 1 && xeditWerkplek.Enabled);
+            verwijderenToolStripMenuItem.Enabled = metroTabControl1.SelectedIndex == 0 && xdeleteartikel.Enabled ||
+                                                   (metroTabControl1.SelectedIndex == 1 && xdeletewerkplek.Enabled);
+            toonProductiesToolStripMenuItem.Enabled =
+                metroTabControl1.SelectedIndex == 0 && xArtikelList.SelectedObjects.Count > 0 ||
+                (metroTabControl1.SelectedIndex == 1 && xwerkpleklist.SelectedObjects.Count > 0);
+        }
+
+        private void toonProductiesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowProductieLijstForm(metroTabControl1.SelectedIndex == 1);
+        }
+
+        private readonly List<ProductieLijstForm> _Productelijsten = new();
+        private ProductieLijsten _productielijstdock;
+
+        public void ShowProductieLijstForm(bool iswerkplek)
+        {
+            try
+            {
+                if (iswerkplek && xwerkpleklist.SelectedObjects.Count == 0) return;
+                if (!iswerkplek && xArtikelList.SelectedObjects.Count == 0) return;
+                var selected = iswerkplek
+                    ? xwerkpleklist.SelectedObjects.Cast<ArtikelRecord>().ToList()
+                    : xArtikelList.SelectedObjects.Cast<ArtikelRecord>().ToList();
+                foreach (var sel in selected)
+                {
+                    var prodform = _Productelijsten.FirstOrDefault(x =>
+                        string.Equals(x.ListName, sel.ArtikelNr, StringComparison.CurrentCultureIgnoreCase));
+                    if (prodform == null)
+                    {
+                        var xprods = Manager.Database.GetBewerkingen(sel.UpdatedProducties, true).Result;
+                        if (xprods.Count == 0) continue;
+                        prodform = new ProductieLijstForm(xprods, sel.ArtikelNr);
+
+                        prodform.FormClosing += AddProduction_FormClosing;
+                        _Productelijsten.Add(prodform);
+                    }
+
+                    if (_productielijstdock == null || _productielijstdock.IsDisposed)
+                    {
+                        _productielijstdock = new ProductieLijsten()
+                        {
+                            Tag = prodform,
+                            StartPosition = FormStartPosition.CenterScreen
+                        };
+                        _productielijstdock.FormClosed += _productielijstdock_FormClosed;
+                    }
+
+                    prodform.Show(_productielijstdock.DockPanel);
+                    if (_productielijstdock != null)
+                    {
+                        if (!_productielijstdock.Visible)
+                            _productielijstdock.Show();
+                        if (_productielijstdock.WindowState == FormWindowState.Minimized)
+                            _productielijstdock.WindowState = FormWindowState.Normal;
+
+                        _productielijstdock.Focus();
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
+            }
+        }
+
+        private void _productielijstdock_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _productielijstdock?.Dispose();
+            _productielijstdock = null;
+        }
+
+        public void AddProduction_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (sender is ProductieLijstForm form)
+                _Productelijsten.Remove(form);
         }
     }
 }

@@ -1,14 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms;
-using Forms;
-using ProductieManager.Rpm.Mailing;
+﻿using ProductieManager.Rpm.Mailing;
 using Rpm.Misc;
 using Rpm.Productie;
+using System;
+using System.Linq;
+using System.Windows.Forms;
 
-namespace ProductieManager.Forms
+namespace Forms
 {
-    public partial class NewEmailClientForm : MetroFramework.Forms.MetroForm
+    public partial class NewEmailClientForm : Forms.MetroBase.MetroBaseForm
     {
         public NewEmailClientForm()
         {

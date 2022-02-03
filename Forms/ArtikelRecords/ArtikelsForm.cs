@@ -1,16 +1,15 @@
-﻿using System;
+﻿using BrightIdeasSoftware;
+using Rpm.Misc;
+using Rpm.Productie;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows.Forms;
-using BrightIdeasSoftware;
-using Rpm.Misc;
-using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class ArtikelsForm : MetroFramework.Forms.MetroForm
+    public partial class ArtikelsForm : Forms.MetroBase.MetroBaseForm
     {
         private readonly Dictionary<string, List<Bewerking>> _Values = new Dictionary<string, List<Bewerking>>();
 
@@ -21,6 +20,31 @@ namespace Forms
             productieListControl1.ItemCountChanged += ProductieListControl1_ItemCountChanged;
             ((OLVColumn) xartikelsList.Columns[0]).ImageGetter = (x) => 0;
             xsearchbox.ShowClearButton = true;
+        }
+
+        public string SelectedArtikelNr
+        {
+            get => GetSelectedArtikelNr();
+            set => SelectArtikelNr(value);
+        }
+
+        private string GetSelectedArtikelNr()
+        {
+            if (xartikelsList.SelectedObject is KeyValuePair<string, List<Bewerking>> pair)
+            {
+                return pair.Key;
+            }
+
+            return null;
+        }
+
+        private void SelectArtikelNr(string artnr)
+        {
+            var xitems = xartikelsList.Objects?.Cast<KeyValuePair<string, List<Bewerking>>>().ToList();
+            if (xitems == null || xitems.Count == 0) return;
+            var xi = xitems.FirstOrDefault(x => string.Equals(x.Key, artnr, StringComparison.CurrentCultureIgnoreCase));
+            xartikelsList.SelectedObject = xi;
+            xartikelsList.SelectedItem?.EnsureVisible();
         }
 
         private void ProductieListControl1_ItemCountChanged(object sender, EventArgs e)

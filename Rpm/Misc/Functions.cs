@@ -2021,6 +2021,36 @@ namespace Rpm.Misc
             return directory + "\\" + newfilename;
         }
 
+        public static Task PrintPDFWithAcrobat(string pdffile)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                using PrintDialog Dialog = new PrintDialog();
+                Dialog.ShowDialog();
+
+                ProcessStartInfo printProcessInfo = new ProcessStartInfo()
+                {
+                    Verb = "print",
+                    CreateNoWindow = true,
+                    FileName = pdffile,
+                    WindowStyle = ProcessWindowStyle.Hidden
+                };
+
+                Process printProcess = new Process();
+                printProcess.StartInfo = printProcessInfo;
+                printProcess.Start();
+
+                printProcess.WaitForInputIdle();
+
+                Task.Delay(3000).Wait();
+
+                if (false == printProcess.CloseMainWindow())
+                {
+                    printProcess.Kill();
+                }
+            });
+        }
+
         public static bool CleanupFilePath(this string filepath, string directorypath, string filename, bool move, bool rename)
         {
             try

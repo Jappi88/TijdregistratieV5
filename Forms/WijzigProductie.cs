@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class WijzigProductie : MetroFramework.Forms.MetroForm
+    public partial class WijzigProductie : Forms.MetroBase.MetroBaseForm
     {
         private readonly bool editmode;
         

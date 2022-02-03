@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Various;
@@ -104,9 +105,8 @@ namespace ProductieManager
             _splash = null;
             StartPosition = FormStartPosition.CenterParent;
             Application.DoEvents();
-
-            this.Show();
             this.InitLastInfo();
+            this.Show();
             Select();
             BringToFront();
             UpdateTitle();
@@ -512,7 +512,7 @@ namespace ProductieManager
         {
             try
             {
-
+                this.SetLastInfo();
                 try
                 {
                     var forms = Application.OpenForms;
@@ -527,9 +527,7 @@ namespace ProductieManager
                 {
                     Console.WriteLine(exception);
                 }
-
-
-                this.SetLastInfo();
+                
                 productieView1.SaveLayouts();
                 Manager.DefaultSettings?.SaveAsDefault();
                 Manager.OnSettingsChanged -= ProductieView1_OnSettingsChanged;

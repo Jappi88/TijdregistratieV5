@@ -1,16 +1,16 @@
-﻿using System;
+﻿using ProductieManager.Forms.Aantal.Controls;
+using Rpm.Misc;
 using Rpm.Productie;
+using Rpm.Various;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using ProductieManager.Forms.Aantal.Controls;
-using Rpm.Misc;
-using Rpm.Various;
 
 namespace Forms.Aantal
 {
-    public partial class AantalGemaaktProducties : MetroFramework.Forms.MetroForm
+    public partial class AantalGemaaktProducties : Forms.MetroBase.MetroBaseForm
     {
         public List<Bewerking> Bewerkingen { get; private set; } 
         public string Title

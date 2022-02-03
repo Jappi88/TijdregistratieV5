@@ -1,16 +1,14 @@
-﻿using System;
+﻿using MetroFramework;
+using ProductieManager.Properties;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Windows.Forms;
-using MetroFramework;
-using ProductieManager.Properties;
 
 namespace Forms
 {
-    public partial class XMessageBox : MetroFramework.Forms.MetroForm
+    public partial class XMessageBox : Forms.MetroBase.MetroBaseForm
     {
         public DialogResult Result { get; }
         private Color _defaultColor = Color.FromArgb(57, 179, 215);
@@ -22,6 +20,7 @@ namespace Forms
         public XMessageBox()
         {
             InitializeComponent();
+            SaveLastSize = false;
         }
 
         public string SelectedValue => (string) xchooser.SelectedItem;

@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using Forms.Sporen;
 using Rpm.MateriaalSoort;
+using Various;
 
 namespace Controls
 {
@@ -555,7 +556,7 @@ namespace Controls
             var restpakket = xperPak.Value > 0 ? xproduceren.Value % (xperPak.Value * xp) : 0;
             var aantal = xproduceren.Value;
 
-            var xnodig = xp > 0 ? aantal < xp ? 1 : (aantal / xp) : 0;
+            var xnodig = xp > 0 ? aantal < xp ? 1 : Math.Ceiling(aantal / xp) : 0;
 
             if (xnodig > 0)
             {
@@ -614,6 +615,27 @@ namespace Controls
             {
                 info.SaveInfo();
             }
+        }
+
+        private void xtoonwerktekening_Click(object sender, EventArgs e)
+        {
+            ShowWerkTekening();
+        }
+
+        private void ShowWerkTekening()
+        {
+            if (string.IsNullOrEmpty(_spoor?.ArtikelNr??_form?.ArtikelNr)) return;
+            Tools.ShowSelectedTekening(_spoor?.ArtikelNr??_form.ArtikelNr, TekeningClosed);
+        }
+
+        private void TekeningClosed(object sender, EventArgs e)
+        {
+            var form = Application.OpenForms["MainForm"];
+            form?.BringToFront();
+            form?.Focus();
+            this.Parent?.Select();
+            this.Parent?.BringToFront();
+            this.Parent?.Focus();
         }
     }
 }

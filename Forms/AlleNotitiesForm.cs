@@ -1,16 +1,15 @@
-﻿using System;
+﻿using BrightIdeasSoftware;
+using Rpm.Productie;
+using Rpm.Various;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
-using BrightIdeasSoftware;
-using ProductieManager.Rpm.Productie;
-using Rpm.Productie;
-using Rpm.Various;
 
-namespace ProductieManager.Forms
+namespace Forms
 {
-    public partial class AlleNotitiesForm : MetroFramework.Forms.MetroForm
+    public partial class AlleNotitiesForm : Forms.MetroBase.MetroBaseForm
     {
         private List<NotitieEntry> Notities = null;
         public AlleNotitiesForm()

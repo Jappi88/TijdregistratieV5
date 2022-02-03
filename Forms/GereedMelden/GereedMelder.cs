@@ -1,17 +1,15 @@
-﻿using ProductieManager.Forms;
-using Rpm.Misc;
+﻿using Rpm.Misc;
 using Rpm.Productie;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
 
 namespace Forms.GereedMelden
 {
-    public partial class GereedMelder : MetroFramework.Forms.MetroForm
+    public partial class GereedMelder : Forms.MetroBase.MetroBaseForm
     {
         public readonly string Melding = "Controlleer eerst alle gegevens voordat je verder gaat!\n\n" +
                                          "*Kijk en tel de producten goed na.\n" +

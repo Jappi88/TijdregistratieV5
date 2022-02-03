@@ -4,7 +4,7 @@ using Rpm.Productie;
 
 namespace Forms.Sporen
 {
-    public partial class NewSpoorForm : MetroFramework.Forms.MetroForm
+    public partial class NewSpoorForm : Forms.MetroBase.MetroBaseForm
     {
         public NewSpoorForm()
         {

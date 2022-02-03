@@ -9,12 +9,13 @@ using ProductieManager.Properties;
 using Rpm.Misc;
 using Rpm.SqlLite;
 using Rpm.Productie;
+using Rpm.Productie.ArtikelRecords;
 using Rpm.Settings;
 using Rpm.Various;
 
 namespace Forms
 {
-    public partial class UpdateProducties : MetroFramework.Forms.MetroForm
+    public partial class UpdateProducties : Forms.MetroBase.MetroBaseForm
     {
         public UpdateProducties(DatabaseUpdateEntry updateentry = null)
         {
@@ -122,6 +123,7 @@ namespace Forms
                         DoProgress("Producties laden...", count, 100);
                         var files = await Manager.GetAllProductiePaths(true,true);
                         var forms = await Manager.Database.GetAllProducties(true, false);
+                        var artikels = new List<ArtikelRecord>();
                         foreach (var file in files)
                         {
                             if (!IsBussy || IsDisposed || Disposing)
@@ -129,9 +131,45 @@ namespace Forms
                             ProductieFormulier form = await MultipleFileDb.FromPath<ProductieFormulier>(file,true);
                             if (form == null) continue;
                             await form.UpdateForm(true, true, forms, null, true, false, true, true);
+                            if (form.State == ProductieState.Gereed)
+                            {
+                                var xartikel = artikels.FirstOrDefault(x => string.Equals(form.ArtikelNr, x.ArtikelNr,
+                                    StringComparison.CurrentCultureIgnoreCase));
+                                if (xartikel == null)
+                                {
+                                    xartikel = new ArtikelRecord();
+                                    if (Manager.ArtikelRecords?.UpdateWaardes(form, xartikel, false)??false)
+                                        artikels.Add(xartikel);
+                                }
+                                else
+                                {
+                                    Manager.ArtikelRecords?.UpdateWaardes(form, xartikel, false);
+                                }
+                                foreach (var bw in form.Bewerkingen)
+                                {
+                                    foreach (var plek in bw.WerkPlekken)
+                                    {
+                                        xartikel = artikels.FirstOrDefault(x => string.Equals(plek.Naam, x.ArtikelNr,
+                                            StringComparison.CurrentCultureIgnoreCase));
+                                        if (xartikel == null)
+                                        {
+                                            xartikel = new ArtikelRecord();
+                                            if (Manager.ArtikelRecords?.UpdateWaardes(plek, xartikel, false)??false)
+                                                artikels.Add(xartikel);
+                                        }
+                                        else
+                                        {
+                                            Manager.ArtikelRecords?.UpdateWaardes(plek, xartikel, false);
+                                        }
+                                    }
+                                }
+                            }
                             count++;
                             DoProgress($"Updating productie '{form.ProductieNr}'", count, files.Count);
                         }
+
+                        if (Manager.ArtikelRecords != null)
+                            await Manager.ArtikelRecords.SaveRecords(artikels);
 
                         if (IsBussy)
                         {

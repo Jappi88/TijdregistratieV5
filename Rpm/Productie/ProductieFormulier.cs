@@ -206,6 +206,20 @@ namespace Rpm.Productie
             ? Array.Empty<Personeel>()
             : Bewerkingen?.SelectMany(x => x.Personen).ToArray();
 
+        private DateTime _tijdgestart;
+        public override DateTime TijdGestart
+        {
+            get => GestartOp();
+            set => _tijdgestart = value;
+        }
+
+        private DateTime _tijdgestop;
+        public override DateTime TijdGestopt
+        {
+            get => GestoptOp();
+            set => _tijdgestop = value;
+        }
+
         private string _note;
         private string _gereednote;
         [ExcludeFromSerialization]
@@ -1600,6 +1614,12 @@ namespace Rpm.Productie
             return File.Exists(xfile);
         }
 
+        public string GetProductieFormulierPDF()
+        {
+            return System.IO.Path.Combine(Manager.ProductieFormPath, $"{ProductieNr}.pdf");
+
+        }
+
         public void OpenProductiePdf()
         {
             if (ContainsProductiePdf()) Process.Start($"{Manager.ProductieFormPath}\\{ProductieNr}.pdf");
@@ -1728,6 +1748,32 @@ namespace Rpm.Productie
             {
                 return new TimeSpan();
             }
+        }
+
+        public DateTime GestartOp()
+        {
+            var dt = new DateTime();
+            if (Bewerkingen == null || Bewerkingen.Length == 0)
+                return _tijdgestart;
+
+            //if (!IsBemand) return Tijden.GetFirstStart();
+            foreach (var bw in Bewerkingen)
+                if (bw.GestartOp() < dt || dt.IsDefault())
+                    dt = bw.GestartOp();
+            return dt;
+        }
+
+        public DateTime GestoptOp()
+        {
+            var dt = new DateTime();
+            if (Bewerkingen == null || Bewerkingen.Length == 0)
+                return _tijdgestop;
+
+            // if (!IsBemand) return Tijden?.GetLastStop() ?? _gestoptop;
+            foreach (var bw in Bewerkingen)
+                if (bw.GestoptOp() > dt)
+                    dt = bw.GestoptOp();
+            return dt;
         }
 
         public TimeSpan TijdOverTotLeverdatum()

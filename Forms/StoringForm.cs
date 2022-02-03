@@ -6,7 +6,7 @@ using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class StoringForm : MetroFramework.Forms.MetroForm
+    public partial class StoringForm : Forms.MetroBase.MetroBaseForm
     {
         public StoringForm(WerkPlek plek)
         {

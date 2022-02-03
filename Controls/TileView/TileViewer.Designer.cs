@@ -31,10 +31,10 @@
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.metroTile1 = new MetroFramework.Controls.MetroTile();
+            this.metroTile2 = new MetroFramework.Controls.MetroTile();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.xTileHeader = new TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel();
-            this.metroTile2 = new MetroFramework.Controls.MetroTile();
             this.metroPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -104,6 +104,19 @@
             this.metroTile1.UseStyleColors = true;
             this.metroTile1.UseTileImage = true;
             // 
+            // metroTile2
+            // 
+            this.metroTile2.ActiveControl = null;
+            this.metroTile2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.metroTile2.Location = new System.Drawing.Point(60, 18);
+            this.metroTile2.Name = "metroTile2";
+            this.metroTile2.Size = new System.Drawing.Size(144, 94);
+            this.metroTile2.TabIndex = 3;
+            this.metroTile2.Text = "metroTile2";
+            this.metroTile2.TileCount = 35;
+            this.metroTile2.TileCountFont = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.metroTile2.UseSelectable = true;
+            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 3;
@@ -143,19 +156,6 @@
             this.xTileHeader.Size = new System.Drawing.Size(864, 43);
             this.xTileHeader.TabIndex = 0;
             this.xTileHeader.Text = "htmlLabel1";
-            // 
-            // metroTile2
-            // 
-            this.metroTile2.ActiveControl = null;
-            this.metroTile2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.metroTile2.Location = new System.Drawing.Point(60, 18);
-            this.metroTile2.Name = "metroTile2";
-            this.metroTile2.Size = new System.Drawing.Size(144, 94);
-            this.metroTile2.TabIndex = 3;
-            this.metroTile2.Text = "metroTile2";
-            this.metroTile2.TileCount = 35;
-            this.metroTile2.TileCountFont = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.metroTile2.UseSelectable = true;
             // 
             // TileViewer
             // 

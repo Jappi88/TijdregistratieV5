@@ -1,16 +1,16 @@
-﻿using System;
+﻿using ProductieManager.Rpm.Mailing;
+using Rpm.Mailing;
+using Rpm.Productie;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Forms;
-using ProductieManager.Rpm.Mailing;
-using Rpm.Mailing;
-using Rpm.Productie;
+using ProductieManager.Properties;
 
-namespace ProductieManager.Forms
+namespace Forms
 {
-    public partial class SendEmailForm : MetroFramework.Forms.MetroForm
+    public partial class SendEmailForm : Forms.MetroBase.MetroBaseForm
     {
         public SendEmailForm()
         {
@@ -34,7 +34,7 @@ namespace ProductieManager.Forms
                 var xclients = Manager.Opties.EmailClients.OrderBy(x => x.Name);
                 foreach (var client in xclients)
                 {
-                    var item = new ToolStripMenuItem(client.Name, Properties.Resources.user_customer_person_32x32);
+                    var item = new ToolStripMenuItem(client.Name, Resources.user_customer_person_32x32);
                     item.Tag = client;
                     item.ToolTipText = client.Email;
                     item.Click += EmailClient_Click;
@@ -50,7 +50,7 @@ namespace ProductieManager.Forms
                 var items = xontvangerstrip.Items.Cast<ToolStripMenuItem>().ToList();
                 if (items.Any(x => x.Tag is EmailClient xclient && xclient.Equals(client))) return;
                 var xitem = new ToolStripMenuItem(client.Name,
-                    Properties.Resources.delete_delete_deleteusers_delete_male_user_maleclient_2348);
+                    Resources.delete_delete_deleteusers_delete_male_user_maleclient_2348);
                 xitem.Tag = client;
                 xitem.ToolTipText = client.Email;
                 xitem.Click += EmailClientRemove_Click;
@@ -98,7 +98,7 @@ namespace ProductieManager.Forms
             if (string.IsNullOrEmpty(bijlage)) return;
             if (xbijlagestrip.Items.Cast<ToolStripMenuItem>().Any(x =>
                 string.Equals((string) x.Tag, bijlage, StringComparison.CurrentCultureIgnoreCase))) return;
-            var menuitem = new ToolStripMenuItem(Path.GetFileName(bijlage), Properties.Resources.delete_1577);
+            var menuitem = new ToolStripMenuItem(Path.GetFileName(bijlage), Resources.delete_1577);
             menuitem.Tag = bijlage;
             menuitem.ToolTipText = bijlage;
             menuitem.Click += Menuitem_Click;

@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class LogForm : MetroFramework.Forms.MetroForm
+    public partial class LogForm : Forms.MetroBase.MetroBaseForm
     {
 
         public LogForm()

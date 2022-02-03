@@ -1,18 +1,16 @@
-﻿using System;
+﻿using BrightIdeasSoftware;
+using ProductieManager.Properties;
+using Rpm.Productie;
+using Rpm.Productie.ArtikelRecords;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Management;
 using System.Windows.Forms;
-using BrightIdeasSoftware;
-using ProductieManager.Properties;
-using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Productie.ArtikelRecords;
 
 namespace Forms.ArtikelRecords
 {
-    public partial class ArtikelOpmerkingenForm : MetroFramework.Forms.MetroForm
+    public partial class ArtikelOpmerkingenForm : Forms.MetroBase.MetroBaseForm
     {
         public List<ArtikelOpmerking> Opmerkingen = new List<ArtikelOpmerking>();
         public ArtikelRecord Record { get; set; }
@@ -49,7 +47,7 @@ namespace Forms.ArtikelRecords
         {
             try
             {
-                Opmerkingen = Manager.ArtikelRecords?.LoadOpmerkingen();
+                Opmerkingen = Manager.ArtikelRecords?.GetAllAlgemeenRecordsOpmerkingen();
                 LoadList();
             }
             catch (Exception e)
@@ -87,7 +85,7 @@ namespace Forms.ArtikelRecords
                 }
                 else
                 {
-                    Manager.ArtikelRecords?.SaveOpmerkingen(Opmerkingen);
+                    Manager.ArtikelRecords?.SaveAlgemeenOpmerkingen(Opmerkingen);
                 }
 
                 return true;
@@ -196,7 +194,7 @@ namespace Forms.ArtikelRecords
                         return;
                     else
                     {
-                        Opmerkingen = Manager.ArtikelRecords?.LoadOpmerkingen() ?? new List<ArtikelOpmerking>();
+                        Opmerkingen = Manager.ArtikelRecords?.GetAllAlgemeenRecordsOpmerkingen() ?? new List<ArtikelOpmerking>();
                         if (this.InvokeRequired)
                             this.Invoke(new MethodInvoker(LoadList));
                         else

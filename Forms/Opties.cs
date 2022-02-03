@@ -1,5 +1,4 @@
 ﻿using BrightIdeasSoftware;
-using Controls;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
@@ -21,7 +20,7 @@ using Various;
 
 namespace Forms
 {
-    public partial class Opties : MetroFramework.Forms.MetroForm
+    public partial class Opties : Forms.MetroBase.MetroBaseForm
     {
         //public readonly StickyWindow _stickyWindow;
         private List<string> _afdelingen = new();
@@ -762,15 +761,9 @@ namespace Forms
                     return;
                 }
             }
-
-            this.SetLastInfo();
+            
             Manager.OnSettingsChanged -= _manager_OnSettingsChanged;
             //Manager.OnLoginChanged -= _manager_OnLoginChanged;
-        }
-
-        private void Form_Load(object sender, EventArgs e)
-        {
-            this.InitLastInfo();
         }
 
         private void xweergavelijst_SelectedIndexChanged(object sender, EventArgs e)

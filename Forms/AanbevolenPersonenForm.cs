@@ -1,14 +1,11 @@
-﻿
+﻿using Rpm.Productie;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Forms;
-using Rpm.Productie;
 
-namespace ProductieManager.Forms
+namespace Forms
 {
-    public partial class AanbevolenPersonenForm : MetroFramework.Forms.MetroForm
+    public partial class AanbevolenPersonenForm : Forms.MetroBase.MetroBaseForm
     {
         public AanbevolenPersonenForm()
         {

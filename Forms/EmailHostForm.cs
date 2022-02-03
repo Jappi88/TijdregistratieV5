@@ -1,22 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net.Security;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using ProductieManager.Properties;
+﻿using ProductieManager.Properties;
 using Rpm.Mailing;
 using Rpm.Misc;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class EmailHostForm : MetroFramework.Forms.MetroForm
+    public partial class EmailHostForm : Forms.MetroBase.MetroBaseForm
     {
         public EmailHost SelectedHost { get; private set; } = new();
         public EmailHostForm()

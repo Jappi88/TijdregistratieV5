@@ -5,7 +5,7 @@ using Rpm.MateriaalSoort;
 
 namespace Forms.Sporen
 {
-    public partial class SpoorDatabaseForm : MetroFramework.Forms.MetroForm
+    public partial class SpoorDatabaseForm : Forms.MetroBase.MetroBaseForm
     {
         public OpdrukkerInfo Info { get; set; }
         public SpoorDatabaseForm(OpdrukkerInfo info)

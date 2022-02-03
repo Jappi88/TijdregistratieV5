@@ -12,7 +12,7 @@ using Forms.Sporen;
 
 namespace Forms
 {
-    public partial class SporenForm : MetroFramework.Forms.MetroForm
+    public partial class SporenForm : Forms.MetroBase.MetroBaseForm
     {
         private List<SpoorEntry> Sporen { get; set; } = new List<SpoorEntry>();
         public SporenForm()

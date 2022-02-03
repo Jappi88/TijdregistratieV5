@@ -33,7 +33,7 @@ namespace Rpm.Productie.ArtikelRecords
             Database.FileDeleted += Database_FileDeleted;
         }
 
-        public List<ArtikelOpmerking> LoadOpmerkingen()
+        public List<ArtikelOpmerking> GetAllAlgemeenRecordsOpmerkingen()
         {
             try
             {
@@ -51,7 +51,7 @@ namespace Rpm.Productie.ArtikelRecords
             return new List<ArtikelOpmerking>();
         }
 
-        public bool SaveOpmerkingen(List<ArtikelOpmerking> opmerkingen)
+        public bool SaveAlgemeenOpmerkingen(List<ArtikelOpmerking> opmerkingen)
         {
             try
             {
@@ -78,31 +78,90 @@ namespace Rpm.Productie.ArtikelRecords
             }
         }
 
+        public List<ArtikelRecord> GetAllRecords()
+        {
+            try
+            {
+                return Database?.GetAllEntries<ArtikelRecord>()??new List<ArtikelRecord>();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new List<ArtikelRecord>();
+            }
+        }
+
+        public bool SaveRecord(ArtikelRecord record)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(record?.ArtikelNr))
+                    return false;
+                return Database?.Upsert(record.ArtikelNr, record, false) ?? false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        public Task<int> SaveRecords(List<ArtikelRecord> records)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                var xret = 0;
+                try
+                {
+                    if (records == null || records.Count == 0)
+                        return 0;
+
+                    for (int i = 0; i < records.Count; i++)
+                    {
+                        var xrec = records[i];
+                        if (SaveRecord(xrec))
+                            xret++;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+
+                return xret;
+            });
+        }
+
         private void Database_FileDeleted(object sender, FileSystemEventArgs e)
         {
             OnArtikelDeleted(e);
         }
 
-        public void UpdateWaardes(ProductieFormulier form)
+        public bool UpdateWaardes(ProductieFormulier form, ArtikelRecord record = null, bool save = true)
         {
             try
             {
                 if (string.IsNullOrEmpty(form?.ArtikelNr))
-                    return;
-                if (form.State != ProductieState.Gereed) return;
-                var file = Database?.GetEntry<ArtikelRecord>(form.ArtikelNr);
+                    return false;
+                if (form.State != ProductieState.Gereed) return false;
+                var file = record??Database?.GetEntry<ArtikelRecord>(form.ArtikelNr);
+
                 if (file != null)
                 {
                     if (file.UpdatedProducties.Exists(x =>
                             string.Equals(form.ProductieNr, x, StringComparison.CurrentCultureIgnoreCase)))
-                        return;
+                        return false;
+                    file.ArtikelNr = form.ArtikelNr;
                     file.Omschrijving = form.Omschrijving;
                     file.VorigeAantalGemaakt = file.AantalGemaakt;
                     file.AantalGemaakt += form.TotaalGemaakt;
                     file.VorigeTijdGewerkt = form.TijdGewerkt;
                     file.TijdGewerkt += form.TijdAanGewerkt();
-                    file.LaatstGeupdate = DateTime.Now;
-                    
+                    if (form.DatumGereed > file.LaatstGeupdate)
+                        file.LaatstGeupdate = form.DatumGereed;
+                    if (file.Vanaf.IsDefault() || form.TijdGestart < file.Vanaf)
+                        file.Vanaf = form.TijdGestart;
+
                 }
                 else
                 {
@@ -111,38 +170,49 @@ namespace Rpm.Productie.ArtikelRecords
                         AantalGemaakt = form.TotaalGemaakt,
                         ArtikelNr = form.ArtikelNr,
                         Omschrijving = form.Omschrijving,
-                        TijdGewerkt = form.TijdAanGewerkt()
+                        TijdGewerkt = form.TijdAanGewerkt(),
+                        LaatstGeupdate = form.DatumGereed,
+                        Vanaf = form.TijdGestart
                     };
                 }
                 file.UpdatedProducties.Add(form.ProductieNr);
-                Database?.Upsert(form.ArtikelNr, file, false);
+                if (save)
+                    return Database?.Upsert(form.ArtikelNr, file, false)??false;
+                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                return false;
             }
         }
 
-        public void UpdateWaardes(WerkPlek plek)
+        public bool UpdateWaardes(WerkPlek plek, ArtikelRecord record = null, bool save = true)
         {
             try
             {
                 if (string.IsNullOrEmpty(plek?.Naam))
-                    return;
-                if (plek.Werk is not {State: ProductieState.Gereed}) return;
-                var file = Database.GetEntry<ArtikelRecord>(plek.Naam);
+                    return false;
+                if (plek.Werk is not {State: ProductieState.Gereed}) return false;
+                var file = record??Database.GetEntry<ArtikelRecord>(plek.Naam);
                 if (file != null)
                 {
                     if (file.UpdatedProducties.Exists(x =>
                             string.Equals(plek.ProductieNr, x, StringComparison.CurrentCultureIgnoreCase)))
-                        return;
+                        return false;
+                    file.ArtikelNr = plek.Naam;
                     file.Omschrijving = $"{plek.Naam} Werkplek";
                     file.VorigeAantalGemaakt = file.AantalGemaakt;
                     file.AantalGemaakt += plek.TotaalGemaakt;
                     file.VorigeTijdGewerkt = plek.TijdGewerkt;
                     file.TijdGewerkt += plek.TijdAanGewerkt();
-                    file.LaatstGeupdate = DateTime.Now;
                     file.IsWerkplek = true;
+                    var xstop = plek.GestoptOp();
+                    var xstart = plek.GestartOp();
+                    if (xstop > file.LaatstGeupdate)
+                        file.LaatstGeupdate = xstop;
+                    if (file.Vanaf.IsDefault() || xstart < file.Vanaf)
+                        file.Vanaf = xstart;
                 }
                 else
                 {
@@ -152,15 +222,20 @@ namespace Rpm.Productie.ArtikelRecords
                         ArtikelNr = plek.Naam,
                         Omschrijving = $"{plek.Naam} Werkplek",
                         TijdGewerkt = plek.TijdAanGewerkt(),
-                        IsWerkplek = true
+                        IsWerkplek = true,
+                        Vanaf = plek.GestartOp(),
+                        LaatstGeupdate = plek.GestoptOp()
                     };
                 }
                 file.UpdatedProducties.Add(plek.ProductieNr);
-                Database.Upsert(plek.Naam, file, false);
+                if (save)
+                    Database.Upsert(plek.Naam, file, false);
+                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                return false;
             }
         }
 
@@ -226,7 +301,7 @@ namespace Rpm.Productie.ArtikelRecords
             var xreturn = new Dictionary<ArtikelRecord, List<ArtikelOpmerking>>();
             try
             {
-                var opmerkingen = LoadOpmerkingen();
+                var opmerkingen = GetAllAlgemeenRecordsOpmerkingen();
                 if (opmerkingen.Count > 0)
                 {
                     records ??= Database.GetAllEntries<ArtikelRecord>(new List<string>() {"algemeen"});
@@ -274,12 +349,12 @@ namespace Rpm.Productie.ArtikelRecords
 
                         if (op.IsAlgemeen)
                         {
-                            var alg = LoadOpmerkingen();
+                            var alg = GetAllAlgemeenRecordsOpmerkingen();
                             var xindex = alg.IndexOf(op);
                             if (xindex > -1)
                             {
                                 alg[xindex] = op;
-                                SaveOpmerkingen(alg);
+                                SaveAlgemeenOpmerkingen(alg);
                             }
                         }
                         else

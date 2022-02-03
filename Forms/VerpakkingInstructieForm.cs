@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class VerpakkingInstructieForm : MetroFramework.Forms.MetroForm 
+    public partial class VerpakkingInstructieForm : Forms.MetroBase.MetroBaseForm 
     {
         private IProductieBase _productie;
         public VerpakkingInstructieForm(IProductieBase productie)

@@ -1,29 +1,65 @@
-﻿using System;
+﻿using Controls;
+using ProductieManager.Forms.MetroDock;
+using Rpm.Productie;
+using Rpm.Various;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Controls;
-using Rpm.Productie;
+using MetroFramework;
+using MetroFramework.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Forms
 {
-    public partial class ProductieLijstForm : DockContent
+    public partial class ProductieLijstForm : DockInstance
     {
         public string ListName => productieListControl1?.ListName;
 
-        private readonly int _ListIndex;
+        public IsValidHandler ValidHandler
+        {
+            get => productieListControl1?.ValidHandler;
+            set
+            {
+                if (productieListControl1 != null)
+                    productieListControl1.ValidHandler = value;
+            }
+        }
 
-        public ProductieLijstForm(int index)
+        private readonly int _ListIndex;
+        private List<Bewerking> _bewerkingen;
+
+        public ProductieLijstForm():base()
         {
             InitializeComponent();
-            SetStyle(
-                ControlStyles.UserPaint |
-                ControlStyles.AllPaintingInWmPaint |
-                ControlStyles.OptimizedDoubleBuffer |
-                ControlStyles.SupportsTransparentBackColor,
-                true);
+            DisplayHeader = false;
+            ShadowType = MetroFormShadowType.AeroShadow;
+            Style = MetroColorStyle.Purple;
+        }
+
+        public ProductieLijstForm(int index):this()
+        {
             _ListIndex = index;
             productieListControl1.ListName = $"[{_ListIndex}]ProductieLijst";
+            UpdateListName();
+        }
+
+        public bool IsValidHandler(object value, string filter)
+        {
+            if (value is Bewerking bew)
+            {
+                return _bewerkingen.IndexOf(bew) > -1;
+            }
+
+            return false;
+        }
+
+        public ProductieLijstForm(List<Bewerking> bewerkingen, string name):this()
+        {
+            productieListControl1.ListName = name;
+            _bewerkingen = bewerkingen;
+            productieListControl1.EnableFiltering = false;
+            productieListControl1.ValidHandler = IsValidHandler;
             UpdateListName();
         }
 
@@ -41,7 +77,7 @@ namespace Forms
 
             Text = xname + @$"[{xitemcount}]";
             var x1 = xitemcount == 1 ? "bewerking" : "bewerkingen";
-            xlijstname.Text = @$"{xname} met totaal {xitemcount} {x1}";
+            xstatuslabel.Text = @$"{xname} met totaal {xitemcount} {x1}";
             Invalidate();
         }
 
@@ -60,9 +96,13 @@ namespace Forms
 
         private void StartProductie_Shown(object sender, EventArgs e)
         {
-            productieListControl1.InitEvents();
             Manager.FilterChanged += Manager_FilterChanged;
-            productieListControl1.InitProductie(true, true, true, true, true, true);
+            if(_bewerkingen == null)
+                productieListControl1.InitProductie(true, true, true, true, true, true);
+            else
+                productieListControl1.InitProductie(_bewerkingen, true, true, false);
+            UpdateListName();
+            productieListControl1.InitEvents();
             //if (Manager.Opties?._viewbewdata != null)
             //    productieListControl1.ProductieLijst.RestoreState(Manager.Opties.ViewDataBewerkingenState);
         }
@@ -88,11 +128,6 @@ namespace Forms
             Manager.FilterChanged -= Manager_FilterChanged;
         }
 
-        private void xsluiten_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
         private void productieListControl1_ItemCountChanged(object sender, EventArgs e)
         {
             try
@@ -103,6 +138,11 @@ namespace Forms
             {
                 Console.WriteLine(exception);
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

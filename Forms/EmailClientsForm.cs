@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms;
-using BrightIdeasSoftware;
+﻿using BrightIdeasSoftware;
 using ProductieManager.Rpm.Mailing;
 using Rpm.Productie;
+using System;
+using System.Linq;
+using System.Windows.Forms;
 
-namespace ProductieManager.Forms
+namespace Forms
 {
-    public partial class EmailClientsForm : MetroFramework.Forms.MetroForm
+    public partial class EmailClientsForm : Forms.MetroBase.MetroBaseForm
     {
         public EmailClientsForm()
         {

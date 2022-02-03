@@ -6,7 +6,7 @@ using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class WerkPlekChooser : MetroFramework.Forms.MetroForm
+    public partial class WerkPlekChooser : Forms.MetroBase.MetroBaseForm
     {
         public WerkPlekChooser(List<WerkPlek> plekken, string selected)
         {

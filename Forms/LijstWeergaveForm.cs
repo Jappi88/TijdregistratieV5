@@ -1,11 +1,11 @@
-﻿using System;
+﻿using BrightIdeasSoftware;
+using System;
 using System.Linq;
 using System.Windows.Forms;
-using BrightIdeasSoftware;
 
 namespace Forms
 {
-    public partial class LijstWeergaveForm : MetroFramework.Forms.MetroForm
+    public partial class LijstWeergaveForm : Forms.MetroBase.MetroBaseForm
     {
         public LijstWeergaveForm()
         {

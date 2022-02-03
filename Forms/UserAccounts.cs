@@ -8,7 +8,7 @@ using Rpm.Various;
 
 namespace Forms
 {
-    public partial class UserAccounts : MetroFramework.Forms.MetroForm
+    public partial class UserAccounts : Forms.MetroBase.MetroBaseForm
     {
         public UserAccounts()
         {

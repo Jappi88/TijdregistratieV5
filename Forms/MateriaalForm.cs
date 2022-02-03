@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Rpm.Productie;
+using System;
 using System.Windows.Forms;
-using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class MateriaalForm : MetroFramework.Forms.MetroForm
+    public partial class MateriaalForm : Forms.MetroBase.MetroBaseForm
     {
         public MateriaalForm()
         {

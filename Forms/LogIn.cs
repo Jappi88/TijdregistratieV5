@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Rpm.Productie;
+using System;
 using System.Windows.Forms;
-using System.Windows.Navigation;
-using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class LogIn : MetroFramework.Forms.MetroForm
+    public partial class LogIn : Forms.MetroBase.MetroBaseForm
     {
         public bool DisableLogin { get; set; }
         public bool ShowAutoLoginCheckbox

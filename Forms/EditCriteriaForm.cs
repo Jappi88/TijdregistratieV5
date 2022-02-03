@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class EditCriteriaForm : MetroFramework.Forms.MetroForm
+    public partial class EditCriteriaForm : Forms.MetroBase.MetroBaseForm
     {
         public List<FilterEntry> SelectedFilter { get; private set; }
 

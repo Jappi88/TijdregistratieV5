@@ -1,13 +1,12 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using Rpm.DailyUpdate;
+﻿using Rpm.DailyUpdate;
 using Rpm.Productie;
 using Rpm.Various;
+using System;
+using System.Drawing;
 
 namespace Forms
 {
-    public partial class DailyMessageForm : MetroFramework.Forms.MetroForm
+    public partial class DailyMessageForm : Forms.MetroBase.MetroBaseForm
     {
         public Daily Daily { get; set; }
         public DailyMessageForm(Daily daily)

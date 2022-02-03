@@ -430,8 +430,6 @@ namespace Forms
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Pas Werktijd Aan";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WerktijdChanger_FormClosing);
-            this.Load += new System.EventHandler(this.WerktijdChanger_Load);
             ((System.ComponentModel.ISupportInitialize)(this.xwerktijden)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);

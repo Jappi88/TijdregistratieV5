@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-using BrightIdeasSoftware;
+﻿using BrightIdeasSoftware;
 using Forms;
 using Rpm.Misc;
 using Rpm.Productie;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
-namespace ProductieManager.Forms
+namespace Forms
 {
-    public partial class DeelsGereedMeldingenForm : MetroFramework.Forms.MetroForm
+    public partial class DeelsGereedMeldingenForm : Forms.MetroBase.MetroBaseForm
     {
         public Bewerking Bewerking { get; private set; }
         public List<DeelsGereedMelding> DeelMeldingen { get; private set; }

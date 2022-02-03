@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using BrightIdeasSoftware;
+﻿using BrightIdeasSoftware;
 using ProductieManager.Rpm.Productie;
-using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 using Exception = System.Exception;
 
 namespace Forms
 {
-    public partial class MateriaalVerbruikForm : MetroFramework.Forms.MetroForm
+    public partial class MateriaalVerbruikForm : Forms.MetroBase.MetroBaseForm
     {
         public List<MateriaalEntryInfo> Materialen = new List<MateriaalEntryInfo>();
         public MateriaalVerbruikForm()

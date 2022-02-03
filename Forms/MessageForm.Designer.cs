@@ -35,12 +35,12 @@ namespace Forms
             this.xchooserpanel = new System.Windows.Forms.Panel();
             this.xchooser = new MetroFramework.Controls.MetroComboBox();
             this.xbuttonpanel = new System.Windows.Forms.Panel();
-            this.xmessageicon = new System.Windows.Forms.PictureBox();
-            this.xMessagePanel = new System.Windows.Forms.Panel();
-            this.xmessageb4 = new System.Windows.Forms.Button();
-            this.xmessageb1 = new System.Windows.Forms.Button();
             this.xmessageb2 = new System.Windows.Forms.Button();
             this.xmessageb3 = new System.Windows.Forms.Button();
+            this.xmessageb1 = new System.Windows.Forms.Button();
+            this.xmessageb4 = new System.Windows.Forms.Button();
+            this.xmessageicon = new System.Windows.Forms.PictureBox();
+            this.xMessagePanel = new System.Windows.Forms.Panel();
             this.xmainpanel.SuspendLayout();
             this.xchooserpanel.SuspendLayout();
             this.xbuttonpanel.SuspendLayout();
@@ -70,7 +70,7 @@ namespace Forms
             this.xmessage.Size = new System.Drawing.Size(628, 153);
             this.xmessage.TabIndex = 0;
             this.xmessage.Text = "Message Text";
-            this.xmessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xmessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // xchooserpanel
             // 
@@ -108,55 +108,6 @@ namespace Forms
             this.xbuttonpanel.Size = new System.Drawing.Size(777, 41);
             this.xbuttonpanel.TabIndex = 2;
             // 
-            // xmessageicon
-            // 
-            this.xmessageicon.Dock = System.Windows.Forms.DockStyle.Left;
-            this.xmessageicon.Image = global::ProductieManager.Properties.Resources.exit_close_error_15565;
-            this.xmessageicon.Location = new System.Drawing.Point(0, 0);
-            this.xmessageicon.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.xmessageicon.Name = "xmessageicon";
-            this.xmessageicon.Size = new System.Drawing.Size(137, 211);
-            this.xmessageicon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.xmessageicon.TabIndex = 1;
-            this.xmessageicon.TabStop = false;
-            // 
-            // xMessagePanel
-            // 
-            this.xMessagePanel.Controls.Add(this.xmessageicon);
-            this.xMessagePanel.Controls.Add(this.xbuttonpanel);
-            this.xMessagePanel.Controls.Add(this.xmainpanel);
-            this.xMessagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xMessagePanel.Location = new System.Drawing.Point(20, 60);
-            this.xMessagePanel.Name = "xMessagePanel";
-            this.xMessagePanel.Size = new System.Drawing.Size(777, 252);
-            this.xMessagePanel.TabIndex = 3;
-            // 
-            // xmessageb4
-            // 
-            this.xmessageb4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xmessageb4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xmessageb4.Location = new System.Drawing.Point(215, 3);
-            this.xmessageb4.Name = "xmessageb4";
-            this.xmessageb4.Size = new System.Drawing.Size(135, 34);
-            this.xmessageb4.TabIndex = 3;
-            this.xmessageb4.Text = "Button4";
-            this.xmessageb4.UseVisualStyleBackColor = true;
-            this.xmessageb4.Visible = false;
-            this.xmessageb4.Click += new System.EventHandler(this.xmessageb4_Click);
-            // 
-            // xmessageb1
-            // 
-            this.xmessageb1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xmessageb1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xmessageb1.Location = new System.Drawing.Point(356, 3);
-            this.xmessageb1.Name = "xmessageb1";
-            this.xmessageb1.Size = new System.Drawing.Size(135, 34);
-            this.xmessageb1.TabIndex = 2;
-            this.xmessageb1.Text = "Button1";
-            this.xmessageb1.UseVisualStyleBackColor = true;
-            this.xmessageb1.Visible = false;
-            this.xmessageb1.Click += new System.EventHandler(this.xmessageb1_Click);
-            // 
             // xmessageb2
             // 
             this.xmessageb2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -182,6 +133,55 @@ namespace Forms
             this.xmessageb3.UseVisualStyleBackColor = true;
             this.xmessageb3.Visible = false;
             this.xmessageb3.Click += new System.EventHandler(this.xmessageb3_Click);
+            // 
+            // xmessageb1
+            // 
+            this.xmessageb1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xmessageb1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xmessageb1.Location = new System.Drawing.Point(356, 3);
+            this.xmessageb1.Name = "xmessageb1";
+            this.xmessageb1.Size = new System.Drawing.Size(135, 34);
+            this.xmessageb1.TabIndex = 2;
+            this.xmessageb1.Text = "Button1";
+            this.xmessageb1.UseVisualStyleBackColor = true;
+            this.xmessageb1.Visible = false;
+            this.xmessageb1.Click += new System.EventHandler(this.xmessageb1_Click);
+            // 
+            // xmessageb4
+            // 
+            this.xmessageb4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xmessageb4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xmessageb4.Location = new System.Drawing.Point(215, 3);
+            this.xmessageb4.Name = "xmessageb4";
+            this.xmessageb4.Size = new System.Drawing.Size(135, 34);
+            this.xmessageb4.TabIndex = 3;
+            this.xmessageb4.Text = "Button4";
+            this.xmessageb4.UseVisualStyleBackColor = true;
+            this.xmessageb4.Visible = false;
+            this.xmessageb4.Click += new System.EventHandler(this.xmessageb4_Click);
+            // 
+            // xmessageicon
+            // 
+            this.xmessageicon.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xmessageicon.Image = global::ProductieManager.Properties.Resources.exit_close_error_15565;
+            this.xmessageicon.Location = new System.Drawing.Point(0, 0);
+            this.xmessageicon.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.xmessageicon.Name = "xmessageicon";
+            this.xmessageicon.Size = new System.Drawing.Size(137, 211);
+            this.xmessageicon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.xmessageicon.TabIndex = 1;
+            this.xmessageicon.TabStop = false;
+            // 
+            // xMessagePanel
+            // 
+            this.xMessagePanel.Controls.Add(this.xmessageicon);
+            this.xMessagePanel.Controls.Add(this.xbuttonpanel);
+            this.xMessagePanel.Controls.Add(this.xmainpanel);
+            this.xMessagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xMessagePanel.Location = new System.Drawing.Point(20, 60);
+            this.xMessagePanel.Name = "xMessagePanel";
+            this.xMessagePanel.Size = new System.Drawing.Size(777, 252);
+            this.xMessagePanel.TabIndex = 3;
             // 
             // XMessageBox
             // 

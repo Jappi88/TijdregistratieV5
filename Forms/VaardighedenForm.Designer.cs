@@ -55,7 +55,6 @@ namespace Forms
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "VaardighedenForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VaardighedenForm_FormClosing);
-            this.Load += new System.EventHandler(this.Form_Load);
             this.Shown += new System.EventHandler(this.VaardighedenForm_Shown);
             this.ResumeLayout(false);
 

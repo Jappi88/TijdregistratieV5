@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class AfsluitPromp : MetroFramework.Forms.MetroForm
+    public partial class AfsluitPromp : Forms.MetroBase.MetroBaseForm
     {
         private readonly Timer _timer;
         private readonly double max = 30.0;

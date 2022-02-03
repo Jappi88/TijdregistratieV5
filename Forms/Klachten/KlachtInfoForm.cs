@@ -1,16 +1,16 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Windows.Forms;
-using ProductieManager.Properties;
+﻿using ProductieManager.Properties;
 using Rpm.Klachten;
 using Rpm.Productie;
 using Rpm.Various;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Windows.Forms;
 using Various;
 
 namespace Forms.Klachten
 {
-    public partial class KlachtInfoForm : MetroFramework.Forms.MetroForm
+    public partial class KlachtInfoForm : Forms.MetroBase.MetroBaseForm
     {
         public KlachtEntry Klacht { get; private set; }
         public KlachtInfoForm(KlachtEntry entry)
@@ -64,7 +64,6 @@ namespace Forms.Klachten
             Manager.KlachtChanged += Manager_KlachtChanged;
             Manager.KlachtDeleted += Manager_KlachtDeleted;
             timer1.Start();
-            this.InitLastInfo();
         }
 
         private void Manager_KlachtDeleted(object sender, EventArgs e)
@@ -101,7 +100,6 @@ namespace Forms.Klachten
             timer1?.Stop();
             Manager.KlachtChanged -= Manager_KlachtChanged;
             Manager.KlachtDeleted -= Manager_KlachtDeleted;
-            this.SetLastInfo();
         }
 
         private void timer1_Tick(object sender, EventArgs e)

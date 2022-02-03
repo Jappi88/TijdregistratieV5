@@ -1,9 +1,11 @@
-﻿using ProductieManager.Forms;
+﻿using MetroFramework;
+using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using ProductieManager.Rpm.Various;
 using Rpm.Klachten;
 using Rpm.Misc;
+using Rpm.Opmerking;
 using Rpm.Productie;
 using System;
 using System.Collections;
@@ -11,12 +13,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using MetroFramework;
-using Rpm.Opmerking;
 
 namespace Forms.Klachten
 {
-    public partial class NewKlachtForm : MetroFramework.Forms.MetroForm
+    public partial class NewKlachtForm : Forms.MetroBase.MetroBaseForm
     {
         public KlachtEntry Klacht { get; private set; }
         public OpmerkingEntry Opmerking { get; set; }

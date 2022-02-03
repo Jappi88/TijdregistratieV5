@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class DbPathChooser : MetroFramework.Forms.MetroForm
+    public partial class DbPathChooser : Forms.MetroBase.MetroBaseForm
     {
         public DbPathChooser()
         {

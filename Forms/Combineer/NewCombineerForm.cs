@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Rpm.Productie;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Rpm.Productie;
 
 namespace Forms.Combineer
 {
-    public partial class NewCombineerForm : MetroFramework.Forms.MetroForm
+    public partial class NewCombineerForm : Forms.MetroBase.MetroBaseForm
     {
         private readonly Bewerking _parent;
         private readonly Bewerking _productie;

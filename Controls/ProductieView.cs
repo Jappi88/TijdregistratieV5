@@ -647,6 +647,8 @@ namespace Controls
         public void DoActie(object[] values, MainAktie type)
         {
             var flag = values is {Length: > 0};
+            var xforms = Application.OpenForms.Cast<Form>().Where(x => x is Form_Alert).ToList();
+            xforms.ForEach(x=> x.Close());
             switch (type)
             {
                 case MainAktie.OpenProductie:
@@ -1867,7 +1869,7 @@ namespace Controls
                         Tag = prodform,
                         StartPosition = FormStartPosition.CenterScreen
                     };
-                    _productielijstdock.FormClosed += (x, y) => _producties = null;
+                    _productielijstdock.FormClosed += (x, y) => _productielijstdock = null;
                 }
 
                 prodform.Show(_productielijstdock.DockPanel);
@@ -1973,7 +1975,7 @@ namespace Controls
             _opmerkingform.Focus();
         }
 
-        public static void ShowArtikelenWindow()
+        public static void ShowArtikelenWindow(string artnr = null)
         {
             if (_ArtikelsForm == null)
             {
@@ -1990,6 +1992,8 @@ namespace Controls
                 _ArtikelsForm.WindowState = FormWindowState.Normal;
             _ArtikelsForm.BringToFront();
             _ArtikelsForm.Focus();
+            if (artnr != null)
+                _ArtikelsForm.SelectedArtikelNr = artnr;
         }
 
         public static void ShowOnderbrekeningenWidow()

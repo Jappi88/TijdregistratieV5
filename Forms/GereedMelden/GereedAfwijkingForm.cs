@@ -1,14 +1,14 @@
-﻿using Rpm.Productie;
+﻿using MetroFramework;
+using Rpm.Productie;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using MetroFramework;
 
 namespace Forms.GereedMelden
 {
-    public partial class GereedAfwijkingForm : MetroFramework.Forms.MetroForm
+    public partial class GereedAfwijkingForm : Forms.MetroBase.MetroBaseForm
     {
         private IProductieBase _Productie;
         public GereedAfwijkingForm()

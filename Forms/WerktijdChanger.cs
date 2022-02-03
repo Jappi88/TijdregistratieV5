@@ -12,7 +12,7 @@ using Various;
 
 namespace Forms
 {
-    public partial class WerktijdChanger : MetroFramework.Forms.MetroForm
+    public partial class WerktijdChanger : Forms.MetroBase.MetroBaseForm
     {
         private Rooster CurrentRooster { get; set; }
         private List<Rooster> SpecialeRoosters { get; set; }
@@ -530,16 +530,6 @@ namespace Forms
                 UpdateUurGewerkt(GetRooster(null));
                 UpdateStatus();
             }
-        }
-
-        private void WerktijdChanger_Load(object sender, EventArgs e)
-        {
-            this.InitLastInfo();
-        }
-
-        private void WerktijdChanger_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            this.SetLastInfo();
         }
 
         private void xentryrooster_Click(object sender, EventArgs e)

@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Rpm.Misc;
+using Rpm.Productie;
+using Rpm.Various;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Various;
 
 namespace Forms
 {
-    public partial class NieuwKlusForm : MetroFramework.Forms.MetroForm
+    public partial class NieuwKlusForm : Forms.MetroBase.MetroBaseForm
     {
         private readonly bool _save;
 

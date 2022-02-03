@@ -142,6 +142,12 @@ namespace Controls
             InitProductie(true, true, true, initlist, loadproducties, reload);
         }
 
+        public void InitProductie(List<Bewerking> bewerkingen, bool initlist,bool enablefilter, bool loadproducties, bool reload)
+        {
+            Bewerkingen = bewerkingen;
+            InitProductie(true, enablefilter, true, initlist, loadproducties, reload);
+        }
+
         public void InitProductie(bool bewerkingen, bool enablefilter, bool customlist, bool initlist,
             bool loadproducties, bool reload)
         {
@@ -151,15 +157,26 @@ namespace Controls
             if (initlist)
                 try
                 {
-                    CanLoad = true;
-                    Invoke(new MethodInvoker(() =>
+                    xsearch.TextChanged -= xsearchbox_TextChanged;
+                    xsearch.TextChanged += xsearchbox_TextChanged;
+                    if (InvokeRequired)
                     {
-                        xsearch.TextChanged -= xsearchbox_TextChanged;
-                        xsearch.TextChanged += xsearchbox_TextChanged;
+                        Invoke(new MethodInvoker(() =>
+                        {
+
+                            InitImageList();
+                            InitColumns();
+
+                        }));
+                    }
+                    else
+                    {
                         InitImageList();
                         InitColumns();
-                        IsLoaded = true;
-                    }));
+                    }
+
+                    CanLoad = true;
+                    IsLoaded = true;
                 }
                 catch (Exception e)
                 {
@@ -371,8 +388,10 @@ namespace Controls
                 {
                     var valid = false;
                     Invoke(new MethodInvoker(() => valid = !IsDisposed));
-                    if (!valid) return;
                     xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = true; }));
+
+                    if (!valid) return;
+
                     var cur = 0;
                     var xwv = IsBewerkingView ? "Bewerkingen Laden" : "Producties laden";
                     //var xcurvalue = xwv;
@@ -394,14 +413,16 @@ namespace Controls
                         tries++;
                         cur++;
                         Invoke(new MethodInvoker(() => valid = !IsDisposed));
+
                         if (!valid) break;
                     }
 
-                    
+
                 }
                 catch (Exception e)
                 {
                 }
+
                 xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
             });
         }
@@ -987,70 +1008,85 @@ namespace Controls
             if (Manager.Opties == null || !CanLoad) return;
             try
             {
-                Invoke(new MethodInvoker(() =>
+                if (InvokeRequired)
+                    Invoke(new MethodInvoker(() => { xUpdateProductieList(reload, showwaitui); }));
+                else
+                    xUpdateProductieList(reload, showwaitui);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+        }
+
+        public void xUpdateProductieList(bool reload, bool showwaitui)
+        {
+            if (Manager.Opties == null || !CanLoad) return;
+            try
+            {
+                if (showwaitui)
+                    SetWaitUI();
+                try
                 {
-                    if (showwaitui)
-                        SetWaitUI();
-                    try
+                    _loadingproductielist = true;
+                    var xscroloffset = ProductieLijst.LowLevelScrollPosition;
+                    InitFilterStrips();
+                    var selected1 = ProductieLijst.SelectedObject;
+                    var xfocused = ProductieLijst.FocusedObject;
+                    var groups1 = ProductieLijst.Groups.Cast<ListViewGroup>().Select(t => (OLVGroup) t.Tag)
+                        .Where(x => x.Collapsed)
+                        .ToArray();
+                    // Manager.Opties.ProductieWeergaveFilters = GetCurrentProductieViewStates();
+
+
+                    var xlistcount = ProductieLijst.Items.Count;
+                    if (!IsBewerkingView)
                     {
-                        _loadingproductielist = true;
-                        var xscroloffset = ProductieLijst.LowLevelScrollPosition;
-                        InitFilterStrips();
-                        var selected1 = ProductieLijst.SelectedObject;
-                        var xfocused = ProductieLijst.FocusedObject;
-                        var groups1 = ProductieLijst.Groups.Cast<ListViewGroup>().Select(t => (OLVGroup) t.Tag)
-                            .Where(x => x.Collapsed)
-                            .ToArray();
-                        // Manager.Opties.ProductieWeergaveFilters = GetCurrentProductieViewStates();
-                       
-
-                        var xlistcount = ProductieLijst.Items.Count;
-                        if (!IsBewerkingView)
+                        if (CanLoad)
                         {
-                            if (CanLoad)
-                            {
-                                var xprods = GetProducties(reload,true);
-                                UpdateListObjects(xprods);
-                            }
+                            var xprods = GetProducties(reload, true);
+                            UpdateListObjects(xprods);
                         }
-                        else if (CanLoad)
-                        {
-                            var bws = GetBewerkingen(reload,true);
-                            UpdateListObjects(bws);
-                        }
-
-                        var xgroups = ProductieLijst.Groups.Cast<ListViewGroup>().ToList();
-                        if (groups1.Length > 0)
-                            for (var i = 0; i < xgroups.Count; i++)
-                            {
-                                var group = xgroups[i].Tag as OLVGroup;
-                                if (@group == null)
-                                    continue;
-                                if (groups1.Any(t => !@group.Collapsed && t.Header == @group.Header))
-                                    @group.Collapsed = true;
-                            }
-                        SetButtonEnable();
-                        OnSelectedItemChanged();
-                        //if (xfocused != null)
-                        //{
-                        //    ProductieLijst.FocusedObject = xfocused;
-                        //    ProductieLijst.FocusedItem?.EnsureVisible();
-                        //}
-
-                        //ProductieLijst.SelectedObject = selected1;
-                        //if (xfocused == null)
-                        //    ProductieLijst.SelectedItem?.EnsureVisible();
                     }
-                    catch (Exception e)
+                    else if (CanLoad)
                     {
-                        Console.WriteLine(e);
+                        var bws = GetBewerkingen(reload, true);
+                        UpdateListObjects(bws);
                     }
 
-                    _loadingproductielist = false;
-                    if (EnableSync)
-                        StartSync();
-                    StopWait();
-                }));
+                    var xgroups = ProductieLijst.Groups.Cast<ListViewGroup>().ToList();
+                    if (groups1.Length > 0)
+                        for (var i = 0; i < xgroups.Count; i++)
+                        {
+                            var group = xgroups[i].Tag as OLVGroup;
+                            if (@group == null)
+                                continue;
+                            if (groups1.Any(t => !@group.Collapsed && t.Header == @group.Header))
+                                @group.Collapsed = true;
+                        }
+
+                    SetButtonEnable();
+                    OnSelectedItemChanged();
+                    //if (xfocused != null)
+                    //{
+                    //    ProductieLijst.FocusedObject = xfocused;
+                    //    ProductieLijst.FocusedItem?.EnsureVisible();
+                    //}
+
+                    //ProductieLijst.SelectedObject = selected1;
+                    //if (xfocused == null)
+                    //    ProductieLijst.SelectedItem?.EnsureVisible();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+
+                _loadingproductielist = false;
+                if (EnableSync)
+                    StartSync();
+                StopWait();
             }
             catch (Exception e)
             {

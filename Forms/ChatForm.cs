@@ -504,9 +504,9 @@ namespace ProductieManager.Forms
 
         private void ChatForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            this.SetLastInfo();
             ProductieChat.GebruikerUpdate -= ProductieChat_GebruikerUpdate;
             ProductieChat.MessageRecieved -= ProductieChat_MessageRecieved;
-            this.SetLastInfo();
         }
 
         private void xuserlist_SelectedIndexChanged(object sender, EventArgs e)

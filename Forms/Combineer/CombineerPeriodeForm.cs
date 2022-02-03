@@ -1,11 +1,11 @@
-﻿using System;
-using System.Windows.Forms;
-using Rpm.Misc;
+﻿using Rpm.Misc;
 using Rpm.Productie;
+using System;
+using System.Windows.Forms;
 
 namespace Forms.Combineer
 {
-    public partial class CombineerPeriodeForm : MetroFramework.Forms.MetroForm
+    public partial class CombineerPeriodeForm : Forms.MetroBase.MetroBaseForm
     {
         public TijdEntry SelectedPeriode { get; set; } = new TijdEntry(DateTime.Now, default);
         public CombineerPeriodeForm()

@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class BewerkingChooser : MetroFramework.Forms.MetroForm
+    public partial class BewerkingChooser : Forms.MetroBase.MetroBaseForm
     {
         public BewerkingChooser(string[] items)
         {

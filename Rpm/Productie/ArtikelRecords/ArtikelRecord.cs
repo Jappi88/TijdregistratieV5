@@ -30,8 +30,6 @@ namespace Rpm.Productie.ArtikelRecords
         
         public ArtikelRecord()
         {
-            Vanaf = DateTime.Now;
-            LaatstGeupdate = DateTime.Now;
         }
 
         public string GetOpmerking(ArtikelOpmerking opmerking)

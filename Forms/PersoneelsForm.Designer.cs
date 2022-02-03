@@ -795,7 +795,6 @@ namespace Forms
             this.Text = "Personeel Lijst";
             this.toolTip1.SetToolTip(this, "Personeel Lijst");
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PersoneelsForm_FormClosing);
-            this.Load += new System.EventHandler(this.Form_Load);
             this.Shown += new System.EventHandler(this.PersoneelsForm_Shown);
             this.Resize += new System.EventHandler(this.PersoneelsForm_Resize);
             this.panel1.ResumeLayout(false);

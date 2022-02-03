@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using BrightIdeasSoftware;
+﻿using BrightIdeasSoftware;
 using MetroFramework;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Productie.ArtikelRecords;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace Forms.ArtikelRecords
 {
-    public partial class ArtikelOpmerkingForm : MetroFramework.Forms.MetroForm
+    public partial class ArtikelOpmerkingForm : Forms.MetroBase.MetroBaseForm
     {
         public ArtikelOpmerking SelectedOpmerking { get; set; }
 

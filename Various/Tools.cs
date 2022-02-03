@@ -84,15 +84,15 @@ namespace Various
                 {
                     var xvalue = Manager.DefaultSettings.LastFormInfo[form.Name];
                     if (xvalue == null) return;
-                  
+                    if (xvalue.WindowState == FormWindowState.Minimized)
+                        xvalue.WindowState = FormWindowState.Normal;
+                    form.WindowState = xvalue.WindowState;
                     if (xvalue.WindowState == FormWindowState.Normal)
                     {
                         form.Location = xvalue.Location;
                         form.Size = xvalue.Size;
+                        form.Refresh();
                     }
-                    if (xvalue.WindowState == FormWindowState.Minimized)
-                        xvalue.WindowState = FormWindowState.Normal;
-                    form.WindowState = xvalue.WindowState;
                     form.Invalidate();
                 }
             }

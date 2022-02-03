@@ -1,5 +1,4 @@
 ﻿using BrightIdeasSoftware;
-using NPOI.SS.UserModel;
 using ProductieManager.Forms;
 using ProductieManager.Rpm.ExcelHelper;
 using Rpm.Misc;
@@ -12,7 +11,7 @@ using System.Windows.Forms;
 
 namespace Forms.Excel
 {
-    public partial class KleurRegelsForm : MetroFramework.Forms.MetroForm
+    public partial class KleurRegelsForm : Forms.MetroBase.MetroBaseForm
     {
         public KleurRegelsForm()
         {

@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class Indeling : MetroFramework.Forms.MetroForm
+    public partial class Indeling : Forms.MetroBase.MetroBaseForm
     {
         private Bewerking _bew;
 

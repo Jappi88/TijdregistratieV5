@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using System.Windows.Media.TextFormatting;
 
 namespace Forms
 {
-    public partial class ObjectEditForm : MetroFramework.Forms.MetroForm
+    public partial class ObjectEditForm : Forms.MetroBase.MetroBaseForm
     {
         public ObjectEditForm()
         {
