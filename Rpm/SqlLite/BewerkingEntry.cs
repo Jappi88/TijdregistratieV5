@@ -36,6 +36,8 @@ namespace Rpm.SqlLite
         [ExcludeFromSerialization]
         public double DoorloopTijd { get; set; }
         [ExcludeFromSerialization]
+        public DateTime Leverdatum { get; set; }
+        [ExcludeFromSerialization]
         public string Opmerking { get; set; }
 
         public bool HasChanged => !string.IsNullOrEmpty(NewName) &&

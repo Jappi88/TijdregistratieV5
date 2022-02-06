@@ -283,7 +283,7 @@ namespace Rpm.Productie
 
         #endregion "Variables"
 
-        #region "Data Management"}
+        #region "Data Management"
 
         public Task<bool> UpdateFieldsFrom(ProductieFormulier form, string change = null)
         {
@@ -467,6 +467,19 @@ namespace Rpm.Productie
             return -1;
         }
 
+        private static DateTime GetLeverdatumFromBewerking(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return new DateTime();
+            if (value.ToLower().Contains("datum") && value.Contains(":"))
+            {
+                var xvals = value.Trim().Split(':');
+                if (xvals.Length > 1 && DateTime.TryParse(xvals[1].Trim(), out var xdate))
+                    return xdate;
+            }
+
+            return new DateTime();
+        }
+
         private static Dictionary<string, BewerkingEntry> GetBewerkingenFromSections(List<RectAndText> sections)
         {
             Dictionary<string, BewerkingEntry> bws = new Dictionary<string, BewerkingEntry>();
@@ -493,6 +506,7 @@ namespace Rpm.Productie
                     var xstart = 0;
                     string opmerking = "";
                     double doorlooptijd = -1;
+                    DateTime xdate = new DateTime();
                     BewerkingEntry xlastbw = null;
                     while (xstart < xitems.Count)
                     {
@@ -513,6 +527,15 @@ namespace Rpm.Productie
                             }
                         }
 
+                        if (xdate.IsDefault())
+                        {
+                            xdate = GetLeverdatumFromBewerking(xname);
+                            if (!xdate.IsDefault())
+                            {
+                                xstart++;
+                                continue;
+                            }
+                        }
                         var xb = Manager.BewerkingenLijst.GetEntry(xname)?.CreateCopy();
                         if (xb != null)
                         {
@@ -544,6 +567,7 @@ namespace Rpm.Productie
                     {
                         xlastbw.Opmerking = opmerking?.TrimEnd(new char[] { ' ', '\n' });
                         xlastbw.DoorloopTijd = doorlooptijd;
+                        xlastbw.Leverdatum = xdate;
                         xlastbw.IsExtern = isextern;
                         xlastbw = null;
                     }
@@ -696,7 +720,7 @@ namespace Rpm.Productie
                             {
                                 DoorloopTijd = xdt,
                                 IsBemand = s.IsBemand,
-                                LeverDatum = xreturn.LeverDatum,
+                                LeverDatum = xs.Value.Leverdatum.IsDefault()?xreturn.LeverDatum : xs.Value.Leverdatum,
                                 DatumToegevoegd = DateTime.Now,
                                 Parent = xreturn,
                                 Aantal = xreturn.Aantal,

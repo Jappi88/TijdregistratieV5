@@ -119,6 +119,9 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto">
+      <HintPath>..\..\..\Desktop\ProductieManager Libs\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
     <Reference Include="CircularProgressBar">
       <HintPath>..\Libraries\CircularProgressBar.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
