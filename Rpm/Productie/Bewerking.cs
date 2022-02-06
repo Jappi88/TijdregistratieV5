@@ -26,8 +26,7 @@ namespace Rpm.Productie
         }
     }
 
-
-    [DataContract]
+    
     public sealed class Bewerking : IProductieBase
     {
         private DateTime _gestartop;
@@ -577,6 +576,7 @@ namespace Rpm.Productie
                                     klus.Tijden.SpecialeRoosters = plek.Tijden.SpecialeRoosters;
                                     if (per.WerkRooster == null)
                                         per.WerkRooster = x.WerkRooster;
+                                    klus.Tijden.WerkRooster = per.WerkRooster;
                                     x.ReplaceKlus(klus);
                                     _= Manager.Database.UpSert(x,
                                         $"[{x.PersoneelNaam}] is gestart aan klus '{klus.Naam} op {klus.WerkPlek}'.").Result;
@@ -585,7 +585,7 @@ namespace Rpm.Productie
 
                             if (plek.IsActief())
                             {
-                                plek.Tijden.UpdateLijst(klus.Tijden);
+                                plek.Tijden.UpdateLijst(klus.Tijden,false);
                             }
                         }
 
@@ -636,7 +636,7 @@ namespace Rpm.Productie
                         var xklus = xper.Klusjes.GetKlus($"{Path}\\{werkplek}");
                         xklus?.ZetActief(actief, State == ProductieState.Gestart && actief);
                         if (actief && xklus?.Tijden != null)
-                            xwp.Tijden.UpdateLijst(xklus.Tijden);
+                            xwp.Tijden.UpdateLijst(xklus.Tijden,false);
                     }
                     xwp.UpdateWerkplek(false);
                 }

@@ -901,7 +901,7 @@ namespace Forms
                     string.Equals(x.Naam, xklus.SelectedKlus.WerkPlek, StringComparison.CurrentCultureIgnoreCase));
                     if (wp?.Werk != null && wp.Werk.IsBemand)
                     {
-                        wp.Tijden.UpdateLijst(xklus.SelectedKlus.Tijden);
+                        wp.Tijden.UpdateLijst(xklus.SelectedKlus.Tijden,false);
                     }
                     LoadWerkPlekken(wp);
                     //LoadShifts();
@@ -927,7 +927,7 @@ namespace Forms
                         string.Equals(klus.Path, x.Path, StringComparison.CurrentCultureIgnoreCase));
                     if (wp != null)
                     {
-                        wp.Tijden.UpdateLijst(klus.Tijden);
+                        wp.Tijden.UpdateLijst(klus.Tijden,false);
                         //wp.Tijden.WerkRooster = klus.Tijden.WerkRooster.CreateCopy();
                         LoadWerkPlekken(wp);
                     }
@@ -1209,7 +1209,7 @@ namespace Forms
                         {
                             var klus = GetCurrentKlus(user, false);
                             if (klus == null) continue;
-                            wp.Tijden.UpdateLijst(klus.Tijden);
+                            wp.Tijden.UpdateLijst(klus.Tijden,false);
                         }
                     }
 

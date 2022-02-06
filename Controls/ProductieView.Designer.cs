@@ -805,7 +805,7 @@ namespace Controls
             menuButton7.Name = "xverbruik";
             menuButton7.Text = "Bereken Verbruik";
             menuButton7.Tooltip = "Bereken verbruik";
-            menuButton8.AccesLevel = Rpm.Various.AccesType.ProductieAdvance;
+            menuButton8.AccesLevel = Rpm.Various.AccesType.Manager;
             menuButton8.CombineImage = null;
             menuButton8.CombineScale = 1.5D;
             menuButton8.ContextMenu = null;
@@ -827,7 +827,7 @@ namespace Controls
             menuButton9.Name = "xcreateexcel";
             menuButton9.Text = "Excel Overzicht";
             menuButton9.Tooltip = "Maak excel overzicht";
-            menuButton10.AccesLevel = Rpm.Various.AccesType.ProductieAdvance;
+            menuButton10.AccesLevel = Rpm.Various.AccesType.Manager;
             menuButton10.CombineImage = null;
             menuButton10.CombineScale = 1.5D;
             menuButton10.ContextMenu = null;

@@ -485,7 +485,7 @@ namespace Rpm.Productie
             {
                 if (VrijeDagen == null)
                     VrijeDagen = new UrenLijst();
-                xupdate += VrijeDagen.UpdateLijst(persoon.VrijeDagen);
+                xupdate += VrijeDagen.UpdateLijst(persoon.VrijeDagen,true);
             }
 
             //update klusjes

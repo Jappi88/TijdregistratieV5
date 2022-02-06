@@ -509,7 +509,7 @@ namespace Rpm.Productie
             return tijd;
         }
 
-        public int UpdateLijst(UrenLijst from)
+        public int UpdateLijst(UrenLijst from, bool overwriterooster)
         {
             if (from?.Uren == null)
                 return -1;
@@ -572,7 +572,8 @@ namespace Rpm.Productie
                         done++;
                 }
             }
-            UpdateUrenRooster(false, from.WerkRooster);
+
+            UpdateUrenRooster(false, overwriterooster ? @from.WerkRooster : null);
             return done;
         }
 

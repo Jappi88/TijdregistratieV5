@@ -96,6 +96,8 @@ namespace Forms
                 throw new Exception(
                     "Klus bevat geen geldige bewerkingen!\n\nHet kan zjn dat de bewerking{en) in de filter lijst zijn geplaatst.");
             }
+        
+            UpdateTijdGewerkt();
         }
 
         private async void button2_Click(object sender, EventArgs e)
@@ -159,6 +161,12 @@ namespace Forms
             }
             SelectedKlus.WerkPlek = xwerkplekken.SelectedItem.ToString();
             SelectedKlus.Status = curbew.State;
+            var wp = GetWerkPlek(SelectedKlus.WerkPlek, curbew, false);
+            Rooster rooster = Persoon.Length == 1
+                ? Persoon[0].WerkRooster : null;
+            if (rooster == null || !rooster.IsCustom())
+                rooster = wp?.Tijden?.WerkRooster ?? Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
+            SelectedKlus.Tijden.WerkRooster = rooster;
             var tent = SelectedKlus.GetAvailibleTijdEntry();
             xstart.SetValue(tent.Start);
             xstop.SetValue(tent.Stop);
@@ -217,9 +225,13 @@ namespace Forms
                 var bewerking = pair.Bewerking;
                 var wp = GetWerkPlek(_origklus.WerkPlek, bewerking, false);
                 var xpersonen = new List<Personeel>();
-                Rooster rooster = Persoon.Length == 1
-                    ? Persoon[0].WerkRooster
-                    : wp?.Tijden?.WerkRooster ?? Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
+                //Rooster rooster = Persoon.Length == 1
+                //    ? Persoon[0].WerkRooster : null;
+                //if (rooster == null || !rooster.IsCustom())
+                //    rooster = wp?.Tijden?.WerkRooster ?? Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
+
+                var rooster = SelectedKlus.Tijden.WerkRooster?? Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
+
                 foreach (var xpers in Persoon)
                 {
                     var xklus = SelectedKlus.CreateCopy();
@@ -298,6 +310,7 @@ namespace Forms
                     if (wp == null)
                     {
                         wp = new WerkPlek(xklus.WerkPlek, bewerking);
+                        wp.Tijden.WerkRooster = rooster;
                         bewerking.WerkPlekken.Add(wp);
                     }
                     else if (!EditMode && wp.Personen.Any(x => string.Equals(x.PersoneelNaam, xpers.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase)))
@@ -311,8 +324,10 @@ namespace Forms
                     xklus.Tijden.WerkRooster = rooster;
                     xpers.ReplaceKlus(xklus);
                     wp.AddPersoon(xpers, bewerking);
-                    wp.Tijden.SetUren(xklus.Tijden.Uren.ToArray(), bewerking.State == ProductieState.Gestart,
-                        false);
+
+                    wp.Tijden.UpdateLijst(xklus.Tijden, true);
+                   // wp.Tijden.SetUren(xklus.Tijden.Uren.ToArray(), bewerking.State == ProductieState.Gestart,
+                    //    false);
                     bewerking.ZetPersoneelActief(xpers.PersoneelNaam, wp.Naam, !EditMode || xpers.IngezetAanKlus(bewerking,true, out _));
                     dbpers.ReplaceKlus(xklus);
                     if (_save)
@@ -358,7 +373,12 @@ namespace Forms
             tent.Stop = xstop.Value;
             tent.InUse = SelectedKlus.Status == ProductieState.Gestart;
             SelectedKlus.UpdateTijdGewerkt(tent);
+            SelectedKlus.Tijden.WerkRooster ??= Manager.Opties.GetWerkRooster();
+            var xstartdag = SelectedKlus.Tijden.WerkRooster.StartWerkdag;
+            var xeinddag = SelectedKlus.Tijden.WerkRooster.EindWerkdag;
+            var x1 = SelectedKlus.Tijden.WerkRooster.GebruiktPauze ? "met" : "zonder";
             xgewerkt.Text =
+                $"WerkRooster: {xstartdag.Hours}:{xstartdag.Minutes.ToString().PadLeft(2,'0')} t/m {xeinddag.Hours}:{xeinddag.Minutes.ToString().PadLeft(2, '0')}, {x1} pauze.\n" +
                 $"Gewerkte Tijd: {Math.Round(SelectedKlus.TijdGewerkt(GetPersoneelVrijeDagen(), SelectedKlus?.Tijden?.WerkRooster).TotalHours, 2)} uur.";
         }
 
@@ -383,6 +403,16 @@ namespace Forms
                 var tent = SelectedKlus.GetAvailibleTijdEntry();
                 xstart.SetValue(tent.Start);
                 xstop.SetValue(tent.Stop);
+                UpdateTijdGewerkt();
+            }
+        }
+
+        private void xrooster_Click(object sender, EventArgs e)
+        {
+            var rs = new RoosterForm(SelectedKlus.Tijden.WerkRooster, $"Werkrooster: {SelectedKlus.Path}");
+            if (rs.ShowDialog() == DialogResult.OK)
+            {
+                SelectedKlus.Tijden.UpdateUrenRooster(false, rs.WerkRooster);
                 UpdateTijdGewerkt();
             }
         }

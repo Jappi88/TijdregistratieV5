@@ -80,6 +80,7 @@ namespace Controls
             this.xBottomToolMenu = new System.Windows.Forms.ToolStrip();
             this.xBeheerweergavetoolstrip = new System.Windows.Forms.ToolStripSplitButton();
             this.xBeheerLijstenToolstripItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.panel3 = new System.Windows.Forms.Panel();
             this.xfiltersStrip = new System.Windows.Forms.MenuStrip();
             this.xfiltertoolstrip = new System.Windows.Forms.ToolStripMenuItem();
@@ -123,7 +124,6 @@ namespace Controls
             this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst1)).BeginInit();
             this.xproductieLijstcontext.SuspendLayout();
@@ -155,9 +155,9 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xloadinglabel.BackColor = System.Drawing.Color.Transparent;
             this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xloadinglabel.Location = new System.Drawing.Point(0, 67);
+            this.xloadinglabel.Location = new System.Drawing.Point(0, 76);
             this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(1149, 542);
+            this.xloadinglabel.Size = new System.Drawing.Size(1146, 533);
             this.xloadinglabel.TabIndex = 29;
             this.xloadinglabel.Text = "Producties Laden...";
             this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -650,6 +650,11 @@ namespace Controls
             this.xBeheerLijstenToolstripItem.Size = new System.Drawing.Size(194, 22);
             this.xBeheerLijstenToolstripItem.Text = "Beheer Layouts";
             this.xBeheerLijstenToolstripItem.Click += new System.EventHandler(this.xListColumnsButton_Click);
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(191, 6);
             // 
             // panel3
             // 
@@ -1152,11 +1157,6 @@ namespace Controls
             // toolTip1
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            // 
-            // toolStripSeparator9
-            // 
-            this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(191, 6);
             // 
             // ProductieListControl
             // 

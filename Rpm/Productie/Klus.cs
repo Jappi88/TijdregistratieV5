@@ -270,7 +270,7 @@ namespace Rpm.Productie
                 PerUur = klus.PerUur;
                 ArtikelNr = klus.ArtikelNr;
                 Omschrijving = klus.Omschrijving;
-                Tijden.UpdateLijst(klus.Tijden);
+                Tijden.UpdateLijst(klus.Tijden,true);
                 return true;
             }
             catch (Exception e)

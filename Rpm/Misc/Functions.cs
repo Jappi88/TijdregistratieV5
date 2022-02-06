@@ -647,30 +647,32 @@ namespace Rpm.Misc
                         XMessageBox.Show(owner, $"{b.Naam} heeft nog geen werkplek.\n\nMaak eerst een werkplek aan voordat je de rooster kan aanpassen.", "Geen Werkplek", MessageBoxIcon.Exclamation);
                         return;
                     }
-                    var roosterform = new RoosterForm(wp.Tijden._rooster,
+                    var roosterform = new RoosterForm(wp.Tijden.WerkRooster,
                         "Kies een rooster voor al je werkzaamheden");
                     roosterform.ViewPeriode = false;
                     if (roosterform.ShowDialog() == DialogResult.OK)
                     {
                         bool flag = wp.Personen.Any(x =>
                             x.WerkRooster == null || !x.WerkRooster.SameTijden(roosterform.WerkRooster));
-                        if (flag)
+                        if (flag && bew.IsBemand)
                         {
-                            var result = XMessageBox.Show(
-                                owner, $"Er zijn personeel leden op {wp.Naam} die niet dezelfde rooster hebben als wat je hebt gekozen...\n" +
-                                      $"De personeel bepaald natuurlijk hoe en wanneer er op {wp.Naam} wordt gewerkt.\n\n" +
-                                      $"Wil je dit rooster door geven aan alle personeel leden op {wp.Naam}?",
-                                "Personeel Werkrooster Wijzigen", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-                            if (result == DialogResult.Cancel) return;
-                            if (result == DialogResult.Yes)
-                            {
-                                foreach (var per in wp.Personen)
-                                    per.WerkRooster = roosterform.WerkRooster;
-                            }
+                            foreach (var per in wp.Personen)
+                                per.WerkRooster = roosterform.WerkRooster;
+                            //var result = XMessageBox.Show(
+                            //    owner, $"Er zijn personeel leden op {wp.Naam} die niet dezelfde rooster hebben als wat je hebt gekozen...\n" +
+                            //          $"De personeel bepaald natuurlijk hoe en wanneer er op {wp.Naam} wordt gewerkt.\n\n" +
+                            //          $"Wil je dit rooster door geven aan alle personeel leden op {wp.Naam}?",
+                            //    "Personeel Werkrooster Wijzigen", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                            //if (result == DialogResult.Cancel) return;
+                            //if (result == DialogResult.Yes)
+                            //{
+                            //    foreach (var per in wp.Personen)
+                            //        per.WerkRooster = roosterform.WerkRooster;
+                            //}
                         }
                         //wp.Tijden._rooster = roosterform.WerkRooster;
                         wp.UpdateWerkRooster(roosterform.WerkRooster,true, true,true, true, true,true, true);
-                        var xchange = wp.Tijden._rooster != null && wp.Tijden._rooster.IsCustom()
+                        var xchange = wp.Tijden.WerkRooster != null && wp.Tijden.WerkRooster.IsCustom()
                             ? "eigen rooster"
                             : "standaard rooster";
                         await b.UpdateBewerking(null,

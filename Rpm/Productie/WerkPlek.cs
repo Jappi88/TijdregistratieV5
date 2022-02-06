@@ -464,7 +464,7 @@ namespace Rpm.Productie
                             bool save = false;
                             foreach (var klus in klusjes)
                             {
-                                klus.Tijden.WerkRooster ??= pers.WerkRooster ?? dbpers?.WerkRooster ?? Tijden.WerkRooster;
+                                klus.Tijden.WerkRooster = rooster;
                                 klus.Tijden.SpecialeRoosters = Tijden.SpecialeRoosters;
                                 klus.Tijden.SetUren(Tijden.Uren.ToArray(), Werk.State == ProductieState.Gestart,true);
                                 save |= dbpers?.ReplaceKlus(klus) ?? false;
@@ -482,7 +482,7 @@ namespace Rpm.Productie
             {
                 var st = Storingen[i];
                 if (st.IsVerholpen) continue;
-                st.WerkRooster = Tijden.WerkRooster?.CreateCopy() ?? Manager.Opties.GetWerkRooster();
+                st.WerkRooster = rooster;
             }
 
             if (updatewerkplek)

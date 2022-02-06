@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
@@ -607,8 +608,8 @@ namespace Controls
                 if (Manager.ListLayouts == null || Manager.ListLayouts.Disposed)
                     return;
                 var xlists = Manager.ListLayouts.GetAlleLayouts().Where(x=> !x.IsExcelSettings).ToList();
-               
-                var xcols = xlists.FirstOrDefault(x => x.IsUsed(ListName));
+                var xcols = xlists.FirstOrDefault(x => 
+                    x.IsUsed(ListName));
                 OLVColumn xsort = null;
                 if (xcols == null)
                 {
@@ -1659,6 +1660,7 @@ namespace Controls
                                                 afzonderlijk = result == DialogResult.Yes;
                                             }
 
+                                            var rooster = Manager.Opties.GetWerkRooster();
                                             if (!werk.IsBemand || !afzonderlijk)
                                             {
                                                 var klusui = new NieuwKlusForm(parent, pers.SelectedPersoneel, true,
@@ -1669,7 +1671,10 @@ namespace Controls
                                                 werk = pair.Bewerking;
                                                 if (werk is {IsBemand: false} && klusui.SelectedKlus?.Tijden?.Count > 0)
                                                     foreach (var wp in werk.WerkPlekken)
-                                                        wp.Tijden = klusui.SelectedKlus.Tijden.CreateCopy();
+                                                    {
+                                                        wp.Tijden.UpdateLijst(klusui.SelectedKlus.Tijden,
+                                                            false);
+                                                    }
 
                                                 //var xwp = werk.WerkPlekken.FirstOrDefault(x =>
                                                 //    string.Equals(klusui.SelectedKlus.Path, x.Path, StringComparison.CurrentCultureIgnoreCase));
@@ -1682,6 +1687,7 @@ namespace Controls
                                                 foreach (var per in pers.SelectedPersoneel)
                                                 {
                                                     var klusui = new NieuwKlusForm(parent, per, true, false, werk);
+                                          
                                                     if (klusui.ShowDialog() != DialogResult.OK) break;
                                                     //klusui.Persoon.CopyTo(ref per);
                                                     var pair = klusui.SelectedKlus.GetWerk(parent);
@@ -1697,6 +1703,7 @@ namespace Controls
                                                         if (wp == null)
                                                         {
                                                             wp = new WerkPlek(per, klusui.SelectedKlus.WerkPlek, werk);
+                                                            wp.Tijden.UpdateLijst(klusui.SelectedKlus.Tijden, false);
                                                             werk.WerkPlekken.Add(wp);
                                                         }
                                                         else

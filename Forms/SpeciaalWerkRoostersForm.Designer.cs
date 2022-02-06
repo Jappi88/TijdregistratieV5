@@ -107,7 +107,7 @@ namespace Forms
             this.xroosterlist.Name = "xroosterlist";
             this.xroosterlist.ShowGroups = false;
             this.xroosterlist.ShowItemToolTips = true;
-            this.xroosterlist.Size = new System.Drawing.Size(200, 302);
+            this.xroosterlist.Size = new System.Drawing.Size(258, 302);
             this.xroosterlist.SmallImageList = this.imageList1;
             this.xroosterlist.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.xroosterlist.TabIndex = 2;
@@ -140,7 +140,7 @@ namespace Forms
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(20, 60);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(200, 337);
+            this.panel1.Size = new System.Drawing.Size(258, 337);
             this.panel1.TabIndex = 3;
             // 
             // panel2
@@ -151,7 +151,7 @@ namespace Forms
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(200, 35);
+            this.panel2.Size = new System.Drawing.Size(258, 35);
             this.panel2.TabIndex = 3;
             // 
             // xdeleterooster
@@ -197,7 +197,7 @@ namespace Forms
             this.xroosterdatelabel.AutoSize = true;
             this.xroosterdatelabel.Dock = System.Windows.Forms.DockStyle.Top;
             this.xroosterdatelabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xroosterdatelabel.Location = new System.Drawing.Point(220, 60);
+            this.xroosterdatelabel.Location = new System.Drawing.Point(278, 60);
             this.xroosterdatelabel.Name = "xroosterdatelabel";
             this.xroosterdatelabel.Size = new System.Drawing.Size(146, 25);
             this.xroosterdatelabel.TabIndex = 5;
@@ -209,10 +209,10 @@ namespace Forms
             this.roosterUI1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.roosterUI1.Enabled = false;
             this.roosterUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.roosterUI1.Location = new System.Drawing.Point(220, 85);
+            this.roosterUI1.Location = new System.Drawing.Point(278, 85);
             this.roosterUI1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.roosterUI1.Name = "roosterUI1";
-            this.roosterUI1.Size = new System.Drawing.Size(325, 312);
+            this.roosterUI1.Size = new System.Drawing.Size(267, 312);
             this.roosterUI1.TabIndex = 4;
             this.roosterUI1.WerkRooster = null;
             // 
@@ -231,8 +231,6 @@ namespace Forms
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(565, 465);
             this.Name = "SpeciaalWerkRoostersForm";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Speciale Werk Roosters";
             this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xroosterlist)).EndInit();
