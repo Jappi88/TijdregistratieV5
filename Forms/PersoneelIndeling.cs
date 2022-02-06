@@ -13,10 +13,10 @@ using Various;
 
 namespace Forms
 {
-    public partial class WerkplaatsIndeling : Forms.MetroBase.MetroBaseForm
+    public partial class PersoneelIndeling : Forms.MetroBase.MetroBaseForm
     {
         public Personeel SelectedPersoneel { get; private set; }
-        public WerkplaatsIndeling()
+        public PersoneelIndeling()
         {
             InitializeComponent();
             productieListControl1.ValidHandler = IsAllowed;

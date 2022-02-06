@@ -2,7 +2,7 @@
 
 namespace Forms
 {
-    partial class WerkplaatsIndeling
+    partial class PersoneelIndeling
     {
         /// <summary>
         /// Required designer variable.
@@ -131,6 +131,7 @@ namespace Forms
             // 
             // productieListControl1
             // 
+            this.productieListControl1.AutoScroll = true;
             this.productieListControl1.BackColor = System.Drawing.Color.White;
             this.productieListControl1.CanLoad = false;
             this.productieListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -166,24 +167,23 @@ namespace Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xloadinglabel.Location = new System.Drawing.Point(3, 60);
+            this.xloadinglabel.Location = new System.Drawing.Point(13, 60);
             this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(1146, 570);
+            this.xloadinglabel.Size = new System.Drawing.Size(1136, 570);
             this.xloadinglabel.TabIndex = 31;
             this.xloadinglabel.Text = "Indeling laden...";
             this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // WerkplaatsIndeling
+            // PersoneelIndeling
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1150, 631);
             this.Controls.Add(this.xloadinglabel);
             this.Controls.Add(this.splitContainer1);
-            this.Name = "WerkplaatsIndeling";
+            this.Name = "PersoneelIndeling";
             this.Padding = new System.Windows.Forms.Padding(10, 60, 10, 10);
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
-            this.Text = "Werkplaats Indeling";
+            this.Text = "Personeel Indeling";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WerkplaatsIndeling_FormClosing);
             this.Shown += new System.EventHandler(this.WerkplaatsIndeling_Shown);
             this.panel1.ResumeLayout(false);

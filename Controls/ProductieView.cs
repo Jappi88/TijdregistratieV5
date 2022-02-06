@@ -125,7 +125,7 @@ namespace Controls
         private static ArtikelsForm _ArtikelsForm;
         private static PersoneelsForm _PersoneelForm;
         private static ProductieOverzichtForm _ProductieOverzicht;
-        private static WerkplaatsIndeling _WerkplaatsIndeling;
+        private static PersoneelIndeling _WerkplaatsIndeling;
         private static MetroForm _berekenverbruik;
 
         private readonly Daily DailyMessage;
@@ -2031,7 +2031,7 @@ namespace Controls
         {
             if (_WerkplaatsIndeling == null)
             {
-                _WerkplaatsIndeling = new WerkplaatsIndeling();
+                _WerkplaatsIndeling = new PersoneelIndeling();
                 _WerkplaatsIndeling.FormClosed += (x, y) =>
                 {
                     _WerkplaatsIndeling?.Dispose();

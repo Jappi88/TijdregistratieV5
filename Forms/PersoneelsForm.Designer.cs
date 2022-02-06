@@ -230,6 +230,7 @@ namespace Forms
             this.xafdelingfilter.Location = new System.Drawing.Point(538, 0);
             this.xafdelingfilter.Name = "xafdelingfilter";
             this.xafdelingfilter.Size = new System.Drawing.Size(171, 29);
+            this.xafdelingfilter.Style = MetroFramework.MetroColorStyle.Teal;
             this.xafdelingfilter.TabIndex = 9;
             this.xafdelingfilter.UseSelectable = true;
             this.xafdelingfilter.SelectedIndexChanged += new System.EventHandler(this.xafdelingfilter_SelectedIndexChanged);
@@ -715,7 +716,7 @@ namespace Forms
             this.xsearchbox.CustomButton.Location = new System.Drawing.Point(439, 2);
             this.xsearchbox.CustomButton.Name = "";
             this.xsearchbox.CustomButton.Size = new System.Drawing.Size(25, 25);
-            this.xsearchbox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.xsearchbox.CustomButton.Style = MetroFramework.MetroColorStyle.Teal;
             this.xsearchbox.CustomButton.TabIndex = 1;
             this.xsearchbox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
             this.xsearchbox.CustomButton.UseSelectable = true;
@@ -734,6 +735,7 @@ namespace Forms
             this.xsearchbox.ShortcutsEnabled = true;
             this.xsearchbox.ShowClearButton = true;
             this.xsearchbox.Size = new System.Drawing.Size(467, 30);
+            this.xsearchbox.Style = MetroFramework.MetroColorStyle.Teal;
             this.xsearchbox.TabIndex = 7;
             this.xsearchbox.Text = "Zoeken...";
             this.toolTip1.SetToolTip(this.xsearchbox, "Zoek voor personeel. Zoek meerdere personen door de criteria te eindigen met \';\'");
@@ -790,7 +792,6 @@ namespace Forms
             this.MinimumSize = new System.Drawing.Size(900, 580);
             this.Name = "PersoneelsForm";
             this.Padding = new System.Windows.Forms.Padding(10, 60, 10, 10);
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.Style = MetroFramework.MetroColorStyle.Teal;
             this.Text = "Personeel Lijst";
             this.toolTip1.SetToolTip(this, "Personeel Lijst");

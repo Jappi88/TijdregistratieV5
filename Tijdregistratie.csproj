@@ -62,7 +62,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -772,12 +772,6 @@
     <Compile Include="Forms\OpmerkingenForm.Designer.cs">
       <DependentUpon>OpmerkingenForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\PersoneelTakenForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\PersoneelTakenForm.Designer.cs">
-      <DependentUpon>PersoneelTakenForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\ProductieInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1054,11 +1048,11 @@
     <Compile Include="Forms\WebBrowserForm.Designer.cs">
       <DependentUpon>WebBrowserForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WerkplaatsIndeling.cs">
+    <Compile Include="Forms\PersoneelIndeling.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\WerkplaatsIndeling.Designer.cs">
-      <DependentUpon>WerkplaatsIndeling.cs</DependentUpon>
+    <Compile Include="Forms\PersoneelIndeling.Designer.cs">
+      <DependentUpon>PersoneelIndeling.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\WerkPlekChooser.cs">
       <SubType>Form</SubType>
@@ -1544,9 +1538,6 @@
     <EmbeddedResource Include="Forms\OpmerkingenForm.resx">
       <DependentUpon>OpmerkingenForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PersoneelTakenForm.resx">
-      <DependentUpon>PersoneelTakenForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ProductieInfoForm.resx">
       <DependentUpon>ProductieInfoForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1688,8 +1679,8 @@
     <EmbeddedResource Include="Forms\WebBrowserForm.resx">
       <DependentUpon>WebBrowserForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WerkplaatsIndeling.resx">
-      <DependentUpon>WerkplaatsIndeling.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\PersoneelIndeling.resx">
+      <DependentUpon>PersoneelIndeling.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WerkPlekChooser.resx">
       <DependentUpon>WerkPlekChooser.cs</DependentUpon>
