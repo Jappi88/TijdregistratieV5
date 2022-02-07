@@ -8,6 +8,7 @@ using Rpm.SqlLite;
 using Rpm.Various;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -38,6 +39,7 @@ namespace Rpm.Settings
         public DatabaseUpdateEntry MainDB { get; set; }
         public DatabaseUpdateEntry TempMainDB { get; set; }
         public List<string> PersoneelIndeling { get; set; }
+        public List<string> WerkplaatsIndeling { get; set; }
 
         public bool PreviewShown { get; set; }
         #region "Methods"
@@ -284,7 +286,8 @@ namespace Rpm.Settings
         public bool DeelAllesIn { get; set; }
         public int AantalPerPagina { get; set; }
         public List<string> ToegelatenProductieCrit { get; set; }
-
+        public bool ToonPersoneelIndelingNaOpstart { get; set; }
+        public bool ToonWerkplaatsIndelingNaOpstart { get; set; }
         #endregion "Weergave Producties"
 
         #region "Gebruiker"

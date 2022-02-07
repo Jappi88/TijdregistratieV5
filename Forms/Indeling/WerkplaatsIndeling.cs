@@ -13,10 +13,10 @@ using Various;
 
 namespace Forms
 {
-    public partial class PersoneelIndeling : Forms.MetroBase.MetroBaseForm
+    public partial class WerkplaatsIndeling : Forms.MetroBase.MetroBaseForm
     {
-        public Personeel SelectedPersoneel { get; private set; }
-        public PersoneelIndeling()
+        public WerkplekIndeling SelectedWerkplek { get; private set; }
+        public WerkplaatsIndeling()
         {
             InitializeComponent();
             productieListControl1.ValidHandler = IsAllowed;
@@ -27,18 +27,7 @@ namespace Forms
 
         private void ProductieListControl1_SelectedItemChanged(object sender, EventArgs e)
         {
-            if (SelectedPersoneel != null)
-            {
-                var xindeling = GetIndeling(SelectedPersoneel);
-                if (productieListControl1.ProductieLijst.SelectedObjects.Count == 0)
-                {
-                    var xnum = productieListControl1.ProductieLijst.Objects?.GetEnumerator();
-                    if (xnum != null && xnum.MoveNext())
-                        productieListControl1.SelectedItem = xnum.Current;
-                      
-                } 
-                xindeling?.SetBewerking(productieListControl1.SelectedItem as Bewerking);
-            }
+            SelectedWerkplek?.SetBewerking(productieListControl1.SelectedItem as Bewerking);
         }
 
         private void ProductieListControl1_ItemCountChanged(object sender, EventArgs e)
@@ -105,17 +94,17 @@ namespace Forms
             _iswaiting = false;
         }
 
-        private List<Personeel> GetPersonen()
+        private List<WerkplekIndeling> GetIndelingen()
         {
-            var xreturn = new List<Personeel>();
+            var xreturn = new List<WerkplekIndeling>();
             try
             {
-                foreach (var xgroup in xPersoneelIndelingPanel.Controls.Cast<GroupBox>())
+                foreach (var xgroup in xWerkplaatsIndelingPanel.Controls.Cast<GroupBox>())
                 {
-                    if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is PersoonIndeling xpers)
+                    if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is WerkplekIndeling xpers)
                     {
-                      if(xpers.Persoon != null)
-                          xreturn.Add(xpers.Persoon);
+                      if(!xpers.Werkplek.IsDefault())
+                          xreturn.Add(xpers);
                     }
                 }
             }
@@ -127,12 +116,14 @@ namespace Forms
             return xreturn;
         }
 
-        private double GetTijdOver(Personeel pers)
+        private double GetTijdOver()
         {
             var xweek = DateTime.Now.GetWeekNr();
-            var weekrange = Functions.GetWeekRange(xweek, DateTime.Now.Year, pers.WerkRooster);
-            return Math.Round(Werktijd.TijdGewerkt(new TijdEntry(DateTime.Now, weekrange.EndDate, pers.WerkRooster),
-                pers.WerkRooster, null, pers.VrijeDagen.ToDictionary()).TotalHours, 2);
+            var rs = Manager.Opties.GetWerkRooster() ?? Rooster.StandaartRooster();
+            var weekrange = Functions.GetWeekRange(xweek, DateTime.Now.Year, rs);
+            return Math.Round(
+                Werktijd.TijdGewerkt(new TijdEntry(DateTime.Now, weekrange.EndDate, rs), rs,
+                    Manager.Opties.SpecialeRoosters).TotalHours, 2);
         }
 
         private string GetBaseHitmlBody(string body, string image)
@@ -174,27 +165,30 @@ namespace Forms
             return xreturn;
         }
 
-        private string IndelingFieldTextGetter(PersoonIndeling indeling)
+        private string IndelingFieldTextGetter(WerkplekIndeling indeling)
         {
 
             try
             {
                 string xall = null;
-                if (indeling?.Persoon == null)
+                if (indeling == null || indeling.Werkplek.IsDefault())
                 {
                     var bws = productieListControl1.GetBewerkingen(false,false);
                     var x1 = bws.Count == 1 ? "productie" : "producties";
-                    var pers = GetPersonen();
+                    var pers = GetIndelingen();
 
-                    var x2 = pers.Count == 1 ? "persoon" : "personen";
-                    var xtijdover = Math.Round(pers.Sum(GetTijdOver));
+                    var x2 = pers.Count == 1 ? "werkplek" : "werkplaatsen";
+                    var xtijdover = Math.Round(pers.Sum(x=> GetTijdOver()));
                     var xbwtijdover = Math.Round(bws.Sum(x => x.GetTijdOver()), 2);
                     xall =
                         $"<li>Totaal <b>{bws.Count}</b> {x1} " +
-                        $"<b>({xbwtijdover})</b> uur.</li>";
+                        $"<b>({xbwtijdover} uur)</b>.</li>";
                     if (pers.Count > 0)
                     {
-                        xall += $"<li>Met <b>{pers.Count}</b> {x2} is dat <b>{Math.Round(xbwtijdover / pers.Count, 2)}</b> uur per persoon</li>" +
+                        var x3 = pers.Count == 1
+                            ? $""
+                            : $"<li>Met <b>{pers.Count}</b> {x2} is dat <b>{Math.Round(xbwtijdover / pers.Count, 2)}</b> uur per werkplek</li>";
+                        xall += $"{x3}" +
                             $"<li><b>{pers.Count}</b> {x2} met nog <b>{xtijdover}</b> uur tot einde van de week.</li>" +
                             $"<li>Met <b>{pers.Count}</b> {x2} kan je op <b>{Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(xbwtijdover / pers.Count), null, null)}</b> klaar zijn</li>";
                     }
@@ -203,29 +197,34 @@ namespace Forms
                 }
                 else
                 {
-                    var pers = indeling.Persoon;
-                    var bws = productieListControl1.GetBewerkingen(false,false).Where(x => IsAllowed(x, pers))
+                    var pers = indeling.Werkplek;
+                    var bws = productieListControl1.GetBewerkingen(false,false).Where(x => IsAllowed(x, indeling))
                         .ToList();
-                    var xklusjes = pers.Klusjes.Where(x =>
-                        x.Status != ProductieState.Gereed && x.Status != ProductieState.Verwijderd).ToList();
-                    var xstarted = xklusjes.Where(x => x.Status == ProductieState.Gestart && x.IsActief).ToList();
-                    var x2 = xklusjes.Count == 1 ? "klus" : "klusjes";
-                    var x3 = xstarted.Count == 1 ? "klus" : "klusjes";
+                    var xklusjes = pers.Value.Where(x =>
+                            x.State != ProductieState.Gereed && x.State != ProductieState.Verwijderd).SelectMany(x =>
+                            x.WerkPlekken.Where(w =>
+                                string.Equals(pers.Key, w.Naam,
+                                    StringComparison.CurrentCultureIgnoreCase)))
+                        .ToList();
+                    var xstarted = xklusjes.Where(x => x.Werk.State == ProductieState.Gestart && x.IsActief())
+                        .ToList();
+                    var x2 = xklusjes.Count == 1 ? "productie" : "producties";
+                    var x3 = xstarted.Count == 1 ? "productie" : "producties";
                     var x1 = bws.Count == 1 ? "productie" : "producties";
                     xall =
                         $"<li>Totaal <b>{bws.Count}</b> {x1} <b>({Math.Round(bws.Sum(x => x.GetTijdOver()), 2)})</b> uur.</li>" +
                         $"<li>Ingezet op <b>{xklusjes.Count}</b> {x2} " +
-                        $"waarvan <b>{Math.Round(xklusjes.Sum(x => x.TijdGewerkt(pers.VrijeDagen.ToDictionary(), pers.WerkRooster).TotalHours), 2)}</b> uur gewerkt.</li>" +
+                        $"waarvan <b>{Math.Round(xklusjes.Sum(x => x.TijdAanGewerkt()), 2)}</b> uur gewerkt.</li>" +
                         $"<li>Bezig met <b>{xstarted.Count}</b> {x3} " +
-                        $"waarvan <b>{Math.Round(xstarted.Sum(x => x.TijdGewerkt(pers.VrijeDagen.ToDictionary(), pers.WerkRooster).TotalHours), 2)}</b> uur gewerkt.</li>" +
-                        $"<li><b>{GetTijdOver(pers)}</b> uur over tot einde van de week</li>";
+                        $"waarvan <b>{Math.Round(xstarted.Sum(x => x.TijdAanGewerkt()), 2)}</b> uur gewerkt.</li>" +
+                        $"<li>Er is nog <b>{GetTijdOver()}</b> uur over tot einde van de week</li>";
                     //if (indeling.SelectedBewerking != null && SelectedPersoneel != null && SelectedPersoneel.Equals(indeling.Persoon))
                     //{
                     //    var bw = indeling.SelectedBewerking;
                     //    xall +=
                     //        $"<b>{bw.Naam} van {bw.ArtikelNr} | {bw.ProductieNr}</b>";
                     //}
-                    return GetBaseHitmlBody(xall, "personeel");
+                    return GetBaseHitmlBody(xall, "werkplek");
                 }
             }
             catch (Exception ex)
@@ -236,32 +235,27 @@ namespace Forms
             return string.Empty;
         }
 
-        private async void LoadProducties()
+        private void LoadProducties()
         {
             try
             {
                 SetWaitUI();
-                xPersoneelIndelingPanel.SuspendLayout();
-                var xfirst = AddPersoneel(null);
+                xWerkplaatsIndelingPanel.SuspendLayout();
+                var xfirst = AddNewIndeling(default);
                 
                 productieListControl1.InitProductie(true, true, true, true, true, true);
 
-                if (Manager.Opties?.PersoneelIndeling != null)
+                if (Manager.Opties?.WerkplaatsIndeling != null)
                 {
-                    for (int i = 0; i < Manager.Opties.PersoneelIndeling.Count; i++)
+                    for (int i = 0; i < Manager.Opties.WerkplaatsIndeling.Count; i++)
                     {
-                        var xpers = Manager.Opties.PersoneelIndeling[i];
-                        var xp = await Manager.Database.GetPersoneel(xpers);
-                        if (xp != null)
-                        {
-                             AddPersoneel(xp);
-                        }
-                        else Manager.Opties.PersoneelIndeling.RemoveAt(i--);
+                        var xwp = Manager.Opties.WerkplaatsIndeling[i];
+                        AddNewIndeling(xwp);
                     }
                 }
                 
                 xfirst?.UpdateLabelText();
-                xPersoneelIndelingPanel.ResumeLayout(true);
+                xWerkplaatsIndelingPanel.ResumeLayout(true);
                 SetSelected(null, true);
             }
             catch (Exception e)
@@ -275,19 +269,18 @@ namespace Forms
         private void UpdateTitle()
         {
             var bws = productieListControl1.GetBewerkingen(false,true);
-            
-            string x2 = String.Empty;
-            var xselected = SelectedPersoneel == null? "Alle" : $"{SelectedPersoneel.PersoneelNaam}";
+
+            var xselected = SelectedWerkplek == null || SelectedWerkplek.Werkplek.IsDefault() ? "Alle" : $"{SelectedWerkplek.Werkplek.Key}";
             var x3 = bws.Count == 1 ? "Bewerking" : "Bewerkingen";
-            x2 = $"<b>{xselected} {bws.Count}</b> {x3}<br>" +
-                 $"Totaal <b>{Math.Round(bws.Sum(x=> x.TijdGewerkt),2)} / {Math.Round(bws.Sum(x => x.DoorloopTijd),2)}</b> uur gewerkt " +
-                 $"waarvan nog <b>{Math.Round(bws.Sum(x=> x.GetTijdOver()),2)}</b> uur over aan productie";
+            var x2 = $"<b>{xselected} {bws.Count}</b> {x3}<br>" +
+                     $"Totaal <b>{Math.Round(bws.Sum(x=> x.TijdGewerkt),2)} / {Math.Round(bws.Sum(x => x.DoorloopTijd),2)}</b> uur gewerkt " +
+                     $"waarvan nog <b>{Math.Round(bws.Sum(x=> x.GetTijdOver()),2)}</b> uur over aan productie";
             xGeselecteerdeGebruikerLabel.Text = x2;
             bws = productieListControl1.GetBewerkingen(false, false);
             var x1 = bws.Count == 1 ? "Bewerking" : "Bewerkingen";
-            this.Text = $@"Totaal {bws.Count} {x1}";
+            this.Text = $@"Werkplaats Indeling: {bws.Count} {x1}";
             var xindeling = GetIndeling(null);
-            xindeling?.InitPersoneel((Personeel)null);
+            xindeling?.InitWerkplek(default);
             this.Invalidate();
         }
 
@@ -301,11 +294,13 @@ namespace Forms
         {
             if (value is Bewerking bew)
             {
-                if (SelectedPersoneel == null)
+                if (SelectedWerkplek == null || SelectedWerkplek.Werkplek.IsDefault())
                 {
                     return true;
                 }
-                var xreturn =  bew.GetPersoneel().Any(x => string.Equals(x.PersoneelNaam, SelectedPersoneel.PersoneelNaam,
+
+                var xname = SelectedWerkplek.Werkplek.Key;
+                var xreturn = bew.WerkPlekken.Any(x => string.Equals(x.Naam, xname,
                     StringComparison.CurrentCultureIgnoreCase));
                 return xreturn;
             }
@@ -313,46 +308,53 @@ namespace Forms
             return false;
         }
 
-        private bool IsAllowed(IProductieBase productie, Personeel pers)
+        private bool IsAllowed(IProductieBase productie, WerkplekIndeling indeling)
         {
-            if (pers == null)
+            if (indeling == null)
             {
                 return true;
             }
 
-            var xreturn = productie.Personen.Any(x => string.Equals(x.PersoneelNaam, pers.PersoneelNaam,
+            var xreturn = productie.GetWerkPlekken().Any(x => string.Equals(x.Naam, indeling.Werkplek.Key,
                 StringComparison.CurrentCultureIgnoreCase));
             return xreturn;
         }
 
-        public PersoonIndeling AddPersoneel(Personeel persoon)
+        public WerkplekIndeling AddNewIndeling(string indeling)
         {
             try
             {
                 var xgroup = new GroupBox();
-                xgroup.Text = persoon == null? "Alle Bewerkingen" : persoon.PersoneelNaam;
+                xgroup.Text = indeling ?? "Alle Bewerkingen";
                 xgroup.Font = new Font(this.Font.FontFamily, 10, FontStyle.Bold);
                 xgroup.Height = 140;
-                xgroup.MouseEnter += PersoonIndeling_MouseEnter;
-                xgroup.MouseLeave += PersoonIndeling_MouseLeave;
+                xgroup.MouseEnter += WerkplekIndeling_MouseEnter;
+                xgroup.MouseLeave += WerkplekIndeling_MouseLeave;
                 xgroup.Click += Xpers_Click;
                 xgroup.DoubleClick += Xpers_DoubleClick;
-                var xpers = new PersoonIndeling();
+                var xpers = new WerkplekIndeling();
                 xpers.FieldTextGetter = IndelingFieldTextGetter;
-                xpers.InitPersoneel(persoon);
+                var pair = new KeyValuePair<string, List<Bewerking>>(indeling, new List<Bewerking>());
+               
+               
+                xpers.InitWerkplek(pair);
+                var bws = Manager.Database.GetAllBewerkingen(false,true).Result;
+                bws = bws.Where(x => IsAllowed(x, xpers)).ToList();
+                if (bws.Count > 0)
+                    xpers.Werkplek.Value.AddRange(bws);
                 xgroup.Width = xpers.Width;
                 xpers.DragDrop += Xpers_DragDrop;
                 xgroup.MouseDown += xpers.IndelingMouseDown;
                 xgroup.MouseMove += xpers.IndelingMouseMove;
-                xpers.VerwijderPersoneel += Xpers_VerwijderPersoneel;
+                xpers.VerwijderWerkplaats += Xpers_VerwijderIndeling;
                 xpers.Dock = DockStyle.Fill;
-                xpers.MouseEnter += PersoonIndeling_MouseEnter;
-                xpers.MouseLeave += PersoonIndeling_MouseLeave;
+                xpers.MouseEnter += WerkplekIndeling_MouseEnter;
+                xpers.MouseLeave += WerkplekIndeling_MouseLeave;
                 xpers.Click += Xpers_Click;
                 xpers.DoubleClick += Xpers_DoubleClick;
                 //xgroup.Dock = DockStyle.Top;
                 xgroup.Controls.Add(xpers);
-                xPersoneelIndelingPanel.Controls.Add(xgroup);
+                xWerkplaatsIndelingPanel.Controls.Add(xgroup);
                 //xPersoneelIndelingPanel.Controls.SetChildIndex(xgroup, xPersoneelIndelingPanel.Controls.Count -1);
              
                 return xpers;
@@ -367,16 +369,16 @@ namespace Forms
 
         private void Xpers_DragDrop(object sender, DragEventArgs e)
         {
-            flowLayoutPanel1_DragDrop(xPersoneelIndelingPanel, e);
+            flowLayoutPanel1_DragDrop(xWerkplaatsIndelingPanel, e);
         }
 
-        private void Xpers_VerwijderPersoneel(object sender, EventArgs e)
+        private void Xpers_VerwijderIndeling(object sender, EventArgs e)
         {
             try
             {
-                if (sender is PersoonIndeling indeling && indeling.Persoon != null)
+                if (sender is WerkplekIndeling indeling && !indeling.Werkplek.IsDefault())
                 {
-                    DeletePersoneel(indeling.Persoon.PersoneelNaam);
+                    DeleteWerkplaats(indeling.Werkplek.Key);
                 }
             }
             catch (Exception ex)
@@ -386,61 +388,54 @@ namespace Forms
             }
         }
 
-        private async void Xpers_DoubleClick(object sender, EventArgs e)
+        private void Xpers_DoubleClick(object sender, EventArgs e)
         {
-            PersoonIndeling xindeling = sender as PersoonIndeling;
+            WerkplekIndeling xindeling = sender as WerkplekIndeling;
             if (xindeling == null)
             {
-                if (sender is GroupBox group && group.Controls.Count > 0 && group.Controls[0] is PersoonIndeling x)
+                if (sender is GroupBox group && group.Controls.Count > 0 && group.Controls[0] is WerkplekIndeling x)
                 {
                     xindeling = x;
                 }
             }
 
-            if (xindeling?.Persoon == null)
+            if (xindeling == null || xindeling.Werkplek.IsDefault())
             {
-                AddNewPersoneel();
-                return;
-            }
-            var add = new AddPersoneel(xindeling.Persoon);
-            if (add.ShowDialog() == DialogResult.OK)
-            {
-                xindeling.Persoon = add.PersoneelLid;
-                if (!await Personeel.UpdateKlusjes(this,xindeling.Persoon)) return;
-                await Manager.Database.UpSert(xindeling.Persoon, $"{xindeling.Persoon.PersoneelNaam} Aangepast!");
+                AddNewIndeling();
             }
         }
 
         private void Xpers_Click(object sender, EventArgs e)
         {
-            if (sender is GroupBox group && group.Controls.Count > 0 && group.Controls[0] is PersoonIndeling x)
+            if (sender is GroupBox group && group.Controls.Count > 0 && group.Controls[0] is WerkplekIndeling x)
             {
-                SelectPersoneel(x.Persoon);
+                SelectWerkplek(x);
             }
-            else if(sender is PersoonIndeling xpers)
+            else if(sender is WerkplekIndeling xpers)
             {
-                SelectPersoneel(xpers.Persoon);
+                SelectWerkplek(xpers);
             }
         }
 
-        public void SelectPersoneel(Personeel persoon)
+        public void SelectWerkplek(WerkplekIndeling werkplek)
         {
-            if (SelectedPersoneel != null && SelectedPersoneel.Equals(persoon)) return;
-            foreach (var xgroup in xPersoneelIndelingPanel.Controls.Cast<GroupBox>())
+            if (SelectedWerkplek != null && string.Equals(werkplek.Werkplek.Key, SelectedWerkplek.Werkplek.Key,
+                    StringComparison.CurrentCultureIgnoreCase)) return;
+            foreach (var xgroup in xWerkplaatsIndelingPanel.Controls.Cast<GroupBox>())
             {
-                if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is PersoonIndeling xpers)
+                if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is WerkplekIndeling xpers)
                 {
-                    if (xpers.Persoon == null && persoon == null)
+                    if (xpers.Werkplek.IsDefault() && (werkplek == null || werkplek.Werkplek.IsDefault()))
                     {
                         SetSelected(xpers, true);
                         continue;
                     }
 
-                    if (xpers.Persoon == null)
+                    if (xpers.Werkplek.IsDefault())
                     {
                         SetSelected(xpers, false);
                     }
-                    else if (xpers.Persoon.Equals(persoon))
+                    else if (string.Equals(werkplek?.Werkplek.Key, xpers.Werkplek.Key, StringComparison.CurrentCultureIgnoreCase))
                     {
                         SetSelected(xpers, true);
                     }
@@ -449,21 +444,21 @@ namespace Forms
             }
         }
 
-        private void SetSelected(PersoonIndeling indeling, bool selected)
+        private void SetSelected(WerkplekIndeling indeling, bool selected)
         {
            
             if (selected)
             {
                 indeling ??= GetIndeling(null);
-                SelectedPersoneel = indeling?.Persoon;
+                SelectedWerkplek = indeling;
 
-                foreach (var xgroup in xPersoneelIndelingPanel.Controls.Cast<GroupBox>())
+                foreach (var xgroup in xWerkplaatsIndelingPanel.Controls.Cast<GroupBox>())
                 {
-                    if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is PersoonIndeling xpers)
+                    if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is WerkplekIndeling xpers)
                     {
                         SetColor(xpers, Color.White);
                         xpers.IsSelected = false;
-                        xpers.UpdateGebruikerInfo();
+                        xpers.UpdateWerkplekInfo();
                     }
                 }
 
@@ -484,76 +479,72 @@ namespace Forms
                 indeling.BackColor = Color.White;
                 indeling.IsSelected = false;
             }
-            xDeletePersoneel.Enabled = SelectedPersoneel != null;
+            xDeletePersoneel.Enabled = SelectedWerkplek != null;
             
         }
 
-        private void PersoonIndeling_MouseEnter(object sender, EventArgs e)
+        private void WerkplekIndeling_MouseEnter(object sender, EventArgs e)
         {
-            if (sender is GroupBox group && group.Controls.Count > 0 && group.Controls[0] is PersoonIndeling xpers)
+            if (sender is GroupBox group && group.Controls.Count > 0 && group.Controls[0] is WerkplekIndeling xpers)
             {
                 SetColor(xpers, Color.AliceBlue);
             }
-            else if (sender is PersoonIndeling xindeling)
+            else if (sender is WerkplekIndeling xindeling)
             {
                 SetColor(xindeling, Color.AliceBlue);
             }
         }
 
-        private void SetColor(PersoonIndeling indeling, Color color)
+        private void SetColor(WerkplekIndeling indeling, Color color)
         {
             if (indeling != null)
             {
-                if (indeling.Persoon == null && SelectedPersoneel == null)
+                if (indeling.Werkplek.IsDefault() && (SelectedWerkplek == null || SelectedWerkplek.Werkplek.IsDefault()))
                 {
                     indeling.BackColor = Color.LightBlue;
                 }
-                else if (indeling.Persoon == null)
+                else if (indeling.Werkplek.IsDefault())
                 {
                     indeling.BackColor = color;
                 }
                 else
                 {
-                    if (indeling.Persoon.Equals(SelectedPersoneel))
-                    {
-                        indeling.BackColor = Color.LightBlue;
-                    }
-                    else
-                        indeling.BackColor = color;
+                    indeling.BackColor = string.Equals(indeling.Werkplek.Key, SelectedWerkplek.Werkplek.Key,
+                        StringComparison.CurrentCultureIgnoreCase)
+                        ? Color.LightBlue
+                        : color;
                 }
             }
         }
 
-        private void PersoonIndeling_MouseLeave(object sender, EventArgs e)
+        private void WerkplekIndeling_MouseLeave(object sender, EventArgs e)
         {
-            if (sender is GroupBox group && group.Controls.Count > 0 && group.Controls[0] is PersoonIndeling xpers)
+            if (sender is GroupBox group && group.Controls.Count > 0 && group.Controls[0] is WerkplekIndeling xpers)
             {
                 SetColor(xpers, Color.White);
             }
-            else if(sender is PersoonIndeling xindeling)
+            else if(sender is WerkplekIndeling xindeling)
             {
                 SetColor(xindeling, Color.White);
             }
         }
 
-        private void AddNewPersoneel()
+        private void AddNewIndeling()
         {
             try
             {
-                var xpers = new PersoneelsForm(true);
-                if (xpers.ShowDialog() == DialogResult.OK)
+                var xwps = Manager.BewerkingenLijst.GetAlleWerkplekken(true).ToArray();
+                var wpchooser = new WerkPlekChooser(xwps, null);
+                wpchooser.Title = $"Voeg een nieuwe Werkplek toe";
+                if (wpchooser.ShowDialog() == DialogResult.OK)
                 {
-                    var chosen = xpers.SelectedPersoneel;
+                    var chosen = wpchooser.SelectedName;
                     if (chosen.Length > 0)
                     {
-                        PersoonIndeling xindeling = null;
-                        foreach (var chose in chosen)
+                        WerkplekIndeling xindeling = GetIndeling(chosen);
+                        if (xindeling == null)
                         {
-                            xindeling = GetIndeling(chose);
-                            if (xindeling == null)
-                            {
-                                xindeling = AddPersoneel(chose);
-                            }
+                            xindeling = AddNewIndeling(chosen);
                         }
 
                         if (xindeling != null)
@@ -573,19 +564,19 @@ namespace Forms
 
         private void xAddPersoneel_Click(object sender, EventArgs e)
         {
-            AddNewPersoneel();
+            AddNewIndeling();
         }
 
-        public bool PersoneelExists(Personeel pers)
+        public bool IndelingExists(WerkplekIndeling plek)
         {
             try
             {
-                foreach (var xgroup in xPersoneelIndelingPanel.Controls.Cast<GroupBox>())
+                foreach (var xgroup in xWerkplaatsIndelingPanel.Controls.Cast<GroupBox>())
                 {
-                    if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is PersoonIndeling xpers)
+                    if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is WerkplekIndeling xpers)
                     {
-                        if (xpers.Persoon == null) continue;
-                        if (xpers.Persoon.Equals(pers))
+                        if (xpers.Werkplek.IsDefault()) continue;
+                        if (string.Equals(xpers.Werkplek.Key, plek.Werkplek.Key, StringComparison.CurrentCultureIgnoreCase))
                             return true;
                     }
                 }
@@ -599,21 +590,21 @@ namespace Forms
             }
         }
 
-        public PersoonIndeling GetIndeling(Personeel pers)
+        public WerkplekIndeling GetIndeling(string werkplek)
         {
             try
             {
-                foreach (var xgroup in xPersoneelIndelingPanel.Controls.Cast<GroupBox>())
+                foreach (var xgroup in xWerkplaatsIndelingPanel.Controls.Cast<GroupBox>())
                 {
-                    if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is PersoonIndeling xpers)
+                    if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is WerkplekIndeling xpers)
                     {
-                        if (xpers.Persoon == null && pers == null)
+                        if (xpers.Werkplek.IsDefault() && string.IsNullOrEmpty(werkplek))
                         {
                             return xpers;
                         }
 
-                        if (xpers.Persoon == null) continue;
-                        if (xpers.Persoon.Equals(pers))
+                        if (xpers.Werkplek.IsDefault()) continue;
+                        if (string.Equals(xpers.Werkplek.Key, werkplek, StringComparison.CurrentCultureIgnoreCase))
                             return xpers;
                     }
                 }
@@ -627,16 +618,16 @@ namespace Forms
             }
         }
 
-        public bool PersoneelExists(string pers)
+        public bool WerkplekExists(string werkplek)
         {
             try
             {
-                foreach (var xgroup in xPersoneelIndelingPanel.Controls.Cast<GroupBox>())
+                foreach (var xgroup in xWerkplaatsIndelingPanel.Controls.Cast<GroupBox>())
                 {
-                    if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is PersoonIndeling xpers)
+                    if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is WerkplekIndeling xpers)
                     {
-                        if (xpers.Persoon == null) continue;
-                        if (string.Equals(xpers.Persoon.PersoneelNaam, pers, StringComparison.CurrentCultureIgnoreCase))
+                        if (xpers.Werkplek.IsDefault()) continue;
+                        if (string.Equals(xpers.Werkplek.Key, werkplek, StringComparison.CurrentCultureIgnoreCase))
                             return true;
                     }
                 }
@@ -654,8 +645,8 @@ namespace Forms
         {
             try
             {
-                if (SelectedPersoneel == null) return;
-                DeletePersoneel(SelectedPersoneel.PersoneelNaam);
+                if (SelectedWerkplek == null || SelectedWerkplek.Werkplek.IsDefault()) return;
+                DeleteWerkplaats(SelectedWerkplek.Werkplek.Key);
             }
             catch (Exception ex)
             {
@@ -664,28 +655,28 @@ namespace Forms
             }
         }
 
-        private void DeletePersoneel(string personeelnaam)
+        private void DeleteWerkplaats(string werkplek)
         {
             try
             {
                 GroupBox xdelete = null;
-                foreach (var xgroup in xPersoneelIndelingPanel.Controls.Cast<GroupBox>())
+                foreach (var xgroup in xWerkplaatsIndelingPanel.Controls.Cast<GroupBox>())
                 {
-                    if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is PersoonIndeling xpers)
+                    if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is WerkplekIndeling xpers)
                     {
-                        if (xpers.Persoon == null) continue;
-                        if (string.Equals(xpers.Persoon.PersoneelNaam, personeelnaam, StringComparison.CurrentCultureIgnoreCase))
+                        if (xpers.Werkplek.IsDefault()) continue;
+                        if (string.Equals(xpers.Werkplek.Key, werkplek, StringComparison.CurrentCultureIgnoreCase))
                         {
-                            xgroup.MouseEnter -= PersoonIndeling_MouseEnter;
-                            xgroup.MouseLeave -= PersoonIndeling_MouseLeave;
+                            xgroup.MouseEnter -= WerkplekIndeling_MouseEnter;
+                            xgroup.MouseLeave -= WerkplekIndeling_MouseLeave;
                             xgroup.Click -= Xpers_Click;
                             xgroup.DoubleClick -= Xpers_DoubleClick;
                             xdelete = xgroup;
-                            xpers.MouseEnter -= PersoonIndeling_MouseEnter;
-                            xpers.MouseLeave -= PersoonIndeling_MouseLeave;
+                            xpers.MouseEnter -= WerkplekIndeling_MouseEnter;
+                            xpers.MouseLeave -= WerkplekIndeling_MouseLeave;
                             xpers.Click -= Xpers_Click;
                             xpers.DoubleClick -= Xpers_DoubleClick;
-                            xpers.VerwijderPersoneel -= Xpers_VerwijderPersoneel;
+                            xpers.VerwijderWerkplaats -= Xpers_VerwijderIndeling;
                             break;
                         }
                     }
@@ -693,9 +684,9 @@ namespace Forms
 
                 if (xdelete != null)
                 {
-                    xPersoneelIndelingPanel.SuspendLayout();
-                    xPersoneelIndelingPanel.Controls.Remove(xdelete);
-                    xPersoneelIndelingPanel.ResumeLayout(true);
+                    xWerkplaatsIndelingPanel.SuspendLayout();
+                    xWerkplaatsIndelingPanel.Controls.Remove(xdelete);
+                    xWerkplaatsIndelingPanel.ResumeLayout(true);
                     SetSelected(null, true);
                 }
             }
@@ -709,7 +700,6 @@ namespace Forms
         {
             LoadProducties();
             productieListControl1.InitEvents();
-            Manager.OnPersoneelChanged += Manager_OnPersoneelChanged;
             Manager.OnPersoneelDeleted += Manager_OnPersoneelDeleted;
             Manager.OnFormulierChanged += Manager_OnFormulierChanged;
         }
@@ -718,16 +708,17 @@ namespace Forms
         {
             try
             {
+                if (changedform?.Bewerkingen == null) return;
                 this.BeginInvoke(new Action(() =>
                 {
                     try
                     {
-                        foreach (var xgroup in xPersoneelIndelingPanel.Controls.Cast<GroupBox>())
+                        foreach (var xgroup in xWerkplaatsIndelingPanel.Controls.Cast<GroupBox>())
                         {
-                            if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is PersoonIndeling xindeling)
+                            if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is WerkplekIndeling xindeling)
                             {
-                                if (xindeling.Persoon == null) continue;
-                                if (IsAllowed(changedform, xindeling.Persoon))
+                                if (xindeling.Werkplek.IsDefault()) continue;
+                                if (IsAllowed(changedform, xindeling))
                                 {
                                     xindeling.UpdateLabelText();
                                     if (xindeling.SelectedBewerking != null)
@@ -737,6 +728,29 @@ namespace Forms
                                         if (xnew != null)
                                             xindeling.SelectedBewerking = xnew;
                                     }
+
+                                    var bws = changedform.Bewerkingen.Where(x =>
+                                        x.WerkPlekken.Any(w => string.Equals(w.Naam, xindeling.Werkplek.Key,
+                                            StringComparison.CurrentCultureIgnoreCase))).ToList();
+                                    var xremove = xindeling.Werkplek.Value.Where(x =>
+                                        string.Equals(x.ProductieNr, changedform.ProductieNr,
+                                            StringComparison.CurrentCultureIgnoreCase) &&
+                                        !x.WerkPlekken.Any(w => string.Equals(w.Naam, xindeling.Werkplek.Key,
+                                            StringComparison.CurrentCultureIgnoreCase))).ToList();
+                                    if (xremove.Count > 0)
+                                        xremove.ForEach(r => xindeling.Werkplek.Value.Remove(r));
+
+                                    foreach (var bw in bws)
+                                    {
+                                        if (!bw.WerkPlekken.Any(w => string.Equals(w.Naam, xindeling.Werkplek.Key,
+                                                StringComparison.CurrentCultureIgnoreCase)))
+                                            continue;
+                                        var xindex = xindeling.Werkplek.Value.IndexOf(bw);
+                                        if (xindex > -1)
+                                            xindeling.Werkplek.Value[xindex] = bw;
+                                        else xindeling.Werkplek.Value.Add(bw);
+                                    }
+
                                 }
                             }
                         }
@@ -755,41 +769,17 @@ namespace Forms
 
         private void Manager_OnPersoneelDeleted(object sender, string id)
         {
-            if (PersoneelExists(id))
-                DeletePersoneel(id);
-        }
-
-        private void Manager_OnPersoneelChanged(object sender, Personeel user)
-        {
-            try
-            {
-                this.BeginInvoke(new MethodInvoker(() =>
-                {
-                    try
-                    {
-                        var indeling = GetIndeling(user);
-                        indeling?.InitPersoneel(user);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        throw;
-                    }
-                }));
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            if (WerkplekExists(id))
+                DeleteWerkplaats(id);
         }
 
         private void WerkplaatsIndeling_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (Manager.Opties != null)
             {
-                Manager.Opties.PersoneelIndeling = GetPersonen().Select(x => x.PersoneelNaam).ToList();
+                Manager.Opties.WerkplaatsIndeling = GetIndelingen().Select(x => x.Werkplek.Key).ToList();
             }
-            Manager.OnPersoneelChanged -= Manager_OnPersoneelChanged;
+
             Manager.OnPersoneelDeleted -= Manager_OnPersoneelDeleted;
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
             productieListControl1.DetachEvents();

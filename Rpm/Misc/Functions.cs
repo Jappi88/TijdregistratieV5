@@ -2199,7 +2199,7 @@ namespace Rpm.Misc
 
             // The +7 and %7 stuff is to avoid negative numbers etc.
             var daysToFirstCorrectDay = ((int) day - (int) startOfYear.DayOfWeek + 7) % 7;
-            if (day == DayOfWeek.Monday) week--;
+            if (day != DayOfWeek.Sunday) week--;
             return startOfYear.AddDays(7 * (week) + daysToFirstCorrectDay);
         }
 

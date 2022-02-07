@@ -851,7 +851,7 @@ namespace Forms
 
             if (!string.IsNullOrWhiteSpace(werkplek) && werkplek.ToLower().Trim() != "n.v.t")
             {
-                if (Bewerking.WerkPlekken.Any(x => x.Naam.ToLower() == werkplek.ToLower()))
+                if (Bewerking.WerkPlekken.Any(x => string.Equals(x.Naam, werkplek, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     XMessageBox.Show(
                         this, $"{werkplek} bestaat al...",

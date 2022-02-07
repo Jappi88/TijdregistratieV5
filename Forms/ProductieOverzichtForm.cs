@@ -85,7 +85,7 @@ namespace Forms
                 if (Manager.Opties == null) return WerkPlekken;
                 if (Manager.Opties.ToonAlles)
                 {
-                    var plekken = Manager.BewerkingenLijst.GetAlleWerkplekken();
+                    var plekken = Manager.BewerkingenLijst.GetAlleWerkplekken(true);
                     foreach (var plek in plekken)
                     {
                         if (!WerkPlekken.ContainsKey(plek))

@@ -578,14 +578,6 @@ namespace Controls
                             return "N.V.T.";
                         };
                         break;
-                    case "leverdatum":
-                        column.AspectGetter = y =>
-                        {
-                            if (y is IProductieBase pr)
-                                return pr.LeverDatum.ToString(8, "over {0} {1}", "{0} {1} geleden", false);
-                            return "N.V.T.";
-                        };
-                        break;
                 }
 
                 column.LastDisplayIndex = xcol.ColumnIndex >= 0 &&
@@ -1612,7 +1604,7 @@ namespace Controls
             }
         }
 
-        public static void StartBewerkingen(IWin32Window owner, Bewerking[] bws)
+        public static bool StartBewerkingen(IWin32Window owner, Bewerking[] bws)
         {
             var count = bws.Length;
             if (count > 0)
@@ -1631,7 +1623,7 @@ namespace Controls
                     {
                         //var mainform = sender??Application.OpenForms["MainForm"];
 
-                       // async void Action()
+                        // async void Action()
                         //{
                         for (var i = 0; i < bws.Length; i++)
                         {
@@ -1656,7 +1648,7 @@ namespace Controls
                                                     $"Je hebt {pers.SelectedPersoneel.Length} medewerkers geselecteerd," +
                                                     " wil je ze allemaal afzonderlijk indelen?", "Indeling",
                                                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                                                if (result == DialogResult.Cancel) return;
+                                                if (result == DialogResult.Cancel) return false;
                                                 afzonderlijk = result == DialogResult.Yes;
                                             }
 
@@ -1665,7 +1657,7 @@ namespace Controls
                                             {
                                                 var klusui = new NieuwKlusForm(parent, pers.SelectedPersoneel, true,
                                                     false, werk);
-                                                if (klusui.ShowDialog() != DialogResult.OK) return;
+                                                if (klusui.ShowDialog() != DialogResult.OK) return false;
                                                 var pair = klusui.SelectedKlus.GetWerk(parent);
                                                 var prod = pair.Formulier;
                                                 werk = pair.Bewerking;
@@ -1687,7 +1679,7 @@ namespace Controls
                                                 foreach (var per in pers.SelectedPersoneel)
                                                 {
                                                     var klusui = new NieuwKlusForm(parent, per, true, false, werk);
-                                          
+
                                                     if (klusui.ShowDialog() != DialogResult.OK) break;
                                                     //klusui.Persoon.CopyTo(ref per);
                                                     var pair = klusui.SelectedKlus.GetWerk(parent);
@@ -1719,13 +1711,17 @@ namespace Controls
                                             }
 
                                             if (werk != null)
-                                                _ = werk.StartProductie(true, true,true);
+                                                _ = werk.StartProductie(true, true, true);
                                         }
+
+                                        return false;
                                     }
+
+                                    return false;
                                 }
                                 else
                                 {
-                                    _=werk.StartProductie(true, true,true);
+                                    _ = werk.StartProductie(true, true, true);
                                 }
                             }
                         }
@@ -1733,13 +1729,19 @@ namespace Controls
                         //}
 
                         //mainform?.BeginInvoke(new Action( Action));
+                        return true;
                     }
                     catch (Exception exception)
                     {
                         XMessageBox.Show(owner, exception.Message,
                             "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
                     }
+
+                return false;
             }
+
+            return false;
         }
 
         private static void StopBewerkingen(Bewerking[] bws)

@@ -27,7 +27,7 @@ namespace Forms.MetroBase
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MetroBaseForm_FormClosing);
-            this.Load += new System.EventHandler(this.MetroBaseForm_Load);
+            this.Shown += new System.EventHandler(this.MetroBaseForm_Load);
             this.ResumeLayout(false);
 
         }

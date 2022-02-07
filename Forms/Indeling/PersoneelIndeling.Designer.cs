@@ -30,6 +30,7 @@ namespace Forms
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PersoneelIndeling));
             this.panel1 = new System.Windows.Forms.Panel();
             this.xPersoneelIndelingPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -181,6 +182,7 @@ namespace Forms
             this.ClientSize = new System.Drawing.Size(1150, 631);
             this.Controls.Add(this.xloadinglabel);
             this.Controls.Add(this.splitContainer1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "PersoneelIndeling";
             this.Padding = new System.Windows.Forms.Padding(10, 60, 10, 10);
             this.Text = "Personeel Indeling";

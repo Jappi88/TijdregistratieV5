@@ -62,7 +62,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -399,10 +399,16 @@
     <Compile Include="Controls\ObjectEditorUI.Designer.cs">
       <DependentUpon>ObjectEditorUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\PersoonIndeling.cs">
+    <Compile Include="Forms\Indeling\WerkplekIndeling.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\PersoonIndeling.Designer.cs">
+    <Compile Include="Forms\Indeling\WerkplekIndeling.Designer.cs">
+      <DependentUpon>WerkplekIndeling.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Indeling\PersoonIndeling.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Indeling\PersoonIndeling.Designer.cs">
       <DependentUpon>PersoonIndeling.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ProductieInfoUI.cs">
@@ -772,6 +778,12 @@
     <Compile Include="Forms\OpmerkingenForm.Designer.cs">
       <DependentUpon>OpmerkingenForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Indeling\WerkplaatsIndeling.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Indeling\WerkplaatsIndeling.Designer.cs">
+      <DependentUpon>WerkplaatsIndeling.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ProductieInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1048,10 +1060,10 @@
     <Compile Include="Forms\WebBrowserForm.Designer.cs">
       <DependentUpon>WebBrowserForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\PersoneelIndeling.cs">
+    <Compile Include="Forms\Indeling\PersoneelIndeling.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\PersoneelIndeling.Designer.cs">
+    <Compile Include="Forms\Indeling\PersoneelIndeling.Designer.cs">
       <DependentUpon>PersoneelIndeling.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\WerkPlekChooser.cs">
@@ -1351,7 +1363,10 @@
     <EmbeddedResource Include="Controls\ObjectEditorUI.resx">
       <DependentUpon>ObjectEditorUI.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\PersoonIndeling.resx">
+    <EmbeddedResource Include="Forms\Indeling\WerkplekIndeling.resx">
+      <DependentUpon>WerkplekIndeling.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Indeling\PersoonIndeling.resx">
       <DependentUpon>PersoonIndeling.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ProductieInfoUI.resx">
@@ -1538,6 +1553,9 @@
     <EmbeddedResource Include="Forms\OpmerkingenForm.resx">
       <DependentUpon>OpmerkingenForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Indeling\WerkplaatsIndeling.resx">
+      <DependentUpon>WerkplaatsIndeling.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ProductieInfoForm.resx">
       <DependentUpon>ProductieInfoForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1679,7 +1697,7 @@
     <EmbeddedResource Include="Forms\WebBrowserForm.resx">
       <DependentUpon>WebBrowserForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PersoneelIndeling.resx">
+    <EmbeddedResource Include="Forms\Indeling\PersoneelIndeling.resx">
       <DependentUpon>PersoneelIndeling.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WerkPlekChooser.resx">
@@ -1862,6 +1880,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\werkplaatsindeling_32x32.png" />
     <None Include="Resources\documents_32x32.png" />
     <None Include="Resources\extension_file_documents_32x32.png" />
     <None Include="Resources\layout_widget_icon_32x32.png" />

@@ -156,6 +156,9 @@ namespace Forms
             xtoonallesvanbeide.Checked = x.ToonAllesVanBeide;
             xtoonalles.Checked = x.ToonAlles;
 
+            xpersoneelindeling.Checked = x.ToonPersoneelIndelingNaOpstart;
+            xwerkplaatsindeling.Checked = x.ToonWerkplaatsIndelingNaOpstart;
+
             _afdelingen = x.Afdelingen.ToList();
             _bewerkingen = x.Bewerkingen.ToList();
 
@@ -290,7 +293,7 @@ namespace Forms
             var flag3 = xtoonvolgensbewerking.Checked;
             // bool flag4 = xtoonalles.Checked || xdeelallesin.Checked;
             var bewerkingen = Manager.BewerkingenLijst.GetAllEntries().Select(x => (object) x.Naam).ToArray();
-            var afdelingen = Manager.BewerkingenLijst.GetAlleWerkplekken().Select(x => (object) x).ToArray();
+            var afdelingen = Manager.BewerkingenLijst.GetAlleWerkplekken(false).Select(x => (object) x).ToArray();
             if (flag1)
             {
                 xgroupweergave.Visible = true;
@@ -410,6 +413,9 @@ namespace Forms
             xs.ToonAlleGestartProducties = xtoonallegestartproducties.Checked;
             xs.ToonProductieLogs = xtoonproductielogs.Checked;
             xs.ToonProductieNaToevoegen = xtoonproductieNaToevoegen.Checked;
+
+            xs.ToonPersoneelIndelingNaOpstart = xpersoneelindeling.Checked;
+            xs.ToonWerkplaatsIndelingNaOpstart = xwerkplaatsindeling.Checked;
 
             xs.WeekOverzichtPath = xweekoverzichtpath.Text.Trim();
             xs.CreateWeekOverzichten = xmaakoverichtenaan.Checked;

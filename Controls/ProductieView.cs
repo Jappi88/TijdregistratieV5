@@ -125,7 +125,8 @@ namespace Controls
         private static ArtikelsForm _ArtikelsForm;
         private static PersoneelsForm _PersoneelForm;
         private static ProductieOverzichtForm _ProductieOverzicht;
-        private static PersoneelIndeling _WerkplaatsIndeling;
+        private static PersoneelIndeling _PersoneelIndeling;
+        private static WerkplaatsIndeling _WerkplaatsIndeling;
         private static MetroForm _berekenverbruik;
 
         private readonly Daily DailyMessage;
@@ -199,6 +200,10 @@ namespace Controls
                         DailyMessage.CreateDaily();
                         UpdateUnreadMessages(null);
                         UpdateUnreadOpmerkingen();
+                        if(Manager.Opties is {ToonPersoneelIndelingNaOpstart: true})
+                            ShowPersoneelIndelingWindow();
+                        if (Manager.Opties is {ToonWerkplaatsIndelingNaOpstart: true})
+                            ShowWerkplaatsIndelingWindow();
                         //UpdateAllLists();
                     }
                     catch (Exception e)
@@ -1220,6 +1225,9 @@ namespace Controls
                         case "xchangeaantal":
                             DoAantalGemaakt(this);
                             break;
+                        case "xpersoneelindeling":
+                            ShowPersoneelIndelingWindow();
+                            break;
                         case "xwerkplaatsindeling":
                             ShowWerkplaatsIndelingWindow();
                             break;
@@ -2031,7 +2039,7 @@ namespace Controls
         {
             if (_WerkplaatsIndeling == null)
             {
-                _WerkplaatsIndeling = new PersoneelIndeling();
+                _WerkplaatsIndeling = new WerkplaatsIndeling();
                 _WerkplaatsIndeling.FormClosed += (x, y) =>
                 {
                     _WerkplaatsIndeling?.Dispose();
@@ -2044,6 +2052,25 @@ namespace Controls
                 _WerkplaatsIndeling.WindowState = FormWindowState.Normal;
             _WerkplaatsIndeling.BringToFront();
             _WerkplaatsIndeling.Focus();
+        }
+
+        public static void ShowPersoneelIndelingWindow()
+        {
+            if (_PersoneelIndeling == null)
+            {
+                _PersoneelIndeling = new PersoneelIndeling();
+                _PersoneelIndeling.FormClosed += (x, y) =>
+                {
+                    _PersoneelIndeling?.Dispose();
+                    _PersoneelIndeling = null;
+                };
+            }
+
+            _PersoneelIndeling.Show();
+            if (_PersoneelIndeling.WindowState == FormWindowState.Minimized)
+                _PersoneelIndeling.WindowState = FormWindowState.Normal;
+            _PersoneelIndeling.BringToFront();
+            _PersoneelIndeling.Focus();
         }
 
         public static void ShowBerekenVerbruikWindow()

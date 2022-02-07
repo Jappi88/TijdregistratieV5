@@ -991,7 +991,7 @@ namespace Rpm.Productie
                    if (xprod != null)
                    {
                        prod = xprod;
-                       _ = ProductieFormulier.UpdateDoorloopTijd(null, prod, null, true, true, false);
+                       _ = ProductieFormulier.UpdateDoorloopTijd(null, prod, null, false, true, false);
 
                        return new RemoteMessage($"{prod.ProductieNr} toegevoegd!", MessageAction.NieweProductie,
                            MsgType.Success, null, prod, prod.ProductieNr);
@@ -1050,7 +1050,7 @@ namespace Rpm.Productie
                                 }
                             }
                             else
-                                msg = new RemoteMessage($"[{prod.ProductieNr}, {prod.ArtikelNr}]{prod.Omschrijving} is gefilterd!",
+                                msg = new RemoteMessage($"[{prod.ProductieNr}, {prod.ArtikelNr}]Kan niet toevoegen omdat de bewerking is gefilterd!",
                                     MessageAction.AlgemeneMelding, MsgType.Info);
                             rms.Add(msg);
                             if (msg.Action is MessageAction.NieweProductie or MessageAction.ProductieWijziging)
