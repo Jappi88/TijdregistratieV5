@@ -108,6 +108,8 @@ namespace Rpm.Productie
 
         public double TijdGewerkt => TijdAanGewerkt();
 
+        public int Aantal => Werk?.Aantal ?? 0;
+
         public virtual int AantalGemaakt
         {
             get => _aantalgemaakt;

@@ -67,6 +67,7 @@ namespace Controls
             this.notitieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
+            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.xwerkpleklist)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -81,6 +82,7 @@ namespace Controls
             this.xwerkpleklist.AllColumns.Add(this.xaantalpersc);
             this.xwerkpleklist.AllColumns.Add(this.xtijdgestartc);
             this.xwerkpleklist.AllColumns.Add(this.xtijdgewerktc);
+            this.xwerkpleklist.AllColumns.Add(this.olvColumn1);
             this.xwerkpleklist.AllColumns.Add(this.xaantalc);
             this.xwerkpleklist.AllColumns.Add(this.xactueelgemaakt);
             this.xwerkpleklist.AllColumns.Add(this.xaantalupdatec);
@@ -103,6 +105,7 @@ namespace Controls
             this.xaantalpersc,
             this.xtijdgestartc,
             this.xtijdgewerktc,
+            this.olvColumn1,
             this.xaantalc,
             this.xactueelgemaakt,
             this.xaantalupdatec,
@@ -339,7 +342,7 @@ namespace Controls
             this.toolStripSeparator2,
             this.notitieToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(193, 276);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(193, 254);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // openProductieToolStripMenuItem
@@ -465,6 +468,13 @@ namespace Controls
             this.panel2.Size = new System.Drawing.Size(977, 580);
             this.panel2.TabIndex = 2;
             // 
+            // olvColumn1
+            // 
+            this.olvColumn1.AspectName = "Aantal";
+            this.olvColumn1.Text = "Aantal";
+            this.olvColumn1.ToolTipText = "Aantal te produceren";
+            this.olvColumn1.Width = 100;
+            // 
             // WerkPlekkenUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -518,5 +528,6 @@ namespace Controls
         private System.Windows.Forms.ToolStripMenuItem onderbrekenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hervattenToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private BrightIdeasSoftware.OLVColumn olvColumn1;
     }
 }

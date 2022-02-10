@@ -22,7 +22,8 @@ namespace Forms.MetroBase
             // 
             // MetroBaseForm
             // 
-            this.ClientSize = new System.Drawing.Size(799, 477);
+            this.ClientSize = new System.Drawing.Size(100, 75);
+            this.MinimumSize = new System.Drawing.Size(100, 75);
             this.Name = "MetroBaseForm";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

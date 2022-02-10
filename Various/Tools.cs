@@ -90,7 +90,8 @@ namespace Various
                     if (xvalue.WindowState == FormWindowState.Normal)
                     {
                         //form.Location = xvalue.Location;
-                        form.Size = xvalue.Size;
+                        if (xvalue.Size.Width > 50 && xvalue.Size.Height > 50)
+                            form.Size = xvalue.Size;
                     }
                     form.Invalidate();
                 }
