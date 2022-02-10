@@ -1624,15 +1624,15 @@ namespace Rpm.Productie
                                                  x.WerkPlekken.Any(w => w.NeedsAantalUpdate(mins))).ToList();
                             //_isChecking = false;
                             //}).Wait(60000);
-
+                            if (bws.Count > 0)
+                            {
+                                FormulierActie(new object[] {bws, mins}, MainAktie.OpenAantalGemaaktProducties);
+                                _lastchecked = DateTime.Now;
+                            }
                         }
 
 
-                        if (bws.Count > 0 && !_isChecking)
-                        {
-                            FormulierActie(new object[] {bws, mins}, MainAktie.OpenAantalGemaaktProducties);
-                            _lastchecked = DateTime.Now;
-                        }
+
                     }
 
                 }

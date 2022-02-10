@@ -817,8 +817,12 @@ namespace Rpm.Productie
 
             //if (!IsBemand) return Tijden.GetFirstStart();
             foreach (var wp in WerkPlekken)
-                if (wp.GestartOp() < dt || dt.IsDefault())
-                    dt = wp.GestartOp();
+            {
+                var xgestart = wp.GestartOp();
+                if (xgestart.IsDefault()) continue;
+                if (dt.IsDefault() || xgestart < dt)
+                    dt = xgestart;
+            }
             return dt;
         }
 
@@ -1170,7 +1174,7 @@ namespace Rpm.Productie
         {
             try
             {
-                if (TotaalGemaakt >= Aantal || State == ProductieState.Gereed || State == ProductieState.Verwijderd)
+                if (TotaalGemaakt >= Aantal || State is ProductieState.Gereed or ProductieState.Verwijderd)
                     return 0;
                 if (Aantal - TotaalGemaakt <= 0)
                     return 0;
@@ -1200,6 +1204,13 @@ namespace Rpm.Productie
             }
 
             return tijd;
+        }
+
+        public double GetDoorloopTijd()
+        {
+            if (Aantal == 0) return 0;
+            if (PerUur == 0) return 0;
+            return Math.Round(Aantal / PerUur, 2);
         }
 
         public int AantalPersonenNodig(ref DateTime startop, bool onlyifsmaller)

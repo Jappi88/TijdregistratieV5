@@ -1,12 +1,10 @@
 ﻿using Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
-using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -15,11 +13,18 @@ using TheArtOfDev.HtmlRenderer.Core.Entities;
 namespace Controls
 {
     public delegate string WerkplekTextGetterHandler(WerkplekIndeling indeling);
+    
     public partial class WerkplekIndeling : UserControl
     {
+        public string Werkplek { get; set; }
+        public bool IsDefault()
+        {
+            return string.IsNullOrEmpty(Werkplek) ||
+                   string.Equals(Werkplek, "default", StringComparison.CurrentCultureIgnoreCase);
+        }
 
-        public KeyValuePair<string, List<Bewerking>> Werkplek { get;  set; }
-
+        public string Criteria { get; set; }
+        public bool ToonNietIngedeeld = true;
         public Bewerking SelectedBewerking { get; set; }
         public bool IsSelected { get; set; }
 
@@ -30,7 +35,7 @@ namespace Controls
             InitializeComponent();
         }
 
-        public void InitWerkplek(KeyValuePair<string, List<Bewerking>> werkplek)
+        public void InitWerkplek(string werkplek)
         {
             try
             {
@@ -39,7 +44,7 @@ namespace Controls
             }
             catch (Exception e)
             {
-
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -59,17 +64,12 @@ namespace Controls
 
         public void UpdateWerkplekInfo()
         {
-            //xpersoonInfo.AutoScroll = false;
-            //xpersoonInfo.HorizontalScroll.Maximum = 0;
-            //xpersoonInfo.VerticalScroll.Visible = false;
-            //xpersoonInfo.VerticalScroll.Enabled = false;
-            //xpersoonInfo.VerticalScroll.Maximum = 0;
-            //xpersoonInfo.HorizontalScroll.Visible = false;
-            //xpersoonInfo.HorizontalScroll.Enabled = false;
-            if (Werkplek.IsDefault())
+            if (IsDefault())
             {
                // ximage.Image = Resources.operation;
                xVerwijderPersoneel.Visible = false;
+               xnietingedeeld.Visible = true;
+               xnietingedeeld.Checked = ToonNietIngedeeld;
                 if (FieldTextGetter != null)
                     xpersoonInfo.Text = FieldTextGetter.Invoke(this);
                 else
@@ -81,20 +81,20 @@ namespace Controls
             else
             {
                 //ximage.Image = Resources.user_customer_person_13976;
-                xknoppenpanel.Visible = SelectedBewerking != null && !Werkplek.IsDefault() && IsSelected;
+                xknoppenpanel.Visible = SelectedBewerking != null && !IsDefault() && IsSelected;
                 xVerwijderPersoneel.Visible = true;
                 if (Parent is GroupBox group)
                 {
                     if (SelectedBewerking != null && IsSelected)
                     {
                         var bw = SelectedBewerking;
-                        group.Text = $"{Werkplek.Key} {bw.Naam} van {bw.ArtikelNr} | {bw.ProductieNr}";
+                        group.Text = $"{Werkplek} {bw.Naam} van {bw.ArtikelNr} | {bw.ProductieNr}";
                     }
-                    else group.Text = $"{Werkplek.Key}";
+                    else group.Text = $"{Werkplek}";
                 }
-                if (SelectedBewerking != null && !Werkplek.IsDefault())
+                if (SelectedBewerking != null)
                 {
-                    var wp = SelectedBewerking.GetWerkPlek(Werkplek.Key, false);
+                    var wp = SelectedBewerking.GetWerkPlek(Werkplek, false);
                     if (wp != null && wp.IsActief())
                     {
                         if (SelectedBewerking.State == ProductieState.Gestart)
@@ -120,21 +120,13 @@ namespace Controls
                 }
                 if (FieldTextGetter != null)
                     xpersoonInfo.Text = FieldTextGetter.Invoke(this);
-                else
-                {
-                    var klusjes = Werkplek.Value.Where(x =>
-                        x.State != ProductieState.Gereed && x.State != ProductieState.Verwijderd).ToList();
-                    xpersoonInfo.Text = $"{Werkplek.Key} Indeling.<br>" +
-                                        $"Ingedeeld met {klusjes.Count} productie(s).<br>" +
-                                        $"Bezig met {klusjes.Count(x => x.State == ProductieState.Gestart)} producties(s) ({klusjes.Sum(x=> x.TijdAanGewerkt())} uur).";
-                }
             }
 
         }
 
         public void SetBewerking(Bewerking bew)
         {
-            if (Werkplek.IsDefault()) return;
+            if (IsDefault()) return;
             SelectedBewerking = bew;
             UpdateWerkplekInfo();
         }
@@ -144,7 +136,7 @@ namespace Controls
             var data = (GroupBox)e.Data.GetData(typeof(GroupBox));
             var falsecolor = Color.MistyRose;
             var truecolor = Color.LightGreen;
-            if (data != null && data.Controls.Count > 0 && data.Controls[0] is PersoonIndeling indeling && indeling.Persoon != null)
+            if (data != null && data.Controls.Count > 0 && data.Controls[0] is WerkplekIndeling indeling && !indeling.IsDefault())
             {
                 this.BackColor = truecolor;
                 e.Effect = DragDropEffects.Move;
@@ -156,13 +148,13 @@ namespace Controls
                 {
                     if (x is Bewerking bew)
                     {
-                        if (!Werkplek.IsDefault())
+                        if (!IsDefault())
                         {
                             var wps = Manager.BewerkingenLijst?.GetWerkplekken(bew.Naam);
                             if (wps == null || !wps.Any(w =>
-                                    string.Equals(w, Werkplek.Key, StringComparison.CurrentCultureIgnoreCase)))
+                                    string.Equals(w, Werkplek, StringComparison.CurrentCultureIgnoreCase)))
                                 continue;
-                            var wp = bew.GetWerkPlek(Werkplek.Key, false);
+                            var wp = bew.GetWerkPlek(Werkplek, false);
                             if (wp == null)
                             {
                                 this.BackColor = truecolor;
@@ -189,11 +181,16 @@ namespace Controls
                     {
                         if (x is Bewerking bew)
                         {
-                            if (!Werkplek.IsDefault())
+                            
+                            if (!IsDefault())
                             {
-                                var wp = bew.GetWerkPlek(Werkplek.Key, true); 
-                                bew.UpdateBewerking(null,
-                                $"{wp.Naam} Ingedeeld voor [{bew.Naam}] van {bew.Omschrijving}").Wait(2000);;
+                                var wps = Manager.BewerkingenLijst?.GetWerkplekken(bew.Naam);
+                                if (wps == null || !wps.Any(w =>
+                                        string.Equals(w, Werkplek, StringComparison.CurrentCultureIgnoreCase)))
+                                    continue;
+                                var wp = bew.GetWerkPlek(Werkplek, true);
+                                _ = bew.UpdateBewerking(null,
+                                    $"[{bew.Naam}] Ingedeeld op {wp.Naam}").Result;
                             }
                         }
                     }
@@ -232,27 +229,41 @@ namespace Controls
 
         private void xVerwijderKlus_Click(object sender, EventArgs e)
         {
-            if (SelectedBewerking == null || Werkplek.IsDefault()) return;
-            if (!Werkplek.IsDefault() && SelectedBewerking != null)
+            if (SelectedBewerking == null || IsDefault()) return;
+            if (!IsDefault() && SelectedBewerking != null)
             {
                 if (SelectedBewerking == null) return;
-                if (SelectedBewerking.WerkPlekken.RemoveAll(x =>
-                        string.Equals(Werkplek.Key, x.Naam, StringComparison.CurrentCultureIgnoreCase)) > 0)
-                    SelectedBewerking.UpdateBewerking(null,
-                            $"{Werkplek.Key} verwijderd uit [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!")
-                        .Wait(2000);
+                var xremove = SelectedBewerking.WerkPlekken.Where(x =>
+                    string.Equals(Werkplek, x.Naam, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                var xtijd = xremove.Sum(x => x.TijdAanGewerkt());
+                if (xtijd > 0)
+                {
+                    if (XMessageBox.Show(this.Parent?.Parent?.Parent?.Parent?.Parent,
+                            $"Er is {xtijd} uur aan {SelectedBewerking.Naam} op {Werkplek} gewerkt!\n\n" +
+                            $"Weetje zeker dat je alsnog {Werkplek} uit {SelectedBewerking.Naam}({SelectedBewerking.ProductieNr})  wilt verwijderen?",
+                            $"{Werkplek} Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
+                        DialogResult.No) return;
+                }
+
+                if (xremove.Count > 0)
+                {
+                    foreach (var xr in xremove)
+                        SelectedBewerking.WerkPlekken.Remove(xr);
+                    _ = SelectedBewerking.UpdateBewerking(null,
+                        $"{Werkplek} verwijderd uit [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!");
+                }
 
             }
         }
 
         private void xStopKlus_Click(object sender, EventArgs e)
         {
-            if (SelectedBewerking == null || Werkplek.IsDefault()) return;
+            if (SelectedBewerking == null || IsDefault()) return;
 
             string change =
-                $"{Werkplek.Key} gestopt met {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!";
+                $"{Werkplek} gestopt met {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!";
             bool changed = false;
-            var wp = SelectedBewerking.GetWerkPlek(Werkplek.Key, false);
+            var wp = SelectedBewerking.GetWerkPlek(Werkplek, false);
             if (wp == null) return;
             foreach (var xp in wp.Personen)
             {
@@ -277,32 +288,41 @@ namespace Controls
                 xStartKlus.Enabled = true;
                 xStopKlus.Enabled = false;
                 _ = SelectedBewerking.UpdateBewerking(null,
-                    $"{Werkplek.Key} UPDATE: {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!");
+                    $"{Werkplek} UPDATE: {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!");
+
             }
         }
 
         private void xStartKlus_Click(object sender, EventArgs e)
         {
-            if (SelectedBewerking == null || Werkplek.IsDefault() ||
+            if (SelectedBewerking == null || IsDefault() ||
                 SelectedBewerking.State is ProductieState.Verwijderd or ProductieState.Gereed) return;
-            bool xstarted = false;
-            var wp = SelectedBewerking.GetWerkPlek(Werkplek.Key, true);
-            if (!wp.IsActief() && wp.Personen.Count > 0)
+            var wp = SelectedBewerking.GetWerkPlek(Werkplek, true);
+            if (!wp.IsActief())
             {
-                foreach (var per in wp.Personen)
+                if (wp.Personen.Count > 0)
                 {
-                    SelectedBewerking.ZetPersoneelActief(per.PersoneelNaam, wp.Naam, true);
-                    var xdb = Manager.Database.GetPersoneel(per.PersoneelNaam).Result;
-                    if (xdb != null)
+                    foreach (var per in wp.Personen)
                     {
-                        if (per.IngezetAanKlus(wp.Path, true, out var klusjes))
+                        SelectedBewerking.ZetPersoneelActief(per.PersoneelNaam, wp.Naam, true);
+                        var xdb = Manager.Database.GetPersoneel(per.PersoneelNaam).Result;
+                        if (xdb != null)
                         {
-                            klusjes.ForEach(x => xdb.ReplaceKlus(x));
-                            string change =
-                                $"{xdb.PersoneelNaam} gestart met {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!";
-                            Manager.Database?.UpSert(xdb, change);
+                            if (per.IngezetAanKlus(wp.Path, true, out var klusjes))
+                            {
+                                klusjes.ForEach(x => xdb.ReplaceKlus(x));
+                                string change =
+                                    $"{xdb.PersoneelNaam} gestart met {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!";
+                                Manager.Database?.UpSert(xdb, change);
+                            }
                         }
                     }
+                }
+                else
+                {
+                    var xbw = SelectedBewerking;
+                    if (!ProductieListControl.AddPersoneel(this, ref xbw, wp.Naam))
+                        return;
                 }
             }
 
@@ -314,7 +334,7 @@ namespace Controls
             else
             {
                 _ = SelectedBewerking.UpdateBewerking(null,
-                    $"{Werkplek.Key} UPDATE: {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!");
+                    $"{Werkplek} UPDATE: {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!");
             }
             xStartKlus.Enabled = false;
             xStopKlus.Enabled = true;
@@ -351,6 +371,8 @@ namespace Controls
         {
             VerwijderWerkplaats?.Invoke(this, e);
         }
+
+        public event EventHandler ViewStateChanged;
 
         protected override void OnClick(EventArgs e)
         {
@@ -389,7 +411,7 @@ namespace Controls
             {
                 // This is a check to see if the mouse is moving while pressed.
                 // Without this, the DragDrop is fired directly when the control is clicked, now you have to drag a few pixels first.
-                if (e.Button == MouseButtons.Left && _DDradius > 0 && !Werkplek.IsDefault())
+                if (e.Button == MouseButtons.Left && _DDradius > 0 && !IsDefault())
                 {
                     var num1 = _mX - e.X;
                     var num2 = _mY - e.Y;
@@ -428,6 +450,17 @@ namespace Controls
         private void xpersoonInfo_GiveFeedback(object sender, GiveFeedbackEventArgs e)
         {
             this.OnGiveFeedback(e);
+        }
+
+        private void xnietingedeeld_CheckedChanged(object sender, EventArgs e)
+        {
+            ToonNietIngedeeld = xnietingedeeld.Checked;
+            OnViewStateChanged();
+        }
+
+        protected virtual void OnViewStateChanged()
+        {
+            ViewStateChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

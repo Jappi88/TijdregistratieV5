@@ -48,6 +48,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.xmaterialen = new System.Windows.Forms.ComboBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.xtoonwerktekening = new System.Windows.Forms.Button();
             this.xaangepastdoor = new TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel();
             this.xrekenmachine = new System.Windows.Forms.Button();
             this.xopslaan = new System.Windows.Forms.Button();
@@ -58,7 +59,6 @@
             this.xmachine = new MetroFramework.Controls.MetroComboBox();
             this.xopdrukkerartikelnr = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.xtoonwerktekening = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -377,6 +377,24 @@
             this.panel2.Size = new System.Drawing.Size(880, 40);
             this.panel2.TabIndex = 16;
             // 
+            // xtoonwerktekening
+            // 
+            this.xtoonwerktekening.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xtoonwerktekening.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xtoonwerktekening.ForeColor = System.Drawing.Color.Black;
+            this.xtoonwerktekening.Image = global::ProductieManager.Properties.Resources.libreoffice_draw_icon_181050;
+            this.xtoonwerktekening.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xtoonwerktekening.Location = new System.Drawing.Point(161, 2);
+            this.xtoonwerktekening.Margin = new System.Windows.Forms.Padding(4);
+            this.xtoonwerktekening.Name = "xtoonwerktekening";
+            this.xtoonwerktekening.Size = new System.Drawing.Size(110, 35);
+            this.xtoonwerktekening.TabIndex = 15;
+            this.xtoonwerktekening.Text = "Tekening";
+            this.xtoonwerktekening.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTip1.SetToolTip(this.xtoonwerktekening, "Toon werktekening");
+            this.xtoonwerktekening.UseVisualStyleBackColor = true;
+            this.xtoonwerktekening.Click += new System.EventHandler(this.xtoonwerktekening_Click);
+            // 
             // xaangepastdoor
             // 
             this.xaangepastdoor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -511,24 +529,6 @@
             // toolTip1
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            // 
-            // xtoonwerktekening
-            // 
-            this.xtoonwerktekening.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xtoonwerktekening.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xtoonwerktekening.ForeColor = System.Drawing.Color.Black;
-            this.xtoonwerktekening.Image = global::ProductieManager.Properties.Resources.libreoffice_draw_icon_181050;
-            this.xtoonwerktekening.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xtoonwerktekening.Location = new System.Drawing.Point(161, 2);
-            this.xtoonwerktekening.Margin = new System.Windows.Forms.Padding(4);
-            this.xtoonwerktekening.Name = "xtoonwerktekening";
-            this.xtoonwerktekening.Size = new System.Drawing.Size(110, 35);
-            this.xtoonwerktekening.TabIndex = 15;
-            this.xtoonwerktekening.Text = "Tekening";
-            this.xtoonwerktekening.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolTip1.SetToolTip(this.xtoonwerktekening, "Toon werktekening");
-            this.xtoonwerktekening.UseVisualStyleBackColor = true;
-            this.xtoonwerktekening.Click += new System.EventHandler(this.xtoonwerktekening_Click);
             // 
             // ProductieVerbruikUI
             // 

@@ -27,7 +27,11 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Interop;
+using IWin32Window = System.Windows.Forms.IWin32Window;
+using Size = System.Drawing.Size;
 
 namespace Rpm.Misc
 {
@@ -2199,7 +2203,7 @@ namespace Rpm.Misc
 
             // The +7 and %7 stuff is to avoid negative numbers etc.
             var daysToFirstCorrectDay = ((int) day - (int) startOfYear.DayOfWeek + 7) % 7;
-            if (day != DayOfWeek.Sunday) week--;
+            if (day != DayOfWeek.Sunday && day != DayOfWeek.Saturday) week--;
             return startOfYear.AddDays(7 * (week) + daysToFirstCorrectDay);
         }
 
@@ -2616,6 +2620,47 @@ namespace Rpm.Misc
         public static double GetPercentageDifference(this double a, double b)
         {
             return (b - a) == 0 ? 0 : Math.Round((((b - a) / (a == 0 ? b : a)) * 100), 2);
+        }
+
+        public static bool IsWindowOnAnyScreen(this Form Window, int WindowSizeX, int WindowSizeY, bool AutoAdjustWindow)
+        {
+            var Screen = System.Windows.Forms.Screen.FromHandle(Window.Handle);
+
+            bool LeftSideTest = false, TopSideTest = false, BottomSideTest = false, RightSideTest = false;
+
+            if (Window.Left >= Screen.WorkingArea.Left)
+                LeftSideTest = true;
+
+            if (Window.Top >= Screen.WorkingArea.Top)
+                TopSideTest = true;
+
+            if ((Window.Top + WindowSizeY) <= Screen.WorkingArea.Bottom)
+                BottomSideTest = true;
+
+            if ((Window.Left + WindowSizeX) <= Screen.WorkingArea.Right)
+                RightSideTest = true;
+
+            if (LeftSideTest && TopSideTest && BottomSideTest && RightSideTest)
+                return true;
+            else
+            {
+                if (AutoAdjustWindow)
+                {
+                    if (!LeftSideTest)
+                        Window.Left = Window.Left - (Window.Left - Screen.WorkingArea.Left);
+
+                    if (!TopSideTest)
+                        Window.Top = Window.Top - (Window.Top - Screen.WorkingArea.Top);
+
+                    if (!BottomSideTest)
+                        Window.Top = Window.Top - ((Window.Top + WindowSizeY) - Screen.WorkingArea.Bottom);
+
+                    if (!RightSideTest)
+                        Window.Left = Window.Left - ((Window.Left + WindowSizeX) - Screen.WorkingArea.Right);
+                }
+            }
+
+            return false;
         }
 
         #endregion Misc

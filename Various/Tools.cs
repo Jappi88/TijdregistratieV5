@@ -89,9 +89,8 @@ namespace Various
                     form.WindowState = xvalue.WindowState;
                     if (xvalue.WindowState == FormWindowState.Normal)
                     {
-                        form.Location = xvalue.Location;
+                        //form.Location = xvalue.Location;
                         form.Size = xvalue.Size;
-                        form.Refresh();
                     }
                     form.Invalidate();
                 }

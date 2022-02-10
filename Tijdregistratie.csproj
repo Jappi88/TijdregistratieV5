@@ -62,7 +62,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -257,558 +257,844 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\AfkeurEntryUI.cs" />
+    <Compile Include="Controls\AfkeurEntryUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\AfkeurEntryUI.Designer.cs">
       <DependentUpon>AfkeurEntryUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ChartView.cs" />
+    <Compile Include="Controls\ChartView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\ChartView.Designer.cs">
       <DependentUpon>ChartView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ProductieVerbruikUI.cs" />
+    <Compile Include="Controls\ProductieVerbruikUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\ProductieVerbruikUI.Designer.cs">
       <DependentUpon>ProductieVerbruikUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TileView\TileViewer.cs" />
+    <Compile Include="Controls\TileView\TileViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\TileView\TileViewer.Designer.cs">
       <DependentUpon>TileViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Aantal\AantalHistoryForm.cs" />
+    <Compile Include="Forms\Aantal\AantalHistoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Aantal\AantalHistoryForm.Designer.cs">
       <DependentUpon>AantalHistoryForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Aantal\Controls\AantalGemaaktHistoryUI.cs" />
+    <Compile Include="Forms\Aantal\Controls\AantalGemaaktHistoryUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Aantal\Controls\AantalGemaaktHistoryUI.Designer.cs">
       <DependentUpon>AantalGemaaktHistoryUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Aantal\Controls\AlleWerkPlekAantalHistoryUI.cs" />
+    <Compile Include="Forms\Aantal\Controls\AlleWerkPlekAantalHistoryUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Aantal\Controls\AlleWerkPlekAantalHistoryUI.Designer.cs">
       <DependentUpon>AlleWerkPlekAantalHistoryUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Aantal\NewAantalRecordForm.cs" />
+    <Compile Include="Forms\Aantal\NewAantalRecordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Aantal\NewAantalRecordForm.Designer.cs">
       <DependentUpon>NewAantalRecordForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ArtikelRecords\ArtikelOpmerkingenForm.cs" />
+    <Compile Include="Forms\ArtikelRecords\ArtikelOpmerkingenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\ArtikelRecords\ArtikelOpmerkingenForm.Designer.cs">
       <DependentUpon>ArtikelOpmerkingenForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ArtikelRecords\ArtikelOpmerkingForm.cs" />
+    <Compile Include="Forms\ArtikelRecords\ArtikelOpmerkingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\ArtikelRecords\ArtikelOpmerkingForm.Designer.cs">
       <DependentUpon>ArtikelOpmerkingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ArtikelRecords\ArtikelRecordsForm.cs" />
+    <Compile Include="Forms\ArtikelRecords\ArtikelRecordsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\ArtikelRecords\ArtikelRecordsForm.Designer.cs">
       <DependentUpon>ArtikelRecordsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ArtikelRecords\NewArtikelRecord.cs" />
+    <Compile Include="Forms\ArtikelRecords\NewArtikelRecord.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\ArtikelRecords\NewArtikelRecord.Designer.cs">
       <DependentUpon>NewArtikelRecord.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Combineer\CombineerPeriodeForm.cs" />
+    <Compile Include="Forms\Combineer\CombineerPeriodeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Combineer\CombineerPeriodeForm.Designer.cs">
       <DependentUpon>CombineerPeriodeForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Combineer\Controls\CombineerEntryUI.cs" />
+    <Compile Include="Forms\Combineer\Controls\CombineerEntryUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Combineer\Controls\CombineerEntryUI.Designer.cs">
       <DependentUpon>CombineerEntryUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Combineer\Controls\CombineerUI.cs" />
+    <Compile Include="Forms\Combineer\Controls\CombineerUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Combineer\Controls\CombineerUI.Designer.cs">
       <DependentUpon>CombineerUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\CustomImageBox.cs" />
+    <Compile Include="Controls\CustomImageBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\CustomImageBox.Designer.cs">
       <DependentUpon>CustomImageBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\FilterEntryEditorUI.cs" />
+    <Compile Include="Controls\FilterEntryEditorUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\FilterEntryEditorUI.Designer.cs">
       <DependentUpon>FilterEntryEditorUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\GereedMeldingenUI.cs" />
+    <Compile Include="Controls\GereedMeldingenUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\GereedMeldingenUI.Designer.cs">
       <DependentUpon>GereedMeldingenUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MainMenu.cs" />
+    <Compile Include="Controls\MainMenu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\MainMenu.Designer.cs">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MateriaalUI.cs" />
+    <Compile Include="Controls\MateriaalUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\MateriaalUI.Designer.cs">
       <DependentUpon>MateriaalUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ObjectEditorUI.cs" />
+    <Compile Include="Controls\ObjectEditorUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\ObjectEditorUI.Designer.cs">
       <DependentUpon>ObjectEditorUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Indeling\WerkplekIndeling.cs" />
+    <Compile Include="Forms\Indeling\WerkplekIndeling.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Indeling\WerkplekIndeling.Designer.cs">
       <DependentUpon>WerkplekIndeling.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Indeling\PersoonIndeling.cs" />
+    <Compile Include="Forms\Indeling\PersoonIndeling.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Indeling\PersoonIndeling.Designer.cs">
       <DependentUpon>PersoonIndeling.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ProductieInfoUI.cs" />
+    <Compile Include="Controls\ProductieInfoUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\ProductieInfoUI.Designer.cs">
       <DependentUpon>ProductieInfoUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ProductieListControl.cs" />
+    <Compile Include="Controls\ProductieListControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\ProductieListControl.Designer.cs">
       <DependentUpon>ProductieListControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ProgressWait.cs" />
+    <Compile Include="Controls\ProgressWait.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\ProgressWait.Designer.cs">
       <DependentUpon>ProgressWait.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\RealtimeLog.cs" />
+    <Compile Include="Controls\RealtimeLog.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\RealtimeLog.Designer.cs">
       <DependentUpon>RealtimeLog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\RecentGereedMeldingenUI.cs" />
+    <Compile Include="Controls\RecentGereedMeldingenUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\RecentGereedMeldingenUI.Designer.cs">
       <DependentUpon>RecentGereedMeldingenUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\RoosterUI.cs" />
+    <Compile Include="Controls\RoosterUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\RoosterUI.Designer.cs">
       <DependentUpon>RoosterUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\RoundedButton.cs" />
+    <Compile Include="Controls\RoundedButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\RoundedButton.Designer.cs">
       <DependentUpon>RoundedButton.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\VerpakkingInstructieUI.cs" />
+    <Compile Include="Controls\VerpakkingInstructieUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\VerpakkingInstructieUI.Designer.cs">
       <DependentUpon>VerpakkingInstructieUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\WerkPlekInfoUI.cs" />
+    <Compile Include="Controls\WerkPlekInfoUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\WerkPlekInfoUI.Designer.cs">
       <DependentUpon>WerkPlekInfoUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\WerkPlekStoringen.cs" />
+    <Compile Include="Controls\WerkPlekStoringen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\WerkPlekStoringen.Designer.cs">
       <DependentUpon>WerkPlekStoringen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\PersoonVaardigheden.cs" />
+    <Compile Include="Controls\PersoonVaardigheden.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\PersoonVaardigheden.Designer.cs">
       <DependentUpon>PersoonVaardigheden.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ProductieForm.cs" />
+    <Compile Include="Controls\ProductieForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\ProductieForm.Designer.cs">
       <DependentUpon>ProductieForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ProductieView.cs" />
+    <Compile Include="Controls\ProductieView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\ProductieView.Designer.cs">
       <DependentUpon>ProductieView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TakenManager.cs" />
+    <Compile Include="Controls\TakenManager.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\TakenManager.Designer.cs">
       <DependentUpon>TakenManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\WerkplekUI.cs" />
+    <Compile Include="Controls\WerkplekUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\WerkplekUI.Designer.cs">
       <DependentUpon>WerkplekUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AanbevolenPersonenForm.cs" />
+    <Compile Include="Forms\AanbevolenPersonenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\AanbevolenPersonenForm.Designer.cs">
       <DependentUpon>AanbevolenPersonenForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Aantal\AantalChanger.cs" />
+    <Compile Include="Forms\Aantal\AantalChanger.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Aantal\AantalChanger.Designer.cs">
       <DependentUpon>AantalChanger.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Aantal\AantalGemaaktProducties.cs" />
+    <Compile Include="Forms\Aantal\AantalGemaaktProducties.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Aantal\AantalGemaaktProducties.Designer.cs">
       <DependentUpon>AantalGemaaktProducties.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Aantal\AantalGemaaktUI.cs" />
+    <Compile Include="Forms\Aantal\AantalGemaaktUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Aantal\AantalGemaaktUI.Designer.cs">
       <DependentUpon>AantalGemaaktUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Aantal\AantalMonitorForm.cs" />
+    <Compile Include="Forms\Aantal\AantalMonitorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Aantal\AantalMonitorForm.Designer.cs">
       <DependentUpon>AantalMonitorForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Aantal\Controls\AantalChangerUI.cs" />
+    <Compile Include="Forms\Aantal\Controls\AantalChangerUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Aantal\Controls\AantalChangerUI.Designer.cs">
       <DependentUpon>AantalChangerUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AboutBox1.cs" />
+    <Compile Include="Forms\AboutBox1.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\AboutBox1.Designer.cs">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AddExtraTijdForm.cs" />
+    <Compile Include="Forms\AddExtraTijdForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\AddExtraTijdForm.Designer.cs">
       <DependentUpon>AddExtraTijdForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AfkeurForm.cs" />
+    <Compile Include="Forms\AfkeurForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\AfkeurForm.Designer.cs">
       <DependentUpon>AfkeurForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AlleNotitiesForm.cs" />
+    <Compile Include="Forms\AlleNotitiesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\AlleNotitiesForm.Designer.cs">
       <DependentUpon>AlleNotitiesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ArtikelRecords\ArtikelsForm.cs" />
+    <Compile Include="Forms\ArtikelRecords\ArtikelsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\ArtikelRecords\ArtikelsForm.Designer.cs">
       <DependentUpon>ArtikelsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BewerkingSelectorForm.cs" />
+    <Compile Include="Forms\BewerkingSelectorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\BewerkingSelectorForm.Designer.cs">
       <DependentUpon>BewerkingSelectorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Charting\ChartAantalSerie.cs" />
-    <Compile Include="Forms\ChatForm.cs" />
+    <Compile Include="Forms\ChatForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\ChatForm.Designer.cs">
       <DependentUpon>ChatForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ColorPickerForm.cs" />
+    <Compile Include="Forms\ColorPickerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\ColorPickerForm.Designer.cs">
       <DependentUpon>ColorPickerForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Combineer\NewCombineerForm.cs" />
+    <Compile Include="Forms\Combineer\NewCombineerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Combineer\NewCombineerForm.Designer.cs">
       <DependentUpon>NewCombineerForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DailyMessageForm.cs" />
+    <Compile Include="Forms\DailyMessageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\DailyMessageForm.Designer.cs">
       <DependentUpon>DailyMessageForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EditCriteriaForm.cs" />
+    <Compile Include="Forms\EditCriteriaForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\EditCriteriaForm.Designer.cs">
       <DependentUpon>EditCriteriaForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EmailHostForm.cs" />
+    <Compile Include="Forms\EmailHostForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\EmailHostForm.Designer.cs">
       <DependentUpon>EmailHostForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Excel\CreateWeekExcelForm.cs" />
+    <Compile Include="Forms\Excel\CreateWeekExcelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Excel\CreateWeekExcelForm.Designer.cs">
       <DependentUpon>CreateWeekExcelForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Excel\ExcelOptiesForm.cs" />
+    <Compile Include="Forms\Excel\ExcelOptiesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Excel\ExcelOptiesForm.Designer.cs">
       <DependentUpon>ExcelOptiesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Excel\KleurRegelsForm.cs" />
+    <Compile Include="Forms\Excel\KleurRegelsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Excel\KleurRegelsForm.Designer.cs">
       <DependentUpon>KleurRegelsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FilterEditor.cs" />
+    <Compile Include="Forms\FilterEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\FilterEditor.Designer.cs">
       <DependentUpon>FilterEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\GereedMelden\GereedAfwijkingForm.cs" />
+    <Compile Include="Forms\GereedMelden\GereedAfwijkingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\GereedMelden\GereedAfwijkingForm.Designer.cs">
       <DependentUpon>GereedAfwijkingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\GereedMelden\GereedNotitieForm.cs" />
+    <Compile Include="Forms\GereedMelden\GereedNotitieForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\GereedMelden\GereedNotitieForm.Designer.cs">
       <DependentUpon>GereedNotitieForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Klachten\KlachtControl.cs" />
+    <Compile Include="Forms\Klachten\KlachtControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Klachten\KlachtControl.Designer.cs">
       <DependentUpon>KlachtControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Klachten\KlachtenForm.cs" />
+    <Compile Include="Forms\Klachten\KlachtenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Klachten\KlachtenForm.Designer.cs">
       <DependentUpon>KlachtenForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Klachten\KlachtInfoForm.cs" />
+    <Compile Include="Forms\Klachten\KlachtInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Klachten\KlachtInfoForm.Designer.cs">
       <DependentUpon>KlachtInfoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Charting\WerkPlekChart.cs" />
+    <Compile Include="Forms\Charting\WerkPlekChart.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Charting\WerkPlekChart.Designer.cs">
       <DependentUpon>WerkPlekChart.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\LijstWeergaveForm.cs" />
+    <Compile Include="Forms\LijstWeergaveForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\LijstWeergaveForm.designer.cs">
       <DependentUpon>LijstWeergaveForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\LoadingForm.cs" />
+    <Compile Include="Forms\LoadingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\LoadingForm.Designer.cs">
       <DependentUpon>LoadingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MateriaalVerbruikForm.cs" />
+    <Compile Include="Forms\MateriaalVerbruikForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\MateriaalVerbruikForm.Designer.cs">
       <DependentUpon>MateriaalVerbruikForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MethodsForm.cs" />
+    <Compile Include="Forms\MethodsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\MethodsForm.Designer.cs">
       <DependentUpon>MethodsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MetroBase\MetroBaseForm.cs" />
-    <Compile Include="Forms\MetroDock\DockInstance.cs" />
-    <Compile Include="Forms\NewFilterEntry.cs" />
+    <Compile Include="Forms\MetroBase\MetroBaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MetroDock\DockInstance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NewFilterEntry.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\NewFilterEntry.Designer.cs">
       <DependentUpon>NewFilterEntry.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Klachten\NewKlachtForm.cs" />
+    <Compile Include="Forms\Klachten\NewKlachtForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Klachten\NewKlachtForm.Designer.cs">
       <DependentUpon>NewKlachtForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NotitieForms.cs" />
+    <Compile Include="Forms\NotitieForms.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\NotitieForms.Designer.cs">
       <DependentUpon>NotitieForms.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Excel\CreateExcelForm.cs" />
+    <Compile Include="Forms\Excel\CreateExcelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Excel\CreateExcelForm.Designer.cs">
       <DependentUpon>CreateExcelForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DeelsGereedForm.cs" />
+    <Compile Include="Forms\DeelsGereedForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\DeelsGereedForm.Designer.cs">
       <DependentUpon>DeelsGereedForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DeelsGereedMeldingenForm.cs" />
+    <Compile Include="Forms\DeelsGereedMeldingenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\DeelsGereedMeldingenForm.Designer.cs">
       <DependentUpon>DeelsGereedMeldingenForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EmailClientsForm.cs" />
+    <Compile Include="Forms\EmailClientsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\EmailClientsForm.Designer.cs">
       <DependentUpon>EmailClientsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NewEmailClientForm.cs" />
+    <Compile Include="Forms\NewEmailClientForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\NewEmailClientForm.Designer.cs">
       <DependentUpon>NewEmailClientForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NiewProductieForm.cs" />
+    <Compile Include="Forms\NiewProductieForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\NiewProductieForm.Designer.cs">
       <DependentUpon>NiewProductieForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ObjectEditForm.cs" />
+    <Compile Include="Forms\ObjectEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\ObjectEditForm.Designer.cs">
       <DependentUpon>ObjectEditForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OpenTakenForm.cs" />
+    <Compile Include="Forms\OpenTakenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\OpenTakenForm.Designer.cs">
       <DependentUpon>OpenTakenForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OpmerkingEditor.cs" />
+    <Compile Include="Forms\OpmerkingEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\OpmerkingEditor.Designer.cs">
       <DependentUpon>OpmerkingEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OpmerkingenForm.cs" />
+    <Compile Include="Forms\OpmerkingenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\OpmerkingenForm.Designer.cs">
       <DependentUpon>OpmerkingenForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Indeling\WerkplaatsIndeling.cs" />
+    <Compile Include="Forms\Indeling\WerkplaatsIndeling.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Indeling\WerkplaatsIndeling.Designer.cs">
       <DependentUpon>WerkplaatsIndeling.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ProductieInfoForm.cs" />
+    <Compile Include="Forms\ProductieInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\ProductieInfoForm.Designer.cs">
       <DependentUpon>ProductieInfoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ProductieOverzichtForm.cs" />
+    <Compile Include="Forms\ProductieOverzichtForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\ProductieOverzichtForm.Designer.cs">
       <DependentUpon>ProductieOverzichtForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ProductieLijsten.cs" />
+    <Compile Include="Forms\ProductieLijsten.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\ProductieLijsten.Designer.cs">
       <DependentUpon>ProductieLijsten.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\RoosterForm.cs" />
+    <Compile Include="Forms\RoosterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\RoosterForm.Designer.cs">
       <DependentUpon>RoosterForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AddPersoneel.cs" />
+    <Compile Include="Forms\AddPersoneel.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\AddPersoneel.Designer.cs">
       <DependentUpon>AddPersoneel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AfsluitPromp.cs" />
+    <Compile Include="Forms\AfsluitPromp.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\AfsluitPromp.Designer.cs">
       <DependentUpon>AfsluitPromp.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AlleKlusjes.cs" />
+    <Compile Include="Forms\AlleKlusjes.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\AlleKlusjes.Designer.cs">
       <DependentUpon>AlleKlusjes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AlleStoringen.cs" />
+    <Compile Include="Forms\AlleStoringen.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\AlleStoringen.Designer.cs">
       <DependentUpon>AlleStoringen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AlleVaardigheden.cs" />
+    <Compile Include="Forms\AlleVaardigheden.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\AlleVaardigheden.Designer.cs">
       <DependentUpon>AlleVaardigheden.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BewerkingChooser.cs" />
+    <Compile Include="Forms\BewerkingChooser.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\BewerkingChooser.Designer.cs">
       <DependentUpon>BewerkingChooser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CreateAccount.cs" />
+    <Compile Include="Forms\CreateAccount.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\CreateAccount.Designer.cs">
       <DependentUpon>CreateAccount.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DatumChanger.cs" />
+    <Compile Include="Forms\DatumChanger.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\DatumChanger.Designer.cs">
       <DependentUpon>DatumChanger.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DbBewerkingChanger.cs" />
+    <Compile Include="Forms\DbBewerkingChanger.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\DbBewerkingChanger.Designer.cs">
       <DependentUpon>DbBewerkingChanger.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DbPathChooser.cs" />
+    <Compile Include="Forms\DbPathChooser.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\DbPathChooser.Designer.cs">
       <DependentUpon>DbPathChooser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DbUpdater.cs" />
+    <Compile Include="Forms\DbUpdater.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\DbUpdater.Designer.cs">
       <DependentUpon>DbUpdater.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\GereedMelden\GereedMelder.cs" />
+    <Compile Include="Forms\GereedMelden\GereedMelder.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\GereedMelden\GereedMelder.Designer.cs">
       <DependentUpon>GereedMelder.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\LogForm.cs" />
+    <Compile Include="Forms\LogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\LogForm.Designer.cs">
       <DependentUpon>LogForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\LogIn.cs" />
+    <Compile Include="Forms\LogIn.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\LogIn.Designer.cs">
       <DependentUpon>LogIn.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MateriaalForm.cs" />
+    <Compile Include="Forms\MateriaalForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\MateriaalForm.Designer.cs">
       <DependentUpon>MateriaalForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MessageForm.cs" />
+    <Compile Include="Forms\MessageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\MessageForm.Designer.cs">
       <DependentUpon>MessageForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NewStoringForm.cs" />
+    <Compile Include="Forms\NewStoringForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\NewStoringForm.Designer.cs">
       <DependentUpon>NewStoringForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NieuwKlusForm.cs" />
+    <Compile Include="Forms\NieuwKlusForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\NieuwKlusForm.Designer.cs">
       <DependentUpon>NieuwKlusForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Opties.cs" />
+    <Compile Include="Forms\Opties.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Opties.Designer.cs">
       <DependentUpon>Opties.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\PasswordChanger.cs" />
+    <Compile Include="Forms\PasswordChanger.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\PasswordChanger.Designer.cs">
       <DependentUpon>PasswordChanger.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\PersoneelsForm.cs" />
+    <Compile Include="Forms\PersoneelsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\PersoneelsForm.Designer.cs">
       <DependentUpon>PersoneelsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ScreenImageForm.cs" />
+    <Compile Include="Forms\ScreenImageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\ScreenImageForm.designer.cs">
       <DependentUpon>ScreenImageForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SelectScreenImage.cs" />
+    <Compile Include="Forms\SelectScreenImage.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\SelectScreenImage.designer.cs">
       <DependentUpon>SelectScreenImage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SendEmailForm.cs" />
+    <Compile Include="Forms\SendEmailForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\SendEmailForm.Designer.cs">
       <DependentUpon>SendEmailForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SpeciaalWerkRoostersForm.cs" />
+    <Compile Include="Forms\SpeciaalWerkRoostersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\SpeciaalWerkRoostersForm.Designer.cs">
       <DependentUpon>SpeciaalWerkRoostersForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ProductieLijstForm.cs" />
+    <Compile Include="Forms\ProductieLijstForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\ProductieLijstForm.Designer.cs">
       <DependentUpon>ProductieLijstForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Sporen\NewSpoorForm.cs" />
+    <Compile Include="Forms\Sporen\NewSpoorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Sporen\NewSpoorForm.Designer.cs">
       <DependentUpon>NewSpoorForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Sporen\SpoorDatabaseForm.cs" />
+    <Compile Include="Forms\Sporen\SpoorDatabaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Sporen\SpoorDatabaseForm.Designer.cs">
       <DependentUpon>SpoorDatabaseForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Sporen\SporenForm.cs" />
+    <Compile Include="Forms\Sporen\SporenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Sporen\SporenForm.Designer.cs">
       <DependentUpon>SporenForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UpdatePreviewForm.cs" />
+    <Compile Include="Forms\Sporen\VebruikAfrondForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Sporen\VebruikAfrondForm.Designer.cs">
+      <DependentUpon>VebruikAfrondForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UpdatePreviewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\UpdatePreviewForm.Designer.cs">
       <DependentUpon>UpdatePreviewForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UpdateProducties.cs" />
+    <Compile Include="Forms\UpdateProducties.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\UpdateProducties.Designer.cs">
       <DependentUpon>UpdateProducties.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\RangeCalculatorForm.cs" />
+    <Compile Include="Forms\RangeCalculatorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\RangeCalculatorForm.Designer.cs">
       <DependentUpon>RangeCalculatorForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SplashScreen.cs" />
+    <Compile Include="Forms\SplashScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\SplashScreen.Designer.cs">
       <DependentUpon>SplashScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StoringForm.cs" />
+    <Compile Include="Forms\StoringForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\StoringForm.Designer.cs">
       <DependentUpon>StoringForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\TextFieldEditor.cs" />
+    <Compile Include="Forms\TextFieldEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\TextFieldEditor.Designer.cs">
       <DependentUpon>TextFieldEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UserAccounts.cs" />
+    <Compile Include="Forms\UserAccounts.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\UserAccounts.Designer.cs">
       <DependentUpon>UserAccounts.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VaardighedenForm.cs" />
+    <Compile Include="Forms\VaardighedenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\VaardighedenForm.Designer.cs">
       <DependentUpon>VaardighedenForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VerpakkingenForm.cs" />
+    <Compile Include="Forms\VerpakkingenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\VerpakkingenForm.Designer.cs">
       <DependentUpon>VerpakkingenForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VerpakkingInstructieForm.cs" />
+    <Compile Include="Forms\VerpakkingInstructieForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\VerpakkingInstructieForm.Designer.cs">
       <DependentUpon>VerpakkingInstructieForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ViewChartForm.cs" />
+    <Compile Include="Forms\ViewChartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\ViewChartForm.Designer.cs">
       <DependentUpon>ViewChartForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VrijeTijdForm.cs" />
+    <Compile Include="Forms\VrijeTijdForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\VrijeTijdForm.Designer.cs">
       <DependentUpon>VrijeTijdForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WebBrowserForm.cs" />
+    <Compile Include="Forms\WebBrowserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\WebBrowserForm.Designer.cs">
       <DependentUpon>WebBrowserForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Indeling\PersoneelIndeling.cs" />
+    <Compile Include="Forms\Indeling\PersoneelIndeling.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Indeling\PersoneelIndeling.Designer.cs">
       <DependentUpon>PersoneelIndeling.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WerkPlekChooser.cs" />
+    <Compile Include="Forms\WerkPlekChooser.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\WerkPlekChooser.Designer.cs">
       <DependentUpon>WerkPlekChooser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WerktijdChanger.cs" />
+    <Compile Include="Forms\WerktijdChanger.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\WerktijdChanger.Designer.cs">
       <DependentUpon>WerktijdChanger.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WijzigProductie.cs" />
+    <Compile Include="Forms\WijzigProductie.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\WijzigProductie.Designer.cs">
       <DependentUpon>WijzigProductie.cs</DependentUpon>
     </Compile>
-    <Compile Include="Mainform.cs" />
+    <Compile Include="Mainform.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Mainform.Designer.cs">
       <DependentUpon>Mainform.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Indeling.cs" />
+    <Compile Include="Forms\Indeling.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Indeling.Designer.cs">
       <DependentUpon>Indeling.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Producties.cs" />
+    <Compile Include="Forms\Producties.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Producties.Designer.cs">
       <DependentUpon>Producties.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StartProductie.cs" />
+    <Compile Include="Forms\StartProductie.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\StartProductie.Designer.cs">
       <DependentUpon>StartProductie.cs</DependentUpon>
     </Compile>
@@ -822,21 +1108,29 @@
     <Compile Include="Rpm\AutoUpdater\AutoUpdater.cs" />
     <Compile Include="Rpm\AutoUpdater\BasicAuthentication.cs" />
     <Compile Include="Rpm\AutoUpdater\CustomAuthentication.cs" />
-    <Compile Include="Rpm\AutoUpdater\Forms\DownloadUpdateDialog.cs" />
+    <Compile Include="Rpm\AutoUpdater\Forms\DownloadUpdateDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Rpm\AutoUpdater\Forms\DownloadUpdateDialog.Designer.cs">
       <DependentUpon>DownloadUpdateDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Rpm\AutoUpdater\Forms\RemindLaterForm.cs" />
+    <Compile Include="Rpm\AutoUpdater\Forms\RemindLaterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Rpm\AutoUpdater\Forms\RemindLaterForm.Designer.cs">
       <DependentUpon>RemindLaterForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Rpm\AutoUpdater\Forms\UpdateForm.cs" />
+    <Compile Include="Rpm\AutoUpdater\Forms\UpdateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Rpm\AutoUpdater\Forms\UpdateForm.Designer.cs">
       <DependentUpon>UpdateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Rpm\AutoUpdater\IAuthentication.cs" />
     <Compile Include="Rpm\AutoUpdater\IPersistenceProvider.cs" />
-    <Compile Include="Rpm\AutoUpdater\MyWebClient.cs" />
+    <Compile Include="Rpm\AutoUpdater\MyWebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Rpm\AutoUpdater\NetworkAuthentication.cs" />
     <Compile Include="Rpm\AutoUpdater\ParseUpdateInfoEventArgs.cs" />
     <Compile Include="Rpm\AutoUpdater\RegistryPersistenceProvider.cs" />
@@ -846,11 +1140,15 @@
     <Compile Include="Rpm\Connection\SmtpConnectorWithoutSsl.cs" />
     <Compile Include="Rpm\Connection\SmtpConnectorWithSsl.cs" />
     <Compile Include="Rpm\Connection\SmtpHelper.cs" />
-    <Compile Include="Rpm\Controls\Form_Alert.cs" />
+    <Compile Include="Rpm\Controls\Form_Alert.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Rpm\Controls\Form_Alert.designer.cs">
       <DependentUpon>Form_Alert.cs</DependentUpon>
     </Compile>
-    <Compile Include="Rpm\Controls\ImageCombineForm.cs" />
+    <Compile Include="Rpm\Controls\ImageCombineForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Rpm\Controls\ImageCombineForm.Designer.cs">
       <DependentUpon>ImageCombineForm.cs</DependentUpon>
     </Compile>
@@ -984,7 +1282,9 @@
     <Compile Include="Rpm\ViewModels\TaakModel.cs" />
     <Compile Include="Rpm\ViewModels\VrijeTijdModel.cs" />
     <Compile Include="Rpm\ViewModels\WerkPlekModel.cs" />
-    <Compile Include="Various\ColumnRenderer.cs" />
+    <Compile Include="Various\ColumnRenderer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Various\DockContentEntry.cs" />
     <Compile Include="Various\DockNestedPaneEntry.cs" />
     <Compile Include="Various\DockPaneContentEntry.cs" />
@@ -1344,6 +1644,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Sporen\SporenForm.resx">
       <DependentUpon>SporenForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Sporen\VebruikAfrondForm.resx">
+      <DependentUpon>VebruikAfrondForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UpdatePreviewForm.resx">
       <DependentUpon>UpdatePreviewForm.cs</DependentUpon>

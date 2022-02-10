@@ -66,11 +66,11 @@ namespace Rpm.Productie
 
         public NotitieEntry Note { get; set; }
 
-        public string Notitie => Note?.Notitie?? String.Empty;
+        public string Notitie => Note?.Notitie?? string.Empty;
 
         public DateTime LaatstAantalUpdate { get; set; } = DateTime.Now;
 
-        public string Path => Werk?.Path == null ? Naam : Werk.Path + "\\" + Naam;
+        public string Path => string.IsNullOrEmpty(Werk?.Path) ? Naam : System.IO.Path.Combine(Werk.Path, Naam);
         public double Activiteit { get; set; } = 100;
 
         public string Omschrijving => Werk?.Omschrijving;

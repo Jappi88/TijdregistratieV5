@@ -38,6 +38,7 @@ namespace Controls
             this.xStopKlus = new System.Windows.Forms.Button();
             this.xStartKlus = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.xnietingedeeld = new MetroFramework.Controls.MetroCheckBox();
             this.xpersoonInfo = new TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel();
             this.xknoppenpanel.SuspendLayout();
             this.SuspendLayout();
@@ -56,7 +57,7 @@ namespace Controls
             this.xVerwijderPersoneel.Size = new System.Drawing.Size(42, 29);
             this.xVerwijderPersoneel.TabIndex = 3;
             this.xVerwijderPersoneel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolTip1.SetToolTip(this.xVerwijderPersoneel, "Verwijder personeel");
+            this.toolTip1.SetToolTip(this.xVerwijderPersoneel, "Verwijder Werkplaats");
             this.xVerwijderPersoneel.UseVisualStyleBackColor = false;
             this.xVerwijderPersoneel.Click += new System.EventHandler(this.xVerwijderPersoneel_Click);
             // 
@@ -88,13 +89,13 @@ namespace Controls
             this.xVerwijderKlus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xVerwijderKlus.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xVerwijderKlus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xVerwijderKlus.Location = new System.Drawing.Point(66, 4);
+            this.xVerwijderKlus.Location = new System.Drawing.Point(7, 4);
             this.xVerwijderKlus.Name = "xVerwijderKlus";
             this.xVerwijderKlus.Size = new System.Drawing.Size(136, 29);
             this.xVerwijderKlus.TabIndex = 2;
             this.xVerwijderKlus.Text = "Verwijder Klus";
             this.xVerwijderKlus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolTip1.SetToolTip(this.xVerwijderKlus, "Verwijder klus van de geselecteerde producties");
+            this.toolTip1.SetToolTip(this.xVerwijderKlus, "Verwijder de werkplaats uit de geselecteerde productie");
             this.xVerwijderKlus.UseVisualStyleBackColor = false;
             this.xVerwijderKlus.Click += new System.EventHandler(this.xVerwijderKlus_Click);
             this.xVerwijderKlus.MouseEnter += new System.EventHandler(this.xPersoonImage_MouseEnter);
@@ -112,7 +113,7 @@ namespace Controls
             this.xStopKlus.Size = new System.Drawing.Size(125, 29);
             this.xStopKlus.TabIndex = 1;
             this.xStopKlus.Text = "Stop";
-            this.toolTip1.SetToolTip(this.xStopKlus, "Stop aan alle geselecteerde producties");
+            this.toolTip1.SetToolTip(this.xStopKlus, "Stop de geselecteerde productie");
             this.xStopKlus.UseVisualStyleBackColor = false;
             this.xStopKlus.Click += new System.EventHandler(this.xStopKlus_Click);
             this.xStopKlus.MouseEnter += new System.EventHandler(this.xPersoonImage_MouseEnter);
@@ -136,16 +137,37 @@ namespace Controls
             this.xStartKlus.MouseEnter += new System.EventHandler(this.xPersoonImage_MouseEnter);
             this.xStartKlus.MouseLeave += new System.EventHandler(this.xPersoonImage_MouseLeave);
             // 
+            // xnietingedeeld
+            // 
+            this.xnietingedeeld.AutoSize = true;
+            this.xnietingedeeld.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.xnietingedeeld.FontSize = MetroFramework.MetroCheckBoxSize.Medium;
+            this.xnietingedeeld.FontWeight = MetroFramework.MetroCheckBoxWeight.Bold;
+            this.xnietingedeeld.Location = new System.Drawing.Point(0, 109);
+            this.xnietingedeeld.Name = "xnietingedeeld";
+            this.xnietingedeeld.Size = new System.Drawing.Size(467, 19);
+            this.xnietingedeeld.Style = MetroFramework.MetroColorStyle.Blue;
+            this.xnietingedeeld.TabIndex = 6;
+            this.xnietingedeeld.Text = "Toon Alleen Niet Ingedeelde Producties";
+            this.toolTip1.SetToolTip(this.xnietingedeeld, "Toon alleen de producties die niet ingedeeld zijn");
+            this.xnietingedeeld.UseSelectable = true;
+            this.xnietingedeeld.UseStyleColors = true;
+            this.xnietingedeeld.Visible = false;
+            this.xnietingedeeld.CheckedChanged += new System.EventHandler(this.xnietingedeeld_CheckedChanged);
+            // 
             // xpersoonInfo
             // 
             this.xpersoonInfo.AutoSize = false;
             this.xpersoonInfo.BackColor = System.Drawing.Color.Transparent;
             this.xpersoonInfo.BaseStylesheet = null;
             this.xpersoonInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xpersoonInfo.IsContextMenuEnabled = false;
+            this.xpersoonInfo.IsSelectionEnabled = false;
             this.xpersoonInfo.Location = new System.Drawing.Point(0, 0);
             this.xpersoonInfo.Name = "xpersoonInfo";
-            this.xpersoonInfo.Size = new System.Drawing.Size(467, 164);
+            this.xpersoonInfo.Size = new System.Drawing.Size(467, 109);
             this.xpersoonInfo.TabIndex = 5;
+            this.xpersoonInfo.Text = null;
             this.xpersoonInfo.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xpersoonInfo_ImageLoad);
             this.xpersoonInfo.Click += new System.EventHandler(this.xPersoonImage_Click);
             this.xpersoonInfo.DragDrop += new System.Windows.Forms.DragEventHandler(this.PersoonIndeling_DragDrop);
@@ -157,25 +179,27 @@ namespace Controls
             this.xpersoonInfo.MouseLeave += new System.EventHandler(this.xPersoonImage_MouseLeave);
             this.xpersoonInfo.MouseMove += new System.Windows.Forms.MouseEventHandler(this.IndelingMouseMove);
             // 
-            // PersoonIndeling
+            // WerkplekIndeling
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.xVerwijderPersoneel);
-            this.Controls.Add(this.xknoppenpanel);
             this.Controls.Add(this.xpersoonInfo);
+            this.Controls.Add(this.xnietingedeeld);
+            this.Controls.Add(this.xknoppenpanel);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "PersoonIndeling";
+            this.Name = "WerkplekIndeling";
             this.Size = new System.Drawing.Size(467, 164);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.PersoonIndeling_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.PersoonIndeling_DragEnter);
             this.DragLeave += new System.EventHandler(this.PersoonIndeling_DragLeave);
             this.xknoppenpanel.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -187,5 +211,6 @@ namespace Controls
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button xVerwijderPersoneel;
         private HtmlLabel xpersoonInfo;
+        private MetroFramework.Controls.MetroCheckBox xnietingedeeld;
     }
 }

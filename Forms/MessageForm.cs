@@ -191,7 +191,17 @@ namespace Forms
                 }
             }
 
-            Form form = owner is not Form form1 ? ((ContainerControl) owner).ParentForm : form1;
+            Form form = null;
+            try
+            {
+                form = owner is not Form form1 ? ((ContainerControl) owner).ParentForm : form1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            form ??= Application.OpenForms["Mainform"];
 
             switch (icon)
             {
@@ -233,9 +243,12 @@ namespace Forms
                 Height += 50;
             }
 
-            Width = form.Width;
+            if (form != null)
+            {
+                Width = form.Width;
+                BackColor = form.BackColor;
+            }
             TopMost = false;
-            BackColor = form.BackColor;
             ShowInTaskbar = false;
             this.Invalidate();
             BringToFront();

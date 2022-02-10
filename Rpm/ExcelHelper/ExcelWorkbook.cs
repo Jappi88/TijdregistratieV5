@@ -1565,7 +1565,7 @@ namespace ProductieManager.Rpm.ExcelHelper
         /// <param name="createoverzicht">True voor als je ook de statistieken wilt maken</param>
         /// <param name="handler"></param>
         /// <returns>Een taak die op de achtergrond excel bestanden aanmaakt</returns>
-        public static Task<WeekOverzicht[]> CreateWeekOverzicht(WeekOverzicht[] overzichten, bool createoverzicht, IsRunningHandler handler)
+        public static Task<WeekOverzicht[]> CreateWeekOverzicht(WeekOverzicht[] overzichten, IsRunningHandler handler)
         {
             return Task.Run(async () =>
             {
@@ -1639,7 +1639,7 @@ namespace ProductieManager.Rpm.ExcelHelper
 
                     if (tobecreated.Count > 0)
                     {
-                        var newcreated = await CreateWeekOverzicht(tobecreated.ToArray(), true,handler);
+                        var newcreated = await CreateWeekOverzicht(tobecreated.ToArray(),handler);
                         if (newcreated?.Length > 0) bestaande.AddRange(newcreated);
                     }
                 }
@@ -1811,7 +1811,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                     //eerste werkdag/tijd
                     var xstartweek = Functions.DateOfWeek(jaar, DayOfWeek.Monday, weeknr);
                     //eerste werkdag/tijd
-                    var xeidnweek = Functions.DateOfWeek(jaar, DayOfWeek.Saturday, weeknr);
+                    var xeidnweek = Functions.DateOfWeek(jaar, DayOfWeek.Sunday, weeknr);
                     //xstartweek = xstartweek.Add(xrooster.StartWerkdag);
                     //laatste werkdag/tijd
                     //xeidnweek = xeidnweek.Add(xrooster.EindWerkdag);

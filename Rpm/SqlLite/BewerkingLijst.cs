@@ -156,35 +156,38 @@ namespace Rpm.SqlLite
                 if (Manager.Database == null || Manager.Database.IsDisposed)
                     return -1;
                 if (Entries == null && !LoadDb()) return 0;
-                var prods = await Manager.Database.ProductieFormulieren.FindAll();
+                var prods = await Manager.Database.GetAllBewerkingen(true, false);
                 var done = 0;
-                foreach (var prod in prods)
+                foreach (var bw in prods)
                 {
-                    if (prod.Bewerkingen == null) continue;
                     var changed = false;
-                    foreach (var bw in prod.Bewerkingen)
+                    var ent = GetEntry(bw.Naam.Split('[')[0]);
+                    if (ent != null)
                     {
-                        var ent = GetEntry(bw.Naam.Split('[')[0]);
-                        if (ent != null)
+                        if (bw.IsBemand != ent.IsBemand)
                         {
-                            if (bw.IsBemand != ent.IsBemand)
-                            {
-                                bw.IsBemand = ent.IsBemand;
-                                changed = true;
-                                done++;
-                            }
+                            bw.IsBemand = ent.IsBemand;
+                            changed = true;
+                            done++;
+                        }
 
-                            if (ent.HasChanged)
+                        if (ent.HasChanged)
+                        {
+                            bw.Naam = ent.NewName;
+                            changed = true;
+                            done++;
+                            foreach (var wp in bw.WerkPlekken)
                             {
-                                bw.Naam = ent.NewName;
-                                changed = true;
-                                done++;
+                                foreach (var st in wp.Storingen)
+                                {
+                                    st.Path = wp.Path;
+                                }
                             }
                         }
                     }
 
                     if (changed)
-                        await Manager.Database.UpSert(prod);
+                        _=bw.UpdateBewerking(null, null, true, false);
                 }
 
                 var entries = GetAllEntries();
@@ -266,7 +269,7 @@ namespace Rpm.SqlLite
                         values.Add(wp);
                 }
 
-                return values;
+                return values.OrderBy(x=> x).ToList();
             }
             catch
             {

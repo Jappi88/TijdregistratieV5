@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Rpm.Misc;
@@ -16,13 +17,21 @@ namespace Forms
     public partial class WerkplaatsIndeling : Forms.MetroBase.MetroBaseForm
     {
         public WerkplekIndeling SelectedWerkplek { get; private set; }
+        public List<Bewerking> Bewerkingen { get; set; } = new List<Bewerking>();
+
         public WerkplaatsIndeling()
         {
             InitializeComponent();
             productieListControl1.ValidHandler = IsAllowed;
             productieListControl1.ItemCountChanged += ProductieListControl1_ItemCountChanged;
             productieListControl1.SelectedItemChanged += ProductieListControl1_SelectedItemChanged;
-           
+            productieListControl1.SearchItems += ProductieListControl1_SearchItems;
+        }
+
+        private void ProductieListControl1_SearchItems(object sender, EventArgs e)
+        {
+            if (SelectedWerkplek == null) return;
+            SelectedWerkplek.Criteria = sender as string;
         }
 
         private void ProductieListControl1_SelectedItemChanged(object sender, EventArgs e)
@@ -94,7 +103,7 @@ namespace Forms
             _iswaiting = false;
         }
 
-        private List<WerkplekIndeling> GetIndelingen()
+        private List<WerkplekIndeling> GetIndelingen(bool incdefault)
         {
             var xreturn = new List<WerkplekIndeling>();
             try
@@ -103,8 +112,9 @@ namespace Forms
                 {
                     if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is WerkplekIndeling xpers)
                     {
-                      if(!xpers.Werkplek.IsDefault())
-                          xreturn.Add(xpers);
+                        if (xpers.IsDefault() && !incdefault)
+                            continue;
+                        xreturn.Add(xpers);
                     }
                 }
             }
@@ -114,6 +124,27 @@ namespace Forms
             }
 
             return xreturn;
+        }
+
+        private WerkplekIndeling GetDefaultIndeling()
+        {
+            try
+            {
+                foreach (var xgroup in xWerkplaatsIndelingPanel.Controls.Cast<GroupBox>())
+                {
+                    if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is WerkplekIndeling xpers)
+                    {
+                        if (xpers.IsDefault())
+                            return xpers;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return null;
         }
 
         private double GetTijdOver()
@@ -171,11 +202,12 @@ namespace Forms
             try
             {
                 string xall = null;
-                if (indeling == null || indeling.Werkplek.IsDefault())
+                var bws = Bewerkingen.Where(x => IsAllowed(x, indeling)).OrderBy(x=> x.ProductieNr).ToList();
+               if (indeling == null || indeling.IsDefault())
                 {
-                    var bws = productieListControl1.GetBewerkingen(false,false);
+                   
                     var x1 = bws.Count == 1 ? "productie" : "producties";
-                    var pers = GetIndelingen();
+                    var pers = GetIndelingen(false);
 
                     var x2 = pers.Count == 1 ? "werkplek" : "werkplaatsen";
                     var xtijdover = Math.Round(pers.Sum(x=> GetTijdOver()));
@@ -190,7 +222,7 @@ namespace Forms
                             : $"<li>Met <b>{pers.Count}</b> {x2} is dat <b>{Math.Round(xbwtijdover / pers.Count, 2)}</b> uur per werkplek</li>";
                         xall += $"{x3}" +
                             $"<li><b>{pers.Count}</b> {x2} met nog <b>{xtijdover}</b> uur tot einde van de week.</li>" +
-                            $"<li>Met <b>{pers.Count}</b> {x2} kan je op <b>{Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(xbwtijdover / pers.Count), null, null)}</b> klaar zijn</li>";
+                            $"<li>Met <b>{pers.Count}</b> {x2} kan je op <b>{Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(xbwtijdover / pers.Count), null, null):dd/MM/yy HH:mm}</b> klaar zijn</li>";
                     }
 
                     return GetBaseHitmlBody(xall, "bewerkingen");
@@ -198,26 +230,25 @@ namespace Forms
                 else
                 {
                     var pers = indeling.Werkplek;
-                    var bws = productieListControl1.GetBewerkingen(false,false).Where(x => IsAllowed(x, indeling))
-                        .ToList();
-                    var xklusjes = pers.Value.Where(x =>
-                            x.State != ProductieState.Gereed && x.State != ProductieState.Verwijderd).SelectMany(x =>
+                    var xklusjes = bws.SelectMany(x =>
                             x.WerkPlekken.Where(w =>
-                                string.Equals(pers.Key, w.Naam,
+                                string.Equals(pers, w.Naam,
                                     StringComparison.CurrentCultureIgnoreCase)))
                         .ToList();
                     var xstarted = xklusjes.Where(x => x.Werk.State == ProductieState.Gestart && x.IsActief())
                         .ToList();
+                    var xbwtijdover = Math.Round(bws.Sum(x => x.GetTijdOver()), 2);
+                    var xbwtijdgewerkt = Math.Round(bws.Sum(x => x.TijdAanGewerkt()), 2);
+                    var xbwtotaaltijd = Math.Round(bws.Sum(x => x.GetDoorloopTijd()), 2);
                     var x2 = xklusjes.Count == 1 ? "productie" : "producties";
                     var x3 = xstarted.Count == 1 ? "productie" : "producties";
                     var x1 = bws.Count == 1 ? "productie" : "producties";
                     xall =
-                        $"<li>Totaal <b>{bws.Count}</b> {x1} <b>({Math.Round(bws.Sum(x => x.GetTijdOver()), 2)})</b> uur.</li>" +
-                        $"<li>Ingezet op <b>{xklusjes.Count}</b> {x2} " +
-                        $"waarvan <b>{Math.Round(xklusjes.Sum(x => x.TijdAanGewerkt()), 2)}</b> uur gewerkt.</li>" +
+                        $"<li>Totaal <b>{bws.Count}</b> {x1} <b>({xbwtijdgewerkt}/{xbwtotaaltijd})</b> uur.</li>" +
                         $"<li>Bezig met <b>{xstarted.Count}</b> {x3} " +
                         $"waarvan <b>{Math.Round(xstarted.Sum(x => x.TijdAanGewerkt()), 2)}</b> uur gewerkt.</li>" +
-                        $"<li>Er is nog <b>{GetTijdOver()}</b> uur over tot einde van de week</li>";
+                        $"<li>Er is nog <b>{GetTijdOver()}</b> uur over tot einde van de week</li>" +
+                        $"<li>Met Alles kan je op <b>{Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(xbwtijdover), null, null):dd/MM/yyyy HH:mm}</b> klaar zijn</li>";
                     //if (indeling.SelectedBewerking != null && SelectedPersoneel != null && SelectedPersoneel.Equals(indeling.Persoon))
                     //{
                     //    var bw = indeling.SelectedBewerking;
@@ -241,9 +272,17 @@ namespace Forms
             {
                 SetWaitUI();
                 xWerkplaatsIndelingPanel.SuspendLayout();
+                if (Manager.Database == null || Manager.Database.IsDisposed)
+                    throw new Exception("Database is niet beschikbaar!");
+                lock (Bewerkingen)
+                {
+                    Bewerkingen = Manager.Database.GetAllBewerkingen(false, true).Result.Where(x =>
+                        x.State != ProductieState.Gereed && x.State != ProductieState.Verwijderd).ToList();
+                }
+
                 var xfirst = AddNewIndeling(default);
-                
-                productieListControl1.InitProductie(true, true, true, true, true, true);
+                var bws = Bewerkingen.Where(x => IsAllowed(x, xfirst)).ToList();
+                productieListControl1.InitProductie(bws, true, true, true, false);
 
                 if (Manager.Opties?.WerkplaatsIndeling != null)
                 {
@@ -254,7 +293,7 @@ namespace Forms
                     }
                 }
                 
-                xfirst?.UpdateLabelText();
+                xfirst.UpdateLabelText();
                 xWerkplaatsIndelingPanel.ResumeLayout(true);
                 SetSelected(null, true);
             }
@@ -268,25 +307,39 @@ namespace Forms
 
         private void UpdateTitle()
         {
-            var bws = productieListControl1.GetBewerkingen(false,true);
+            //if (SelectedWerkplek == null || SelectedWerkplek.IsDefault())
+           // {
+                var bws = Bewerkingen.Where(x=> IsAllowed(x, SelectedWerkplek)).ToList();
 
-            var xselected = SelectedWerkplek == null || SelectedWerkplek.Werkplek.IsDefault() ? "Alle" : $"{SelectedWerkplek.Werkplek.Key}";
-            var x3 = bws.Count == 1 ? "Bewerking" : "Bewerkingen";
-            var x2 = $"<b>{xselected} {bws.Count}</b> {x3}<br>" +
-                     $"Totaal <b>{Math.Round(bws.Sum(x=> x.TijdGewerkt),2)} / {Math.Round(bws.Sum(x => x.DoorloopTijd),2)}</b> uur gewerkt " +
-                     $"waarvan nog <b>{Math.Round(bws.Sum(x=> x.GetTijdOver()),2)}</b> uur over aan productie";
-            xGeselecteerdeGebruikerLabel.Text = x2;
-            bws = productieListControl1.GetBewerkingen(false, false);
-            var x1 = bws.Count == 1 ? "Bewerking" : "Bewerkingen";
-            this.Text = $@"Werkplaats Indeling: {bws.Count} {x1}";
-            var xindeling = GetIndeling(null);
-            xindeling?.InitWerkplek(default);
-            this.Invalidate();
+                var xselected = SelectedWerkplek == null || SelectedWerkplek.IsDefault()
+                    ? "Alle"
+                    : $"{SelectedWerkplek.Werkplek}";
+                var x3 = bws.Count == 1 ? "Bewerking" : "Bewerkingen";
+                var x2 = $"<b>{xselected} {bws.Count}</b> {x3}<br>" +
+                         $"Totaal <b>{Math.Round(bws.Sum(x => x.TijdGewerkt), 2)} / {Math.Round(bws.Sum(x => x.DoorloopTijd), 2)}</b> uur gewerkt " +
+                         $"waarvan nog <b>{Math.Round(bws.Sum(x => x.GetTijdOver()), 2)}</b> uur over aan productie";
+                xGeselecteerdeGebruikerLabel.Text = x2;
+                xGeselecteerdeGebruikerLabel.Refresh();
+                var x1 = bws.Count == 1 ? "Bewerking" : "Bewerkingen";
+                this.Text = $@"Werkplaats Indeling: {bws.Count} {x1}";
+                var xindeling = GetIndeling(null);
+                xindeling?.UpdateWerkplekInfo();
+                this.Invalidate();
+           // }
         }
 
         private void ListProducties()
         {
-            productieListControl1.UpdateProductieList(false, false);
+            if (SelectedWerkplek != null)
+            {
+                //productieListControl1.InitProductie(Bewerkingen.Where(x => IsAllowed(x, SelectedWerkplek)).ToList(),
+                //    false, true, true, false);
+                //if (productieListControl1.DoSearch(SelectedWerkplek.Criteria))
+                    productieListControl1.InitProductie(Bewerkingen.Where(x => IsAllowed(x, SelectedWerkplek)).ToList(),
+                        false, true, true, false);
+                    productieListControl1.DoSearch(SelectedWerkplek.Criteria);
+            }
+
             UpdateTitle();
         }
 
@@ -294,28 +347,40 @@ namespace Forms
         {
             if (value is Bewerking bew)
             {
-                if (SelectedWerkplek == null || SelectedWerkplek.Werkplek.IsDefault())
+                if (SelectedWerkplek == null)
                 {
                     return true;
                 }
 
-                var xname = SelectedWerkplek.Werkplek.Key;
-                var xreturn = bew.WerkPlekken.Any(x => string.Equals(x.Naam, xname,
-                    StringComparison.CurrentCultureIgnoreCase));
-                return xreturn;
+                return IsAllowed(bew, SelectedWerkplek);
             }
 
             return false;
         }
 
-        private bool IsAllowed(IProductieBase productie, WerkplekIndeling indeling)
+        private bool IsAllowed(Bewerking bew, WerkplekIndeling indeling)
         {
             if (indeling == null)
             {
                 return true;
             }
 
-            var xreturn = productie.GetWerkPlekken().Any(x => string.Equals(x.Naam, indeling.Werkplek.Key,
+            if (!bew.IsAllowed() || bew.State is ProductieState.Gereed or ProductieState.Verwijderd)
+                return false;
+            if (indeling.IsDefault())
+            {
+                if (indeling.ToonNietIngedeeld)
+                {
+                    
+                        var xindelingen = GetIndelingen(false);
+                        if (bew.WerkPlekken.Any(x => xindelingen.Any(w =>
+                                string.Equals(w.Werkplek, x.Naam, StringComparison.CurrentCultureIgnoreCase))))
+                            return false;
+                }
+
+                return true;
+            }
+            var xreturn = bew.WerkPlekken.Any(x => string.Equals(x.Naam, indeling.Werkplek,
                 StringComparison.CurrentCultureIgnoreCase));
             return xreturn;
         }
@@ -334,14 +399,8 @@ namespace Forms
                 xgroup.DoubleClick += Xpers_DoubleClick;
                 var xpers = new WerkplekIndeling();
                 xpers.FieldTextGetter = IndelingFieldTextGetter;
-                var pair = new KeyValuePair<string, List<Bewerking>>(indeling, new List<Bewerking>());
-               
-               
-                xpers.InitWerkplek(pair);
-                var bws = Manager.Database.GetAllBewerkingen(false,true).Result;
-                bws = bws.Where(x => IsAllowed(x, xpers)).ToList();
-                if (bws.Count > 0)
-                    xpers.Werkplek.Value.AddRange(bws);
+                
+
                 xgroup.Width = xpers.Width;
                 xpers.DragDrop += Xpers_DragDrop;
                 xgroup.MouseDown += xpers.IndelingMouseDown;
@@ -350,13 +409,19 @@ namespace Forms
                 xpers.Dock = DockStyle.Fill;
                 xpers.MouseEnter += WerkplekIndeling_MouseEnter;
                 xpers.MouseLeave += WerkplekIndeling_MouseLeave;
+                xpers.ViewStateChanged += Xpers_ViewStateChanged;
                 xpers.Click += Xpers_Click;
                 xpers.DoubleClick += Xpers_DoubleClick;
                 //xgroup.Dock = DockStyle.Top;
                 xgroup.Controls.Add(xpers);
                 xWerkplaatsIndelingPanel.Controls.Add(xgroup);
+                xpers.InitWerkplek(indeling);
+                if (!xpers.IsDefault())
+                {
+                    UpdateDefault();
+                }
                 //xPersoneelIndelingPanel.Controls.SetChildIndex(xgroup, xPersoneelIndelingPanel.Controls.Count -1);
-             
+
                 return xpers;
             }
             catch (Exception e)
@@ -365,6 +430,21 @@ namespace Forms
                 XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
                 return null;
             }
+        }
+
+        private void UpdateDefault()
+        {
+            var xdef = GetDefaultIndeling();
+            xdef?.UpdateWerkplekInfo();
+            if (SelectedWerkplek != null && SelectedWerkplek.IsDefault())
+            {
+                ListProducties();
+            }
+        }
+
+        private void Xpers_ViewStateChanged(object sender, EventArgs e)
+        {
+            UpdateDefault();
         }
 
         private void Xpers_DragDrop(object sender, DragEventArgs e)
@@ -376,9 +456,9 @@ namespace Forms
         {
             try
             {
-                if (sender is WerkplekIndeling indeling && !indeling.Werkplek.IsDefault())
+                if (sender is WerkplekIndeling indeling && !indeling.IsDefault())
                 {
-                    DeleteWerkplaats(indeling.Werkplek.Key);
+                    DeleteWerkplaats(indeling.Werkplek);
                 }
             }
             catch (Exception ex)
@@ -399,7 +479,7 @@ namespace Forms
                 }
             }
 
-            if (xindeling == null || xindeling.Werkplek.IsDefault())
+            if (xindeling == null || xindeling.IsDefault())
             {
                 AddNewIndeling();
             }
@@ -419,23 +499,23 @@ namespace Forms
 
         public void SelectWerkplek(WerkplekIndeling werkplek)
         {
-            if (SelectedWerkplek != null && string.Equals(werkplek.Werkplek.Key, SelectedWerkplek.Werkplek.Key,
+            if (SelectedWerkplek != null && string.Equals(werkplek.Werkplek, SelectedWerkplek.Werkplek,
                     StringComparison.CurrentCultureIgnoreCase)) return;
             foreach (var xgroup in xWerkplaatsIndelingPanel.Controls.Cast<GroupBox>())
             {
                 if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is WerkplekIndeling xpers)
                 {
-                    if (xpers.Werkplek.IsDefault() && (werkplek == null || werkplek.Werkplek.IsDefault()))
+                    if (xpers.IsDefault() && (werkplek == null || werkplek.IsDefault()))
                     {
                         SetSelected(xpers, true);
                         continue;
                     }
 
-                    if (xpers.Werkplek.IsDefault())
+                    if (xpers.IsDefault())
                     {
                         SetSelected(xpers, false);
                     }
-                    else if (string.Equals(werkplek?.Werkplek.Key, xpers.Werkplek.Key, StringComparison.CurrentCultureIgnoreCase))
+                    else if (string.Equals(werkplek?.Werkplek, xpers.Werkplek, StringComparison.CurrentCultureIgnoreCase))
                     {
                         SetSelected(xpers, true);
                     }
@@ -499,17 +579,17 @@ namespace Forms
         {
             if (indeling != null)
             {
-                if (indeling.Werkplek.IsDefault() && (SelectedWerkplek == null || SelectedWerkplek.Werkplek.IsDefault()))
+                if (indeling.IsDefault() && (SelectedWerkplek == null || SelectedWerkplek.IsDefault()))
                 {
                     indeling.BackColor = Color.LightBlue;
                 }
-                else if (indeling.Werkplek.IsDefault())
+                else if (indeling.IsDefault())
                 {
                     indeling.BackColor = color;
                 }
                 else
                 {
-                    indeling.BackColor = string.Equals(indeling.Werkplek.Key, SelectedWerkplek.Werkplek.Key,
+                    indeling.BackColor = string.Equals(indeling.Werkplek, SelectedWerkplek.Werkplek,
                         StringComparison.CurrentCultureIgnoreCase)
                         ? Color.LightBlue
                         : color;
@@ -575,8 +655,8 @@ namespace Forms
                 {
                     if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is WerkplekIndeling xpers)
                     {
-                        if (xpers.Werkplek.IsDefault()) continue;
-                        if (string.Equals(xpers.Werkplek.Key, plek.Werkplek.Key, StringComparison.CurrentCultureIgnoreCase))
+                        if (xpers.IsDefault()) continue;
+                        if (string.Equals(xpers.Werkplek, plek.Werkplek, StringComparison.CurrentCultureIgnoreCase))
                             return true;
                     }
                 }
@@ -598,13 +678,13 @@ namespace Forms
                 {
                     if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is WerkplekIndeling xpers)
                     {
-                        if (xpers.Werkplek.IsDefault() && string.IsNullOrEmpty(werkplek))
+                        if (xpers.IsDefault() && string.IsNullOrEmpty(werkplek))
                         {
                             return xpers;
                         }
 
-                        if (xpers.Werkplek.IsDefault()) continue;
-                        if (string.Equals(xpers.Werkplek.Key, werkplek, StringComparison.CurrentCultureIgnoreCase))
+                        if (xpers.IsDefault()) continue;
+                        if (string.Equals(xpers.Werkplek, werkplek, StringComparison.CurrentCultureIgnoreCase))
                             return xpers;
                     }
                 }
@@ -626,8 +706,8 @@ namespace Forms
                 {
                     if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is WerkplekIndeling xpers)
                     {
-                        if (xpers.Werkplek.IsDefault()) continue;
-                        if (string.Equals(xpers.Werkplek.Key, werkplek, StringComparison.CurrentCultureIgnoreCase))
+                        if (xpers.IsDefault()) continue;
+                        if (string.Equals(xpers.Werkplek, werkplek, StringComparison.CurrentCultureIgnoreCase))
                             return true;
                     }
                 }
@@ -645,8 +725,8 @@ namespace Forms
         {
             try
             {
-                if (SelectedWerkplek == null || SelectedWerkplek.Werkplek.IsDefault()) return;
-                DeleteWerkplaats(SelectedWerkplek.Werkplek.Key);
+                if (SelectedWerkplek == null || SelectedWerkplek.IsDefault()) return;
+                DeleteWerkplaats(SelectedWerkplek.Werkplek);
             }
             catch (Exception ex)
             {
@@ -664,8 +744,8 @@ namespace Forms
                 {
                     if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is WerkplekIndeling xpers)
                     {
-                        if (xpers.Werkplek.IsDefault()) continue;
-                        if (string.Equals(xpers.Werkplek.Key, werkplek, StringComparison.CurrentCultureIgnoreCase))
+                        if (xpers.IsDefault()) continue;
+                        if (string.Equals(xpers.Werkplek, werkplek, StringComparison.CurrentCultureIgnoreCase))
                         {
                             xgroup.MouseEnter -= WerkplekIndeling_MouseEnter;
                             xgroup.MouseLeave -= WerkplekIndeling_MouseLeave;
@@ -677,6 +757,7 @@ namespace Forms
                             xpers.Click -= Xpers_Click;
                             xpers.DoubleClick -= Xpers_DoubleClick;
                             xpers.VerwijderWerkplaats -= Xpers_VerwijderIndeling;
+                            
                             break;
                         }
                     }
@@ -688,6 +769,7 @@ namespace Forms
                     xWerkplaatsIndelingPanel.Controls.Remove(xdelete);
                     xWerkplaatsIndelingPanel.ResumeLayout(true);
                     SetSelected(null, true);
+                    UpdateDefault();
                 }
             }
             catch (Exception ex)
@@ -700,7 +782,7 @@ namespace Forms
         {
             LoadProducties();
             productieListControl1.InitEvents();
-            Manager.OnPersoneelDeleted += Manager_OnPersoneelDeleted;
+            Manager.OnFormulierDeleted += Manager_OnFormulierDeleted;
             Manager.OnFormulierChanged += Manager_OnFormulierChanged;
         }
 
@@ -713,47 +795,61 @@ namespace Forms
                 {
                     try
                     {
-                        foreach (var xgroup in xWerkplaatsIndelingPanel.Controls.Cast<GroupBox>())
+                        if (changedform.Bewerkingen == null || changedform.Bewerkingen.Length == 0)
                         {
-                            if (xgroup.Controls.Count > 0 && xgroup.Controls[0] is WerkplekIndeling xindeling)
+                            return;
+                        }
+
+                        bool xchanged = false;
+                        for (int i = 0; i < changedform.Bewerkingen.Length; i++)
+                        {
+                            var bw = changedform.Bewerkingen[i];
+                            bool valid = bw.IsAllowed() && bw.State != ProductieState.Verwijderd &&
+                                         bw.State != ProductieState.Gereed;
+                            bool changed = false;
+                            lock (Bewerkingen)
                             {
-                                if (xindeling.Werkplek.IsDefault()) continue;
-                                if (IsAllowed(changedform, xindeling))
+                                var xindex = Bewerkingen.IndexOf(bw);
+                               
+                               
+                                if (!valid && xindex > -1)
                                 {
-                                    xindeling.UpdateLabelText();
-                                    if (xindeling.SelectedBewerking != null)
+                                    Bewerkingen.RemoveAt(xindex);
+                                    changed = true;
+                                }
+                                else if (xindex > -1)
+                                {
+                                    Bewerkingen[xindex] = bw;
+                                    changed = true;
+                                }
+                                else if (valid)
+                                {
+                                    Bewerkingen.Add(bw);
+                                    changed = true;
+                                }
+                            }
+
+                            xchanged |= changed;
+                            if (changed)
+                            {
+                                foreach (var wp in bw.WerkPlekken)
+                                {
+                                    var xindeling = GetIndeling(wp.Naam);
+                                    if (xindeling?.SelectedBewerking != null && xindeling.SelectedBewerking.Equals(bw))
                                     {
-                                        var xnew = changedform.Bewerkingen?.FirstOrDefault(x =>
-                                            x.Equals(xindeling.SelectedBewerking));
-                                        if (xnew != null)
-                                            xindeling.SelectedBewerking = xnew;
+                                        if (valid)
+                                        {
+                                            xindeling.SelectedBewerking = bw;
+                                        }
+                                        else xindeling.SelectedBewerking = null;
                                     }
-
-                                    var bws = changedform.Bewerkingen.Where(x =>
-                                        x.WerkPlekken.Any(w => string.Equals(w.Naam, xindeling.Werkplek.Key,
-                                            StringComparison.CurrentCultureIgnoreCase))).ToList();
-                                    var xremove = xindeling.Werkplek.Value.Where(x =>
-                                        string.Equals(x.ProductieNr, changedform.ProductieNr,
-                                            StringComparison.CurrentCultureIgnoreCase) &&
-                                        !x.WerkPlekken.Any(w => string.Equals(w.Naam, xindeling.Werkplek.Key,
-                                            StringComparison.CurrentCultureIgnoreCase))).ToList();
-                                    if (xremove.Count > 0)
-                                        xremove.ForEach(r => xindeling.Werkplek.Value.Remove(r));
-
-                                    foreach (var bw in bws)
-                                    {
-                                        if (!bw.WerkPlekken.Any(w => string.Equals(w.Naam, xindeling.Werkplek.Key,
-                                                StringComparison.CurrentCultureIgnoreCase)))
-                                            continue;
-                                        var xindex = xindeling.Werkplek.Value.IndexOf(bw);
-                                        if (xindex > -1)
-                                            xindeling.Werkplek.Value[xindex] = bw;
-                                        else xindeling.Werkplek.Value.Add(bw);
-                                    }
-
                                 }
                             }
                         }
+
+                        if (xchanged)
+                            UpdateIndelingen();
+
                     }
                     catch (Exception e)
                     {
@@ -767,20 +863,46 @@ namespace Forms
             }
         }
 
-        private void Manager_OnPersoneelDeleted(object sender, string id)
+        private void UpdateIndelingen()
         {
-            if (WerkplekExists(id))
-                DeleteWerkplaats(id);
+            var xindelingen = GetIndelingen(true);
+            xindelingen.ForEach(x => x.UpdateWerkplekInfo());
+        }
+
+        private void Manager_OnFormulierDeleted(object sender, string id)
+        {
+            try
+            {
+                var bws = Bewerkingen
+                    .Where(x => string.Equals(x.ProductieNr, id, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                if (bws.Count > 0)
+                {
+                    bool changed = false;
+                    foreach (var bw in bws)
+                    {
+                        changed |= Bewerkingen.Remove(bw);
+                    }
+
+                    if (changed)
+                    {
+                        UpdateIndelingen();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private void WerkplaatsIndeling_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (Manager.Opties != null)
             {
-                Manager.Opties.WerkplaatsIndeling = GetIndelingen().Select(x => x.Werkplek.Key).ToList();
+                Manager.Opties.WerkplaatsIndeling = GetIndelingen(false).Select(x => x.Werkplek).ToList();
             }
 
-            Manager.OnPersoneelDeleted -= Manager_OnPersoneelDeleted;
+            Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
             productieListControl1.DetachEvents();
         }

@@ -795,7 +795,7 @@ namespace Controls
             menuButton6.Name = "xpersoneelindeling";
             menuButton6.Text = "Personeel Indeling";
             menuButton6.Tooltip = "Beheer personeel leden en hun producties";
-            menuButton7.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton7.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
             menuButton7.CombineImage = null;
             menuButton7.CombineScale = 1.5D;
             menuButton7.ContextMenu = null;

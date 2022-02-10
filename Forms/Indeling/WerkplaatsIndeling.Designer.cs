@@ -142,23 +142,26 @@ namespace Forms
             this.productieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.productieListControl1.IsBewerkingView = true;
             this.productieListControl1.ListName = "PersoneelIndelingLijst";
-            this.productieListControl1.Location = new System.Drawing.Point(0, 20);
+            this.productieListControl1.Location = new System.Drawing.Point(0, 40);
             this.productieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.productieListControl1.Name = "productieListControl1";
             this.productieListControl1.RemoveCustomItemIfNotValid = false;
             this.productieListControl1.SelectedItem = null;
-            this.productieListControl1.Size = new System.Drawing.Size(636, 541);
+            this.productieListControl1.Size = new System.Drawing.Size(636, 521);
             this.productieListControl1.TabIndex = 0;
             this.productieListControl1.ValidHandler = null;
             // 
             // xGeselecteerdeGebruikerLabel
             // 
+            this.xGeselecteerdeGebruikerLabel.AutoSize = false;
             this.xGeselecteerdeGebruikerLabel.BackColor = System.Drawing.Color.Transparent;
             this.xGeselecteerdeGebruikerLabel.BaseStylesheet = null;
             this.xGeselecteerdeGebruikerLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.xGeselecteerdeGebruikerLabel.IsContextMenuEnabled = false;
+            this.xGeselecteerdeGebruikerLabel.IsSelectionEnabled = false;
             this.xGeselecteerdeGebruikerLabel.Location = new System.Drawing.Point(0, 0);
             this.xGeselecteerdeGebruikerLabel.Name = "xGeselecteerdeGebruikerLabel";
-            this.xGeselecteerdeGebruikerLabel.Size = new System.Drawing.Size(636, 20);
+            this.xGeselecteerdeGebruikerLabel.Size = new System.Drawing.Size(636, 40);
             this.xGeselecteerdeGebruikerLabel.TabIndex = 2;
             this.xGeselecteerdeGebruikerLabel.Text = "htmlLabel1";
             // 
@@ -194,7 +197,6 @@ namespace Forms
             this.toolStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);

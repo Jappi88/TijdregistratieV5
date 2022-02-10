@@ -487,6 +487,7 @@ namespace Forms
                 xs.UpdateDatabaseVersion = _LoadedOpties.UpdateDatabaseVersion;
 
                 xs.PersoneelIndeling = _LoadedOpties.PersoneelIndeling;
+                xs.WerkplaatsIndeling = _LoadedOpties.WerkplaatsIndeling;
 
                 xs.DeelAllesIn = _LoadedOpties.DeelAllesIn;
                 xs.DeelInPerAfdeling = _LoadedOpties.DeelInPerAfdeling;

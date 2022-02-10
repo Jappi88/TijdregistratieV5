@@ -28,6 +28,7 @@ namespace Forms.Aantal
         public AantalGemaaktProducties(List<Bewerking> producties, int lastchangedminutes = -1)
         {
             InitializeComponent();
+            SaveLastSize = false;
             LastchangedMinutes = lastchangedminutes;
             Bewerkingen = producties;
             LoadProducties();
@@ -183,10 +184,16 @@ namespace Forms.Aantal
                 {
                     foreach (var bw in form.Bewerkingen)
                     {
+                        if (LastchangedMinutes > -1)
+                        {
+                            if (!bw.WerkPlekken.Any(x => x.NeedsAantalUpdate(LastchangedMinutes)))
+                                continue;
+                        }
                         var index = Bewerkingen.IndexOf(bw);
                         bool bwvalid = bw.State == ProductieState.Gestart && bw.IsAllowed() && string.Equals(
                             bw.GestartDoor, Manager.Opties?.Username,
                             StringComparison.CurrentCultureIgnoreCase);
+                     
                         if (index == -1)
                         {
                             if (bwvalid)
@@ -225,18 +232,19 @@ namespace Forms.Aantal
                 Bewerkingen ??= new List<Bewerking>();
                 foreach (var bw in form.Bewerkingen)
                 {
-                    if (bw.State == ProductieState.Gestart && (LastchangedMinutes < 0 ||
-                                                               bw.LaatstAantalUpdate.AddMinutes(
-                                                                   LastchangedMinutes) < DateTime.Now))
+                    if (LastchangedMinutes > -1)
                     {
-                        bool bwvalid = bw.State == ProductieState.Gestart && bw.IsAllowed() && string.Equals(
-                            bw.GestartDoor, Manager.Opties?.Username,
-                            StringComparison.CurrentCultureIgnoreCase);
-                        if (bwvalid)
-                        {
-                            Bewerkingen.Add(bw);
-                            init = true;
-                        }
+                        if (!bw.WerkPlekken.Any(x => x.NeedsAantalUpdate(LastchangedMinutes)))
+                            continue;
+                    }
+
+                    bool bwvalid = bw.State == ProductieState.Gestart && bw.IsAllowed() && string.Equals(
+                        bw.GestartDoor, Manager.Opties?.Username,
+                        StringComparison.CurrentCultureIgnoreCase);
+                    if (bwvalid)
+                    {
+                        Bewerkingen.Add(bw);
+                        init = true;
                     }
                 }
             }
