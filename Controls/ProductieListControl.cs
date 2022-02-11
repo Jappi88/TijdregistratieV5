@@ -1724,8 +1724,7 @@ namespace Controls
                         if (result == DialogResult.Cancel) return false;
                         afzonderlijk = result == DialogResult.Yes;
                     }
-
-                    var rooster = Manager.Opties.GetWerkRooster();
+                    
                     var parent = werk.GetParent();
                     if (!werk.IsBemand || !afzonderlijk)
                     {
@@ -1736,11 +1735,8 @@ namespace Controls
                         var prod = pair.Formulier;
                         werk = pair.Bewerking;
                         if (werk is { IsBemand: false } && klusui.SelectedKlus?.Tijden?.Count > 0)
-                            foreach (var wp in werk.WerkPlekken)
-                            {
-                                wp.Tijden.UpdateLijst(klusui.SelectedKlus.Tijden,
-                                    false);
-                            }
+                            pair.Plek?.Tijden.UpdateLijst(klusui.SelectedKlus.Tijden,
+                                false);
 
                         //var xwp = werk.WerkPlekken.FirstOrDefault(x =>
                         //    string.Equals(klusui.SelectedKlus.Path, x.Path, StringComparison.CurrentCultureIgnoreCase));
