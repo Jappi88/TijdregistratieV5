@@ -594,14 +594,14 @@ namespace Rpm.Misc
             }
         }
 
-        public static string[] LoadSoortStoringen(string txt)
+        public static string[] LoadSoortStoringen(string filepath)
         {
             var xreturn = new List<string>();
             try
             {
                 try
                 {
-                    xreturn = File.ReadAllBytes(txt).DeSerialize<List<string>>();
+                    xreturn = File.ReadAllBytes(filepath).DeSerialize<List<string>>();
                 }
                 catch (Exception e)
                 {
@@ -611,11 +611,11 @@ namespace Rpm.Misc
 
                 if (xreturn == null)
                 {
-                    var value = ReadResourceString(txt);
+                    var value = ReadResourceString(Path.GetFileName(filepath));
                     if (value != null)
                     {
                         xreturn = value.Replace("\r\n", "").Split(',').ToList();
-                        File.WriteAllBytes(txt, xreturn.Serialize());
+                        File.WriteAllBytes(filepath, xreturn.Serialize());
                     }
                 }
 

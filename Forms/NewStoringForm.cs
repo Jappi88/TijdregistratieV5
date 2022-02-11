@@ -15,7 +15,7 @@ namespace Forms
         public NewStoringForm()
         {
             InitializeComponent();
-            var storingen = Functions.LoadSoortStoringen("SoortStilstanden.txt").Select(x => (object)x).ToArray();
+            var storingen = Functions.LoadSoortStoringen(System.IO.Path.Combine(Application.StartupPath, "SoortStilstanden.txt")).Select(x => (object)x).ToArray();
             xsoortstoringen.Items.AddRange(storingen);
         }
 
@@ -270,7 +270,7 @@ namespace Forms
 
                 Settings.Default.StoringMelder = xnaammelder.Text;
                 Settings.Default.Save();
-                Functions.SaveStoringen(xcur, "SoortStilstanden.txt");
+                Functions.SaveStoringen(xcur, System.IO.Path.Combine(Application.StartupPath, "SoortStilstanden.txt"));
             }
             catch (Exception e)
             {
