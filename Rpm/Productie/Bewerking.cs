@@ -340,6 +340,44 @@ namespace Rpm.Productie
             return storingen.ToArray();
         }
 
+        public List<NotitieEntry> GetAlleNotities()
+        {
+            var xreturn = new List<NotitieEntry>();
+            try
+            {
+                if (Note != null && !string.IsNullOrEmpty(Note.Notitie))
+                {
+                    xreturn.Add(Note);
+                }
+
+                if (GereedNote != null && !string.IsNullOrEmpty(GereedNote.Notitie))
+                {
+                    xreturn.Add(GereedNote);
+                }
+
+                if (DeelGereedMeldingen != null)
+                {
+                    foreach (var dg in DeelGereedMeldingen)
+                        if (dg.Note != null && !string.IsNullOrEmpty(dg.Note.Notitie))
+                            xreturn.Add(dg.Note);
+                }
+            
+                foreach (var wp in WerkPlekken)
+                {
+                    if (wp.Note != null && !string.IsNullOrEmpty(wp.Note.Notitie))
+                    {
+                        xreturn.Add(wp.Note);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return xreturn;
+        }
+
         public Storing[] GetAlleStoringen(DateTime vanaf, DateTime tot)
         {
             if (WerkPlekken == null || WerkPlekken.Count == 0)

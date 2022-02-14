@@ -466,7 +466,7 @@ namespace Controls
             var b = CurrentBewerking();
             if (b != null)
             {
-                var allst = new AlleStoringen();
+                var allst = new AlleStoringenForm();
                 allst.InitStoringen(b.Root, selected);
                 allst.ShowDialog();
             }

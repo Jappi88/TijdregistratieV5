@@ -23,8 +23,7 @@ namespace Rpm.Misc
         {
             try
             {
-                if (string.IsNullOrEmpty(listname)) return true;
-                if (!ListNames.Any(x => string.Equals(x, listname))) return true;
+                if (!string.IsNullOrEmpty(listname) && !ListNames.Any(x => string.Equals(x, listname))) return true;
                 if (value == null) return false;
                 if (Filters == null || Filters.Count == 0) return true;
                 bool xdone = false;

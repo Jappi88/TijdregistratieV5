@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Controls;
 
 namespace Forms.Klachten
 {
@@ -195,10 +196,13 @@ namespace Forms.Klachten
                 if (tb.UseSecondary)
                 {
                     var calcform = new RangeCalculatorForm();
-                    var rf = new RangeCalculatorForm.RangeFilter();
-                    rf.Enabled = true;
-                    rf.Criteria = tb.SecondaryText.Trim();
-                    calcform.Show(rf);
+                    var rf = new ZoekProductiesUI.RangeFilter
+                    {
+                        Enabled = true,
+                        Criteria = tb.SecondaryText.Trim(),
+                    };
+                    calcform.Filter = rf;
+                    calcform.Show();
                 }
                 else
                 {

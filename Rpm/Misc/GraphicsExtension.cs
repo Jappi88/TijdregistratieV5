@@ -28,30 +28,28 @@ namespace ProductieManager.Rpm.Misc
         public static byte[] ToByteArray(this Image imageIn)
         {
             if (imageIn == null) return null;
-            using var ms = new MemoryStream();
-            imageIn.Save(ms, imageIn.RawFormat);
-            return ms.ToArray();
+            byte[] bytes = (byte[])(new ImageConverter()).ConvertTo(imageIn, typeof(byte[]));
+            return bytes;
         }
 
         public static Bitmap ResizeImage(this Image image, int width, int height)
         {
+            if (image == null) return null;
             var destRect = new Rectangle(0, 0, width, height);
             var destImage = new Bitmap(width, height);
 
             destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
 
-            using (var graphics = Graphics.FromImage(destImage))
-            {
-                graphics.CompositingMode = CompositingMode.SourceCopy;
-                graphics.CompositingQuality = CompositingQuality.HighQuality;
-                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                graphics.SmoothingMode = SmoothingMode.HighQuality;
-                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            using var graphics = Graphics.FromImage(destImage);
+            graphics.CompositingMode = CompositingMode.SourceCopy;
+            graphics.CompositingQuality = CompositingQuality.HighQuality;
+            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            graphics.SmoothingMode = SmoothingMode.HighQuality;
+            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-                using var wrapMode = new ImageAttributes();
-                wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-                graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
-            }
+            using var wrapMode = new ImageAttributes();
+            wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+            graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
 
             return destImage;
         }
@@ -67,6 +65,20 @@ namespace ProductieManager.Rpm.Misc
             {
                 return null;
             }
+        }
+
+        public static Bitmap ColorToImage(this Color color, int width, int height)
+        {
+            var bitmap = new Bitmap(width, height);
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    bitmap.SetPixel(x, y, color);
+                }
+            }
+
+            return bitmap;
         }
 
         public static void ShowImageFromBytes(this byte[] image)
@@ -126,8 +138,6 @@ namespace ProductieManager.Rpm.Misc
 
             return image;
         }
-
-
 
         public static Bitmap DrawUserCircle(Size PicSize, Brush Brush, string Text, Font font, Color BackColor)
         {
@@ -268,7 +278,7 @@ namespace ProductieManager.Rpm.Misc
         public static Bitmap CombineImage(this Bitmap a, Bitmap b, int width, int height, ContentAlignment alignment,
             double scale)
         {
-            Bitmap xreturn = a.ResizeImage(width, height);
+            var xreturn = a.ResizeImage(width, height);
             b = b.ResizeImage((int)(width / scale), (int)(height / scale));
             try
             {

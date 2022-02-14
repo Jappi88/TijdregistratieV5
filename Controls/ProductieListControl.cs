@@ -1708,8 +1708,8 @@ namespace Controls
 
         public static bool AddPersoneel(IWin32Window owner, ref Bewerking werk, string werkplek)
         {
-            var pers = new PersoneelsForm(true);
-            if (pers.ShowDialog(werk) == DialogResult.OK)
+            var pers = new PersoneelsForm(werk, true);
+            if (pers.ShowDialog() == DialogResult.OK)
             {
                 if (pers.SelectedPersoneel is { Length: > 0 })
                 {
@@ -1953,11 +1953,14 @@ namespace Controls
                 if (done.Any(x => string.Equals(x, bws[i].ArtikelNr, StringComparison.CurrentCultureIgnoreCase)))
                     continue;
                 var _calcform = new RangeCalculatorForm();
-                var rf = new RangeFilter();
-                rf.Enabled = true;
-                rf.Criteria = bws[i].ArtikelNr;
-                rf.Bewerking = bws[i].Naam;
-                _calcform.Show(rf);
+                var rf = new ZoekProductiesUI.RangeFilter
+                {
+                    Enabled = true,
+                    Criteria = bws[i].ArtikelNr,
+                    Bewerking = bws[i].Naam
+                };
+                _calcform.Filter = rf;
+                _calcform.Show();
                 done.Add(bws[i].ArtikelNr);
             }
         }
@@ -1971,10 +1974,13 @@ namespace Controls
             {
                 if (done.Any(x => string.Equals(x, bws[i].Naam, StringComparison.CurrentCultureIgnoreCase))) continue;
                 var _calcform = new RangeCalculatorForm();
-                var rf = new RangeFilter();
-                rf.Enabled = true;
-                rf.Bewerking = bws[i].Naam;
-                _calcform.Show(rf);
+                var rf = new ZoekProductiesUI.RangeFilter
+                {
+                    Enabled = true,
+                    Bewerking = bws[i].Naam
+                };
+                _calcform.Filter = rf;
+                _calcform.Show();
                 done.Add(bws[i].Naam);
             }
         }
@@ -2042,7 +2048,7 @@ namespace Controls
                 form = prod;
             else if (ProductieLijst.SelectedObject is Bewerking bew) form = bew.GetParent();
             if (form == null) return;
-            var allst = new AlleStoringen();
+            var allst = new AlleStoringenForm();
             allst.InitStoringen(form);
             allst.ShowDialog();
         }

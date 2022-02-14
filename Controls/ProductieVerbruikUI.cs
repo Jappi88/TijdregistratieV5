@@ -1,5 +1,7 @@
 ﻿using Forms;
+using Forms.Sporen;
 using ProductieManager.Properties;
+using Rpm.MateriaalSoort;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
@@ -8,10 +10,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
-using Forms.Sporen;
-using Rpm.MateriaalSoort;
 using Various;
 
 namespace Controls
@@ -38,11 +37,7 @@ namespace Controls
         public bool ShowSluiten
         {
             get => xsluiten.Visible;
-            set
-            {
-                xsluiten.Visible = value;
-                xbuttonseperator.Visible = value;
-            }
+            set => xsluiten.Visible = value;
         }
 
         public bool ShowPerUur { get; set; }
@@ -474,8 +469,7 @@ namespace Controls
 
         private void xsluiten_Click(object sender, EventArgs e)
         {
-            if (Parent is Form form)
-                form.Close();
+            OnCloseClicked();
         }
 
         private bool IsOpdrukkerArtikelNr()
@@ -636,6 +630,13 @@ namespace Controls
             this.Parent?.Select();
             this.Parent?.BringToFront();
             this.Parent?.Focus();
+        }
+
+        public event EventHandler CloseClicked;
+
+        protected virtual void OnCloseClicked()
+        {
+            CloseClicked?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -161,7 +161,7 @@ namespace Forms
                 form = prod;
             else if (Productie is Bewerking bew) form = bew.GetParent();
             if (form == null) return;
-            var allst = new AlleStoringen();
+            var allst = new AlleStoringenForm();
             allst.InitStoringen(form);
             allst.ShowDialog();
         }

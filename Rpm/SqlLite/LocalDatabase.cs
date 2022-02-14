@@ -387,7 +387,7 @@ namespace Rpm.SqlLite
                 {
                     var xprods = await GereedFormulieren.FindAll(validhandler);
                     if (bereik != null)
-                        xprods = prods.Where(x => x.HeeftGewerkt(bereik)).ToList();
+                        xprods = xprods.Where(x => x.HeeftGewerkt(bereik)).ToList();
                     if (xprods.Count > 0)
                         prods.AddRange(xprods);
                 }

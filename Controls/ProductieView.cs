@@ -25,7 +25,10 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Forms.ArtikelRecords;
+using Forms.MetroBase;
+using MetroFramework.Controls;
 using MetroFramework.Forms;
+using Org.BouncyCastle.Pkcs;
 using Rpm.Controls;
 using Rpm.DailyUpdate;
 using Various;
@@ -37,7 +40,6 @@ namespace Controls
         public ProductieView()
         {
             InitializeComponent();
-            metroTabControl.SelectedIndex = 0;
             _specialRoosterWatcher = new Timer();
             _specialRoosterWatcher.Interval = 60000; //1 minuut;
             _specialRoosterWatcher.Tick += (x, y) => CheckForSpecialRooster(false);
@@ -119,14 +121,13 @@ namespace Controls
         private static Producties _producties;
         private static ProductieLijsten _productielijstdock;
         private static LogForm _logform;
-        private static RangeCalculatorForm _calcform;
         private static ChatForm _chatform;
         private static OpmerkingenForm _opmerkingform;
         private static ArtikelsForm _ArtikelsForm;
         private static PersoneelsForm _PersoneelForm;
         private static ProductieOverzichtForm _ProductieOverzicht;
-        private static PersoneelIndeling _PersoneelIndeling;
-        private static WerkplaatsIndeling _WerkplaatsIndeling;
+        private static PersoneelIndelingForm _PersoneelIndeling;
+        private static WerkplaatsIndelingForm _WerkplaatsIndeling;
         private static MetroForm _berekenverbruik;
 
         private readonly Daily DailyMessage;
@@ -154,13 +155,9 @@ namespace Controls
                 DetachEvents();
 
                 _manager.InitManager();
-                //xproductieListControl1.InitProductie(false, true, true, true, false, false);
-                
                 takenManager1.InitManager();
-                werkPlekkenUI1.InitUI(_manager);
                 InitEvents();
                 await _manager.Load(path, autologin, true, true);
-                xbewerkingListControl.InitProductie(true, true, true, true, false, false);
                 if (Manager.Opmerkingen != null)
                     Manager.Opmerkingen.OnOpmerkingenChanged += Opmerkingen_OnOpmerkingenChanged;
                 // _manager.StartMonitor();
@@ -171,6 +168,699 @@ namespace Controls
                 Console.WriteLine(ex);
             }
         }
+
+        #region Tab Buttons
+        private void InitWerkplekkenUITab(TileInfoEntry entry, bool select)
+        {
+            if (CheckTab(entry, select))
+                return;
+            var xtabpage = new MetroTabPage();
+            xtabpage.Padding = new Padding(5);
+            xtabpage.Text = entry.Text + "    ";
+            xtabpage.Tag = entry;
+            var xprodlist = new WerkPlekkenUI();
+            xprodlist.AutoScroll = true;
+            xprodlist.BackColor = System.Drawing.Color.White;
+            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.OnPlekkenChanged += (sender, args) =>
+            {
+                if (xprodlist.Parent is MetroTabPage page)
+                {
+                    var xend = page.Text.IndexOf('[');
+                    if (xend > -1)
+                        page.Text = page.Text.Substring(0, xend) + $"[{xprodlist.xwerkpleklist.Items.Count}]";
+                    else
+                        page.Text = $"{page.Text}[{xprodlist.xwerkpleklist.Items.Count}]";
+                    page.Invalidate();
+                }
+            };
+            xprodlist.OnRequestOpenWerk += WerkPlekkenUI1_OnRequestOpenWerk;
+            xprodlist.Name = entry.Name;
+            xprodlist.InitUI(_manager);
+            xprodlist.LoadPlekken(true);
+            xprodlist.InitEvents();
+            xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.TabPages.Add(xtabpage);
+            if (select)
+                metroCustomTabControl1.SelectedTab = xtabpage;
+            entry.IsViewed = true;
+        }
+
+        private void InitGereedmeldingenTab(TileInfoEntry entry, bool select)
+        {
+            if (CheckTab(entry, select))
+                return;
+            var xtabpage = new MetroTabPage();
+            xtabpage.Padding = new Padding(5);
+            xtabpage.Text = entry.Text + "    ";
+            xtabpage.Tag = entry;
+            var xprodlist = new RecentGereedMeldingenUI();
+            xprodlist.AutoScroll = true;
+            xprodlist.BackColor = System.Drawing.Color.White;
+            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.ItemCountChanged += (sender, args) =>
+            {
+                if (xprodlist.Parent is MetroTabPage page)
+                {
+                    var xend = page.Text.IndexOf('[');
+                    if (xend > -1)
+                        page.Text = page.Text.Substring(0, xend) + $"[{xprodlist.ProductieLijst.Items.Count}]";
+                    else
+                        page.Text = $"{page.Text}[{xprodlist.ProductieLijst.Items.Count}]";
+                    page.Invalidate();
+                }
+            };
+            xprodlist.Name = entry.Name;
+            xprodlist.LoadBewerkingen();
+            xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.TabPages.Add(xtabpage);
+            if (select)
+                metroCustomTabControl1.SelectedTab = xtabpage;
+            entry.IsViewed = true;
+        }
+
+        private bool CheckTab(TileInfoEntry entry, bool select)
+        {
+            var xold = metroCustomTabControl1.TabPages.Cast<MetroTabPage>()
+                .FirstOrDefault(x => x.Tag is TileInfoEntry xent && entry.Equals(xent));
+            if (xold != null)
+            {
+                if (select)
+                    metroCustomTabControl1.SelectedTab = xold;
+                return true;
+            }
+
+            return false;
+        }
+
+        private void InitProductiesTab(TileInfoEntry entry, bool select)
+        {
+            try
+            {
+                if (CheckTab(entry, select))
+                    return;
+                var xtabpage = new MetroTabPage();
+                xtabpage.Padding = new Padding(5);
+                xtabpage.Text = entry.Text + "    ";
+                xtabpage.Tag = entry;
+                var xprodlist = new ProductieListControl();
+                xprodlist.AutoScroll = true;
+                xprodlist.BackColor = System.Drawing.Color.White;
+                xprodlist.CanLoad = true;
+                xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+                xprodlist.EnableEntryFiltering = true;
+                xprodlist.EnableFiltering = true;
+                xprodlist.EnableSync = false;
+                xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                xprodlist.IsBewerkingView = true;
+                xprodlist.ListName = entry.Name;
+                xprodlist.ItemCountChanged += (sender, args) =>
+                {
+                    if (xprodlist.Parent is MetroTabPage page)
+                    {
+                        var xend = page.Text.IndexOf('[');
+                        if (xend > -1)
+                            page.Text = page.Text.Substring(0, xend) + $"[{xprodlist.ProductieLijst.Items.Count}]";
+                        else
+                            page.Text = $"{page.Text}[{xprodlist.ProductieLijst.Items.Count}]";
+                        page.Invalidate();
+                    }
+                };
+                xprodlist.Name = entry.Name;
+                xprodlist.RemoveCustomItemIfNotValid = false;
+                xtabpage.Controls.Add(xprodlist);
+                metroCustomTabControl1.TabPages.Add(xtabpage);
+                if (select)
+                    metroCustomTabControl1.SelectedTab = xtabpage;
+                xprodlist.InitProductie(true, true, true, true, true, true);
+                xprodlist.InitEvents();
+                entry.IsViewed = true;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        private void InitFilterProductieTab(TileInfoEntry entry, bool select)
+        {
+            try
+            {
+                var xold = metroCustomTabControl1.TabPages.Cast<MetroTabPage>()
+    .FirstOrDefault(x => x.Tag is TileInfoEntry xent && entry.Equals(xent));
+                if (xold != null)
+                {
+                    if (select)
+                        metroCustomTabControl1.SelectedTab = xold;
+                    return;
+                }
+
+                var xname = entry.Name.Trim().Replace("_", " ");
+                var xfilter = Manager.Opties.Filters.FirstOrDefault(x =>
+                    string.Equals(x.Name, xname, StringComparison.CurrentCultureIgnoreCase));
+                if (xfilter == null)
+                    throw new Exception($"'{xname}' bestaat niet meer!");
+                var xtabpage = new MetroTabPage();
+                xtabpage.Padding = new Padding(5);
+                xtabpage.Text = entry.Text + "    ";
+                xtabpage.Tag = entry;
+                var xprodlist = new ProductieListControl();
+                xprodlist.AutoScroll = true;
+                xprodlist.BackColor = System.Drawing.Color.White;
+                xprodlist.CanLoad = true;
+                xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+                xprodlist.EnableEntryFiltering = true;
+                xprodlist.EnableFiltering = true;
+                xprodlist.EnableSync = false;
+                xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                xprodlist.IsBewerkingView = true;
+                xprodlist.ListName = entry.Name;
+                if (xfilter.ListNames.IndexOf(entry.Name) == -1)
+                    xfilter.ListNames.Add(entry.Name);
+                xprodlist.ItemCountChanged += (sender, args) =>
+                {
+                    if (xprodlist.Parent is MetroTabPage page)
+                    {
+                        var xend = page.Text.IndexOf('[');
+                        if (xend > -1)
+                            page.Text = page.Text.Substring(0, xend) + $"[{xprodlist.ProductieLijst.Items.Count}]";
+                        else
+                            page.Text = $"{page.Text}[{xprodlist.ProductieLijst.Items.Count}]";
+                        page.Invalidate();
+                    }
+                };
+                xprodlist.Name = entry.Name;
+                xprodlist.RemoveCustomItemIfNotValid = false;
+                xtabpage.Controls.Add(xprodlist);
+                metroCustomTabControl1.TabPages.Add(xtabpage);
+                if (select)
+                    metroCustomTabControl1.SelectedTab = xtabpage;
+                xprodlist.InitProductie(true, true, true, true, true, true);
+                xprodlist.InitEvents();
+                entry.IsViewed = true;
+            }
+            catch (Exception e)
+            {
+                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
+            }
+        }
+
+        private void InitZoekProductiesUITab(TileInfoEntry entry, bool select)
+        {
+            if (CheckTab(entry, select))
+                return;
+            var xtabpage = new MetroTabPage();
+            xtabpage.Padding = new Padding(5);
+            xtabpage.Text = entry.Text + "    ";
+            xtabpage.Tag = entry;
+            var xprodlist = new ZoekProductiesUI();
+
+            xprodlist.AutoScroll = true;
+            xprodlist.BackColor = System.Drawing.Color.White;
+            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.Name = entry.Name;
+            xprodlist.ClosedClicked += (x, y) =>
+            {
+                if (xprodlist.Parent is MetroTabPage page)
+                    metroCustomTabControl1.CloseTab(page);
+            };
+            xprodlist.InitUI();
+            xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.TabPages.Add(xtabpage);
+            if (select)
+                metroCustomTabControl1.SelectedTab = xtabpage;
+            entry.IsViewed = true;
+        }
+
+        private void InitAlleStoringenUITab(TileInfoEntry entry, bool select)
+        {
+            if (CheckTab(entry, select))
+                return;
+            var xtabpage = new MetroTabPage();
+            xtabpage.Padding = new Padding(5);
+            xtabpage.Text = entry.Text + "    ";
+            xtabpage.Tag = entry;
+            var xprodlist = new AlleStoringenUI();
+
+            xprodlist.AutoScroll = true;
+            xprodlist.BackColor = System.Drawing.Color.White;
+            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.Name = entry.Name;
+            xprodlist.CloseClicked += (x, y) =>
+            {
+                if (xprodlist.Parent is MetroTabPage page)
+                    metroCustomTabControl1.CloseTab(page);
+            };
+            xprodlist.InitUI();
+            xprodlist.InitStoringen();
+            xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.TabPages.Add(xtabpage);
+            if (select)
+                metroCustomTabControl1.SelectedTab = xtabpage;
+            entry.IsViewed = true;
+        }
+
+        private void InitArtikelenVerbruikUITab(TileInfoEntry entry, bool select)
+        {
+            if (CheckTab(entry, select))
+                return;
+            var xtabpage = new MetroTabPage();
+            xtabpage.Padding = new Padding(5);
+            xtabpage.Text = entry.Text + "    ";
+            xtabpage.Tag = entry;
+            var xprodlist = new ArtikelenVerbruikUI();
+
+            xprodlist.AutoScroll = true;
+            xprodlist.BackColor = System.Drawing.Color.White;
+            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.Name = entry.Name;
+            xprodlist.CloseClicked += (x, y) =>
+            {
+                if (xprodlist.Parent is MetroTabPage page)
+                    metroCustomTabControl1.CloseTab(page);
+            };
+            xprodlist.InitUI();
+            xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.TabPages.Add(xtabpage);
+            if (select)
+                metroCustomTabControl1.SelectedTab = xtabpage;
+            entry.IsViewed = true;
+        }
+
+
+        private void InitPersoneelIndelingTab(TileInfoEntry entry, bool select)
+        {
+            if (CheckTab(entry, select))
+                return;
+            var xtabpage = new MetroTabPage();
+            xtabpage.Padding = new Padding(5);
+            xtabpage.Text = entry.Text + "    ";
+            xtabpage.Tag = entry;
+            var xprodlist = new PersoneelIndelingUI();
+
+            xprodlist.AutoScroll = true;
+            xprodlist.BackColor = System.Drawing.Color.White;
+            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.Name = entry.Name;
+            xprodlist.InitUI();
+            xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.TabPages.Add(xtabpage);
+            if (select)
+                metroCustomTabControl1.SelectedTab = xtabpage;
+            entry.IsViewed = true;
+        }
+
+        private void InitWerkplaatsIndelingTab(TileInfoEntry entry, bool select)
+        {
+            if (CheckTab(entry, select))
+                return;
+            var xtabpage = new MetroTabPage();
+            xtabpage.Padding = new Padding(5);
+            xtabpage.Text = entry.Text + "    ";
+            xtabpage.Tag = entry;
+            var xprodlist = new WerkplaatsIndelingUI();
+
+            xprodlist.AutoScroll = true;
+            xprodlist.BackColor = System.Drawing.Color.White;
+            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.Name = entry.Name;
+            xprodlist.InitUI();
+            xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.TabPages.Add(xtabpage);
+            if (select)
+                metroCustomTabControl1.SelectedTab = xtabpage;
+            entry.IsViewed = true;
+        }
+
+        private void InitPersoneelTab(TileInfoEntry entry, bool select)
+        {
+            if (CheckTab(entry, select))
+                return;
+            var xtabpage = new MetroTabPage();
+            xtabpage.Padding = new Padding(5);
+            xtabpage.Text = entry.Text + "    ";
+            xtabpage.Tag = entry;
+            var xprodlist = new PersoneelsUI();
+
+            xprodlist.AutoScroll = true;
+            xprodlist.BackColor = System.Drawing.Color.White;
+            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.Name = entry.Name;
+            xprodlist.InitUI();
+            xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.TabPages.Add(xtabpage);
+            if (select)
+                metroCustomTabControl1.SelectedTab = xtabpage;
+            entry.IsViewed = true;
+        }
+
+        private void InitArtikelenTab(TileInfoEntry entry, bool select)
+        {
+            if (CheckTab(entry, select))
+                return;
+            var xtabpage = new MetroTabPage();
+            xtabpage.Padding = new Padding(5);
+            xtabpage.Text = entry.Text + "    ";
+            xtabpage.Tag = entry;
+            var xprodlist = new ArtikelsUI();
+
+            xprodlist.AutoScroll = true;
+            xprodlist.BackColor = System.Drawing.Color.White;
+            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.Name = entry.Name;
+            xprodlist.InitUI();
+            xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.TabPages.Add(xtabpage);
+            if (select)
+                metroCustomTabControl1.SelectedTab = xtabpage;
+            entry.IsViewed = true;
+        }
+
+        private void InitArtikelenRecordsTab(TileInfoEntry entry, bool select)
+        {
+            if (CheckTab(entry, select))
+                return;
+            var xtabpage = new MetroTabPage();
+            xtabpage.Padding = new Padding(5);
+            xtabpage.Text = entry.Text + "    ";
+            xtabpage.Tag = entry;
+            var xprodlist = new ArtikelRecordsUI();
+
+            xprodlist.AutoScroll = true;
+            xprodlist.BackColor = System.Drawing.Color.White;
+            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.Name = entry.Name;
+            xprodlist.CloseClicked += (x, y) =>
+            {
+                if (xprodlist.Parent is MetroTabPage page)
+                    metroCustomTabControl1.CloseTab(page);
+            };
+            xprodlist.InitUI();
+            xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.TabPages.Add(xtabpage);
+            if (select)
+                metroCustomTabControl1.SelectedTab = xtabpage;
+            entry.IsViewed = true;
+        }
+
+        private void InitBerekenVerbruikUITab(TileInfoEntry entry, bool select)
+        {
+            if (CheckTab(entry, select))
+                return;
+            var xtabpage = new MetroTabPage();
+            xtabpage.Padding = new Padding(5);
+            xtabpage.Text = entry.Text + "    ";
+            xtabpage.Tag = entry;
+            var xprodlist = new ProductieVerbruikUI();
+            xprodlist.Dock = DockStyle.Fill;
+            xprodlist.ShowMateriaalSelector = false;
+            xprodlist.ShowOpslaan = true;
+            xprodlist.ShowPerUur = true;
+            xprodlist.ShowSluiten = true;
+            xprodlist.ShowOpdrukkerArtikelNr = true;
+            xprodlist.UpdateFields(true);
+            xprodlist.MaxUitgangsLengte = 12450;
+            xprodlist.RestStuk = 50;
+            xprodlist.AutoScroll = true;
+            xprodlist.BackColor = System.Drawing.Color.White;
+            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.Name = entry.Name;
+            xprodlist.CloseClicked += (x, y) =>
+            {
+                if (xprodlist.Parent is MetroTabPage page)
+                    metroCustomTabControl1.CloseTab(page);
+            };
+            xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.TabPages.Add(xtabpage);
+            if (select)
+                metroCustomTabControl1.SelectedTab = xtabpage;
+            entry.IsViewed = true;
+        }
+
+        private void InitAlleNotitiesTab(TileInfoEntry entry, bool select)
+        {
+            if (CheckTab(entry, select))
+                return;
+            var xtabpage = new MetroTabPage();
+            xtabpage.Padding = new Padding(5);
+            xtabpage.Text = entry.Text + "    ";
+            xtabpage.Tag = entry;
+            var xprodlist = new AlleNotitiesUI();
+
+            xprodlist.AutoScroll = true;
+            xprodlist.BackColor = System.Drawing.Color.White;
+            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.Name = entry.Name;
+            xprodlist.InitUI();
+            xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.TabPages.Add(xtabpage);
+            if (select)
+                metroCustomTabControl1.SelectedTab = xtabpage;
+            entry.IsViewed = true;
+        }
+
+        private void InitProductieVolgordeTab(TileInfoEntry entry, bool select)
+        {
+            if (CheckTab(entry, select))
+                return;
+            var xtabpage = new MetroTabPage();
+            xtabpage.Padding = new Padding(5);
+            xtabpage.Text = entry.Text + "    ";
+            xtabpage.Tag = entry;
+            var xprodlist = new ProductieOverzichtUI();
+
+            xprodlist.AutoScroll = true;
+            xprodlist.BackColor = System.Drawing.Color.White;
+            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.Name = entry.Name;
+            xprodlist.InitUI();
+            xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.TabPages.Add(xtabpage);
+            if (select)
+                metroCustomTabControl1.SelectedTab = xtabpage;
+            entry.IsViewed = true;
+        }
+        private void InitChartsTab(TileInfoEntry entry, bool select)
+        {
+            if (CheckTab(entry, select))
+                return;
+            var xtabpage = new MetroTabPage();
+            xtabpage.Padding = new Padding(5);
+            xtabpage.Text = entry.Text + "    ";
+            xtabpage.Tag = entry;
+            var xprodlist = new ChartView();
+
+            xprodlist.AutoScroll = true;
+            xprodlist.BackColor = System.Drawing.Color.White;
+            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.Name = entry.Name;
+            xprodlist.LoadData();
+            xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.TabPages.Add(xtabpage);
+            if (select)
+                metroCustomTabControl1.SelectedTab = xtabpage;
+            entry.IsViewed = true;
+        }
+
+        private void CloseTabPage(object sender)
+        {
+            if (sender is MetroTabPage page && page.Controls.Count > 0)
+            {
+                var xcontrol = page.Controls.Cast<Control>().FirstOrDefault(x=> x is not MetroScrollBar);
+                if (xcontrol is ProductieListControl xprod)
+                {
+                    xprod.DetachEvents();
+                    xprod.SaveColumns(true);
+                }
+                else if (xcontrol is RecentGereedMeldingenUI gereed)
+                {
+                    gereed.DetachEvents();
+                    gereed.productieListControl1.SaveColumns(true);
+                }
+                else if (xcontrol is WerkPlekkenUI werkplekken)
+                {
+                    werkplekken.DetachEvents();
+                    werkplekken.SaveLayout();
+                }
+                else if (xcontrol is ZoekProductiesUI zoeken)
+                {
+                    zoeken.CloseUI();
+                }
+                else if (xcontrol is AlleStoringenUI storingen)
+                {
+                    storingen.CloseUI();
+                }
+                else if (xcontrol is ArtikelenVerbruikUI artikelverbuik)
+                {
+                    artikelverbuik.CloseUI();
+                }
+                else if (xcontrol is PersoneelIndelingUI pers)
+                {
+                    pers.CloseUI();
+                }
+                else if (xcontrol is WerkplaatsIndelingUI werkp)
+                {
+                    werkp.CloseUI();
+                }
+                else if (xcontrol is PersoneelsUI xpers)
+                {
+                    xpers.CloseUI();
+                }
+                else if (xcontrol is ArtikelsUI artikels)
+                {
+                    artikels.CloseUI();
+                }
+                else if (xcontrol is ArtikelRecordsUI records)
+                {
+                    records.CloseUI();
+                }
+                else if (xcontrol is AlleNotitiesUI notes)
+                {
+                    notes.CloseUI();
+                }
+                else if (xcontrol is ProductieOverzichtUI overzicht)
+                {
+                    overzicht.CloseUI();
+                }
+                if (page.Tag is TileInfoEntry info)
+                    info.IsViewed = false;
+                xcontrol?.Dispose();
+            }
+        }
+
+        private void metroCustomTabControl1_TabClosed(object sender, EventArgs e)
+        {
+            CloseTabPage(sender);
+        }
+
+        public void ShowTileTabPage(TileInfoEntry entry, bool select)
+        {
+            try
+            {
+                if (entry?.Name == null) return;
+                switch (entry.Name.ToLower())
+                {
+                    case "producties":
+                        InitProductiesTab(entry, select);
+                        break;
+                    case "werkplaatsen":
+                        InitWerkplekkenUITab(entry, select);
+                        break;
+                    case "gereedmeldingen":
+                        InitGereedmeldingenTab(entry, select);
+                        break;
+                    case "onderbrekingen":
+                        InitAlleStoringenUITab(entry, select);
+                        break;
+                    case "xverbruik":
+                        InitBerekenVerbruikUITab(entry, select);
+                        break;
+                    case "xverbruikbeheren":
+                        InitArtikelenVerbruikUITab(entry, select);
+                        break;
+                    case "xchangeaantal":
+                        DoAantalGemaakt(this);
+                        break;
+                    case "xsearchtekening":
+                        ZoekWerkTekening();
+                        break;
+                    case "xpersoneelindeling":
+                        InitPersoneelIndelingTab(entry, select);
+                        break;
+                    case "xwerkplaatsindeling":
+                        InitWerkplaatsIndelingTab(entry,select);
+                        break;
+                    case "xcreateexcel":
+                        DoCreateExcel();
+                        break;
+                    case "xstats":
+                        InitChartsTab(entry, select);
+                        break;
+                    case "xzoekproducties":
+                        InitZoekProductiesUITab(entry, select);
+                        break;
+                    case "xpersoneel":
+                        InitPersoneelTab(entry,select);
+                        break;
+                    case "xalleartikelen":
+                        InitArtikelenTab(entry, select);
+                        break;
+                    case "xartikelrecords":
+                        InitArtikelenRecordsTab(entry,select);
+                        break;
+                    case "xproductievolgorde":
+                        InitProductieVolgordeTab(entry, select);
+                        break;
+                    case "xklachten":
+                        ShowKlachtenWindow();
+                        break;
+                    case "xweekoverzicht":
+                        ShowCreateWeekOverzicht();
+                        break;
+                    case "xallenotities":
+                        InitAlleNotitiesTab(entry,select);
+                        break;
+                    default:
+                        switch (entry.GroupName.ToLower())
+                        {
+                            case "filter":
+                                InitFilterProductieTab(entry, select);
+                                break;
+                        }
+
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        private void tileMainView1_TileClicked(object sender, EventArgs e)
+        {
+            if (sender is Tile {Tag: TileInfoEntry entry})
+            {
+                ShowTileTabPage(entry, true);
+            }
+        }
+
+        private void tileMainView1_TilesLoaded(object sender, EventArgs e)
+        {
+            try
+            {
+                if (sender is TileViewer viewer)
+                {
+                    var xtiles = viewer.GetAllTiles().Where(x => x.Tag is TileInfoEntry {IsViewed: true}).ToList();
+                    foreach (var xt in xtiles)
+                    {
+                        if (xt.Tag is TileInfoEntry entry)
+                            ShowTileTabPage(entry, false);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                throw;
+            }
+        }
+        #endregion Tab Buttons
 
         public void LoadManager(string path, bool disposeOld, bool autologin = true)
         {
@@ -225,13 +915,11 @@ namespace Controls
             Manager.OnSettingsChanged += _manager_OnSettingsChanged;
             //Manager.OnProductiesLoaded += Manager_OnProductiesChanged;
             Manager.OnLoginChanged += _manager_OnLoginChanged;
-            Manager.OnSettingsChanging += _manager_OnSettingsChanging;
             Manager.OnFormulierActie += Manager_OnFormulierActie;
             //Manager.DbUpdater.DbEntryUpdated += DbUpdater_DbEntryUpdated;
             //Manager.OnDbBeginUpdate += Manager_OnDbBeginUpdate;
             //Manager.OnDbEndUpdate += Manager_OnDbEndUpdate;
             Manager.OnManagerLoaded += _manager_OnManagerLoaded;
-            Manager.FilterChanged += Manager_FilterChanged;
             ProductieChat.MessageRecieved += ProductieChat_MessageRecieved;
             ProductieChat.GebruikerUpdate += ProductieChat_GebruikerUpdate;
             MultipleFileDb.CorruptedFilesChanged += MultipleFileDb_CorruptedFilesChanged;
@@ -245,15 +933,6 @@ namespace Controls
             Manager.RequestRespondDialog += Manager_RequestRespondDialog;
 
             _manager.OnShutdown += _manager_OnShutdown;
-            //xproductieListControl1.InitEvents();
-            xbewerkingListControl.InitEvents();
-            //xproductieListControl1.ItemCountChanged += XproductieListControl1_ItemCountChanged;
-            xbewerkingListControl.ItemCountChanged += XproductieListControl1_ItemCountChanged;
-            recentGereedMeldingenUI1.ItemCountChanged += XproductieListControl1_ItemCountChanged;
-            //xproductieListControl1.SelectedItemChanged += XproductieListControl1_SelectedItemChanged;
-            werkPlekkenUI1.InitEvents();
-            werkPlekkenUI1.OnRequestOpenWerk += WerkPlekkenUI1_OnRequestOpenWerk;
-            werkPlekkenUI1.OnPlekkenChanged += WerkPlekkenUI1_OnPlekkenChanged;
         }
 
         private DialogResult Manager_RequestRespondDialog(object sender, string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon, string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null, Image customImage = null, MetroColorStyle style = MetroColorStyle.Default)
@@ -282,8 +961,6 @@ namespace Controls
             // Manager.OnProductiesLoaded -= Manager_OnProductiesChanged;
             //Manager.DbUpdater.DbEntryUpdated -= DbUpdater_DbEntryUpdated;
             Manager.OnLoginChanged -= _manager_OnLoginChanged;
-            Manager.OnSettingsChanging -= _manager_OnSettingsChanging;
-            Manager.FilterChanged -= Manager_FilterChanged;
             if (Manager.Opmerkingen != null)
                 Manager.Opmerkingen.OnOpmerkingenChanged -= Opmerkingen_OnOpmerkingenChanged;
             Manager.RequestRespondDialog -= Manager_RequestRespondDialog;
@@ -302,20 +979,31 @@ namespace Controls
             Manager.VerpakkingDeleted -= Manager_VerpakkingDeleted;
             if (_manager != null)
                 _manager.OnShutdown -= _manager_OnShutdown;
-            //xproductieListControl1.DetachEvents();
-            xbewerkingListControl.DetachEvents();
-            //productieListControl1.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
-            xbewerkingListControl.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
-            recentGereedMeldingenUI1.ItemCountChanged -= XproductieListControl1_ItemCountChanged;
-            werkPlekkenUI1.DetachEvents();
-            werkPlekkenUI1.OnRequestOpenWerk -= WerkPlekkenUI1_OnRequestOpenWerk;
-            werkPlekkenUI1.OnPlekkenChanged -= WerkPlekkenUI1_OnPlekkenChanged;
         }
 
         public void SaveLayouts()
         {
-            xbewerkingListControl.SaveColumns(false);
-            recentGereedMeldingenUI1.productieListControl1.SaveColumns(false);
+            try
+            {
+                tileMainView1.SaveLayout(false);
+                foreach (var xtab in metroCustomTabControl1.TabPages)
+                {
+                    if (xtab is MetroTabPage page && page.Controls.Count > 0)
+                    {
+                        var xcontrol = page.Controls[0];
+                        if (xcontrol is ProductieListControl xprod)
+                            xprod.SaveColumns(true);
+                        else if (xcontrol is RecentGereedMeldingenUI gereed)
+                            gereed.productieListControl1.SaveColumns(true);
+                        else if (xcontrol is WerkPlekkenUI werkplekken)
+                            werkplekken.SaveLayout();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private void Manager_VerpakkingDeleted(object sender, EventArgs e)
@@ -459,24 +1147,6 @@ namespace Controls
           UpdateUnreadOpmerkingen();
         }
 
-        private void Manager_FilterChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                BeginInvoke(new MethodInvoker(() => werkPlekkenUI1.LoadPlekken(true)));
-                BeginInvoke(new MethodInvoker(recentGereedMeldingenUI1.LoadBewerkingen));
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
-        }
-
-        private void XproductieListControl1_ItemCountChanged(object sender, EventArgs e)
-        {
-            UpdateTabCounts();
-        }
-
         private void ProductieChat_GebruikerUpdate(UserChat user)
         {
             UpdateUnreadMessages(user);
@@ -496,50 +1166,7 @@ namespace Controls
             if (res == DialogResult.OK) verlengtijd = af.VerlengTijd;
             return res;
         }
-
-        private void _manager_OnSettingsChanging(object instance, ref UserSettings settings, ref bool cancel)
-        {
-            if (IsDisposed || Disposing) return;
-            try
-            {
-                var xsettings = settings;
-                if (InvokeRequired)
-                    Invoke(new Action(() =>
-                    {
-                        try
-                        {
-                            //xsettings.ViewDataProductieState = xproductieListControl1.ProductieLijst.SaveState();
-                            //xsettings.ViewDataBewerkingenState = xbewerkingListControl.ProductieLijst.SaveState();
-                            xsettings.ViewDataWerkplekState = werkPlekkenUI1.xwerkpleklist.SaveState();
-                            //xsettings.ViewDataRecentProductieState =
-                            //    recentGereedMeldingenUI1.ProductieLijst.SaveState();
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e);
-                        }
-                    }));
-                else
-                    try
-                    {
-                        //xsettings.ViewDataProductieState = xproductieListControl1.ProductieLijst.SaveState();
-                        //xsettings.ViewDataBewerkingenState = xbewerkingListControl.ProductieLijst.SaveState();
-                        xsettings.ViewDataWerkplekState = werkPlekkenUI1.xwerkpleklist.SaveState();
-                        //xsettings.ViewDataRecentProductieState = recentGereedMeldingenUI1.ProductieLijst.SaveState();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
-
-                settings = xsettings;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
+        
         private void _manager_OnSettingsChanged(object instance, UserSettings settings, bool init)
         {
             try
@@ -554,22 +1181,8 @@ namespace Controls
                     {
                         var name = Manager.Opties == null ? "Default" : Manager.Opties.Username;
                         Text = @$"ProductieManager [{name}]";
-
-
-                        //if (Manager.Opties?._viewproddata != null)
-                        //{
-                        //    xproductieListControl1.ProductieLijst.RestoreState(Manager.Opties?.ViewDataProductieState);
-                        //    xproductieListControl1.ProductieLijst.Columns.Remove(
-                        //        xproductieListControl1.ProductieLijst.Columns["Naam"]);
-                        //}
-
-                        //if (Manager.Opties?._viewbewdata != null)
-                        //    xbewerkingListControl.ProductieLijst.RestoreState(Manager.Opties.ViewDataBewerkingenState);
-                        if (Manager.Opties?._viewwerkplekdata != null)
-                            werkPlekkenUI1.xwerkpleklist.RestoreState(Manager.Opties.ViewDataWerkplekState);
-                        //if (Manager.Opties?._viewrecentproddata != null)
-                        //    recentGereedMeldingenUI1.ProductieLijst.RestoreState(Manager.Opties
-                        //        .ViewDataRecentProductieState);
+                        tileMainView1.LoadTileViewer();
+                        tileMainView1.TileCountRefreshInterval = Manager.Opties.TileCountRefreshRate;
                         var xrooster = mainMenu1.GetButton("xroostermenubutton");
                         if (xrooster != null)
                             xrooster.Image = Manager.Opties?.TijdelijkeRooster == null
@@ -578,9 +1191,7 @@ namespace Controls
 
                         //LoadFilter();
                         _manager.SetSettings(settings);
-                        werkPlekkenUI1.LoadPlekken(true);
                         CheckForSpecialRooster(false);
-                        recentGereedMeldingenUI1.LoadBewerkingen();
                         this.Invalidate();
                         //Manager.Taken?.StartBeheer();
                         //if (Manager.IsLoaded)
@@ -781,7 +1392,7 @@ namespace Controls
                     ProductieListControl.StartBewerkingen(this, created.Bewerkingen);
                 else
                     await created.UpdateForm(true, false);
-                SelectProductieItem(created);
+                ShowProductieForm(this, created, true, created.Bewerkingen.FirstOrDefault());
             }
         }
 
@@ -919,57 +1530,24 @@ namespace Controls
             }
         }
 
-        private void DoOpenProductiePdf()
-        {
-            switch (metroTabControl.SelectedIndex)
-            {
-                case 0: 
-                    if (xbewerkingListControl.SelectedItem is Bewerking bew) bew.Parent?.OpenProductiePdf();
-                    break;
-                case 2: //werkplekken
-                    var plek = werkPlekkenUI1.SelectedWerkplek;
-                    plek?.Werk?.Parent?.OpenProductiePdf();
-                    break;
-            }
-        }
-
-        private void DoPdfEnabled()
-        {
-            mainMenu1.Enable("xbekijkproductiepdf", false);
-            switch (metroTabControl.SelectedIndex)
-            {
-                case 0: //producties
-                    if (xbewerkingListControl.SelectedItem is Bewerking bew)
-                        mainMenu1.Enable("xbekijkproductiepdf",
-                            bew.Parent != null && bew.Parent.ContainsProductiePdf());
-                    break;
-                case 2: //werkplekken
-                    var plek = werkPlekkenUI1.SelectedWerkplek;
-                    if (plek != null)
-                        mainMenu1.Enable("xbekijkproductiepdf",
-                            plek.Werk?.Parent != null && plek.Werk.Parent.ContainsProductiePdf());
-                    break;
-            }
-        }
-
-        private void SelectProductieItem(object item)
-        {
-            if (item is ProductieFormulier form)
-            {
-                //xproductieListControl1.SelectedItem = form;
-                metroTabControl.SelectedIndex = 0;
-            }
-            else if (item is Bewerking bew)
-            {
-                xbewerkingListControl.SelectedItem = bew;
-                metroTabControl.SelectedIndex = 0;
-            }
-            else if (item is WerkPlek plek)
-            {
-                werkPlekkenUI1.SelectedWerkplek = plek;
-                metroTabControl.SelectedIndex = 1;
-            }
-        }
+        //private void SelectProductieItem(object item)
+        //{
+        //    if (item is ProductieFormulier form)
+        //    {
+        //        //xproductieListControl1.SelectedItem = form;
+        //        metroTabControl.SelectedIndex = 0;
+        //    }
+        //    else if (item is Bewerking bew)
+        //    {
+        //        xbewerkingListControl.SelectedItem = bew;
+        //        metroTabControl.SelectedIndex = 0;
+        //    }
+        //    else if (item is WerkPlek plek)
+        //    {
+        //        werkPlekkenUI1.SelectedWerkplek = plek;
+        //        metroTabControl.SelectedIndex = 1;
+        //    }
+        //}
 
         private async void DoEigenRooster()
         {
@@ -1256,7 +1834,6 @@ namespace Controls
                             DoOnderbreking();
                             break;
                         case "xbekijkproductiepdf":
-                            DoOpenProductiePdf();
                             break;
                         case "xroostermenubutton":
                             SetSpecialeRooster();
@@ -1365,15 +1942,6 @@ namespace Controls
         private void xdbbewerkingen_Click(object sender, EventArgs e)
         {
             ShowBewerkingDb();
-        }
-
-
-        private void WerkPlekkenUI1_OnPlekkenChanged(object sender, EventArgs e)
-        {
-            if (sender is ObjectListView olv)
-                tabPage3.Text = olv.Items.Count == 0
-                    ? "Geen Actieve Werkplekken"
-                    : $"Actieve Werkplekken [{olv.Items.Count}]";
         }
 
         private void WerkPlekkenUI1_OnRequestOpenWerk(object sender, EventArgs e)
@@ -1655,16 +2223,6 @@ namespace Controls
             ShowProductieLogWindow();
         }
 
-        private void UpdateTabCounts()
-        {
-            BeginInvoke(new MethodInvoker(() =>
-            {
-                //tabPage1.Text = $"Producties [{xproductieListControl1.ProductieLijst.Items.Count}]";
-                tabPage2.Text = $"Bewerkingen [{xbewerkingListControl.ProductieLijst.Items.Count}]";
-                tabPage4.Text = $"Recente Gereedmeldingen [{recentGereedMeldingenUI1.ItemCount}]";
-            }));
-        }
-
         private XMessageBox _unreadMessages;
 
         public void UpdateUnreadMessages(UserChat user)
@@ -1926,20 +2484,8 @@ namespace Controls
 
         public static void ShowCalculatieWindow()
         {
-            //var _calcform = new RangeCalculatorForm();
-            //_calcform.ShowDialog();
-            if (_calcform == null)
-            {
-                _calcform = new RangeCalculatorForm();
-                _calcform.FormClosed += (x, y) =>
-                {
-                    _calcform?.Dispose();
-                    _calcform = null;
-                };
-            }
+            var _calcform = new RangeCalculatorForm();
             _calcform.Show();
-            if (_calcform.WindowState == FormWindowState.Minimized)
-                _calcform.WindowState = FormWindowState.Normal;
             _calcform.BringToFront();
             _calcform.Focus();
         }
@@ -2006,7 +2552,7 @@ namespace Controls
 
         public static void ShowOnderbrekeningenWidow()
         {
-            var x = new AlleStoringen();
+            var x = new AlleStoringenForm();
             x.InitStoringen();
             x.ShowDialog();
         }
@@ -2020,7 +2566,7 @@ namespace Controls
         {
             if (_PersoneelForm == null)
             {
-                _PersoneelForm = new PersoneelsForm(false);
+                _PersoneelForm = new PersoneelsForm();
                 _PersoneelForm.FormClosed += (x, y) =>
                 {
                     _PersoneelForm?.Dispose();
@@ -2039,7 +2585,7 @@ namespace Controls
         {
             if (_WerkplaatsIndeling == null)
             {
-                _WerkplaatsIndeling = new WerkplaatsIndeling();
+                _WerkplaatsIndeling = new WerkplaatsIndelingForm();
                 _WerkplaatsIndeling.FormClosed += (x, y) =>
                 {
                     _WerkplaatsIndeling?.Dispose();
@@ -2058,7 +2604,7 @@ namespace Controls
         {
             if (_PersoneelIndeling == null)
             {
-                _PersoneelIndeling = new PersoneelIndeling();
+                _PersoneelIndeling = new PersoneelIndelingForm();
                 _PersoneelIndeling.FormClosed += (x, y) =>
                 {
                     _PersoneelIndeling?.Dispose();
@@ -2119,7 +2665,7 @@ namespace Controls
         {
             var form = bew?.GetParent();
             if (form == null) return;
-            var allst = new AlleStoringen();
+            var allst = new AlleStoringenForm();
             allst.InitStoringen(form);
             allst.ShowDialog();
         }
@@ -2238,6 +2784,18 @@ namespace Controls
             _ProductieOverzicht.Focus();
         }
 
+        public void ShowKlachtenWindow()
+        {
+            var kl = new KlachtenForm();
+            kl.ShowDialog();
+        }
+
+        public void ShowCreateWeekOverzicht()
+        {
+            var xf = new CreateWeekExcelForm();
+            xf.ShowDialog();
+        }
+
         public static void CheckForPreview(bool showall, bool onlyifnew)
         {
             try
@@ -2301,10 +2859,13 @@ namespace Controls
                     if (tb.UseSecondary)
                     {
                         var calcform = new RangeCalculatorForm();
-                        var rf = new RangeCalculatorForm.RangeFilter();
-                        rf.Enabled = true;
-                        rf.Criteria = tb.SecondaryText.Trim();
-                        calcform.Show(rf);
+                        var rf = new ZoekProductiesUI.RangeFilter
+                        {
+                            Enabled = true,
+                            Criteria = tb.SecondaryText.Trim()
+                        };
+                        calcform.Filter = rf;
+                        calcform.Show();
                     }
                     else
                     {
@@ -2495,8 +3056,7 @@ namespace Controls
 
         private void xklachten_Click(object sender, EventArgs e)
         {
-            var kl = new KlachtenForm();
-            kl.ShowDialog();
+            ShowKlachtenWindow();
         }
 
         private void xverpakkingen_Click(object sender, EventArgs e)
@@ -2507,40 +3067,11 @@ namespace Controls
 
         private void xMaakWeekOverzichtToolstrip_Click(object sender, EventArgs e)
         {
-            var xf = new CreateWeekExcelForm();
-            xf.ShowDialog();
+            ShowCreateWeekOverzicht();
         }
         #endregion Menu Button Events
 
         #region Taken Lijst
-
-        private void takenManager1_OnTaakClicked(Taak taak)
-        {
-            if (taak?.Formulier != null)
-            {
-                if (taak.Plek != null)
-                {
-                    werkPlekkenUI1.xwerkpleklist.SelectedObject = taak.Plek;
-                    if (werkPlekkenUI1.xwerkpleklist.SelectedItem != null)
-                    {
-                        metroTabControl.SelectedIndex = 1;
-                        werkPlekkenUI1.xwerkpleklist.SelectedItem.EnsureVisible();
-                        return;
-                    }
-                }
-
-                if (taak.Bewerking != null)
-                {
-                    xbewerkingListControl.SelectedItem = taak.Bewerking;
-                    if (xbewerkingListControl.SelectedItem != null) metroTabControl.SelectedIndex = 0;
-                }
-                //else
-                //{
-                    //xproductieListControl1.SelectedItem = taak.Formulier;
-                    //if (xproductieListControl1.SelectedItem != null) metroTabControl.SelectedIndex = 0;
-                //}
-            }
-        }
 
         private async void takenManager1_OnTaakUitvoeren(Taak taak)
         {
@@ -2706,7 +3237,7 @@ namespace Controls
 
         private void xSporenButton_Click(object sender, EventArgs e)
         {
-            new SporenForm().ShowDialog();
+           new ArtikelenVerbruikForm().ShowDialog();
         }
     }
 }

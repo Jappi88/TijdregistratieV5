@@ -107,7 +107,7 @@ namespace Rpm.Productie
         {
             if (bereik == null) return true;
             return (bereik.Start >= Start && bereik.Start < Stop) ||
-                   (bereik.Stop >= Start && bereik.Start < Stop);
+                   (bereik.Stop >= Start && bereik.Stop <= Stop);
         }
 
         public override bool Equals(object obj)

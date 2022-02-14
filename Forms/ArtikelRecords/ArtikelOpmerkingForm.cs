@@ -93,7 +93,7 @@ namespace Forms.ArtikelRecords
         private void InitOntvangers(ArtikelOpmerking opmerking)
         {
             ClearOntvangers();
-            var xusers = Manager.Database?.GetAllSettings().Result;
+            var xusers = Manager.Database?.GetAllAccounts().Result;
             
             if (xusers is {Count: > 0})
             {

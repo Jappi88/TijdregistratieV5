@@ -1683,30 +1683,10 @@ namespace Rpm.Productie
             {
                 foreach (var bew in Bewerkingen)
                 {
-                    if (bew.Note != null && !string.IsNullOrEmpty(bew.Note.Notitie))
+                    var xnots = bew.GetAlleNotities();
+                    if (xnots.Count > 0)
                     {
-                        xreturn.Add(bew.Note);
-                    }
-
-                    if (bew.GereedNote != null && !string.IsNullOrEmpty(bew.GereedNote.Notitie))
-                    {
-                        xreturn.Add(bew.GereedNote);
-                    }
-
-                    if (bew.DeelGereedMeldingen != null)
-                    {
-                        foreach(var dg in bew.DeelGereedMeldingen)
-                            if(dg.Note != null && !string.IsNullOrEmpty(dg.Note.Notitie))
-                                xreturn.Add(dg.Note);
-                    }
-
-                    if (bew.WerkPlekken.Count == 0) continue;
-                    foreach (var wp in bew.WerkPlekken)
-                    {
-                        if (wp.Note != null && !string.IsNullOrEmpty(wp.Note.Notitie))
-                        {
-                            xreturn.Add(wp.Note);
-                        }
+                        xreturn.AddRange(xnots);
                     }
                 }
             }

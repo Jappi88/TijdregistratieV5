@@ -75,6 +75,10 @@ namespace Controls
         private void StopWaiting()
         {
             _IsWaiting = false;
+            if (xstatus.InvokeRequired)
+                xstatus.Invoke(new MethodInvoker(() => xstatus.Visible = false));
+            else
+                xstatus.Visible = false;
         }
 
         private Task UpdateTijdgewerktChart(bool iswerkplek, int startweek, int startjaar, string type, bool shownow)

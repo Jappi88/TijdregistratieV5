@@ -194,7 +194,21 @@ namespace Forms
             Form form = null;
             try
             {
-                form = owner is not Form form1 ? ((ContainerControl) owner).ParentForm : form1;
+                while (true)
+                {
+                    if (owner is Form xform)
+                    {
+                        form = xform;
+                        break;
+                    }
+                    if (owner is Control xcontrol)
+                    {
+                        owner = xcontrol.Parent;
+                    }
+
+                    if (owner == null)
+                        break;
+                }
             }
             catch (Exception e)
             {

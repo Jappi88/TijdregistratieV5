@@ -57,7 +57,17 @@ namespace Rpm.Productie.AantalHistory
                             x.EndDate.AddMinutes(5) >= DateTime.Now)
                         : null;
                     var xlast = Aantallen.LastOrDefault();
+
                     var xstart = xlast?.EndDate ?? tijden?.GetFirstStart() ?? DateTime.Now;
+                    var xtijd = tijden?.Uren.FirstOrDefault(x =>
+                        x.ContainsBereik(new TijdEntry(DateTime.Now, DateTime.Now)));
+                    if (xtijd != null)
+                    {
+                        if (xlast != null && xtijd.ContainsBereik(new TijdEntry(xlast.DateChanged, xlast.EndDate)))
+                            xstart = xlast.EndDate;
+                        else
+                            xstart = xtijd.Start;
+                    }
                     if (xstart.IsDefault())
                         xstart = DateTime.Now;
                     if (xent != null)

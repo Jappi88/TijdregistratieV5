@@ -49,7 +49,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(20, 60);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(660, 400);
+            this.panel1.Size = new System.Drawing.Size(906, 484);
             this.panel1.TabIndex = 0;
             // 
             // xklachtenContainer
@@ -59,7 +59,7 @@
             this.xklachtenContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xklachtenContainer.Location = new System.Drawing.Point(0, 37);
             this.xklachtenContainer.Name = "xklachtenContainer";
-            this.xklachtenContainer.Size = new System.Drawing.Size(660, 363);
+            this.xklachtenContainer.Size = new System.Drawing.Size(906, 447);
             this.xklachtenContainer.TabIndex = 0;
             // 
             // panel2
@@ -69,7 +69,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(660, 37);
+            this.panel2.Size = new System.Drawing.Size(906, 37);
             this.panel2.TabIndex = 0;
             // 
             // toolStrip1
@@ -82,7 +82,7 @@
             this.xshowkrachtinfo});
             this.toolStrip1.Location = new System.Drawing.Point(376, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(284, 39);
+            this.toolStrip1.Size = new System.Drawing.Size(530, 39);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -139,7 +139,7 @@
             this.xsearchbox.CustomButton.Location = new System.Drawing.Point(340, 1);
             this.xsearchbox.CustomButton.Name = "";
             this.xsearchbox.CustomButton.Size = new System.Drawing.Size(35, 35);
-            this.xsearchbox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.xsearchbox.CustomButton.Style = MetroFramework.MetroColorStyle.Red;
             this.xsearchbox.CustomButton.TabIndex = 1;
             this.xsearchbox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
             this.xsearchbox.CustomButton.UseSelectable = true;
@@ -161,6 +161,7 @@
             this.xsearchbox.ShortcutsEnabled = true;
             this.xsearchbox.ShowClearButton = true;
             this.xsearchbox.Size = new System.Drawing.Size(376, 37);
+            this.xsearchbox.Style = MetroFramework.MetroColorStyle.Red;
             this.xsearchbox.TabIndex = 1;
             this.xsearchbox.TabStop = false;
             this.xsearchbox.Text = "Zoeken...";
@@ -175,12 +176,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(700, 480);
+            this.ClientSize = new System.Drawing.Size(946, 564);
             this.Controls.Add(this.panel1);
             this.MinimumSize = new System.Drawing.Size(700, 480);
             this.Name = "KlachtenForm";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Style = MetroFramework.MetroColorStyle.Red;
             this.Text = "Alle Klachten";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.KlachtenForm_FormClosing);

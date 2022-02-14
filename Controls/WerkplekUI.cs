@@ -48,6 +48,8 @@ namespace Controls
             imageList1.Images.Add(Resources.iconfinder_technology);
             imageList1.Images.Add(
                 Resources.iconfinder_technology.CombineImage(Resources.exclamation_warning_15590, 2));
+            if (Manager.Opties?._viewwerkplekdata != null)
+                xwerkpleklist.RestoreState(Manager.Opties.ViewDataWerkplekState);
             foreach (var col in xwerkpleklist.Columns.Cast<OLVColumn>())
             {
                 col.Groupable = true;
@@ -103,6 +105,36 @@ namespace Controls
         {
             Manager.OnFormulierChanged += PManager_FormulierChanged;
             Manager.OnFormulierDeleted += Manager_OnFormulierDeleted;
+            Manager.FilterChanged += Manager_FilterChanged;
+            Manager.OnSettingsChanged += Manager_OnSettingsChanged;
+        }
+
+        private void Manager_OnSettingsChanged(object instance, Rpm.Settings.UserSettings settings, bool reinit)
+        {
+            if (Manager.Opties?._viewwerkplekdata != null)
+                xwerkpleklist.RestoreState(Manager.Opties.ViewDataWerkplekState);
+        }
+
+        public void SaveLayout()
+        {
+            if (Manager.Opties == null) return;
+            Manager.Opties.ViewDataWerkplekState = xwerkpleklist.SaveState();
+        }
+
+        private void Manager_FilterChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.InvokeRequired)
+                {
+                    this.BeginInvoke(new MethodInvoker(() => LoadPlekken(true)));
+                }
+                else LoadPlekken(true);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
         }
 
         private void Manager_OnFormulierDeleted(object sender, string id)
@@ -114,6 +146,8 @@ namespace Controls
         {
             Manager.OnFormulierChanged -= PManager_FormulierChanged;
             Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
+            Manager.FilterChanged -= Manager_FilterChanged;
+            Manager.OnSettingsChanged -= Manager_OnSettingsChanged;
         }
 
         private bool _IsLoading;

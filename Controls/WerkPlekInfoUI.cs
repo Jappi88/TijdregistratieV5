@@ -192,7 +192,7 @@ namespace Controls
                             var wp = bew.GetWerkPlek(xvals[2], true);
                             if (!wp.Personen.Any(x => x.IngezetAanKlus(bew, true, out var klusjes)))
                             {
-                                var xpers = new PersoneelsForm(true);
+                                var xpers = new PersoneelsForm(bew, true);
                                 if (xpers.ShowDialog() == DialogResult.OK)
                                 {
                                     var selected = xpers.SelectedPersoneel;

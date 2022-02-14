@@ -86,13 +86,21 @@ namespace Controls
         public void LoadBewerkingen()
         {
             if (IsLoaded) return;
-            productieListControl1.DetachEvents();
+            DetachEvents();
             UpdateTijdPeriode(true);
-            Manager.OnSettingsChanged -= Manager_OnSettingsChanged;
-            Manager.OnSettingsChanged += Manager_OnSettingsChanged;
-            Manager.FilterChanged -= Manager_FilterChanged;
-            Manager.FilterChanged += Manager_FilterChanged;
             InitRecenteGereedmeldingen();
+            InitEvents();
+        }
+
+        public void InitEvents()
+        {
+            Manager.OnSettingsChanged += Manager_OnSettingsChanged;
+            productieListControl1.InitEvents();
+        }
+
+        public void DetachEvents()
+        {
+            Manager.OnSettingsChanged += Manager_OnSettingsChanged;
             productieListControl1.InitEvents();
         }
 

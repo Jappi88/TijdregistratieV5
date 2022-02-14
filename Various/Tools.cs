@@ -80,6 +80,8 @@ namespace Various
             try
             {
                 if (Manager.DefaultSettings == null || form == null) return;
+                if (form.WindowState == FormWindowState.Minimized)
+                    form.WindowState = FormWindowState.Normal;
                 if (Manager.DefaultSettings.LastFormInfo.ContainsKey(form.Name))
                 {
                     var xvalue = Manager.DefaultSettings.LastFormInfo[form.Name];

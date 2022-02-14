@@ -164,15 +164,6 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MetroFramework">
-      <HintPath>..\..\..\Desktop\ProductieManager\MetroFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="MetroFramework.Design">
-      <HintPath>..\..\..\Desktop\ProductieManager\MetroFramework.Design.dll</HintPath>
-    </Reference>
-    <Reference Include="MetroFramework.Fonts">
-      <HintPath>..\..\..\Desktop\ProductieManager\MetroFramework.Fonts.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualBasic">
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -269,14 +260,48 @@
     <Compile Include="Controls\ChartView.Designer.cs">
       <DependentUpon>ChartView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MetroCustomTabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\ProductieVerbruikUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ProductieVerbruikUI.Designer.cs">
       <DependentUpon>ProductieVerbruikUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TileView\TileViewer.cs">
+    <Compile Include="Controls\TileView\BeheerTilesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\TileView\BeheerTilesForm.Designer.cs">
+      <DependentUpon>BeheerTilesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TileView\Tile.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TileView\Tile.Designer.cs">
+      <DependentUpon>Tile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TileView\TileEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\TileView\TileEditorForm.Designer.cs">
+      <DependentUpon>TileEditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TileView\TileEditorUI.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\TileView\TileEditorUI.Designer.cs">
+      <DependentUpon>TileEditorUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TileView\TileInfoEntry.cs" />
+    <Compile Include="Controls\TileView\TileMainView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\TileView\TileMainView.Designer.cs">
+      <DependentUpon>TileMainView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TileView\TileViewer.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\TileView\TileViewer.Designer.cs">
       <DependentUpon>TileViewer.cs</DependentUpon>
@@ -305,6 +330,24 @@
     <Compile Include="Forms\Aantal\NewAantalRecordForm.Designer.cs">
       <DependentUpon>NewAantalRecordForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\AlleNotitiesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AlleNotitiesForm.Designer.cs">
+      <DependentUpon>AlleNotitiesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AlleStoringenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AlleStoringenForm.Designer.cs">
+      <DependentUpon>AlleStoringenForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ArtikelRecordsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ArtikelRecordsForm.Designer.cs">
+      <DependentUpon>ArtikelRecordsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ArtikelRecords\ArtikelOpmerkingenForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -317,17 +360,29 @@
     <Compile Include="Forms\ArtikelRecords\ArtikelOpmerkingForm.Designer.cs">
       <DependentUpon>ArtikelOpmerkingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ArtikelRecords\ArtikelRecordsForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Forms\ArtikelRecords\ArtikelRecordsUI.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\ArtikelRecords\ArtikelRecordsForm.Designer.cs">
-      <DependentUpon>ArtikelRecordsForm.cs</DependentUpon>
+    <Compile Include="Forms\ArtikelRecords\ArtikelRecordsUI.Designer.cs">
+      <DependentUpon>ArtikelRecordsUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ArtikelRecords\NewArtikelRecord.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ArtikelRecords\NewArtikelRecord.Designer.cs">
       <DependentUpon>NewArtikelRecord.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ArtikelsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ArtikelsForm.Designer.cs">
+      <DependentUpon>ArtikelsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ChangeSizeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChangeSizeForm.Designer.cs">
+      <DependentUpon>ChangeSizeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Combineer\CombineerPeriodeForm.cs">
       <SubType>Form</SubType>
@@ -382,6 +437,18 @@
     </Compile>
     <Compile Include="Controls\ObjectEditorUI.Designer.cs">
       <DependentUpon>ObjectEditorUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Indeling\WerkplaatsIndelingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Indeling\WerkplaatsIndelingForm.Designer.cs">
+      <DependentUpon>WerkplaatsIndelingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Indeling\PersoneelIndelingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Indeling\PersoneelIndelingForm.Designer.cs">
+      <DependentUpon>PersoneelIndelingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Indeling\WerkplekIndeling.cs">
       <SubType>UserControl</SubType>
@@ -539,17 +606,17 @@
     <Compile Include="Forms\AfkeurForm.Designer.cs">
       <DependentUpon>AfkeurForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AlleNotitiesForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Controls\AlleNotitiesUI.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\AlleNotitiesForm.Designer.cs">
-      <DependentUpon>AlleNotitiesForm.cs</DependentUpon>
+    <Compile Include="Controls\AlleNotitiesUI.Designer.cs">
+      <DependentUpon>AlleNotitiesUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ArtikelRecords\ArtikelsForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Forms\ArtikelRecords\ArtikelsUI.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\ArtikelRecords\ArtikelsForm.Designer.cs">
-      <DependentUpon>ArtikelsForm.cs</DependentUpon>
+    <Compile Include="Forms\ArtikelRecords\ArtikelsUI.Designer.cs">
+      <DependentUpon>ArtikelsUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BewerkingSelectorForm.cs">
       <SubType>Form</SubType>
@@ -762,11 +829,17 @@
     <Compile Include="Forms\OpmerkingenForm.Designer.cs">
       <DependentUpon>OpmerkingenForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Indeling\WerkplaatsIndeling.cs">
+    <Compile Include="Forms\Indeling\WerkplaatsIndelingUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Indeling\WerkplaatsIndelingUI.Designer.cs">
+      <DependentUpon>WerkplaatsIndelingUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PersoneelsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Indeling\WerkplaatsIndeling.Designer.cs">
-      <DependentUpon>WerkplaatsIndeling.cs</DependentUpon>
+    <Compile Include="Forms\PersoneelsForm.Designer.cs">
+      <DependentUpon>PersoneelsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ProductieInfoForm.cs">
       <SubType>Form</SubType>
@@ -774,17 +847,29 @@
     <Compile Include="Forms\ProductieInfoForm.Designer.cs">
       <DependentUpon>ProductieInfoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ProductieOverzichtForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Controls\ProductieOverzichtUI.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\ProductieOverzichtForm.Designer.cs">
-      <DependentUpon>ProductieOverzichtForm.cs</DependentUpon>
+    <Compile Include="Controls\ProductieOverzichtUI.Designer.cs">
+      <DependentUpon>ProductieOverzichtUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ProductieLijsten.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ProductieLijsten.Designer.cs">
       <DependentUpon>ProductieLijsten.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ProductieOverzichtForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ProductieOverzichtForm.Designer.cs">
+      <DependentUpon>ProductieOverzichtForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\RangeCalculatorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\RangeCalculatorForm.Designer.cs">
+      <DependentUpon>RangeCalculatorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\RoosterForm.cs">
       <SubType>Form</SubType>
@@ -810,11 +895,11 @@
     <Compile Include="Forms\AlleKlusjes.Designer.cs">
       <DependentUpon>AlleKlusjes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AlleStoringen.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Controls\AlleStoringenUI.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\AlleStoringen.Designer.cs">
-      <DependentUpon>AlleStoringen.cs</DependentUpon>
+    <Compile Include="Controls\AlleStoringenUI.Designer.cs">
+      <DependentUpon>AlleStoringenUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\AlleVaardigheden.cs">
       <SubType>Form</SubType>
@@ -912,11 +997,11 @@
     <Compile Include="Forms\PasswordChanger.Designer.cs">
       <DependentUpon>PasswordChanger.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\PersoneelsForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Controls\PersoneelsUI.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\PersoneelsForm.Designer.cs">
-      <DependentUpon>PersoneelsForm.cs</DependentUpon>
+    <Compile Include="Controls\PersoneelsUI.Designer.cs">
+      <DependentUpon>PersoneelsUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ScreenImageForm.cs">
       <SubType>Form</SubType>
@@ -948,6 +1033,12 @@
     <Compile Include="Forms\ProductieLijstForm.Designer.cs">
       <DependentUpon>ProductieLijstForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Sporen\ArtikelenVerbruikForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Sporen\ArtikelenVerbruikForm.Designer.cs">
+      <DependentUpon>ArtikelenVerbruikForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Sporen\NewSpoorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -960,11 +1051,11 @@
     <Compile Include="Forms\Sporen\SpoorDatabaseForm.Designer.cs">
       <DependentUpon>SpoorDatabaseForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Sporen\SporenForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Forms\Sporen\ArtikelenVerbruikUI.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\Sporen\SporenForm.Designer.cs">
-      <DependentUpon>SporenForm.cs</DependentUpon>
+    <Compile Include="Forms\Sporen\ArtikelenVerbruikUI.Designer.cs">
+      <DependentUpon>ArtikelenVerbruikUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Sporen\VebruikAfrondForm.cs">
       <SubType>Form</SubType>
@@ -984,11 +1075,11 @@
     <Compile Include="Forms\UpdateProducties.Designer.cs">
       <DependentUpon>UpdateProducties.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\RangeCalculatorForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Controls\ZoekProductiesUI.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\RangeCalculatorForm.Designer.cs">
-      <DependentUpon>RangeCalculatorForm.cs</DependentUpon>
+    <Compile Include="Controls\ZoekProductiesUI.Designer.cs">
+      <DependentUpon>ZoekProductiesUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\SplashScreen.cs">
       <SubType>Form</SubType>
@@ -1050,11 +1141,11 @@
     <Compile Include="Forms\WebBrowserForm.Designer.cs">
       <DependentUpon>WebBrowserForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Indeling\PersoneelIndeling.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Forms\Indeling\PersoneelIndelingUI.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\Indeling\PersoneelIndeling.Designer.cs">
-      <DependentUpon>PersoneelIndeling.cs</DependentUpon>
+    <Compile Include="Forms\Indeling\PersoneelIndelingUI.Designer.cs">
+      <DependentUpon>PersoneelIndelingUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\WerkPlekChooser.cs">
       <SubType>Form</SubType>
@@ -1302,6 +1393,21 @@
     <EmbeddedResource Include="Controls\ProductieVerbruikUI.resx">
       <DependentUpon>ProductieVerbruikUI.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TileView\BeheerTilesForm.resx">
+      <DependentUpon>BeheerTilesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TileView\Tile.resx">
+      <DependentUpon>Tile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TileView\TileEditorForm.resx">
+      <DependentUpon>TileEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TileView\TileEditorUI.resx">
+      <DependentUpon>TileEditorUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TileView\TileMainView.resx">
+      <DependentUpon>TileMainView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\TileView\TileViewer.resx">
       <DependentUpon>TileViewer.cs</DependentUpon>
     </EmbeddedResource>
@@ -1317,17 +1423,33 @@
     <EmbeddedResource Include="Forms\Aantal\NewAantalRecordForm.resx">
       <DependentUpon>NewAantalRecordForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AlleNotitiesForm.resx">
+      <DependentUpon>AlleNotitiesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AlleStoringenForm.resx">
+      <DependentUpon>AlleStoringenForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ArtikelRecordsForm.resx">
+      <DependentUpon>ArtikelRecordsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ArtikelRecords\ArtikelOpmerkingenForm.resx">
       <DependentUpon>ArtikelOpmerkingenForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ArtikelRecords\ArtikelOpmerkingForm.resx">
       <DependentUpon>ArtikelOpmerkingForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ArtikelRecords\ArtikelRecordsForm.resx">
-      <DependentUpon>ArtikelRecordsForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ArtikelRecords\ArtikelRecordsUI.resx">
+      <DependentUpon>ArtikelRecordsUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ArtikelRecords\NewArtikelRecord.resx">
       <DependentUpon>NewArtikelRecord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ArtikelsForm.resx">
+      <DependentUpon>ArtikelsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ChangeSizeForm.resx">
+      <DependentUpon>ChangeSizeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Combineer\CombineerPeriodeForm.resx">
       <DependentUpon>CombineerPeriodeForm.cs</DependentUpon>
@@ -1352,6 +1474,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ObjectEditorUI.resx">
       <DependentUpon>ObjectEditorUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Indeling\WerkplaatsIndelingForm.resx">
+      <DependentUpon>WerkplaatsIndelingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Indeling\PersoneelIndelingForm.resx">
+      <DependentUpon>PersoneelIndelingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Indeling\WerkplekIndeling.resx">
       <DependentUpon>WerkplekIndeling.cs</DependentUpon>
@@ -1428,11 +1556,11 @@
     <EmbeddedResource Include="Forms\AfkeurForm.resx">
       <DependentUpon>AfkeurForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AlleNotitiesForm.resx">
-      <DependentUpon>AlleNotitiesForm.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\AlleNotitiesUI.resx">
+      <DependentUpon>AlleNotitiesUI.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ArtikelRecords\ArtikelsForm.resx">
-      <DependentUpon>ArtikelsForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ArtikelRecords\ArtikelsUI.resx">
+      <DependentUpon>ArtikelsUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BewerkingSelectorForm.resx">
       <DependentUpon>BewerkingSelectorForm.cs</DependentUpon>
@@ -1543,17 +1671,26 @@
     <EmbeddedResource Include="Forms\OpmerkingenForm.resx">
       <DependentUpon>OpmerkingenForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Indeling\WerkplaatsIndeling.resx">
-      <DependentUpon>WerkplaatsIndeling.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Indeling\WerkplaatsIndelingUI.resx">
+      <DependentUpon>WerkplaatsIndelingUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PersoneelsForm.resx">
+      <DependentUpon>PersoneelsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ProductieInfoForm.resx">
       <DependentUpon>ProductieInfoForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ProductieOverzichtForm.resx">
-      <DependentUpon>ProductieOverzichtForm.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ProductieOverzichtUI.resx">
+      <DependentUpon>ProductieOverzichtUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ProductieLijsten.resx">
       <DependentUpon>ProductieLijsten.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ProductieOverzichtForm.resx">
+      <DependentUpon>ProductieOverzichtForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\RangeCalculatorForm.resx">
+      <DependentUpon>RangeCalculatorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\RoosterForm.resx">
       <DependentUpon>RoosterForm.cs</DependentUpon>
@@ -1567,8 +1704,8 @@
     <EmbeddedResource Include="Forms\AlleKlusjes.resx">
       <DependentUpon>AlleKlusjes.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AlleStoringen.resx">
-      <DependentUpon>AlleStoringen.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\AlleStoringenUI.resx">
+      <DependentUpon>AlleStoringenUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AlleVaardigheden.resx">
       <DependentUpon>AlleVaardigheden.cs</DependentUpon>
@@ -1618,8 +1755,8 @@
     <EmbeddedResource Include="Forms\PasswordChanger.resx">
       <DependentUpon>PasswordChanger.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PersoneelsForm.resx">
-      <DependentUpon>PersoneelsForm.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\PersoneelsUI.resx">
+      <DependentUpon>PersoneelsUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ScreenImageForm.resx">
       <DependentUpon>ScreenImageForm.cs</DependentUpon>
@@ -1636,14 +1773,17 @@
     <EmbeddedResource Include="Forms\ProductieLijstForm.resx">
       <DependentUpon>ProductieLijstForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Sporen\ArtikelenVerbruikForm.resx">
+      <DependentUpon>ArtikelenVerbruikForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Sporen\NewSpoorForm.resx">
       <DependentUpon>NewSpoorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Sporen\SpoorDatabaseForm.resx">
       <DependentUpon>SpoorDatabaseForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Sporen\SporenForm.resx">
-      <DependentUpon>SporenForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Sporen\ArtikelenVerbruikUI.resx">
+      <DependentUpon>ArtikelenVerbruikUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Sporen\VebruikAfrondForm.resx">
       <DependentUpon>VebruikAfrondForm.cs</DependentUpon>
@@ -1654,8 +1794,8 @@
     <EmbeddedResource Include="Forms\UpdateProducties.resx">
       <DependentUpon>UpdateProducties.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\RangeCalculatorForm.resx">
-      <DependentUpon>RangeCalculatorForm.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ZoekProductiesUI.resx">
+      <DependentUpon>ZoekProductiesUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SplashScreen.resx">
       <DependentUpon>SplashScreen.cs</DependentUpon>
@@ -1690,8 +1830,8 @@
     <EmbeddedResource Include="Forms\WebBrowserForm.resx">
       <DependentUpon>WebBrowserForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Indeling\PersoneelIndeling.resx">
-      <DependentUpon>PersoneelIndeling.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Indeling\PersoneelIndelingUI.resx">
+      <DependentUpon>PersoneelIndelingUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WerkPlekChooser.resx">
       <DependentUpon>WerkPlekChooser.cs</DependentUpon>
@@ -1872,6 +2012,15 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\home_icon_32x32.png" />
+    <None Include="Resources\filter_32x32.png" />
+    <None Include="Resources\time_management_tasks_96x96.png" />
+    <None Include="Resources\product_document_file_96x96.png" />
+    <None Include="Resources\werkplaatsindeling_96x96.png" />
+    <None Include="Resources\user_rotation_96x96.png" />
+    <None Include="Resources\cancel-close-cross-delete_32x32.png" />
+    <None Include="Resources\Tile_colors_icon_32x32.png" />
+    <None Include="Resources\Tile_Resize_icon_32x32.png" />
     <None Include="Resources\werkplaatsindeling_32x32.png" />
     <None Include="Resources\documents_32x32.png" />
     <None Include="Resources\extension_file_documents_32x32.png" />
@@ -2185,7 +2334,20 @@
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\metroframework-modern-ui\MetroFramework.Design\MetroFramework.Design.csproj">
+      <Project>{7316584d-9a16-4280-a8ab-6d45198c6e4d}</Project>
+      <Name>MetroFramework.Design</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\metroframework-modern-ui\MetroFramework.Fonts\MetroFramework.Fonts.csproj">
+      <Project>{5a2fcae8-c2fa-41bd-90ea-16103ea07b26}</Project>
+      <Name>MetroFramework.Fonts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\metroframework-modern-ui\MetroFramework\MetroFramework.csproj">
+      <Project>{bb41ac8b-cbed-4387-a7e0-4567edb3f57f}</Project>
+      <Name>MetroFramework</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Code to merge the assemblies into one:setup.exe -->
 </Project>

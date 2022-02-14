@@ -77,7 +77,7 @@ namespace Controls
             this.xomschrijving.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xomschrijving.Location = new System.Drawing.Point(0, 0);
             this.xomschrijving.Name = "xomschrijving";
-            this.xomschrijving.Size = new System.Drawing.Size(939, 66);
+            this.xomschrijving.Size = new System.Drawing.Size(786, 66);
             this.xomschrijving.TabIndex = 0;
             this.xomschrijving.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -89,7 +89,7 @@ namespace Controls
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 66);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(939, 513);
+            this.panel1.Size = new System.Drawing.Size(786, 408);
             this.panel1.TabIndex = 1;
             // 
             // xskillview
@@ -128,7 +128,7 @@ namespace Controls
             this.xskillview.LargeImageList = this.imageList1;
             this.xskillview.Location = new System.Drawing.Point(0, 38);
             this.xskillview.Name = "xskillview";
-            this.xskillview.Size = new System.Drawing.Size(939, 431);
+            this.xskillview.Size = new System.Drawing.Size(786, 338);
             this.xskillview.SmallImageList = this.imageList1;
             this.xskillview.SpaceBetweenGroups = 5;
             this.xskillview.TabIndex = 1;
@@ -308,7 +308,7 @@ namespace Controls
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(939, 38);
+            this.panel3.Size = new System.Drawing.Size(786, 38);
             this.panel3.TabIndex = 3;
             // 
             // xsearchbox
@@ -317,7 +317,7 @@ namespace Controls
             this.xsearchbox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsearchbox.Location = new System.Drawing.Point(134, 9);
             this.xsearchbox.Name = "xsearchbox";
-            this.xsearchbox.Size = new System.Drawing.Size(805, 29);
+            this.xsearchbox.Size = new System.Drawing.Size(652, 29);
             this.xsearchbox.TabIndex = 0;
             this.xsearchbox.Text = "Zoeken...";
             this.toolTip1.SetToolTip(this.xsearchbox, "Zoek naar een onderbreking");
@@ -383,9 +383,9 @@ namespace Controls
             this.panel2.Controls.Add(this.xstatuslabel);
             this.panel2.Controls.Add(this.xclosepanel);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 469);
+            this.panel2.Location = new System.Drawing.Point(0, 376);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(939, 44);
+            this.panel2.Size = new System.Drawing.Size(786, 32);
             this.panel2.TabIndex = 2;
             // 
             // xstatuslabel
@@ -395,7 +395,7 @@ namespace Controls
             this.xstatuslabel.Location = new System.Drawing.Point(0, 0);
             this.xstatuslabel.Name = "xstatuslabel";
             this.xstatuslabel.Padding = new System.Windows.Forms.Padding(5);
-            this.xstatuslabel.Size = new System.Drawing.Size(807, 44);
+            this.xstatuslabel.Size = new System.Drawing.Size(654, 32);
             this.xstatuslabel.TabIndex = 0;
             this.xstatuslabel.Text = "Geen Onderbrekeningen";
             this.xstatuslabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -404,22 +404,24 @@ namespace Controls
             // 
             this.xclosepanel.Controls.Add(this.xsluiten);
             this.xclosepanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.xclosepanel.Location = new System.Drawing.Point(807, 0);
+            this.xclosepanel.Location = new System.Drawing.Point(654, 0);
             this.xclosepanel.Name = "xclosepanel";
-            this.xclosepanel.Size = new System.Drawing.Size(132, 44);
+            this.xclosepanel.Size = new System.Drawing.Size(132, 32);
             this.xclosepanel.TabIndex = 1;
             // 
             // xsluiten
             // 
+            this.xsluiten.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xsluiten.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xsluiten.Location = new System.Drawing.Point(3, 3);
+            this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xsluiten.Location = new System.Drawing.Point(0, 0);
             this.xsluiten.Name = "xsluiten";
-            this.xsluiten.Size = new System.Drawing.Size(125, 38);
+            this.xsluiten.Size = new System.Drawing.Size(132, 32);
             this.xsluiten.TabIndex = 1;
             this.xsluiten.Text = "&Sluiten";
-            this.xsluiten.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.xsluiten.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolTip1.SetToolTip(this.xsluiten, "Sluit storing window");
             this.xsluiten.UseVisualStyleBackColor = true;
             this.xsluiten.Click += new System.EventHandler(this.xsluiten_Click);
@@ -431,14 +433,13 @@ namespace Controls
             // 
             // WerkPlekStoringen
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.xomschrijving);
             this.DoubleBuffered = true;
             this.Name = "WerkPlekStoringen";
-            this.Size = new System.Drawing.Size(939, 579);
+            this.Size = new System.Drawing.Size(786, 474);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xskillview)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);

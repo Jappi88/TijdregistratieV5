@@ -266,11 +266,21 @@ namespace Forms
         private void KlachtenForm_Shown(object sender, EventArgs e)
         {
             LoadEntries();
+            InitEvents();
+        }
+
+        private void KlachtenForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DetachEvents();
+        }
+
+        public void InitEvents()
+        {
             Manager.KlachtChanged += Klachten_KlachtChanged;
             Manager.KlachtDeleted += Klachten_KlachtDeleted;
         }
 
-        private void KlachtenForm_FormClosing(object sender, FormClosingEventArgs e)
+        public void DetachEvents()
         {
             Manager.KlachtChanged -= Klachten_KlachtChanged;
             Manager.KlachtDeleted -= Klachten_KlachtDeleted;

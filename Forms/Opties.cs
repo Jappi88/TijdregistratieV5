@@ -149,6 +149,8 @@ namespace Forms
             xminvoorcontrole.Value = x.MinVoorControle;
             xsyncinterval.Value = x.SyncInterval;
 
+            xtilesrefresh.SetValue(x.TileCountRefreshRate);
+
             //weergave producties
             xniewaantaluur.SetValue((decimal)x.NieuwTijd);
             xtoonvolgensafdeling.Checked = x.ToonVolgensAfdelingen;
@@ -366,6 +368,8 @@ namespace Forms
             xs.TaakSyncInterval = (int) xsyncinterval.Value;
             xs.SyncInterval = (int)xsyncinterval.Value;
 
+            xs.TileCountRefreshRate = (int)xtilesrefresh.Value;
+
             xs.ShowDaylyMessage = xtoondayli.Checked;
 
             //weergave
@@ -488,6 +492,8 @@ namespace Forms
 
                 xs.PersoneelIndeling = _LoadedOpties.PersoneelIndeling;
                 xs.WerkplaatsIndeling = _LoadedOpties.WerkplaatsIndeling;
+                xs.TileLayout = _LoadedOpties.TileLayout;
+                xs.TileFlowDirection = _LoadedOpties.TileFlowDirection;
 
                 xs.DeelAllesIn = _LoadedOpties.DeelAllesIn;
                 xs.DeelInPerAfdeling = _LoadedOpties.DeelInPerAfdeling;

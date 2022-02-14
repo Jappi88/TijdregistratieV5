@@ -555,8 +555,8 @@ namespace Forms
 
         private Personeel[] KiesPersoneel()
         {
-            var pers = new PersoneelsForm(true);
-            if (pers.ShowDialog(Bewerking) == DialogResult.OK)
+            var pers = new PersoneelsForm(Bewerking,true);
+            if (pers.ShowDialog() == DialogResult.OK)
                 if (pers.SelectedPersoneel is {Length: > 0})
                 {
                     foreach (var per in pers.SelectedPersoneel)

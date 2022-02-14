@@ -1,5 +1,7 @@
-﻿using Polenter.Serialization;
+﻿using Controls;
+using Polenter.Serialization;
 using ProductieManager.Rpm.Mailing;
+using ProductieManager.Rpm.Misc;
 using ProductieManager.Rpm.Settings;
 using Rpm.Mailing;
 using Rpm.Misc;
@@ -8,7 +10,7 @@ using Rpm.SqlLite;
 using Rpm.Various;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -40,9 +42,305 @@ namespace Rpm.Settings
         public DatabaseUpdateEntry TempMainDB { get; set; }
         public List<string> PersoneelIndeling { get; set; }
         public List<string> WerkplaatsIndeling { get; set; }
-
+        public int TileCountRefreshRate { get; set; } = 30000;
+        public List<TileInfoEntry> TileLayout { get; set; }
+        public FlowDirection TileFlowDirection { get; set; } = FlowDirection.TopDown;
         public bool PreviewShown { get; set; }
         #region "Methods"
+
+        public List<TileInfoEntry> GetAllDefaultEntries(bool incextra)
+        {
+            var xtiles = new List<TileInfoEntry>();
+            try
+            {
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Producties",
+                    ForeColor = Color.Purple,
+                    GroupName = "Producties",
+                    Name = "Producties",
+                    Size = new Size(256, 96),
+                    TileColor = Color.FromArgb(215,174,255),
+                    TileImage = ProductieManager.Properties.Resources.operation,
+                    TileIndex = 0,
+                    IsDefault = true
+                });
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Actieve Werkplaatsen",
+                    ForeColor = Color.Navy,
+                    GroupName = "Werkplaatsen",
+                    Name = "Werkplaatsen",
+                    Size = new Size(256, 96),
+                    TileColor = Color.FromArgb(164, 209, 255),
+                    TileImage = ProductieManager.Properties.Resources.iconfinder_technology,
+                    TileIndex = 1,
+                    IsDefault = true
+                });
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Recente Gereedmeldingen",
+                    ForeColor = Color.White,
+                    GroupName = "Gereedmeldingen",
+                    Name = "Gereedmeldingen",
+                    Size = new Size(256, 96),
+                    TileColor = Color.Green,
+                    TileImage = new Bitmap(ProductieManager.Properties.Resources.operation.CombineImage(ProductieManager.Properties.Resources.check_1582, 1.75)),
+                    TileIndex = 2,
+                    IsDefault = true
+                });
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Alle Onderbrekeningen",
+                    ForeColor = Color.White,
+                    GroupName = "Onderbrekingen",
+                    Name = "Onderbrekingen",
+                    Size = new Size(256, 96),
+                    TileColor = Color.SteelBlue,
+                    TileImage = ProductieManager.Properties.Resources.onderhoud128_128,
+                    TileIndex = 3,
+                    IsDefault = true
+                });
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Bereken Verbruik",
+                    ForeColor = Color.White,
+                    GroupName = "Verbruik",
+                    Name = "xverbruik",
+                    Size = new Size(256, 96),
+                    TileColor = Color.RosyBrown,
+                    TileImage = ProductieManager.Properties.Resources.geometry_measure_96x96,
+                    TileIndex = 4,
+                    IsDefault = true
+                });
+
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Artikelen Verbruik",
+                    ForeColor = Color.Brown,
+                    GroupName = "Verbruik",
+                    Name = "xverbruikbeheren",
+                    Size = new Size(256, 96),
+                    TileColor = Color.FromArgb(223,191,191),
+                    TileImage = ProductieManager.Properties.Resources.geometry_measure_96x96,
+                    TileIndex = 5,
+                    IsDefault = true
+                });
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Wijzig AantalGemaakt",
+                    ForeColor = Color.White,
+                    GroupName = "AantalGemaakt",
+                    Name = "xchangeaantal",
+                    Size = new Size(256, 96),
+                    TileColor = Color.FromArgb(245,122,135),
+                    TileImage = ProductieManager.Properties.Resources.Count_tool_34564__1_,
+                    TileIndex = 6,
+                    IsDefault = true,
+                    AccesLevel = AccesType.ProductieBasis
+                });
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Zoek WerkTekening",
+                    ForeColor = Color.White,
+                    GroupName = "Werktekening",
+                    Name = "xsearchtekening",
+                    Size = new Size(256, 96),
+                    TileColor = Color.DarkGoldenrod,
+                    TileImage = new Bitmap(ProductieManager.Properties.Resources.libreoffice_draw_icon_128x128.CombineImage(ProductieManager.Properties.Resources.search_locate_find_6278,1.75)),
+                    TileIndex = 7,
+                    IsDefault = true
+                });
+
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Personeel Indeling",
+                    ForeColor = Color.White,
+                    GroupName = "Indeling",
+                    Name = "xpersoneelindeling",
+                    Size = new Size(256, 96),
+                    TileColor = Color.MediumSlateBlue,
+                    TileImage = ProductieManager.Properties.Resources.user_rotation_96x96,
+                    TileIndex = 8,
+                    IsDefault = true,
+                    AccesLevel = AccesType.ProductieBasis
+                });
+
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Werkplaats Indeling",
+                    ForeColor = IProductieBase.GetProductSoortColor("horti"),
+                    GroupName = "Indeling",
+                    Name = "xwerkplaatsindeling",
+                    Size = new Size(256, 96),
+                    TileColor = Color.AliceBlue,
+                    TileImage = ProductieManager.Properties.Resources.werkplaatsindeling_96x96,
+                    TileIndex = 9,
+                    IsDefault = true,
+                    AccesLevel = AccesType.ProductieBasis
+                });
+
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Exporteer Excel",
+                    ForeColor = Color.DarkGreen,
+                    GroupName = "Excel",
+                    Name = "xcreateexcel",
+                    Size = new Size(256, 96),
+                    TileColor = Color.FromArgb(215,255,215),
+                    TileImage = ProductieManager.Properties.Resources.microsoft_excel_22733_128x128,
+                    TileIndex = 10,
+                    IsDefault = true,
+                });
+
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Toon Statistieken",
+                    ForeColor = Color.White,
+                    GroupName = "Statistieken",
+                    Name = "xstats",
+                    Size = new Size(256, 96),
+                    TileColor = Color.CornflowerBlue,
+                    TileImage = ProductieManager.Properties.Resources.stats_15267_128x128,
+                    TileIndex = 11,
+                    IsDefault = true,
+                });
+
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Zoek Producties",
+                    ForeColor = Color.White,
+                    GroupName = "Zoeken",
+                    Name = "xzoekproducties",
+                    Size = new Size(256, 96),
+                    TileColor = Color.SlateBlue,
+                    TileImage = ProductieManager.Properties.Resources.FocusEye_img_128_128,
+                    TileIndex = 12,
+                    IsDefault = true,
+                });
+
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Personeel",
+                    ForeColor = Color.Navy,
+                    GroupName = "Personeel",
+                    Name = "xpersoneel",
+                    Size = new Size(256, 96),
+                    TileColor = Color.FromArgb(125, 175, 255),
+                    TileImage = ProductieManager.Properties.Resources.users_clients_group_16774,
+                    TileIndex = 13,
+                    IsDefault = true,
+                });
+
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Alle Artikelen",
+                    ForeColor = Color.White,
+                    GroupName = "Artikelen",
+                    Name = "xalleartikelen",
+                    Size = new Size(256, 96),
+                    TileColor = Color.FromArgb(95, 95, 95),
+                    TileImage = ProductieManager.Properties.Resources.product_document_file_96x96,
+                    TileIndex = 14,
+                    IsDefault = true,
+                });
+
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Artikel/Werkplaats Records",
+                    ForeColor = Color.FromArgb(253, 185, 253),
+                    GroupName = "Artikelen",
+                    Name = "xartikelrecords",
+                    Size = new Size(256, 96),
+                    TileColor = Color.FromArgb(152, 5, 152),
+                    TileImage = ProductieManager.Properties.Resources.time_management_tasks_96x96,
+                    TileIndex = 15,
+                    IsDefault = true,
+                });
+
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Productie Volgorde",
+                    ForeColor = Color.White,
+                    GroupName = "Producties",
+                    Name = "xproductievolgorde",
+                    Size = new Size(256, 96),
+                    TileColor = Color.Navy,
+                    TileImage = ProductieManager.Properties.Resources.taskboardflat_106022,
+                    TileIndex = 16,
+                    IsDefault = true,
+                });
+
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Klachten",
+                    ForeColor = Color.White,
+                    GroupName = "Klachten",
+                    Name = "xklachten",
+                    Size = new Size(256, 96),
+                    TileColor = IProductieBase.GetProductSoortColor("red"),
+                    TextFontStyle = FontStyle.Bold,
+                    TileImage = ProductieManager.Properties.Resources.Leave_80_icon_icons_com_57305_128x128,
+                    TileIndex = 17,
+                    IsDefault = true,
+                });
+
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Excel WeekOverzicht",
+                    ForeColor = Color.White,
+                    GroupName = "Excel",
+                    Name = "xweekoverzicht",
+                    Size = new Size(256, 96),
+                    TileColor = IProductieBase.GetProductSoortColor("Horti"),
+                    TileImage = ProductieManager.Properties.Resources.microsoft_excel_22733_128x128,
+                    TileIndex = 18,
+                    IsDefault = true,
+                });
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Alle Notities",
+                    ForeColor = Color.White,
+                    GroupName = "Noties",
+                    Name = "xallenotities",
+                    Size = new Size(256, 96),
+                    TileColor = Color.DarkRed,
+                    TileImage = ProductieManager.Properties.Resources.memo_pad_notes_reminder_task_icon_128x128,
+                    TileIndex = 19,
+                    IsDefault = true,
+                });
+
+                if (incextra)
+                {
+                    if (Filters.Count > 0)
+                    {
+                        foreach (var f in Filters)
+                        {
+                            if (f.IsTempFilter)
+                                continue;
+                            xtiles.Add(new TileInfoEntry()
+                            {
+                                Text = f.Name,
+                                ForeColor = Color.White,
+                                TileColor = Color.CadetBlue,
+                                GroupName = "Filter",
+                                Name = f.Name,
+                                Size = new Size(256, 96),
+                                TileImage = new Bitmap(ProductieManager.Properties.Resources.operation.CombineImage(ProductieManager.Properties.Resources.filter_32x32, 2.5)),
+                                TileIndex = xtiles.Count,
+                                IsDefault = true,
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return xtiles;
+        }
 
         public void Initdefault()
         {
@@ -56,6 +354,11 @@ namespace Rpm.Settings
             NationaleFeestdagen = new DateTime[] { };
             SpecialeRoosters = new List<Rooster>();
             PersoneelIndeling = new List<string>();
+            WerkplaatsIndeling = new List<string>();
+            TileLayout = GetAllDefaultEntries(false);
+            //create default Tiles
+            //voor de producties
+  
             //Taken
             ToonLijstNaNieuweTaak = true;
             TaakVoorStart = true;

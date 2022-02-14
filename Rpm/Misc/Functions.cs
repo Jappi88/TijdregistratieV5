@@ -751,7 +751,7 @@ namespace Rpm.Misc
                 var xsts = wp.Storingen.Where(x => !x.IsVerholpen).ToList();
                 if (xsts.Count > 1)
                 {
-                    var allst = new AlleStoringen();
+                    var allst = new AlleStoringenForm();
                     allst.InitStoringen(bw.Root, wp);
                     allst.ShowDialog();
                     return;
