@@ -336,7 +336,7 @@ namespace Controls
                     Text =
                         $"{Formulier.ArtikelNr} [{Formulier.ProductieNr}][{Enum.GetName(typeof(ProductieState), b.State)?.ToUpper()}]";
                     if (pers == 0 && b.State == ProductieState.Gestart)
-                        b.StopProductie(true,true).Wait();
+                        b.StopProductie(true,true);
                     CreateTextField(b);
                 }
             }

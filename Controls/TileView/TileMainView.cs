@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Navigation;
+using Forms;
 using ProductieManager.Rpm.Productie;
 using Rpm.Productie;
 using Rpm.Various;
@@ -208,6 +209,9 @@ namespace Controls.TileView
                         var xnots = bws.SelectMany(x => x.GetAlleNotities()).ToList();
                         entry.TileCount = xnots.Count;
                         break;
+                    case "xbeheerfilters":
+                        entry.TileCount = Manager.Opties?.Filters?.Count ?? 0;
+                        break;
                     default:
                         switch (entry.GroupName.ToLower())
                         {
@@ -269,6 +273,10 @@ namespace Controls.TileView
 
         private void reserLayoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var result = XMessageBox.Show(this, "Weetje zeker dat je de TileLayout wilt resetten?!\n\n" +
+                                                "Alle gewijzigde tiles zullen ongedaan worden, toch doorgaan?",
+                "TileLayout Resetten", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+            if (result == DialogResult.No) return;
             if (Manager.Opties != null)
             {
                 Manager.Opties.TileFlowDirection = FlowDirection.LeftToRight;

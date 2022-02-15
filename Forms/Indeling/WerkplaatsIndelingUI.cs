@@ -411,10 +411,14 @@ namespace Forms
                 return false;
             if (indeling.IsDefault())
             {
+                var xindelingen = GetIndelingen(false);
+                var xwps = Manager.BewerkingenLijst.GetWerkplekken(bew.Naam);
+                if (xindelingen.Count > 0 && !xwps.Any(x =>
+                        xindelingen.Any(w => string.Equals(x, w.Werkplek, StringComparison.CurrentCultureIgnoreCase))))
+                    return false;
                 if (indeling.ToonNietIngedeeld)
                 {
                     
-                        var xindelingen = GetIndelingen(false);
                         if (bew.WerkPlekken.Any(x => xindelingen.Any(w =>
                                 string.Equals(w.Werkplek, x.Naam, StringComparison.CurrentCultureIgnoreCase))))
                             return false;

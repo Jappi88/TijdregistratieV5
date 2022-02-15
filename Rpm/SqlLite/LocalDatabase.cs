@@ -1298,17 +1298,17 @@ namespace Rpm.SqlLite
 
         public Task<bool> UpSert(string id, Personeel persoon, string change, bool showmessage = true, bool onlylocal = false)
         {
-            return Task.Run(async () =>
+            return Task.Run( () =>
             {
                 if (IsDisposed || PersoneelLijst == null || id == null || persoon == null)
                     return false;
                 try
                 {
                     persoon.LastChanged = persoon.LastChanged.UpdateChange(change, DbType.Medewerkers);
-                    await UpdateChange(persoon.LastChanged, DbType.Medewerkers,
+                    UpdateChange(persoon.LastChanged, DbType.Medewerkers,
                         showmessage);
                     PersoneelLijst.RaiseEventWhenChanged = !RaiseEventWhenChanged;
-                    await PersoneelLijst.Upsert(id, persoon,onlylocal);
+                    _= PersoneelLijst.Upsert(id, persoon,onlylocal).Result;
                     if (RaiseEventWhenChanged)
                         Manager.PersoneelChanged(this, persoon);
                     PersoneelLijst.RaiseEventWhenChanged = true;

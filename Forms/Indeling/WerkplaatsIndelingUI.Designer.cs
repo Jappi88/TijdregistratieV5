@@ -55,7 +55,7 @@ namespace Forms
             this.panel1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(490, 561);
+            this.panel1.Size = new System.Drawing.Size(490, 631);
             this.panel1.TabIndex = 0;
             // 
             // xWerkplaatsIndelingPanel
@@ -66,7 +66,7 @@ namespace Forms
             this.xWerkplaatsIndelingPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.xWerkplaatsIndelingPanel.Location = new System.Drawing.Point(0, 39);
             this.xWerkplaatsIndelingPanel.Name = "xWerkplaatsIndelingPanel";
-            this.xWerkplaatsIndelingPanel.Size = new System.Drawing.Size(490, 522);
+            this.xWerkplaatsIndelingPanel.Size = new System.Drawing.Size(490, 592);
             this.xWerkplaatsIndelingPanel.TabIndex = 2;
             this.xWerkplaatsIndelingPanel.WrapContents = false;
             this.xWerkplaatsIndelingPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.flowLayoutPanel1_DragDrop);
@@ -112,7 +112,7 @@ namespace Forms
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(10, 60);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -125,7 +125,7 @@ namespace Forms
             this.splitContainer1.Panel2.Controls.Add(this.productieListControl1);
             this.splitContainer1.Panel2.Controls.Add(this.xGeselecteerdeGebruikerLabel);
             this.splitContainer1.Panel2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.splitContainer1.Size = new System.Drawing.Size(1130, 561);
+            this.splitContainer1.Size = new System.Drawing.Size(1150, 631);
             this.splitContainer1.SplitterDistance = 490;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -146,7 +146,7 @@ namespace Forms
             this.productieListControl1.Name = "productieListControl1";
             this.productieListControl1.RemoveCustomItemIfNotValid = false;
             this.productieListControl1.SelectedItem = null;
-            this.productieListControl1.Size = new System.Drawing.Size(636, 521);
+            this.productieListControl1.Size = new System.Drawing.Size(656, 591);
             this.productieListControl1.TabIndex = 0;
             this.productieListControl1.ValidHandler = null;
             // 
@@ -160,7 +160,7 @@ namespace Forms
             this.xGeselecteerdeGebruikerLabel.IsSelectionEnabled = false;
             this.xGeselecteerdeGebruikerLabel.Location = new System.Drawing.Point(0, 0);
             this.xGeselecteerdeGebruikerLabel.Name = "xGeselecteerdeGebruikerLabel";
-            this.xGeselecteerdeGebruikerLabel.Size = new System.Drawing.Size(636, 40);
+            this.xGeselecteerdeGebruikerLabel.Size = new System.Drawing.Size(656, 40);
             this.xGeselecteerdeGebruikerLabel.TabIndex = 2;
             this.xGeselecteerdeGebruikerLabel.Text = "htmlLabel1";
             // 
@@ -170,22 +170,21 @@ namespace Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xloadinglabel.Location = new System.Drawing.Point(13, 60);
+            this.xloadinglabel.Location = new System.Drawing.Point(3, 0);
             this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(1127, 570);
+            this.xloadinglabel.Size = new System.Drawing.Size(1147, 640);
             this.xloadinglabel.TabIndex = 31;
             this.xloadinglabel.Text = "Indeling laden...";
             this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.xloadinglabel.Visible = false;
             // 
-            // WerkplaatsIndeling
+            // WerkplaatsIndelingUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.xloadinglabel);
             this.Controls.Add(this.splitContainer1);
-            this.Name = "WerkplaatsIndeling";
-            this.Padding = new System.Windows.Forms.Padding(10, 60, 10, 10);
+            this.Name = "WerkplaatsIndelingUI";
             this.Size = new System.Drawing.Size(1150, 631);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

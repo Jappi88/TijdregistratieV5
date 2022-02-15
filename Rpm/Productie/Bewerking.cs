@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Controls;
 
 namespace Rpm.Productie
 {
@@ -573,7 +574,7 @@ namespace Rpm.Productie
 
         public Task<bool> StartProductie(bool email, bool savepersoneel, bool updatecombies)
         {
-            return Task.Run(  () =>
+            return Task.Run( async() =>
             {
                 try
                 {
@@ -607,7 +608,7 @@ namespace Rpm.Productie
 
                             if (klus.Start() && savepersoneel)
                             {
-                                var x = Manager.Database.GetPersoneel(per.PersoneelNaam).Result;
+                                var x = await Manager.Database.GetPersoneel(per.PersoneelNaam);
                                 if (x != null)
                                 {
                                     per.VrijeDagen = x.VrijeDagen;
@@ -616,8 +617,7 @@ namespace Rpm.Productie
                                         per.WerkRooster = x.WerkRooster;
                                     klus.Tijden.WerkRooster = per.WerkRooster;
                                     x.ReplaceKlus(klus);
-                                    _= Manager.Database.UpSert(x,
-                                        $"[{x.PersoneelNaam}] is gestart aan klus '{klus.Naam} op {klus.WerkPlek}'.").Result;
+                                    _= Manager.Database.PersoneelLijst.Upsert(x.PersoneelNaam.Trim(), x, false);
                                 }
                             }
 
@@ -645,8 +645,8 @@ namespace Rpm.Productie
 
                     GestartDoor = Manager.Opties.Username;
                    
-                    if(UpdateBewerking(null, $"[{Path}] Bewerking Gestart").Result && updatecombies)
-                        UpdateCombies();
+                    if(await UpdateBewerking(null, $"[{Path}] Bewerking Gestart") && updatecombies)
+                        _= UpdateCombies();
                     if (email)
                         RemoteProductie.RespondByEmail(this,
                             $"Productie [{ProductieNr.ToUpper()}] {Naam} is zojuist gestart op {WerkplekkenName}.");
@@ -725,7 +725,7 @@ namespace Rpm.Productie
                     }
                 }
                 if(await UpdateBewerking(null, $"[{Path}] Bewerking Gestopt") && updatecombis)
-                    UpdateCombies();
+                    _=UpdateCombies();
                 if (email)
                     RemoteProductie.RespondByEmail(this,
                         $"Productie [{ProductieNr.ToUpper()}] {Naam} is zojuist gestopt op {WerkplekkenName}.");
@@ -1632,84 +1632,89 @@ namespace Rpm.Productie
             }
         }
 
-        public bool UpdateCombies()
+        public Task<bool> UpdateCombies()
         {
-            try
+
+            return Task.Run( () =>
             {
-                if (Combies.Count == 0) return false;
-                for (int i = 0; i < Combies.Count; i++)
+                try
                 {
-                    var combi = Combies[i];
-                    if (!combi.IsRunning) continue;
-                    var bew = combi.GetProductie();
-                    if (bew == null)
+                    if (Combies.Count == 0) return false;
+                    for (int i = 0; i < Combies.Count; i++)
                     {
-                        continue;
-                    }
-
-                    if (bew.State != State && bew.State != ProductieState.Gereed &&
-                        bew.State != ProductieState.Verwijderd)
-                    {
-                        switch (State)
+                        var combi = Combies[i];
+                        if (!combi.IsRunning) continue;
+                        var bew = combi.GetProductie();
+                        if (bew == null)
                         {
-                            case ProductieState.Gestopt:
-                                _ = bew.StopProductie(true,true);
-                                break;
-                            case ProductieState.Gestart:
-                                if (!bew.WerkPlekken.Any(x => x.IsActief()))
-                                {
-                                    var pers = GetPersoneel();
-                                    foreach (var per in pers)
-                                    {
-                                        per.WerktAan = bew.Path;
-                                        var klus = per.Klusjes.FirstOrDefault();
-                                        if (klus != null)
-                                        {
-                                            klus.ProductieNr = bew.ProductieNr;
-                                            klus.Naam = bew.Naam;
-                                            klus.Tijden.Uren.Clear();
-                                        }
+                            continue;
+                        }
 
-                                        bew.AddPersoneel(per, per.Werkplek);
+                        if (bew.State != State && bew.State != ProductieState.Gereed &&
+                            bew.State != ProductieState.Verwijderd)
+                        {
+                            switch (State)
+                            {
+                                case ProductieState.Gestopt:
+                                    _ = bew.StopProductie(true, true);
+                                    break;
+                                case ProductieState.Gestart:
+                                    if (!bew.WerkPlekken.Any(x => x.IsActief()))
+                                    {
+                                        var pers = GetPersoneel();
+                                        foreach (var per in pers)
+                                        {
+                                            per.WerktAan = bew.Path;
+                                            var klus = per.Klusjes.FirstOrDefault();
+                                            if (klus != null)
+                                            {
+                                                klus.ProductieNr = bew.ProductieNr;
+                                                klus.Naam = bew.Naam;
+                                                klus.Tijden.Uren.Clear();
+                                            }
+
+                                            bew.AddPersoneel(per, per.Werkplek);
+                                        }
+                                    }
+
+                                    if (bew.StartProductie(true, true, false).Result)
+                                        _= bew.UpdateCombies();
+                                    break;
+                            }
+
+                            //sync storingen
+                            for (int w = 0; w < WerkPlekken.Count; w++)
+                            {
+                                var wp = WerkPlekken[w];
+                                var xw = bew.WerkPlekken.FirstOrDefault(x => x.Equals(wp));
+                                if (xw != null)
+                                {
+                                    xw.Storingen ??= new List<Storing>();
+                                    foreach (var xst in wp.Storingen)
+                                    {
+                                        var xxst = xst.CreateCopy();
+                                        xxst.Path = xw.Path;
+                                        var xindex = xw.Storingen.IndexOf(xxst);
+                                        if (xindex > -1)
+                                            xw.Storingen[xindex] = xxst;
+                                        else xw.Storingen.Add(xxst);
+                                        _= xw.Werk.UpdateBewerking(null, $"[{xw.Path}]\n" +
+                                                                            $"Onderbreking update");
                                     }
                                 }
 
-                                Manager.FormulierActie(new object[] {bew}, MainAktie.StartBewerking);
-                                break;
-                        }
-
-                        //sync storingen
-                        foreach (var wp in WerkPlekken)
-                        {
-                            var xw = bew.WerkPlekken.FirstOrDefault(x => x.Equals(wp));
-                            if (xw != null)
-                            {
-                                xw.Storingen ??= new List<Storing>();
-                                foreach (var xst in wp.Storingen)
-                                {
-                                    var xxst = xst.CreateCopy();
-                                    xxst.Path = xw.Path;
-                                    var xindex = xw.Storingen.IndexOf(xxst);
-                                    if (xindex > -1)
-                                        xw.Storingen[xindex] = xxst;
-                                    else xw.Storingen.Add(xxst);
-                                    xw.Werk.UpdateBewerking(null, $"[{xw.Path}]\n" +
-                                                                  $"Onderbreking update");
-                                }
                             }
-
                         }
                     }
+
+                    return true;
                 }
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return false;
-
-            }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return false;
+                }
+            });
         }
 
         public override bool Equals(object obj)

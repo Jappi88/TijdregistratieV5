@@ -37,7 +37,6 @@
             this.werkplaatsIndeling1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.werkplaatsIndeling1.Location = new System.Drawing.Point(20, 60);
             this.werkplaatsIndeling1.Name = "werkplaatsIndeling1";
-            this.werkplaatsIndeling1.Padding = new System.Windows.Forms.Padding(10, 60, 10, 10);
             this.werkplaatsIndeling1.Size = new System.Drawing.Size(872, 461);
             this.werkplaatsIndeling1.TabIndex = 0;
             this.werkplaatsIndeling1.StatusTextChanged += new System.EventHandler(this.werkplaatsIndeling1_StatusTextChanged);

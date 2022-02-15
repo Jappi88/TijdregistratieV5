@@ -142,7 +142,7 @@ namespace ProductieManager.Forms
         {
             try
             {
-                filterEntryEditorUI1.LoadFilterEntries(typeof(Bewerking), filter?.Filters ?? new List<FilterEntry>(),false);
+                filterEntryEditorUI1.LoadFilterEntries(typeof(Bewerking), filter,false);
             }
             catch (Exception e)
             {
@@ -170,6 +170,14 @@ namespace ProductieManager.Forms
         private void xannuleren_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void filterEntryEditorUI1_CriteriasChanged(object sender, EventArgs e)
+        {
+            if (Filters == null) return;
+            var xindex = Filters.IndexOf(filterEntryEditorUI1.SelectedFilter);
+            if (xindex > -1)
+                Filters[xindex].Filters = filterEntryEditorUI1.Criterias;
         }
     }
 }

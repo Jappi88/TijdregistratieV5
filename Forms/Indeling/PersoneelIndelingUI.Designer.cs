@@ -55,7 +55,7 @@ namespace Forms
             this.panel1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(490, 393);
+            this.panel1.Size = new System.Drawing.Size(490, 463);
             this.panel1.TabIndex = 0;
             // 
             // xPersoneelIndelingPanel
@@ -66,7 +66,7 @@ namespace Forms
             this.xPersoneelIndelingPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.xPersoneelIndelingPanel.Location = new System.Drawing.Point(0, 39);
             this.xPersoneelIndelingPanel.Name = "xPersoneelIndelingPanel";
-            this.xPersoneelIndelingPanel.Size = new System.Drawing.Size(490, 354);
+            this.xPersoneelIndelingPanel.Size = new System.Drawing.Size(490, 424);
             this.xPersoneelIndelingPanel.TabIndex = 2;
             this.xPersoneelIndelingPanel.WrapContents = false;
             this.xPersoneelIndelingPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.flowLayoutPanel1_DragDrop);
@@ -112,7 +112,7 @@ namespace Forms
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(10, 60);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -125,7 +125,7 @@ namespace Forms
             this.splitContainer1.Panel2.Controls.Add(this.productieListControl1);
             this.splitContainer1.Panel2.Controls.Add(this.xGeselecteerdeGebruikerLabel);
             this.splitContainer1.Panel2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.splitContainer1.Size = new System.Drawing.Size(814, 393);
+            this.splitContainer1.Size = new System.Drawing.Size(834, 463);
             this.splitContainer1.SplitterDistance = 490;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -146,7 +146,7 @@ namespace Forms
             this.productieListControl1.Name = "productieListControl1";
             this.productieListControl1.RemoveCustomItemIfNotValid = false;
             this.productieListControl1.SelectedItem = null;
-            this.productieListControl1.Size = new System.Drawing.Size(320, 373);
+            this.productieListControl1.Size = new System.Drawing.Size(340, 443);
             this.productieListControl1.TabIndex = 0;
             this.productieListControl1.ValidHandler = null;
             // 
@@ -167,9 +167,9 @@ namespace Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xloadinglabel.Location = new System.Drawing.Point(13, 62);
+            this.xloadinglabel.Location = new System.Drawing.Point(3, 2);
             this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(811, 391);
+            this.xloadinglabel.Size = new System.Drawing.Size(831, 461);
             this.xloadinglabel.TabIndex = 31;
             this.xloadinglabel.Text = "Indeling laden...";
             this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -183,7 +183,6 @@ namespace Forms
             this.Controls.Add(this.splitContainer1);
             this.DoubleBuffered = true;
             this.Name = "PersoneelIndelingUI";
-            this.Padding = new System.Windows.Forms.Padding(10, 60, 10, 10);
             this.Size = new System.Drawing.Size(834, 463);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

@@ -63,10 +63,13 @@ namespace Controls
             if (!AllowTileEdit) return;
             if (this.Tag is TileInfoEntry entry)
             {
+                var xindex = Manager.Opties?.TileLayout?.IndexOf(entry)??-1;
                 var form = new TileEditorForm(entry.CreateCopy());
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     this.UpdateTile(form.SelectedEntry);
+                    if (Manager.Opties?.TileLayout != null && xindex > -1)
+                        Manager.Opties.TileLayout[xindex] = form.SelectedEntry;
                 }
             }
         }

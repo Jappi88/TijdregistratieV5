@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Forms;
 using ProductieManager.Forms;
@@ -12,6 +13,7 @@ namespace Controls
 {
     public partial class FilterEntryEditorUI : UserControl
     {
+        public Filter SelectedFilter { get; set; }
         public List<FilterEntry> Criterias { get; private set; } = new();
 
         private bool _UseOperand;
@@ -20,6 +22,8 @@ namespace Controls
         {
             InitializeComponent();
         }
+
+        public event EventHandler CriteriasChanged;
 
         public void LoadFilterEntries(Type type, List<FilterEntry> entries, bool useOperand)
         {
@@ -34,6 +38,12 @@ namespace Controls
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        public void LoadFilterEntries(Type type, Filter filter, bool useOperand)
+        {
+            SelectedFilter = filter;
+            LoadFilterEntries(type, filter?.Filters, useOperand);
         }
 
         public FilterEntry SelectedFilterEntry()
@@ -60,6 +70,7 @@ namespace Controls
 
                 UpdateCriterias();
                 xcriterialijst.Invalidate();
+                OnCriteriasChanged();
             }
         }
 
@@ -117,6 +128,7 @@ namespace Controls
                 xcriterialijst.AddObject(xnewcrit.SelectedFilter);
                 xcriterialijst.SelectedObject = xnewcrit.SelectedFilter;
                 xcriterialijst.SelectedItem?.EnsureVisible();
+                OnCriteriasChanged();
             }
 
             UpdateHtmlCriteria();
@@ -144,6 +156,7 @@ namespace Controls
                     //xfilter.Filters.Insert(index, xnewcrit.SelectedFilter);
                     xcriterialijst.RefreshObject(xnewcrit.SelectedFilter);
                     UpdateCriterias();
+                    OnCriteriasChanged();
                 }
             }
         }
@@ -161,6 +174,7 @@ namespace Controls
             xcriterialijst.SelectedObject = xfilter;
             xcriterialijst.SelectedItem?.EnsureVisible();
             UpdateCriterias();
+            OnCriteriasChanged();
         }
 
         private void UpdateCriterias()
@@ -240,6 +254,11 @@ namespace Controls
             xdeletefilterregel.Enabled = xcriterialijst.SelectedItems.Count > 0;
             xregelup.Enabled = xcriterialijst.SelectedItems.Count > 0;
             xregeeldown.Enabled = xcriterialijst.SelectedItems.Count > 0;
+        }
+
+        protected virtual void OnCriteriasChanged()
+        {
+            CriteriasChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

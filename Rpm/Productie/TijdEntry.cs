@@ -106,8 +106,11 @@ namespace Rpm.Productie
         public bool ContainsBereik(TijdEntry bereik)
         {
             if (bereik == null) return true;
-            return (bereik.Start >= Start && bereik.Start < Stop) ||
+            var result = (bereik.Start >= Start && bereik.Start < Stop) ||
                    (bereik.Stop >= Start && bereik.Stop <= Stop);
+            var result2 = (Start >= bereik.Start && Start < bereik.Stop) ||
+                          (Stop > bereik.Start && Stop <= bereik.Stop);
+            return result || result2;
         }
 
         public override bool Equals(object obj)

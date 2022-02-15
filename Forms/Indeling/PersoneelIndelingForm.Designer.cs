@@ -38,7 +38,6 @@
             this.personeelIndelingUI1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.personeelIndelingUI1.Location = new System.Drawing.Point(20, 60);
             this.personeelIndelingUI1.Name = "personeelIndelingUI1";
-            this.personeelIndelingUI1.Padding = new System.Windows.Forms.Padding(10, 60, 10, 10);
             this.personeelIndelingUI1.Size = new System.Drawing.Size(1085, 535);
             this.personeelIndelingUI1.TabIndex = 0;
             this.personeelIndelingUI1.StatusTextChanged += new System.EventHandler(this.personeelIndelingUI1_StatusTextChanged);

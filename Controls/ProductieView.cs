@@ -126,6 +126,7 @@ namespace Controls
         private static ArtikelsForm _ArtikelsForm;
         private static PersoneelsForm _PersoneelForm;
         private static ProductieOverzichtForm _ProductieOverzicht;
+        private static KlachtenForm _Klachten;
         private static PersoneelIndelingForm _PersoneelIndeling;
         private static WerkplaatsIndelingForm _WerkplaatsIndeling;
         private static MetroForm _berekenverbruik;
@@ -743,6 +744,20 @@ namespace Controls
             }
         }
 
+        public void ShowFilterForm()
+        {
+            try
+            {
+                var xf = new FilterEditor();
+                if (xf.ShowDialog() == DialogResult.OK)
+                    Manager.OnFilterChanged(this);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         private void metroCustomTabControl1_TabClosed(object sender, EventArgs e)
         {
             CloseTabPage(sender);
@@ -814,6 +829,9 @@ namespace Controls
                         break;
                     case "xallenotities":
                         InitAlleNotitiesTab(entry,select);
+                        break;
+                    case "xbeheerfilters":
+                        ShowFilterForm();
                         break;
                     default:
                         switch (entry.GroupName.ToLower())
@@ -2786,8 +2804,21 @@ namespace Controls
 
         public void ShowKlachtenWindow()
         {
-            var kl = new KlachtenForm();
-            kl.ShowDialog();
+            if (_Klachten == null)
+            {
+                _Klachten = new KlachtenForm();
+                _Klachten.FormClosed += (x, y) =>
+                {
+                    _Klachten?.Dispose();
+                    _Klachten = null;
+                };
+            }
+
+            _Klachten.Show();
+            if (_Klachten.WindowState == FormWindowState.Minimized)
+                _Klachten.WindowState = FormWindowState.Normal;
+            _Klachten.BringToFront();
+            _Klachten.Focus();
         }
 
         public void ShowCreateWeekOverzicht()

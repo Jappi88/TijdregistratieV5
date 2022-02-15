@@ -309,6 +309,18 @@ namespace Rpm.Settings
                     TileIndex = 19,
                     IsDefault = true,
                 });
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Beheer Filters",
+                    ForeColor = Color.White,
+                    GroupName = "Beheer",
+                    Name = "xbeheerfilters",
+                    Size = new Size(256, 96),
+                    TileColor = Color.LightSkyBlue,
+                    TileImage = ProductieManager.Properties.Resources.filter_96x96,
+                    TileIndex = 19,
+                    IsDefault = true,
+                });
 
                 if (incextra)
                 {

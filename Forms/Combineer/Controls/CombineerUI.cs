@@ -20,59 +20,63 @@ namespace Controls
             InitializeComponent();
         }
 
-        public bool UpdateBewerking(Bewerking bewerking)
+        public void UpdateBewerking(Bewerking bewerking)
         {
-            try
+            if (this.Disposing || this.IsDisposed || !this.Visible || bewerking == null) return;
+            this.BeginInvoke(new Action(() =>
             {
-                Productie = bewerking;
-                var xcurrentitems = xcontainer.Controls.Count > 0
-                    ? xcontainer.Controls.Cast<CombineerEntryUI>().ToList()
-                    : new List<CombineerEntryUI>();
-                var xremove = xcurrentitems.Where(x => !bewerking.Combies.Any(b =>
-                    string.Equals(x.Productie.ProductieNr + $"\\{x.Productie.Naam}",
-                        b.ProductieNr + $"\\{b.BewerkingNaam}", StringComparison.CurrentCultureIgnoreCase))).ToList();
-                foreach (var item in xremove)
+                try
                 {
-                    xcurrentitems.Remove(item);
-                    xcontainer.Controls.Remove(item);
-                }
+                    Productie = bewerking;
+                    var xcurrentitems = xcontainer.Controls.Count > 0
+                        ? xcontainer.Controls.Cast<CombineerEntryUI>().ToList()
+                        : new List<CombineerEntryUI>();
+                    var xremove = xcurrentitems.Where(x => !bewerking.Combies.Any(b =>
+                            string.Equals(x.Productie.ProductieNr + $"\\{x.Productie.Naam}",
+                                b.ProductieNr + $"\\{b.BewerkingNaam}", StringComparison.CurrentCultureIgnoreCase)))
+                        .ToList();
+                    foreach (var item in xremove)
+                    {
+                        xcurrentitems.Remove(item);
+                        xcontainer.Controls.Remove(item);
+                    }
 
-                xaddproductie.Enabled = bewerking.Activiteit > 1;
-                foreach (var combi in bewerking.Combies)
+                    xaddproductie.Enabled = bewerking.Activiteit > 1;
+                    foreach (var combi in bewerking.Combies)
+                    {
+                        var prod = Werk.FromPath(combi.Path);
+                        if (prod?.Bewerking == null)
+                        {
+                            continue;
+                        }
+
+                        var xold = xcurrentitems.FirstOrDefault(x =>
+                            string.Equals(x.Productie.ProductieNr + $"\\{x.Productie.Naam}",
+                                combi.ProductieNr + $"\\{combi.BewerkingNaam}",
+                                StringComparison.CurrentCultureIgnoreCase));
+                        if (xold == null)
+                        {
+                            xold = new CombineerEntryUI();
+                            xold.Tag = combi;
+                            xold.Dock = DockStyle.Top;
+                            xold.LoadBewerking(bewerking, prod.Bewerking);
+                            xcontainer.Controls.Add(xold);
+                            xold.SendToBack();
+                        }
+                        else
+                        {
+                            xold.LoadBewerking(bewerking, prod.Bewerking);
+                        }
+                    }
+
+                    InitFields();
+
+                }
+                catch (Exception e)
                 {
-                    var prod = Werk.FromPath(combi.Path);
-                    if (prod?.Bewerking == null)
-                    {
-                        continue;
-                    }
-
-                    var xold = xcurrentitems.FirstOrDefault(x =>
-                        string.Equals(x.Productie.ProductieNr + $"\\{x.Productie.Naam}",
-                            combi.ProductieNr + $"\\{combi.BewerkingNaam}", StringComparison.CurrentCultureIgnoreCase));
-                    if (xold == null)
-                    {
-                        xold = new CombineerEntryUI();
-                        xold.Tag = combi;
-                        xold.Dock = DockStyle.Top;
-                        xold.LoadBewerking(bewerking, prod.Bewerking);
-                        xcontainer.Controls.Add(xold);
-                        xold.SendToBack();
-                    }
-                    else
-                    {
-                        xold.LoadBewerking(bewerking, prod.Bewerking);
-                    }
+                    Console.WriteLine(e);
                 }
-
-                InitFields();
-                return true;
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return false;
-            }
+            }));
         }
 
         private void InitFields()
@@ -153,7 +157,7 @@ namespace Controls
 
                         if (Productie.UpdateBewerking(null, msg).Result)
                         {
-                            Productie.UpdateCombies();
+                            _= Productie.UpdateCombies();
                         }
                     }
                 }

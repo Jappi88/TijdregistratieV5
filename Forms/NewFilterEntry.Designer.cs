@@ -41,6 +41,7 @@ namespace ProductieManager.Forms
             this.xtextvalue = new MetroFramework.Controls.MetroTextBox();
             this.xvaluepanel = new MetroFramework.Controls.MetroPanel();
             this.xdatepanel = new System.Windows.Forms.Panel();
+            this.xdezeweekcheckbox = new System.Windows.Forms.CheckBox();
             this.xdatevalue = new System.Windows.Forms.DateTimePicker();
             this.xhuidigeDatum = new System.Windows.Forms.CheckBox();
             this.xhuidigeTijd = new System.Windows.Forms.CheckBox();
@@ -56,11 +57,10 @@ namespace ProductieManager.Forms
             this.xVergelijkVariableCheck = new System.Windows.Forms.RadioButton();
             this.xVergelijkWaardeCheck = new System.Windows.Forms.RadioButton();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.xcriteriahtml = new HtmlPanel();
+            this.xcriteriahtml = new TheArtOfDev.HtmlRenderer.WinForms.HtmlPanel();
             this.xvoorwaardenb = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.xdezeweekcheckbox = new System.Windows.Forms.CheckBox();
             this.metroPanel1.SuspendLayout();
             this.xvaluepanel.SuspendLayout();
             this.xdatepanel.SuspendLayout();
@@ -225,6 +225,19 @@ namespace ProductieManager.Forms
             this.xdatepanel.Size = new System.Drawing.Size(535, 52);
             this.xdatepanel.TabIndex = 11;
             this.xdatepanel.Visible = false;
+            // 
+            // xdezeweekcheckbox
+            // 
+            this.xdezeweekcheckbox.AutoSize = true;
+            this.xdezeweekcheckbox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xdezeweekcheckbox.Location = new System.Drawing.Point(3, 13);
+            this.xdezeweekcheckbox.Name = "xdezeweekcheckbox";
+            this.xdezeweekcheckbox.Size = new System.Drawing.Size(95, 21);
+            this.xdezeweekcheckbox.TabIndex = 11;
+            this.xdezeweekcheckbox.Text = "Deze Week";
+            this.toolTip1.SetToolTip(this.xdezeweekcheckbox, "KIes dit voor als je de criteria wilt vergelijken met de huidige datum");
+            this.xdezeweekcheckbox.UseVisualStyleBackColor = true;
+            this.xdezeweekcheckbox.CheckedChanged += new System.EventHandler(this.xdezeweekcheckbox_CheckedChanged);
             // 
             // xdatevalue
             // 
@@ -468,19 +481,6 @@ namespace ProductieManager.Forms
             // toolTip1
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            // 
-            // xdezeweekcheckbox
-            // 
-            this.xdezeweekcheckbox.AutoSize = true;
-            this.xdezeweekcheckbox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xdezeweekcheckbox.Location = new System.Drawing.Point(3, 13);
-            this.xdezeweekcheckbox.Name = "xdezeweekcheckbox";
-            this.xdezeweekcheckbox.Size = new System.Drawing.Size(95, 21);
-            this.xdezeweekcheckbox.TabIndex = 11;
-            this.xdezeweekcheckbox.Text = "Deze Week";
-            this.toolTip1.SetToolTip(this.xdezeweekcheckbox, "KIes dit voor als je de criteria wilt vergelijken met de huidige datum");
-            this.xdezeweekcheckbox.UseVisualStyleBackColor = true;
-            this.xdezeweekcheckbox.CheckedChanged += new System.EventHandler(this.xdezeweekcheckbox_CheckedChanged);
             // 
             // NewFilterEntry
             // 

@@ -2012,6 +2012,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\filter_96x96.png" />
     <None Include="Resources\home_icon_32x32.png" />
     <None Include="Resources\filter_32x32.png" />
     <None Include="Resources\time_management_tasks_96x96.png" />

@@ -166,7 +166,8 @@ namespace Rpm.Productie.AantalHistory
             {
                 int gemaakt = 0;
 
-                var xaantallen = Aantallen.Where(x => x.ContainsBereik(new TijdEntry(start, stop), uren?.WerkRooster, uren?.SpecialeRoosters))
+                var xaantallen = Aantallen.Where(x =>
+                        x.ContainsBereik(new TijdEntry(start, stop), uren?.WerkRooster, uren?.SpecialeRoosters))
                     .OrderBy(x => x.Aantal).ToList();
                 
                 Dictionary<DateTime, DateTime> exc = exclude ?? new Dictionary<DateTime, DateTime>();

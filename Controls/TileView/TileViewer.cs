@@ -249,7 +249,12 @@ namespace Controls
 
                 _destination.Controls.SetChildIndex(data, index);
                 if (data.Tag is TileInfoEntry ent)
+                {
                     ent.TileIndex = index;
+                    var xindex = Manager.Opties?.TileLayout?.IndexOf(ent) ?? -1;
+                    if (xindex > -1 && Manager.Opties?.TileLayout != null)
+                        Manager.Opties.TileLayout[xindex] = ent;
+                }
                 // Invalidate to paint!
                 _destination.Invalidate();
                 _source.Invalidate();
@@ -263,7 +268,12 @@ namespace Controls
                 var index = item == null ? 0 : _destination.Controls.GetChildIndex(item, false);
                 _destination.Controls.SetChildIndex(data, index);
                 if (data.Tag is TileInfoEntry ent)
+                {
                     ent.TileIndex = index;
+                    var xindex = Manager.Opties?.TileLayout?.IndexOf(ent) ?? -1;
+                    if (xindex > -1 && Manager.Opties?.TileLayout != null)
+                        Manager.Opties.TileLayout[xindex] = ent;
+                }
                 _destination.Invalidate();
             }
         }

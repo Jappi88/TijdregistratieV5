@@ -38,8 +38,8 @@ namespace ProductieManager.Forms
             this.xdeletefilter = new MetroFramework.Controls.MetroButton();
             this.metroToolTip1 = new MetroFramework.Components.MetroToolTip();
             this.metroPanel6 = new MetroFramework.Controls.MetroPanel();
-            this.xopslaan = new MetroFramework.Controls.MetroButton();
-            this.xannuleren = new MetroFramework.Controls.MetroButton();
+            this.xopslaan = new System.Windows.Forms.Button();
+            this.xannuleren = new System.Windows.Forms.Button();
             this.filterEntryEditorUI1 = new Controls.FilterEntryEditorUI();
             this.metroPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xfilterlijst)).BeginInit();
@@ -59,7 +59,7 @@ namespace ProductieManager.Forms
             this.metroPanel1.Location = new System.Drawing.Point(7, 60);
             this.metroPanel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.metroPanel1.Name = "metroPanel1";
-            this.metroPanel1.Size = new System.Drawing.Size(237, 374);
+            this.metroPanel1.Size = new System.Drawing.Size(237, 378);
             this.metroPanel1.TabIndex = 1;
             this.metroPanel1.VerticalScrollbarBarColor = true;
             this.metroPanel1.VerticalScrollbarHighlightOnWheel = false;
@@ -80,7 +80,7 @@ namespace ProductieManager.Forms
             this.xfilterlijst.Name = "xfilterlijst";
             this.xfilterlijst.ShowGroups = false;
             this.xfilterlijst.ShowItemToolTips = true;
-            this.xfilterlijst.Size = new System.Drawing.Size(237, 346);
+            this.xfilterlijst.Size = new System.Drawing.Size(237, 350);
             this.xfilterlijst.TabIndex = 0;
             this.xfilterlijst.UseCompatibleStateImageBehavior = false;
             this.xfilterlijst.UseExplorerTheme = true;
@@ -206,9 +206,9 @@ namespace ProductieManager.Forms
             this.metroPanel6.HorizontalScrollbarBarColor = true;
             this.metroPanel6.HorizontalScrollbarHighlightOnWheel = false;
             this.metroPanel6.HorizontalScrollbarSize = 10;
-            this.metroPanel6.Location = new System.Drawing.Point(7, 441);
+            this.metroPanel6.Location = new System.Drawing.Point(7, 445);
             this.metroPanel6.Name = "metroPanel6";
-            this.metroPanel6.Size = new System.Drawing.Size(880, 39);
+            this.metroPanel6.Size = new System.Drawing.Size(912, 39);
             this.metroPanel6.TabIndex = 3;
             this.metroPanel6.VerticalScrollbarBarColor = true;
             this.metroPanel6.VerticalScrollbarHighlightOnWheel = false;
@@ -217,25 +217,33 @@ namespace ProductieManager.Forms
             // xopslaan
             // 
             this.xopslaan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xopslaan.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.xopslaan.Location = new System.Drawing.Point(650, 4);
+            this.xopslaan.BackColor = System.Drawing.Color.AliceBlue;
+            this.xopslaan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xopslaan.Image = global::ProductieManager.Properties.Resources.diskette_save_saveas_1514;
+            this.xopslaan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xopslaan.Location = new System.Drawing.Point(702, 3);
             this.xopslaan.Name = "xopslaan";
-            this.xopslaan.Size = new System.Drawing.Size(110, 33);
+            this.xopslaan.Size = new System.Drawing.Size(100, 32);
             this.xopslaan.TabIndex = 3;
             this.xopslaan.Text = "Opslaan";
-            this.xopslaan.UseSelectable = true;
+            this.xopslaan.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.xopslaan.UseVisualStyleBackColor = false;
             this.xopslaan.Click += new System.EventHandler(this.xopslaan_Click);
             // 
             // xannuleren
             // 
             this.xannuleren.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xannuleren.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.xannuleren.Location = new System.Drawing.Point(766, 4);
+            this.xannuleren.BackColor = System.Drawing.Color.AliceBlue;
+            this.xannuleren.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xannuleren.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.xannuleren.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xannuleren.Location = new System.Drawing.Point(808, 3);
             this.xannuleren.Name = "xannuleren";
-            this.xannuleren.Size = new System.Drawing.Size(110, 33);
+            this.xannuleren.Size = new System.Drawing.Size(100, 32);
             this.xannuleren.TabIndex = 2;
-            this.xannuleren.Text = "Annuleren";
-            this.xannuleren.UseSelectable = true;
+            this.xannuleren.Text = "Sluiten";
+            this.xannuleren.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.xannuleren.UseVisualStyleBackColor = false;
             this.xannuleren.Click += new System.EventHandler(this.xannuleren_Click);
             // 
             // filterEntryEditorUI1
@@ -249,14 +257,16 @@ namespace ProductieManager.Forms
             this.filterEntryEditorUI1.Margin = new System.Windows.Forms.Padding(5);
             this.filterEntryEditorUI1.Name = "filterEntryEditorUI1";
             this.filterEntryEditorUI1.Padding = new System.Windows.Forms.Padding(5);
-            this.filterEntryEditorUI1.Size = new System.Drawing.Size(631, 373);
+            this.filterEntryEditorUI1.SelectedFilter = null;
+            this.filterEntryEditorUI1.Size = new System.Drawing.Size(663, 377);
             this.filterEntryEditorUI1.TabIndex = 4;
+            this.filterEntryEditorUI1.CriteriasChanged += new System.EventHandler(this.filterEntryEditorUI1_CriteriasChanged);
             // 
             // FilterEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(895, 495);
+            this.ClientSize = new System.Drawing.Size(927, 499);
             this.Controls.Add(this.filterEntryEditorUI1);
             this.Controls.Add(this.metroPanel6);
             this.Controls.Add(this.metroPanel1);
@@ -283,8 +293,8 @@ namespace ProductieManager.Forms
         private MetroFramework.Components.MetroToolTip metroToolTip1;
         private MetroFramework.Controls.MetroButton xdeletefilter;
         private MetroFramework.Controls.MetroPanel metroPanel6;
-        private MetroFramework.Controls.MetroButton xopslaan;
-        private MetroFramework.Controls.MetroButton xannuleren;
+        private System.Windows.Forms.Button xopslaan;
+        private System.Windows.Forms.Button xannuleren;
         private BrightIdeasSoftware.ObjectListView xfilterlijst;
         private BrightIdeasSoftware.OLVColumn olvColumn1;
         private Controls.FilterEntryEditorUI filterEntryEditorUI1;
