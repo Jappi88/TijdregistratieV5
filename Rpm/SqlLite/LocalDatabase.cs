@@ -167,15 +167,15 @@ namespace Rpm.SqlLite
 
         public Task<ProductieFormulier> GetProductie(string productienr)
         {
-            return Task.Run(async () =>
+            return Task.Run( () =>
             {
                 try
                 {
                     ProductieFormulier prod = null;
                     if (ProductieFormulieren != null)
-                        prod = await ProductieFormulieren.FindOne(productienr);
+                        prod = ProductieFormulieren.FindOne(productienr).Result;
                     if (prod == null && GereedFormulieren != null)
-                        prod = await GereedFormulieren.FindOne(productienr);
+                        prod = GereedFormulieren.FindOne(productienr).Result;
                     prod?.UpdateForm(true, false, null, null, false, false, false);
                     return prod;
                 }
