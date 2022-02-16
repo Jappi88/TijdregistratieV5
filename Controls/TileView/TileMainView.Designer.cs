@@ -38,15 +38,11 @@
             this.vanRechtsNaarLinksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vanOnderNaarBovenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xBeheerLijstenToolstripItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-            this.kiesAchtergrondAfbeeldingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.reserLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.beheerTileLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.kiesAchtergrondAfbeeldingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.resetLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tileViewer1 = new Controls.TileViewer();
@@ -75,8 +71,6 @@
             this.beheerTileLayoutToolStripMenuItem1,
             this.toolStripMenuItem1,
             this.xBeheerLijstenToolstripItem,
-            this.toolStripSeparator9,
-            this.kiesAchtergrondAfbeeldingToolStripMenuItem,
             this.toolStripSeparator1,
             this.reserLayoutToolStripMenuItem});
             this.xBeheerweergavetoolstrip.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -144,19 +138,6 @@
             this.xBeheerLijstenToolstripItem.Text = "Beheer Tiles";
             this.xBeheerLijstenToolstripItem.Click += new System.EventHandler(this.xBeheerLijstenToolstripItem_Click);
             // 
-            // toolStripSeparator9
-            // 
-            this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(303, 6);
-            // 
-            // kiesAchtergrondAfbeeldingToolStripMenuItem
-            // 
-            this.kiesAchtergrondAfbeeldingToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.photo_photography_image_32x32;
-            this.kiesAchtergrondAfbeeldingToolStripMenuItem.Name = "kiesAchtergrondAfbeeldingToolStripMenuItem";
-            this.kiesAchtergrondAfbeeldingToolStripMenuItem.Size = new System.Drawing.Size(306, 26);
-            this.kiesAchtergrondAfbeeldingToolStripMenuItem.Text = "Kies Achtergrond Afbeelding";
-            this.kiesAchtergrondAfbeeldingToolStripMenuItem.Click += new System.EventHandler(this.kiesAchtergrondAfbeeldingToolStripMenuItem_Click);
-            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
@@ -175,11 +156,9 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.beheerTileLayoutToolStripMenuItem,
             this.toolStripSeparator2,
-            this.kiesAchtergrondAfbeeldingToolStripMenuItem1,
-            this.toolStripSeparator3,
             this.resetLayoutToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(243, 130);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(184, 86);
             // 
             // beheerTileLayoutToolStripMenuItem
             // 
@@ -194,20 +173,6 @@
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(261, 6);
-            // 
-            // kiesAchtergrondAfbeeldingToolStripMenuItem1
-            // 
-            this.kiesAchtergrondAfbeeldingToolStripMenuItem1.Image = global::ProductieManager.Properties.Resources.photo_photography_image_32x32;
-            this.kiesAchtergrondAfbeeldingToolStripMenuItem1.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.kiesAchtergrondAfbeeldingToolStripMenuItem1.Name = "kiesAchtergrondAfbeeldingToolStripMenuItem1";
-            this.kiesAchtergrondAfbeeldingToolStripMenuItem1.Size = new System.Drawing.Size(264, 38);
-            this.kiesAchtergrondAfbeeldingToolStripMenuItem1.Text = "Kies Achtergrond Afbeelding";
-            this.kiesAchtergrondAfbeeldingToolStripMenuItem1.Click += new System.EventHandler(this.kiesAchtergrondAfbeeldingToolStripMenuItem1_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(261, 6);
             // 
             // resetLayoutToolStripMenuItem
             // 
@@ -281,7 +246,6 @@
         private System.Windows.Forms.ToolStrip xBottomToolMenu;
         private System.Windows.Forms.ToolStripSplitButton xBeheerweergavetoolstrip;
         private System.Windows.Forms.ToolStripMenuItem xBeheerLijstenToolstripItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.ToolStripMenuItem reserLayoutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
@@ -295,8 +259,5 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem resetLayoutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem beheerTileLayoutToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem kiesAchtergrondAfbeeldingToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem kiesAchtergrondAfbeeldingToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }

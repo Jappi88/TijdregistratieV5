@@ -1220,7 +1220,7 @@ namespace Controls
                     {
                         var name = Manager.Opties == null ? "Default" : Manager.Opties.Username;
                         Text = @$"ProductieManager [{name}]";
-                        tileMainView1.SetBackgroundImage(Manager.Opties?.BackgroundImagePath);
+                        //tileMainView1.SetBackgroundImage(Manager.Opties?.BackgroundImagePath);
                         tileMainView1.LoadTileViewer();
                         tileMainView1.TileCountRefreshInterval = Manager.Opties?.TileCountRefreshRate??30000;
                         var xrooster = mainMenu1.GetButton("xroostermenubutton");
