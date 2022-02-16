@@ -1655,6 +1655,8 @@ namespace Rpm.Misc
         {
             try
             {
+                if (string.IsNullOrEmpty(filepath) || !File.Exists(filepath))
+                    return false;
                 bool isvalid = false;
                 using FileStream fs = new FileStream(filepath, FileMode.Open,FileAccess.Read, FileShare.ReadWrite);
                 var data = new byte[8];

@@ -24,9 +24,20 @@ namespace Controls
             }
         }
 
+        private readonly PictureBox SelectedBox;
+        
+        public bool Selected
+        {
+            get => SelectedBox.Visible;
+            set => SelectedBox.Visible = value;
+        }
+
+        public bool AllowSelection { get; set; }
+
         public Tile()
         {
             InitializeComponent();
+            this.Resize += Tile_Resize;
             UseTileImage = true;
             UseCustomBackColor = true;
             UseCustomForeColor = true;
@@ -54,8 +65,31 @@ namespace Controls
             flatbutton.ContextMenuStrip = xcontext;
             this.ContextMenuStrip = xcontext;
             flatbutton.Click += Flatbutton_Click;
+            SelectedBox = new PictureBox();
+            SelectedBox.Visible = false;
+            SelectedBox.Image = Resources.notification_done_114461;
+            SelectedBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            SelectedBox.BackColor = Color.Transparent;
+            SelectedBox.Size = new Size(64, 64);
+            SelectedBox.Click += (x, y) => this.PerformClick();
+            this.SuspendLayout();
             this.Controls.Add(flatbutton);
+            this.Controls.Add(SelectedBox);
+            SelectedBox.BringToFront();
             flatbutton.BringToFront();
+            UpdateSelectedImageLocation();
+            this.ResumeLayout(false);
+        }
+
+        private void UpdateSelectedImageLocation()
+        {
+            if (SelectedBox == null) return;
+            SelectedBox.Location = new Point(((this.Size.Width / 2) - SelectedBox.Width / 2), ((this.Size.Height / 2) - SelectedBox.Height / 2));
+        }
+
+        private void Tile_Resize(object sender, EventArgs e)
+        {
+            UpdateSelectedImageLocation();
         }
 
         private void TileChangeClicked(object sender, EventArgs e)
@@ -105,7 +139,7 @@ namespace Controls
             xtile.UseCustomBackColor = true;
             xtile.UseCustomForeColor = true;
             xtile.BackColor = entry.TileColor;
-            xtile.TileImage = entry.TileImage?.ResizeImage(entry.Size.Width / 4, (int)(entry.Size.Height / 1.5m));
+            xtile.TileImage = entry.TileImage;
             xtile.TileImageAlign = ContentAlignment.TopLeft;
             xtile.Size = entry.Size;
             xtile.Anchor = AnchorStyles.None;

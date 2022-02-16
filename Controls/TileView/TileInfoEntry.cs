@@ -7,6 +7,14 @@ using System.Drawing;
 namespace Controls
 {
     public delegate TileInfoEntry TileChangeEventhandler(Tile tile);
+
+    public enum ResizeMode
+    {
+        None,
+        Custom,
+        Auto
+    }
+
     public class TileInfoEntry
     {
         public int TileCount { get; set; }
@@ -15,6 +23,8 @@ namespace Controls
         public string Text { get; set; }
         public string GroupName { get; set; }
         public Size Size { get; set; } = new Size(256, 128);
+        public Size ImageSize { get; set; } = new Size(64, 64);
+        public ResizeMode ImageResize { get; set; } = ResizeMode.Auto;
         public bool IsDefault { get; set; }
         public bool IsViewed { get; set; }
         public AccesType AccesLevel { get; set; } = AccesType.AlleenKijken;
@@ -71,7 +81,19 @@ namespace Controls
             if (ImageData == null) return null;
             try
             {
-                return ImageData.ImageFromBytes();
+                var img = ImageData.ImageFromBytes();
+                if (img != null)
+                {
+                    switch (ImageResize)
+                    {
+                        case ResizeMode.Custom:
+                            return new Bitmap(img.ResizeImage(ImageSize.Width, ImageSize.Height));
+                        case ResizeMode.Auto:
+                            return new Bitmap(img.ResizeImage(Size.Width / 4, (int) (Size.Height / 1.5m)));
+                    }
+                }
+
+                return img;
             }
             catch (Exception e)
             {

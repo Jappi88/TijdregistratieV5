@@ -12,8 +12,10 @@ namespace Controls
     public partial class TileViewer : FlowLayoutPanel
     {
         private readonly System.Timers.Timer _timer;
-        
+        public bool EnableSaveTiles { get; set; } = true;
         public int TileInfoRefresInterval { get; set; } = 10000;
+        public bool EnableTileSelection { get; set; }
+        public bool MultipleSelections { get; set; }
 
         public bool EnableTimer
         {
@@ -80,11 +82,11 @@ namespace Controls
             StartTimer();
         }
 
-        private void UpdateTiles()
+        private void UpdateTiles(List<TileInfoEntry> tiles, TileInfoEntry selected = null)
         {
             try
             {
-                var xTiles = Manager.Opties.TileLayout;
+                var xTiles = tiles;
                 var _Tiles = GetAllTiles();
                 var xtoremove = _Tiles.Where(x => x.Tag is TileInfoEntry ent && !xTiles.Any(t => t.Equals(ent)))
                     .ToList();
@@ -102,16 +104,9 @@ namespace Controls
                         continue;
                     xtileinfo.TileIndex = i;
                     var xtile = GetTile(xtileinfo.Name);
-                    bool isnew = xtile == null;
                     xtile = UpdateTile(xtileinfo, xtile);
-                    if (isnew)
-                    {
-                        xtileinfo.TileIndex = Controls.Count;
-                        Controls.Add(xtile);
-                        xtile.Click += (x, y) => OnTileClicked(x);
-                    }
-
-
+                    if (EnableTileSelection && selected != null && selected.Equals(xtileinfo))
+                        SelectTile(xtile, true);
                 }
 
                 _Tiles = GetAllTiles();
@@ -132,7 +127,15 @@ namespace Controls
         {
             try
             {
+                tile ??= GetTile(entry.Name);
                 var xtile = tile ?? new Tile();
+                if (tile == null)
+                {
+                    xtile.Click += Xtile_Click;
+                    entry.TileIndex = Controls.Count;
+                    Controls.Add(xtile);
+                }
+                xtile.AllowTileEdit = EnableSaveTiles;
                 return xtile.UpdateTile(entry);
             }
             catch (Exception e)
@@ -140,6 +143,11 @@ namespace Controls
                 Console.WriteLine(e);
                 return null;
             }
+        }
+
+        private void Xtile_Click(object sender, EventArgs e)
+        {
+            OnTileClicked(sender);
         }
 
         public Tile GetTile(string name)
@@ -184,6 +192,27 @@ namespace Controls
             return xret;
         }
 
+        public List<TileInfoEntry> GetAllTileEntries()
+        {
+            var xret = new List<TileInfoEntry>();
+            try
+            {
+                var xcontrols = Controls.Cast<Control>().ToList();
+                for (int i = 0; i < xcontrols.Count; i++)
+                {
+                    var xcon = xcontrols[i];
+                    if (xcon is Tile {Tag: TileInfoEntry entry})
+                        xret.Add(entry);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return xret;
+        }
+
         public bool SaveTiles(bool save)
         {
             try
@@ -212,12 +241,11 @@ namespace Controls
             }
         }
 
-        public bool LoadTiles()
+        public bool LoadTiles(List<TileInfoEntry> tiles, TileInfoEntry selected = null)
         {
             try
             {
-                if (Manager.Opties == null) return false;
-                UpdateTiles();
+                UpdateTiles(tiles);
                 OnTilesLoaded();
                 return true;
             }
@@ -230,52 +258,36 @@ namespace Controls
 
         private void flowLayoutPanel1_DragDrop(object sender, DragEventArgs e)
         {
-            var data = (Tile)e.Data.GetData(typeof(Tile));
+            var data = (Tile) e.Data.GetData(typeof(Tile));
             if (data == null) return;
-            var _destination = (FlowLayoutPanel)sender;
-            var _source = (FlowLayoutPanel)data.Parent;
+            var _destination = (FlowLayoutPanel) sender;
+            // Just add the control to the new panel.
+            // No need to remove from the other panel, this changes the Control.Parent property.
+            var p = _destination.PointToClient(new Point(e.X, e.Y));
+            var item = _destination.GetChildAtPoint(p) ?? _destination.Controls[_destination.Controls.Count - 1];
+            var index = item == null ? 0 : _destination.Controls.GetChildIndex(item, false);
+            var xoldindex = _destination.Controls.GetChildIndex(data, false);
 
-            if (_source != _destination)
+            if (item != null && xoldindex > -1)
             {
-                // Add control to panel
-                _destination.Controls.Add(data);
-                data.Size = new Size(_destination.Width, 50);
-
-                // Reorder
-                var p = _destination.PointToClient(new Point(e.X, e.Y));
-                var item = _destination.GetChildAtPoint(p);
-
-                var index = item == null ? 0 : _destination.Controls.GetChildIndex(item, false);
-
-                _destination.Controls.SetChildIndex(data, index);
-                if (data.Tag is TileInfoEntry ent)
+                _destination.Controls.SetChildIndex(item, xoldindex);
+                if (item.Tag is TileInfoEntry xent)
                 {
-                    ent.TileIndex = index;
-                    var xindex = Manager.Opties?.TileLayout?.IndexOf(ent) ?? -1;
-                    if (xindex > -1 && Manager.Opties?.TileLayout != null)
-                        Manager.Opties.TileLayout[xindex] = ent;
+                    xent.TileIndex = xoldindex;
+                    var xindex = Manager.Opties?.TileLayout?.IndexOf(xent) ?? -1;
+                    if (EnableSaveTiles && xindex > -1 && Manager.Opties?.TileLayout != null)
+                        Manager.Opties.TileLayout[xindex] = xent;
                 }
-                // Invalidate to paint!
-                _destination.Invalidate();
-                _source.Invalidate();
             }
-            else
+            _destination.Controls.SetChildIndex(data, index);
+            if (data.Tag is TileInfoEntry ent)
             {
-                // Just add the control to the new panel.
-                // No need to remove from the other panel, this changes the Control.Parent property.
-                var p = _destination.PointToClient(new Point(e.X, e.Y));
-                var item = _destination.GetChildAtPoint(p) ?? _destination.Controls[_destination.Controls.Count - 1];
-                var index = item == null ? 0 : _destination.Controls.GetChildIndex(item, false);
-                _destination.Controls.SetChildIndex(data, index);
-                if (data.Tag is TileInfoEntry ent)
-                {
-                    ent.TileIndex = index;
-                    var xindex = Manager.Opties?.TileLayout?.IndexOf(ent) ?? -1;
-                    if (xindex > -1 && Manager.Opties?.TileLayout != null)
-                        Manager.Opties.TileLayout[xindex] = ent;
-                }
-                _destination.Invalidate();
+                ent.TileIndex = index;
+                var xindex = Manager.Opties?.TileLayout?.IndexOf(ent) ?? -1;
+                if (EnableSaveTiles && xindex > -1 && Manager.Opties?.TileLayout != null)
+                    Manager.Opties.TileLayout[xindex] = ent;
             }
+            _destination.Invalidate();
         }
 
         private void flowLayoutPanel1_DragEnter(object sender, DragEventArgs e)
@@ -297,8 +309,38 @@ namespace Controls
 
         protected virtual void OnTileClicked(object sender)
         {
+            if (EnableTileSelection)
+            {
+                if (sender is Tile tile)
+                {
+                    TogleTile(tile);
+                }
+            }
             TileClicked?.Invoke(sender, EventArgs.Empty);
         }
+
+        public bool TogleTile(Tile tile)
+        {
+            bool select = !tile.Selected;
+            return SelectTile(tile, select);
+        }
+
+        public bool SelectTile(Tile tile, bool enable)
+        {
+            if (enable && !MultipleSelections)
+            {
+                var xtiles = GetAllTiles();
+                xtiles.ForEach(x => x.Selected = false);
+            }
+
+            bool flag = tile.Selected != enable;
+            tile.Selected = enable;
+            if (flag)
+                OnSelectionChanged(tile);
+            return enable;
+        }
+
+        public event EventHandler SelectionChanged;
 
         protected virtual TileInfoEntry OnTileRequestInfo(Tile tile)
         {
@@ -312,5 +354,9 @@ namespace Controls
 
         #endregion Events
 
+        protected virtual void OnSelectionChanged(object sender)
+        {
+            SelectionChanged?.Invoke(sender, EventArgs.Empty);
+        }
     }
 }

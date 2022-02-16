@@ -40,9 +40,9 @@
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(20, 284);
+            this.panel1.Location = new System.Drawing.Point(20, 394);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(660, 36);
+            this.panel1.Size = new System.Drawing.Size(710, 36);
             this.panel1.TabIndex = 0;
             // 
             // button2
@@ -53,7 +53,7 @@
             this.button2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.Image = global::ProductieManager.Properties.Resources.diskette_save_saveas_1514;
             this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(427, 3);
+            this.button2.Location = new System.Drawing.Point(477, 3);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(112, 30);
             this.button2.TabIndex = 1;
@@ -69,7 +69,7 @@
             this.button1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(545, 3);
+            this.button1.Location = new System.Drawing.Point(595, 3);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(112, 30);
             this.button1.TabIndex = 0;
@@ -85,17 +85,17 @@
             this.tileEditorUI1.InfoEntry = null;
             this.tileEditorUI1.Location = new System.Drawing.Point(20, 60);
             this.tileEditorUI1.Name = "tileEditorUI1";
-            this.tileEditorUI1.Size = new System.Drawing.Size(660, 224);
+            this.tileEditorUI1.Size = new System.Drawing.Size(710, 334);
             this.tileEditorUI1.TabIndex = 1;
             // 
             // TileEditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(700, 340);
+            this.ClientSize = new System.Drawing.Size(750, 450);
             this.Controls.Add(this.tileEditorUI1);
             this.Controls.Add(this.panel1);
-            this.MinimumSize = new System.Drawing.Size(700, 340);
+            this.MinimumSize = new System.Drawing.Size(750, 450);
             this.Name = "TileEditorForm";
             this.SaveLastSize = false;
             this.Style = MetroFramework.MetroColorStyle.Purple;

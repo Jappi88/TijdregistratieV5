@@ -24,7 +24,7 @@ namespace Rpm.Settings
         {
             Initdefault();
         }
-
+        public string BackgroundImagePath { get; set; }
         public string LastPreviewVersion { get; set; } = "1.0.0.0";
         public string AutoLoginUsername { get; set; }
         public UserChange LastChanged { get; set; }

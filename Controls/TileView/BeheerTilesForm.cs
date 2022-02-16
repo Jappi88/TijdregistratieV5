@@ -18,7 +18,7 @@ namespace Controls
             ((OLVColumn) xmainlist.Columns[0]).ImageGetter = (x) => 0;
             ((OLVColumn)xlist.Columns[0]).ImageGetter = (x) => 1;
             xmainlist.SetObjects(Manager.Opties.GetAllDefaultEntries(true));
-            xlist.SetObjects(Manager.Opties.TileLayout??new List<TileInfoEntry>());
+            xlist.SetObjects(Manager.Opties.TileLayout?.OrderBy(x=> x.TileIndex).ToList()??new List<TileInfoEntry>());
         }
 
         private void xopslaan_Click(object sender, System.EventArgs e)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -12,6 +13,13 @@ namespace Controls
     {
         public TileInfoEntry InfoEntry { get; set; }
 
+        public List<TileInfoEntry> Tiles => tileViewer1.GetAllTileEntries();
+        public FlowDirection Direction
+        {
+            get => tileViewer1.FlowDirection;
+            set=> tileViewer1.FlowDirection = value;
+        }
+
         public TileEditorUI()
         {
             InitializeComponent();
@@ -19,14 +27,43 @@ namespace Controls
 
         public void InitEntry(TileInfoEntry entry)
         {
+            InfoEntry = null;
+            xomschrijving.Text = entry?.Text;
+            xafbeelding.Image = entry?.TileImage;
+            xtextkleurimage.Image = entry?.ForeColor.ColorToImage(28, 28);
+            xtilekleur.Image = entry?.TileColor.ColorToImage(28, 28);
+            xtoontelling.Checked = entry?.EnableTileCount??false;
+            xtilebreedte.SetValue(entry?.Size.Width??0);
+            xtilehoogte.SetValue(entry?.Size.Height??0);
+            ximagebreedte.SetValue(entry?.ImageSize.Width ?? 0);
+            ximagehoogte.SetValue(entry?.ImageSize.Height ?? 0);
+            if (entry != null)
+            {
+                switch (entry.ImageResize)
+                {
+                    case ResizeMode.None:
+                        xnonecheckbox.Checked = true;
+                        break;
+                    case ResizeMode.Custom:
+                        xaangepastcheckbox.Checked = true;
+                        break;
+                    case ResizeMode.Auto:
+                        xautocheckbox.Checked = true;
+                        break;
+                }
+            }
             InfoEntry = entry;
-            InfoEntry ??= new TileInfoEntry();
-            xomschrijving.Text = InfoEntry.Text;
-            xafbeelding.Image = InfoEntry.TileImage;
-            xtextkleurimage.Image = InfoEntry.ForeColor.ColorToImage(28, 28);
-            xtilekleur.Image = InfoEntry.TileColor.ColorToImage(28, 28);
-            xtoontelling.Checked = InfoEntry.EnableTileCount;
+            if (InfoEntry == null) return;
             UpdateTile();
+        }
+
+        public void InitEntries(List<TileInfoEntry> entries,FlowDirection direction, TileInfoEntry selected = null)
+        {
+            tileViewer1.EnableTileSelection = true;
+            xtileview.Visible = true;
+            xtileview.SelectedIndex = (int) direction;
+            tileViewer1.FlowDirection = direction;
+            tileViewer1.LoadTiles(entries, selected);
         }
 
         private void xomschrijving_TextChanged(object sender, System.EventArgs e)
@@ -52,9 +89,9 @@ namespace Controls
         private void UpdateTile()
         {
             if (InfoEntry == null) return;
-            tileViewer1.UpdateTile(InfoEntry, tile1);
+            var xtile = tileViewer1.UpdateTile(InfoEntry);
             if (InfoEntry.EnableTileCount)
-                tile1.TileCount = InfoEntry.TileCount == 0? 123 : InfoEntry.TileCount;
+                xtile.TileCount = InfoEntry.TileCount == 0? 123 : InfoEntry.TileCount;
         }
 
         private void xtilekleurbutton_Click(object sender, System.EventArgs e)
@@ -202,6 +239,61 @@ namespace Controls
             {
                 XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
             }
+        }
+
+        private void xnonecheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateAfbeeldingFormaatPanel();
+        }
+
+        private void UpdateAfbeeldingFormaatPanel()
+        {
+            if (InfoEntry != null)
+            {
+                if (xnonecheckbox.Checked)
+                    InfoEntry.ImageResize = ResizeMode.None;
+                else if (xaangepastcheckbox.Checked)
+                    InfoEntry.ImageResize = ResizeMode.Custom;
+                else if (xautocheckbox.Checked)
+                    InfoEntry.ImageResize = ResizeMode.Auto;
+            }
+            xformaatpanel.Visible = xaangepastcheckbox.Checked;
+            UpdateTile();
+        }
+
+        private void xbreedte_ValueChanged(object sender, EventArgs e)
+        {
+            if (InfoEntry != null)
+            {
+                InfoEntry.ImageSize = new Size((int) ximagebreedte.Value, (int) ximagehoogte.Value);
+                UpdateTile();
+            }
+        }
+
+        private void xtilebreedte_ValueChanged(object sender, EventArgs e)
+        {
+            if (InfoEntry != null)
+            {
+                InfoEntry.Size = new Size((int)xtilebreedte.Value, (int)xtilehoogte.Value);
+                UpdateTile();
+            }
+        }
+
+        private void tileViewer1_SelectionChanged(object sender, EventArgs e)
+        {
+            if (sender is Tile {Tag: TileInfoEntry entry} tile)
+            {
+                if (tile.Selected)
+                    InfoEntry = entry;
+                else InfoEntry = null;
+                InitEntry(InfoEntry);
+            }
+        }
+
+        private void xtileview_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            tileViewer1.FlowDirection = (FlowDirection) xtileview.SelectedIndex;
+            tileViewer1.LoadTiles(tileViewer1.GetAllTileEntries(), InfoEntry);
         }
     }
 }

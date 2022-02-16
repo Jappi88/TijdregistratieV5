@@ -24,6 +24,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Navigation;
 using Forms.ArtikelRecords;
 using Forms.MetroBase;
 using MetroFramework.Controls;
@@ -205,7 +206,7 @@ namespace Controls
             metroCustomTabControl1.TabPages.Add(xtabpage);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
-            entry.IsViewed = true;
+            UpdateTileViewed(entry, true);
         }
 
         private void InitGereedmeldingenTab(TileInfoEntry entry, bool select)
@@ -239,7 +240,7 @@ namespace Controls
             metroCustomTabControl1.TabPages.Add(xtabpage);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
-            entry.IsViewed = true;
+            UpdateTileViewed(entry, true);
         }
 
         private bool CheckTab(TileInfoEntry entry, bool select)
@@ -297,7 +298,7 @@ namespace Controls
                     metroCustomTabControl1.SelectedTab = xtabpage;
                 xprodlist.InitProductie(true, true, true, true, true, true);
                 xprodlist.InitEvents();
-                entry.IsViewed = true;
+                UpdateTileViewed(entry, true);
 
             }
             catch (Exception e)
@@ -361,7 +362,7 @@ namespace Controls
                     metroCustomTabControl1.SelectedTab = xtabpage;
                 xprodlist.InitProductie(true, true, true, true, true, true);
                 xprodlist.InitEvents();
-                entry.IsViewed = true;
+                UpdateTileViewed(entry, true);
             }
             catch (Exception e)
             {
@@ -394,7 +395,7 @@ namespace Controls
             metroCustomTabControl1.TabPages.Add(xtabpage);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
-            entry.IsViewed = true;
+            UpdateTileViewed(entry, true);
         }
 
         private void InitAlleStoringenUITab(TileInfoEntry entry, bool select)
@@ -423,7 +424,7 @@ namespace Controls
             metroCustomTabControl1.TabPages.Add(xtabpage);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
-            entry.IsViewed = true;
+            UpdateTileViewed(entry, true);
         }
 
         private void InitArtikelenVerbruikUITab(TileInfoEntry entry, bool select)
@@ -451,7 +452,7 @@ namespace Controls
             metroCustomTabControl1.TabPages.Add(xtabpage);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
-            entry.IsViewed = true;
+            UpdateTileViewed(entry, true);
         }
 
 
@@ -475,7 +476,7 @@ namespace Controls
             metroCustomTabControl1.TabPages.Add(xtabpage);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
-            entry.IsViewed = true;
+            UpdateTileViewed(entry, true);
         }
 
         private void InitWerkplaatsIndelingTab(TileInfoEntry entry, bool select)
@@ -498,7 +499,7 @@ namespace Controls
             metroCustomTabControl1.TabPages.Add(xtabpage);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
-            entry.IsViewed = true;
+            UpdateTileViewed(entry, true);
         }
 
         private void InitPersoneelTab(TileInfoEntry entry, bool select)
@@ -521,7 +522,7 @@ namespace Controls
             metroCustomTabControl1.TabPages.Add(xtabpage);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
-            entry.IsViewed = true;
+            UpdateTileViewed(entry, true);
         }
 
         private void InitArtikelenTab(TileInfoEntry entry, bool select)
@@ -544,7 +545,7 @@ namespace Controls
             metroCustomTabControl1.TabPages.Add(xtabpage);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
-            entry.IsViewed = true;
+            UpdateTileViewed(entry, true);
         }
 
         private void InitArtikelenRecordsTab(TileInfoEntry entry, bool select)
@@ -572,7 +573,7 @@ namespace Controls
             metroCustomTabControl1.TabPages.Add(xtabpage);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
-            entry.IsViewed = true;
+            UpdateTileViewed(entry, true);
         }
 
         private void InitBerekenVerbruikUITab(TileInfoEntry entry, bool select)
@@ -607,7 +608,7 @@ namespace Controls
             metroCustomTabControl1.TabPages.Add(xtabpage);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
-            entry.IsViewed = true;
+            UpdateTileViewed(entry, true);
         }
 
         private void InitAlleNotitiesTab(TileInfoEntry entry, bool select)
@@ -630,7 +631,7 @@ namespace Controls
             metroCustomTabControl1.TabPages.Add(xtabpage);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
-            entry.IsViewed = true;
+            UpdateTileViewed(entry, true);
         }
 
         private void InitProductieVolgordeTab(TileInfoEntry entry, bool select)
@@ -653,7 +654,7 @@ namespace Controls
             metroCustomTabControl1.TabPages.Add(xtabpage);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
-            entry.IsViewed = true;
+            UpdateTileViewed(entry, true);
         }
         private void InitChartsTab(TileInfoEntry entry, bool select)
         {
@@ -675,7 +676,7 @@ namespace Controls
             metroCustomTabControl1.TabPages.Add(xtabpage);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
-            entry.IsViewed = true;
+            UpdateTileViewed(entry, true);
         }
 
         private void CloseTabPage(object sender)
@@ -738,9 +739,29 @@ namespace Controls
                 {
                     overzicht.CloseUI();
                 }
+
                 if (page.Tag is TileInfoEntry info)
-                    info.IsViewed = false;
+                    UpdateTileViewed(info, false);
                 xcontrol?.Dispose();
+            }
+        }
+
+        public void UpdateTileViewed(TileInfoEntry entry, bool isviewed)
+        {
+            try
+            {
+                if (entry == null) return;
+                entry.IsViewed = isviewed;
+                if (Manager.Opties?.TileLayout != null)
+                {
+                    var xindex = Manager.Opties.TileLayout.IndexOf(entry);
+                    if (xindex > -1)
+                        Manager.Opties.TileLayout[xindex] = entry;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
@@ -1199,8 +1220,9 @@ namespace Controls
                     {
                         var name = Manager.Opties == null ? "Default" : Manager.Opties.Username;
                         Text = @$"ProductieManager [{name}]";
+                        tileMainView1.SetBackgroundImage(Manager.Opties?.BackgroundImagePath);
                         tileMainView1.LoadTileViewer();
-                        tileMainView1.TileCountRefreshInterval = Manager.Opties.TileCountRefreshRate;
+                        tileMainView1.TileCountRefreshInterval = Manager.Opties?.TileCountRefreshRate??30000;
                         var xrooster = mainMenu1.GetButton("xroostermenubutton");
                         if (xrooster != null)
                             xrooster.Image = Manager.Opties?.TijdelijkeRooster == null
@@ -1214,7 +1236,7 @@ namespace Controls
                         //Manager.Taken?.StartBeheer();
                         //if (Manager.IsLoaded)
                         //    CheckForSpecialRooster(true);
-                        if (_specialRoosterWatcher != null && !_specialRoosterWatcher.Enabled)
+                        if (_specialRoosterWatcher is {Enabled: false})
                             _specialRoosterWatcher.Start();
                     }
                     catch (Exception e)

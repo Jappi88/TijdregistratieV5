@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Windows.Navigation;
 using Forms;
 using ProductieManager.Rpm.Productie;
+using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
 
@@ -23,7 +24,7 @@ namespace Controls.TileView
             if (Manager.Opties != null)
             {
                 InitToolStripMenu();
-                tileViewer1.LoadTiles();
+                tileViewer1.LoadTiles(Manager.Opties.TileLayout);
             }
         }
 
@@ -307,6 +308,86 @@ namespace Controls.TileView
         protected virtual void OnTilesLoaded()
         {
             TilesLoaded?.Invoke(Viewer, EventArgs.Empty);
+        }
+
+        private void SowTileLayoutEditor()
+        {
+            try
+            {
+                if (Manager.Opties?.TileLayout == null) return;
+                var xeditor = new TileEditorForm(Manager.Opties.TileLayout.CreateCopy(), Manager.Opties.TileFlowDirection, null);
+                xeditor.Size = new Size(1200, 750);
+                if (xeditor.ShowDialog() == DialogResult.OK)
+                {
+                    Manager.Opties.TileLayout = xeditor.SelectedEntries;
+                    Manager.Opties.TileFlowDirection = xeditor.Direction;
+                    LoadTileViewer();
+                }
+
+            }
+            catch (Exception exception)
+            {
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
+            }
+        }
+
+        private void beheerTileLayoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SowTileLayoutEditor();
+        }
+
+        private void beheerTileLayoutToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            SowTileLayoutEditor();
+        }
+
+        public void SetBackgroundImage(string path)
+        {
+            try
+            {
+                if (Manager.Opties == null) return;
+                if (path.IsImageFile())
+                {
+                    Manager.Opties.BackgroundImagePath = path;
+                    this.BackgroundImage = Image.FromFile(path);
+                    this.BackgroundImageLayout = ImageLayout.Tile;
+                }
+            }
+            catch (Exception exception)
+            {
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
+            }
+        }
+
+        public void SetBackgroundImage()
+        {
+            try
+            {
+                if (Manager.Opties == null) return;
+                var ofd = new OpenFileDialog();
+                ofd.Filter = "JPEG|*.jpeg|PNG|*.png|Alles|*.*";
+                ofd.Multiselect = false;
+                ofd.Title = "Kies een achtergrond Afbeelding";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    var xfile = ofd.FileName;
+                    SetBackgroundImage(xfile);
+                }
+            }
+            catch (Exception exception)
+            {
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
+            }
+        }
+
+        private void kiesAchtergrondAfbeeldingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetBackgroundImage();
+        }
+
+        private void kiesAchtergrondAfbeeldingToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            SetBackgroundImage();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Collections.Generic;
+using System.Windows.Forms;
 using Forms.MetroBase;
 using Rpm.Misc;
 
@@ -12,6 +13,14 @@ namespace Controls
             set => tileEditorUI1.InitEntry(value);
         }
 
+        public FlowDirection Direction
+        {
+            get => tileEditorUI1.Direction;
+            set => tileEditorUI1.Direction = value;
+        }
+
+        public List<TileInfoEntry> SelectedEntries => tileEditorUI1.Tiles;
+
         public TileEditorForm()
         {
             InitializeComponent();
@@ -20,6 +29,11 @@ namespace Controls
         public TileEditorForm(TileInfoEntry entry) : this()
         {
            tileEditorUI1.InitEntry(entry);
+        }
+
+        public TileEditorForm(List<TileInfoEntry> tiles,FlowDirection direction, TileInfoEntry entry) : this()
+        {
+            tileEditorUI1.InitEntries(tiles,direction, entry);
         }
     }
 }

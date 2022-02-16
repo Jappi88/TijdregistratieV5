@@ -2078,6 +2078,26 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap photo_photography_image_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("photo-photography-image_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap photos_Outling_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("photos-Outling_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap play_button_icon_icons_com_60615 {
             get {
                 object obj = ResourceManager.GetObject("play-button_icon-icons.com_60615", resourceCulture);

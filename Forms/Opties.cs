@@ -481,6 +481,7 @@ namespace Forms
             //default settings die we hier niet veranderen.
             if (_LoadedOpties != null)
             {
+                xs.BackgroundImagePath = _LoadedOpties.BackgroundImagePath;
                 xs.PreviewShown = _LoadedOpties.PreviewShown;
                 xs.LastPreviewVersion = _LoadedOpties.LastPreviewVersion;
                 xs.BoundUsername = _LoadedOpties.BoundUsername;
@@ -802,10 +803,8 @@ namespace Forms
         {
             try
             {
-                if (!Directory.Exists(xfolderpath.Text))
-                    throw new Exception($"'{xfolderpath.Text}' bestaat niet! ");
                 foreach (ListViewItem lv in xlocatielist.Items)
-                    if (lv.Text.ToLower() == xfolderpath.Text.ToLower())
+                    if (string.Equals(lv.Text, xfolderpath.Text, StringComparison.CurrentCultureIgnoreCase))
                         throw new Exception($"'{xfolderpath.Text}' is al toegevoegd!");
                 xlocatielist.Items.Add(xfolderpath.Text);
             }
