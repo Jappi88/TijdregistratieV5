@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -349,8 +350,8 @@ namespace Controls.TileView
                 if (path.IsImageFile())
                 {
                     Manager.Opties.BackgroundImagePath = path;
-                    this.BackgroundImage = Image.FromFile(path);
-                    this.BackgroundImageLayout = ImageLayout.Tile;
+                    tableLayoutPanel1.BackgroundImage = Image.FromFile(path);
+                    tableLayoutPanel1.BackgroundImageLayout = ImageLayout.Stretch;
                 }
             }
             catch (Exception exception)
@@ -380,14 +381,28 @@ namespace Controls.TileView
             }
         }
 
+        public void ClearBackgroundImage()
+        {
+            try
+            {
+                if (Manager.Opties == null) return;
+                Manager.Opties.BackgroundImagePath = null;
+                tableLayoutPanel1.BackgroundImage = null;
+            }
+            catch (Exception exception)
+            {
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
+            }
+        }
+
         private void kiesAchtergrondAfbeeldingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SetBackgroundImage();
         }
 
-        private void kiesAchtergrondAfbeeldingToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void verwijderAchtergrondAfbeeldingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetBackgroundImage();
+            ClearBackgroundImage();
         }
     }
 }
