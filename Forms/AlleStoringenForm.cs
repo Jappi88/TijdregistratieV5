@@ -11,8 +11,19 @@ namespace Forms
             InitializeComponent();
         }
 
+        public void InitUI()
+        {
+            alleStoringenUI1.InitUI();
+        }
+
+        public void CloseUI()
+        {
+            alleStoringenUI1.CloseUI();
+        }
+
         public void InitStoringen(ProductieFormulier form = null, WerkPlek selected = null)
         {
+            alleStoringenUI1.InitUI();
             alleStoringenUI1.InitStoringen(form, selected);
         }
 
@@ -27,14 +38,9 @@ namespace Forms
             this.Invalidate();
         }
 
-        private void AlleStoringenForm_Shown(object sender, System.EventArgs e)
-        {
-            alleStoringenUI1.InitUI();
-        }
-
         private void AlleStoringenForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            alleStoringenUI1.CloseUI();
+            CloseUI();
         }
     }
 }

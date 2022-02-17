@@ -1758,12 +1758,12 @@ namespace ProductieManager.Rpm.ExcelHelper
         public static string CleanSheetName(string name)
         {
             if (string.IsNullOrEmpty(name)) return null;
-           // string illegal = "\"M\"\\a/ry/ h**ad:>> a\\/:*?\"| li*tt|le|| la\"mb.?";
+            //string illegal = "\"M\"\\a/ry/ h**ad:>> a\\/:*?\"| li*tt|le|| la\"mb.?[]";
             string invalid = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
 
             foreach (char c in invalid)
             {
-                name = name.Replace(c.ToString(), "_");
+                name = name.Replace(c.ToString(), "_").Replace("[", "(").Replace("]", ")");
             }
 
             return name;

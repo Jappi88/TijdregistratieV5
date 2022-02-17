@@ -204,43 +204,47 @@ namespace Controls
             }
         }
 
-        private void UpdateStatusText()
+        private void xUpdateStatusText()
+        {
+            var text = "Geen Onderbrekeningen";
+            if (xwerkplekken.Items.Count > 0)
+            {
+                var items = xwerkplekken.Objects.Cast<KeyValuePair<string, List<WerkPlek>>>().ToArray();
+                double uren = 0;
+                for (int i = 0; i < items.Length; i++)
+                {
+                    var pair = items[i];
+                    if (!pair.IsDefault() && pair.Value.Count > 0)
+                    {
+                        for (int j = 0; j < pair.Value.Count; j++)
+                        {
+                            var sts = pair.Value[j].Storingen?.CreateCopy();
+                            if (sts is { Count: > 0 })
+                            {
+                                uren += sts.Sum(t => t.GetTotaleTijd());
+                            }
+                        }
+                    }
+                }
+
+                if (items.Length == 1)
+                    text = $"Alleen {items.First().Key}, met een totaal van {uren} uur aan onderbrekeningen.";
+                else
+                    text = $"{items.Length} werkplaatsen, met een totaal van {uren} uur aan onderbrekeningen.";
+            }
+
+            OnStatusTextChanged(text);
+            xstatuslabel.Text = text;
+            this.Invalidate();
+        }
+
+        public void UpdateStatusText()
         {
             try
             {
-                this.BeginInvoke(new MethodInvoker(() =>
-                {
-                    var text = "Geen Onderbrekeningen";
-                    if (xwerkplekken.Items.Count > 0)
-                    {
-                        var items = xwerkplekken.Objects.Cast<KeyValuePair<string, List<WerkPlek>>>().ToArray();
-                        double uren = 0;
-                        for (int i = 0; i < items.Length; i++)
-                        {
-                            var pair = items[i];
-                            if (!pair.IsDefault() && pair.Value.Count > 0)
-                            {
-                                for (int j = 0; j < pair.Value.Count; j++)
-                                {
-                                    var sts = pair.Value[j].Storingen?.CreateCopy();
-                                    if (sts is {Count: > 0})
-                                    {
-                                        uren += sts.Sum(t => t.GetTotaleTijd());
-                                    }
-                                }
-                            }
-                        }
-
-                        if (items.Length == 1)
-                            text = $"Alleen {items.First().Key}, met een totaal van {uren} uur aan onderbrekeningen.";
-                        else
-                            text = $"{items.Length} werkplaatsen, met een totaal van {uren} uur aan onderbrekeningen.";
-                    }
-
-                    OnStatusTextChanged(text);
-                    xstatuslabel.Text = text;
-                    this.Invalidate();
-                }));
+                if (this.InvokeRequired)
+                    this.BeginInvoke(new MethodInvoker(xUpdateStatusText));
+                else xUpdateStatusText();
             }
             catch (Exception e)
             {

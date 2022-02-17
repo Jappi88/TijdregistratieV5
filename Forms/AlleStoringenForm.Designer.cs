@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AlleStoringenForm));
             this.alleStoringenUI1 = new Controls.AlleStoringenUI();
             this.SuspendLayout();
             // 
@@ -55,7 +54,6 @@
             this.Name = "AlleStoringenForm";
             this.Text = "Alle Storingen";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AlleStoringenForm_FormClosing);
-            this.Shown += new System.EventHandler(this.AlleStoringenForm_Shown);
             this.ResumeLayout(false);
 
         }

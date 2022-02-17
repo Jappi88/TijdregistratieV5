@@ -308,7 +308,7 @@ namespace Rpm.Productie
 
             if (!changed)
             {
-                xent = Uren.LastOrDefault(x => x.Stop.AddMinutes(2) > entry.Start);
+                xent = Uren.LastOrDefault(x => x.ContainsBereik(entry));
                 if (xent != null)
                 {
                     xent.InUse = entry.InUse;
