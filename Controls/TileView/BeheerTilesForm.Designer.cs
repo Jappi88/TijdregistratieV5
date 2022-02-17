@@ -64,9 +64,9 @@
             this.panel1.Controls.Add(this.xsluiten);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.panel1.Location = new System.Drawing.Point(20, 409);
+            this.panel1.Location = new System.Drawing.Point(20, 547);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(640, 36);
+            this.panel1.Size = new System.Drawing.Size(875, 36);
             this.panel1.TabIndex = 1;
             // 
             // xopslaan
@@ -76,7 +76,7 @@
             this.xopslaan.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xopslaan.Image = global::ProductieManager.Properties.Resources.diskette_save_saveas_1514;
             this.xopslaan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xopslaan.Location = new System.Drawing.Point(407, 3);
+            this.xopslaan.Location = new System.Drawing.Point(642, 3);
             this.xopslaan.Name = "xopslaan";
             this.xopslaan.Size = new System.Drawing.Size(112, 30);
             this.xopslaan.TabIndex = 1;
@@ -93,7 +93,7 @@
             this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xsluiten.Location = new System.Drawing.Point(525, 3);
+            this.xsluiten.Location = new System.Drawing.Point(760, 3);
             this.xsluiten.Name = "xsluiten";
             this.xsluiten.Size = new System.Drawing.Size(112, 30);
             this.xsluiten.TabIndex = 0;
@@ -116,8 +116,8 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.xlist);
             this.splitContainer1.Panel2.Controls.Add(this.panel3);
-            this.splitContainer1.Size = new System.Drawing.Size(640, 349);
-            this.splitContainer1.SplitterDistance = 295;
+            this.splitContainer1.Size = new System.Drawing.Size(875, 487);
+            this.splitContainer1.SplitterDistance = 403;
             this.splitContainer1.TabIndex = 2;
             // 
             // xmainlist
@@ -139,7 +139,7 @@
             this.xmainlist.ShowFilterMenuOnRightClick = false;
             this.xmainlist.ShowGroups = false;
             this.xmainlist.ShowItemToolTips = true;
-            this.xmainlist.Size = new System.Drawing.Size(263, 349);
+            this.xmainlist.Size = new System.Drawing.Size(371, 487);
             this.xmainlist.SmallImageList = this.imageList1;
             this.xmainlist.TabIndex = 0;
             this.xmainlist.UseAlternatingBackColors = true;
@@ -163,16 +163,16 @@
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "extension_file_documents_32x32.png");
+            this.imageList1.Images.SetKeyName(0, "layout_widget_icon_32x32.png");
             this.imageList1.Images.SetKeyName(1, "Tile_colors_icon_32x32.png");
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.xaddtile);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(263, 0);
+            this.panel2.Location = new System.Drawing.Point(371, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(32, 349);
+            this.panel2.Size = new System.Drawing.Size(32, 487);
             this.panel2.TabIndex = 1;
             // 
             // xaddtile
@@ -208,7 +208,7 @@
             this.xlist.ShowFilterMenuOnRightClick = false;
             this.xlist.ShowGroups = false;
             this.xlist.ShowItemToolTips = true;
-            this.xlist.Size = new System.Drawing.Size(309, 349);
+            this.xlist.Size = new System.Drawing.Size(436, 487);
             this.xlist.SmallImageList = this.imageList1;
             this.xlist.TabIndex = 3;
             this.xlist.UseAlternatingBackColors = true;
@@ -235,9 +235,9 @@
             this.panel3.Controls.Add(this.xmovedown);
             this.panel3.Controls.Add(this.xmoveup);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.Location = new System.Drawing.Point(309, 0);
+            this.panel3.Location = new System.Drawing.Point(436, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(32, 349);
+            this.panel3.Size = new System.Drawing.Size(32, 487);
             this.panel3.TabIndex = 2;
             // 
             // xedittile
@@ -305,7 +305,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(680, 465);
+            this.ClientSize = new System.Drawing.Size(915, 603);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.panel1);
             this.Name = "BeheerTilesForm";

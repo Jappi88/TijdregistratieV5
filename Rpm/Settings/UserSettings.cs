@@ -337,6 +337,7 @@ namespace Rpm.Settings
                                 TileColor = Color.CadetBlue,
                                 GroupName = "Filter",
                                 Name = f.Name,
+                                LinkID = f.ID,
                                 Size = new Size(256, 96),
                                 TileImage = new Bitmap(ProductieManager.Properties.Resources.operation.CombineImage(ProductieManager.Properties.Resources.filter_32x32, 2.5)),
                                 TileIndex = xtiles.Count,

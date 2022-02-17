@@ -3,6 +3,7 @@ using ProductieManager.Rpm.Misc;
 using Rpm.Various;
 using System;
 using System.Drawing;
+using Rpm.Misc;
 
 namespace Controls
 {
@@ -22,6 +23,8 @@ namespace Controls
         public string Name { get; set; }
         public string Text { get; set; }
         public string GroupName { get; set; }
+        public int ID { get; set; }
+        public int LinkID { get; set; } = -1;
         public Size Size { get; set; } = new Size(256, 128);
         public Size ImageSize { get; set; } = new Size(64, 64);
         public ResizeMode ImageResize { get; set; } = ResizeMode.Auto;
@@ -105,18 +108,20 @@ namespace Controls
         public TileInfoEntry()
         {
             Name = "xTile";
+            ID = Functions.GenerateRandomID();
         }
 
         public override bool Equals(object obj)
         {
             if (obj is TileInfoEntry entry)
-                return string.Equals(Name, entry.Name, StringComparison.CurrentCultureIgnoreCase);
+                return entry.ID == ID;
+               // return string.Equals(Name, entry.Name, StringComparison.CurrentCultureIgnoreCase);
             return false;
         }
 
         public override int GetHashCode()
         {
-            return Name?.GetHashCode()??0;
+            return ID;
         }
     }
 }

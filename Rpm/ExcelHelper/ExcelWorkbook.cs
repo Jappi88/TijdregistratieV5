@@ -1205,11 +1205,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                 #region Columns Aanmaken
 
                 //create column font
-                cellStyleBorder = GetBorderStyle(workbook);
-                cellStylefont = workbook.CreateFont();
-                cellStylefont.IsBold = true;
-                cellStylefont.FontHeightInPoints = 12;
-                cellStyleBorder.SetFont(cellStylefont);
+                cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Center, 12, IndexedColors.Black.Index, BorderStyle.Medium);
                 //init the columns and font
                 var rowindex = 0;
                 var row = sheet.CreateRow(rowindex);
@@ -1224,15 +1220,11 @@ namespace ProductieManager.Rpm.ExcelHelper
                 #region Columns Aanvullen
                
                 //Populate fields
-                cellStyleBorder = GetBorderStyle(workbook);
-                cellStylefont = workbook.CreateFont();
-                cellStylefont.IsBold = false;
-                cellStylefont.FontHeightInPoints = 11;
-                cellStyleBorder.SetFont(cellStylefont);
+                cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Center, 10, IndexedColors.Black.Index, BorderStyle.Medium);
                 foreach (var st in storingen)
                 {
                     row = sheet.CreateRow(rowindex);
-                    row.HeightInPoints = 15;
+                    row.HeightInPoints = 20;
                     var formatting = CreateStoringRowConditionalFormatRules(sheet, rowindex + 1, StoringColumns.Length);
                     cellindex = 0;
                     foreach (var col in StoringColumns)
@@ -1245,11 +1237,7 @@ namespace ProductieManager.Rpm.ExcelHelper
 
                 #region Totale Rijen Aanmaken
 
-                cellStyleBorder = GetBorderStyle(workbook);
-                cellStylefont = workbook.CreateFont();
-                cellStylefont.IsBold = true;
-                cellStylefont.FontHeightInPoints = 12;
-                cellStyleBorder.SetFont(cellStylefont);
+                cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Center, 12, IndexedColors.Black.Index, BorderStyle.Medium);
 
                 //hier gaan we de cells aanmaken.
                 row = sheet.CreateRow(rowindex);

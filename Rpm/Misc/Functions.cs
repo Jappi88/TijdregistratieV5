@@ -1348,6 +1348,20 @@ namespace Rpm.Misc
             }
         }
 
+        public static int GenerateRandomID()
+        {
+            try
+            {
+               return Guid.NewGuid().GetHashCode();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return -1;
+            }
+        }
+
         #endregion IO
 
         #region Matching

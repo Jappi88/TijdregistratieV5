@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using System.Windows.Navigation;
-using Forms;
+﻿using Forms;
 using ProductieManager.Rpm.Productie;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace Controls.TileView
 {
@@ -25,8 +23,29 @@ namespace Controls.TileView
             if (Manager.Opties != null)
             {
                 InitToolStripMenu();
+                UpdateFilterTiles();
                 tileViewer1.LoadTiles(Manager.Opties.TileLayout);
             }
+        }
+
+        public void UpdateFilterTiles()
+        {
+            var xtiles = Manager.Opties.TileLayout.Where(x =>
+                string.Equals(x.GroupName, "filter", StringComparison.CurrentCultureIgnoreCase)).ToList();
+            var xremove = xtiles.Where(x => Manager.Opties.Filters.All(f => f.ID != x.LinkID)).ToList();
+            if (xremove.Count > 0)
+                xremove.ForEach(f => Manager.Opties.TileLayout.Remove(f));
+            xtiles = Manager.Opties.TileLayout.Where(x =>
+                string.Equals(x.GroupName, "filter", StringComparison.CurrentCultureIgnoreCase)).ToList();
+            xtiles.ForEach(f =>
+            {
+                var xent = Manager.Opties.Filters.FirstOrDefault(x => x.ID == f.LinkID);
+                if (xent != null)
+                {
+                    f.Name = xent.Name;
+                }
+
+            });
         }
 
         public int TileCountRefreshInterval
@@ -350,8 +369,7 @@ namespace Controls.TileView
                 if (path.IsImageFile())
                 {
                     Manager.Opties.BackgroundImagePath = path;
-                    tableLayoutPanel1.BackgroundImage = Image.FromFile(path);
-                    tableLayoutPanel1.BackgroundImageLayout = ImageLayout.Stretch;
+                    //pictureBox1.Image = Image.FromFile(path);
                 }
             }
             catch (Exception exception)
@@ -366,7 +384,7 @@ namespace Controls.TileView
             {
                 if (Manager.Opties == null) return;
                 var ofd = new OpenFileDialog();
-                ofd.Filter = "JPEG|*.jpeg|PNG|*.png|Alles|*.*";
+                ofd.Filter = "JPG|*.jpg|JPEG|*.jpeg|PNG|*.png|Alles|*.*";
                 ofd.Multiselect = false;
                 ofd.Title = "Kies een achtergrond Afbeelding";
                 if (ofd.ShowDialog() == DialogResult.OK)
@@ -387,7 +405,7 @@ namespace Controls.TileView
             {
                 if (Manager.Opties == null) return;
                 Manager.Opties.BackgroundImagePath = null;
-                tableLayoutPanel1.BackgroundImage = null;
+                //pictureBox1.Image = null;
             }
             catch (Exception exception)
             {

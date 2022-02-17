@@ -203,7 +203,9 @@ namespace Controls
             xprodlist.LoadPlekken(true);
             xprodlist.InitEvents();
             xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
+            metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
             UpdateTileViewed(entry, true);
@@ -237,7 +239,9 @@ namespace Controls
             xprodlist.Name = entry.Name;
             xprodlist.LoadBewerkingen();
             xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
+            metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
             UpdateTileViewed(entry, true);
@@ -293,7 +297,9 @@ namespace Controls
                 xprodlist.Name = entry.Name;
                 xprodlist.RemoveCustomItemIfNotValid = false;
                 xtabpage.Controls.Add(xprodlist);
+                metroCustomTabControl1.SuspendLayout();
                 metroCustomTabControl1.TabPages.Add(xtabpage);
+                metroCustomTabControl1.ResumeLayout(false);
                 if (select)
                     metroCustomTabControl1.SelectedTab = xtabpage;
                 xprodlist.InitProductie(true, true, true, true, true, true);
@@ -321,8 +327,7 @@ namespace Controls
                 }
 
                 var xname = entry.Name.Trim().Replace("_", " ");
-                var xfilter = Manager.Opties.Filters.FirstOrDefault(x =>
-                    string.Equals(x.Name, xname, StringComparison.CurrentCultureIgnoreCase));
+                var xfilter = Manager.Opties.Filters.FirstOrDefault(x => x.ID == entry.LinkID);
                 if (xfilter == null)
                     throw new Exception($"'{xname}' bestaat niet meer!");
                 var xtabpage = new MetroTabPage();
@@ -357,7 +362,9 @@ namespace Controls
                 xprodlist.Name = entry.Name;
                 xprodlist.RemoveCustomItemIfNotValid = false;
                 xtabpage.Controls.Add(xprodlist);
+                metroCustomTabControl1.SuspendLayout();
                 metroCustomTabControl1.TabPages.Add(xtabpage);
+                metroCustomTabControl1.ResumeLayout(false);
                 if (select)
                     metroCustomTabControl1.SelectedTab = xtabpage;
                 xprodlist.InitProductie(true, true, true, true, true, true);
@@ -392,7 +399,9 @@ namespace Controls
             };
             xprodlist.InitUI();
             xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
+            metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
             UpdateTileViewed(entry, true);
@@ -421,7 +430,9 @@ namespace Controls
             xprodlist.InitUI();
             xprodlist.InitStoringen();
             xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
+            metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
             UpdateTileViewed(entry, true);
@@ -449,7 +460,9 @@ namespace Controls
             };
             xprodlist.InitUI();
             xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
+            metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
             UpdateTileViewed(entry, true);
@@ -473,7 +486,9 @@ namespace Controls
             xprodlist.Name = entry.Name;
             xprodlist.InitUI();
             xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
+            metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
             UpdateTileViewed(entry, true);
@@ -496,7 +511,9 @@ namespace Controls
             xprodlist.Name = entry.Name;
             xprodlist.InitUI();
             xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
+            metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
             UpdateTileViewed(entry, true);
@@ -519,7 +536,9 @@ namespace Controls
             xprodlist.Name = entry.Name;
             xprodlist.InitUI();
             xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
+            metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
             UpdateTileViewed(entry, true);
@@ -542,7 +561,9 @@ namespace Controls
             xprodlist.Name = entry.Name;
             xprodlist.InitUI();
             xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
+            metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
             UpdateTileViewed(entry, true);
@@ -570,7 +591,9 @@ namespace Controls
             };
             xprodlist.InitUI();
             xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
+            metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
             UpdateTileViewed(entry, true);
@@ -605,7 +628,9 @@ namespace Controls
                     metroCustomTabControl1.CloseTab(page);
             };
             xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
+            metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
             UpdateTileViewed(entry, true);
@@ -628,7 +653,9 @@ namespace Controls
             xprodlist.Name = entry.Name;
             xprodlist.InitUI();
             xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
+            metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
             UpdateTileViewed(entry, true);
@@ -651,7 +678,9 @@ namespace Controls
             xprodlist.Name = entry.Name;
             xprodlist.InitUI();
             xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
+            metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
             UpdateTileViewed(entry, true);
@@ -673,7 +702,9 @@ namespace Controls
             xprodlist.Name = entry.Name;
             xprodlist.LoadData();
             xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
+            metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
             UpdateTileViewed(entry, true);
@@ -962,6 +993,7 @@ namespace Controls
             ProductieChat.MessageRecieved += ProductieChat_MessageRecieved;
             ProductieChat.GebruikerUpdate += ProductieChat_GebruikerUpdate;
             MultipleFileDb.CorruptedFilesChanged += MultipleFileDb_CorruptedFilesChanged;
+            Manager.FilterChanged += Manager_FilterChanged;
 
             Manager.KlachtChanged += Klachten_KlachtChanged;
             Manager.KlachtDeleted += Klachten_KlachtChanged;
@@ -972,6 +1004,14 @@ namespace Controls
             Manager.RequestRespondDialog += Manager_RequestRespondDialog;
 
             _manager.OnShutdown += _manager_OnShutdown;
+        }
+
+        private void Manager_FilterChanged(object sender, EventArgs e)
+        {
+            if (tileMainView1.InvokeRequired)
+                tileMainView1.Invoke(new MethodInvoker(() => tileMainView1.UpdateFilterTiles()));
+            else
+                tileMainView1.UpdateFilterTiles();
         }
 
         private DialogResult Manager_RequestRespondDialog(object sender, string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon, string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null, Image customImage = null, MetroColorStyle style = MetroColorStyle.Default)
@@ -1006,7 +1046,7 @@ namespace Controls
             ProductieChat.MessageRecieved -= ProductieChat_MessageRecieved;
             ProductieChat.GebruikerUpdate -= ProductieChat_GebruikerUpdate;
             MultipleFileDb.CorruptedFilesChanged -= MultipleFileDb_CorruptedFilesChanged;
-
+            Manager.FilterChanged -= Manager_FilterChanged;
             //Manager.OnDbBeginUpdate -= Manager_OnDbBeginUpdate;
             //Manager.OnDbEndUpdate -= Manager_OnDbEndUpdate;
             Manager.OnManagerLoaded -= _manager_OnManagerLoaded;
@@ -1220,7 +1260,7 @@ namespace Controls
                     {
                         var name = Manager.Opties == null ? "Default" : Manager.Opties.Username;
                         Text = @$"ProductieManager [{name}]";
-                        //tileMainView1.SetBackgroundImage(Manager.Opties?.BackgroundImagePath);
+                        tileMainView1.SetBackgroundImage(Manager.Opties?.BackgroundImagePath);
                         tileMainView1.LoadTileViewer();
                         tileMainView1.TileCountRefreshInterval = Manager.Opties?.TileCountRefreshRate??30000;
                         var xrooster = mainMenu1.GetButton("xroostermenubutton");

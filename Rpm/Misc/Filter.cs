@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NPOI.OpenXmlFormats.Dml;
 using Polenter.Serialization;
 using Rpm.Various;
 
@@ -18,6 +19,13 @@ namespace Rpm.Misc
         public List<string> ListNames { get; set; } = new();
         //public Operand OperandType { get; set; }
         public List<FilterEntry> Filters { get; set; } = new List<FilterEntry>();
+
+        public int ID { get; set; }
+
+        public Filter()
+        {
+            ID = Functions.GenerateRandomID();
+        }
 
         public bool IsAllowed(object value, string listname)
         {
@@ -111,6 +119,21 @@ namespace Rpm.Misc
                 Console.WriteLine(e);
                 return string.Empty;
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Filter f)
+                return f.ID == ID;
+
+            if (obj is string xstring)
+                return string.Equals(xstring, Name, StringComparison.CurrentCultureIgnoreCase);
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return ID;
         }
     }
 }

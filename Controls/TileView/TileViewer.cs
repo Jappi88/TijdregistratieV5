@@ -50,25 +50,28 @@ namespace Controls
                 for (int i = 0; i < _Tiles.Count; i++)
                 {
                     var xtileinfo = _Tiles[i];
-                    Tile xtile = null;
-                    if (this.InvokeRequired)
-                        this.Invoke(new MethodInvoker(() => xtile = GetTile(xtileinfo.Name)));
-                    else
-                        xtile = GetTile(xtileinfo.Name);
-                    if (xtile != null)
+                    if (xtileinfo.Tag is TileInfoEntry entry)
                     {
-                        var xupdate = OnTileRequestInfo(xtile);
-                        if (xupdate != null)
+                        Tile xtile = null;
+                        if (this.InvokeRequired)
+                            this.Invoke(new MethodInvoker(() => xtile = GetTile(entry)));
+                        else
+                            xtile = GetTile(entry);
+                        if (xtile != null)
                         {
-                            if (this.InvokeRequired)
+                            var xupdate = OnTileRequestInfo(xtile);
+                            if (xupdate != null)
                             {
-                                this.Invoke(new MethodInvoker(() => UpdateTile(xupdate, xtile)));
-                                this.Invoke(new MethodInvoker(Invalidate));
-                            }
-                            else
-                            {
-                                UpdateTile(xupdate, xtile);
-                                Invalidate();
+                                if (this.InvokeRequired)
+                                {
+                                    this.Invoke(new MethodInvoker(() => UpdateTile(xupdate, xtile)));
+                                    this.Invoke(new MethodInvoker(Invalidate));
+                                }
+                                else
+                                {
+                                    UpdateTile(xupdate, xtile);
+                                    Invalidate();
+                                }
                             }
                         }
                     }
@@ -103,7 +106,7 @@ namespace Controls
                     if (xtileinfo == null)
                         continue;
                     xtileinfo.TileIndex = i;
-                    var xtile = GetTile(xtileinfo.Name);
+                    var xtile = GetTile(xtileinfo);
                     xtile = UpdateTile(xtileinfo, xtile);
                     if (EnableTileSelection && selected != null && selected.Equals(xtileinfo))
                         SelectTile(xtile, true);
@@ -127,7 +130,7 @@ namespace Controls
         {
             try
             {
-                tile ??= GetTile(entry.Name);
+                tile ??= GetTile(entry);
                 var xtile = tile ?? new Tile();
                 if (tile == null)
                 {
@@ -150,7 +153,7 @@ namespace Controls
             OnTileClicked(sender);
         }
 
-        public Tile GetTile(string name)
+        public Tile GetTile(TileInfoEntry entry)
         {
             try
             {
@@ -158,8 +161,9 @@ namespace Controls
                 for (int i = 0; i < xcontrols.Count; i++)
                 {
                     var xcon = xcontrols[i];
-                    if (string.Equals(xcon.Name, name, StringComparison.CurrentCultureIgnoreCase) && xcon is Tile tile)
-                        return tile;
+                    if (xcon is Tile {Tag: TileInfoEntry xinfo} xtile)
+                        if (xinfo.Equals(entry))
+                            return xtile;
                 }
 
                 return null;
