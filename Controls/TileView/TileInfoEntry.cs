@@ -1,9 +1,9 @@
 ﻿using Polenter.Serialization;
 using ProductieManager.Rpm.Misc;
+using Rpm.Misc;
 using Rpm.Various;
 using System;
 using System.Drawing;
-using Rpm.Misc;
 
 namespace Controls
 {
@@ -38,7 +38,8 @@ namespace Controls
             get => Color.FromArgb(TileColorARgb);
             set => TileColorARgb = value.ToArgb();
         }
-
+        [ExcludeFromSerialization]
+        public Image SecondaryImage { get; set; }
         public int TileColorARgb { get; set; } = Color.CornflowerBlue.ToArgb();
 
         [ExcludeFromSerialization]

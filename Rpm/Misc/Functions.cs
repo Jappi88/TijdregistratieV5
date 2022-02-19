@@ -794,7 +794,7 @@ namespace Rpm.Misc
                     }
 
                  
-                    _= bw.UpdateBewerking(null, $"'{bw.Naam}' op '{wp.Naam}' is {x1}");
+                    _= bw.UpdateBewerking(null, $"'{bw.Naam}' op '{wp.Naam}' is {x1}").Result;
                 }
             }
             catch (Exception e)
@@ -2357,7 +2357,7 @@ namespace Rpm.Misc
                     var added = true;
                     var wps = new List<WerkPlek>();
                     var storingen = bereik != null
-                        ? plek.Storingen.Where(x => x.Gestart >= bereik.Start && x.Gestart <= bereik.Stop).ToList()
+                        ? plek.Storingen.Where(x => new TijdEntry(x.Gestart, x.Gestopt).ContainsBereik(bereik)).ToList()
                         : plek.Storingen;
                     plek.Storingen = storingen;
                     if (!collection.ContainsKey(plek.Naam))
@@ -2392,7 +2392,8 @@ namespace Rpm.Misc
                             wps.Add(plek);
                         }
 
-                        var xreturn = collection.FirstOrDefault(x => x.Key == plek.Naam);
+                        var xreturn = collection.FirstOrDefault(x =>
+                            string.Equals(x.Key, plek.Naam, StringComparison.CurrentCultureIgnoreCase));
                         if (!xreturn.IsDefault() && xreturn.Value == null || xreturn.Value.Count == 0)
                             collection.Remove(xreturn.Key);
                         else return xreturn;

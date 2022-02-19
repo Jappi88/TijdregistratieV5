@@ -31,23 +31,26 @@
             this.components = new System.ComponentModel.Container();
             this.xBottomToolMenu = new System.Windows.Forms.ToolStrip();
             this.xBeheerweergavetoolstrip = new System.Windows.Forms.ToolStripSplitButton();
+            this.kiesAchtergrondKleurToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.beheerTileLayoutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.xBeheerLijstenToolstripItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.vanLinksNaarRechtsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vanBovenNaarBenedenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vanRechtsNaarLinksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vanOnderNaarBovenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.xBeheerLijstenToolstripItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.reserLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.beheerTileLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.resetLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.tileViewer1 = new Controls.TileViewer();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.xBottomToolMenu.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -69,10 +72,11 @@
             // 
             this.xBeheerweergavetoolstrip.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.xBeheerweergavetoolstrip.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.kiesAchtergrondKleurToolStripMenuItem,
             this.beheerTileLayoutToolStripMenuItem1,
-            this.toolStripMenuItem1,
             this.toolStripSeparator1,
             this.xBeheerLijstenToolstripItem,
+            this.toolStripMenuItem1,
             this.toolStripSeparator4,
             this.reserLayoutToolStripMenuItem});
             this.xBeheerweergavetoolstrip.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -83,15 +87,38 @@
             this.xBeheerweergavetoolstrip.Text = "Tiles";
             this.xBeheerweergavetoolstrip.Click += new System.EventHandler(this.xBeheerweergavetoolstrip_ButtonClick);
             // 
+            // kiesAchtergrondKleurToolStripMenuItem
+            // 
+            this.kiesAchtergrondKleurToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Edit_color_32x32;
+            this.kiesAchtergrondKleurToolStripMenuItem.Name = "kiesAchtergrondKleurToolStripMenuItem";
+            this.kiesAchtergrondKleurToolStripMenuItem.Size = new System.Drawing.Size(295, 26);
+            this.kiesAchtergrondKleurToolStripMenuItem.Text = "Kies Achtergrond Kleur";
+            this.kiesAchtergrondKleurToolStripMenuItem.Click += new System.EventHandler(this.kiesAchtergrondKleurToolStripMenuItem_Click);
+            // 
             // beheerTileLayoutToolStripMenuItem1
             // 
             this.beheerTileLayoutToolStripMenuItem1.Image = global::ProductieManager.Properties.Resources.Tile_colors_icon_32x32;
             this.beheerTileLayoutToolStripMenuItem1.Name = "beheerTileLayoutToolStripMenuItem1";
             this.beheerTileLayoutToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.T)));
-            this.beheerTileLayoutToolStripMenuItem1.Size = new System.Drawing.Size(300, 26);
-            this.beheerTileLayoutToolStripMenuItem1.Text = "Beheer TileLayout";
+            this.beheerTileLayoutToolStripMenuItem1.Size = new System.Drawing.Size(295, 26);
+            this.beheerTileLayoutToolStripMenuItem1.Text = "Wijzig TileLayout";
             this.beheerTileLayoutToolStripMenuItem1.Click += new System.EventHandler(this.beheerTileLayoutToolStripMenuItem1_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(292, 6);
+            // 
+            // xBeheerLijstenToolstripItem
+            // 
+            this.xBeheerLijstenToolstripItem.Image = global::ProductieManager.Properties.Resources.layout_widget_icon_32x32;
+            this.xBeheerLijstenToolstripItem.Name = "xBeheerLijstenToolstripItem";
+            this.xBeheerLijstenToolstripItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.L)));
+            this.xBeheerLijstenToolstripItem.Size = new System.Drawing.Size(295, 26);
+            this.xBeheerLijstenToolstripItem.Text = "Beheer Tiles";
+            this.xBeheerLijstenToolstripItem.Click += new System.EventHandler(this.xBeheerLijstenToolstripItem_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -102,7 +129,7 @@
             this.vanOnderNaarBovenToolStripMenuItem});
             this.toolStripMenuItem1.Image = global::ProductieManager.Properties.Resources.layout_widget_icon_32x32;
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(300, 26);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(295, 26);
             this.toolStripMenuItem1.Text = "Tile Layout Richting";
             this.toolStripMenuItem1.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStripMenuItem1_DropDownItemClicked);
             // 
@@ -130,43 +157,30 @@
             this.vanOnderNaarBovenToolStripMenuItem.Size = new System.Drawing.Size(227, 26);
             this.vanOnderNaarBovenToolStripMenuItem.Text = "VanOnderNaarBoven";
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(297, 6);
-            // 
-            // xBeheerLijstenToolstripItem
-            // 
-            this.xBeheerLijstenToolstripItem.Image = global::ProductieManager.Properties.Resources.layout_widget_icon_32x32;
-            this.xBeheerLijstenToolstripItem.Name = "xBeheerLijstenToolstripItem";
-            this.xBeheerLijstenToolstripItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.L)));
-            this.xBeheerLijstenToolstripItem.Size = new System.Drawing.Size(300, 26);
-            this.xBeheerLijstenToolstripItem.Text = "Beheer Tiles";
-            this.xBeheerLijstenToolstripItem.Click += new System.EventHandler(this.xBeheerLijstenToolstripItem_Click);
-            // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(297, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(292, 6);
             // 
             // reserLayoutToolStripMenuItem
             // 
             this.reserLayoutToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
             this.reserLayoutToolStripMenuItem.Name = "reserLayoutToolStripMenuItem";
-            this.reserLayoutToolStripMenuItem.Size = new System.Drawing.Size(300, 26);
+            this.reserLayoutToolStripMenuItem.Size = new System.Drawing.Size(295, 26);
             this.reserLayoutToolStripMenuItem.Text = "Reset Layout";
             this.reserLayoutToolStripMenuItem.Click += new System.EventHandler(this.reserLayoutToolStripMenuItem_Click);
             // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem3,
             this.beheerTileLayoutToolStripMenuItem,
+            this.toolStripSeparator2,
             this.toolStripMenuItem2,
             this.toolStripSeparator5,
             this.resetLayoutToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(225, 124);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(225, 168);
             // 
             // beheerTileLayoutToolStripMenuItem
             // 
@@ -174,8 +188,13 @@
             this.beheerTileLayoutToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.beheerTileLayoutToolStripMenuItem.Name = "beheerTileLayoutToolStripMenuItem";
             this.beheerTileLayoutToolStripMenuItem.Size = new System.Drawing.Size(224, 38);
-            this.beheerTileLayoutToolStripMenuItem.Text = "Beheer TileLayout";
+            this.beheerTileLayoutToolStripMenuItem.Text = "Wijzig TileLayout";
             this.beheerTileLayoutToolStripMenuItem.Click += new System.EventHandler(this.beheerTileLayoutToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(221, 6);
             // 
             // toolStripMenuItem2
             // 
@@ -229,6 +248,15 @@
             this.tileViewer1.TileClicked += new System.EventHandler(this.tileViewer1_TileClicked);
             this.tileViewer1.TileRequestInfo += new Controls.TileChangeEventhandler(this.tileViewer1_TileRequestInfo);
             // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Image = global::ProductieManager.Properties.Resources.Edit_color_32x32;
+            this.toolStripMenuItem3.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(224, 38);
+            this.toolStripMenuItem3.Text = "Kies Achtergrond Kleur";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.kiesAchtergrondKleurToolStripMenuItem_Click);
+            // 
             // TileMainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -267,5 +295,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem kiesAchtergrondKleurToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
     }
 }

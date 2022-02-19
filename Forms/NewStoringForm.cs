@@ -29,6 +29,8 @@ namespace Forms
             }
         }
 
+        public bool AutoUpdateTitle { get; set; } = true;
+
         public NewStoringForm(WerkPlek plek) : this(plek, null)
         {
 
@@ -58,7 +60,6 @@ namespace Forms
         {
             IsEdit = storing != null;
             //pak all soort storingen
-            Text = $@"Alle Onderbrekeningen van {plek?.Path}";
             this.Invalidate();
             Plek = plek;
             _onderbreking = storing == null ? new Storing() { GemeldDoor = Settings.Default.StoringMelder} : storing.CreateCopy();
@@ -66,6 +67,9 @@ namespace Forms
             if (isverholpen && !_onderbreking.IsVerholpen)
                 _onderbreking.Gestopt = xeindestoring.Value;
             _onderbreking.IsVerholpen = isverholpen;
+            if (_onderbreking.IsVerholpen)
+                xnaambeeindiger.Select();
+            else xnaammelder.Select();
             _onderbreking.WerkRooster = plek?.Tijden.WerkRooster;
             _onderbreking.Path = plek?.Path;
             _onderbreking.WerkPlek = plek?.Naam;
@@ -103,26 +107,38 @@ namespace Forms
             xnaambeeindiger.Enabled = Onderbreking.IsVerholpen;
             xomschrijving.Text = x.Omschrijving;
             xactie.Text = x.Oplossing;
-            if (_onderbreking.IsVerholpen)
-                xnaambeeindiger.Select();
             UpdateStatusLabel();
             SetTextFieldEnable();
         }
 
         private void UpdateStatusLabel()
         {
-            if (IsEdit)
+            if (Plek != null && AutoUpdateTitle)
             {
-                if (Onderbreking == null)
-                    this.Text = $"Wijzig onderbreking van {Plek?.Path}";
-                else this.Text = $"Wijzig onderbreking van {Plek?.Path} [{Onderbreking?.GetTotaleTijd()} uur]";
+                if (IsEdit)
+                {
+                    if (Onderbreking == null)
+                        this.Text = $"Wijzig onderbreking van {Plek?.Path}";
+                    else this.Text = $"Wijzig onderbreking van {Plek?.Path} [{Onderbreking?.GetTotaleTijd()} uur]";
+                }
+                else
+                {
+                    if (Onderbreking == null)
+                        this.Text = $"Voeg nieuwe onderbreking toe aan {Plek?.Path}";
+                    else
+                        this.Text =
+                            $"Voeg nieuwe onderbreking toe aan {Plek?.Path} [{Onderbreking?.GetTotaleTijd()} uur]";
+                }
             }
             else
             {
-                if (Onderbreking == null)
-                    this.Text = $"Voeg nieuwe onderbreking toe aan {Plek?.Path}";
-                else
-                    this.Text = $"Voeg nieuwe onderbreking toe aan {Plek?.Path} [{Onderbreking?.GetTotaleTijd()} uur]";
+                var xindex = this.Text.LastIndexOf('[');
+                var xlast = this.Text.LastIndexOf(']');
+                var xtext = this.Text;
+                if (xindex > 0 && xlast == xtext.Length -1)
+                    xtext = this.Text.Substring(0, xindex);
+                this.Text = $"{xtext}[{Onderbreking?.GetTotaleTijd()} uur]";
+                this.Invalidate();
             }
 
             if (Onderbreking != null)

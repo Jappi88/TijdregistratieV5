@@ -26,6 +26,7 @@ namespace Rpm.Productie
         {
             Bewerking = bewerking;
             Formulier = bewerking?.Parent;
+            Persoon = persoon;
         }
 
         public TakenLijst(ProductieFormulier form, Personeel persoon, Bewerking bewerking,
@@ -34,6 +35,7 @@ namespace Rpm.Productie
             Bewerking = bewerking;
             Formulier = form ?? bewerking?.Parent;
             Plek = plek;
+            Persoon = persoon;
         }
 
         public TakenLijst( WerkPlek plek)

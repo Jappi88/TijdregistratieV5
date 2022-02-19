@@ -138,5 +138,15 @@ namespace Forms
                 //content.DockHandler.DockTo(pane, DockStyle.Right, i);
             }
         }
+
+        private void ProductieLijsten_Load(object sender, EventArgs e)
+        {
+            this.InitLastInfo();
+        }
+
+        private void ProductieLijsten_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.SetLastInfo();
+        }
     }
 }

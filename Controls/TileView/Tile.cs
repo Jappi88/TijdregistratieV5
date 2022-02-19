@@ -1,18 +1,20 @@
-﻿using MetroFramework.Controls;
+﻿using MetroFramework;
+using MetroFramework.Controls;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
-using System;
-using System.Drawing;
-using System.Windows.Forms;
-using MetroFramework;
 using Rpm.Misc;
 using Rpm.Productie;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace Controls
 {
     public partial class Tile : MetroTile
     {
         private readonly Button flatbutton;
+        public List<string> InfoFields { get; set; }
 
         public bool AllowTileEdit
         {
@@ -143,6 +145,13 @@ namespace Controls
             xtile.TileImageAlign = ContentAlignment.TopLeft;
             xtile.Size = entry.Size;
             xtile.Anchor = AnchorStyles.None;
+            if (!AllowSelection && entry.SecondaryImage != null)
+            {
+                SelectedBox.Image = entry.SecondaryImage;
+                Selected = true;
+            }
+            else
+                SelectedBox.Image = Resources.notification_done_114461;
             return xtile;
         }
 
@@ -203,6 +212,20 @@ namespace Controls
                 //base.OnMouseMove(e);
                 _isDragging = false;
 
+            }
+        }
+
+        private void DoMove(int x, int y, bool select)
+        {
+            var _destination = this.Parent;
+            if (_destination == null) return;
+            // Just add the control to the new panel.
+            // No need to remove from the other panel, this changes the Control.Parent property.
+            var p = _destination.PointToClient(new Point(x, y));
+            var item = _destination.GetChildAtPoint(p);
+            if (item is Tile {Tag: TileInfoEntry entry} xtile)
+            {
+                xtile.BackColor = select ? Color.White : entry.TileColor;
             }
         }
 

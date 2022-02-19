@@ -16,9 +16,9 @@ namespace Rpm.Productie
             var werk = new Werk();
             try
             {
-                if (string.IsNullOrEmpty(path)) throw new Exception("Werk locatie kan niet leeg zijn!");
+                if (string.IsNullOrEmpty(path)) return werk;
                 string[] xpaths = path.Split('\\');
-                if (xpaths.Length == 0) throw new Exception("Werk locatie kan niet leeg zijn!");
+                if (xpaths.Length == 0) return werk;
                 var prod = parent ?? Manager.Database.GetProductie(xpaths[0]).Result;
                 if (prod == null)
                     return null;

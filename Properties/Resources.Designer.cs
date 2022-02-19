@@ -712,6 +712,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Edit_color_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("Edit_color_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap education_school_memo_pad_notes_reminder_task_icon_133450 {
             get {
                 object obj = ResourceManager.GetObject("education_school_memo_pad_notes_reminder_task_icon_133450", resourceCulture);

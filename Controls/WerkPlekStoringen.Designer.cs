@@ -77,7 +77,7 @@ namespace Controls
             this.xomschrijving.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xomschrijving.Location = new System.Drawing.Point(0, 0);
             this.xomschrijving.Name = "xomschrijving";
-            this.xomschrijving.Size = new System.Drawing.Size(786, 66);
+            this.xomschrijving.Size = new System.Drawing.Size(786, 32);
             this.xomschrijving.TabIndex = 0;
             this.xomschrijving.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -87,9 +87,9 @@ namespace Controls
             this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 66);
+            this.panel1.Location = new System.Drawing.Point(0, 32);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(786, 408);
+            this.panel1.Size = new System.Drawing.Size(786, 442);
             this.panel1.TabIndex = 1;
             // 
             // xskillview
@@ -139,7 +139,7 @@ namespace Controls
             this.xskillview.ShowCommandMenuOnRightClick = true;
             this.xskillview.ShowItemCountOnGroups = true;
             this.xskillview.ShowItemToolTips = true;
-            this.xskillview.Size = new System.Drawing.Size(786, 338);
+            this.xskillview.Size = new System.Drawing.Size(786, 360);
             this.xskillview.SmallImageList = this.imageList1;
             this.xskillview.SpaceBetweenGroups = 5;
             this.xskillview.TabIndex = 1;
@@ -394,19 +394,20 @@ namespace Controls
             this.panel2.Controls.Add(this.xstatuslabel);
             this.panel2.Controls.Add(this.xclosepanel);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 376);
+            this.panel2.Location = new System.Drawing.Point(0, 398);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(786, 32);
+            this.panel2.Padding = new System.Windows.Forms.Padding(5);
+            this.panel2.Size = new System.Drawing.Size(786, 44);
             this.panel2.TabIndex = 2;
             // 
             // xstatuslabel
             // 
             this.xstatuslabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xstatuslabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xstatuslabel.Location = new System.Drawing.Point(0, 0);
+            this.xstatuslabel.Location = new System.Drawing.Point(5, 5);
             this.xstatuslabel.Name = "xstatuslabel";
             this.xstatuslabel.Padding = new System.Windows.Forms.Padding(5);
-            this.xstatuslabel.Size = new System.Drawing.Size(654, 32);
+            this.xstatuslabel.Size = new System.Drawing.Size(680, 34);
             this.xstatuslabel.TabIndex = 0;
             this.xstatuslabel.Text = "Geen Onderbrekeningen";
             this.xstatuslabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -415,9 +416,9 @@ namespace Controls
             // 
             this.xclosepanel.Controls.Add(this.xsluiten);
             this.xclosepanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.xclosepanel.Location = new System.Drawing.Point(654, 0);
+            this.xclosepanel.Location = new System.Drawing.Point(685, 5);
             this.xclosepanel.Name = "xclosepanel";
-            this.xclosepanel.Size = new System.Drawing.Size(132, 32);
+            this.xclosepanel.Size = new System.Drawing.Size(96, 34);
             this.xclosepanel.TabIndex = 1;
             // 
             // xsluiten
@@ -429,11 +430,11 @@ namespace Controls
             this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.xsluiten.Location = new System.Drawing.Point(0, 0);
             this.xsluiten.Name = "xsluiten";
-            this.xsluiten.Size = new System.Drawing.Size(132, 32);
+            this.xsluiten.Size = new System.Drawing.Size(96, 34);
             this.xsluiten.TabIndex = 1;
             this.xsluiten.Text = "&Sluiten";
             this.xsluiten.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolTip1.SetToolTip(this.xsluiten, "Sluit storing window");
+            this.toolTip1.SetToolTip(this.xsluiten, "Sluit de onderbreking venster");
             this.xsluiten.UseVisualStyleBackColor = true;
             this.xsluiten.Click += new System.EventHandler(this.xsluiten_Click);
             // 

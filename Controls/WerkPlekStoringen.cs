@@ -215,11 +215,12 @@ namespace Controls
                     IEnumerable<Storing> entries = new Storing[] { };
                     if (xskillview.Objects != null)
                         entries = xskillview.Objects.Cast<Storing>();
-                    var title = $"Onderbrekeningen van {Plek.Key}.\n";
-                    if (entries.Any())
+                    var title = $"Onderbrekeningen van {Plek.Key}.";
+                    var enumerable = entries as Storing[] ?? entries.ToArray();
+                    if (enumerable.Any())
                     {
-                        var xarg = entries.Count() == 1 ? "onderbreking" : "onderbrekeningen";
-                        title += $"{entries.Count()} {xarg} van totaal {entries.Sum(x => x.GetTotaleTijd())} uur.";
+                        var xarg = enumerable.Count() == 1 ? "onderbreking" : "onderbrekeningen";
+                        title = $"{enumerable.Count()} {xarg} van {enumerable.Sum(x => x.GetTotaleTijd())} uur op {Plek.Key}.";
                         xomschrijving.Text = title;
                     }
                     else

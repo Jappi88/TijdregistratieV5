@@ -230,12 +230,12 @@ namespace Rpm.Productie
 
         public double IsVrijOver()
         {
-            var firststart = new DateTime(1, 1, 1);
+            var firststart = new DateTime();
             if (VrijeDagen is {Count: > 0})
                 foreach (var v in VrijeDagen.Uren)
-                    if (firststart < v.Start)
+                    if (firststart.IsDefault() || firststart < v.Start)
                         firststart = v.Start;
-            if (firststart.Year == 1 || firststart < DateTime.Now)
+            if (firststart.IsDefault())
                 return -1;
             return Math.Round(Werktijd.TijdGewerkt(DateTime.Now, firststart, WerkRooster,null).TotalHours, 2);
         }

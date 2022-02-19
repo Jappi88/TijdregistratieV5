@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Rpm.Productie;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using MetroFramework;
+using iTextSharp.text.pdf.parser.clipper;
 using ProductieManager.Rpm.Misc;
-using Rpm.Productie;
 
 namespace Controls
 {
@@ -260,6 +260,29 @@ namespace Controls
             }
         }
 
+        public Tile GetTileFromPoint(Point location, int marge)
+        {
+            try
+            {
+                for (int i = 0; i < this.Controls.Count; i++)
+                {
+                    var xtile = this.Controls[i] as Tile;
+                    if (xtile == null) continue;
+                    var xloc = new Rectangle(xtile.Location, new Size(xtile.Width + marge, xtile.Height + marge));
+                    bool flag = xloc.Contains(location);
+                        if (flag)
+                            return xtile;
+                }
+
+                return null;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
         private void flowLayoutPanel1_DragDrop(object sender, DragEventArgs e)
         {
             var data = (Tile) e.Data.GetData(typeof(Tile));
@@ -268,7 +291,7 @@ namespace Controls
             // Just add the control to the new panel.
             // No need to remove from the other panel, this changes the Control.Parent property.
             var p = _destination.PointToClient(new Point(e.X, e.Y));
-            var item = _destination.GetChildAtPoint(p) ?? _destination.Controls[_destination.Controls.Count - 1];
+            var item = GetTileFromPoint(p,10); //??_destination.Controls[_destination.Controls.Count - 1];
             var index = item == null ? 0 : _destination.Controls.GetChildIndex(item, false);
             var xoldindex = _destination.Controls.GetChildIndex(data, false);
 

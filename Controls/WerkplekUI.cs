@@ -553,7 +553,8 @@ namespace Controls
                 }
 
                 var xstform = new NewStoringForm();
-                xstform.SetOnderbreking(null, xst, false);
+                xstform.SetOnderbreking(wps.FirstOrDefault(), xst, false);
+                xstform.AutoUpdateTitle = false;
                 xstform.Title = $"Onderbreek {string.Join(", ", wps.Select(x => x.Naam))}";
                 if (xstform.ShowDialog() == DialogResult.OK)
                 {
@@ -587,8 +588,10 @@ namespace Controls
                 if (xwp == null) return;
                 var xst = xwp.Storingen.FirstOrDefault(x => !x.IsVerholpen);
                 var xstform = new NewStoringForm();
-                xstform.SetOnderbreking(null, xst, true);
+                xstform.AutoUpdateTitle = false;
                 xstform.Title = $"Hervat {string.Join(", ", wps.Select(x => x.Naam))}";
+                xstform.SetOnderbreking(xwp, xst, true);
+
                 if (xstform.ShowDialog() == DialogResult.OK)
                 {
                     foreach (var wp in wps)

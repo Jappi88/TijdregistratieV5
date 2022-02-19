@@ -250,5 +250,15 @@ namespace Forms
                 //content.DockHandler.DockTo(pane, DockStyle.Right, i);
             }
         }
+
+        private void Producties_Load(object sender, EventArgs e)
+        {
+            this.InitLastInfo();
+        }
+
+        private void Producties_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.SetLastInfo();
+        }
     }
 }

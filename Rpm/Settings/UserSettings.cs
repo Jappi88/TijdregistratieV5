@@ -43,6 +43,7 @@ namespace Rpm.Settings
         public List<string> PersoneelIndeling { get; set; }
         public List<string> WerkplaatsIndeling { get; set; }
         public int TileCountRefreshRate { get; set; } = 30000;
+        public int TileViewBackgroundColorRGB { get; set; } = Color.White.ToArgb();
         public List<TileInfoEntry> TileLayout { get; set; }
         public FlowDirection TileFlowDirection { get; set; } = FlowDirection.TopDown;
         public bool PreviewShown { get; set; }

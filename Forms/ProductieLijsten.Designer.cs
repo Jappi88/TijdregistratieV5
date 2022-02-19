@@ -30,10 +30,10 @@ namespace Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Producties));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieLijsten));
             this.SuspendLayout();
             // 
-            // Producties
+            // ProductieLijsten
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -47,6 +47,8 @@ namespace Forms
             this.MinimumSize = new System.Drawing.Size(750, 510);
             this.Name = "ProductieLijsten";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ProductieLijsten_FormClosing);
+            this.Load += new System.EventHandler(this.ProductieLijsten_Load);
             this.ResumeLayout(false);
 
         }

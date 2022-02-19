@@ -217,7 +217,7 @@ namespace ProductieManager.Forms
             // xopslaan
             // 
             this.xopslaan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xopslaan.BackColor = System.Drawing.Color.AliceBlue;
+            this.xopslaan.BackColor = System.Drawing.Color.White;
             this.xopslaan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xopslaan.Image = global::ProductieManager.Properties.Resources.diskette_save_saveas_1514;
             this.xopslaan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -233,7 +233,7 @@ namespace ProductieManager.Forms
             // xannuleren
             // 
             this.xannuleren.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xannuleren.BackColor = System.Drawing.Color.AliceBlue;
+            this.xannuleren.BackColor = System.Drawing.Color.White;
             this.xannuleren.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xannuleren.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xannuleren.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;

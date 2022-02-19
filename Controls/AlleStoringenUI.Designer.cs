@@ -37,12 +37,12 @@ namespace Controls
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.xstatuslabel = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.werkPlekStoringen1 = new Controls.WerkPlekStoringen();
             this.xrangepanel = new System.Windows.Forms.Panel();
             this.xupdatetijdb = new System.Windows.Forms.Button();
             this.xtot = new System.Windows.Forms.DateTimePicker();
             this.xvanaf = new System.Windows.Forms.DateTimePicker();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.werkPlekStoringen1 = new Controls.WerkPlekStoringen();
             this.panel1.SuspendLayout();
             this.xperscontainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xwerkplekken)).BeginInit();
@@ -66,10 +66,10 @@ namespace Controls
             this.xperscontainer.AutoScroll = true;
             this.xperscontainer.Controls.Add(this.xwerkplekken);
             this.xperscontainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xperscontainer.Location = new System.Drawing.Point(0, 80);
+            this.xperscontainer.Location = new System.Drawing.Point(0, 64);
             this.xperscontainer.Name = "xperscontainer";
             this.xperscontainer.Padding = new System.Windows.Forms.Padding(5);
-            this.xperscontainer.Size = new System.Drawing.Size(227, 394);
+            this.xperscontainer.Size = new System.Drawing.Size(227, 410);
             this.xperscontainer.TabIndex = 0;
             // 
             // xwerkplekken
@@ -88,7 +88,7 @@ namespace Controls
             this.xwerkplekken.Name = "xwerkplekken";
             this.xwerkplekken.ShowGroups = false;
             this.xwerkplekken.ShowItemToolTips = true;
-            this.xwerkplekken.Size = new System.Drawing.Size(217, 384);
+            this.xwerkplekken.Size = new System.Drawing.Size(217, 400);
             this.xwerkplekken.SmallImageList = this.imageList1;
             this.xwerkplekken.TabIndex = 0;
             this.xwerkplekken.TileSize = new System.Drawing.Size(150, 35);
@@ -127,7 +127,7 @@ namespace Controls
             this.xstatuslabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xstatuslabel.Location = new System.Drawing.Point(0, 0);
             this.xstatuslabel.Name = "xstatuslabel";
-            this.xstatuslabel.Size = new System.Drawing.Size(227, 80);
+            this.xstatuslabel.Size = new System.Drawing.Size(227, 64);
             this.xstatuslabel.TabIndex = 1;
             this.xstatuslabel.Text = "Alle Werkplekken";
             this.xstatuslabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -142,6 +142,20 @@ namespace Controls
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(884, 513);
             this.panel2.TabIndex = 2;
+            // 
+            // werkPlekStoringen1
+            // 
+            this.werkPlekStoringen1.BackColor = System.Drawing.Color.White;
+            this.werkPlekStoringen1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.werkPlekStoringen1.IsCloseAble = true;
+            this.werkPlekStoringen1.IsEditAble = true;
+            this.werkPlekStoringen1.Location = new System.Drawing.Point(227, 39);
+            this.werkPlekStoringen1.Name = "werkPlekStoringen1";
+            this.werkPlekStoringen1.Size = new System.Drawing.Size(657, 474);
+            this.werkPlekStoringen1.TabIndex = 1;
+            this.werkPlekStoringen1.OnCloseButtonPressed += new System.EventHandler(this.werkPlekStoringen1_OnCloseButtonPressed);
+            this.werkPlekStoringen1.OnDisableEvents += new System.EventHandler(this.werkPlekStoringen1_OnDisableEvents);
+            this.werkPlekStoringen1.OnEnableEvents += new System.EventHandler(this.werkPlekStoringen1_OnEnableEvents);
             // 
             // xrangepanel
             // 
@@ -200,20 +214,6 @@ namespace Controls
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
-            // 
-            // werkPlekStoringen1
-            // 
-            this.werkPlekStoringen1.BackColor = System.Drawing.Color.White;
-            this.werkPlekStoringen1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.werkPlekStoringen1.IsCloseAble = true;
-            this.werkPlekStoringen1.IsEditAble = true;
-            this.werkPlekStoringen1.Location = new System.Drawing.Point(227, 39);
-            this.werkPlekStoringen1.Name = "werkPlekStoringen1";
-            this.werkPlekStoringen1.Size = new System.Drawing.Size(657, 474);
-            this.werkPlekStoringen1.TabIndex = 1;
-            this.werkPlekStoringen1.OnCloseButtonPressed += new System.EventHandler(this.werkPlekStoringen1_OnCloseButtonPressed);
-            this.werkPlekStoringen1.OnDisableEvents += new System.EventHandler(this.werkPlekStoringen1_OnDisableEvents);
-            this.werkPlekStoringen1.OnEnableEvents += new System.EventHandler(this.werkPlekStoringen1_OnEnableEvents);
             // 
             // AlleStoringenUI
             // 

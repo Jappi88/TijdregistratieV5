@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using ProductieManager.Properties;
 
 namespace Controls.TileView
 {
@@ -24,6 +25,7 @@ namespace Controls.TileView
             {
                 InitToolStripMenu();
                 UpdateFilterTiles();
+                tileViewer1.BackColor = Color.FromArgb(Manager.Opties.TileViewBackgroundColorRGB);
                 tileViewer1.LoadTiles(Manager.Opties.TileLayout);
             }
         }
@@ -124,6 +126,7 @@ namespace Controls.TileView
                                 }, true, null).Result;
                             var wps = xxbws.SelectMany(x => x.WerkPlekken.Where(w => w.IsActief())).ToList();
                             entry.TileCount = wps.Count;
+                           
                             break;
                     case "gereedmeldingen":
                         bws = Manager.ProductieProvider.GetBewerkingen(ProductieProvider.LoadedType.Alles,
@@ -161,6 +164,7 @@ namespace Controls.TileView
                             }, true, null).Result;
                         var storingen = bws.SelectMany(x => x.GetStoringen(false)).ToList();
                         entry.TileCount = storingen.Count;
+                       
                         break;
                     case "xverbruik":
                         break;
@@ -208,7 +212,6 @@ namespace Controls.TileView
                                 continue;
                             xlist.Add(bws[i].ArtikelNr);
                         }
-
                         entry.TileCount = xlist.Count;
                         break;
                     case "xartikelrecords":
@@ -240,7 +243,8 @@ namespace Controls.TileView
                                 if (Manager.Opties != null && Manager.Opties.Filters.Count > 0)
                                 {
                                     var xf = Manager.Opties.Filters.FirstOrDefault(x =>
-                                        string.Equals(x.Name, entry.Name.Replace("_", " "), StringComparison.CurrentCultureIgnoreCase));
+                                        string.Equals(x.Name, entry.Name.Replace("_", " "),
+                                            StringComparison.CurrentCultureIgnoreCase));
                                     if (xf != null)
                                     {
                                         bws = Manager.ProductieProvider.GetBewerkingen(
@@ -251,11 +255,11 @@ namespace Controls.TileView
                                                 ViewState.Gestopt,
                                             }, true, null).Result;
                                         bws = bws.Where(x => xf.IsAllowed(x, null)).ToList();
-
+                                        entry.TileCount = bws.Count;
                                     }
-
-                                    entry.TileCount = bws.Count;
+                                    else entry.TileCount = 0;
                                 }
+                                else entry.TileCount = 0;
                                 break;
                         }
                         break;
@@ -421,6 +425,32 @@ namespace Controls.TileView
         private void verwijderAchtergrondAfbeeldingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ClearBackgroundImage();
+        }
+
+        private void ChooseBackgroundColor()
+        {
+            try
+            {
+                if (Manager.Opties == null) return;
+                var xcolorpicker = new ColorDialog();
+                xcolorpicker.AllowFullOpen = true;
+                xcolorpicker.Color = Color.FromArgb(Manager.Opties.TileViewBackgroundColorRGB);
+                xcolorpicker.AnyColor = true;
+                if (xcolorpicker.ShowDialog() == DialogResult.OK)
+                {
+                    Manager.Opties.TileViewBackgroundColorRGB = xcolorpicker.Color.ToArgb();
+                    LoadTileViewer();
+                }
+            }
+            catch (Exception exception)
+            {
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
+            }
+        }
+
+        private void kiesAchtergrondKleurToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChooseBackgroundColor();
         }
     }
 }

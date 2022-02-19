@@ -495,6 +495,7 @@ namespace Forms
                 xs.WerkplaatsIndeling = _LoadedOpties.WerkplaatsIndeling;
                 xs.TileLayout = _LoadedOpties.TileLayout;
                 xs.TileFlowDirection = _LoadedOpties.TileFlowDirection;
+                xs.TileViewBackgroundColorRGB = _LoadedOpties.TileViewBackgroundColorRGB;
 
                 xs.DeelAllesIn = _LoadedOpties.DeelAllesIn;
                 xs.DeelInPerAfdeling = _LoadedOpties.DeelInPerAfdeling;

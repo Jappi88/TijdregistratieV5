@@ -2024,6 +2024,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Edit_color_32x32.png" />
     <None Include="Resources\photos-Outling_32x32.png" />
     <None Include="Resources\photo-photography-image_32x32.png" />
     <None Include="Resources\filter_96x96.png" />

@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ProductieManager.Rpm.Productie;
+using Rpm.Various;
 
 namespace Controls
 {
@@ -43,13 +45,28 @@ namespace Controls
         public void InitEvents()
         {
             Manager.OnFormulierChanged += Manager_OnFormulierChanged;
+            Manager.OnSettingsChanged += Manager_OnSettingsChanged;
             werkPlekStoringen1.OnDisableEvents += werkPlekStoringen1_OnDisableEvents;
             werkPlekStoringen1.OnEnableEvents += werkPlekStoringen1_OnEnableEvents;
         }
 
+        private void Manager_OnSettingsChanged(object instance, Rpm.Settings.UserSettings settings, bool reinit)
+        {
+            try
+            {
+                UpdateBereik();
+                InitStoringen();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         public void DetachEvents()
         {
-            Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
+            Manager.OnFormulierChanged -= Manager_OnFormulierChanged; 
+            Manager.OnSettingsChanged -= Manager_OnSettingsChanged;
             werkPlekStoringen1.OnDisableEvents -= werkPlekStoringen1_OnDisableEvents;
             werkPlekStoringen1.OnEnableEvents -= werkPlekStoringen1_OnEnableEvents;
         }
@@ -97,6 +114,8 @@ namespace Controls
         {
             try
             {
+                if (this.Disposing || this.IsDisposed)
+                    return;
                 _productie ??= productie;
                 Collection = new Dictionary<string, List<WerkPlek>>();
                 werkPlekStoringen1.InitStoringen(new KeyValuePair<string, List<WerkPlek>>());
@@ -104,21 +123,25 @@ namespace Controls
                 xrangepanel.Visible = productie == null;
                 if (productie == null)
                 {
-                    await Task.Run(async () =>
+                    await Task.Run(() =>
                     {
                         if (Manager.Database is {IsDisposed: false})
                         {
-                            var items = await Manager.Database.GetAllProducties(true, true,
-                                Bereik, null);
-                            foreach (var prod in items)
-                                UpdateStoringen(prod, Bereik);
+                            var bws = Manager.ProductieProvider.GetBewerkingen(ProductieProvider.LoadedType.Alles,
+                                new ViewState[]
+                                {
+                                    ViewState.Alles
+                                }, true, null).Result;
+                          
+                            foreach (var bw in bws)
+                                UpdateStoringen(bw, Bereik,null);
                         }
                     });
-                    if (this.Disposing || this.IsDisposed)
-                        return;
+                  
                 }
-                else UpdateStoringen(productie, null);
+                else UpdateStoringen(productie, null,false);
 
+                Collection = Collection.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
                 xwerkplekken.SetObjects(Collection);
                 if (xwerkplekken.Items.Count > 0 && xwerkplekken.SelectedObject == null)
                 {
@@ -138,69 +161,86 @@ namespace Controls
             }
         }
 
-        public void UpdateStoringen(ProductieFormulier prod, TijdEntry bereik)
+        public void UpdateStoringen(Bewerking bew, TijdEntry bereik, List<KeyValuePair<string, List<WerkPlek>>> items)
+        {
+            try
+            {
+                if (bew == null || !bew.IsAllowed()) return;
+                if (bereik != null && !bew.HeeftGewerkt(bereik)) return;
+                if (bew.WerkPlekken != null)
+                    foreach (var wp in bew.WerkPlekken)
+                    {
+                        wp.Werk = bew;
+                        var updated = Collection.UpdateStoringCollection(wp, _productie != null, bereik);
+                        if (items == null) continue;
+                        var item = items.FirstOrDefault(x =>
+                            string.Equals(x.Key, wp.Naam, StringComparison.CurrentCultureIgnoreCase));
+                        bool changed = false;
+                        if (!updated.IsDefault())
+                        {
+                            if (bereik != null && updated.Value.Any(x => x.Storingen.Any(source => source.Gestart < bereik.Start || source.Gestart > bereik.Stop)))
+                            {
+                                Console.WriteLine(@"here");
+                            }
+                            if (item.IsDefault())
+                            {
+                                xwerkplekken.AddObject(updated);
+                            }
+                            else
+                            {
+                                xwerkplekken.RefreshObject(updated);
+                            }
+                            if (Collection.ContainsKey(updated.Key))
+                                Collection[updated.Key] = updated.Value;
+                            else
+                            {
+                                Collection.Add(updated.Key, updated.Value);
+                                changed = true;
+                            }
+                        }
+                        else
+                        {
+                            if (xwerkplekken.Objects != null && !item.IsDefault())
+                                xwerkplekken.RemoveObject(item);
+                            if (Collection.ContainsKey(wp.Naam))
+                            {
+                                Collection.Remove(wp.Naam);
+                                changed = true;
+                            }
+
+                        }
+
+                        if (!werkPlekStoringen1.Plek.IsDefault() &&
+                            string.Equals(werkPlekStoringen1.Plek.Key, wp.Naam,
+                                StringComparison.CurrentCultureIgnoreCase))
+                            werkPlekStoringen1.RefreshItems(wp);
+                        if (changed)
+                            UpdateStatusText();
+                    }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        public void UpdateStoringen(ProductieFormulier prod, TijdEntry bereik, bool updatelist)
         {
             try
             {
                 if (prod?.Bewerkingen != null)
                 {
-                    var items = xwerkplekken.Objects?.Cast<KeyValuePair<string, List<WerkPlek>>>().ToList();
+                    var items = updatelist
+                        ? xwerkplekken.Objects?.Cast<KeyValuePair<string, List<WerkPlek>>>().ToList()
+                        : null;
                     foreach (var bew in prod.Bewerkingen)
-                        if (bew.WerkPlekken != null)
-                            foreach (var wp in bew.WerkPlekken)
-                            {
-                                wp.Werk = bew;
-                                var updated = Collection.UpdateStoringCollection(wp, _productie != null,bereik);
-                                var item = new KeyValuePair<string, List<WerkPlek>>();
-                                if(items != null)
-                                   item = items.FirstOrDefault(x =>
-                                            string.Equals(x.Key, wp.Naam, StringComparison.CurrentCultureIgnoreCase));
-                                bool changed = false;
-                                if (!updated.IsDefault())
-                                {
-                                    if(bereik != null && updated.Value.Any(x=> x.Storingen.Any(source=> source.Gestart < bereik.Start || source.Gestart > bereik.Stop)))
-                                    {
-                                        Console.WriteLine(@"here");
-                                    }
-                                    if (item.IsDefault())
-                                    {
-                                        xwerkplekken.AddObject(updated);
-                                    }
-                                    else
-                                    {
-                                        xwerkplekken.RefreshObject(updated);
-                                    }
-                                    if (Collection.ContainsKey(updated.Key))
-                                        Collection[updated.Key] = updated.Value;
-                                    else
-                                    {
-                                        Collection.Add(updated.Key, updated.Value);
-                                        changed = true;
-                                    }
-                                }
-                                else
-                                {
-                                    if (xwerkplekken.Objects != null && !item.IsDefault())
-                                        xwerkplekken.RemoveObject(item);
-                                    if (Collection.ContainsKey(wp.Naam))
-                                    {
-                                        Collection.Remove(wp.Naam);
-                                        changed = true;
-                                    }
-                                   
-                                }
-
-                                if (!werkPlekStoringen1.Plek.IsDefault() &&
-                                    string.Equals(werkPlekStoringen1.Plek.Key, wp.Naam,
-                                        StringComparison.CurrentCultureIgnoreCase))
-                                    werkPlekStoringen1.RefreshItems(wp);
-                                if (changed)
-                                    UpdateStatusText();
-                            }
+                        if (bew.IsAllowed())
+                            UpdateStoringen(bew, bereik, items);
                 }
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e);
             }
         }
 
@@ -211,6 +251,7 @@ namespace Controls
             {
                 var items = xwerkplekken.Objects.Cast<KeyValuePair<string, List<WerkPlek>>>().ToArray();
                 double uren = 0;
+                int aantal = 0;
                 for (int i = 0; i < items.Length; i++)
                 {
                     var pair = items[i];
@@ -222,15 +263,14 @@ namespace Controls
                             if (sts is { Count: > 0 })
                             {
                                 uren += sts.Sum(t => t.GetTotaleTijd());
+                                aantal += sts.Count;
                             }
                         }
                     }
                 }
-
-                if (items.Length == 1)
-                    text = $"Alleen {items.First().Key}, met een totaal van {uren} uur aan onderbrekeningen.";
-                else
-                    text = $"{items.Length} werkplaatsen, met een totaal van {uren} uur aan onderbrekeningen.";
+                var x1 = aantal == 1? "onderbreking" : "onderbrekeningen";
+                var x2 = aantal == 1 ? items.First().Key : $"{items.Length} werkplaatsen";
+                text = $"{aantal} {x1} van {uren} uur op {x2}.";
             }
 
             OnStatusTextChanged(text);
@@ -263,7 +303,7 @@ namespace Controls
                     this.BeginInvoke(new MethodInvoker(() =>
                     {
                         var bereik = _productie == null ? Bereik : null;
-                        UpdateStoringen(changedform,bereik);
+                        UpdateStoringen(changedform,bereik,true);
                     }));
                 }
                 catch (Exception e)
