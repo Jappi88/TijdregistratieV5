@@ -22,7 +22,7 @@ namespace Forms
             InitializeComponent();
             SaveLastSize = false;
             MinimizeBox = false;
-            StartPosition = FormStartPosition.CenterScreen;
+            StartPosition = FormStartPosition.CenterParent;
         }
 
         public string SelectedValue => (string) xchooser.SelectedItem;
@@ -90,7 +90,6 @@ namespace Forms
             Image customImage = null, MetroColorStyle style = MetroColorStyle.Default)
         {
             Text = title;
-            StartPosition = FormStartPosition.CenterScreen;
             xmessage.Text = message;
             var maxSize = new Size(xmessage.Width, int.MaxValue);
             var textheight = TextRenderer.MeasureText(xmessage.Text, xmessage.Font, maxSize).Height;

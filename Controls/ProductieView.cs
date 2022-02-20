@@ -2434,7 +2434,7 @@ namespace Controls
                         bttns.Add("OK", DialogResult.OK);
                         bttns.Add("Toon Bericht", DialogResult.Yes);
                         _unreadMessages = new XMessageBox();
-                        _unreadMessages.StartPosition = FormStartPosition.CenterParent;
+                        _unreadMessages.StartPosition = FormStartPosition.CenterScreen;
                         _unreadMessages.Location = new Point(0, this.Height / 2);
                         var result = _unreadMessages.ShowDialog(
                             this, $"Je hebt {unread.Count} ongelezen {xv} van {string.Join(", ", names)}",
