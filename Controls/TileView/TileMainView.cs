@@ -9,6 +9,8 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
+using ProductieManager.Rpm.Various;
 
 namespace Controls.TileView
 {
@@ -92,6 +94,19 @@ namespace Controls.TileView
             }
 
             return null;
+        }
+
+        public Tile GetTile(string name)
+        {
+            try
+            {
+                return tileViewer1.GetTile(name);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
         }
 
         public TileInfoEntry GetTileInfo(TileInfoEntry entry)
@@ -235,6 +250,18 @@ namespace Controls.TileView
                         break;
                     case "xbeheerfilters":
                         entry.TileCount = Manager.Opties?.Filters?.Count ?? 0;
+                        break;
+                    case "xchat":
+                        entry.TileCount = ProductieChat.Gebruikers.Count(x=> x.IsOnline);
+                        var xunread = ProductieChat.Chat?.GetAllUnreadMessages().Count ?? 0;
+                        if (xunread > 0)
+                        {
+                            var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White,
+                                xunread.ToString(),
+                                new Font("Ariel", 16, FontStyle.Bold), Color.DarkRed);
+                            entry.SecondaryImage = ximg;
+                        }
+                        else entry.SecondaryImage = null;
                         break;
                     default:
                         switch (entry.GroupName.ToLower())

@@ -464,6 +464,7 @@ namespace ProductieManager
         {
             try
             {
+                if (this.Disposing || this.IsDisposed) return;
                 BeginInvoke(new Action(UpdateTitle));
             }
             catch (Exception e)

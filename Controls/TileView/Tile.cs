@@ -72,7 +72,7 @@ namespace Controls
             SelectedBox.Image = Resources.notification_done_114461;
             SelectedBox.SizeMode = PictureBoxSizeMode.StretchImage;
             SelectedBox.BackColor = Color.Transparent;
-            SelectedBox.Size = new Size(64, 64);
+            SelectedBox.Size = new Size(32, 32);
             SelectedBox.Click += (x, y) => this.PerformClick();
             this.SuspendLayout();
             this.Controls.Add(flatbutton);
@@ -86,7 +86,7 @@ namespace Controls
         private void UpdateSelectedImageLocation()
         {
             if (SelectedBox == null) return;
-            SelectedBox.Location = new Point(((this.Size.Width / 2) - SelectedBox.Width / 2), ((this.Size.Height / 2) - SelectedBox.Height / 2));
+            SelectedBox.Location = new Point(((this.Size.Width / 2) - SelectedBox.Width / 2), ((this.Size.Height / 2) - SelectedBox.Height));
         }
 
         private void Tile_Resize(object sender, EventArgs e)
@@ -147,11 +147,16 @@ namespace Controls
             xtile.Anchor = AnchorStyles.None;
             if (!AllowSelection && entry.SecondaryImage != null)
             {
+                SelectedBox.Visible = true;
                 SelectedBox.Image = entry.SecondaryImage;
                 Selected = true;
             }
             else
+            {
+                if (!AllowSelection)
+                    SelectedBox.Visible = false;
                 SelectedBox.Image = Resources.notification_done_114461;
+            }
             return xtile;
         }
 

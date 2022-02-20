@@ -1,33 +1,29 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls;
-using System.Windows.Forms;
-using BrightIdeasSoftware;
+﻿using BrightIdeasSoftware;
 using Forms;
-using MetroFramework.Drawing.Html;
 using ProductieManager.Rpm.Misc;
 using ProductieManager.Rpm.Various;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.UI.WebControls;
+using System.Windows.Forms;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
-using Various;
-using Image = System.Drawing.Image;
 using TextAlign = NPOI.XSSF.UserModel.TextAlign;
 
 namespace ProductieManager.Forms
 {
-    public partial class ChatForm : Form
+    public partial class ProductieChatUI : UserControl
     {
         //public ImageList LoadedUserImages { get; private set; } = new ImageList();
 
-        public ChatForm()
+        public ProductieChatUI()
         {
             InitializeComponent();
             SetStyle(
@@ -41,6 +37,28 @@ namespace ProductieManager.Forms
             ((OLVColumn) xuserlist.Columns[2]).AspectGetter = ProfileLastSeenGet;
            // LoadedUserImages.ColorDepth = ColorDepth.Depth32Bit;
             //LoadedUserImages.ImageSize = new Size(64, 64);
+        }
+
+        public bool InitUI()
+        {
+            if (!ProductieChat.LoggedIn || ProductieChat.Chat == null)
+            {
+                XMessageBox.Show(this, $"Je bent niet ingelogd!\n\n Log in om te kunnen chatten met productie.",
+                    "Niet Ingelogd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
+            }
+            LoadProfile();
+            LoadProfiles();
+            LoadSelectedUser();
+            ProductieChat.GebruikerUpdate += ProductieChat_GebruikerUpdate;
+            ProductieChat.MessageRecieved += ProductieChat_MessageRecieved;
+            return true;
+        }
+
+        public void CloseUI()
+        {
+            ProductieChat.GebruikerUpdate -= ProductieChat_GebruikerUpdate;
+            ProductieChat.MessageRecieved -= ProductieChat_MessageRecieved;
         }
 
         private object ProfileNameGet(object user)
@@ -239,29 +257,7 @@ namespace ProductieManager.Forms
             return $"<img src='{name};width:{imagesize.Width};height:{imagesize.Height};'</>";
         }
 
-        private string _Selected = null;
-        public void Show(string selected = null)
-        {
-            _Selected = selected;
-            base.Show();
-        }
-
-        private void ChatForm_Shown(object sender, EventArgs e)
-        {
-            if (!ProductieChat.LoggedIn || ProductieChat.Chat == null)
-            {
-                XMessageBox.Show(this, $"Je bent niet ingelogd!\n\n Log in om te kunnen chatten met productie.",
-                    "Niet Ingelogd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                this.Close();
-                return;
-            }
-
-            ProductieChat.GebruikerUpdate += ProductieChat_GebruikerUpdate;
-            ProductieChat.MessageRecieved += ProductieChat_MessageRecieved;
-            LoadProfile();
-            LoadProfiles();
-            LoadSelectedUser();
-        }
+        internal string _Selected = null;
 
         private void ProductieChat_MessageRecieved(ProductieChatEntry message)
         {
@@ -281,6 +277,7 @@ namespace ProductieManager.Forms
 
         private void ProductieChat_GebruikerUpdate(UserChat user)
         {
+            if (this.Disposing || this.IsDisposed) return;
             this.BeginInvoke(new MethodInvoker(() =>
             {
                 LoadProfile();
@@ -404,7 +401,6 @@ namespace ProductieManager.Forms
         {
             if (Manager.ProductieChat == null || Manager.LogedInGebruiker == null) return;
             var user = SelectedUser();
-            xselecteduserprofilebutton.Visible = user != null;
             xselecteduserimage.Image = user?.GetProfielImage();
             xselectedusername.Text = user?.UserName;
             xselecteduserstatus.Text = user == null ? "" : (user.IsOnline ? "Online" : "Offline");
@@ -502,13 +498,6 @@ namespace ProductieManager.Forms
             });
         }
 
-        private void ChatForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            this.SetLastInfo();
-            ProductieChat.GebruikerUpdate -= ProductieChat_GebruikerUpdate;
-            ProductieChat.MessageRecieved -= ProductieChat_MessageRecieved;
-        }
-
         private void xuserlist_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadSelectedUser();
@@ -558,13 +547,12 @@ namespace ProductieManager.Forms
 
                 try
                 {
-                    var img = Image.FromStream(new MemoryStream(File.ReadAllBytes(ofd.FileName)));
+                    //Image.FromStream(new MemoryStream(File.ReadAllBytes(ofd.FileName)));
                     if (!ProductieChat.ChangeProfielImage(ofd.FileName))
                     {
                         XMessageBox.Show(this, $"Het is niet gelukt om je profiel foto te wijzigen, probeer het later nog eens.",
                             "Ongeldige Afbeelding", MessageBoxIcon.Exclamation);
                     }
-                    img = null;
                 }
                 catch (Exception exception)
                 {
@@ -681,11 +669,6 @@ namespace ProductieManager.Forms
                 SendMessage();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void ChatForm_Load(object sender, EventArgs e)
-        {
-            this.InitLastInfo();
         }
     }
 }

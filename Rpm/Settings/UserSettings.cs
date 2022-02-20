@@ -322,6 +322,18 @@ namespace Rpm.Settings
                     TileIndex = 19,
                     IsDefault = true,
                 });
+                xtiles.Add(new TileInfoEntry()
+                {
+                    Text = "Productie Chat",
+                    ForeColor = Color.Navy,
+                    GroupName = "Beheer",
+                    Name = "xchat",
+                    Size = new Size(256, 96),
+                    TileColor = Color.LightSteelBlue,
+                    TileImage = ProductieManager.Properties.Resources.chat_26_icon_96x96,
+                    TileIndex = 19,
+                    IsDefault = true,
+                });
 
                 if (incextra)
                 {

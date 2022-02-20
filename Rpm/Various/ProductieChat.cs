@@ -273,7 +273,7 @@ namespace ProductieManager.Rpm.Various
             if (Chat == null || string.IsNullOrEmpty(img)) return false;
             try
             {
-                
+                if (!img.IsImageFile()) return false;
                 Chat.ProfielImage = ProfielPath + "\\ProfielFoto.png";
                 File.Copy(img, Chat.ProfielImage, true);
                 FileInfo fi = new FileInfo(Chat.ProfielImage);

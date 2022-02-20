@@ -64,6 +64,7 @@ namespace Forms
 
         private void _manager_OnSettingsChanged(object instance, UserSettings settings, bool init)
         {
+            if (this.IsDisposed || this.Disposing) return;
             this.BeginInvoke(new MethodInvoker(() =>
             {
                 LoadSettings(settings, true);

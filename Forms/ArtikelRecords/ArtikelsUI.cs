@@ -98,9 +98,8 @@ namespace Controls
             {
                 try
                 {
-                    var valid = false;
-                    Invoke(new MethodInvoker(() => valid = !IsDisposed));
-                    if (!valid) return;
+
+                    if (Disposing || IsDisposed) return;
                     xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = true; }));
                     var cur = 0;
                     var xwv = "Artikelen laden";
@@ -108,24 +107,30 @@ namespace Controls
                     var tries = 0;
                     while (_iswaiting && tries < 200)
                     {
-                        if (Disposing || IsDisposed) return;
-                        if (cur > 5) cur = 0;
-                        var curvalue = xwv.PadRight(xwv.Length + cur, '.');
-                        //xcurvalue = curvalue;
-                        xloadinglabel.BeginInvoke(new MethodInvoker(() =>
+                        try
                         {
-                            xloadinglabel.Text = curvalue;
-                            xloadinglabel.Invalidate();
-                        }));
-                        Application.DoEvents();
+                            if (Disposing || IsDisposed) return;
+                            if (cur > 5) cur = 0;
+                            var curvalue = xwv.PadRight(xwv.Length + cur, '.');
+                            //xcurvalue = curvalue;
+                            xloadinglabel.BeginInvoke(new MethodInvoker(() =>
+                            {
+                                xloadinglabel.Text = curvalue;
+                                xloadinglabel.Invalidate();
+                            }));
+                            Application.DoEvents();
 
-                        await Task.Delay(500);
-                        Application.DoEvents();
-                        tries++;
-                        cur++;
-                        Invoke(new MethodInvoker(() => valid = !IsDisposed));
-                        if (!valid) break;
+                            await Task.Delay(500);
+                            Application.DoEvents();
+                            tries++;
+                            cur++;
+                        }
+                        catch (Exception e)
+                        {
+                            break;
+                        }
                     }
+                    if (Disposing || IsDisposed) return;
                     xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
                 }
                 catch (Exception e)

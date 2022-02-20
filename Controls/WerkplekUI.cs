@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using BrightIdeasSoftware;
+﻿using BrightIdeasSoftware;
 using Forms;
 using Forms.Aantal;
-using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Controls
 {
@@ -48,8 +47,7 @@ namespace Controls
             imageList1.Images.Add(Resources.iconfinder_technology);
             imageList1.Images.Add(
                 Resources.iconfinder_technology.CombineImage(Resources.exclamation_warning_15590, 2));
-            if (Manager.Opties?._viewwerkplekdata != null)
-                xwerkpleklist.RestoreState(Manager.Opties.ViewDataWerkplekState);
+           LoadLayout();
             foreach (var col in xwerkpleklist.Columns.Cast<OLVColumn>())
             {
                 col.Groupable = true;
@@ -109,16 +107,38 @@ namespace Controls
             Manager.OnSettingsChanged += Manager_OnSettingsChanged;
         }
 
+        public void LoadLayout()
+        {
+            try
+            {
+                if (this.IsDisposed || this.Disposing || xwerkpleklist == null || xwerkpleklist.IsDisposed) return;
+                if (Manager.Opties?._viewwerkplekdata == null) return;
+                if (xwerkpleklist.InvokeRequired)
+                    xwerkpleklist.Invoke(new MethodInvoker(() =>
+                        xwerkpleklist.RestoreState(Manager.Opties.ViewDataWerkplekState)));
+                else xwerkpleklist.RestoreState(Manager.Opties.ViewDataWerkplekState);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         private void Manager_OnSettingsChanged(object instance, Rpm.Settings.UserSettings settings, bool reinit)
         {
-            if (Manager.Opties?._viewwerkplekdata != null)
-                xwerkpleklist.RestoreState(Manager.Opties.ViewDataWerkplekState);
+            LoadLayout();
         }
 
         public void SaveLayout()
         {
+            if (this.IsDisposed || this.Disposing || xwerkpleklist == null || xwerkpleklist.IsDisposed) return;
             if (Manager.Opties == null) return;
-            Manager.Opties.ViewDataWerkplekState = xwerkpleklist.SaveState();
+            if (xwerkpleklist.InvokeRequired)
+                xwerkpleklist.Invoke(new MethodInvoker(() =>
+                    Manager.Opties.ViewDataWerkplekState = xwerkpleklist.SaveState()));
+            else Manager.Opties.ViewDataWerkplekState = xwerkpleklist.SaveState();
+
         }
 
         private void Manager_FilterChanged(object sender, EventArgs e)

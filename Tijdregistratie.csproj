@@ -396,6 +396,12 @@
     <Compile Include="Forms\ChangeSizeForm.Designer.cs">
       <DependentUpon>ChangeSizeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Chat\ChatForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Chat\ChatForm.Designer.cs">
+      <DependentUpon>ChatForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Combineer\CombineerPeriodeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -637,11 +643,11 @@
       <DependentUpon>BewerkingSelectorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Charting\ChartAantalSerie.cs" />
-    <Compile Include="Forms\ChatForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Forms\Chat\ProductieChatUI.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\ChatForm.Designer.cs">
-      <DependentUpon>ChatForm.cs</DependentUpon>
+    <Compile Include="Forms\Chat\ProductieChatUI.Designer.cs">
+      <DependentUpon>ProductieChatUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ColorPickerForm.cs">
       <SubType>Form</SubType>
@@ -1463,6 +1469,9 @@
     <EmbeddedResource Include="Forms\ChangeSizeForm.resx">
       <DependentUpon>ChangeSizeForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Chat\ChatForm.resx">
+      <DependentUpon>ChatForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Combineer\CombineerPeriodeForm.resx">
       <DependentUpon>CombineerPeriodeForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1577,8 +1586,8 @@
     <EmbeddedResource Include="Forms\BewerkingSelectorForm.resx">
       <DependentUpon>BewerkingSelectorForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ChatForm.resx">
-      <DependentUpon>ChatForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Chat\ProductieChatUI.resx">
+      <DependentUpon>ProductieChatUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ColorPickerForm.resx">
       <DependentUpon>ColorPickerForm.cs</DependentUpon>
@@ -2024,6 +2033,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\chat-26_icon_96x96.png" />
     <None Include="Resources\Edit_color_32x32.png" />
     <None Include="Resources\photos-Outling_32x32.png" />
     <None Include="Resources\photo-photography-image_32x32.png" />
@@ -2350,6 +2360,7 @@
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Code to merge the assemblies into one:setup.exe -->
 </Project>

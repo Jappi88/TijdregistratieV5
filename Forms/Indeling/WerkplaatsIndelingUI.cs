@@ -98,9 +98,7 @@ namespace Forms
             {
                 try
                 {
-                    var valid = false;
-                    Invoke(new MethodInvoker(() => valid = !IsDisposed));
-                    if (!valid) return;
+                    if (Disposing || IsDisposed) return;
                     xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = true; }));
                     var cur = 0;
                     var xwv = "Indeling laden";
@@ -123,9 +121,8 @@ namespace Forms
                         Application.DoEvents();
                         tries++;
                         cur++;
-                        Invoke(new MethodInvoker(() => valid = !IsDisposed));
-                        if (!valid) break;
                     }
+                    if (Disposing || IsDisposed) return;
                     xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
                 }
                 catch (Exception e)

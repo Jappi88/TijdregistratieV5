@@ -21,6 +21,8 @@ namespace Forms
         {
             InitializeComponent();
             SaveLastSize = false;
+            MinimizeBox = false;
+            StartPosition = FormStartPosition.CenterScreen;
         }
 
         public string SelectedValue => (string) xchooser.SelectedItem;
@@ -88,6 +90,7 @@ namespace Forms
             Image customImage = null, MetroColorStyle style = MetroColorStyle.Default)
         {
             Text = title;
+            StartPosition = FormStartPosition.CenterScreen;
             xmessage.Text = message;
             var maxSize = new Size(xmessage.Width, int.MaxValue);
             var textheight = TextRenderer.MeasureText(xmessage.Text, xmessage.Font, maxSize).Height;
@@ -262,7 +265,7 @@ namespace Forms
                 Width = form.Width;
                 BackColor = form.BackColor;
             }
-            TopMost = false;
+            TopMost = true;
             ShowInTaskbar = false;
             this.Invalidate();
             BringToFront();

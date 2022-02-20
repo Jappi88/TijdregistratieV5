@@ -3,7 +3,7 @@ using TheArtOfDev.HtmlRenderer.WinForms;
 
 namespace ProductieManager.Forms
 {
-    partial class ChatForm
+    partial class ProductieChatUI
     {
         /// <summary>
         /// Required designer variable.
@@ -32,7 +32,6 @@ namespace ProductieManager.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChatForm));
             this.panel1 = new System.Windows.Forms.Panel();
             this.xuserlist = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -51,8 +50,6 @@ namespace ProductieManager.Forms
             this.panel2 = new System.Windows.Forms.Panel();
             this.xsendbutton = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.menuStrip2 = new System.Windows.Forms.MenuStrip();
-            this.xselecteduserprofilebutton = new System.Windows.Forms.ToolStripMenuItem();
             this.xselecteduserdate = new System.Windows.Forms.Label();
             this.xselecteduserstatusimage = new System.Windows.Forms.PictureBox();
             this.xselecteduserstatus = new System.Windows.Forms.Label();
@@ -69,7 +66,6 @@ namespace ProductieManager.Forms
             this.menuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
-            this.menuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xselecteduserstatusimage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xselecteduserimage)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -82,7 +78,7 @@ namespace ProductieManager.Forms
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(250, 420);
+            this.panel1.Size = new System.Drawing.Size(250, 471);
             this.panel1.TabIndex = 3;
             // 
             // xuserlist
@@ -105,7 +101,7 @@ namespace ProductieManager.Forms
             this.xuserlist.Name = "xuserlist";
             this.xuserlist.ShowGroups = false;
             this.xuserlist.ShowItemToolTips = true;
-            this.xuserlist.Size = new System.Drawing.Size(250, 348);
+            this.xuserlist.Size = new System.Drawing.Size(250, 399);
             this.xuserlist.SmallImageList = this.xuserimages;
             this.xuserlist.TabIndex = 9;
             this.xuserlist.TileSize = new System.Drawing.Size(240, 68);
@@ -254,7 +250,7 @@ namespace ProductieManager.Forms
             this.xchattextbox.MinimumSize = new System.Drawing.Size(4, 30);
             this.xchattextbox.Multiline = true;
             this.xchattextbox.Name = "xchattextbox";
-            this.xchattextbox.Size = new System.Drawing.Size(461, 51);
+            this.xchattextbox.Size = new System.Drawing.Size(476, 51);
             this.xchattextbox.TabIndex = 4;
             this.xchattextbox.Text = "Typ bericht...";
             this.toolTip1.SetToolTip(this.xchattextbox, "Type in een bericht...");
@@ -269,10 +265,10 @@ namespace ProductieManager.Forms
             this.panel2.Controls.Add(this.xchattextbox);
             this.panel2.Controls.Add(this.xsendbutton);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(3, 288);
+            this.panel2.Location = new System.Drawing.Point(3, 339);
             this.panel2.MinimumSize = new System.Drawing.Size(0, 25);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(546, 57);
+            this.panel2.Size = new System.Drawing.Size(561, 57);
             this.panel2.TabIndex = 5;
             // 
             // xsendbutton
@@ -280,7 +276,7 @@ namespace ProductieManager.Forms
             this.xsendbutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xsendbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xsendbutton.Image = global::ProductieManager.Properties.Resources.ic_send_128_28719;
-            this.xsendbutton.Location = new System.Drawing.Point(467, 28);
+            this.xsendbutton.Location = new System.Drawing.Point(482, 28);
             this.xsendbutton.Name = "xsendbutton";
             this.xsendbutton.Size = new System.Drawing.Size(76, 26);
             this.xsendbutton.TabIndex = 5;
@@ -291,7 +287,6 @@ namespace ProductieManager.Forms
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.AliceBlue;
-            this.panel4.Controls.Add(this.menuStrip2);
             this.panel4.Controls.Add(this.xselecteduserdate);
             this.panel4.Controls.Add(this.xselecteduserstatusimage);
             this.panel4.Controls.Add(this.xselecteduserstatus);
@@ -300,31 +295,8 @@ namespace ProductieManager.Forms
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(250, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(552, 72);
+            this.panel4.Size = new System.Drawing.Size(567, 72);
             this.panel4.TabIndex = 9;
-            // 
-            // menuStrip2
-            // 
-            this.menuStrip2.AutoSize = false;
-            this.menuStrip2.BackColor = System.Drawing.Color.Transparent;
-            this.menuStrip2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.menuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.xselecteduserprofilebutton});
-            this.menuStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.menuStrip2.Location = new System.Drawing.Point(499, 0);
-            this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(53, 72);
-            this.menuStrip2.TabIndex = 15;
-            this.menuStrip2.Text = "menuStrip2";
-            // 
-            // xselecteduserprofilebutton
-            // 
-            this.xselecteduserprofilebutton.BackColor = System.Drawing.Color.Transparent;
-            this.xselecteduserprofilebutton.Image = global::ProductieManager.Properties.Resources.icons8_Menu_Vertical_32;
-            this.xselecteduserprofilebutton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xselecteduserprofilebutton.Name = "xselecteduserprofilebutton";
-            this.xselecteduserprofilebutton.Size = new System.Drawing.Size(44, 68);
-            this.xselecteduserprofilebutton.Visible = false;
             // 
             // xselecteduserdate
             // 
@@ -393,7 +365,7 @@ namespace ProductieManager.Forms
             this.xchatpanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xchatpanel.Location = new System.Drawing.Point(3, 3);
             this.xchatpanel.Name = "xchatpanel";
-            this.xchatpanel.Size = new System.Drawing.Size(546, 279);
+            this.xchatpanel.Size = new System.Drawing.Size(561, 330);
             this.xchatpanel.TabIndex = 0;
             this.xchatpanel.Text = null;
             this.xchatpanel.LinkClicked += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlLinkClickedEventArgs>(this.xchatpanel_LinkClicked);
@@ -413,28 +385,20 @@ namespace ProductieManager.Forms
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 63F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(552, 348);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(567, 399);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // ChatForm
+            // ProductieChatUI
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.AliceBlue;
-            this.ClientSize = new System.Drawing.Size(802, 420);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel1);
             this.DoubleBuffered = true;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(135, 163);
-            this.Name = "ChatForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Productie Chat";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ChatForm_FormClosing);
-            this.Load += new System.EventHandler(this.ChatForm_Load);
-            this.Shown += new System.EventHandler(this.ChatForm_Shown);
+            this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Name = "ProductieChatUI";
+            this.Size = new System.Drawing.Size(817, 471);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xuserlist)).EndInit();
             this.panel3.ResumeLayout(false);
@@ -447,8 +411,6 @@ namespace ProductieManager.Forms
             this.panel2.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
-            this.menuStrip2.ResumeLayout(false);
-            this.menuStrip2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xselecteduserstatusimage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xselecteduserimage)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -481,8 +443,6 @@ namespace ProductieManager.Forms
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem wijzigProfielFotoToolStripMenuItem;
-        private System.Windows.Forms.MenuStrip menuStrip2;
-        private System.Windows.Forms.ToolStripMenuItem xselecteduserprofilebutton;
         private HtmlPanel xchatpanel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }

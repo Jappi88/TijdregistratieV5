@@ -47,18 +47,18 @@ namespace Controls
 
         private void StartWaiting()
         {
-            if (_IsWaiting) return;
+            if (_IsWaiting || !Visible) return;
             _IsWaiting = true;
             Task.Run(async () =>
             {
                 var cur = 0;
                 var xvalue = "Producties Laden.";
-                BeginInvoke(new MethodInvoker(() => xstatus.Visible = true));
+                xstatus.BeginInvoke(new MethodInvoker(() => xstatus.Visible = true));
                 while (_IsWaiting && !IsDisposed)
                     try
                     {
                         var xcur = cur;
-                        BeginInvoke(new MethodInvoker(() => xstatus.Text = xvalue.PadRight(xvalue.Length + xcur, '.')));
+                        xstatus.BeginInvoke(new MethodInvoker(() => xstatus.Text = xvalue.PadRight(xvalue.Length + xcur, '.')));
                         cur++;
                         if (cur > 5) cur = 0;
                         await Task.Delay(350);
@@ -67,7 +67,7 @@ namespace Controls
                     {
                     }
 
-                BeginInvoke(new MethodInvoker(() => xstatus.Visible = false));
+                xstatus.BeginInvoke(new MethodInvoker(() => xstatus.Visible = false));
                 _IsWaiting = false;
             });
         }

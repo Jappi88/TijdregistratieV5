@@ -68,19 +68,22 @@ namespace Controls
 
         private void Manager_OnSettingsChanged(object instance, Rpm.Settings.UserSettings settings, bool reinit)
         {
-            if(!settings.GebruikTaken || Manager.LogedInGebruiker == null)
-            {
-                Taken.Clear();
-                xtakenlijst.SetObjects(Taken);
-                UpdateStatus();
-                DetachEvents();
-            }
-            else if(settings.GebruikTaken && Manager.LogedInGebruiker != null)
+            if (this.IsDisposed || this.Disposing) return;
+            this.BeginInvoke(new MethodInvoker(() =>
             {
                 DetachEvents();
-                UpdateAllTaken();
-                InitEvents();
-            }
+                if (!settings.GebruikTaken || Manager.LogedInGebruiker == null)
+                {
+                    Taken.Clear();
+                    xtakenlijst.SetObjects(Taken);
+                    UpdateStatus();
+                }
+                else if (settings.GebruikTaken && Manager.LogedInGebruiker != null)
+                {
+                    UpdateAllTaken();
+                    InitEvents();
+                }
+            }));
         }
 
         private void Manager_OnFormulierDeleted(object sender, string id)

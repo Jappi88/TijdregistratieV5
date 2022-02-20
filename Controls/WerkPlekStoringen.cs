@@ -192,7 +192,15 @@ namespace Controls
             UpdateButtonEnable();
         }
 
-        public void UpdateButtonEnable()
+        private void UpdateButtonEnable()
+        {
+            if (this.IsDisposed || this.Disposing) return;
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(xUpdateButtonEnable));
+            else xUpdateButtonEnable();
+        }
+
+        public void xUpdateButtonEnable()
         {
             var acces1 = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
             var selected1 = xskillview.SelectedObjects.Count == 1;
@@ -205,6 +213,14 @@ namespace Controls
         }
 
         private void UpdateHeaderLabel()
+        {
+            if (this.IsDisposed || this.Disposing) return;
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(xUpdateHeaderLabel));
+            else xUpdateHeaderLabel();
+        }
+
+        private void xUpdateHeaderLabel()
         {
             if (!Plek.IsDefault())
             {
@@ -240,6 +256,14 @@ namespace Controls
         }
 
         private void UpdateStatusLabel()
+        {
+            if (this.IsDisposed || this.Disposing) return;
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(xUpdateStatusLabel));
+            else xUpdateStatusLabel();
+        }
+
+        private void xUpdateStatusLabel()
         {
             if (xskillview.SelectedObjects.Count > 0)
             {

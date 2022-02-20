@@ -413,6 +413,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap chat_26_icon_96x96 {
+            get {
+                object obj = ResourceManager.GetObject("chat_26_icon_96x96", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap check_1582 {
             get {
                 object obj = ResourceManager.GetObject("check_1582", resourceCulture);

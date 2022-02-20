@@ -174,6 +174,28 @@ namespace Controls
                 return null;
             }
         }
+        public Tile GetTile(string name)
+        {
+            try
+            {
+                var xcontrols = Controls.Cast<Control>().ToList();
+                for (int i = 0; i < xcontrols.Count; i++)
+                {
+                    var xcon = xcontrols[i];
+                    if (xcon is Tile { Tag: TileInfoEntry xinfo } xtile)
+                        if (string.Equals(name,xinfo.Name, StringComparison.CurrentCultureIgnoreCase))
+                            return xtile;
+                }
+
+                return null;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
 
         public List<Tile> GetAllTiles()
         {

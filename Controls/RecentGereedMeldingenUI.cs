@@ -100,7 +100,7 @@ namespace Controls
 
         public void DetachEvents()
         {
-            Manager.OnSettingsChanged += Manager_OnSettingsChanged;
+            Manager.OnSettingsChanged -= Manager_OnSettingsChanged;
             productieListControl1.InitEvents();
         }
 
@@ -111,6 +111,7 @@ namespace Controls
 
         private void Manager_OnSettingsChanged(object instance, UserSettings settings, bool reinit)
         {
+            if (this.Disposing || this.IsDisposed) return;
             UpdateGereedProducties();
         }
 

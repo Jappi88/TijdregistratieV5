@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32.SafeHandles;
+﻿using MetroFramework;
+using Microsoft.Win32.SafeHandles;
 using ProductieManager.Rpm.ExcelHelper;
 using ProductieManager.Rpm.Productie;
 using ProductieManager.Rpm.Productie.Verpakking;
@@ -8,6 +9,7 @@ using Rpm.Klachten;
 using Rpm.Mailing;
 using Rpm.Misc;
 using Rpm.Opmerking;
+using Rpm.Productie.Verpakking;
 using Rpm.Settings;
 using Rpm.SqlLite;
 using Rpm.Various;
@@ -21,9 +23,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MetroFramework;
-using Rpm.Controls;
-using Rpm.Productie.Verpakking;
 using Timer = System.Timers.Timer;
 
 namespace Rpm.Productie
@@ -1519,7 +1518,10 @@ namespace Rpm.Productie
                 if (Opties?.SyncLocaties != null)
                 {
                     foreach (var s in Opties.SyncLocaties)
-                        files.AddRange(Directory.GetFiles(s, "*.pdf").Where(t => !t.Contains("_old")).ToArray());
+                    {
+                        if (Directory.Exists(s))
+                            files.AddRange(Directory.GetFiles(s, "*.pdf").Where(t => !t.Contains("_old")).ToArray());
+                    }
                     if (files.Count > 0)
                     {
                         AddProductie(files.ToArray(),false, true, false);

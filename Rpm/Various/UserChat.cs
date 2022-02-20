@@ -81,6 +81,11 @@ namespace ProductieManager.Rpm.Various
             return GetMessagesFromAfzender(null, true);
         }
 
+        public List<ProductieChatEntry> GetAllMessages()
+        {
+            return GetMessagesFromAfzender(null, false);
+        }
+
         public bool Save()
         {
             try

@@ -139,11 +139,15 @@ namespace Forms
 
         private void _manager_OnSettingsChanged(object instance, UserSettings settings, bool init)
         {
+            if (this.Disposing || this.IsDisposed) return;
             var user = Manager.LogedInGebruiker;
-            if (user == null || user.AccesLevel <= AccesType.AlleenKijken)
+            if (user is not {AccesLevel: > AccesType.AlleenKijken})
             {
                 DetachEvents();
-                Close();
+                if (this.InvokeRequired)
+                    this.Invoke(new MethodInvoker(Close));
+                else
+                    Close();
             }
             else productieForm1.OnSettingChanged(instance, settings, init);
         }

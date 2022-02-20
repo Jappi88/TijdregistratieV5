@@ -390,11 +390,8 @@ namespace Controls
             {
                 try
                 {
-                    var valid = false;
-                    Invoke(new MethodInvoker(() => valid = !IsDisposed));
+                    if (Disposing || IsDisposed) return;
                     xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = true; }));
-
-                    if (!valid) return;
 
                     var cur = 0;
                     var xwv = IsBewerkingView ? "Bewerkingen Laden" : "Producties laden";
@@ -403,6 +400,7 @@ namespace Controls
                     while (_iswaiting && tries < 200)
                     {
                         if (cur > 5) cur = 0;
+                        if (Disposing || IsDisposed) return;
                         var curvalue = xwv.PadRight(xwv.Length + cur, '.');
                         //xcurvalue = curvalue;
                         xloadinglabel.BeginInvoke(new MethodInvoker(() =>
@@ -416,9 +414,6 @@ namespace Controls
                         Application.DoEvents();
                         tries++;
                         cur++;
-                        Invoke(new MethodInvoker(() => valid = !IsDisposed));
-
-                        if (!valid) break;
                     }
 
 
@@ -426,7 +421,7 @@ namespace Controls
                 catch (Exception e)
                 {
                 }
-
+                if (Disposing || IsDisposed) return;
                 xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
             });
         }
@@ -720,7 +715,10 @@ namespace Controls
             if (sender is ExcelSettings settings)
             {
                 if (settings.IsUsed(ListName))
-                    this.BeginInvoke(new Action(InitColumns));
+                {
+                    if (!this.IsDisposed)
+                        this.BeginInvoke(new Action(InitColumns));
+                }
             }
         }
 
@@ -1458,10 +1456,9 @@ namespace Controls
         {
             try
             {
-                if (!init) return;
+                if (!init || IsDisposed || Disposing) return;
                 BeginInvoke(new MethodInvoker(() =>
                 {
-                    if (IsDisposed) return;
                     //InitColumns();
                     if (CanLoad)
                         UpdateProductieList(true, true);

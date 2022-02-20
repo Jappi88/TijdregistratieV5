@@ -55,7 +55,10 @@ namespace Controls
             try
             {
                 UpdateBereik();
-                InitStoringen();
+                if (this.IsDisposed || this.Disposing) return;
+                if (InvokeRequired)
+                    this.BeginInvoke(new MethodInvoker(()=> InitStoringen()));
+                else InitStoringen();
             }
             catch (Exception e)
             {

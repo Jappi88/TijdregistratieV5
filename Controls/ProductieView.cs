@@ -199,15 +199,15 @@ namespace Controls
             };
             xprodlist.OnRequestOpenWerk += WerkPlekkenUI1_OnRequestOpenWerk;
             xprodlist.Name = entry.Name;
-            xprodlist.InitUI(_manager);
-            xprodlist.LoadPlekken(true);
-            xprodlist.InitEvents();
             xtabpage.Controls.Add(xprodlist);
             metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
             metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
+            xprodlist.InitUI(_manager);
+            xprodlist.LoadPlekken(true);
+            xprodlist.InitEvents();
             UpdateTileViewed(entry, true);
         }
 
@@ -237,13 +237,13 @@ namespace Controls
                 }
             };
             xprodlist.Name = entry.Name;
-            xprodlist.LoadBewerkingen();
             xtabpage.Controls.Add(xprodlist);
             metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
             metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
+            xprodlist.LoadBewerkingen();
             UpdateTileViewed(entry, true);
         }
 
@@ -397,13 +397,14 @@ namespace Controls
                 if (xprodlist.Parent is MetroTabPage page)
                     metroCustomTabControl1.CloseTab(page);
             };
-            xprodlist.InitUI();
+           
             xtabpage.Controls.Add(xprodlist);
             metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
             metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
+            xprodlist.InitUI();
             UpdateTileViewed(entry, true);
         }
 
@@ -427,7 +428,7 @@ namespace Controls
                 if (xprodlist.Parent is MetroTabPage page)
                     metroCustomTabControl1.CloseTab(page);
             };
-            xprodlist.InitUI();
+          
             xprodlist.InitStoringen();
             xtabpage.Controls.Add(xprodlist);
             metroCustomTabControl1.SuspendLayout();
@@ -435,6 +436,7 @@ namespace Controls
             metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
+            xprodlist.InitUI();
             UpdateTileViewed(entry, true);
         }
 
@@ -458,13 +460,14 @@ namespace Controls
                 if (xprodlist.Parent is MetroTabPage page)
                     metroCustomTabControl1.CloseTab(page);
             };
-            xprodlist.InitUI();
+         
             xtabpage.Controls.Add(xprodlist);
             metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
             metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
+            xprodlist.InitUI();
             UpdateTileViewed(entry, true);
         }
 
@@ -484,13 +487,14 @@ namespace Controls
             xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
             xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             xprodlist.Name = entry.Name;
-            xprodlist.InitUI();
+           
             xtabpage.Controls.Add(xprodlist);
             metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
             metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
+            xprodlist.InitUI();
             UpdateTileViewed(entry, true);
         }
 
@@ -509,13 +513,14 @@ namespace Controls
             xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
             xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             xprodlist.Name = entry.Name;
-            xprodlist.InitUI();
+          
             xtabpage.Controls.Add(xprodlist);
             metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
             metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
+            xprodlist.InitUI();
             UpdateTileViewed(entry, true);
         }
 
@@ -534,13 +539,14 @@ namespace Controls
             xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
             xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             xprodlist.Name = entry.Name;
-            xprodlist.InitUI();
+          
             xtabpage.Controls.Add(xprodlist);
             metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
             metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
+            xprodlist.InitUI();
             UpdateTileViewed(entry, true);
         }
 
@@ -559,13 +565,13 @@ namespace Controls
             xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
             xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             xprodlist.Name = entry.Name;
-            xprodlist.InitUI();
             xtabpage.Controls.Add(xprodlist);
             metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
             metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
+            xprodlist.InitUI();
             UpdateTileViewed(entry, true);
         }
 
@@ -589,13 +595,14 @@ namespace Controls
                 if (xprodlist.Parent is MetroTabPage page)
                     metroCustomTabControl1.CloseTab(page);
             };
-            xprodlist.InitUI();
+           
             xtabpage.Controls.Add(xprodlist);
             metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
             metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
+            xprodlist.InitUI();
             UpdateTileViewed(entry, true);
         }
 
@@ -651,13 +658,13 @@ namespace Controls
             xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
             xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             xprodlist.Name = entry.Name;
-            xprodlist.InitUI();
             xtabpage.Controls.Add(xprodlist);
             metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
             metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
+            xprodlist.InitUI();
             UpdateTileViewed(entry, true);
         }
 
@@ -676,13 +683,14 @@ namespace Controls
             xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
             xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             xprodlist.Name = entry.Name;
-            xprodlist.InitUI();
+           
             xtabpage.Controls.Add(xprodlist);
             metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
             metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
+            xprodlist.InitUI();
             UpdateTileViewed(entry, true);
         }
         private void InitChartsTab(TileInfoEntry entry, bool select)
@@ -700,14 +708,45 @@ namespace Controls
             xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
             xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             xprodlist.Name = entry.Name;
-            xprodlist.LoadData();
+            
             xtabpage.Controls.Add(xprodlist);
             metroCustomTabControl1.SuspendLayout();
             metroCustomTabControl1.TabPages.Add(xtabpage);
             metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
+            xprodlist.LoadData();
             UpdateTileViewed(entry, true);
+        }
+
+        private void InitChatTab(TileInfoEntry entry, bool select, string username = null)
+        {
+            if (CheckTab(entry, select))
+                return;
+            var xtabpage = new MetroTabPage();
+            xtabpage.Padding = new Padding(5);
+            xtabpage.Text = entry.Text + "    ";
+            xtabpage.Tag = entry;
+            var xprodlist = new ProductieChatUI();
+            xprodlist._Selected = username;
+            xprodlist.AutoScroll = true;
+            xprodlist.BackColor = System.Drawing.Color.White;
+            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.Name = entry.Name;
+
+            xtabpage.Controls.Add(xprodlist);
+            metroCustomTabControl1.SuspendLayout();
+            metroCustomTabControl1.TabPages.Add(xtabpage);
+            metroCustomTabControl1.ResumeLayout(false);
+            if (select)
+                metroCustomTabControl1.SelectedTab = xtabpage;
+            if (!xprodlist.InitUI())
+            {
+                metroCustomTabControl1.TabPages.Remove(xtabpage);
+                UpdateTileViewed(entry, false);
+            }
+            else UpdateTileViewed(entry, true);
         }
 
         private void CloseTabPage(object sender)
@@ -770,6 +809,11 @@ namespace Controls
                 {
                     overzicht.CloseUI();
                 }
+                else if (xcontrol is ProductieChatUI xchat)
+                {
+                    xchat.CloseUI();
+                }
+
 
                 if (page.Tag is TileInfoEntry info)
                     UpdateTileViewed(info, false);
@@ -885,6 +929,9 @@ namespace Controls
                     case "xbeheerfilters":
                         ShowFilterForm();
                         break;
+                    case "xchat":
+                        InitChatTab(entry, select);
+                        break;
                     default:
                         switch (entry.GroupName.ToLower())
                         {
@@ -916,11 +963,15 @@ namespace Controls
             {
                 if (sender is TileViewer viewer)
                 {
+
                     var xtiles = viewer.GetAllTiles().Where(x => x.Tag is TileInfoEntry {IsViewed: true}).ToList();
                     foreach (var xt in xtiles)
                     {
                         if (xt.Tag is TileInfoEntry entry)
+                        {
                             ShowTileTabPage(entry, false);
+                            Application.DoEvents();
+                        }
                     }
                 }
             }
@@ -930,6 +981,7 @@ namespace Controls
                 throw;
             }
         }
+
         #endregion Tab Buttons
 
         public void LoadManager(string path, bool disposeOld, bool autologin = true)
@@ -1837,6 +1889,10 @@ namespace Controls
                 {
                     switch (menubutton.Name.ToLower())
                     {
+                        case "xhome":
+                            if (metroCustomTabControl1.TabCount > 0)
+                                metroCustomTabControl1.SelectedIndex = 0;
+                            break;
                         case "xniewproductie":
                             if (Manager.Database?.ProductieFormulieren == null)
                             {
@@ -2308,7 +2364,7 @@ namespace Controls
         public void UpdateUnreadMessages(UserChat user)
         {
             if (this.InvokeRequired)
-                BeginInvoke(new Action(xUpdateUnreadMessages));
+                Invoke(new Action(xUpdateUnreadMessages));
             else xUpdateUnreadMessages();
         }
 
@@ -2318,15 +2374,27 @@ namespace Controls
             {
                 if (ProductieChat.Chat == null) return;
                 var unread = ProductieChat.Chat.GetAllUnreadMessages();
+                var xtile = tileMainView1.GetTile("xchat");
                 if (unread.Count > 0)
                 {
                     var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White,
                         unread.Count.ToString(),
                         new Font("Ariel", 16, FontStyle.Bold), Color.DarkRed);
                     xchatformbutton.Image = Resources.conversation_chat_32x321.CombineImage(ximg, 1.75);
+
+                    if (xtile is {Tag: TileInfoEntry entry})
+                    {
+                        entry.SecondaryImage = ximg;
+                        xtile.UpdateTile(entry);
+                    }
                 }
                 else
                 {
+                    if (xtile is {Tag: TileInfoEntry entry})
+                    {
+                        entry.SecondaryImage = null;
+                        xtile.UpdateTile(entry);
+                    }
                     xchatformbutton.Image = Resources.conversation_chat_32x321;
                 }
 
@@ -2342,6 +2410,15 @@ namespace Controls
                 }
                 else if (unread.Count > 0 && ShowUnreadMessage)
                 {
+                    if (_unreadMessages != null && !_unreadMessages.IsDisposed)
+                    {
+                        if (!_unreadMessages.Visible)
+                            _unreadMessages.Show();
+                        _unreadMessages.BringToFront();
+                        _unreadMessages.Select();
+                        _unreadMessages.Focus();
+                        return;
+                    }
                     _unreadMessages?.Dispose();
                     var names = new List<string>();
                     foreach (var msg in unread.Where(msg => msg.Afzender != null && !names.Any(x =>
@@ -2357,6 +2434,8 @@ namespace Controls
                         bttns.Add("OK", DialogResult.OK);
                         bttns.Add("Toon Bericht", DialogResult.Yes);
                         _unreadMessages = new XMessageBox();
+                        _unreadMessages.StartPosition = FormStartPosition.CenterParent;
+                        _unreadMessages.Location = new Point(0, this.Height / 2);
                         var result = _unreadMessages.ShowDialog(
                             this, $"Je hebt {unread.Count} ongelezen {xv} van {string.Join(", ", names)}",
                             $"{unread.Count} ongelezen berichten", MessageBoxButtons.OK, MessageBoxIcon.None, null,
@@ -2364,7 +2443,15 @@ namespace Controls
                         _unreadMessages?.Dispose();
                         _unreadMessages = null;
                         if (result == DialogResult.Yes)
-                            ShowChatWindow(iedereen ? "Iedereen" : names[0]);
+                        {
+                            xtile = tileMainView1.GetTile("xchat");
+                            if (xtile is { Tag: TileInfoEntry entry})
+                            {
+                                InitChatTab(entry, true, iedereen ? "Iedereen" : names[0]);
+                            }
+                            else
+                                ShowChatWindow(iedereen ? "Iedereen" : names[0]);
+                        }
                     }
                 }
             }
@@ -2719,6 +2806,10 @@ namespace Controls
                 xver.UpdateFields(true);
                 xver.MaxUitgangsLengte = 12450;
                 xver.RestStuk = 50;
+                xver.CloseClicked += (x, y) =>
+                {
+                    _berekenverbruik.Close();
+                };
                 _berekenverbruik.Controls.Add(xver);
                 _berekenverbruik.FormClosed += (x, y) =>
                 {
