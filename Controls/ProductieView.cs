@@ -2384,6 +2384,7 @@ namespace Controls
 
                     if (xtile is {Tag: TileInfoEntry entry})
                     {
+                        entry.TileCount = ProductieChat.Gebruikers.Count(x=> x.IsOnline && x.UserName.ToLower() != "iedereen");
                         entry.SecondaryImage = ximg;
                         xtile.UpdateTile(entry);
                     }
@@ -2392,6 +2393,7 @@ namespace Controls
                 {
                     if (xtile is {Tag: TileInfoEntry entry})
                     {
+                        entry.TileCount = ProductieChat.Gebruikers.Count(x => x.IsOnline && x.UserName.ToLower() != "iedereen");
                         entry.SecondaryImage = null;
                         xtile.UpdateTile(entry);
                     }

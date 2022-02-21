@@ -252,7 +252,7 @@ namespace Controls.TileView
                         entry.TileCount = Manager.Opties?.Filters?.Count ?? 0;
                         break;
                     case "xchat":
-                        entry.TileCount = ProductieChat.Gebruikers.Count(x=> x.IsOnline);
+                        entry.TileCount = ProductieChat.Gebruikers.Count(x=> x.IsOnline && x.UserName.ToLower() != "iedereen");
                         var xunread = ProductieChat.Chat?.GetAllUnreadMessages().Count ?? 0;
                         if (xunread > 0)
                         {

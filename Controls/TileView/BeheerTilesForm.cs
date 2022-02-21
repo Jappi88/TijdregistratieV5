@@ -61,7 +61,7 @@ namespace Controls
                 var xtile = xtiles.FirstOrDefault(x => x.Equals(entry));
                 if (xtile == null)
                 {
-                    var xname = entry.Text.Trim().Replace(" ", "_");
+                    var xname = entry.Name.Trim().Replace(" ", "_");
                     int count = xtiles.Count(x =>
                         string.Equals(xname, x.Name, StringComparison.CurrentCultureIgnoreCase));
                     if(count > 0)

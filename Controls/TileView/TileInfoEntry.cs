@@ -115,7 +115,7 @@ namespace Controls
         public override bool Equals(object obj)
         {
             if (obj is TileInfoEntry entry)
-                return entry.ID == ID;
+                return entry.ID == ID || string.Equals(Name, entry.Name, StringComparison.CurrentCultureIgnoreCase);
                // return string.Equals(Name, entry.Name, StringComparison.CurrentCultureIgnoreCase);
             return false;
         }
