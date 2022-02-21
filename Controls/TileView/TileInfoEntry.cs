@@ -1,9 +1,9 @@
-﻿using Polenter.Serialization;
+﻿using System;
+using System.Drawing;
+using Polenter.Serialization;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Various;
-using System;
-using System.Drawing;
 
 namespace Controls
 {
@@ -18,6 +18,12 @@ namespace Controls
 
     public class TileInfoEntry
     {
+        public TileInfoEntry()
+        {
+            Name = "xTile";
+            ID = Functions.GenerateRandomID();
+        }
+
         public int TileCount { get; set; }
         public bool EnableTileCount { get; set; } = true;
         public string Name { get; set; }
@@ -25,21 +31,23 @@ namespace Controls
         public string GroupName { get; set; }
         public int ID { get; set; }
         public int LinkID { get; set; } = -1;
-        public Size Size { get; set; } = new Size(256, 128);
-        public Size ImageSize { get; set; } = new Size(64, 64);
+        public Size Size { get; set; } = new(256, 128);
+        public Size ImageSize { get; set; } = new(64, 64);
         public ResizeMode ImageResize { get; set; } = ResizeMode.Auto;
         public bool IsDefault { get; set; }
         public bool IsViewed { get; set; }
         public AccesType AccesLevel { get; set; } = AccesType.AlleenKijken;
         public int TileIndex { get; set; }
+
         [ExcludeFromSerialization]
         public Color TileColor
         {
             get => Color.FromArgb(TileColorARgb);
             set => TileColorARgb = value.ToArgb();
         }
-        [ExcludeFromSerialization]
-        public Image SecondaryImage { get; set; }
+
+        [ExcludeFromSerialization] public Image SecondaryImage { get; set; }
+
         public int TileColorARgb { get; set; } = Color.CornflowerBlue.ToArgb();
 
         [ExcludeFromSerialization]
@@ -57,6 +65,7 @@ namespace Controls
         public string CountFontFamily { get; set; } = "Segoe UI";
         public int CountFontSize { get; set; } = 20;
         public FontStyle CountFontStyle { get; set; } = FontStyle.Bold;
+
         [ExcludeFromSerialization]
         public Image TileImage
         {
@@ -87,7 +96,6 @@ namespace Controls
             {
                 var img = ImageData.ImageFromBytes();
                 if (img != null)
-                {
                     switch (ImageResize)
                     {
                         case ResizeMode.Custom:
@@ -95,7 +103,6 @@ namespace Controls
                         case ResizeMode.Auto:
                             return new Bitmap(img.ResizeImage(Size.Width / 4, (int) (Size.Height / 1.5m)));
                     }
-                }
 
                 return img;
             }
@@ -106,17 +113,11 @@ namespace Controls
             }
         }
 
-        public TileInfoEntry()
-        {
-            Name = "xTile";
-            ID = Functions.GenerateRandomID();
-        }
-
         public override bool Equals(object obj)
         {
             if (obj is TileInfoEntry entry)
                 return entry.ID == ID || string.Equals(Name, entry.Name, StringComparison.CurrentCultureIgnoreCase);
-               // return string.Equals(Name, entry.Name, StringComparison.CurrentCultureIgnoreCase);
+            // return string.Equals(Name, entry.Name, StringComparison.CurrentCultureIgnoreCase);
             return false;
         }
 

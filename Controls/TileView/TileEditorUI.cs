@@ -11,18 +11,19 @@ namespace Controls
 {
     public partial class TileEditorUI : UserControl
     {
-        public TileInfoEntry InfoEntry { get; set; }
-
-        public List<TileInfoEntry> Tiles => tileViewer1.GetAllTileEntries();
-        public FlowDirection Direction
-        {
-            get => tileViewer1.FlowDirection;
-            set=> tileViewer1.FlowDirection = value;
-        }
-
         public TileEditorUI()
         {
             InitializeComponent();
+        }
+
+        public TileInfoEntry InfoEntry { get; set; }
+
+        public List<TileInfoEntry> Tiles => tileViewer1.GetAllTileEntries();
+
+        public FlowDirection Direction
+        {
+            get => tileViewer1.FlowDirection;
+            set => tileViewer1.FlowDirection = value;
         }
 
         public void InitEntry(TileInfoEntry entry)
@@ -32,13 +33,12 @@ namespace Controls
             xafbeelding.Image = entry?.TileImage;
             xtextkleurimage.Image = entry?.ForeColor.ColorToImage(28, 28);
             xtilekleur.Image = entry?.TileColor.ColorToImage(28, 28);
-            xtoontelling.Checked = entry?.EnableTileCount??false;
-            xtilebreedte.SetValue(entry?.Size.Width??0);
-            xtilehoogte.SetValue(entry?.Size.Height??0);
+            xtoontelling.Checked = entry?.EnableTileCount ?? false;
+            xtilebreedte.SetValue(entry?.Size.Width ?? 0);
+            xtilehoogte.SetValue(entry?.Size.Height ?? 0);
             ximagebreedte.SetValue(entry?.ImageSize.Width ?? 0);
             ximagehoogte.SetValue(entry?.ImageSize.Height ?? 0);
             if (entry != null)
-            {
                 switch (entry.ImageResize)
                 {
                     case ResizeMode.None:
@@ -51,13 +51,13 @@ namespace Controls
                         xautocheckbox.Checked = true;
                         break;
                 }
-            }
+
             InfoEntry = entry;
             if (InfoEntry == null) return;
             UpdateTile();
         }
 
-        public void InitEntries(List<TileInfoEntry> entries,FlowDirection direction, TileInfoEntry selected = null)
+        public void InitEntries(List<TileInfoEntry> entries, FlowDirection direction, TileInfoEntry selected = null)
         {
             tileViewer1.EnableTileSelection = true;
             xtileview.Visible = true;
@@ -66,24 +66,22 @@ namespace Controls
             tileViewer1.LoadTiles(entries, selected);
         }
 
-        private void xomschrijving_TextChanged(object sender, System.EventArgs e)
+        private void xomschrijving_TextChanged(object sender, EventArgs e)
         {
             if (InfoEntry != null)
             {
                 InfoEntry.Text = xomschrijving.Text.Trim();
                 UpdateTile();
             }
-
         }
 
-        private void xtoontelling_CheckedChanged(object sender, System.EventArgs e)
+        private void xtoontelling_CheckedChanged(object sender, EventArgs e)
         {
             if (InfoEntry != null)
             {
                 InfoEntry.EnableTileCount = xtoontelling.Checked;
                 UpdateTile();
             }
-
         }
 
         private void UpdateTile()
@@ -91,10 +89,10 @@ namespace Controls
             if (InfoEntry == null) return;
             var xtile = tileViewer1.UpdateTile(InfoEntry);
             if (InfoEntry.EnableTileCount)
-                xtile.TileCount = InfoEntry.TileCount == 0? 123 : InfoEntry.TileCount;
+                xtile.TileCount = InfoEntry.TileCount == 0 ? 123 : InfoEntry.TileCount;
         }
 
-        private void xtilekleurbutton_Click(object sender, System.EventArgs e)
+        private void xtilekleurbutton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -118,7 +116,7 @@ namespace Controls
             }
         }
 
-        private void xtextkleur_Click(object sender, System.EventArgs e)
+        private void xtextkleur_Click(object sender, EventArgs e)
         {
             try
             {
@@ -142,7 +140,7 @@ namespace Controls
             }
         }
 
-        private void xtextfont_Click(object sender, System.EventArgs e)
+        private void xtextfont_Click(object sender, EventArgs e)
         {
             try
             {
@@ -157,7 +155,7 @@ namespace Controls
                     InfoEntry.ForeColor = xcolor;
                     xtextkleurimage.Image = xcolor.ColorToImage(28, 28);
                     InfoEntry.TextFontFamily = xd.Font.FontFamily.Name;
-                    InfoEntry.TextFontSize = (int)xd.Font.Size;
+                    InfoEntry.TextFontSize = (int) xd.Font.Size;
                     InfoEntry.TextFontStyle = xd.Font.Style;
                     UpdateTile();
                 }
@@ -168,7 +166,7 @@ namespace Controls
             }
         }
 
-        private void xtellingtextfont_Click(object sender, System.EventArgs e)
+        private void xtellingtextfont_Click(object sender, EventArgs e)
         {
             try
             {
@@ -183,7 +181,7 @@ namespace Controls
                     InfoEntry.ForeColor = xcolor;
                     xtextkleur.Image = xcolor.ColorToImage(28, 28);
                     InfoEntry.CountFontFamily = xd.Font.FontFamily.Name;
-                    InfoEntry.CountFontSize = (int)xd.Font.Size;
+                    InfoEntry.CountFontSize = (int) xd.Font.Size;
                     InfoEntry.CountFontStyle = xd.Font.Style;
                     UpdateTile();
                 }
@@ -194,7 +192,7 @@ namespace Controls
             }
         }
 
-        private void xformaatwijzigen_Click(object sender, System.EventArgs e)
+        private void xformaatwijzigen_Click(object sender, EventArgs e)
         {
             try
             {
@@ -215,7 +213,7 @@ namespace Controls
             }
         }
 
-        private void xafbeeldingbutton_Click(object sender, System.EventArgs e)
+        private void xafbeeldingbutton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -257,6 +255,7 @@ namespace Controls
                 else if (xautocheckbox.Checked)
                     InfoEntry.ImageResize = ResizeMode.Auto;
             }
+
             xformaatpanel.Visible = xaangepastcheckbox.Checked;
             UpdateTile();
         }
@@ -274,7 +273,7 @@ namespace Controls
         {
             if (InfoEntry != null)
             {
-                InfoEntry.Size = new Size((int)xtilebreedte.Value, (int)xtilehoogte.Value);
+                InfoEntry.Size = new Size((int) xtilebreedte.Value, (int) xtilehoogte.Value);
                 UpdateTile();
             }
         }

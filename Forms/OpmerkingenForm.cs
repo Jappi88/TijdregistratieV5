@@ -1,4 +1,13 @@
-﻿using Forms.Klachten;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using Forms.Klachten;
+using Forms.MetroBase;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Mailing;
@@ -6,19 +15,12 @@ using Rpm.Misc;
 using Rpm.Opmerking;
 using Rpm.Productie;
 using Rpm.Various;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class OpmerkingenForm : Forms.MetroBase.MetroBaseForm
+    public partial class OpmerkingenForm : MetroBaseForm
     {
-        public List<OpmerkingEntry> Opmerkingen { get; set; }
+        private readonly List<OpmerkingEntry> _removed = new();
 
         public OpmerkingenForm()
         {
@@ -39,6 +41,8 @@ namespace Forms
             xopmerkingimages.Images.Add(Resources.notekey_office_32x32);
             xOpmerkingenTree.SelectedImageIndex = xopmerkingimages.Images.Count - 1;
         }
+
+        public List<OpmerkingEntry> Opmerkingen { get; set; }
 
         public void LoadOpmerkingen(object selected = null)
         {
@@ -79,11 +83,9 @@ namespace Forms
                             index = xopmerkingimages.Images.Count - 1;
                         }
 
-                        if (index > 0)
-                        {
-                            AddNode(xbijlagenode, bijlage.Key, index, op);
-                        }
+                        if (index > 0) AddNode(xbijlagenode, bijlage.Key, index, op);
                     }
+
                     tn.Nodes.Add(xbijlagenode);
                     var tn1 = new TreeNode($"Reacties[{op.Reacties.Count}]")
                     {
@@ -108,6 +110,7 @@ namespace Forms
                             AddNode(reatn,
                                 rea.Reactie, 5, rea);
                         }
+
                         tn1.Nodes.Add(reatn);
                     }
 
@@ -144,7 +147,7 @@ namespace Forms
                                     StringComparison.CurrentCultureIgnoreCase));
                         }
                     }
-                    else if(selected is List<ReactieEntry>)
+                    else if (selected is List<ReactieEntry>)
                     {
                         if (xselectedopmerkingpanel.Tag is OpmerkingEntry xentry)
                         {
@@ -162,7 +165,6 @@ namespace Forms
                     xOpmerkingenTree.SelectedNode = xtn;
                     xOpmerkingenTree.SelectedNode?.EnsureVisible();
                     xOpmerkingenTree.SelectedNode?.Expand();
-
                 }
 
                 xOpmerkingenTree.TopNode?.Expand();
@@ -181,7 +183,7 @@ namespace Forms
             {
                 Tag = tag,
                 ImageIndex = imageindex,
-                SelectedImageIndex = imageindex,
+                SelectedImageIndex = imageindex
             };
 
             parent?.Nodes.Add(tn);
@@ -193,15 +195,14 @@ namespace Forms
             {
                 Tag = tag,
                 ImageKey = imagekey,
-                SelectedImageKey = imagekey,
+                SelectedImageKey = imagekey
             };
 
             parent?.Nodes.Add(tn);
         }
 
-        private void xopmerkinglijst_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void xopmerkinglijst_SelectedIndexChanged(object sender, EventArgs e)
         {
-
         }
 
         private void xOpmerkingenTree_AfterSelect(object sender, TreeViewEventArgs e)
@@ -224,9 +225,9 @@ namespace Forms
                     xopmerking = entry1;
             }
 
-            bool isvalid = xopmerking == null || xselectedopmerkingpanel.Tag == null ||
-                           (xselectedopmerkingpanel.Tag is OpmerkingEntry xentry &&
-                            !string.Equals(xopmerking.Title, xentry.Title, StringComparison.CurrentCultureIgnoreCase));
+            var isvalid = xopmerking == null || xselectedopmerkingpanel.Tag == null ||
+                          xselectedopmerkingpanel.Tag is OpmerkingEntry xentry &&
+                          !string.Equals(xopmerking.Title, xentry.Title, StringComparison.CurrentCultureIgnoreCase);
             if (isvalid)
                 SetOpmerkingFields(xopmerking);
         }
@@ -257,7 +258,8 @@ namespace Forms
                 xopmerkingtextbox.Text = entry.Opmerking?.Trim() ?? "";
                 var req = entry.GetReactie();
                 xreactietextbox.Text = req == null ? "" : req.Reactie;
-                xaansluitencheckbox.Checked = req?.Reactie != null && req.Reactie.ToLower().StartsWith("ik sta achter deze opmerking, want: ");
+                xaansluitencheckbox.Checked = req?.Reactie != null &&
+                                              req.Reactie.ToLower().StartsWith("ik sta achter deze opmerking, want: ");
             }
         }
 
@@ -269,13 +271,14 @@ namespace Forms
                 Manager.Opmerkingen?.Remove(r);
             _removed.Clear();
             Manager.Opmerkingen.Save().Wait();
-            Manager.RemoteMessage(new RemoteMessage("Opmerkingen Opgeslagen!", MessageAction.AlgemeneMelding, MsgType.Info));
+            Manager.RemoteMessage(new RemoteMessage("Opmerkingen Opgeslagen!", MessageAction.AlgemeneMelding,
+                MsgType.Info));
         }
 
         private void xannuleren_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         private void xaddtoolstripbutton_Click(object sender, EventArgs e)
@@ -288,7 +291,7 @@ namespace Forms
                 if (xcur.Length > 0)
                 {
                     XMessageBox.Show(this, $"Er bestaal al een opmerking  met de title '{op.Title}'...\n\n" +
-                                     $"Maak een opmerking met een andere Title, of sluit je aan bij de bestaande versie.",
+                                           "Maak een opmerking met een andere Title, of sluit je aan bij de bestaande versie.",
                         "Title Bestaal Al", MessageBoxIcon.Warning);
                     xOpmerkingenTree.SelectedNode = xcur[0];
                     xOpmerkingenTree.SelectedNode?.EnsureVisible();
@@ -309,7 +312,6 @@ namespace Forms
                 LoadOpmerkingen(opmerking.GetReactie());
                 UpdateWijzigButton();
             }
-
         }
 
         private void xopmerkingtextbox_TextChanged(object sender, EventArgs e)
@@ -327,21 +329,19 @@ namespace Forms
             if (xselectedopmerkingpanel.Tag is OpmerkingEntry opmerking)
             {
                 var reactie = opmerking.GetReactie() ?? new ReactieEntry();
-                xwijzigbutton.Visible = (!string.Equals(xreactietextbox.Text, reactie.Reactie,
-                                            StringComparison.CurrentCultureIgnoreCase)) ||
-                                        (!string.Equals(xopmerkingtextbox.Text, opmerking.Opmerking,
-                                            StringComparison.CurrentCultureIgnoreCase));
+                xwijzigbutton.Visible = !string.Equals(xreactietextbox.Text, reactie.Reactie,
+                                            StringComparison.CurrentCultureIgnoreCase) ||
+                                        !string.Equals(xopmerkingtextbox.Text, opmerking.Opmerking,
+                                            StringComparison.CurrentCultureIgnoreCase);
             }
         }
 
         private void xaansluitencheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            string xdeelname = "Ik sta achter deze opmerking, want: ";
+            var xdeelname = "Ik sta achter deze opmerking, want: ";
             var xvalue = xreactietextbox.Text.Replace(xdeelname, "").Trim();
             if (xaansluitencheckbox.Checked)
-            {
                 xreactietextbox.Text = $@"{xdeelname}{xvalue}";
-            }
             else xreactietextbox.Text = xvalue;
         }
 
@@ -350,8 +350,6 @@ namespace Forms
             xOpmerkingenTree.SelectedNode = e.Node;
         }
 
-        private List<OpmerkingEntry> _removed = new List<OpmerkingEntry>();
-
         private void xdeletetoolstripbutton_Click(object sender, EventArgs e)
         {
             if (xOpmerkingenTree.SelectedNode != null)
@@ -359,9 +357,10 @@ namespace Forms
                 var tn = xOpmerkingenTree.SelectedNode;
                 if (tn.Tag is OpmerkingEntry xent)
                 {
-                    bool flag = tn.Parent != null && tn.Parent.Text.ToLower().StartsWith("bijlage");
+                    var flag = tn.Parent != null && tn.Parent.Text.ToLower().StartsWith("bijlage");
                     var xname = flag ? tn.Text : xent.Title;
-                    if (XMessageBox.Show(this, $"Weetje zeker dat je '{xname}' wilt verwijderen?", "Opmerking verwijderen",
+                    if (XMessageBox.Show(this, $"Weetje zeker dat je '{xname}' wilt verwijderen?",
+                            "Opmerking verwijderen",
                             MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                     {
                         timer1.Stop();
@@ -376,7 +375,7 @@ namespace Forms
                             xent.Bijlages.Remove(xname);
                             SetOpmerkingFields(xent);
                         }
-                       
+
                         LoadOpmerkingen();
                     }
                 }
@@ -395,7 +394,7 @@ namespace Forms
                     if (xcur.Length > 0)
                     {
                         XMessageBox.Show(this, $"Er bestaal al een opmerking  met de title '{op.Title}'...\n\n" +
-                                         $"Maak een opmerking met een andere Title, of sluit je aan bij de bestaande versie.",
+                                               "Maak een opmerking met een andere Title, of sluit je aan bij de bestaande versie.",
                             "Title Bestaal Al", MessageBoxIcon.Warning);
                         xOpmerkingenTree.SelectedNode = xcur[0];
                         xOpmerkingenTree.SelectedNode?.EnsureVisible();
@@ -408,9 +407,10 @@ namespace Forms
             }
         }
 
-        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-            if (xselectedopmerkingpanel.Tag is OpmerkingEntry entry && string.Equals(entry.Afzender, Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase))
+            if (xselectedopmerkingpanel.Tag is OpmerkingEntry entry && string.Equals(entry.Afzender,
+                    Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase))
             {
                 wijzigToolStripMenuItem.Enabled = true;
                 verwijderToolStripMenuItem.Enabled = true;
@@ -441,7 +441,7 @@ namespace Forms
         private void Opmerkingen_OnOpmerkingenChanged(object sender, EventArgs e)
         {
             Opmerkingen = null;
-            this.BeginInvoke(new MethodInvoker(() => LoadOpmerkingen(xselectedopmerkingpanel.Tag as OpmerkingEntry)));
+            BeginInvoke(new MethodInvoker(() => LoadOpmerkingen(xselectedopmerkingpanel.Tag as OpmerkingEntry)));
         }
 
         private void OpmerkingenForm_FormClosing(object sender, FormClosingEventArgs e)

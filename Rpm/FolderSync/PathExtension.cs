@@ -6,11 +6,11 @@
         {
             path = GetPathNameFix(path);
 
-            int last = path.LastIndexOf(ch);
+            var last = path.LastIndexOf(ch);
             if (last == -1 || last == 0) return last;
-            
+
             if (lastPathCount == 0) return last;
-            while(lastPathCount != 0)
+            while (lastPathCount != 0)
             {
                 path = path.Substring(0, last);
                 last = path.LastIndexOf(ch);
@@ -18,6 +18,7 @@
                 if (last == -1 || last == 0) return last;
                 lastPathCount--;
             }
+
             return last;
         }
 
@@ -25,14 +26,14 @@
         {
             fullpath = GetPathNameFix(fullpath);
 
-            int uncIndex = LastIndexOf(fullpath, '/', lastPathCount);
-            int comIndex = LastIndexOf(fullpath, '\\', lastPathCount);
-            int result = uncIndex;
+            var uncIndex = LastIndexOf(fullpath, '/', lastPathCount);
+            var comIndex = LastIndexOf(fullpath, '\\', lastPathCount);
+            var result = uncIndex;
             if (comIndex > uncIndex) result = comIndex;
 
-            if (result == fullpath.Length -1) return string.Empty;
+            if (result == fullpath.Length - 1) return string.Empty;
 
-            return fullpath.Substring(result+1);
+            return fullpath.Substring(result + 1);
         }
 
         public static string GetPathNameFix(string path)

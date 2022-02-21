@@ -4,31 +4,27 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
-using ProductieManager.Forms;
+using Forms.MetroBase;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
-using Various;
 
 namespace Forms
 {
-    public partial class WerktijdChanger : Forms.MetroBase.MetroBaseForm
+    public partial class WerktijdChanger : MetroBaseForm
     {
-        private Rooster CurrentRooster { get; set; }
-        private List<Rooster> SpecialeRoosters { get; set; }
-        public bool SaveChanges { get; set; }
         public WerktijdChanger()
         {
             InitializeComponent();
-            ((OLVColumn)xwerktijden.Columns[0]).AspectGetter = TijdGestartGet;
-            ((OLVColumn)xwerktijden.Columns[1]).AspectGetter = TijdGestoptGet;
-            ((OLVColumn)xwerktijden.Columns[2]).AspectGetter = TijdGewerktGet;
-            ((OLVColumn)xwerktijden.Columns[3]).AspectGetter = EigenRoosterGet;
-            ((OLVColumn)xwerktijden.Columns[4]).AspectGetter = IsActiefGet;
+            ((OLVColumn) xwerktijden.Columns[0]).AspectGetter = TijdGestartGet;
+            ((OLVColumn) xwerktijden.Columns[1]).AspectGetter = TijdGestoptGet;
+            ((OLVColumn) xwerktijden.Columns[2]).AspectGetter = TijdGewerktGet;
+            ((OLVColumn) xwerktijden.Columns[3]).AspectGetter = EigenRoosterGet;
+            ((OLVColumn) xwerktijden.Columns[4]).AspectGetter = IsActiefGet;
         }
-        public WerktijdChanger(Klus klus):this()
+
+        public WerktijdChanger(Klus klus) : this()
         {
-            
             Klusje = klus;
             CurrentRooster = klus.Tijden.WerkRooster?.CreateCopy();
             SpecialeRoosters = klus.Tijden.SpecialeRoosters?.CreateCopy();
@@ -38,17 +34,7 @@ namespace Forms
             UpdateFormText();
         }
 
-        public string Title
-        {
-            get => this.Text;
-            set
-            {
-                this.Text = value;
-                this.Invalidate();
-            }
-        }
-
-        public WerktijdChanger(WerkPlek werk):this()
+        public WerktijdChanger(WerkPlek werk) : this()
         {
             Werklplek = werk;
             CurrentRooster = werk.Tijden.WerkRooster?.CreateCopy();
@@ -59,23 +45,31 @@ namespace Forms
             UpdateFormText();
         }
 
+        private Rooster CurrentRooster { get; set; }
+        private List<Rooster> SpecialeRoosters { get; set; }
+        public bool SaveChanges { get; set; }
+
+        public string Title
+        {
+            get => Text;
+            set
+            {
+                Text = value;
+                Invalidate();
+            }
+        }
+
         public Klus Klusje { get; }
         public WerkPlek Werklplek { get; }
 
         private void UpdateFormText()
         {
             if (Werklplek != null)
-            {
                 Text = $@"Wijzig werktijden van: {Werklplek.Path}";
-                
-            }
-            else if (Klusje != null)
-            {
-                Text = $@"Wijzig werktijden van '{Klusje.PersoneelNaam}' op '{Klusje.Path}'";
-            }
+            else if (Klusje != null) Text = $@"Wijzig werktijden van '{Klusje.PersoneelNaam}' op '{Klusje.Path}'";
             if (CurrentRooster != null && CurrentRooster.IsCustom())
                 Text += @" [Aangepaste Rooster]";
-            this.Invalidate();
+            Invalidate();
         }
 
         public bool IsActief()
@@ -96,7 +90,7 @@ namespace Forms
                     return $"Extra {Math.Round(pair.ExtraTijd.ExtraUren(ent, rooster), 2)} uur";
                 }
 
-                return pair.TijdGewerkt(rooster, null,SpecialeRoosters) + " uur";
+                return pair.TijdGewerkt(rooster, null, SpecialeRoosters) + " uur";
             }
 
             return 0;
@@ -104,10 +98,10 @@ namespace Forms
 
         private Rooster GetRooster(TijdEntry entry)
         {
-            if (entry?.WerkRooster != null &&  entry.WerkRooster.IsCustom())
+            if (entry?.WerkRooster != null && entry.WerkRooster.IsCustom())
                 return entry.WerkRooster;
             if (CurrentRooster != null && CurrentRooster.IsCustom())
-                return CurrentRooster; 
+                return CurrentRooster;
             return Manager.Opties.GetWerkRooster();
         }
 
@@ -167,28 +161,28 @@ namespace Forms
 
         private object EigenRoosterGet(object item)
         {
-            if (item is TijdEntry pair) return pair.WerkRooster!= null && pair.WerkRooster.IsCustom()? "Ja" : "Nee";
+            if (item is TijdEntry pair) return pair.WerkRooster != null && pair.WerkRooster.IsCustom() ? "Ja" : "Nee";
 
             return "Geen Idee";
         }
 
         private void xaddb_Click(object sender, EventArgs e)
         {
-            if (AddTijd(xstartdate.Value, xstopdate.Value,null, false,true,GetRooster(null)))
+            if (AddTijd(xstartdate.Value, xstopdate.Value, null, false, true, GetRooster(null)))
             {
                 UpdateUurGewerkt(null);
                 UpdateStatus();
             }
         }
 
-        private bool AddTijd(DateTime start, DateTime stop, List<TijdEntry> tijden, bool isactief, bool isnew, Rooster rooster)
+        private bool AddTijd(DateTime start, DateTime stop, List<TijdEntry> tijden, bool isactief, bool isnew,
+            Rooster rooster)
         {
-
             var uurgewerkt = UurGewerkt(rooster);
             if (uurgewerkt <= 0 && isnew)
             {
-                XMessageBox.Show(this, $"Ongeldige tijd!\n" +
-                                 "Je totale uren kunnen niet '0' zijn.", "Ongeldig", MessageBoxButtons.OK,
+                XMessageBox.Show(this, "Ongeldige tijd!\n" +
+                                       "Je totale uren kunnen niet '0' zijn.", "Ongeldig", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
                 return false;
             }
@@ -204,7 +198,7 @@ namespace Forms
             //    return false;
             //}
 
-            var wt = tijden??GetWerkTijden();
+            var wt = tijden ?? GetWerkTijden();
             //if (wt.Any(x => start > x.Start && stop < x.Stop))
             //{
             //    XMessageBox.Show(
@@ -214,18 +208,19 @@ namespace Forms
             //    return false;
             //}
 
-            return AddWerkTijd(start, stop,wt, isactief,rooster);
+            return AddWerkTijd(start, stop, wt, isactief, rooster);
         }
 
-        private bool AddWerkTijd(DateTime start, DateTime stop,List<TijdEntry> tijden, bool isactief,Rooster rooster = null)
+        private bool AddWerkTijd(DateTime start, DateTime stop, List<TijdEntry> tijden, bool isactief,
+            Rooster rooster = null)
         {
-            var wt = tijden??GetWerkTijden();
+            var wt = tijden ?? GetWerkTijden();
             var lijst = new UrenLijst();
             lijst.SpecialeRoosters = SpecialeRoosters;
             lijst.WerkRooster = CurrentRooster;
-            lijst.SetUren(wt.ToArray(), isactief,true);
+            lijst.SetUren(wt.ToArray(), isactief, true);
             rooster ??= GetRooster(null);
-            var xent = new TijdEntry(start, stop,rooster) {InUse = isactief};
+            var xent = new TijdEntry(start, stop, rooster) {InUse = isactief};
             var changed = false;
             lijst.Add(xent, ref changed);
             xwerktijden.SetObjects(lijst.Uren);
@@ -268,21 +263,21 @@ namespace Forms
         {
             var rooster = CurrentRooster != null && CurrentRooster.IsValid()
                 ? CurrentRooster
-                : Manager.Opties?.GetWerkRooster()??Rooster.StandaartRooster();
+                : Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
             var tijden = GetWerkTijden().ToArray();
             var result = DialogResult.No;
             if (Klusje != null)
             {
                 Klusje.Tijden.WerkRooster = rooster;
                 Klusje.Tijden.SpecialeRoosters = SpecialeRoosters;
-                Klusje.Tijden.SetUren(tijden, Klusje.Status == ProductieState.Gestart,true);
+                Klusje.Tijden.SetUren(tijden, Klusje.Status == ProductieState.Gestart, true);
             }
-            else if(Werklplek != null)
+            else if (Werklplek != null)
             {
-                bool isgestart = false;
+                var isgestart = false;
                 if (Werklplek.Personen is {Count: > 0})
                 {
-                    var xpers = Werklplek.Personen.Where(x => x.IngezetAanKlus(Werklplek.Path,true)).ToList();
+                    var xpers = Werklplek.Personen.Where(x => x.IngezetAanKlus(Werklplek.Path, true)).ToList();
                     if (xpers.Count > 0)
                     {
                         var x0 = xpers.Count == 1 ? xpers[0].PersoneelNaam : $"Er zijn {xpers.Count}";
@@ -291,17 +286,19 @@ namespace Forms
                         var x3 = xpers.Count == 1 ? "deze werktijden" : "allemaal deze werktijden";
                         var x4 = xpers.Count == 1 ? "krijgt" : "hebben";
                         result = XMessageBox.Show(this, $"{x0} {x1} actief op {Werklplek.Naam}.\n\n" +
-                                                      $"Wil je {x2} {x3} geven?",
+                                                        $"Wil je {x2} {x3} geven?",
                             "Medewerkers Werktijden",
                             MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                         if (result == DialogResult.Cancel) return;
                     }
                 }
+
                 Werklplek.Tijden.WerkRooster = rooster;
                 Werklplek.Tijden.SpecialeRoosters = SpecialeRoosters;
                 Werklplek.Tijden.SetUren(tijden, Werklplek.Werk.State == ProductieState.Gestart, true);
                 //Werklplek.Tijden.UpdateUrenRooster(true,false);
-                Werklplek.UpdateWerkRooster(rooster,false, false,result == DialogResult.Yes, SaveChanges,false, true, false);
+                Werklplek.UpdateWerkRooster(rooster, false, false, result == DialogResult.Yes, SaveChanges, false, true,
+                    false);
             }
 
             DialogResult = DialogResult.OK;
@@ -345,12 +342,12 @@ namespace Forms
         {
             rooster ??= GetRooster(null);
             return Math.Round(
-                Werktijd.TijdGewerkt(new TijdEntry(start, stop, rooster), rooster,SpecialeRoosters).TotalHours, 2);
+                Werktijd.TijdGewerkt(new TijdEntry(start, stop, rooster), rooster, SpecialeRoosters).TotalHours, 2);
         }
 
         public double UurGewerkt(Rooster rooster)
         {
-            return UurGewerkt(xstartdate.Value, xstopdate.Value,rooster);
+            return UurGewerkt(xstartdate.Value, xstopdate.Value, rooster);
         }
 
         public List<TijdEntry> GetWerkTijden()
@@ -394,7 +391,6 @@ namespace Forms
         {
             if (xwerktijden.SelectedObject is TijdEntry remove)
             {
-
                 if (remove.ExtraTijd != null)
                 {
                     //remove.ExtraTijd.Start = xstartdate.Value;
@@ -414,7 +410,7 @@ namespace Forms
                     tijden.Remove(remove);
                     var start = xstartdate.Value;
                     var stop = remove.InUse ? remove.Stop : xstopdate.Value;
-                    AddTijd(start, stop, tijden, remove.InUse, false,GetRooster(remove));
+                    AddTijd(start, stop, tijden, remove.InUse, false, GetRooster(remove));
                     //if (AddTijd(start, stop ,tijden, remove.InUse,false))
                     //    xwerktijden.RemoveObject(remove);
                 }

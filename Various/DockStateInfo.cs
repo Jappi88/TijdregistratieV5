@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ProductieManager.Various
 {
@@ -13,6 +9,6 @@ namespace ProductieManager.Various
         public double DockTopPortion { get; set; }
         public double DockBottomPortion { get; set; }
 
-        public List<DockContentEntry> DockContents { get; set; } = new List<DockContentEntry>();
+        public List<DockContentEntry> DockContents { get; set; } = new();
     }
 }

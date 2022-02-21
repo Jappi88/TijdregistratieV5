@@ -1,38 +1,47 @@
-﻿using Forms;
-using ProductieManager.Properties;
-using ProductieManager.Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Forms;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
+using Rpm.Productie;
+using Rpm.Various;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
 
 namespace Controls
 {
     public delegate string WerkplekTextGetterHandler(WerkplekIndeling indeling);
-    
+
     public partial class WerkplekIndeling : UserControl
     {
-        public string Werkplek { get; set; }
-        public bool IsDefault()
+        private readonly int _DDradius = 40;
+
+        private bool _isDragging;
+        private int _mX;
+        private int _mY;
+
+        private Cursor BitMapCursor;
+        public bool ToonNietIngedeeld = true;
+
+        public WerkplekIndeling()
         {
-            return string.IsNullOrEmpty(Werkplek) ||
-                   string.Equals(Werkplek, "default", StringComparison.CurrentCultureIgnoreCase);
+            InitializeComponent();
         }
 
+        public string Werkplek { get; set; }
+
         public string Criteria { get; set; }
-        public bool ToonNietIngedeeld = true;
         public Bewerking SelectedBewerking { get; set; }
         public bool IsSelected { get; set; }
 
         public WerkplekTextGetterHandler FieldTextGetter { get; set; }
 
-        public WerkplekIndeling()
+        public bool IsDefault()
         {
-            InitializeComponent();
+            return string.IsNullOrEmpty(Werkplek) ||
+                   string.Equals(Werkplek, "default", StringComparison.CurrentCultureIgnoreCase);
         }
 
         public void InitWerkplek(string werkplek)
@@ -52,8 +61,8 @@ namespace Controls
         {
             try
             {
-                if (this.InvokeRequired)
-                    this.BeginInvoke(new MethodInvoker(UpdateWerkplekInfo));
+                if (InvokeRequired)
+                    BeginInvoke(new MethodInvoker(UpdateWerkplekInfo));
                 else UpdateWerkplekInfo();
             }
             catch (Exception e)
@@ -66,16 +75,16 @@ namespace Controls
         {
             if (IsDefault())
             {
-               // ximage.Image = Resources.operation;
-               xVerwijderPersoneel.Visible = false;
-               xnietingedeeld.Visible = true;
-               xnietingedeeld.Checked = ToonNietIngedeeld;
+                // ximage.Image = Resources.operation;
+                xVerwijderPersoneel.Visible = false;
+                xnietingedeeld.Visible = true;
+                xnietingedeeld.Checked = ToonNietIngedeeld;
                 if (FieldTextGetter != null)
                     xpersoonInfo.Text = FieldTextGetter.Invoke(this);
                 else
-                    xpersoonInfo.Text = $"Beheer hier alle bewerkingen.<br>" +
-                                        $"Voeg werkplaatsen toe om producties daarvoor in te delen.<br>" +
-                                        $"Sleep een bewerking naar de gewenste werkplek om ze in te delen.<br>";
+                    xpersoonInfo.Text = "Beheer hier alle bewerkingen.<br>" +
+                                        "Voeg werkplaatsen toe om producties daarvoor in te delen.<br>" +
+                                        "Sleep een bewerking naar de gewenste werkplek om ze in te delen.<br>";
                 xknoppenpanel.Visible = false;
             }
             else
@@ -90,8 +99,12 @@ namespace Controls
                         var bw = SelectedBewerking;
                         group.Text = $"{Werkplek} {bw.Naam} van {bw.ArtikelNr} | {bw.ProductieNr}";
                     }
-                    else group.Text = $"{Werkplek}";
+                    else
+                    {
+                        @group.Text = $"{Werkplek}";
+                    }
                 }
+
                 if (SelectedBewerking != null)
                 {
                     var wp = SelectedBewerking.GetWerkPlek(Werkplek, false);
@@ -118,10 +131,10 @@ namespace Controls
                 {
                     xknoppenpanel.Visible = false;
                 }
+
                 if (FieldTextGetter != null)
                     xpersoonInfo.Text = FieldTextGetter.Invoke(this);
             }
-
         }
 
         public void SetBewerking(Bewerking bew)
@@ -133,21 +146,20 @@ namespace Controls
 
         private void PersoonIndeling_DragEnter(object sender, DragEventArgs e)
         {
-            var data = (GroupBox)e.Data.GetData(typeof(GroupBox));
+            var data = (GroupBox) e.Data.GetData(typeof(GroupBox));
             var falsecolor = Color.MistyRose;
             var truecolor = Color.LightGreen;
-            if (data != null && data.Controls.Count > 0 && data.Controls[0] is WerkplekIndeling indeling && !indeling.IsDefault())
+            if (data != null && data.Controls.Count > 0 && data.Controls[0] is WerkplekIndeling indeling &&
+                !indeling.IsDefault())
             {
-                this.BackColor = truecolor;
+                BackColor = truecolor;
                 e.Effect = DragDropEffects.Move;
                 return;
             }
+
             if (e.Data.GetData("Producties") is ArrayList xdata)
-            {
                 foreach (var x in xdata)
-                {
                     if (x is Bewerking bew)
-                    {
                         if (!IsDefault())
                         {
                             var wps = Manager.BewerkingenLijst?.GetWerkplekken(bew.Naam);
@@ -157,31 +169,23 @@ namespace Controls
                             var wp = bew.GetWerkPlek(Werkplek, false);
                             if (wp == null)
                             {
-                                this.BackColor = truecolor;
+                                BackColor = truecolor;
                                 e.Effect = DragDropEffects.Link;
                                 return;
                             }
                         }
-                    }
-                }
-            }
 
-            this.BackColor = falsecolor;
+            BackColor = falsecolor;
             e.Effect = DragDropEffects.None;
         }
 
         private void PersoonIndeling_DragDrop(object sender, DragEventArgs e)
         {
-
             try
             {
                 if (e.Data.GetData("Producties") is ArrayList xdata)
-                {
                     foreach (var x in xdata)
-                    {
                         if (x is Bewerking bew)
-                        {
-                            
                             if (!IsDefault())
                             {
                                 var wps = Manager.BewerkingenLijst?.GetWerkplekken(bew.Naam);
@@ -192,39 +196,37 @@ namespace Controls
                                 _ = bew.UpdateBewerking(null,
                                     $"[{bew.Naam}] Ingedeeld op {wp.Naam}").Result;
                             }
-                        }
-                    }
-                }
+
                 BitMapCursor?.Dispose();
                 BitMapCursor = null;
                 _isDragging = false;
-                this.OnMouseLeave(EventArgs.Empty);
+                OnMouseLeave(EventArgs.Empty);
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
-                XMessageBox.Show(this,exception.Message, "Fout", MessageBoxIcon.Error);
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
         private void PersoonIndeling_DragLeave(object sender, EventArgs e)
         {
-            this.OnMouseLeave(EventArgs.Empty);
+            OnMouseLeave(EventArgs.Empty);
         }
 
         private void xPersoonImage_Click(object sender, EventArgs e)
         {
-            this.OnClick(EventArgs.Empty);
+            OnClick(EventArgs.Empty);
         }
 
         private void xPersoonImage_MouseEnter(object sender, EventArgs e)
         {
-            this.OnMouseEnter(EventArgs.Empty);
+            OnMouseEnter(EventArgs.Empty);
         }
 
         private void xPersoonImage_MouseLeave(object sender, EventArgs e)
         {
-            this.OnMouseLeave(EventArgs.Empty);
+            OnMouseLeave(EventArgs.Empty);
         }
 
         private void xVerwijderKlus_Click(object sender, EventArgs e)
@@ -237,13 +239,12 @@ namespace Controls
                     string.Equals(Werkplek, x.Naam, StringComparison.CurrentCultureIgnoreCase)).ToList();
                 var xtijd = xremove.Sum(x => x.TijdAanGewerkt());
                 if (xtijd > 0)
-                {
-                    if (XMessageBox.Show(this.Parent?.Parent?.Parent?.Parent?.Parent,
+                    if (XMessageBox.Show(Parent?.Parent?.Parent?.Parent?.Parent,
                             $"Er is {xtijd} uur aan {SelectedBewerking.Naam} op {Werkplek} gewerkt!\n\n" +
                             $"Weetje zeker dat je alsnog {Werkplek} uit {SelectedBewerking.Naam}({SelectedBewerking.ProductieNr})  wilt verwijderen?",
                             $"{Werkplek} Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
-                        DialogResult.No) return;
-                }
+                        DialogResult.No)
+                        return;
 
                 if (xremove.Count > 0)
                 {
@@ -252,7 +253,6 @@ namespace Controls
                     _ = SelectedBewerking.UpdateBewerking(null,
                         $"{Werkplek} verwijderd uit [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!");
                 }
-
             }
         }
 
@@ -260,13 +260,12 @@ namespace Controls
         {
             if (SelectedBewerking == null || IsDefault()) return;
 
-            string change =
+            var change =
                 $"{Werkplek} gestopt met {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!";
-            bool changed = false;
+            var changed = false;
             var wp = SelectedBewerking.GetWerkPlek(Werkplek, false);
             if (wp == null) return;
             foreach (var xp in wp.Personen)
-            {
                 if (xp.IngezetAanKlus(SelectedBewerking, false, out var klusjes))
                 {
                     var xdp = Manager.Database.GetPersoneel(xp.PersoneelNaam).Result;
@@ -281,7 +280,6 @@ namespace Controls
                     if (xdp != null)
                         Manager.Database.UpSert(xdp, change);
                 }
-            }
 
             if (changed)
             {
@@ -289,7 +287,6 @@ namespace Controls
                 xStopKlus.Enabled = false;
                 _ = SelectedBewerking.UpdateBewerking(null,
                     $"{Werkplek} UPDATE: {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!");
-
             }
         }
 
@@ -307,15 +304,13 @@ namespace Controls
                         SelectedBewerking.ZetPersoneelActief(per.PersoneelNaam, wp.Naam, true);
                         var xdb = Manager.Database.GetPersoneel(per.PersoneelNaam).Result;
                         if (xdb != null)
-                        {
                             if (per.IngezetAanKlus(wp.Path, true, out var klusjes))
                             {
                                 klusjes.ForEach(x => xdb.ReplaceKlus(x));
-                                string change =
+                                var change =
                                     $"{xdb.PersoneelNaam} gestart met {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!";
                                 Manager.Database?.UpSert(xdb, change);
                             }
-                        }
                     }
                 }
                 else
@@ -328,7 +323,7 @@ namespace Controls
 
             if (SelectedBewerking.State == ProductieState.Gestopt)
             {
-                if (!ProductieListControl.StartBewerkingen(this.Parent, new Bewerking[] {SelectedBewerking}))
+                if (!ProductieListControl.StartBewerkingen(Parent, new[] {SelectedBewerking}))
                     return;
             }
             else
@@ -336,13 +331,14 @@ namespace Controls
                 _ = SelectedBewerking.UpdateBewerking(null,
                     $"{Werkplek} UPDATE: {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!");
             }
+
             xStartKlus.Enabled = false;
             xStopKlus.Enabled = true;
         }
 
         private void xPersoonImage_DoubleClick(object sender, EventArgs e)
         {
-            this.OnDoubleClick(EventArgs.Empty);
+            OnDoubleClick(EventArgs.Empty);
         }
 
         private void xpersoonInfo_ImageLoad(object sender, HtmlImageLoadEventArgs e)
@@ -357,6 +353,7 @@ namespace Controls
                     e.Callback(Resources.iconfinder_technology);
                     break;
             }
+
             e.Handled = true;
         }
 
@@ -380,11 +377,6 @@ namespace Controls
             base.OnClick(e);
         }
 
-        private bool _isDragging;
-        private readonly int _DDradius = 40;
-        private int _mX;
-        private int _mY;
-       
         protected override void OnMouseDown(MouseEventArgs e)
         {
             Focus();
@@ -394,16 +386,13 @@ namespace Controls
             _isDragging = false;
             //Cast the sender to control type youre using
             //Copy the control in a bitmap
-            Bitmap bmp = new Bitmap(this.Parent.Width, this.Parent.Height);
-            this.Parent.DrawToBitmap(bmp, new Rectangle(Point.Empty, bmp.Size));
+            var bmp = new Bitmap(Parent.Width, Parent.Height);
+            Parent.DrawToBitmap(bmp, new Rectangle(Point.Empty, bmp.Size));
             bmp = bmp.ChangeOpacity(0.75f);
             //In a variable save the cursor with the image of your controler
-            this.BitMapCursor = new Cursor(bmp.GetHicon());
+            BitMapCursor = new Cursor(bmp.GetHicon());
             //this.DoDragDrop(this.Parent, DragDropEffects.Move);
-
         }
-
-        private Cursor BitMapCursor;
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
@@ -417,7 +406,7 @@ namespace Controls
                     var num2 = _mY - e.Y;
                     if (num1 * num1 + num2 * num2 > _DDradius)
                     {
-                        DoDragDrop(this.Parent, DragDropEffects.All);
+                        DoDragDrop(Parent, DragDropEffects.All);
                         _isDragging = true;
                         return;
                     }
@@ -433,23 +422,23 @@ namespace Controls
             //Deactivate the default cursor
             e.UseDefaultCursors = false;
             //Use the cursor created from the bitmap
-            Cursor.Current = this.BitMapCursor;
+            Cursor.Current = BitMapCursor;
             base.OnGiveFeedback(e);
         }
 
         public void IndelingMouseDown(object sender, MouseEventArgs e)
         {
-            this.OnMouseDown(e);
+            OnMouseDown(e);
         }
 
         public void IndelingMouseMove(object sender, MouseEventArgs e)
         {
-            this.OnMouseMove(e);
+            OnMouseMove(e);
         }
 
         private void xpersoonInfo_GiveFeedback(object sender, GiveFeedbackEventArgs e)
         {
-            this.OnGiveFeedback(e);
+            OnGiveFeedback(e);
         }
 
         private void xnietingedeeld_CheckedChanged(object sender, EventArgs e)

@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using Forms.MetroBase;
 
 namespace Forms
@@ -10,12 +11,12 @@ namespace Forms
             InitializeComponent();
         }
 
-        private void artikelenVerbruikUI1_CloseClicked(object sender, System.EventArgs e)
+        private void artikelenVerbruikUI1_CloseClicked(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
-        private void ArtikelenVerbruikForm_Shown(object sender, System.EventArgs e)
+        private void ArtikelenVerbruikForm_Shown(object sender, EventArgs e)
         {
             artikelenVerbruikUI1.InitUI();
         }
@@ -25,10 +26,10 @@ namespace Forms
             artikelenVerbruikUI1.CloseUI();
         }
 
-        private void artikelenVerbruikUI1_StatusTextChanged(object sender, System.EventArgs e)
+        private void artikelenVerbruikUI1_StatusTextChanged(object sender, EventArgs e)
         {
-            this.Text = sender as string;
-            this.Invalidate();
+            Text = sender as string;
+            Invalidate();
         }
     }
 }

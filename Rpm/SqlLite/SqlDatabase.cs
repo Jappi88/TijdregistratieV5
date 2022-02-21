@@ -241,9 +241,9 @@ namespace Rpm.SqlLite
                 {
                     var dbname = Enum.GetName(typeof(DbType), type);
                     using (var command =
-                        new SqlCommand(
-                            $"SELECT * FROM [dbo].{dbname} WHERE LastChanged >= @LastChanged AND LastChanged <= @Tot AND ChangedBy != @ChangedBy",
-                            connection))
+                           new SqlCommand(
+                               $"SELECT * FROM [dbo].{dbname} WHERE LastChanged >= @LastChanged AND LastChanged <= @Tot AND ChangedBy != @ChangedBy",
+                               connection))
                     {
                         try
                         {
@@ -312,7 +312,7 @@ namespace Rpm.SqlLite
                         var dbname = Enum.GetName(typeof(DbType), type);
                         var count = 0;
                         using (var command = new SqlCommand($"SELECT COUNT(*) FROM [dbo].{dbname} WHERE Name='{name}'",
-                            connection))
+                                   connection))
                         {
                             connection.Open();
                             count = (int) command.ExecuteScalar();
@@ -347,7 +347,7 @@ namespace Rpm.SqlLite
                         var dbname = Enum.GetName(typeof(DbType), type);
 
                         using (var command = new SqlCommand($"SELECT * FROM [dbo].{dbname} WHERE Name='{name}'",
-                            connection))
+                                   connection))
                         {
                             connection.Open();
                             using (var Locationreader = command.ExecuteReader())
@@ -391,9 +391,9 @@ namespace Rpm.SqlLite
                         var dbname = Enum.GetName(typeof(DbType), type);
 
                         using (var command =
-                            new SqlCommand(
-                                $"SELECT * FROM [dbo].{dbname} WHERE {string.Join(" OR ", names.Select(x => $"Name='{x}'"))}",
-                                connection))
+                               new SqlCommand(
+                                   $"SELECT * FROM [dbo].{dbname} WHERE {string.Join(" OR ", names.Select(x => $"Name='{x}'"))}",
+                                   connection))
                         {
                             connection.Open();
                             using (var Locationreader = command.ExecuteReader())

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Windows.Forms;
+using Forms.MetroBase;
 
 namespace Forms
 {
-    public partial class AfsluitPromp : Forms.MetroBase.MetroBaseForm
+    public partial class AfsluitPromp : MetroBaseForm
     {
         private readonly Timer _timer;
         private readonly double max = 30.0;

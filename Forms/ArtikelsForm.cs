@@ -1,28 +1,29 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using Forms.MetroBase;
 
 namespace Forms
 {
     public partial class ArtikelsForm : MetroBaseForm
     {
+        public ArtikelsForm()
+        {
+            InitializeComponent();
+        }
+
         public string SelectedArtikelNr
         {
             get => artikelsUI1.SelectedArtikelNr;
             set => artikelsUI1.SelectedArtikelNr = value;
         }
 
-        public ArtikelsForm()
+        private void artikelsUI1_StatusTextChanged(object sender, EventArgs e)
         {
-            InitializeComponent();
+            Text = sender as string;
+            Invalidate();
         }
 
-        private void artikelsUI1_StatusTextChanged(object sender, System.EventArgs e)
-        {
-            this.Text = sender as string;
-            this.Invalidate();
-        }
-
-        private void ArtikelsForm_Shown(object sender, System.EventArgs e)
+        private void ArtikelsForm_Shown(object sender, EventArgs e)
         {
             artikelsUI1.InitUI();
         }

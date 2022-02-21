@@ -1,17 +1,19 @@
-﻿using Rpm.Misc;
-using Rpm.Productie.AantalHistory;
+﻿using System;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using Rpm.Misc;
+using Rpm.Productie.AantalHistory;
 
 namespace Forms.Aantal
 {
-    public partial class NewAantalRecordForm : Forms.MetroBase.MetroBaseForm
+    public partial class NewAantalRecordForm : MetroBaseForm
     {
         public NewAantalRecordForm()
         {
             InitializeComponent();
         }
 
-        public NewAantalRecordForm(AantalRecord record):this()
+        public NewAantalRecordForm(AantalRecord record) : this()
         {
             if (record != null)
             {
@@ -27,7 +29,7 @@ namespace Forms.Aantal
 
         public AantalRecord SelectedRecord { get; private set; }
 
-        private void button1_Click(object sender, System.EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
             SelectedRecord ??= new AantalRecord();
             SelectedRecord._endDate = xstopdatum.Value;
@@ -37,7 +39,7 @@ namespace Forms.Aantal
             DialogResult = DialogResult.OK;
         }
 
-        private void xfirstvalue_ValueChanged(object sender, System.EventArgs e)
+        private void xfirstvalue_ValueChanged(object sender, EventArgs e)
         {
             xgemaaktlabel.Text = (xsecondvalue.Value - xfirstvalue.Value).ToString("##.###");
         }

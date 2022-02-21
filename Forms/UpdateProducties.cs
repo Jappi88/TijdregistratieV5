@@ -5,18 +5,20 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Forms.MetroBase;
 using ProductieManager.Properties;
-using Rpm.Misc;
-using Rpm.SqlLite;
 using Rpm.Productie;
 using Rpm.Productie.ArtikelRecords;
 using Rpm.Settings;
+using Rpm.SqlLite;
 using Rpm.Various;
 
 namespace Forms
 {
-    public partial class UpdateProducties : Forms.MetroBase.MetroBaseForm
+    public partial class UpdateProducties : MetroBaseForm
     {
+        public CancellationTokenSource Cancelation;
+
         public UpdateProducties(DatabaseUpdateEntry updateentry = null)
         {
             InitializeComponent();
@@ -26,9 +28,7 @@ namespace Forms
         }
 
         public Func<Task> UpdateMethod { get; set; }
-
-        public CancellationTokenSource Cancelation;
-        public DatabaseUpdateEntry UpdateEntry { get; private set; }
+        public DatabaseUpdateEntry UpdateEntry { get; }
         public bool IsBussy { get; private set; }
 
         public bool ShowStop { get; set; } = true;
@@ -59,7 +59,8 @@ namespace Forms
                 if (Manager.Database == null || Manager.Database.IsDisposed)
                 {
                     XMessageBox.Show(
-                        this, "Database is niet beschikbaar!\nZorg ervoor dat je een geldige database hebt, en restart het programma.",
+                        this,
+                        "Database is niet beschikbaar!\nZorg ervoor dat je een geldige database hebt, en restart het programma.",
                         "Ongeldige Database", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 else
@@ -76,8 +77,7 @@ namespace Forms
                     //else if (!CloseWhenFinished)
                     //    XMessageBox.Show(this, $"Er is zijn geen producties beschikbaar", "Productie Updates");
                     if (CloseWhenFinished)
-                        this.Close();
-
+                        Close();
                 }
             }
         }
@@ -121,14 +121,14 @@ namespace Forms
                         if (!IsBussy || IsDisposed || Disposing)
                             return;
                         DoProgress("Producties laden...", count, 100);
-                        var files = await Manager.GetAllProductiePaths(true,true);
+                        var files = await Manager.GetAllProductiePaths(true, true);
                         var forms = await Manager.Database.GetAllProducties(true, false);
                         var artikels = new List<ArtikelRecord>();
                         foreach (var file in files)
                         {
                             if (!IsBussy || IsDisposed || Disposing)
                                 break;
-                            ProductieFormulier form = await MultipleFileDb.FromPath<ProductieFormulier>(file,true);
+                            var form = await MultipleFileDb.FromPath<ProductieFormulier>(file, true);
                             if (form == null) continue;
                             await form.UpdateForm(true, true, forms, null, true, false, true, true);
                             if (form.State == ProductieState.Gereed)
@@ -138,49 +138,54 @@ namespace Forms
                                 if (xartikel == null)
                                 {
                                     xartikel = new ArtikelRecord();
-                                    if (Manager.ArtikelRecords?.UpdateWaardes(form, xartikel, false)??false)
+                                    if (Manager.ArtikelRecords?.UpdateWaardes(form, xartikel, false) ?? false)
                                         artikels.Add(xartikel);
                                 }
                                 else
                                 {
                                     Manager.ArtikelRecords?.UpdateWaardes(form, xartikel, false);
                                 }
+
                                 foreach (var bw in form.Bewerkingen)
+                                foreach (var plek in bw.WerkPlekken)
                                 {
-                                    foreach (var plek in bw.WerkPlekken)
+                                    xartikel = artikels.FirstOrDefault(x => string.Equals(plek.Naam, x.ArtikelNr,
+                                        StringComparison.CurrentCultureIgnoreCase));
+                                    if (xartikel == null)
                                     {
-                                        xartikel = artikels.FirstOrDefault(x => string.Equals(plek.Naam, x.ArtikelNr,
-                                            StringComparison.CurrentCultureIgnoreCase));
-                                        if (xartikel == null)
-                                        {
-                                            xartikel = new ArtikelRecord();
-                                            if (Manager.ArtikelRecords?.UpdateWaardes(plek, xartikel, false)??false)
-                                                artikels.Add(xartikel);
-                                        }
-                                        else
-                                        {
-                                            Manager.ArtikelRecords?.UpdateWaardes(plek, xartikel, false);
-                                        }
+                                        xartikel = new ArtikelRecord();
+                                        if (Manager.ArtikelRecords?.UpdateWaardes(plek, xartikel, false) ?? false)
+                                            artikels.Add(xartikel);
+                                    }
+                                    else
+                                    {
+                                        Manager.ArtikelRecords?.UpdateWaardes(plek, xartikel, false);
                                     }
                                 }
                             }
+
                             count++;
                             DoProgress($"Updating productie '{form.ProductieNr}'", count, files.Count);
                         }
 
                         if (Manager.ArtikelRecords != null)
-                            await Manager.ArtikelRecords.SaveRecords(artikels);
+                        {
+                            var xprogarg = new ProgressArg();
+                            xprogarg.Changed += Xprogarg_Changed;
+                            await Manager.ArtikelRecords.SaveRecords(artikels, xprogarg);
+                        }
 
                         if (IsBussy)
                         {
-                            var opties = Manager.DefaultSettings??UserSettings.GetDefaultSettings();
+                            var opties = Manager.DefaultSettings ?? UserSettings.GetDefaultSettings();
                             IsFinished = true;
                             opties.UpdateDatabaseVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                             opties.SaveAsDefault();
-                            string x1 = count == 1 ? "update" : "updates";
+                            var x1 = count == 1 ? "update" : "updates";
                             DoProgress($"{count} {x1} Uitgevoerd!", 100);
                         }
                     }
+
                     Manager.Database.RaiseEventWhenChanged = true;
                     Manager.Database.RaiseEventWhenDeleted = true;
                     Manager.Database.LoggerEnabled = oldlog;
@@ -192,6 +197,11 @@ namespace Forms
             });
         }
 
+        private void Xprogarg_Changed(object sender, ProgressArg arg)
+        {
+            DoProgress($"{arg.Message}", arg.Current, arg.Max);
+        }
+
         public Task UpdateUserActivity(bool gestart)
         {
             return Task.Run(async () =>
@@ -199,29 +209,28 @@ namespace Forms
                 try
                 {
                     var users = await Manager.Database.GetAllPersoneel();
-                    int done = 0;
-                    for (int i = 0; i < users.Count; i++)
+                    var done = 0;
+                    for (var i = 0; i < users.Count; i++)
                     {
                         if (!IsBussy || IsDisposed || Disposing)
                             break;
                         var user = users[i];
                         DoProgress($"Updating {user.PersoneelNaam}...", i, users.Count);
-                        bool userchanged = false;
+                        var userchanged = false;
                         if (user.PersoneelNaam.EndsWith(" "))
                         {
                             user.PersoneelNaam = user.PersoneelNaam.Trim();
                             userchanged = true;
                         }
 
-                        List<Klus> toremove = new List<Klus>();
+                        var toremove = new List<Klus>();
 
                         var klusjes = gestart
                             ? user.Klusjes.Where(x => x.Status == ProductieState.Gestart).ToList()
-                            : user.Klusjes.ToList(); //.Where(x=> x.IsActief).ToList(); //.Where(x => x.Status == ProductieState.Gestart).ToArray();
+                            : user.Klusjes
+                                .ToList(); //.Where(x=> x.IsActief).ToList(); //.Where(x => x.Status == ProductieState.Gestart).ToArray();
 
                         if (klusjes.Count > 0)
-                        {
-
                             foreach (var klus in klusjes)
                             {
                                 var pair = klus.GetWerk();
@@ -278,7 +287,6 @@ namespace Forms
 
                                     msg =
                                         $"{klus.Path} van {user.PersoneelNaam}  is verandert naar {Enum.GetName(typeof(ProductieState), klus.Status)}.";
-
                                 }
 
                                 if (klus.Tijden.IsActief && klus.Status != ProductieState.Gestart)
@@ -294,7 +302,6 @@ namespace Forms
                                         await bew.UpdateBewerking(null, $"{klus.Naam} klus geupdate");
                                 }
                             }
-                        }
 
                         if (userchanged || toremove.Count > 0)
                         {
@@ -317,7 +324,7 @@ namespace Forms
         {
             return Task.Run(async () =>
             {
-                int count = 0;
+                var count = 0;
                 try
                 {
                     count = await Manager.Database.UpdateDbFromDb(entry, Cancelation, ProgressChanged);
@@ -346,7 +353,7 @@ namespace Forms
             {
                 if (CloseWhenFinished)
                 {
-                    this.Invoke(new Action(() => DialogResult = DialogResult.OK));
+                    Invoke(new Action(() => DialogResult = DialogResult.OK));
                     //this.Invoke(new Action(this.Close));
                 }
                 else
@@ -367,7 +374,6 @@ namespace Forms
                 }
                 else
                 {
-
                     xstartb.Image = Resources.play_button_icon_icons_com_60615;
                     xstartb.Invalidate();
                     circularProgressBar1.Value = 68;
@@ -397,13 +403,12 @@ namespace Forms
 
         private void DoProgress(string message, double min, double max)
         {
-            var percentage = max > 0  && min > 0? (int) ((min / max) * 100) : 0;
+            var percentage = max > 0 && min > 0 ? (int) (min / max * 100) : 0;
             DoProgress(message, percentage);
         }
 
         private void DoProgress(string message, int percentage)
         {
-           
             if (InvokeRequired)
             {
                 circularProgressBar1.Invoke(

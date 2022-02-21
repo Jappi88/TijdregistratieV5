@@ -23,7 +23,7 @@ namespace Rpm.SqlLite
 
         public string User { get; set; }
 
-         public string PcId { get; set; }
+        public string PcId { get; set; }
 
         public string Change { get; set; }
         public DateTime TimeChanged { get; set; }
@@ -33,7 +33,7 @@ namespace Rpm.SqlLite
 
         public RemoteMessage CreateMessage(DbType type)
         {
-            RemoteMessage xreturn = new RemoteMessage();
+            var xreturn = new RemoteMessage();
             xreturn.MessageType = MsgType.Info;
             switch (type)
             {

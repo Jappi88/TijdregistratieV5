@@ -1,20 +1,18 @@
-﻿using Polenter.Serialization;
-using ProductieManager.Properties;
-using ProductieManager.Rpm.Misc;
-using Rpm.SqlLite;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.Remoting.Contexts;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using NPOI.HSSF.Util;
+using System.Windows.Forms;
 using NPOI.SS.UserModel;
-using Rpm.Misc;
+using NPOI.XSSF.UserModel;
+using Polenter.Serialization;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
+using Rpm.SqlLite;
+using Rpm.Various;
 
 namespace Rpm.Productie
 {
@@ -204,7 +202,7 @@ namespace Rpm.Productie
         public virtual bool TeLaat => DateTime.Now > LeverDatum;
 
         [Display(Name = "IsNieuw", Description = "True voor als de productie nieuw is")]
-        public virtual bool IsNieuw => DatumToegevoegd.AddHours((Manager.Opties?.NieuwTijd ?? 4)) > DateTime.Now;
+        public virtual bool IsNieuw => DatumToegevoegd.AddHours(Manager.Opties?.NieuwTijd ?? 4) > DateTime.Now;
 
         [Display(Name = "Gereed", Description = "Aantal percentage gereed")]
         public virtual double Gereed { get; set; }
@@ -216,6 +214,7 @@ namespace Rpm.Productie
         public virtual int DeelsGereed { get; }
 
         private double _GemiddeldPerUur { get; set; }
+
         [Display(Name = "GemiddeldPerUur",
             Description = "Gemiddelde van de basis p/u volgens alle producties met dit ArtikelNr")]
         [ExcludeFromSerialization]
@@ -225,8 +224,9 @@ namespace Rpm.Productie
             set => _GemiddeldPerUur = value;
         }
 
-       
+
         private double _GemiddeldActueelPerUur { get; set; }
+
         [Display(Name = "GemiddeldActueelPerUur",
             Description = "Gemiddelde GEMETEN aantal per uur volgens alle producties met dit ArtikelNr")]
         [ExcludeFromSerialization]
@@ -235,6 +235,7 @@ namespace Rpm.Productie
             get => _GemiddeldActueelPerUur <= 0 ? ActueelPerUur : _GemiddeldActueelPerUur;
             set => _GemiddeldActueelPerUur = value;
         }
+
         [Display(Name = "ActueelPerUur", Description = "Gemeten aantal per uur voor deze productie")]
         public virtual double ActueelPerUur { get; set; }
 
@@ -261,7 +262,9 @@ namespace Rpm.Productie
         [Display(Name = "ControlePunten", Description = "Punten waar je vooral op moet controleren")]
         public virtual string ControlePunten { get; set; }
 
-        [Display(Name = "ControleRatio", Description = "Controle Ratio, Percentage van hoevaak de aantallen worden door gegeven op basis van 1.5 uur")]
+        [Display(Name = "ControleRatio",
+            Description =
+                "Controle Ratio, Percentage van hoevaak de aantallen worden door gegeven op basis van 1.5 uur")]
         public virtual double ControleRatio
         {
             get
@@ -293,15 +296,9 @@ namespace Rpm.Productie
         {
             try
             {
-                if (this is Bewerking bew)
-                {
-                    return bew.WerkPlekken?.Any(x => x.HeeftGewerkt(bereik))??false;
-                }
+                if (this is Bewerking bew) return bew.WerkPlekken?.Any(x => x.HeeftGewerkt(bereik)) ?? false;
 
-                if (this is ProductieFormulier prod)
-                {
-                    return prod.Bewerkingen?.Any(x => x.HeeftGewerkt(bereik)) ?? false;
-                }
+                if (this is ProductieFormulier prod) return prod.Bewerkingen?.Any(x => x.HeeftGewerkt(bereik)) ?? false;
 
                 return false;
             }
@@ -316,7 +313,10 @@ namespace Rpm.Productie
         {
             try
             {
-                return (ActueelPerUur - PerUur) == 0 ? 0 : Math.Round((decimal)(((ActueelPerUur - PerUur) / (PerUur == 0? ActueelPerUur :  PerUur)) * 100), 2);
+                return ActueelPerUur - PerUur == 0
+                    ? 0
+                    : Math.Round((decimal) ((ActueelPerUur - PerUur) / (PerUur == 0 ? ActueelPerUur : PerUur) * 100),
+                        2);
             }
             catch (Exception ex)
             {
@@ -329,7 +329,11 @@ namespace Rpm.Productie
         {
             try
             {
-                return (GemiddeldActueelPerUur - GemiddeldPerUur) == 0 ? 0 : Math.Round((decimal)(((GemiddeldActueelPerUur - GemiddeldPerUur) / (GemiddeldPerUur == 0 ? GemiddeldActueelPerUur : GemiddeldPerUur)) * 100), 2);
+                return GemiddeldActueelPerUur - GemiddeldPerUur == 0
+                    ? 0
+                    : Math.Round(
+                        (decimal) ((GemiddeldActueelPerUur - GemiddeldPerUur) /
+                            (GemiddeldPerUur == 0 ? GemiddeldActueelPerUur : GemiddeldPerUur) * 100), 2);
             }
             catch (Exception ex)
             {
@@ -345,7 +349,7 @@ namespace Rpm.Productie
 
         public virtual List<Materiaal> GetMaterialen()
         {
-            return Root?.Materialen?.Where(x=> x != null).ToList() ?? new List<Materiaal>();
+            return Root?.Materialen?.Where(x => x != null).ToList() ?? new List<Materiaal>();
         }
 
         public virtual Personeel[] GetPersonen(bool onlyactive)
@@ -369,16 +373,16 @@ namespace Rpm.Productie
                 if (this is Bewerking bew)
                     return bew.UpdateBewerking(null, change, save);
                 if (this is ProductieFormulier form)
-                    return form.UpdateForm(true, false, null, change, save,save,raiseevent);
-                return Task.FromResult<bool>(false);
+                    return form.UpdateForm(true, false, null, change, save, save, raiseevent);
+                return Task.FromResult(false);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return Task.FromResult<bool>(false);
+                return Task.FromResult(false);
             }
         }
-      
+
         public static Color GetNegativeColorByPercentage(decimal percentage)
         {
             if (percentage <= -25)
@@ -426,7 +430,7 @@ namespace Rpm.Productie
 
         public static Color GetProductSoortColor(string soort)
         {
-            if(string.IsNullOrEmpty(soort))return Color.Black;
+            if (string.IsNullOrEmpty(soort)) return Color.Black;
             switch (soort.ToLower())
             {
                 case "horti":
@@ -438,6 +442,7 @@ namespace Rpm.Productie
                 case "red":
                     return Color.FromArgb(199, 17, 39);
             }
+
             return Color.Black;
         }
 
@@ -478,7 +483,6 @@ namespace Rpm.Productie
         public static string GetStylesheet(string src)
         {
             if (src == "StyleSheet")
-            {
                 return @"h1, h2, h3 { color: navy}
                     h1 { margin-bottom: .3em; font:12pt Tahoma}
                     h2 { margin-bottom: .3em; font:10pt Tahoma}
@@ -495,9 +499,7 @@ namespace Rpm.Productie
                     .caption { font-size: 1.1em }
                     .comment { color: green; margin-bottom: 5px; margin-left: 3px; }
                     .comment2 { color: green; }";
-            }
             if (src == "StyleSheet1")
-            {
                 return @"h1, h2, h3 { color: navy}
                     h1 { margin-bottom: .3em; font:18pt Tahoma}
                     h2 { margin-bottom: .3em; font:14pt Tahoma}
@@ -514,100 +516,100 @@ namespace Rpm.Productie
                     .caption { font-size: 1.1em }
                     .comment { color: green; margin-bottom: 5px; margin-left: 3px; }
                     .comment2 { color: green; }";
-            }
 
             return null;
         }
 
-        public string GetVerpakkingHtmlText(VerpakkingInstructie verpakking, string title, Color backcolor, Color backgroundgradient,
+        public string GetVerpakkingHtmlText(VerpakkingInstructie verpakking, string title, Color backcolor,
+            Color backgroundgradient,
             Color textcolor, bool useimage)
         {
-            var x = verpakking ?? VerpakkingsInstructies?? new VerpakkingInstructie();
+            var x = verpakking ?? VerpakkingsInstructies ?? new VerpakkingInstructie();
             return x.CreateHtmlText(title, backcolor, backgroundgradient, textcolor, useimage);
         }
 
         public string GetProductieInfoHtml(string title, Color backcolor, Color backgroundgradient,
             Color textcolor, bool useimage)
         {
-            string ximage = $"<td width = '32' style = 'padding: 5px 5px 0 0' >\r\n" +
-                            $"<img width='{64}' height='{64}'  src = 'ProductieInfoicon' />\r\n" +
-                            $"</td>";
+            var ximage = "<td width = '32' style = 'padding: 5px 5px 0 0' >\r\n" +
+                         $"<img width='{64}' height='{64}'  src = 'ProductieInfoicon' />\r\n" +
+                         "</td>";
             if (!useimage) ximage = "";
-            var xreturn = $"<html>\r\n" +
-              $"<head>\r\n" +
-              $"<style>{GetStylesheet("StyleSheet")}</style>\r\n" +
-              $"<Title>{title}</Title>\r\n" +
-              $"<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
-              $"</head>\r\n" +
-              $"<body style='background - color: {backcolor.Name}; background-gradient: {backgroundgradient.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
-              $"<h1 align='center' style='color: {textcolor.Name}'>\r\n" +
-              $"       {title}\r\n" +
-              $"        <br/>\r\n" +
-              $"        <span style=\'font-size: x-small;\'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +
-              $"</h1>\r\n" +
-              $"<blockquote class='whitehole'>\r\n" +
-              $"       <p style = 'margin-top: 0px' >\r\n" +
-              $"<table border = '0' width = '100%' >\r\n" +
-              $"<tr style = 'vertical-align: top;' >\r\n" +
-              ximage + 
-              $"<td>" +
-              $"<div>\r\n" +
-              $"ArtikelNr: <b>{ArtikelNr}</b>, ProductieNr: <b>{ProductieNr}</b><br>" +
-              $"Omschrijving: <b>{Omschrijving?.Replace("\n", " <br> ")}</b><br><br>" +
-              $"Status: <b>{Enum.GetName(typeof(ProductieState), State)}</b><br>" +
-              $"{(State != ProductieState.Gestart ? "Laatst " : "")}Gestart Door: <b>{(string.IsNullOrEmpty(GestartDoor) ? "Niemand" : GestartDoor)}</b><br>" +
-              $"Aantal Gemaakt: <b>{TotaalGemaakt} / {Aantal} ({Gereed}%)</b><br>" +
-              $"Per Uur: <b>{ActueelPerUur} i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span></b><br>" +
-              $"Gemiddeld Per Uur: <b>{GemiddeldActueelPerUur} i.p.v. {GemiddeldPerUur} <span style = 'color: {GetNegativeColorByPercentage(GemiddeldProcentAfwijkingPerUur).Name}'>({GemiddeldProcentAfwijkingPerUur}%)</span></b><br>" +
-              $"Tijd Gewerkt: <b>{TijdGewerkt} uur</b><br>" +
-              $"{CombiesHtml()}" +
-              $"Aantal Aanbevolen Personen: <b>{AanbevolenPersonen}</b><br>" +
-              $"Opmerking: <b>{Opmerking?.Replace("\n", "<br>") ?? "Geen Opmerking."}</b><br><br>" +
-              $"</div>\r\n" +
-              $"<hr />" +
-              $"</td>" +
-              $"</tr>\r\n" +
-              $"</table >\r\n" +
-              $"</p>\r\n" +
-              $"</blockquote>\r\n" +
-              $"</body>\r\n" +
-              $"</html>";
+            var xreturn = "<html>\r\n" +
+                          "<head>\r\n" +
+                          $"<style>{GetStylesheet("StyleSheet")}</style>\r\n" +
+                          $"<Title>{title}</Title>\r\n" +
+                          "<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
+                          "</head>\r\n" +
+                          $"<body style='background - color: {backcolor.Name}; background-gradient: {backgroundgradient.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
+                          $"<h1 align='center' style='color: {textcolor.Name}'>\r\n" +
+                          $"       {title}\r\n" +
+                          "        <br/>\r\n" +
+                          $"        <span style=\'font-size: x-small;\'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +
+                          "</h1>\r\n" +
+                          "<blockquote class='whitehole'>\r\n" +
+                          "       <p style = 'margin-top: 0px' >\r\n" +
+                          "<table border = '0' width = '100%' >\r\n" +
+                          "<tr style = 'vertical-align: top;' >\r\n" +
+                          ximage +
+                          "<td>" +
+                          "<div>\r\n" +
+                          $"ArtikelNr: <b>{ArtikelNr}</b>, ProductieNr: <b>{ProductieNr}</b><br>" +
+                          $"Omschrijving: <b>{Omschrijving?.Replace("\n", " <br> ")}</b><br><br>" +
+                          $"Status: <b>{Enum.GetName(typeof(ProductieState), State)}</b><br>" +
+                          $"{(State != ProductieState.Gestart ? "Laatst " : "")}Gestart Door: <b>{(string.IsNullOrEmpty(GestartDoor) ? "Niemand" : GestartDoor)}</b><br>" +
+                          $"Aantal Gemaakt: <b>{TotaalGemaakt} / {Aantal} ({Gereed}%)</b><br>" +
+                          $"Per Uur: <b>{ActueelPerUur} i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span></b><br>" +
+                          $"Gemiddeld Per Uur: <b>{GemiddeldActueelPerUur} i.p.v. {GemiddeldPerUur} <span style = 'color: {GetNegativeColorByPercentage(GemiddeldProcentAfwijkingPerUur).Name}'>({GemiddeldProcentAfwijkingPerUur}%)</span></b><br>" +
+                          $"Tijd Gewerkt: <b>{TijdGewerkt} uur</b><br>" +
+                          $"{CombiesHtml()}" +
+                          $"Aantal Aanbevolen Personen: <b>{AanbevolenPersonen}</b><br>" +
+                          $"Opmerking: <b>{Opmerking?.Replace("\n", "<br>") ?? "Geen Opmerking."}</b><br><br>" +
+                          "</div>\r\n" +
+                          "<hr />" +
+                          "</td>" +
+                          "</tr>\r\n" +
+                          "</table >\r\n" +
+                          "</p>\r\n" +
+                          "</blockquote>\r\n" +
+                          "</body>\r\n" +
+                          "</html>";
             return xreturn;
         }
 
         public static string CreateHtmlMessage(string message, string title, Color txtcolor, Color backcolor,
             Color backgradient, string imgname, Size imgsize)
         {
-            string ximage = $"<td width = '{imgsize.Width}' style = 'padding: 5px 5px 0 0' >\r\n" +
-                           $"<img width='{imgsize.Width}' height='{imgsize.Height}'  src = '{imgname}' />\r\n" +
-                           $"</td>";
+            var ximage = $"<td width = '{imgsize.Width}' style = 'padding: 5px 5px 0 0' >\r\n" +
+                         $"<img width='{imgsize.Width}' height='{imgsize.Height}'  src = '{imgname}' />\r\n" +
+                         "</td>";
             if (string.IsNullOrEmpty(imgname)) ximage = "";
-            var xreturn = $"<html>\r\n" +
-              $"<head>\r\n" +
-              $"<style>{GetStylesheet("StyleSheet1")}</style>\r\n" +
-              $"<Title>{title}</Title>\r\n" +
-              $"<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
-              $"</head>\r\n" +
-              $"<body style='background - color: {backcolor.Name}; background-gradient: {backgradient.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
-              $"<h1 align='center' style='color: {txtcolor.Name}'>\r\n" +
-              $"       {title}\r\n" +
-              $"</h1>\r\n" +
-              $"<blockquote class='whitehole'>\r\n" +
-              $"       <p style = 'margin-top: 0px' >\r\n" +
-              $"<table border = '0' width = '100%' >\r\n" +
-              $"<tr style = 'vertical-align: top;' >\r\n" +
-              ximage +
-              $"<td>" +
-              $"<div>\r\n" +
-              $"{message}"+
-              $"<hr />" +
-              $"</td>" +
-              $"</tr>\r\n" +
-              $"</table >\r\n" +
-              $"</p>\r\n" +
-              $"</blockquote>\r\n" +
-              $"</body>\r\n" +
-              $"</html>";
+            var xreturn = "<html>\r\n" +
+                          "<head>\r\n" +
+                          $"<style>{GetStylesheet("StyleSheet1")}</style>\r\n" +
+                          $"<Title>{title}</Title>\r\n" +
+                          "<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
+                          "</head>\r\n" +
+                          $"<body style='background - color: {backcolor.Name}; background-gradient: {backgradient.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
+                          $"<h1 align='center' style='color: {txtcolor.Name}'>\r\n" +
+                          $"       {title}\r\n" +
+                          "</h1>\r\n" +
+                          "<blockquote class='whitehole'>\r\n" +
+                          "       <p style = 'margin-top: 0px' >\r\n" +
+                          "<table border = '0' width = '100%' >\r\n" +
+                          "<tr style = 'vertical-align: top;' >\r\n" +
+                          ximage +
+                          "<td>" +
+                          "<div>\r\n" +
+                          $"{message}" +
+                          "<hr />" +
+                          "</td>" +
+                          "</tr>\r\n" +
+                          "</table >\r\n" +
+                          "</p>\r\n" +
+                          "</blockquote>\r\n" +
+                          "</body>\r\n" +
+                          "</html>";
             return xreturn;
         }
 
@@ -617,11 +619,11 @@ namespace Rpm.Productie
             {
                 if (this is Bewerking {Combies: {Count: > 0}} bew)
                 {
-                    var xvalue = $"<ul>" +
+                    var xvalue = "<ul>" +
                                  $"{string.Join("\n", bew.Combies.Select(x => $"<li>Combinatie van {x.Activiteit}% tussen '{x.Periode.Start:M-d-yy HH:mm}' en '{(x.IsRunning ? DateTime.Now : x.Periode.Stop):M-d-yy HH:mm}'</li>"))}";
 
                     xvalue += $"<li>Huidige Activiteit: <u>{bew.Activiteit}%</u></li>";
-                    
+
                     xvalue += "</ul>";
                     return xvalue;
                 }
@@ -632,187 +634,186 @@ namespace Rpm.Productie
                 throw;
             }
 
-            return $"";
+            return "";
         }
 
 
         public string GetMaterialenHtml(string title, Color backcolor, Color backgroundgradient,
-    Color textcolor, bool useimage)
+            Color textcolor, bool useimage)
         {
-            string ximage = $"<td width = '32' style = 'padding: 5px 5px 0 0' >\r\n" +
-                            $"<img width='{64}' height='{64}'  src = 'Materialenicon' />\r\n" +
-                            $"</td>";
+            var ximage = "<td width = '32' style = 'padding: 5px 5px 0 0' >\r\n" +
+                         $"<img width='{64}' height='{64}'  src = 'Materialenicon' />\r\n" +
+                         "</td>";
             if (!useimage) ximage = "";
-            var xreturn = $"<html>\r\n" +
-              $"<head>\r\n" +
-              $"<style>{GetStylesheet("StyleSheet")}</style>\r\n" +
-              $"<Title>{title}</Title>\r\n" +
-              $"<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
-              $"</head>\r\n" +
-              $"<body style='background - color: {backcolor.Name}; background-gradient: {backgroundgradient.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
-              $"<h1 align='center' style='color: {textcolor.Name}'>\r\n" +
-              $"       {title}\r\n" +
-              $"        <br/>\r\n" +
-              $"        <span style='font-size: x-small;'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +
-              $"</h1>\r\n" +
-              $"<blockquote class='whitehole'>\r\n" +
-              $"       <p style = 'margin-top: 0px' >\r\n" +
-              $"<table border = '0' width = '100%' >\r\n" +
-              $"<tr style = 'vertical-align: top;' >\r\n" +
-              ximage + 
-              $"<td>" +
-              $"<ul>\r\n" +
-              string.Join("<br>", GetMaterialen().Select(x =>
-                  ($"<li>" +
-                   $"<div Color=RoyalBlue>[{x.ArtikelNr}] {x.Omschrijving}</div>" +
-                   $"<div>Locatie: <b>{x.Locatie}</b></div>" +
-                   $"<div>Verbuik Per Eenheid: <b>{Math.Round(x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
-                   $"<div>Verbuikt: <b>{Math.Round(TotaalGemaakt * x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
-                   $"<div>Totaal Nodig: <b>{Math.Round(Aantal * x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
-                   $"<div>Aantal Afkeur: <b>{Math.Round(x.AantalAfkeur, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)} ({x.AfKeurProcent()})</b></div>" +
-                   $"</li>"))) +
-              $"</ul>\r\n" +
-              $"<hr />" +
-              $"</td>" +
-              $"</tr>\r\n" +
-              $"</table >\r\n" +
-              $"</p>\r\n" +
-              $"</blockquote>\r\n" +
-              $"</body>\r\n" +
-              $"</html>";
+            var xreturn = "<html>\r\n" +
+                          "<head>\r\n" +
+                          $"<style>{GetStylesheet("StyleSheet")}</style>\r\n" +
+                          $"<Title>{title}</Title>\r\n" +
+                          "<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
+                          "</head>\r\n" +
+                          $"<body style='background - color: {backcolor.Name}; background-gradient: {backgroundgradient.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
+                          $"<h1 align='center' style='color: {textcolor.Name}'>\r\n" +
+                          $"       {title}\r\n" +
+                          "        <br/>\r\n" +
+                          $"        <span style='font-size: x-small;'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +
+                          "</h1>\r\n" +
+                          "<blockquote class='whitehole'>\r\n" +
+                          "       <p style = 'margin-top: 0px' >\r\n" +
+                          "<table border = '0' width = '100%' >\r\n" +
+                          "<tr style = 'vertical-align: top;' >\r\n" +
+                          ximage +
+                          "<td>" +
+                          "<ul>\r\n" +
+                          string.Join("<br>", GetMaterialen().Select(x =>
+                              "<li>" +
+                              $"<div Color=RoyalBlue>[{x.ArtikelNr}] {x.Omschrijving}</div>" +
+                              $"<div>Locatie: <b>{x.Locatie}</b></div>" +
+                              $"<div>Verbuik Per Eenheid: <b>{Math.Round(x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
+                              $"<div>Verbuikt: <b>{Math.Round(TotaalGemaakt * x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
+                              $"<div>Totaal Nodig: <b>{Math.Round(Aantal * x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
+                              $"<div>Aantal Afkeur: <b>{Math.Round(x.AantalAfkeur, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)} ({x.AfKeurProcent()})</b></div>" +
+                              "</li>")) +
+                          "</ul>\r\n" +
+                          "<hr />" +
+                          "</td>" +
+                          "</tr>\r\n" +
+                          "</table >\r\n" +
+                          "</p>\r\n" +
+                          "</blockquote>\r\n" +
+                          "</body>\r\n" +
+                          "</html>";
             return xreturn;
         }
 
         public string GetNotitiesHtml(string title, Color backcolor, Color backgroundgradient,
             Color textcolor, bool useimage)
         {
-            string ximage = $"<td width = '32' style = 'padding: 5px 5px 0 0' >\r\n" +
-                            $"<img width='{64}' height='{64}'  src = 'NotitiesIcon' />\r\n" +
-                            $"</td>";
+            var ximage = "<td width = '32' style = 'padding: 5px 5px 0 0' >\r\n" +
+                         $"<img width='{64}' height='{64}'  src = 'NotitiesIcon' />\r\n" +
+                         "</td>";
             if (!useimage) ximage = "";
-            var xreturn = $"<html>\r\n" +
-                          $"<head>\r\n" +
+            var xreturn = "<html>\r\n" +
+                          "<head>\r\n" +
                           $"<style>{GetStylesheet("StyleSheet")}</style>\r\n" +
                           $"<Title>{title}</Title>\r\n" +
-                          $"<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
-                          $"</head>\r\n" +
+                          "<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
+                          "</head>\r\n" +
                           $"<body style='background - color: {backcolor.Name}; background-gradient: {backgroundgradient.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
                           $"<h1 align='center' style='color: {textcolor.Name}'>\r\n" +
                           $"       {title}\r\n" +
-                          $"        <br/>\r\n" +
+                          "        <br/>\r\n" +
                           $"        <span style=\'font-size: x-small;\'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +
-                          $"</h1>\r\n" +
-                          $"<blockquote class='whitehole'>\r\n" +
-                          $"       <p style = 'margin-top: 0px' >\r\n" +
-                          $"<table border = '0' width = '100%' >\r\n" +
-                          $"<tr style = 'vertical-align: top;' >\r\n" +
-                          ximage+
-                          $"<td>" +
-                          $"<div>\r\n" +
+                          "</h1>\r\n" +
+                          "<blockquote class='whitehole'>\r\n" +
+                          "       <p style = 'margin-top: 0px' >\r\n" +
+                          "<table border = '0' width = '100%' >\r\n" +
+                          "<tr style = 'vertical-align: top;' >\r\n" +
+                          ximage +
+                          "<td>" +
+                          "<div>\r\n" +
                           $"Notitie: <b>{Note?.Notitie?.Replace("\n", "<br>") ?? "Geen Notitie."}</b><br>" +
                           $"Gereed Notitie: <b>{GereedNote?.Notitie?.Replace("\n", "<br>") ?? "Geen Gereed Notitie."}</b><br>" +
-                          $"</div>\r\n" +
-                          $"<hr />" +
-                          $"</td>" +
-                          $"</tr>\r\n" +
-                          $"</table >\r\n" +
-                          $"</p>\r\n" +
-                          $"</blockquote>\r\n" +
-                          $"</body>\r\n" +
-                          $"</html>";
+                          "</div>\r\n" +
+                          "<hr />" +
+                          "</td>" +
+                          "</tr>\r\n" +
+                          "</table >\r\n" +
+                          "</p>\r\n" +
+                          "</blockquote>\r\n" +
+                          "</body>\r\n" +
+                          "</html>";
             return xreturn;
         }
 
         public string GetDatumsHtml(string title, Color backcolor, Color backgroundgradient,
-    Color textcolor, bool useimage)
+            Color textcolor, bool useimage)
         {
-            string ximage = $"<td width = '32' style = 'padding: 5px 5px 0 0' >\r\n" +
-                            $"<img width='{64}' height='{64}'  src = 'Datumsicon' />\r\n" +
-                            $"</td>";
+            var ximage = "<td width = '32' style = 'padding: 5px 5px 0 0' >\r\n" +
+                         $"<img width='{64}' height='{64}'  src = 'Datumsicon' />\r\n" +
+                         "</td>";
             if (!useimage) ximage = "";
-            var xreturn = $"<html>\r\n" +
-                          $"<head>\r\n" +
+            var xreturn = "<html>\r\n" +
+                          "<head>\r\n" +
                           $"<style>{GetStylesheet("StyleSheet")}</style>\r\n" +
                           $"<Title>{title}</Title>\r\n" +
-                          $"<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
-                          $"</head>\r\n" +
+                          "<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
+                          "</head>\r\n" +
                           $"<body style='background - color: {backcolor.Name}; background-gradient: {backgroundgradient.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
                           $"<h1 align='center' style='color: {textcolor.Name}'>\r\n" +
                           $"       {title}\r\n" +
-                          $"        <br/>\r\n" +
+                          "        <br/>\r\n" +
                           $"        <span style='font-size: x-small;'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +
-                          $"</h1>\r\n" +
-                          $"<blockquote class='whitehole'>\r\n" +
-                          $"       <p style = 'margin-top: 0px' >\r\n" +
-                          $"<table border = '0' width = '100%' >\r\n" +
-                          $"<tr style = 'vertical-align: top;' >\r\n" +
+                          "</h1>\r\n" +
+                          "<blockquote class='whitehole'>\r\n" +
+                          "       <p style = 'margin-top: 0px' >\r\n" +
+                          "<table border = '0' width = '100%' >\r\n" +
+                          "<tr style = 'vertical-align: top;' >\r\n" +
                           ximage +
-                          $"<td>" +
-                          $"<ul>\r\n" +
+                          "<td>" +
+                          "<ul>\r\n" +
                           $"<li>Leverdatum is Op: <b>{LeverDatum:f}</b></li>" +
                           $"<li>Uiterlijk starten Op: <b>{StartOp:f}</b></li>" +
                           $"<li>Aantal Gewijzigd Op: <b>{LaatstAantalUpdate:f}</b></li>" +
                           $"<li>Toegevoegd Op: <b>{DatumToegevoegd:f}</b></li>" +
                           $"<li>Gestart Op: <b>{TijdGestart:f}</b></li>" +
                           $"<li>Gestopt Op: <b>{(State == ProductieState.Gestart ? "Is nog bezig." : TijdGestopt.ToString("f"))}</b></li>" +
-                          $"<li>Gereed Gemeld op: <b>{(State != ProductieState.Gereed ? "Nog niet gereed gemeld." : (DatumGereed.ToString("f")))}</b></li>" +
-                          $"</ul>\r\n" +
-                          $"<hr />" +
-                          $"</td>" +
-                          $"</tr>\r\n" +
-                          $"</table >\r\n" +
-                          $"</p>\r\n" +
-                          $"</blockquote>\r\n" +
-                          $"</body>\r\n" +
-                          $"</html>";
+                          $"<li>Gereed Gemeld op: <b>{(State != ProductieState.Gereed ? "Nog niet gereed gemeld." : DatumGereed.ToString("f"))}</b></li>" +
+                          "</ul>\r\n" +
+                          "<hr />" +
+                          "</td>" +
+                          "</tr>\r\n" +
+                          "</table >\r\n" +
+                          "</p>\r\n" +
+                          "</blockquote>\r\n" +
+                          "</body>\r\n" +
+                          "</html>";
             return xreturn;
         }
 
         public string GetWerkplekkenHtml(string title, Color backcolor, Color backgroundgradient,
-Color textcolor, bool useimage)
+            Color textcolor, bool useimage)
         {
-            string ximage = $"<td width = '32' style = 'padding: 5px 5px 0 0' >\r\n" +
-                            $"<img width='{64}' height='{64}'  src = 'WerkplaatsenIcon' />\r\n" +
-                            $"</td>";
+            var ximage = "<td width = '32' style = 'padding: 5px 5px 0 0' >\r\n" +
+                         $"<img width='{64}' height='{64}'  src = 'WerkplaatsenIcon' />\r\n" +
+                         "</td>";
             if (!useimage) ximage = "";
-            var xreturn = $"<html>\r\n" +
-                          $"<head>\r\n" +
+            var xreturn = "<html>\r\n" +
+                          "<head>\r\n" +
                           $"<style>{GetStylesheet("StyleSheet")}</style>\r\n" +
                           $"<Title>{ArtikelNr}</Title>\r\n" +
-                          $"<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
-                          $"</head>\r\n" +
+                          "<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
+                          "</head>\r\n" +
                           $"<body style='background - color: {backcolor.Name}; background-gradient: {backgroundgradient.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
                           $"<h1 align='center' style='color: {textcolor.Name}'>\r\n" +
                           $"      {title}\r\n" +
-                          $"        <br/>\r\n" +
+                          "        <br/>\r\n" +
                           $"       {(this is Bewerking ? Naam + "<br>" : "")}\r\n" +
                           $"        <span style=\'font-size: x-small;\'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +
-                          $"</h1>\r\n" +
-                          $"<blockquote class='whitehole'>\r\n" +
-                          $"       <p style = 'margin-top: 0px' 'margin-bottom: 0px'>\r\n" +
-                          $"<table border = '0' width = '100%' >\r\n" +
-                          $"<tr style = 'vertical-align: top;' >\r\n" +
+                          "</h1>\r\n" +
+                          "<blockquote class='whitehole'>\r\n" +
+                          "       <p style = 'margin-top: 0px' 'margin-bottom: 0px'>\r\n" +
+                          "<table border = '0' width = '100%' >\r\n" +
+                          "<tr style = 'vertical-align: top;' >\r\n" +
                           ximage +
-                          $"<td>" +
-                          $"<div>\r\n" +
+                          "<td>" +
+                          "<div>\r\n" +
                           string.Join("<br>", GetWerkPlekken().Select(x =>
-                              ($"<h3>{x.Naam}</h3>" +
-                               $"<div>" +
-                               $"Medewerkers: <div><b>{string.Join("<br>", x.Personen.Select(p => p.PersoneelNaam + $"({p.TotaalTijdGewerkt} Uur gewerkt)"))}</b><br></div>" +
-                               $"Aantal Gemaakt: <b>{x.AantalGemaakt} / {Aantal}</b><br>" +
-                               $"Actueel Per Uur: <b>{x.PerUur} i.p.v. {x.PerUurBase}</b><br>" +
-                               $"Notitie: <b>{x.Note?.Notitie?.Replace("\n", "<br>") ?? "Geen Notitie."}</b><br>" +
-                               $"</div>"))) +
-                          
+                              $"<h3>{x.Naam}</h3>" +
+                              "<div>" +
+                              $"Medewerkers: <div><b>{string.Join("<br>", x.Personen.Select(p => p.PersoneelNaam + $"({p.TotaalTijdGewerkt} Uur gewerkt)"))}</b><br></div>" +
+                              $"Aantal Gemaakt: <b>{x.AantalGemaakt} / {Aantal}</b><br>" +
+                              $"Actueel Per Uur: <b>{x.PerUur} i.p.v. {x.PerUurBase}</b><br>" +
+                              $"Notitie: <b>{x.Note?.Notitie?.Replace("\n", "<br>") ?? "Geen Notitie."}</b><br>" +
+                              "</div>")) +
                           "</div>" +
-                          $"<hr />" +
+                          "<hr />" +
                           "</td>" +
-                          $"</tr>\r\n" +
-                          $"</table >\r\n" +
-                          $"</p>\r\n" +
-                          $"</blockquote>\r\n" +
-                          $"</body>\r\n" +
-                          $"</html>";
+                          "</tr>\r\n" +
+                          "</table >\r\n" +
+                          "</p>\r\n" +
+                          "</blockquote>\r\n" +
+                          "</body>\r\n" +
+                          "</html>";
             return xreturn;
         }
 
@@ -820,84 +821,151 @@ Color textcolor, bool useimage)
             Color backgroundgradient,
             Color textcolor, bool useimage)
         {
-            string ximage = image == null || !useimage
+            var ximage = image == null || !useimage
                 ? string.Empty
-                : $"<td width = '32' style = 'padding: 5px 5px 0 0' >\r\n" +
+                : "<td width = '32' style = 'padding: 5px 5px 0 0' >\r\n" +
                   $"<img width='{imagesize.Width}' height='{imagesize.Height}'  src = 'data:image/png;base64,{image.Base64Encoded()}' />\r\n" +
-                  $"</td>";
+                  "</td>";
             var xcolor = GetProductSoortColor(ProductSoort);
             var xrgb = $"rgb({xcolor.R}, {xcolor.G}, {xcolor.B})'";
-            string prodsoort = string.IsNullOrEmpty(ProductSoort)
+            var prodsoort = string.IsNullOrEmpty(ProductSoort)
                 ? ""
                 : $"<span color='{xrgb}'><b>[{ProductSoort}]</b></span>";
-            var ratio = Math.Round(ControleRatio,2);
+            var ratio = Math.Round(ControleRatio, 2);
             if (!useimage) ximage = "";
-            var xreturn = $"<html>\r\n" +
-                          $"<head>\r\n" +
+            var xreturn = "<html>\r\n" +
+                          "<head>\r\n" +
                           $"<style>{GetStylesheet("StyleSheet")}</style>\r\n" +
                           $"<Title>{ArtikelNr}</Title>\r\n" +
-                          $"<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
-                          $"</head>\r\n" +
+                          "<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
+                          "</head>\r\n" +
                           $"<body style='background - color: {backcolor.Name}; background-gradient: {backgroundgradient.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
                           $"<h1 align='center' style='color: {textcolor.Name}'>\r\n" +
                           $"      {prodsoort} {title}\r\n" +
-                          $"        <br/>\r\n" +
+                          "        <br/>\r\n" +
                           $"       {(this is Bewerking ? Naam + "<br>" : "")}\r\n" +
                           $"        <span style=\'font-size: x-small;\'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +
-                          $"</h1>\r\n" +
-                          $"<blockquote class='whitehole'>\r\n" +
-                          $"       <p style = 'margin-top: 0px' 'margin-bottom: 0px'>\r\n" +
-                          $"<table border = '0' width = '100%' >\r\n" +
-                          $"<tr style = 'vertical-align: top;' >\r\n" +
+                          "</h1>\r\n" +
+                          "<blockquote class='whitehole'>\r\n" +
+                          "       <p style = 'margin-top: 0px' 'margin-bottom: 0px'>\r\n" +
+                          "<table border = '0' width = '100%' >\r\n" +
+                          "<tr style = 'vertical-align: top;' >\r\n" +
                           ximage +
-                          $"<td><div>" +
+                          "<td><div>" +
                           $"<h2>Leverdatum: <span style = 'color: {GetValidColor(LeverDatum > DateTime.Now).Name}>{LeverDatum:f}</span>.</h2>" +
-                          $"<h2>" +
+                          "<h2>" +
                           $"{(State != ProductieState.Gereed ? $"Verwachte Leverdatum: <span style = 'color:{GetValidColor(VerwachtLeverDatum < LeverDatum).Name}> {VerwachtLeverDatum:f}</span>." : $"Gereed Gemeld Op: <span style = 'color:{GetValidColor(true).Name}>{DatumGereed:f}</span>.")}\r\n" +
-                          $"</h2><hr />\r\n<h2>" +
+                          "</h2><hr />\r\n<h2>" +
                           $"Aantal Gemaakt: <u>{TotaalGemaakt}</u> / {Aantal} <span style = 'color: {GetPositiveColorByPercentage((decimal) Gereed).Name}'>({Gereed}%)</span><br>" +
                           $"<ul><li><u>Actueel</u> Aantal Gemaakt: <b><u>{ActueelAantalGemaakt}</u></b> / {Aantal}</li></ul>" +
                           $"Tijd Gewerkt: <u>{TijdGewerkt}</u> / {Math.Round(DoorloopTijd, 2)} uur <span style = 'color:{GetPositiveColorByPercentage((decimal) TijdGewerktPercentage).Name}'>({TijdGewerktPercentage}%)</span><br>" +
                           $"{CombiesHtml()}" +
                           $"Per Uur: <u>{ActueelPerUur}</u> i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span><br>" +
-                          $"Controle Ratio: <span style = 'color: {GetNegativeColorByPercentage((decimal)ratio).Name}'>{(ratio > 0 ? $"+{ratio}" : ratio)}%</span><br><br>" +
+                          $"Controle Ratio: <span style = 'color: {GetNegativeColorByPercentage((decimal) ratio).Name}'>{(ratio > 0 ? $"+{ratio}" : ratio)}%</span><br><br>" +
                           $"<span style = 'color: {Color.DarkRed.Name}'><u>{Opmerking}</u></span><br>" +
                           $"<span style = 'color: {Color.DarkRed.Name}'><u>{ControlePunten}</u></span><br>" +
-                          $"</h2><hr />\r\n" +
+                          "</h2><hr />\r\n" +
                           "</div>" +
                           "</td>" +
-                          $"</tr>\r\n" +
-                          $"</table >\r\n" +
-                          $"</p>\r\n" +
-                          $"</blockquote>\r\n" +
-                          $"</body>\r\n" +
-                          $"</html>";
+                          "</tr>\r\n" +
+                          "</table >\r\n" +
+                          "</p>\r\n" +
+                          "</blockquote>\r\n" +
+                          "</body>\r\n" +
+                          "</html>";
             return xreturn;
         }
 
         public Bitmap GetImageFromResources()
         {
-            Bitmap img = this is ProductieFormulier ? Resources.page_document_16748_128_128 : Resources.operation;
-            switch (State)
+            string xname = "";
+            return GetImageFromResources(ref xname);
+        }
+
+        public Bitmap GetImageFromResources(ref string name)
+        {
+            var img = this is ProductieFormulier ? Resources.page_document_16748_128_128 : Resources.operation;
+            bool onderbroken = this.GetStoringen(true).Length > 0;
+            if (this is Bewerking bew)
             {
-                case ProductieState.Gestopt:
-                    if (IsNieuw)
-                        img = img.CombineImage(Resources.new_25355, 2);
-                    else if (TeLaat)
-                        img = img.CombineImage(Resources.Warning_36828, 2);
-                    break;
-                case ProductieState.Gestart:
-                    img = img.CombineImage(Resources.play_button_icon_icons_com_60615, 2);
-                    break;
-                case ProductieState.Gereed:
-                    img = img.CombineImage(Resources.check_1582, 2);
-                    break;
-                case ProductieState.Verwijderd:
-                    img = img.CombineImage(Resources.delete_1577, 2);
-                    break;
+                name += "bew";
+                if (bew.Combies.Count > 0)
+                {
+                    name += "_combi";
+                    img = img.CombineImage(Resources.UnMerge_arrows_32x32, ContentAlignment.BottomLeft, 2);
+                }
+                if (!string.IsNullOrEmpty(bew.Note?.Notitie))
+                {
+                    name += "_note";
+                    img = img.CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, 2);
+                }
+            }
+            else if (this is ProductieFormulier prod)
+            {
+                name += "prod";
+                if (prod.Bewerkingen?.Any(x => x.Combies.Count > 0) ?? false)
+                {
+                    name += "_combi";
+                    img = img.CombineImage(Resources.UnMerge_arrows_32x32, ContentAlignment.BottomLeft, 2);
+                }
+
+                if (!string.IsNullOrEmpty(prod.Note?.Notitie))
+                {
+                    name += "_note";
+                    img = img.CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, 2);
+                }
             }
 
+            if (onderbroken)
+            {
+                name += "_onderbroken";
+                img = img.CombineImage(Resources.Stop_Hand__32x32, ContentAlignment.BottomRight, 2);
+            }
+            else
+            {
+                name += "_" + Enum.GetName(typeof(ProductieState), State)?.ToLower();
+                switch (State)
+                {
+                    case ProductieState.Gestopt:
+                        if (IsNieuw)
+                        {
+                            name += "_nieuw";
+                            img = img.CombineImage(Resources.new_25355, 2);
+                        }
+                        else if (TeLaat)
+                        {
+                            name += "_telaat";
+                            img = img.CombineImage(Resources.Warning_36828, 2);
+                        }
+
+                        break;
+                    case ProductieState.Gestart:
+                        img = img.CombineImage(Resources.play_button_icon_icons_com_60615, 2);
+                        break;
+                    case ProductieState.Gereed:
+                        img = img.CombineImage(Resources.check_1582, 2);
+                        break;
+                    case ProductieState.Verwijderd:
+                        img = img.CombineImage(Resources.delete_1577, 2);
+                        break;
+                }
+            }
             return img;
+        }
+
+        public int GetImageIndexFromList(ImageList list)
+        {
+            if (list == null) return -1;
+            string name = "";
+            var img = this.GetImageFromResources(ref name);
+            if (!string.IsNullOrEmpty(name) && img != null)
+            {
+                if (!list.Images.ContainsKey(name))
+                    list.Images.Add(name, img);
+                return list.Images.IndexOfKey(name);
+            }
+
+            return -1;
         }
     }
 }

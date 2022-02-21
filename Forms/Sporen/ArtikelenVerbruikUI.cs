@@ -1,28 +1,28 @@
-﻿using BrightIdeasSoftware;
-using Forms.Sporen;
-using ProductieManager.Properties;
-using Rpm.Productie;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
 using Forms;
+using Forms.Sporen;
+using ProductieManager.Properties;
+using Rpm.Productie;
 
 namespace Controls
 {
     public partial class ArtikelenVerbruikUI : UserControl
     {
-        private List<SpoorEntry> Sporen { get; set; } = new List<SpoorEntry>();
-
         public ArtikelenVerbruikUI()
         {
             InitializeComponent();
         }
 
+        private List<SpoorEntry> Sporen { get; set; } = new();
+
         public void InitUI()
         {
             imageList1.Images.Add(Resources.geometry_measure_32x32);
-            ((OLVColumn)xVerpakkingen.Columns[0]).ImageGetter = (x) => 0;
+            ((OLVColumn) xVerpakkingen.Columns[0]).ImageGetter = x => 0;
             InitList(true);
             InitEvents();
         }
@@ -42,23 +42,17 @@ namespace Controls
                 if (reload)
                 {
                     Sporen?.Clear();
-                    if (Manager.SporenBeheer is {Disposed: false})
-                    {
-                        Sporen = Manager.SporenBeheer.GetAlleSporen();
-                    }
+                    if (Manager.SporenBeheer is {Disposed: false}) Sporen = Manager.SporenBeheer.GetAlleSporen();
                 }
-               
+
                 Sporen ??= new List<SpoorEntry>();
-                string xfilter = xsearch.Text.Trim();
+                var xfilter = xsearch.Text.Trim();
                 var xitems = Sporen;
                 if (xfilter.Length > 0)
                     xitems = Sporen.Where(x => x.ContainsFilter(xfilter)).ToList();
                 xVerpakkingen.SetObjects(xitems);
                 xVerpakkingen.SelectedObject = xselected;
-                if (xVerpakkingen.SelectedObject == null)
-                {
-                    xVerpakkingen.SelectedIndex = 0;
-                }
+                if (xVerpakkingen.SelectedObject == null) xVerpakkingen.SelectedIndex = 0;
 
                 xVerpakkingen.SelectedItem?.EnsureVisible();
             }
@@ -71,27 +65,23 @@ namespace Controls
             EnableFields();
         }
 
-        private void metroTextBox1_TextChanged(object sender, System.EventArgs e)
+        private void metroTextBox1_TextChanged(object sender, EventArgs e)
         {
             InitList(false);
         }
 
-        private void Manager_VerpakkingDeleted(object sender, System.EventArgs e)
+        private void Manager_VerpakkingDeleted(object sender, EventArgs e)
         {
             try
             {
-                this.BeginInvoke(new MethodInvoker(() =>
+                BeginInvoke(new MethodInvoker(() =>
                 {
                     if (sender is string value)
                     {
                         var xremoved = Sporen.RemoveAll(x =>
                             string.Equals(x.ArtikelNr, value, StringComparison.CurrentCultureIgnoreCase));
-                        if (xremoved > 0)
-                        {
-                            InitList(false);
-                        }
+                        if (xremoved > 0) InitList(false);
                     }
-
                 }));
             }
             catch (Exception exception)
@@ -107,10 +97,7 @@ namespace Controls
             if (xold != null)
             {
                 var xindex = Sporen.IndexOf(xold);
-                if (xindex != -1)
-                {
-                    Sporen[xindex] = spoor;
-                }
+                if (xindex != -1) Sporen[xindex] = spoor;
             }
             else
             {
@@ -121,24 +108,19 @@ namespace Controls
             UpdateSporen(spoor);
         }
 
-        private void Manager_VerpakkingChanged(object sender, System.EventArgs e)
+        private void Manager_VerpakkingChanged(object sender, EventArgs e)
         {
             try
             {
-                this.BeginInvoke(new MethodInvoker(() =>
+                BeginInvoke(new MethodInvoker(() =>
                 {
-                    if (sender is SpoorEntry spoor)
-                    {
-                        UpdateSpoor(spoor);
-                    }
-
+                    if (sender is SpoorEntry spoor) UpdateSpoor(spoor);
                 }));
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
             }
-
         }
 
         private void UpdateSporen(SpoorEntry spoor)
@@ -148,7 +130,7 @@ namespace Controls
                 var xitems = xVerpakkingen.Objects.Cast<SpoorEntry>().ToList();
                 var xold = xitems.FirstOrDefault(x =>
                     string.Equals(x.ArtikelNr, spoor.ArtikelNr, StringComparison.CurrentCultureIgnoreCase));
-                bool valid = spoor != null && spoor.ContainsFilter(xsearch.Text.Trim());
+                var valid = spoor != null && spoor.ContainsFilter(xsearch.Text.Trim());
 
                 if (xold == null && valid)
                 {
@@ -159,9 +141,7 @@ namespace Controls
                 else if (xold != null)
                 {
                     if (valid)
-                    {
                         xVerpakkingen.RefreshObject(spoor);
-                    }
                     else xVerpakkingen.RemoveObject(xold);
                 }
 
@@ -201,6 +181,7 @@ namespace Controls
             {
                 productieVerbruikUI1.Visible = false;
             }
+
             var text = $"Aangepaste Materiaal Verbruik Overzicht[{Sporen?.Count ?? 0}]";
             OnStatusTextChanged(text);
         }
@@ -213,27 +194,20 @@ namespace Controls
         private void xdelete_Click(object sender, EventArgs e)
         {
             if (xVerpakkingen.SelectedObjects.Count > 0)
-            {
-                if (XMessageBox.Show(this, $"Weetje zekere dat je alle geselecteerde verpakkingen wilt verwijderen?",
+                if (XMessageBox.Show(this, "Weetje zekere dat je alle geselecteerde verpakkingen wilt verwijderen?",
                         "Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     var xitems = xVerpakkingen.SelectedObjects.Cast<SpoorEntry>();
                     foreach (var item in xitems)
-                    {
                         if (Manager.SporenBeheer is {Disposed: false})
-                        {
                             Manager.SporenBeheer.RemoveSpoor(item);
-                        }
-                    }
 
                     xdelete.Enabled = xVerpakkingen.SelectedObjects.Count > 0;
                 }
-            }
         }
 
         private void xadd_Click(object sender, EventArgs e)
         {
-            
             var xnew = new NewSpoorForm();
             if (xnew.ShowDialog() == DialogResult.OK)
             {

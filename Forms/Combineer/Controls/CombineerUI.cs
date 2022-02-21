@@ -1,29 +1,29 @@
-﻿using Forms;
-using Rpm.Productie;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Forms;
 using Forms.Combineer;
+using Rpm.Productie;
+using Rpm.Various;
 
 namespace Controls
 {
     public partial class CombineerUI : UserControl
     {
-        public Bewerking Productie { get; private set; }
-
         public CombineerUI()
         {
             InitializeComponent();
         }
 
+        public Bewerking Productie { get; private set; }
+
         public void UpdateBewerking(Bewerking bewerking)
         {
-            if (this.Disposing || this.IsDisposed || !this.Visible || bewerking == null) return;
-            this.BeginInvoke(new Action(() =>
+            if (Disposing || IsDisposed || !Visible || bewerking == null) return;
+            BeginInvoke(new Action(() =>
             {
                 try
                 {
@@ -45,10 +45,7 @@ namespace Controls
                     foreach (var combi in bewerking.Combies)
                     {
                         var prod = Werk.FromPath(combi.Path);
-                        if (prod?.Bewerking == null)
-                        {
-                            continue;
-                        }
+                        if (prod?.Bewerking == null) continue;
 
                         var xold = xcurrentitems.FirstOrDefault(x =>
                             string.Equals(x.Productie.ProductieNr + $"\\{x.Productie.Naam}",
@@ -70,7 +67,6 @@ namespace Controls
                     }
 
                     InitFields();
-
                 }
                 catch (Exception e)
                 {
@@ -85,19 +81,19 @@ namespace Controls
             if (Productie != null)
             {
                 var combs = Productie.Combies.Where(x => x.IsRunning).ToList();
-                string xcount = combs.Count == 0 ? "geen" : combs.Count.ToString();
-                string x0 = combs.Count == 1 ? "is" : "zijn";
-                string x1 = combs.Count == 1 ? "combinatie" : "combinaties";
-                string x2 = combs.Count == 0
+                var xcount = combs.Count == 0 ? "geen" : combs.Count.ToString();
+                var x0 = combs.Count == 1 ? "is" : "zijn";
+                var x1 = combs.Count == 1 ? "combinatie" : "combinaties";
+                var x2 = combs.Count == 0
                     ? ""
                     : $"met totaal {combs.Sum(x => x.Activiteit)}% aan activiteit.";
 
-                string title = combs.Count > 0
+                var title = combs.Count > 0
                     ? $"Er {x0} {xcount} actieve {x1} {x2}"
                     : $"Combineer producties met {Productie.Naam} van {Productie.Omschrijving}";
 
                 msg = $"<span color='darkred'><b>{title}</b><br>" +
-                      $"Alle gecombineerde producties zullen automatisch starten,stoppen en worden gereed gemeld.<br>" +
+                      "Alle gecombineerde producties zullen automatisch starten,stoppen en worden gereed gemeld.<br>" +
                       $"<b>Huidige productie draait op {Productie.Activiteit}%</b></span>";
             }
 
@@ -116,31 +112,33 @@ namespace Controls
                         string.Equals(c.Path, Productie.Path, StringComparison.CurrentCultureIgnoreCase)));
                 if (prods.Count == 0)
                 {
-                    XMessageBox.Show(this, $"Geen producties om te combineren");
+                    XMessageBox.Show(this, "Geen producties om te combineren");
                     return;
                 }
+
                 var xbwselector = new BewerkingSelectorForm(prods, false, false);
                 if (xbwselector.ShowDialog() == DialogResult.OK)
                 {
                     var selected = xbwselector.SelectedBewerkingen;
                     if (selected.Count == 0) return;
-                    List<Bewerking> added = new List<Bewerking>();
+                    var added = new List<Bewerking>();
                     foreach (var item in selected)
                     {
                         var xnew = new NewCombineerForm(Productie, item);
                         if (xnew.ShowDialog() == DialogResult.OK)
                         {
                             Productie.Combies.Add(xnew.SelectedEntry);
-                            
+
                             item.Combies.RemoveAll(x => string.Equals(Path.Combine(x.ProductieNr, x.BewerkingNaam),
                                 Productie.Path, StringComparison.CurrentCultureIgnoreCase));
-                            item.Combies.Add(new CombineerEntry()
+                            item.Combies.Add(new CombineerEntry
                             {
                                 ProductieNr = Productie.ProductieNr, BewerkingNaam = Productie.Naam,
-                                Activiteit = 100 - xnew.SelectedEntry.Activiteit, Periode = new TijdEntry(DateTime.Now, default)
+                                Activiteit = 100 - xnew.SelectedEntry.Activiteit,
+                                Periode = new TijdEntry(DateTime.Now, default)
                             });
                             var msg = $"[{item.ArtikelNr} | {item.ProductieNr}] toegevoegd als combinatie.\n" +
-                                  $"Activiteit is gewijzigd!";
+                                      "Activiteit is gewijzigd!";
                             if (item.UpdateBewerking(null, msg).Result)
                                 added.Add(item);
                             Task.Delay(500).Wait();
@@ -155,10 +153,7 @@ namespace Controls
                         var msg = $"{added.Count} {x1} toegevoegd als combinatie.\n" +
                                   $"Huidige productie activiteit is gewijzigd van {Productie.Activiteit}% naar {left}%";
 
-                        if (Productie.UpdateBewerking(null, msg).Result)
-                        {
-                            _= Productie.UpdateCombies();
-                        }
+                        if (Productie.UpdateBewerking(null, msg).Result) _ = Productie.UpdateCombies();
                     }
                 }
             }

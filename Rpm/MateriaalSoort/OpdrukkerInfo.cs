@@ -8,14 +8,6 @@ namespace Rpm.MateriaalSoort
 {
     public class OpdrukkerInfo
     {
-        #region Variables
-        public Dictionary<int, string> Types { get; set; }
-        public Dictionary<int, decimal> Diameters { get; set; }
-        public Dictionary<int, decimal> WandDiktes { get; set; }
-        public Dictionary<int, decimal> LipLengtes { get; set; }
-        public Dictionary<int, int> Aantallen { get; set; }
-        #endregion Variables
-
         #region Ctors
 
         public OpdrukkerInfo()
@@ -26,7 +18,18 @@ namespace Rpm.MateriaalSoort
             LipLengtes = OpdrukkerLipLengtes;
             Aantallen = PakketAantallen;
         }
+
         #endregion Ctors
+
+        #region Variables
+
+        public Dictionary<int, string> Types { get; set; }
+        public Dictionary<int, decimal> Diameters { get; set; }
+        public Dictionary<int, decimal> WandDiktes { get; set; }
+        public Dictionary<int, decimal> LipLengtes { get; set; }
+        public Dictionary<int, int> Aantallen { get; set; }
+
+        #endregion Variables
 
         #region public Members
 
@@ -49,7 +52,6 @@ namespace Rpm.MateriaalSoort
         {
             try
             {
-
                 var xpath = Manager.DbPath;
                 var xfile = Path.Combine(xpath, "OpdrukkerInfo.rpm");
                 var xdata = xfile.DeSerialize<OpdrukkerInfo>();
@@ -69,11 +71,12 @@ namespace Rpm.MateriaalSoort
                 return null;
             }
         }
+
         #endregion public Members
 
         #region Static Members
 
-        public static Dictionary<int, string> OpdrukkerTypes = new Dictionary<int, string>
+        public static Dictionary<int, string> OpdrukkerTypes = new()
         {
             {0, "Enkel D=6,5 A=10 D=6,5 A=10"},
             {1, "Enkel D=8,5 A=15 D=8,5 A=15"},
@@ -90,10 +93,10 @@ namespace Rpm.MateriaalSoort
             {83, "Flat roof D=8,5 A=15 D=8,5 A=15"},
             {84, "East-West D=8,5 A=25 D=8,5 A=25"},
             {85, "ValkBox 1 D=6,5 A=10 D=8,5 A=15"},
-            {86, "ValkBox 2 D=6,5 A=10 D=8,5 A=15"},
+            {86, "ValkBox 2 D=6,5 A=10 D=8,5 A=15"}
         };
 
-        public static Dictionary<int, int> PakketAantallen = new Dictionary<int, int>
+        public static Dictionary<int, int> PakketAantallen = new()
         {
             {0, 792},
             {1, 599},
@@ -107,7 +110,7 @@ namespace Rpm.MateriaalSoort
             {9, 1}
         };
 
-        public static Dictionary<int, decimal> BuisDiameters = new Dictionary<int, decimal>
+        public static Dictionary<int, decimal> BuisDiameters = new()
         {
             {0, 19},
             {1, 22},
@@ -118,10 +121,10 @@ namespace Rpm.MateriaalSoort
             {6, 32},
             {7, 0},
             {8, 38},
-            {9, 0},
+            {9, 0}
         };
 
-        public static Dictionary<int, decimal> BuisWandDiktes = new Dictionary<int, decimal>
+        public static Dictionary<int, decimal> BuisWandDiktes = new()
         {
             {0, 0},
             {1, 0.9m},
@@ -135,7 +138,7 @@ namespace Rpm.MateriaalSoort
             {9, 0}
         };
 
-        public static Dictionary<int, decimal> OpdrukkerLipLengtes = new Dictionary<int, decimal>
+        public static Dictionary<int, decimal> OpdrukkerLipLengtes = new()
         {
             {0, 22},
             {1, 30},

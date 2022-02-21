@@ -1,36 +1,40 @@
-﻿using FolderSync;
-using Microsoft.Win32.SafeHandles;
-using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using FolderSync;
+using Microsoft.Win32.SafeHandles;
+using Rpm.Misc;
+using Rpm.Productie;
 using Rpm.SqlLite;
+using Rpm.Various;
 
 namespace ProductieManager.Rpm.Productie
 {
-    public class ProductieProvider:IDisposable
+    public class ProductieProvider : IDisposable
     {
         public enum LoadedType
         {
             Alles,
             Gereed,
             Producties,
-            None,
+            None
         }
 
-        private static readonly object _locker = new object();
+        private static readonly object _locker = new();
+
+        private bool _isupdating;
         public bool IsProductiesSyncing { get; private set; }
-        public List<IProductieBase> ExcludeProducties { get; set; } = new List<IProductieBase>();
-        public static FolderSynchronization FolderSynchronization { get; private set; } = new FolderSynchronization();
-       // public static Synchronisation MicSync { get; private set; } = new Synchronisation();
-       public string AppRootPath { get; private set; }
-       public string SecondaryRootPath { get; private set; }
+        public List<IProductieBase> ExcludeProducties { get; set; } = new();
+
+        public static FolderSynchronization FolderSynchronization { get; } = new();
+
+        // public static Synchronisation MicSync { get; private set; } = new Synchronisation();
+        public string AppRootPath { get; private set; }
+        public string SecondaryRootPath { get; private set; }
+
         public void StartSyncProducties()
         {
             if (IsProductiesSyncing) return;
@@ -68,21 +72,17 @@ namespace ProductieManager.Rpm.Productie
         public bool IsExcluded(IProductieBase productie)
         {
             if (productie == null || string.IsNullOrEmpty(productie.ProductieNr)) return true;
-            return ExcludeProducties != null && ExcludeProducties.Any(x => string.Equals(productie.ProductieNr, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase) &&
+            return ExcludeProducties != null && ExcludeProducties.Any(x =>
+                string.Equals(productie.ProductieNr, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase) &&
                 string.Equals(productie.Naam, x.Naam, StringComparison.CurrentCultureIgnoreCase));
         }
-
-        private bool _isupdating = false;
 
         public void InitOfflineDb()
         {
             if (Manager.DefaultSettings.GebruikOfflineMetSync && !string.Equals(Manager.AppRootPath,
                     Manager.DefaultSettings.TempMainDB.RootPath, StringComparison.CurrentCultureIgnoreCase) &&
                 Directory.Exists(Manager.DefaultSettings.TempMainDB.RootPath))
-            {
-               
                 SyncProducties();
-            }
             else DisableOfflineDb();
         }
 
@@ -108,30 +108,23 @@ namespace ProductieManager.Rpm.Productie
             if (Manager.DefaultSettings?.MainDB == null || Manager.DefaultSettings.TempMainDB == null) return;
             try
             {
-                var path1 = Manager.AppRootPath??string.Empty;
+                var path1 = Manager.AppRootPath ?? string.Empty;
                 var path2 = Manager.DefaultSettings.TempMainDB.RootPath;
                 var xtmp = Path.Combine(path2, DateTime.Now.Year.ToString());
                 if (Path.GetFileName(path1) == Path.GetFileName(xtmp))
-                {
                     path2 = xtmp;
-                }
                 else
-                {
                     path2 = Path.Combine(path2, Path.GetFileName(path1));
-                }
 
                 path1 = Path.Combine(path1, "RPM_Data");
                 path2 = Path.Combine(path2, "RPM_Data");
                 AppRootPath = path1;
                 SecondaryRootPath = path2;
-                if (!Directory.Exists(path2))
-                {
-                    Directory.CreateDirectory(path2);
-                }
+                if (!Directory.Exists(path2)) Directory.CreateDirectory(path2);
                 if (Manager.DefaultSettings.GebruikOfflineMetSync &&
                     !string.IsNullOrEmpty(path1) &&
                     !string.IsNullOrEmpty(path2) &&
-                    !string.Equals(path1,path2, StringComparison.CurrentCultureIgnoreCase) &&
+                    !string.Equals(path1, path2, StringComparison.CurrentCultureIgnoreCase) &&
                     Directory.Exists(path1) &&
                     Directory.Exists(path2))
                 {
@@ -145,119 +138,118 @@ namespace ProductieManager.Rpm.Productie
                     FolderSynchronization.ClearScans();
                     foreach (var xkey in Manager.DefaultSettings.OfflineDabaseTypes)
                     {
-                        string localproductiepath = string.Empty;
-                        string remoteproductiepath = string.Empty;
+                        var localproductiepath = string.Empty;
+                        var remoteproductiepath = string.Empty;
                         switch (xkey)
                         {
                             case DbType.Producties:
-                                localproductiepath = path2 + $"\\SqlDatabase";
-                                remoteproductiepath = path1 + $"\\SqlDatabase";
+                                localproductiepath = path2 + "\\SqlDatabase";
+                                remoteproductiepath = path1 + "\\SqlDatabase";
                                 Manager.Database?.ProductieFormulieren?.MultiFiles?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
                                     });
                                 break;
                             case DbType.Medewerkers:
-                                localproductiepath = path2 + $"\\PersoneelDb";
-                                remoteproductiepath = path1 + $"\\PersoneelDb";
+                                localproductiepath = path2 + "\\PersoneelDb";
+                                remoteproductiepath = path1 + "\\PersoneelDb";
                                 Manager.Database?.PersoneelLijst?.MultiFiles?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
                                     });
                                 break;
                             case DbType.GereedProducties:
-                                localproductiepath = path2 + $"\\GereedDb";
-                                remoteproductiepath = path1 + $"\\GereedDb";
+                                localproductiepath = path2 + "\\GereedDb";
+                                remoteproductiepath = path1 + "\\GereedDb";
                                 Manager.Database?.GereedFormulieren?.MultiFiles?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
                                     });
                                 break;
                             case DbType.Opties:
-                                localproductiepath = path2 + $"\\SettingDb";
-                                remoteproductiepath = path1 + $"\\SettingDb";
+                                localproductiepath = path2 + "\\SettingDb";
+                                remoteproductiepath = path1 + "\\SettingDb";
                                 Manager.Database?.AllSettings?.MultiFiles?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
                                     });
                                 break;
                             case DbType.Accounts:
-                                localproductiepath = path2 + $"\\AccountsDb";
-                                remoteproductiepath = path1 + $"\\AccountsDb";
+                                localproductiepath = path2 + "\\AccountsDb";
+                                remoteproductiepath = path1 + "\\AccountsDb";
                                 Manager.Database?.UserAccounts?.MultiFiles?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
                                     });
                                 break;
                             case DbType.Klachten:
-                                localproductiepath = path2 + $"\\Klachten";
-                                remoteproductiepath = path1 + $"\\Klachten";
+                                localproductiepath = path2 + "\\Klachten";
+                                remoteproductiepath = path1 + "\\Klachten";
                                 Manager.Klachten?.Database?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
                                     });
                                 break;
                             case DbType.Verpakkingen:
-                                localproductiepath = path2 + $"\\Verpakking";
-                                remoteproductiepath = path1 + $"\\Verpakking";
+                                localproductiepath = path2 + "\\Verpakking";
+                                remoteproductiepath = path1 + "\\Verpakking";
                                 Manager.Verpakkingen?.Database?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
                                     });
                                 break;
                             case DbType.SpoorOverzicht:
-                                localproductiepath = path2 + $"\\Sporen";
-                                remoteproductiepath = path1 + $"\\Sporen";
+                                localproductiepath = path2 + "\\Sporen";
+                                remoteproductiepath = path1 + "\\Sporen";
                                 Manager.SporenBeheer?.Database?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
                                     });
                                 break;
                             case DbType.LijstLayouts:
-                                localproductiepath = path2 + $"\\LijstLayouts";
-                                remoteproductiepath = path1 + $"\\LijstLayouts";
+                                localproductiepath = path2 + "\\LijstLayouts";
+                                remoteproductiepath = path1 + "\\LijstLayouts";
                                 Manager.ListLayouts?.Database?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
                                     });
                                 break;
                             case DbType.Messages:
-                                localproductiepath = path2 + $"\\Chat";
-                                remoteproductiepath = path1 + $"\\Chat";
+                                localproductiepath = path2 + "\\Chat";
+                                remoteproductiepath = path1 + "\\Chat";
                                 break;
                             case DbType.Opmerkingen:
-                                localproductiepath = path2 + $"\\Opmerkingen";
-                                remoteproductiepath = path1 + $"\\Opmerkingen";
+                                localproductiepath = path2 + "\\Opmerkingen";
+                                remoteproductiepath = path1 + "\\Opmerkingen";
                                 break;
                             case DbType.ArtikelRecords:
-                                localproductiepath = path2 + $"\\ArtikelRecords";
-                                remoteproductiepath = path1 + $"\\ArtikelRecords";
+                                localproductiepath = path2 + "\\ArtikelRecords";
+                                remoteproductiepath = path1 + "\\ArtikelRecords";
                                 Manager.ArtikelRecords?.Database?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
                                     });
                                 break;
-
                         }
 
                         if (!string.IsNullOrEmpty(localproductiepath) && !string.IsNullOrEmpty(remoteproductiepath))
@@ -266,11 +258,13 @@ namespace ProductieManager.Rpm.Productie
                                 Directory.CreateDirectory(localproductiepath);
                             if (!Directory.Exists(remoteproductiepath))
                                 Directory.CreateDirectory(remoteproductiepath);
-                            var fsync = new FolderSynchronizationScannerItem()
+                            var fsync = new FolderSynchronizationScannerItem
                             {
                                 Destination = localproductiepath,
                                 Monitor = true,
-                                Option = xkey == DbType.Messages? FolderSynchorizationOption.SourceCreate : FolderSynchorizationOption.Destination,
+                                Option = xkey == DbType.Messages
+                                    ? FolderSynchorizationOption.SourceCreate
+                                    : FolderSynchorizationOption.Destination,
                                 Source = remoteproductiepath
                             };
                             FolderSynchronization?.AddScan(fsync);
@@ -279,7 +273,10 @@ namespace ProductieManager.Rpm.Productie
 
                     FolderSynchronization?.Start();
                 }
-                else DisableOfflineDb();
+                else
+                {
+                    DisableOfflineDb();
+                }
             }
             catch (Exception e)
             {
@@ -287,7 +284,7 @@ namespace ProductieManager.Rpm.Productie
                 FolderSynchronization?.Stop();
             }
         }
-        
+
         private async Task xSyncDirectories(string remotepath, string localpath)
         {
             var remotedb = await Manager.GetAllProductiePaths(true, false);
@@ -303,8 +300,7 @@ namespace ProductieManager.Rpm.Productie
                     var fi1 = new FileInfo(path);
                     var fi2 = new FileInfo(localfilep);
                     if (fi1.CreationTime > fi2.CreationTime || fi1.LastWriteTime > fi2.LastWriteTime)
-                    {
-                        for (int i = 0; i < 10; i++)
+                        for (var i = 0; i < 10; i++)
                         {
                             try
                             {
@@ -321,11 +317,8 @@ namespace ProductieManager.Rpm.Productie
 
                             await Task.Delay(100);
                         }
-
-                    }
                     else if (fi1.CreationTime < fi2.CreationTime || fi1.LastWriteTime < fi2.LastWriteTime)
-                    {
-                        for (int i = 0; i < 10; i++)
+                        for (var i = 0; i < 10; i++)
                         {
                             try
                             {
@@ -342,14 +335,10 @@ namespace ProductieManager.Rpm.Productie
 
                             await Task.Delay(100);
                         }
-
-                    }
-
-
                 }
                 else
                 {
-                    for (int i = 0; i < 10; i++)
+                    for (var i = 0; i < 10; i++)
                     {
                         try
                         {
@@ -381,8 +370,7 @@ namespace ProductieManager.Rpm.Productie
                     var fi1 = new FileInfo(path);
                     var fi2 = new FileInfo(remotefilep);
                     if (fi1.CreationTime > fi2.CreationTime || fi1.LastWriteTime > fi2.LastWriteTime)
-                    {
-                        for (int i = 0; i < 10; i++)
+                        for (var i = 0; i < 10; i++)
                         {
                             try
                             {
@@ -399,11 +387,8 @@ namespace ProductieManager.Rpm.Productie
 
                             await Task.Delay(100);
                         }
-
-                    }
                     else if (fi1.CreationTime < fi2.CreationTime || fi1.LastWriteTime < fi2.LastWriteTime)
-                    {
-                        for (int i = 0; i < 10; i++)
+                        for (var i = 0; i < 10; i++)
                         {
                             try
                             {
@@ -420,12 +405,10 @@ namespace ProductieManager.Rpm.Productie
 
                             await Task.Delay(100);
                         }
-
-                    }
                 }
                 else
                 {
-                    for (int i = 0; i < 10; i++)
+                    for (var i = 0; i < 10; i++)
                     {
                         try
                         {
@@ -456,8 +439,7 @@ namespace ProductieManager.Rpm.Productie
                     var fi1 = new FileInfo(path);
                     var fi2 = new FileInfo(localfilep);
                     if (fi1.CreationTime > fi2.CreationTime || fi1.LastWriteTime > fi2.LastWriteTime)
-                    {
-                        for (int i = 0; i < 10; i++)
+                        for (var i = 0; i < 10; i++)
                         {
                             try
                             {
@@ -475,11 +457,8 @@ namespace ProductieManager.Rpm.Productie
 
                             await Task.Delay(100);
                         }
-
-                    }
                     else if (fi1.CreationTime < fi2.CreationTime || fi1.LastWriteTime < fi2.LastWriteTime)
-                    {
-                        for (int i = 0; i < 10; i++)
+                        for (var i = 0; i < 10; i++)
                         {
                             try
                             {
@@ -497,14 +476,10 @@ namespace ProductieManager.Rpm.Productie
 
                             await Task.Delay(100);
                         }
-
-                    }
-
-
                 }
                 else
                 {
-                    for (int i = 0; i < 10; i++)
+                    for (var i = 0; i < 10; i++)
                     {
                         try
                         {
@@ -536,8 +511,7 @@ namespace ProductieManager.Rpm.Productie
                     var fi1 = new FileInfo(path);
                     var fi2 = new FileInfo(remotefilep);
                     if (fi1.CreationTime > fi2.CreationTime || fi1.LastWriteTime > fi2.LastWriteTime)
-                    {
-                        for (int i = 0; i < 10; i++)
+                        for (var i = 0; i < 10; i++)
                         {
                             try
                             {
@@ -555,11 +529,8 @@ namespace ProductieManager.Rpm.Productie
 
                             await Task.Delay(100);
                         }
-
-                    }
                     else if (fi1.CreationTime < fi2.CreationTime || fi1.LastWriteTime < fi2.LastWriteTime)
-                    {
-                        for (int i = 0; i < 10; i++)
+                        for (var i = 0; i < 10; i++)
                         {
                             try
                             {
@@ -577,12 +548,10 @@ namespace ProductieManager.Rpm.Productie
 
                             await Task.Delay(100);
                         }
-
-                    }
                 }
                 else
                 {
-                    for (int i = 0; i < 10; i++)
+                    for (var i = 0; i < 10; i++)
                     {
                         try
                         {
@@ -609,13 +578,15 @@ namespace ProductieManager.Rpm.Productie
             {
                 try
                 {
-                    if (Manager.LogedInGebruiker != null && (Manager.Opties.GebruikLocalSync || Manager.Opties.GebruikTaken))
+                    if (Manager.LogedInGebruiker != null &&
+                        (Manager.Opties.GebruikLocalSync || Manager.Opties.GebruikTaken))
                     {
-                        var forms = await Manager.GetAllProductieIDs(false,false);
-                        for (int i = 0; i < forms.Count; i++)
+                        var forms = await Manager.GetAllProductieIDs(false, false);
+                        for (var i = 0; i < forms.Count; i++)
                         {
-                            if (Manager.LogedInGebruiker == null || !IsProductiesSyncing || (!Manager.Opties.GebruikLocalSync && !Manager.Opties.GebruikTaken)) break;
-                            var prod = await Manager.Database.GetProductie(forms[i]);
+                            if (Manager.LogedInGebruiker == null || !IsProductiesSyncing ||
+                                !Manager.Opties.GebruikLocalSync && !Manager.Opties.GebruikTaken) break;
+                            var prod = Manager.Database.GetProductie(forms[i]);
                             if (prod == null || !prod.IsAllowed(null) || IsExcluded(prod))
                                 continue;
                             if (prod.State is ProductieState.Verwijderd or ProductieState.Gereed)
@@ -623,7 +594,7 @@ namespace ProductieManager.Rpm.Productie
                             // bool invoke = true;
 
                             //opslaan als de productie voor het laatst is gestart door de huidige gebruiker.
-                            bool save = prod.Bewerkingen != null && prod.Bewerkingen.Any(x =>
+                            var save = prod.Bewerkingen != null && prod.Bewerkingen.Any(x =>
                                 string.Equals(x.GestartDoor, Manager.Opties.Username,
                                     StringComparison.CurrentCultureIgnoreCase));
                             prod.FormulierChanged(this);
@@ -647,37 +618,44 @@ namespace ProductieManager.Rpm.Productie
         }
 
         /// <summary>
-        /// Verkrijg alle producties
+        ///     Verkrijg alle producties
         /// </summary>
         /// <param name="type">De type producties die je wilt verkrijgen</param>
         /// <param name="states">Verkrijg producties op basis van een bepaalde status types</param>
         /// <param name="filter">true als je wilt dat de producties worden gefiltered volgens een geldige bewerking</param>
-        /// <param name="incform">true als de productie ook die aangegeven status moet zijn, false je alleen wilt verkrijgen op basis van een geldige bewerking</param>
+        /// <param name="incform">
+        ///     true als de productie ook die aangegeven status moet zijn, false je alleen wilt verkrijgen op
+        ///     basis van een geldige bewerking
+        /// </param>
         /// <param name="loaddb">true als je de producties als standaard wilt laden.</param>
         /// <returns></returns>
-        public async Task<List<ProductieFormulier>> GetProducties(LoadedType type, ViewState[] states, bool filter, IsValidHandler validhandler)
+        public async Task<List<ProductieFormulier>> GetProducties(LoadedType type, ViewState[] states, bool filter,
+            IsValidHandler validhandler)
         {
             return await GetProducties(type, filter, validhandler);
         }
 
-        public async Task<List<Bewerking>> GetBewerkingen(LoadedType type, ViewState[] states, bool filter, IsValidHandler validhandler)
+        public async Task<List<Bewerking>> GetBewerkingen(LoadedType type, ViewState[] states, bool filter,
+            IsValidHandler validhandler)
         {
             var prods = await GetProducties(type, false, validhandler);
             var bws = GetBewerkingen(prods, type, states, filter);
             return bws;
         }
 
-        private List<Bewerking> GetBewerkingen(List<ProductieFormulier>  producties, LoadedType type, ViewState[] states, bool filter)
+        private List<Bewerking> GetBewerkingen(List<ProductieFormulier> producties, LoadedType type, ViewState[] states,
+            bool filter)
         {
             return (from prod in producties
                 where type != LoadedType.Producties || prod.State != ProductieState.Gereed
                 where prod?.Bewerkingen != null && prod.Bewerkingen.Length != 0
                 from bw in prod.Bewerkingen
-                where !filter || (states.Any(bw.IsValidState) && bw.IsAllowed())
+                where !filter || states.Any(bw.IsValidState) && bw.IsAllowed()
                 select bw).ToList();
         }
 
-        private async Task<List<ProductieFormulier>> GetProducties(LoadedType type, bool filter, IsValidHandler validhandler)
+        private async Task<List<ProductieFormulier>> GetProducties(LoadedType type, bool filter,
+            IsValidHandler validhandler)
         {
             var prods = new List<ProductieFormulier>();
             //Manager.DbBeginUpdate();
@@ -699,11 +677,11 @@ namespace ProductieManager.Rpm.Productie
                         prods = new List<ProductieFormulier>();
                         break;
                 }
-
             }
             catch
             {
             }
+
             //Manager.DbEndUpdate();
             return prods;
         }

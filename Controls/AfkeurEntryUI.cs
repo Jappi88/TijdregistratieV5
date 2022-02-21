@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 using Rpm.Misc;
 using Rpm.Productie;
@@ -65,9 +66,7 @@ namespace Controls
         private void xvalue_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar.Equals('.') || e.KeyChar.Equals(','))
-            {
-                e.KeyChar = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.ToCharArray()[0];
-            }
+                e.KeyChar = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.ToCharArray()[0];
         }
     }
 }

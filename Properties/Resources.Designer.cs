@@ -413,6 +413,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Charts_96x96 {
+            get {
+                object obj = ResourceManager.GetObject("Charts_96x96", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap chat_26_icon_96x96 {
             get {
                 object obj = ResourceManager.GetObject("chat_26_icon_96x96", resourceCulture);
@@ -2803,10 +2813,11 @@ namespace ProductieManager.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; standalone=&quot;yes&quot;?&gt;
+        ///
         ///&lt;configuration&gt;
-        ///  &lt;startup&gt;
-        ///    &lt;supportedRuntime version=&quot;v4.0&quot; sku=&quot;.NETFramework,Version=v4.5&quot; /&gt;
-        ///  &lt;/startup&gt;
+        ///	&lt;startup&gt;
+        ///		&lt;supportedRuntime version=&quot;v4.0&quot; sku=&quot;.NETFramework,Version=v4.5&quot; /&gt;
+        ///	&lt;/startup&gt;
         ///&lt;/configuration&gt;.
         /// </summary>
         internal static string ZipExtractor_exe {

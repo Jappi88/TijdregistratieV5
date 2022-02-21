@@ -1,38 +1,29 @@
-﻿using BrightIdeasSoftware;
-using ProductieManager.Properties;
-using Rpm.Productie;
-using Rpm.Productie.ArtikelRecords;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
+using Forms.MetroBase;
+using ProductieManager.Properties;
+using Rpm.Productie;
+using Rpm.Productie.ArtikelRecords;
 
 namespace Forms.ArtikelRecords
 {
-    public partial class ArtikelOpmerkingenForm : Forms.MetroBase.MetroBaseForm
+    public partial class ArtikelOpmerkingenForm : MetroBaseForm
     {
-        public List<ArtikelOpmerking> Opmerkingen = new List<ArtikelOpmerking>();
-        public ArtikelRecord Record { get; set; }
-
-        public string Title
-        {
-            get => this.Text;
-            set
-            {
-                this.Text = value;
-                this.Invalidate();
-            }
-        }
+        private string _Filter = string.Empty;
+        public List<ArtikelOpmerking> Opmerkingen = new();
 
         public ArtikelOpmerkingenForm()
         {
             InitializeComponent();
             imageList1.Images.Add(Resources.default_opmerking_16757_32x32);
-            ((OLVColumn)xOpmerkingenList.Columns[0]).ImageGetter = (x) => 0;
+            ((OLVColumn) xOpmerkingenList.Columns[0]).ImageGetter = x => 0;
         }
 
-        public ArtikelOpmerkingenForm(ArtikelRecord record):this()
+        public ArtikelOpmerkingenForm(ArtikelRecord record) : this()
         {
             Record = record;
             Opmerkingen = record.Opmerkingen;
@@ -41,6 +32,18 @@ namespace Forms.ArtikelRecords
         public ArtikelOpmerkingenForm(List<ArtikelOpmerking> opmerkingen) : this()
         {
             Opmerkingen = opmerkingen;
+        }
+
+        public ArtikelRecord Record { get; set; }
+
+        public string Title
+        {
+            get => Text;
+            set
+            {
+                Text = value;
+                Invalidate();
+            }
         }
 
         public void LoadAlgemeenOpmerkingen()
@@ -78,7 +81,6 @@ namespace Forms.ArtikelRecords
             {
                 if (Record != null)
                 {
-
                     Record.Opmerkingen = Opmerkingen;
                     Record.LaatstGeupdate = DateTime.Now;
                     Manager.ArtikelRecords?.Database?.Upsert(Record.ArtikelNr, Record, false);
@@ -129,10 +131,9 @@ namespace Forms.ArtikelRecords
                 xsearchbox.Text = "";
         }
 
-        private string _Filter = string.Empty;
-        private void xsearchArtikel_TextChanged(object sender, System.EventArgs e)
+        private void xsearchArtikel_TextChanged(object sender, EventArgs e)
         {
-            string filter = xsearchbox.Text.Replace("Zoeken...", "").Trim().ToLower();
+            var filter = xsearchbox.Text.Replace("Zoeken...", "").Trim().ToLower();
             if (string.Equals(filter, _Filter, StringComparison.CurrentCultureIgnoreCase)) return;
             LoadList();
             _Filter = filter;
@@ -159,11 +160,11 @@ namespace Forms.ArtikelRecords
             }
         }
 
-        private void ArtikelRecords_ArtikelDeleted(object sender, System.IO.FileSystemEventArgs e)
+        private void ArtikelRecords_ArtikelDeleted(object sender, FileSystemEventArgs e)
         {
             try
             {
-                if(e.Name.ToLower().StartsWith("algemeen"))
+                if (e.Name.ToLower().StartsWith("algemeen"))
                     if (Record != null)
                         return;
                 if (Record != null)
@@ -171,10 +172,10 @@ namespace Forms.ArtikelRecords
                     var xid = Path.GetFileNameWithoutExtension(e.FullPath);
                     if (string.Equals(Record.ArtikelNr, xid, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        if (this.InvokeRequired)
-                            this.Invoke(new MethodInvoker(this.Close));
+                        if (InvokeRequired)
+                            Invoke(new MethodInvoker(Close));
                         else
-                            this.Close();
+                            Close();
                     }
                 }
             }
@@ -188,18 +189,22 @@ namespace Forms.ArtikelRecords
         {
             try
             {
-                if (this.IsDisposed || Disposing) return;
+                if (IsDisposed || Disposing) return;
                 if (e.Name.ToLower().StartsWith("algemeen"))
                     if (Record != null)
+                    {
                         return;
+                    }
                     else
                     {
-                        Opmerkingen = Manager.ArtikelRecords?.GetAllAlgemeenRecordsOpmerkingen() ?? new List<ArtikelOpmerking>();
-                        if (this.InvokeRequired)
-                            this.Invoke(new MethodInvoker(LoadList));
+                        Opmerkingen = Manager.ArtikelRecords?.GetAllAlgemeenRecordsOpmerkingen() ??
+                                      new List<ArtikelOpmerking>();
+                        if (InvokeRequired)
+                            Invoke(new MethodInvoker(LoadList));
                         else
                             LoadList();
                     }
+
                 if (Record != null)
                 {
                     var xid = Path.GetFileNameWithoutExtension(e.FullPath);
@@ -210,8 +215,8 @@ namespace Forms.ArtikelRecords
                             return;
                         Record = xrecord;
                         Opmerkingen = xrecord.Opmerkingen;
-                        if (this.InvokeRequired)
-                            this.Invoke(new MethodInvoker(LoadList));
+                        if (InvokeRequired)
+                            Invoke(new MethodInvoker(LoadList));
                         else
                             LoadList();
                     }
@@ -234,7 +239,6 @@ namespace Forms.ArtikelRecords
 
         private void xOK_Click(object sender, EventArgs e)
         {
-          
             DialogResult = DialogResult.OK;
             SaveOpmerkingen();
         }
@@ -246,9 +250,7 @@ namespace Forms.ArtikelRecords
             if (Record != null)
                 newopmerking.Title = $"{Record.ArtikelNr} Melding Aanmaken";
             else
-            {
-                newopmerking.Title = $"Algemene Melding Aanmaken";
-            }
+                newopmerking.Title = "Algemene Melding Aanmaken";
             newopmerking.EnableWerkplekCheckbox = Record == null;
             if (newopmerking.ShowDialog() == DialogResult.OK)
             {
@@ -307,7 +309,7 @@ namespace Forms.ArtikelRecords
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
+            DialogResult = DialogResult.Cancel;
         }
     }
 }

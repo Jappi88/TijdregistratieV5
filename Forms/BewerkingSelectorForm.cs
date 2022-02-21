@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Navigation;
 using MetroFramework.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
@@ -14,23 +13,13 @@ namespace Forms
 {
     public partial class BewerkingSelectorForm : MetroForm
     {
-        public bool ShowWerkPlekken { get; set; }
+        private string _Filter = string.Empty;
 
         public BewerkingSelectorForm(ViewState[] bewerkingstates, bool filter, bool showwerkplekken, bool checkall)
         {
             InitializeComponent();
             ShowWerkPlekken = showwerkplekken;
             LoadBewerkingen(bewerkingstates, filter, showwerkplekken, checkall);
-        }
-
-        public string Title
-        {
-            get => this.Text;
-            set
-            {
-                this.Text = value;
-                this.Invalidate();
-            }
         }
 
         public BewerkingSelectorForm(List<Bewerking> bws, bool showwerkplekken, bool checkall)
@@ -40,11 +29,24 @@ namespace Forms
             ListBewerkingen(bws, showwerkplekken, checkall);
         }
 
-        public List<WerkPlek> SelectedWerkplekken { get; private set; } = new List<WerkPlek>();
-        public List<Bewerking> SelectedBewerkingen { get; private set; } = new List<Bewerking>();
-        public List<Bewerking> Bewerkingen { get; private set; } = new List<Bewerking>();
+        public bool ShowWerkPlekken { get; set; }
 
-        private async void LoadBewerkingen(ViewState[] bewerkingstates, bool filter, bool showwerkplekken, bool checkall)
+        public string Title
+        {
+            get => Text;
+            set
+            {
+                Text = value;
+                Invalidate();
+            }
+        }
+
+        public List<WerkPlek> SelectedWerkplekken { get; } = new();
+        public List<Bewerking> SelectedBewerkingen { get; } = new();
+        public List<Bewerking> Bewerkingen { get; private set; } = new();
+
+        private async void LoadBewerkingen(ViewState[] bewerkingstates, bool filter, bool showwerkplekken,
+            bool checkall)
         {
             try
             {
@@ -60,13 +62,13 @@ namespace Forms
 
         private void ListBewerkingen(List<Bewerking> bws, bool showwerkplekken, bool allchecked)
         {
-
             try
             {
                 xbewerkinglijst.BeginUpdate();
                 xbewerkinglijst.Items.Clear();
                 imageList1.Images.Clear();
-                imageList1.Images.Add(Resources.iconfinder_technology.CombineImage(Resources.play_button_icon_icons_com_60615,
+                imageList1.Images.Add(Resources.iconfinder_technology.CombineImage(
+                    Resources.play_button_icon_icons_com_60615,
                     2));
                 imageList1.Images.Add(Resources.operation);
                 foreach (var bw in bws)
@@ -112,24 +114,19 @@ namespace Forms
                 Console.WriteLine(e);
                 XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
-
-            
         }
 
-        private void xok_Click(object sender, System.EventArgs e)
+        private void xok_Click(object sender, EventArgs e)
         {
-
             try
             {
                 SelectedWerkplekken.Clear();
                 SelectedBewerkingen.Clear();
                 foreach (var lv in xbewerkinglijst.Items)
-                {
                     if (lv is ListViewItem {Checked: true, Tag: WerkPlek plek})
                         SelectedWerkplekken.Add(plek);
-                    else if (lv is ListViewItem { Checked: true, Tag: Bewerking bew })
+                    else if (lv is ListViewItem {Checked: true, Tag: Bewerking bew})
                         SelectedBewerkingen.Add(bew);
-                }
 
                 DialogResult = DialogResult.OK;
             }
@@ -140,7 +137,7 @@ namespace Forms
             }
         }
 
-        private void xannuleren_Click(object sender, System.EventArgs e)
+        private void xannuleren_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
         }
@@ -154,7 +151,7 @@ namespace Forms
 
         private void deselecteerAllesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach(var item in xbewerkinglijst.Items)
+            foreach (var item in xbewerkinglijst.Items)
                 if (item is ListViewItem lv)
                     lv.Checked = false;
         }
@@ -165,10 +162,9 @@ namespace Forms
                 xsearchbox.Text = "";
         }
 
-        private string _Filter = String.Empty;
-        private void xsearchArtikel_TextChanged(object sender, System.EventArgs e)
+        private void xsearchArtikel_TextChanged(object sender, EventArgs e)
         {
-            string filter = xsearchbox.Text.Replace("Zoeken...", "").Trim().ToLower();
+            var filter = xsearchbox.Text.Replace("Zoeken...", "").Trim().ToLower();
             if (string.Equals(filter, _Filter, StringComparison.CurrentCultureIgnoreCase)) return;
             ListBewerkingen(Bewerkingen, ShowWerkPlekken, ShowWerkPlekken);
             _Filter = filter;

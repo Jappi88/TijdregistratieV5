@@ -1,18 +1,16 @@
-﻿using Forms;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using Forms;
 using Forms.GereedMelden;
-using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.Various;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using PdfSharp.Drawing;
 using Various;
 
 namespace Controls
@@ -88,7 +86,7 @@ namespace Controls
             try
             {
                 var wps = bewerking.State == ProductieState.Gestart
-                    ? "op " + string.Join(", ", bewerking.WerkPlekken.Where(x=> x.IsActief()).Select(x => x.Naam))
+                    ? "op " + string.Join(", ", bewerking.WerkPlekken.Where(x => x.IsActief()).Select(x => x.Naam))
                     : "";
 
                 xstatuslabel.Text =
@@ -233,7 +231,7 @@ namespace Controls
                             ? Resources.schedule_32_32.CombineImage(Resources.exclamation_warning_15590, 1.75)
                             : Resources.schedule_32_32;
                     var xstoring = mainMenu1.GetButton("xonderbreking");
-                    
+
                     if (xstoring != null)
                     {
                         var img = b.GetAlleStoringen(true).Length == 0
@@ -259,7 +257,7 @@ namespace Controls
                                 xstartb.Image = Resources.play_button_icon_icons_com_60615;
                             }
 
-                            
+
                             xstatuslabel.ForeColor = Color.DarkRed;
                             xstatusimage.Image = Resources.stop_red256_24890;
                             break;
@@ -270,6 +268,7 @@ namespace Controls
                                 xstartb.Text = "Stop";
                                 xstartb.Image = Resources.stop_red256_24890;
                             }
+
                             xstatuslabel.ForeColor = Color.DarkGreen;
                             xstatusimage.Image = Resources.play_button_icon_icons_com_60615;
                             break;
@@ -280,6 +279,7 @@ namespace Controls
                                 xstartb.Enabled = false;
                                 xstartb.Image = Resources.check_1582;
                             }
+
                             xstatuslabel.ForeColor = Color.DodgerBlue;
                             xstatusimage.Image = Resources.check_1582;
                             break;
@@ -304,6 +304,7 @@ namespace Controls
                             xpcolor = Color.Red;
                             break;
                     }
+
                     xprogressbar.ForeColor = xpcolor;
                     xOnderbreek.Enabled = b.State is ProductieState.Gestart or ProductieState.Gestopt;
                     //update de onderbrekingknop
@@ -321,9 +322,9 @@ namespace Controls
                         xOnderbreek.Image = Resources.Stop_Hand__32x32;
                     }
 
-                    int xpercent = (int) b.GereedPercentage();
+                    var xpercent = (int) b.GereedPercentage();
                     xprogressbar.ProgressColor = Functions.GetProgressColor(xpercent);
-                    xprogressbar.Value = (xpercent > xprogressbar.Maximum? xprogressbar.Maximum : xpercent);
+                    xprogressbar.Value = xpercent > xprogressbar.Maximum ? xprogressbar.Maximum : xpercent;
                     xprogressbar.Text = $"{b.TotaalGemaakt}/{b.Aantal}\n{xpercent}%";
                     var tg = b.TijdAanGewerkt();
                     xprogressbar.Invalidate();
@@ -336,7 +337,7 @@ namespace Controls
                     Text =
                         $"{Formulier.ArtikelNr} [{Formulier.ProductieNr}][{Enum.GetName(typeof(ProductieState), b.State)?.ToUpper()}]";
                     if (pers == 0 && b.State == ProductieState.Gestart)
-                        b.StopProductie(true,true);
+                        b.StopProductie(true, true);
                     CreateTextField(b);
                 }
             }
@@ -369,8 +370,8 @@ namespace Controls
                         //{
                         //    await b.StartProductie(true, true);
                         //}
-                        ProductieListControl.StartBewerkingen(this,new[] {b});
-                    else if (b.State == ProductieState.Gestart) await b.StopProductie(true,true);
+                        ProductieListControl.StartBewerkingen(this, new[] {b});
+                    else if (b.State == ProductieState.Gestart) await b.StopProductie(true, true);
                 }
             }
             catch (Exception ex)
@@ -435,12 +436,10 @@ namespace Controls
                 return;
             var b = CurrentBewerking();
             if (b != null)
-            {
                 productieInfoUI1.ShowAantal = !productieInfoUI1.ShowAantal;
-                //var aantal = new AantalGemaaktUI();
-                //aantal.Width = Width + 10;
-                //aantal.ShowDialog(Formulier, b);
-            }
+            //var aantal = new AantalGemaaktUI();
+            //aantal.Width = Width + 10;
+            //aantal.ShowDialog(Formulier, b);
         }
 
         private void ShowAanbevolenPersoneel()
@@ -556,14 +555,12 @@ namespace Controls
         {
             var xselected = CurrentBewerking();
             if (xselected == null) return;
-            var res = XMessageBox.Show(this, $"Wil je de geselecteerde producties helemaal verwijderen?\n\n" +
-                                   "Click op 'Ja' als je helemaal van de database wilt verwijderen.\n" +
-                                   "Click op 'Nee' als je alleen op een verwijderde status wilt te zetten.", "",
-            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (res != DialogResult.Cancel)
-            {
-                xselected.RemoveBewerking(res == DialogResult.No, res == DialogResult.Yes);
-            }
+            var res = XMessageBox.Show(this, "Wil je de geselecteerde producties helemaal verwijderen?\n\n" +
+                                             "Click op 'Ja' als je helemaal van de database wilt verwijderen.\n" +
+                                             "Click op 'Nee' als je alleen op een verwijderde status wilt te zetten.",
+                "",
+                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            if (res != DialogResult.Cancel) xselected.RemoveBewerking(res == DialogResult.No, res == DialogResult.Yes);
         }
 
         private void UndoBewerking()
@@ -585,9 +582,9 @@ namespace Controls
             var form = Application.OpenForms["MainForm"];
             form?.BringToFront();
             form?.Focus();
-            this.Parent?.Select();
-            this.Parent?.BringToFront();
-            this.Parent?.Focus();
+            Parent?.Select();
+            Parent?.BringToFront();
+            Parent?.Focus();
         }
 
         private void xstatuslabel_SizeChanged(object sender, EventArgs e)

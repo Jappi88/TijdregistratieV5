@@ -1,5 +1,5 @@
-﻿using System.Windows.Forms;
-using System.Windows.Media.Animation;
+﻿using System;
+using System.Windows.Forms;
 using Forms.MetroBase;
 
 namespace Forms
@@ -11,10 +11,10 @@ namespace Forms
             InitializeComponent();
         }
 
-        private void personeelIndelingUI1_StatusTextChanged(object sender, System.EventArgs e)
+        private void personeelIndelingUI1_StatusTextChanged(object sender, EventArgs e)
         {
-            this.Text = sender as string;
-            this.Invalidate();
+            Text = sender as string;
+            Invalidate();
         }
 
         private void PersoneelIndelingForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -22,7 +22,7 @@ namespace Forms
             personeelIndelingUI1.CloseUI();
         }
 
-        private void PersoneelIndelingForm_Shown(object sender, System.EventArgs e)
+        private void PersoneelIndelingForm_Shown(object sender, EventArgs e)
         {
             personeelIndelingUI1.InitUI();
         }

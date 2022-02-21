@@ -1,13 +1,14 @@
-﻿using Rpm.Misc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NPOI.XSSF.Util;
+using Rpm.Misc;
 
 namespace Rpm.Productie
 {
     public class UrenLijst
     {
+        internal Rooster _rooster;
+
         public UrenLijst()
         {
         }
@@ -23,7 +24,7 @@ namespace Rpm.Productie
         }
 
         public List<TijdEntry> Uren { get; private set; } = new();
-        internal Rooster _rooster;
+
         public Rooster WerkRooster
         {
             get => _rooster;
@@ -43,13 +44,9 @@ namespace Rpm.Productie
 
         public void SetUren(TijdEntry[] uren, bool isactief, bool isnew)
         {
-            if (Uren == null || isnew)
-            {
-                Uren = new List<TijdEntry>();
-            }
+            if (Uren == null || isnew) Uren = new List<TijdEntry>();
             if (uren is {Length: > 0})
             {
-                
                 var isbussy = false;
                 foreach (var tijd in uren)
                 {
@@ -60,13 +57,11 @@ namespace Rpm.Productie
                 //UpdateUrenRooster(false,null);
                 if (isactief && !isbussy)
                     UpdateTijdGewerkt(DateTime.Now, DateTime.Now, true);
-                
             }
         }
 
         public void UpdateUrenRooster(bool dospecialrooster, Rooster rooster)
         {
-
             lock (Uren)
             {
                 if (Uren is {Count: > 0})
@@ -76,33 +71,36 @@ namespace Rpm.Productie
                     var currooster = rooster == null || !rooster.IsValid()
                         ? Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster()
                         : rooster;
-                    bool xflag = WerkRooster != null && !WerkRooster.SameTijden(currooster);
+                    var xflag = WerkRooster != null && !WerkRooster.SameTijden(currooster);
                     WerkRooster = currooster;
                     if (dospecialrooster && Manager.Opties != null)
                     {
-                        int removed = SpecialeRoosters.RemoveAll(x =>
+                        var removed = SpecialeRoosters.RemoveAll(x =>
                             Manager.Opties.SpecialeRoosters.All(p => x.Vanaf.Date != p.Vanaf.Date));
-                        for (int i = 0; i < Uren.Count; i++)
+                        for (var i = 0; i < Uren.Count; i++)
                         {
                             var xent = Uren[i];
                             if (xent.ExtraTijd != null || !xent.InUse) continue;
                             var xspc = Manager.Opties.SpecialeRoosters
-                                ?.Where(x => new TijdEntry(x.Vanaf.Date, x.Vanaf.Date.Add(x.EindWerkdag)).ContainsBereik(xent)).ToList();
+                                ?.Where(x =>
+                                    new TijdEntry(x.Vanaf.Date, x.Vanaf.Date.Add(x.EindWerkdag)).ContainsBereik(xent))
+                                .ToList();
                             //var xspc = Manager.Opties?.SpecialeRoosters
-                             //   ?.Where(x => (x.Vanaf.Date >= xent.Start.Date && x.Vanaf.Date <= xent.Stop.Date) && (
-                                           //  xent.Stop.TimeOfDay >= x.StartWerkdag && ((x.Vanaf.Date != xent.Start.Date || (xent.Start.TimeOfDay <= x.EindWerkdag))))).ToList();
+                            //   ?.Where(x => (x.Vanaf.Date >= xent.Start.Date && x.Vanaf.Date <= xent.Stop.Date) && (
+                            //  xent.Stop.TimeOfDay >= x.StartWerkdag && ((x.Vanaf.Date != xent.Start.Date || (xent.Start.TimeOfDay <= x.EindWerkdag))))).ToList();
                             xspc = xspc?.Where(x => SpecialeRoosters.All(s => s.Vanaf.Date != x.Vanaf.Date)).ToList();
 
                             if (xspc is {Count: > 0})
                                 SpecialeRoosters.AddRange(xspc);
                         }
                     }
+
                     //if(xflag && Uren.Any(x=> x.InUse))
                     //{
                     //    SetStop();
                     //    SetStart();
                     //}
-                    for (int i = 0; i < Uren.Count; i++)
+                    for (var i = 0; i < Uren.Count; i++)
                     {
                         var xent = Uren[i];
                         if (xent.ExtraTijd != null) continue;
@@ -111,7 +109,6 @@ namespace Rpm.Productie
                             xent.WerkRooster = currooster;
                             break;
                         }
-                        
                     }
                 }
             }
@@ -135,7 +132,8 @@ namespace Rpm.Productie
         {
             lock (Uren)
             {
-                return Uren.RemoveAll(x => x.TijdGewerkt(x.WerkRooster??WerkRooster,null,SpecialeRoosters) == 0 && !x.InUse);
+                return Uren.RemoveAll(x =>
+                    x.TijdGewerkt(x.WerkRooster ?? WerkRooster, null, SpecialeRoosters) == 0 && !x.InUse);
             }
         }
 
@@ -153,6 +151,7 @@ namespace Rpm.Productie
                     if (xstartr != null)
                         xstart = bereik.Start.Add(xstartr.StartWerkdag);
                 }
+
                 if (bereik.Stop.TimeOfDay == new TimeSpan())
                 {
                     var xstartr = SpecialeRoosters.FirstOrDefault(x => x.Vanaf.Date == bereik.Stop.Date) ??
@@ -160,16 +159,17 @@ namespace Rpm.Productie
                     if (xstartr != null)
                         xstop = bereik.Stop.Add(xstartr.EindWerkdag);
                 }
+
                 foreach (var uur in Uren)
                 {
-                   
                     if (uur.Start >= xstart && uur.Start < xstop)
                         return true;
                     if (uur.Start <= xstart && uur.Stop > xstop)
                         return true;
                 }
+
                 return Uren.Any(x =>
-                    (x.Start >= xstart && x.Start < xstop) ||
+                    x.Start >= xstart && x.Start < xstop ||
                     x.Stop > xstart && x.Stop <= xstop);
             }
             catch (Exception e)
@@ -181,14 +181,16 @@ namespace Rpm.Productie
 
         public TijdEntry Add(TijdEntry entry)
         {
-            bool x = false;
+            var x = false;
             return Add(entry, ref x);
         }
 
         public TijdEntry Add(TijdEntry entry, ref bool isnew, bool reorder = true)
         {
             var changed = false;
-            var rooster = WerkRooster == null || !WerkRooster.IsCustom() ? Manager.Opties?.GetWerkRooster() : WerkRooster;
+            var rooster = WerkRooster == null || !WerkRooster.IsCustom()
+                ? Manager.Opties?.GetWerkRooster()
+                : WerkRooster;
             if (entry.WerkRooster == null || !entry.WerkRooster.IsCustom())
                 entry.WerkRooster = rooster;
             lock (Uren)
@@ -217,7 +219,8 @@ namespace Rpm.Productie
             }
 
             //Het snelste is om eerst te kijken of dit al een actieve tijd lijn is, en of de nieuwe tijd wel meer dan 0 is.
-            if (entry.TijdGewerkt(entry.WerkRooster??rooster,null,SpecialeRoosters) == 0 && entry.InUse && Uren.Any(x => x.InUse))
+            if (entry.TijdGewerkt(entry.WerkRooster ?? rooster, null, SpecialeRoosters) == 0 && entry.InUse &&
+                Uren.Any(x => x.InUse))
                 return entry;
 
             var xent = Uren.FirstOrDefault(x => x.ID != 0 && entry.ID != 0 && entry.ID == x.ID);
@@ -247,7 +250,6 @@ namespace Rpm.Productie
                 xent = Uren.FirstOrDefault(x =>
                     entry.Start >= x.Start && entry.Start < x._gestopt);
                 if (xent != null)
-                {
                     //we hebben een entry gevonden waar de start tijd tussen zit.
                     //we willen alleen de stop veranderen en eventueel de rooster
                     if (entry.Stop > xent.Stop)
@@ -269,7 +271,6 @@ namespace Rpm.Productie
 
                         changed = true;
                     }
-                }
             }
 
             if (!changed)
@@ -279,7 +280,6 @@ namespace Rpm.Productie
                     entry._gestopt > x.Start && entry._gestopt <= x._gestopt ||
                     entry._gestopt == x._gestopt);
                 if (xent != null)
-                {
                     //we hebben een entry gevonden waar de stop tijd tussen zit.
                     //we willen alleen de start veranderen en eventueel de rooster
                     if (entry.Start < xent.Start)
@@ -301,9 +301,6 @@ namespace Rpm.Productie
 
                         changed = true;
                     }
-
-
-                }
             }
 
             if (!changed)
@@ -331,9 +328,10 @@ namespace Rpm.Productie
 
             if (Uren.Count > 1)
             {
-                var toremove = Uren.Where(x => (x.ExtraTijd == null && Uren.Any(s =>
-                        s.ExtraTijd == null && x.Start >= s.Start && x._gestopt < s._gestopt ||
-                        x.Start > s.Start && x._gestopt <= s._gestopt)) || !x.InUse && x.TijdGewerkt(x.WerkRooster??rooster,null,SpecialeRoosters) <= 0)
+                var toremove = Uren.Where(x => x.ExtraTijd == null && Uren.Any(s =>
+                            s.ExtraTijd == null && x.Start >= s.Start && x._gestopt < s._gestopt ||
+                            x.Start > s.Start && x._gestopt <= s._gestopt) || !x.InUse &&
+                        x.TijdGewerkt(x.WerkRooster ?? rooster, null, SpecialeRoosters) <= 0)
                     .ToArray();
                 lock (Uren)
                 {
@@ -350,11 +348,10 @@ namespace Rpm.Productie
                 lock (Uren)
                 {
                     if (Uren.Count > 1)
-                    {
-                        for (int i = 0; i < Uren.Count; i++)
+                        for (var i = 0; i < Uren.Count; i++)
                         {
                             var te = Uren[i];
-                            for (int j = 0; j < Uren.Count; j++)
+                            for (var j = 0; j < Uren.Count; j++)
                             {
                                 if (j == i) continue;
                                 var xte = Uren[j];
@@ -367,10 +364,8 @@ namespace Rpm.Productie
                                     Uren.Remove(xte);
                                     j--;
                                 }
-
                             }
                         }
-                    }
                 }
             }
 
@@ -390,7 +385,7 @@ namespace Rpm.Productie
             {
                 foreach (var t in tijden)
                 {
-                    bool x = false;
+                    var x = false;
                     Add(t, ref x, false);
                 }
 
@@ -468,7 +463,7 @@ namespace Rpm.Productie
             xextra.ForEach(x =>
             {
                 var xtmp = x.CreateRange(Vanaf, tot);
-                if(xtmp != null) extra.Add(xtmp);
+                if (xtmp != null) extra.Add(xtmp);
             });
 
             var xtijden = Uren.Where(x => x.ExtraTijd == null).ToList();
@@ -477,7 +472,7 @@ namespace Rpm.Productie
             double tijd = 0;
             xtijden.ForEach(x =>
             {
-                var xtmp = x.CreateRange(Vanaf, tot, x.WerkRooster??WerkRooster, SpecialeRoosters);
+                var xtmp = x.CreateRange(Vanaf, tot, x.WerkRooster ?? WerkRooster, SpecialeRoosters);
                 if (xtmp != null)
                 {
                     tijden.Add(xtmp);
@@ -486,7 +481,7 @@ namespace Rpm.Productie
             });
             if (tijden.Count == 0)
                 return extra.Sum(x => x.ExtraUren(null, rooster));
-            
+
             tijden.ForEach(x =>
             {
                 if (x.Start < Vanaf)
@@ -496,7 +491,6 @@ namespace Rpm.Productie
                     x.InUse = false;
                     x.Stop = tot;
                 }
-               
             });
             var start = GetFirstStart(tijden);
             var stop = GetLastStop(tijden);
@@ -518,12 +512,11 @@ namespace Rpm.Productie
             SpecialeRoosters ??= new List<Rooster>();
             lock (SpecialeRoosters)
             {
-                var xadd = from.SpecialeRoosters?.Where(x => SpecialeRoosters.All(s => s.Vanaf.Date != x.Vanaf.Date)).ToList();
-                if (xadd is {Count: > 0})
-                {
-                    SpecialeRoosters.AddRange(xadd);
-                }
+                var xadd = from.SpecialeRoosters?.Where(x => SpecialeRoosters.All(s => s.Vanaf.Date != x.Vanaf.Date))
+                    .ToList();
+                if (xadd is {Count: > 0}) SpecialeRoosters.AddRange(xadd);
             }
+
             foreach (var tijd in from.Uren)
             {
                 var changed = false;
@@ -546,6 +539,7 @@ namespace Rpm.Productie
                             done++;
                             break;
                         }
+
                         if (t.ContainsBereik(tijd))
                         {
                             if (t.WerkRooster == null || !t.WerkRooster.IsCustom())
@@ -566,14 +560,14 @@ namespace Rpm.Productie
 
                 if (!changed)
                 {
-                    bool x = false;
+                    var x = false;
                     Add(tijd, ref x);
                     if (x)
                         done++;
                 }
             }
 
-            UpdateUrenRooster(false, overwriterooster ? @from.WerkRooster : null);
+            UpdateUrenRooster(false, overwriterooster ? from.WerkRooster : null);
             return done;
         }
 
@@ -598,14 +592,15 @@ namespace Rpm.Productie
             if (Uren == null || Uren.Count == 0)
                 return UpdateTijdGewerkt(DateTime.Now, DateTime.Now, false);
             TijdEntry xent = null;
-            for (int i = 0; i < Uren.Count; i++)
+            for (var i = 0; i < Uren.Count; i++)
             {
                 var ent = Uren[i];
                 if (ent.InUse) return ent;
                 if (xent == null || ent.Stop >= xent.Stop)
                     xent = ent;
             }
-            if(xent == null)
+
+            if (xent == null)
                 return UpdateTijdGewerkt(DateTime.Now, DateTime.Now, false);
             return xent;
         }
@@ -619,7 +614,7 @@ namespace Rpm.Productie
         {
             SetStop(DateTime.Now);
         }
-        
+
         public void SetStop(DateTime stop)
         {
             var lastkey = GetInUseEntry(true);
@@ -681,7 +676,7 @@ namespace Rpm.Productie
         {
             if (Uren == null || Uren?.Count == 0)
             {
-                Uren = new List<TijdEntry> { };
+                Uren = new List<TijdEntry>();
                 var ent = new TijdEntry(DateTime.Now, DateTime.Now, WerkRooster);
                 Uren.Add(ent);
                 return ent;

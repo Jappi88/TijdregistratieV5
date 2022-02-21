@@ -30,9 +30,13 @@ namespace Forms
                 if (plek != null)
                     xwerkplekken.SelectedItem = plek.Naam;
                 if (xwerkplekken.SelectedItem == null)
-                    xwerkplekken.SelectedIndex = xwerkplekken.Items.Count -1;
+                    xwerkplekken.SelectedIndex = xwerkplekken.Items.Count - 1;
             }
-            else xaantalgemaakt.SetValue(bew.AantalGemaakt);
+            else
+            {
+                xaantalgemaakt.SetValue(bew.AantalGemaakt);
+            }
+
             xaantal.Text = bew.AantalTeMaken.ToString();
             xaantalgemaaktlabel.Text = bew.AantalGemaakt.ToString();
             Text = $"[{bew.ArtikelNr}][{bew.ProductieNr}] {bew.Omschrijving}";
@@ -54,9 +58,6 @@ namespace Forms
         }
 
 
-
-
-
         private void SetPacketAantal(VerpakkingInstructie instructie, int aantal, int totaalaantal)
         {
             if (instructie == null || instructie.VerpakkenPer == 0)
@@ -67,10 +68,12 @@ namespace Forms
             {
                 xvaluepanel.Height = 100;
                 xpacketvalue.ValueChanged -= Xpacketvalue_ValueChanged;
-                int xpackets = aantal <= 0 ? 0 : (int)Math.Ceiling((double)aantal / instructie.VerpakkenPer);
+                var xpackets = aantal <= 0 ? 0 : (int) Math.Ceiling((double) aantal / instructie.VerpakkenPer);
                 xpacketvalue.SetValue(xpackets);
                 xpacketlabel.Text = xpacketvalue.Value.ToString(CultureInfo.InvariantCulture);
-                xtotalpacketlabel.Text = (totaalaantal <= 0 ? 0 : (int)Math.Ceiling((double)totaalaantal / instructie.VerpakkenPer)).ToString();
+                xtotalpacketlabel.Text =
+                    (totaalaantal <= 0 ? 0 : (int) Math.Ceiling((double) totaalaantal / instructie.VerpakkenPer))
+                    .ToString();
                 xpacketvalue.ValueChanged += Xpacketvalue_ValueChanged;
                 var x0 = "Verpakken Per {0}";
                 var x1 = string.IsNullOrEmpty(instructie.VerpakkingType)
@@ -85,7 +88,7 @@ namespace Forms
             var xverp = Bewerking?.VerpakkingsInstructies ?? Formulier?.VerpakkingsInstructies;
             if (xverp == null || xverp.VerpakkenPer == 0) return;
             var aantal = xaantalgemaakt.Value;
-            int xpackets = aantal <= 0 ? 0 : (int)Math.Ceiling((double)aantal / xverp.VerpakkenPer);
+            var xpackets = aantal <= 0 ? 0 : (int) Math.Ceiling((double) aantal / xverp.VerpakkenPer);
             if (xpacketvalue.Value != xpackets)
             {
                 xaantalgemaakt.Value = xpacketvalue.Value * xverp.VerpakkenPer;
@@ -160,7 +163,8 @@ namespace Forms
                 {
                     if (!alles && Bewerking.WerkPlekken is {Count: > 0})
                     {
-                        var wp = Bewerking.WerkPlekken.FirstOrDefault(t => string.Equals(t.Naam, selected, StringComparison.CurrentCultureIgnoreCase));
+                        var wp = Bewerking.WerkPlekken.FirstOrDefault(t =>
+                            string.Equals(t.Naam, selected, StringComparison.CurrentCultureIgnoreCase));
                         if (wp != null)
                         {
                             xaantalgemaakt.SetValue(wp.AantalGemaakt);
@@ -195,7 +199,6 @@ namespace Forms
                         xaantalgemaaktlabel.Text = Formulier.AantalGemaakt.ToString();
                         SetPacketAantal(Formulier.VerpakkingsInstructies, Formulier.AantalGemaakt, Formulier.Aantal);
                     }
-                   
                 }
 
                 xaantalgemaakt.Select(0, xaantalgemaakt.Value.ToString().Length);
@@ -223,7 +226,8 @@ namespace Forms
 
                     if (!changed && Bewerking.WerkPlekken is {Count: > 0})
                     {
-                        var wp = Bewerking.WerkPlekken.FirstOrDefault(t => string.Equals(t.Naam, selected, StringComparison.CurrentCultureIgnoreCase));
+                        var wp = Bewerking.WerkPlekken.FirstOrDefault(t =>
+                            string.Equals(t.Naam, selected, StringComparison.CurrentCultureIgnoreCase));
                         if (wp != null)
                             if (wp.AantalGemaakt != (int) xaantalgemaakt.Value)
                             {
@@ -268,14 +272,16 @@ namespace Forms
                             Formulier.LaatstAantalUpdate = DateTime.Now;
                             xaantalgemaaktlabel.Text = Formulier.AantalGemaakt.ToString();
                             LoadProductieText(Formulier);
-                            SetPacketAantal(Formulier.VerpakkingsInstructies, Formulier.AantalGemaakt, Formulier.Aantal);
+                            SetPacketAantal(Formulier.VerpakkingsInstructies, Formulier.AantalGemaakt,
+                                Formulier.Aantal);
                             await Formulier.UpdateForm(false, false, null, change);
                         }
                     }
                     else if (Formulier.Bewerkingen is {Length: > 0})
                     {
                         var b = Bewerking ??
-                                Formulier.Bewerkingen.FirstOrDefault(t => string.Equals(t.Naam, selected, StringComparison.CurrentCultureIgnoreCase));
+                                Formulier.Bewerkingen.FirstOrDefault(t =>
+                                    string.Equals(t.Naam, selected, StringComparison.CurrentCultureIgnoreCase));
 
                         if (b != null && b.AantalGemaakt != (int) xaantalgemaakt.Value)
                         {
@@ -359,6 +365,7 @@ namespace Forms
             xaantalgemaakt.Focus();
             xaantalgemaakt.Select(0, xaantalgemaakt.Value.ToString().Length);
         }
+
         private void AantalGemaaktUI_FormClosing(object sender, FormClosingEventArgs e)
         {
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;

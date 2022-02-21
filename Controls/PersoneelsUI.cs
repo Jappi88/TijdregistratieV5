@@ -1,4 +1,11 @@
-﻿using BrightIdeasSoftware;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using BrightIdeasSoftware;
 using Forms;
 using MetroFramework.Controls;
 using ProductieManager.Properties;
@@ -8,13 +15,6 @@ using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.Various;
 using Rpm.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Controls
 {
@@ -26,6 +26,14 @@ namespace Controls
         {
             InitializeComponent();
         }
+
+        public Bewerking Bewerking { get; set; }
+
+
+        public Personeel[] SelectedPersoneel =>
+            xuserlist.SelectedObjects?.Cast<PersoneelModel>().Select(x => x.PersoneelLid).ToArray();
+
+        public string Title { get; set; }
 
         public void InitUI(Bewerking bew = null, bool choose = false)
         {
@@ -55,10 +63,8 @@ namespace Controls
             //((OLVColumn) xuserlist.Columns[0]).AspectGetter = NameGetter;
             _choose = choose;
             if (Bewerking != null && _choose)
-            {
-                this.Text =
+                Text =
                     $"Kies personeel voor productie [{Bewerking.ArtikelNr}, {Bewerking.ProductieNr}] {Bewerking.Naam}";
-            }
 
             xformbuttonpanel.Visible = _choose;
             EnableFilters();
@@ -98,12 +104,6 @@ namespace Controls
             StatusTextChanged?.Invoke(text, EventArgs.Empty);
         }
 
-        public Bewerking Bewerking { get; set; }
-        
-
-        public Personeel[] SelectedPersoneel =>
-            xuserlist.SelectedObjects?.Cast<PersoneelModel>().Select(x => x.PersoneelLid).ToArray();
-
         private object NameGetter(object item)
         {
             if (item is PersoneelModel pers)
@@ -127,7 +127,7 @@ namespace Controls
         private void Manager_OnPersoneelDeleted(object sender, string id)
         {
             if (IsDisposed || Disposing) return;
-            this.BeginInvoke(new MethodInvoker(() =>
+            BeginInvoke(new MethodInvoker(() =>
             {
                 try
                 {
@@ -135,10 +135,7 @@ namespace Controls
                     var remove = pers?.Where(x => string.Equals(x.Naam, id)).ToArray();
                     if (remove is {Length: > 0})
                     {
-                        for (int i = 0; i < remove.Length; i++)
-                        {
-                            pers.Remove(remove[i]);
-                        }
+                        for (var i = 0; i < remove.Length; i++) pers.Remove(remove[i]);
 
                         LoadPersoneel(pers.Select(x => x.PersoneelLid).ToList());
                     }
@@ -149,8 +146,6 @@ namespace Controls
                 }
             }));
         }
-
-        public string Title { get; set; }
 
         private void UpdateStatus(int index = -1)
         {
@@ -196,6 +191,7 @@ namespace Controls
 
                     break;
             }
+
             OnStatusTextChanged(xtext);
         }
 
@@ -205,10 +201,8 @@ namespace Controls
                 return;
             try
             {
-                this.BeginInvoke(new MethodInvoker(() =>
+                BeginInvoke(new MethodInvoker(() =>
                 {
-
-
                     var allowed = IsAllowed(pers);
                     var resort = false;
                     var per = xuserlist.Objects?.Cast<PersoneelModel>()
@@ -241,8 +235,6 @@ namespace Controls
                         UpdateStatus();
                     }
                 }));
-
-
             }
             catch (Exception e)
             {
@@ -306,7 +298,7 @@ namespace Controls
                 base.Show();
             }
         }
-        
+
         private void CollapseAllGroups()
         {
             foreach (var group in xuserlist.Groups.Cast<ListViewGroup>().Select(x => x.Tag as OLVGroup))
@@ -321,7 +313,7 @@ namespace Controls
             var pers = Manager.Database.GetAllPersoneel().Result;
             if (pers?.Count > 0)
             {
-                List<string> xafdelingen = new List<string>();
+                var xafdelingen = new List<string>();
                 foreach (var per in pers)
                 {
                     if (string.IsNullOrEmpty(per.Afdeling)) continue;
@@ -341,11 +333,9 @@ namespace Controls
             if (xafdelingfilter.SelectedItem != null &&
                 !string.IsNullOrEmpty(xafdelingfilter.SelectedItem.ToString().Trim()) &&
                 xafdelingfilter.SelectedItem.ToString().ToLower() != "iedereen")
-            {
                 pers = pers.Where(x => !string.IsNullOrEmpty(x.Afdeling) && string.Equals(
                     xafdelingfilter.SelectedItem.ToString().Trim(), x.Afdeling.Trim(),
                     StringComparison.CurrentCultureIgnoreCase)).ToList();
-            }
 
             xuserinfopanel.Enabled = false;
             xuserlist.BeginUpdate();
@@ -501,10 +491,10 @@ namespace Controls
             var resort = per.IsUitzendKracht != xisuitzendcheck.Checked && IsAllowed(per);
             per.IsUitzendKracht = xisuitzendcheck.Checked;
             if (!await Personeel.UpdateKlusjes(this, per, oldnaam)) return false;
-            string change = $"Wijzigingen voor {per.PersoneelNaam} succesvol!";
-            bool replace = !string.Equals(oldnaam, xnaam.Text, StringComparison.CurrentCultureIgnoreCase);
-            if ((replace && await Manager.Database.Replace(oldnaam, per, change)) ||
-                (!replace && await Manager.Database.UpSert(per, change)))
+            var change = $"Wijzigingen voor {per.PersoneelNaam} succesvol!";
+            var replace = !string.Equals(oldnaam, xnaam.Text, StringComparison.CurrentCultureIgnoreCase);
+            if (replace && await Manager.Database.Replace(oldnaam, per, change) ||
+                !replace && await Manager.Database.UpSert(per, change))
             {
                 ProcessUser(per);
                 if (resort) xuserlist.Sort("Kracht");
@@ -546,7 +536,7 @@ namespace Controls
                 var pers = xuserlist.SelectedObjects.Cast<PersoneelModel>().Select(x => x.PersoneelLid).ToArray();
                 if (pers.Any(x => x.IsVrij(DateTime.Now)))
                 {
-                    XMessageBox.Show(this, $"Je hebt iemand gekozen die vrij is...!\nKies iemand anders a.u.b.",
+                    XMessageBox.Show(this, "Je hebt iemand gekozen die vrij is...!\nKies iemand anders a.u.b.",
                         "Personeel Vrij",
                         MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return false;
@@ -555,13 +545,16 @@ namespace Controls
                 OnOKClicked();
                 return true;
             }
+
             return false;
         }
 
         private async void xuserlist_DoubleClick(object sender, EventArgs e)
         {
             if (_choose)
+            {
                 ChooseUser();
+            }
             else if (xuserlist.SelectedObject is PersoneelModel model)
             {
                 if (Manager.LogedInGebruiker == null || Manager.LogedInGebruiker.AccesLevel < AccesType.ProductieBasis)
@@ -608,10 +601,8 @@ namespace Controls
                             var form = pair.Formulier;
                             var werk = pair.Bewerking;
                             if (form != null && werk != null)
-                            {
                                 Manager.FormulierActie(new object[] {form, werk}, MainAktie.OpenProductie);
-                                //ShowProductieForm(form, werk);
-                            }
+                            //ShowProductieForm(form, werk);
                         }
                     }
                     catch (Exception ex)
@@ -650,14 +641,13 @@ namespace Controls
             if (pers == null)
                 return false;
             var filter = Currentfilter();
-            string fname = xsearchbox.Text.ToLower().Trim();
+            var fname = xsearchbox.Text.ToLower().Trim();
             if (!string.IsNullOrEmpty(fname) && !fname.Contains("zoeken"))
             {
-                string[] xfilters = fname.Split(';').Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                var xfilters = fname.Split(';').Where(x => !string.IsNullOrEmpty(x)).ToArray();
                 if (!xfilters.Any(s => pers.PersoneelNaam.ToLower().Contains(s.ToLower()) ||
-                                       (pers.Afdeling != null && pers.Afdeling.ToLower().Contains(s.ToLower()))))
+                                       pers.Afdeling != null && pers.Afdeling.ToLower().Contains(s.ToLower())))
                     return false;
-
             }
 
             if (filter != null)
@@ -759,30 +749,24 @@ namespace Controls
                     "Non Actief Zetten", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
                 if (await permodel.PersoneelLid.ZetOpInactief())
-                {
                     UpdateUserFields(permodel);
-                }
                 else
-                {
                     XMessageBox.Show(
                         this, $"Het is niet gelukt om {permodel.PersoneelLid.PersoneelNaam} op non actief te zetten!",
                         "Fout",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
             }
         }
 
         private void OpenSelectedVaardigheden()
         {
             if (xuserlist.SelectedObject is PersoneelModel)
-            {
                 if (xuserlist.SelectedObject is PersoneelModel model)
                 {
                     var vf = new VaardighedenForm(model.PersoneelLid);
                     vf.ShowDialog();
                     UpdateUserFields(model);
                 }
-            }
         }
 
         private void xroosterb_Click(object sender, EventArgs e)
@@ -879,7 +863,7 @@ namespace Controls
         private void CollapseGroups(bool collapsed)
         {
             foreach (ListViewGroup group in xuserlist.Groups)
-                ((OLVGroup) @group.Tag).Collapsed = collapsed;
+                ((OLVGroup) group.Tag).Collapsed = collapsed;
         }
 
         private void vouwAlleGroupenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -895,9 +879,7 @@ namespace Controls
         private void xafdelingfilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Manager.Opties != null && xafdelingfilter.SelectedIndex > -1)
-            {
                 Manager.Opties.PersoneelAfdelingFilter = xafdelingfilter.SelectedItem.ToString().Trim();
-            }
 
             EnableFilters();
         }
@@ -916,15 +898,12 @@ namespace Controls
 
         private void xsearchbox_TextChanged(object sender, EventArgs e)
         {
-            if (xsearchbox.Text.Trim().ToLower() != "zoeken...")
-            {
-                EnableFilters();
-            }
+            if (xsearchbox.Text.Trim().ToLower() != "zoeken...") EnableFilters();
         }
 
         private void PersoneelsForm_Resize(object sender, EventArgs e)
         {
-            this.Invalidate();
+            Invalidate();
             xsearchbox.Invalidate();
         }
 

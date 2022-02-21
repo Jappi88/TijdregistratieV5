@@ -1,18 +1,18 @@
-﻿using ProductieManager.Properties;
-using Rpm.Klachten;
-using Rpm.Productie;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using Various;
+using Forms.MetroBase;
+using ProductieManager.Properties;
+using Rpm.Klachten;
+using Rpm.Productie;
+using Rpm.Various;
+using TheArtOfDev.HtmlRenderer.Core.Entities;
 
 namespace Forms.Klachten
 {
-    public partial class KlachtInfoForm : Forms.MetroBase.MetroBaseForm
+    public partial class KlachtInfoForm : MetroBaseForm
     {
-        public KlachtEntry Klacht { get; private set; }
         public KlachtInfoForm(KlachtEntry entry)
         {
             InitializeComponent();
@@ -20,7 +20,9 @@ namespace Forms.Klachten
             xtextfield.Text = entry.ToHtml();
         }
 
-        private void xtextfield_ImageLoad(object sender, TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs e)
+        public KlachtEntry Klacht { get; private set; }
+
+        private void xtextfield_ImageLoad(object sender, HtmlImageLoadEventArgs e)
         {
             if (e.Src == "ProductieWarningicon")
             {
@@ -28,8 +30,8 @@ namespace Forms.Klachten
                 e.Handled = true;
                 return;
             }
+
             if (File.Exists(e.Src))
-            {
                 try
                 {
                     e.Callback(e.Src);
@@ -39,10 +41,9 @@ namespace Forms.Klachten
                 {
                     Console.WriteLine(exception);
                 }
-            }
         }
 
-        private void xtextfield_LinkClicked(object sender, TheArtOfDev.HtmlRenderer.Core.Entities.HtmlLinkClickedEventArgs e)
+        private void xtextfield_LinkClicked(object sender, HtmlLinkClickedEventArgs e)
         {
             var link = e.Link.Trim().ToLower();
             if (link.StartsWith("http") || link.StartsWith("www"))
@@ -51,11 +52,8 @@ namespace Forms.Klachten
             }
             else
             {
-                var prod = Manager.Database.GetProductie(link).Result;
-                if (prod != null)
-                {
-                    Manager.FormulierActie(new object[] {prod}, MainAktie.OpenProductie);
-                }
+                var prod = Manager.Database.GetProductie(link);
+                if (prod != null) Manager.FormulierActie(new object[] {prod}, MainAktie.OpenProductie);
             }
         }
 
@@ -69,30 +67,25 @@ namespace Forms.Klachten
         private void Manager_KlachtDeleted(object sender, EventArgs e)
         {
             if (sender is string xvalue && Klacht != null)
-            {
                 if (Klacht.ID.ToString().ToLower().Trim() == xvalue.ToLower().Trim())
                 {
                     if (InvokeRequired)
-                        this.Invoke(new MethodInvoker(this.Close));
-                    else this.Close();
+                        Invoke(new MethodInvoker(Close));
+                    else Close();
                 }
-            }
-           
         }
 
         private void Manager_KlachtChanged(object sender, EventArgs e)
         {
-            if (this.Disposing || this.IsDisposed) return;
+            if (Disposing || IsDisposed) return;
             if (sender is KlachtEntry xvalue && Klacht != null)
-            {
                 if (Klacht.Equals(xvalue))
                 {
                     Klacht = xvalue;
                     if (InvokeRequired)
-                        this.Invoke(new MethodInvoker(() => xtextfield.Text = Klacht.ToHtml()));
+                        Invoke(new MethodInvoker(() => xtextfield.Text = Klacht.ToHtml()));
                     else xtextfield.Text = Klacht.ToHtml();
                 }
-            }
         }
 
         private void KlachtInfoForm_FormClosing(object sender, FormClosingEventArgs e)

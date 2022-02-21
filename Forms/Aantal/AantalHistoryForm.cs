@@ -1,21 +1,23 @@
-﻿using Rpm.Productie;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using Rpm.Productie;
 
 namespace Forms.Aantal
 {
-    public partial class AantalHistoryForm : Forms.MetroBase.MetroBaseForm
+    public partial class AantalHistoryForm : MetroBaseForm
     {
-        public WerkPlek Plek { get; private set; }
         public AantalHistoryForm(WerkPlek plek)
         {
             InitializeComponent();
             Plek = plek;
-            this.Text = $"Aantal Geschiedenis Van {Plek.Path}";
-            this.Invalidate();
+            Text = $"Aantal Geschiedenis Van {Plek.Path}";
+            Invalidate();
             LoadWerkplekken();
         }
+
+        public WerkPlek Plek { get; private set; }
 
         public void LoadWerkplekken()
         {
@@ -40,23 +42,21 @@ namespace Forms.Aantal
         {
             if (Plek?.ProductieNr != null &&
                 string.Equals(Plek.ProductieNr, id, StringComparison.CurrentCultureIgnoreCase))
-            {
-                this.Close();
-            }
+                Close();
         }
 
         private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
         {
             if (Plek?.ProductieNr == null || changedform == null ||
                 !string.Equals(Plek.ProductieNr, changedform.ProductieNr, StringComparison.CurrentCultureIgnoreCase))
-            {
                 return;
-            }
 
             var xplek = changedform.GetAlleWerkplekken().FirstOrDefault(x =>
                 string.Equals(Plek.Path, x.Path, StringComparison.CurrentCultureIgnoreCase));
             if (string.IsNullOrEmpty(xplek?.ProductieNr))
-                this.Close();
+            {
+                Close();
+            }
             else
             {
                 Plek = xplek;

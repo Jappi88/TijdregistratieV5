@@ -226,17 +226,19 @@ namespace Controls
         private void xniewmatb_Click(object sender, EventArgs e)
         {
             if (xomschrijving.Text.Trim().Length < 4)
-                XMessageBox.Show(this, $"Ongeldige Omschrijving!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XMessageBox.Show(this, "Ongeldige Omschrijving!", "Ongeldig", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             else if (xartikelnr.Text.Trim().Length < 4)
-                XMessageBox.Show(this, $"Ongeldige Artikel Nr!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XMessageBox.Show(this, "Ongeldige Artikel Nr!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else if (string.IsNullOrEmpty(xlocatie.Text.Trim()))
-                XMessageBox.Show(this, $"Ongeldige Locatie!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XMessageBox.Show(this, "Ongeldige Locatie!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else if (xeenheid.SelectedIndex < 0)
-                XMessageBox.Show(this, $"Ongeldige Eenheid! Kies een eenheid voor de aantallen.", "Ongeldig",
+                XMessageBox.Show(this, "Ongeldige Eenheid! Kies een eenheid voor de aantallen.", "Ongeldig",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             else if (xmateriaallijst.Objects.Cast<Materiaal>()
-                .Any(x => x.ArtikelNr.ToLower() == xartikelnr.Text.ToLower()))
-                XMessageBox.Show(this, $"Ongeldige ArtikelNr! ArtikelNr bestaal al, gebruik een andere artikel nr a.u.b. ",
+                     .Any(x => x.ArtikelNr.ToLower() == xartikelnr.Text.ToLower()))
+                XMessageBox.Show(this,
+                    "Ongeldige ArtikelNr! ArtikelNr bestaal al, gebruik een andere artikel nr a.u.b. ",
                     "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
                 xmateriaallijst.AddObject(CreateMaterial());

@@ -1,16 +1,17 @@
-﻿using BrightIdeasSoftware;
-using Rpm.Productie;
-using Rpm.SqlLite;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
+using Forms.MetroBase;
+using Rpm.Productie;
+using Rpm.SqlLite;
 
 namespace Forms
 {
-    public partial class DbBewerkingChanger : Forms.MetroBase.MetroBaseForm
+    public partial class DbBewerkingChanger : MetroBaseForm
     {
-       // private readonly List<BewerkingEntry> _deletedentries = new();
+        // private readonly List<BewerkingEntry> _deletedentries = new();
         private List<BewerkingEntry> _entries = new();
 
         public DbBewerkingChanger()
@@ -83,12 +84,14 @@ namespace Forms
             if (xbewerkingnaam.Text.Trim().Length < 4)
             {
                 XMessageBox.Show(
-                    this, $"'{xbewerkingnaam.Text}' is ongeldig!\nGebruik een geldige naam dat bestaat uit minimaal 4 characters.",
+                    this,
+                    $"'{xbewerkingnaam.Text}' is ongeldig!\nGebruik een geldige naam dat bestaat uit minimaal 4 characters.",
                     "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (_entries.Any(x =>
-                string.Equals(x.Naam, xbewerkingnaam.Text.Trim(), StringComparison.CurrentCultureIgnoreCase) ||
-                string.Equals(x.NewName, xbewerkingnaam.Text.Trim(), StringComparison.CurrentCultureIgnoreCase)))
+                         string.Equals(x.Naam, xbewerkingnaam.Text.Trim(), StringComparison.CurrentCultureIgnoreCase) ||
+                         string.Equals(x.NewName, xbewerkingnaam.Text.Trim(),
+                             StringComparison.CurrentCultureIgnoreCase)))
             {
                 XMessageBox.Show(
                     this, $"'{xbewerkingnaam.Text}' Bestaat al!\nGebruik een andere naam dat nog niet is toegevoegd.",
@@ -121,9 +124,10 @@ namespace Forms
         private void xdelbew_Click(object sender, EventArgs e)
         {
             if (xbewlist.SelectedObjects.Count > 0)
-                if (XMessageBox.Show(this, $"Je staat op het punt alle geselecteerde bewerkingen te verwijderen...\n" +
-                                     "Weetje zeker dat je door wilt gaan?!", "Verwijderen", MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning) == DialogResult.Yes)
+                if (XMessageBox.Show(this, "Je staat op het punt alle geselecteerde bewerkingen te verwijderen...\n" +
+                                           "Weetje zeker dat je door wilt gaan?!", "Verwijderen",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     foreach (var x in xbewlist.SelectedObjects.Cast<BewerkingEntry>())
                     {
@@ -138,7 +142,7 @@ namespace Forms
 
         private void SetBewEnable()
         {
-            bool empty = xbewlist.SelectedObjects.Count == 0;
+            var empty = xbewlist.SelectedObjects.Count == 0;
             xdelbew.Enabled = !empty;
             if (empty)
                 xpleklist.SetObjects(new string[] { });
@@ -157,11 +161,12 @@ namespace Forms
             if (xwerkpleknaam.Text.Trim().Length < 4)
             {
                 XMessageBox.Show(
-                    this, $"'{xwerkpleknaam.Text}' is ongeldig!\nGebruik een geldige naam dat bestaat uit minimaal 4 characters.",
+                    this,
+                    $"'{xwerkpleknaam.Text}' is ongeldig!\nGebruik een geldige naam dat bestaat uit minimaal 4 characters.",
                     "Ongeldig Werkplek", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (cur.WerkPlekken.Any(wp =>
-                string.Equals(wp, xwerkpleknaam.Text.Trim(), StringComparison.CurrentCultureIgnoreCase)))
+                         string.Equals(wp, xwerkpleknaam.Text.Trim(), StringComparison.CurrentCultureIgnoreCase)))
             {
                 XMessageBox.Show(
                     this, $"'{xwerkpleknaam.Text}' Bestaat al!\nGebruik een andere naam dat nog niet is toegevoegd.",
@@ -181,9 +186,10 @@ namespace Forms
             var cur = CurrentBew();
             if (cur == null) return;
             if (xpleklist.SelectedObjects.Count > 0)
-                if (XMessageBox.Show(this, $"Je staat op het punt alle geselecteerde werkplekken te verwijderen...\n" +
-                                     "Weetje zeker dat je door wilt gaan?!", "Verwijderen", MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning) == DialogResult.Yes)
+                if (XMessageBox.Show(this, "Je staat op het punt alle geselecteerde werkplekken te verwijderen...\n" +
+                                           "Weetje zeker dat je door wilt gaan?!", "Verwijderen",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     foreach (var x in xpleklist.SelectedObjects.Cast<string>())
                     {
@@ -204,11 +210,12 @@ namespace Forms
             if (xwerkpleknaam.Text.Trim().Length < 4)
             {
                 XMessageBox.Show(
-                    this, $"'{xwerkpleknaam.Text}' is ongeldig!\nGebruik een geldige naam dat bestaat uit minimaal 4 characters.",
+                    this,
+                    $"'{xwerkpleknaam.Text}' is ongeldig!\nGebruik een geldige naam dat bestaat uit minimaal 4 characters.",
                     "Ongeldig Werkplek", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (cur.WerkPlekken.Any(wp =>
-                string.Equals(wp, xwerkpleknaam.Text.Trim(), StringComparison.CurrentCultureIgnoreCase)))
+                         string.Equals(wp, xwerkpleknaam.Text.Trim(), StringComparison.CurrentCultureIgnoreCase)))
             {
                 XMessageBox.Show(
                     this, $"'{xwerkpleknaam.Text}' Bestaat al!\nGebruik een andere naam dat nog niet is toegevoegd.",

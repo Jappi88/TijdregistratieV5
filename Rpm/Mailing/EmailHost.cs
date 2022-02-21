@@ -1,9 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Net;
 using System.Net.Mail;
-using System.Net.Security;
-using System.Net.Sockets;
 using Rpm.Connection;
 using Rpm.Misc;
 
@@ -23,21 +20,25 @@ namespace Rpm.Mailing
         }
 
         private string _host;
+
+        private int _Port;
         public string EmailAdres { get; set; }
         public string Password { get; set; }
 
-        public int Port {
+        public int Port
+        {
             get => UseSsl ? 587 : 25;
             set => _Port = value;
         }
 
-        private int _Port;
         public bool UseSsl { get; set; }
+
         public string Host
         {
             get => GetHost();
             set => _host = value;
         }
+
         public EmailType GetEmailType()
         {
             if (string.IsNullOrEmpty(EmailAdres)) return EmailType.None;
@@ -87,9 +88,8 @@ namespace Rpm.Mailing
                 if (string.IsNullOrEmpty(host)) return null;
                 var smtp = new SmtpClient(host)
                 {
-                  
                     Credentials = new NetworkCredential(EmailAdres, Password),
-                    EnableSsl = UseSsl,
+                    EnableSsl = UseSsl
                 };
                 smtp.Port = Port;
                 return smtp;

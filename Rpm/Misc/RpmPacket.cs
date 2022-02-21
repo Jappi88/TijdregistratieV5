@@ -7,22 +7,22 @@ namespace ProductieManager.Rpm.Misc
 {
     public class RpmPacket
     {
-        public string ID { get; set; }
-        public DateTime Changed { get; set; }
-        public List<string> Criterias { get; set; } = new List<string>();
-        public bool IsCompressed { get; set; }
-        public DbType Type { get; set; }
-
         public RpmPacket()
         {
             Changed = DateTime.Now;
         }
 
+        public string ID { get; set; }
+        public DateTime Changed { get; set; }
+        public List<string> Criterias { get; set; } = new();
+        public bool IsCompressed { get; set; }
+        public DbType Type { get; set; }
+
         public bool ContainsCriteria(string criteria, bool fullmatch)
         {
             if (Criterias == null || Criterias.Count == 0) return false;
             criteria ??= string.Empty;
-            string[] crits = criteria.Split(';');
+            var crits = criteria.Split(';');
             foreach (var crit in crits)
             {
                 if (string.Equals(crit, ID, StringComparison.CurrentCultureIgnoreCase)) return true;

@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MetroFramework;
 using MetroFramework.Controls;
@@ -24,10 +20,10 @@ namespace Controls
 
         public object Instance { get; set; }
 
-        public List<string> ExcludeItems { get; set; } = new List<string>() { "versie", "verwachtleverdatum", "viewimageindex" };
+        public List<string> ExcludeItems { get; set; } = new() {"versie", "verwachtleverdatum", "viewimageindex"};
 
-        public List<Type> DisplayTypes { get; set; } = new List<Type>()
-            { typeof(string), typeof(int), typeof(decimal), typeof(double), typeof(DateTime), typeof(Enum)};
+        public List<Type> DisplayTypes { get; set; } = new()
+            {typeof(string), typeof(int), typeof(decimal), typeof(double), typeof(DateTime), typeof(Enum)};
 
         private Control GetControlByProperty(PropertyInfo property)
         {
@@ -65,7 +61,7 @@ namespace Controls
                     xdbl.ThousandsSeparator = true;
                     xdbl.Tag = property;
                     xdbl.Name = property.Name;
-                    xdbl.SetValue((decimal)xdouble);
+                    xdbl.SetValue((decimal) xdouble);
                     xdbl.ValueChanged += ValueChanged;
                     xdbl.Width = 125;
                     return xdbl;
@@ -96,7 +92,7 @@ namespace Controls
                     var xcmb = new MetroComboBox();
                     xcmb.Tag = property;
                     xcmb.Name = property.Name;
-                    xcmb.Items.AddRange(xnums.Select(x => (object)x).ToArray());
+                    xcmb.Items.AddRange(xnums.Select(x => (object) x).ToArray());
                     xcmb.SelectedItem = value.ToString();
                     if (xcmb.SelectedIndex == -1 && xcmb.Items.Count > 0)
                         xcmb.SelectedIndex = 0;
@@ -105,6 +101,7 @@ namespace Controls
                     xcmb.FontSize = MetroComboBoxSize.Medium;
                     return xcmb;
             }
+
             return null;
         }
 
@@ -125,9 +122,9 @@ namespace Controls
                     if (info != null)
                     {
                         if (info.PropertyType == typeof(int))
-                            value = (int)nr.Value;
+                            value = (int) nr.Value;
                         else if (info.PropertyType == typeof(double))
-                            value = (double)nr.Value;
+                            value = (double) nr.Value;
                         else
                             value = nr.Value;
                     }
@@ -139,10 +136,7 @@ namespace Controls
                     break;
                 case MetroComboBox cb:
                     info = cb.Tag as PropertyInfo;
-                    if (info != null)
-                    {
-                        value = Enum.Parse(info.PropertyType, cb.SelectedItem.ToString(), true);
-                    }
+                    if (info != null) value = Enum.Parse(info.PropertyType, cb.SelectedItem.ToString(), true);
 
                     break;
             }
@@ -161,12 +155,11 @@ namespace Controls
                 var props = instance.GetType().GetProperties().Where(x => x.CanRead && x.CanWrite).ToList();
                 foreach (var allow in DisplayTypes)
                 {
-                    var xprops = props.Where(x => ((allow == typeof(Enum) && x.PropertyType.IsEnum) ||
+                    var xprops = props.Where(x => (allow == typeof(Enum) && x.PropertyType.IsEnum ||
                                                    x.PropertyType.IsAssignableFrom(allow)) &&
                                                   !ExcludeItems.Any(s => string.Equals(s, x.Name,
                                                       StringComparison.CurrentCultureIgnoreCase))).ToList();
                     if (xprops.Count > 0)
-                    {
                         foreach (var xprop in xprops)
                         {
                             var xcontrol = GetControlByProperty(xprop);
@@ -189,9 +182,9 @@ namespace Controls
                             xcontrol.BringToFront();
                             xFlowPanel.Controls.Add(xpanel);
                         }
-                    }
                 }
             }
+
             xFlowPanel.ResumeLayout(true);
         }
     }

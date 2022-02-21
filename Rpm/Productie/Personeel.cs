@@ -1,13 +1,13 @@
-﻿using Forms;
-using Polenter.Serialization;
-using Rpm.Misc;
-using Rpm.SqlLite;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Forms;
+using Polenter.Serialization;
+using Rpm.Misc;
+using Rpm.SqlLite;
+using Rpm.Various;
 
 namespace Rpm.Productie
 {
@@ -87,12 +87,10 @@ namespace Rpm.Productie
 
             if (VrijeDagen == null || VrijeDagen.Count <= 0) return klus.TijdGewerkt(storingen, rooster);
             foreach (var v in VrijeDagen.Uren)
-            {
                 if (storingen.ContainsKey(v.Start))
                     storingen[v.Start] = v.Stop;
                 else
                     storingen.Add(v.Start, v.Stop);
-            }
 
 
             return klus.TijdGewerkt(storingen, rooster);
@@ -188,7 +186,7 @@ namespace Rpm.Productie
         public DateTime GestartOp()
         {
             var xreturn = default(DateTime);
-            for (int i = 0; i < Klusjes.Count; i++)
+            for (var i = 0; i < Klusjes.Count; i++)
             {
                 var klus = Klusjes[i];
                 if (klus.Status != ProductieState.Gestart)
@@ -204,7 +202,7 @@ namespace Rpm.Productie
         public DateTime GestoptOp()
         {
             var xreturn = default(DateTime);
-            for (int i = 0; i < Klusjes.Count; i++)
+            for (var i = 0; i < Klusjes.Count; i++)
             {
                 var klus = Klusjes[i];
                 if (klus.Status == ProductieState.Gestart)
@@ -237,7 +235,7 @@ namespace Rpm.Productie
                         firststart = v.Start;
             if (firststart.IsDefault())
                 return -1;
-            return Math.Round(Werktijd.TijdGewerkt(DateTime.Now, firststart, WerkRooster,null).TotalHours, 2);
+            return Math.Round(Werktijd.TijdGewerkt(DateTime.Now, firststart, WerkRooster, null).TotalHours, 2);
         }
 
         public bool IsVrijOver(TimeSpan time)
@@ -250,7 +248,8 @@ namespace Rpm.Productie
             var time = new TimeSpan();
             if (VrijeDagen is {Count: > 0})
                 foreach (var v in VrijeDagen.Uren)
-                    time = time.Add(Werktijd.TijdGewerkt(new TijdEntry(v.Start, v.Stop, WerkRooster), WerkRooster,null));
+                    time = time.Add(
+                        Werktijd.TijdGewerkt(new TijdEntry(v.Start, v.Stop, WerkRooster), WerkRooster, null));
             return time;
         }
 
@@ -261,8 +260,9 @@ namespace Rpm.Productie
                 naam ??= persoon.PersoneelNaam;
                 var rooster = persoon.WerkRooster;
                 if (rooster == null) return true;
-                bool flag = persoon.Klusjes.Any(x =>
-                    x.Status is ProductieState.Gestart or ProductieState.Gestopt &&  !rooster.SameTijden(x.Tijden.WerkRooster));
+                var flag = persoon.Klusjes.Any(x =>
+                    x.Status is ProductieState.Gestart or ProductieState.Gestopt &&
+                    !rooster.SameTijden(x.Tijden.WerkRooster));
                 var result = flag
                     ? XMessageBox.Show(
                         owner, $"Wil je alle loopende klusjes van {persoon.PersoneelNaam} ook updaten?",
@@ -271,14 +271,13 @@ namespace Rpm.Productie
                     : DialogResult.No;
                 if (result == DialogResult.Cancel) return false;
                 if (result == DialogResult.Yes)
-                {
                     foreach (var klus in persoon.Klusjes)
                     {
                         if (klus.Status == ProductieState.Verwijderd ||
                             klus.Status == ProductieState.Gereed) continue;
                         var werk = klus.GetWerk();
                         if (werk == null || !werk.IsValid || werk.Bewerking == null || werk.Plek == null) continue;
-                        bool changed = false;
+                        var changed = false;
                         klus.PersoneelNaam = persoon.PersoneelNaam.Trim();
                         klus.Tijden.WerkRooster = persoon.WerkRooster;
                         foreach (var xper in werk.Plek.Personen)
@@ -307,12 +306,9 @@ namespace Rpm.Productie
                         }
 
                         if (changed)
-                        {
                             await werk.Bewerking.UpdateBewerking(null,
-                                $"{persoon.PersoneelNaam} Werkrooster aangepast op klus {klus.Path}", true);
-                        }
+                                $"{persoon.PersoneelNaam} Werkrooster aangepast op klus {klus.Path}");
                     }
-                }
 
                 return true;
             }
@@ -341,13 +337,16 @@ namespace Rpm.Productie
             if (path == null || Klusjes == null)
                 return false;
             if (onlyactive)
-                klusjes = Klusjes.Where(x => x.IsActief && string.Equals(path, x.Path, StringComparison.CurrentCultureIgnoreCase) ||
-                                             string.Equals(path, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase) ||
-                                             string.Equals(path, x.Werk, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                klusjes = Klusjes.Where(x =>
+                    x.IsActief && string.Equals(path, x.Path, StringComparison.CurrentCultureIgnoreCase) ||
+                    string.Equals(path, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase) ||
+                    string.Equals(path, x.Werk, StringComparison.CurrentCultureIgnoreCase)).ToList();
             else
                 klusjes = Klusjes.Where(x => string.Equals(path, x.Path, StringComparison.CurrentCultureIgnoreCase) ||
-                                             string.Equals(path, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase) ||
-                                             string.Equals(path, x.Werk, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                                             string.Equals(path, x.ProductieNr,
+                                                 StringComparison.CurrentCultureIgnoreCase) ||
+                                             string.Equals(path, x.Werk, StringComparison.CurrentCultureIgnoreCase))
+                    .ToList();
             return klusjes.Count > 0;
         }
 
@@ -360,9 +359,10 @@ namespace Rpm.Productie
 
         public bool IngezetAanKlus(string path, bool isactief)
         {
-            return Klusjes?.Any(x => x.IsActief == isactief && string.Equals(path, x.Path, StringComparison.CurrentCultureIgnoreCase) ||
-                                     string.Equals(path, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase) ||
-                                     string.Equals(path, x.Werk, StringComparison.CurrentCultureIgnoreCase)) ?? false;
+            return Klusjes?.Any(x =>
+                x.IsActief == isactief && string.Equals(path, x.Path, StringComparison.CurrentCultureIgnoreCase) ||
+                string.Equals(path, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase) ||
+                string.Equals(path, x.Werk, StringComparison.CurrentCultureIgnoreCase)) ?? false;
         }
 
         public bool WerktAanKlus(Bewerking bew, out List<Klus> klusjes)
@@ -372,7 +372,8 @@ namespace Rpm.Productie
                 return false;
 
             klusjes = Klusjes?.Where(x => string.Equals(bew.Path, x.Path, StringComparison.CurrentCultureIgnoreCase) ||
-                                          string.Equals(bew.Path, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase) ||
+                                          string.Equals(bew.Path, x.ProductieNr,
+                                              StringComparison.CurrentCultureIgnoreCase) ||
                                           string.Equals(bew.Path, x.Werk, StringComparison.CurrentCultureIgnoreCase) &&
                                           x.Status == ProductieState.Gestart).ToList();
 
@@ -385,18 +386,21 @@ namespace Rpm.Productie
             if (bew == null || Klusjes == null || Klusjes.Count == 0)
                 return klusjes;
 
-            klusjes = Klusjes.Where(x => string.Equals(bew.ArtikelNr, x.ArtikelNr, StringComparison.CurrentCultureIgnoreCase) &&
-                                          string.Equals(bew.Naam, x.Naam, StringComparison.CurrentCultureIgnoreCase) && x.TijdGewerkt() > 0).ToList();
+            klusjes = Klusjes.Where(x =>
+                    string.Equals(bew.ArtikelNr, x.ArtikelNr, StringComparison.CurrentCultureIgnoreCase) &&
+                    string.Equals(bew.Naam, x.Naam, StringComparison.CurrentCultureIgnoreCase) && x.TijdGewerkt() > 0)
+                .ToList();
 
             return klusjes;
         }
 
         public bool WerktAanKlus(string path, out Klus klus)
         {
-            klus = Klusjes?.FirstOrDefault(x => string.Equals(path, x.Path, StringComparison.CurrentCultureIgnoreCase) ||
-                                                string.Equals(path, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase) ||
-                                                string.Equals(path, x.Werk, StringComparison.CurrentCultureIgnoreCase) &&
-                                                x.Status == ProductieState.Gestart);
+            klus = Klusjes?.FirstOrDefault(x =>
+                string.Equals(path, x.Path, StringComparison.CurrentCultureIgnoreCase) ||
+                string.Equals(path, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase) ||
+                string.Equals(path, x.Werk, StringComparison.CurrentCultureIgnoreCase) &&
+                x.Status == ProductieState.Gestart);
             return klus != null;
         }
 
@@ -485,7 +489,7 @@ namespace Rpm.Productie
             {
                 if (VrijeDagen == null)
                     VrijeDagen = new UrenLijst();
-                xupdate += VrijeDagen.UpdateLijst(persoon.VrijeDagen,true);
+                xupdate += VrijeDagen.UpdateLijst(persoon.VrijeDagen, true);
             }
 
             //update klusjes

@@ -1,10 +1,10 @@
-﻿using Rpm.Productie;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Rpm.Productie;
 using Various;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -12,12 +12,20 @@ namespace Forms
 {
     public partial class Producties : Form
     {
+        private List<IDockContent> _producties = new();
+        private int lastindex;
 
         public Producties()
         {
             InitializeComponent();
             InitDock();
         }
+
+
+        public DockPanel DockPanel { get; private set; }
+
+        public string Catagory { get; set; }
+        public bool IsReordered { get; set; }
 
         public void InitDock()
         {
@@ -34,17 +42,17 @@ namespace Forms
             // dockPanel1
             // 
             dockPanel.BackColor = Color.White;
-            dockPanel.DefaultFloatWindowSize = this.MinimumSize;
+            dockPanel.DefaultFloatWindowSize = MinimumSize;
             dockPanel.Dock = DockStyle.Fill;
             dockPanel.DockBackColor = Color.White;
             dockPanel.ShowDocumentIcon = true;
             dockPanel.Location = new Point(0, 0);
             dockPanel.Margin = new Padding(2);
             dockPanel.Name = "dockPanel";
-            dockPanel.Size = this.Size;
+            dockPanel.Size = Size;
             dockPanel.TabIndex = 4;
-            dockPanel.ContentAdded += new EventHandler<DockContentEventArgs>(dockPanel1_ContentAdded);
-            dockPanel.ContentRemoved += new EventHandler<DockContentEventArgs>(dockPanel1_ContentRemoved);
+            dockPanel.ContentAdded += dockPanel1_ContentAdded;
+            dockPanel.ContentRemoved += dockPanel1_ContentRemoved;
             return dockPanel;
         }
 
@@ -60,17 +68,12 @@ namespace Forms
                 {
                     return false;
                 }
-                
+
                 return true;
             }
+
             return false;
         }
-
-
-        public DockPanel DockPanel { get; private set; }
-
-        public string Catagory { get; set; }
-        public bool IsReordered { get; set; }
 
         private void dockPanel1_ContentRemoved(object sender, DockContentEventArgs e)
         {
@@ -85,10 +88,8 @@ namespace Forms
                 {
                 }
             else
-            {
                 //dockPanel.SaveAsXml(Manager.DbPath + "\\dockstyleinfo.xml");
                 UpdateStatusText(dockPanel);
-            }
             //else ReArangeDocks();
         }
 
@@ -102,7 +103,7 @@ namespace Forms
             //        var xv = count == 1 ? "Productie" : "Producties";
             //        this.Text = $"{count} {xv} Geopend";
             //        this.Invalidate();
-                    
+
             //    }
             //    catch (Exception e)
             //    {
@@ -113,9 +114,8 @@ namespace Forms
             {
                 var count = dockPanel.Contents.Count;
                 var xv = count == 1 ? "Productie" : "Producties";
-                this.Text = $"{count} {xv} Geopend";
-                this.Invalidate();
-
+                Text = $"{count} {xv} Geopend";
+                Invalidate();
             }
             catch (Exception e)
             {
@@ -129,14 +129,14 @@ namespace Forms
             if (dockPanel == null) return;
             _producties.Add(e.Content);
             UpdateStatusText(dockPanel);
-            this.BringToFront();
-            this.Focus();
-            this.Select();
+            BringToFront();
+            Focus();
+            Select();
         }
 
         private void SaveLastState(DockPanel dockPanel)
         {
-            for (int i = 0; i < dockPanel.DockWindows.Count; i++)
+            for (var i = 0; i < dockPanel.DockWindows.Count; i++)
             {
                 var dw = dockPanel.DockWindows[i];
             }
@@ -149,10 +149,6 @@ namespace Forms
             if (lastindex >= _producties.Count) lastindex = 0;
             return _producties[lastindex++];
         }
-
-
-        private List<IDockContent> _producties = new List<IDockContent>();
-        private int lastindex = 0;
 
         public void LoadProducties(List<StartProductie> producties)
         {
@@ -204,11 +200,11 @@ namespace Forms
 
         private Size GetFormSize(int forms)
         {
-            int row = forms > 2 ? 2 : 1;
-            int colmns = forms == 3 ? 2 : forms < 3 ? forms : forms > 4 ? 3 : 2;
+            var row = forms > 2 ? 2 : 1;
+            var colmns = forms == 3 ? 2 : forms < 3 ? forms : forms > 4 ? 3 : 2;
 
-            int width = this.MinimumSize.Width * colmns;
-            int height = this.MinimumSize.Height * row;
+            var width = MinimumSize.Width * colmns;
+            var height = MinimumSize.Height * row;
             return new Size(width, height);
         }
 
@@ -231,10 +227,10 @@ namespace Forms
 
         private void metroButton1_Click(object sender, EventArgs e)
         {
-            List<DockPane> panes = new List<DockPane>();
+            var panes = new List<DockPane>();
             DockPane pane = null;
-            int curindex = 0;
-            for (int i = 0; i < DockPanel.Contents.Count; i++)
+            var curindex = 0;
+            for (var i = 0; i < DockPanel.Contents.Count; i++)
             {
                 var content = DockPanel.Contents[i];
                 if (pane == null || pane.Contents.Count > 3)

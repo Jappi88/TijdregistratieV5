@@ -1,13 +1,16 @@
-﻿using Rpm.Productie;
-using Rpm.Various;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Rpm.Productie;
+using Rpm.Various;
 
 namespace Rpm.SqlLite
 {
     public interface IDbCollection<T>
     {
+        public bool RaiseEventWhenChanged { get; set; }
+        public bool RaiseEventWhenDeleted { get; set; }
+        public MultipleFileDb MultiFiles { get; }
         public Task<int> Count();
         public Task<T> FindOne(string id);
         public Task<List<T>> FindAll();
@@ -25,10 +28,6 @@ namespace Rpm.SqlLite
         public Task<bool> Upsert(string id, T item, bool onlylocal);
         public Task<T> FromPath<T>(string filepath);
         public Task<bool> Exists(string id);
-
-        public bool RaiseEventWhenChanged { get; set; }
-        public bool RaiseEventWhenDeleted { get; set; }
-        public MultipleFileDb MultiFiles { get; }
 
         public event FileSystemEventHandler InstanceChanged;
         public event FileSystemEventHandler InstanceDeleted;

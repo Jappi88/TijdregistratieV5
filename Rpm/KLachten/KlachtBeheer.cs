@@ -1,18 +1,14 @@
-﻿using Rpm.Productie;
-using Rpm.SqlLite;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Rpm.Various;
+using Rpm.SqlLite;
 
 namespace Rpm.Klachten
 {
     public class KlachtBeheer : IDisposable
     {
         public static readonly string KlachtDbVersion = "1.0.0.0";
-        public bool Disposed => _disposed;
-        public MultipleFileDb Database { get; private set; }
         public readonly string RootPath;
 
         public KlachtBeheer(string path)
@@ -25,9 +21,21 @@ namespace Rpm.Klachten
             Database.FileDeleted += Database_FileDeleted;
         }
 
+        public bool Disposed { get; private set; }
+
+        public MultipleFileDb Database { get; private set; }
+
+        public void Dispose()
+        {
+            // Dispose of unmanaged resources.
+            Dispose(true);
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
+        }
+
         public string GetBijlagesFolder()
         {
-            string xb = Path.Combine(RootPath, "Bijlages");
+            var xb = Path.Combine(RootPath, "Bijlages");
             if (!Directory.Exists(xb))
                 Directory.CreateDirectory(xb);
             return xb;
@@ -35,7 +43,7 @@ namespace Rpm.Klachten
 
         public string GetBijlageFolder(KlachtEntry entry)
         {
-            string xb = Path.Combine(RootPath, "Bijlages", entry.ID.ToString());
+            var xb = Path.Combine(RootPath, "Bijlages", entry.ID.ToString());
             if (!Directory.Exists(xb))
                 Directory.CreateDirectory(xb);
             return xb;
@@ -44,16 +52,16 @@ namespace Rpm.Klachten
         public int UpdateBijlages(KlachtEntry entry, bool rename)
         {
             if (entry?.Bijlages == null || entry.Bijlages.Count == 0) return 0;
-            int xdone = 0;
+            var xdone = 0;
             try
             {
                 var xpath = GetBijlageFolder(entry);
-                for(int i = 0; i < entry.Bijlages.Count;i++)
+                for (var i = 0; i < entry.Bijlages.Count; i++)
                 {
                     var bijlage = entry.Bijlages[i];
                     var fn = Path.GetFileName(bijlage);
                     var fnext = Path.GetFileNameWithoutExtension(bijlage);
-                    string xnewpath = Path.Combine(xpath, fn);
+                    var xnewpath = Path.Combine(xpath, fn);
                     if (string.Equals(bijlage, xnewpath, StringComparison.CurrentCultureIgnoreCase))
                         continue;
                     if (rename)
@@ -88,8 +96,8 @@ namespace Rpm.Klachten
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-               
             }
+
             return xdone;
         }
 
@@ -119,12 +127,8 @@ namespace Rpm.Klachten
             try
             {
                 if (entry == null || Database == null) return false;
-                if (savebijlages && entry.Bijlages is {Count: > 0})
-                {
-                    UpdateBijlages(entry, false);
-
-                }
-                return Database.Upsert<KlachtEntry>(entry.ID.ToString(), entry, false);
+                if (savebijlages && entry.Bijlages is {Count: > 0}) UpdateBijlages(entry, false);
+                return Database.Upsert(entry.ID.ToString(), entry, false);
             }
             catch (Exception e)
             {
@@ -138,7 +142,7 @@ namespace Rpm.Klachten
             try
             {
                 if (entry == null || Database == null) return false;
-                if(Database.Delete(entry.ID.ToString()))
+                if (Database.Delete(entry.ID.ToString()))
                 {
                     var xbf = GetBijlageFolder(entry);
                     if (Directory.Exists(xbf))
@@ -157,16 +161,17 @@ namespace Rpm.Klachten
 
         public List<KlachtEntry> GetAlleKlachten()
         {
-            List<KlachtEntry> xklachten = new List<KlachtEntry>();
+            var xklachten = new List<KlachtEntry>();
             try
             {
                 if (Database == null) return xklachten;
-                xklachten = Database.GetAllEntries<KlachtEntry>().Where(x=> x.IsValid).ToList();
+                xklachten = Database.GetAllEntries<KlachtEntry>().Where(x => x.IsValid).ToList();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
+
             return xklachten;
         }
 
@@ -208,25 +213,13 @@ namespace Rpm.Klachten
             KlachtDeleted?.Invoke(sender, EventArgs.Empty);
         }
 
-        public void Dispose()
-        {
-            // Dispose of unmanaged resources.
-            Dispose(true);
-            // Suppress finalization.
-            GC.SuppressFinalize(this);
-        }
-
-        private bool _disposed;
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposed)
-            {
-                return;
-            }
+            if (Disposed) return;
 
             Database?.Dispose();
             Database = null;
-            _disposed = true;
+            Disposed = true;
         }
     }
 }

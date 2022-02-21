@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
+using Forms.MetroBase;
 using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class VrijeTijdForm : Forms.MetroBase.MetroBaseForm
+    public partial class VrijeTijdForm : MetroBaseForm
     {
         public VrijeTijdForm()
         {
@@ -31,7 +32,8 @@ namespace Forms
             {
                 var ex = VrijeDagen(entry);
                 return Math.Round(
-                    Werktijd.TijdGewerkt(entry, Persoon.WerkRooster ?? Manager.Opties.GetWerkRooster(),null, ex).TotalHours, 2);
+                    Werktijd.TijdGewerkt(entry, Persoon.WerkRooster ?? Manager.Opties.GetWerkRooster(), null, ex)
+                        .TotalHours, 2);
             }
 
             return 0;
@@ -82,8 +84,8 @@ namespace Forms
         {
             var rooster = Persoon.WerkRooster ?? Manager.Opties.GetWerkRooster();
             return Math.Round(
-                Werktijd.TijdGewerkt(new TijdEntry(xstartvrij.Value, xeindvrij.Value, rooster),rooster
-                    ,null, VrijeDagen()).TotalHours, 2);
+                Werktijd.TijdGewerkt(new TijdEntry(xstartvrij.Value, xeindvrij.Value, rooster), rooster
+                    , null, VrijeDagen()).TotalHours, 2);
         }
 
         public List<TijdEntry> GetVrijeDagen()
@@ -131,8 +133,8 @@ namespace Forms
             var x = UurVrij();
             if (x <= 0)
             {
-                XMessageBox.Show(this, $"Ongeldige aanvraag!\n" +
-                                 "Je totale uren kunnen niet '0' zijn.", "Ongeldig", MessageBoxButtons.OK,
+                XMessageBox.Show(this, "Ongeldige aanvraag!\n" +
+                                       "Je totale uren kunnen niet '0' zijn.", "Ongeldig", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
             }
             else
@@ -162,8 +164,8 @@ namespace Forms
         private void xverwijdervrij_Click(object sender, EventArgs e)
         {
             if (xvrijetijdlist.SelectedObjects.Count > 0)
-                if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde vrije uren wilt verwijderen?"
-                    , "Ongeldig", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                if (XMessageBox.Show(this, "Weetje zeker dat je alle geselecteerde vrije uren wilt verwijderen?"
+                        , "Ongeldig", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     xvrijetijdlist.RemoveObjects(xvrijetijdlist.SelectedObjects);
                     //var vrij = new Dictionary<DateTime, DateTime>();
@@ -184,7 +186,7 @@ namespace Forms
 
         private void xok_Click(object sender, EventArgs e)
         {
-            VrijeTijd.SetUren(GetVrijeDagen().ToArray(), false,true);
+            VrijeTijd.SetUren(GetVrijeDagen().ToArray(), false, true);
             DialogResult = DialogResult.OK;
         }
 
@@ -206,16 +208,17 @@ namespace Forms
 
         private void Manager_OnPersoneelChanged(object sender, Personeel user)
         {
-            if (Persoon == null || this.IsDisposed) return;
-            if (!string.Equals(Persoon.PersoneelNaam, user.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase)) return;
+            if (Persoon == null || IsDisposed) return;
+            if (!string.Equals(Persoon.PersoneelNaam, user.PersoneelNaam,
+                    StringComparison.CurrentCultureIgnoreCase)) return;
             Persoon = user;
         }
 
         private void Manager_OnPersoneelDeleted(object sender, string id)
         {
-            if (Persoon == null || this.IsDisposed) return;
+            if (Persoon == null || IsDisposed) return;
             if (!string.Equals(Persoon.PersoneelNaam, id, StringComparison.CurrentCultureIgnoreCase)) return;
-            this.BeginInvoke(new MethodInvoker(this.Close));
+            BeginInvoke(new MethodInvoker(Close));
         }
 
         private void VrijeTijdForm_FormClosing(object sender, FormClosingEventArgs e)

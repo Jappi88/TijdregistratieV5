@@ -1,33 +1,35 @@
-﻿using Polenter.Serialization;
-using Rpm.Mailing;
-using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.SqlLite;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text;
+using Polenter.Serialization;
+using Rpm.Mailing;
+using Rpm.Misc;
+using Rpm.Productie;
+using Rpm.SqlLite;
+using Rpm.Various;
 
 namespace Rpm.Settings
 {
     [Serializable]
     public class UserAccount
     {
+        private byte[] _rawmaildata;
+
         public UserAccount()
         {
             OsID = Guid.NewGuid().ToString().Split('-').LastOrDefault();
         }
 
-        [ExcludeFromSerialization] public EmailHost MailingHost
+        [ExcludeFromSerialization]
+        public EmailHost MailingHost
         {
             get => RawMailData?.Decrypt(Password)?.DeSerialize<EmailHost>();
             set => RawMailData = value?.Serialize()?.Encrypt(Password);
         }
 
-        private byte[] _rawmaildata;
         public byte[] RawMailData
         {
             get => _rawmaildata;
@@ -37,7 +39,7 @@ namespace Rpm.Settings
         public UserChange LastChanged { get; set; }
 
         public string _pass { get; set; }
-        
+
         [ExcludeFromSerialization]
         public string Password
         {
@@ -53,19 +55,20 @@ namespace Rpm.Settings
 
         public string Username { get; set; }
         public AccesType AccesLevel { get; set; }
-        [ExcludeFromSerialization]
-        public bool AutoLogIn { get; set; }
+
+        [ExcludeFromSerialization] public bool AutoLogIn { get; set; }
+
         public string OsID { get; set; }
 
         public bool ValidateUser(string username, string password, bool save)
         {
-            if (!String.Equals(Username, username, StringComparison.CurrentCultureIgnoreCase))
+            if (!string.Equals(Username, username, StringComparison.CurrentCultureIgnoreCase))
                 throw new Exception("Ongeldige Gebruikers Name!");
             if (Password != Convert.ToBase64String(SHA1.Create().ComputeHash(Encoding.UTF8.GetBytes(password))))
                 throw new Exception("Ongeldige Wachtwoord!");
             if (save)
             {
-                this.OsID = Manager.SystemId;
+                OsID = Manager.SystemId;
                 Manager.Database.UpSert(this, $"{username} Ingelogd!");
             }
 

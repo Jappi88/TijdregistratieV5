@@ -7,12 +7,13 @@ namespace Various
 {
     public class MenuButton
     {
+        private bool _enabled = true;
         private Bitmap _image;
+        private string _txt;
         public ContextMenuStrip ContextMenu { get; set; }
         public AccesType AccesLevel { get; set; }
         public int Index { get; set; }
         public Button Base { get; set; }
-        private string _txt;
 
         public string Text
         {
@@ -46,7 +47,7 @@ namespace Various
 
         public Bitmap CombineImage { get; set; }
         public Size ImageSize { get; set; } = new(32, 32);
-        private bool _enabled = true;
+
         public bool Enabled
         {
             get => _enabled;

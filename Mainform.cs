@@ -1,64 +1,40 @@
-﻿using AutoUpdaterDotNET;
-using Forms;
-using Rpm.Mailing;
-using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Settings;
-using Rpm.SqlLite;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AutoUpdaterDotNET;
+using Forms;
+using Rpm.Mailing;
+using Rpm.Misc;
+using Rpm.Productie;
+using Rpm.Settings;
+using Rpm.SqlLite;
 using Various;
-using WeifenLuo.WinFormsUI.Docking;
-using Timer = System.Windows.Forms.Timer;
 
 namespace ProductieManager
 {
     /// <summary>
-    /// De hoofd scherm van de productiemanager
+    ///     De hoofd scherm van de productiemanager
     /// </summary>
     [Serializable]
     public partial class Mainform : Form
     {
         private string _bootDir;
         private PathWatcher _dbWatcher;
-        /// <summary>
-        /// De titel van de hoofdscherm
-        /// </summary>
-        public string MainAppTitle
-        {
-            get => this.Text;
-            set => this.Text = value;
-        }
+        private SplashScreen _splash;
 
         /// <summary>
-        /// Update de titel en status text
-        /// </summary>
-        public void UpdateTitle()
-        {
-            string xuser = Manager.LogedInGebruiker == null ? "Niet Ingelogd" : $"Ingelogd als: {Manager.LogedInGebruiker.Username}";
-            MainAppTitle = $"ProductieManager Versie {ProductVersion} {xuser}";
-            xstatuslabel.Text = $@"Database: {Manager.AppRootPath}";
-        }
-        /// <summary>
-        /// Of de hoofdscherm bezig is met laden
-        /// </summary>
-        public static bool IsLoading { get; private set; }
-        private SplashScreen _splash;
-        /// <summary>
-        /// De timer die ingesteld staat om te kijken voor nieuwe updates
+        ///     De timer die ingesteld staat om te kijken voor nieuwe updates
         /// </summary>
         public Timer Updatechecker;
 
         /// <summary>
-        /// Maak een nieuwe hoofdscherm aan
+        ///     Maak een nieuwe hoofdscherm aan
         /// </summary>
         public Mainform()
         {
@@ -72,7 +48,33 @@ namespace ProductieManager
                 true);
             Shown += Mainform_Shown;
             //StickyWindow.RegisterExternalReferenceForm(this);
-             LoadManager();
+            LoadManager();
+        }
+
+        /// <summary>
+        ///     De titel van de hoofdscherm
+        /// </summary>
+        public string MainAppTitle
+        {
+            get => Text;
+            set => Text = value;
+        }
+
+        /// <summary>
+        ///     Of de hoofdscherm bezig is met laden
+        /// </summary>
+        public static bool IsLoading { get; private set; }
+
+        /// <summary>
+        ///     Update de titel en status text
+        /// </summary>
+        public void UpdateTitle()
+        {
+            var xuser = Manager.LogedInGebruiker == null
+                ? "Niet Ingelogd"
+                : $"Ingelogd als: {Manager.LogedInGebruiker.Username}";
+            MainAppTitle = $"ProductieManager Versie {ProductVersion} {xuser}";
+            xstatuslabel.Text = $@"Database: {Manager.AppRootPath}";
         }
 
         private void LoadManager()
@@ -81,7 +83,7 @@ namespace ProductieManager
             AutoUpdater.AppTitle = "Productie Manager";
             AutoUpdater.ShowSkipButton = false;
             AutoUpdater.ApplicationExitEvent += AutoUpdater_ApplicationExitEvent;
-            this.WindowState = FormWindowState.Minimized;
+            WindowState = FormWindowState.Minimized;
             Hide();
             Manager.OnSettingsChanged += ProductieView1_OnSettingsChanged;
             Manager.OnManagerLoaded += _manager_OnManagerLoaded;
@@ -89,7 +91,7 @@ namespace ProductieManager
 
             //Shown += Mainform_Shown;
             //Task.Run(new Action(productieView1.LoadForm));
-            _splash = new SplashScreen(3000) {WindowState = FormWindowState.Normal};
+            _splash = new SplashScreen(2000) {WindowState = FormWindowState.Normal};
             _splash.Shown += _splash_Shown;
             _splash.Closed += _splash_Closed;
             _splash.Show();
@@ -106,7 +108,7 @@ namespace ProductieManager
             StartPosition = FormStartPosition.CenterParent;
             Application.DoEvents();
             this.InitLastInfo();
-            this.Show();
+            Show();
             Select();
             BringToFront();
             UpdateTitle();
@@ -121,7 +123,7 @@ namespace ProductieManager
         }
 
         /// <summary>
-        /// Sluit de ProductieManager 
+        ///     Sluit de ProductieManager
         /// </summary>
         /// <param name="restart">Of je de productiemanager wilt restarten</param>
         public static async void Exit(bool restart)
@@ -132,23 +134,25 @@ namespace ProductieManager
             Manager.DefaultSettings?.SaveAsDefault();
             if (Manager.Opties != null)
             {
-                bool cancel = false;
+                var cancel = false;
                 var opties = Manager.Opties;
                 Manager.SettingsChanging(null, ref opties, ref cancel);
                 if (cancel) return;
                 Manager.Opties = opties;
                 await Manager.Opties.Save();
             }
+
             proc.Kill();
         }
+
         /// <summary>
-        /// Een event die aangeeft of de hoofd database niet meer bestaat
+        ///     Een event die aangeeft of de hoofd database niet meer bestaat
         /// </summary>
         /// <param name="sender">De gene die dat heeft geconstateerd</param>
         /// <param name="e">Event informatie</param>
         private void _DbWatcher_PathLocationLost(object sender, EventArgs e)
         {
-            this.Invoke(new Action(DoDbLocationLost));
+            Invoke(new Action(DoDbLocationLost));
         }
 
         private async void DoDbLocationLost()
@@ -156,8 +160,8 @@ namespace ProductieManager
             try
             {
                 _dbWatcher?.Stop();
-                bool found = false;
-                for (int i = 0; i < 5; i++)
+                var found = false;
+                for (var i = 0; i < 5; i++)
                 {
                     if (Directory.Exists(Manager.DefaultSettings.MainDB.RootPath))
                     {
@@ -169,14 +173,19 @@ namespace ProductieManager
                 }
 
                 if (found) return;
-                Dictionary<string, DialogResult> xbtns = new Dictionary<string, DialogResult>
+                var xbtns = new Dictionary<string, DialogResult>
                 {
                     {"Herstart", DialogResult.OK},
                     {"Ga Offline", DialogResult.Cancel},
                     {"Afsluiten", DialogResult.No},
                     {"Kies DB", DialogResult.Yes}
                 };
-                var xrslt = XMessageBox.Show(this, $"Oorspronkelijke database kan niet geladen worden!\n\n" + " * Kies 'Herstart' als je de ProductieManager opnieuw wilt opstarten.\n" + " * Kies 'Offline' als je gewoon offline wilt werken.\n" + " * Kies anders voor een andere database of sluit de ProductieManager af.", "Database niet gevonden!", MessageBoxIcon.Warning, null, xbtns);
+                var xrslt = XMessageBox.Show(this,
+                    "Oorspronkelijke database kan niet geladen worden!\n\n" +
+                    " * Kies 'Herstart' als je de ProductieManager opnieuw wilt opstarten.\n" +
+                    " * Kies 'Offline' als je gewoon offline wilt werken.\n" +
+                    " * Kies anders voor een andere database of sluit de ProductieManager af.",
+                    "Database niet gevonden!", MessageBoxIcon.Warning, null, xbtns);
                 if (xrslt == DialogResult.OK)
                 {
                     Application.Restart();
@@ -185,13 +194,13 @@ namespace ProductieManager
 
                 if (xrslt == DialogResult.No)
                 {
-                    this.Close();
+                    Close();
                     return;
                 }
 
                 if (xrslt == DialogResult.Yes)
                 {
-                    DbPathChooser ps = new DbPathChooser();
+                    var ps = new DbPathChooser();
                     if (ps.ShowDialog() == DialogResult.OK)
                     {
                         Manager.DefaultSettings.MainDB.RootPath = ps.SelectedPath;
@@ -200,17 +209,18 @@ namespace ProductieManager
                     }
                 }
 
-                productieView1.LoadManager(Manager.DefaultSettings.TempMainDB.RootPath,false);
+                productieView1.LoadManager(Manager.DefaultSettings.TempMainDB.RootPath, false);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
+
             _dbWatcher?.Start();
         }
 
         /// <summary>
-        /// Of de hoofd database weer is gevonden
+        ///     Of de hoofd database weer is gevonden
         /// </summary>
         /// <param name="sender">De gene die dat heeft geconstateerd</param>
         /// <param name="e">De event informatoie</param>
@@ -229,7 +239,6 @@ namespace ProductieManager
 
         private void InitBootDir(string path = null)
         {
-
             _bootDir = Application.StartupPath;
             Manager.AppRootPath = path ?? _bootDir;
 
@@ -237,12 +246,12 @@ namespace ProductieManager
             {
                 var dbent = Manager.DefaultSettings.MainDB;
                 var tempdbent = Manager.DefaultSettings.TempMainDB;
-                dbent ??= new DatabaseUpdateEntry()
+                dbent ??= new DatabaseUpdateEntry
                 {
                     Naam = "Main Boot Dir",
                     RootPath = Manager.DefaultSettings.MainDbPath ?? Application.StartupPath,
                     UpdateDatabases =
-                        new List<DbType>()
+                        new List<DbType>
                         {
                             DbType.Accounts,
                             DbType.Producties,
@@ -251,12 +260,12 @@ namespace ProductieManager
                             DbType.Opties
                         }
                 };
-                tempdbent ??= new DatabaseUpdateEntry()
+                tempdbent ??= new DatabaseUpdateEntry
                 {
                     Naam = "Temp Boot Dir",
                     RootPath = Application.StartupPath,
                     UpdateDatabases =
-                        new List<DbType>()
+                        new List<DbType>
                         {
                             DbType.Accounts,
                             DbType.Producties,
@@ -266,7 +275,7 @@ namespace ProductieManager
                         }
                 };
                 string rootpath = null;
-                for (int i = 0; i < 5; i++)
+                for (var i = 0; i < 5; i++)
                 {
                     try
                     {
@@ -292,10 +301,7 @@ namespace ProductieManager
                 {
                     tempdbent.RootPath = _bootDir;
                     if (tempdbent.LastUpdated < dbent.LastUpdated || tempdbent.LastUpdated.IsDefault())
-                    {
                         tempdbent.LastUpdated = DateTime.Now;
-                    }
-
                 }
 
                 Manager.DefaultSettings.MainDB = dbent;
@@ -306,11 +312,10 @@ namespace ProductieManager
 
         private void _manager_OnRemoteMessage(RemoteMessage message, Manager instance)
         {
-           ShowMessagePopup(message);
+            ShowMessagePopup(message);
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="msg"></param>
         public void ShowMessagePopup(RemoteMessage msg)
@@ -322,20 +327,19 @@ namespace ProductieManager
                 //if (InvokeRequired)
                 //    BeginInvoke(new Action(msg.Notify));
                 //else
-                    msg.Notify();
+                msg.Notify();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
         }
-        
+
         private void _manager_OnManagerLoaded()
         {
-            if (this.InvokeRequired)
-                this.Invoke(new MethodInvoker(DoLoaded));
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(DoLoaded));
             else DoLoaded();
-
         }
 
         private void DoLoaded()
@@ -345,7 +349,6 @@ namespace ProductieManager
                 if (_splash.CanClose)
                     _splash.Close();
                 else _splash.CanClose = true;
-
             }
 
             _dbWatcher.WatchPath(Manager.DefaultSettings.MainDB.UpdatePath, false, true);
@@ -355,19 +358,19 @@ namespace ProductieManager
         private void _splash_Shown(object sender, EventArgs e)
         {
             IsLoading = true;
-            Task.Factory.StartNew(new Action(Action));
+            Task.Factory.StartNew(Action);
             //BeginInvoke(new Action(Action));
         }
 
         private void Action()
         {
-            this.BeginInvoke(new Action(() =>
+            BeginInvoke(new Action(() =>
             {
                 try
                 {
                     InitBootDir();
                     xversie.Text = $@"Versie {ProductVersion}";
-                    productieView1.LoadManager(_bootDir,true);
+                    productieView1.LoadManager(_bootDir, true);
                     productieView1.ShowUnreadMessage = true;
                 }
                 catch (Exception e)
@@ -375,14 +378,13 @@ namespace ProductieManager
                     Console.WriteLine(e);
                 }
             }));
-
         }
 
         private void Mainform_Shown(object sender, EventArgs e)
         {
             FormShown();
             Invalidate();
-            Updatechecker = new Timer { Interval = 60000 };
+            Updatechecker = new Timer {Interval = 60000};
             Updatechecker.Tick += _updatechecker_Tick;
             Updatechecker.Start();
         }
@@ -393,7 +395,7 @@ namespace ProductieManager
         }
 
         /// <summary>
-        /// Een event voor als de hoofdscherm zichtbaar is
+        ///     Een event voor als de hoofdscherm zichtbaar is
         /// </summary>
         public event EventHandler OnFormShown;
 
@@ -437,8 +439,8 @@ namespace ProductieManager
                     var asmlibs = asm.GetReferencedAssemblies().Where(x =>
                         !x.FullName.ToLower().StartsWith("system") &&
                         !x.FullName.ToLower().StartsWith("mscorlib")).ToArray();
-                    foreach(var asmlib in asmlibs)
-                        if(!names.Any(x=> x.Equals(asmlib)))
+                    foreach (var asmlib in asmlibs)
+                        if (!names.Any(x => x.Equals(asmlib)))
                             names.Add(asmlib);
                 }
 
@@ -449,7 +451,7 @@ namespace ProductieManager
                     var dllname = Path.GetFileNameWithoutExtension(dll);
                     var dllasm = names.FirstOrDefault(x =>
                         string.Equals(dllname, x.Name, StringComparison.CurrentCultureIgnoreCase));
-                    
+
                     if (dllasm == null)
                         File.Delete(dll);
                 }
@@ -460,11 +462,11 @@ namespace ProductieManager
             }
         }
 
-        private void ProductieView1_OnSettingsChanged(object instance,UserSettings user, bool reinit)
+        private void ProductieView1_OnSettingsChanged(object instance, UserSettings user, bool reinit)
         {
             try
             {
-                if (this.Disposing || this.IsDisposed) return;
+                if (Disposing || IsDisposed) return;
                 BeginInvoke(new Action(UpdateTitle));
             }
             catch (Exception e)
@@ -507,6 +509,13 @@ namespace ProductieManager
             Console.WriteLine(e.Message);
         }
 
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Show();
+            WindowState = FormWindowState.Normal;
+            notifyIcon1.Visible = false;
+        }
+
         #region "Mainform"
 
         private void Mainform_FormClosing(object sender, FormClosingEventArgs e)
@@ -517,7 +526,7 @@ namespace ProductieManager
                 try
                 {
                     var forms = Application.OpenForms;
-                    for(int i = 0; i < forms.Count; i++)
+                    for (var i = 0; i < forms.Count; i++)
                     {
                         var open = forms[i];
                         if (string.IsNullOrEmpty(open.Name) || open.Name == "Mainform") continue;
@@ -528,7 +537,7 @@ namespace ProductieManager
                 {
                     Console.WriteLine(exception);
                 }
-                
+
                 productieView1.SaveLayouts();
                 Manager.DefaultSettings?.SaveAsDefault();
                 Manager.OnSettingsChanged -= ProductieView1_OnSettingsChanged;
@@ -537,7 +546,7 @@ namespace ProductieManager
                 Manager.ProductieProvider?.StopSync();
                 Manager.ProductieProvider?.DisableOfflineDb();
                 if (Manager.LogedInGebruiker != null)
-                    Manager.LogOut(this,false);
+                    Manager.LogOut(this, false);
                 else Manager.SaveSettings(Manager.Opties, false, false, true);
                 productieView1.DetachEvents();
                 //  _updatechecker?.Stop();
@@ -553,9 +562,9 @@ namespace ProductieManager
 
         private void Mainform_Resize(object sender, EventArgs e)
         {
-            if (this.WindowState == FormWindowState.Minimized && Manager.Opties is {MinimizeToTray: true})
+            if (WindowState == FormWindowState.Minimized && Manager.Opties is {MinimizeToTray: true})
             {
-                this.Hide();
+                Hide();
                 notifyIcon1.Visible = true;
                 notifyIcon1.Text = $@"ProductieManager Versie {Application.ProductVersion}";
                 notifyIcon1.ShowBalloonTip(5000);
@@ -565,8 +574,9 @@ namespace ProductieManager
         #endregion "Mainform"
 
         #region IMain Interface
+
         /// <summary>
-        /// Toon de hoofdscherm
+        ///     Toon de hoofdscherm
         /// </summary>
         public void ShowForm()
         {
@@ -574,7 +584,7 @@ namespace ProductieManager
         }
 
         /// <summary>
-        /// Geef aan dat de hoofdscherm zichtbaar is
+        ///     Geef aan dat de hoofdscherm zichtbaar is
         /// </summary>
         protected void FormShown()
         {
@@ -582,13 +592,5 @@ namespace ProductieManager
         }
 
         #endregion IMain Interface
-
-        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            Show();
-            this.WindowState = FormWindowState.Normal;
-            notifyIcon1.Visible = false;
-        }
-
     }
 }

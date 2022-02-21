@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Controls;
+using Forms.MetroBase;
 using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.Various;
 
 namespace Forms
 {
-    public partial class UserAccounts : Forms.MetroBase.MetroBaseForm
+    public partial class UserAccounts : MetroBaseForm
     {
         public UserAccounts()
         {
@@ -40,7 +40,8 @@ namespace Forms
                 var lv = new ListViewItem(x.Username) {Tag = x};
                 lv.SubItems.Add(Enum.GetName(typeof(AccesType), x.AccesLevel));
                 if (Manager.LogedInGebruiker != null &&
-                    string.Equals(Manager.LogedInGebruiker.Username, x.Username, StringComparison.CurrentCultureIgnoreCase))
+                    string.Equals(Manager.LogedInGebruiker.Username, x.Username,
+                        StringComparison.CurrentCultureIgnoreCase))
                     lv.SubItems.Add("Ja");
                 else lv.SubItems.Add("Nee");
                 listView1.Items.Add(lv);
@@ -61,23 +62,22 @@ namespace Forms
             if (count > 0)
             {
                 var del = count > 1
-                    ? XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde gebruikers wilt verwijderen?",
+                    ? XMessageBox.Show(this, "Weetje zeker dat je alle geselecteerde gebruikers wilt verwijderen?",
                         "Verwijderen", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation) == DialogResult.Yes
                     : XMessageBox.Show(this, $"Weetje zeker dat je {listView1.SelectedItems[0].Text} wilt verwijderen?",
                         "Verwijderen", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation) == DialogResult.Yes;
                 if (del)
                 {
                     foreach (ListViewItem lv in listView1.SelectedItems)
-                    {
                         if (lv.Tag is UserAccount us)
                         {
                             if (Manager.LogedInGebruiker != null &&
-                                string.Equals(Manager.LogedInGebruiker.Username, us.Username, StringComparison.CurrentCultureIgnoreCase))
-                                Manager.LogOut(this,true);
+                                string.Equals(Manager.LogedInGebruiker.Username, us.Username,
+                                    StringComparison.CurrentCultureIgnoreCase))
+                                Manager.LogOut(this, true);
                             if (await Manager.Database.DeleteAccount(us.Username))
                                 lv.Remove();
                         }
-                    }
 
                     UpdateStatus();
                 }
@@ -148,7 +148,6 @@ namespace Forms
             if (xlevelselector.SelectedItem == null)
                 return;
             if (listView1.SelectedItems.Count > 0 && listView1.SelectedItems[0].Tag is UserAccount account)
-            {
                 if (Enum.TryParse(xlevelselector.SelectedItem.ToString(), out AccesType current))
                     if (current != account.AccesLevel)
                     {
@@ -157,13 +156,13 @@ namespace Forms
                         xeditb.Visible = false;
                         listView1.SelectedItems[0].SubItems[1].Text = xlevelselector.SelectedItem.ToString();
                         if (Manager.LogedInGebruiker != null &&
-                            string.Equals(Manager.LogedInGebruiker.Username, account.Username, StringComparison.CurrentCultureIgnoreCase))
+                            string.Equals(Manager.LogedInGebruiker.Username, account.Username,
+                                StringComparison.CurrentCultureIgnoreCase))
                         {
                             Manager.LogedInGebruiker.AccesLevel = current;
-                            Manager.LoginChanged(this,false);
+                            Manager.LoginChanged(this, false);
                         }
                     }
-            }
         }
 
         private void xlevelselector_SelectedIndexChanged(object sender, EventArgs e)

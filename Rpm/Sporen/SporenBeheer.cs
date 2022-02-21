@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Rpm.Klachten;
 using Rpm.Mailing;
-using Rpm.Productie;
 using Rpm.SqlLite;
 using Rpm.Various;
 
@@ -15,8 +11,6 @@ namespace Rpm.Productie.Verpakking
     public class SporenBeheer : IDisposable
     {
         public static readonly string VerpakkingDbVersion = "1.0.0.0";
-        public bool Disposed => _disposed;
-        public MultipleFileDb Database { get; private set; }
         public readonly string RootPath;
 
         public SporenBeheer(string path)
@@ -27,6 +21,18 @@ namespace Rpm.Productie.Verpakking
             Database = new MultipleFileDb(RootPath, true, VerpakkingDbVersion, DbType.Verpakkingen);
             Database.FileChanged += Database_Changed;
             Database.FileDeleted += Database_FileDeleted;
+        }
+
+        public bool Disposed { get; private set; }
+
+        public MultipleFileDb Database { get; private set; }
+
+        public void Dispose()
+        {
+            // Dispose of unmanaged resources.
+            Dispose(true);
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
         }
 
 
@@ -67,10 +73,10 @@ namespace Rpm.Productie.Verpakking
             try
             {
                 if (entry == null || Database == null) return false;
-                if(Database.Delete(entry.ArtikelNr))
+                if (Database.Delete(entry.ArtikelNr))
                 {
-                    string msg = $"[SPOOR][{entry.ArtikelNr}] {entry.ProductOmschrijving} " +
-                                 $"verwijderd!";
+                    var msg = $"[SPOOR][{entry.ArtikelNr}] {entry.ProductOmschrijving} " +
+                              "verwijderd!";
                     Manager.RemoteMessage(new RemoteMessage(msg, MessageAction.AlgemeneMelding, MsgType.Success));
                     return true;
                 }
@@ -91,8 +97,8 @@ namespace Rpm.Productie.Verpakking
                 if (string.IsNullOrEmpty(artikelnr) || Database == null) return false;
                 if (Database.Delete(artikelnr))
                 {
-                    string msg = $"[SPOOR][{artikelnr}] " +
-                                 $"verwijderd!";
+                    var msg = $"[SPOOR][{artikelnr}] " +
+                              "verwijderd!";
                     Manager.RemoteMessage(new RemoteMessage(msg, MessageAction.AlgemeneMelding, MsgType.Success));
                     return true;
                 }
@@ -108,7 +114,7 @@ namespace Rpm.Productie.Verpakking
 
         public List<SpoorEntry> GetAlleSporen()
         {
-            List<SpoorEntry> xsporen = new List<SpoorEntry>();
+            var xsporen = new List<SpoorEntry>();
             try
             {
                 if (Database == null) return xsporen;
@@ -118,12 +124,13 @@ namespace Rpm.Productie.Verpakking
             {
                 Console.WriteLine(e);
             }
+
             return xsporen;
         }
 
         public List<string> GetAlleIDs()
         {
-            List<string> xsporen = new List<string>();
+            var xsporen = new List<string>();
             try
             {
                 if (Database == null) return xsporen;
@@ -133,6 +140,7 @@ namespace Rpm.Productie.Verpakking
             {
                 Console.WriteLine(e);
             }
+
             return xsporen;
         }
 
@@ -169,25 +177,13 @@ namespace Rpm.Productie.Verpakking
             SpoorDeleted?.Invoke(sender, EventArgs.Empty);
         }
 
-        public void Dispose()
-        {
-            // Dispose of unmanaged resources.
-            Dispose(true);
-            // Suppress finalization.
-            GC.SuppressFinalize(this);
-        }
-
-        private bool _disposed;
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposed)
-            {
-                return;
-            }
+            if (Disposed) return;
 
             Database?.Dispose();
             Database = null;
-            _disposed = true;
+            Disposed = true;
         }
     }
 }

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Documents;
-using System.Windows.Forms;
+using Forms.MetroBase;
 using Rpm.Productie;
-using Various;
 
 namespace Forms
 {
-    public partial class ViewChartForm : Forms.MetroBase.MetroBaseForm
+    public partial class ViewChartForm : MetroBaseForm
     {
         public ViewChartForm()
         {

@@ -1,11 +1,12 @@
-﻿using BrightIdeasSoftware;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
+using Forms.MetroBase;
 
 namespace Forms
 {
-    public partial class LijstWeergaveForm : Forms.MetroBase.MetroBaseForm
+    public partial class LijstWeergaveForm : MetroBaseForm
     {
         public LijstWeergaveForm()
         {
@@ -22,7 +23,7 @@ namespace Forms
         public bool AllowAddItem
         {
             get => xAddPanel.Visible;
-            set=> xAddPanel.Visible = value;
+            set => xAddPanel.Visible = value;
         }
 
         public bool AllowOpslaan
@@ -106,8 +107,8 @@ namespace Forms
             {
                 if (items is string[] xitems)
                 {
-                    if (this.InvokeRequired)
-                        this.Invoke(new MethodInvoker(() => ViewedData = xitems));
+                    if (InvokeRequired)
+                        Invoke(new MethodInvoker(() => ViewedData = xitems));
                     else ViewedData = xitems;
                 }
             }

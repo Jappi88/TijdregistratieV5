@@ -1,23 +1,30 @@
-﻿using Forms.Klachten;
-using ProductieManager.Properties;
-using ProductieManager.Rpm.Misc;
-using Rpm.Klachten;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Forms;
+using Forms.Klachten;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
+using Rpm.Klachten;
 using Rpm.Productie;
 using Rpm.Various;
+using TheArtOfDev.HtmlRenderer.Core.Entities;
 
 namespace ProductieManager.Forms.Klachten
 {
     public partial class KlachtControl : UserControl
     {
+        private bool _selected;
+
+        public KlachtControl()
+        {
+            InitializeComponent();
+            Height = 127;
+        }
+
         public KlachtEntry Klacht { get; private set; }
 
-
-        private bool _selected;
         public bool IsSelected
         {
             get => _selected;
@@ -25,18 +32,10 @@ namespace ProductieManager.Forms.Klachten
             {
                 _selected = value;
                 if (IsSelected)
-                {
-                    this.BackColor = Color.LightBlue;
-                }
-                else this.BackColor = Color.Transparent;
+                    BackColor = Color.LightBlue;
+                else BackColor = Color.Transparent;
                 Invalidate();
             }
-        }
-
-        public KlachtControl()
-        {
-            InitializeComponent();
-            this.Height = 127;
         }
 
 
@@ -47,7 +46,7 @@ namespace ProductieManager.Forms.Klachten
             var ximg = Resources.page_document_16748_128_128.CombineImage(Resources.dialog_error_36230, 2.5);
             xKlachtImage.Image = Klacht.IsGelezen
                 ? ximg
-                : ximg.CombineImage(Resources.new_25355,ContentAlignment.TopLeft, 2);
+                : ximg.CombineImage(Resources.new_25355, ContentAlignment.TopLeft, 2);
             xklachtinfo.Text = klacht.GetKlachtInfoHtml();
             xdelete.Visible = klacht.AllowEdit;
             xedit.Visible = klacht.AllowEdit;
@@ -90,19 +89,15 @@ namespace ProductieManager.Forms.Klachten
         private void KlachtControl_MouseEnter(object sender, EventArgs e)
         {
             if (IsSelected)
-            {
-                this.BackColor = Color.LightBlue;
-            }
-            else this.BackColor = Color.AliceBlue;
+                BackColor = Color.LightBlue;
+            else BackColor = Color.AliceBlue;
         }
 
         private void KlachtControl_MouseLeave(object sender, EventArgs e)
         {
             if (IsSelected)
-            {
-                this.BackColor = Color.LightBlue;
-            }
-            else this.BackColor = Color.Transparent;
+                BackColor = Color.LightBlue;
+            else BackColor = Color.Transparent;
         }
 
         private void xedit_Click(object sender, EventArgs e)
@@ -124,7 +119,7 @@ namespace ProductieManager.Forms.Klachten
                 Manager.Klachten.RemoveKlacht(Klacht);
         }
 
-        private void xklachtinfo_LinkClicked(object sender, TheArtOfDev.HtmlRenderer.Core.Entities.HtmlLinkClickedEventArgs e)
+        private void xklachtinfo_LinkClicked(object sender, HtmlLinkClickedEventArgs e)
         {
             var link = e.Link.Trim().ToLower();
             if (link.StartsWith("http") || link.StartsWith("www"))
@@ -133,11 +128,8 @@ namespace ProductieManager.Forms.Klachten
             }
             else
             {
-                var prod = Manager.Database.GetProductie(link).Result;
-                if (prod != null)
-                {
-                    Manager.FormulierActie(new object[] { prod }, MainAktie.OpenProductie);
-                }
+                var prod = Manager.Database.GetProductie(link);
+                if (prod != null) Manager.FormulierActie(new object[] {prod}, MainAktie.OpenProductie);
             }
         }
     }

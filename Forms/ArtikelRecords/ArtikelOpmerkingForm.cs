@@ -1,30 +1,29 @@
-﻿using BrightIdeasSoftware;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using BrightIdeasSoftware;
+using Forms.MetroBase;
 using MetroFramework;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Productie.ArtikelRecords;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace Forms.ArtikelRecords
 {
-    public partial class ArtikelOpmerkingForm : Forms.MetroBase.MetroBaseForm
+    public partial class ArtikelOpmerkingForm : MetroBaseForm
     {
-        public ArtikelOpmerking SelectedOpmerking { get; set; }
-
         public ArtikelOpmerkingForm()
         {
             InitializeComponent();
             xGelezenDoorImageList.Images.Add(Resources.user_customer_person_32x32);
-            ((OLVColumn) xGelezenDoorList.Columns[0]).ImageGetter = (x) => 0;
+            ((OLVColumn) xGelezenDoorList.Columns[0]).ImageGetter = x => 0;
         }
 
-        public ArtikelOpmerkingForm(ArtikelOpmerking opmerking):this()
+        public ArtikelOpmerkingForm(ArtikelOpmerking opmerking) : this()
         {
             if (opmerking == null) return;
             Title = $"Wijzig Melding van '{opmerking.GeplaatstDoor}'";
@@ -34,13 +33,15 @@ namespace Forms.ArtikelRecords
             SelectedOpmerking = opmerking;
         }
 
+        public ArtikelOpmerking SelectedOpmerking { get; set; }
+
         public string Title
         {
-            get => this.Text;
+            get => Text;
             set
             {
-                this.Text = value;
-                this.Invalidate();
+                Text = value;
+                Invalidate();
             }
         }
 
@@ -54,13 +55,13 @@ namespace Forms.ArtikelRecords
         {
             try
             {
-                var xvalues = Enum.GetNames(typeof(ArtikelFilter)).Select(x=> (object)x).ToArray();
+                var xvalues = Enum.GetNames(typeof(ArtikelFilter)).Select(x => (object) x).ToArray();
                 xFilterCombo.Items.Clear();
                 xFilterCombo.Items.AddRange(xvalues);
-                xvalues = Enum.GetNames(typeof(ArtikelFilterSoort)).Select(x => (object)x).ToArray();
+                xvalues = Enum.GetNames(typeof(ArtikelFilterSoort)).Select(x => (object) x).ToArray();
                 xFilterTypeCombo.Items.Clear();
                 xFilterTypeCombo.Items.AddRange(xvalues);
-                xvalues = Enum.GetNames(typeof(FilterOp)).Select(x => (object)x).ToArray();
+                xvalues = Enum.GetNames(typeof(FilterOp)).Select(x => (object) x).ToArray();
                 xfilterOp.Items.Clear();
                 xfilterOp.Items.AddRange(xvalues);
             }
@@ -72,10 +73,7 @@ namespace Forms.ArtikelRecords
 
         private void EmailClient_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem { Tag: string client })
-            {
-                AddOntvangerStrip(client);
-            }
+            if (sender is ToolStripMenuItem {Tag: string client}) AddOntvangerStrip(client);
         }
 
         private void ClearOntvangers()
@@ -94,7 +92,7 @@ namespace Forms.ArtikelRecords
         {
             ClearOntvangers();
             var xusers = Manager.Database?.GetAllAccounts().Result;
-            
+
             if (xusers is {Count: > 0})
             {
                 var xclients = xusers.Select(x => x.Username).ToList();
@@ -134,10 +132,7 @@ namespace Forms.ArtikelRecords
 
         private void ClientRemove_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem client)
-            {
-                xontvangerstrip.Items.Remove(client);
-            }
+            if (sender is ToolStripMenuItem client) xontvangerstrip.Items.Remove(client);
         }
 
         public void LoadValues(ArtikelOpmerking opmerking)
@@ -157,7 +152,7 @@ namespace Forms.ArtikelRecords
                 xOpmerking.Text = opmerking.Opmerking;
                 xImage.Image = opmerking.ImageData?.ImageFromBytes();
                 xGelezenDoorList.SetObjects(opmerking.GelezenDoor);
-                xfilterOp.SelectedIndex = (int)opmerking.FilterOp;
+                xfilterOp.SelectedIndex = (int) opmerking.FilterOp;
             }
             catch (Exception e)
             {
@@ -174,13 +169,13 @@ namespace Forms.ArtikelRecords
                     SelectedOpmerking.Filter = (ArtikelFilter) xFilterCombo.SelectedIndex;
                 else throw new Exception("Kies een FilterType a.u.b.");
                 if (xFilterTypeCombo.SelectedIndex > -1)
-                    SelectedOpmerking.FilterSoort = (ArtikelFilterSoort)xFilterTypeCombo.SelectedIndex;
+                    SelectedOpmerking.FilterSoort = (ArtikelFilterSoort) xFilterTypeCombo.SelectedIndex;
                 else throw new Exception("Kies een FilterSoort a.u.b.");
                 if (xfilterOp.SelectedIndex > -1)
-                    SelectedOpmerking.FilterOp = (FilterOp)xfilterOp.SelectedIndex;
+                    SelectedOpmerking.FilterOp = (FilterOp) xfilterOp.SelectedIndex;
                 else throw new Exception("Kies waarop je wilt filteren a.u.b.");
                 var ontvangers = GetOntvangers();
-                if(ontvangers.Count == 0)
+                if (ontvangers.Count == 0)
                     throw new Exception("Kies onvanger(s) a.u.b.");
                 if (xFilterWaarde.Value == 0)
                     throw new Exception("Vul in een waarde dat niet gelijk is aan '0' a.u.b.");
@@ -193,7 +188,7 @@ namespace Forms.ArtikelRecords
                 SelectedOpmerking.Title = xtitletextbox.Text.Trim();
                 SelectedOpmerking.ImageData = xImage.Image?.ToByteArray();
                 SelectedOpmerking.GelezenDoor = xGelezenDoorList.SelectedObjects.Cast<KeyValuePair<string, DateTime>>()
-                    .ToDictionary(x => x.Key, x=> x.Value);
+                    .ToDictionary(x => x.Key, x => x.Value);
                 SelectedOpmerking.OpmerkingVoor = ontvangers;
                 return true;
             }
@@ -210,13 +205,13 @@ namespace Forms.ArtikelRecords
             {
                 record ??= new ArtikelOpmerking();
                 if (xFilterCombo.SelectedIndex > -1)
-                    record.Filter = (ArtikelFilter)xFilterCombo.SelectedIndex;
+                    record.Filter = (ArtikelFilter) xFilterCombo.SelectedIndex;
                 else throw new Exception("Kies een FilterType a.u.b.");
                 if (xFilterTypeCombo.SelectedIndex > -1)
-                    record.FilterSoort = (ArtikelFilterSoort)xFilterTypeCombo.SelectedIndex;
+                    record.FilterSoort = (ArtikelFilterSoort) xFilterTypeCombo.SelectedIndex;
                 else throw new Exception("Kies een FilterSoort a.u.b.");
                 if (xfilterOp.SelectedIndex > -1)
-                    record.FilterOp = (FilterOp)xfilterOp.SelectedIndex;
+                    record.FilterOp = (FilterOp) xfilterOp.SelectedIndex;
                 else throw new Exception("Kies waarop je wilt filteren a.u.b.");
                 var ontvangers = GetOntvangers();
                 if (ontvangers.Count == 0)
@@ -244,12 +239,12 @@ namespace Forms.ArtikelRecords
             var xreturn = new List<string>();
             try
             {
-                xreturn = xontvangerstrip.Items.Cast<ToolStripMenuItem>().Where(x => x.Tag is string).Select(x => x.Tag as string).ToList();
+                xreturn = xontvangerstrip.Items.Cast<ToolStripMenuItem>().Where(x => x.Tag is string)
+                    .Select(x => x.Tag as string).ToList();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-
             }
 
             return xreturn;
@@ -308,13 +303,14 @@ namespace Forms.ArtikelRecords
                     AantalGemaakt = 5000,
                     TijdGewerkt = 50
                 };
-                testrec.UpdatedProducties.AddRange(new List<string>() { "test1", "test2"});
+                testrec.UpdatedProducties.AddRange(new List<string> {"test1", "test2"});
                 var bttns = new Dictionary<string, DialogResult>();
                 bttns.Add("Sluiten", DialogResult.No);
                 bttns.Add("Begrepen", DialogResult.Yes);
                 var xop = testrec.GetOpmerking(op);
-                Manager.OnRequestRespondDialog(xop, testrec.GetTitle(op), MessageBoxButtons.OK, MessageBoxIcon.Information, null, bttns,
-                    xImage.Image??Resources.default_opmerking_16757_256x256, MetroColorStyle.Purple);
+                Manager.OnRequestRespondDialog(xop, testrec.GetTitle(op), MessageBoxButtons.OK,
+                    MessageBoxIcon.Information, null, bttns,
+                    xImage.Image ?? Resources.default_opmerking_16757_256x256, MetroColorStyle.Purple);
             }
         }
 

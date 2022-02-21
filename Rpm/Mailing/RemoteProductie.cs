@@ -1,12 +1,12 @@
-﻿using ProductieManager.Rpm.Mailing;
-using Rpm.Productie;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
-using MailMessage = System.Net.Mail.MailMessage;
+using ProductieManager.Rpm.Mailing;
+using Rpm.Productie;
+using Rpm.Various;
 
 namespace Rpm.Mailing
 {
@@ -135,20 +135,21 @@ namespace Rpm.Mailing
 
         public static bool RespondByEmail(ProductieFormulier formulier, string title = "")
         {
-            return RespondByEmail(new EmailRespond(formulier), title,false);
+            return RespondByEmail(new EmailRespond(formulier), title, false);
         }
 
         public static bool RespondByEmail(Bewerking bew, string title = "")
         {
-            return RespondByEmail(new EmailRespond(bew), title,false);
+            return RespondByEmail(new EmailRespond(bew), title, false);
         }
 
-        public static bool SendEmail(string adress, string title, string msg, List<string> attachments, bool shownotification, bool ishtml)
+        public static bool SendEmail(string adress, string title, string msg, List<string> attachments,
+            bool shownotification, bool ishtml)
         {
             try
             {
-                var es = EmailRespond.CreateMail(adress, "ProductieManager", title, msg, attachments,ishtml);
-                return RespondByEmail(new[] {es},shownotification);
+                var es = EmailRespond.CreateMail(adress, "ProductieManager", title, msg, attachments, ishtml);
+                return RespondByEmail(new[] {es}, shownotification);
             }
             catch (Exception)
             {
@@ -156,7 +157,8 @@ namespace Rpm.Mailing
             }
         }
 
-        public static bool SendEmails(List<EmailClient> adresses, string title, string afzender, string msg, List<string> attachments, bool shownotification, bool ishtml)
+        public static bool SendEmails(List<EmailClient> adresses, string title, string afzender, string msg,
+            List<string> attachments, bool shownotification, bool ishtml)
         {
             try
             {
@@ -167,7 +169,7 @@ namespace Rpm.Mailing
                 //AsyncCallback callback = shownotification ? new AsyncCallback(RecievedRespond) : null;
                 foreach (var adres in adresses)
                 {
-                    var es = EmailRespond.CreateMail(adres.Email, afzender, title, msg, attachments,ishtml);
+                    var es = EmailRespond.CreateMail(adres.Email, afzender, title, msg, attachments, ishtml);
                     if (es == null) continue;
                     es.From = new MailAddress(email, "ProductieManager");
                     es.Sender = new MailAddress(email, "ProductieManager");
@@ -187,7 +189,6 @@ namespace Rpm.Mailing
             email = string.Empty;
             try
             {
-                
                 if (Manager.Opties == null || string.IsNullOrEmpty(Manager.Opties.BoundUsername)) return null;
                 var acc = Manager.Database?.GetAccount(Manager.Opties.BoundUsername).Result;
                 var host = acc?.MailingHost;
@@ -196,7 +197,6 @@ namespace Rpm.Mailing
                 var smtp = host.CreateClient();
                 smtp.SendCompleted += Smtp_SendCompleted;
                 return smtp;
-
             }
             catch (Exception)
             {
@@ -204,11 +204,11 @@ namespace Rpm.Mailing
             }
         }
 
-        private static void Smtp_SendCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        private static void Smtp_SendCompleted(object sender, AsyncCompletedEventArgs e)
         {
             if (e.UserState is MailMessage mail)
             {
-                string xreciepts = string.Join(", ", mail.To.Select(x => x.Address));
+                var xreciepts = string.Join(", ", mail.To.Select(x => x.Address));
                 Manager.RemoteMessage(new RemoteMessage($"Email verzonden naar {xreciepts}",
                     MessageAction.AlgemeneMelding, MsgType.Bericht));
             }
@@ -219,14 +219,14 @@ namespace Rpm.Mailing
             try
             {
                 var mails = respond.GetRespondMails(title);
-                return RespondByEmail(mails,shownotification);
+                return RespondByEmail(mails, shownotification);
             }
             catch (Exception)
             {
                 return false;
             }
         }
-        
+
         public static bool RespondByEmail(MailMessage[] mails, bool shownotification)
         {
             try
@@ -258,7 +258,7 @@ namespace Rpm.Mailing
             try
             {
                 var mails = EmailRespond.GetRespondMails(storing, productie);
-                return RespondByEmail(mails,false);
+                return RespondByEmail(mails, false);
             }
             catch (Exception)
             {

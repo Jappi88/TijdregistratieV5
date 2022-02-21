@@ -1,18 +1,22 @@
-﻿using Forms;
-using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Forms;
+using Rpm.Misc;
+using Rpm.Productie;
+using Rpm.Various;
 
 namespace Controls
 {
     public partial class ZoekProductiesUI : UserControl
     {
+        private bool _isbussy;
+
+        public RangeFilter ShowFilter;
+
         //private List<Bewerking> _loaded = new List<Bewerking>();
         public ZoekProductiesUI()
         {
@@ -25,8 +29,8 @@ namespace Controls
             productieListControl1.ValidHandler = IsAllowed;
             if (Manager.BewerkingenLijst == null) return;
             InitEvents();
-            var bewerkingen = Manager.BewerkingenLijst.GetAllEntries().Select(x => (object)x.Naam).ToArray();
-            var afdelingen = Manager.BewerkingenLijst.GetAlleWerkplekken(false).Select(x => (object)x).ToArray();
+            var bewerkingen = Manager.BewerkingenLijst.GetAllEntries().Select(x => (object) x.Naam).ToArray();
+            var afdelingen = Manager.BewerkingenLijst.GetAlleWerkplekken(false).Select(x => (object) x).ToArray();
             xwerkplekken.Items.AddRange(afdelingen);
             xbewerkingen.Items.AddRange(bewerkingen);
         }
@@ -53,14 +57,14 @@ namespace Controls
         {
             try
             {
-                this.BeginInvoke(new MethodInvoker(UpdateStatusLabel));
+                BeginInvoke(new MethodInvoker(UpdateStatusLabel));
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
             }
         }
-        
+
         private void xartikelnrcheck_CheckedChanged(object sender, EventArgs e)
         {
             xcriteria.Enabled = xcriteriacheckbox.Checked;
@@ -96,33 +100,23 @@ namespace Controls
         {
             if (xwerkplekcheck.Checked && string.IsNullOrEmpty(xwerkplekken.Text.Trim()))
                 XMessageBox.Show(
-                    this, "Werkplekken is aangevinkt, maar het veld is leeg!\nvul in of kies werkplek en probeer het opniew.",
+                    this,
+                    "Werkplekken is aangevinkt, maar het veld is leeg!\nvul in of kies werkplek en probeer het opniew.",
                     "Werkplekken", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else if (xbewerkingcheck.Checked && string.IsNullOrEmpty(xbewerkingen.Text.Trim()))
                 XMessageBox.Show(
-                    this, "Bewerking is aangevinkt, maar het veld is leeg!\nvul in of kies een bewerking en probeer het opniew.",
+                    this,
+                    "Bewerking is aangevinkt, maar het veld is leeg!\nvul in of kies een bewerking en probeer het opniew.",
                     "Bewerking", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else if (xcriteriacheckbox.Checked && string.IsNullOrWhiteSpace(xcriteria.Text.Trim()))
                 XMessageBox.Show(
-                    this, "Artikelnr, productienr of een omschrijving is aangevinkt, maar het veld is leeg!\nvul in een criteria waar de productie aan moet voldoen.",
+                    this,
+                    "Artikelnr, productienr of een omschrijving is aangevinkt, maar het veld is leeg!\nvul in een criteria waar de productie aan moet voldoen.",
                     "Criteria", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             else
                 return true;
 
             return false;
-        }
-
-        public RangeFilter ShowFilter;
-        public struct RangeFilter
-        {
-            public bool Enabled;
-            public bool VanafCheck;
-            public DateTime VanafTime;
-            public bool TotCheck;
-            public DateTime TotTime;
-            public string Criteria;
-            public string werkPlek;
-            public string Bewerking;
         }
 
         public void SetFilter(RangeFilter filter)
@@ -141,22 +135,32 @@ namespace Controls
                 xcriteriacheckbox.Checked = true;
                 xcriteria.Select();
             }
-            else xcriteriacheckbox.Checked = false;
+            else
+            {
+                xcriteriacheckbox.Checked = false;
+            }
+
             if (!string.IsNullOrEmpty(x.werkPlek))
             {
                 xwerkplekken.SelectedItem = x.werkPlek;
                 xwerkplekcheck.Checked = true;
                 xwerkplekken.Select();
             }
-            else xwerkplekcheck.Checked = false;
+            else
+            {
+                xwerkplekcheck.Checked = false;
+            }
+
             if (!string.IsNullOrEmpty(x.Bewerking))
             {
                 xbewerkingen.SelectedItem = x.Bewerking;
                 xbewerkingcheck.Checked = true;
                 xbewerkingen.Select();
             }
-            else xbewerkingcheck.Checked = false;
-
+            else
+            {
+                xbewerkingcheck.Checked = false;
+            }
         }
 
         private bool IsAllowed(object value, string filter)
@@ -171,11 +175,12 @@ namespace Controls
                 var flag = true;
 
                 if (ShowFilter.VanafCheck)
-                {
                     switch (bew.State)
                     {
                         case ProductieState.Gestopt:
-                            flag &= bew.TijdGestopt.IsDefault() ? bew.DatumToegevoegd >= ShowFilter.VanafTime : bew.TijdGestopt >= ShowFilter.VanafTime;
+                            flag &= bew.TijdGestopt.IsDefault()
+                                ? bew.DatumToegevoegd >= ShowFilter.VanafTime
+                                : bew.TijdGestopt >= ShowFilter.VanafTime;
                             break;
                         case ProductieState.Gestart:
                             flag &= bew.GestartOp() >= ShowFilter.VanafTime;
@@ -187,14 +192,14 @@ namespace Controls
                             flag &= bew.DatumVerwijderd >= ShowFilter.VanafTime;
                             break;
                     }
-                        
-                }
 
                 if (ShowFilter.TotCheck)
                     switch (bew.State)
                     {
                         case ProductieState.Gestopt:
-                            flag &= bew.TijdGestopt.IsDefault() ? bew.DatumToegevoegd <= ShowFilter.TotTime : bew.TijdGestopt <= ShowFilter.TotTime;
+                            flag &= bew.TijdGestopt.IsDefault()
+                                ? bew.DatumToegevoegd <= ShowFilter.TotTime
+                                : bew.TijdGestopt <= ShowFilter.TotTime;
                             break;
                         case ProductieState.Gestart:
                             flag &= bew.GestartOp() <= ShowFilter.TotTime;
@@ -219,7 +224,7 @@ namespace Controls
                     return false;
 
                 if (!string.IsNullOrEmpty(ShowFilter.Bewerking) && !string.Equals(bew.Naam.Split('[')[0],
-                    ShowFilter.Bewerking, StringComparison.CurrentCultureIgnoreCase))
+                        ShowFilter.Bewerking, StringComparison.CurrentCultureIgnoreCase))
                     return false;
 
                 return true;
@@ -228,17 +233,18 @@ namespace Controls
             {
                 return false;
             }
-
         }
 
         private void SetProgressLabelText(string text)
         {
             if (xprogresslabel.InvokeRequired)
+            {
                 xprogresslabel.Invoke(new MethodInvoker(() =>
                 {
                     xprogresslabel.Text = text;
                     xprogresslabel.Invalidate();
                 }));
+            }
             else
             {
                 xprogresslabel.Text = text;
@@ -256,11 +262,9 @@ namespace Controls
                 xprogresslabel.Visible = enable;
         }
 
-        private bool _isbussy;
-
         public Task Verwerk()
         {
-            return Task.Run(new Action(()=>  this.Invoke(new Action(() =>
+            return Task.Run(new Action(() => Invoke(new Action(() =>
             {
                 try
                 {
@@ -279,34 +283,34 @@ namespace Controls
                         ShowFilter.Criteria = xcriteriacheckbox.Checked ? xcriteria.Text.Trim() : null;
                         EnableProgressLabel(true);
                         SetProgressLabelText("Producties Laden...");
-                        var ids = Manager.GetAllProductieIDs(true,true).Result;
-                        int cur = 0;
-                        int max = ids.Count;
+                        var ids = Manager.GetAllProductieIDs(true, true).Result;
+                        var cur = 0;
+                        var max = ids.Count;
                         var loaded = new List<Bewerking>();
                         foreach (var id in ids)
                         {
                             if (IsDisposed || !Visible) break;
                             if (string.IsNullOrEmpty(id)) continue;
-                            var x = Manager.Database.GetProductie(id).Result;
+                            var x = Manager.Database.GetProductie(id);
                             if (x == null) continue;
                             if (x.Bewerkingen is {Length: > 0})
                             {
                                 var bws = x.Bewerkingen.Where(b => IsAllowed(b, null)).ToArray();
-                                if (bws.Length > 0)
-                                {
-                                    loaded.AddRange(bws);
-                                }
+                                if (bws.Length > 0) loaded.AddRange(bws);
                             }
 
                             cur++;
-                            double perc = (double)cur / max;
+                            var perc = (double) cur / max;
                             SetProgressLabelText($"Producties laden ({perc:0.0%})...");
                         }
+
                         if (IsDisposed) return;
                         productieListControl1.InitProductie(loaded, true, true, false);
                     }
                     else
+                    {
                         return;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -326,14 +330,14 @@ namespace Controls
             var xtext = "Zoek producties";
             if (ShowFilter.Enabled)
             {
-                var xtitle = $"Resultaten voor ";
+                var xtitle = "Resultaten voor ";
                 if (!string.IsNullOrEmpty(ShowFilter.Criteria))
                     xtitle += $"criteria '{ShowFilter.Criteria}', ";
                 if (!string.IsNullOrEmpty(ShowFilter.werkPlek))
                     xtitle += $"werkplek '{ShowFilter.werkPlek}', ";
                 if (!string.IsNullOrEmpty(ShowFilter.Bewerking))
                     xtitle += $"bewerking '{ShowFilter.Bewerking}', ";
-                xtitle = xtitle.TrimEnd(new char[] { ',', ' ' });
+                xtitle = xtitle.TrimEnd(',', ' ');
                 if (ShowFilter.VanafCheck)
                     xtitle += $" vanaf {ShowFilter.VanafTime.ToString(CultureInfo.InvariantCulture)}";
                 if (ShowFilter.TotCheck)
@@ -348,7 +352,7 @@ namespace Controls
 
         private void xsluiten_Click(object sender, EventArgs e)
         {
-           OnClosedClicked();
+            OnClosedClicked();
         }
 
         private async void xcriteria_KeyDown(object sender, KeyEventArgs e)
@@ -358,7 +362,6 @@ namespace Controls
                 e.Handled = e.SuppressKeyPress = true;
                 if (_isbussy) return;
                 await Verwerk();
-
             }
         }
 
@@ -374,6 +377,18 @@ namespace Controls
         protected virtual void OnStatusTextChanged(string text)
         {
             StatusTextChanged?.Invoke(text, EventArgs.Empty);
+        }
+
+        public struct RangeFilter
+        {
+            public bool Enabled;
+            public bool VanafCheck;
+            public DateTime VanafTime;
+            public bool TotCheck;
+            public DateTime TotTime;
+            public string Criteria;
+            public string werkPlek;
+            public string Bewerking;
         }
     }
 }

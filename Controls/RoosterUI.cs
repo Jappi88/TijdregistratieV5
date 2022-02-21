@@ -116,8 +116,8 @@ namespace Controls
 
         private void xstandaard_Click(object sender, EventArgs e)
         {
-            if (XMessageBox.Show(this, $"Weetje zeker dat je een standaard rooster wilt?", "Standaard Rooster",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (XMessageBox.Show(this, "Weetje zeker dat je een standaard rooster wilt?", "Standaard Rooster",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 SetRooster(Rooster.StandaartRooster());
         }
     }

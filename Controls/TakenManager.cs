@@ -7,16 +7,15 @@ using System.Windows.Forms;
 using BrightIdeasSoftware;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
-using ProductieManager.Rpm.Productie;
 using Rpm.Misc;
 using Rpm.Productie;
+using Rpm.Settings;
 using Rpm.Various;
 
 namespace Controls
 {
     public partial class TakenManager : UserControl
     {
-        public List<Taak> Taken { get; private set; } = new List<Taak>();
         private Taak _selectedtaak;
 
         public TakenManager()
@@ -30,6 +29,8 @@ namespace Controls
                 true);
             Manager.OnSettingsChanged += Manager_OnSettingsChanged;
         }
+
+        public List<Taak> Taken { get; private set; } = new();
 
         public Taak SelectedItem
         {
@@ -49,27 +50,25 @@ namespace Controls
             var x = xtakenlijst.Columns[0] as OLVColumn;
             x.ImageGetter = ImageGetter;
             x.GroupKeyGetter = GroupGetter;
-            UpdateTakenViewState(false,false);
-           
+            UpdateTakenViewState(false, false);
         }
 
         public void InitEvents()
         {
             Manager.OnFormulierChanged += Manager_OnFormulierChanged;
             Manager.OnFormulierDeleted += Manager_OnFormulierDeleted;
-           
         }
-        
+
         public void DetachEvents()
         {
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
             Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
         }
 
-        private void Manager_OnSettingsChanged(object instance, Rpm.Settings.UserSettings settings, bool reinit)
+        private void Manager_OnSettingsChanged(object instance, UserSettings settings, bool reinit)
         {
-            if (this.IsDisposed || this.Disposing) return;
-            this.BeginInvoke(new MethodInvoker(() =>
+            if (IsDisposed || Disposing) return;
+            BeginInvoke(new MethodInvoker(() =>
             {
                 DetachEvents();
                 if (!settings.GebruikTaken || Manager.LogedInGebruiker == null)
@@ -90,8 +89,8 @@ namespace Controls
         {
             try
             {
-                if (this.IsDisposed || this.Disposing) return;
-                this.BeginInvoke(new MethodInvoker(() => DeleteProductieId(id)));
+                if (IsDisposed || Disposing) return;
+                BeginInvoke(new MethodInvoker(() => DeleteProductieId(id)));
             }
             catch (Exception e)
             {
@@ -106,10 +105,7 @@ namespace Controls
 
         private object GroupGetter(object value)
         {
-            if (value is Taak xt)
-            {
-                return xt.Type;
-            }
+            if (value is Taak xt) return xt.Type;
 
             return "N/A";
         }
@@ -117,7 +113,6 @@ namespace Controls
         private object ImageGetter(object value)
         {
             if (value is Taak xt)
-            {
                 switch (xt.Urgentie)
                 {
                     case TaakUrgentie.ZodraMogelijk:
@@ -129,7 +124,6 @@ namespace Controls
                     case TaakUrgentie.Geen_Prioriteit:
                         return 3;
                 }
-            }
 
             return 4;
         }
@@ -149,14 +143,15 @@ namespace Controls
 
         public bool IsAllowed(Taak taak)
         {
-            if (taak == null || Manager.Opties == null || !Manager.Opties.GebruikTaken || this.IsDisposed || this.Disposing) return false;
-            if (xpriotaken.DropDownItems.Cast<ToolStripMenuItem>().Any(t => t.Checked) && 
+            if (taak == null || Manager.Opties == null || !Manager.Opties.GebruikTaken || IsDisposed ||
+                Disposing) return false;
+            if (xpriotaken.DropDownItems.Cast<ToolStripMenuItem>().Any(t => t.Checked) &&
                 !xpriotaken.DropDownItems.Cast<ToolStripMenuItem>().Any(t =>
-                t.Checked && ((string) t.Tag).Equals(((int) taak.Urgentie).ToString())))
+                    t.Checked && ((string) t.Tag).Equals(((int) taak.Urgentie).ToString())))
                 return false;
             if (xsoorttaken.DropDownItems.Cast<ToolStripMenuItem>().Any(t => t.Checked) && !xsoorttaken.DropDownItems
-                .Cast<ToolStripMenuItem>().Any(t =>
-                    t.Checked && ((string) t.Tag).Equals(((int) taak.Type).ToString())))
+                    .Cast<ToolStripMenuItem>().Any(t =>
+                        t.Checked && ((string) t.Tag).Equals(((int) taak.Type).ToString())))
                 return false;
             return true;
         }
@@ -165,9 +160,9 @@ namespace Controls
         {
             try
             {
-                if (this.IsDisposed || this.Disposing) return false;
+                if (IsDisposed || Disposing) return false;
                 var takenlijst = xtakenlijst.Objects.Cast<Taak>().ToArray();
-                int r = Taken.RemoveAll(x => string.Equals(x.ProductieNr, id,
+                var r = Taken.RemoveAll(x => string.Equals(x.ProductieNr, id,
                     StringComparison.CurrentCultureIgnoreCase));
                 var toremove = takenlijst.Where(x => string.Equals(x.ProductieNr, id,
                     StringComparison.CurrentCultureIgnoreCase)).ToList();
@@ -188,24 +183,27 @@ namespace Controls
                 Console.WriteLine(ex.Message);
                 return false;
             }
-            finally { xtakenlijst.EndUpdate(); }
+            finally
+            {
+                xtakenlijst.EndUpdate();
+            }
         }
 
         public void UpdateFormulier(ProductieFormulier formulier)
         {
             try
             {
-                if (this.IsDisposed || this.Disposing) return;
-                this.BeginInvoke(new MethodInvoker(() =>
+                if (IsDisposed || Disposing) return;
+                BeginInvoke(new MethodInvoker(() =>
                 {
                     try
                     {
                         if (xtakenlijst.Objects == null)
                             xtakenlijst.SetObjects(new Taak[] { });
-                        int xcount = Taken.Count;
+                        var xcount = Taken.Count;
                         var takenlijst = xtakenlijst.Objects.Cast<Taak>().ToList();
                         var taken = formulier.GetProductieTaken();
-                        bool changed = false;
+                        var changed = false;
                         if (taken == null || taken.Length == 0)
                         {
                             Taken.RemoveAll(x => x == null || string.Equals(x.ProductieNr, formulier.ProductieNr,
@@ -221,9 +219,10 @@ namespace Controls
                         }
                         else
                         {
-                            var xremove = Taken.Where(x => x == null || 
-                                    (string.Equals(x.ProductieNr, formulier.ProductieNr,
-                                        StringComparison.CurrentCultureIgnoreCase) && !taken.Any(t => t != null && t.Equals(x))))
+                            var xremove = Taken.Where(x => x == null ||
+                                                           string.Equals(x.ProductieNr, formulier.ProductieNr,
+                                                               StringComparison.CurrentCultureIgnoreCase) &&
+                                                           !taken.Any(t => t != null && t.Equals(x)))
                                 .ToArray();
                             if (xremove.Length > 0)
                             {
@@ -233,14 +232,15 @@ namespace Controls
                                     takenlijst.Remove(xt);
                                     changed = true;
                                 }
+
                                 xtakenlijst.BeginUpdate();
                                 xtakenlijst.RemoveObjects(xremove);
-                                
                             }
+
                             foreach (var t in taken)
                             {
                                 if (t == null) continue;
-                                int index = -1;
+                                var index = -1;
                                 if ((index = Taken.IndexOf(t)) < 0)
                                     Taken.Add(t);
                                 else Taken[index] = t;
@@ -257,7 +257,9 @@ namespace Controls
                                 else
                                 {
                                     if (IsAllowed(t))
+                                    {
                                         xtakenlijst.RefreshObject(t);
+                                    }
                                     else
                                     {
                                         xtakenlijst.BeginUpdate();
@@ -273,13 +275,15 @@ namespace Controls
                             xtakenlijst.Sort();
                             UpdateTakenViewState(Taken.Count > xcount && Manager.Opties.ToonLijstNaNieuweTaak, false);
                         }
-                        
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(e);
                     }
-                    finally { xtakenlijst.EndUpdate(); }
+                    finally
+                    {
+                        xtakenlijst.EndUpdate();
+                    }
                 }));
             }
             catch (Exception e)
@@ -292,8 +296,8 @@ namespace Controls
         {
             try
             {
-                if (this.IsDisposed || this.Disposing) return;
-                this.BeginInvoke(new MethodInvoker(MethodInvoker));
+                if (IsDisposed || Disposing) return;
+                BeginInvoke(new MethodInvoker(MethodInvoker));
             }
             catch (Exception e)
             {
@@ -307,7 +311,7 @@ namespace Controls
                 Taken = await TaakBeheer.GetAlleTaken();
                 if (Taken is {Count: > 0})
                 {
-                    for (int i = 0; i < Taken.Count; i++)
+                    for (var i = 0; i < Taken.Count; i++)
                     {
                         var taak = Taken[i];
                         if (taak == null)
@@ -315,6 +319,7 @@ namespace Controls
                             Taken.RemoveAt(i--);
                             continue;
                         }
+
                         if (taak.Bewerking != null && !taak.Bewerking.IsAllowed(null))
                             Taken.RemoveAt(i--);
                         else if (taak.Plek?.Werk != null && !taak.Plek.Werk.IsAllowed(null))
@@ -337,7 +342,7 @@ namespace Controls
             if (IsDisposed || xtakenlijst.IsDisposed) return;
             try
             {
-                int count = xtakenlijst.Items.Count;
+                var count = xtakenlijst.Items.Count;
                 var xselected = xtakenlijst.SelectedObject;
                 var xtaken = Taken.Where(IsAllowed).ToList();
                 xtakenlijst.BeginUpdate();
@@ -388,7 +393,6 @@ namespace Controls
                 item.Checked = !item.Checked;
                 LoadTaken();
             }
-          
         }
 
         private void xpriotaken_MouseEnter(object sender, EventArgs e)
@@ -512,7 +516,7 @@ namespace Controls
 
         private void TakenShow_Click(object sender, EventArgs e)
         {
-            UpdateTakenViewState(false,true);
+            UpdateTakenViewState(false, true);
         }
 
         private void UpdateTakenViewState(bool makevisible, bool collapse)
@@ -525,14 +529,11 @@ namespace Controls
             else
             {
                 if (Width <= 50)
-                {
                     Width = collapse ? 650 : 38;
-                }
                 else
-                {
                     Width = collapse ? 38 : 650;
-                }
             }
+
             UpdateStatus();
         }
 

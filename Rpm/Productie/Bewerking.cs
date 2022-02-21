@@ -1,16 +1,14 @@
-﻿using Polenter.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Threading.Tasks;
+using Polenter.Serialization;
 using Rpm.Mailing;
 using Rpm.Misc;
 using Rpm.Productie.AantalHistory;
 using Rpm.SqlLite;
 using Rpm.Various;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Threading.Tasks;
-using Controls;
 
 namespace Rpm.Productie
 {
@@ -27,11 +25,21 @@ namespace Rpm.Productie
         }
     }
 
-    
+
     public sealed class Bewerking : IProductieBase
     {
+        private string _Eenheid;
+        private string _gereednote;
         private DateTime _gestartop;
         private DateTime _gestoptop;
+
+        private DateTime _Leverdatum;
+
+        private string _note;
+
+        //public override DateTime VerwachtLeverDatum => VerwachtDatumGereed();
+
+        private double _TijdGewerkt;
 
         public Bewerking()
         {
@@ -51,7 +59,6 @@ namespace Rpm.Productie
         public List<DeelsGereedMelding> DeelGereedMeldingen { get; set; } = new();
         public override int AanbevolenPersonen { get; set; }
 
-        private string _Eenheid;
         public override string Eenheid
         {
             get => Parent?.Eenheid ?? _Eenheid;
@@ -61,23 +68,6 @@ namespace Rpm.Productie
                     Parent.Eenheid = value;
                 _Eenheid = value;
             }
-        }
-
-        public int GetAantalGemaakt(DateTime start, DateTime stop,ref double tijd, bool predict)
-        {
-            double xtijd = tijd;
-
-            var xret = WerkPlekken.Sum(x => x.GetAantalGemaakt(start, stop,ref xtijd, predict));
-            tijd = xtijd;
-            return xret;
-        }
-
-        public override int GetActueelAantalGemaakt(ref double tijd)
-        {
-            var xtijd = tijd;
-            var xret = WerkPlekken.Sum(x => x.GetActueelAantalGemaakt(ref xtijd));
-            tijd = xtijd;
-            return xret;
         }
 
         //[ExcludeFromSerialization]
@@ -90,6 +80,7 @@ namespace Rpm.Productie
 
         public bool IsBemand { get; set; }
         public bool IsExtern { get; set; }
+
         public override DateTime TijdGestart
         {
             get => GestartOp();
@@ -110,7 +101,7 @@ namespace Rpm.Productie
         [ExcludeFromSerialization]
         public override string ProductSoort
         {
-            get => Parent?.ProductSoort ?? String.Empty;
+            get => Parent?.ProductSoort ?? string.Empty;
             set
             {
                 if (Parent != null)
@@ -129,18 +120,16 @@ namespace Rpm.Productie
             get { return GetPersoneel().Count(x => x.IngezetAanKlus(this, true, out _)); }
         }
 
-        public override double Activiteit => (100 - Combies.Where(x=> x.IsRunning).Sum(x => x.Activiteit));
+        public override double Activiteit => 100 - Combies.Where(x => x.IsRunning).Sum(x => x.Activiteit);
 
         public int AantalPersonen
         {
             get { return GetPersoneel().Count(x => x.IngezetAanKlus(this, false, out _)); }
         }
 
-        [ExcludeFromSerialization]
-        public override Personeel[] Personen => GetPersoneel();
+        [ExcludeFromSerialization] public override Personeel[] Personen => GetPersoneel();
 
-        [ExcludeFromSerialization]
-        public int AantalBewerkingen { get; set; }
+        [ExcludeFromSerialization] public int AantalBewerkingen { get; set; }
 
         public int _gemaakt { get; set; }
 
@@ -170,26 +159,23 @@ namespace Rpm.Productie
         {
             get
             {
-                int gemaakt = TotaalGemaakt;
+                var gemaakt = TotaalGemaakt;
                 return gemaakt > Aantal ? 0 : Aantal - gemaakt;
             }
-
         }
 
         public override int AantalTeMaken
         {
             get
             {
-                int gemaakt = DeelGereedMeldingen.Sum(x => x.Aantal);
+                var gemaakt = DeelGereedMeldingen.Sum(x => x.Aantal);
                 return gemaakt > Aantal ? 0 : Aantal - gemaakt;
             }
-
         }
 
         public override int TotaalGemaakt => DeelGereedMeldingen.Sum(x => x.Aantal) + AantalGemaakt;
         public override int DeelsGereed => DeelGereedMeldingen.Sum(x => x.Aantal);
 
-        private DateTime _Leverdatum;
         public override DateTime LeverDatum
         {
             get => _Leverdatum;
@@ -201,9 +187,6 @@ namespace Rpm.Productie
             }
         }
 
-        //public override DateTime VerwachtLeverDatum => VerwachtDatumGereed();
-
-        private double _TijdGewerkt;
         public override double TijdGewerkt
         {
             get => TijdAanGewerkt();
@@ -218,14 +201,14 @@ namespace Rpm.Productie
 
         public override string Omschrijving
         {
-            get => (string.IsNullOrEmpty(base.Omschrijving) ? Parent?.Omschrijving : base.Omschrijving);//.WrapText(150);
+            get => string.IsNullOrEmpty(base.Omschrijving) ? Parent?.Omschrijving : base.Omschrijving; //.WrapText(150);
             set => base.Omschrijving = value;
         }
 
         [ExcludeFromSerialization]
         public override string ControlePunten
         {
-            get => Parent?.ControlePunten??String.Empty;
+            get => Parent?.ControlePunten ?? string.Empty;
             set
             {
                 if (Parent != null)
@@ -238,14 +221,12 @@ namespace Rpm.Productie
         public override string Path => ProductieNr + "\\" + Naam;
 
         public ProductieFormulier Parent { get; set; }
-        public override  ProductieFormulier Root => Parent;
+        public override ProductieFormulier Root => Parent;
 
-        private string _note;
-        private string _gereednote;
         [ExcludeFromSerialization]
         public string Notitie
         {
-            get => Note?.Notitie??_note;
+            get => Note?.Notitie ?? _note;
             set
             {
                 _note = value;
@@ -253,26 +234,43 @@ namespace Rpm.Productie
                     Note = new NotitieEntry(value, this);
             }
         }
+
         [ExcludeFromSerialization]
         public string GereedNotitie
         {
-            get => GereedNote?.Notitie?? _gereednote;
+            get => GereedNote?.Notitie ?? _gereednote;
             set
             {
                 _gereednote = value;
                 if (GereedNote == null && !string.IsNullOrEmpty(value))
-                    GereedNote = new NotitieEntry(value, this) { Type = NotitieType.BewerkingGereed, Naam = Paraaf };
+                    GereedNote = new NotitieEntry(value, this) {Type = NotitieType.BewerkingGereed, Naam = Paraaf};
             }
         }
 
-        public List<CombineerEntry> Combies { get; set; } = new List<CombineerEntry>();
+        public List<CombineerEntry> Combies { get; set; } = new();
+
+        public int GetAantalGemaakt(DateTime start, DateTime stop, ref double tijd, bool predict)
+        {
+            var xtijd = tijd;
+
+            var xret = WerkPlekken.Sum(x => x.GetAantalGemaakt(start, stop, ref xtijd, predict));
+            tijd = xtijd;
+            return xret;
+        }
+
+        public override int GetActueelAantalGemaakt(ref double tijd)
+        {
+            var xtijd = tijd;
+            var xret = WerkPlekken.Sum(x => x.GetActueelAantalGemaakt(ref xtijd));
+            tijd = xtijd;
+            return xret;
+        }
 
         public double GetControleRatio()
         {
             if (WerkPlekken.Count > 0)
                 return WerkPlekken.Sum(x => x.ControleRatio()) / WerkPlekken.Count;
             return 0;
-
         }
 
         public bool StartedByMe()
@@ -312,7 +310,7 @@ namespace Rpm.Productie
         public DateTime GetStartOp()
         {
             var dt = DateTime.Now;
-            AantalPersonenNodig(ref dt,false);
+            AantalPersonenNodig(ref dt, false);
             return dt;
         }
 
@@ -346,30 +344,18 @@ namespace Rpm.Productie
             var xreturn = new List<NotitieEntry>();
             try
             {
-                if (Note != null && !string.IsNullOrEmpty(Note.Notitie))
-                {
-                    xreturn.Add(Note);
-                }
+                if (Note != null && !string.IsNullOrEmpty(Note.Notitie)) xreturn.Add(Note);
 
-                if (GereedNote != null && !string.IsNullOrEmpty(GereedNote.Notitie))
-                {
-                    xreturn.Add(GereedNote);
-                }
+                if (GereedNote != null && !string.IsNullOrEmpty(GereedNote.Notitie)) xreturn.Add(GereedNote);
 
                 if (DeelGereedMeldingen != null)
-                {
                     foreach (var dg in DeelGereedMeldingen)
                         if (dg.Note != null && !string.IsNullOrEmpty(dg.Note.Notitie))
                             xreturn.Add(dg.Note);
-                }
-            
+
                 foreach (var wp in WerkPlekken)
-                {
                     if (wp.Note != null && !string.IsNullOrEmpty(wp.Note.Notitie))
-                    {
                         xreturn.Add(wp.Note);
-                    }
-                }
             }
             catch (Exception e)
             {
@@ -388,7 +374,6 @@ namespace Rpm.Productie
             {
                 var xstoringen = wp.Storingen;
                 if (xstoringen is {Count: > 0})
-                {
                     foreach (var storing in xstoringen)
                     {
                         var stop = storing.IsVerholpen ? storing.Gestopt : DateTime.Now;
@@ -396,11 +381,10 @@ namespace Rpm.Productie
                             storingen.Add(storing);
                     }
 
-                    //storingen.AddRange(from storing in xstoringen
-                    //    let stop = storing.IsVerholpen ? storing.Gestopt : DateTime.Now
-                    //    where tot > storing.Gestart && tot <= stop || vanaf >= storing.Gestart && vanaf < stop
-                    //    select storing);
-                }
+                //storingen.AddRange(from storing in xstoringen
+                //    let stop = storing.IsVerholpen ? storing.Gestopt : DateTime.Now
+                //    where tot > storing.Gestart && tot <= stop || vanaf >= storing.Gestart && vanaf < stop
+                //    select storing);
             }
 
             return storingen.ToArray();
@@ -423,7 +407,6 @@ namespace Rpm.Productie
             try
             {
                 if (WerkPlekken.Count > 0)
-                {
                     for (var i = 0; i < WerkPlekken.Count; i++)
                     {
                         if (personen.Length > 0)
@@ -440,7 +423,6 @@ namespace Rpm.Productie
                                     i--;
                                 }
                     }
-                }
 
                 var xreturn = false;
                 foreach (var persoon in personen) xreturn |= AddPersoneel(persoon, persoon.Werkplek);
@@ -505,10 +487,8 @@ namespace Rpm.Productie
                 }
 
                 if (WerkPlekken != null)
-                    foreach (WerkPlek wp in WerkPlekken)
-                    {
+                    foreach (var wp in WerkPlekken)
                         wp.UpdateWerkplek(true);
-                    }
 
                 if (DeelGereedMeldingen != null)
                     foreach (var deels in DeelGereedMeldingen)
@@ -530,7 +510,7 @@ namespace Rpm.Productie
                 AanbevolenPersonen = AantalPersonenNodig(ref dt, false);
                 StartOp = dt;
                 if (AantalActievePersonen == 0 && State == ProductieState.Gestart)
-                    _= StopProductie(true,true).Result;
+                    _ = StopProductie(true, true).Result;
                 if (save)
                     LastChanged = LastChanged.UpdateChange(change, DbType.Producties);
                 if (Parent != null)
@@ -574,7 +554,7 @@ namespace Rpm.Productie
 
         public Task<bool> StartProductie(bool email, bool savepersoneel, bool updatecombies)
         {
-            return Task.Run( async() =>
+            return Task.Run(async () =>
             {
                 try
                 {
@@ -596,7 +576,6 @@ namespace Rpm.Productie
                     TijdGestart = DateTime.Now;
                     foreach (var plek in WerkPlekken)
                     {
-
                         foreach (var per in plek.Personen)
                         {
                             var klus = per.Klusjes.GetKlus(plek.Path);
@@ -617,14 +596,11 @@ namespace Rpm.Productie
                                         per.WerkRooster = x.WerkRooster;
                                     klus.Tijden.WerkRooster = per.WerkRooster;
                                     x.ReplaceKlus(klus);
-                                    _= Manager.Database.PersoneelLijst.Upsert(x.PersoneelNaam.Trim(), x, false);
+                                    _ = Manager.Database.PersoneelLijst.Upsert(x.PersoneelNaam.Trim(), x, false);
                                 }
                             }
 
-                            if (plek.IsActief())
-                            {
-                                plek.Tijden.UpdateLijst(klus.Tijden,false);
-                            }
+                            if (plek.IsActief()) plek.Tijden.UpdateLijst(klus.Tijden, false);
                         }
 
 
@@ -636,7 +612,6 @@ namespace Rpm.Productie
                             plek.LaatstAantalUpdate = DateTime.Now;
                             plek.UpdateTijdGestart();
                         }
-
                     }
                     //if (newtime || Tijden.Count == 0)
 
@@ -644,46 +619,51 @@ namespace Rpm.Productie
                         Parent.TijdGestart = DateTime.Now;
 
                     GestartDoor = Manager.Opties.Username;
-                   
-                    if(await UpdateBewerking(null, $"[{Path}] Bewerking Gestart") && updatecombies)
-                        _= UpdateCombies();
+
+                    if (await UpdateBewerking(null, $"[{Path}] Bewerking Gestart") && updatecombies)
+                        _ = UpdateCombies();
                     if (email)
                         RemoteProductie.RespondByEmail(this,
                             $"Productie [{ProductieNr.ToUpper()}] {Naam} is zojuist gestart op {WerkplekkenName}.");
                     return true;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    _ = StopProductie(false,true);
+                    _ = StopProductie(false, true);
                     return false;
                 }
             });
         }
 
-        public void ZetPersoneelActief(string personeelnaam,string werkplek,bool actief)
+        public void ZetPersoneelActief(string personeelnaam, string werkplek, bool actief)
         {
             if (WerkPlekken != null)
             {
-                var xwp = WerkPlekken.FirstOrDefault(x => string.Equals(x.Naam, werkplek, StringComparison.CurrentCultureIgnoreCase));
-                if(xwp != null)
+                var xwp = WerkPlekken.FirstOrDefault(x =>
+                    string.Equals(x.Naam, werkplek, StringComparison.CurrentCultureIgnoreCase));
+                if (xwp != null)
                 {
                     var xpers = xwp.Personen.Where(x =>
-                   string.Equals(x.PersoneelNaam, personeelnaam, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                            string.Equals(x.PersoneelNaam, personeelnaam, StringComparison.CurrentCultureIgnoreCase))
+                        .ToList();
                     foreach (var xper in xpers)
                     {
                         var xklus = xper.Klusjes.GetKlus($"{Path}\\{werkplek}");
                         xklus?.ZetActief(actief, State == ProductieState.Gestart && actief);
                         if (actief && xklus?.Tijden != null)
-                            xwp.Tijden.UpdateLijst(xklus.Tijden,false);
+                            xwp.Tijden.UpdateLijst(xklus.Tijden, false);
                     }
+
                     xwp.UpdateWerkplek(false);
                 }
+
                 if (!actief) return;
                 foreach (var wp in WerkPlekken)
                 {
                     if (string.Equals(wp.Naam, werkplek, StringComparison.CurrentCultureIgnoreCase)) continue;
                     var xpers = wp.Personen.Where(x =>
-                    string.Equals(x.PersoneelNaam, personeelnaam, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                            string.Equals(x.PersoneelNaam, personeelnaam, StringComparison.CurrentCultureIgnoreCase))
+                        .ToList();
                     foreach (var xper in xpers)
                     {
                         var xklus = xper.Klusjes.GetKlus($"{Path}\\{wp.Naam}");
@@ -705,7 +685,7 @@ namespace Rpm.Productie
                 if (Parent != null && Parent.State != ProductieState.Gestopt)
                     Parent.TijdGestopt = DateTime.Now;
                 State = ProductieState.Gestopt;
-                
+
                 foreach (var plek in WerkPlekken)
                 {
                     plek.TijdGestopt = DateTime.Now;
@@ -724,8 +704,9 @@ namespace Rpm.Productie
                         _ = Manager.Database.UpSert(x, $"[{x.PersoneelNaam}] uit werk [{Path}] gehaald");
                     }
                 }
-                if(await UpdateBewerking(null, $"[{Path}] Bewerking Gestopt") && updatecombis)
-                    _=UpdateCombies();
+
+                if (await UpdateBewerking(null, $"[{Path}] Bewerking Gestopt") && updatecombis)
+                    _ = UpdateCombies();
                 if (email)
                     RemoteProductie.RespondByEmail(this,
                         $"Productie [{ProductieNr.ToUpper()}] {Naam} is zojuist gestopt op {WerkplekkenName}.");
@@ -739,7 +720,7 @@ namespace Rpm.Productie
 
         public Task<bool> RemoveBewerking(bool skip, bool completeremove)
         {
-            return Task.Run(async() =>
+            return Task.Run(async () =>
             {
                 var personen = GetPersoneel();
 
@@ -748,7 +729,6 @@ namespace Rpm.Productie
                     if (Parent != null && !skip)
                     {
                         foreach (var per in personen)
-                        {
                             if (per.IngezetAanKlus(this, false, out var klusjes))
                             {
                                 var dbpers = await Manager.Database.GetPersoneel(per.PersoneelNaam);
@@ -759,22 +739,18 @@ namespace Rpm.Productie
                                     await Manager.Database.UpSert(dbpers, $"{Path} Klusjes verwijderd");
                                 }
                             }
-                        }
-                        if(completeremove)
+
+                        if (completeremove)
                             return await Manager.Database.Delete(Parent);
                         var bws = Parent.Bewerkingen.Where(x => !x.Equals(this)).ToArray();
                         var deleted = bws.Length < Parent.Bewerkingen.Length;
                         Parent.Bewerkingen = bws;
-                        if (Parent.Bewerkingen.Length == 0)
-                        {
-                            return await Manager.Database.Delete(Parent);
-                        }
+                        if (Parent.Bewerkingen.Length == 0) return await Manager.Database.Delete(Parent);
 
                         if (deleted)
                         {
-                            Manager.BewerkingDeleted(this, this,false);
+                            Manager.BewerkingDeleted(this, this, false);
                             await Parent.UpdateForm(true, false);
-
                         }
 
                         return deleted;
@@ -783,9 +759,8 @@ namespace Rpm.Productie
                     return false;
                 }
 
-                if (State == ProductieState.Gestart) await StopProductie(false,true);
+                if (State == ProductieState.Gestart) await StopProductie(false, true);
                 foreach (var per in personen)
-                {
                     if (per.IngezetAanKlus(this, false, out var klusjes))
                     {
                         var dbpers = await Manager.Database.GetPersoneel(per.PersoneelNaam);
@@ -801,7 +776,6 @@ namespace Rpm.Productie
                             await Manager.Database.UpSert(dbpers, $"{Path} Klusjes verwijderd");
                         }
                     }
-                }
 
                 DatumVerwijderd = DateTime.Now;
                 State = ProductieState.Verwijderd;
@@ -815,14 +789,13 @@ namespace Rpm.Productie
 
         public Task<bool> Undo()
         {
-            return Task.Run(async() =>
+            return Task.Run(async () =>
             {
                 if (State != ProductieState.Gestart && State != ProductieState.Gestopt)
                 {
                     State = ProductieState.Gestopt;
                     var personen = GetPersoneel();
                     foreach (var per in personen)
-                    {
                         if (per.IngezetAanKlus(this, false, out var klusjes))
                         {
                             var dbpers = await Manager.Database.GetPersoneel(per.PersoneelNaam);
@@ -837,7 +810,6 @@ namespace Rpm.Productie
                                 await Manager.Database.UpSert(dbpers, $"{Path} Klusjes terug gezet");
                             }
                         }
-                    }
 
                     await UpdateBewerking();
                     return true;
@@ -851,7 +823,7 @@ namespace Rpm.Productie
         {
             var dt = new DateTime();
             if (WerkPlekken == null || WerkPlekken.Count == 0)
-                    return _gestartop;
+                return _gestartop;
 
             //if (!IsBemand) return Tijden.GetFirstStart();
             foreach (var wp in WerkPlekken)
@@ -861,6 +833,7 @@ namespace Rpm.Productie
                 if (dt.IsDefault() || xgestart < dt)
                     dt = xgestart;
             }
+
             return dt;
         }
 
@@ -881,7 +854,7 @@ namespace Rpm.Productie
         {
             if (string.IsNullOrEmpty(ProductieNr))
                 return null;
-            var parent = Manager.Database.GetProductie(ProductieNr).Result;
+            var parent = Manager.Database.GetProductie(ProductieNr);
             if (parent?.Bewerkingen != null)
                 for (var i = 0; i < parent.Bewerkingen.Length; i++)
                     if (string.Equals(parent.Bewerkingen[i].Naam, Naam, StringComparison.CurrentCultureIgnoreCase))
@@ -953,26 +926,26 @@ namespace Rpm.Productie
         public Task<bool> MeldDeelsGereed(DeelsGereedMelding gereedmelding, bool update)
         {
             return MeldDeelsGereed(gereedmelding.Paraaf, gereedmelding.Aantal, gereedmelding.Notitie,
-                gereedmelding.WerkPlek,gereedmelding.Datum, update);
+                gereedmelding.WerkPlek, gereedmelding.Datum, update);
         }
 
         public Task<bool> MeldDeelsGereed(string paraaf, int aantal,
-            string notitie,string werkplek,DateTime datum, bool update)
+            string notitie, string werkplek, DateTime datum, bool update)
         {
-            return Task.Run(async ()=>
+            return Task.Run(async () =>
             {
                 try
                 {
-                    int xaantal = aantal;
-                   
+                    var xaantal = aantal;
+
                     if (werkplek != null && WerkPlekken.Count > 0)
                     {
-                        int xparts = xaantal / WerkPlekken.Count;
-                        int xrestpart = xaantal % WerkPlekken.Count;
-                        int index = 0;
+                        var xparts = xaantal / WerkPlekken.Count;
+                        var xrestpart = xaantal % WerkPlekken.Count;
+                        var index = 0;
                         foreach (var wp in WerkPlekken)
                         {
-                            var deelgereed = new DeelsGereedMelding()
+                            var deelgereed = new DeelsGereedMelding
                             {
                                 Aantal = xparts,
                                 Datum = datum,
@@ -981,7 +954,7 @@ namespace Rpm.Productie
                                 WerkPlek = werkplek,
                                 Werk = this
                             };
-                            
+
                             if (wp.AantalGemaakt >= xparts)
                                 wp.AantalGemaakt -= xparts;
                             else wp.AantalGemaakt = 0;
@@ -991,13 +964,14 @@ namespace Rpm.Productie
                                 if (wp.AantalGemaakt > 0)
                                     wp.AantalGemaakt -= xrestpart;
                             }
+
                             DeelGereedMeldingen.Add(deelgereed);
                             index++;
                         }
                     }
                     else
                     {
-                        var deelgereed = new DeelsGereedMelding()
+                        var deelgereed = new DeelsGereedMelding
                         {
                             Aantal = aantal,
                             Datum = datum,
@@ -1024,6 +998,7 @@ namespace Rpm.Productie
                                 AantalGemaakt = 0;
                         }
                     }
+
                     if (update)
                     {
                         var xa = aantal == 1 ? "stuk" : "stuks";
@@ -1031,6 +1006,7 @@ namespace Rpm.Productie
                             $"[{Path}] {paraaf} heeft is zojuist {aantal} {xa} deels gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u).";
                         return await UpdateBewerking(null, change);
                     }
+
                     return true;
                 }
                 catch (Exception e)
@@ -1047,7 +1023,7 @@ namespace Rpm.Productie
             var tijd = GetTijdOver();
             //tijd /= GetPersoneel().AantalPersTijdMultiplier();
             var rooster = Manager.Opties?.GetWerkRooster();
-            if (TotaalGemaakt >= Aantal || tijd is 0 or Double.NaN || double.IsInfinity(tijd))
+            if (TotaalGemaakt >= Aantal || tijd is 0 or double.NaN || double.IsInfinity(tijd))
                 return Werktijd.EerstVolgendeWerkdag(DateTime.Now, ref rooster, rooster,
                     Manager.Opties?.SpecialeRoosters);
             var xdate = Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(tijd), rooster, null);
@@ -1101,7 +1077,7 @@ namespace Rpm.Productie
             var aantalbws = bws.Sum(t => t.Length);
             if (aantalbws == 0)
                 return 0;
-            var aantal = (int)bws.Sum(t => t.Sum(b => b.TotaalGemaakt)) / aantalbws;
+            var aantal = bws.Sum(t => t.Sum(b => b.TotaalGemaakt)) / aantalbws;
             return aantal;
         }
 
@@ -1117,7 +1093,7 @@ namespace Rpm.Productie
             var aantalbws = bws.Sum(t => t.Length);
             if (aantalbws == 0)
                 return 0;
-            var peruur = (double)bws.Sum(t => t.Sum(b => b.PerUur)) / aantalbws;
+            var peruur = bws.Sum(t => t.Sum(b => b.PerUur)) / aantalbws;
             return Math.Round(peruur, 0);
         }
 
@@ -1147,9 +1123,10 @@ namespace Rpm.Productie
 
             if (TotaalGemaakt > 0)
             {
-                var val = Math.Round((double)Aantal / TotaalGemaakt * 100, 1);
+                var val = Math.Round((double) Aantal / TotaalGemaakt * 100, 1);
                 return val + 100;
             }
+
             return 0;
         }
 
@@ -1160,7 +1137,8 @@ namespace Rpm.Productie
                 var val = Math.Round(TijdGewerkt / DoorloopTijd * 100, 1);
                 return val;
             }
-            if(TijdGewerkt > 0)
+
+            if (TijdGewerkt > 0)
             {
                 var val = Math.Round(DoorloopTijd / TijdGewerkt * 100, 1);
                 return val + 100;
@@ -1183,14 +1161,14 @@ namespace Rpm.Productie
             //if (!string.IsNullOrEmpty(GestartDoor) && !string.Equals(GestartDoor, Manager.Opties.Username,
             //    StringComparison.CurrentCultureIgnoreCase))
             //    return TijdGewerkt;
-            double tijd = CalculateMachineTijd();
+            var tijd = CalculateMachineTijd();
             if (tijd <= 0) return 0;
             return tijd;
         }
 
         public double TijdAanGewerkt(DateTime vanaf, DateTime tot)
         {
-            double tijd = CalculateMachineTijd(vanaf, tot);
+            var tijd = CalculateMachineTijd(vanaf, tot);
             if (tijd <= 0) return 0;
             return tijd;
         }
@@ -1198,14 +1176,14 @@ namespace Rpm.Productie
         public double CalculateMachineTijd()
         {
             //var storingen = WerkPlekken.ToArray().CreateStoringDictionary();
-            var xtijd = WerkPlekken.Sum(x=> x.TijdAanGewerkt(true));
-            return Math.Round(xtijd,2);
+            var xtijd = WerkPlekken.Sum(x => x.TijdAanGewerkt());
+            return Math.Round(xtijd, 2);
         }
 
         public double CalculateMachineTijd(DateTime vanaf, DateTime tot)
         {
-            var xtijd = WerkPlekken.Sum(x => x.TijdAanGewerkt(vanaf,tot,true));
-            return Math.Round(xtijd,2);
+            var xtijd = WerkPlekken.Sum(x => x.TijdAanGewerkt(vanaf, tot, true));
+            return Math.Round(xtijd, 2);
         }
 
         public double GetTijdNodig()
@@ -1256,11 +1234,11 @@ namespace Rpm.Productie
             var nodig = GetTijdNodig();
             if (nodig == 0)
                 return 0;
-            Rooster rs = Manager.Opties?.GetWerkRooster();
+            var rs = Manager.Opties?.GetWerkRooster();
             var tijdover = Werktijd
-                .TijdGewerkt(DateTime.Now, LeverDatum, rs,Manager.Opties?.SpecialeRoosters);
+                .TijdGewerkt(DateTime.Now, LeverDatum, rs, Manager.Opties?.SpecialeRoosters);
             var uurover = tijdover.TotalHours;
-            int pers = 1;
+            var pers = 1;
 
             if (IsBemand)
             {
@@ -1278,9 +1256,10 @@ namespace Rpm.Productie
             //voeg start marge toe van 1 uur
             uurpp += 1;
             //startop = DateTime.Now;
-          
+
             // if (uurpp > 0)
-            var xt = Werktijd.DatumVoorTijd(LeverDatum, TimeSpan.FromHours(uurpp), rs, Manager.Opties?.SpecialeRoosters);
+            var xt = Werktijd.DatumVoorTijd(LeverDatum, TimeSpan.FromHours(uurpp), rs,
+                Manager.Opties?.SpecialeRoosters);
             if (onlyifsmaller && xt < startop)
                 startop = xt;
             else if (!onlyifsmaller)
@@ -1292,7 +1271,7 @@ namespace Rpm.Productie
 
         public void BewerkingChanged(object sender, Bewerking bewerking, string change, bool shownotification)
         {
-            OnBewerkingChanged?.Invoke(sender, bewerking, change,shownotification);
+            OnBewerkingChanged?.Invoke(sender, bewerking, change, shownotification);
         }
 
         public async void BewerkingChanged(string change = null)
@@ -1366,7 +1345,7 @@ namespace Rpm.Productie
                 var xreturn = new Dictionary<string, List<WerkPlek>>();
                 try
                 {
-                    var prods = await Manager.Database.GetProducties($"{ArtikelNr}",true, true);
+                    var prods = await Manager.Database.GetProducties($"{ArtikelNr}", true, true);
                     if (prods is {Count: > 0})
                     {
                         foreach (var prod in prods)
@@ -1374,15 +1353,13 @@ namespace Rpm.Productie
                             var bw = prod.Bewerkingen?.FirstOrDefault(x =>
                                 string.Equals(x.Naam, Naam, StringComparison.CurrentCultureIgnoreCase));
                             if (bw?.WerkPlekken != null && bw.WerkPlekken.Count > 0)
-                            {
                                 foreach (var wp in bw.WerkPlekken)
                                 {
                                     if (wp.TijdAanGewerkt() <= 0) continue;
                                     if (xreturn.ContainsKey(wp.Naam))
                                         xreturn[wp.Naam].Add(wp);
-                                    else xreturn.Add(wp.Naam, new List<WerkPlek>() {wp});
+                                    else xreturn.Add(wp.Naam, new List<WerkPlek> {wp});
                                 }
-                            }
                         }
 
                         if (xreturn.Count > 0)
@@ -1406,19 +1383,19 @@ namespace Rpm.Productie
             return new KeyValuePair<string, int>(xret.Key, aantbevolen);
         }
 
-        public async Task<KeyValuePair<string,int>> GetAanbevolenWerkplekHtml(bool inclheader, int aantbevolen)
+        public async Task<KeyValuePair<string, int>> GetAanbevolenWerkplekHtml(bool inclheader, int aantbevolen)
         {
             var xret = await GetAanbevolenWerkplekkenHtml(inclheader);
             aantbevolen += xret.Value;
             return new KeyValuePair<string, int>(xret.Key, aantbevolen);
         }
 
-        public Task<KeyValuePair<string,int>> GetAanbevolenPersoneelHtml(bool inclheader)
+        public Task<KeyValuePair<string, int>> GetAanbevolenPersoneelHtml(bool inclheader)
         {
-            return Task.Run(async() =>
+            return Task.Run(async () =>
             {
                 var xpers = 0;
-                string xkey = string.Empty;
+                var xkey = string.Empty;
                 try
                 {
                     var xdict = await GetAanbevolenPersonen();
@@ -1426,25 +1403,25 @@ namespace Rpm.Productie
                     if (xdict.Count > 0)
                     {
                         var x1 = xdict.Count == 1 ? "persoon" : "personen";
-                        var xtitle = $"{xdict.Count} Aanbevolen {x1} voor {this.Naam}";
+                        var xtitle = $"{xdict.Count} Aanbevolen {x1} voor {Naam}";
                         if (inclheader)
-                            xkey = $"<html>\r\n" +
-                                   $"<head>\r\n" +
+                            xkey = "<html>\r\n" +
+                                   "<head>\r\n" +
                                    $"<style>{GetStylesheet("StyleSheet")}</style>\r\n" +
                                    $"<Title>{ArtikelNr}</Title>\r\n" +
-                                   $"<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
-                                   $"</head>\r\n" +
+                                   "<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
+                                   "</head>\r\n" +
                                    $"<body style='background - color: {Color.DarkGreen.Name}; background-gradient: {Color.DarkGreen.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 50px 0px'>\r\n" +
                                    $"<h1 align='center' style='color: {Color.White.Name}'>\r\n" +
                                    $"       {xtitle}\r\n" +
-                                   $"        <br/>\r\n" +
+                                   "        <br/>\r\n" +
                                    $"        <span style=\'font-size: x-small;\'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +
-                                   $"</h1>\r\n" +
-                                   $"<blockquote class='whitehole'>\r\n" +
-                                   $"       <p style = 'margin-top: 0px' >\r\n" +
-                                   $"<table border = '0' width = '100%' >\r\n" +
-                                   $"<tr style = 'vertical-align: top;' >\r\n" +
-                                   $"<td>\r\n";
+                                   "</h1>\r\n" +
+                                   "<blockquote class='whitehole'>\r\n" +
+                                   "       <p style = 'margin-top: 0px' >\r\n" +
+                                   "<table border = '0' width = '100%' >\r\n" +
+                                   "<tr style = 'vertical-align: top;' >\r\n" +
+                                   "<td>\r\n";
                         else xkey = "";
                         xkey += $"<h3><u><b>{Naam}</b></u></h3>\r\n";
                         foreach (var key in xdict)
@@ -1452,16 +1429,15 @@ namespace Rpm.Productie
                             double tijd = 0;
                             int aantal;
                             xkey += $"<h3>{key.Key}</h3>\r\n" +
-                                    $"<div>\r\n" +
+                                    "<div>\r\n" +
                                     $"<b>{key.Key}</b> heeft <b>{key.Value.Count}</b> keer aan {Naam} van {Omschrijving} gewerkt.<br>" +
                                     $"Tijd Gewerkt: <b>{Math.Round(key.Value.Sum(x => x.TijdGewerkt()), 2)} uur</b><br>" +
-                                    $"Aantal Gemaakt: <b>{(aantal = key.Value.Sum(x => x.GetAantalGemaakt(ref tijd)))}</b><br>" +
+                                    $"Aantal Gemaakt: <b>{aantal = key.Value.Sum(x => x.GetAantalGemaakt(ref tijd))}</b><br>" +
                                     $"Gemiddeld P/u: <b>{(tijd > 0 ? (int) (aantal / tijd) : 0)} p/u</b><br>" +
-                                    $"</div>\r\n";
-
+                                    "</div>\r\n";
                         }
 
-                        xkey += $"<hr/>";
+                        xkey += "<hr/>";
                     }
                 }
                 catch (Exception e)
@@ -1477,8 +1453,8 @@ namespace Rpm.Productie
         {
             return Task.Run(async () =>
             {
-                string xret = string.Empty;
-                int xpers = 0;
+                var xret = string.Empty;
+                var xpers = 0;
                 try
                 {
                     var xdict = await GetAanbevolenWerkplekken();
@@ -1486,42 +1462,41 @@ namespace Rpm.Productie
                     if (xdict.Count > 0)
                     {
                         var x1 = xdict.Count == 1 ? "werkplek" : "werkplekken";
-                        var xtitle = $"{xdict.Count} Aanbevolen {x1} voor {this.Naam}";
+                        var xtitle = $"{xdict.Count} Aanbevolen {x1} voor {Naam}";
                         if (inclheader)
-                            xret = $"<html>\r\n" +
-                                   $"<head>\r\n" +
+                            xret = "<html>\r\n" +
+                                   "<head>\r\n" +
                                    $"<style>{GetStylesheet("StyleSheet")}</style>\r\n" +
                                    $"<Title>{ArtikelNr}</Title>\r\n" +
-                                   $"<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
-                                   $"</head>\r\n" +
+                                   "<link rel = 'Stylesheet' href = 'StyleSheet' />\r\n" +
+                                   "</head>\r\n" +
                                    $"<body style='background - color: {Color.DarkGreen.Name}; background-gradient: {Color.DarkGreen.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 50px 0px'>\r\n" +
                                    $"<h1 align='center' style='color: {Color.White.Name}'>\r\n" +
                                    $"       {xtitle}\r\n" +
-                                   $"        <br/>\r\n" +
+                                   "        <br/>\r\n" +
                                    $"        <span style=\'font-size: x-small;\'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +
-                                   $"</h1>\r\n" +
-                                   $"<blockquote class='whitehole'>\r\n" +
-                                   $"       <p style = 'margin-top: 0px' >\r\n" +
-                                   $"<table border = '0' width = '100%' >\r\n" +
-                                   $"<tr style = 'vertical-align: top;' >\r\n" +
-                                   $"<td>\r\n";
+                                   "</h1>\r\n" +
+                                   "<blockquote class='whitehole'>\r\n" +
+                                   "       <p style = 'margin-top: 0px' >\r\n" +
+                                   "<table border = '0' width = '100%' >\r\n" +
+                                   "<tr style = 'vertical-align: top;' >\r\n" +
+                                   "<td>\r\n";
                         else xret = "";
                         xret += $"<h3><u><b>{Naam}</b></u></h3>\r\n";
                         foreach (var key in xdict)
                         {
-                            double tijd = key.Value.Sum(x => x.TijdAanGewerkt());
+                            var tijd = key.Value.Sum(x => x.TijdAanGewerkt());
                             int aantal;
                             xret += $"<h3>{key.Key}</h3>\r\n" +
-                                    $"<div>\r\n" +
+                                    "<div>\r\n" +
                                     $"<b>{key.Key}</b> is <b>{key.Value.Count}</b> keer gebruikt voor {Naam} van {Omschrijving}.<br>" +
                                     $"Tijd Gewerkt: <b>{Math.Round(tijd, 2)} uur</b><br>" +
-                                    $"Aantal Gemaakt: <b>{(aantal = key.Value.Sum(x => x.AantalGemaakt))}</b><br>" +
+                                    $"Aantal Gemaakt: <b>{aantal = key.Value.Sum(x => x.AantalGemaakt)}</b><br>" +
                                     $"Gemiddeld P/u: <b>{(tijd > 0 ? (int) (aantal / tijd) : 0)} p/u</b><br>" +
-                                    $"</div>\r\n";
-
+                                    "</div>\r\n";
                         }
 
-                        xret += $"<hr/>";
+                        xret += "<hr/>";
                     }
                 }
                 catch (Exception e)
@@ -1567,12 +1542,12 @@ namespace Rpm.Productie
                 var plekken = WerkPlekken.Where(x => x.Werk != null && x.Werk.Equals(this)).ToArray();
                 if (plekken.Length > 0)
                 {
-                    int totaalgemaakt = plekken.Sum(x => x.AantalGemaakt);
-                    if ( totaalgemaakt != _gemaakt)
+                    var totaalgemaakt = plekken.Sum(x => x.AantalGemaakt);
+                    if (totaalgemaakt != _gemaakt)
                     {
-                        int verschil = 0;
-                        bool add = false;
-                        if(totaalgemaakt > _gemaakt)
+                        var verschil = 0;
+                        var add = false;
+                        if (totaalgemaakt > _gemaakt)
                         {
                             verschil = totaalgemaakt - _gemaakt;
                         }
@@ -1586,7 +1561,7 @@ namespace Rpm.Productie
                         var split = verschil / plekken.Length;
                         var rest = verschil % plekken.Length;
                         verschil -= rest;
-                        int index = 0;
+                        var index = 0;
                         while (verschil > 0)
                         {
                             if (verschil < split)
@@ -1612,6 +1587,7 @@ namespace Rpm.Productie
                                     verschil -= split;
                                 }
                             }
+
                             plek.LaatstAantalUpdate = DateTime.Now;
                             index++;
                             if (index > plekken.Length - 1)
@@ -1620,7 +1596,9 @@ namespace Rpm.Productie
                         }
 
                         if (add)
+                        {
                             plekken[plekken.Length - 1].AantalGemaakt += rest;
+                        }
                         else
                         {
                             var xplek = plekken.LastOrDefault(x => x.AantalGemaakt >= rest);
@@ -1634,21 +1612,17 @@ namespace Rpm.Productie
 
         public Task<bool> UpdateCombies()
         {
-
-            return Task.Run( () =>
+            return Task.Run(() =>
             {
                 try
                 {
                     if (Combies.Count == 0) return false;
-                    for (int i = 0; i < Combies.Count; i++)
+                    for (var i = 0; i < Combies.Count; i++)
                     {
                         var combi = Combies[i];
                         if (!combi.IsRunning) continue;
                         var bew = combi.GetProductie();
-                        if (bew == null)
-                        {
-                            continue;
-                        }
+                        if (bew == null) continue;
 
                         if (bew.State != State && bew.State != ProductieState.Gereed &&
                             bew.State != ProductieState.Verwijderd)
@@ -1678,12 +1652,12 @@ namespace Rpm.Productie
                                     }
 
                                     if (bew.StartProductie(true, true, false).Result)
-                                        _= bew.UpdateCombies();
+                                        _ = bew.UpdateCombies();
                                     break;
                             }
 
                             //sync storingen
-                            for (int w = 0; w < WerkPlekken.Count; w++)
+                            for (var w = 0; w < WerkPlekken.Count; w++)
                             {
                                 var wp = WerkPlekken[w];
                                 var xw = bew.WerkPlekken.FirstOrDefault(x => x.Equals(wp));
@@ -1698,11 +1672,10 @@ namespace Rpm.Productie
                                         if (xindex > -1)
                                             xw.Storingen[xindex] = xxst;
                                         else xw.Storingen.Add(xxst);
-                                        _= xw.Werk.UpdateBewerking(null, $"[{xw.Path}]\n" +
-                                                                            $"Onderbreking update");
+                                        _ = xw.Werk.UpdateBewerking(null, $"[{xw.Path}]\n" +
+                                                                          "Onderbreking update");
                                     }
                                 }
-
                             }
                         }
                     }
@@ -1720,7 +1693,7 @@ namespace Rpm.Productie
         public override bool Equals(object obj)
         {
             if (obj is string)
-                return string.Equals(Path, ((string) obj), StringComparison.CurrentCultureIgnoreCase);
+                return string.Equals(Path, (string) obj, StringComparison.CurrentCultureIgnoreCase);
             if (!(obj is Bewerking bew))
                 return false;
 

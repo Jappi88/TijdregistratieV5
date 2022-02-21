@@ -1,21 +1,21 @@
-﻿using MetroFramework;
-using ProductieManager.Properties;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using MetroFramework;
+using ProductieManager.Properties;
 
 namespace Forms
 {
-    public partial class XMessageBox : Forms.MetroBase.MetroBaseForm
+    public partial class XMessageBox : MetroBaseForm
     {
-        public DialogResult Result { get; }
         private Color _defaultColor = Color.FromArgb(57, 179, 215);
         private Color _errorColor = Color.FromArgb(210, 50, 45);
-        private Color _warningColor = Color.FromArgb(237, 156, 40);
-        private Color _success = Color.FromArgb(71, 164, 71);
         private Color _question = Color.FromArgb(71, 164, 71);
+        private Color _success = Color.FromArgb(71, 164, 71);
+        private Color _warningColor = Color.FromArgb(237, 156, 40);
 
         public XMessageBox()
         {
@@ -24,6 +24,8 @@ namespace Forms
             MinimizeBox = false;
             StartPosition = FormStartPosition.CenterParent;
         }
+
+        public DialogResult Result { get; }
 
         public string SelectedValue => (string) xchooser.SelectedItem;
 
@@ -34,26 +36,33 @@ namespace Forms
 
         public static DialogResult Show(IWin32Window owner, string message, string title)
         {
-            return new XMessageBox().ShowDialog(owner,message, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return new XMessageBox().ShowDialog(owner, message, title, MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
 
-        public static DialogResult Show(IWin32Window owner, string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon,
+        public static DialogResult Show(IWin32Window owner, string message, string title, MessageBoxButtons buttons,
+            MessageBoxIcon icon,
             string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null, Image custImage = null,
             MetroColorStyle style = MetroColorStyle.Default)
         {
-            return new XMessageBox().ShowDialog(owner,message, title, buttons, icon, chooseitems, custombuttons, custImage,
+            return new XMessageBox().ShowDialog(owner, message, title, buttons, icon, chooseitems, custombuttons,
+                custImage,
                 style);
         }
 
-        public static DialogResult Show(IWin32Window owner, string message, string title, MessageBoxButtons buttons, Image icon)
+        public static DialogResult Show(IWin32Window owner, string message, string title, MessageBoxButtons buttons,
+            Image icon)
         {
-            return new XMessageBox().ShowDialog(owner, message, title, buttons, MessageBoxIcon.Information, null, null, icon);
+            return new XMessageBox().ShowDialog(owner, message, title, buttons, MessageBoxIcon.Information, null, null,
+                icon);
         }
 
-        public static DialogResult Show(IWin32Window owner, string message, string title, MessageBoxButtons buttons, Image icon,
+        public static DialogResult Show(IWin32Window owner, string message, string title, MessageBoxButtons buttons,
+            Image icon,
             MetroColorStyle style)
         {
-            return new XMessageBox().ShowDialog(owner, message, title, buttons, MessageBoxIcon.Information, null, null, icon,
+            return new XMessageBox().ShowDialog(owner, message, title, buttons, MessageBoxIcon.Information, null, null,
+                icon,
                 style);
         }
 
@@ -61,7 +70,8 @@ namespace Forms
         public static DialogResult Show(IWin32Window owner, string message, string title, MessageBoxIcon icon,
             string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null)
         {
-            return new XMessageBox().ShowDialog(owner, message, title, MessageBoxButtons.OK, icon, chooseitems, custombuttons);
+            return new XMessageBox().ShowDialog(owner, message, title, MessageBoxButtons.OK, icon, chooseitems,
+                custombuttons);
         }
 
         private void xmessageb1_Click(object sender, EventArgs e)
@@ -94,7 +104,7 @@ namespace Forms
             var maxSize = new Size(xmessage.Width, int.MaxValue);
             var textheight = TextRenderer.MeasureText(xmessage.Text, xmessage.Font, maxSize).Height;
             Height = textheight + 200;
-            MinimumSize = new Size(this.Width, this.Height);
+            MinimumSize = new Size(Width, Height);
             if (custombuttons is {Count: > 0})
             {
                 var done = 0;
@@ -203,10 +213,8 @@ namespace Forms
                         form = xform;
                         break;
                     }
-                    if (owner is Control xcontrol)
-                    {
-                        owner = xcontrol.Parent;
-                    }
+
+                    if (owner is Control xcontrol) owner = xcontrol.Parent;
 
                     if (owner == null)
                         break;
@@ -227,28 +235,28 @@ namespace Forms
                     break;
                 case MessageBoxIcon.Question:
                     xmessageicon.Image = customImage ?? Resources.help_question_1566;
-                    this.Style = MetroColorStyle.Purple;
+                    Style = MetroColorStyle.Purple;
                     //xMessagePanel.BackColor = _question;
                     break;
                 case MessageBoxIcon.Exclamation:
                     xmessageicon.Image = customImage ?? Resources.exclamation_warning_15590__1_;
-                    this.Style = MetroColorStyle.Yellow;
-                   // xMessagePanel.BackColor = _warningColor;
+                    Style = MetroColorStyle.Yellow;
+                    // xMessagePanel.BackColor = _warningColor;
                     break;
                 case MessageBoxIcon.Information:
                     xmessageicon.Image = customImage ?? Resources.information_info_1565;
-                    this.Style = MetroColorStyle.Blue;
-                   // xMessagePanel.BackColor = _success;
+                    Style = MetroColorStyle.Blue;
+                    // xMessagePanel.BackColor = _success;
                     break;
                 case MessageBoxIcon.Error:
                     xmessageicon.Image = customImage ?? Resources.exit_close_error_15565;
-                    this.Style = MetroColorStyle.Red;
-                   // xMessagePanel.BackColor = _errorColor;
+                    Style = MetroColorStyle.Red;
+                    // xMessagePanel.BackColor = _errorColor;
                     break;
             }
 
             if (style != MetroColorStyle.Default)
-                this.Style = style;
+                Style = style;
             xchooser.Items.Clear();
             xchooserpanel.Visible = chooseitems is {Length: > 0};
             if (chooseitems is {Length: > 0})
@@ -264,9 +272,10 @@ namespace Forms
                 Width = form.Width;
                 BackColor = form.BackColor;
             }
+
             TopMost = true;
             ShowInTaskbar = false;
-            this.Invalidate();
+            Invalidate();
             BringToFront();
             return ShowDialog();
         }

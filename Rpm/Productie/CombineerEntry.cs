@@ -1,5 +1,4 @@
 ﻿using System;
-using Polenter.Serialization;
 using Rpm.Misc;
 using Rpm.Various;
 
@@ -11,7 +10,7 @@ namespace Rpm.Productie
         public string BewerkingNaam { get; set; }
         public double Activiteit { get; set; } = 100;
         public string Path => System.IO.Path.Combine(ProductieNr, BewerkingNaam);
-        public TijdEntry Periode { get; set; } = new TijdEntry();
+        public TijdEntry Periode { get; set; } = new();
 
         public bool IsRunning
         {

@@ -1,15 +1,16 @@
-﻿using Rpm.Misc;
-using Rpm.Productie;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
+using Forms.MetroBase;
+using ProductieManager.Properties;
+using Rpm.Misc;
+using Rpm.Productie;
 
 namespace Forms.GereedMelden
 {
-    public partial class GereedMelder : Forms.MetroBase.MetroBaseForm
+    public partial class GereedMelder : MetroBaseForm
     {
         public readonly string Melding = "Controlleer eerst alle gegevens voordat je verder gaat!\n\n" +
                                          "*Kijk en tel de producten goed na.\n" +
@@ -22,12 +23,12 @@ namespace Forms.GereedMelden
 
         private IProductieBase _prod;
 
-        public string ParentCombi { get; set; }
-
         public GereedMelder()
         {
             InitializeComponent();
         }
+
+        public string ParentCombi { get; set; }
 
         public int Aantal
         {
@@ -52,9 +53,9 @@ namespace Forms.GereedMelden
             xdeelsgereed.Visible = false;
             xgereedlijst.Visible = false;
             xaantal.ValueChanged += xaantal_ValueChanged;
-            this.Text = @$"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
-            this.Invalidate();
-            productieInfoUI1.SetInfo(_prod, this.Text, Color.White,
+            Text = @$"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
+            Invalidate();
+            productieInfoUI1.SetInfo(_prod, Text, Color.White,
                 Color.White, Color.DarkGreen);
             return ShowDialog();
         }
@@ -67,20 +68,20 @@ namespace Forms.GereedMelden
             xdeelsgereed.Visible = true;
             xgereedlijst.Visible = true;
             xaantal.ValueChanged += xaantal_ValueChanged;
-            this.Text = @$"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
-            this.Invalidate();
-            productieInfoUI1.SetInfo(_prod, this.Text, Color.White,
+            Text = @$"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
+            Invalidate();
+            productieInfoUI1.SetInfo(_prod, Text, Color.White,
                 Color.White, Color.DarkGreen);
             return ShowDialog();
         }
 
         private void MeldGereed()
         {
-            if (DoCheck() && XMessageBox.Show(this,Melding,
-                "Gereed Melden",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (DoCheck() && XMessageBox.Show(this, Melding,
+                    "Gereed Melden",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                _prod.AantalGemaakt = (int)xaantal.Value;
+                _prod.AantalGemaakt = (int) xaantal.Value;
                 if (_prod.TotaalGemaakt < _prod.Aantal)
                 {
                     var xt = new GereedNotitieForm();
@@ -88,7 +89,7 @@ namespace Forms.GereedMelden
                     Notitie = xt.Reden;
                 }
 
-                
+
                 var afwijking = _prod.GetAfwijking();
                 if (afwijking is < -10 or > 10)
                 {
@@ -96,50 +97,54 @@ namespace Forms.GereedMelden
                     if (xt.ShowDialog(_prod) == DialogResult.Cancel) return;
                     if (string.IsNullOrEmpty(Notitie))
                         Notitie = xt.Reden;
-                    else Notitie += $"\n\nDe reden voor een te hoge 'PerUur' afwijking van '{afwijking}%':\n\n" + xt.Reden?.Trim().Split(':').LastOrDefault()?.Trim();
+                    else
+                        Notitie += $"\n\nDe reden voor een te hoge 'PerUur' afwijking van '{afwijking}%':\n\n" +
+                                   xt.Reden?.Trim().Split(':').LastOrDefault()?.Trim();
                 }
+
                 if (_prod is ProductieFormulier form)
                 {
                     Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
                     if (form.MeldGereed((int) xaantal.Value, xparaaf.Text.Trim(), Notitie, true, true).Result)
                         DialogResult = DialogResult.OK;
-
                 }
                 else if (_prod is Bewerking bew)
                 {
                     var xcombies = bew.Combies.Where(x =>
-                        !string.Equals(x.Path, ParentCombi, StringComparison.CurrentCultureIgnoreCase) && x.IsRunning).ToList();
+                            !string.Equals(x.Path, ParentCombi, StringComparison.CurrentCultureIgnoreCase) &&
+                            x.IsRunning)
+                        .ToList();
                     if (xcombies.Count > 0)
                     {
                         var x0 = xcombies.Count == 1 ? "is" : "zijn";
                         var x1 = xcombies.Count == 1 ? "productie" : "producties";
                         var result = XMessageBox.Show(this, $"Er {x0} {xcombies.Count} gecombineerde {x1}...\n\n" +
-                                                      $"Wil je die ook gereedmelden?", "Gereed Melden",
+                                                            "Wil je die ook gereedmelden?", "Gereed Melden",
                             MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                         if (result == DialogResult.Cancel) return;
-                        for(int i =0; i < xcombies.Count; i++)
+                        for (var i = 0; i < xcombies.Count; i++)
                         {
                             var combi = xcombies[i];
                             combi.IsRunning = false;
                             var xbw = combi.GetProductie();
-                            if (xbw == null)
-                            {
-                                continue;
-                            }
+                            if (xbw == null) continue;
 
-                            var xcombi = xbw.Combies?.FirstOrDefault(x => string.Equals(x.Path, bew.Path, StringComparison.CurrentCultureIgnoreCase));
+                            var xcombi = xbw.Combies?.FirstOrDefault(x =>
+                                string.Equals(x.Path, bew.Path, StringComparison.CurrentCultureIgnoreCase));
                             if (xcombi != null)
                             {
                                 xcombi.IsRunning = false;
                                 if (result != DialogResult.No)
-                                {
                                     if (!xbw.UpdateBewerking(null,
                                                 $"[{bew.Path}] Combinatie is op inactief gezet in '{xbw.Path}'")
-                                            .Result) return;
-                                }
+                                            .Result)
+                                        return;
                             }
+
                             if (result == DialogResult.No)
-                                _= xbw.StopProductie(true,true);
+                            {
+                                _ = xbw.StopProductie(true, true);
+                            }
                             else
                             {
                                 var gereedmelder = new GereedMelder();
@@ -153,35 +158,39 @@ namespace Forms.GereedMelden
                     if (bew.MeldBewerkingGereed(xparaaf.Text.Trim(), (int) xaantal.Value, Notitie, true, true, true)
                         .Result)
                     {
-                        ProductieManager.Properties.Settings.Default.Paraaf = xparaaf.Text.Trim();
-                        ProductieManager.Properties.Settings.Default.Save();
+                        Settings.Default.Paraaf = xparaaf.Text.Trim();
+                        Settings.Default.Save();
                         DialogResult = DialogResult.OK;
                     }
                 }
-                else DialogResult = DialogResult.Cancel;
+                else
+                {
+                    DialogResult = DialogResult.Cancel;
+                }
             }
         }
 
         private bool DoCheck()
         {
-            _prod.AantalGemaakt = (int)xaantal.Value;
-            if ((_prod.TotaalGemaakt) <= 0 && xaantal.Value == 0)
+            _prod.AantalGemaakt = (int) xaantal.Value;
+            if (_prod.TotaalGemaakt <= 0 && xaantal.Value == 0)
             {
-                XMessageBox.Show(this, $"Je aantal kan niet 0 zijn!\nJe kan minstins maar 1 product gereedmelden",
+                XMessageBox.Show(this, "Je aantal kan niet 0 zijn!\nJe kan minstins maar 1 product gereedmelden",
                     "Ongeldig Aantal", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
 
             if (string.IsNullOrEmpty(xparaaf.Text) || string.IsNullOrWhiteSpace(xparaaf.Text))
             {
-                XMessageBox.Show(this, $"Paraaf kan niet leeg zijn!\nVul eerst een geldige paraaf in en probeer het opnieuw.",
+                XMessageBox.Show(this,
+                    "Paraaf kan niet leeg zijn!\nVul eerst een geldige paraaf in en probeer het opnieuw.",
                     "Ongeldig Naam", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
 
-            Storing[] storingen = _prod.Root.GetAlleStoringen(true).ToArray();
+            var storingen = _prod.Root.GetAlleStoringen(true).ToArray();
 
-            if ( (storingen.Length > 0 || _prod.TijdGewerkt <= 0 || _prod.GetPersonen(true).Length == 0))
+            if (storingen.Length > 0 || _prod.TijdGewerkt <= 0 || _prod.GetPersonen(true).Length == 0)
             {
                 var xopenform = new OpenTakenForm(_prod);
                 if (xopenform.ShowDialog() != DialogResult.OK)
@@ -195,15 +204,14 @@ namespace Forms.GereedMelden
         {
             if (_prod == null)
                 return;
-            if (this.IsDisposed || this.Disposing) return;
-            this.Text = @$"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
-            this.Invalidate();
-            productieInfoUI1.SetInfo(_prod, this.Text, Color.White,
+            if (IsDisposed || Disposing) return;
+            Text = @$"Meld Gereed [{_prod.ProductieNr} | {_prod.ArtikelNr}]";
+            Invalidate();
+            productieInfoUI1.SetInfo(_prod, Text, Color.White,
                 Color.White, Color.DarkGreen);
             //this.BeginInvoke(new Action( () =>
             //{
-               
-                
+
 
             //}));
             // xtextfield3.Text = Melding;
@@ -243,15 +251,15 @@ namespace Forms.GereedMelden
             }
         }
 
-        private void GereedMelder_Shown(object sender, System.EventArgs e)
+        private void GereedMelder_Shown(object sender, EventArgs e)
         {
             SetString();
             Manager.OnFormulierChanged += Manager_OnFormulierChanged;
-            xparaaf.Text = ProductieManager.Properties.Settings.Default.Paraaf;
+            xparaaf.Text = Settings.Default.Paraaf;
             xparaaf.Select();
         }
 
-        private void GereedMelder_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
+        private void GereedMelder_FormClosing(object sender, FormClosingEventArgs e)
         {
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
         }
@@ -260,15 +268,15 @@ namespace Forms.GereedMelden
         {
             try
             {
-                if (this.Disposing || this.IsDisposed || changedform == null || _prod == null ||
-                    !string.Equals(_prod.ProductieNr, changedform.ProductieNr, StringComparison.CurrentCultureIgnoreCase))
+                if (Disposing || IsDisposed || changedform == null || _prod == null ||
+                    !string.Equals(_prod.ProductieNr, changedform.ProductieNr,
+                        StringComparison.CurrentCultureIgnoreCase))
                     return;
                 if (_prod is Bewerking bew)
                 {
                     var xbw = changedform.Bewerkingen.FirstOrDefault(x =>
                         string.Equals(x.Naam, bew.Naam, StringComparison.CurrentCultureIgnoreCase));
                     if (xbw != null)
-                    {
                         lock (_prod)
                         {
                             _prod = xbw.CreateCopy();
@@ -279,8 +287,6 @@ namespace Forms.GereedMelden
                                 _ = _prod.Update(null, false, false);
                             }
                         }
-                    }
-                    
                 }
                 else
                 {
@@ -296,7 +302,7 @@ namespace Forms.GereedMelden
                     }
                 }
 
-               
+
                 SetString();
             }
             catch (Exception e)
@@ -307,7 +313,7 @@ namespace Forms.GereedMelden
 
         private void xaantal_ValueChanged(object sender, EventArgs e)
         {
-            _prod.AantalGemaakt = (int)xaantal.Value;
+            _prod.AantalGemaakt = (int) xaantal.Value;
             _prod.Update(null, false, false).Wait(1000);
             SetString();
         }
@@ -332,56 +338,61 @@ namespace Forms.GereedMelden
         {
             if (_prod is Bewerking bew && DoCheck())
             {
-                int aantal = (int)xaantal.Value;
+                var aantal = (int) xaantal.Value;
                 if (aantal == 0)
                 {
-                    XMessageBox.Show(this, $"Je kan niet 0 gereedmelden!\nAantal moet minimaal 1 zijn.",
+                    XMessageBox.Show(this, "Je kan niet 0 gereedmelden!\nAantal moet minimaal 1 zijn.",
                         "Ongeldige Aantal",
                         MessageBoxIcon.Exclamation);
                     return;
                 }
-                int totaal = aantal + bew.DeelGereedMeldingen.Sum(x=> x.Aantal);
-                string xvar = aantal == 1 ? "stuk" : "stuks";
-                string xmsg = $"Je wilt {aantal} {xvar} deels gereedmelden.\n\n";
+
+                var totaal = aantal + bew.DeelGereedMeldingen.Sum(x => x.Aantal);
+                var xvar = aantal == 1 ? "stuk" : "stuks";
+                var xmsg = $"Je wilt {aantal} {xvar} deels gereedmelden.\n\n";
                 if (totaal > bew.Aantal)
                 {
-                    string xmsgval = totaal == bew.Aantal ? "precies" : "meer dan";
-                   var xmsg1 = $"{xmsg}Als je {aantal} gereedmeld heb je totaal {totaal} van de {bew.Aantal} gemaakt.\n" +
-                            $"Dat is {xmsgval} wat je nodig hebt, wil je anders de productie helemaal gereed melden?";
-                   var bttns = new Dictionary<string, DialogResult>();
-                   bttns.Add("Annuleren", DialogResult.Cancel);
-                   bttns.Add("Gereedmelden", DialogResult.Yes);
-                   bttns.Add("Deels Gereedmelden", DialogResult.OK);
-                   var xresult = XMessageBox.Show(this, xmsg1, "Gereed Melden", MessageBoxButtons.YesNoCancel,
-                       MessageBoxIcon.Question, null, bttns);
-                   if (xresult == DialogResult.Cancel) return;
-                   if (xresult == DialogResult.Yes)
-                   {
-                       MeldGereed();
-                       return;
-                   }
-
+                    var xmsgval = totaal == bew.Aantal ? "precies" : "meer dan";
+                    var xmsg1 =
+                        $"{xmsg}Als je {aantal} gereedmeld heb je totaal {totaal} van de {bew.Aantal} gemaakt.\n" +
+                        $"Dat is {xmsgval} wat je nodig hebt, wil je anders de productie helemaal gereed melden?";
+                    var bttns = new Dictionary<string, DialogResult>();
+                    bttns.Add("Annuleren", DialogResult.Cancel);
+                    bttns.Add("Gereedmelden", DialogResult.Yes);
+                    bttns.Add("Deels Gereedmelden", DialogResult.OK);
+                    var xresult = XMessageBox.Show(this, xmsg1, "Gereed Melden", MessageBoxButtons.YesNoCancel,
+                        MessageBoxIcon.Question, null, bttns);
+                    if (xresult == DialogResult.Cancel) return;
+                    if (xresult == DialogResult.Yes)
+                    {
+                        MeldGereed();
+                        return;
+                    }
                 }
                 else
                 {
-                    int temaken = bew.Aantal >= totaal ? bew.Aantal - totaal : 0;
+                    var temaken = bew.Aantal >= totaal ? bew.Aantal - totaal : 0;
                     xmsg += "Weetje zeker dat je dat wilt doen?\n" +
                             $"Je zal dan totaal {totaal} stuks deels hebben gereed gemeld, en {temaken} om nog te maken\n";
-                    if (XMessageBox.Show(this,xmsg, "Gereed Melden", MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Warning) == DialogResult.No) return;
+                    if (XMessageBox.Show(this, xmsg, "Gereed Melden", MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Warning) == DialogResult.No) return;
                 }
+
                 var wps = bew.WerkPlekken.Select(x => x.Naam).ToList();
                 string wp = null;
                 if (wps.Count > 1)
                 {
                     wps.Add("Alle Werkplekken");
-                    WerkPlekChooser wpChooser = new WerkPlekChooser(wps.ToArray(),null);
+                    var wpChooser = new WerkPlekChooser(wps.ToArray(), null);
                     if (wpChooser.ShowDialog() == DialogResult.Cancel) return;
                     wp = wpChooser.SelectedName?.ToLower() == "alle werkplekken" ? null : wpChooser.SelectedName;
                 }
-                else wp = wps.FirstOrDefault();
+                else
+                {
+                    wp = wps.FirstOrDefault();
+                }
 
-                await bew.MeldDeelsGereed(xparaaf.Text.Trim(), aantal, Notitie,wp, DateTime.Now, true);
+                await bew.MeldDeelsGereed(xparaaf.Text.Trim(), aantal, Notitie, wp, DateTime.Now, true);
                 xaantal.SetValue(bew.AantalGemaakt);
                 SetString();
             }

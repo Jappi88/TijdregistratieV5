@@ -22,7 +22,7 @@ namespace Rpm.SqlLite
         {
             if (_worker != null)
                 return;
-            DefaultSettings = settings??UserSettings.GetDefaultSettings();
+            DefaultSettings = settings ?? UserSettings.GetDefaultSettings();
             _worker = new BackgroundWorker();
             _worker.WorkerSupportsCancellation = true;
             _worker.WorkerReportsProgress = true;
@@ -60,7 +60,8 @@ namespace Rpm.SqlLite
             _worker.Dispose();
         }
 
-        public Task<int> UpdateEntryAsync(DatabaseUpdateEntry entry, CancellationTokenSource canceltoken,ProgressChangedHandler progres)
+        public Task<int> UpdateEntryAsync(DatabaseUpdateEntry entry, CancellationTokenSource canceltoken,
+            ProgressChangedHandler progres)
         {
             return Task.Run(async () =>
             {
@@ -119,7 +120,6 @@ namespace Rpm.SqlLite
         {
             try
             {
-
                 entry.LastUpdated = DateTime.Now;
                 DefaultSettings.SaveAsDefault();
             }

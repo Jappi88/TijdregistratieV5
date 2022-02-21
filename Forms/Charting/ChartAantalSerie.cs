@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LiveCharts;
 using LiveCharts.Defaults;
-using NPOI.HSSF.EventUserModel;
 using Rpm.Productie;
 
 namespace ProductieManager.Forms.Charting
@@ -13,27 +9,24 @@ namespace ProductieManager.Forms.Charting
     internal class ChartAantalSerie
     {
         public WerkPlek Plek { get; private set; }
-        public ChartValues<ObservableValue> Values { get; set; } = new ChartValues<ObservableValue>();
+        public ChartValues<ObservableValue> Values { get; set; } = new();
 
         public bool UpdateGemaakt(WerkPlek plek, ref List<string> label)
         {
             try
             {
-                
                 if (plek?.Werk == null) return false;
                 Plek = plek;
                 var aantallen = plek.AantalHistory.Aantallen.ToArray();
                 if (aantallen.Length < Values.Count)
                     Values.RemoveAt(aantallen.Length);
-                for (int i = 0; i < aantallen.Length; i++)
+                for (var i = 0; i < aantallen.Length; i++)
                 {
                     var aantal = 0;
                     var record = aantallen[i];
                     double tijd = 0;
                     if (!record.IsActive)
-                    {
                         aantal = record.GetGemaakt();
-                    }
                     else
                         aantal = plek.GetActueelAantalGemaakt(ref tijd);
 

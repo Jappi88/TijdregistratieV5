@@ -1,17 +1,19 @@
-﻿using BrightIdeasSoftware;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows.Forms;
+using BrightIdeasSoftware;
+using Forms.MetroBase;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.Various;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class AlleKlusjes : Forms.MetroBase.MetroBaseForm
+    public partial class AlleKlusjes : MetroBaseForm
     {
         public readonly List<StartProductie> _formuis = new();
 
@@ -118,12 +120,12 @@ namespace Forms
             if (Persoon.Klusjes.Count > 0)
             {
                 var xvalue = Persoon.Klusjes.Count == 1 ? "klus" : "klusjes";
-                this.Text =
+                Text =
                     $"{Persoon.PersoneelNaam} heeft {Persoon.Klusjes.Count} {xvalue} van {Persoon.TotaalTijdGewerkt} uur.";
             }
             else
             {
-                this.Text = $"{Persoon.PersoneelNaam} heeft nog geen klusjes.";
+                Text = $"{Persoon.PersoneelNaam} heeft nog geen klusjes.";
             }
         }
 
@@ -157,13 +159,12 @@ namespace Forms
                 }
             }
         }
-        
 
 
         private double GetKlusTijdGewerkt(Klus klus)
         {
             if (Persoon == null || klus == null || !string.Equals(klus.PersoneelNaam, Persoon.PersoneelNaam,
-                StringComparison.OrdinalIgnoreCase))
+                    StringComparison.OrdinalIgnoreCase))
                 return 0;
             return Math.Round(klus.TijdGewerkt(Persoon.VrijeDagen.ToDictionary(), klus.Tijden?.WerkRooster).TotalHours,
                 2);
@@ -217,11 +218,13 @@ namespace Forms
             Manager.OnBewerkingChanged -= Manager_OnBewerkingChanged;
         }
 
-        private void Manager_OnBewerkingChanged(object sender, Bewerking bewerking, string change, bool shownotification)
+        private void Manager_OnBewerkingChanged(object sender, Bewerking bewerking, string change,
+            bool shownotification)
         {
             if (IsDisposed) return;
             var pers = bewerking?.GetPersoneel()
-                .Where(x => string.Equals(x.PersoneelNaam, Persoon.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase)).ToArray();
+                .Where(x => string.Equals(x.PersoneelNaam, Persoon.PersoneelNaam,
+                    StringComparison.CurrentCultureIgnoreCase)).ToArray();
             if (pers?.Length > 0)
             {
                 var update = 0;
@@ -274,7 +277,7 @@ namespace Forms
             if (klus != null)
                 try
                 {
-                    var xedit = new NieuwKlusForm(Persoon, klus,true);
+                    var xedit = new NieuwKlusForm(Persoon, klus, true);
                     if (xedit.ShowDialog() == DialogResult.OK)
                         //xedit.Formulier?.UpdateForm(true, false, $"{klus.Naam} aangepast", true);
                         xklusjes.RefreshObject(klus);
@@ -292,11 +295,11 @@ namespace Forms
         private void xverwijderklusjes_Click(object sender, EventArgs e)
         {
             if (xklusjes.SelectedObjects.Count > 0)
-                if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde klusjes wilt verwijderen?\n\n" +
-                                     "LET OP:\n" +
-                                     "Klusjes verwijderen zal ook je gewerkte tijden weghalen en de producties beinvloeden!\n" +
-                                     "Wil je toch doorgaan?", "Verwijderen", MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning) == DialogResult.Yes)
+                if (XMessageBox.Show(this, "Weetje zeker dat je alle geselecteerde klusjes wilt verwijderen?\n\n" +
+                                           "LET OP:\n" +
+                                           "Klusjes verwijderen zal ook je gewerkte tijden weghalen en de producties beinvloeden!\n" +
+                                           "Wil je toch doorgaan?", "Verwijderen", MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     var count = 0;
                     foreach (var klus in xklusjes.SelectedObjects.Cast<Klus>())
@@ -316,7 +319,7 @@ namespace Forms
         {
             if (xklusjes.SelectedObjects.Count > 0)
             {
-                string invalid = "";
+                var invalid = "";
                 foreach (var k in xklusjes.SelectedObjects.Cast<Klus>())
                 {
                     var werk = k.GetWerk();
@@ -337,14 +340,12 @@ namespace Forms
                 }
 
                 if (!string.IsNullOrEmpty(invalid))
-                {
-                    XMessageBox.Show(this, $"De volgende klus(jes) zijn niet meer geldig!\n" +
-                                     $"{invalid.TrimEnd(new char[] {',', ' '})}", "Ongeldig", MessageBoxIcon.Warning);
-                }
+                    XMessageBox.Show(this, "De volgende klus(jes) zijn niet meer geldig!\n" +
+                                           $"{invalid.TrimEnd(',', ' ')}", "Ongeldig", MessageBoxIcon.Warning);
             }
         }
 
-        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             openProductieToolStripMenuItem.Enabled = xklusjes.SelectedObjects.Count > 0;
             wijzigToolStripMenuItem.Enabled = xklusjes.SelectedObjects.Count == 1;
@@ -354,18 +355,17 @@ namespace Forms
 
         private void UpdateFormulier(ProductieFormulier form)
         {
-            if (this.IsDisposed) return;
+            if (IsDisposed) return;
             if (form != null)
                 try
                 {
                     var prodform = _formuis?.FirstOrDefault(x => !x.IsDisposed && x.Formulier.Equals(form));
-                    prodform?.UpdateFields(form,null);
+                    prodform?.UpdateFields(form, null);
                 }
                 catch (ObjectDisposedException)
                 {
                     Console.WriteLine(@"Disposed!");
                 }
         }
-
     }
 }

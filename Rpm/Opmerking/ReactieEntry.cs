@@ -8,6 +8,14 @@ namespace Rpm.Opmerking
 {
     public class ReactieEntry
     {
+        public ReactieEntry()
+        {
+            GelezenDoor = new List<string>();
+            GelezenOp = DateTime.Now;
+            Reactie = "";
+            ReactieVan = Manager.Opties?.Username ?? "Onbekend";
+        }
+
         public DateTime GelezenOp { get; set; }
         public List<string> GelezenDoor { get; set; }
         public string Reactie { get; set; }
@@ -16,15 +24,9 @@ namespace Rpm.Opmerking
 
         public bool IsGelezen =>
             string.Equals(Manager.Opties?.Username, ReactieVan, StringComparison.CurrentCultureIgnoreCase) ||
-            (GelezenDoor.Any(x=> string.Equals(Manager.Opties?.Username, x, StringComparison.CurrentCultureIgnoreCase)) && !GelezenOp.IsDefault());
-
-        public ReactieEntry()
-        {
-            GelezenDoor = new List<string>();
-            GelezenOp = DateTime.Now;
-            Reactie = "";
-            ReactieVan = Manager.Opties?.Username ?? "Onbekend";
-        }
+            GelezenDoor.Any(x =>
+                string.Equals(Manager.Opties?.Username, x, StringComparison.CurrentCultureIgnoreCase)) &&
+            !GelezenOp.IsDefault();
 
         public void SetReactie(string reactie)
         {
@@ -44,6 +46,5 @@ namespace Rpm.Opmerking
                 string.Equals(Manager.Opties?.Username, x, StringComparison.CurrentCultureIgnoreCase));
             GelezenDoor.Add(Manager.Opties?.Username ?? "Onbekend");
         }
-
     }
 }

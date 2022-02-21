@@ -22,7 +22,7 @@ namespace AutoUpdaterDotNET
         ///     If new update is available then returns true otherwise false.
         /// </summary>
         public bool IsUpdateAvailable { get; set; }
-        
+
         /// <summary>
         ///     If there is an error while checking for update then this property won't be null.
         /// </summary>
@@ -88,12 +88,9 @@ namespace AutoUpdaterDotNET
         {
             if (!string.IsNullOrEmpty(url) && Uri.IsWellFormedUriString(url, UriKind.Relative))
             {
-                Uri uri = new Uri(baseUri, url);
+                var uri = new Uri(baseUri, url);
 
-                if (uri.IsAbsoluteUri)
-                {
-                    url = uri.AbsoluteUri;
-                }
+                if (uri.IsAbsoluteUri) url = uri.AbsoluteUri;
             }
 
             return url;
@@ -112,7 +109,8 @@ namespace AutoUpdaterDotNET
         public bool Value { get; set; }
 
         /// <summary>
-        ///     If this is set and 'Value' property is set to true then it will trigger the mandatory update only when current installed version is less than value of this property.
+        ///     If this is set and 'Value' property is set to true then it will trigger the mandatory update only when current
+        ///     installed version is less than value of this property.
         /// </summary>
         [XmlAttribute("minVersion")]
         public string MinimumVersion { get; set; }

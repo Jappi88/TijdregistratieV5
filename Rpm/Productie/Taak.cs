@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Windows.Forms;
 using Rpm.Various;
 
 namespace Rpm.Productie
@@ -46,7 +42,7 @@ namespace Rpm.Productie
             HashCode = base.GetHashCode();
         }
 
-        public Taak( ProductieFormulier formulier, Bewerking bewerking, AktieType type,
+        public Taak(ProductieFormulier formulier, Bewerking bewerking, AktieType type,
             TaakUrgentie urgentie) : this(formulier, type, urgentie)
         {
             Bewerking = bewerking;
@@ -118,7 +114,8 @@ namespace Rpm.Productie
         public Personeel Persoon { get; set; }
         public WerkPlek Plek { get; set; }
 
-        public string Title { get; private set; }
+        public string Title { get; }
+
         public string Beschrijving { get; set; }
         // public string Plek { get; set; }
 
@@ -179,7 +176,7 @@ namespace Rpm.Productie
         public static TaakUrgentie GetUrgentie(DateTime time)
         {
             var rooster = Manager.Opties?.GetWerkRooster();
-            var xtime = Werktijd.EerstVolgendeWerkdag(DateTime.Now, ref rooster,rooster,null);
+            var xtime = Werktijd.EerstVolgendeWerkdag(DateTime.Now, ref rooster, rooster, null);
             if (time <= xtime.AddMinutes(30))
                 return TaakUrgentie.PerDirect;
             if (time <= xtime.AddMinutes(60))
@@ -199,7 +196,8 @@ namespace Rpm.Productie
                     return false;
                 var xreturn = true;
                 if (taak.Formulier != null && Formulier != null)
-                    if (!string.Equals(Formulier.ProductieNr, taak.Formulier.ProductieNr, StringComparison.CurrentCultureIgnoreCase))
+                    if (!string.Equals(Formulier.ProductieNr, taak.Formulier.ProductieNr,
+                            StringComparison.CurrentCultureIgnoreCase))
                         xreturn = false;
                 if (taak.Plek != null && Plek != null)
                     xreturn &= taak.Plek.Equals(Plek);

@@ -1,26 +1,33 @@
-﻿using BrightIdeasSoftware;
-using ProductieManager.Properties;
-using ProductieManager.Rpm.Misc;
-using Rpm.Misc;
-using Rpm.Productie;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
 using ProductieManager.Rpm.Productie;
+using Rpm.Misc;
+using Rpm.Productie;
+using Rpm.Settings;
 using Rpm.Various;
 
 namespace Controls
 {
     public partial class AlleStoringenUI : UserControl
     {
-        private TijdEntry Bereik { get; set; }
+        public ProductieFormulier _productie;
+
         public AlleStoringenUI()
         {
             InitializeComponent();
-           
         }
+
+        private TijdEntry Bereik { get; set; }
+
+        private KeyValuePair<string, List<WerkPlek>> Selected { get; set; }
+
+        public Dictionary<string, List<WerkPlek>> Collection { get; private set; }
 
         public void InitUI()
         {
@@ -29,7 +36,7 @@ namespace Controls
             imageList1.Images.Add(Resources.iconfinder_technology);
             imageList1.Images.Add(
                 Resources.iconfinder_technology.CombineImage(Resources.exclamation_warning_15590, 2.25));
-            ((OLVColumn)xwerkplekken.Columns[0]).ImageGetter = ImageGet;
+            ((OLVColumn) xwerkplekken.Columns[0]).ImageGetter = ImageGet;
             xvanaf.Value = DateTime.Now.Subtract(TimeSpan.FromDays(365));
             UpdateBereik();
             InitEvents();
@@ -50,14 +57,14 @@ namespace Controls
             werkPlekStoringen1.OnEnableEvents += werkPlekStoringen1_OnEnableEvents;
         }
 
-        private void Manager_OnSettingsChanged(object instance, Rpm.Settings.UserSettings settings, bool reinit)
+        private void Manager_OnSettingsChanged(object instance, UserSettings settings, bool reinit)
         {
             try
             {
                 UpdateBereik();
-                if (this.IsDisposed || this.Disposing) return;
+                if (IsDisposed || Disposing) return;
                 if (InvokeRequired)
-                    this.BeginInvoke(new MethodInvoker(()=> InitStoringen()));
+                    BeginInvoke(new MethodInvoker(() => InitStoringen()));
                 else InitStoringen();
             }
             catch (Exception e)
@@ -68,7 +75,7 @@ namespace Controls
 
         public void DetachEvents()
         {
-            Manager.OnFormulierChanged -= Manager_OnFormulierChanged; 
+            Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
             Manager.OnSettingsChanged -= Manager_OnSettingsChanged;
             werkPlekStoringen1.OnDisableEvents -= werkPlekStoringen1_OnDisableEvents;
             werkPlekStoringen1.OnEnableEvents -= werkPlekStoringen1_OnEnableEvents;
@@ -78,12 +85,6 @@ namespace Controls
         {
             Bereik = new TijdEntry(xvanaf.Value, xtot.Value, null);
         }
-
-        private KeyValuePair<string, List<WerkPlek>> Selected { get; set; }
-
-        public Dictionary<string, List<WerkPlek>> Collection { get; private set; }
-
-        public ProductieFormulier _productie = null;
 
         public object ImageGet(object sender)
         {
@@ -117,7 +118,7 @@ namespace Controls
         {
             try
             {
-                if (this.Disposing || this.IsDisposed)
+                if (Disposing || IsDisposed)
                     return;
                 _productie ??= productie;
                 Collection = new Dictionary<string, List<WerkPlek>>();
@@ -125,24 +126,21 @@ namespace Controls
                 xstatuslabel.Text = "Onderbrekeningen laden...\nEen moment a.u.b";
                 xrangepanel.Visible = productie == null;
                 if (productie == null)
-                {
                     await Task.Run(() =>
                     {
                         if (Manager.Database is {IsDisposed: false})
                         {
                             var bws = Manager.ProductieProvider.GetBewerkingen(ProductieProvider.LoadedType.Alles,
-                                new ViewState[]
+                                new[]
                                 {
                                     ViewState.Alles
                                 }, true, null).Result;
-                          
+
                             foreach (var bw in bws)
-                                UpdateStoringen(bw, Bereik,null);
+                                UpdateStoringen(bw, Bereik, null);
                         }
                     });
-                  
-                }
-                else UpdateStoringen(productie, null,false);
+                else UpdateStoringen(productie, null, false);
 
                 Collection = Collection.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
                 xwerkplekken.SetObjects(Collection);
@@ -157,6 +155,7 @@ namespace Controls
                     else xwerkplekken.SelectedObject = first;
                     xwerkplekken.SelectedItem?.EnsureVisible();
                 }
+
                 UpdateStatusText();
             }
             catch
@@ -178,23 +177,21 @@ namespace Controls
                         if (items == null) continue;
                         var item = items.FirstOrDefault(x =>
                             string.Equals(x.Key, wp.Naam, StringComparison.CurrentCultureIgnoreCase));
-                        bool changed = false;
+                        var changed = false;
                         if (!updated.IsDefault())
                         {
-                            if (bereik != null && updated.Value.Any(x => x.Storingen.Any(source => source.Gestart < bereik.Start || source.Gestart > bereik.Stop)))
-                            {
+                            if (bereik != null && updated.Value.Any(x =>
+                                    x.Storingen.Any(source =>
+                                        source.Gestart < bereik.Start || source.Gestart > bereik.Stop)))
                                 Console.WriteLine(@"here");
-                            }
                             if (item.IsDefault())
-                            {
                                 xwerkplekken.AddObject(updated);
-                            }
                             else
-                            {
                                 xwerkplekken.RefreshObject(updated);
-                            }
                             if (Collection.ContainsKey(updated.Key))
+                            {
                                 Collection[updated.Key] = updated.Value;
+                            }
                             else
                             {
                                 Collection.Add(updated.Key, updated.Value);
@@ -210,7 +207,6 @@ namespace Controls
                                 Collection.Remove(wp.Naam);
                                 changed = true;
                             }
-
                         }
 
                         if (!werkPlekStoringen1.Plek.IsDefault() &&
@@ -254,39 +250,38 @@ namespace Controls
             {
                 var items = xwerkplekken.Objects.Cast<KeyValuePair<string, List<WerkPlek>>>().ToArray();
                 double uren = 0;
-                int aantal = 0;
-                for (int i = 0; i < items.Length; i++)
+                var aantal = 0;
+                for (var i = 0; i < items.Length; i++)
                 {
                     var pair = items[i];
                     if (!pair.IsDefault() && pair.Value.Count > 0)
-                    {
-                        for (int j = 0; j < pair.Value.Count; j++)
+                        for (var j = 0; j < pair.Value.Count; j++)
                         {
                             var sts = pair.Value[j].Storingen?.CreateCopy();
-                            if (sts is { Count: > 0 })
+                            if (sts is {Count: > 0})
                             {
                                 uren += sts.Sum(t => t.GetTotaleTijd());
                                 aantal += sts.Count;
                             }
                         }
-                    }
                 }
-                var x1 = aantal == 1? "onderbreking" : "onderbrekeningen";
+
+                var x1 = aantal == 1 ? "onderbreking" : "onderbrekeningen";
                 var x2 = aantal == 1 ? items.First().Key : $"{items.Length} werkplaatsen";
                 text = $"{aantal} {x1} van {uren} uur op {x2}.";
             }
 
             OnStatusTextChanged(text);
             xstatuslabel.Text = text;
-            this.Invalidate();
+            Invalidate();
         }
 
         public void UpdateStatusText()
         {
             try
             {
-                if (this.InvokeRequired)
-                    this.BeginInvoke(new MethodInvoker(xUpdateStatusText));
+                if (InvokeRequired)
+                    BeginInvoke(new MethodInvoker(xUpdateStatusText));
                 else xUpdateStatusText();
             }
             catch (Exception e)
@@ -298,23 +293,20 @@ namespace Controls
         private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
         {
             if (changedform != null && !IsDisposed)
-            {
                 try
                 {
                     if (_productie != null && !_productie.Equals(changedform))
                         return;
-                    this.BeginInvoke(new MethodInvoker(() =>
+                    BeginInvoke(new MethodInvoker(() =>
                     {
                         var bereik = _productie == null ? Bereik : null;
-                        UpdateStoringen(changedform,bereik,true);
+                        UpdateStoringen(changedform, bereik, true);
                     }));
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
-
-            }
         }
 
         private void werkPlekStoringen1_OnCloseButtonPressed(object sender, EventArgs e)

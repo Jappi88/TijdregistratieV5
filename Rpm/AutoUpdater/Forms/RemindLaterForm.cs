@@ -5,14 +5,14 @@ namespace AutoUpdaterDotNET
 {
     internal partial class RemindLaterForm : Form
     {
-        public RemindLaterFormat RemindLaterFormat { get; private set; }
-
-        public int RemindLaterAt { get; private set; }
-
         public RemindLaterForm()
         {
             InitializeComponent();
         }
+
+        public RemindLaterFormat RemindLaterFormat { get; private set; }
+
+        public int RemindLaterAt { get; private set; }
 
         private void RemindLaterFormLoad(object sender, EventArgs e)
         {

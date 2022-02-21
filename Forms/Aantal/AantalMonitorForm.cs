@@ -1,13 +1,14 @@
-﻿using Rpm.Productie;
-using System;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class AantalMonitorForm : Forms.MetroBase.MetroBaseForm
+    public partial class AantalMonitorForm : MetroBaseForm
     {
-        public Bewerking Werk { get; private set; }
         //public SeriesCollection Series
         //{
         //    get => xChart.Series;
@@ -23,6 +24,8 @@ namespace Forms
         {
             //InitBewerking(bew);
         }
+
+        public Bewerking Werk { get; private set; }
 
         //private IChartValues GetChartValues(WerkPlek wp)
         //{
@@ -46,9 +49,8 @@ namespace Forms
         //    return xret;
         //}
 
-        private void Obs_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Obs_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-           
         }
 
         //public void InitBewerking(Bewerking bew)
@@ -56,14 +58,14 @@ namespace Forms
         //    Werk = bew;
         //    if (bew == null) return;
 
-          
+
         //    var xAxis = new Axis
         //    {
         //        Title = "Periode",
         //        MinValue = 0,
         //        MinRange = 0,
         //    };
-          
+
         //    var yAxis = new Axis
         //    {
         //        Title = $"Aantal",
@@ -115,7 +117,7 @@ namespace Forms
         //    if (Werk == null) return;
         //    try
         //    {
-                
+
         //        foreach (var wp in Werk.WerkPlekken)
         //        {
         //            var serie = Series.FirstOrDefault(x =>
@@ -164,10 +166,10 @@ namespace Forms
                 string.Equals(Werk.ProductieNr, id, StringComparison.CurrentCultureIgnoreCase)) return;
             try
             {
-                if (this.InvokeRequired)
-                    this.Invoke(new MethodInvoker(Close));
+                if (InvokeRequired)
+                    Invoke(new MethodInvoker(Close));
                 else
-                    this.Close();
+                    Close();
             }
             catch (Exception e)
             {
@@ -177,7 +179,7 @@ namespace Forms
 
         private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
         {
-           UpdateForm(changedform);
+            UpdateForm(changedform);
         }
 
         private void AantalMonitorForm_FormClosing(object sender, FormClosingEventArgs e)

@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media;
 using LiveCharts;
 using LiveCharts.Wpf;
 using ProductieManager.Forms.Charting;
@@ -27,10 +23,7 @@ namespace Forms.Charting
         {
             var xret = new List<string>();
             var start = DateTime.Now.Date.AddHours(6);
-            for (var i = 0; i < 13; i++)
-            {
-                xret.Add(start.AddHours(i).ToString("t"));
-            }
+            for (var i = 0; i < 13; i++) xret.Add(start.AddHours(i).ToString("t"));
 
             return xret;
         }
@@ -43,7 +36,7 @@ namespace Forms.Charting
                 var xremove = xChart.Series.Where(x => !bewerking.WerkPlekken.Any(w =>
                     string.Equals(w.Naam, x.Title, StringComparison.CurrentCultureIgnoreCase))).ToList();
                 xremove.ForEach(r => xChart.Series.Remove(r));
-                List<string> labels = new List<string>();
+                var labels = new List<string>();
                 xChart.LegendLocation = LegendLocation.Bottom;
                 xChart.AxisX.Clear();
                 foreach (var wp in bewerking.WerkPlekken)
@@ -59,7 +52,7 @@ namespace Forms.Charting
                         {
                             Title = wp.Naam,
                             Tag = aantals,
-                            Values = aantals.Values,
+                            Values = aantals.Values
                         });
                     }
                     else if (serie is LineSeries {Tag: ChartAantalSerie aantal})
@@ -67,20 +60,22 @@ namespace Forms.Charting
                         aantal.UpdateGemaakt(wp, ref labels);
                         aantals = aantal;
                     }
+
                     xChart.AxisX.Add(new Axis
                     {
                         Separator = new Separator
                         {
                             StrokeThickness = 1,
-                            StrokeDashArray = new System.Windows.Media.DoubleCollection(2),
-                            Stroke = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(64, 79, 86))
+                            StrokeDashArray = new DoubleCollection(2),
+                            Stroke = new SolidColorBrush(Color.FromRgb(64, 79, 86))
                         },
                         Title = wp.Naam,
-                        Labels = labels,
+                        Labels = labels
                         //Sections = new SectionsCollection().AddRange()
                     });
                     labels = new List<string>();
                 }
+
                 //var exis = xChart.AxisX.FirstOrDefault();
                 //if (exis != null && labels != null)
                 //    exis.Labels = labels;

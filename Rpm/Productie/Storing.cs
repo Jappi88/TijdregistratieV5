@@ -1,8 +1,8 @@
-﻿using Polenter.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Polenter.Serialization;
 
 namespace Rpm.Productie
 {
@@ -50,8 +50,9 @@ namespace Rpm.Productie
         public string VerholpenDoor { get; set; }
         public string GemeldDoor { get; set; }
         public string WerkPlek { get; set; }
-        [ExcludeFromSerialization]
-        public WerkPlek Plek { get; set; }
+
+        [ExcludeFromSerialization] public WerkPlek Plek { get; set; }
+
         public string Path { get; set; }
         public bool IsVerholpen { get; set; }
         [ExcludeFromSerialization] public double TotaalTijd => GetTotaleTijd();
@@ -61,11 +62,11 @@ namespace Rpm.Productie
             var gestopt = IsVerholpen ? Gestopt : DateTime.Now;
             return GetTotaleTijd(Gestart, gestopt);
         }
-        
+
         public double GetTotaleTijd(DateTime vanaf, DateTime tot)
         {
-           // if (string.IsNullOrEmpty(Path)) return 0;
-            var werk = Plek??Werk.FromPath(Path)?.Plek;
+            // if (string.IsNullOrEmpty(Path)) return 0;
+            var werk = Plek ?? Werk.FromPath(Path)?.Plek;
             if (vanaf.TimeOfDay == new TimeSpan() && WerkRooster != null)
                 vanaf = vanaf.Add(WerkRooster.StartWerkdag);
             var gestopt = IsVerholpen ? Gestopt : DateTime.Now;
@@ -73,14 +74,17 @@ namespace Rpm.Productie
                 tot = tot.Add(WerkRooster.EindWerkdag);
             if (gestopt > tot) gestopt = tot;
             var gestart = Gestart < vanaf ? vanaf : Gestart;
-            return Math.Round(Werktijd.TijdGewerkt(gestart, gestopt, werk?.Tijden?.WerkRooster, werk?.Tijden?.SpecialeRoosters).TotalHours, 2);
+            return Math.Round(
+                Werktijd.TijdGewerkt(gestart, gestopt, werk?.Tijden?.WerkRooster, werk?.Tijden?.SpecialeRoosters)
+                    .TotalHours, 2);
         }
 
         public DateTime GestartOp(TijdEntry bereik, List<Rooster> specialeroosters)
         {
             if (bereik == null) return Gestart;
             var xspr = specialeroosters?.FirstOrDefault(x => x.Vanaf.Date == Gestart.Date) ?? WerkRooster;
-            return new TijdEntry(Gestart,Gestopt).CreateRange(bereik.Start, bereik.Stop,xspr, specialeroosters)?.Start??new DateTime();
+            return new TijdEntry(Gestart, Gestopt).CreateRange(bereik.Start, bereik.Stop, xspr, specialeroosters)
+                ?.Start ?? new DateTime();
         }
 
         public DateTime GestoptOp(TijdEntry bereik, List<Rooster> specialeroosters)
@@ -88,7 +92,7 @@ namespace Rpm.Productie
             var stop = IsVerholpen ? Gestopt : DateTime.Now;
             if (bereik == null)
                 return stop;
-            var xspr = specialeroosters?.FirstOrDefault(x => x.Vanaf.Date == stop.Date)??WerkRooster;
+            var xspr = specialeroosters?.FirstOrDefault(x => x.Vanaf.Date == stop.Date) ?? WerkRooster;
             return new TijdEntry(Gestart, stop).CreateRange(bereik.Start, bereik.Stop, xspr, specialeroosters)?.Stop ??
                    stop;
         }

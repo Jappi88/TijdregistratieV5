@@ -1,35 +1,36 @@
-﻿using Polenter.Serialization;
-using Rpm.Misc;
-using Rpm.Productie;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Polenter.Serialization;
+using Rpm.Misc;
+using Rpm.Productie;
 
 namespace Rpm.SqlLite
 {
     public class BewerkingLijst
     {
-        private static readonly object _locker = new object();
-        private static readonly object _filelocker = new object();
-        //public LiteDatabase Database { get; private set; }
-        public List<BewerkingEntry> Entries { get; private set; }
+        private static readonly object _locker = new();
+        private static readonly object _filelocker = new();
         public FileSystemWatcher _dbWatcher;
+
         public BewerkingLijst()
         {
             LoadDb();
         }
 
+        //public LiteDatabase Database { get; private set; }
+        public List<BewerkingEntry> Entries { get; private set; }
+
         private bool LoadDb()
         {
             try
             {
-                string filename = $"{Manager.DbPath}\\BewerkingLijst.rpm";
+                var filename = $"{Manager.DbPath}\\BewerkingLijst.rpm";
                 if (!File.Exists(filename))
-                {
-                    if (!CreateNew()) return false;
-                }
+                    if (!CreateNew())
+                        return false;
 
                 if (_dbWatcher == null)
                 {
@@ -37,18 +38,20 @@ namespace Rpm.SqlLite
                     _dbWatcher.EnableRaisingEvents = true;
                     _dbWatcher.Changed += _dbWatcher_Changed;
                 }
+
                 //Database = new LiteDatabase(new ConnectionString()
-                    //{ Connection = ConnectionType.Shared });
-                    lock (_locker)
-                    {
-                        using var fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                        var ser = new SharpSerializer(true);
-                        Entries = (List<BewerkingEntry>)ser.Deserialize(fs);
-                        fs.Close();
-                    }
-                    if (Entries == null && !CreateNew())
-                        throw new Exception("Ongeldige bewerkinglijst database!");
-                    return true;
+                //{ Connection = ConnectionType.Shared });
+                lock (_locker)
+                {
+                    using var fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    var ser = new SharpSerializer(true);
+                    Entries = (List<BewerkingEntry>) ser.Deserialize(fs);
+                    fs.Close();
+                }
+
+                if (Entries == null && !CreateNew())
+                    throw new Exception("Ongeldige bewerkinglijst database!");
+                return true;
             }
             catch (Exception e)
             {
@@ -89,7 +92,7 @@ namespace Rpm.SqlLite
                 return Entries.FirstOrDefault(x =>
                     string.Equals(x.Naam, naam, StringComparison.CurrentCultureIgnoreCase));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return null;
@@ -177,17 +180,13 @@ namespace Rpm.SqlLite
                             changed = true;
                             done++;
                             foreach (var wp in bw.WerkPlekken)
-                            {
-                                foreach (var st in wp.Storingen)
-                                {
-                                    st.Path = wp.Path;
-                                }
-                            }
+                            foreach (var st in wp.Storingen)
+                                st.Path = wp.Path;
                         }
                     }
 
                     if (changed)
-                        _=bw.UpdateBewerking(null, null, true, false);
+                        _ = bw.UpdateBewerking(null, null, true, false);
                 }
 
                 var entries = GetAllEntries();
@@ -215,9 +214,8 @@ namespace Rpm.SqlLite
         {
             try
             {
-                string filename = $"{Manager.DbPath}\\BewerkingLijst.db";
+                var filename = $"{Manager.DbPath}\\BewerkingLijst.db";
                 if (File.Exists(filename))
-                {
                     try
                     {
                         File.Delete(filename);
@@ -226,7 +224,6 @@ namespace Rpm.SqlLite
                     {
                         Console.WriteLine(e.Message);
                     }
-                }
 
                 if (Entries == null || Entries.Count == 0)
                     Entries = Functions.LoadBewerkingLijst("BewerkingenV2.txt");
@@ -262,14 +259,12 @@ namespace Rpm.SqlLite
                 var values = new List<string>();
                 foreach (var wp in entries.SelectMany(entry => entry.WerkPlekken.Where(wp =>
                              values.All(x => !string.Equals(x, wp, StringComparison.CurrentCultureIgnoreCase)))))
-                {
                     if (filter && IsAllowedWerkplek(wp))
                         values.Add(wp);
                     else if (!filter)
                         values.Add(wp);
-                }
 
-                return values.OrderBy(x=> x).ToList();
+                return values.OrderBy(x => x).ToList();
             }
             catch
             {
@@ -284,15 +279,11 @@ namespace Rpm.SqlLite
                 if (Manager.Opties == null) return false;
                 if (Manager.Opties.ToonAlles) return true;
                 if (Manager.Opties.ToonVolgensAfdelingen || Manager.Opties.ToonAllesVanBeide)
-                {
                     if (Manager.Opties.Afdelingen != null && Manager.Opties.Afdelingen.Any(x =>
                             string.Equals(x, werkplek, StringComparison.CurrentCultureIgnoreCase)))
                         return true;
-                }
                 if (Manager.Opties.ToonVolgensBewerkingen || Manager.Opties.ToonAllesVanBeide)
-                {
                     if (Manager.Opties.Bewerkingen != null)
-                    {
                         foreach (var bw in Manager.Opties.Bewerkingen)
                         {
                             var wps = GetWerkplekken(bw);
@@ -300,8 +291,6 @@ namespace Rpm.SqlLite
                                     string.Equals(x, werkplek, StringComparison.CurrentCultureIgnoreCase)))
                                 return true;
                         }
-                    }
-                }
 
                 return false;
             }
@@ -316,7 +305,7 @@ namespace Rpm.SqlLite
         {
             lock (_locker)
             {
-                string filename = $"{Manager.DbPath}\\BewerkingLijst.rpm";
+                var filename = $"{Manager.DbPath}\\BewerkingLijst.rpm";
                 try
                 {
                     using var fs = new FileStream(filename, FileMode.Create, FileAccess.ReadWrite, FileShare.None);

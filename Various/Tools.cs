@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
-using ProductieManager;
 using ProductieManager.Forms;
 using Rpm.Misc;
 using Rpm.Productie;
@@ -90,11 +89,9 @@ namespace Various
                         xvalue.WindowState = FormWindowState.Normal;
                     form.WindowState = xvalue.WindowState;
                     if (xvalue.WindowState == FormWindowState.Normal)
-                    {
                         //form.Location = xvalue.Location;
                         if (xvalue.Size.Width > 50 && xvalue.Size.Height > 50)
                             form.Size = xvalue.Size;
-                    }
                     form.Invalidate();
                 }
             }
@@ -118,14 +115,16 @@ namespace Various
                     xvalue.WindowState = form.WindowState;
                 }
                 else
+                {
                     Manager.DefaultSettings.LastFormInfo.Add(form.Name,
-                        new LastFormScreenInfo()
+                        new LastFormScreenInfo
                         {
                             Location = form.Location,
                             Name = form.Name,
                             Size = form.Size,
                             WindowState = form.WindowState
                         });
+                }
             }
             catch (Exception e)
             {
@@ -135,12 +134,12 @@ namespace Various
 
         public static void ShowSelectedTekening(string artnr, EventHandler browserclosed)
         {
-            if(!string.IsNullOrEmpty(artnr))
+            if (!string.IsNullOrEmpty(artnr))
             {
                 var xart = artnr;
                 //Process.Start(xtek); 
                 var wb = new WebBrowserForm();
-                wb.FilesFormatToOpen = new string[] { "{0}_fbr.pdf" };
+                wb.FilesFormatToOpen = new[] {"{0}_fbr.pdf"};
                 wb.FilesToOpen.Add(xart);
                 wb.CloseIfNotFound = true;
                 wb.OpenIfFound = true;

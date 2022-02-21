@@ -7,10 +7,6 @@ namespace AutoUpdaterDotNET
     /// </summary>
     public class NetworkAuthentication : IAuthentication
     {
-        private string Username { get; }
-
-        private string Password { get; }
-
         /// <summary>
         ///     Initializes credentials for Network Authentication.
         /// </summary>
@@ -21,6 +17,10 @@ namespace AutoUpdaterDotNET
             Username = username;
             Password = password;
         }
+
+        private string Username { get; }
+
+        private string Password { get; }
 
         /// <inheritdoc />
         public void Apply(ref MyWebClient webClient)

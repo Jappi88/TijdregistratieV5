@@ -1,21 +1,24 @@
-﻿using ProductieManager.Forms;
-using ProductieManager.Properties;
-using ProductieManager.Rpm.ExcelHelper;
-using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using ProductieManager.Forms;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.ExcelHelper;
+using Rpm.Misc;
+using Rpm.Productie;
+using Rpm.Various;
 
 namespace Forms.Excel
 {
-    public partial class CreateWeekExcelForm : Forms.MetroBase.MetroBaseForm
+    public partial class CreateWeekExcelForm : MetroBaseForm
     {
-        private string ListName = "ExcelWeekOverzicht";
+        private bool _isbusy;
+        private readonly string ListName = "ExcelWeekOverzicht";
+
         public CreateWeekExcelForm()
         {
             InitializeComponent();
@@ -24,13 +27,14 @@ namespace Forms.Excel
             xjaar.Value = DateTime.Now.Year;
         }
 
-        private async void xOpslaan_Click(object sender, System.EventArgs e)
+        private async void xOpslaan_Click(object sender, EventArgs e)
         {
             if (IsRunning())
             {
                 StopWait();
                 return;
             }
+
             var ofd = new SaveFileDialog
             {
                 Title = "creëer Productie WeekOverzicht",
@@ -43,13 +47,15 @@ namespace Forms.Excel
                 try
                 {
                     if (await ExcelWorkbook.CreateDagelijksProductieOverzicht((int) xweeknr.Value, (int) xjaar.Value,
-                            ofd.FileName, IsRunning, GetActiveFilters()) && File.Exists(ofd.FileName) && xopenexcel.Checked)
+                            ofd.FileName, IsRunning, GetActiveFilters()) && File.Exists(ofd.FileName) &&
+                        xopenexcel.Checked)
                         Process.Start(ofd.FileName);
                 }
                 catch (Exception exception)
                 {
                     XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
                 }
+
                 StopWait();
             }
         }
@@ -58,10 +64,8 @@ namespace Forms.Excel
         {
             var xreturn = new List<Filter>();
             foreach (var item in xfiltersStrip.Items.Cast<ToolStripMenuItem>())
-            {
-                if(item.Tag is Filter filter)
+                if (item.Tag is Filter filter)
                     xreturn.Add(filter);
-            }
 
             return xreturn;
         }
@@ -83,7 +87,7 @@ namespace Forms.Excel
                     for (var j = 0; j < dropitems.Count; j++)
                         menuitem.DropDownItems.Remove(dropitems[j]);
                 }
-            
+
             //verwijder alle toegevoegde filters
             //items = xfiltersStripItem.DropDownItems.Cast<ToolStripItem>().Where(x => x.Tag != null).ToList();
             //for (int i = 0; i < items.Count; i++)
@@ -92,7 +96,7 @@ namespace Forms.Excel
             if (Manager.Opties?.Filters == null || menuitem == null) return;
             foreach (var f in Manager.Opties.Filters)
             {
-                var xitem = new ToolStripMenuItem(f.Name) { Image = Resources.add_1588, Tag = f };
+                var xitem = new ToolStripMenuItem(f.Name) {Image = Resources.add_1588, Tag = f};
                 xitem.ToolTipText = f.ToString();
                 menuitem.DropDownItems.Add(xitem);
                 if (f.ListNames.Any(x =>
@@ -106,10 +110,7 @@ namespace Forms.Excel
             if (e.ClickedItem.Tag == null)
             {
                 var xf = new FilterEditor();
-                if (xf.ShowDialog() == DialogResult.OK)
-                {
-                    InitFilterStrips();
-                }
+                if (xf.ShowDialog() == DialogResult.OK) InitFilterStrips();
                 //InitFilterStrips();
                 //UpdateProductieList();
                 //OnFilterChanged();
@@ -119,7 +120,7 @@ namespace Forms.Excel
             if (e.ClickedItem.Tag is Filter filter)
             {
                 if (filter.ListNames.Any(x =>
-                    string.Equals(ListName, x, StringComparison.CurrentCultureIgnoreCase)))
+                        string.Equals(ListName, x, StringComparison.CurrentCultureIgnoreCase)))
                     return;
                 filter.ListNames.Add(ListName);
                 AddFilterToolstripItem(filter, false);
@@ -131,7 +132,7 @@ namespace Forms.Excel
             if (filter.ListNames.Any(x =>
                     string.Equals(ListName, x, StringComparison.CurrentCultureIgnoreCase)) &&
                 docheck) return false;
-            var ts = new ToolStripMenuItem(filter.Name) { Image = Resources.delete_1577, Tag = filter };
+            var ts = new ToolStripMenuItem(filter.Name) {Image = Resources.delete_1577, Tag = filter};
             ts.ToolTipText = filter.ToString();
             ts.Click += Ts_Click;
             xfiltersStrip.Items.Add(ts);
@@ -140,7 +141,7 @@ namespace Forms.Excel
 
         private void Ts_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripItem { Tag: Filter filter } ts)
+            if (sender is ToolStripItem {Tag: Filter filter} ts)
             {
                 filter.ListNames.RemoveAll(x => string.Equals(x, ListName, StringComparison.CurrentCultureIgnoreCase));
                 if (filter.IsTempFilter && filter.ListNames.Count == 0)
@@ -153,12 +154,11 @@ namespace Forms.Excel
             }
         }
 
-        private void xsluiten_Click(object sender, System.EventArgs e)
+        private void xsluiten_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
+            DialogResult = DialogResult.Cancel;
         }
 
-        private bool _isbusy = false;
         private void StartWait()
         {
             if (_isbusy) return;
@@ -191,13 +191,11 @@ namespace Forms.Excel
         public bool IsRunning(ProgressArg arg)
         {
             if (arg?.Message != null)
-            {
-                this.BeginInvoke(new MethodInvoker(() =>
+                BeginInvoke(new MethodInvoker(() =>
                 {
                     xbezig.Text = arg.Message;
                     xbezig.Invalidate();
                 }));
-            }
 
             return _isbusy;
         }
@@ -205,7 +203,7 @@ namespace Forms.Excel
         private void StopWait()
         {
             _isbusy = false;
-            if (!this.IsDisposed)
+            if (!IsDisposed)
             {
                 xOpslaan.Text = "Opslaan";
                 xOpslaan.Image = Resources.diskette_save_saveas_1514;

@@ -7,8 +7,9 @@ namespace Rpm.Mailing
     public class RemoteMessage
     {
         public RemoteMessage(string message, MessageAction type, MsgType msgtype, byte[] content = null,
-            object value = null, string prodnr = null) : 
-            this(message,$"{Enum.GetName(typeof(MsgType),msgtype)} {Manager.Opties.Username}",type,msgtype,content,value,prodnr)
+            object value = null, string prodnr = null) :
+            this(message, $"{Enum.GetName(typeof(MsgType), msgtype)} {Manager.Opties.Username}", type, msgtype, content,
+                value, prodnr)
         {
         }
 

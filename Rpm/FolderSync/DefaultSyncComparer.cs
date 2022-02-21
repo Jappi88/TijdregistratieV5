@@ -1,14 +1,14 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace FolderSync
-{ 
+{
     public class DefaultSyncComparer : IFileComparer
     {
         /// <summary>
-        /// Compare two fils infos. If the first file has last write date lesser than second file, it will return negative value
-        /// If first file has last write date bigger than second file, it will return positive value
-        /// If both files last write date is the same, it will return 0
+        ///     Compare two fils infos. If the first file has last write date lesser than second file, it will return negative
+        ///     value
+        ///     If first file has last write date bigger than second file, it will return positive value
+        ///     If both files last write date is the same, it will return 0
         /// </summary>
         /// <param name="sourcefile">First file info</param>
         /// <param name="destinationfile">Second file info</param>

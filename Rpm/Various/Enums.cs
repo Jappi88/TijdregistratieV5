@@ -2,7 +2,6 @@
 
 namespace Rpm.Various
 {
-
     [Serializable]
     public enum FilterType
     {

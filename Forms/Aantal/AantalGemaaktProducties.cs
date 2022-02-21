@@ -1,18 +1,31 @@
-﻿using ProductieManager.Forms.Aantal.Controls;
-using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using ProductieManager.Forms.Aantal.Controls;
+using Rpm.Misc;
+using Rpm.Productie;
+using Rpm.Various;
 
 namespace Forms.Aantal
 {
-    public partial class AantalGemaaktProducties : Forms.MetroBase.MetroBaseForm
+    public partial class AantalGemaaktProducties : MetroBaseForm
     {
-        public List<Bewerking> Bewerkingen { get; private set; } 
+        private bool xloading;
+
+        public AantalGemaaktProducties(List<Bewerking> producties, int lastchangedminutes = -1)
+        {
+            InitializeComponent();
+            SaveLastSize = false;
+            LastchangedMinutes = lastchangedminutes;
+            Bewerkingen = producties;
+            LoadProducties();
+        }
+
+        public List<Bewerking> Bewerkingen { get; private set; }
+
         public string Title
         {
             get => base.Text;
@@ -25,16 +38,6 @@ namespace Forms.Aantal
 
         public int LastchangedMinutes { get; set; }
 
-        public AantalGemaaktProducties(List<Bewerking> producties, int lastchangedminutes = -1)
-        {
-            InitializeComponent();
-            SaveLastSize = false;
-            LastchangedMinutes = lastchangedminutes;
-            Bewerkingen = producties;
-            LoadProducties();
-        }
-
-        private bool xloading = false;
         private void LoadProducties()
         {
             try
@@ -52,10 +55,7 @@ namespace Forms.Aantal
                     Title = $"Wijzig AantalGemaakt Van {bws.Count} Actieve {x1}";
 
                     xcontainer.Controls.Clear();
-                    foreach (var bw in bws)
-                    {
-                        AddGroup(bw);
-                    }
+                    foreach (var bw in bws) AddGroup(bw);
 
                     UpdateHeight();
                 }
@@ -75,7 +75,7 @@ namespace Forms.Aantal
                 var group = new GroupBox();
                 group.ForeColor = Color.DarkRed;
                 group.Text = $"{bw.ArtikelNr}, {bw.ProductieNr} | {bw.Naam} Van {bw.Omschrijving}";
-                group.Font = new Font(this.Font.FontFamily, 12, FontStyle.Bold);
+                group.Font = new Font(Font.FontFamily, 12, FontStyle.Bold);
                 group.Dock = DockStyle.Top;
 
                 var xaantal = new AantalChangerUI();
@@ -96,8 +96,10 @@ namespace Forms.Aantal
         private List<Bewerking> GetBewerkingen()
         {
             return Bewerkingen.Where(x => x.IsAllowed() && string.Equals(
-                x.GestartDoor, Manager.Opties.Username,
-                StringComparison.CurrentCultureIgnoreCase)).OrderBy(x => x.WerkPlekken.FirstOrDefault()?.Naam ?? x.Naam).Reverse().ToList();
+                    x.GestartDoor, Manager.Opties.Username,
+                    StringComparison.CurrentCultureIgnoreCase))
+                .OrderBy(x => x.WerkPlekken.FirstOrDefault()?.Naam ?? x.Naam)
+                .Reverse().ToList();
         }
 
         private void UpdateProducties(bool closeifnocounts)
@@ -118,17 +120,18 @@ namespace Forms.Aantal
                     Title = $"Wijzig AantalGemaakt Van {bws.Count} Actieve {x1}";
                     xcontainer.SuspendLayout();
                     var groups = xcontainer.Controls.Cast<GroupBox>().ToList();
-                    
+
                     var xremove = groups.Where(x =>
                         x.Controls.Count > 0 && x.Controls[0] is AantalChangerUI ui &&
-                        !Bewerkingen.Any(b => b.Equals(ui.Productie) || (LastchangedMinutes > -1 && ui.Productie.LaatstAantalUpdate.AddMinutes(LastchangedMinutes) >= DateTime.Now))).ToList();
+                        !Bewerkingen.Any(b => b.Equals(ui.Productie) || LastchangedMinutes > -1 &&
+                            ui.Productie.LaatstAantalUpdate.AddMinutes(LastchangedMinutes) >= DateTime.Now)).ToList();
                     xremove.ForEach(r => xcontainer.Controls.Remove(r));
                     var aantallen = groups.Select(x => x.Controls[0] as AantalChangerUI).ToList();
                     foreach (var bw in bws)
                     {
                         var ui = aantallen.FirstOrDefault(x => x.Productie.Equals(bw));
                         GroupBox group = null;
-                        bool valid = bw.State == ProductieState.Gestart && string.Equals(bw.GestartDoor,
+                        var valid = bw.State == ProductieState.Gestart && string.Equals(bw.GestartDoor,
                             Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase);
                         if (ui == null && valid)
                         {
@@ -143,23 +146,24 @@ namespace Forms.Aantal
                                 groups.Remove(group);
                             }
                             else
+                            {
                                 ui?.LoadAantalGemaakt(bw);
-
+                            }
                         }
 
                         if (group == null)
                             continue;
                         group.Text = $"{bw.ArtikelNr}, {bw.ProductieNr} | {bw.Naam} Van {bw.Omschrijving}";
-
                     }
 
                     xcontainer.ResumeLayout(true);
                     UpdateHeight();
                 }
+
                 if (closeifnocounts && xcontainer.Controls.Count == 0)
                 {
-                    this.Close();
-                    this.Dispose();
+                    Close();
+                    Dispose();
                 }
             }
             catch (Exception e)
@@ -172,35 +176,33 @@ namespace Forms.Aantal
 
         public void UpdateProductie(ProductieFormulier form)
         {
-            if (this.IsDisposed || this.Disposing) return;
-            bool valid = form is {State: ProductieState.Gestart};
-            bool init = false;
-            if (Bewerkingen != null && Bewerkingen.Any(x => string.Equals(x.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase)))
+            if (IsDisposed || Disposing) return;
+            var valid = form is {State: ProductieState.Gestart};
+            var init = false;
+            if (Bewerkingen != null && Bewerkingen.Any(x =>
+                    string.Equals(x.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase)))
             {
                 if (!valid)
                     init = Bewerkingen.RemoveAll(x =>
                         string.Equals(x.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase)) > 0;
                 else
-                {
                     foreach (var bw in form.Bewerkingen)
                     {
                         if (LastchangedMinutes > -1)
-                        {
                             if (!bw.WerkPlekken.Any(x => x.NeedsAantalUpdate(LastchangedMinutes)))
                                 continue;
-                        }
                         var index = Bewerkingen.IndexOf(bw);
-                        bool bwvalid = bw.State == ProductieState.Gestart && bw.IsAllowed() && string.Equals(
+                        var bwvalid = bw.State == ProductieState.Gestart && bw.IsAllowed() && string.Equals(
                             bw.GestartDoor, Manager.Opties?.Username,
                             StringComparison.CurrentCultureIgnoreCase);
-                     
+
                         if (index == -1)
                         {
                             if (bwvalid)
                             {
                                 if (LastchangedMinutes > -1)
                                 {
-                                    if (bw.WerkPlekken.Any(x=> x.NeedsAantalUpdate(LastchangedMinutes)))
+                                    if (bw.WerkPlekken.Any(x => x.NeedsAantalUpdate(LastchangedMinutes)))
                                     {
                                         Bewerkingen.Add(bw);
                                         init = true;
@@ -211,13 +213,14 @@ namespace Forms.Aantal
                                     Bewerkingen.Add(bw);
                                     init = true;
                                 }
-                                
                             }
                         }
                         else
                         {
                             if (bwvalid)
+                            {
                                 Bewerkingen[index] = bw;
+                            }
                             else
                             {
                                 Bewerkingen.RemoveAt(index);
@@ -225,7 +228,6 @@ namespace Forms.Aantal
                             }
                         }
                     }
-                }
             }
             else
             {
@@ -233,12 +235,10 @@ namespace Forms.Aantal
                 foreach (var bw in form.Bewerkingen)
                 {
                     if (LastchangedMinutes > -1)
-                    {
                         if (!bw.WerkPlekken.Any(x => x.NeedsAantalUpdate(LastchangedMinutes)))
                             continue;
-                    }
 
-                    bool bwvalid = bw.State == ProductieState.Gestart && bw.IsAllowed() && string.Equals(
+                    var bwvalid = bw.State == ProductieState.Gestart && bw.IsAllowed() && string.Equals(
                         bw.GestartDoor, Manager.Opties?.Username,
                         StringComparison.CurrentCultureIgnoreCase);
                     if (bwvalid)
@@ -249,25 +249,18 @@ namespace Forms.Aantal
                 }
             }
 
-            if (init)
-            {
-                UpdateProducties(true);
-            }
+            if (init) UpdateProducties(true);
         }
 
         private void UpdateHeight()
         {
             var height = 120;
             if (xcontainer.Controls.Count > 0)
-            {
-                for (int i = 0; i < xcontainer.Controls.Count; i++)
-                {
+                for (var i = 0; i < xcontainer.Controls.Count; i++)
                     if (xcontainer.Controls[i] is GroupBox group)
-                        height += group.Height;
-                }
-            }
-            this.Height = height < 750? height : 750;
-            this.Invalidate();
+                        height += @group.Height;
+            Height = height < 750 ? height : 750;
+            Invalidate();
         }
 
         private void AantalGemaaktProducties_Shown(object sender, EventArgs e)
@@ -279,9 +272,9 @@ namespace Forms.Aantal
         {
             try
             {
-                if (this.Disposing || this.IsDisposed) return;
+                if (Disposing || IsDisposed) return;
                 if (InvokeRequired)
-                    this.Invoke(new MethodInvoker(() => UpdateProductie(changedform)));
+                    Invoke(new MethodInvoker(() => UpdateProductie(changedform)));
                 else
                     UpdateProductie(changedform);
             }

@@ -1,5 +1,12 @@
-﻿using Controls;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Controls;
 using Polenter.Serialization;
+using ProductieManager.Properties;
 using ProductieManager.Rpm.Mailing;
 using ProductieManager.Rpm.Misc;
 using ProductieManager.Rpm.Settings;
@@ -8,12 +15,6 @@ using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.SqlLite;
 using Rpm.Various;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Rpm.Settings
 {
@@ -24,6 +25,7 @@ namespace Rpm.Settings
         {
             Initdefault();
         }
+
         public string BackgroundImagePath { get; set; }
         public string LastPreviewVersion { get; set; } = "1.0.0.0";
         public string AutoLoginUsername { get; set; }
@@ -31,8 +33,8 @@ namespace Rpm.Settings
         public string Username { get; set; }
         public string BoundUsername { get; set; }
 
-        [ExcludeFromSerialization]
-        public string OSID { get; set; }
+        [ExcludeFromSerialization] public string OSID { get; set; }
+
         public string SystemID { get; set; }
 
         //[ExcludeFromSerialization]
@@ -47,6 +49,7 @@ namespace Rpm.Settings
         public List<TileInfoEntry> TileLayout { get; set; }
         public FlowDirection TileFlowDirection { get; set; } = FlowDirection.TopDown;
         public bool PreviewShown { get; set; }
+
         #region "Methods"
 
         public List<TileInfoEntry> GetAllDefaultEntries(bool incextra)
@@ -54,19 +57,19 @@ namespace Rpm.Settings
             var xtiles = new List<TileInfoEntry>();
             try
             {
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Producties",
                     ForeColor = Color.Purple,
                     GroupName = "Producties",
                     Name = "Producties",
                     Size = new Size(256, 96),
-                    TileColor = Color.FromArgb(215,174,255),
-                    TileImage = ProductieManager.Properties.Resources.operation,
+                    TileColor = Color.FromArgb(215, 174, 255),
+                    TileImage = Resources.operation,
                     TileIndex = 0,
                     IsDefault = true
                 });
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Actieve Werkplaatsen",
                     ForeColor = Color.Navy,
@@ -74,11 +77,11 @@ namespace Rpm.Settings
                     Name = "Werkplaatsen",
                     Size = new Size(256, 96),
                     TileColor = Color.FromArgb(164, 209, 255),
-                    TileImage = ProductieManager.Properties.Resources.iconfinder_technology,
+                    TileImage = Resources.iconfinder_technology,
                     TileIndex = 1,
                     IsDefault = true
                 });
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Recente Gereedmeldingen",
                     ForeColor = Color.White,
@@ -86,11 +89,11 @@ namespace Rpm.Settings
                     Name = "Gereedmeldingen",
                     Size = new Size(256, 96),
                     TileColor = Color.Green,
-                    TileImage = new Bitmap(ProductieManager.Properties.Resources.operation.CombineImage(ProductieManager.Properties.Resources.check_1582, 1.75)),
+                    TileImage = new Bitmap(Resources.operation.CombineImage(Resources.check_1582, 1.75)),
                     TileIndex = 2,
                     IsDefault = true
                 });
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Alle Onderbrekeningen",
                     ForeColor = Color.White,
@@ -98,11 +101,11 @@ namespace Rpm.Settings
                     Name = "Onderbrekingen",
                     Size = new Size(256, 96),
                     TileColor = Color.SteelBlue,
-                    TileImage = ProductieManager.Properties.Resources.onderhoud128_128,
+                    TileImage = Resources.onderhoud128_128,
                     TileIndex = 3,
                     IsDefault = true
                 });
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Bereken Verbruik",
                     ForeColor = Color.White,
@@ -110,37 +113,37 @@ namespace Rpm.Settings
                     Name = "xverbruik",
                     Size = new Size(256, 96),
                     TileColor = Color.RosyBrown,
-                    TileImage = ProductieManager.Properties.Resources.geometry_measure_96x96,
+                    TileImage = Resources.geometry_measure_96x96,
                     TileIndex = 4,
                     IsDefault = true
                 });
 
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Artikelen Verbruik",
                     ForeColor = Color.Brown,
                     GroupName = "Verbruik",
                     Name = "xverbruikbeheren",
                     Size = new Size(256, 96),
-                    TileColor = Color.FromArgb(223,191,191),
-                    TileImage = ProductieManager.Properties.Resources.geometry_measure_96x96,
+                    TileColor = Color.FromArgb(223, 191, 191),
+                    TileImage = Resources.geometry_measure_96x96,
                     TileIndex = 5,
                     IsDefault = true
                 });
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Wijzig AantalGemaakt",
                     ForeColor = Color.White,
                     GroupName = "AantalGemaakt",
                     Name = "xchangeaantal",
                     Size = new Size(256, 96),
-                    TileColor = Color.FromArgb(245,122,135),
-                    TileImage = ProductieManager.Properties.Resources.Count_tool_34564__1_,
+                    TileColor = Color.FromArgb(245, 122, 135),
+                    TileImage = Resources.Count_tool_34564__1_,
                     TileIndex = 6,
                     IsDefault = true,
                     AccesLevel = AccesType.ProductieBasis
                 });
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Zoek WerkTekening",
                     ForeColor = Color.White,
@@ -148,12 +151,13 @@ namespace Rpm.Settings
                     Name = "xsearchtekening",
                     Size = new Size(256, 96),
                     TileColor = Color.DarkGoldenrod,
-                    TileImage = new Bitmap(ProductieManager.Properties.Resources.libreoffice_draw_icon_128x128.CombineImage(ProductieManager.Properties.Resources.search_locate_find_6278,1.75)),
+                    TileImage = new Bitmap(
+                        Resources.libreoffice_draw_icon_128x128.CombineImage(Resources.search_locate_find_6278, 1.75)),
                     TileIndex = 7,
                     IsDefault = true
                 });
 
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Personeel Indeling",
                     ForeColor = Color.White,
@@ -161,13 +165,13 @@ namespace Rpm.Settings
                     Name = "xpersoneelindeling",
                     Size = new Size(256, 96),
                     TileColor = Color.MediumSlateBlue,
-                    TileImage = ProductieManager.Properties.Resources.user_rotation_96x96,
+                    TileImage = Resources.user_rotation_96x96,
                     TileIndex = 8,
                     IsDefault = true,
                     AccesLevel = AccesType.ProductieBasis
                 });
 
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Werkplaats Indeling",
                     ForeColor = IProductieBase.GetProductSoortColor("horti"),
@@ -175,39 +179,40 @@ namespace Rpm.Settings
                     Name = "xwerkplaatsindeling",
                     Size = new Size(256, 96),
                     TileColor = Color.AliceBlue,
-                    TileImage = ProductieManager.Properties.Resources.werkplaatsindeling_96x96,
+                    TileImage = Resources.werkplaatsindeling_96x96,
                     TileIndex = 9,
                     IsDefault = true,
                     AccesLevel = AccesType.ProductieBasis
                 });
 
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Exporteer Excel",
                     ForeColor = Color.DarkGreen,
                     GroupName = "Excel",
                     Name = "xcreateexcel",
                     Size = new Size(256, 96),
-                    TileColor = Color.FromArgb(215,255,215),
-                    TileImage = ProductieManager.Properties.Resources.microsoft_excel_22733_128x128,
+                    TileColor = Color.FromArgb(215, 255, 215),
+                    TileImage = Resources.microsoft_excel_22733_128x128,
                     TileIndex = 10,
-                    IsDefault = true,
+                    IsDefault = true
                 });
 
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Toon Statistieken",
-                    ForeColor = Color.White,
+                    ForeColor = Color.SteelBlue,
                     GroupName = "Statistieken",
                     Name = "xstats",
                     Size = new Size(256, 96),
-                    TileColor = Color.CornflowerBlue,
-                    TileImage = ProductieManager.Properties.Resources.stats_15267_128x128,
+                    TileColor = Color.Pink,
+                    TextFontStyle = FontStyle.Bold,
+                    TileImage = Resources.Charts_96x96,
                     TileIndex = 11,
-                    IsDefault = true,
+                    IsDefault = true
                 });
 
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Zoek Producties",
                     ForeColor = Color.White,
@@ -215,12 +220,12 @@ namespace Rpm.Settings
                     Name = "xzoekproducties",
                     Size = new Size(256, 96),
                     TileColor = Color.SlateBlue,
-                    TileImage = ProductieManager.Properties.Resources.FocusEye_img_128_128,
+                    TileImage = Resources.FocusEye_img_128_128,
                     TileIndex = 12,
-                    IsDefault = true,
+                    IsDefault = true
                 });
 
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Personeel",
                     ForeColor = Color.Navy,
@@ -228,12 +233,12 @@ namespace Rpm.Settings
                     Name = "xpersoneel",
                     Size = new Size(256, 96),
                     TileColor = Color.FromArgb(125, 175, 255),
-                    TileImage = ProductieManager.Properties.Resources.users_clients_group_16774,
+                    TileImage = Resources.users_clients_group_16774,
                     TileIndex = 13,
-                    IsDefault = true,
+                    IsDefault = true
                 });
 
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Alle Artikelen",
                     ForeColor = Color.White,
@@ -241,12 +246,12 @@ namespace Rpm.Settings
                     Name = "xalleartikelen",
                     Size = new Size(256, 96),
                     TileColor = Color.FromArgb(95, 95, 95),
-                    TileImage = ProductieManager.Properties.Resources.product_document_file_96x96,
+                    TileImage = Resources.product_document_file_96x96,
                     TileIndex = 14,
-                    IsDefault = true,
+                    IsDefault = true
                 });
 
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Artikel/Werkplaats Records",
                     ForeColor = Color.FromArgb(253, 185, 253),
@@ -254,12 +259,12 @@ namespace Rpm.Settings
                     Name = "xartikelrecords",
                     Size = new Size(256, 96),
                     TileColor = Color.FromArgb(152, 5, 152),
-                    TileImage = ProductieManager.Properties.Resources.time_management_tasks_96x96,
+                    TileImage = Resources.time_management_tasks_96x96,
                     TileIndex = 15,
-                    IsDefault = true,
+                    IsDefault = true
                 });
 
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Productie Volgorde",
                     ForeColor = Color.White,
@@ -267,12 +272,12 @@ namespace Rpm.Settings
                     Name = "xproductievolgorde",
                     Size = new Size(256, 96),
                     TileColor = Color.Navy,
-                    TileImage = ProductieManager.Properties.Resources.taskboardflat_106022,
+                    TileImage = Resources.taskboardflat_106022,
                     TileIndex = 16,
-                    IsDefault = true,
+                    IsDefault = true
                 });
 
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Klachten",
                     ForeColor = Color.White,
@@ -281,12 +286,12 @@ namespace Rpm.Settings
                     Size = new Size(256, 96),
                     TileColor = IProductieBase.GetProductSoortColor("red"),
                     TextFontStyle = FontStyle.Bold,
-                    TileImage = ProductieManager.Properties.Resources.Leave_80_icon_icons_com_57305_128x128,
+                    TileImage = Resources.Leave_80_icon_icons_com_57305_128x128,
                     TileIndex = 17,
-                    IsDefault = true,
+                    IsDefault = true
                 });
 
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Excel WeekOverzicht",
                     ForeColor = Color.White,
@@ -294,11 +299,11 @@ namespace Rpm.Settings
                     Name = "xweekoverzicht",
                     Size = new Size(256, 96),
                     TileColor = IProductieBase.GetProductSoortColor("Horti"),
-                    TileImage = ProductieManager.Properties.Resources.microsoft_excel_22733_128x128,
+                    TileImage = Resources.microsoft_excel_22733_128x128,
                     TileIndex = 18,
-                    IsDefault = true,
+                    IsDefault = true
                 });
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Alle Notities",
                     ForeColor = Color.White,
@@ -306,11 +311,11 @@ namespace Rpm.Settings
                     Name = "xallenotities",
                     Size = new Size(256, 96),
                     TileColor = Color.DarkRed,
-                    TileImage = ProductieManager.Properties.Resources.memo_pad_notes_reminder_task_icon_128x128,
+                    TileImage = Resources.memo_pad_notes_reminder_task_icon_128x128,
                     TileIndex = 19,
-                    IsDefault = true,
+                    IsDefault = true
                 });
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Beheer Filters",
                     ForeColor = Color.White,
@@ -318,11 +323,11 @@ namespace Rpm.Settings
                     Name = "xbeheerfilters",
                     Size = new Size(256, 96),
                     TileColor = Color.LightSkyBlue,
-                    TileImage = ProductieManager.Properties.Resources.filter_96x96,
+                    TileImage = Resources.filter_96x96,
                     TileIndex = 19,
-                    IsDefault = true,
+                    IsDefault = true
                 });
-                xtiles.Add(new TileInfoEntry()
+                xtiles.Add(new TileInfoEntry
                 {
                     Text = "Productie Chat",
                     ForeColor = Color.Navy,
@@ -330,20 +335,18 @@ namespace Rpm.Settings
                     Name = "xchat",
                     Size = new Size(256, 96),
                     TileColor = Color.LightSteelBlue,
-                    TileImage = ProductieManager.Properties.Resources.chat_26_icon_96x96,
+                    TileImage = Resources.chat_26_icon_96x96,
                     TileIndex = 19,
-                    IsDefault = true,
+                    IsDefault = true
                 });
 
                 if (incextra)
-                {
                     if (Filters.Count > 0)
-                    {
                         foreach (var f in Filters)
                         {
                             if (f.IsTempFilter)
                                 continue;
-                            xtiles.Add(new TileInfoEntry()
+                            xtiles.Add(new TileInfoEntry
                             {
                                 Text = f.Name,
                                 ForeColor = Color.White,
@@ -352,13 +355,11 @@ namespace Rpm.Settings
                                 Name = f.Name,
                                 LinkID = f.ID,
                                 Size = new Size(256, 96),
-                                TileImage = new Bitmap(ProductieManager.Properties.Resources.operation.CombineImage(ProductieManager.Properties.Resources.filter_32x32, 2.5)),
+                                TileImage = new Bitmap(Resources.operation.CombineImage(Resources.filter_32x32, 2.5)),
                                 TileIndex = xtiles.Count,
-                                IsDefault = true,
+                                IsDefault = true
                             });
                         }
-                    }
-                }
             }
             catch (Exception e)
             {
@@ -372,7 +373,7 @@ namespace Rpm.Settings
         {
             SystemID = Manager.SystemId;
             NieuwTijd = 4.0;
-            Username = $"Default";
+            Username = "Default";
             BoundUsername = "ihab";
             LastChanged = new UserChange {User = Username, Change = $"Optie [{Username}] Aangemaakt"};
             //werktijden
@@ -384,7 +385,7 @@ namespace Rpm.Settings
             TileLayout = GetAllDefaultEntries(false);
             //create default Tiles
             //voor de producties
-  
+
             //Taken
             ToonLijstNaNieuweTaak = true;
             TaakVoorStart = true;
@@ -417,9 +418,9 @@ namespace Rpm.Settings
             UpdateDatabaseVersion = "1.0.0.0";
             CreateWeekOverzichten = false;
             DoCurrentWeekOverzicht = false;
-            var xset = ExcelSettings.CreateSettings("ExcelColumns",true);
+            var xset = ExcelSettings.CreateSettings("ExcelColumns", true);
             WeekOverzichtPath = Manager.WeekOverzichtPath;
-            WeekOverzichtUpdateInterval = (5 * 60000); //5min
+            WeekOverzichtUpdateInterval = 5 * 60000; //5min
             VanafWeek = 6;
             VanafJaar = 2021;
             DbUpdateEntries = new List<DatabaseUpdateEntry>();
@@ -475,16 +476,17 @@ namespace Rpm.Settings
             LastFormInfo = new Dictionary<string, LastFormScreenInfo>();
         }
 
-        public Task<bool> Save(string change = null,bool init = false, bool triggersaved = false, bool showmessage = true)
+        public Task<bool> Save(string change = null, bool init = false, bool triggersaved = false,
+            bool showmessage = true)
         {
             return Task.Run(async () =>
             {
                 if (Manager.Database?.AllSettings == null) return false;
                 change ??= $"[{Username}] Instellingen Opgeslagen";
-                if (await Manager.Database.UpSert(this, change,showmessage))
+                if (await Manager.Database.UpSert(this, change, showmessage))
                 {
                     if (triggersaved)
-                        Manager.SettingsChanged(this,init);
+                        Manager.SettingsChanged(this, init);
                     return true;
                 }
 
@@ -497,12 +499,11 @@ namespace Rpm.Settings
             UserSettings xreturn = null;
             var defaultpath = Application.StartupPath + "\\DefaultSettings.db";
             if (File.Exists(defaultpath))
-            {
-                for (int i = 0; i < 10; i++)
+                for (var i = 0; i < 10; i++)
                 {
                     try
                     {
-                        using FileStream fs = new FileStream(defaultpath, FileMode.Open, FileAccess.ReadWrite,
+                        using var fs = new FileStream(defaultpath, FileMode.Open, FileAccess.ReadWrite,
                             FileShare.Read);
 
                         var str = new SharpSerializer();
@@ -517,7 +518,6 @@ namespace Rpm.Settings
 
                     Application.DoEvents();
                 }
-            }
 
             xreturn ??= Manager.Opties?.CreateCopy();
             if (xreturn != null)
@@ -528,15 +528,14 @@ namespace Rpm.Settings
         public bool SaveAsDefault()
         {
             var username = Username;
-            bool xreturn = false;
+            var xreturn = false;
             try
             {
-                
                 Username = "Default Settings";
                 var defaultpath = AppDomain.CurrentDomain.BaseDirectory + "\\DefaultSettings.db";
-                using FileStream fs = new FileStream(defaultpath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
+                using var fs = new FileStream(defaultpath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
                 var str = new SharpSerializer();
-                str.Serialize(this,fs);
+                str.Serialize(this, fs);
                 fs.Close();
                 xreturn = true;
             }
@@ -553,9 +552,12 @@ namespace Rpm.Settings
         #endregion "Methods"
 
         #region "WerkTijden"
+
         private Rooster _huidigerooster;
 
-        public Rooster WerkRooster { get => _huidigerooster;
+        public Rooster WerkRooster
+        {
+            get => _huidigerooster;
             set => _huidigerooster = value;
         }
 
@@ -578,6 +580,7 @@ namespace Rpm.Settings
         #endregion "WerkTijden"
 
         #region "Taken"
+
         public bool ToonLijstNaNieuweTaak { get; set; }
         public bool TaakVoorStart { get; set; }
         public int MinVoorStart { get; set; }
@@ -596,6 +599,7 @@ namespace Rpm.Settings
         #endregion "Taken"
 
         #region "Weergave Producties"
+
         public double NieuwTijd { get; set; }
         public bool ToonVolgensAfdelingen { get; set; }
         public bool ToonVolgensBewerkingen { get; set; }
@@ -609,6 +613,7 @@ namespace Rpm.Settings
             get => _bewerkingen;
             set => _bewerkingen = value;
         }
+
         public List<Filter> Filters { get; set; }
         public bool DeelInPerAfdeling { get; set; }
         public bool DeelInPerBewerking { get; set; }
@@ -617,11 +622,13 @@ namespace Rpm.Settings
         public List<string> ToegelatenProductieCrit { get; set; }
         public bool ToonPersoneelIndelingNaOpstart { get; set; }
         public bool ToonWerkplaatsIndelingNaOpstart { get; set; }
+
         #endregion "Weergave Producties"
 
         #region "Gebruiker"
 
         public bool ShowDaylyMessage { get; set; } = true;
+
         //weergave
         public string PersoneelAfdelingFilter { get; set; }
         public byte[] _viewwerkplekdata { get; set; }
@@ -630,10 +637,10 @@ namespace Rpm.Settings
         public byte[] _viewpersoneeldata { get; set; }
         public byte[] _viewallenotitiesdata { get; set; }
         public bool UseLastGereedStart { get; set; }
-        public  DateTime LastGereedStart { get; set; }
+        public DateTime LastGereedStart { get; set; }
         public bool UseLastGereedStop { get; set; }
         public DateTime LastGereedStop { get; set; }
-        public Dictionary<string,LastFormScreenInfo> LastFormInfo { get; set; }
+        public Dictionary<string, LastFormScreenInfo> LastFormInfo { get; set; }
 
         [ExcludeFromSerialization]
         public byte[] ViewDataWerkplekState
@@ -641,28 +648,28 @@ namespace Rpm.Settings
             get => _viewwerkplekdata?.DeCompress();
             set => _viewwerkplekdata = value?.Compress();
         }
-        
+
         [ExcludeFromSerialization]
         public byte[] ViewDataVaardighedenState
         {
             get => _viewvaarddata?.DeCompress();
             set => _viewvaarddata = value?.Compress();
         }
-        
+
         [ExcludeFromSerialization]
         public byte[] ViewDataStoringenState
         {
             get => _viewstoringdata?.DeCompress();
             set => _viewstoringdata = value?.Compress();
         }
-        
+
         [ExcludeFromSerialization]
         public byte[] ViewDataPersoneelState
         {
             get => _viewpersoneeldata?.DeCompress();
             set => _viewpersoneeldata = value?.Compress();
         }
-        
+
         [ExcludeFromSerialization]
         public byte[] AlleNotitiesState
         {
@@ -676,13 +683,15 @@ namespace Rpm.Settings
         #endregion "Gebruiker"
 
         #region Database
+
         public string UpdateDatabaseVersion { get; set; }
         public string WeekOverzichtPath { get; set; }
         public bool CreateWeekOverzichten { get; set; }
         public bool DoCurrentWeekOverzicht { get; set; }
         public int WeekOverzichtUpdateInterval { get; set; }
-        [ExcludeFromSerialization]
-        public List<ExcelSettings> ExcelColumns { get; set; }
+
+        [ExcludeFromSerialization] public List<ExcelSettings> ExcelColumns { get; set; }
+
         public int VanafWeek { get; set; }
         public int VanafJaar { get; set; }
         public bool GebruikOfflineMetSync { get; set; }
@@ -698,6 +707,7 @@ namespace Rpm.Settings
         #endregion Database
 
         #region "Admin Opties"
+
         public List<EmailClient> EmailClients { get; set; }
         public List<UitgaandAdres> VerzendAdres { get; set; }
         public List<InkomendAdres> OntvangAdres { get; set; }

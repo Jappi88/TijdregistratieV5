@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Rpm.Klachten;
 using Rpm.Productie;
 using Rpm.SqlLite;
 
@@ -13,8 +10,6 @@ namespace ProductieManager.Rpm.Productie.Verpakking
     public class VerpakkingBeheer : IDisposable
     {
         public static readonly string VerpakkingDbVersion = "1.0.0.0";
-        public bool Disposed => _disposed;
-        public MultipleFileDb Database { get; private set; }
         public readonly string RootPath;
 
         public VerpakkingBeheer(string path)
@@ -25,6 +20,18 @@ namespace ProductieManager.Rpm.Productie.Verpakking
             Database = new MultipleFileDb(RootPath, true, VerpakkingDbVersion, DbType.Verpakkingen);
             Database.FileChanged += Database_Changed;
             Database.FileDeleted += Database_FileDeleted;
+        }
+
+        public bool Disposed { get; private set; }
+
+        public MultipleFileDb Database { get; private set; }
+
+        public void Dispose()
+        {
+            // Dispose of unmanaged resources.
+            Dispose(true);
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
         }
 
 
@@ -84,7 +91,7 @@ namespace ProductieManager.Rpm.Productie.Verpakking
 
         public List<VerpakkingInstructie> GetAlleVerpakkingen()
         {
-            List<VerpakkingInstructie> xklachten = new List<VerpakkingInstructie>();
+            var xklachten = new List<VerpakkingInstructie>();
             try
             {
                 if (Database == null) return xklachten;
@@ -94,6 +101,7 @@ namespace ProductieManager.Rpm.Productie.Verpakking
             {
                 Console.WriteLine(e);
             }
+
             return xklachten;
         }
 
@@ -130,25 +138,13 @@ namespace ProductieManager.Rpm.Productie.Verpakking
             VerpakkingDeleted?.Invoke(sender, EventArgs.Empty);
         }
 
-        public void Dispose()
-        {
-            // Dispose of unmanaged resources.
-            Dispose(true);
-            // Suppress finalization.
-            GC.SuppressFinalize(this);
-        }
-
-        private bool _disposed;
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposed)
-            {
-                return;
-            }
+            if (Disposed) return;
 
             Database?.Dispose();
             Database = null;
-            _disposed = true;
+            Disposed = true;
         }
     }
 }

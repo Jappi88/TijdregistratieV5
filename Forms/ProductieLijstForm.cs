@@ -1,19 +1,46 @@
-﻿using Controls;
-using ProductieManager.Forms.MetroDock;
-using Rpm.Productie;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Controls;
 using MetroFramework;
 using MetroFramework.Forms;
+using ProductieManager.Forms.MetroDock;
+using Rpm.Productie;
+using Rpm.Various;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Forms
 {
     public partial class ProductieLijstForm : DockInstance
     {
+        private readonly int _ListIndex;
+        private readonly List<Bewerking> _bewerkingen;
+
+        public ProductieLijstForm()
+        {
+            InitializeComponent();
+            DisplayHeader = false;
+            ShadowType = MetroFormShadowType.AeroShadow;
+            Style = MetroColorStyle.Purple;
+        }
+
+        public ProductieLijstForm(int index) : this()
+        {
+            _ListIndex = index;
+            productieListControl1.ListName = $"[{_ListIndex}]ProductieLijst";
+            UpdateListName();
+        }
+
+        public ProductieLijstForm(List<Bewerking> bewerkingen, string name) : this()
+        {
+            productieListControl1.ListName = name;
+            _bewerkingen = bewerkingen;
+            productieListControl1.EnableFiltering = false;
+            productieListControl1.ValidHandler = IsValidHandler;
+            UpdateListName();
+        }
+
         public string ListName => productieListControl1?.ListName;
 
         public IsValidHandler ValidHandler
@@ -26,41 +53,17 @@ namespace Forms
             }
         }
 
-        private readonly int _ListIndex;
-        private List<Bewerking> _bewerkingen;
-
-        public ProductieLijstForm():base()
+        public sealed override string Text
         {
-            InitializeComponent();
-            DisplayHeader = false;
-            ShadowType = MetroFormShadowType.AeroShadow;
-            Style = MetroColorStyle.Purple;
-        }
-
-        public ProductieLijstForm(int index):this()
-        {
-            _ListIndex = index;
-            productieListControl1.ListName = $"[{_ListIndex}]ProductieLijst";
-            UpdateListName();
+            get => base.Text;
+            set => base.Text = value;
         }
 
         public bool IsValidHandler(object value, string filter)
         {
-            if (value is Bewerking bew)
-            {
-                return _bewerkingen.IndexOf(bew) > -1;
-            }
+            if (value is Bewerking bew) return _bewerkingen.IndexOf(bew) > -1;
 
             return false;
-        }
-
-        public ProductieLijstForm(List<Bewerking> bewerkingen, string name):this()
-        {
-            productieListControl1.ListName = name;
-            _bewerkingen = bewerkingen;
-            productieListControl1.EnableFiltering = false;
-            productieListControl1.ValidHandler = IsValidHandler;
-            UpdateListName();
         }
 
         private void UpdateListName()
@@ -81,12 +84,6 @@ namespace Forms
             Invalidate();
         }
 
-        public sealed override string Text
-        {
-            get => base.Text;
-            set => base.Text = value;
-        }
-
         public new void Show(DockPanel dock)
         {
             if (!Visible)
@@ -97,7 +94,7 @@ namespace Forms
         private void StartProductie_Shown(object sender, EventArgs e)
         {
             Manager.FilterChanged += Manager_FilterChanged;
-            if(_bewerkingen == null)
+            if (_bewerkingen == null)
                 productieListControl1.InitProductie(true, true, true, true, true, true);
             else
                 productieListControl1.InitProductie(_bewerkingen, true, true, false);
@@ -110,7 +107,7 @@ namespace Forms
         private void Manager_FilterChanged(object sender, EventArgs e)
         {
             if (sender is ProductieListControl control && string.Equals(productieListControl1.ListName,
-                control.ListName, StringComparison.CurrentCultureIgnoreCase))
+                    control.ListName, StringComparison.CurrentCultureIgnoreCase))
                 try
                 {
                     BeginInvoke(new Action(UpdateListName));
@@ -142,7 +139,7 @@ namespace Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

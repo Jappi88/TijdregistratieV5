@@ -1,18 +1,21 @@
-﻿using BrightIdeasSoftware;
-using Rpm.Productie;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
 using Forms;
+using Rpm.Productie;
+using Rpm.Settings;
+using Rpm.Various;
 
 namespace Controls
 {
     public partial class AlleNotitiesUI : UserControl
     {
-        private List<NotitieEntry> Notities = null;
+        private bool _isbusy;
+        private List<NotitieEntry> Notities;
+
         public AlleNotitiesUI()
         {
             InitializeComponent();
@@ -20,7 +23,7 @@ namespace Controls
 
         public void InitUI()
         {
-            ((OLVColumn)xnotitielist.Columns[0]).ImageGetter = (item) => 0;
+            ((OLVColumn) xnotitielist.Columns[0]).ImageGetter = item => 0;
             foreach (var col in xnotitielist.Columns.Cast<OLVColumn>())
                 col.GroupKeyGetter = GroupKey;
             if (Manager.Opties?._viewallenotitiesdata != null)
@@ -69,19 +72,15 @@ namespace Controls
 
         private void xsearchbox_TextChanged(object sender, EventArgs e)
         {
-            if (xsearchbox.Text.Trim().ToLower() != "zoeken...")
-            {
-                LoadNotities();
-            }
+            if (xsearchbox.Text.Trim().ToLower() != "zoeken...") LoadNotities();
         }
 
-        private bool _isbusy = false;
         private async void LoadNotities()
         {
             if (_isbusy || Manager.Database?.ProductieFormulieren == null) return;
             _isbusy = true;
-            string filter = xsearchbox.Text.Trim().ToLower();
-            bool xs = !string.IsNullOrEmpty(filter) && !filter.Contains("zoeken...");
+            var filter = xsearchbox.Text.Trim().ToLower();
+            var xs = !string.IsNullOrEmpty(filter) && !filter.Contains("zoeken...");
             if (Notities == null)
             {
                 Notities = new List<NotitieEntry>();
@@ -89,10 +88,11 @@ namespace Controls
                 foreach (var prod in prods)
                 {
                     var xnotes = prod.GetNotities();
-                    if(xnotes.Count > 0)
+                    if (xnotes.Count > 0)
                         Notities.AddRange(xnotes);
                 }
-                if(Manager.Opties?.Notities != null)
+
+                if (Manager.Opties?.Notities != null)
                     Notities.AddRange(Manager.Opties.Notities);
             }
 
@@ -100,7 +100,7 @@ namespace Controls
 
             var xview = !xs
                 ? Notities
-                : Notities.Where(x => IsAllowed(x,filter));
+                : Notities.Where(x => IsAllowed(x, filter));
 
             xnotitielist.SetObjects(xview);
 
@@ -111,7 +111,7 @@ namespace Controls
 
         public bool IsAllowed(NotitieEntry ent, string filter)
         {
-            bool xs = !string.IsNullOrEmpty(filter) && !filter.Contains("zoeken...");
+            var xs = !string.IsNullOrEmpty(filter) && !filter.Contains("zoeken...");
             if (!xs) return true;
             return ent.Naam != null && ent.Naam.ToLower().Contains(filter) ||
                    ent.Notitie != null && ent.Notitie.ToLower().Contains(filter) ||
@@ -123,50 +123,42 @@ namespace Controls
             if (xnotitielist.SelectedObject is NotitieEntry ent)
             {
                 var xedit = new NotitieForms(ent);
-                if (xedit.ShowDialog() == DialogResult.OK)
-                {
-                    ent.UpdateEntry(xedit.Notitie, true);
-                }
+                if (xedit.ShowDialog() == DialogResult.OK) ent.UpdateEntry(xedit.Notitie, true);
             }
         }
 
         private void openProductieToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (xnotitielist.SelectedObjects.Count > 0)
-            {
                 foreach (var note in xnotitielist.SelectedObjects.Cast<NotitieEntry>())
                 {
                     var werk = Werk.FromPath(note.Path);
                     if (werk == null || !werk.IsValid) continue;
                     Manager.FormulierActie(new object[] {werk.Formulier, werk.Bewerking}, MainAktie.OpenProductie);
                 }
-            }
         }
 
         private void verwijderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (xnotitielist.SelectedObjects.Count > 0)
-            {
                 foreach (var note in xnotitielist.SelectedObjects.Cast<NotitieEntry>())
-                {
                     note.UpdateEntry(null, true);
-                }
-            }
         }
 
         private void UpdateNotitie(ProductieFormulier form)
         {
-            if (this.IsDisposed || _isbusy) return;
+            if (IsDisposed || _isbusy) return;
             if (form != null)
                 try
                 {
                     var filter = xsearchbox.Text.ToLower().Trim();
                     var formnotes = form.GetNotities();
-                    var notes = Notities.Where(x => x.Path != null && x.Path.ToLower().StartsWith(form.ProductieNr.ToLower())).ToList();
+                    var notes = Notities
+                        .Where(x => x.Path != null && x.Path.ToLower().StartsWith(form.ProductieNr.ToLower())).ToList();
                     if (notes.Count == 0 && formnotes.Count == 0) return;
                     foreach (var note in notes)
                         Notities.Remove(note);
-                    if(formnotes.Count > 0)
+                    if (formnotes.Count > 0)
                         Notities.AddRange(formnotes);
                     foreach (var note in formnotes)
                         if (IsAllowed(note, filter))
@@ -175,10 +167,13 @@ namespace Controls
                                 xnotitielist.RefreshObject(note);
                             else xnotitielist.AddObject(note);
                         }
-                        else xnotitielist.RemoveObject(note);
+                        else
+                        {
+                            xnotitielist.RemoveObject(note);
+                        }
 
                     var toremove = notes.Where(x => !formnotes.Any(s => s.Equals(x)));
-                    foreach (var remove in toremove) 
+                    foreach (var remove in toremove)
                         xnotitielist.RemoveObject(remove);
                 }
                 catch (ObjectDisposedException)
@@ -218,14 +213,17 @@ namespace Controls
                         xnotitielist.RefreshObject(note);
                     else xnotitielist.AddObject(note);
                 }
-                else xnotitielist.RemoveObject(note);
+                else
+                {
+                    xnotitielist.RemoveObject(note);
+                }
 
             var toremove = oldnotes.Where(x => !formnotes.Any(s => s.Equals(x)));
             foreach (var remove in toremove)
                 xnotitielist.RemoveObject(remove);
         }
 
-        private void Manager_OnSettingsChanged(object instance, global::Rpm.Settings.UserSettings settings, bool init)
+        private void Manager_OnSettingsChanged(object instance, UserSettings settings, bool init)
         {
             try
             {
@@ -238,10 +236,11 @@ namespace Controls
                 Console.WriteLine(e);
             }
         }
+
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             e.Cancel = xnotitielist.SelectedObjects.Count == 0;
-            openProductieToolStripMenuItem.Enabled = (xnotitielist.SelectedObject is NotitieEntry ent) &&
+            openProductieToolStripMenuItem.Enabled = xnotitielist.SelectedObject is NotitieEntry ent &&
                                                      (ent.Werkplek != null || ent.Productie != null);
         }
 
@@ -249,10 +248,7 @@ namespace Controls
         {
             var xnote = new NotitieEntry("", NotitieType.Algemeen);
             var xnewnote = new NotitieForms(xnote);
-            if (xnewnote.ShowDialog() == DialogResult.OK)
-            {
-                xnote.UpdateEntry(xnewnote.Notitie,true);
-            }
+            if (xnewnote.ShowDialog() == DialogResult.OK) xnote.UpdateEntry(xnewnote.Notitie, true);
         }
 
         private void xnotitielist_DoubleClick(object sender, EventArgs e)
@@ -260,10 +256,7 @@ namespace Controls
             if (xnotitielist.SelectedObject is NotitieEntry ent)
             {
                 var xedit = new NotitieForms(ent);
-                if (xedit.ShowDialog() == DialogResult.OK)
-                {
-                    ent.UpdateEntry(xedit.Notitie, true);
-                }
+                if (xedit.ShowDialog() == DialogResult.OK) ent.UpdateEntry(xedit.Notitie, true);
             }
         }
     }

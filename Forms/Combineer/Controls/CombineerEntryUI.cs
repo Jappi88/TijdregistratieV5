@@ -3,7 +3,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using BrightIdeasSoftware;
 using Forms;
 using Forms.Combineer;
 using ProductieManager.Properties;
@@ -16,12 +15,13 @@ namespace Controls
 {
     public partial class CombineerEntryUI : UserControl
     {
-        public Bewerking ParentProductie { get; private set; }
-        public Bewerking Productie { get; private set; }
         public CombineerEntryUI()
         {
             InitializeComponent();
         }
+
+        public Bewerking ParentProductie { get; private set; }
+        public Bewerking Productie { get; private set; }
 
         public void LoadBewerking(Bewerking parent, Bewerking bewerking)
         {
@@ -53,9 +53,9 @@ namespace Controls
                 var combi = ParentProductie.Combies.FirstOrDefault(x =>
                     string.Equals(x.Path, Productie.Path,
                         StringComparison.CurrentCultureIgnoreCase));
-                if (combi != null && (decimal)combi.Activiteit != (decimal)(xactiviteit.Tag ?? 0m))
+                if (combi != null && (decimal) combi.Activiteit != (decimal) (xactiviteit.Tag ?? 0m))
                 {
-                    xactiviteit.SetValue((decimal)combi.Activiteit);
+                    xactiviteit.SetValue((decimal) combi.Activiteit);
                     xactiviteit.Tag = xactiviteit.Value;
                 }
 
@@ -63,7 +63,8 @@ namespace Controls
                 if (combi != null)
                 {
                     if (combi.IsRunning)
-                        ximg = ximg.CombineImage(Resources.play_button_icon_icons_com_60615, ContentAlignment.BottomLeft, 1.5);
+                        ximg = ximg.CombineImage(Resources.play_button_icon_icons_com_60615,
+                            ContentAlignment.BottomLeft, 1.5);
                     else ximg = ximg.CombineImage(Resources.check_1582, ContentAlignment.BottomLeft, 1.5);
                 }
 
@@ -77,30 +78,35 @@ namespace Controls
         private bool DoCheck(ref decimal current)
         {
             if (ParentProductie == null || Productie == null) return false;
-            var total = (decimal)ParentProductie.Combies
-                .Where(x => !string.Equals(x.Path, Productie.Path, StringComparison.CurrentCultureIgnoreCase) && x.IsRunning)
+            var total = (decimal) ParentProductie.Combies
+                .Where(x => !string.Equals(x.Path, Productie.Path, StringComparison.CurrentCultureIgnoreCase) &&
+                            x.IsRunning)
                 .Sum(x => x.Activiteit);
             var cur = xactiviteit.Value;
-            if ((total + cur) >= 100)
+            if (total + cur >= 100)
             {
                 XMessageBox.Show(
-                    this, "Het is niet mogelijk om de gecombineerde producties meer actief te laten zijn dan de oorspronkelijke productie...\n\n" +
-                          $"Het totale activiteit van de gecombineerde producties zijn {(total + cur)}%", "Te Hoog",
+                    this,
+                    "Het is niet mogelijk om de gecombineerde producties meer actief te laten zijn dan de oorspronkelijke productie...\n\n" +
+                    $"Het totale activiteit van de gecombineerde producties zijn {total + cur}%", "Te Hoog",
                     MessageBoxIcon.Exclamation);
-                xactiviteit.SetValue((decimal)xactiviteit.Tag);
+                xactiviteit.SetValue((decimal) xactiviteit.Tag);
                 return false;
             }
+
             cur = 100 - cur;
-            total = (decimal)Productie.Combies
-                .Where(x => !string.Equals(x.Path, ParentProductie.Path, StringComparison.CurrentCultureIgnoreCase) && x.IsRunning)
+            total = (decimal) Productie.Combies
+                .Where(x => !string.Equals(x.Path, ParentProductie.Path, StringComparison.CurrentCultureIgnoreCase) &&
+                            x.IsRunning)
                 .Sum(x => x.Activiteit);
-            if ((total + cur) >= 100)
+            if (total + cur >= 100)
             {
-                var extra = (total + cur + 1) - 100;
+                var extra = total + cur + 1 - 100;
                 XMessageBox.Show(this, $"De gekozen combi heeft al een combinaties van {total}%!\n" +
-                                 $"Om deze productie te kunnen combineren, dien je de resterende activiteit van { (100 - cur)}% op te kunnen vangen.\n\n" +
-                                 $"Je komt {extra}% te kort om te kunnen combineren.", "Geen Ruimte", MessageBoxIcon.Exclamation);
-                xactiviteit.SetValue((decimal)xactiviteit.Tag);
+                                       $"Om deze productie te kunnen combineren, dien je de resterende activiteit van {100 - cur}% op te kunnen vangen.\n\n" +
+                                       $"Je komt {extra}% te kort om te kunnen combineren.", "Geen Ruimte",
+                    MessageBoxIcon.Exclamation);
+                xactiviteit.SetValue((decimal) xactiviteit.Tag);
                 return false;
             }
 
@@ -109,33 +115,30 @@ namespace Controls
 
         private void xupdate_Click(object sender, EventArgs e)
         {
-
             var cur = xactiviteit.Value;
             if (!DoCheck(ref cur)) return;
-            
+
             var parentcombi = ParentProductie.Combies.FirstOrDefault(x =>
                 string.Equals(Path.Combine(x.ProductieNr, x.BewerkingNaam), Productie.Path,
                     StringComparison.CurrentCultureIgnoreCase));
             var combi = Productie.Combies.FirstOrDefault(x =>
                 string.Equals(Path.Combine(x.ProductieNr, x.BewerkingNaam), ParentProductie.Path,
                     StringComparison.CurrentCultureIgnoreCase));
-            if (parentcombi != null && cur != (decimal)parentcombi.Activiteit)
+            if (parentcombi != null && cur != (decimal) parentcombi.Activiteit)
             {
-
-                string msg = $"[{ParentProductie.ProductieNr}|{ParentProductie.ArtikelNr}]\n" +
-                             $"Activiteit aangepast van {parentcombi.Activiteit}% naar {cur}%";
+                var msg = $"[{ParentProductie.ProductieNr}|{ParentProductie.ArtikelNr}]\n" +
+                          $"Activiteit aangepast van {parentcombi.Activiteit}% naar {cur}%";
                 parentcombi.Activiteit = (double) cur;
                 // ParentProductie.Activiteit = (double)xparentactiviteit;
                 _ = ParentProductie.UpdateBewerking(null, msg);
             }
-            var xparentactiviteit = 100 - xactiviteit.Value;
-            if (combi != null && xparentactiviteit != (decimal)combi.Activiteit)
-            {
-                
 
-                string msg = $"[GECOMBINEERD][{Productie.ProductieNr}|{Productie.ArtikelNr}]\n" +
-                             $"Activiteit aangepast van {combi.Activiteit}% naar {xparentactiviteit}%";
-                combi.Activiteit = (double)xparentactiviteit;
+            var xparentactiviteit = 100 - xactiviteit.Value;
+            if (combi != null && xparentactiviteit != (decimal) combi.Activiteit)
+            {
+                var msg = $"[GECOMBINEERD][{Productie.ProductieNr}|{Productie.ArtikelNr}]\n" +
+                          $"Activiteit aangepast van {combi.Activiteit}% naar {xparentactiviteit}%";
+                combi.Activiteit = (double) xparentactiviteit;
                 //Productie.Activiteit = (double)cur;
                 _ = Productie.UpdateBewerking(null, msg);
             }
@@ -151,22 +154,25 @@ namespace Controls
         {
             if (ParentProductie == null || Productie == null) return;
             if (XMessageBox.Show(
-                    this, $"Weetje zeker dat je de combinatie van '{Productie.Omschrijving}'({Productie.ProductieNr}) wilt ontkoppelen?",
+                    this,
+                    $"Weetje zeker dat je de combinatie van '{Productie.Omschrijving}'({Productie.ProductieNr}) wilt ontkoppelen?",
                     "Combinatie Ontkoppelen", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
                 DialogResult.No) return;
             if (ParentProductie.Combies.RemoveAll(x =>
                     string.Equals(x.ProductieNr, Productie.ProductieNr, StringComparison.CurrentCultureIgnoreCase)) > 0)
             {
-                string msg = $"[{Productie.ProductieNr}|{Productie.ArtikelNr}] {Productie.Naam}\n" +
-                             $"Gecombineerde Productie is niet meer gekoppeld!";
+                var msg = $"[{Productie.ProductieNr}|{Productie.ArtikelNr}] {Productie.Naam}\n" +
+                          "Gecombineerde Productie is niet meer gekoppeld!";
                 _ = ParentProductie.UpdateBewerking(null, msg);
             }
 
             if (Productie.Combies.RemoveAll(x =>
-                    string.Equals(x.ProductieNr, ParentProductie.ProductieNr, StringComparison.CurrentCultureIgnoreCase)) > 0)
+                    string.Equals(x.ProductieNr, ParentProductie.ProductieNr,
+                        StringComparison.CurrentCultureIgnoreCase)) > 0)
             {
-                string msg = $"[{ParentProductie.ProductieNr}|{ParentProductie.ArtikelNr}] {ParentProductie.Omschrijving}\n" +
-                             $"Productie is onkoppeld!";
+                var msg =
+                    $"[{ParentProductie.ProductieNr}|{ParentProductie.ArtikelNr}] {ParentProductie.Omschrijving}\n" +
+                    "Productie is onkoppeld!";
                 _ = Productie.UpdateBewerking(null, msg);
             }
         }
@@ -196,7 +202,7 @@ namespace Controls
                         UpdateFields();
                         ParentProductie.UpdateBewerking(null,
                             $"[{parentcombi.ProductieNr}] {parentcombi.BewerkingNaam}\n" +
-                            $"Periode Aangepast!");
+                            "Periode Aangepast!");
                     }
                 }
             }

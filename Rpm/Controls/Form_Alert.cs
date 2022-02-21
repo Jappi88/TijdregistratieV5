@@ -1,12 +1,12 @@
-﻿using ProductieManager.Properties;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using ProductieManager.Properties;
+using Rpm.Various;
 
 namespace Rpm.Controls
 {
-    public partial class Form_Alert: Form
+    public partial class Form_Alert : Form
     {
         public enum enmAction
         {
@@ -55,11 +55,9 @@ namespace Rpm.Controls
 
                     Left -= 3;
                     if (Opacity == 0.0)
-                    {
-                       // this.Invoke(new Action(Close));
-                       if (typeof(Form_Alert) == this.GetType())
-                           this.Invoke(new Action(Close));
-                    }
+                        // this.Invoke(new Action(Close));
+                        if (typeof(Form_Alert) == GetType())
+                            Invoke(new Action(Close));
                     break;
             }
         }
@@ -85,7 +83,7 @@ namespace Rpm.Controls
             for (var i = 1; i < 13; i++)
             {
                 var fname = "alert" + i;
-                var frm = (Form_Alert)Application.OpenForms[fname];
+                var frm = (Form_Alert) Application.OpenForms[fname];
 
                 if (frm == null)
                 {
@@ -146,6 +144,5 @@ namespace Rpm.Controls
             timer1.Start();
             Invalidate();
         }
-
     }
 }

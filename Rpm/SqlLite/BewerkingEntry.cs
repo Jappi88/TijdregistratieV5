@@ -1,6 +1,6 @@
-﻿using Polenter.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Polenter.Serialization;
 
 namespace Rpm.SqlLite
 {
@@ -26,19 +26,20 @@ namespace Rpm.SqlLite
             WerkPlekken = werkplekken;
         }
 
-        public int ID { get; private set; }
+        public int ID { get; }
         public bool IsBemand { get; set; }
-        [ExcludeFromSerialization]
-        public bool IsExtern { get; set; }
+
+        [ExcludeFromSerialization] public bool IsExtern { get; set; }
+
         public string Naam { get; set; }
 
         public string NewName { get; set; }
-        [ExcludeFromSerialization]
-        public double DoorloopTijd { get; set; }
-        [ExcludeFromSerialization]
-        public DateTime Leverdatum { get; set; }
-        [ExcludeFromSerialization]
-        public string Opmerking { get; set; }
+
+        [ExcludeFromSerialization] public double DoorloopTijd { get; set; }
+
+        [ExcludeFromSerialization] public DateTime Leverdatum { get; set; }
+
+        [ExcludeFromSerialization] public string Opmerking { get; set; }
 
         public bool HasChanged => !string.IsNullOrEmpty(NewName) &&
                                   !string.Equals(Naam, NewName, StringComparison.CurrentCultureIgnoreCase);

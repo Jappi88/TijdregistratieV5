@@ -1,23 +1,42 @@
-﻿using Forms;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Windows.Forms;
+using Forms;
 using Forms.Sporen;
 using ProductieManager.Properties;
 using Rpm.MateriaalSoort;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.Linq;
-using System.Windows.Forms;
 using Various;
 
 namespace Controls
 {
     public partial class ProductieVerbruikUI : UserControl
     {
+        private readonly char[] _opdrukkertypes = {'a', 'g', 's'};
+
+        private readonly List<decimal> xprods = new();
         private ProductieFormulier _form;
+
+        private int _index = -1;
+        private SpoorEntry _spoor;
+
+        public ProductieVerbruikUI()
+        {
+            InitializeComponent();
+            xmachine.SelectedIndex = 0;
+            xmachine.SelectedIndexChanged += Xmachine_SelectedIndexChanged;
+            if (Manager.SporenBeheer != null)
+            {
+                xopdrukkerartikelnr.AutoCompleteCustomSource = new AutoCompleteStringCollection();
+                xopdrukkerartikelnr.AutoCompleteCustomSource.AddRange(Manager.SporenBeheer.GetAlleIDs().ToArray());
+            }
+        }
 
         public bool ShowMateriaalSelector
         {
@@ -50,16 +69,10 @@ namespace Controls
 
         public Opdrukker OpdrukkerArtikel { get; set; }
 
-        public ProductieVerbruikUI()
+        public string Title
         {
-            InitializeComponent();
-            xmachine.SelectedIndex = 0;
-            xmachine.SelectedIndexChanged += Xmachine_SelectedIndexChanged;
-            if (Manager.SporenBeheer != null)
-            {
-                xopdrukkerartikelnr.AutoCompleteCustomSource = new AutoCompleteStringCollection();
-                xopdrukkerartikelnr.AutoCompleteCustomSource.AddRange(Manager.SporenBeheer.GetAlleIDs().ToArray());
-            }
+            get => groupBox1.Text;
+            set => groupBox1.Text = value;
         }
 
         private void Xmachine_SelectedIndexChanged(object sender, EventArgs e)
@@ -67,33 +80,27 @@ namespace Controls
             UpdateOpdrukkerInfo();
         }
 
-        public string Title
-        {
-            get => groupBox1.Text;
-            set=> groupBox1.Text = value;
-        }
-
         private int GetAantalSporen()
         {
-            if ((_spoor == null || xaantalsporen.Value ==1) && !string.IsNullOrEmpty(_form?.Opmerking))
+            if ((_spoor == null || xaantalsporen.Value == 1) && !string.IsNullOrEmpty(_form?.Opmerking))
             {
                 var xindex = _form.Opmerking.IndexOf("max banen:", StringComparison.CurrentCultureIgnoreCase);
                 if (xindex > -1)
                 {
-                    string xval = "";
+                    var xval = "";
                     xindex += 10;
                     var xtmp = _form.Opmerking.Substring(xindex, _form.Opmerking.Length - xindex);
-                    bool begin = false;
+                    var begin = false;
                     foreach (var xchar in xtmp)
-                    {
                         if (char.IsDigit(xchar))
                         {
                             begin = true;
                             xval += xchar;
                         }
                         else if (begin)
+                        {
                             break;
-                    }
+                        }
 
                     if (!int.TryParse(xval, out var sporen))
                         sporen = (int) xaantalsporen.Value;
@@ -101,24 +108,21 @@ namespace Controls
                 }
             }
 
-            return (int)xaantalsporen.Value;
+            return (int) xaantalsporen.Value;
         }
-
 
 
         public SpoorEntry GetSpoorInfo()
         {
             try
             {
-                SpoorEntry spoor = _spoor;
+                var spoor = _spoor;
                 var artikel = _form?.ArtikelNr ?? xopdrukkerartikelnr.Text;
                 if (artikel.ToLower().StartsWith("vul in een artikelnr"))
                     artikel = _spoor?.ArtikelNr;
                 if (!string.IsNullOrEmpty(artikel))
-                {
                     if (Manager.SporenBeheer != null)
                         spoor = Manager.SporenBeheer.GetSpoor(artikel.Trim());
-                }
                 if (spoor == null)
                 {
                     spoor = new SpoorEntry
@@ -126,14 +130,15 @@ namespace Controls
                         ArtikelNr = artikel,
                         ProductLengte = GetSelectedMateriaalLengte(),
                         AantalSporen = GetAantalSporen(),
-                        PakketAantal = (int)xperPak.Value,
+                        PakketAantal = (int) xperPak.Value,
                         Aantal = (int) xproduceren.Value,
                         UitgangsLengte = xuitganglengte.Value,
-                        ProductOmschrijving = _form?.Omschrijving??OpdrukkerArtikel?.GetHtmlString()
+                        ProductOmschrijving = _form?.Omschrijving ?? OpdrukkerArtikel?.GetHtmlString()
                     };
                     if (OpdrukkerArtikel != null)
                         spoor.PerUur = OpdrukkerArtikel.PerUur();
                 }
+
                 return spoor;
             }
             catch (Exception e)
@@ -145,10 +150,8 @@ namespace Controls
 
         private void xrekenmachine_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("calc.exe");
+            Process.Start("calc.exe");
         }
-
-        private readonly List<decimal> xprods = new List<decimal>();
 
         public void InitFields(ProductieFormulier form)
         {
@@ -159,10 +162,14 @@ namespace Controls
                 var xselected = xmaterialen.SelectedIndex;
                 xmaterialen.Items.Clear();
                 if (form?.Materialen == null) return;
-                xprods.AddRange(form.Materialen.Select(x => (decimal) x.AantalPerStuk * ((int)(x.Eenheid.ToLower().StartsWith("m") ? 1000 : 1))));
-               
-                
-                xmaterialen.Items.AddRange(form.Materialen.Select(x => (object) $"[{x.ArtikelNr}]{x.Omschrijving} ({x.AantalPerStuk * ((int)(x.Eenheid.ToLower().StartsWith("m") ? 1000 : 1))} mm)")
+                xprods.AddRange(form.Materialen.Select(x =>
+                    (decimal) x.AantalPerStuk * (x.Eenheid.ToLower().StartsWith("m") ? 1000 : 1)));
+
+
+                xmaterialen.Items.AddRange(form.Materialen
+                    .Select(x =>
+                        (object)
+                        $"[{x.ArtikelNr}]{x.Omschrijving} ({x.AantalPerStuk * (x.Eenheid.ToLower().StartsWith("m") ? 1000 : 1)} mm)")
                     .ToArray());
                 if (xselected > -1 && xmaterialen.Items.Count > xselected)
                     xmaterialen.SelectedIndex = xselected;
@@ -179,10 +186,7 @@ namespace Controls
         public void UpdateFields(bool initvalues, SpoorEntry entry = null)
         {
             var aantal = _form?.Aantal ?? _spoor?.Aantal ?? 1;
-            if (_form is {State: ProductieState.Gereed})
-            {
-                aantal = _form.TotaalGemaakt;
-            }
+            if (_form is {State: ProductieState.Gereed}) aantal = _form.TotaalGemaakt;
 
             if (xproduceren.Tag is int val)
             {
@@ -197,6 +201,7 @@ namespace Controls
                 xproduceren.SetValue(aantal);
                 xproduceren.Tag = aantal;
             }
+
             if (initvalues)
             {
                 if (entry != null)
@@ -211,7 +216,8 @@ namespace Controls
                     xperPak.SetValue(_spoor.PakketAantal);
                 }
             }
-            _spoor ??= GetSpoorInfo()??new SpoorEntry();
+
+            _spoor ??= GetSpoorInfo() ?? new SpoorEntry();
             aantal = (int) xproduceren.Value;
 
             var xvalue = Math.Round(xprodlengte.Value / 1000, 4);
@@ -222,30 +228,26 @@ namespace Controls
             xinfo.Text = _spoor.CreateHtmlText(aantal, ShowPerUur);
 
             if (!string.IsNullOrEmpty(_spoor?.AangepastDoor))
-            {
                 xaangepastdoor.Text =
                     $"<span style=\'font-size: x-small; color: {Color.Navy.Name};\'>Aangepast door <b>{_spoor.AangepastDoor}</b> op: <br>{_spoor.AangepastOp:f}</span>";
-
-            }
             else xaangepastdoor.Text = "";
         }
 
-        private int _index = -1;
-        private SpoorEntry _spoor;
         private void xmaterialen_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (xmaterialen.SelectedIndex > -1 && xprods.Count > xmaterialen.SelectedIndex && _index != xmaterialen.SelectedIndex)
+            if (xmaterialen.SelectedIndex > -1 && xprods.Count > xmaterialen.SelectedIndex &&
+                _index != xmaterialen.SelectedIndex)
             {
-               
                 _index = xmaterialen.SelectedIndex;
                 _spoor = GetSpoorInfo();
                 if (_spoor != null)
                 {
                     xaantalsporen.SetValue(_spoor.AantalSporen);
                     xuitganglengte.SetValue(_spoor.UitgangsLengte);
-                    xprodlengte.SetValue(_spoor.ProductLengte);//mm
+                    xprodlengte.SetValue(_spoor.ProductLengte); //mm
                     xperPak.SetValue(_spoor.PakketAantal);
                 }
+
                 if (xprodlengte.Value == 0)
                     xprodlengte.SetValue(xprods[xmaterialen.SelectedIndex]);
             }
@@ -254,9 +256,7 @@ namespace Controls
         private void xprodlengte_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar.Equals('.') || e.KeyChar.Equals(','))
-            {
-                e.KeyChar = ((CultureInfo)CultureInfo.CurrentCulture).NumberFormat.NumberDecimalSeparator.ToCharArray()[0];
-            }
+                e.KeyChar = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.ToCharArray()[0];
         }
 
         public Materiaal GetSelectedMateriaalArtikelNr()
@@ -325,7 +325,7 @@ namespace Controls
                 if (Manager.SporenBeheer != null && !string.IsNullOrEmpty(xart))
                 {
                     var xmat = GetSelectedMateriaalArtikelNr();
-                    _spoor ??= GetSpoorInfo()??new SpoorEntry();
+                    _spoor ??= GetSpoorInfo() ?? new SpoorEntry();
                     _spoor.ArtikelNr = xart;
                     _spoor.MateriaalArtikelNr = xmat?.ArtikelNr;
                     _spoor.MateriaalOmschrijving = xmat?.Omschrijving;
@@ -353,10 +353,7 @@ namespace Controls
 
         private void xprodlengte_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyData == Keys.Enter)
-            {
-                e.Handled = e.SuppressKeyPress = true;
-            }
+            if (e.KeyData == Keys.Enter) e.Handled = e.SuppressKeyPress = true;
         }
 
         private void xprodlengte_ValueChanged(object sender, EventArgs e)
@@ -382,7 +379,7 @@ namespace Controls
         {
             if (_spoor != null)
             {
-                _spoor.AantalSporen = (int)xaantalsporen.Value;
+                _spoor.AantalSporen = (int) xaantalsporen.Value;
                 UpdateFields(false);
             }
         }
@@ -391,7 +388,7 @@ namespace Controls
         {
             if (_spoor != null)
             {
-                _spoor.PakketAantal = (int)xperPak.Value;
+                _spoor.PakketAantal = (int) xperPak.Value;
                 UpdateFields(false);
             }
         }
@@ -400,9 +397,11 @@ namespace Controls
         {
             if (_spoor != null)
             {
-                _spoor.Aantal = (int)xproduceren.Value;
+                _spoor.Aantal = (int) xproduceren.Value;
                 UpdateFields(false);
             }
+
+            xproduceren.ForeColor = xproduceren.Value < 2 ? Color.Red : Color.Navy;
         }
 
 
@@ -410,7 +409,7 @@ namespace Controls
         {
             var xcurlengte = maxlengte;
             if (prodlengte == 0) return maxlengte;
-            var xrest = (xcurlengte % prodlengte);
+            var xrest = xcurlengte % prodlengte;
             if (xrest >= rest)
             {
                 var dif = xrest - rest;
@@ -419,7 +418,7 @@ namespace Controls
             else
             {
                 var xaantallen = xcurlengte - rest;
-                xrest = (xaantallen % prodlengte);
+                xrest = xaantallen % prodlengte;
                 if (xrest == 0)
                     xcurlengte = xaantallen;
                 else
@@ -429,17 +428,15 @@ namespace Controls
             return xcurlengte;
         }
 
-        private readonly char[] _opdrukkertypes = new char[] {'a', 'g', 's'};
-
         private void xoptimalemaat_Click(object sender, EventArgs e)
         {
             try
             {
                 var xfirst = xopdrukkerartikelnr.Text.ToLower().FirstOrDefault();
-                bool isopdrukker = _opdrukkertypes.Any(x => x == xfirst);
-                var reststuk =  isopdrukker? RestStuk : 20;
-                var maxlengte = isopdrukker? MaxUitgangsLengte : 7500;
-                var xprod = this.xprodlengte.Value;
+                var isopdrukker = _opdrukkertypes.Any(x => x == xfirst);
+                var reststuk = isopdrukker ? RestStuk : 20;
+                var maxlengte = isopdrukker ? MaxUitgangsLengte : 7500;
+                var xprod = xprodlengte.Value;
                 if (xprod <= 0)
                     throw new Exception("Productlengte kan niet '0' zijn!");
                 var xtxtform = new TextFieldEditor();
@@ -459,7 +456,7 @@ namespace Controls
                 xtxtform.Dispose();
 
                 var xcurlengte = OptimalUitgangsLengte(xprodlengte.Value, reststuk, maxlengte);
-                xuitganglengte.SetValue((int)xcurlengte);
+                xuitganglengte.SetValue((int) xcurlengte);
             }
             catch (Exception exception)
             {
@@ -476,7 +473,7 @@ namespace Controls
         {
             var txt = xopdrukkerartikelnr.Text.Trim().ToLower();
             var xfirst = txt.FirstOrDefault();
-            bool isopdrukker = _opdrukkertypes.Any(x => x == xfirst);
+            var isopdrukker = _opdrukkertypes.Any(x => x == xfirst);
             return isopdrukker;
         }
 
@@ -488,13 +485,13 @@ namespace Controls
                 if (isopdrukker)
                 {
                     UpdateOpdrukkerInfo();
-                    UpdateFields(true, null);
+                    UpdateFields(true);
                 }
                 else
                 {
                     xmachine.Visible = false;
                     OpdrukkerArtikel = null;
-                    UpdateFields(true, null);
+                    UpdateFields(true);
                 }
             }
             else
@@ -502,7 +499,6 @@ namespace Controls
                 xmachine.Visible = false;
                 OpdrukkerArtikel = null;
             }
-
         }
 
         private void UpdateOpdrukkerInfo()
@@ -511,7 +507,7 @@ namespace Controls
                 return;
             if (!IsOpdrukkerArtikelNr()) return;
             OpdrukkerArtikel ??= new Opdrukker();
-            OpdrukkerArtikel.Machine = (OpdrukkerMachine) (xmachine.SelectedIndex);
+            OpdrukkerArtikel.Machine = (OpdrukkerMachine) xmachine.SelectedIndex;
             OpdrukkerArtikel.UpdateOpdrukkerArtikelNr(xopdrukkerartikelnr.Text);
             xmachine.Visible = true;
             _spoor = GetSpoorInfo();
@@ -521,8 +517,8 @@ namespace Controls
             xperPak.SetValue(OpdrukkerArtikel.PakketAantal);
             xaantalsporen.Value = xmachine.SelectedIndex == 0 ? 1 : 2;
             var xcurlengte = OptimalUitgangsLengte(OpdrukkerArtikel.KnipMaat, 50, 12450);
-            xcurlengte = ((int)Math.Round(xcurlengte / 50.0m)) * 50;
-            xuitganglengte.SetValue((int)xcurlengte);
+            xcurlengte = (int) Math.Round(xcurlengte / 50.0m) * 50;
+            xuitganglengte.SetValue((int) xcurlengte);
         }
 
         private void xopdrukkerartikelnr_Enter(object sender, EventArgs e)
@@ -545,7 +541,7 @@ namespace Controls
 
         private void xaantalafronden_Click(object sender, EventArgs e)
         {
-            var xp = xprodlengte.Value == 0? 0 : ((int)(xuitganglengte.Value / xprodlengte.Value));
+            var xp = xprodlengte.Value == 0 ? 0 : (int) (xuitganglengte.Value / xprodlengte.Value);
             var restsporen = 0;
             var restpakket = xperPak.Value > 0 ? xproduceren.Value % (xperPak.Value * xp) : 0;
             var aantal = xproduceren.Value;
@@ -566,11 +562,13 @@ namespace Controls
                 xselect.Add("Rond af naar Boven voor een volle Lading");
                 xselect.Add("Rond af naar Beneden voor een volle Lading");
             }
+
             if (restpakket > 0)
             {
                 xselect.Add("Rond af naar Boven voor een volle Pakket");
                 xselect.Add("Rond af naar Beneden voor een volle Pakket");
             }
+
             if (xselect.Count == 0)
             {
                 var x1 = xproduceren.Value == 1 ? "product" : "producten";
@@ -587,16 +585,19 @@ namespace Controls
             if (xs.EndsWith("Lading"))
             {
                 var boven = xs.Contains("Boven");
-                var xpakktets = boven ? Math.Ceiling(xproduceren.Value / (xaantalsporen.Value * xp)) : Math.Floor(xproduceren.Value / (xaantalsporen.Value * xp));
-                var xp1 = (int)((xpakktets * xaantalsporen.Value) * xp);
+                var xpakktets = boven
+                    ? Math.Ceiling(xproduceren.Value / (xaantalsporen.Value * xp))
+                    : Math.Floor(xproduceren.Value / (xaantalsporen.Value * xp));
+                var xp1 = (int) (xpakktets * xaantalsporen.Value * xp);
                 xproduceren.SetValue(xp1);
-
             }
             else if (xs.EndsWith("Pakket"))
             {
                 var boven = xs.Contains("Boven");
-                var xpakktets = boven ? Math.Ceiling(xproduceren.Value / (xperPak.Value * xp)) : Math.Floor(xproduceren.Value / (xperPak.Value * xp));
-                var xp1 = (int)((xpakktets * xperPak.Value) * xp);
+                var xpakktets = boven
+                    ? Math.Ceiling(xproduceren.Value / (xperPak.Value * xp))
+                    : Math.Floor(xproduceren.Value / (xperPak.Value * xp));
+                var xp1 = (int) (xpakktets * xperPak.Value * xp);
                 xproduceren.SetValue(xp1);
             }
         }
@@ -605,10 +606,7 @@ namespace Controls
         {
             var info = OpdrukkerInfo.Load();
             var xform = new SpoorDatabaseForm(info);
-            if (xform.ShowDialog() == DialogResult.OK)
-            {
-                info.SaveInfo();
-            }
+            if (xform.ShowDialog() == DialogResult.OK) info.SaveInfo();
         }
 
         private void xtoonwerktekening_Click(object sender, EventArgs e)
@@ -618,8 +616,8 @@ namespace Controls
 
         private void ShowWerkTekening()
         {
-            if (string.IsNullOrEmpty(_spoor?.ArtikelNr??_form?.ArtikelNr)) return;
-            Tools.ShowSelectedTekening(_spoor?.ArtikelNr??_form.ArtikelNr, TekeningClosed);
+            if (string.IsNullOrEmpty(_spoor?.ArtikelNr ?? _form?.ArtikelNr)) return;
+            Tools.ShowSelectedTekening(_spoor?.ArtikelNr ?? _form.ArtikelNr, TekeningClosed);
         }
 
         private void TekeningClosed(object sender, EventArgs e)
@@ -627,9 +625,9 @@ namespace Controls
             var form = Application.OpenForms["MainForm"];
             form?.BringToFront();
             form?.Focus();
-            this.Parent?.Select();
-            this.Parent?.BringToFront();
-            this.Parent?.Focus();
+            Parent?.Select();
+            Parent?.BringToFront();
+            Parent?.Focus();
         }
 
         public event EventHandler CloseClicked;

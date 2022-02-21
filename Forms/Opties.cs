@@ -1,5 +1,12 @@
-﻿using BrightIdeasSoftware;
-using ProductieManager.Forms;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using BrightIdeasSoftware;
+using Forms.MetroBase;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Mailing;
@@ -9,24 +16,18 @@ using Rpm.Settings;
 using Rpm.SqlLite;
 using Rpm.Various;
 using Rpm.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using Various;
 
 namespace Forms
 {
-    public partial class Opties : Forms.MetroBase.MetroBaseForm
+    public partial class Opties : MetroBaseForm
     {
         //public readonly StickyWindow _stickyWindow;
         private List<string> _afdelingen = new();
         private List<string> _bewerkingen = new();
         public ListViewGroup[] _groups = {new("Standaart Instellingen"), new("Gebruikers")};
         public UserSettings _LoadedOpties = Manager.Opties;
+
+        private bool _locatieGewijzigd;
 
         public Opties()
         {
@@ -39,7 +40,7 @@ namespace Forms
             imageList1.Images.Add(Resources.industry_setting_114090.CombineImage(Resources.check_1582, 2));
             xoptielist.Groups.Clear();
             xfiltertype.SelectedIndex = 0;
-            if (Manager.Opties == null && !Manager.LoadSettings(this,true).Result)
+            if (Manager.Opties == null && !Manager.LoadSettings(this, true).Result)
                 return;
             Manager.DefaultSettings ??= UserSettings.GetDefaultSettings();
         }
@@ -64,8 +65,8 @@ namespace Forms
 
         private void _manager_OnSettingsChanged(object instance, UserSettings settings, bool init)
         {
-            if (this.IsDisposed || this.Disposing) return;
-            this.BeginInvoke(new MethodInvoker(() =>
+            if (IsDisposed || Disposing) return;
+            BeginInvoke(new MethodInvoker(() =>
             {
                 LoadSettings(settings, true);
                 SetLoginState();
@@ -91,7 +92,7 @@ namespace Forms
                 }
 
             if (exist)
-                XMessageBox.Show(this, $"Datum is al toegevoegd", "Bestaat Al", MessageBoxButtons.OK,
+                XMessageBox.Show(this, "Datum is al toegevoegd", "Bestaat Al", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
             else
                 xfeestdagen.Items.Add(lv);
@@ -153,7 +154,7 @@ namespace Forms
             xtilesrefresh.SetValue(x.TileCountRefreshRate);
 
             //weergave producties
-            xniewaantaluur.SetValue((decimal)x.NieuwTijd);
+            xniewaantaluur.SetValue((decimal) x.NieuwTijd);
             xtoonvolgensafdeling.Checked = x.ToonVolgensAfdelingen;
             xtoonvolgensbewerking.Checked = x.ToonVolgensBewerkingen;
             xtoonallesvanbeide.Checked = x.ToonAllesVanBeide;
@@ -228,7 +229,8 @@ namespace Forms
             xoffdbsyncinterval.SetValue(Manager.DefaultSettings.OfflineDbSyncInterval);
             //Zet de offline database gegevens.
             xoffprodcheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Producties) > -1;
-            xoffgereedprodcheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.GereedProducties) > -1;
+            xoffgereedprodcheckbox.Checked =
+                Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.GereedProducties) > -1;
             xoffperscheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Medewerkers) > -1;
             xoffaccountcheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Opties) > -1;
             xoffinstellingcheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Accounts) > -1;
@@ -236,7 +238,8 @@ namespace Forms
             xoffopmerkingcheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Opmerkingen) > -1;
             xoffklachtencheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.Klachten) > -1;
             xartikelrecords.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.ArtikelRecords) > -1;
-            xSpoorOverzichtCheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.SpoorOverzicht) > -1;
+            xSpoorOverzichtCheckbox.Checked =
+                Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.SpoorOverzicht) > -1;
             xlijstlayout.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.LijstLayouts) > -1;
         }
 
@@ -254,7 +257,7 @@ namespace Forms
                 xhostlabel.Text = @"Geen host om emails te verzenden!";
                 xhostlabel.ForeColor = Color.Red;
                 xdeletehost.Enabled = false;
-                xdeletehost.Text = @$"Verwijder Host";
+                xdeletehost.Text = @"Verwijder Host";
             }
         }
 
@@ -265,7 +268,10 @@ namespace Forms
                 {
                     var sets = await Manager.Database.GetAllSettings();
                     xoptielist.SetObjects(sets.Select(x => new SettingModel(x)
-                        {IsLoaded = string.Equals(_LoadedOpties.Username, x.Username, StringComparison.CurrentCultureIgnoreCase)}).ToArray());
+                    {
+                        IsLoaded = string.Equals(_LoadedOpties.Username, x.Username,
+                            StringComparison.CurrentCultureIgnoreCase)
+                    }).ToArray());
                 }
                 catch
                 {
@@ -341,7 +347,7 @@ namespace Forms
 
             //werktijden
             xs.WerkRooster = roosterUI1.WerkRooster;
-            xs.SpecialeRoosters = ((List<Rooster>) xspeciaalroosterb.Tag) ?? new List<Rooster>();
+            xs.SpecialeRoosters = (List<Rooster>) xspeciaalroosterb.Tag ?? new List<Rooster>();
             var xlist = new List<DateTime>();
             foreach (ListViewItem lv in xfeestdagen.Items)
             {
@@ -351,7 +357,7 @@ namespace Forms
             }
 
             xs.NationaleFeestdagen = xlist.ToArray();
-           
+
             //taken
             xs.GebruikTaken = xgebruiktaken.Checked;
             xs.ToonLijstNaNieuweTaak = xtoonnieuwetaak.Checked;
@@ -367,14 +373,14 @@ namespace Forms
             xs.MinVoorKlaarZet = (int) xminvoorklaarzet.Value;
             xs.MinVoorControle = (int) xminvoorcontrole.Value;
             xs.TaakSyncInterval = (int) xsyncinterval.Value;
-            xs.SyncInterval = (int)xsyncinterval.Value;
+            xs.SyncInterval = (int) xsyncinterval.Value;
 
-            xs.TileCountRefreshRate = (int)xtilesrefresh.Value;
+            xs.TileCountRefreshRate = (int) xtilesrefresh.Value;
 
             xs.ShowDaylyMessage = xtoondayli.Checked;
 
             //weergave
-            xs.NieuwTijd = (double)xniewaantaluur.Value;
+            xs.NieuwTijd = (double) xniewaantaluur.Value;
             xs.ToonAlles = xtoonalles.Checked;
             xs.ToonAllesVanBeide = xtoonallesvanbeide.Checked;
             xs.ToonVolgensAfdelingen = xtoonvolgensafdeling.Checked;
@@ -398,17 +404,16 @@ namespace Forms
             //Admin Settings
             //save settings
             if (Manager.LogedInGebruiker?.Username != null)
-            {
-                Manager.DefaultSettings.AutoLoginUsername = xautologin.Checked ? Manager.LogedInGebruiker.Username : null;
-            }
+                Manager.DefaultSettings.AutoLoginUsername =
+                    xautologin.Checked ? Manager.LogedInGebruiker.Username : null;
             xs.GebruikLocalSync = xenablesync.Checked;
             xs.SyncInterval = (int) xsyncinterval.Value;
             xs.AutoGereedSync = xenablegreedsync.Checked;
-            xs.GereedSyncInterval = (int)(xgereedsyncinterval.Value * 60000);
-            xs.ProductieLijstSyncInterval = (int)(xproductielijstsyncinterval.Value * 60000);
+            xs.GereedSyncInterval = (int) (xgereedsyncinterval.Value * 60000);
+            xs.ProductieLijstSyncInterval = (int) (xproductielijstsyncinterval.Value * 60000);
             xs.AutoProductieLijstSync = xenableproductielijstsync.Checked;
             xs.VerzendAdres = GetUitgaandadreses();
-           // xs.OntvangAdres = GetInkomendadreses();
+            // xs.OntvangAdres = GetInkomendadreses();
             xs.SyncLocaties = xlocatielist.Items.Cast<ListViewItem>().Select(t => t.Text).ToArray();
             xs.VerwijderVerwerkteBestanden = xverwijderverwerkt.Checked;
             xs.StartNaOpstart = xstartopnaopstart.Checked;
@@ -427,58 +432,25 @@ namespace Forms
             xs.DoCurrentWeekOverzicht = xdocurrentweekoverzicht.Checked;
             xs.VanafWeek = (int) xmaakvanafweek.Value;
             xs.VanafJaar = (int) xmaakvanafjaar.Value;
-            xs.WeekOverzichtUpdateInterval = (int)xexcelinterval.Value * 60000;
+            xs.WeekOverzichtUpdateInterval = (int) xexcelinterval.Value * 60000;
             xs.CreateBackup = xcreatebackup.Checked;
-            xs.BackupInterval = TimeSpan.FromHours((double)xcreatebackupinterval.Value).TotalMilliseconds;
-            xs.MaxBackupCount = (int)xmaxbackups.Value;
+            xs.BackupInterval = TimeSpan.FromHours((double) xcreatebackupinterval.Value).TotalMilliseconds;
+            xs.MaxBackupCount = (int) xmaxbackups.Value;
             xs.ToonLogNotificatie = xtoonlognotificatie.Checked;
 
             Manager.DefaultSettings.OfflineDbSyncInterval = (int) xoffdbsyncinterval.Value;
             Manager.DefaultSettings.OfflineDabaseTypes.Clear();
-            if (xoffprodcheckbox.Checked)
-            {
-                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Producties);
-            }
-            if (xoffgereedprodcheckbox.Checked)
-            {
-                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.GereedProducties);
-            }
-            if (xoffperscheckbox.Checked)
-            {
-                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Medewerkers);
-            }
-            if (xoffaccountcheckbox.Checked)
-            {
-                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Accounts);
-            }
-            if (xoffinstellingcheckbox.Checked)
-            {
-                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Opties);
-            }
-            if (xoffberichtencheckbox.Checked)
-            {
-                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Messages);
-            }
-            if (xoffopmerkingcheckbox.Checked)
-            {
-                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Opmerkingen);
-            }
-            if (xoffklachtencheckbox.Checked)
-            {
-                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Klachten);
-            }
-            if (xartikelrecords.Checked)
-            {
-                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.ArtikelRecords);
-            }
-            if (xSpoorOverzichtCheckbox.Checked)
-            {
-                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.SpoorOverzicht);
-            }
-            if (xlijstlayout.Checked)
-            {
-                Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.LijstLayouts);
-            }
+            if (xoffprodcheckbox.Checked) Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Producties);
+            if (xoffgereedprodcheckbox.Checked) Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.GereedProducties);
+            if (xoffperscheckbox.Checked) Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Medewerkers);
+            if (xoffaccountcheckbox.Checked) Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Accounts);
+            if (xoffinstellingcheckbox.Checked) Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Opties);
+            if (xoffberichtencheckbox.Checked) Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Messages);
+            if (xoffopmerkingcheckbox.Checked) Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Opmerkingen);
+            if (xoffklachtencheckbox.Checked) Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.Klachten);
+            if (xartikelrecords.Checked) Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.ArtikelRecords);
+            if (xSpoorOverzichtCheckbox.Checked) Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.SpoorOverzicht);
+            if (xlijstlayout.Checked) Manager.DefaultSettings.OfflineDabaseTypes.Add(DbType.LijstLayouts);
             //default settings die we hier niet veranderen.
             if (_LoadedOpties != null)
             {
@@ -527,7 +499,6 @@ namespace Forms
             }
 
 
-
             return xs;
         }
 
@@ -537,7 +508,7 @@ namespace Forms
                 return false;
             //bool xchanged = !string.Equals(xdblocatie.Text.Trim(), DefaultSettings.MainDB?.RootPath,
             //    StringComparison.CurrentCultureIgnoreCase);
-            return  !CreateInstance(Manager.Opties.Username)
+            return !CreateInstance(Manager.Opties.Username)
                 .xPublicInstancePropertiesEqual(Manager.Opties, new[] {typeof(UserChange)});
         }
 
@@ -552,8 +523,8 @@ namespace Forms
 
         private void xremovefeestdag_Click(object sender, EventArgs e)
         {
-            if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde datums wilt verwijderen?", "Verwijderen",
-                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+            if (XMessageBox.Show(this, "Weetje zeker dat je alle geselecteerde datums wilt verwijderen?", "Verwijderen",
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 foreach (ListViewItem lv in xfeestdagen.SelectedItems)
                     lv.Remove();
         }
@@ -569,14 +540,14 @@ namespace Forms
             if (!SetSettings()) return false;
             if (_locatieGewijzigd)
             {
-                string db = xdblocatie.Text.Trim();
+                var db = xdblocatie.Text.Trim();
                 if (!string.Equals(Manager.DefaultSettings.MainDB.RootPath, db,
                         StringComparison.CurrentCultureIgnoreCase) &&
                     Directory.Exists(db))
                 {
-                    var rsult = XMessageBox.Show(this, $"Database locatie is gewijzigd!\n" +
-                                                 "Om de wijzigingen door te kunnen voeren dien je de Productie Manager opnieuw op te starten.\n\n" +
-                                                 "Wil je de Productie Manager nu opnieuw opstarten?",
+                    var rsult = XMessageBox.Show(this, "Database locatie is gewijzigd!\n" +
+                                                       "Om de wijzigingen door te kunnen voeren dien je de Productie Manager opnieuw op te starten.\n\n" +
+                                                       "Wil je de Productie Manager nu opnieuw opstarten?",
                         "Database Locatie Gewijzigd!",
                         MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
                     if (rsult == DialogResult.Cancel) return false;
@@ -605,7 +576,10 @@ namespace Forms
                             Process.Start(name);
                             proc.Kill();
                         }
-                        else Application.Restart();
+                        else
+                        {
+                            Application.Restart();
+                        }
 
                         return true;
                     }
@@ -616,13 +590,9 @@ namespace Forms
 
             Manager.DefaultSettings.GebruikOfflineMetSync = xgebruikofflinemetsync.Checked;
             if (Manager.DefaultSettings.GebruikOfflineMetSync)
-            {
                 Manager.ProductieProvider.InitOfflineDb();
-            }
             else
-            {
                 Manager.ProductieProvider.DisableOfflineDb();
-            }
 
             Manager.DefaultSettings.SaveAsDefault();
             Close();
@@ -671,7 +641,7 @@ namespace Forms
             }
             else
             {
-               Manager.LogOut(this,true);
+                Manager.LogOut(this, true);
             }
         }
 
@@ -743,8 +713,9 @@ namespace Forms
         private void xremoveweergaveb_Click(object sender, EventArgs e)
         {
             if (xweergavelijst.SelectedItems.Count > 0)
-                if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde items wilt verwijderen?", "Verwijderen",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                if (XMessageBox.Show(this, "Weetje zeker dat je alle geselecteerde items wilt verwijderen?",
+                        "Verwijderen",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                     foreach (ListViewItem lv in xweergavelijst.SelectedItems)
                     {
                         var delete = false;
@@ -763,7 +734,8 @@ namespace Forms
             if (IsChanged())
             {
                 var res = XMessageBox.Show(
-                    this, "Er zijn wijzigingen gemaakt, wil je deze opslaan?\n\nNiet opgeslagen gegevens zullen verloren gaan!",
+                    this,
+                    "Er zijn wijzigingen gemaakt, wil je deze opslaan?\n\nNiet opgeslagen gegevens zullen verloren gaan!",
                     "Opslaan", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
                 if (res == DialogResult.Cancel)
                 {
@@ -777,7 +749,7 @@ namespace Forms
                     return;
                 }
             }
-            
+
             Manager.OnSettingsChanged -= _manager_OnSettingsChanged;
             //Manager.OnLoginChanged -= _manager_OnLoginChanged;
         }
@@ -789,7 +761,7 @@ namespace Forms
 
         private void Opties_Shown(object sender, EventArgs e)
         {
-            LoadSettings(Manager.Opties,true);
+            LoadSettings(Manager.Opties, true);
             SetLoginState();
             Manager.OnSettingsChanged += _manager_OnSettingsChanged;
             //Manager.OnLoginChanged += _manager_OnLoginChanged;
@@ -824,8 +796,9 @@ namespace Forms
         private void xremovefolder_Click(object sender, EventArgs e)
         {
             if (xlocatielist.SelectedItems.Count > 0)
-                if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde locaties wilt verwijderen?", "Verwijderen",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                if (XMessageBox.Show(this, "Weetje zeker dat je alle geselecteerde locaties wilt verwijderen?",
+                        "Verwijderen",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                     foreach (ListViewItem lv in xlocatielist.SelectedItems)
                         lv.Remove();
         }
@@ -836,7 +809,8 @@ namespace Forms
                 return;
             if (!e.Label.EmailIsValid())
             {
-                XMessageBox.Show(this, $"'{e.Label}' is geen geldige email adres!", "Ongeldige Email", MessageBoxButtons.OK,
+                XMessageBox.Show(this, $"'{e.Label}' is geen geldige email adres!", "Ongeldige Email",
+                    MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
                 e.CancelEdit = true;
             }
@@ -876,7 +850,8 @@ namespace Forms
                 switch (e.ColumnIndex)
                 {
                     case 1: // laad instellingen
-                        if (XMessageBox.Show(this, $"Weetje zeker dat je '{moddel.Settings.Username}' wilt Laden?", "Laden",
+                        if (XMessageBox.Show(this, $"Weetje zeker dat je '{moddel.Settings.Username}' wilt Laden?",
+                                "Laden",
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
                             DialogResult.Yes) LoadSettings(moddel.Settings, true);
                         break;
@@ -885,7 +860,8 @@ namespace Forms
                         var name = moddel.Settings.Username;
                         var id = moddel.Settings.SystemID;
                         var res = XMessageBox.Show(
-                            this, $"Je staat op het punt '{name}' te overschrijven met deze instellingen!\n\nWeet je zeker dat je dat wilt doen?!",
+                            this,
+                            $"Je staat op het punt '{name}' te overschrijven met deze instellingen!\n\nWeet je zeker dat je dat wilt doen?!",
                             "Overschrijf", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                         if (res != DialogResult.Yes)
                             return;
@@ -894,12 +870,14 @@ namespace Forms
                         if (await moddel.Settings.Save())
                         {
                             if (Manager.Opties != null &&
-                                string.Equals(moddel.Settings.Username, Manager.Opties.Username, StringComparison.CurrentCultureIgnoreCase))
+                                string.Equals(moddel.Settings.Username, Manager.Opties.Username,
+                                    StringComparison.CurrentCultureIgnoreCase))
                                 Manager.Opties = moddel.Settings;
                         }
                         else
                         {
-                            XMessageBox.Show(this, $"Er zijn geen  wijzigingen om op te slaan...\n\n", "Geen Wijzigingen",
+                            XMessageBox.Show(this, "Er zijn geen  wijzigingen om op te slaan...\n\n",
+                                "Geen Wijzigingen",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
 
@@ -912,7 +890,7 @@ namespace Forms
         {
             if (Manager.Database is {IsDisposed: false})
             {
-                var prod = new UpdateProducties(){StartWhenShown = true, CloseWhenFinished = true};
+                var prod = new UpdateProducties {StartWhenShown = true, CloseWhenFinished = true};
                 prod.ShowDialog();
             }
         }
@@ -941,6 +919,232 @@ namespace Forms
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                 }
+        }
+
+        private void xgebruiktaken_CheckedChanged(object sender, EventArgs e)
+        {
+            xtakengroup.Enabled = xgebruiktaken.Checked;
+        }
+
+        private void xspeciaalroosterb_Click(object sender, EventArgs e)
+        {
+            var sproosters = new SpeciaalWerkRoostersForm(xspeciaalroosterb.Tag as List<Rooster>);
+            if (sproosters.ShowDialog() == DialogResult.OK)
+            {
+                xspeciaalroosterb.Tag = sproosters.Roosters;
+                var acces1 = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
+                if (acces1 && sproosters.Roosters.Count > 0)
+                {
+                    var bws = Manager.GetBewerkingen(new[] {ViewState.Gestart}, true).Result;
+                    bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
+                        StringComparison.CurrentCultureIgnoreCase)).ToList();
+                    if (bws.Count > 0)
+                    {
+                        var bwselector = new BewerkingSelectorForm(bws, true, true);
+                        bwselector.Title = "Selecteer Wekplekken waarvan de rooster aangepast moet worden";
+                        if (bwselector.ShowDialog() == DialogResult.OK)
+                            _ = Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
+                    }
+                }
+            }
+        }
+
+        private void xchooseoverzichtpathb_Click(object sender, EventArgs e)
+        {
+            var fb = new FolderBrowserDialog();
+            if (fb.ShowDialog() == DialogResult.OK) xweekoverzichtpath.Text = fb.SelectedPath;
+        }
+
+        private void xdeletecrit_Click(object sender, EventArgs e)
+        {
+            if (xcriterialist.SelectedItems.Count > 0)
+                if (XMessageBox.Show(this, "Weetje zeker dat je alle geselecteerde items wilt verwijderen?",
+                        "Verwijderen",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                    foreach (ListViewItem lv in xcriterialist.SelectedItems)
+                        lv.Remove();
+        }
+
+        private void xaddcrit_Click(object sender, EventArgs e)
+        {
+            var value = xcriteriatextbox.Text.Trim();
+            if (value.Length < 3)
+            {
+                XMessageBox.Show(this, "Ingevulde criteria is ongeldig!", "Ongeldig", MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (xcriterialist.Items.Cast<ListViewItem>()
+                .Any(x => string.Equals(value, x.Text, StringComparison.CurrentCultureIgnoreCase)))
+            {
+                XMessageBox.Show(this, $"'{value}' is al toegevoegd!", "Bestaat Al", MessageBoxIcon.Warning);
+                return;
+            }
+
+            xcriterialist.Items.Add(value).SubItems.Add(xfiltertype.SelectedItem.ToString());
+        }
+
+        private void xcriterialist_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (xcriterialist.SelectedItems.Count > 0)
+            {
+                xdeletecrit.Enabled = true;
+                xfiltertype.SelectedItem = xcriterialist.SelectedItems[0].SubItems["Filter Actie"]?.Text;
+            }
+            else
+            {
+                xdeletecrit.Enabled = false;
+                xfiltertype.SelectedIndex = 0;
+            }
+
+            if (xfiltertype.SelectedItem == null)
+                xfiltertype.SelectedIndex = 0;
+        }
+
+        private void xkiesdbbutton_Click(object sender, EventArgs e)
+        {
+            var fb = new FolderBrowserDialog();
+            fb.Description = "Kies database locatie";
+            fb.SelectedPath = xdblocatie.Text;
+            if (fb.ShowDialog() == DialogResult.OK)
+                if (!string.Equals(xdblocatie.Text.Trim(), fb.SelectedPath, StringComparison.CurrentCultureIgnoreCase))
+                    xdblocatie.Text = fb.SelectedPath;
+        }
+
+        private void xcopydatabase_Click(object sender, EventArgs e)
+        {
+            var fb = new FolderBrowserDialog
+            {
+                Description = "Kies database locatie"
+            };
+            if (fb.ShowDialog() == DialogResult.OK)
+                (xdblocatie.Text + "\\RPM_Data").CopyDirectoryTo(fb.SelectedPath + "\\RPM_Data", this);
+        }
+
+        private void xenablesync_CheckedChanged(object sender, EventArgs e)
+        {
+            xproductiesyncgroup.Enabled = xenablesync.Checked;
+        }
+
+        private void xdblocatie_TextChanged(object sender, EventArgs e)
+        {
+            var db = xdblocatie.Text.Trim();
+            if (!string.Equals(Manager.DefaultSettings?.MainDB?.RootPath, db,
+                    StringComparison.CurrentCultureIgnoreCase) &&
+                Directory.Exists(db))
+            {
+                _locatieGewijzigd = true;
+                xdblocatie.ForeColor = Color.Green;
+            }
+            else
+            {
+                _locatieGewijzigd = false;
+                xdblocatie.ForeColor = Color.Black;
+            }
+        }
+
+        private void xcreatebackup_CheckedChanged(object sender, EventArgs e)
+        {
+            xbackupgroup.Enabled = xcreatebackup.Checked;
+        }
+
+        private void xenablegreedsync_CheckedChanged(object sender, EventArgs e)
+        {
+            xgereedproductiesyncgroup.Enabled = xenablegreedsync.Checked;
+        }
+
+        private void xenableproductielijstsync_CheckedChanged(object sender, EventArgs e)
+        {
+            xproductielijstsyncgroup.Enabled = xenableproductielijstsync.Checked;
+        }
+
+        private void xgebruikofflinemetsync_CheckedChanged(object sender, EventArgs e)
+        {
+            xofflinedbgroup.Enabled = xgebruikofflinemetsync.Checked;
+        }
+
+        private async void xbeheerEmailhost_Click(object sender, EventArgs e)
+        {
+            if (Manager.Database?.UserAccounts == null) return;
+            var login = new LogIn();
+            login.DisableLogin = true;
+            login.ShowAutoLoginCheckbox = false;
+            if (login.ShowDialog() == DialogResult.OK)
+            {
+                var acc = await Manager.Database.GetAccount(login.Username);
+                if (acc == null)
+                {
+                    XMessageBox.Show(this, $"Gebruiker '{login.Username}' bestaat niet", "Gebruiker bestaat niet",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                try
+                {
+                    if (acc.ValidateUser(login.Username, login.Password, false))
+                    {
+                        if (acc.AccesLevel < AccesType.Manager)
+                            throw new Exception($"'{acc.Username}' is geen beheerder!\n\n" +
+                                                "De emailhost kan alleen door een beheerder worden gewijzigd.");
+                        var mailhost = new EmailHostForm(acc.MailingHost);
+                        if (mailhost.ShowDialog() == DialogResult.OK)
+                        {
+                            _LoadedOpties.BoundUsername = acc.Username;
+                            UpdateEmailHostControls();
+                            acc.MailingHost = mailhost.SelectedHost;
+                            await Manager.Database.UpSert(acc);
+                        }
+                    }
+                }
+                catch (Exception exception)
+                {
+                    XMessageBox.Show(this, exception.Message, "Fout",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+        }
+
+        private async void xdeletehost_Click(object sender, EventArgs e)
+        {
+            if (Manager.Database?.UserAccounts == null) return;
+            var login = new LogIn();
+            login.DisableLogin = true;
+            login.ShowAutoLoginCheckbox = false;
+            if (login.ShowDialog() == DialogResult.OK)
+            {
+                var acc = await Manager.Database.GetAccount(login.Username);
+                if (acc == null)
+                {
+                    XMessageBox.Show(this, $"Gebruiker '{login.Username}' bestaat niet", "Gebruiker bestaat niet",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                try
+                {
+                    if (acc.ValidateUser(login.Username, login.Password, false))
+                    {
+                        if (acc.AccesLevel < AccesType.Manager)
+                            throw new Exception($"'{acc.Username}' is geen beheerder!\n\n" +
+                                                "De emailhost kan alleen door een beheerder worden gewijzigd.");
+                        if (!string.Equals(_LoadedOpties.BoundUsername, acc.Username,
+                                StringComparison.CurrentCultureIgnoreCase))
+                            throw new Exception(
+                                @$"Alleen '{_LoadedOpties.BoundUsername}' kan de email host verwijderen!");
+                        _LoadedOpties.BoundUsername = null;
+                        UpdateEmailHostControls();
+                    }
+                }
+                catch (Exception exception)
+                {
+                    XMessageBox.Show(this, exception.Message, "Fout",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+        }
+
+        private void xfiltertype_SelectedIndexChanged(object sender, EventArgs e)
+        {
         }
 
         #region "Email Verkeer Settings"
@@ -1154,11 +1358,11 @@ namespace Forms
         {
             if (string.IsNullOrEmpty(xuitgaandemailtext.Text))
             {
-                XMessageBox.Show(this, $"Vul in een geldige email adres aub");
+                XMessageBox.Show(this, "Vul in een geldige email adres aub");
             }
             else if (!xuitgaandemailtext.Text.EmailIsValid())
             {
-                XMessageBox.Show(this, $"Ongelidge email adres!\nVul in een geldige email adres aub", "Ongeldige Email",
+                XMessageBox.Show(this, "Ongelidge email adres!\nVul in een geldige email adres aub", "Ongeldige Email",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
@@ -1167,7 +1371,7 @@ namespace Forms
                     ((UitgaandAdres) x.Tag).Adres.Trim().ToLower() == xuitgaandemailtext.Text.Trim().ToLower());
                 if (contains)
                 {
-                    XMessageBox.Show(this, $"Email adres bestaat al!\n Gebruik een andere email adres aub.",
+                    XMessageBox.Show(this, "Email adres bestaat al!\n Gebruik een andere email adres aub.",
                         "Email Bestaat Al",
                         MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
@@ -1347,7 +1551,6 @@ namespace Forms
         private void xverzendgereedcheck_CheckedChanged(object sender, EventArgs e)
         {
             if (xuitgaandemailijst.SelectedItems.Count > 0)
-            {
                 if (xuitgaandemailijst.SelectedItems[0].Tag is UitgaandAdres adres)
                 {
                     var states = new List<ProductieState>();
@@ -1357,245 +1560,9 @@ namespace Forms
                         states.Add(ProductieState.Gereed);
                     adres.States = states.ToArray();
                 }
-            }
         }
 
         #endregion "Email Verkeer Settings"
-
-        private void xgebruiktaken_CheckedChanged(object sender, EventArgs e)
-        {
-            xtakengroup.Enabled = xgebruiktaken.Checked;
-        }
-
-        private void xspeciaalroosterb_Click(object sender, EventArgs e)
-        {
-            var sproosters = new SpeciaalWerkRoostersForm(xspeciaalroosterb.Tag as List<Rooster>);
-            if (sproosters.ShowDialog() == DialogResult.OK)
-            {
-                xspeciaalroosterb.Tag = sproosters.Roosters;
-                var acces1 = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
-                if (acces1 && sproosters.Roosters.Count > 0)
-                {
-                    var bws = Manager.GetBewerkingen(new ViewState[] { ViewState.Gestart }, true).Result;
-                    bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
-                        StringComparison.CurrentCultureIgnoreCase)).ToList();
-                    if (bws.Count > 0)
-                    {
-                        var bwselector = new BewerkingSelectorForm(bws,true,true);
-                        bwselector.Title = "Selecteer Wekplekken waarvan de rooster aangepast moet worden";
-                        if (bwselector.ShowDialog() == DialogResult.OK)
-                            _= Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
-                    }
-                }
-            }
-
-        }
-
-        private void xchooseoverzichtpathb_Click(object sender, EventArgs e)
-        {
-            var fb = new FolderBrowserDialog();
-            if (fb.ShowDialog() == DialogResult.OK) xweekoverzichtpath.Text = fb.SelectedPath;
-        }
-
-        private void xdeletecrit_Click(object sender, EventArgs e)
-        {
-            if (xcriterialist.SelectedItems.Count > 0)
-                if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde items wilt verwijderen?", "Verwijderen",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                    foreach (ListViewItem lv in xcriterialist.SelectedItems)
-                    {
-                            lv.Remove();
-                    }
-        }
-
-        private void xaddcrit_Click(object sender, EventArgs e)
-        {
-            var value = xcriteriatextbox.Text.Trim();
-            if (value.Length < 3)
-            {
-                XMessageBox.Show(this, $"Ingevulde criteria is ongeldig!", "Ongeldig", MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (xcriterialist.Items.Cast<ListViewItem>().Any(x => string.Equals(value, x.Text, StringComparison.CurrentCultureIgnoreCase)))
-            {
-                XMessageBox.Show(this, $"'{value}' is al toegevoegd!", "Bestaat Al", MessageBoxIcon.Warning);
-                return;
-            }
-
-            xcriterialist.Items.Add(value).SubItems.Add(xfiltertype.SelectedItem.ToString());
-        }
-
-        private void xcriterialist_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (xcriterialist.SelectedItems.Count > 0)
-            {
-                xdeletecrit.Enabled = true;
-                xfiltertype.SelectedItem = xcriterialist.SelectedItems[0].SubItems["Filter Actie"]?.Text;
-            }
-            else
-            {
-                xdeletecrit.Enabled = false;
-                xfiltertype.SelectedIndex = 0;
-            }
-
-            if (xfiltertype.SelectedItem == null)
-                xfiltertype.SelectedIndex = 0;
-        }
-
-        private bool _locatieGewijzigd;
-        private void xkiesdbbutton_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog fb = new FolderBrowserDialog();
-            fb.Description = "Kies database locatie";
-            fb.SelectedPath = xdblocatie.Text;
-            if (fb.ShowDialog() == DialogResult.OK)
-            {
-                if (!string.Equals(xdblocatie.Text.Trim(), fb.SelectedPath, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    xdblocatie.Text = fb.SelectedPath;
-                }
-            }
-        }
-
-        private void xcopydatabase_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog fb = new FolderBrowserDialog
-            {
-                Description = "Kies database locatie"
-            };
-            if (fb.ShowDialog() == DialogResult.OK)
-            {
-                (xdblocatie.Text + "\\RPM_Data").CopyDirectoryTo(fb.SelectedPath + "\\RPM_Data",this);
-            }
-        }
-
-        private void xenablesync_CheckedChanged(object sender, EventArgs e)
-        {
-            xproductiesyncgroup.Enabled = xenablesync.Checked;
-        }
-
-        private void xdblocatie_TextChanged(object sender, EventArgs e)
-        {
-            string db = xdblocatie.Text.Trim();
-            if (!string.Equals(Manager.DefaultSettings?.MainDB?.RootPath, db, StringComparison.CurrentCultureIgnoreCase) &&
-                Directory.Exists(db))
-            {
-                _locatieGewijzigd = true;
-                xdblocatie.ForeColor = Color.Green;
-            }
-            else
-            {
-                _locatieGewijzigd = false;
-                xdblocatie.ForeColor = Color.Black;
-            }
-        }
-
-        private void xcreatebackup_CheckedChanged(object sender, EventArgs e)
-        {
-            xbackupgroup.Enabled = xcreatebackup.Checked;
-        }
-
-        private void xenablegreedsync_CheckedChanged(object sender, EventArgs e)
-        {
-            xgereedproductiesyncgroup.Enabled = xenablegreedsync.Checked;
-        }
-
-        private void xenableproductielijstsync_CheckedChanged(object sender, EventArgs e)
-        {
-            xproductielijstsyncgroup.Enabled = xenableproductielijstsync.Checked;
-        }
-
-        private void xgebruikofflinemetsync_CheckedChanged(object sender, EventArgs e)
-        {
-            xofflinedbgroup.Enabled = xgebruikofflinemetsync.Checked;
-        }
-
-        private async void xbeheerEmailhost_Click(object sender, EventArgs e)
-        {
-            if (Manager.Database?.UserAccounts == null) return;
-            var login = new LogIn();
-            login.DisableLogin = true;
-            login.ShowAutoLoginCheckbox = false;
-            if (login.ShowDialog() == DialogResult.OK)
-            {
-                var acc = await Manager.Database.GetAccount(login.Username);
-                if (acc == null)
-                {
-                    XMessageBox.Show(this, $"Gebruiker '{login.Username}' bestaat niet", "Gebruiker bestaat niet",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
-
-                try
-                {
-                    if (acc.ValidateUser(login.Username, login.Password, false))
-                    {
-                        if (acc.AccesLevel < AccesType.Manager)
-                            throw new Exception($"'{acc.Username}' is geen beheerder!\n\n" +
-                                                $"De emailhost kan alleen door een beheerder worden gewijzigd.");
-                        var mailhost = new EmailHostForm(acc.MailingHost);
-                        if (mailhost.ShowDialog() == DialogResult.OK)
-                        {
-                            _LoadedOpties.BoundUsername = acc.Username;
-                            UpdateEmailHostControls();
-                            acc.MailingHost = mailhost.SelectedHost;
-                            await Manager.Database.UpSert(acc);
-                        }
-                    }
-                }
-                catch (Exception exception)
-                {
-                    XMessageBox.Show(this, exception.Message, "Fout",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-             
-            }
-        }
-
-        private async void xdeletehost_Click(object sender, EventArgs e)
-        {
-            if (Manager.Database?.UserAccounts == null) return;
-            var login = new LogIn();
-            login.DisableLogin = true;
-            login.ShowAutoLoginCheckbox = false;
-            if (login.ShowDialog() == DialogResult.OK)
-            {
-                var acc = await Manager.Database.GetAccount(login.Username);
-                if (acc == null)
-                {
-                    XMessageBox.Show(this, $"Gebruiker '{login.Username}' bestaat niet", "Gebruiker bestaat niet",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
-
-                try
-                {
-                    if (acc.ValidateUser(login.Username, login.Password, false))
-                    {
-                        if (acc.AccesLevel < AccesType.Manager)
-                            throw new Exception($"'{acc.Username}' is geen beheerder!\n\n" +
-                                                $"De emailhost kan alleen door een beheerder worden gewijzigd.");
-                        if (!string.Equals(_LoadedOpties.BoundUsername, acc.Username,
-                            StringComparison.CurrentCultureIgnoreCase))
-                            throw new Exception(@$"Alleen '{_LoadedOpties.BoundUsername}' kan de email host verwijderen!");
-                        _LoadedOpties.BoundUsername = null;
-                        UpdateEmailHostControls();
-                    }
-                }
-                catch (Exception exception)
-                {
-                    XMessageBox.Show(this, exception.Message, "Fout",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-
-            }
-        }
-
-        private void xfiltertype_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
 
         //private void xKiesExcelColumnButton_Click(object sender, EventArgs e)
         //{

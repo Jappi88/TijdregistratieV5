@@ -8,24 +8,27 @@ using Rpm.Various;
 namespace Rpm.Misc
 {
     /// <summary>
-    /// Een rij taak dat bevat de functionaliteit info
+    ///     Een rij taak dat bevat de functionaliteit info
     /// </summary>
     public interface IQueue
     {
         /// <summary>
-        /// prioriteren van de taak
+        ///     prioriteren van de taak
         /// </summary>
         bool IsPrioritize { get; }
+
         /// <summary>
-        /// Blijf de taak herhalen als die klaar is
+        ///     Blijf de taak herhalen als die klaar is
         /// </summary>
         bool ReQueue { get; }
+
         /// <summary>
-        /// De Id van de taak
+        ///     De Id van de taak
         /// </summary>
         int Id { get; }
+
         /// <summary>
-        /// Resultaat berichten van de uitgevoerde taak
+        ///     Resultaat berichten van de uitgevoerde taak
         /// </summary>
         public List<RemoteMessage> Results { get; set; }
 
@@ -36,24 +39,25 @@ namespace Rpm.Misc
         Task DoWork();
 
         /// <summary>
-        /// Controleer of de rij hetzelfde is als deze
+        ///     Controleer of de rij hetzelfde is als deze
         /// </summary>
         /// <param name="queue">De rij waarvan vergeleken moet worden</param>
         /// <returns>True als de rij hetzelfde is</returns>
         bool CheckEquals(IQueue queue);
+
         /// <summary>
-        /// Annuleer de taak
+        ///     Annuleer de taak
         /// </summary>
         void Cancel();
     }
 
     /// <summary>
-    /// Een extensie om een event veilig te kunnen oproepen
+    ///     Een extensie om een event veilig te kunnen oproepen
     /// </summary>
     public static class EventHandlerExtensions
     {
         /// <summary>
-        /// Veilig oproepen
+        ///     Veilig oproepen
         /// </summary>
         /// <param name="evt">De event die veilig opgeroepen moet worden</param>
         /// <param name="e">De argument wat doorgegeven moet worden door de event</param>
@@ -65,7 +69,7 @@ namespace Rpm.Misc
     }
 
     /// <summary>
-    /// Een taken rij beheerder
+    ///     Een taken rij beheerder
     /// </summary>
     public class TaskQueues
     {
@@ -80,7 +84,7 @@ namespace Rpm.Misc
         private EventHandler<EventArgs> _runInstanceComplete;
 
         /// <summary>
-        /// De maximaal aantal taken die je kan uitvoeren
+        ///     De maximaal aantal taken die je kan uitvoeren
         /// </summary>
         public int MaxRun
         {
@@ -95,12 +99,14 @@ namespace Rpm.Misc
                 }
             }
         }
+
         /// <summary>
-        /// Voer taken door elkaar uit
+        ///     Voer taken door elkaar uit
         /// </summary>
         public bool RunRandom { get; set; } = false;
+
         /// <summary>
-        /// Of de taken moeten worden uitgevoerd.
+        ///     Of de taken moeten worden uitgevoerd.
         /// </summary>
         public bool IsStart
         {
@@ -111,12 +117,14 @@ namespace Rpm.Misc
                 if (value) RunNewQueue();
             }
         }
+
         /// <summary>
-        /// Een event voor als alle taken op zijn 
+        ///     Een event voor als alle taken op zijn
         /// </summary>
         public event RunComplete OnRunComplete;
+
         /// <summary>
-        /// Een event voor als een taak klaar is
+        ///     Een event voor als een taak klaar is
         /// </summary>
         public event EventHandler<EventArgs> RunInstanceComplete
         {
@@ -136,8 +144,8 @@ namespace Rpm.Misc
                 }
             }
         }
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -152,15 +160,17 @@ namespace Rpm.Misc
 
             handler?.Invoke(sender, e);
         }
+
         /// <summary>
-        /// Geef aan dat alle taken gereed zijn
+        ///     Geef aan dat alle taken gereed zijn
         /// </summary>
         public void RunComplete()
         {
             OnRunComplete?.Invoke();
         }
+
         /// <summary>
-        /// Geef aan dat een bepaalde taak klaar is
+        ///     Geef aan dat een bepaalde taak klaar is
         /// </summary>
         /// <param name="sender">De taak die klaar is</param>
         public void OnRunInstanceComplete(object sender)
@@ -243,7 +253,7 @@ namespace Rpm.Misc
         }
 
         /// <summary>
-        /// Voeg een nieuwe taak toe
+        ///     Voeg een nieuwe taak toe
         /// </summary>
         /// <param name="queue">Een taak als ITaskQueue</param>
         /// <exception cref="ArgumentNullException">Geeft een fout als de taak niet wordt gegeven</exception>
@@ -257,8 +267,9 @@ namespace Rpm.Misc
 
             RunNewQueue();
         }
+
         /// <summary>
-        /// Annuleer een taak
+        ///     Annuleer een taak
         /// </summary>
         /// <param name="queue">De taak die geannuleerd moet worden</param>
         public void Cancel(IQueue queue)
@@ -277,8 +288,9 @@ namespace Rpm.Misc
                 });
             }
         }
+
         /// <summary>
-        /// Reset een taak
+        ///     Reset een taak
         /// </summary>
         /// <param name="queue">De taak die gereset moet worden</param>
         public void Reset(IQueue queue)
@@ -287,8 +299,9 @@ namespace Rpm.Misc
             Cancel(queue);
             Add(queue);
         }
+
         /// <summary>
-        /// Sluit af alle taken
+        ///     Sluit af alle taken
         /// </summary>
         public void ShutDown()
         {

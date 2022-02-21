@@ -3,34 +3,16 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Windows.Forms;
 using Forms;
 using MetroFramework.Forms;
 using Rpm.Misc;
-using Rpm.Productie;
 using Rpm.Various;
 
 namespace ProductieManager.Forms
 {
     public partial class NewFilterEntry : MetroForm
     {
-        public PropertyInfo Property { get; private set; }
-
-        public Type PropertyType { get; private set; }
-
-        public FilterEntry SelectedFilter { get; private set; }
-
-        public string Title
-        {
-            get => Text;
-            set
-            {
-                Text = value;
-                this.Invalidate();
-            }
-        }
-
         public NewFilterEntry(Type type, string propertyname, bool useoperand)
         {
             InitializeComponent();
@@ -67,6 +49,22 @@ namespace ProductieManager.Forms
             xRangeDevider.SelectedItem = Enum.GetName(typeof(RangeDeviderType), entry.DeviderType);
         }
 
+        public PropertyInfo Property { get; private set; }
+
+        public Type PropertyType { get; private set; }
+
+        public FilterEntry SelectedFilter { get; private set; }
+
+        public string Title
+        {
+            get => Text;
+            set
+            {
+                Text = value;
+                Invalidate();
+            }
+        }
+
         private void InitOperand()
         {
             if (xoperandtype.Enabled)
@@ -89,8 +87,8 @@ namespace ProductieManager.Forms
             xvariablenamelabel.Text = propertyname;
             xvaluetypes.Items.Clear();
 
-            bool xflag = xVergelijkWaardeCheck.Checked;
-            
+            var xflag = xVergelijkWaardeCheck.Checked;
+
             xtextvalue.Enabled = Property.PropertyType == typeof(string) && xflag;
             xdecimalvalue.Enabled = Property.PropertyType.IsNumericType() && xflag;
             xdatepanel.Enabled = Property.PropertyType == typeof(DateTime) && xflag;
@@ -106,10 +104,7 @@ namespace ProductieManager.Forms
             xComboPanel.Visible = xComboPanel.Enabled;
             xcheckvalue.Visible = xcheckvalue.Enabled;
             var xvaltypes = FilterEntry.GetFilterStringTypesByType(Property.PropertyType);
-            foreach (var xval in xvaltypes)
-            {
-                xvaluetypes.Items.Add(xval);
-            }
+            foreach (var xval in xvaltypes) xvaluetypes.Items.Add(xval);
 
             xRangeDevider.Items.Clear();
             xRangeDevider.Items.AddRange(Enum.GetNames(typeof(RangeDeviderType)).Select(x => (object) x).ToArray());
@@ -180,14 +175,20 @@ namespace ProductieManager.Forms
                             xval = DateTime.Now;
                             xhuidigeDatum.Checked = true;
                         }
-                        else xhuidigeDatum.Checked = false;
+                        else
+                        {
+                            xhuidigeDatum.Checked = false;
+                        }
+
                         if (xvalue.TimeOfDay > new TimeSpan())
                         {
                             xhuidigeTijd.Checked = false;
                             xval = xval.ChangeTime(xvalue.TimeOfDay);
                         }
                         else
+                        {
                             xhuidigeTijd.Checked = true;
+                        }
 
                         xdatevalue.Value = xval;
                         break;
@@ -224,7 +225,7 @@ namespace ProductieManager.Forms
                 {
                     var dt = xdatevalue.Value;
                     if (xhuidigeDatum.Checked)
-                        dt = new DateTime(9999, 1, 1, dt.Hour, dt.Minute, 0,0);
+                        dt = new DateTime(9999, 1, 1, dt.Hour, dt.Minute, 0, 0);
 
                     if (xhuidigeTijd.Checked)
                         dt = dt.ChangeTime(new TimeSpan());
@@ -242,6 +243,7 @@ namespace ProductieManager.Forms
                                 true);
                             return xenum;
                         }
+
                         return xcombovalue.SelectedItem.ToString().Trim();
                     }
                     catch (Exception e)
@@ -280,7 +282,7 @@ namespace ProductieManager.Forms
                     catch (Exception exception)
                     {
                         if (showmessage)
-                            XMessageBox.Show(this, $"Ongeldige operand type!", "Ongeldig", MessageBoxButtons.OK,
+                            XMessageBox.Show(this, "Ongeldige operand type!", "Ongeldig", MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
                         return false;
                     }
@@ -288,7 +290,8 @@ namespace ProductieManager.Forms
                 if (value == null)
                 {
                     if (showmessage)
-                        XMessageBox.Show(this, $"Ongeldige Criteria!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        XMessageBox.Show(this, "Ongeldige Criteria!", "Ongeldig", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
                     return false;
                 }
 
@@ -297,7 +300,7 @@ namespace ProductieManager.Forms
                     FilterType = xfiltertype,
                     OperandType = xoperandtype.Enabled ? operand : Operand.ALS,
                     PropertyName = Property.Name,
-                    RangeValue = (int)numericUpDown1.Value,
+                    RangeValue = (int) numericUpDown1.Value,
                     Value = value,
                     CompareWithProperty = xVergelijkVariableCheck.Checked,
                     DezeWeekDateTime = xdezeweekcheckbox.Checked
@@ -335,7 +338,8 @@ namespace ProductieManager.Forms
             catch (Exception e)
             {
                 if (showmessage)
-                    XMessageBox.Show(this, e.Message, "Ongeldige Criteria", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    XMessageBox.Show(this, e.Message, "Ongeldige Criteria", MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation);
                 return false;
             }
         }
@@ -378,7 +382,7 @@ namespace ProductieManager.Forms
         private void xvoorwaardenb_Click(object sender, EventArgs e)
         {
             if (SelectedFilter == null) return;
-            var fs = new EditCriteriaForm(PropertyType,SelectedFilter.ChildEntries);
+            var fs = new EditCriteriaForm(PropertyType, SelectedFilter.ChildEntries);
             if (fs.ShowDialog() == DialogResult.OK)
             {
                 SelectedFilter.ChildEntries = fs.SelectedFilter;
@@ -449,10 +453,7 @@ namespace ProductieManager.Forms
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
-            if (xEditValueRangePanel.Visible)
-            {
-                SaveChanges(false);
-            }
+            if (xEditValueRangePanel.Visible) SaveChanges(false);
         }
 
         private void xhuidigeDatum_CheckStateChanged(object sender, EventArgs e)
@@ -462,7 +463,9 @@ namespace ProductieManager.Forms
                 if (xhuidigeDatum.Checked)
                 {
                     if (xhuidigeTijd.Checked)
+                    {
                         xdatevalue.Enabled = false;
+                    }
                     else
                     {
                         xdatevalue.CustomFormat = "HH:mm";
@@ -511,10 +514,7 @@ namespace ProductieManager.Forms
 
         private void xRangeDevider_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (xEditValueRangePanel.Enabled)
-            {
-                SaveChanges(false);
-            }
+            if (xEditValueRangePanel.Enabled) SaveChanges(false);
         }
 
         private void xdezeweekcheckbox_CheckedChanged(object sender, EventArgs e)

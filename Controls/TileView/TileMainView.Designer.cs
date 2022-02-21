@@ -49,7 +49,7 @@
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.resetLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.tileViewer1 = new Controls.TileViewer();
+            this.Viewer = new Controls.TileViewer();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.xBottomToolMenu.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -228,25 +228,25 @@
             // 
             // tileViewer1
             // 
-            this.tileViewer1.AllowDrop = true;
-            this.tileViewer1.AutoScroll = true;
-            this.tileViewer1.BackColor = System.Drawing.Color.Transparent;
-            this.tileViewer1.ContextMenuStrip = this.contextMenuStrip1;
-            this.tileViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tileViewer1.EnableSaveTiles = true;
-            this.tileViewer1.EnableTileSelection = false;
-            this.tileViewer1.EnableTimer = false;
-            this.tileViewer1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tileViewer1.Location = new System.Drawing.Point(0, 0);
-            this.tileViewer1.MultipleSelections = false;
-            this.tileViewer1.Name = "tileViewer1";
-            this.tileViewer1.Padding = new System.Windows.Forms.Padding(50);
-            this.tileViewer1.Size = new System.Drawing.Size(816, 558);
-            this.tileViewer1.TabIndex = 0;
-            this.tileViewer1.TileInfoRefresInterval = 10000;
-            this.tileViewer1.TilesLoaded += new System.EventHandler(this.tileViewer1_TilesLoaded);
-            this.tileViewer1.TileClicked += new System.EventHandler(this.tileViewer1_TileClicked);
-            this.tileViewer1.TileRequestInfo += new Controls.TileChangeEventhandler(this.tileViewer1_TileRequestInfo);
+            this.Viewer.AllowDrop = true;
+            this.Viewer.AutoScroll = true;
+            this.Viewer.BackColor = System.Drawing.Color.Transparent;
+            this.Viewer.ContextMenuStrip = this.contextMenuStrip1;
+            this.Viewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Viewer.EnableSaveTiles = true;
+            this.Viewer.EnableTileSelection = false;
+            this.Viewer.EnableTimer = false;
+            this.Viewer.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Viewer.Location = new System.Drawing.Point(0, 0);
+            this.Viewer.MultipleSelections = false;
+            this.Viewer.Name = "Viewer";
+            this.Viewer.Padding = new System.Windows.Forms.Padding(50);
+            this.Viewer.Size = new System.Drawing.Size(816, 558);
+            this.Viewer.TabIndex = 0;
+            this.Viewer.TileInfoRefresInterval = 10000;
+            this.Viewer.TilesLoaded += new System.EventHandler(this.tileViewer1_TilesLoaded);
+            this.Viewer.TileClicked += new System.EventHandler(this.tileViewer1_TileClicked);
+            this.Viewer.TileRequestInfo += new Controls.TileChangeEventhandler(this.tileViewer1_TileRequestInfo);
             // 
             // toolStripMenuItem3
             // 
@@ -262,7 +262,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.tileViewer1);
+            this.Controls.Add(this.Viewer);
             this.Controls.Add(this.xBottomToolMenu);
             this.DoubleBuffered = true;
             this.Name = "TileMainView";
@@ -276,7 +276,7 @@
         }
 
         #endregion
-        private TileViewer tileViewer1;
+
         private System.Windows.Forms.ToolStrip xBottomToolMenu;
         private System.Windows.Forms.ToolStripSplitButton xBeheerweergavetoolstrip;
         private System.Windows.Forms.ToolStripMenuItem xBeheerLijstenToolstripItem;

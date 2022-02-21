@@ -1,7 +1,7 @@
-﻿using MetroFramework.Forms;
-using Rpm.Productie;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using MetroFramework.Forms;
+using Rpm.Productie;
 
 namespace Forms
 {
@@ -10,7 +10,6 @@ namespace Forms
         public AantalChanger()
         {
             InitializeComponent();
-            
         }
 
         public int Aantal

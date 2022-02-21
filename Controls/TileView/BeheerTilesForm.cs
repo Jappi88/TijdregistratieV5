@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Documents;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using Forms.MetroBase;
-using NPOI.SS.Formula.Functions;
 using Rpm.Productie;
 
 namespace Controls
@@ -15,16 +13,17 @@ namespace Controls
         public BeheerTilesForm()
         {
             InitializeComponent();
-            ((OLVColumn) xmainlist.Columns[0]).ImageGetter = (x) => 0;
-            ((OLVColumn)xlist.Columns[0]).ImageGetter = (x) => 1;
+            ((OLVColumn) xmainlist.Columns[0]).ImageGetter = x => 0;
+            ((OLVColumn) xlist.Columns[0]).ImageGetter = x => 1;
             xmainlist.SetObjects(Manager.Opties.GetAllDefaultEntries(true));
-            xlist.SetObjects(Manager.Opties.TileLayout?.OrderBy(x=> x.TileIndex).ToList()??new List<TileInfoEntry>());
+            xlist.SetObjects(Manager.Opties.TileLayout?.OrderBy(x => x.TileIndex).ToList() ??
+                             new List<TileInfoEntry>());
         }
 
-        private void xopslaan_Click(object sender, System.EventArgs e)
+        private void xopslaan_Click(object sender, EventArgs e)
         {
             Manager.Opties.TileLayout = xlist.Objects.Cast<TileInfoEntry>().ToList();
-            for (int i = 0; i < Manager.Opties.TileLayout.Count; i++)
+            for (var i = 0; i < Manager.Opties.TileLayout.Count; i++)
                 Manager.Opties.TileLayout[i].TileIndex = i;
             DialogResult = DialogResult.OK;
         }
@@ -34,7 +33,7 @@ namespace Controls
             try
             {
                 xmoveup.Enabled = xlist.SelectedItem is {Index: > 0};
-                xmovedown.Enabled = xlist.SelectedItem != null && xlist.SelectedItem.Index < xlist.Items.Count -1;
+                xmovedown.Enabled = xlist.SelectedItem != null && xlist.SelectedItem.Index < xlist.Items.Count - 1;
                 xdeletetile.Enabled = xlist.SelectedObjects.Count > 0;
                 xedittile.Enabled = xlist.SelectedItem != null;
                 xaddtile.Enabled = xmainlist.SelectedObjects.Count > 0;
@@ -45,12 +44,9 @@ namespace Controls
             }
         }
 
-        private void xmainlist_DoubleClick(object sender, System.EventArgs e)
+        private void xmainlist_DoubleClick(object sender, EventArgs e)
         {
-            if (xmainlist.SelectedObject is TileInfoEntry entry)
-            {
-                AddTile(entry);
-            }
+            if (xmainlist.SelectedObject is TileInfoEntry entry) AddTile(entry);
         }
 
         private void AddTile(TileInfoEntry entry)
@@ -62,9 +58,9 @@ namespace Controls
                 if (xtile == null)
                 {
                     var xname = entry.Name.Trim().Replace(" ", "_");
-                    int count = xtiles.Count(x =>
+                    var count = xtiles.Count(x =>
                         string.Equals(xname, x.Name, StringComparison.CurrentCultureIgnoreCase));
-                    if(count > 0)
+                    if (count > 0)
                         xname += "_" + count;
                     entry.Name = xname;
                     xlist.AddObject(entry);
@@ -80,7 +76,7 @@ namespace Controls
             }
         }
 
-        private void xlist_DoubleClick(object sender, System.EventArgs e)
+        private void xlist_DoubleClick(object sender, EventArgs e)
         {
             EditTile();
         }
@@ -111,7 +107,7 @@ namespace Controls
             {
                 var index = xlist.SelectedIndex - 1;
                 xlist.RemoveObject(entry);
-                xlist.InsertObjects(index, new TileInfoEntry[] {entry});
+                xlist.InsertObjects(index, new[] {entry});
                 xlist.SelectedObject = entry;
                 xlist.SelectedItem?.EnsureVisible();
             }
@@ -119,11 +115,12 @@ namespace Controls
 
         private void xmovedown_Click(object sender, EventArgs e)
         {
-            if (xlist.SelectedItem != null && xlist.SelectedIndex < xlist.Items.Count -1 && xlist.SelectedObject is TileInfoEntry entry)
+            if (xlist.SelectedItem != null && xlist.SelectedIndex < xlist.Items.Count - 1 &&
+                xlist.SelectedObject is TileInfoEntry entry)
             {
                 var index = xlist.SelectedIndex + 1;
                 xlist.RemoveObject(entry);
-                xlist.InsertObjects(index, new TileInfoEntry[] { entry });
+                xlist.InsertObjects(index, new[] {entry});
                 xlist.SelectedObject = entry;
                 xlist.SelectedItem?.EnsureVisible();
             }
@@ -149,10 +146,7 @@ namespace Controls
             if (xmainlist.SelectedObjects.Count > 0)
             {
                 var xitems = xmainlist.SelectedObjects.Cast<TileInfoEntry>().ToList();
-                foreach (var item in xitems)
-                {
-                    AddTile(item);
-                }
+                foreach (var item in xitems) AddTile(item);
 
                 xlist.Select();
                 xlist.Focus();

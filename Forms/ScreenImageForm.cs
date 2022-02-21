@@ -1,30 +1,32 @@
-﻿using Rpm.Misc;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
-using ProductieManager.Forms;
+using Forms.MetroBase;
+using Rpm.Misc;
 
 namespace Forms
 {
-    public partial class ScreenImageForm : Forms.MetroBase.MetroBaseForm
+    public partial class ScreenImageForm : MetroBaseForm
     {
-        Bitmap bmp;
-        public string SavedImagePath { get; set; }
-        public ScreenImageForm(Int32 x, Int32 y, Int32 w, Int32 h, Size s)
+        private readonly Bitmap bmp;
+
+        public ScreenImageForm(int x, int y, int w, int h, Size s)
         {
             InitializeComponent();
 
-            Rectangle rect = new Rectangle(x, y, w, h);
+            var rect = new Rectangle(x, y, w, h);
             bmp = new Bitmap(rect.Width, rect.Height, PixelFormat.Format32bppArgb);
-            Graphics g = Graphics.FromImage(bmp);
+            var g = Graphics.FromImage(bmp);
             g.CopyFromScreen(rect.Left, rect.Top, 0, 0, s, CopyPixelOperation.SourceCopy);
 
             //bmp.Save("screen.jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
             pbCapture.Image = bmp;
-            this.Size = new Size(s.Width + 23, s.Height + 86);
+            Size = new Size(s.Width + 23, s.Height + 86);
         }
+
+        public string SavedImagePath { get; set; }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -36,29 +38,29 @@ namespace Forms
             //{
             //    pbCapture.Image.Save(sfd.FileName);
             //}
-            
-           
+
+
             var sfd = new SaveFileDialog();
             sfd.Title = "Screenshot Opslaan";
-            string xdir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            var xdir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             sfd.InitialDirectory = xdir;
-            string xscreen = Functions.GetAvailibleFilepath(xdir, "ScreenShot.jpg");
+            var xscreen = Functions.GetAvailibleFilepath(xdir, "ScreenShot.jpg");
             sfd.FileName = Path.GetFileName(xscreen);
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 pbCapture.Image.Save(sfd.FileName);
                 SavedImagePath = sfd.FileName;
-                this.DialogResult = DialogResult.OK;
+                DialogResult = DialogResult.OK;
             }
         }
 
         private void btnHome_Click(object sender, EventArgs e)
         {
-            SelectScreenImage area = new SelectScreenImage();
-            this.Hide();
+            var area = new SelectScreenImage();
+            Hide();
             var result = area.ShowDialog();
             SavedImagePath = area.SelectedImagePath;
-            this.DialogResult = result;
+            DialogResult = result;
             //frmHome home = new frmHome();
             //this.Hide();
             //home.Show();

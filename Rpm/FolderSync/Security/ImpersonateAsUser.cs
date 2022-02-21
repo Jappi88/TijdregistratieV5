@@ -9,15 +9,16 @@ namespace FolderSync.Security
         public const int LOGON32_LOGON_INTERACTIVE = 2;
         public const int LOGON32_PROVIDER_DEFAULT = 0;
 
-        WindowsImpersonationContext impersonationContext;
+        private WindowsImpersonationContext impersonationContext;
 
         [DllImport("advapi32.dll")]
-        public static extern int LogonUserA(String lpszUserName,
-            String lpszDomain,
-            String lpszPassword,
+        public static extern int LogonUserA(string lpszUserName,
+            string lpszDomain,
+            string lpszPassword,
             int dwLogonType,
             int dwLogonProvider,
             ref IntPtr phToken);
+
         [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern int DuplicateToken(IntPtr hToken,
             int impersonationLevel,
@@ -29,17 +30,15 @@ namespace FolderSync.Security
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         public static extern bool CloseHandle(IntPtr handle);
 
-        public bool impersonateValidUser(String userName, String domain, String password)
+        public bool impersonateValidUser(string userName, string domain, string password)
         {
             WindowsIdentity tempWindowsIdentity;
-            IntPtr token = IntPtr.Zero;
-            IntPtr tokenDuplicate = IntPtr.Zero;
+            var token = IntPtr.Zero;
+            var tokenDuplicate = IntPtr.Zero;
 
             if (RevertToSelf())
-            {
                 if (LogonUserA(userName, domain, password, LOGON32_LOGON_INTERACTIVE,
-                    LOGON32_PROVIDER_DEFAULT, ref token) != 0)
-                {
+                        LOGON32_PROVIDER_DEFAULT, ref token) != 0)
                     if (DuplicateToken(token, 2, ref tokenDuplicate) != 0)
                     {
                         tempWindowsIdentity = new WindowsIdentity(tokenDuplicate);
@@ -51,8 +50,7 @@ namespace FolderSync.Security
                             return true;
                         }
                     }
-                }
-            }
+
             if (token != IntPtr.Zero)
                 CloseHandle(token);
             if (tokenDuplicate != IntPtr.Zero)

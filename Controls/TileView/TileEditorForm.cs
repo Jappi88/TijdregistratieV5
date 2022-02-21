@@ -1,12 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
 using Forms.MetroBase;
-using Rpm.Misc;
 
 namespace Controls
 {
     public partial class TileEditorForm : MetroBaseForm
     {
+        public TileEditorForm()
+        {
+            InitializeComponent();
+        }
+
+        public TileEditorForm(TileInfoEntry entry) : this()
+        {
+            tileEditorUI1.InitEntry(entry);
+        }
+
+        public TileEditorForm(List<TileInfoEntry> tiles, FlowDirection direction, TileInfoEntry entry) : this()
+        {
+            tileEditorUI1.InitEntries(tiles, direction, entry);
+        }
+
         public TileInfoEntry SelectedEntry
         {
             get => tileEditorUI1.InfoEntry;
@@ -20,20 +34,5 @@ namespace Controls
         }
 
         public List<TileInfoEntry> SelectedEntries => tileEditorUI1.Tiles;
-
-        public TileEditorForm()
-        {
-            InitializeComponent();
-        }
-
-        public TileEditorForm(TileInfoEntry entry) : this()
-        {
-           tileEditorUI1.InitEntry(entry);
-        }
-
-        public TileEditorForm(List<TileInfoEntry> tiles,FlowDirection direction, TileInfoEntry entry) : this()
-        {
-            tileEditorUI1.InitEntries(tiles,direction, entry);
-        }
     }
 }

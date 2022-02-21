@@ -13,36 +13,34 @@ namespace Rpm.Productie.ArtikelRecords
         public decimal AantalGemaakt { get; set; }
         public double VorigeTijdGewerkt { get; set; }
         public double TijdGewerkt { get; set; }
-        public List<string> UpdatedProducties { get; set; } = new List<string>();
-        public List<ArtikelOpmerking> Opmerkingen { get; set; } = new List<ArtikelOpmerking>();
+        public List<string> UpdatedProducties { get; set; } = new();
+        public List<ArtikelOpmerking> Opmerkingen { get; set; } = new();
         public bool IsWerkplek { get; set; }
         public int PerUur => GetPerUur();
 
-       public int GetPerUur()
-       {
-           if (AantalGemaakt == 0) return 0;
-           if (TijdGewerkt == 0) return (int)AantalGemaakt;
-           int peruur = (int)(AantalGemaakt / (decimal)TijdGewerkt);
-           //if (UpdatedProducties.Count > 0)
-           //    peruur /= UpdatedProducties.Count;
-           return peruur;
-       }
-        
-        public ArtikelRecord()
+        public int GetPerUur()
         {
+            if (AantalGemaakt == 0) return 0;
+            if (TijdGewerkt == 0) return (int) AantalGemaakt;
+            var peruur = (int) (AantalGemaakt / (decimal) TijdGewerkt);
+            //if (UpdatedProducties.Count > 0)
+            //    peruur /= UpdatedProducties.Count;
+            return peruur;
         }
 
         public string GetOpmerking(ArtikelOpmerking opmerking)
         {
             if (string.IsNullOrEmpty(opmerking?.Opmerking)) return string.Empty;
-            return string.Format(opmerking.Opmerking, ArtikelNr, Omschrijving, opmerking.FilterWaarde, AantalGemaakt, TijdGewerkt, PerUur,
+            return string.Format(opmerking.Opmerking, ArtikelNr, Omschrijving, opmerking.FilterWaarde, AantalGemaakt,
+                TijdGewerkt, PerUur,
                 UpdatedProducties.Count);
         }
 
         public string GetTitle(ArtikelOpmerking opmerking)
         {
             if (string.IsNullOrEmpty(opmerking?.Opmerking)) return string.Empty;
-            return string.Format(opmerking.Title, ArtikelNr, Omschrijving,opmerking.FilterWaarde, AantalGemaakt, TijdGewerkt, PerUur,
+            return string.Format(opmerking.Title, ArtikelNr, Omschrijving, opmerking.FilterWaarde, AantalGemaakt,
+                TijdGewerkt, PerUur,
                 UpdatedProducties.Count);
         }
 

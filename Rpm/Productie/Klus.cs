@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Polenter.Serialization;
-using ProductieManager.Rpm.Productie;
 using Rpm.Misc;
 using Rpm.Various;
 
@@ -28,7 +27,7 @@ namespace Rpm.Productie
             Omschrijving = bew?.Omschrijving;
             ProductieNr = bew?.ProductieNr;
             WerkPlek = werkPlek;
-            Status = bew?.State?? ProductieState.Gestopt;
+            Status = bew?.State ?? ProductieState.Gestopt;
             PersoneelNaam = pers?.PersoneelNaam;
             Tijden.WerkRooster = pers?.WerkRooster;
         }
@@ -77,12 +76,12 @@ namespace Rpm.Productie
         public TimeSpan TijdGewerkt(Dictionary<DateTime, DateTime> exclude, Rooster rooster)
         {
             var ex = exclude ?? new Dictionary<DateTime, DateTime>();
-            return TimeSpan.FromHours(Tijden.TijdGewerkt(rooster,ex));
+            return TimeSpan.FromHours(Tijden.TijdGewerkt(rooster, ex));
         }
 
         public double TijdGewerkt()
         {
-            Rooster rooster = null; 
+            Rooster rooster = null;
             var ex = new Dictionary<DateTime, DateTime>();
             var per = Manager.Database?.GetPersoneel(PersoneelNaam)?.Result;
             if (per != null)
@@ -91,7 +90,6 @@ namespace Rpm.Productie
                 ex = per.VrijeDagen.ToDictionary();
             var werk = GetWerk();
             if (werk?.Bewerking != null)
-            {
                 if (werk.Plek != null)
                 {
                     rooster ??= werk.Plek.Tijden?.WerkRooster;
@@ -101,7 +99,6 @@ namespace Rpm.Productie
                             ex[st.Key] = st.Value;
                         else ex.Add(st.Key, st.Value);
                 }
-            }
 
             return Tijden.TijdGewerkt(rooster, ex);
         }
@@ -116,7 +113,7 @@ namespace Rpm.Productie
             if (per?.VrijeDagen != null && per.VrijeDagen.Count > 0)
                 ex = per.VrijeDagen.ToDictionary();
             var werk = GetWerk();
-            int aantal = 0;
+            var aantal = 0;
             double werktijd = 0;
             if (werk?.Bewerking != null)
             {
@@ -137,14 +134,14 @@ namespace Rpm.Productie
                     werktijd = werk.Bewerking.TijdAanGewerkt();
                 }
             }
+
             var perstijd = Tijden.TijdGewerkt(rooster, ex);
             if (perstijd > werktijd)
                 perstijd = werktijd;
             if (aantal > 0 && werktijd > 0)
             {
-               
-                var perc = (perstijd / werktijd) * 100;
-                var xaantal = (int)(aantal * (perc / 100));
+                var perc = perstijd / werktijd * 100;
+                var xaantal = (int) (aantal * (perc / 100));
                 aantal = xaantal;
             }
 
@@ -178,13 +175,13 @@ namespace Rpm.Productie
         {
             try
             {
-                    Status = ProductieState.Gestopt;
-                    var ent = Tijden.GetInUseEntry(true);
-                    if (ent != null)
-                        ent.Stop = DateTime.Now;
-                    Tijden.Uren.ForEach(x => x.InUse = false);
-                    Tijden.RemoveAllEmpty();
-                    return true;
+                Status = ProductieState.Gestopt;
+                var ent = Tijden.GetInUseEntry(true);
+                if (ent != null)
+                    ent.Stop = DateTime.Now;
+                Tijden.Uren.ForEach(x => x.InUse = false);
+                Tijden.RemoveAllEmpty();
+                return true;
             }
             catch (Exception)
             {
@@ -203,6 +200,7 @@ namespace Rpm.Productie
                     Status = ProductieState.Gestart;
                     return true;
                 }
+
                 Stop();
                 return Status == ProductieState.Gestart;
             }
@@ -246,7 +244,7 @@ namespace Rpm.Productie
             else if (isgestart)
                 Start();
             else Stop();
-           
+
             return IsActief;
         }
 
@@ -270,7 +268,7 @@ namespace Rpm.Productie
                 PerUur = klus.PerUur;
                 ArtikelNr = klus.ArtikelNr;
                 Omschrijving = klus.Omschrijving;
-                Tijden.UpdateLijst(klus.Tijden,true);
+                Tijden.UpdateLijst(klus.Tijden, true);
                 return true;
             }
             catch (Exception e)
@@ -286,7 +284,7 @@ namespace Rpm.Productie
 
         public Werk GetWerk(ProductieFormulier form)
         {
-            return Productie.Werk.FromPath(Path,form);
+            return Productie.Werk.FromPath(Path, form);
         }
 
         private Task<WerkPlek> GetWerkPlek(bool createnew)
@@ -333,7 +331,8 @@ namespace Rpm.Productie
                 var wp = await GetWerkPlek(false);
                 if (wp != null && PersoneelNaam != null)
                 {
-                    var removed = wp.Personen.RemoveAll(x => string.Equals(x.PersoneelNaam, PersoneelNaam, StringComparison.CurrentCultureIgnoreCase));
+                    var removed = wp.Personen.RemoveAll(x =>
+                        string.Equals(x.PersoneelNaam, PersoneelNaam, StringComparison.CurrentCultureIgnoreCase));
                     if (removed > 0)
                     {
                         var xvalue = removed == 1 ? "medewerker" : "medewerkers";

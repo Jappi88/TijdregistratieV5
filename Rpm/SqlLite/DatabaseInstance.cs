@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Timers;
 using Rpm.Productie;
 using Rpm.Various;
 
@@ -19,13 +17,8 @@ namespace Rpm.SqlLite
 
     public class DatabaseInstance<T> : IDbCollection<T>
     {
-        public bool RaiseEventWhenChanged { get; set; } = true;
-        public bool RaiseEventWhenDeleted { get; set; } = true;
-        public event FileSystemEventHandler InstanceChanged;
-        public event FileSystemEventHandler InstanceDeleted;
-        public event ProgressChangedHandler ProgressChanged;
-
-        public DatabaseInstance(DbInstanceType instanceType, string dbrootpath, string dbname, string collectionname, bool watchdatabase)
+        public DatabaseInstance(DbInstanceType instanceType, string dbrootpath, string dbname, string collectionname,
+            bool watchdatabase)
         {
             DbName = dbname;
             DbRootPath = dbrootpath;
@@ -41,6 +34,13 @@ namespace Rpm.SqlLite
         public DbType Type { get; private set; }
         public DbInstanceType InstanceType { get; }
         public SqlDatabase ServerDb { get; private set; }
+        public bool RaiseEventWhenChanged { get; set; } = true;
+        public bool RaiseEventWhenDeleted { get; set; } = true;
+        public event FileSystemEventHandler InstanceChanged;
+        public event FileSystemEventHandler InstanceDeleted;
+
+        public event ProgressChangedHandler ProgressChanged;
+
         //public LiteDatabase LocalDb { get; private set; }
         //public ILiteCollection<T> LocalDbCollection { get; private set; }
         public MultipleFileDb MultiFiles { get; private set; }
@@ -59,7 +59,8 @@ namespace Rpm.SqlLite
                     //LocalDbCollection = LocalDb.GetCollection<T>(CollectionName);
                     break;
                 case DbInstanceType.MultipleFiles:
-                    MultiFiles = new MultipleFileDb(rootpath, watchdatabase, Assembly.GetExecutingAssembly().GetName().Version.ToString(), Type);
+                    MultiFiles = new MultipleFileDb(rootpath, watchdatabase,
+                        Assembly.GetExecutingAssembly().GetName().Version.ToString(), Type);
                     CollectionName = DbName;
                     if (watchdatabase)
                     {
@@ -76,29 +77,6 @@ namespace Rpm.SqlLite
                     break;
             }
         }
-
-        #region Multi Events
-        private void MultiFiles_SecondaryFileDeleted(object sender, System.IO.FileSystemEventArgs e)
-        {
-          OnInstanceDeleted(e);
-        }
-
-        private void MultiFiles_SecondaryFileChanged(object sender, System.IO.FileSystemEventArgs e)
-        {
-           OnInstanceChanged(e);
-        }
-
-        private void MultiFiles_FileDeleted(object sender, System.IO.FileSystemEventArgs e)
-        {
-            OnInstanceDeleted(e);
-        }
-
-        private void MultiFiles_FileChanged(object sender, System.IO.FileSystemEventArgs e)
-        {
-            OnInstanceChanged(e);
-        }
-
-        #endregion Multi Events
 
         private DbType GetType(string name)
         {
@@ -123,9 +101,48 @@ namespace Rpm.SqlLite
             return DbType.None;
         }
 
+        protected virtual void OnInstanceChanged(FileSystemEventArgs value)
+        {
+            if (RaiseEventWhenChanged)
+                InstanceChanged?.Invoke(this, value);
+        }
+
+        protected virtual void OnInstanceDeleted(FileSystemEventArgs value)
+        {
+            if (RaiseEventWhenDeleted)
+                InstanceDeleted?.Invoke(this, value);
+        }
+
+        protected virtual void OnProgressChanged(ProgressArg arg)
+        {
+            ProgressChanged?.Invoke(this, arg);
+        }
+
+        #region Multi Events
+
+        private void MultiFiles_SecondaryFileDeleted(object sender, FileSystemEventArgs e)
+        {
+            OnInstanceDeleted(e);
+        }
+
+        private void MultiFiles_SecondaryFileChanged(object sender, FileSystemEventArgs e)
+        {
+            OnInstanceChanged(e);
+        }
+
+        private void MultiFiles_FileDeleted(object sender, FileSystemEventArgs e)
+        {
+            OnInstanceDeleted(e);
+        }
+
+        private void MultiFiles_FileChanged(object sender, FileSystemEventArgs e)
+        {
+            OnInstanceChanged(e);
+        }
+
+        #endregion Multi Events
+
         #region Implemented
-
-
 
         public Task<T> FindOne(string id)
         {
@@ -136,8 +153,8 @@ namespace Rpm.SqlLite
                     switch (InstanceType)
                     {
                         case DbInstanceType.LiteDb:
-                            //if (LocalDbCollection == null) throw new NullReferenceException();
-                            //return LocalDbCollection.FindById(id);
+                        //if (LocalDbCollection == null) throw new NullReferenceException();
+                        //return LocalDbCollection.FindById(id);
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
                             return MultiFiles.GetEntry<T>(id);
@@ -361,7 +378,7 @@ namespace Rpm.SqlLite
                             break;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
-                            xreturn = MultiFiles.FindEntries<T>(criteria,fullmatch);
+                            xreturn = MultiFiles.FindEntries<T>(criteria, fullmatch);
                             break;
                         case DbInstanceType.Server:
                             if (ServerDb == null) throw new NullReferenceException();
@@ -391,7 +408,7 @@ namespace Rpm.SqlLite
                             return true;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
-                            return MultiFiles.Replace<T>(oldid, newitem,onlylocal);
+                            return MultiFiles.Replace(oldid, newitem, onlylocal);
                         case DbInstanceType.Server:
                             if (ServerDb == null) throw new NullReferenceException();
                             await ServerDb.Delete(oldid, Type);
@@ -445,8 +462,8 @@ namespace Rpm.SqlLite
                     switch (InstanceType)
                     {
                         case DbInstanceType.LiteDb:
-                            //if (LocalDbCollection == null) throw new NullReferenceException();
-                            //return LocalDbCollection.DeleteAll();
+                        //if (LocalDbCollection == null) throw new NullReferenceException();
+                        //return LocalDbCollection.DeleteAll();
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
                             return MultiFiles.DeleteAll();
@@ -511,7 +528,7 @@ namespace Rpm.SqlLite
                             return false;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
-                            return MultiFiles.Upsert(id, item,onlylocal);
+                            return MultiFiles.Upsert(id, item, onlylocal);
                         case DbInstanceType.Server:
                             if (ServerDb == null) throw new NullReferenceException();
                             return await ServerDb.Upsert(item, id, Type);
@@ -539,17 +556,16 @@ namespace Rpm.SqlLite
                             break;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
-                            return MultipleFileDb.FromPath<T>(filepath,true);
+                            return MultipleFileDb.FromPath<T>(filepath, true);
                         case DbInstanceType.Server:
                             if (ServerDb == null) throw new NullReferenceException();
                             break;
                     }
-
-                    
                 }
                 catch
                 {
                 }
+
                 return default;
             });
         }
@@ -585,7 +601,7 @@ namespace Rpm.SqlLite
 
         public Task<bool> Upsert(string id, T item, bool onlylocal)
         {
-            return Update(id, item,onlylocal);
+            return Update(id, item, onlylocal);
         }
 
 
@@ -644,22 +660,5 @@ namespace Rpm.SqlLite
         }
 
         #endregion Implemented
-
-        protected virtual void OnInstanceChanged(FileSystemEventArgs value)
-        {
-            if (RaiseEventWhenChanged)
-                InstanceChanged?.Invoke(this, value);
-        }
-
-        protected virtual void OnInstanceDeleted(FileSystemEventArgs value)
-        {
-            if (RaiseEventWhenDeleted)
-                InstanceDeleted?.Invoke(this, value);
-        }
-
-        protected virtual void OnProgressChanged(ProgressArg arg)
-        {
-            ProgressChanged?.Invoke(this, arg);
-        }
     }
 }

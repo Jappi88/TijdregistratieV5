@@ -1,14 +1,22 @@
-﻿using Rpm.Opmerking;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using Rpm.Opmerking;
 
 namespace Forms
 {
-    public partial class OpmerkingEditor : Forms.MetroBase.MetroBaseForm
+    public partial class OpmerkingEditor : MetroBaseForm
     {
         private OpmerkingEntry _Selected;
+
+        public OpmerkingEditor(OpmerkingEntry entry = null)
+        {
+            InitializeComponent();
+            InitEntry(entry);
+        }
+
         public OpmerkingEntry SelectedEntry
         {
             get => _Selected;
@@ -18,31 +26,39 @@ namespace Forms
         private void InitEntry(OpmerkingEntry entry)
         {
             _Selected = entry ?? new OpmerkingEntry();
-            xtitle.Text = string.IsNullOrEmpty(_Selected.Title?.Trim()) ? "Vul in een onderwerp..." : _Selected.Title.Trim();
+            xtitle.Text = string.IsNullOrEmpty(_Selected.Title?.Trim())
+                ? "Vul in een onderwerp..."
+                : _Selected.Title.Trim();
             if (_Selected.Ontvangers is {Count: > 0})
                 xontvangers.Text = string.Join(";", _Selected.Ontvangers);
-            else  xontvangers.SelectedIndex = 1;
-            xopmerking.Text = string.IsNullOrEmpty(_Selected.Opmerking?.Trim()) ? "Vul in een vraag, opmerking of een verzoek..." : _Selected.Opmerking.Trim();
+            else xontvangers.SelectedIndex = 1;
+            xopmerking.Text = string.IsNullOrEmpty(_Selected.Opmerking?.Trim())
+                ? "Vul in een vraag, opmerking of een verzoek..."
+                : _Selected.Opmerking.Trim();
             xgeplaatstOpLabel.Text = _Selected.GeplaatstOp.ToString(CultureInfo.CurrentCulture);
         }
 
-        public OpmerkingEditor(OpmerkingEntry entry = null)
-        {
-            InitializeComponent();
-            InitEntry(entry);
-        }
-
-        private void xOpslaan_Click(object sender, System.EventArgs e)
+        private void xOpslaan_Click(object sender, EventArgs e)
         {
             var ont = xontvangers.Text.Trim().Split(';').Where(x => !string.IsNullOrEmpty(x)).ToList();
-            if (xtitle.Text.Trim().Length < 4 || string.Equals(xtitle.Text.Trim(), "vul in een onderwerp...", StringComparison.CurrentCultureIgnoreCase))
-                XMessageBox.Show(this, $"Vul in een geldige Title a.u.b.", "Ongeldige Title", MessageBoxIcon.Warning);
-            else if(string.Equals(xontvangers.Text, xontvangers.Items[1].ToString(),
-                StringComparison.CurrentCultureIgnoreCase) || ont.Count == 0)
-                XMessageBox.Show(this, $"Vul in minimaal 1 ontvanger a.u.b.", "Ongeldige Ontvanger(s)", MessageBoxIcon.Warning);
-            else if (xopmerking.Text.Trim().Length < 8 || string.Equals(xopmerking.Text, "Vul in een vraag, opmerking of een verzoek...",
-                StringComparison.CurrentCultureIgnoreCase))
-                XMessageBox.Show(this, $"Vul in een geldige Opmerking a.u.b.", "Ongeldige Opmerking", MessageBoxIcon.Warning);
+            if (xtitle.Text.Trim().Length < 4 || string.Equals(xtitle.Text.Trim(), "vul in een onderwerp...",
+                    StringComparison.CurrentCultureIgnoreCase))
+            {
+                XMessageBox.Show(this, "Vul in een geldige Title a.u.b.", "Ongeldige Title", MessageBoxIcon.Warning);
+            }
+            else if (string.Equals(xontvangers.Text, xontvangers.Items[1].ToString(),
+                         StringComparison.CurrentCultureIgnoreCase) || ont.Count == 0)
+            {
+                XMessageBox.Show(this, "Vul in minimaal 1 ontvanger a.u.b.", "Ongeldige Ontvanger(s)",
+                    MessageBoxIcon.Warning);
+            }
+            else if (xopmerking.Text.Trim().Length < 8 || string.Equals(xopmerking.Text,
+                         "Vul in een vraag, opmerking of een verzoek...",
+                         StringComparison.CurrentCultureIgnoreCase))
+            {
+                XMessageBox.Show(this, "Vul in een geldige Opmerking a.u.b.", "Ongeldige Opmerking",
+                    MessageBoxIcon.Warning);
+            }
             else
             {
                 _Selected.SetOpmerking(xtitle.Text.Trim(), xopmerking.Text.Trim(), ont);
@@ -50,33 +66,31 @@ namespace Forms
             }
         }
 
-        private void xannuleren_Click(object sender, System.EventArgs e)
+        private void xannuleren_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
         }
 
-        private void xtitle_Enter(object sender, System.EventArgs e)
+        private void xtitle_Enter(object sender, EventArgs e)
         {
             if (string.Equals(xtitle.Text.Trim(), "vul in een onderwerp...", StringComparison.CurrentCultureIgnoreCase))
                 xtitle.Text = "";
         }
 
-        private void xtitle_Leave(object sender, System.EventArgs e)
+        private void xtitle_Leave(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(xtitle.Text.Trim()))
                 xtitle.Text = @"Vul in een onderwerp...";
         }
 
-        private void xontvangers_Enter(object sender, System.EventArgs e)
+        private void xontvangers_Enter(object sender, EventArgs e)
         {
             if (string.Equals(xontvangers.Text, xontvangers.Items[1].ToString(),
-                StringComparison.CurrentCultureIgnoreCase))
-            {
+                    StringComparison.CurrentCultureIgnoreCase))
                 xontvangers.Text = "";
-            }
         }
 
-        private void xontvangers_Leave(object sender, System.EventArgs e)
+        private void xontvangers_Leave(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(xontvangers.Text.Trim()))
             {
@@ -85,16 +99,14 @@ namespace Forms
             }
         }
 
-        private void xopmerking_Enter(object sender, System.EventArgs e)
+        private void xopmerking_Enter(object sender, EventArgs e)
         {
             if (string.Equals(xopmerking.Text, "Vul in een vraag, opmerking of een verzoek...",
-                StringComparison.CurrentCultureIgnoreCase))
-            {
+                    StringComparison.CurrentCultureIgnoreCase))
                 xopmerking.Text = "";
-            }
         }
 
-        private void xopmerking_Leave(object sender, System.EventArgs e)
+        private void xopmerking_Leave(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(xopmerking.Text.Trim()))
                 xopmerking.Text = @"Vul in een vraag, opmerking of een verzoek...";

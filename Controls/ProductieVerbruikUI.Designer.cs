@@ -162,7 +162,7 @@
             // 
             // xperPak
             // 
-            this.xperPak.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xperPak.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xperPak.ForeColor = System.Drawing.Color.Navy;
             this.xperPak.Location = new System.Drawing.Point(8, 213);
             this.xperPak.Maximum = new decimal(new int[] {
@@ -190,8 +190,8 @@
             // 
             // xproduceren
             // 
-            this.xproduceren.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xproduceren.ForeColor = System.Drawing.Color.Navy;
+            this.xproduceren.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xproduceren.ForeColor = System.Drawing.Color.Red;
             this.xproduceren.Location = new System.Drawing.Point(8, 273);
             this.xproduceren.Maximum = new decimal(new int[] {
             999999999,
@@ -229,7 +229,7 @@
             // 
             // xaantalsporen
             // 
-            this.xaantalsporen.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xaantalsporen.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xaantalsporen.ForeColor = System.Drawing.Color.Navy;
             this.xaantalsporen.Location = new System.Drawing.Point(8, 153);
             this.xaantalsporen.Maximum = new decimal(new int[] {
@@ -283,7 +283,7 @@
             // 
             // xuitganglengte
             // 
-            this.xuitganglengte.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xuitganglengte.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xuitganglengte.ForeColor = System.Drawing.Color.Navy;
             this.xuitganglengte.Location = new System.Drawing.Point(8, 91);
             this.xuitganglengte.Maximum = new decimal(new int[] {
@@ -318,7 +318,7 @@
             // xprodlengte
             // 
             this.xprodlengte.DecimalPlaces = 3;
-            this.xprodlengte.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xprodlengte.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xprodlengte.ForeColor = System.Drawing.Color.Navy;
             this.xprodlengte.Increment = new decimal(new int[] {
             1,

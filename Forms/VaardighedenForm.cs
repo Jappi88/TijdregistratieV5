@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
+using Forms.MetroBase;
 using Rpm.Productie;
-using Various;
 
 namespace Forms
 {
-    public partial class VaardighedenForm : Forms.MetroBase.MetroBaseForm
+    public partial class VaardighedenForm : MetroBaseForm
     {
         public VaardighedenForm(Personeel persoon)
         {

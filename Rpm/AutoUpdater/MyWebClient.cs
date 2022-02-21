@@ -14,7 +14,7 @@ namespace AutoUpdaterDotNET
         /// <inheritdoc />
         protected override WebResponse GetWebResponse(WebRequest request, IAsyncResult result)
         {
-            WebResponse webResponse = base.GetWebResponse(request, result);
+            var webResponse = base.GetWebResponse(request, result);
             ResponseUri = webResponse.ResponseUri;
             return webResponse;
         }

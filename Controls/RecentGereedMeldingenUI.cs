@@ -13,9 +13,7 @@ namespace Controls
 {
     public partial class RecentGereedMeldingenUI : UserControl
     {
-        public bool IsLoaded { get; private set; }
-
-        public bool IsSyncing { get; private set; }
+        private bool _iswaiting;
         //TimeSpan _TijdTerug = TimeSpan.FromDays(1);
         //public TimeSpan TijdTerug
         //{
@@ -28,6 +26,18 @@ namespace Controls
         //}
 
         private DateTime _LastSynced;
+
+        public RecentGereedMeldingenUI()
+        {
+            InitializeComponent();
+            productieListControl1.ValidHandler = IsAllowed;
+            productieListControl1.ItemCountChanged += ProductieListControl1_ItemCountChanged;
+            productieListControl1.RemoveCustomItemIfNotValid = true;
+        }
+
+        public bool IsLoaded { get; private set; }
+
+        public bool IsSyncing { get; private set; }
         // public int SyncInterval { get; set; } = 300000;//5 min
         //public bool EnableSync
         //{
@@ -44,14 +54,6 @@ namespace Controls
 
         public int ItemCount => productieListControl1.ProductieLijst.Items.Count;
         private TijdEntry Bereik { get; set; }
-
-        public RecentGereedMeldingenUI()
-        {
-            InitializeComponent();
-            productieListControl1.ValidHandler = IsAllowed;
-            productieListControl1.ItemCountChanged += ProductieListControl1_ItemCountChanged;
-            productieListControl1.RemoveCustomItemIfNotValid = true;
-        }
 
         private void ProductieListControl1_ItemCountChanged(object sender, EventArgs e)
         {
@@ -79,8 +81,12 @@ namespace Controls
             }
 
             Bereik = new TijdEntry
-            { Start = Manager.Opties.UseLastGereedStart ? Manager.Opties.LastGereedStart :
-            DateTime.Now.Subtract(TimeSpan.FromDays(1)), Stop = xtotgereed.Checked ? xtotgereed.Value : DateTime.Now };
+            {
+                Start = Manager.Opties.UseLastGereedStart
+                    ? Manager.Opties.LastGereedStart
+                    : DateTime.Now.Subtract(TimeSpan.FromDays(1)),
+                Stop = xtotgereed.Checked ? xtotgereed.Value : DateTime.Now
+            };
         }
 
         public void LoadBewerkingen()
@@ -111,7 +117,7 @@ namespace Controls
 
         private void Manager_OnSettingsChanged(object instance, UserSettings settings, bool reinit)
         {
-            if (this.Disposing || this.IsDisposed) return;
+            if (Disposing || IsDisposed) return;
             UpdateGereedProducties();
         }
 
@@ -219,7 +225,7 @@ namespace Controls
                         if (IsDisposed || Disposing) return;
                         var id = xprodids[i];
                         if (string.IsNullOrEmpty(id)) continue;
-                        var prod = await Manager.Database.GetProductie(id);
+                        var prod = Manager.Database.GetProductie(id);
                         if (prod?.Bewerkingen == null) continue;
                         foreach (var bw in prod.Bewerkingen)
                             if (IsAllowed(bw, null))
@@ -242,8 +248,6 @@ namespace Controls
             });
         }
 
-        private bool _iswaiting;
-
         private async void DoWait()
         {
             if (_iswaiting) return;
@@ -256,13 +260,15 @@ namespace Controls
                 try
                 {
                     xstatus.Invoke(new Action(() =>
-                                   {
-                                       if (IsDisposed || Disposing) return;
-                                       xstatus.Text = value.PadRight(value.Length + xcur, '.');
-                                       xstatus.Invalidate();
-                                   }));
+                    {
+                        if (IsDisposed || Disposing) return;
+                        xstatus.Text = value.PadRight(value.Length + xcur, '.');
+                        xstatus.Invalidate();
+                    }));
                 }
-                catch { }
+                catch
+                {
+                }
 
                 await Task.Delay(350);
                 if (cur > 5)
@@ -308,7 +314,7 @@ namespace Controls
             BeginInvoke(new MethodInvoker(() =>
             {
                 if (IsDisposed || Disposing) return;
-                var count = productieListControl1?.ProductieLijst?.Items.Count??0;
+                var count = productieListControl1?.ProductieLijst?.Items.Count ?? 0;
                 //var count = bws?.Count ?? 0;
                 var x1 = count == 1 ? "Gereedmelding" : "Gereedmeldingen";
                 var tijd = Bereik.Stop < Bereik.Start ? new TimeSpan() : Bereik.Stop - Bereik.Start;

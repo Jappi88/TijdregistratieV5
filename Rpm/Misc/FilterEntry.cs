@@ -27,17 +27,24 @@ namespace Rpm.Misc
     [Serializable]
     public class FilterEntry
     {
+        private Operand _fOperand;
+
+        public FilterEntry()
+        {
+            ID = DateTime.Now.GetHashCode();
+        }
+
         public int ID { get; set; }
         public string PropertyName { get; set; }
         public object Value { get; set; }
         public bool CompareWithProperty { get; set; }
         public bool DezeWeekDateTime { get; set; }
         public FilterType FilterType { get; set; }
-        private Operand _fOperand;
         public Operand OldOperandType { get; set; } = Operand.None;
         public List<FilterEntry> ChildEntries { get; set; }
         public int RangeValue { get; set; }
         public RangeDeviderType DeviderType { get; set; }
+
         public Operand OperandType
         {
             get => _fOperand;
@@ -51,11 +58,6 @@ namespace Rpm.Misc
 
         public string Criteria => ToString();
 
-        public FilterEntry()
-        {
-            ID = DateTime.Now.GetHashCode();
-        }
-
         public bool ContainsFilter(object instance)
         {
             try
@@ -63,13 +65,11 @@ namespace Rpm.Misc
                 if (instance == null || Value == null) return false;
                 object xvalue = null;
                 if (CompareWithProperty && Value is string xpropname && !string.IsNullOrEmpty(xpropname))
-                {
                     xvalue = instance.GetPropValue(xpropname);
-                }
                 var propertyvalue =
                     string.IsNullOrEmpty(PropertyName) ? instance : instance.GetPropValue(PropertyName);
                 if (propertyvalue == null) return false;
-                var xreturn = ContainsFilter(xvalue??Value, propertyvalue, FilterType);
+                var xreturn = ContainsFilter(xvalue ?? Value, propertyvalue, FilterType);
                 if (ChildEntries is {Count: > 0})
                     foreach (var filter in ChildEntries)
                         switch (filter.OperandType)
@@ -101,11 +101,11 @@ namespace Rpm.Misc
             var xvaltypes = Enum.GetNames(typeof(FilterType)).ToList();
             xvaltypes.RemoveAll(x => x.ToLower() == "none");
             if (type == typeof(string))
-            {
                 xvaltypes.RemoveAll(x => x.ToLower().StartsWith("kleiner") || x.ToLower().StartsWith("groter"));
-            }
             else if (type == typeof(bool))
-                xvaltypes.RemoveAll(x => x.ToLower().StartsWith("kleiner") || x.ToLower().StartsWith("groter") || x.ToLower().StartsWith("bevat") || x.ToLower().Contains("met"));
+                xvaltypes.RemoveAll(x =>
+                    x.ToLower().StartsWith("kleiner") || x.ToLower().StartsWith("groter") ||
+                    x.ToLower().StartsWith("bevat") || x.ToLower().Contains("met"));
             else xvaltypes.RemoveAll(x => x.ToLower().StartsWith("bevat") || x.ToLower().Contains("met"));
 
             return xvaltypes;
@@ -116,7 +116,7 @@ namespace Rpm.Misc
             try
             {
                 var xvaltypes = GetFilterStringTypesByType(type);
-            
+
                 return xvaltypes.Select(x => (FilterType) Enum.Parse(typeof(FilterType), x)).ToList();
             }
             catch (Exception e)
@@ -153,7 +153,7 @@ namespace Rpm.Misc
                 case RangeDeviderType.Keer:
                     return value * RangeValue;
                 case RangeDeviderType.Procent:
-                    return value * ((double)RangeValue / 100);
+                    return value * ((double) RangeValue / 100);
                 case RangeDeviderType.MOD:
                     return value % RangeValue;
             }
@@ -178,10 +178,11 @@ namespace Rpm.Misc
                 case RangeDeviderType.Keer:
                     return value * RangeValue;
                 case RangeDeviderType.Procent:
-                    return value * ((decimal)RangeValue / 100);
+                    return value * ((decimal) RangeValue / 100);
                 case RangeDeviderType.MOD:
                     return value % RangeValue;
             }
+
             return value;
         }
 
@@ -202,10 +203,11 @@ namespace Rpm.Misc
                 case RangeDeviderType.Keer:
                     return value * RangeValue;
                 case RangeDeviderType.Procent:
-                    return (int)(value * ((double)RangeValue / 100));
+                    return (int) (value * ((double) RangeValue / 100));
                 case RangeDeviderType.MOD:
                     return value % RangeValue;
             }
+
             return value;
         }
 
@@ -373,10 +375,8 @@ namespace Rpm.Misc
                         break;
                     case DateTime xvalue:
                         if (valueA is not DateTime value2)
-                        {
                             if (!DateTime.TryParse(valueA.ToString(), out value2))
                                 return false;
-                        }
 
                         if (xvalue.Year == 9999 && xvalue.Month == 1 && xvalue.Day == 1)
                             xvalue = DateTime.Now.ChangeTime(xvalue.TimeOfDay);
@@ -396,11 +396,12 @@ namespace Rpm.Misc
                             var xcur = xvalue.Year - DateTime.Now.Year;
                             weeknr = DateTime.Now.GetWeekNr();
                             xweeknr = xvalue.GetWeekNr();
-                            if(xcur > 0)
-                                xweeknr += (52 * xcur);
+                            if (xcur > 0)
+                                xweeknr += 52 * xcur;
                             else if (xcur < 0)
-                                weeknr += (52 * (-xcur));
+                                weeknr += 52 * -xcur;
                         }
+
                         switch (type)
                         {
                             case FilterType.GelijkAan:
@@ -525,19 +526,18 @@ namespace Rpm.Misc
                     case int xvalue:
                         return $"<b>{xvalue.ToString(CultureInfo.InvariantCulture)}</b>";
                     case DateTime xvalue:
-                        string xreturn = "";
+                        var xreturn = "";
                         if (DezeWeekDateTime)
                         {
                             var weeknr = DateTime.Now.GetWeekNr();
                             return $"'<b>Deze Week({weeknr})</b>'";
                         }
+
                         if (xvalue.Year == 9999 && xvalue.Month == 1 && xvalue.Day == 1)
                             xreturn = "'<b>Huidige Datum</b>' ";
                         else xreturn = $"'<b>{xvalue.Date:D}</b>' ";
                         if (xvalue.TimeOfDay > new TimeSpan())
-                        {
                             xreturn += $"'<b>{xvalue.TimeOfDay.Hours}:{xvalue.TimeOfDay.Minutes}</b>'";
-                        }
                         else
                             xreturn += "'<b>Huidige Tijd</b>'";
                         return xreturn.Trim();
@@ -570,13 +570,12 @@ namespace Rpm.Misc
             int index;
             while ((index = html.IndexOf("<", StringComparison.Ordinal)) > -1)
             {
-                int xend = html.IndexOf(">", StringComparison.Ordinal);
+                var xend = html.IndexOf(">", StringComparison.Ordinal);
                 if (xend > -1)
-                    html = html.Remove(index, ((xend + 1) - index));
+                    html = html.Remove(index, xend + 1 - index);
             }
 
             return html;
-
         }
 
         public new string ToString()

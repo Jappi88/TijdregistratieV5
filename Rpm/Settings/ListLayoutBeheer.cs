@@ -1,20 +1,17 @@
-﻿using Rpm.Mailing;
-using Rpm.Productie;
-using Rpm.SqlLite;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NPOI.OpenXmlFormats.Dml;
+using Rpm.Mailing;
+using Rpm.Productie;
+using Rpm.SqlLite;
+using Rpm.Various;
 
 namespace ProductieManager.Rpm.Settings
 {
     public class ListLayoutBeheer : IDisposable
     {
         public static readonly string DbVersion = "1.0.0.0";
-        public bool Disposed => _disposed;
-        public MultipleFileDb Database { get; private set; }
         public readonly string RootPath;
 
         public ListLayoutBeheer(string path)
@@ -25,6 +22,18 @@ namespace ProductieManager.Rpm.Settings
             Database = new MultipleFileDb(RootPath, true, DbVersion, DbType.LijstLayouts);
             Database.FileChanged += Database_Changed;
             Database.FileDeleted += Database_FileDeleted;
+        }
+
+        public bool Disposed { get; private set; }
+
+        public MultipleFileDb Database { get; private set; }
+
+        public void Dispose()
+        {
+            // Dispose of unmanaged resources.
+            Dispose(true);
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
         }
 
 
@@ -47,7 +56,7 @@ namespace ProductieManager.Rpm.Settings
             {
                 if (Database == null || Disposed)
                     return false;
-                bool xlast = Database.RaiseChangeEvent;
+                var xlast = Database.RaiseChangeEvent;
                 Database.RaiseChangeEvent = raiseevent;
                 if (Database.Upsert(entry.Name, entry, false))
                 {
@@ -91,8 +100,8 @@ namespace ProductieManager.Rpm.Settings
                 {
                     if (showmessage)
                     {
-                        string msg = $"[Lijst Layout] {entry.Name} " +
-                                     $"verwijderd!";
+                        var msg = $"[Lijst Layout] {entry.Name} " +
+                                  "verwijderd!";
                         Manager.RemoteMessage(new RemoteMessage(msg, MessageAction.AlgemeneMelding, MsgType.Info));
                     }
 
@@ -115,8 +124,8 @@ namespace ProductieManager.Rpm.Settings
                 if (string.IsNullOrEmpty(listname) || Database == null) return false;
                 if (Database.Delete(listname))
                 {
-                    string msg = $"[Lijst Layout] {listname} " +
-                                 $"verwijderd!";
+                    var msg = $"[Lijst Layout] {listname} " +
+                              "verwijderd!";
                     Manager.RemoteMessage(new RemoteMessage(msg, MessageAction.AlgemeneMelding, MsgType.Info));
                     return true;
                 }
@@ -132,7 +141,7 @@ namespace ProductieManager.Rpm.Settings
 
         public List<ExcelSettings> GetAlleLayouts()
         {
-            List<ExcelSettings> xreturn = new List<ExcelSettings>();
+            var xreturn = new List<ExcelSettings>();
             try
             {
                 if (Database == null) return xreturn;
@@ -142,12 +151,13 @@ namespace ProductieManager.Rpm.Settings
             {
                 Console.WriteLine(e);
             }
+
             return xreturn;
         }
 
         public List<string> GetAlleIDs()
         {
-            List<string> xreturn = new List<string>();
+            var xreturn = new List<string>();
             try
             {
                 if (Database == null) return xreturn;
@@ -157,6 +167,7 @@ namespace ProductieManager.Rpm.Settings
             {
                 Console.WriteLine(e);
             }
+
             return xreturn;
         }
 
@@ -193,25 +204,13 @@ namespace ProductieManager.Rpm.Settings
             LayoutDeleted?.Invoke(sender, EventArgs.Empty);
         }
 
-        public void Dispose()
-        {
-            // Dispose of unmanaged resources.
-            Dispose(true);
-            // Suppress finalization.
-            GC.SuppressFinalize(this);
-        }
-
-        private bool _disposed;
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposed)
-            {
-                return;
-            }
+            if (Disposed) return;
 
             Database?.Dispose();
             Database = null;
-            _disposed = true;
+            Disposed = true;
         }
     }
 }

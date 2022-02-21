@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using Forms.MetroBase;
 
 namespace Forms
@@ -10,7 +11,7 @@ namespace Forms
             InitializeComponent();
         }
 
-        private void ProductieOverzichtForm_Shown(object sender, System.EventArgs e)
+        private void ProductieOverzichtForm_Shown(object sender, EventArgs e)
         {
             productieOverzichtUI1.InitUI();
         }

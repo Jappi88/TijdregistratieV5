@@ -1,14 +1,19 @@
-﻿using ProductieManager.Properties;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using ProductieManager.Properties;
 
 namespace Forms
 {
-    public partial class MethodsForm : Forms.MetroBase.MetroBaseForm
+    public partial class MethodsForm : MetroBaseForm
     {
+        private bool _Cancel;
+
+        private bool _IsRunning;
+
         //public List<Task<bool>> TasksList { get; private set; }
         public MethodsForm(Dictionary<string, Task<bool>> tasks)
         {
@@ -38,9 +43,6 @@ namespace Forms
             }
         }
 
-        private bool _IsRunning;
-        private bool _Cancel;
-
         private async void RunTasks()
         {
             if (_IsRunning) return;
@@ -48,7 +50,7 @@ namespace Forms
             _Cancel = false;
             try
             {
-                for (int i = 0; i < listView1.Items.Count; i++)
+                for (var i = 0; i < listView1.Items.Count; i++)
                 {
                     if (_Cancel) break;
                     var item = listView1.Items[i];
@@ -63,8 +65,9 @@ namespace Forms
                         listView1.Items.RemoveAt(i--);
                         listView1.Invalidate();
                     }
+
                     Application.DoEvents();
-                    this.Select();
+                    Select();
                 }
             }
             catch (Exception e)
@@ -74,29 +77,27 @@ namespace Forms
 
             _IsRunning = false;
             if (listView1.Items.Count == 0)
-                this.Close();
+                Close();
         }
 
         private void xannuleren_Click(object sender, EventArgs e)
         {
             if (CloseTasks())
-                this.Close();
+                Close();
         }
 
         private bool CloseTasks()
         {
-            int count = listView1.Items.Count;
+            var count = listView1.Items.Count;
 
             if (count > 0)
             {
-                string x1 = count == 1 ? "actie" : "acties";
+                var x1 = count == 1 ? "actie" : "acties";
                 if (XMessageBox.Show(
-                    this,$"Er staan nog {count} {x1} open!\nDeze scherm sluiten zal alle acties annuleren...\n\n" +
-                    $"Weetje zeker dat je alsnog wilt sluiten?", "Alles Annuleren?", MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning) == DialogResult.No)
-                {
+                        this, $"Er staan nog {count} {x1} open!\nDeze scherm sluiten zal alle acties annuleren...\n\n" +
+                              "Weetje zeker dat je alsnog wilt sluiten?", "Alles Annuleren?", MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning) == DialogResult.No)
                     return false;
-                }
             }
 
             _Cancel = true;
@@ -121,7 +122,7 @@ namespace Forms
                 {
                     Application.DoEvents();
                     if (!listView1.Items.Cast<ListViewItem>().Select(x => x.Tag as Task<bool>)
-                        .Any(x => x is {Status: TaskStatus.Running}))
+                            .Any(x => x is {Status: TaskStatus.Running}))
                         break;
                 }
 
@@ -129,8 +130,8 @@ namespace Forms
                 xpausestart.Enabled = true;
                 xpausestart.Image = Resources.play_button_icon_icons_com_60615;
                 xpausestart.Text = @"Hervat Acties";
-                
             }
+
             xpausestart.Invalidate();
         }
 

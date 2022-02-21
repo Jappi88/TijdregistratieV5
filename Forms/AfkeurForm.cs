@@ -11,7 +11,6 @@ namespace Forms
 {
     public partial class AfkeurForm : MetroForm
     {
-        public ProductieFormulier Productie { get; private set; }
         public AfkeurForm()
         {
             InitializeComponent();
@@ -22,13 +21,15 @@ namespace Forms
             InitProductie(productie);
         }
 
+        public ProductieFormulier Productie { get; private set; }
+
         public string Title
         {
-            get => this.Text;
+            get => Text;
             set
             {
-                this.Text = value;
-                this.Invalidate();
+                Text = value;
+                Invalidate();
             }
         }
 
@@ -40,14 +41,14 @@ namespace Forms
             xmaterialpanel.Controls.Clear();
             if (Productie.Materialen != null)
             {
-                int index = 0;
+                var index = 0;
                 foreach (var mat in Productie.Materialen)
                 {
                     if (mat == null) continue;
                     var xui = new AfkeurEntryUI();
                     xui.InitMateriaal(mat);
                     //xui.Dock = DockStyle.Top;
-                    xui.Location = new Point(5, (index * 85) + 5);
+                    xui.Location = new Point(5, index * 85 + 5);
                     xui.Size = new Size(xmaterialpanel.Width - 10, 85);
                     xui.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
                     xmaterialpanel.Controls.Add(xui);
@@ -60,12 +61,16 @@ namespace Forms
 
         private async void xok_Click(object sender, EventArgs e)
         {
-            if (Productie == null) DialogResult = DialogResult.Cancel;
+            if (Productie == null)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
             else
             {
                 try
                 {
-                    Productie.Materialen = xmaterialpanel.Controls.Cast<AfkeurEntryUI>().Select(x => x.Materiaal).ToList();
+                    Productie.Materialen =
+                        xmaterialpanel.Controls.Cast<AfkeurEntryUI>().Select(x => x.Materiaal).ToList();
                     await Productie.UpdateForm(false, false, null,
                         $"[{Productie.ProductieNr} | {Productie.ArtikelNr}] Afkeur aangepast");
                 }
@@ -73,8 +78,8 @@ namespace Forms
                 {
                     Console.WriteLine(exception);
                 }
-               
-                this.DialogResult = DialogResult.OK;
+
+                DialogResult = DialogResult.OK;
             }
         }
 
@@ -83,12 +88,12 @@ namespace Forms
             DialogResult = DialogResult.Cancel;
         }
 
-        private void AfkeurForm_Shown(object sender, System.EventArgs e)
+        private void AfkeurForm_Shown(object sender, EventArgs e)
         {
             Manager.OnFormulierChanged += Manager_OnFormulierChanged;
         }
 
-        private void AfkeurForm_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
+        private void AfkeurForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
         }
@@ -97,7 +102,7 @@ namespace Forms
         {
             try
             {
-                if (this.Disposing || this.IsDisposed || changedform == null || Productie == null ||
+                if (Disposing || IsDisposed || changedform == null || Productie == null ||
                     !Productie.Equals(changedform))
                     return;
                 Productie = changedform.CreateCopy();

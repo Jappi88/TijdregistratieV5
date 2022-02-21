@@ -1,14 +1,15 @@
 ﻿using System.IO;
 using System.Reflection;
+using Forms.MetroBase;
 
 namespace Forms
 {
-    internal partial class AboutBox1 : Forms.MetroBase.MetroBaseForm
+    internal partial class AboutBox1 : MetroBaseForm
     {
         public AboutBox1()
         {
             InitializeComponent();
-            this.Text = $"About {AssemblyTitle}";
+            Text = $"About {AssemblyTitle}";
             labelProductName.Text = AssemblyProduct;
             labelVersion.Text = $"Version {AssemblyVersion}";
             labelCopyright.Text = AssemblyCopyright;

@@ -15,15 +15,18 @@ namespace Rpm.Various
     public delegate void ProductiesChangedHandler(object sender);
 
     public delegate void FormulierChangedHandler(object sender, ProductieFormulier changedform);
+
     public delegate void FormulierDeletedHandler(object sender, string id);
 
     public delegate void FormulierActieHandler(object[] values, MainAktie type);
 
-    public delegate void BewerkingChangedHandler(object sender, Bewerking bewerking, string change, bool shownotification);
+    public delegate void BewerkingChangedHandler(object sender, Bewerking bewerking, string change,
+        bool shownotification);
 
     public delegate void AccountChangedHandler(object sender, UserAccount account);
 
     public delegate void PersoneelChangedHandler(object sender, Personeel user);
+
     public delegate void PersoneelDeletedHandler(object sender, string id);
 
     public delegate void UserSettingsChangingHandler(object instance, ref UserSettings settings, ref bool cancel);
@@ -49,22 +52,24 @@ namespace Rpm.Various
     public delegate void ProgressChangedHandler(object sender, ProgressArg arg);
 
     public delegate void InstanceChangedHandler(object sender, object value);
+
     public delegate bool IsValidHandler(object value, string filter);
 
     public delegate DialogResult RequestRespondDialogHandler(object sender, string message, string title,
         MessageBoxButtons buttons, MessageBoxIcon icon,
-        string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null, Image customImage = null, MetroColorStyle style = MetroColorStyle.Default);
+        string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null, Image customImage = null,
+        MetroColorStyle style = MetroColorStyle.Default);
 
 
     public class ProgressArg
     {
+        public int Current;
+        public bool IsCanceled;
+        public int Max;
         public string Message;
         public int Pogress;
-        public int Current;
-        public int Max;
         public ProgressType Type;
         public object Value;
-        public bool IsCanceled;
 
         public event ProgressChangedHandler Changed;
 

@@ -1,28 +1,39 @@
-﻿using BrightIdeasSoftware;
-using Rpm.Misc;
-using Rpm.Productie;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
+using Rpm.Misc;
+using Rpm.Productie;
 
 namespace Controls
 {
     public partial class ArtikelsUI : UserControl
     {
-        private readonly Dictionary<string, List<Bewerking>> _Values = new Dictionary<string, List<Bewerking>>();
+        private readonly Dictionary<string, List<Bewerking>> _Values = new();
+
+        private string _Filter;
+
+        private bool _iswaiting;
 
         public ArtikelsUI()
         {
             InitializeComponent();
         }
 
+
+        public string SelectedArtikelNr
+        {
+            get => GetSelectedArtikelNr();
+            set => SelectArtikelNr(value);
+        }
+
         public void InitUI()
         {
             productieListControl1.ValidHandler = IsValidHandler;
             productieListControl1.ItemCountChanged += ProductieListControl1_ItemCountChanged;
-            ((OLVColumn)xartikelsList.Columns[0]).ImageGetter = (x) => 0;
+            ((OLVColumn) xartikelsList.Columns[0]).ImageGetter = x => 0;
             xsearchbox.ShowClearButton = true;
             LoadArtikels();
             InitEvents();
@@ -54,19 +65,9 @@ namespace Controls
             StatusTextChanged?.Invoke(text, EventArgs.Empty);
         }
 
-
-        public string SelectedArtikelNr
-        {
-            get => GetSelectedArtikelNr();
-            set => SelectArtikelNr(value);
-        }
-
         private string GetSelectedArtikelNr()
         {
-            if (xartikelsList.SelectedObject is KeyValuePair<string, List<Bewerking>> pair)
-            {
-                return pair.Key;
-            }
+            if (xartikelsList.SelectedObject is KeyValuePair<string, List<Bewerking>> pair) return pair.Key;
 
             return null;
         }
@@ -85,8 +86,6 @@ namespace Controls
             UpdateTitle();
         }
 
-        private bool _iswaiting;
-
         /// <summary>
         ///     Toon laad scherm
         /// </summary>
@@ -98,7 +97,6 @@ namespace Controls
             {
                 try
                 {
-
                     if (Disposing || IsDisposed) return;
                     xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = true; }));
                     var cur = 0;
@@ -106,7 +104,6 @@ namespace Controls
                     //var xcurvalue = xwv;
                     var tries = 0;
                     while (_iswaiting && tries < 200)
-                    {
                         try
                         {
                             if (Disposing || IsDisposed) return;
@@ -129,15 +126,13 @@ namespace Controls
                         {
                             break;
                         }
-                    }
+
                     if (Disposing || IsDisposed) return;
                     xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
                 }
                 catch (Exception e)
                 {
                 }
-
-                
             });
         }
 
@@ -165,10 +160,11 @@ namespace Controls
                         StopWait();
                         return;
                     }
+
                     if (_Values.ContainsKey(bw.ArtikelNr.ToLower()))
                         _Values[bw.ArtikelNr.ToLower()].Add(bw);
                     else
-                        _Values.Add(bw.ArtikelNr.ToLower(), new List<Bewerking>() {bw});
+                        _Values.Add(bw.ArtikelNr.ToLower(), new List<Bewerking> {bw});
                 }
 
                 ListArtikels();
@@ -186,7 +182,7 @@ namespace Controls
         private void UpdateTitle()
         {
             var x1 = _Values.Count == 1 ? "Artikel" : "Artikelen";
-            string x2 = String.Empty;
+            var x2 = string.Empty;
             if (xartikelsList.SelectedItems.Count > 0)
             {
                 var xselected = xartikelsList.SelectedItems[0].Text;
@@ -194,6 +190,7 @@ namespace Controls
                 var x3 = bws.Count == 1 ? "Bewerking" : "Bewerkingen";
                 x2 = $@"[Selected: {xselected} ({bws.Count} {x3})]";
             }
+
             var text = $@"{_Values.Count} {x1} {x2}";
             OnStatusTextChanged(text);
         }
@@ -201,13 +198,13 @@ namespace Controls
         private void ListArtikels()
         {
             xartikelsList.BeginUpdate();
-            Dictionary<string, List<Bewerking>> values = new Dictionary<string, List<Bewerking>>();
-            string filter = xsearchbox.Text.Replace("Zoeken...", "").Trim();
+            var values = new Dictionary<string, List<Bewerking>>();
+            var filter = xsearchbox.Text.Replace("Zoeken...", "").Trim();
             foreach (var value in _Values)
             {
                 if (!string.IsNullOrEmpty(filter) &&
                     !value.Key.ToLower().Contains(filter.ToLower())) continue;
-                values.Add(value.Key,value.Value);
+                values.Add(value.Key, value.Value);
             }
 
             xartikelsList.SetObjects(values);
@@ -217,6 +214,7 @@ namespace Controls
                 xartikelsList.Items[0].Selected = true;
                 xartikelsList.Items[0].EnsureVisible();
             }
+
             xartikelsList_SelectedIndexChanged(this, EventArgs.Empty);
         }
 
@@ -226,9 +224,7 @@ namespace Controls
             {
                 var xselected = xartikelsList.SelectedItems[0];
                 if (value is Bewerking bew)
-                {
                     return string.Equals(xselected.Text, bew.ArtikelNr, StringComparison.CurrentCultureIgnoreCase);
-                }
 
                 if (value is ProductieFormulier prod)
                     return string.Equals(xselected.Text, prod.ArtikelNr, StringComparison.CurrentCultureIgnoreCase);
@@ -237,7 +233,7 @@ namespace Controls
             return false;
         }
 
-        private void xartikelsList_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void xartikelsList_SelectedIndexChanged(object sender, EventArgs e)
         {
             productieListControl1.DetachEvents();
             if (xartikelsList.SelectedItems.Count > 0)
@@ -250,14 +246,14 @@ namespace Controls
                     return;
                 }
             }
+
             productieListControl1.InitProductie(new List<Bewerking>(), false, true, false);
             UpdateTitle();
         }
 
-        private string _Filter = null;
-        private void xsearchArtikel_TextChanged(object sender, System.EventArgs e)
+        private void xsearchArtikel_TextChanged(object sender, EventArgs e)
         {
-            string filter = xsearchbox.Text.Replace("Zoeken...", "").Trim().ToLower();
+            var filter = xsearchbox.Text.Replace("Zoeken...", "").Trim().ToLower();
             if (string.Equals(filter, _Filter, StringComparison.CurrentCultureIgnoreCase)) return;
             ListArtikels();
             _Filter = filter;
@@ -268,7 +264,7 @@ namespace Controls
             if (string.IsNullOrEmpty(id)) return;
             foreach (var value in _Values)
                 value.Value.RemoveAll(x => string.Equals(x.ProductieNr, id, StringComparison.CurrentCultureIgnoreCase));
-            this.Invoke(new Action(UpdateTitle));
+            Invoke(new Action(UpdateTitle));
         }
 
         private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
@@ -293,8 +289,8 @@ namespace Controls
                     else
                     {
                         _Values.Add(changedform.ArtikelNr.ToLower(), bws);
-                        if (this.InvokeRequired)
-                            this.Invoke(new Action(UpdateTitle));
+                        if (InvokeRequired)
+                            Invoke(new Action(UpdateTitle));
                         else UpdateTitle();
                     }
                 }

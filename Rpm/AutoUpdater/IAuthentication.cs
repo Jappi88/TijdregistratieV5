@@ -1,6 +1,5 @@
 ﻿namespace AutoUpdaterDotNET
 {
-
     /// <summary>
     ///     Interface for authentication
     /// </summary>

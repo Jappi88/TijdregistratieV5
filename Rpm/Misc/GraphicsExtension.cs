@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Net;
 using System.Windows.Forms;
 using MetroFramework.Forms;
 using Rpm.Misc;
@@ -28,7 +29,7 @@ namespace ProductieManager.Rpm.Misc
         public static byte[] ToByteArray(this Image imageIn)
         {
             if (imageIn == null) return null;
-            byte[] bytes = (byte[])(new ImageConverter()).ConvertTo(imageIn, typeof(byte[]));
+            var bytes = (byte[]) new ImageConverter().ConvertTo(imageIn, typeof(byte[]));
             return bytes;
         }
 
@@ -70,13 +71,9 @@ namespace ProductieManager.Rpm.Misc
         public static Bitmap ColorToImage(this Color color, int width, int height)
         {
             var bitmap = new Bitmap(width, height);
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    bitmap.SetPixel(x, y, color);
-                }
-            }
+            for (var x = 0; x < width; x++)
+            for (var y = 0; y < height; y++)
+                bitmap.SetPixel(x, y, color);
 
             return bitmap;
         }
@@ -110,11 +107,12 @@ namespace ProductieManager.Rpm.Misc
             return a.CombineImage(b, a.Width, a.Height, ContentAlignment.BottomRight, scale);
         }
 
-        public static Image WriteTextWithCircle(this Image image, string text, ContentAlignment alignment, Font font, Brush textbrush, Brush circlebrush, int radius)
+        public static Image WriteTextWithCircle(this Image image, string text, ContentAlignment alignment, Font font,
+            Brush textbrush, Brush circlebrush, int radius)
         {
             try
             {
-                Point location = GetAlignmentLocation(alignment, image.Size, radius, radius);
+                var location = GetAlignmentLocation(alignment, image.Size, radius, radius);
                 //var rectf = new RectangleF(location.X, location.Y, image.Width, image.Height); //rectf for My Text
                 using (var g = Graphics.FromImage(image))
                 {
@@ -141,43 +139,44 @@ namespace ProductieManager.Rpm.Misc
 
         public static Bitmap DrawUserCircle(Size PicSize, Brush Brush, string Text, Font font, Color BackColor)
         {
+            var Canvas = new Bitmap(PicSize.Width, PicSize.Height);
+            var g = Graphics.FromImage(Canvas);
 
-            Bitmap Canvas = new Bitmap(PicSize.Width, PicSize.Height);
-            Graphics g = Graphics.FromImage(Canvas);
-            
 
-            Rectangle outerRect = new Rectangle(-1, -1, Canvas.Width + 1, Canvas.Height + 1);
-            Rectangle rect = Rectangle.Inflate(outerRect, -2, -2);
+            var outerRect = new Rectangle(-1, -1, Canvas.Width + 1, Canvas.Height + 1);
+            var rect = Rectangle.Inflate(outerRect, -2, -2);
 
             g.InterpolationMode = InterpolationMode.HighQualityBilinear;
             g.CompositingQuality = CompositingQuality.HighQuality;
             g.PixelOffsetMode = PixelOffsetMode.HighQuality;
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            using GraphicsPath path = new GraphicsPath();
+            using var path = new GraphicsPath();
             g.FillEllipse(new SolidBrush(BackColor),
                 new RectangleF(0, 0, PicSize.Width, PicSize.Height));
-                
+
             path.AddEllipse(rect);
             g.FillPath(Brushes.Transparent, path);
 
-            SizeF stringSize = g.MeasureString(Text, font); //<- Obtiene el tamaño del Texto en pixeles                                                                                 
-            int posX = Convert.ToInt32((PicSize.Width - stringSize.Width) / 2); //<- Calcula la posicion para centrar el Texto
-            int posY = Convert.ToInt32((PicSize.Height - stringSize.Height) / 2);
-                
+            var stringSize =
+                g.MeasureString(Text,
+                    font); //<- Obtiene el tamaño del Texto en pixeles                                                                                 
+            var posX = Convert.ToInt32((PicSize.Width - stringSize.Width) /
+                                       2); //<- Calcula la posicion para centrar el Texto
+            var posY = Convert.ToInt32((PicSize.Height - stringSize.Height) / 2);
+
             g.DrawString(Text, font, Brush, new Point(posX, posY));
             return Canvas;
         }
 
         public static Bitmap DrawUserText(Size PicSize, Brush Brush, string Text, Font font)
         {
+            var Canvas = new Bitmap(PicSize.Width, PicSize.Height);
+            var g = Graphics.FromImage(Canvas);
 
-            Bitmap Canvas = new Bitmap(PicSize.Width, PicSize.Height);
-            Graphics g = Graphics.FromImage(Canvas);
 
-
-           // Rectangle outerRect = new Rectangle(-1, -1, image.Width + 1, image.Height + 1);
-           // Rectangle rect = Rectangle.Inflate(outerRect, -2, -2);
+            // Rectangle outerRect = new Rectangle(-1, -1, image.Width + 1, image.Height + 1);
+            // Rectangle rect = Rectangle.Inflate(outerRect, -2, -2);
 
             g.InterpolationMode = InterpolationMode.HighQualityBilinear;
             g.CompositingQuality = CompositingQuality.HighQuality;
@@ -186,14 +185,14 @@ namespace ProductieManager.Rpm.Misc
 
             //using GraphicsPath path = new GraphicsPath();
             //g.FillEllipse(new SolidBrush(BackColor),
-             //   new RectangleF(0, 0, image.Width, image.Height));
+            //   new RectangleF(0, 0, image.Width, image.Height));
 
-           // path.AddEllipse(rect);
+            // path.AddEllipse(rect);
             //g.FillPath(Brushes.Transparent, path);
 
-            SizeF stringSize = g.MeasureString(Text, font);                                                                              
-            int posX = Convert.ToInt32((Canvas.Width - stringSize.Width) / 2); 
-            int posY = Convert.ToInt32((Canvas.Height - stringSize.Height) / 2);
+            var stringSize = g.MeasureString(Text, font);
+            var posX = Convert.ToInt32((Canvas.Width - stringSize.Width) / 2);
+            var posY = Convert.ToInt32((Canvas.Height - stringSize.Height) / 2);
 
             g.DrawString(Text, font, Brush, new Point(posX, posY));
             return Canvas;
@@ -201,56 +200,56 @@ namespace ProductieManager.Rpm.Misc
 
         public static string Base64Encoded(this Image image, Size size)
         {
-            using MemoryStream m = new MemoryStream();
+            using var m = new MemoryStream();
             image.ResizeImage(size.Width, size.Height).Save(m, ImageFormat.Png);
             var imageBytes = m.ToArray();
 
             // Convert byte[] to Base64 String
-            string base64String = Convert.ToBase64String(imageBytes);
+            var base64String = Convert.ToBase64String(imageBytes);
             return base64String;
         }
 
         public static string Base64Encoded(this Bitmap image)
         {
             if (image == null) return string.Empty;
-            using MemoryStream m = new MemoryStream();
+            using var m = new MemoryStream();
             image.MakeTransparent();
             image.Save(m, ImageFormat.Png);
             var imageBytes = m.ToArray();
 
             // Convert byte[] to Base64 String
-            string base64String = Convert.ToBase64String(imageBytes);
+            var base64String = Convert.ToBase64String(imageBytes);
             return base64String;
         }
 
-        public static Point GetAlignmentLocation(ContentAlignment alignment, Size bound, int xwidth,int xheight)
+        public static Point GetAlignmentLocation(ContentAlignment alignment, Size bound, int xwidth, int xheight)
         {
-            Point point = new Point();
+            var point = new Point();
             switch (alignment)
             {
                 case ContentAlignment.TopLeft:
                     point = new Point(xwidth, xheight);
                     break;
                 case ContentAlignment.TopCenter:
-                    point = new Point((bound.Width / 2) + xwidth, xheight);
+                    point = new Point(bound.Width / 2 + xwidth, xheight);
                     break;
                 case ContentAlignment.TopRight:
                     point = new Point(bound.Width - xwidth, xheight);
                     break;
                 case ContentAlignment.MiddleLeft:
-                    point = new Point(xwidth, (bound.Height / 2) + xheight);
+                    point = new Point(xwidth, bound.Height / 2 + xheight);
                     break;
                 case ContentAlignment.MiddleCenter:
-                    point = new Point((bound.Width / 2) + xwidth, (bound.Height / 2) + xheight);
+                    point = new Point(bound.Width / 2 + xwidth, bound.Height / 2 + xheight);
                     break;
                 case ContentAlignment.MiddleRight:
-                    point = new Point(bound.Width - xwidth, (bound.Height / 2) + xheight);
+                    point = new Point(bound.Width - xwidth, bound.Height / 2 + xheight);
                     break;
                 case ContentAlignment.BottomLeft:
                     point = new Point(xwidth, bound.Height - xheight);
                     break;
                 case ContentAlignment.BottomCenter:
-                    point = new Point((bound.Width / 2) + xwidth, bound.Height - xheight);
+                    point = new Point(bound.Width / 2 + xwidth, bound.Height - xheight);
                     break;
                 case ContentAlignment.BottomRight:
                     point = new Point(bound.Width - xwidth, bound.Height - xheight);
@@ -279,7 +278,7 @@ namespace ProductieManager.Rpm.Misc
             double scale)
         {
             var xreturn = a.ResizeImage(width, height);
-            b = b.ResizeImage((int)(width / scale), (int)(height / scale));
+            b = b.ResizeImage((int) (width / scale), (int) (height / scale));
             try
             {
                 var align = new Size(width - b.Width, height - b.Height);
@@ -347,14 +346,15 @@ namespace ProductieManager.Rpm.Misc
 
         public static Bitmap ChangeOpacity(this Image img, float opacityvalue)
         {
-            Bitmap bmp = new Bitmap(img.Width, img.Height); // Determining Width and Height of Source Image
-            Graphics graphics = Graphics.FromImage(bmp);
-            ColorMatrix colormatrix = new ColorMatrix();
+            var bmp = new Bitmap(img.Width, img.Height); // Determining Width and Height of Source Image
+            var graphics = Graphics.FromImage(bmp);
+            var colormatrix = new ColorMatrix();
             colormatrix.Matrix33 = opacityvalue;
-            ImageAttributes imgAttribute = new ImageAttributes();
+            var imgAttribute = new ImageAttributes();
             imgAttribute.SetColorMatrix(colormatrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
-            graphics.DrawImage(img, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, img.Width, img.Height, GraphicsUnit.Pixel, imgAttribute);
-            graphics.Dispose();   // Releasing all resource used by graphics 
+            graphics.DrawImage(img, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, img.Width, img.Height,
+                GraphicsUnit.Pixel, imgAttribute);
+            graphics.Dispose(); // Releasing all resource used by graphics 
             return bmp;
         }
 
@@ -362,7 +362,7 @@ namespace ProductieManager.Rpm.Misc
         {
             try
             {
-                using var webClient = new System.Net.WebClient();
+                using var webClient = new WebClient();
                 var result = webClient.DownloadData(url);
                 if (result == null || result.Length < 8) return null;
                 var image = Image.FromStream(new MemoryStream(result));
@@ -379,7 +379,7 @@ namespace ProductieManager.Rpm.Misc
         {
             try
             {
-                using var webClient = new System.Net.WebClient();
+                using var webClient = new WebClient();
                 var result = webClient.DownloadData(url);
                 if (result == null || result.Length < 8) return null;
                 return new MemoryStream(result);

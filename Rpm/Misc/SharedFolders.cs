@@ -71,10 +71,6 @@ namespace Rpm.Misc
 
     public sealed class NetworkBrowser
     {
-        #region Public Constructor
-
-        #endregion
-
         #region Public Methods
 
         /// <summary>
@@ -165,6 +161,10 @@ namespace Rpm.Misc
             //return entries found
             return networkComputers;
         }
+
+        #endregion
+
+        #region Public Constructor
 
         #endregion
 

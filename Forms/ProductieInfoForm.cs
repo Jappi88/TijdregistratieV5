@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using MetroFramework.Forms;
-using ProductieManager.Forms;
+﻿using Forms.MetroBase;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using Rpm.Misc;
 using TheArtOfDev.HtmlRenderer.WinForms;
 
 namespace Forms
 {
-    public partial class ProductieInfoForm : MetroForm
+    public partial class ProductieInfoForm : MetroBaseForm
     {
         private readonly List<Bewerking> _Bewerkingen;
 
@@ -27,6 +27,7 @@ namespace Forms
             if (productie == null) return;
             Text = $@"Productie Info [{productie.ArtikelNr} => {productie.ProductieNr}]";
             productieInfoUI1.SetInfo(productie, productie.Omschrijving, Color.White, Color.White, Color.Black);
+            InitEvents();
             productieInfoUI1.Visible = true;
             //xinfopanel.Text = productie.GetHtmlBody(productie.Omschrijving, productie.GetImageFromResources(),
             //    new Size(64, 64), Color.Black, Color.Purple, Color.White);
@@ -44,7 +45,7 @@ namespace Forms
             xcontainer.Controls.Add(xhtml);
             xstatsb.Visible = bewerkingen is {Count: > 0};
             _Bewerkingen = bewerkingen;
-            xexport.Visible = bewerkingen is { Count: > 0 }; ;
+            xexport.Visible = bewerkingen is {Count: > 0};
             Invalidate();
         }
 
@@ -53,17 +54,80 @@ namespace Forms
             if (bew == null) return;
             Text = $@"Werk Info [{bew.ArtikelNr} => {bew.ProductieNr}]";
             productieInfoUI1.SetInfo(bew, bew.Omschrijving, Color.White, Color.White, Color.Black);
+           InitEvents();
             productieInfoUI1.Visible = true;
             //xinfopanel.Text = bew.GetHtmlBody($"{bew.Naam} van: {bew.Omschrijving}", bew.GetImageFromResources(),
             //    new Size(64, 64), Color.Black, Color.Purple, Color.White);
             Invalidate();
         }
 
+        private void InitEvents()
+        {
+            Manager.OnFormulierChanged += Manager_OnFormulierChanged;
+            Manager.OnFormulierDeleted += Manager_OnFormulierDeleted;
+        }
+
+        private void DetachEvents()
+        {
+            Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
+            Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
+        }
+
+        private void Manager_OnFormulierDeleted(object sender, string id)
+        {
+            if (this.Disposing || this.IsDisposed) return;
+            this.BeginInvoke(new Action(() =>
+            {
+                if (productieInfoUI1.Visible)
+                {
+                    if (string.Equals(productieInfoUI1.Productie?.ProductieNr, id,
+                            StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        this.Close();
+                    }
+                }
+            }));
+        }
+
+        private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
+        {
+            if (this.Disposing || this.IsDisposed) return;
+            this.BeginInvoke(new Action(() =>
+            {
+                if (productieInfoUI1.Visible)
+                {
+                    if (string.Equals(productieInfoUI1.Productie?.ProductieNr, changedform.ProductieNr,
+                            StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        Text = $@"Werk Info [{changedform.ArtikelNr} => {changedform.ProductieNr}]";
+                        if (productieInfoUI1.Productie is Bewerking bew)
+                        {
+                            var xbw = changedform.Bewerkingen?.FirstOrDefault(x => x.IsAllowed() && x.Equals(bew));
+                            if (xbw == null)
+                            {
+                                this.Close();
+                                return;
+                            }
+
+                            productieInfoUI1.SetInfo(xbw, changedform.Omschrijving, Color.White, Color.White,
+                                Color.Black);
+                        }
+                        else
+                            productieInfoUI1.SetInfo(changedform, changedform.Omschrijving, Color.White, Color.White,
+                                Color.Black);
+
+                        Invalidate();
+                    }
+                }
+            }));
+        }
+
         public ProductieInfoForm(WerkPlek plek) : this()
         {
             if (plek == null || plek.Werk == null) return;
             Text = $@"Werk Info [{plek.Werk.ArtikelNr} => {plek.Werk.ProductieNr}]";
-            productieInfoUI1.SetInfo(plek.Werk, $"{plek.Naam}: {plek.Werk.Omschrijving}", Color.White, Color.White, Color.Black);
+            productieInfoUI1.SetInfo(plek.Werk, $"{plek.Naam}: {plek.Werk.Omschrijving}", Color.White, Color.White,
+                Color.Black);
             productieInfoUI1.Visible = true;
             //xinfopanel.Text = plek.Werk.GetHtmlBody($"{plek.Naam}: {plek.Werk.Omschrijving}",
             //    Resources.iconfinder_technology, new Size(64, 64), Color.Black, Color.Purple, Color.White);
@@ -101,7 +165,8 @@ namespace Forms
                 var totaalgemaaktText = totaalgemaakt.ToUitgeschrevenTekst();
                 var xbws = bewerkingen.Where(x => x.ActueelPerUur > 0).ToList();
                 var totaalgereed = bewerkingen.Count(x => x.State == ProductieState.Gereed);
-                var latergereed = bewerkingen.Count(x => x.State == ProductieState.Gereed && x.DatumGereed > x.LeverDatum);
+                var latergereed =
+                    bewerkingen.Count(x => x.State == ProductieState.Gereed && x.DatumGereed > x.LeverDatum);
                 var optijdgereed = totaalgereed - latergereed;
                 var gestart = bewerkingen.Count(x => x.State == ProductieState.Gestart);
                 var gestopt = bewerkingen.Count(x => x.State == ProductieState.Gestopt);
@@ -119,7 +184,8 @@ namespace Forms
                 foreach (var bw in bewerkingen)
                 foreach (var per in bw.GetPersoneel())
                     if (!personen.Any(x =>
-                            string.Equals(x.PersoneelNaam, per.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase)))
+                            string.Equals(x.PersoneelNaam, per.PersoneelNaam,
+                                StringComparison.CurrentCultureIgnoreCase)))
                         personen.Add(per);
                 var totaalpersonen = personen.Count;
 
@@ -149,7 +215,7 @@ namespace Forms
                               $"Totaal Gemaakt: <b>{(totaalgemaakt == 0 ? "0" : totaalgemaakt.ToString("##,###"))}</b><br>" +
                               $"Totaal Gemaakt Zin: <b>{totaalgemaaktText}</b><br>" +
                               $"Gemeten P/u: <b>{(actueelperuur == 0 ? "0" : actueelperuur.ToString("##,###"))} p/u</b><br>" +
-                              $"Formulier P/u: <b>{(peruur == 0? "0" : peruur.ToString("##,###"))} p/u</b><br>" +
+                              $"Formulier P/u: <b>{(peruur == 0 ? "0" : peruur.ToString("##,###"))} p/u</b><br>" +
                               $"Gemeten TijdGewerkt: <b>{(actueeltotaaluurgewerkt == 0 ? "0" : actueeltotaaluurgewerkt.ToString("##,###"))} uur</b><br>" +
                               $"Formulier Doorlooptijd: <b>{(totaaluurgewerkt == 0 ? "0" : totaaluurgewerkt.ToString("##,###"))} uur</b><br>" +
                               $"Aantal Personen: <b>{(totaalpersonen == 0 ? "0" : totaalpersonen.ToString("##,###"))}</b><br>" +
@@ -176,7 +242,6 @@ namespace Forms
                 Console.WriteLine(e);
                 return string.Empty;
             }
-            
         }
 
         private void xsluiten_Click(object sender, EventArgs e)
@@ -194,6 +259,11 @@ namespace Forms
         {
             if (_Bewerkingen == null || _Bewerkingen.Count == 0) return;
             new CreateExcelForm(_Bewerkingen).ShowDialog();
+        }
+
+        private void ProductieInfoForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DetachEvents();
         }
     }
 }

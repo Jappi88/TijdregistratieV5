@@ -1,13 +1,14 @@
-﻿using BrightIdeasSoftware;
-using ProductieManager.Rpm.Mailing;
-using Rpm.Productie;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
+using Forms.MetroBase;
+using ProductieManager.Rpm.Mailing;
+using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class EmailClientsForm : Forms.MetroBase.MetroBaseForm
+    public partial class EmailClientsForm : MetroBaseForm
     {
         public EmailClientsForm()
         {
@@ -32,10 +33,7 @@ namespace Forms
 
         private void xdeleteuser_Click(object sender, EventArgs e)
         {
-            foreach (var item in xontvangers.SelectedObjects.Cast<EmailClient>())
-            {
-                xontvangers.RemoveObject(item);
-            }
+            foreach (var item in xontvangers.SelectedObjects.Cast<EmailClient>()) xontvangers.RemoveObject(item);
         }
 
         private void xOpslaan_Click(object sender, EventArgs e)

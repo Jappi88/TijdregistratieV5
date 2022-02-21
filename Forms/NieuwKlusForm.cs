@@ -1,15 +1,16 @@
-﻿using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using Rpm.Misc;
+using Rpm.Productie;
+using Rpm.Various;
 
 namespace Forms
 {
-    public partial class NieuwKlusForm : Forms.MetroBase.MetroBaseForm
+    public partial class NieuwKlusForm : MetroBaseForm
     {
         private readonly bool _save;
 
@@ -17,19 +18,20 @@ namespace Forms
         private string _werkplek;
         private Personeel[] OrigPersoon;
         public Klus SelectedKlus;
-        public bool EditMode { get; private set; }
 
-        public NieuwKlusForm(ProductieFormulier formulier, Personeel pers, bool save,bool editmode, Bewerking bew = null, string werkplek = null)
+        public NieuwKlusForm(ProductieFormulier formulier, Personeel pers, bool save, bool editmode,
+            Bewerking bew = null, string werkplek = null)
         {
             InitializeComponent();
             EditMode = editmode;
-            _save = save; 
-            _origklus = pers.CurrentKlus() ?? new Klus(pers, bew,werkplek);
+            _save = save;
+            _origklus = pers.CurrentKlus() ?? new Klus(pers, bew, werkplek);
             SelectedKlus = _origklus.CreateCopy();
             InitFields(formulier, new[] {pers}, bew, werkplek);
         }
 
-        public NieuwKlusForm(ProductieFormulier formulier, Personeel[] pers, bool save, bool editmode, Bewerking bew = null,
+        public NieuwKlusForm(ProductieFormulier formulier, Personeel[] pers, bool save, bool editmode,
+            Bewerking bew = null,
             string werkplek = null)
         {
             InitializeComponent();
@@ -41,7 +43,7 @@ namespace Forms
             InitFields(formulier, pers, bew, werkplek);
         }
 
-        public NieuwKlusForm(Personeel pers, Klus klus,bool editmode)
+        public NieuwKlusForm(Personeel pers, Klus klus, bool editmode)
         {
             InitializeComponent();
             EditMode = editmode;
@@ -55,6 +57,8 @@ namespace Forms
                 throw new Exception("Ongeldige klus!\nProductie is niet meer beschikbaar.");
             InitFields(prod, new[] {pers}, bew, klus.WerkPlek);
         }
+
+        public bool EditMode { get; }
 
         public Personeel[] Persoon { get; private set; }
         public ProductieFormulier Formulier { get; private set; }
@@ -71,7 +75,7 @@ namespace Forms
             SelectedKlus.ArtikelNr = Formulier.ArtikelNr;
             SelectedKlus.Omschrijving = Formulier.Omschrijving;
             var description = $"Vul in klus gegevens voor {string.Join(", ", Persoon.Select(x => x.PersoneelNaam))}";
-            this.Text = description;
+            Text = description;
             xstatus.Text = description + "\n" +
                            $"[{formulier.ArtikelNr}, {formulier.ProductieNr}] {formulier.Omschrijving.Replace("\n", " ")}";
             if (formulier.Bewerkingen == null || formulier.Bewerkingen.Length == 0)
@@ -96,7 +100,7 @@ namespace Forms
                 throw new Exception(
                     "Klus bevat geen geldige bewerkingen!\n\nHet kan zjn dat de bewerking{en) in de filter lijst zijn geplaatst.");
             }
-        
+
             UpdateTijdGewerkt();
         }
 
@@ -138,7 +142,7 @@ namespace Forms
             var curbew = Formulier.Bewerkingen.FirstOrDefault(x =>
                 string.Equals(x.Naam, xbewerkingen.SelectedItem.ToString(), StringComparison.CurrentCultureIgnoreCase));
             if (curbew == null) return;
-            bool changed = false;
+            var changed = false;
             foreach (var per in Persoon)
             {
                 per.Werkplek = xwerkplekken.SelectedItem.ToString();
@@ -149,21 +153,24 @@ namespace Forms
                 if (xklus == null)
                 {
                     if (SelectedKlus == null)
-                    {
                         SelectedKlus = new Klus(per, curbew, xwerkplekken.SelectedItem.ToString());
-                    }
                 }
                 else
+                {
                     SelectedKlus = xklus.CreateCopy();
-                bool isnew = false;
+                }
+
+                var isnew = false;
                 SelectedKlus.Tijden.Add(new TijdEntry(xstart.Value, xstop.Value, per.WerkRooster), ref isnew);
                 changed = true;
             }
+
             SelectedKlus.WerkPlek = xwerkplekken.SelectedItem.ToString();
             SelectedKlus.Status = curbew.State;
             var wp = GetWerkPlek(SelectedKlus.WerkPlek, curbew, false);
-            Rooster rooster = Persoon.Length == 1
-                ? Persoon[0].WerkRooster : null;
+            var rooster = Persoon.Length == 1
+                ? Persoon[0].WerkRooster
+                : null;
             if (rooster == null || !rooster.IsCustom())
                 rooster = wp?.Tijden?.WerkRooster ?? Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
             SelectedKlus.Tijden.WerkRooster = rooster;
@@ -230,7 +237,8 @@ namespace Forms
                 //if (rooster == null || !rooster.IsCustom())
                 //    rooster = wp?.Tijden?.WerkRooster ?? Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
 
-                var rooster = SelectedKlus.Tijden.WerkRooster?? Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
+                var rooster = SelectedKlus.Tijden.WerkRooster ??
+                              Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
 
                 foreach (var xpers in Persoon)
                 {
@@ -241,7 +249,7 @@ namespace Forms
                     {
                         if (wp != null)
                         {
-                            string path = wp.Path;
+                            var path = wp.Path;
                             wp.Personen.Remove(xpers);
                             xpers.Klusjes.RemoveAll(x =>
                                 string.Equals(x.Path, path, StringComparison.CurrentCultureIgnoreCase));
@@ -266,15 +274,17 @@ namespace Forms
                         if (bewerking == null)
                             continue;
                     }
+
                     //We gaan eerst kijken of de personen zich ook in een andere werkplek zitten.
                     //Met editmode doen we de dezelfde personen gewoon wijzigen. Dus verwijderen van de oude werkplek.
                     //Zonder editmode doen we dezelfde personen op een andere werkplek gewoon op inactief zetten
                     if (!string.Equals(_origklus.WerkPlek, xklus.WerkPlek,
-                        StringComparison.CurrentCultureIgnoreCase))
+                            StringComparison.CurrentCultureIgnoreCase))
                     {
                         if (wp != null)
                         {
-                            var xcurpers = wp.Personen.FirstOrDefault(x=> string.Equals(x.PersoneelNaam, xpers.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase));
+                            var xcurpers = wp.Personen.FirstOrDefault(x => string.Equals(x.PersoneelNaam,
+                                xpers.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase));
                             if (EditMode)
                             {
                                 wp.Personen.Remove(xpers);
@@ -292,7 +302,7 @@ namespace Forms
 
                                 if (wp.Personen.Count == 0 && wp.TijdGewerkt <= 0 && wp.AantalGemaakt == 0)
                                 {
-                                    string path = wp.Path;
+                                    var path = wp.Path;
                                     bewerking.WerkPlekken.Remove(wp);
                                     dbpers?.Klusjes.RemoveAll(x =>
                                         string.Equals(x.Path, path, StringComparison.CurrentCultureIgnoreCase));
@@ -313,11 +323,13 @@ namespace Forms
                         wp.Tijden.WerkRooster = rooster;
                         bewerking.WerkPlekken.Add(wp);
                     }
-                    else if (!EditMode && wp.Personen.Any(x => string.Equals(x.PersoneelNaam, xpers.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase)))
+                    else if (!EditMode && wp.Personen.Any(x => string.Equals(x.PersoneelNaam, xpers.PersoneelNaam,
+                                 StringComparison.CurrentCultureIgnoreCase)))
                     {
                         if (XMessageBox.Show(this, $"{xpers.PersoneelNaam} is al toegevoegd op {wp.Naam}...\n\n" +
-                                                   $"Zou je {xpers.PersoneelNaam} willen overschrijven?", $"{xpers.PersoneelNaam} bestaat al!",
-                           MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                                                   $"Zou je {xpers.PersoneelNaam} willen overschrijven?",
+                                $"{xpers.PersoneelNaam} bestaat al!",
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                             continue;
                     }
 
@@ -326,15 +338,17 @@ namespace Forms
                     wp.AddPersoon(xpers, bewerking);
 
                     wp.Tijden.UpdateLijst(xklus.Tijden, true);
-                   // wp.Tijden.SetUren(xklus.Tijden.Uren.ToArray(), bewerking.State == ProductieState.Gestart,
+                    // wp.Tijden.SetUren(xklus.Tijden.Uren.ToArray(), bewerking.State == ProductieState.Gestart,
                     //    false);
-                    bewerking.ZetPersoneelActief(xpers.PersoneelNaam, wp.Naam, !EditMode || xpers.IngezetAanKlus(bewerking,true, out _));
+                    bewerking.ZetPersoneelActief(xpers.PersoneelNaam, wp.Naam,
+                        !EditMode || xpers.IngezetAanKlus(bewerking, true, out _));
                     dbpers.ReplaceKlus(xklus);
                     if (_save)
                         await Manager.Database.UpSert(dbpers,
                             $"{xpers.PersoneelNaam} Klus {xklus.Path} Update.");
                     xpersonen.Add(xpers);
                 }
+
                 if (xpersonen.Count == 0) return false;
                 Persoon = xpersonen.ToArray().CopyTo(ref OrigPersoon);
                 SelectedKlus = SelectedKlus.CopyTo(ref _origklus);
@@ -349,6 +363,7 @@ namespace Forms
                         await bewerking.UpdateBewerking(null,
                             $"{string.Join(", ", Persoon.Select(x => x.PersoneelNaam))} aangepast op {bewerking.Path}");
                 }
+
                 return true;
             });
         }
@@ -364,7 +379,6 @@ namespace Forms
         }
 
 
-
         private void UpdateTijdGewerkt()
         {
             if (SelectedKlus == null) return;
@@ -378,7 +392,7 @@ namespace Forms
             var xeinddag = SelectedKlus.Tijden.WerkRooster.EindWerkdag;
             var x1 = SelectedKlus.Tijden.WerkRooster.GebruiktPauze ? "met" : "zonder";
             xgewerkt.Text =
-                $"WerkRooster: {xstartdag.Hours}:{xstartdag.Minutes.ToString().PadLeft(2,'0')} t/m {xeinddag.Hours}:{xeinddag.Minutes.ToString().PadLeft(2, '0')}, {x1} pauze.\n" +
+                $"WerkRooster: {xstartdag.Hours}:{xstartdag.Minutes.ToString().PadLeft(2, '0')} t/m {xeinddag.Hours}:{xeinddag.Minutes.ToString().PadLeft(2, '0')}, {x1} pauze.\n" +
                 $"Gewerkte Tijd: {Math.Round(SelectedKlus.TijdGewerkt(GetPersoneelVrijeDagen(), SelectedKlus?.Tijden?.WerkRooster).TotalHours, 2)} uur.";
         }
 

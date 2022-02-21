@@ -1,22 +1,25 @@
-﻿using Rpm.DailyUpdate;
+﻿using System;
+using System.Drawing;
+using Forms.MetroBase;
+using Rpm.DailyUpdate;
 using Rpm.Productie;
 using Rpm.Various;
-using System;
-using System.Drawing;
+using TheArtOfDev.HtmlRenderer.Core.Entities;
 
 namespace Forms
 {
-    public partial class DailyMessageForm : Forms.MetroBase.MetroBaseForm
+    public partial class DailyMessageForm : MetroBaseForm
     {
-        public Daily Daily { get; set; }
         public DailyMessageForm(Daily daily)
         {
             InitializeComponent();
             Daily = daily;
             Daily.ImageList.ImageSize = new Size(128, 128);
-            this.Text = $"{Daily.GetDailyGroet()}!";
-            this.Invalidate();
+            Text = $"{Daily.GetDailyGroet()}!";
+            Invalidate();
         }
+
+        public Daily Daily { get; set; }
 
         public string HtmlText
         {
@@ -24,18 +27,18 @@ namespace Forms
             set => htmlPanel1.Text = value;
         }
 
-        private void htmlPanel1_ImageLoad(object sender, TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs e)
+        private void htmlPanel1_ImageLoad(object sender, HtmlImageLoadEventArgs e)
         {
             e.Callback(Daily.ImageList.Images[e.Src]);
         }
 
-        private void htmlPanel1_LinkClicked(object sender, TheArtOfDev.HtmlRenderer.Core.Entities.HtmlLinkClickedEventArgs e)
+        private void htmlPanel1_LinkClicked(object sender, HtmlLinkClickedEventArgs e)
         {
             try
             {
                 if (Manager.Database?.ProductieFormulieren == null) return;
                 var xprod = Werk.FromPath(e.Link);
-                if(xprod?.Bewerking == null) return;
+                if (xprod?.Bewerking == null) return;
                 Manager.FormulierActie(new object[] {xprod.Formulier, xprod.Bewerking}, MainAktie.OpenProductie);
                 e.Handled = true;
             }

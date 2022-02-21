@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using Forms.MetroBase;
 
 namespace Forms
 {
-    public partial class BewerkingChooser : Forms.MetroBase.MetroBaseForm
+    public partial class BewerkingChooser : MetroBaseForm
     {
         public BewerkingChooser(string[] items)
         {
@@ -18,8 +19,8 @@ namespace Forms
 
         public string Title
         {
-            get => this.Text;
-            set => this.Text = value;
+            get => Text;
+            set => Text = value;
         }
 
         private void xok_Click(object sender, EventArgs e)

@@ -82,7 +82,7 @@ namespace Rpm.ViewModels
             foreach (var klus in PersoneelLid.Klusjes)
             {
                 if (klus.Status != ProductieState.Gestart || wps.Any(x =>
-                    string.Equals(x, klus.WerkPlek, StringComparison.CurrentCultureIgnoreCase)))
+                        string.Equals(x, klus.WerkPlek, StringComparison.CurrentCultureIgnoreCase)))
                     continue;
                 wps.Add(klus.WerkPlek);
                 xreturn += $"{klus.WerkPlek}, ";

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
+using Forms.MetroBase;
 
 namespace Forms
 {
-    public partial class LogForm : Forms.MetroBase.MetroBaseForm
+    public partial class LogForm : MetroBaseForm
     {
-
         public LogForm()
         {
             InitializeComponent();

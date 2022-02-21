@@ -1,27 +1,28 @@
-﻿using BrightIdeasSoftware;
-using Forms;
-using Rpm.Misc;
-using Rpm.Productie;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
+using Forms.MetroBase;
+using Rpm.Misc;
+using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class DeelsGereedMeldingenForm : Forms.MetroBase.MetroBaseForm
+    public partial class DeelsGereedMeldingenForm : MetroBaseForm
     {
-        public Bewerking Bewerking { get; private set; }
-        public List<DeelsGereedMelding> DeelMeldingen { get; private set; }
         public DeelsGereedMeldingenForm(Bewerking bew)
         {
             InitializeComponent();
             Bewerking = bew.CreateCopy();
-            this.Text = $"Deels gereedmeldingen voor {bew.Path} {bew.Omschrijving}";
+            Text = $"Deels gereedmeldingen voor {bew.Path} {bew.Omschrijving}";
             DeelMeldingen = Bewerking.DeelGereedMeldingen.CreateCopy();
-            ((OLVColumn) xgereedlijst.Columns[0]).ImageGetter = (item) => 0;
+            ((OLVColumn) xgereedlijst.Columns[0]).ImageGetter = item => 0;
             InitFields();
         }
+
+        public Bewerking Bewerking { get; private set; }
+        public List<DeelsGereedMelding> DeelMeldingen { get; private set; }
 
         private void InitFields()
         {
@@ -32,8 +33,8 @@ namespace Forms
         private void UpdateStatus()
         {
             var xitems = xgereedlijst.Objects.Cast<DeelsGereedMelding>().ToList();
-            int gemaakt = xitems.Sum(x => x.Aantal);
-            string xvar = gemaakt == 1 ? "stuk" : "stuks";
+            var gemaakt = xitems.Sum(x => x.Aantal);
+            var xvar = gemaakt == 1 ? "stuk" : "stuks";
             xstatuslabel.Text = $"Totaal {gemaakt} {xvar} gereed gemeld.";
         }
 
@@ -73,18 +74,21 @@ namespace Forms
         private async void xadd_Click(object sender, EventArgs e)
         {
             if (Bewerking == null) return;
-            var wps = Bewerking.WerkPlekken.Select(x=> x.Naam).ToList();
+            var wps = Bewerking.WerkPlekken.Select(x => x.Naam).ToList();
             string wp = null;
             if (wps.Count > 1)
             {
                 wps.Add("Alle Werkplekken");
-                WerkPlekChooser wpChooser = new WerkPlekChooser(wps.ToArray(),null);
+                var wpChooser = new WerkPlekChooser(wps.ToArray(), null);
                 if (wpChooser.ShowDialog() == DialogResult.Cancel) return;
                 wp = wpChooser.SelectedName?.ToLower() == "alle werkplekken" ? null : wpChooser.SelectedName;
             }
-            else wp = wps.FirstOrDefault();
+            else
+            {
+                wp = wps.FirstOrDefault();
+            }
 
-            DeelsGereedForm gereedform = new DeelsGereedForm(Bewerking);
+            var gereedform = new DeelsGereedForm(Bewerking);
             gereedform.Text = $"Nieuwe deels gereedmelding voor {Bewerking.Path}";
             if (wp != null)
                 gereedform.Text += $"\\{wp}";
@@ -134,6 +138,7 @@ namespace Forms
                         }
                     }
                 }
+
                 Bewerking.DeelGereedMeldingen = newitems.CreateCopy();
             }
             catch (Exception e)
@@ -145,7 +150,7 @@ namespace Forms
         {
             if (xgereedlijst.SelectedObject is DeelsGereedMelding melding)
             {
-                DeelsGereedForm gereedform = new DeelsGereedForm(melding);
+                var gereedform = new DeelsGereedForm(melding);
                 gereedform.Text = $"Wijzig deels gereedmelding voor {Bewerking.Path}";
                 if (melding.WerkPlek != null)
                     gereedform.Text += $"\\{melding.WerkPlek}";
@@ -160,14 +165,11 @@ namespace Forms
         private void xdelete_Click(object sender, EventArgs e)
         {
             if (xgereedlijst.SelectedObjects.Count > 0)
-            {
-                if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde gereed meldingen wilt verwijderen?\n\n" +
-                                     "Er bestaat de risico dat je de tell kwijt raakt!", "Waarschuwing",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                {
+                if (XMessageBox.Show(this,
+                        "Weetje zeker dat je alle geselecteerde gereed meldingen wilt verwijderen?\n\n" +
+                        "Er bestaat de risico dat je de tell kwijt raakt!", "Waarschuwing",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                     xgereedlijst.RemoveObjects(xgereedlijst.SelectedObjects);
-                }
-            }
         }
 
         private void xgereedlijst_SelectedIndexChanged(object sender, EventArgs e)

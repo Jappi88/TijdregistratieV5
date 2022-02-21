@@ -7,15 +7,16 @@ namespace Rpm.Settings
 {
     public class DatabaseUpdateEntry
     {
-        public string Naam { get; set; }
         private string _rootpath;
+        public string Naam { get; set; }
 
         public string UpdatePath
         {
-            get => Path.Combine(_rootpath.Replace("\\RPM_Data", "").TrimEnd('\\') + "\\", "RPM_Data").Replace("//", "\\");
+            get => Path.Combine(_rootpath.Replace("\\RPM_Data", "").TrimEnd('\\') + "\\", "RPM_Data")
+                .Replace("//", "\\");
             set => _rootpath = value.Replace("\\RPM_Data", "");
-        } 
-            
+        }
+
 
         public string RootPath
         {

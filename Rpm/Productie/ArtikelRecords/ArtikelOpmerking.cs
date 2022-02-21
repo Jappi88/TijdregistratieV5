@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Polenter.Serialization;
 
 namespace Rpm.Productie.ArtikelRecords
 {
@@ -30,25 +26,6 @@ namespace Rpm.Productie.ArtikelRecords
 
     public class ArtikelOpmerking
     {
-        public int ID { get; private set; }
-        public string GeplaatstDoor { get; set; } = string.Empty;
-        public DateTime GeplaatstOp { get; set; }
-        public string Title { get; set; } = string.Empty;
-        public string Opmerking { get; set; } = string.Empty;
-        public ArtikelFilter Filter { get; set; } = ArtikelFilter.GelijkAan;
-        public ArtikelFilterSoort FilterSoort { get; set; } = ArtikelFilterSoort.AantalGemaakt; 
-        public decimal FilterWaarde { get; set; }
-        public FilterOp FilterOp { get; set; }
-        public byte[] ImageData { get; set; }
-        public List<string> OpmerkingVoor { get; set; } = new List<string>();
-        public Dictionary<string, DateTime> GelezenDoor { get; set; } = new Dictionary<string, DateTime>();
-        public bool IsAlgemeen { get; set; }
-
-        public string Ontvangers => string.Join(", ", OpmerkingVoor);
-
-        public bool IsFromMe =>
-            string.Equals(Manager.Opties?.Username, GeplaatstDoor, StringComparison.CurrentCultureIgnoreCase);
-
         public ArtikelOpmerking()
         {
             GeplaatstOp = DateTime.Now;
@@ -61,10 +38,29 @@ namespace Rpm.Productie.ArtikelRecords
             Opmerking = opmerking;
         }
 
-        public ArtikelOpmerking(string opmerking, ArtikelFilter filter):this(opmerking)
+        public ArtikelOpmerking(string opmerking, ArtikelFilter filter) : this(opmerking)
         {
             Filter = filter;
         }
+
+        public int ID { get; }
+        public string GeplaatstDoor { get; set; } = string.Empty;
+        public DateTime GeplaatstOp { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Opmerking { get; set; } = string.Empty;
+        public ArtikelFilter Filter { get; set; } = ArtikelFilter.GelijkAan;
+        public ArtikelFilterSoort FilterSoort { get; set; } = ArtikelFilterSoort.AantalGemaakt;
+        public decimal FilterWaarde { get; set; }
+        public FilterOp FilterOp { get; set; }
+        public byte[] ImageData { get; set; }
+        public List<string> OpmerkingVoor { get; set; } = new();
+        public Dictionary<string, DateTime> GelezenDoor { get; set; } = new();
+        public bool IsAlgemeen { get; set; }
+
+        public string Ontvangers => string.Join(", ", OpmerkingVoor);
+
+        public bool IsFromMe =>
+            string.Equals(Manager.Opties?.Username, GeplaatstDoor, StringComparison.CurrentCultureIgnoreCase);
 
 
         public override bool Equals(object obj)

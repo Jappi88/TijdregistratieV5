@@ -1,20 +1,23 @@
-﻿using ProductieManager.Properties;
-using Rpm.Misc;
-using Rpm.Productie;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using ProductieManager.Properties;
+using Rpm.Misc;
+using Rpm.Productie;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
 
 namespace Controls
 {
     public partial class VerpakkingInstructieUI : UserControl
     {
-        public VerpakkingInstructie VerpakkingInstructie { get=> _VerpakkingInstructie;
-            private set => _VerpakkingInstructie = value;
+        public VerpakkingInstructieUI()
+        {
+            InitializeComponent();
+            UpdateFields(null);
         }
 
-        private VerpakkingInstructie _VerpakkingInstructie;
+        public VerpakkingInstructie VerpakkingInstructie { get; private set; }
+
         public bool IsEditmode { get; set; }
         public Color TextColor { get; set; }
         public Color BodyColor { get; set; }
@@ -27,19 +30,14 @@ namespace Controls
             set => xwijzigPanel.Visible = value;
         }
 
-        public VerpakkingInstructieUI()
-        {
-            InitializeComponent();
-            UpdateFields(null);
-        }
-
-        public void InitFields(VerpakkingInstructie verpakking, bool editmode, string title, Color color, Color textcolor, IProductieBase productie = null)
+        public void InitFields(VerpakkingInstructie verpakking, bool editmode, string title, Color color,
+            Color textcolor, IProductieBase productie = null)
         {
             IsEditmode = editmode;
             BodyColor = color;
             TextColor = textcolor;
             Title = title;
-            _VerpakkingInstructie = verpakking?.CreateCopy();
+            VerpakkingInstructie = verpakking?.CreateCopy();
             UpdateFields(productie);
         }
 
@@ -47,7 +45,7 @@ namespace Controls
         {
             IsEditmode = false;
             AllowEditMode = false;
-            _VerpakkingInstructie = null;
+            VerpakkingInstructie = null;
             UpdateFields(null);
         }
 
@@ -83,7 +81,7 @@ namespace Controls
                 xeditpanel.Visible = false;
                 htmlPanel1.Visible = true;
                 htmlPanel1.Text =
-                    _VerpakkingInstructie?.CreateHtmlText(Title, Color.White, BodyColor, TextColor, true) ?? "";
+                    VerpakkingInstructie?.CreateHtmlText(Title, Color.White, BodyColor, TextColor, true) ?? "";
                 xwijzig.Text = "Wijzig";
                 xwijzig.Image = Resources.edit__52382;
             }
@@ -91,32 +89,32 @@ namespace Controls
 
         public VerpakkingInstructie GetVerpakkingInstructie()
         {
-           
             try
             {
-                if (!IsEditmode) return _VerpakkingInstructie;
+                if (!IsEditmode) return VerpakkingInstructie;
                 var x = new VerpakkingInstructie
                 {
                     VerpakkingType = xverpakkingsoort.Text.Trim(),
                     PalletSoort = xpalletsoort.Text.Trim(),
                     StandaardLocatie = xstandaardlocatie.Text.Trim(),
                     BulkLocatie = xbulklocatie.Text.Trim(),
-                    VerpakkenPer = (int)xverpakkenper.Value,
-                    LagenOpColli = (int)xlagenpercolli.Value,
-                    DozenOpColli = (int)xdozenpercolli.Value,
-                    PerLaagOpColli = (int)xdozenperlaag.Value,
-                    ProductenPerColli = (int)xaantelpercolli.Value
+                    VerpakkenPer = (int) xverpakkenper.Value,
+                    LagenOpColli = (int) xlagenpercolli.Value,
+                    DozenOpColli = (int) xdozenpercolli.Value,
+                    PerLaagOpColli = (int) xdozenperlaag.Value,
+                    ProductenPerColli = (int) xaantelpercolli.Value
                 };
                 if (Productie != null)
                 {
                     x.ArtikelNr = Productie.ArtikelNr.Trim();
                     x.ProductOmschrijving = Productie.Omschrijving.Trim();
                 }
-                else if(_VerpakkingInstructie != null)
+                else if (VerpakkingInstructie != null)
                 {
-                    x.ArtikelNr = _VerpakkingInstructie.ArtikelNr;
-                    x.ProductOmschrijving = _VerpakkingInstructie.ProductOmschrijving;
+                    x.ArtikelNr = VerpakkingInstructie.ArtikelNr;
+                    x.ProductOmschrijving = VerpakkingInstructie.ProductOmschrijving;
                 }
+
                 return x;
             }
             catch (Exception e)
@@ -144,7 +142,7 @@ namespace Controls
         private void xwijzig_Click(object sender, EventArgs e)
         {
             if (IsEditmode && SaveChanges())
-                UpdateFields(false,Productie);
+                UpdateFields(false, Productie);
             else UpdateFields(true, Productie);
         }
 
@@ -159,21 +157,24 @@ namespace Controls
         {
             try
             {
-                 var xverp = GetVerpakkingInstructie();
+                var xverp = GetVerpakkingInstructie();
                 if (xverp.CompareTo(VerpakkingInstructie)) return true;
                 if (!string.IsNullOrEmpty(xverp?.ArtikelNr))
                 {
-                    _VerpakkingInstructie = xverp;
-                    if (Manager.Verpakkingen is { Disposed: false })
+                    VerpakkingInstructie = xverp;
+                    if (Manager.Verpakkingen is {Disposed: false})
                     {
                         Manager.Verpakkingen.SaveVerpakking(xverp);
                         if (Productie != null)
                         {
                             Productie.VerpakkingsInstructies = xverp;
-                            return Productie.Update($"VerpakkingsInstructies aangepast voor [{Productie.ArtikelNr}]{Productie.Omschrijving}", true, true).Result;
+                            return Productie
+                                .Update(
+                                    $"VerpakkingsInstructies aangepast voor [{Productie.ArtikelNr}]{Productie.Omschrijving}",
+                                    true, true).Result;
                         }
 
-                        
+
                         return true;
                     }
                 }

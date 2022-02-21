@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Polenter.Serialization;
 
 namespace Rpm.Productie
 {
@@ -44,6 +43,7 @@ namespace Rpm.Productie
         public int ID { get; set; }
         public string Omschrijving { get; set; }
         public DateTime Start { get; set; }
+
         public DateTime Stop
         {
             get => InUse ? DateTime.Now : _gestopt;
@@ -52,7 +52,7 @@ namespace Rpm.Productie
 
         public Rooster WerkRooster { get; set; }
 
-        public double TotaalTijd => TijdGewerkt(WerkRooster, null,null);
+        public double TotaalTijd => TijdGewerkt(WerkRooster, null, null);
         public bool InUse { get; set; }
         public ExtraTijd ExtraTijd { get; set; }
 
@@ -60,8 +60,8 @@ namespace Rpm.Productie
         {
             rooster ??= WerkRooster;
             var xstart = Start;
-            var xstartrooster = specialeroosters?.FirstOrDefault(x => x.Vanaf.Date == start.Date)??rooster;
-            var xstoprooster = specialeroosters?.FirstOrDefault(x => x.Vanaf.Date == start.Date)??rooster;
+            var xstartrooster = specialeroosters?.FirstOrDefault(x => x.Vanaf.Date == start.Date) ?? rooster;
+            var xstoprooster = specialeroosters?.FirstOrDefault(x => x.Vanaf.Date == start.Date) ?? rooster;
             if (xstartrooster != null && start.TimeOfDay == new TimeSpan())
                 start = start.Add(xstartrooster.StartWerkdag);
             var xstop = Stop;
@@ -80,12 +80,13 @@ namespace Rpm.Productie
             if (lijst == null) return;
             try
             {
-                var xrs = lijst.WerkRooster??Manager.Opties?.GetWerkRooster()??Rooster.StandaartRooster();
+                var xrs = lijst.WerkRooster ?? Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
                 if (Start.TimeOfDay == new TimeSpan())
                 {
                     var sp = lijst.SpecialeRoosters?.FirstOrDefault(x => x.Vanaf.Date == Start.Date);
                     Start = Start.Add(sp?.StartWerkdag ?? xrs.StartWerkdag);
                 }
+
                 if (Stop.TimeOfDay == new TimeSpan())
                 {
                     var sp = lijst.SpecialeRoosters?.FirstOrDefault(x => x.Vanaf.Date == Stop.Date);
@@ -98,7 +99,8 @@ namespace Rpm.Productie
             }
         }
 
-        public double TijdGewerkt(Rooster rooster, Dictionary<DateTime, DateTime> exclude, List<Rooster> speciaaleRoosters, double extratijd = 0)
+        public double TijdGewerkt(Rooster rooster, Dictionary<DateTime, DateTime> exclude,
+            List<Rooster> speciaaleRoosters, double extratijd = 0)
         {
             return Math.Round(Werktijd.TijdGewerkt(this, rooster, speciaaleRoosters, exclude, extratijd).TotalHours, 2);
         }
@@ -106,10 +108,10 @@ namespace Rpm.Productie
         public bool ContainsBereik(TijdEntry bereik)
         {
             if (bereik == null) return true;
-            var result = (bereik.Start >= Start && bereik.Start < Stop) ||
-                   (bereik.Stop >= Start && bereik.Stop <= Stop);
-            var result2 = (Start >= bereik.Start && Start < bereik.Stop) ||
-                          (Stop > bereik.Start && Stop <= bereik.Stop);
+            var result = bereik.Start >= Start && bereik.Start < Stop ||
+                         bereik.Stop >= Start && bereik.Stop <= Stop;
+            var result2 = Start >= bereik.Start && Start < bereik.Stop ||
+                          Stop > bereik.Start && Stop <= bereik.Stop;
             return result || result2;
         }
 
@@ -125,10 +127,7 @@ namespace Rpm.Productie
                     return entry.ExtraTijd.Equals(ExtraTijd);
                 }
 
-                if (ExtraTijd != null)
-                {
-                    return false;
-                }
+                if (ExtraTijd != null) return false;
 
                 if (entry.Start >= Start && entry.Start <= Start &&
                     entry.Stop >= Stop && entry.Stop <= Stop)

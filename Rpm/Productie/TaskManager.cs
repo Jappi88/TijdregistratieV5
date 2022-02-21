@@ -94,7 +94,8 @@ namespace Rpm.Productie
                     var msgs = await ProcessFile(data);
                     if (msgs is {Count: > 0})
                         rms.AddRange(msgs.Where(x =>
-                            rms.All(t => !string.Equals(t.ProductieNummer, x.ProductieNummer, StringComparison.CurrentCultureIgnoreCase))));
+                            rms.All(t => !string.Equals(t.ProductieNummer, x.ProductieNummer,
+                                StringComparison.CurrentCultureIgnoreCase))));
                 }
                 else if (ProductieData is string fp1)
                 {
@@ -103,7 +104,8 @@ namespace Rpm.Productie
                         var msgs = await ProcessFile(File.ReadAllBytes(fp1));
                         if (msgs is {Count: > 0})
                             rms.AddRange(msgs.Where(x =>
-                                rms.All(t => !string.Equals(t.ProductieNummer, x.ProductieNummer, StringComparison.CurrentCultureIgnoreCase))));
+                                rms.All(t => !string.Equals(t.ProductieNummer, x.ProductieNummer,
+                                    StringComparison.CurrentCultureIgnoreCase))));
                     }
                 }
                 else if (ProductieData is string[] fps)
@@ -114,7 +116,8 @@ namespace Rpm.Productie
                             var msgs = await ProcessFile(File.ReadAllBytes(fp));
                             if (msgs is {Count: > 0})
                                 rms.AddRange(msgs.Where(x =>
-                                    rms.All(t => !string.Equals(t.ProductieNummer, x.ProductieNummer, StringComparison.CurrentCultureIgnoreCase))));
+                                    rms.All(t => !string.Equals(t.ProductieNummer, x.ProductieNummer,
+                                        StringComparison.CurrentCultureIgnoreCase))));
                         }
                 }
                 else if (ProductieData is RemoteMessage msg)
@@ -124,7 +127,8 @@ namespace Rpm.Productie
                         var msgs = await ProcessFile(bytes);
                         if (msgs is {Count: > 0})
                             rms.AddRange(msgs.Where(x =>
-                                rms.All(t => !string.Equals(t.ProductieNummer, x.ProductieNummer, StringComparison.CurrentCultureIgnoreCase))));
+                                rms.All(t => !string.Equals(t.ProductieNummer, x.ProductieNummer,
+                                    StringComparison.CurrentCultureIgnoreCase))));
                     }
                     else
                     {
@@ -143,13 +147,12 @@ namespace Rpm.Productie
         {
             var xreturn = messages.ToList();
             foreach (var message in messages)
-            {
                 switch (message.Action)
                 {
                     case MessageAction.ProductieNotitie:
                         if (!string.IsNullOrEmpty(message.ProductieNummer))
                         {
-                            var xpr = await Manager.Database.GetProductie(message.ProductieNummer);
+                            var xpr = Manager.Database.GetProductie(message.ProductieNummer);
                             xpr.Note ??= new NotitieEntry(message.Message, xpr);
                             xpr.Note.Notitie = message.Message;
                             if (!await Manager.Database.UpSert(xpr))
@@ -159,7 +162,7 @@ namespace Rpm.Productie
                         break;
 
                     case MessageAction.ProductieWijziging:
-                        var form = await Manager.Database.GetProductie(message.ProductieNummer);
+                        var form = Manager.Database.GetProductie(message.ProductieNummer);
                         if (form != null)
                         {
                             var properties = typeof(ProductieFormulier).GetProperties();
@@ -170,7 +173,8 @@ namespace Rpm.Productie
                                 {
                                     var xs = v.Split('=');
                                     foreach (var p in properties)
-                                        if (p.CanWrite && string.Equals(p.Name, xs[0].Trim(), StringComparison.CurrentCultureIgnoreCase))
+                                        if (p.CanWrite && string.Equals(p.Name, xs[0].Trim(),
+                                                StringComparison.CurrentCultureIgnoreCase))
                                         {
                                             var xset = xs[1].Trim().ToObjectValue(p.PropertyType);
                                             if (xset != null)
@@ -207,7 +211,7 @@ namespace Rpm.Productie
                         break;
 
                     case MessageAction.NieweProductie:
-                        if (message.Value is ProductieFormulier pr) await Manager.AddProductie(pr,true);
+                        if (message.Value is ProductieFormulier pr) await Manager.AddProductie(pr, true);
                         break;
                     case MessageAction.AlgemeneMelding:
                         break;
@@ -266,7 +270,9 @@ namespace Rpm.Productie
                             if (isvalid && await Manager.Database.UpSert(acc, "Gewijziged vanuit email."))
                             {
                                 string xmessage = null;
-                                xmessage = isnew ? $"Gebruiker: '{acc.Username}' is zojuist toegevoegd!" : $"Gebruiker: '{acc.Username}' is zojuist aangepast!";
+                                xmessage = isnew
+                                    ? $"Gebruiker: '{acc.Username}' is zojuist toegevoegd!"
+                                    : $"Gebruiker: '{acc.Username}' is zojuist aangepast!";
                                 xreturn.Remove(message);
                                 xreturn.Add(new RemoteMessage(xmessage, MessageAction.GebruikerUpdate, MsgType.Success,
                                     null, acc));
@@ -275,7 +281,6 @@ namespace Rpm.Productie
 
                         break;
                 }
-            }
 
             return xreturn;
         }

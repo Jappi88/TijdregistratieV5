@@ -10,40 +10,38 @@ namespace Rpm.Misc
         public static string Value()
         {
             if (string.IsNullOrEmpty(fingerPrint))
-            {
                 fingerPrint = GetHash("CPU >> " + cpuId() + "\nBIOS >> " +
                                       biosId() + "\nBASE >> " + baseId() +
                                       //+"\nDISK >> "+ diskId() + "\nVIDEO >> " + 
                                       videoId() + "\nMAC >> " + macId()
                 );
-            }
 
             return fingerPrint;
         }
 
         private static string GetHash(string s)
         {
-            Crc32Algorithm sec = new Crc32Algorithm();
-            ASCIIEncoding enc = new ASCIIEncoding();
-            byte[] bt = enc.GetBytes(s);
+            var sec = new Crc32Algorithm();
+            var enc = new ASCIIEncoding();
+            var bt = enc.GetBytes(s);
             return GetHexString(sec.ComputeHash(bt));
         }
 
         private static string GetHexString(byte[] bt)
         {
-            string s = string.Empty;
+            var s = string.Empty;
             for (var i = 0; i < bt.Length; i++)
             {
-                byte b = bt[i];
+                var b = bt[i];
                 var n = (int) b;
                 var n1 = n & 15;
                 var n2 = (n >> 4) & 15;
                 if (n2 > 9)
-                    s += ((char) (n2 - 10 + (int) 'A')).ToString();
+                    s += ((char) (n2 - 10 + 'A')).ToString();
                 else
                     s += n2.ToString();
                 if (n1 > 9)
-                    s += ((char) (n1 - 10 + (int) 'A')).ToString();
+                    s += ((char) (n1 - 10 + 'A')).ToString();
                 else
                     s += n1.ToString();
                 //if ((i + 1) != bt.Length && (i + 1) % 2 == 0) s += "-";
@@ -58,18 +56,16 @@ namespace Rpm.Misc
         private static string identifier
             (string wmiClass, string wmiProperty, string wmiMustBeTrue)
         {
-            string result = "";
-            System.Management.ManagementClass mc =
-                new System.Management.ManagementClass(wmiClass);
-            System.Management.ManagementObjectCollection moc = mc.GetInstances();
+            var result = "";
+            var mc =
+                new ManagementClass(wmiClass);
+            var moc = mc.GetInstances();
             foreach (var o in moc)
             {
                 var mo = (ManagementObject) o;
                 if (mo[wmiMustBeTrue].ToString() == "True")
-                {
                     //Only get the first one
                     if (result == "")
-                    {
                         try
                         {
                             result = mo[wmiProperty]?.ToString();
@@ -78,8 +74,6 @@ namespace Rpm.Misc
                         catch
                         {
                         }
-                    }
-                }
             }
 
             return result;
@@ -88,16 +82,15 @@ namespace Rpm.Misc
         //Return a hardware identifier
         private static string identifier(string wmiClass, string wmiProperty)
         {
-            string result = "";
-            System.Management.ManagementClass mc =
-                new System.Management.ManagementClass(wmiClass);
-            System.Management.ManagementObjectCollection moc = mc.GetInstances();
+            var result = "";
+            var mc =
+                new ManagementClass(wmiClass);
+            var moc = mc.GetInstances();
             foreach (var o in moc)
             {
                 var mo = (ManagementObject) o;
                 //Only get the first one
                 if (result == "")
-                {
                     try
                     {
                         result = mo[wmiProperty]?.ToString();
@@ -106,7 +99,6 @@ namespace Rpm.Misc
                     catch
                     {
                     }
-                }
             }
 
             return result;
@@ -116,7 +108,7 @@ namespace Rpm.Misc
         {
             //Uses first CPU identifier available in order of preference
             //Don't get all identifiers, as it is very time consuming
-            string retVal = identifier("Win32_Processor", "UniqueId");
+            var retVal = identifier("Win32_Processor", "UniqueId");
             if (retVal == "") //If no UniqueID, use ProcessorID
             {
                 retVal = identifier("Win32_Processor", "ProcessorId");
@@ -124,9 +116,7 @@ namespace Rpm.Misc
                 {
                     retVal = identifier("Win32_Processor", "Name");
                     if (retVal == "") //If no Name, use Manufacturer
-                    {
                         retVal = identifier("Win32_Processor", "Manufacturer");
-                    }
 
                     //Add clock speed for extra security
                     retVal += identifier("Win32_Processor", "MaxClockSpeed");

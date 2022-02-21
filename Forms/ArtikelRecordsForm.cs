@@ -1,4 +1,6 @@
-﻿using Forms.MetroBase;
+﻿using System;
+using System.Windows.Forms;
+using Forms.MetroBase;
 
 namespace Forms
 {
@@ -9,23 +11,23 @@ namespace Forms
             InitializeComponent();
         }
 
-        private void artikelRecordsUI1_StatusTextChanged(object sender, System.EventArgs e)
+        private void artikelRecordsUI1_StatusTextChanged(object sender, EventArgs e)
         {
-            this.Text = sender as string;
-            this.Invalidate();
+            Text = sender as string;
+            Invalidate();
         }
 
-        private void artikelRecordsUI1_CloseClicked(object sender, System.EventArgs e)
+        private void artikelRecordsUI1_CloseClicked(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
-        private void ArtikelRecordsForm_Shown(object sender, System.EventArgs e)
+        private void ArtikelRecordsForm_Shown(object sender, EventArgs e)
         {
             artikelRecordsUI1.InitUI();
         }
 
-        private void ArtikelRecordsForm_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
+        private void ArtikelRecordsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             artikelRecordsUI1.CloseUI();
         }

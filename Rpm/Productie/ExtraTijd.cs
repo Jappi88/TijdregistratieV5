@@ -5,9 +5,10 @@ namespace Rpm.Productie
 {
     public class ExtraTijd
     {
+        private TimeSpan _tijd;
         public DateTime Start { get; set; }
         public DateTime Stop { get; set; }
-        private TimeSpan _tijd;
+
         [ExcludeFromSerialization]
         public TimeSpan Tijd
         {

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Rpm.ViewModels;
 
 namespace Rpm.Productie
 {
@@ -27,7 +25,7 @@ namespace Rpm.Productie
 
         public static TimeSpan WerkTijdNodigTotLeverdatum(this IProductieBase formulier, DateTime start)
         {
-            return TijdGewerkt(start, formulier.LeverDatum, null,null);
+            return TijdGewerkt(start, formulier.LeverDatum, null, null);
         }
 
         public static TimeSpan WerkTijdNodigTotLeverdatum(DateTime leverdatum, DateTime start)
@@ -37,7 +35,7 @@ namespace Rpm.Productie
 
         public static TimeSpan WerkTijdNodigTotLeverdatum(this IProductieBase formulier)
         {
-            return TijdGewerkt(DateTime.Now, formulier.LeverDatum, null,null);
+            return TijdGewerkt(DateTime.Now, formulier.LeverDatum, null, null);
         }
 
         public static TimeSpan WerkTijdOver(TimeSpan vanaf, Rooster rooster)
@@ -80,7 +78,7 @@ namespace Rpm.Productie
             return TimeSpan.FromHours(hours).Add(TimeSpan.FromDays(dagen));
         }
 
-        public static int AantalWerkdagen(DateTime van, DateTime tot, Rooster rooster,List<Rooster> specialeRoosters)
+        public static int AantalWerkdagen(DateTime van, DateTime tot, Rooster rooster, List<Rooster> specialeRoosters)
         {
             try
             {
@@ -120,10 +118,7 @@ namespace Rpm.Productie
                 {
                     var vanaf = tijd.Vanaf;
                     var tot = tijd.Tot;
-                    if (vanaf > entry.Stop)
-                    {
-                        return 0;
-                    }
+                    if (vanaf > entry.Stop) return 0;
 
                     if (vanaf < entry.Start)
                         vanaf = entry.Start;
@@ -131,7 +126,7 @@ namespace Rpm.Productie
                         tot = entry.Stop;
                     if (vanaf >= entry.Start && vanaf < entry.Stop)
                     {
-                        var dagen = AantalWerkdagen(vanaf, tot, rooster,null);
+                        var dagen = AantalWerkdagen(vanaf, tot, rooster, null);
                         if (dagen <= 0)
                             return 0;
                         if (tijd.Aantalkeer > 0)
@@ -169,7 +164,7 @@ namespace Rpm.Productie
             }
         }
 
-        public static TimeSpan TijdGewerkt(TijdEntry entry, Rooster rooster,List<Rooster> specialeRoosters,
+        public static TimeSpan TijdGewerkt(TijdEntry entry, Rooster rooster, List<Rooster> specialeRoosters,
             Dictionary<DateTime, DateTime> vrijetijd = null, double extratijd = 0)
         {
             if (entry == null)
@@ -177,7 +172,7 @@ namespace Rpm.Productie
 
             var start = entry.Start;
             var stop = entry.InUse ? DateTime.Now : entry.Stop;
-            Rooster realrooster = rooster;
+            var realrooster = rooster;
             if (entry.WerkRooster != null && entry.WerkRooster.IsValid())
                 realrooster = entry.WerkRooster;
             realrooster ??= Manager.Opties.GetWerkRooster();
@@ -191,7 +186,7 @@ namespace Rpm.Productie
                 var xstart = realrooster.StartWerkdag;
                 var xstop = realrooster.EindWerkdag;
                 //var xpauze = rooster.GebruiktPauze;
-                start = EerstVolgendeWerkdag(start, ref rooster, realrooster,specialeRoosters);
+                start = EerstVolgendeWerkdag(start, ref rooster, realrooster, specialeRoosters);
                 //var werkdaguren = WerkTijdOver(xstart, rooster);
                 var tijd = TimeSpan.FromHours(extratijd);
                 var cur = start.TimeOfDay;
@@ -202,36 +197,39 @@ namespace Rpm.Productie
                     var xdict = new Dictionary<DateTime, DateTime>();
                     foreach (var v in vrijetijd)
                     {
-                        var vrijstart = EerstVolgendeWerkdag(v.Key, ref rooster, realrooster,specialeRoosters);
+                        var vrijstart = EerstVolgendeWerkdag(v.Key, ref rooster, realrooster, specialeRoosters);
                         if (vrijstart < start)
                             vrijstart = start;
                         var vrijend = v.Value;
                         if (vrijend.TimeOfDay > xstop)
                             vrijend = new DateTime(vrijend.Year, vrijend.Month, vrijend.Day, xstop.Hours,
                                 xstop.Minutes, 0);
-                        else vrijend = new DateTime(vrijend.Year, vrijend.Month, vrijend.Day, vrijend.Hour,
-                            vrijend.Minute, 0);
+                        else
+                            vrijend = new DateTime(vrijend.Year, vrijend.Month, vrijend.Day, vrijend.Hour,
+                                vrijend.Minute, 0);
                         if (vrijend > start)
                         {
                             if (vrijend > stop)
                                 vrijend = stop;
                             //if (vrijstart < start)
                             //    vrijstart = start;
-                            vrij += TijdGewerkt(new TijdEntry(vrijstart, vrijend, realrooster), realrooster,specialeRoosters, xdict);
+                            vrij += TijdGewerkt(new TijdEntry(vrijstart, vrijend, realrooster), realrooster,
+                                specialeRoosters, xdict);
                             xdict.Add(v.Key, v.Value);
                         }
                     }
                 }
+
                 //hier gaan we door elke dag heen en pakken we de uren die beschikbaar zijn volgens de rooster
                 while (start.Date <= stop.Date)
                 {
                     //we pakken de eerstvolgende werktijd samen met de rooster.
-                    start = EerstVolgendeWerkdag(start, ref rooster, realrooster,specialeRoosters);
+                    start = EerstVolgendeWerkdag(start, ref rooster, realrooster, specialeRoosters);
                     //we gaan dan kijken of de tijd die terug komt wel binnen het bereik is van wat de eindtijd is.
                     if (start.Date > stop.Date) break;
                     //we gaan dan kijken of het weekend is met een speciale rooster,geen feestdag of een normale werkdag. 
-                    if (rooster.IsSpecial() || (Manager.Opties.NationaleFeestdagen.All(x => x.Date != start.Date) &&
-                        start.DayOfWeek != DayOfWeek.Saturday && start.DayOfWeek != DayOfWeek.Sunday))
+                    if (rooster.IsSpecial() || Manager.Opties.NationaleFeestdagen.All(x => x.Date != start.Date) &&
+                        start.DayOfWeek != DayOfWeek.Saturday && start.DayOfWeek != DayOfWeek.Sunday)
                     {
                         //als we op de zelfde datum zijn gaan we de tijd pakken dat al gewerkt is.
                         if (start.Date == stop.Date)
@@ -244,10 +242,10 @@ namespace Rpm.Productie
                             tijd += WerkTijdOver(start.TimeOfDay, rooster);
                         }
                     }
-                    
+
                     start = new DateTime(start.Year, start.Month, start.Day).AddDays(1);
-                    
                 }
+
                 //de tijd die we berekent hebben gaan we de vrije tijd er vanaf halen als dat er is.
                 tijd = vrij >= tijd ? new TimeSpan() : tijd.Subtract(vrij);
                 return tijd;
@@ -276,16 +274,18 @@ namespace Rpm.Productie
         //    return TijdGewerkt(new TijdEntry(start, stop), Manager.Opties.WerkRooster);
         //}
 
-        public static TimeSpan TijdGewerkt(DateTime start, DateTime stop, Rooster rooster,List<Rooster> specialeRoosters)
+        public static TimeSpan TijdGewerkt(DateTime start, DateTime stop, Rooster rooster,
+            List<Rooster> specialeRoosters)
         {
-            return TijdGewerkt(new TijdEntry(start, stop, rooster), rooster ?? Manager.Opties.GetWerkRooster(),specialeRoosters);
+            return TijdGewerkt(new TijdEntry(start, stop, rooster), rooster ?? Manager.Opties.GetWerkRooster(),
+                specialeRoosters);
         }
 
         public static TimeSpan TijdGewerkt(TimeSpan starttime, TimeSpan stoptime, Rooster rooster)
         {
             if (Manager.Opties == null)
                 return new TimeSpan();
-            rooster = rooster == null || !rooster.IsValid() ?Manager.Opties.GetWerkRooster() : rooster;
+            rooster = rooster == null || !rooster.IsValid() ? Manager.Opties.GetWerkRooster() : rooster;
             if (starttime < rooster.StartWerkdag || starttime > stoptime)
                 return new TimeSpan();
             if (stoptime > rooster.EindWerkdag)
@@ -369,7 +369,8 @@ namespace Rpm.Productie
         //    return pauze;
         //}
 
-        public static DateTime DatumNaTijd(DateTime vanaf, TimeSpan tijd, Rooster rooster,List<Rooster> specialeRoosters)
+        public static DateTime DatumNaTijd(DateTime vanaf, TimeSpan tijd, Rooster rooster,
+            List<Rooster> specialeRoosters)
         {
             var nu = vanaf;
             try
@@ -384,6 +385,7 @@ namespace Rpm.Productie
                         nu = new DateTime(nu.Year, nu.Month, nu.Day).AddDays(1);
                         continue;
                     }
+
                     var xleft = tijd > werkover ? werkover : tijd;
                     var pauze = PauzeGehad(nu.TimeOfDay, nu.Add(xleft).TimeOfDay, rooster);
                     nu = nu.Add(xleft);
@@ -393,22 +395,23 @@ namespace Rpm.Productie
                         //xpause += pauze;
                         if (nu.Add(pauze).TimeOfDay > rooster.EindWerkdag)
                         {
-                            xleft -= (rooster.EindWerkdag - nu.Add(pauze).TimeOfDay);
+                            xleft -= rooster.EindWerkdag - nu.Add(pauze).TimeOfDay;
                             break;
                         }
 
-                       
-                            //xleft += pauze;
+
+                        //xleft += pauze;
                         var xpauze = PauzeGehad(nu.TimeOfDay, nu.Add(pauze).TimeOfDay, rooster);
                         nu = nu.Add(pauze);
                         pauze = xpauze;
                     }
-                    
+
                     tijd -= xleft;
                 }
+
                 return EerstVolgendeWerkdag(nu, ref rooster, realrooster, specialeRoosters);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
@@ -416,7 +419,8 @@ namespace Rpm.Productie
             return nu;
         }
 
-        public static DateTime DatumVoorTijd(DateTime vanaf, TimeSpan tijd, Rooster rooster, List<Rooster> specialeRoosters)
+        public static DateTime DatumVoorTijd(DateTime vanaf, TimeSpan tijd, Rooster rooster,
+            List<Rooster> specialeRoosters)
         {
             var xreturn = vanaf;
             try
@@ -427,7 +431,7 @@ namespace Rpm.Productie
                 while (tijdover.TotalHours > 0)
                 {
                     xdag = EerstVorigeWerkdag(xdag, ref xrooster, rooster, specialeRoosters);
-                   var xtijdover = WerkTijdOver(xdag.TimeOfDay, xrooster);
+                    var xtijdover = WerkTijdOver(xdag.TimeOfDay, xrooster);
                     var xfulldag = WerkTijdOver(xrooster.StartWerkdag, xrooster);
 
                     //xdag = new DateTime(xdag.Year, xdag.Month, xdag.Day, xrooster.EindWerkdag.Hours,
@@ -442,7 +446,9 @@ namespace Rpm.Productie
                             tijdover = new TimeSpan();
                         }
                         else
+                        {
                             tijdover -= xtijd;
+                        }
                     }
 
                     var pausegehad = PauzeGehad(xdag.TimeOfDay - xtijd, xdag.TimeOfDay, xrooster);
@@ -456,7 +462,7 @@ namespace Rpm.Productie
                 }
 
                 xdag = EerstVorigeWerkdag(xdag, ref xrooster, rooster, specialeRoosters);
-                
+
                 xreturn = xdag;
             }
             catch (Exception v)
@@ -469,7 +475,6 @@ namespace Rpm.Productie
 
         public static bool IsWerkDag(DateTime datum, List<Rooster> specialeroosters, ref Rooster rooster)
         {
-            
             var specialrooster = specialeroosters?.FirstOrDefault(x => x.Vanaf.Date == datum.Date);
             rooster = specialrooster ?? rooster;
             if (specialrooster != null) return true;
@@ -497,11 +502,12 @@ namespace Rpm.Productie
             return x;
         }
 
-        public static DateTime EerstVolgendeWerkdag(DateTime vanaf, ref Rooster rooster, Rooster realrooster, List<Rooster> specialeRoosters)
+        public static DateTime EerstVolgendeWerkdag(DateTime vanaf, ref Rooster rooster, Rooster realrooster,
+            List<Rooster> specialeRoosters)
         {
             var x = vanaf;
             rooster = rooster == null || !rooster.IsValid() ? Manager.Opties.GetWerkRooster() : rooster;
-            var specialrooster = (specialeRoosters?.FirstOrDefault(t => t.Vanaf.Date == vanaf.Date));
+            var specialrooster = specialeRoosters?.FirstOrDefault(t => t.Vanaf.Date == vanaf.Date);
             if (specialrooster != null)
             {
                 rooster = specialrooster;
@@ -512,11 +518,14 @@ namespace Rpm.Productie
                     return new DateTime(vanaf.Year, vanaf.Month, vanaf.Day, vanaf.Hour,
                         vanaf.Minute, 0);
             }
-            else rooster = realrooster;
+            else
+            {
+                rooster = realrooster;
+            }
 
             var einddag = new TimeSpan(rooster.EindWerkdag.Hours, rooster.EindWerkdag.Minutes, 0);
             var time = vanaf.TimeOfDay;
-            bool isnewday = false;
+            var isnewday = false;
             while (Manager.Opties.NationaleFeestdagen.FirstOrDefault(t => t.Date == x.Date).Date == x.Date)
                 switch (x.DayOfWeek)
                 {
@@ -536,13 +545,13 @@ namespace Rpm.Productie
                         break;
                 }
 
-           
+
             switch (x.DayOfWeek)
             {
                 case DayOfWeek.Friday:
                     if (vanaf.TimeOfDay >= einddag)
                     {
-                        for (int i = 0; i < 3; i++)
+                        for (var i = 0; i < 3; i++)
                         {
                             x = x.AddDays(1);
                             specialrooster =
@@ -551,6 +560,7 @@ namespace Rpm.Productie
                             if (specialrooster != null)
                                 break;
                         }
+
                         isnewday = true;
                     }
 
@@ -562,13 +572,14 @@ namespace Rpm.Productie
                     break;
 
                 case DayOfWeek.Saturday:
-                    for (int i = 0; i < 2; i++)
+                    for (var i = 0; i < 2; i++)
                     {
                         x = x.AddDays(1);
                         specialrooster = specialeRoosters?.FirstOrDefault(t => t.Vanaf.Date == x.Date);
                         if (specialrooster != null)
                             break;
                     }
+
                     isnewday = true;
                     break;
 
@@ -578,12 +589,14 @@ namespace Rpm.Productie
                         x = vanaf.AddDays(1);
                         isnewday = true;
                     }
+
                     break;
             }
+
             rooster = specialrooster ?? realrooster ?? Manager.Opties.GetWerkRooster();
 
             if (isnewday)
-                    time = rooster.StartWerkdag;
+                time = rooster.StartWerkdag;
 
             x = new DateTime(x.Year, x.Month, x.Day, time.Hours, time.Minutes, time.Seconds);
             var startdag = new TimeSpan(rooster.StartWerkdag.Hours, rooster.StartWerkdag.Minutes, 0);
@@ -603,7 +616,8 @@ namespace Rpm.Productie
             return new DateTime(x.Year, x.Month, x.Day, time.Hours, time.Minutes, 0);
         }
 
-        public static DateTime EerstVorigeWerkdag(DateTime vanaf, ref Rooster rooster, Rooster realrooster, List<Rooster> specialeRoosters)
+        public static DateTime EerstVorigeWerkdag(DateTime vanaf, ref Rooster rooster, Rooster realrooster,
+            List<Rooster> specialeRoosters)
         {
             var x = vanaf;
             rooster = rooster == null || !rooster.IsValid() ? Manager.Opties.GetWerkRooster() : rooster;
@@ -617,14 +631,19 @@ namespace Rpm.Productie
                 if (vanaf.TimeOfDay >= rooster.StartWerkdag && vanaf.TimeOfDay <= rooster.EindWerkdag)
                     return vanaf;
             }
-            else rooster = realrooster;
+            else
+            {
+                rooster = realrooster;
+            }
+
             var startdag = new TimeSpan(rooster.StartWerkdag.Hours, rooster.StartWerkdag.Minutes, 0);
-            while (!IsWerkDag(x,specialeRoosters,ref rooster) || x.TimeOfDay < startdag)
+            while (!IsWerkDag(x, specialeRoosters, ref rooster) || x.TimeOfDay < startdag)
             {
                 x = x.Subtract(TimeSpan.FromDays(1));
                 startdag = new TimeSpan(rooster.StartWerkdag.Hours, rooster.StartWerkdag.Minutes, 0);
                 x = new DateTime(x.Year, x.Month, x.Day, rooster.StartWerkdag.Hours, rooster.StartWerkdag.Minutes, 0);
             }
+
             var einddag = new TimeSpan(rooster.EindWerkdag.Hours, rooster.EindWerkdag.Minutes, 0);
             var time = startdag;
             if (x.TimeOfDay >= startdag && x.TimeOfDay <= einddag) time = x.TimeOfDay;

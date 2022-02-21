@@ -1,42 +1,33 @@
-﻿using ProductieManager.Properties;
-using Rpm.Misc;
-using Rpm.Productie;
-using System;
+﻿using System;
+using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using ProductieManager.Properties;
+using Rpm.Misc;
+using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class NewStoringForm : Forms.MetroBase.MetroBaseForm
+    public partial class NewStoringForm : MetroBaseForm
     {
         private Storing _onderbreking;
 
         public NewStoringForm()
         {
             InitializeComponent();
-            var storingen = Functions.LoadSoortStoringen(System.IO.Path.Combine(Application.StartupPath, "SoortStilstanden.txt")).Select(x => (object)x).ToArray();
+            var storingen = Functions.LoadSoortStoringen(Path.Combine(Application.StartupPath, "SoortStilstanden.txt"))
+                .Select(x => (object) x).ToArray();
             xsoortstoringen.Items.AddRange(storingen);
         }
 
-        public string Title
-        {
-            get => this.Text;
-            set
-            {
-                this.Text = value;
-                this.Invalidate();
-            }
-        }
-
-        public bool AutoUpdateTitle { get; set; } = true;
-
         public NewStoringForm(WerkPlek plek) : this(plek, null)
         {
-
         }
 
-        public NewStoringForm(WerkPlek plek, Storing storing):this()
+        public NewStoringForm(WerkPlek plek, Storing storing) : this()
         {
             SetOnderbreking(plek, storing, storing?.IsVerholpen ?? false);
         }
@@ -46,6 +37,18 @@ namespace Forms
             SetOnderbreking(plek, storing, isverholpen);
         }
 
+        public string Title
+        {
+            get => Text;
+            set
+            {
+                Text = value;
+                Invalidate();
+            }
+        }
+
+        public bool AutoUpdateTitle { get; set; } = true;
+
         public bool IsEdit { get; private set; }
 
         public WerkPlek Plek { get; private set; }
@@ -53,17 +56,19 @@ namespace Forms
         public Storing Onderbreking
         {
             get => _onderbreking;
-            set => SetOnderbreking(Plek, value,_onderbreking.IsVerholpen);
+            set => SetOnderbreking(Plek, value, _onderbreking.IsVerholpen);
         }
 
         public void SetOnderbreking(WerkPlek plek, Storing storing, bool isverholpen)
         {
             IsEdit = storing != null;
             //pak all soort storingen
-            this.Invalidate();
+            Invalidate();
             Plek = plek;
-            _onderbreking = storing == null ? new Storing() { GemeldDoor = Settings.Default.StoringMelder} : storing.CreateCopy();
-           
+            _onderbreking = storing == null
+                ? new Storing {GemeldDoor = Settings.Default.StoringMelder}
+                : storing.CreateCopy();
+
             if (isverholpen && !_onderbreking.IsVerholpen)
                 _onderbreking.Gestopt = xeindestoring.Value;
             _onderbreking.IsVerholpen = isverholpen;
@@ -90,7 +95,9 @@ namespace Forms
             var x = _onderbreking;
             xisbeeindigd.Image = Onderbreking.IsVerholpen ? Resources.check_1582 : Resources.delete_1577;
             if (!string.IsNullOrEmpty(x.StoringType))
+            {
                 xsoortstoringen.Text = x.StoringType;
+            }
             else
             {
                 var xitem = xsoortstoringen.Items.Cast<string>().FirstOrDefault(s => s.ToLower().Contains("ombouw"));
@@ -118,33 +125,33 @@ namespace Forms
                 if (IsEdit)
                 {
                     if (Onderbreking == null)
-                        this.Text = $"Wijzig onderbreking van {Plek?.Path}";
-                    else this.Text = $"Wijzig onderbreking van {Plek?.Path} [{Onderbreking?.GetTotaleTijd()} uur]";
+                        Text = $"Wijzig onderbreking van {Plek?.Path}";
+                    else Text = $"Wijzig onderbreking van {Plek?.Path} [{Onderbreking?.GetTotaleTijd()} uur]";
                 }
                 else
                 {
                     if (Onderbreking == null)
-                        this.Text = $"Voeg nieuwe onderbreking toe aan {Plek?.Path}";
+                        Text = $"Voeg nieuwe onderbreking toe aan {Plek?.Path}";
                     else
-                        this.Text =
+                        Text =
                             $"Voeg nieuwe onderbreking toe aan {Plek?.Path} [{Onderbreking?.GetTotaleTijd()} uur]";
                 }
             }
             else
             {
-                var xindex = this.Text.LastIndexOf('[');
-                var xlast = this.Text.LastIndexOf(']');
-                var xtext = this.Text;
-                if (xindex > 0 && xlast == xtext.Length -1)
-                    xtext = this.Text.Substring(0, xindex);
-                this.Text = $"{xtext}[{Onderbreking?.GetTotaleTijd()} uur]";
-                this.Invalidate();
+                var xindex = Text.LastIndexOf('[');
+                var xlast = Text.LastIndexOf(']');
+                var xtext = Text;
+                if (xindex > 0 && xlast == xtext.Length - 1)
+                    xtext = Text.Substring(0, xindex);
+                Text = $"{xtext}[{Onderbreking?.GetTotaleTijd()} uur]";
+                Invalidate();
             }
 
             if (Onderbreking != null)
                 xtijdlabel.Text = $"{Onderbreking.GetTotaleTijd()} Uur Aan {Onderbreking.StoringType}";
             else xtijdlabel.Text = "";
-            this.Invalidate();
+            Invalidate();
         }
 
         private void pictureBox1_MouseEnter(object sender, EventArgs e)
@@ -240,27 +247,42 @@ namespace Forms
         private void xok_Click(object sender, EventArgs e)
         {
             if (xnaammelder.Text.Trim().Replace(" ", "").Length < 3)
-                XMessageBox.Show(this, $"Ongeldige melder naam!\n\nVul in een geldige naam en probeer het opnieuw.",
+            {
+                XMessageBox.Show(this, "Ongeldige melder naam!\n\nVul in een geldige naam en probeer het opnieuw.",
                     "Ongeldige Naam", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
             else if (xsoortstoringen.Text.Trim().Replace(" ", "").Length < 4)
-                XMessageBox.Show(this, $"Ongeldige onderbreking type!\n\nVul in een geldige type en probeer het opnieuw.",
+            {
+                XMessageBox.Show(this,
+                    "Ongeldige onderbreking type!\n\nVul in een geldige type en probeer het opnieuw.",
                     "Ongeldige Type", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
             else if (MustEditTextFields() && xomschrijving.Text.Trim().Replace(" ", "").Length < 4)
-                XMessageBox.Show(this, $"Ongeldige omschrijving!\n\nVul in een geldige omschrijving en probeer het opnieuw.",
+            {
+                XMessageBox.Show(this,
+                    "Ongeldige omschrijving!\n\nVul in een geldige omschrijving en probeer het opnieuw.",
                     "Ongeldige Omschrijving", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
             else if (Onderbreking.IsVerholpen && xnaambeeindiger.Text.Trim().Replace(" ", "").Length < 3)
+            {
                 XMessageBox.Show(
-                    this,"Ongeldige beëindiger naam!\n\nVul in een geldige naam in van diegene die het heeft verholpen en probeer het opnieuw.",
+                    this,
+                    "Ongeldige beëindiger naam!\n\nVul in een geldige naam in van diegene die het heeft verholpen en probeer het opnieuw.",
                     "Ongeldige Naam", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
             else if (Onderbreking.IsVerholpen && MustEditTextFields() && xactie.Text.Trim().Replace(" ", "").Length < 4)
+            {
                 XMessageBox.Show(this,
                     "Ongeldige actie omschrijving!\n\nVul in een geldige actie omschrijving en probeer het opnieuw.",
                     "Ongeldige omschrijving", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            else if(Onderbreking.IsVerholpen && Onderbreking.GetTotaleTijd() <= 0)
+            }
+            else if (Onderbreking.IsVerholpen && Onderbreking.GetTotaleTijd() <= 0)
+            {
                 XMessageBox.Show(this,
                     "Onderbreking is verholpen, maar de totale tijd is 0 uur...\n" +
                     "Vul in een geldige tijd en probeer het opnieuw",
                     "Ongeldige Tijd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
             else
             {
                 SaveStoringen();
@@ -272,21 +294,18 @@ namespace Forms
         {
             try
             {
-                string value = xsoortstoringen.Text.Trim();
+                var value = xsoortstoringen.Text.Trim();
                 var xcur = xsoortstoringen.Items.Cast<string>().ToList();
                 if (value.Length > 2)
-                {
-                   
                     if (!xcur.Any(x => string.Equals(x, value, StringComparison.CurrentCultureIgnoreCase)))
                     {
                         xcur.Insert(0, value);
                         xsoortstoringen.Items.Insert(0, value);
                     }
-                }
 
                 Settings.Default.StoringMelder = xnaammelder.Text;
                 Settings.Default.Save();
-                Functions.SaveStoringen(xcur, System.IO.Path.Combine(Application.StartupPath, "SoortStilstanden.txt"));
+                Functions.SaveStoringen(xcur, Path.Combine(Application.StartupPath, "SoortStilstanden.txt"));
             }
             catch (Exception e)
             {
@@ -315,7 +334,7 @@ namespace Forms
         {
             var prodnr = Plek?.Werk?.ProductieNr;
             if (IsDisposed || Plek == null || id == null || !string.Equals(id, prodnr)) return;
-            this.BeginInvoke(new MethodInvoker(this.Close));
+            BeginInvoke(new MethodInvoker(Close));
         }
 
         private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
@@ -326,16 +345,12 @@ namespace Forms
             var plekken = changedform.GetWerkPlekken();
             var xplek = plekken.FirstOrDefault(x => x.Equals(Plek));
             if (xplek != null)
-            {
                 Plek = xplek;
-            }
             else
-            {
-                this.BeginInvoke(new MethodInvoker(this.Close));
-            }
+                BeginInvoke(new MethodInvoker(Close));
         }
 
-        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             if (xsoortstoringen.SelectedIndex < 0)
                 e.Cancel = true;
@@ -343,10 +358,7 @@ namespace Forms
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (xsoortstoringen.SelectedItem != null)
-            {
-                xsoortstoringen.Items.Remove(xsoortstoringen.SelectedItem);
-            }
+            if (xsoortstoringen.SelectedItem != null) xsoortstoringen.Items.Remove(xsoortstoringen.SelectedItem);
         }
     }
 }

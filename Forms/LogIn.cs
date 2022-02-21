@@ -1,17 +1,12 @@
-﻿using Rpm.Productie;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class LogIn : Forms.MetroBase.MetroBaseForm
+    public partial class LogIn : MetroBaseForm
     {
-        public bool DisableLogin { get; set; }
-        public bool ShowAutoLoginCheckbox
-        {
-            get => xautologin.Visible;
-            set => xautologin.Visible = value;
-        }
         public LogIn()
         {
             InitializeComponent();
@@ -19,15 +14,23 @@ namespace Forms
                 xgebruikersname.Text = Manager.Opties.Username;
         }
 
-        private void xgebruikersname_MouseEnter(object sender, EventArgs e)
+        public bool DisableLogin { get; set; }
+
+        public bool ShowAutoLoginCheckbox
         {
-            if (xgebruikersname.Text == @"Vul in je gebruikersnaam...")
-                xgebruikersname.Text = "";
+            get => xautologin.Visible;
+            set => xautologin.Visible = value;
         }
 
         public string Username => xgebruikersname.Text.Replace("Vul in je gebruikersnaam...", "").Trim();
         public string Password => xwachtwoord1.Text.Trim();
         public bool AutoLogin => xautologin.Checked;
+
+        private void xgebruikersname_MouseEnter(object sender, EventArgs e)
+        {
+            if (xgebruikersname.Text == @"Vul in je gebruikersnaam...")
+                xgebruikersname.Text = "";
+        }
 
         private void xgebruikersname_MouseLeave(object sender, EventArgs e)
         {
@@ -45,7 +48,7 @@ namespace Forms
             try
             {
                 if (DisableLogin || await Manager.Login(xgebruikersname.Text.Replace("Vul in je gebruikersnaam...", ""),
-                    xwachtwoord1.Text, xautologin.Checked,this))
+                        xwachtwoord1.Text, xautologin.Checked, this))
                     DialogResult = DialogResult.OK;
             }
             catch (Exception ex)

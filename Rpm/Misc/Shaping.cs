@@ -7,24 +7,28 @@ namespace Rpm.Misc
     {
         public enum RectangleCorners
         {
-            None = 0, TopLeft = 1, TopRight = 2, BottomLeft = 4, BottomRight = 8,
+            None = 0,
+            TopLeft = 1,
+            TopRight = 2,
+            BottomLeft = 4,
+            BottomRight = 8,
             All = TopLeft | TopRight | BottomLeft | BottomRight
         }
 
         public static GraphicsPath Create(int x, int y, int width, int height,
-                                          int radius, RectangleCorners corners)
+            int radius, RectangleCorners corners)
         {
-            int xw = x + width;
-            int yh = y + height;
-            int xwr = xw - radius;
-            int yhr = yh - radius;
-            int xr = x + radius;
-            int yr = y + radius;
-            int r2 = radius * 2;
-            int xwr2 = xw - r2;
-            int yhr2 = yh - r2;
+            var xw = x + width;
+            var yh = y + height;
+            var xwr = xw - radius;
+            var yhr = yh - radius;
+            var xr = x + radius;
+            var yr = y + radius;
+            var r2 = radius * 2;
+            var xwr2 = xw - r2;
+            var yhr2 = yh - r2;
 
-            GraphicsPath p = new GraphicsPath();
+            var p = new GraphicsPath();
             p.StartFigure();
 
             //Top Left Corner
@@ -88,18 +92,28 @@ namespace Rpm.Misc
         }
 
         public static GraphicsPath Create(Rectangle rect, int radius, RectangleCorners c)
-        { return Create(rect.X, rect.Y, rect.Width, rect.Height, radius, c); }
+        {
+            return Create(rect.X, rect.Y, rect.Width, rect.Height, radius, c);
+        }
 
         public static GraphicsPath Create(int x, int y, int width, int height, int radius)
-        { return Create(x, y, width, height, radius, RectangleCorners.All); }
+        {
+            return Create(x, y, width, height, radius, RectangleCorners.All);
+        }
 
         public static GraphicsPath Create(Rectangle rect, int radius)
-        { return Create(rect.X, rect.Y, rect.Width, rect.Height, radius); }
+        {
+            return Create(rect.X, rect.Y, rect.Width, rect.Height, radius);
+        }
 
         public static GraphicsPath Create(int x, int y, int width, int height)
-        { return Create(x, y, width, height, 5); }
+        {
+            return Create(x, y, width, height, 5);
+        }
 
         public static GraphicsPath Create(Rectangle rect)
-        { return Create(rect.X, rect.Y, rect.Width, rect.Height); }
+        {
+            return Create(rect.X, rect.Y, rect.Width, rect.Height);
+        }
     }
 }

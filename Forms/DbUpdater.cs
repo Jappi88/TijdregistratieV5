@@ -1,21 +1,21 @@
-﻿using BrightIdeasSoftware;
-using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Settings;
-using Rpm.SqlLite;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
+using Forms.MetroBase;
+using Rpm.Misc;
+using Rpm.Productie;
+using Rpm.Settings;
+using Rpm.SqlLite;
+using Rpm.Various;
 
 namespace Forms
 {
-    public partial class DbUpdater : Forms.MetroBase.MetroBaseForm
+    public partial class DbUpdater : MetroBaseForm
     {
-        public UserSettings DefaultSettings { get; private set; }
         private readonly CancellationTokenSource _token = new();
 
         public DbUpdater()
@@ -29,11 +29,13 @@ namespace Forms
             DefaultSettings = Manager.DefaultSettings ?? UserSettings.GetDefaultSettings();
             if (DefaultSettings != null)
                 xdbentrylist.SetObjects(DefaultSettings.DbUpdateEntries);
-            
+
             if (xdbentrylist.Items.Count > 0)
                 xdbentrylist.SelectedIndex = 0;
             UpdateSelected();
         }
+
+        public UserSettings DefaultSettings { get; }
 
 
         private void xchoosepath_Click(object sender, EventArgs e)
@@ -69,10 +71,12 @@ namespace Forms
             var xtype = string.Join(", ", cur.UpdateDatabases.Select(x => Enum.GetName(typeof(DbType), x)));
             if (Manager.DbUpdater.IsBussy)
             {
-                XMessageBox.Show(this, $"Er wordt momenteel al een update uitgevoerd...\nProbeer het later nog een keer.",
+                XMessageBox.Show(this,
+                    "Er wordt momenteel al een update uitgevoerd...\nProbeer het later nog een keer.",
                     "DbUpdater Bezig", MessageBoxIcon.Warning);
                 return;
             }
+
             var done = await Manager.DbUpdater.UpdateEntryAsync(cur, _token, DoProgress);
             UpdateSelected();
             if (done > 0)
@@ -129,7 +133,7 @@ namespace Forms
                 xnaam.Text = item.Naam;
                 xupdatewhenstartup.Checked = item.UpdateMetStartup;
                 xaautoupdate.Checked = item.AutoUpdate;
-                xinterval.Value = Manager.Opties?.DbUpdateInterval??1000;
+                xinterval.Value = Manager.Opties?.DbUpdateInterval ?? 1000;
                 if (item.UpdateDatabases == null)
                     item.UpdateDatabases = new List<DbType>();
                 var xitems = item.UpdateDatabases;
@@ -154,14 +158,10 @@ namespace Forms
             var cb = (CheckBox) sender;
             if (cb == null) return;
             if (cur == null)
-            {
                 cb.Checked = false;
-            }
             else
-            {
                 cur.UpdateDatabases = GetCheckedDbs();
-               // cur.LastUpdated = xvanafdate.Value;
-            }
+            // cur.LastUpdated = xvanafdate.Value;
         }
 
         private List<DbType> GetCheckedDbs()
@@ -217,7 +217,7 @@ namespace Forms
             if (DefaultSettings == null)
                 return;
             if (DefaultSettings.DbUpdateEntries == null || DefaultSettings.DbUpdateEntries.Any(x =>
-                string.Equals(x.UpdatePath, xpath.Text, StringComparison.OrdinalIgnoreCase)))
+                    string.Equals(x.UpdatePath, xpath.Text, StringComparison.OrdinalIgnoreCase)))
             {
                 XMessageBox.Show(this, $"'{xpath.Text}' Is al toegevoegd!", "Bestaat Al", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);

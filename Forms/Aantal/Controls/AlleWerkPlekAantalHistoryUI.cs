@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MetroFramework.Controls;
 using Rpm.Productie;
@@ -14,18 +10,19 @@ namespace Forms.Aantal.Controls
 {
     public partial class AlleWerkPlekAantalHistoryUI : UserControl
     {
-        public Bewerking Productie { get; private set; }
         public AlleWerkPlekAantalHistoryUI()
         {
             InitializeComponent();
         }
 
+        public Bewerking Productie { get; private set; }
+
         public void UpdateBewerking(Bewerking bew)
         {
             try
             {
-                if (this.InvokeRequired)
-                    this.Invoke(new MethodInvoker(() => xUpdateBewerking(bew)));
+                if (InvokeRequired)
+                    Invoke(new MethodInvoker(() => xUpdateBewerking(bew)));
                 else xUpdateBewerking(bew);
             }
             catch (Exception e)
@@ -63,11 +60,9 @@ namespace Forms.Aantal.Controls
                     if (xold != null)
                     {
                         if (xold.Controls.Count > 0)
-                        {
-                            foreach(var c in xold.Controls)
+                            foreach (var c in xold.Controls)
                                 if (c is AantalGemaaktHistoryUI history)
                                     history.UpdateList(plek);
-                        }
                     }
                     else
                     {

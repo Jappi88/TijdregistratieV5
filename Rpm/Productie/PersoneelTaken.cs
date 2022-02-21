@@ -21,7 +21,6 @@ namespace Rpm.Productie
                 //hier even iets maken dat we de juiste mensen de juiste taken geven.
                 var personen = Personen.Where(x => x.IsAanwezig).ToList();
                 if (personen.Count == 0) throw new Exception("Geen aanwezige personeel!");
-
             }
             catch (Exception e)
             {

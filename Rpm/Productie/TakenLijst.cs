@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Rpm.Misc;
 using Rpm.Various;
 
 namespace Rpm.Productie
@@ -38,7 +37,7 @@ namespace Rpm.Productie
             Persoon = persoon;
         }
 
-        public TakenLijst( WerkPlek plek)
+        public TakenLijst(WerkPlek plek)
         {
             Plek = plek;
             Bewerking = plek.Werk;
@@ -48,7 +47,7 @@ namespace Rpm.Productie
         //public TaakBeheer TaakManager { get; }
         public ProductieFormulier Formulier { get; }
         public Bewerking Bewerking { get; }
-        public Personeel Persoon { get; private set; }
+        public Personeel Persoon { get; }
         public WerkPlek Plek { get; }
 
         public static Taak GetUpdatedTaak(Taak taak)
@@ -113,7 +112,7 @@ namespace Rpm.Productie
             else t = new Taak(Formulier, AktieType.Telaat, urgentie);
             var leverdatum = Bewerking?.LeverDatum ?? Formulier.LeverDatum;
             var tijd = Werktijd.TijdGewerkt(leverdatum, DateTime.Now, null, null);
-            t.Beschrijving = $"Productie is {Math.Round(tijd.TotalHours,2)} uur te laat!";
+            t.Beschrijving = $"Productie is {Math.Round(tijd.TotalHours, 2)} uur te laat!";
             return t;
         }
 
@@ -124,7 +123,7 @@ namespace Rpm.Productie
             var tstarten = DateTime.Now;
             if (Bewerking != null)
             {
-                persnodig = Bewerking.AantalPersonenNodig(ref tstarten,false);
+                persnodig = Bewerking.AantalPersonenNodig(ref tstarten, false);
                 t = new Taak(Bewerking, AktieType.Beginnen, urgentie);
             }
             else
@@ -134,7 +133,7 @@ namespace Rpm.Productie
             }
 
             var tijdnodig = Bewerking?.WerkTijdNodigTotLeverdatum() ??
-                       Formulier?.WerkTijdNodigTotLeverdatum() ?? new TimeSpan();
+                            Formulier?.WerkTijdNodigTotLeverdatum() ?? new TimeSpan();
             var naam = Bewerking?.Naam ?? Formulier.ProductieNr;
             var tijd = Math.Round(tijdnodig.TotalHours, 2);
             var xn = persnodig == 1 ? "persoon" : "personen";
@@ -161,7 +160,11 @@ namespace Rpm.Productie
                 var xn1 = xmats.Count == 1 ? $"{xmats[0].ArtikelNr} | {xmats[0].Omschrijving}" : $"{xmats.Count} {xn}";
                 t.Beschrijving = $"Je kan nu {xn1} klaarzetten.";
             }
-            else t.Beschrijving = $"Je kan nu de materialen klaarzetten.";
+            else
+            {
+                t.Beschrijving = "Je kan nu de materialen klaarzetten.";
+            }
+
             return t;
         }
 
@@ -171,7 +174,7 @@ namespace Rpm.Productie
             if (Bewerking != null)
                 t = new Taak(Bewerking, AktieType.BewerkingGereed, urgentie);
             else t = new Taak(Formulier, AktieType.BewerkingGereed, urgentie);
-            t.Beschrijving = $"Bewerking is klaar en kan gereed gemeld worden!";
+            t.Beschrijving = "Bewerking is klaar en kan gereed gemeld worden!";
             return t;
         }
 
@@ -181,19 +184,19 @@ namespace Rpm.Productie
             if (Bewerking != null)
                 t = new Taak(Bewerking, AktieType.GereedMelden, urgentie);
             else t = new Taak(Formulier, AktieType.GereedMelden, urgentie);
-            t.Beschrijving = $"Productie is klaar en kan gereed gemeld worden!";
+            t.Beschrijving = "Productie is klaar en kan gereed gemeld worden!";
             return t;
         }
 
         public Taak Controleren(TaakUrgentie urgentie, WerkPlek werkplek)
         {
-            Taak t = new Taak(werkplek, AktieType.ControleCheck, urgentie);
+            var t = new Taak(werkplek, AktieType.ControleCheck, urgentie);
             var xtijd = werkplek.LaatsAantalUpdateMinutes();
-            string xvalue = xtijd == 0
+            var xvalue = xtijd == 0
                 ? "Net gecontroleerd"
-                : Math.Round(TimeSpan.FromMinutes(xtijd).TotalHours,2) + " uur voor het laatst";
+                : Math.Round(TimeSpan.FromMinutes(xtijd).TotalHours, 2) + " uur voor het laatst";
             t.Beschrijving = $"Je hebt {xvalue} gecontroleerd.\r\n " +
-                             $"Het is nu weer tijd om te controleren.";
+                             "Het is nu weer tijd om te controleren.";
             return t;
         }
 
@@ -210,6 +213,7 @@ namespace Rpm.Productie
                     t.Beschrijving = $"Let OP!! {Persoon.PersoneelNaam} is over {tijd} uur vrij.";
                 else t.Beschrijving = $"Let OP!! {Persoon.PersoneelNaam} is vrij!";
             }
+
             return t;
         }
 
@@ -241,19 +245,20 @@ namespace Rpm.Productie
             var pers = Bewerking?.AantalActievePersonen ?? (Formulier?.AantalPersonenShifts().Length ?? 0);
             var starten = DateTime.Now;
             var leverdatum = Bewerking?.LeverDatum ?? Formulier?.LeverDatum ?? DateTime.Now;
-            var persnodig = Bewerking?.AantalPersonenNodig(ref starten,false) ?? (Formulier?.AantalPersonenNodig(ref starten) ?? 0);
+            var persnodig = Bewerking?.AantalPersonenNodig(ref starten, false) ??
+                            (Formulier?.AantalPersonenNodig(ref starten) ?? 0);
             var xn = persnodig == 1 ? "persoon" : "personen";
             var xn1 = pers == 1 ? "persoon" : "personen";
             if (persnodig == 0 && (Bewerking?.TeLaat ?? (Formulier?.TeLaat ?? false)))
             {
                 t.Beschrijving =
-                    $"Leverdatum is te laat!.\r\n " +
+                    "Leverdatum is te laat!.\r\n " +
                     $"Verzet de leverdatum of stop de productie en zet de {pers} {xn1} ergens anders in.";
             }
             else if (persnodig == 0)
             {
                 t.Beschrijving =
-                    $"Het is niet meer nodig om mensen op dit klus te zetten.\r\n " +
+                    "Het is niet meer nodig om mensen op dit klus te zetten.\r\n " +
                     $"Je kan nu {pers} {xn1} ergens anders inzetten.";
             }
             else if (pers > persnodig)
@@ -263,7 +268,7 @@ namespace Rpm.Productie
                 xn = pers == 1 ? "kan" : "kunnen";
                 xn1 = pers == 1 ? "persoon" : "personen";
                 var xn2 = pers == 1 ? "is" : "zijn";
-                t.Beschrijving = $"Productie loopt goed!\r\n " +
+                t.Beschrijving = "Productie loopt goed!\r\n " +
                                  $"{pers} {xn1} {xn2} overbodig, en {xn} eventueel ergers anders voor worden ingezet.";
             }
             else
@@ -271,6 +276,7 @@ namespace Rpm.Productie
                 t.Beschrijving =
                     $"Aantal personeel moet aangepast worden om de datum te halen van {pers} naar {persnodig} {xn}.";
             }
+
             return t;
         }
 

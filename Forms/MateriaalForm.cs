@@ -1,10 +1,11 @@
-﻿using Rpm.Productie;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class MateriaalForm : Forms.MetroBase.MetroBaseForm
+    public partial class MateriaalForm : MetroBaseForm
     {
         public MateriaalForm()
         {
@@ -51,8 +52,8 @@ namespace Forms
         private void Manager_OnFormulierDeleted(object sender, string id)
         {
             var prodnr = Formulier?.ProductieNr;
-            if (this.IsDisposed || Formulier == null || id == null || !string.Equals(id, prodnr)) return;
-            this.BeginInvoke(new MethodInvoker(this.Close));
+            if (IsDisposed || Formulier == null || id == null || !string.Equals(id, prodnr)) return;
+            BeginInvoke(new MethodInvoker(Close));
         }
 
         private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)

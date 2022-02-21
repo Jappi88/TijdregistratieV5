@@ -6,11 +6,15 @@ namespace Rpm.SqlLite
 {
     public class PathWatcher
     {
-
-        public string Path { get; private set; }
         private int _interval = 5000; //5 sec
         private DateTime _LastChecked = DateTime.Now;
-        public int SyncInterval { get => _interval; set
+
+        public string Path { get; private set; }
+
+        public int SyncInterval
+        {
+            get => _interval;
+            set
             {
                 _interval = value;
                 if (_Timer != null)
@@ -20,8 +24,9 @@ namespace Rpm.SqlLite
 
         public bool RaiseEvent { get; set; }
         public bool IsSyncing { get; private set; }
-        public bool PathLost { get;  set; }
+        public bool PathLost { get; set; }
         public bool IsFile { get; private set; }
+
         public void WatchPath(string path, bool isfile, bool raiseevent)
         {
             if (IsSyncing && string.Equals(path, Path, StringComparison.CurrentCultureIgnoreCase))
@@ -46,8 +51,26 @@ namespace Rpm.SqlLite
             _Timer?.Stop();
         }
 
+        public void Dispose()
+        {
+            _Timer?.Stop();
+            _Timer?.Dispose();
+            _Timer = null;
+            IsSyncing = false;
+            Path = null;
+            IsFile = false;
+            RaiseEvent = false;
+            PathLocationFound = null;
+            PathLocationLost = null;
+        }
+
+        public event EventHandler PathLocationLost;
+        public event EventHandler PathLocationFound;
+
         #region Timer
+
         private Timer _Timer;
+
         private void _Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             _Timer?.Stop();
@@ -88,26 +111,11 @@ namespace Rpm.SqlLite
             {
                 Console.WriteLine(ex);
             }
+
             _LastChecked = DateTime.Now;
             _Timer?.Start();
         }
+
         #endregion
-
-        public void Dispose()
-        {
-
-            _Timer?.Stop();
-            _Timer?.Dispose();
-            _Timer = null;
-            IsSyncing = false;
-            Path = null;
-            IsFile = false;
-            RaiseEvent = false;
-            PathLocationFound = null;
-            PathLocationLost = null;
-        }
-
-        public event EventHandler PathLocationLost;
-        public event EventHandler PathLocationFound;
     }
 }

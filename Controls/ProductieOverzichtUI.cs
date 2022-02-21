@@ -1,20 +1,26 @@
-﻿using ProductieManager.Properties;
-using Rpm.Productie;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ProductieManager.Properties;
+using Rpm.Productie;
+using Rpm.Various;
 
 namespace Controls
 {
     public partial class ProductieOverzichtUI : UserControl
     {
+        private readonly List<Bewerking> Bewerkingen = new();
+        private readonly Dictionary<string, bool> WerkPlekken = new();
+
+        private bool _iswaiting;
+
+        private bool _loadinglist;
+
         public ProductieOverzichtUI()
         {
             InitializeComponent();
-            
         }
 
         public void InitUI()
@@ -29,13 +35,7 @@ namespace Controls
         {
             imageList1.Images.Clear();
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
-
         }
-
-        private readonly List<Bewerking> Bewerkingen = new();
-        private readonly Dictionary<string, bool> WerkPlekken = new Dictionary<string, bool>();
-
-        private bool _iswaiting = false;
 
         private void StartWaitUI()
         {
@@ -43,15 +43,14 @@ namespace Controls
             _iswaiting = true;
             Task.Run(async () =>
             {
-
                 try
                 {
-                    bool valid = false;
-                    this.Invoke(new Action(() => valid = !this.IsDisposed));
+                    var valid = false;
+                    Invoke(new Action(() => valid = !IsDisposed));
                     if (!valid) return;
                     if (InvokeRequired)
-                        this.Invoke(new Action(() => xloadinglabel.Visible = true));
-                    else this.Visible = true;
+                        Invoke(new Action(() => xloadinglabel.Visible = true));
+                    else Visible = true;
                     var cur = 0;
                     var xwv = "Overzicht aanmaken.";
                     //var xcurvalue = xwv;
@@ -61,7 +60,7 @@ namespace Controls
                         if (cur > 5) cur = 0;
                         var curvalue = xwv.PadRight(xwv.Length + cur, '.');
                         //xcurvalue = curvalue;
-                        this.Invoke(new Action(() =>
+                        Invoke(new Action(() =>
                         {
                             xloadinglabel.Text = curvalue;
                             xloadinglabel.Invalidate();
@@ -72,7 +71,7 @@ namespace Controls
                         Application.DoEvents();
                         tries++;
                         cur++;
-                        this.Invoke(new Action(() => valid = !this.IsDisposed));
+                        Invoke(new Action(() => valid = !IsDisposed));
                         if (!valid) break;
                     }
                 }
@@ -85,15 +84,15 @@ namespace Controls
 
         private void StopWaitUI()
         {
-          _iswaiting = false;
+            _iswaiting = false;
             if (InvokeRequired)
-                this.Invoke(new Action(() => xloadinglabel.Visible = false));
+                Invoke(new Action(() => xloadinglabel.Visible = false));
             else xloadinglabel.Visible = false;
         }
 
         private Dictionary<string, bool> GetWerkplekken()
         {
-           // List<string> plekken = new List<string>();
+            // List<string> plekken = new List<string>();
             try
             {
                 if (Manager.Opties == null) return WerkPlekken;
@@ -101,44 +100,32 @@ namespace Controls
                 {
                     var plekken = Manager.BewerkingenLijst.GetAlleWerkplekken(true);
                     foreach (var plek in plekken)
-                    {
                         if (!WerkPlekken.ContainsKey(plek))
                             WerkPlekken.Add(plek, true);
-                    }
 
                     return WerkPlekken;
                 }
+
                 if (Manager.Opties.ToonAllesVanBeide || Manager.Opties.ToonVolgensAfdelingen)
-                {
                     if (Manager.Opties.Afdelingen is {Length: > 0})
-                    {
                         foreach (var s in Manager.Opties.Afdelingen)
                         {
                             var xpleks = Manager.BewerkingenLijst.GetWerkplekken(s);
-                            foreach(var plek in xpleks)
+                            foreach (var plek in xpleks)
                                 if (!WerkPlekken.ContainsKey(plek))
                                     WerkPlekken.Add(plek, true);
                         }
-                    }
-                }
 
                 if (Manager.Opties.ToonAllesVanBeide || Manager.Opties.ToonVolgensBewerkingen)
-                {
                     if (Manager.Opties.Bewerkingen is {Length: > 0})
-                    {
                         foreach (var s in Manager.Opties.Bewerkingen)
                         {
                             var ent = Manager.BewerkingenLijst.GetEntry(s);
                             if (ent == null || ent.WerkPlekken == null || ent.WerkPlekken.Count == 0) continue;
                             foreach (var plek in ent.WerkPlekken)
-                            {
                                 if (!WerkPlekken.ContainsKey(plek))
                                     WerkPlekken.Add(plek, true);
-                            }
                         }
-                    }
-                }
-
             }
             catch (Exception e)
             {
@@ -150,9 +137,9 @@ namespace Controls
 
         private List<string> GetWerkplekkenFromList()
         {
-            List<string> xret = new List<string>();
-            if (this.InvokeRequired)
-                this.Invoke(new MethodInvoker(() =>
+            var xret = new List<string>();
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(() =>
                     xret = xwerkpleklist.Items.Cast<ListViewItem>().Where(x => x.Checked).Select(x => x.Text)
                         .ToList()));
             else xret = xwerkpleklist.Items.Cast<ListViewItem>().Where(x => x.Checked).Select(x => x.Text).ToList();
@@ -164,8 +151,8 @@ namespace Controls
             var xreturn = new List<string>();
             try
             {
-                if (this.InvokeRequired)
-                    this.Invoke(new MethodInvoker(() => xreturn = xGetWerkplekkenFromView()));
+                if (InvokeRequired)
+                    Invoke(new MethodInvoker(() => xreturn = xGetWerkplekkenFromView()));
                 else xreturn = xGetWerkplekkenFromView();
             }
             catch (Exception e)
@@ -197,8 +184,8 @@ namespace Controls
             var xreturn = new List<string>();
             try
             {
-                if (this.InvokeRequired)
-                    this.Invoke(new MethodInvoker(() => xreturn = xGetEmptyWerkplekkenFromView()));
+                if (InvokeRequired)
+                    Invoke(new MethodInvoker(() => xreturn = xGetEmptyWerkplekkenFromView()));
                 else xreturn = xGetEmptyWerkplekkenFromView();
             }
             catch (Exception e)
@@ -215,7 +202,7 @@ namespace Controls
             try
             {
                 var xwps = xcontrolpanel.Controls.Cast<WerkPlekInfoUI>().ToList();
-                xreturn = xwps.Where(x=> x.Huidig == null).Select(x => x.Werkplek).ToList();
+                xreturn = xwps.Where(x => x.Huidig == null).Select(x => x.Werkplek).ToList();
             }
             catch (Exception e)
             {
@@ -230,8 +217,8 @@ namespace Controls
             var xreturn = new List<string>();
             try
             {
-                if (this.InvokeRequired)
-                    this.Invoke(new MethodInvoker(() => xreturn = xGetWerkplekkenFromView(name, bewnaam)));
+                if (InvokeRequired)
+                    Invoke(new MethodInvoker(() => xreturn = xGetWerkplekkenFromView(name, bewnaam)));
                 else xreturn = xGetWerkplekkenFromView(name, bewnaam);
             }
             catch (Exception e)
@@ -248,7 +235,10 @@ namespace Controls
             try
             {
                 var xwps = xcontrolpanel.Controls.Cast<WerkPlekInfoUI>().ToList();
-                xreturn = xwps.Where(x => string.Equals(x.Werkplek, name, StringComparison.CurrentCultureIgnoreCase) && (string.Equals(x.Huidig?.Path, bewnaam, StringComparison.CurrentCultureIgnoreCase))).Select(x => x.Werkplek).ToList();
+                xreturn = xwps
+                    .Where(x => string.Equals(x.Werkplek, name, StringComparison.CurrentCultureIgnoreCase) &&
+                                string.Equals(x.Huidig?.Path, bewnaam, StringComparison.CurrentCultureIgnoreCase))
+                    .Select(x => x.Werkplek).ToList();
             }
             catch (Exception e)
             {
@@ -265,8 +255,8 @@ namespace Controls
             if (string.Equals(artikelnr1, artikelnr2, StringComparison.CurrentCultureIgnoreCase))
                 return artikelnr2.Length;
             //kijk voor de aantal overeengekomen getallen.
-            int xgelijk = 0;
-            for (int i = 0; i < artikelnr2.Length; i++)
+            var xgelijk = 0;
+            for (var i = 0; i < artikelnr2.Length; i++)
             {
                 if (i >= artikelnr1.Length) break;
                 if (artikelnr1.ToLower()[i] == artikelnr2.ToLower()[i])
@@ -277,13 +267,6 @@ namespace Controls
             return xgelijk;
         }
 
-        public struct WerkVolgorde
-        {
-            public string Name;
-            public Bewerking Huidig;
-            public Bewerking Volgende;
-        }
-
         public Task<List<WerkVolgorde>> GetOverzicht()
         {
             return Task.Run(async () =>
@@ -291,18 +274,18 @@ namespace Controls
                 var xreturn = new List<WerkVolgorde>();
                 try
                 {
-                    List<string> plekken = GetWerkplekkenFromList();
-                    var bws = await Manager.GetBewerkingen(new ViewState[] {ViewState.Gestopt, ViewState.Gestart},
+                    var plekken = GetWerkplekkenFromList();
+                    var bws = await Manager.GetBewerkingen(new[] {ViewState.Gestopt, ViewState.Gestart},
                         true);
-                    var gestart = bws.Where(x => x.State == ProductieState.Gestart).OrderBy(x=> x.VerwachtDatumGereed()).ToList();
-                    bws = bws.Where(x => x.State == ProductieState.Gestopt).Distinct(new BewerkingDistinctComparer()).ToList();
-                    List<Bewerking> xremove = new List<Bewerking>();
+                    var gestart = bws.Where(x => x.State == ProductieState.Gestart)
+                        .OrderBy(x => x.VerwachtDatumGereed()).ToList();
+                    bws = bws.Where(x => x.State == ProductieState.Gestopt).Distinct(new BewerkingDistinctComparer())
+                        .ToList();
+                    var xremove = new List<Bewerking>();
                     if (gestart.Count > 0)
-                    {
                         foreach (var bw in gestart)
                         {
                             foreach (var wp in bw.WerkPlekken)
-                            {
                                 try
                                 {
                                     if (!plekken.Any(x =>
@@ -311,24 +294,21 @@ namespace Controls
                                     var xbws = GetBewerkingByWerkplek(bws, wp.Naam);
                                     if (xbws.Count == 0) continue;
                                     plekken.Remove(wp.Naam);
-                                    Bewerking volgende = xbws.FirstOrDefault(x =>
+                                    var volgende = xbws.FirstOrDefault(x =>
                                         x.VerwachtDatumGereed() > x.LeverDatum ||
                                         string.Equals(x.ArtikelNr, wp.ArtikelNr,
                                             StringComparison.CurrentCultureIgnoreCase) ||
                                         IsSameProduct(x.ArtikelNr, wp.ArtikelNr) > 5);
                                     volgende ??= xbws[0];
-                                    xreturn.Add(new WerkVolgorde() {Name = wp.Naam, Huidig = bw, Volgende = volgende});
+                                    xreturn.Add(new WerkVolgorde {Name = wp.Naam, Huidig = bw, Volgende = volgende});
                                     xremove.Add(volgende);
-
                                 }
                                 catch (Exception ex)
                                 {
                                     Console.WriteLine(ex.Message);
                                 }
-                            }
 
                             foreach (var xrem in xremove)
-                            {
                                 bws.RemoveAll(x =>
                                     string.IsNullOrEmpty(x.ArtikelNr) || string.IsNullOrEmpty(x.ProductieNr) ||
                                     string.Equals(x.ArtikelNr, xrem.ArtikelNr,
@@ -336,9 +316,7 @@ namespace Controls
                                     string.Equals(x.ProductieNr, xrem.ProductieNr,
                                         StringComparison.CurrentCultureIgnoreCase)
                                 );
-                            }
                         }
-                    }
 
                     try
                     {
@@ -374,16 +352,14 @@ namespace Controls
                                 var volgende = xbws[xbws.Count - 1];
                                 bws.Remove(volgende);
                                 if (!string.IsNullOrEmpty(volgende.ArtikelNr))
-                                {
                                     bws.RemoveAll(x =>
                                         string.IsNullOrEmpty(x.ArtikelNr) || string.IsNullOrEmpty(x.ProductieNr) ||
                                         string.Equals(x.ArtikelNr, volgende.ArtikelNr,
                                             StringComparison.CurrentCultureIgnoreCase) ||
                                         string.Equals(x.ProductieNr, volgende.ProductieNr,
                                             StringComparison.CurrentCultureIgnoreCase));
-                                }
 
-                                xtmp.Add(new WerkVolgorde() {Name = plek, Huidig = null, Volgende = volgende});
+                                xtmp.Add(new WerkVolgorde {Name = plek, Huidig = null, Volgende = volgende});
                             }
 
                             if (xtmp.Count > 0)
@@ -400,7 +376,7 @@ namespace Controls
                     Console.WriteLine(e.Message);
                 }
 
-                return xreturn.OrderBy(x=> x.Huidig?.VerwachtLeverDatum??x.Volgende?.VerwachtLeverDatum).ToList();
+                return xreturn.OrderBy(x => x.Huidig?.VerwachtLeverDatum ?? x.Volgende?.VerwachtLeverDatum).ToList();
             });
         }
 
@@ -409,18 +385,14 @@ namespace Controls
             try
             {
                 if (prod?.Bewerkingen == null || Bewerkingen.Count == 0) return false;
-                bool xchanged = false;
+                var xchanged = false;
                 foreach (var bew in prod.Bewerkingen)
                 {
                     var index = Bewerkingen.IndexOf(bew);
                     xchanged = index > -1 && Bewerkingen[index].State != bew.State;
-                    if (update && index > -1)
-                    {
-                        Bewerkingen[index] = bew;
-                    }
+                    if (update && index > -1) Bewerkingen[index] = bew;
 
                     if (!xchanged)
-                    {
                         //if (bew.State == ProductieState.Gestart)
                         //{
 
@@ -436,7 +408,6 @@ namespace Controls
                             if (xchanged)
                                 return true;
                         }
-                    }
                     else return true;
                 }
 
@@ -451,15 +422,14 @@ namespace Controls
 
         public async void InitOverzicht()
         {
-
             await Task.Run(async () =>
             {
                 try
                 {
-                    if (this.IsDisposed || this.Disposing || Manager.Opties == null || _iswaiting) return;
+                    if (IsDisposed || Disposing || Manager.Opties == null || _iswaiting) return;
                     StartWaitUI();
                     var items = await GetOverzicht();
-                    this.Invoke(new Action(() =>
+                    Invoke(new Action(() =>
                     {
                         xcontrolpanel.SuspendLayout();
                         var xcurpos = xcontrolpanel.VerticalScroll.Value;
@@ -481,7 +451,7 @@ namespace Controls
                             }
                         }
 
-                        for (int i = 0; i < 4; i++)
+                        for (var i = 0; i < 4; i++)
                             xcontrolpanel.VerticalScroll.Value = xcurpos;
                         xcontrolpanel.ResumeLayout(true);
                         if (items.Count == 0)
@@ -506,12 +476,11 @@ namespace Controls
 
                 StopWaitUI();
             });
-
         }
 
         private List<Bewerking> GetBewerkingByWerkplek(List<Bewerking> bewerkingen, string werkplek)
         {
-            List<Bewerking> xreturn = new List<Bewerking>();
+            var xreturn = new List<Bewerking>();
             if (string.IsNullOrEmpty(werkplek)) return xreturn;
             try
             {
@@ -521,7 +490,6 @@ namespace Controls
                     if (wps?.WerkPlekken != null &&
                         wps.WerkPlekken.Any(x => string.Equals(x, werkplek, StringComparison.CurrentCultureIgnoreCase)))
                         xreturn.Add(bw);
-
                 }
 
                 xreturn = xreturn.OrderBy(x => x.LeverDatum).ToList();
@@ -534,7 +502,6 @@ namespace Controls
             return xreturn.OrderBy(x => x.VerwachtDatumGereed()).ToList();
         }
 
-        private bool _loadinglist = false;
         private void LoadList()
         {
             try
@@ -543,37 +510,35 @@ namespace Controls
                 _loadinglist = true;
                 xwerkpleklist.Items.Clear();
                 xwerkpleklist.BeginUpdate();
-                    foreach (var wp in wps)
+                foreach (var wp in wps)
+                {
+                    if (!xsearchbox.Text.Trim().ToLower().StartsWith("zoeken") &&
+                        !string.IsNullOrEmpty(xsearchbox.Text.Trim()))
                     {
-                        if (!xsearchbox.Text.Trim().ToLower().StartsWith("zoeken") &&
-                            !string.IsNullOrEmpty(xsearchbox.Text.Trim()))
+                        var crits = xsearchbox.Text.Trim().ToLower().Split(';');
+                        if (crits.Length > 0)
                         {
-                            var crits = xsearchbox.Text.Trim().ToLower().Split(';');
-                            if (crits.Length > 0)
-                            {
-                                bool valid = false;
-                                foreach (var crit in crits)
+                            var valid = false;
+                            foreach (var crit in crits)
+                                if (!string.IsNullOrEmpty(crit) && wp.Key.Trim().ToLower().Contains(crit.Trim()))
                                 {
-                                    if (!string.IsNullOrEmpty(crit) && wp.Key.Trim().ToLower().Contains(crit.Trim()))
-                                    {
-                                        valid = true;
-                                        break;
-                                    }
+                                    valid = true;
+                                    break;
                                 }
 
-                                if (!valid)
-                                    continue;
-                            }
+                            if (!valid)
+                                continue;
                         }
-
-                        var lv = new ListViewItem(wp.Key);
-                        lv.Tag = wp;
-                        lv.ImageIndex = 0;
-                        lv.Checked = wp.Value;
-                        xwerkpleklist.Items.Add(lv);
                     }
 
-                    xwerkpleklist.EndUpdate();
+                    var lv = new ListViewItem(wp.Key);
+                    lv.Tag = wp;
+                    lv.ImageIndex = 0;
+                    lv.Checked = wp.Value;
+                    xwerkpleklist.Items.Add(lv);
+                }
+
+                xwerkpleklist.EndUpdate();
             }
             catch (Exception e)
             {
@@ -587,8 +552,8 @@ namespace Controls
         {
             try
             {
-                if (changedform?.Bewerkingen == null ||_iswaiting || !HasChanged(changedform,true)) return;
-                this.BeginInvoke(new Action(InitOverzicht));
+                if (changedform?.Bewerkingen == null || _iswaiting || !HasChanged(changedform, true)) return;
+                BeginInvoke(new Action(InitOverzicht));
             }
             catch (Exception e)
             {
@@ -604,27 +569,20 @@ namespace Controls
         private void selecteerAllesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             foreach (var item in xwerkpleklist.Items)
-            {
                 if (item is ListViewItem lv)
                     lv.Checked = true;
-            }
         }
 
         private void deSelecteerAllesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             foreach (var item in xwerkpleklist.Items)
-            {
                 if (item is ListViewItem lv)
                     lv.Checked = false;
-            }
         }
 
         private void xsearchbox_TextChanged(object sender, EventArgs e)
         {
-            if (!xsearchbox.Text.Trim().ToLower().StartsWith("zoeken..."))
-            {
-                LoadList();
-            }
+            if (!xsearchbox.Text.Trim().ToLower().StartsWith("zoeken...")) LoadList();
         }
 
         private void xsearchbox_Enter(object sender, EventArgs e)
@@ -645,6 +603,13 @@ namespace Controls
             var xitem = e.Item.Text;
             if (WerkPlekken.ContainsKey(xitem))
                 WerkPlekken[xitem] = e.Item.Checked;
+        }
+
+        public struct WerkVolgorde
+        {
+            public string Name;
+            public Bewerking Huidig;
+            public Bewerking Volgende;
         }
     }
 }

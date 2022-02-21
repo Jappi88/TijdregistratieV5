@@ -6,12 +6,22 @@ namespace Rpm.Productie
 {
     public class DeelsGereedMelding
     {
+        private Bewerking _bewerking;
+        private string _note;
+
+        public DeelsGereedMelding()
+        {
+            Id = DateTime.Now.Ticks;
+        }
+
         public int Aantal { get; set; }
         public DateTime Datum { get; set; } = DateTime.Now;
         public string Paraaf { get; set; }
-        private string _note;
+
         [ExcludeFromSerialization]
-        public string Notitie { get=> Note?.Notitie??_note;
+        public string Notitie
+        {
+            get => Note?.Notitie ?? _note;
             set
             {
                 _note = value;
@@ -22,7 +32,6 @@ namespace Rpm.Productie
 
         //[ExcludeFromSerialization]
         public NotitieEntry Note { get; set; }
-        private Bewerking _bewerking;
 
         public Bewerking Werk
         {
@@ -37,12 +46,7 @@ namespace Rpm.Productie
 
         public string WerkPlek { get; set; }
         public string Path => Werk?.Path + "\\" + WerkPlek;
-        public long Id { get; private set; }
-
-        public DeelsGereedMelding()
-        {
-            Id = DateTime.Now.Ticks;
-        }
+        public long Id { get; }
 
         public override bool Equals(object obj)
         {

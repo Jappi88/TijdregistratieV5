@@ -35,19 +35,18 @@ namespace Rpm.MateriaalSoort
 
         public bool IsGedraaideLip()
         {
-            return (OpdrukkerType is >= 64 and <= 65 or 54);
+            return OpdrukkerType is >= 64 and <= 65 or 54;
         }
 
         public bool IsGebogen()
         {
-            return (OpdrukkerType is 54 || HoekKlemKlant > HoekRaamkant);
+            return OpdrukkerType is 54 || HoekKlemKlant > HoekRaamkant;
         }
 
         public string GetTitle()
         {
             var xsoort = "Alu.";
             if (!string.IsNullOrEmpty(BuisSoort))
-            {
                 switch (BuisSoort.ToLower())
                 {
                     case "a":
@@ -60,8 +59,8 @@ namespace Rpm.MateriaalSoort
                         xsoort = "Stl.";
                         break;
                 }
-            }
-            string xmat = "xx";
+
+            var xmat = "xx";
             if (Info != null)
             {
                 if (Info.Diameters.ContainsKey(BuisDiameter))
@@ -78,7 +77,6 @@ namespace Rpm.MateriaalSoort
         {
             var xsoort = "Alu.";
             if (!string.IsNullOrEmpty(BuisSoort))
-            {
                 switch (BuisSoort.ToLower())
                 {
                     case "a":
@@ -91,22 +89,22 @@ namespace Rpm.MateriaalSoort
                         xsoort = "Stl.";
                         break;
                 }
-            }
 
-            string xmat = "xx";
+            var xmat = "xx";
             var zijdeA = "";
             var zijdeB = "";
             var lipA = "0";
             var lipB = "0";
-            string xsoortlip = "";
-            bool isdubbelgat = IsDubbelgat();
-            bool isgedraaid = IsGedraaideLip();
+            var xsoortlip = "";
+            var isdubbelgat = IsDubbelgat();
+            var isgedraaid = IsGedraaideLip();
             if (Info != null)
             {
                 if (Info.Diameters.ContainsKey(BuisDiameter))
                     xmat = ((int) Info.Diameters[BuisDiameter]).ToString();
                 if (Info.WandDiktes.ContainsKey(BuisWandDikte))
-                    xmat += "x"  + Math.Round(Info.WandDiktes[BuisWandDikte], 1).ToString(CultureInfo.InvariantCulture).Replace(".",",");
+                    xmat += "x" + Math.Round(Info.WandDiktes[BuisWandDikte], 1).ToString(CultureInfo.InvariantCulture)
+                        .Replace(".", ",");
                 if (Info.Types.ContainsKey(OpdrukkerType))
                 {
                     var xtype = Info.Types[OpdrukkerType];
@@ -124,21 +122,18 @@ namespace Rpm.MateriaalSoort
 
                     if (isgedraaid)
                     {
-                        int xend = xtype.ToLower().IndexOf("d=", StringComparison.CurrentCultureIgnoreCase);
-                        if (xend > 0)
-                        {
-                            xsoortlip = xtype.Substring(0, xend).Trim();
-                        }
+                        var xend = xtype.ToLower().IndexOf("d=", StringComparison.CurrentCultureIgnoreCase);
+                        if (xend > 0) xsoortlip = xtype.Substring(0, xend).Trim();
                     }
                 }
 
                 if (Info.LipLengtes.ContainsKey(LengteRaamKant))
-                    lipA = ((int)Info.LipLengtes[LengteRaamKant]).ToString();
+                    lipA = ((int) Info.LipLengtes[LengteRaamKant]).ToString();
                 if (Info.LipLengtes.ContainsKey(LengteKlemKant))
-                    lipB = ((int)Info.LipLengtes[LengteKlemKant]).ToString();
+                    lipB = ((int) Info.LipLengtes[LengteKlemKant]).ToString();
             }
-            
-            decimal hoekbuiging = HoekKlemKlant - HoekRaamkant;
+
+            var hoekbuiging = HoekKlemKlant - HoekRaamkant;
 
             var xret = $"<h4 color='{Color.Navy.Name}'>" +
                        $"{xsoort} Valk-Plus opdrukker {xmat} / hoh {(int) Hoh} mm<br>" +
@@ -147,9 +142,9 @@ namespace Rpm.MateriaalSoort
             if (hoekbuiging > 0)
                 xret += $"Buiging {hoekbuiging}° tov recht, gat Ø6,5 aan zijde B van bocht";
             if (isgedraaid)
-                xret += $"{(hoekbuiging > 0? "<br>" : "")}{xsoortlip}";
+                xret += $"{(hoekbuiging > 0 ? "<br>" : "")}{xsoortlip}";
             xret += "</h4>";
-           return xret;
+            return xret;
         }
 
         public int PerUur()
@@ -158,21 +153,21 @@ namespace Rpm.MateriaalSoort
             decimal subtrek = 0;
             if (IsGedraaideLip())
                 xbase = 500;
-            if(xbase > 500)
+            if (xbase > 500)
             {
                 var xextra = Hoh - 2000;
                 if (xextra >= 0)
-                    subtrek = ((xextra / 250) * 15);
+                    subtrek = xextra / 250 * 15;
             }
 
             if (HoekKlemKlant > 0)
             {
-                var xm1 = ((HoekKlemKlant / 75) * 100);
-                var xm2 = ((HoekKlemKlant / 75) * 100);
-                subtrek += (xm1 + xm2);
+                var xm1 = HoekKlemKlant / 75 * 100;
+                var xm2 = HoekKlemKlant / 75 * 100;
+                subtrek += xm1 + xm2;
             }
 
-            xbase -= (int)subtrek;
+            xbase -= (int) subtrek;
             return xbase;
         }
 
@@ -182,13 +177,12 @@ namespace Rpm.MateriaalSoort
 
             decimal xmarge = 8;
             decimal maxhoek = 125;
-            var percentraam = ((HoekRaamkant / maxhoek) * 100);
-            var percentklem = ((HoekKlemKlant / maxhoek) * 100);
-            xret += ((xmarge / 100) * percentraam);
-            xret += ((xmarge / 100) * percentklem);
+            var percentraam = HoekRaamkant / maxhoek * 100;
+            var percentklem = HoekKlemKlant / maxhoek * 100;
+            xret += xmarge / 100 * percentraam;
+            xret += xmarge / 100 * percentklem;
 
             if (Info != null)
-            {
                 if (Info.Types.ContainsKey(OpdrukkerType))
                 {
                     var xvalues = Info.Types[OpdrukkerType].Split(' ');
@@ -203,7 +197,6 @@ namespace Rpm.MateriaalSoort
                         }
                     }
                 }
-            }
 
             if (Machine == OpdrukkerMachine.Opdrukker1)
                 xret += 40;
@@ -225,8 +218,8 @@ namespace Rpm.MateriaalSoort
                 var buistype = text.Length >= 12 ? text.Substring(text.Length - 12, 2) : "20";
                 var raamliplengte = text.Length >= 10 ? text.Substring(text.Length - 10, 1) : "0";
                 var klemliplengte = text.Length >= 9 ? text.Substring(text.Length - 9, 1) : "0";
-                int index = text.Length is >= 4 and <= 8 ? 0 : text.Length - 8;
-                var hohtxt = (text.Length - index) >= 4 && index > -1? text.Substring(index, 4) : "0";
+                var index = text.Length is >= 4 and <= 8 ? 0 : text.Length - 8;
+                var hohtxt = text.Length - index >= 4 && index > -1 ? text.Substring(index, 4) : "0";
                 var raamkant = text.Length >= 6 ? text.Substring(text.Length - 4, 2) : "0";
                 var klemkant = text.Length >= 8 ? text.Substring(text.Length - 2, 2) : "0";
 
@@ -239,42 +232,21 @@ namespace Rpm.MateriaalSoort
                         PakketAantal = Info.Aantallen[BuisDiameter];
                 }
 
-                if (int.TryParse(wanddikte, out var xwanddikte))
-                {
-                    BuisWandDikte = xwanddikte;
-                }
+                if (int.TryParse(wanddikte, out var xwanddikte)) BuisWandDikte = xwanddikte;
 
-                if (int.TryParse(buistype, out var xbuistype))
-                {
-                    OpdrukkerType = xbuistype;
-                }
+                if (int.TryParse(buistype, out var xbuistype)) OpdrukkerType = xbuistype;
 
-                if (int.TryParse(raamliplengte, out var xraamliplengte))
-                {
-                    LengteRaamKant = xraamliplengte;
-                }
+                if (int.TryParse(raamliplengte, out var xraamliplengte)) LengteRaamKant = xraamliplengte;
 
-                if (int.TryParse(klemliplengte, out var xklemliplengte))
-                {
-                    LengteKlemKant = xklemliplengte;
-                }
+                if (int.TryParse(klemliplengte, out var xklemliplengte)) LengteKlemKant = xklemliplengte;
 
-                if (decimal.TryParse(hohtxt, out var hoh))
-                {
-                    Hoh = hoh;
-                }
+                if (decimal.TryParse(hohtxt, out var hoh)) Hoh = hoh;
 
-                if (decimal.TryParse(raamkant, out var raam))
-                {
-                    HoekRaamkant = raam;
-                }
+                if (decimal.TryParse(raamkant, out var raam)) HoekRaamkant = raam;
 
-                if (decimal.TryParse(klemkant, out var klem))
-                {
-                    HoekKlemKlant = klem;
-                }
-                Info = OpdrukkerInfo.Load()??new OpdrukkerInfo();
-                KnipMaat = (int)Math.Ceiling(hoh + GetExtraMaat());
+                if (decimal.TryParse(klemkant, out var klem)) HoekKlemKlant = klem;
+                Info = OpdrukkerInfo.Load() ?? new OpdrukkerInfo();
+                KnipMaat = (int) Math.Ceiling(hoh + GetExtraMaat());
             }
             catch (Exception e)
             {

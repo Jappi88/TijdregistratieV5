@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Forms.MetroBase;
 using Rpm.Misc;
 using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class RoosterForm : Forms.MetroBase.MetroBaseForm
+    public partial class RoosterForm : MetroBaseForm
     {
         public RoosterForm()
         {
@@ -16,7 +17,7 @@ namespace Forms
 
         public RoosterForm(Rooster rooster, string title = null) : this()
         {
-            WerkRooster = rooster?.CreateCopy()??Manager.Opties.GetWerkRooster();
+            WerkRooster = rooster?.CreateCopy() ?? Manager.Opties.GetWerkRooster();
             roosterUI1.WerkRooster = WerkRooster;
             if (WerkRooster != null)
             {
@@ -35,8 +36,8 @@ namespace Forms
 
             if (title != null)
             {
-                this.Text = title;
-                this.Invalidate();
+                Text = title;
+                Invalidate();
             }
         }
 
@@ -49,16 +50,11 @@ namespace Forms
             {
                 xperiodegroup.Visible = value;
                 if (value)
-                {
-                    this.MinimumSize = new Size(550, 600);
-                    
-                }
+                    MinimumSize = new Size(550, 600);
                 else
-                {
-                    this.MinimumSize = new Size(550, 500);
-                }
+                    MinimumSize = new Size(550, 500);
 
-                this.Size = this.MinimumSize;
+                Size = MinimumSize;
             }
         }
 

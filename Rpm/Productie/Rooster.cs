@@ -1,31 +1,36 @@
 ﻿using System;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Polenter.Serialization;
 
 namespace Rpm.Productie
 {
     public class Rooster
     {
+        private readonly TimeSpan _Maxduurpauze = new(0, 1, 0, 0);
         private TimeSpan _duurpauze1;
         private TimeSpan _duurpauze2;
         private TimeSpan _duurpauze3;
-        private readonly TimeSpan _Maxduurpauze = new TimeSpan(0, 1, 0, 0);
         public TimeSpan StartWerkdag { get; set; }
         public TimeSpan EindWerkdag { get; set; }
         public TimeSpan StartPauze1 { get; set; }
-        public TimeSpan DuurPauze1 { get=> _duurpauze1 >= _Maxduurpauze? _Maxduurpauze : _duurpauze1;
+
+        public TimeSpan DuurPauze1
+        {
+            get => _duurpauze1 >= _Maxduurpauze ? _Maxduurpauze : _duurpauze1;
             set => _duurpauze1 = value;
         }
+
         public TimeSpan DuurPauze2
         {
             get => _duurpauze2 >= _Maxduurpauze ? _Maxduurpauze : _duurpauze2;
             set => _duurpauze2 = value;
         }
+
         public TimeSpan DuurPauze3
         {
             get => _duurpauze3 >= _Maxduurpauze ? _Maxduurpauze : _duurpauze3;
             set => _duurpauze3 = value;
         }
+
         public TimeSpan StartPauze2 { get; set; }
         public TimeSpan StartPauze3 { get; set; }
         public bool GebruiktPauze { get; set; }
@@ -37,7 +42,7 @@ namespace Rpm.Productie
 
         public bool IsValid()
         {
-            bool xreturn = true;
+            var xreturn = true;
             if (GebruiktVanaf)
                 xreturn &= DateTime.Now >= Vanaf;
             if (GebruiktTot)
@@ -50,7 +55,7 @@ namespace Rpm.Productie
             var rooster = Manager.Opties?.WerkRooster;
             if (rooster == null) return true;
 
-            bool xreturn = IsValid() && !SameTijden(rooster);
+            var xreturn = IsValid() && !SameTijden(rooster);
             return xreturn;
         }
 

@@ -1,12 +1,13 @@
-﻿using Rpm.Productie;
+﻿using System;
+using System.Windows.Forms;
+using Forms.MetroBase;
+using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.Various;
-using System;
-using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class CreateAccount : Forms.MetroBase.MetroBaseForm
+    public partial class CreateAccount : MetroBaseForm
     {
         public CreateAccount()
         {
@@ -24,13 +25,14 @@ namespace Forms
         {
             if (Manager.Database?.UserAccounts == null)
             {
-                XMessageBox.Show(this, $"Database is niet geladen!", "Database Niet Geladen", MessageBoxButtons.OK,
+                XMessageBox.Show(this, "Database is niet geladen!", "Database Niet Geladen", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
             }
             else if (string.IsNullOrWhiteSpace(xgebruikersname.Text) ||
-                xgebruikersname.Text == "Vul in een gebruikersnaam..." || xgebruikersname.Text.Trim().Length == 0)
+                     xgebruikersname.Text == "Vul in een gebruikersnaam..." || xgebruikersname.Text.Trim().Length == 0)
             {
-                XMessageBox.Show(this, $"Vul in een geldige gebruikersnaam", "Ongeldige GebruikersNaam", MessageBoxButtons.OK,
+                XMessageBox.Show(this, "Vul in een geldige gebruikersnaam", "Ongeldige GebruikersNaam",
+                    MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
             }
             else if (await Manager.Database.AccountExist(xgebruikersname.Text))
@@ -41,7 +43,7 @@ namespace Forms
             }
             else if (xwachtwoord1.Text.Length < 6)
             {
-                XMessageBox.Show(this, $"Wachtwoord is te kort!\nJe wachtwoord moet minimaal 6 characters lang zijn.",
+                XMessageBox.Show(this, "Wachtwoord is te kort!\nJe wachtwoord moet minimaal 6 characters lang zijn.",
                     "Ongeldige Wachtwoord", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (xwachtwoord1.Text != xwachtwoord2.Text)
@@ -52,7 +54,7 @@ namespace Forms
             }
             else if (xtoegangslevel.SelectedIndex == -1)
             {
-                XMessageBox.Show(this, $"Vul in de toegangs level en probeer het opnieuw.", "Ongeldige ToegangsLevel",
+                XMessageBox.Show(this, "Vul in de toegangs level en probeer het opnieuw.", "Ongeldige ToegangsLevel",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else

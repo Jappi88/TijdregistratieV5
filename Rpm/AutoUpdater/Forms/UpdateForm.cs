@@ -2,9 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MetroFramework.Drawing.Html;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Productie;
@@ -29,14 +27,15 @@ namespace AutoUpdaterDotNET
             // var resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdateForm));
 
             var curversion = new Version(_args.CurrentVersion);
-            bool isnew = curversion > _args.InstalledVersion;
+            var isnew = curversion > _args.InstalledVersion;
             labelUpdate.Text = isnew
                 ? $"Een nieuwe versie van {AutoUpdater.AppTitle} is beschikbaar!"
                 : $"Er is geen nieuwe update beschikbaar voor {AutoUpdater.AppTitle}.";
-            this.Text = labelUpdate.Text;
-            xdescription.Text = isnew ? $"{AutoUpdater.AppTitle} {_args.CurrentVersion} is nu beschikbaar." +
-                 $" Jij hebt versie {_args.InstalledVersion} geinstalleerd. Wil je nu downloaden?" :
-                 $"Huidige versie van {AutoUpdater.AppTitle} is {_args.CurrentVersion}.";
+            Text = labelUpdate.Text;
+            xdescription.Text = isnew
+                ? $"{AutoUpdater.AppTitle} {_args.CurrentVersion} is nu beschikbaar." +
+                  $" Jij hebt versie {_args.InstalledVersion} geinstalleerd. Wil je nu downloaden?"
+                : $"Huidige versie van {AutoUpdater.AppTitle} is {_args.CurrentVersion}.";
             buttonUpdate.Text = isnew ? "Update" : "Download";
 
             if (string.IsNullOrEmpty(_args.ChangelogURL))
@@ -49,22 +48,18 @@ namespace AutoUpdaterDotNET
             {
                 xchangelog.Text =
                     ChangeLogTxtToHtml(_args.ChangelogURL, labelUpdate.Text, curversion.ToString());
+            }
 
-            }
-            if (AutoUpdater.Mandatory && AutoUpdater.UpdateMode == Mode.Forced)
-            {
-                ControlBox = false;
-            }
+            if (AutoUpdater.Mandatory && AutoUpdater.UpdateMode == Mode.Forced) ControlBox = false;
         }
 
         private void UpdateFormLoad(object sender, EventArgs e)
         {
-           
         }
 
         private string ChangeLogTxtToHtml(string text, string title, string versie)
         {
-            if (string.IsNullOrEmpty(text)) return text; 
+            if (string.IsNullOrEmpty(text)) return text;
             var xbody = text.Replace("[", "</ul>\n<h2>").Replace("]", "</h2>\n<ul>");
             xbody = xbody.Substring(7) + "\n</ul>\n";
             using var streamreader = new StringReader(xbody);
@@ -75,7 +70,7 @@ namespace AutoUpdaterDotNET
                 if (!string.IsNullOrEmpty(xline) && xline.StartsWith("*"))
                 {
                     string xnextline = null;
-                    string xtoadd = "";
+                    var xtoadd = "";
                     while (streamreader.Peek() > -1)
                     {
                         xnextline = streamreader.ReadLine();
@@ -87,34 +82,39 @@ namespace AutoUpdaterDotNET
                                 xbody = xbody.Replace(xnextline, "");
                         }
                         else
+                        {
                             break;
+                        }
                     }
 
-                    string ximagekey = xline.ToLower().Contains("opgelost") ? "opgelost" :
+                    var ximagekey = xline.ToLower().Contains("opgelost") ? "opgelost" :
                         xline.ToLower().Contains("toegevoegd") ? "toegevoegd" : "geen idee";
                     var xlineimage = $"<img src=\"{ximagekey}\" />";
-                    string newline = xline.Replace("* ", "<li>{0}") + xtoadd + "</li>";
+                    var newline = xline.Replace("* ", "<li>{0}") + xtoadd + "</li>";
                     newline = string.Format(newline, xlineimage);
-                    
+
                     xbody = xbody.Replace(xline, newline);
                     if (!string.IsNullOrEmpty(xnextline))
                         xline = xnextline;
                     else xline = null;
-
                 }
-                else xline = null;
+                else
+                {
+                    xline = null;
+                }
             }
-            string xreturn = $"<html>\n" +
-                             $"<head>\n" +
-                             $"<title>Changelogs</title>\n" +
-                             $"<link rel=\"Stylesheet\" href=\"StyleSheet\" />\n" +
-                             $"</head>\n" +
-                             $"<body style=\"background - color: #333; background-gradient: #707; background-gradient-angle: 60; margin: 0;\">\n" +
-                             $"<blockquote class=\"whitehole\">\n" +
-                             $"{xbody}\n" +
-                             $"</blockquote>\n" +
-                             $"</body>\n" +
-                             $"</html>";
+
+            var xreturn = "<html>\n" +
+                          "<head>\n" +
+                          "<title>Changelogs</title>\n" +
+                          "<link rel=\"Stylesheet\" href=\"StyleSheet\" />\n" +
+                          "</head>\n" +
+                          "<body style=\"background - color: #333; background-gradient: #707; background-gradient-angle: 60; margin: 0;\">\n" +
+                          "<blockquote class=\"whitehole\">\n" +
+                          $"{xbody}\n" +
+                          "</blockquote>\n" +
+                          "</body>\n" +
+                          "</html>";
             return xreturn;
         }
 
@@ -130,10 +130,7 @@ namespace AutoUpdaterDotNET
             }
             else
             {
-                if (AutoUpdater.DownloadUpdate(_args))
-                {
-                    DialogResult = DialogResult.OK;
-                }
+                if (AutoUpdater.DownloadUpdate(_args)) DialogResult = DialogResult.OK;
             }
         }
 
@@ -145,7 +142,6 @@ namespace AutoUpdaterDotNET
         private void ButtonRemindLaterClick(object sender, EventArgs e)
         {
             if (AutoUpdater.LetUserSelectRemindLater)
-            {
                 using (var remindLaterForm = new RemindLaterForm())
                 {
                     var dialogResult = remindLaterForm.ShowDialog();
@@ -165,11 +161,10 @@ namespace AutoUpdaterDotNET
                         return;
                     }
                 }
-            }
 
             AutoUpdater.PersistenceProvider.SetSkippedVersion(null);
 
-            DateTime remindLaterDateTime = DateTime.Now;
+            var remindLaterDateTime = DateTime.Now;
             switch (AutoUpdater.RemindLaterTimeSpan)
             {
                 case RemindLaterFormat.Days:
@@ -197,9 +192,7 @@ namespace AutoUpdaterDotNET
         private void UpdateForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (AutoUpdater.Mandatory && AutoUpdater.UpdateMode == Mode.Forced)
-            {
                 e.Cancel = e.CloseReason == CloseReason.UserClosing;
-            }
         }
 
         private void xchangelog_StylesheetLoad(object sender, HtmlStylesheetLoadEventArgs e)
@@ -211,7 +204,7 @@ namespace AutoUpdaterDotNET
 
         private void xchangelog_ImageLoad(object sender, HtmlImageLoadEventArgs e)
         {
-            Image ximage = GetImage(e.Src);
+            var ximage = GetImage(e.Src);
             if (ximage != null)
                 e.Callback(ximage);
         }
@@ -224,7 +217,7 @@ namespace AutoUpdaterDotNET
             switch (name.ToLower())
             {
                 case "opgelost":
-                    return Resources.fixed_Bug_32x32.ResizeImage(16,16);
+                    return Resources.fixed_Bug_32x32.ResizeImage(16, 16);
                 case "toegevoegd":
                     return Resources.add_Blue_circle_32x32.ResizeImage(16, 16);
                 default:

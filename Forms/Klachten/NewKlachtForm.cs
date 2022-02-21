@@ -1,5 +1,12 @@
-﻿using MetroFramework;
-using ProductieManager.Forms;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using Controls;
+using Forms.MetroBase;
+using MetroFramework;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using ProductieManager.Rpm.Various;
@@ -7,20 +14,11 @@ using Rpm.Klachten;
 using Rpm.Misc;
 using Rpm.Opmerking;
 using Rpm.Productie;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using Controls;
 
 namespace Forms.Klachten
 {
-    public partial class NewKlachtForm : Forms.MetroBase.MetroBaseForm
+    public partial class NewKlachtForm : MetroBaseForm
     {
-        public KlachtEntry Klacht { get; private set; }
-        public OpmerkingEntry Opmerking { get; set; }
         public NewKlachtForm(bool isopmerking, object value = null)
         {
             InitializeComponent();
@@ -39,6 +37,9 @@ namespace Forms.Klachten
                 else InitKlacht(null);
             }
         }
+
+        public KlachtEntry Klacht { get; private set; }
+        public OpmerkingEntry Opmerking { get; set; }
 
         private void Xmessagebox_DragDrop(object sender, DragEventArgs e)
         {
@@ -64,7 +65,7 @@ namespace Forms.Klachten
             xDatePanel.Visible = true;
             ximagebox.Image = Resources.file_warning_40447;
             xplaatsen.Image = Resources.Leave_80_icon_icons_com_57305;
-            this.Style = MetroColorStyle.Red;
+            Style = MetroColorStyle.Red;
             InitOntvangers();
             InitProducties();
             InitBijlages();
@@ -75,10 +76,13 @@ namespace Forms.Klachten
                 xdateklacht.SetValue(klacht.DatumKlacht);
                 xplaatsen.Text = "Wijzig Klacht";
             }
-            else xplaatsen.Text = "Klacht Plaatsen";
+            else
+            {
+                xplaatsen.Text = "Klacht Plaatsen";
+            }
 
-            this.Text = xplaatsen.Text;
-            this.Invalidate();
+            Text = xplaatsen.Text;
+            Invalidate();
             xmessagebox.Text = klacht?.Omschrijving;
         }
 
@@ -88,19 +92,17 @@ namespace Forms.Klachten
             xDatePanel.Visible = false;
             ximagebox.Image = Resources.note_document_64x64;
             xplaatsen.Image = Resources.noterespond_general_32x32;
-            this.Style = MetroColorStyle.Teal;
+            Style = MetroColorStyle.Teal;
             InitOntvangers();
             InitProducties();
             InitBijlages();
             xonderwerp.Text = Opmerking?.Title;
             xafzender.Text = Opmerking?.Afzender;
             if (opmerking != null)
-            {
                 xplaatsen.Text = "Wijzig Opmerking";
-            }
             else xplaatsen.Text = "Opmerking Plaatsen";
-            this.Text = xplaatsen.Text;
-            this.Invalidate();
+            Text = xplaatsen.Text;
+            Invalidate();
             xmessagebox.Text = Opmerking?.Opmerking;
         }
 
@@ -110,7 +112,7 @@ namespace Forms.Klachten
 
             if (ProductieChat.Gebruikers != null)
             {
-                var xclients = ProductieChat.Gebruikers.OrderBy(x => x.UserName).Select(x=> x.UserName);
+                var xclients = ProductieChat.Gebruikers.OrderBy(x => x.UserName).Select(x => x.UserName);
                 foreach (var client in xclients)
                 {
                     var item = new ToolStripMenuItem(client, Resources.user_customer_person_32x32);
@@ -121,18 +123,17 @@ namespace Forms.Klachten
                 }
             }
 
-           
+
             if (Klacht?.Ontvangers != null && Klacht.Ontvangers.Count > 0)
             {
-                foreach(var ont in Klacht.Ontvangers)
+                foreach (var ont in Klacht.Ontvangers)
                     AddOntvangerStrip(ont);
                 return;
             }
+
             if (Opmerking?.Ontvangers != null && Opmerking.Ontvangers.Count > 0)
-            {
                 foreach (var ont in Opmerking.Ontvangers)
                     AddOntvangerStrip(ont);
-            }
         }
 
         private void InitBijlages()
@@ -144,11 +145,10 @@ namespace Forms.Klachten
                 foreach (var ont in Klacht.Bijlages) AddBijlageStrip(ont);
                 return;
             }
+
             if (Opmerking?.Bijlages != null && Opmerking.Bijlages.Count > 0)
-            {
-                foreach (var ont in Opmerking.Bijlages) 
+                foreach (var ont in Opmerking.Bijlages)
                     AddBijlageStrip(ont.Key);
-            }
         }
 
         private void InitProducties()
@@ -156,17 +156,13 @@ namespace Forms.Klachten
             ClearProducties();
 
             if (Klacht?.ProductieNrs != null && Klacht.ProductieNrs.Count > 0)
-            {
-                foreach (var ont in Klacht.ProductieNrs) AddProductieStrip(ont);
-            }
+                foreach (var ont in Klacht.ProductieNrs)
+                    AddProductieStrip(ont);
         }
 
         private void EmailClient_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem { Tag: string client })
-            {
-                AddOntvangerStrip(client);
-            }
+            if (sender is ToolStripMenuItem {Tag: string client}) AddOntvangerStrip(client);
         }
 
         private void AddOntvangerStrip(string name)
@@ -199,7 +195,7 @@ namespace Forms.Klachten
                     var rf = new ZoekProductiesUI.RangeFilter
                     {
                         Enabled = true,
-                        Criteria = tb.SecondaryText.Trim(),
+                        Criteria = tb.SecondaryText.Trim()
                     };
                     calcform.Filter = rf;
                     calcform.Show();
@@ -207,13 +203,12 @@ namespace Forms.Klachten
                 else
                 {
                     var name = tb.SelectedText;
-                    var xprod = Manager.Database.GetProductie(name).Result;
+                    var xprod = Manager.Database.GetProductie(name);
                     if (xprod == null)
-                    {
                         if (XMessageBox.Show(this, $"ProductieNr '{name}' bestaat niet, wil je alsnog toevoegen?",
                                 "ProductieNr bestaat niet", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
-                            DialogResult.No) return;
-                    }
+                            DialogResult.No)
+                            return;
 
                     AddProductieStrip(name);
                 }
@@ -253,7 +248,7 @@ namespace Forms.Klachten
             if (xontvangerstrip.Items.Count > 0)
             {
                 var xitems = xontvangerstrip.Items.Cast<ToolStripMenuItem>().Where(x => x.Tag is string).ToList();
-                xitems.ForEach(x=> xontvangerstrip.Items.Remove(x));
+                xitems.ForEach(x => xontvangerstrip.Items.Remove(x));
             }
         }
 
@@ -280,12 +275,12 @@ namespace Forms.Klachten
             var xreturn = new List<string>();
             try
             {
-                xreturn = xontvangerstrip.Items.Cast<ToolStripMenuItem>().Where(x => x.Tag is string).Select(x=> x.Tag as string).ToList();
+                xreturn = xontvangerstrip.Items.Cast<ToolStripMenuItem>().Where(x => x.Tag is string)
+                    .Select(x => x.Tag as string).ToList();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                
             }
 
             return xreturn;
@@ -296,12 +291,12 @@ namespace Forms.Klachten
             var xreturn = new List<string>();
             try
             {
-                xreturn = xbijlagestrip.Items.Cast<ToolStripMenuItem>().Where(x => x.Tag is string).Select(x => x.Tag as string).ToList();
+                xreturn = xbijlagestrip.Items.Cast<ToolStripMenuItem>().Where(x => x.Tag is string)
+                    .Select(x => x.Tag as string).ToList();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-
             }
 
             return xreturn;
@@ -312,12 +307,12 @@ namespace Forms.Klachten
             var xreturn = new List<string>();
             try
             {
-                xreturn = xproductiesstrip.Items.Cast<ToolStripMenuItem>().Where(x => x.Tag is string).Select(x => x.Tag as string).ToList();
+                xreturn = xproductiesstrip.Items.Cast<ToolStripMenuItem>().Where(x => x.Tag is string)
+                    .Select(x => x.Tag as string).ToList();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-
             }
 
             return xreturn;
@@ -325,18 +320,12 @@ namespace Forms.Klachten
 
         private void ClientRemove_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem client)
-            {
-                xontvangerstrip.Items.Remove(client);
-            }
+            if (sender is ToolStripMenuItem client) xontvangerstrip.Items.Remove(client);
         }
 
         private void ProductieRemove_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem client)
-            {
-                xproductiesstrip.Items.Remove(client);
-            }
+            if (sender is ToolStripMenuItem client) xproductiesstrip.Items.Remove(client);
         }
 
         private void xaddbijlage_Click(object sender, EventArgs e)
@@ -345,9 +334,9 @@ namespace Forms.Klachten
             xbuttons.Add("Annuleren", DialogResult.Cancel);
             xbuttons.Add("Bestand", DialogResult.OK);
             xbuttons.Add("Screen Capture", DialogResult.Yes);
-            var result = XMessageBox.Show(this, $"Wat voor bijlage wil je gebruiken?\n\n" +
-                                          "Kies voor 'Bestand' als je een bestand wilt kiezen.\n" +
-                                          "Kies voor 'Screen Capture' als je een scherm afbeelding wilt maken.",
+            var result = XMessageBox.Show(this, "Wat voor bijlage wil je gebruiken?\n\n" +
+                                                "Kies voor 'Bestand' als je een bestand wilt kiezen.\n" +
+                                                "Kies voor 'Screen Capture' als je een scherm afbeelding wilt maken.",
                 "Bijlage", MessageBoxButtons.OK, MessageBoxIcon.Question, null, xbuttons);
             if (result == DialogResult.Cancel) return;
             string bijlage = null;
@@ -362,10 +351,10 @@ namespace Forms.Klachten
                 case DialogResult.Yes:
                     var xscreen = new SelectScreenImage();
                     xscreen.StartPosition = FormStartPosition.CenterParent;
-                    xscreen.Location = this.Location;
+                    xscreen.Location = Location;
                     var forms = Application.OpenForms.Cast<Form>().ToList();
                     if (forms.Count > 0)
-                        foreach(var form in forms)
+                        foreach (var form in forms)
                             form.Hide();
                     //this.Hide();
                     xscreen.Closed += (x, y) =>
@@ -374,9 +363,9 @@ namespace Forms.Klachten
                         if (forms.Count > 0)
                             foreach (var form in forms)
                                 form.Show();
-                        this.BringToFront();
-                        this.Select();
-                        this.Focus();
+                        BringToFront();
+                        Select();
+                        Focus();
                     };
                     if (xscreen.ShowDialog() == DialogResult.OK)
                         bijlage = xscreen.SelectedImagePath;
@@ -389,10 +378,7 @@ namespace Forms.Klachten
 
         private void BijlageRemove_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem item)
-            {
-                xbijlagestrip.Items.Remove(item);
-            }
+            if (sender is ToolStripMenuItem item) xbijlagestrip.Items.Remove(item);
         }
 
         private void xsluiten_Click(object sender, EventArgs e)
@@ -461,14 +447,11 @@ namespace Forms.Klachten
                         byte[] data = null;
                         if (Opmerking.Bijlages.ContainsKey(xname))
                             data = Opmerking.Bijlages[xname];
-                        if (data == null && File.Exists(xb))
-                        {
-                            data = File.ReadAllBytes(xb);
-                           
-                        }
+                        if (data == null && File.Exists(xb)) data = File.ReadAllBytes(xb);
                         if (data != null && !xbl.ContainsKey(xname))
                             xbl.Add(xname, data);
                     }
+
                     Opmerking.Bijlages = xbl;
                     Opmerking.Producties = prods;
                     Opmerking.Title = xonderwerp.Text.Trim();

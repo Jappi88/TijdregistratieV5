@@ -3,12 +3,13 @@ using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
+using Forms.MetroBase;
 using ProductieManager.Properties;
 using Rpm.Settings;
 
 namespace Forms
 {
-    public partial class PasswordChanger : Forms.MetroBase.MetroBaseForm
+    public partial class PasswordChanger : MetroBaseForm
     {
         public PasswordChanger()
         {
@@ -49,17 +50,17 @@ namespace Forms
             }
         }
 
-  private void pictureBox_MouseEnter(object sender, EventArgs e)
+        private void pictureBox_MouseEnter(object sender, EventArgs e)
         {
             if (sender is PictureBox box) box.BackColor = Color.LightBlue;
         }
 
-  private void pictureBox_MouseLeave(object sender, EventArgs e)
-  {
-      if (sender is PictureBox box) box.BackColor = Color.Transparent;
-  }
+        private void pictureBox_MouseLeave(object sender, EventArgs e)
+        {
+            if (sender is PictureBox box) box.BackColor = Color.Transparent;
+        }
 
-  private TextBox GetTextBoxByPicturebox(PictureBox box)
+        private TextBox GetTextBoxByPicturebox(PictureBox box)
         {
             if (box.Name == "xpic1")
                 return xpass1;
@@ -70,7 +71,6 @@ namespace Forms
             return null;
         }
 
-      
 
         private void xok_Click(object sender, EventArgs e)
         {
@@ -79,17 +79,20 @@ namespace Forms
             var pass = Convert.ToBase64String(SHA1.Create().ComputeHash(Encoding.UTF8.GetBytes(xpass1.Text)));
             if (pass != Account.Password)
             {
-                XMessageBox.Show(this, $"Ongeldige Wachtwoord!\n\nWachtwoord komt niet overeen met je account.", "Ongeldig",
+                XMessageBox.Show(this, "Ongeldige Wachtwoord!\n\nWachtwoord komt niet overeen met je account.",
+                    "Ongeldig",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (xpass2.Text.Length < 6)
             {
-                XMessageBox.Show(this, $"Ongeldige Wachtwoord!\n\nWachtwoord moet minimaal 6 karakters hebben.", "Ongeldig",
+                XMessageBox.Show(this, "Ongeldige Wachtwoord!\n\nWachtwoord moet minimaal 6 karakters hebben.",
+                    "Ongeldig",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (xpass2.Text != xpass3.Text)
             {
-                XMessageBox.Show(this, $"Ongeldige Wachtwoord!\n\nWachtwoorden komen niet overeen met elkaar..", "Ongeldig",
+                XMessageBox.Show(this, "Ongeldige Wachtwoord!\n\nWachtwoorden komen niet overeen met elkaar..",
+                    "Ongeldig",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else

@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using Forms.MetroBase;
 using Rpm.Productie;
 
@@ -27,15 +28,15 @@ namespace Forms
             alleStoringenUI1.InitStoringen(form, selected);
         }
 
-        private void alleStoringenUI1_CloseClicked(object sender, System.EventArgs e)
+        private void alleStoringenUI1_CloseClicked(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
-        private void alleStoringenUI1_StatusChanged(object sender, System.EventArgs e)
+        private void alleStoringenUI1_StatusChanged(object sender, EventArgs e)
         {
-            this.Text = sender as string;
-            this.Invalidate();
+            Text = sender as string;
+            Invalidate();
         }
 
         private void AlleStoringenForm_FormClosing(object sender, FormClosingEventArgs e)

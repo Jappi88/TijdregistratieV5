@@ -15,9 +15,9 @@ namespace FolderSync
 
         public static byte[] ReadFully(string filename)
         {
-            FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            BinaryReader br = new BinaryReader(fs);
-            byte[] result = br.ReadBytes((int)fs.Length);
+            var fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
+            var br = new BinaryReader(fs);
+            var result = br.ReadBytes((int) fs.Length);
             br.Close();
             fs.Close();
             return result;
@@ -30,24 +30,29 @@ namespace FolderSync
             {
                 asm = Assembly.Load(binaries);
             }
-            catch { }
+            catch
+            {
+            }
+
             return asm;
         }
 
         public static Assembly LoadAssemblyFromFile(string filename)
         {
-            byte[] binaries = ReadFully(filename);
+            var binaries = ReadFully(filename);
             return LoadAssemblyFromBinaries(binaries);
         }
 
         public static void AddAccess(string path)
         {
-            DirectoryInfo info = new DirectoryInfo(path);
-            DirectorySecurity security = info.GetAccessControl();
-            WindowsIdentity wi = WindowsIdentity.GetCurrent();
+            var info = new DirectoryInfo(path);
+            var security = info.GetAccessControl();
+            var wi = WindowsIdentity.GetCurrent();
 
-            security.AddAccessRule(new FileSystemAccessRule(wi.User, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
-            security.AddAccessRule(new FileSystemAccessRule(wi.User, FileSystemRights.FullControl, InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow));
+            security.AddAccessRule(new FileSystemAccessRule(wi.User, FileSystemRights.FullControl,
+                InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
+            security.AddAccessRule(new FileSystemAccessRule(wi.User, FileSystemRights.FullControl,
+                InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow));
             info.SetAccessControl(security);
 
             File.SetAttributes(path, FileAttributes.Normal);

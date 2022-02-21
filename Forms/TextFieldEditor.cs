@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Forms.MetroBase;
 
 namespace Forms
 {
-    public partial class TextFieldEditor : Forms.MetroBase.MetroBaseForm
+    public partial class TextFieldEditor : MetroBaseForm
     {
         public TextFieldEditor()
         {
@@ -19,11 +20,11 @@ namespace Forms
 
         public string Title
         {
-            get => this.Text;
+            get => Text;
             set
             {
-                this.Text = value;
-                this.Invalidate();
+                Text = value;
+                Invalidate();
             }
         }
 
@@ -50,7 +51,7 @@ namespace Forms
         public bool UseSecondary
         {
             get => xextrafieldcheck.Checked;
-            set=> xextrafieldcheck.Checked = value;
+            set => xextrafieldcheck.Checked = value;
         }
 
         public bool EnableSecondaryField
@@ -64,7 +65,11 @@ namespace Forms
             }
         }
 
-        public Image FieldImage { get => ximage.Image; set => ximage.Image = value; }
+        public Image FieldImage
+        {
+            get => ximage.Image;
+            set => ximage.Image = value;
+        }
 
         public bool MultiLine
         {
@@ -78,8 +83,9 @@ namespace Forms
 
         private void xok_Click(object sender, EventArgs e)
         {
-            if ((!xextrafieldcheck.Checked && xtextfield.Text.Trim().Length < MinimalTextLength) || (xextrafieldcheck.Checked && xsecondarytextbox.Text.Trim().Length < MinimalTextLength))
-                XMessageBox.Show(this, $"Ongeldige waarde", "Ongeldig", MessageBoxIcon.Warning);
+            if (!xextrafieldcheck.Checked && xtextfield.Text.Trim().Length < MinimalTextLength ||
+                xextrafieldcheck.Checked && xsecondarytextbox.Text.Trim().Length < MinimalTextLength)
+                XMessageBox.Show(this, "Ongeldige waarde", "Ongeldig", MessageBoxIcon.Warning);
             else
                 DialogResult = DialogResult.OK;
         }
@@ -91,10 +97,7 @@ namespace Forms
 
         private void TextFieldEditor_Shown(object sender, EventArgs e)
         {
-            if (xtextfield.TextLength > 0)
-            {
-                xtextfield.SelectAll();
-            }
+            if (xtextfield.TextLength > 0) xtextfield.SelectAll();
 
             xtextfield.Select();
             xtextfield.Focus();
@@ -125,8 +128,8 @@ namespace Forms
                 xheight += 85;
             var xbase = 200 + xheight;
 
-            this.MinimumSize = new Size(this.MinimumSize.Width, xbase);
-            this.Height = xbase;
+            MinimumSize = new Size(MinimumSize.Width, xbase);
+            Height = xbase;
         }
     }
 }

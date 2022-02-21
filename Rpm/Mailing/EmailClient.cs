@@ -7,6 +7,5 @@ namespace ProductieManager.Rpm.Mailing
         public string Name { get; set; }
         public string Email { get; set; }
         public DateTime LastSendEmail { get; set; }
-
     }
 }

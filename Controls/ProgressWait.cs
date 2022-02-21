@@ -12,6 +12,33 @@ namespace Controls
             Resize += ProgressWait_Resize;
         }
 
+        public double FontSizePercentage { get; set; } = 6.21d;
+        public double ProgressWidthPercentage { get; set; } = 9.2d;
+
+        public ProgressBarStyle Style
+        {
+            get => xprogress.Style;
+            set => xprogress.Style = value;
+        }
+
+        public Color ProgressBarColor
+        {
+            get => xprogress.ProgressColor;
+            set => xprogress.ProgressColor = value;
+        }
+
+        public string ProgressText
+        {
+            get => xprogress.Text;
+            set => xprogress.Text = value;
+        }
+
+        public int ProgressValue
+        {
+            get => xprogress.Value;
+            set => xprogress.Value = value;
+        }
+
         private void ProgressWait_Resize(object sender, EventArgs e)
         {
             UpdateProgressSize();
@@ -26,9 +53,6 @@ namespace Controls
         {
             return (int) Math.Round((double) xprogress.Width / 100 * ProgressWidthPercentage);
         }
-
-        public double FontSizePercentage { get; set; } = 6.21d;
-        public double ProgressWidthPercentage { get; set; } = 9.2d;
 
         public void UpdateProgressSize()
         {
@@ -83,30 +107,6 @@ namespace Controls
                     y < minfwidth ? minfwidth : y > maxfwidth ? maxfwidth : y);
                 xprogress.Invalidate();
             }
-        }
-
-        public ProgressBarStyle Style
-        {
-            get => xprogress.Style;
-            set => xprogress.Style = value;
-        }
-
-        public Color ProgressBarColor
-        {
-            get => xprogress.ProgressColor;
-            set => xprogress.ProgressColor = value;
-        }
-
-        public string ProgressText
-        {
-            get => xprogress.Text;
-            set => xprogress.Text = value;
-        }
-
-        public int ProgressValue
-        {
-            get => xprogress.Value;
-            set => xprogress.Value = value;
         }
     }
 }

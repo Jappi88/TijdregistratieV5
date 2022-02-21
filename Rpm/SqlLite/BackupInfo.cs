@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.IO.Compression;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using ICSharpCode.SharpZipLib.Checksum;
 using ICSharpCode.SharpZipLib.Zip;
 using Polenter.Serialization;
@@ -18,18 +16,23 @@ namespace Rpm.SqlLite
 {
     public class BackupInfo
     {
+        internal Timer _BackupSyncTimer = new();
+        private double _interval;
+        public CancellationTokenSource CancellationToken;
+
+        public BackupInfo()
+        {
+            DbVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        }
+
         public string DbVersion { get; set; }
         public string CreatedBy { get; set; }
         public string CreatedFileName { get; set; }
         public DateTime Created { get; set; }
         public bool IsCreating { get; set; }
         public DateTime Creating { get; set; }
-        [ExcludeFromSerialization]
-        public bool IsSyncing { get; private set; }
-        public CancellationTokenSource CancellationToken;
 
-        internal Timer _BackupSyncTimer = new Timer();
-        private double _interval;
+        [ExcludeFromSerialization] public bool IsSyncing { get; private set; }
 
         [ExcludeFromSerialization]
         public double BackupInterval
@@ -39,7 +42,6 @@ namespace Rpm.SqlLite
             {
                 _interval = value;
                 if (_BackupSyncTimer != null)
-                {
                     try
                     {
                         _BackupSyncTimer.Interval = value;
@@ -47,23 +49,17 @@ namespace Rpm.SqlLite
                     catch (Exception e)
                     {
                     }
-                }
             }
-        }
-
-        public BackupInfo()
-        {
-            DbVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         public void StartBackupSyncer(double interval)
         {
-
             if (IsSyncing)
             {
                 BackupInterval = interval;
                 return;
             }
+
             IsSyncing = true;
             _BackupSyncTimer?.Stop();
             _BackupSyncTimer?.Dispose();
@@ -72,22 +68,20 @@ namespace Rpm.SqlLite
             _BackupSyncTimer.Start();
         }
 
-        private async void _BackupSyncTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private async void _BackupSyncTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             try
             {
                 IsSyncing = true;
                 _BackupSyncTimer?.Stop();
-                var bki = BackupInfo.Load();
-                if (!bki.IsCreating || (bki.IsCreating && (DateTime.Now - bki.Creating).TotalHours > 2))
-                {
+                var bki = Load();
+                if (!bki.IsCreating || bki.IsCreating && (DateTime.Now - bki.Creating).TotalHours > 2)
                     if (Manager.Opties is {CreateBackup: true} && (DateTime.Now - bki.Created).TotalHours >
                         TimeSpan.FromMilliseconds(Manager.Opties.BackupInterval).TotalHours)
                     {
                         IsCreating = false;
                         await CreateBackup();
                     }
-                }
 
                 if (Manager.Opties is {CreateBackup: true})
                     _BackupSyncTimer?.Start();
@@ -101,7 +95,6 @@ namespace Rpm.SqlLite
 
         public Task CreateBackup()
         {
-
             if (CancellationToken == null)
                 CancellationToken = new CancellationTokenSource();
             return Task.Run(async () =>
@@ -111,11 +104,11 @@ namespace Rpm.SqlLite
                 {
                     Creating = DateTime.Now;
                     IsCreating = true;
-                    this.Save();
+                    Save();
 
 
-                    string path = Manager.BackupPath + $"\\RPM_Backup_{DateTime.Now: ddMMHHmmss}.zip";
-                    bool valid = await ZipFileDirectory(Manager.DbPath, path, CancellationToken);
+                    var path = Manager.BackupPath + $"\\RPM_Backup_{DateTime.Now: ddMMHHmmss}.zip";
+                    var valid = await ZipFileDirectory(Manager.DbPath, path, CancellationToken);
                     //zip.Close();
                     IsCreating = false;
                     if (valid && !CancellationToken.IsCancellationRequested)
@@ -129,17 +122,15 @@ namespace Rpm.SqlLite
                             var backups = Directory.GetFiles(Manager.BackupPath, "*.zip", SearchOption.TopDirectoryOnly)
                                 .OrderBy(x => new FileInfo(x).CreationTime).ToList();
                             if (backups.Count > Manager.Opties.MaxBackupCount)
-                            {
                                 try
                                 {
-                                    int xc = backups.Count - Manager.Opties.MaxBackupCount;
-                                    for (int i = 0; i < xc; i++)
+                                    var xc = backups.Count - Manager.Opties.MaxBackupCount;
+                                    for (var i = 0; i < xc; i++)
                                         File.Delete(backups[i]);
                                 }
                                 catch (Exception e)
                                 {
                                 }
-                            }
                         }
                     }
                     else
@@ -152,7 +143,8 @@ namespace Rpm.SqlLite
                         {
                         }
                     }
-                    this.Save();
+
+                    Save();
                 }
                 catch (Exception e)
                 {
@@ -172,7 +164,7 @@ namespace Rpm.SqlLite
         }
 
         /// <summary>
-        /// Compress multi-level directories
+        ///     Compress multi-level directories
         /// </summary>
         /// <param name="strDirectory">The directory.</param>
         /// <param name="zipedFile">The ziped file.</param>
@@ -182,15 +174,14 @@ namespace Rpm.SqlLite
         {
             return Task.Run(async () =>
             {
-                using FileStream ZipFile = File.Create(zipedFile);
-                using ZipOutputStream s = new ZipOutputStream(ZipFile);
+                using var ZipFile = File.Create(zipedFile);
+                using var s = new ZipOutputStream(ZipFile);
                 return await ZipSetp(strDirectory, s, "", cancellation);
             });
-
         }
 
         /// <summary>
-        /// Recursive traversal directory
+        ///     Recursive traversal directory
         /// </summary>
         /// <param name="strDirectory">The directory.</param>
         /// <param name="s">The ZipOutputStream Object.</param>
@@ -205,21 +196,19 @@ namespace Rpm.SqlLite
                 {
                     cancellation?.Token.ThrowIfCancellationRequested();
                     if (strDirectory[strDirectory.Length - 1] != Path.DirectorySeparatorChar)
-                    {
                         strDirectory += Path.DirectorySeparatorChar;
-                    }
 
-                    Crc32 crc = new Crc32();
+                    var crc = new Crc32();
 
-                    string[] filenames = Directory.GetFileSystemEntries(strDirectory);
+                    var filenames = Directory.GetFileSystemEntries(strDirectory);
 
-                    foreach (string file in filenames) // traverse all files and directories
+                    foreach (var file in filenames) // traverse all files and directories
                     {
                         cancellation?.Token.ThrowIfCancellationRequested();
                         if (Directory.Exists(file)
-                        ) // is treated as a directory first. If this directory exists, recursively copy the files below the directory.
+                           ) // is treated as a directory first. If this directory exists, recursively copy the files below the directory.
                         {
-                            string pPath = parentPath;
+                            var pPath = parentPath;
                             pPath += file.Substring(file.LastIndexOf("\\", StringComparison.Ordinal) + 1);
                             pPath += "\\";
                             if (!await ZipSetp(file, s, pPath, cancellation)) return false;
@@ -228,16 +217,14 @@ namespace Rpm.SqlLite
                         {
                             try
                             {
-
-
                                 // Open the compressed file
-                                using FileStream fs = File.OpenRead(file);
-                                byte[] buffer = new byte[fs.Length];
+                                using var fs = File.OpenRead(file);
+                                var buffer = new byte[fs.Length];
                                 fs.Read(buffer, 0, buffer.Length);
 
-                                string fileName = parentPath +
-                                                  file.Substring(file.LastIndexOf("\\", StringComparison.Ordinal) + 1);
-                                ZipEntry entry = new ZipEntry(fileName) {DateTime = DateTime.Now, Size = fs.Length};
+                                var fileName = parentPath +
+                                               file.Substring(file.LastIndexOf("\\", StringComparison.Ordinal) + 1);
+                                var entry = new ZipEntry(fileName) {DateTime = DateTime.Now, Size = fs.Length};
 
 
                                 fs.Close();
@@ -264,18 +251,18 @@ namespace Rpm.SqlLite
                     return false;
                 }
             });
-
         }
 
         /// <summary>
-        /// Extract a zip file.
+        ///     Extract a zip file.
         /// </summary>
         /// <param name="zipedFile">The ziped file.</param>
         /// <param name="strDirectory">The STR directory.</param>
         /// <param name="password">The password for the zip file. </param>
         /// <param name="overWrite">Overwrite existing files. </param>
         /// <param name="cancellation">A token for possible cancellation</param>
-        public Task UnZip(string zipedFile, string strDirectory, string password, bool overWrite, CancellationTokenSource cancellation = null)
+        public Task UnZip(string zipedFile, string strDirectory, string password, bool overWrite,
+            CancellationTokenSource cancellation = null)
         {
             return Task.Run(() =>
             {
@@ -286,7 +273,7 @@ namespace Rpm.SqlLite
                     if (!strDirectory.EndsWith("\\"))
                         strDirectory = strDirectory + "\\";
 
-                    using ZipInputStream s = new ZipInputStream(File.OpenRead(zipedFile)) {Password = password};
+                    using var s = new ZipInputStream(File.OpenRead(zipedFile)) {Password = password};
 
                     try
                     {
@@ -294,28 +281,27 @@ namespace Rpm.SqlLite
                         while ((theEntry = s.GetNextEntry()) != null)
                         {
                             cancellation?.Token.ThrowIfCancellationRequested();
-                            string directoryName = "";
-                            string pathToZip = "";
+                            var directoryName = "";
+                            var pathToZip = "";
                             pathToZip = theEntry.Name;
 
                             if (pathToZip != "")
                                 directoryName = Path.GetDirectoryName(pathToZip) + "\\";
 
-                            string fileName = Path.GetFileName(pathToZip);
+                            var fileName = Path.GetFileName(pathToZip);
 
                             Directory.CreateDirectory(strDirectory + directoryName);
 
                             if (fileName != "")
-                            {
-                                if ((File.Exists(strDirectory + directoryName + fileName) && overWrite) ||
-                                    (!File.Exists(strDirectory + directoryName + fileName)))
+                                if (File.Exists(strDirectory + directoryName + fileName) && overWrite ||
+                                    !File.Exists(strDirectory + directoryName + fileName))
                                 {
-                                    using FileStream streamWriter =
+                                    using var streamWriter =
                                         File.Create(strDirectory + directoryName + fileName);
-                                    bool valid = false;
+                                    var valid = false;
                                     try
                                     {
-                                        byte[] data = new byte[2048];
+                                        var data = new byte[2048];
                                         while (true)
                                         {
                                             var size = s.Read(data, 0, data.Length);
@@ -345,14 +331,11 @@ namespace Rpm.SqlLite
                                         catch (Exception e)
                                         {
                                         }
-
                                 }
-                            }
                         }
                     }
                     catch (Exception e)
                     {
-
                     }
                     finally
                     {
@@ -363,8 +346,6 @@ namespace Rpm.SqlLite
                 {
                 }
             });
-
         }
-
     }
 }

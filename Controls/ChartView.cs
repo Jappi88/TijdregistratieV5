@@ -11,13 +11,14 @@ using LiveCharts.Wpf;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
-using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 
 namespace Controls
 {
     public partial class ChartView : UserControl
     {
         private bool _isbussy;
+
+        private bool _IsWaiting;
         public List<Bewerking> _producties;
 
         public ChartView()
@@ -43,8 +44,6 @@ namespace Controls
             return CheckState.Unchecked;
         }
 
-        private bool _IsWaiting;
-
         private void StartWaiting()
         {
             if (_IsWaiting || !Visible) return;
@@ -58,7 +57,8 @@ namespace Controls
                     try
                     {
                         var xcur = cur;
-                        xstatus.BeginInvoke(new MethodInvoker(() => xstatus.Text = xvalue.PadRight(xvalue.Length + xcur, '.')));
+                        xstatus.BeginInvoke(new MethodInvoker(() =>
+                            xstatus.Text = xvalue.PadRight(xvalue.Length + xcur, '.')));
                         cur++;
                         if (cur > 5) cur = 0;
                         await Task.Delay(350);
@@ -119,7 +119,8 @@ namespace Controls
                             datarow["Periode"] = chart.Key;
                             foreach (var colmn in chart.Value)
                                 if (table.Columns.Cast<DataColumn>().All(x =>
-                                    !string.Equals(x.ColumnName, colmn.Key, StringComparison.CurrentCultureIgnoreCase)))
+                                        !string.Equals(x.ColumnName, colmn.Key,
+                                            StringComparison.CurrentCultureIgnoreCase)))
                                     table.Columns.Add(colmn.Key);
                         }
 

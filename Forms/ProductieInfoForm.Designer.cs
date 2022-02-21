@@ -33,10 +33,10 @@ namespace Forms
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieInfoForm));
             this.xcontainer = new System.Windows.Forms.Panel();
+            this.productieInfoUI1 = new Controls.ProductieInfoUI();
             this.xexport = new System.Windows.Forms.Button();
             this.xstatsb = new System.Windows.Forms.Button();
             this.xsluiten = new System.Windows.Forms.Button();
-            this.productieInfoUI1 = new Controls.ProductieInfoUI();
             this.xcontainer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -54,6 +54,23 @@ namespace Forms
             this.xcontainer.Padding = new System.Windows.Forms.Padding(10);
             this.xcontainer.Size = new System.Drawing.Size(867, 518);
             this.xcontainer.TabIndex = 11;
+            // 
+            // productieInfoUI1
+            // 
+            this.productieInfoUI1.AllowVerpakkingEdit = false;
+            this.productieInfoUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.productieInfoUI1.AutoScroll = true;
+            this.productieInfoUI1.BackColor = System.Drawing.Color.White;
+            this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productieInfoUI1.Location = new System.Drawing.Point(10, 10);
+            this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
+            this.productieInfoUI1.Name = "productieInfoUI1";
+            this.productieInfoUI1.Padding = new System.Windows.Forms.Padding(5);
+            this.productieInfoUI1.ShowAantal = false;
+            this.productieInfoUI1.Size = new System.Drawing.Size(847, 460);
+            this.productieInfoUI1.TabIndex = 0;
             // 
             // xexport
             // 
@@ -109,22 +126,6 @@ namespace Forms
             this.xsluiten.UseVisualStyleBackColor = true;
             this.xsluiten.Click += new System.EventHandler(this.xsluiten_Click);
             // 
-            // productieInfoUI1
-            // 
-            this.productieInfoUI1.AllowVerpakkingEdit = false;
-            this.productieInfoUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.productieInfoUI1.AutoScroll = true;
-            this.productieInfoUI1.BackColor = System.Drawing.Color.White;
-            this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productieInfoUI1.Location = new System.Drawing.Point(10, 10);
-            this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
-            this.productieInfoUI1.Name = "productieInfoUI1";
-            this.productieInfoUI1.ShowAantal = false;
-            this.productieInfoUI1.Size = new System.Drawing.Size(847, 460);
-            this.productieInfoUI1.TabIndex = 0;
-            // 
             // ProductieInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -139,9 +140,9 @@ namespace Forms
             this.MinimumSize = new System.Drawing.Size(680, 340);
             this.Name = "ProductieInfoForm";
             this.Padding = new System.Windows.Forms.Padding(10, 60, 10, 10);
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.Style = MetroFramework.MetroColorStyle.Purple;
             this.Text = "Productie Info";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ProductieInfoForm_FormClosing);
             this.xcontainer.ResumeLayout(false);
             this.ResumeLayout(false);
 

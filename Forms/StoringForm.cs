@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Forms.MetroBase;
 using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class StoringForm : Forms.MetroBase.MetroBaseForm
+    public partial class StoringForm : MetroBaseForm
     {
         public StoringForm(WerkPlek plek)
         {
@@ -72,7 +73,8 @@ namespace Forms
         {
             if (IsDisposed) return;
             if (changedform != null &&
-                Plekken.Any(x => string.Equals(x.Werk.Parent.ProductieNr, changedform.ProductieNr, StringComparison.CurrentCultureIgnoreCase)) &&
+                Plekken.Any(x => string.Equals(x.Werk.Parent.ProductieNr, changedform.ProductieNr,
+                    StringComparison.CurrentCultureIgnoreCase)) &&
                 changedform.Bewerkingen != null)
                 foreach (var bew in changedform.Bewerkingen)
                 {

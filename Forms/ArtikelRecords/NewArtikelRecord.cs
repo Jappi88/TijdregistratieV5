@@ -1,12 +1,29 @@
-﻿using Rpm.Productie.ArtikelRecords;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using Rpm.Productie.ArtikelRecords;
 
 namespace Forms.ArtikelRecords
 {
-    public partial class NewArtikelRecord : Forms.MetroBase.MetroBaseForm
+    public partial class NewArtikelRecord : MetroBaseForm
     {
-        public ArtikelRecord SelectedRecord { get; set; } = new ArtikelRecord();
+        public NewArtikelRecord()
+        {
+            InitializeComponent();
+        }
+
+        public NewArtikelRecord(ArtikelRecord record) : this()
+        {
+            SelectedRecord = record ?? new ArtikelRecord();
+            xartikelnr.Text = SelectedRecord.ArtikelNr;
+            xomschrijving.Text = SelectedRecord.Omschrijving;
+            xwerkplekcheck.Checked = record?.IsWerkplek ?? false;
+            xok.Text = "Wijzigen";
+            Text = "Wijzig Artikel/ Werkplek";
+            Invalidate();
+        }
+
+        public ArtikelRecord SelectedRecord { get; set; } = new();
 
         public bool IsWerkplek
         {
@@ -26,23 +43,7 @@ namespace Forms.ArtikelRecords
             set => xwerkplekcheck.Visible = value;
         }
 
-        public NewArtikelRecord()
-        {
-            InitializeComponent();
-        }
-
-        public NewArtikelRecord(ArtikelRecord record) : this()
-        {
-            SelectedRecord = record ?? new ArtikelRecord();
-            xartikelnr.Text = SelectedRecord.ArtikelNr;
-            xomschrijving.Text = SelectedRecord.Omschrijving;
-            xwerkplekcheck.Checked = record?.IsWerkplek??false;
-            xok.Text = "Wijzigen";
-            this.Text = "Wijzig Artikel/ Werkplek";
-            this.Invalidate();
-        }
-
-        private void xok_Click(object sender, System.EventArgs e)
+        private void xok_Click(object sender, EventArgs e)
         {
             try
             {
@@ -56,6 +57,7 @@ namespace Forms.ArtikelRecords
                     if (xartikelnr.Text.Trim().Length < 4)
                         throw new Exception("Vul in een geldige ArtikelNr a.u.b.");
                 }
+
                 if (xomschrijving.Text.Trim().Length < 12)
                     throw new Exception("Vul in een geldige omschrijving a.u.b.");
                 SelectedRecord.ArtikelNr = xartikelnr.Text.Trim();
@@ -69,7 +71,7 @@ namespace Forms.ArtikelRecords
             }
         }
 
-        private void xsluiten_Click(object sender, System.EventArgs e)
+        private void xsluiten_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
         }

@@ -36,7 +36,7 @@ namespace Rpm.ViewModels
         {
             var rooster = PersoneelLid.WerkRooster ?? Manager.Opties.GetWerkRooster();
             return Math.Round(
-                Werktijd.TijdGewerkt(new TijdEntry(Start, Stop, rooster), rooster,null,
+                Werktijd.TijdGewerkt(new TijdEntry(Start, Stop, rooster), rooster, null,
                         GetVrijeDagen())
                     .TotalHours, 2);
         }

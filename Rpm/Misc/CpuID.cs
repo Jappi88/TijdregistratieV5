@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
-
-namespace Rpm.Misc
+﻿namespace Rpm.Misc
 {
     //public class CpuID
     //{

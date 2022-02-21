@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Forms;
 using ProductieManager.Forms;
@@ -13,15 +12,15 @@ namespace Controls
 {
     public partial class FilterEntryEditorUI : UserControl
     {
-        public Filter SelectedFilter { get; set; }
-        public List<FilterEntry> Criterias { get; private set; } = new();
-
         private bool _UseOperand;
 
         public FilterEntryEditorUI()
         {
             InitializeComponent();
         }
+
+        public Filter SelectedFilter { get; set; }
+        public List<FilterEntry> Criterias { get; private set; } = new();
 
         public event EventHandler CriteriasChanged;
 
@@ -60,8 +59,8 @@ namespace Controls
         private void DeleteSelectedCriterias()
         {
             if (xcriterialijst.SelectedItems.Count == 0) return;
-            if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde criteria's wilt verwijderen?!",
-                "Filters Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+            if (XMessageBox.Show(this, "Weetje zeker dat je alle geselecteerde criteria's wilt verwijderen?!",
+                    "Filters Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
                 var crits = xcriterialijst.SelectedObjects.Cast<FilterEntry>().ToArray();
                 xcriterialijst.RemoveObjects(crits);
@@ -146,7 +145,8 @@ namespace Controls
             var index = Criterias.IndexOf(xfilter);
             if (index > -1)
             {
-                var xnewcrit = new NewFilterEntry(typeof(Bewerking),xfilter) {Title = $"Wijzig regel voor {xfilter.PropertyName}"};
+                var xnewcrit = new NewFilterEntry(typeof(Bewerking), xfilter)
+                    {Title = $"Wijzig regel voor {xfilter.PropertyName}"};
                 if (xnewcrit.ShowDialog() == DialogResult.OK)
                 {
                     Criterias[index] = xnewcrit.SelectedFilter;

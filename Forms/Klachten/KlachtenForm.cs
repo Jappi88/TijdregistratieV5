@@ -1,17 +1,17 @@
-﻿using Forms.Klachten;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using Forms.Klachten;
+using Forms.MetroBase;
 using ProductieManager.Forms.Klachten;
 using Rpm.Klachten;
 using Rpm.Productie;
 using Rpm.Various;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-using Various;
 
 namespace Forms
 {
-    public partial class KlachtenForm : Forms.MetroBase.MetroBaseForm 
+    public partial class KlachtenForm : MetroBaseForm
     {
         public KlachtenForm()
         {
@@ -20,7 +20,7 @@ namespace Forms
 
         public KlachtControl SelectedKlacht
         {
-            get=> GetAlleKlachtenControl().FirstOrDefault(x => x.IsSelected);
+            get => GetAlleKlachtenControl().FirstOrDefault(x => x.IsSelected);
             set => SelectControl(value?.Klacht, true);
         }
 
@@ -28,16 +28,13 @@ namespace Forms
         {
             try
             {
-                if (this.Disposing || this.IsDisposed || Manager.Klachten == null) return;
+                if (Disposing || IsDisposed || Manager.Klachten == null) return;
                 UpdateSelectedButtons();
                 var selected = SelectedKlacht;
-                var xents = Manager.Klachten.GetAlleKlachten().Where(IsAllowed).OrderBy(x=> x.DatumGeplaatst);
+                var xents = Manager.Klachten.GetAlleKlachten().Where(IsAllowed).OrderBy(x => x.DatumGeplaatst);
                 xklachtenContainer.SuspendLayout();
                 xklachtenContainer.Controls.Clear();
-                foreach (var xent in xents)
-                {
-                    AddKlacht(xent,false);
-                }
+                foreach (var xent in xents) AddKlacht(xent, false);
                 xklachtenContainer.ResumeLayout(true);
                 if (selected?.Klacht != null)
                     SelectControl(selected.Klacht, true);
@@ -67,18 +64,14 @@ namespace Forms
         {
             try
             {
-                bool deleted = false;
-                for (int i = 0; i < xklachtenContainer.Controls.Count; i++)
-                {
+                var deleted = false;
+                for (var i = 0; i < xklachtenContainer.Controls.Count; i++)
                     if (xklachtenContainer.Controls[i] is KlachtControl control)
-                    {
                         if (control.Klacht != null && control.Klacht.Equals(id))
                         {
                             xklachtenContainer.Controls.RemoveAt(i--);
                             deleted = true;
                         }
-                    }
-                }
 
                 UpdateKlachtenCount();
                 UpdateSelectedButtons();
@@ -120,16 +113,10 @@ namespace Forms
 
         public KlachtControl GetKlachtControl(object id)
         {
-            for (int i = 0; i < xklachtenContainer.Controls.Count; i++)
-            {
+            for (var i = 0; i < xklachtenContainer.Controls.Count; i++)
                 if (xklachtenContainer.Controls[i] is KlachtControl control)
-                {
                     if (control.Klacht != null && control.Klacht.Equals(id))
-                    {
                         return control;
-                    }
-                }
-            }
 
             return null;
         }
@@ -163,7 +150,6 @@ namespace Forms
         {
             if (sender is KlachtControl {Klacht: { }} control)
                 SelectControl(control.Klacht, true);
-
         }
 
         private void SelectControl(KlachtEntry entry, bool selected)
@@ -173,11 +159,9 @@ namespace Forms
             {
                 var kc = GetAlleKlachtenControl();
                 foreach (var c in kc)
-                {
                     if (c.Klacht != null && c.Klacht.Equals(entry))
                         c.IsSelected = true;
                     else c.IsSelected = false;
-                }
             }
             else
             {
@@ -194,7 +178,7 @@ namespace Forms
             try
             {
                 var control = GetKlachtControl(entry.ID);
-                bool isvalid = IsAllowed(entry);
+                var isvalid = IsAllowed(entry);
                 if (control != null)
                 {
                     if (isvalid)
@@ -209,12 +193,13 @@ namespace Forms
                         xklachtenContainer.ResumeLayout(true);
                     }
                 }
-                else if(isvalid)
+                else if (isvalid)
                 {
                     xklachtenContainer.SuspendLayout();
-                    AddKlacht(entry,true);
+                    AddKlacht(entry, true);
                     xklachtenContainer.ResumeLayout(true);
                 }
+
                 UpdateKlachtenCount();
             }
             catch (Exception e)
@@ -230,14 +215,13 @@ namespace Forms
                 var xklachten = Manager.Klachten.GetAlleKlachten();
                 var xunread = Manager.Klachten.GetUnreadKlachten();
                 var x1 = xklachten.Count == 1 ? "Klacht" : "Klachten";
-                this.Text = $"{xklachten.Count} {x1}";
+                Text = $"{xklachten.Count} {x1}";
                 if (xunread.Count > 0)
-                    this.Text += $", waarvan {xunread.Count} niet gelezen";
-                this.Invalidate();
+                    Text += $", waarvan {xunread.Count} niet gelezen";
+                Invalidate();
             }
             catch (Exception e)
             {
-               
             }
         }
 
@@ -246,8 +230,8 @@ namespace Forms
             if (IsDisposed || Disposing) return;
             if (sender is string id)
             {
-                if (this.InvokeRequired)
-                    this.Invoke(new Action(() => DeleteEntry(id)));
+                if (InvokeRequired)
+                    Invoke(new Action(() => DeleteEntry(id)));
                 else DeleteEntry(id);
             }
         }
@@ -257,8 +241,8 @@ namespace Forms
             if (IsDisposed || Disposing) return;
             if (sender is KlachtEntry entry)
             {
-                if (this.InvokeRequired)
-                    this.Invoke(new Action(() => UpdateKlacht(entry)));
+                if (InvokeRequired)
+                    Invoke(new Action(() => UpdateKlacht(entry)));
                 else UpdateKlacht(entry);
             }
         }
@@ -305,7 +289,7 @@ namespace Forms
             if (xklacht.ShowDialog() == DialogResult.OK)
             {
                 xklacht.Klacht.Afzender = Manager.Opties?.Username;
-                Manager.Klachten.SaveKlacht(xklacht.Klacht,true);
+                Manager.Klachten.SaveKlacht(xklacht.Klacht, true);
             }
         }
 
@@ -318,7 +302,7 @@ namespace Forms
             if (xklacht.ShowDialog() == DialogResult.OK)
             {
                 xklacht.Klacht.GelezenDoor.Clear();
-                Manager.Klachten.SaveKlacht(xklacht.Klacht,true);
+                Manager.Klachten.SaveKlacht(xklacht.Klacht, true);
             }
         }
 
@@ -341,11 +325,11 @@ namespace Forms
 
         public void UpdateSelectedButtons()
         {
-            bool xvalid = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
+            var xvalid = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
             var xselected = SelectedKlacht;
             xaddklacht.Enabled = xvalid;
             xeditklacht.Enabled = xvalid && xselected is {Klacht: {AllowEdit: true}};
-            xdeleteklacht.Enabled = xvalid && xselected is { Klacht: { AllowEdit: true } };
+            xdeleteklacht.Enabled = xvalid && xselected is {Klacht: {AllowEdit: true}};
             xshowkrachtinfo.Enabled = xselected != null;
         }
 

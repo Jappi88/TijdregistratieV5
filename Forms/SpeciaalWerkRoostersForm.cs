@@ -1,16 +1,16 @@
-﻿using BrightIdeasSoftware;
-using Rpm.Misc;
-using Rpm.Productie;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
+using Forms.MetroBase;
+using Rpm.Misc;
+using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class SpeciaalWerkRoostersForm : Forms.MetroBase.MetroBaseForm
+    public partial class SpeciaalWerkRoostersForm : MetroBaseForm
     {
-        public List<Rooster> Roosters { get; set; }
         public SpeciaalWerkRoostersForm()
         {
             InitializeComponent();
@@ -19,25 +19,25 @@ namespace Forms
             ((OLVColumn) xroosterlist.Columns[0]).AspectGetter = DateGetter;
         }
 
-        private object DateGetter(object item)
-        {
-            if (item is Rooster rooster)
-            {
-                return rooster.Vanaf.ToString("D");
-            }
-
-            return "N/A";
-        }
-
         public SpeciaalWerkRoostersForm(List<Rooster> roosters) : this()
         {
-            xroosterlist.SetObjects((roosters?.CreateCopy()?? new List<Rooster>()));
+            xroosterlist.SetObjects(roosters?.CreateCopy() ?? new List<Rooster>());
             if (xroosterlist.Items.Count > 0)
             {
                 xroosterlist.SelectedIndex = 0;
                 xroosterlist.SelectedItem?.EnsureVisible();
             }
+
             UpdateRoosterListLabel();
+        }
+
+        public List<Rooster> Roosters { get; set; }
+
+        private object DateGetter(object item)
+        {
+            if (item is Rooster rooster) return rooster.Vanaf.ToString("D");
+
+            return "N/A";
         }
 
         private void xroosterlist_SelectedIndexChanged(object sender, EventArgs e)
@@ -70,23 +70,26 @@ namespace Forms
 
         private void UpdateRoosterListLabel()
         {
-            this.Text = $"Speciale Roosters ({xroosterlist.Items.Count})";
+            Text = $"Speciale Roosters ({xroosterlist.Items.Count})";
         }
 
         private void xaddrooster_Click(object sender, EventArgs e)
         {
             var dt = new DatumChanger();
             dt.DateFormat = "dddd dd MMMM yyyy";
-            dt.DisplayText = "Kies datum voor de speciale rooster.\n\nSpeciale roosters zijn afwijkende roosters op specifieke dagen.";
+            dt.DisplayText =
+                "Kies datum voor de speciale rooster.\n\nSpeciale roosters zijn afwijkende roosters op specifieke dagen.";
             if (dt.ShowDialog() == DialogResult.OK)
             {
                 var roosters = xroosterlist.Objects.Cast<Rooster>().ToList();
                 if (roosters.Any(x => x.Vanaf.Date == dt.SelectedValue.Date))
                 {
-                    XMessageBox.Show(this, $"Er is al een speciale rooster op '{dt.SelectedValue:D}'", "Rooster Bestaat Al",
+                    XMessageBox.Show(this, $"Er is al een speciale rooster op '{dt.SelectedValue:D}'",
+                        "Rooster Bestaat Al",
                         MessageBoxIcon.Exclamation);
                     return;
                 }
+
                 var rooster = Rooster.StandaartRooster();
                 rooster.GebruiktPauze = false;
                 rooster.StartWerkdag = new TimeSpan(7, 0, 0);
@@ -100,6 +103,7 @@ namespace Forms
                     xroosterlist.SelectedItem.EnsureVisible();
                     xroosterdatelabel.Text = rooster.Vanaf.ToString("D");
                 }
+
                 xroosterlist.Sort(0);
                 UpdateRoosterListLabel();
             }
@@ -115,12 +119,16 @@ namespace Forms
                 dt.SelectedValue = rooster.Vanaf;
                 if (dt.ShowDialog() == DialogResult.OK)
                 {
-                    if (dt.SelectedValue.DayOfWeek != DayOfWeek.Saturday && dt.SelectedValue.DayOfWeek != DayOfWeek.Sunday)
+                    if (dt.SelectedValue.DayOfWeek != DayOfWeek.Saturday &&
+                        dt.SelectedValue.DayOfWeek != DayOfWeek.Sunday)
                     {
-                        XMessageBox.Show(this, $"Speciale roosters zijn alleen voor een zaterdag of zondag!\n\n Je hebt '{dt.SelectedValue:D}' gekozen...", "Ongeldige Datum",
+                        XMessageBox.Show(this,
+                            $"Speciale roosters zijn alleen voor een zaterdag of zondag!\n\n Je hebt '{dt.SelectedValue:D}' gekozen...",
+                            "Ongeldige Datum",
                             MessageBoxIcon.Exclamation);
                         return;
                     }
+
                     rooster.Vanaf = dt.SelectedValue;
                     xroosterlist.RefreshObject(rooster);
                     xroosterlist.SelectedObject = rooster;
@@ -129,6 +137,7 @@ namespace Forms
                         xroosterlist.SelectedItem.EnsureVisible();
                         xroosterdatelabel.Text = rooster.Vanaf.ToString("D");
                     }
+
                     xroosterlist.Sort(0);
                 }
             }

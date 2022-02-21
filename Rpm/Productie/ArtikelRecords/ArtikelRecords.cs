@@ -1,24 +1,23 @@
-﻿using MetroFramework;
-using ProductieManager.Properties;
-using ProductieManager.Rpm.Misc;
-using Rpm.Misc;
-using Rpm.SqlLite;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MetroFramework;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
+using Rpm.Misc;
+using Rpm.SqlLite;
+using Rpm.Various;
 
 namespace Rpm.Productie.ArtikelRecords
 {
     public class ArtikelRecords : IDisposable
     {
+        private bool _checking;
+
         public string Version = "1.0.0.0";
-        public  MultipleFileDb Database { get; private set; }
-        public string DbPath { get; private set; }
-        public bool Disposed => _disposed;
 
         public ArtikelRecords(string database)
         {
@@ -33,12 +32,24 @@ namespace Rpm.Productie.ArtikelRecords
             Database.FileDeleted += Database_FileDeleted;
         }
 
+        public MultipleFileDb Database { get; private set; }
+        public string DbPath { get; }
+        public bool Disposed { get; private set; }
+
+        public void Dispose()
+        {
+            // Dispose of unmanaged resources.
+            Dispose(true);
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
+        }
+
         public List<ArtikelOpmerking> GetAllAlgemeenRecordsOpmerkingen()
         {
             try
             {
                 var xop = new List<ArtikelOpmerking>();
-                string xfile = Path.Combine(DbPath, "Algemeen.rpm");
+                var xfile = Path.Combine(DbPath, "Algemeen.rpm");
                 if (File.Exists(xfile))
                     xop = xfile.DeSerialize<List<ArtikelOpmerking>>();
                 return xop;
@@ -55,7 +66,7 @@ namespace Rpm.Productie.ArtikelRecords
         {
             try
             {
-                string xfile = Path.Combine(DbPath, "Algemeen.rpm");
+                var xfile = Path.Combine(DbPath, "Algemeen.rpm");
                 return opmerkingen.Serialize(xfile);
             }
             catch (Exception e)
@@ -82,7 +93,7 @@ namespace Rpm.Productie.ArtikelRecords
         {
             try
             {
-                return Database?.GetAllEntries<ArtikelRecord>()??new List<ArtikelRecord>();
+                return Database?.GetAllEntries<ArtikelRecord>() ?? new List<ArtikelRecord>();
             }
             catch (Exception e)
             {
@@ -106,7 +117,7 @@ namespace Rpm.Productie.ArtikelRecords
             }
         }
 
-        public Task<int> SaveRecords(List<ArtikelRecord> records)
+        public Task<int> SaveRecords(List<ArtikelRecord> records, ProgressArg changed = null)
         {
             return Task.Factory.StartNew(() =>
             {
@@ -115,10 +126,24 @@ namespace Rpm.Productie.ArtikelRecords
                 {
                     if (records == null || records.Count == 0)
                         return 0;
+                    if (changed != null)
+                    {
+                        changed.Message = $"Updating ArtikelRecords...";
+                        changed.Current = 0;
+                        changed.Max = records.Count;
+                        changed.OnChanged(this);
+                    }
 
-                    for (int i = 0; i < records.Count; i++)
+                    for (var i = 0; i < records.Count; i++)
                     {
                         var xrec = records[i];
+                        if (changed != null)
+                        {
+                            changed.Value = xrec;
+                            changed.Current = i;
+                            changed.Max = records.Count;
+                            changed.OnChanged(this);
+                        }
                         if (SaveRecord(xrec))
                             xret++;
                     }
@@ -144,7 +169,7 @@ namespace Rpm.Productie.ArtikelRecords
                 if (string.IsNullOrEmpty(form?.ArtikelNr))
                     return false;
                 if (form.State != ProductieState.Gereed) return false;
-                var file = record??Database?.GetEntry<ArtikelRecord>(form.ArtikelNr);
+                var file = record ?? Database?.GetEntry<ArtikelRecord>(form.ArtikelNr);
 
                 if (file != null)
                 {
@@ -161,11 +186,10 @@ namespace Rpm.Productie.ArtikelRecords
                         file.LaatstGeupdate = form.DatumGereed;
                     if (file.Vanaf.IsDefault() || form.TijdGestart < file.Vanaf)
                         file.Vanaf = form.TijdGestart;
-
                 }
                 else
                 {
-                    file = new ArtikelRecord()
+                    file = new ArtikelRecord
                     {
                         AantalGemaakt = form.TotaalGemaakt,
                         ArtikelNr = form.ArtikelNr,
@@ -175,9 +199,10 @@ namespace Rpm.Productie.ArtikelRecords
                         Vanaf = form.TijdGestart
                     };
                 }
+
                 file.UpdatedProducties.Add(form.ProductieNr);
                 if (save)
-                    return Database?.Upsert(form.ArtikelNr, file, false)??false;
+                    return Database?.Upsert(form.ArtikelNr, file, false) ?? false;
                 return true;
             }
             catch (Exception e)
@@ -194,7 +219,7 @@ namespace Rpm.Productie.ArtikelRecords
                 if (string.IsNullOrEmpty(plek?.Naam))
                     return false;
                 if (plek.Werk is not {State: ProductieState.Gereed}) return false;
-                var file = record??Database.GetEntry<ArtikelRecord>(plek.Naam);
+                var file = record ?? Database.GetEntry<ArtikelRecord>(plek.Naam);
                 if (file != null)
                 {
                     if (file.UpdatedProducties.Exists(x =>
@@ -216,7 +241,7 @@ namespace Rpm.Productie.ArtikelRecords
                 }
                 else
                 {
-                    file = new ArtikelRecord()
+                    file = new ArtikelRecord
                     {
                         AantalGemaakt = plek.TotaalGemaakt,
                         ArtikelNr = plek.Naam,
@@ -227,6 +252,7 @@ namespace Rpm.Productie.ArtikelRecords
                         LaatstGeupdate = plek.GestoptOp()
                     };
                 }
+
                 file.UpdatedProducties.Add(plek.ProductieNr);
                 if (save)
                     Database.Upsert(plek.Naam, file, false);
@@ -239,8 +265,6 @@ namespace Rpm.Productie.ArtikelRecords
             }
         }
 
-        private bool _checking = false;
-
         public async void CheckForOpmerkingen(bool includealgemeen)
         {
             if (_checking) return;
@@ -252,7 +276,7 @@ namespace Rpm.Productie.ArtikelRecords
                 _checking = true;
                 try
                 {
-                    var records = Database.GetAllEntries<ArtikelRecord>(new List<string>() {"algemeen"});
+                    var records = Database.GetAllEntries<ArtikelRecord>(new List<string> {"algemeen"});
                     foreach (var file in records)
                     {
                         var rs = CheckForRecordOpmerkingen(file, false);
@@ -269,7 +293,6 @@ namespace Rpm.Productie.ArtikelRecords
                                 xreturn.Add(r.Key, r.Value);
                     }
                     // Task.Delay(7000).Wait();
-
                 }
                 catch (Exception e)
                 {
@@ -277,8 +300,6 @@ namespace Rpm.Productie.ArtikelRecords
                 }
 
                 _checking = false;
-
-
             });
             if (xreturn.Count > 0)
             {
@@ -296,7 +317,8 @@ namespace Rpm.Productie.ArtikelRecords
             }
         }
 
-        public Dictionary<ArtikelRecord, List<ArtikelOpmerking>> CheckForAlgemeenOpmerkingen(List<ArtikelRecord> records)
+        public Dictionary<ArtikelRecord, List<ArtikelOpmerking>> CheckForAlgemeenOpmerkingen(
+            List<ArtikelRecord> records)
         {
             var xreturn = new Dictionary<ArtikelRecord, List<ArtikelOpmerking>>();
             try
@@ -304,11 +326,11 @@ namespace Rpm.Productie.ArtikelRecords
                 var opmerkingen = GetAllAlgemeenRecordsOpmerkingen();
                 if (opmerkingen.Count > 0)
                 {
-                    records ??= Database.GetAllEntries<ArtikelRecord>(new List<string>() {"algemeen"});
+                    records ??= Database.GetAllEntries<ArtikelRecord>(new List<string> {"algemeen"});
                     foreach (var file in records)
                     {
-                        var rs = CheckForOpmerkingen(file, opmerkingen,true);
-                        if(rs.Count > 0)
+                        var rs = CheckForOpmerkingen(file, opmerkingen, true);
+                        if (rs.Count > 0)
                             foreach (var r in rs)
                                 xreturn.Add(r.Key, r.Value);
                     }
@@ -341,9 +363,7 @@ namespace Rpm.Productie.ArtikelRecords
                         if (Manager.Opties?.Username == null)
                             return;
                         if (op.GelezenDoor.ContainsKey(Manager.Opties.Username))
-                        {
                             op.GelezenDoor[Manager.Opties.Username] = DateTime.Now;
-                        }
                         else
                             op.GelezenDoor.Add(Manager.Opties.Username, DateTime.Now);
 
@@ -366,14 +386,14 @@ namespace Rpm.Productie.ArtikelRecords
                                 alg[xindex] = op;
                                 Database?.Upsert(record.ArtikelNr, record, false);
                             }
-
                         }
                     }
                 }
             }
         }
 
-        public Dictionary<ArtikelRecord, List<ArtikelOpmerking>> CheckForOpmerkingen(ArtikelRecord record, List<ArtikelOpmerking> opmerkingen, bool isalgemeen)
+        public Dictionary<ArtikelRecord, List<ArtikelOpmerking>> CheckForOpmerkingen(ArtikelRecord record,
+            List<ArtikelOpmerking> opmerkingen, bool isalgemeen)
         {
             var xreturn = new Dictionary<ArtikelRecord, List<ArtikelOpmerking>>();
             try
@@ -390,6 +410,7 @@ namespace Rpm.Productie.ArtikelRecords
                             if (!record.IsWerkplek) continue;
                             break;
                     }
+
                     switch (op.Filter)
                     {
                         case ArtikelFilter.GelijkAan:
@@ -400,7 +421,7 @@ namespace Rpm.Productie.ArtikelRecords
                                         continue;
                                     break;
                                 case ArtikelFilterSoort.TijdGewerkt:
-                                    if ((decimal)record.TijdGewerkt != op.FilterWaarde)
+                                    if ((decimal) record.TijdGewerkt != op.FilterWaarde)
                                         continue;
                                     break;
                             }
@@ -428,8 +449,8 @@ namespace Rpm.Productie.ArtikelRecords
                                         break;
                                     continue;
                                 case ArtikelFilterSoort.TijdGewerkt:
-                                    if ((decimal)record.TijdGewerkt > op.FilterWaarde)
-                                     break;
+                                    if ((decimal) record.TijdGewerkt > op.FilterWaarde)
+                                        break;
                                     continue;
                             }
 
@@ -439,21 +460,17 @@ namespace Rpm.Productie.ArtikelRecords
                             {
                                 case ArtikelFilterSoort.AantalGemaakt:
                                     var xoldaantal = (int) (record.VorigeAantalGemaakt / op.FilterWaarde);
-                                    var xnewaantal = (int)(record.AantalGemaakt / op.FilterWaarde);
+                                    var xnewaantal = (int) (record.AantalGemaakt / op.FilterWaarde);
                                     if (xnewaantal > xoldaantal)
-                                    {
                                         //op.GelezenDoor.Remove(Manager.Opties.Username);
                                         break;
-                                    }
                                     continue;
                                 case ArtikelFilterSoort.TijdGewerkt:
-                                    var xoldtijd = (int)(record.VorigeTijdGewerkt / (double)op.FilterWaarde);
-                                    var xnewtijd = (int)(record.TijdGewerkt / (double)op.FilterWaarde);
+                                    var xoldtijd = (int) (record.VorigeTijdGewerkt / (double) op.FilterWaarde);
+                                    var xnewtijd = (int) (record.TijdGewerkt / (double) op.FilterWaarde);
                                     if (xnewtijd > xoldtijd)
-                                    {
                                         //op.GelezenDoor.Remove(Manager.Opties.Username);
                                         break;
-                                    }
                                     continue;
                             }
 
@@ -461,37 +478,34 @@ namespace Rpm.Productie.ArtikelRecords
                     }
 
                     if (op.GelezenDoor.ContainsKey(Manager.Opties.Username))
-                    {
                         if (op.GelezenDoor[Manager.Opties.Username] >= record.LaatstGeupdate)
                             continue;
-                    }
                     if (op.OpmerkingVoor.Any(x =>
                             string.Equals("iedereen", x, StringComparison.CurrentCultureIgnoreCase) ||
                             string.Equals(Manager.Opties.Username, x, StringComparison.CurrentCultureIgnoreCase)))
                     {
                         if (xreturn.ContainsKey(record))
                             xreturn[record].Add(op);
-                        else xreturn.Add(record, new List<ArtikelOpmerking>() {op});
-                        
+                        else xreturn.Add(record, new List<ArtikelOpmerking> {op});
                     }
                 }
-
-                
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
+
             return xreturn;
         }
 
-        public Dictionary<ArtikelRecord, List<ArtikelOpmerking>> CheckForRecordOpmerkingen(ArtikelRecord record, bool isalgemeen)
+        public Dictionary<ArtikelRecord, List<ArtikelOpmerking>> CheckForRecordOpmerkingen(ArtikelRecord record,
+            bool isalgemeen)
         {
             var xreturn = new Dictionary<ArtikelRecord, List<ArtikelOpmerking>>();
             if (Manager.Opties == null) return xreturn;
             if (record?.Opmerkingen != null && record.Opmerkingen.Count > 0)
             {
-                var rs = CheckForOpmerkingen(record, record.Opmerkingen,isalgemeen);
+                var rs = CheckForOpmerkingen(record, record.Opmerkingen, isalgemeen);
                 if (rs.Count > 0)
                     foreach (var r in rs)
                         xreturn.Add(r.Key, r.Value);
@@ -509,25 +523,13 @@ namespace Rpm.Productie.ArtikelRecords
         public event FileSystemEventHandler ArtikelChanged;
         public event FileSystemEventHandler ArtikelDeleted;
 
-        private bool _disposed;
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposed)
-            {
-                return;
-            }
+            if (Disposed) return;
 
             Database?.Close();
             Database = null;
-            _disposed = true;
-        }
-
-        public void Dispose()
-        {
-            // Dispose of unmanaged resources.
-            Dispose(true);
-            // Suppress finalization.
-            GC.SuppressFinalize(this);
+            Disposed = true;
         }
 
         protected virtual void OnArtikelChanged(FileSystemEventArgs f)

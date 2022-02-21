@@ -1,13 +1,4 @@
-﻿using Forms;
-using Microsoft.VisualBasic.FileIO;
-using Microsoft.Win32;
-using Polenter.Serialization;
-using Rpm.Mailing;
-using Rpm.Productie;
-using Rpm.Settings;
-using Rpm.SqlLite;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -27,11 +18,16 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Interop;
-using IWin32Window = System.Windows.Forms.IWin32Window;
-using Size = System.Drawing.Size;
+using Forms;
+using Microsoft.VisualBasic.FileIO;
+using Microsoft.Win32;
+using Polenter.Serialization;
+using Rpm.Mailing;
+using Rpm.Productie;
+using Rpm.Settings;
+using Rpm.SqlLite;
+using Rpm.Various;
 
 namespace Rpm.Misc
 {
@@ -108,14 +104,13 @@ namespace Rpm.Misc
             {
                 foreach (var bew in bewerkingen)
                 {
-
                     if (!bew.IsAllowed(null)) continue;
                     if (iswerkplek)
                     {
                         if (bew.WerkPlekken == null || bew.WerkPlekken.Count == 0) continue;
                         foreach (var wp in bew.WerkPlekken)
                         {
-                            if (wp.TijdAanGewerkt(periode.Start, periode.Stop,true) <= 0) continue;
+                            if (wp.TijdAanGewerkt(periode.Start, periode.Stop, true) <= 0) continue;
                             if (!xreturn.ContainsKey(wp.Naam))
                                 xreturn.Add(wp.Naam, new List<object> {wp});
                             else xreturn[wp.Naam].Add(wp);
@@ -140,7 +135,7 @@ namespace Rpm.Misc
 
         public static void ExcludeFromUpdate(this ProductieFormulier productie)
         {
-           // Manager.ProductieProvider?.AddToExclude(productie);
+            // Manager.ProductieProvider?.AddToExclude(productie);
         }
 
         public static void RemoveExcludeFromUpdate(this ProductieFormulier productie)
@@ -155,12 +150,13 @@ namespace Rpm.Misc
             var xreturn = new Dictionary<string, Dictionary<string, double>>();
             try
             {
-                var weekrange = GetWeekRange(startweek, startjaar,null);
-                var data = bewerkingen.ToSections(iswerkplek, new TijdEntry(weekrange.StartDate, weekrange.EndDate, null));
+                var weekrange = GetWeekRange(startweek, startjaar, null);
+                var data = bewerkingen.ToSections(iswerkplek,
+                    new TijdEntry(weekrange.StartDate, weekrange.EndDate, null));
                 var weekranges = GetWeekRanges(weekrange.StartDate, weekrange.EndDate, includethisweek, shownow);
-                var rows =(weekranges.Count > 1
+                var rows = (weekranges.Count > 1
                     ? weekranges.Select(x => x.Name)
-                    : new[] {"Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag","Zaterdag","Zondag"}).ToArray();
+                    : new[] {"Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"}).ToArray();
                 for (var xrowindex = 0; xrowindex < rows.Length; xrowindex++)
                 {
                     //init values
@@ -175,7 +171,8 @@ namespace Rpm.Misc
                         //pak alle waarden doormiddel van een dag bereik
                         range = weekranges[0];
                         var xstart = range.StartDate.AddDays(xrowindex);
-                        var xstop = new DateTime(xstart.Year, xstart.Month, xstart.Day).Add(Manager.Opties.GetWerkRooster()
+                        var xstop = new DateTime(xstart.Year, xstart.Month, xstart.Day).Add(Manager.Opties
+                            .GetWerkRooster()
                             .EindWerkdag);
                         range = new WeekRange {StartDate = xstart, EndDate = xstop};
                     }
@@ -186,7 +183,8 @@ namespace Rpm.Misc
                     double val = 0;
                     foreach (var prod in data)
                     {
-                        var value = GetSumValueRange(prod.Value, new TijdEntry(range.StartDate, range.EndDate, null), field,
+                        var value = GetSumValueRange(prod.Value, new TijdEntry(range.StartDate, range.EndDate, null),
+                            field,
                             iswerkplek);
                         if (value <= 0) continue;
                         // value = Math.Round(value, 0, MidpointRounding.AwayFromZero);
@@ -195,12 +193,9 @@ namespace Rpm.Misc
                         if (xreturn.ContainsKey(rows[xrowindex]) && !string.IsNullOrEmpty(prod.Key))
                         {
                             if (xreturn[rows[xrowindex]].ContainsKey(prod.Key))
-                            {
-                                xreturn[rows[xrowindex]][prod.Key] +=  value;
-                            }
+                                xreturn[rows[xrowindex]][prod.Key] += value;
                             else xreturn[rows[xrowindex]].Add(prod.Key, value);
                         }
-                        
                     }
 
                     if (val <= 0)
@@ -222,7 +217,8 @@ namespace Rpm.Misc
             {
                 case "tijd gewerkt":
                     if (iswerkplek)
-                        return Math.Round(producties.Sum(x => ((WerkPlek) x).TijdAanGewerkt(bereik.Start, bereik.Stop,true)),
+                        return Math.Round(
+                            producties.Sum(x => ((WerkPlek) x).TijdAanGewerkt(bereik.Start, bereik.Stop, true)),
                             2);
 
                     return Math.Round(producties.Sum(x => ((Bewerking) x).TijdAanGewerkt(bereik.Start, bereik.Stop)),
@@ -234,7 +230,7 @@ namespace Rpm.Misc
                         {
                             var prod = (WerkPlek) xprod;
                             if (prod == null || prod.TotaalGemaakt == 0) continue;
-                            var tg = prod.TijdAanGewerkt(bereik.Start, bereik.Stop,true);
+                            var tg = prod.TijdAanGewerkt(bereik.Start, bereik.Stop, true);
                             var totaltg = prod.TijdAanGewerkt();
                             if (tg <= 0) continue;
                             var percentage = tg / totaltg * 100;
@@ -267,7 +263,8 @@ namespace Rpm.Misc
                                 ((WerkPlek) x).Storingen.Sum(t => t.GetTotaleTijd(bereik.Start, bereik.Stop))), 2);
                     return Math.Round(
                         producties.Sum(x =>
-                            ((Bewerking) x).GetAlleStoringen(false).Sum(t => t.GetTotaleTijd(bereik.Start, bereik.Stop))),
+                            ((Bewerking) x).GetAlleStoringen(false)
+                            .Sum(t => t.GetTotaleTijd(bereik.Start, bereik.Stop))),
                         2);
             }
 
@@ -338,7 +335,8 @@ namespace Rpm.Misc
             {
                 if (werk.Naam != null && werk.Naam.Replace(" ", "").ToLower().Contains(filter.ToLower()))
                     return true;
-                if (werk.Omschrijving != null && werk.Omschrijving.Replace(" ", "").ToLower().Contains(filter.ToLower()))
+                if (werk.Omschrijving != null &&
+                    werk.Omschrijving.Replace(" ", "").ToLower().Contains(filter.ToLower()))
                     return true;
                 if (werk.ProductieNr != null && werk.ProductieNr.Replace(" ", "").ToLower().Contains(filter.ToLower()))
                     return true;
@@ -378,12 +376,13 @@ namespace Rpm.Misc
                 var valid = true;
                 foreach (var c in xcrits)
                     valid &= bew.ContainsFilter(c);
-                bool allow = false;
+                var allow = false;
                 if (xvalues.Length > 1)
                     allow = xvalues[1].ToLower() == "toelaten";
                 if (valid)
                     return allow;
             }
+
             //if (valid) return xreturn;
             if (Manager.Opties.ToonAlles)
                 return true;
@@ -582,9 +581,7 @@ namespace Rpm.Misc
             try
             {
                 if (!string.IsNullOrEmpty(path) && storingen is {Count : > 0})
-                {
                     File.WriteAllBytes(path, storingen.Serialize());
-                }
                 return false;
             }
             catch (Exception e)
@@ -618,7 +615,6 @@ namespace Rpm.Misc
                         File.WriteAllBytes(filepath, xreturn.Serialize());
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -638,50 +634,54 @@ namespace Rpm.Misc
                     WerkPlek wp = null;
                     if (bew.WerkPlekken is {Count: > 1})
                     {
-                        var wpchooser = new WerkPlekChooser(bew.WerkPlekken,null)
+                        var wpchooser = new WerkPlekChooser(bew.WerkPlekken, null)
                         {
                             Title = "Kies een werkplek om een rooster van te wijzigen"
                         };
                         if (wpchooser.ShowDialog() == DialogResult.Cancel) return;
                         wp = wpchooser.Selected;
                     }
-                    else wp = bew.WerkPlekken?.FirstOrDefault();
+                    else
+                    {
+                        wp = bew.WerkPlekken?.FirstOrDefault();
+                    }
+
                     if (wp == null)
                     {
-                        XMessageBox.Show(owner, $"{b.Naam} heeft nog geen werkplek.\n\nMaak eerst een werkplek aan voordat je de rooster kan aanpassen.", "Geen Werkplek", MessageBoxIcon.Exclamation);
+                        XMessageBox.Show(owner,
+                            $"{b.Naam} heeft nog geen werkplek.\n\nMaak eerst een werkplek aan voordat je de rooster kan aanpassen.",
+                            "Geen Werkplek", MessageBoxIcon.Exclamation);
                         return;
                     }
+
                     var roosterform = new RoosterForm(wp.Tijden.WerkRooster,
                         "Kies een rooster voor al je werkzaamheden");
                     roosterform.ViewPeriode = false;
                     if (roosterform.ShowDialog() == DialogResult.OK)
                     {
-                        bool flag = wp.Personen.Any(x =>
+                        var flag = wp.Personen.Any(x =>
                             x.WerkRooster == null || !x.WerkRooster.SameTijden(roosterform.WerkRooster));
                         if (flag && bew.IsBemand)
-                        {
                             foreach (var per in wp.Personen)
                                 per.WerkRooster = roosterform.WerkRooster;
-                            //var result = XMessageBox.Show(
-                            //    owner, $"Er zijn personeel leden op {wp.Naam} die niet dezelfde rooster hebben als wat je hebt gekozen...\n" +
-                            //          $"De personeel bepaald natuurlijk hoe en wanneer er op {wp.Naam} wordt gewerkt.\n\n" +
-                            //          $"Wil je dit rooster door geven aan alle personeel leden op {wp.Naam}?",
-                            //    "Personeel Werkrooster Wijzigen", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-                            //if (result == DialogResult.Cancel) return;
-                            //if (result == DialogResult.Yes)
-                            //{
-                            //    foreach (var per in wp.Personen)
-                            //        per.WerkRooster = roosterform.WerkRooster;
-                            //}
-                        }
+                        //var result = XMessageBox.Show(
+                        //    owner, $"Er zijn personeel leden op {wp.Naam} die niet dezelfde rooster hebben als wat je hebt gekozen...\n" +
+                        //          $"De personeel bepaald natuurlijk hoe en wanneer er op {wp.Naam} wordt gewerkt.\n\n" +
+                        //          $"Wil je dit rooster door geven aan alle personeel leden op {wp.Naam}?",
+                        //    "Personeel Werkrooster Wijzigen", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                        //if (result == DialogResult.Cancel) return;
+                        //if (result == DialogResult.Yes)
+                        //{
+                        //    foreach (var per in wp.Personen)
+                        //        per.WerkRooster = roosterform.WerkRooster;
+                        //}
                         //wp.Tijden._rooster = roosterform.WerkRooster;
-                        wp.UpdateWerkRooster(roosterform.WerkRooster,true, true,true, true, true,true, true);
+                        wp.UpdateWerkRooster(roosterform.WerkRooster, true, true, true, true, true, true, true);
                         var xchange = wp.Tijden.WerkRooster != null && wp.Tijden.WerkRooster.IsCustom()
                             ? "eigen rooster"
                             : "standaard rooster";
                         await b.UpdateBewerking(null,
-                            $"{Manager.Opties.Username} heeft voor een {xchange} gekozen voor {wp.Path}", true);
-                        
+                            $"{Manager.Opties.Username} heeft voor een {xchange} gekozen voor {wp.Path}");
                     }
                 }
             }
@@ -699,11 +699,10 @@ namespace Rpm.Misc
             if (b.WerkPlekken.Count == 1)
             {
                 wp = b.WerkPlekken[0];
-
             }
             else if (b.WerkPlekken.Count > 1)
             {
-                var wpchooser = new WerkPlekChooser(b.WerkPlekken,null);
+                var wpchooser = new WerkPlekChooser(b.WerkPlekken, null);
                 wpchooser.Title = $"Kies voor '{b.Naam}' een werkplek";
                 if (wpchooser.ShowDialog() == DialogResult.Cancel) return;
                 wp = wpchooser.Selected;
@@ -731,12 +730,11 @@ namespace Rpm.Misc
                 if (wps.Count == 1)
                 {
                     wp = wps[0];
-
                 }
                 else if (wps.Count > 1)
                 {
                     var wpchooser = new WerkPlekChooser(wps, null);
-                    wpchooser.Title = $"Kies een werkplek om te onderbreken of te hervatten";
+                    wpchooser.Title = "Kies een werkplek om te onderbreken of te hervatten";
                     if (wpchooser.ShowDialog() == DialogResult.Cancel) return;
                     wp = wpchooser.Selected;
                 }
@@ -756,6 +754,7 @@ namespace Rpm.Misc
                     allst.ShowDialog();
                     return;
                 }
+
                 var xst = xsts.FirstOrDefault();
                 var xnew = new NewStoringForm(wp, xst, xst != null);
                 if (xnew.ShowDialog() == DialogResult.OK)
@@ -764,17 +763,18 @@ namespace Rpm.Misc
                     {
                         var index = wp.Storingen.IndexOf(xst);
                         if (index > -1)
-                        {
                             wp.Storingen[index] = xnew.Onderbreking;
-                        }
                         else wp.Storingen.Add(xnew.Onderbreking);
                     }
-                    else wp.Storingen.Add(xnew.Onderbreking);
+                    else
+                    {
+                        wp.Storingen.Add(xnew.Onderbreking);
+                    }
+
                     xsts = wp.Storingen.Where(x => !x.IsVerholpen).ToList();
                     var x1 = xsts.Count > 0 ? "onderbroken" : "hervat";
 
                     if (bw.Combies.Count > 0 && xnew.Onderbreking != null)
-                    {
                         foreach (var comb in bw.Combies)
                         {
                             var werk = Werk.FromPath(comb.Path);
@@ -791,10 +791,9 @@ namespace Rpm.Misc
                             else xwp.Storingen.Add(xst);
                             _ = xwp.Werk.UpdateBewerking(null, $"'{xwp.Werk.Naam}' op '{xwp.Naam}' is {x1}");
                         }
-                    }
 
-                 
-                    _= bw.UpdateBewerking(null, $"'{bw.Naam}' op '{wp.Naam}' is {x1}").Result;
+
+                    _ = bw.UpdateBewerking(null, $"'{bw.Naam}' op '{wp.Naam}' is {x1}").Result;
                 }
             }
             catch (Exception e)
@@ -806,6 +805,7 @@ namespace Rpm.Misc
         #endregion Bewerkingen
 
         #region Personeel
+
         public static Klus GetKlus(this List<Klus> klusjes, string path)
         {
             try
@@ -940,7 +940,8 @@ namespace Rpm.Misc
                         foreach (var wp in bew.WerkPlekken)
                         {
                             var xpers = wp.Personen.FirstOrDefault(x =>
-                                string.Equals(x.PersoneelNaam, personeel.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase));
+                                string.Equals(x.PersoneelNaam, personeel.PersoneelNaam,
+                                    StringComparison.CurrentCultureIgnoreCase));
                             if (xpers is {Actief: true})
                             {
                                 xpers.ReplaceKlus(klus);
@@ -1030,11 +1031,11 @@ namespace Rpm.Misc
                 var pdb =
                     new Rfc2898DeriveBytes(pass,
                         new byte[] {0x43, 0x87, 0x23, 0x72, 0x36, 0x45, 0x88, 0x61});
-                MemoryStream ms = new MemoryStream();
+                var ms = new MemoryStream();
                 Aes aes = new AesManaged();
                 aes.Key = pdb.GetBytes(aes.KeySize / 8);
                 aes.IV = pdb.GetBytes(aes.BlockSize / 8);
-                CryptoStream cs = new CryptoStream(ms,
+                var cs = new CryptoStream(ms,
                     aes.CreateEncryptor(), CryptoStreamMode.Write);
                 cs.Write(input, 0, input.Length);
                 cs.Close();
@@ -1044,7 +1045,6 @@ namespace Rpm.Misc
             {
                 return null;
             }
-
         }
 
         public static byte[] Decrypt(this byte[] input, string pass)
@@ -1055,11 +1055,11 @@ namespace Rpm.Misc
                 var pdb =
                     new Rfc2898DeriveBytes(pass,
                         new byte[] {0x43, 0x87, 0x23, 0x72, 0x36, 0x45, 0x88, 0x61}); // Change this
-                MemoryStream ms = new MemoryStream();
+                var ms = new MemoryStream();
                 Aes aes = new AesManaged();
                 aes.Key = pdb.GetBytes(aes.KeySize / 8);
                 aes.IV = pdb.GetBytes(aes.BlockSize / 8);
-                CryptoStream cs = new CryptoStream(ms,
+                var cs = new CryptoStream(ms,
                     aes.CreateDecryptor(), CryptoStreamMode.Write);
                 cs.Write(input, 0, input.Length);
                 cs.Close();
@@ -1069,7 +1069,6 @@ namespace Rpm.Misc
             {
                 return null;
             }
-
         }
 
         public static byte[] Compress(this byte[] data)
@@ -1273,8 +1272,7 @@ namespace Rpm.Misc
             {
                 //T xreturn = default;
                 if (!File.Exists(filepath)) return default;
-                for (int i = 0; i < 4; i++)
-                {
+                for (var i = 0; i < 4; i++)
                     try
                     {
                         var data = File.ReadAllBytes(filepath);
@@ -1286,8 +1284,6 @@ namespace Rpm.Misc
                     {
                         Console.WriteLine(e);
                     }
-                    
-                }
 
                 return default;
                 //using (var ms = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -1327,8 +1323,7 @@ namespace Rpm.Misc
             try
             {
                 if (instance == null) return false;
-                for (int i = 0; i < 4; i++)
-                {
+                for (var i = 0; i < 4; i++)
                     try
                     {
                         File.WriteAllBytes(destination, instance.Serialize());
@@ -1336,9 +1331,7 @@ namespace Rpm.Misc
                     }
                     catch (Exception e)
                     {
-                        
                     }
-                }
 
                 return false;
             }
@@ -1352,8 +1345,7 @@ namespace Rpm.Misc
         {
             try
             {
-               return Guid.NewGuid().GetHashCode();
-
+                return Guid.NewGuid().GetHashCode();
             }
             catch (Exception e)
             {
@@ -1481,7 +1473,7 @@ namespace Rpm.Misc
                         var i = 0;
                         while (aEnumerator.MoveNext() && bEnumerator.MoveNext())
                             if (!CheckForEquality($"{path}[{i++}]",
-                                aEnumerator.Current, bEnumerator.Current, differences, ignore))
+                                    aEnumerator.Current, bEnumerator.Current, differences, ignore))
                                 return false;
                     }
                     else
@@ -1496,7 +1488,7 @@ namespace Rpm.Misc
                 var properties = type.GetProperties().Where(x => x.GetMethod != null);
                 foreach (var property in properties)
                     if (!CheckForEquality($"{path}.{property.Name}",
-                        property.GetValue(a), property.GetValue(b), differences, ignore))
+                            property.GetValue(a), property.GetValue(b), differences, ignore))
                         return false;
                 return true;
             }
@@ -1646,8 +1638,8 @@ namespace Rpm.Misc
         {
             var jpg = new List<string> {"FF", "D8"};
             var bmp = new List<string> {"42", "4D"};
-            List<string> gif = new List<string> { "47", "49", "46" };
-            List<string> png = new List<string> { "89", "50", "4E", "47", "0D", "0A", "1A", "0A" };
+            var gif = new List<string> {"47", "49", "46"};
+            var png = new List<string> {"89", "50", "4E", "47", "0D", "0A", "1A", "0A"};
             var imgTypes = new List<List<string>> {jpg, bmp, gif, png};
 
             var bytesIterated = new List<string>();
@@ -1671,15 +1663,12 @@ namespace Rpm.Misc
             {
                 if (string.IsNullOrEmpty(filepath) || !File.Exists(filepath))
                     return false;
-                bool isvalid = false;
-                using FileStream fs = new FileStream(filepath, FileMode.Open,FileAccess.Read, FileShare.ReadWrite);
+                var isvalid = false;
+                using var fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 var data = new byte[8];
                 if (fs.Length >= data.Length)
-                {
                     if (fs.Read(data, 0, data.Length) == data.Length)
                         isvalid = data.IsImage();
-
-                }
 
                 return isvalid;
             }
@@ -1770,44 +1759,47 @@ namespace Rpm.Misc
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="time"></param>
         /// <param name="maxuren"></param>
-        /// <param name="telaatformat">te laat string formaat waarvan de eerste oject de tijd is en de tweede de soort tijd (min,sec of uren)</param>
+        /// <param name="telaatformat">
+        ///     te laat string formaat waarvan de eerste oject de tijd is en de tweede de soort tijd
+        ///     (min,sec of uren)
+        /// </param>
         /// <param name="tevroegformat"></param>
         /// <returns></returns>
-        public static string ToString(this DateTime time, double maxuren, string telaatformat, string tevroegformat, bool alleenwerktijd)
+        public static string ToString(this DateTime time, double maxuren, string telaatformat, string tevroegformat,
+            bool alleenwerktijd)
         {
             if (time.IsDefault()) return "Geen Tijd";
-            bool islater = time > DateTime.Now;
+            var islater = time > DateTime.Now;
             if (islater)
             {
-                var tg = alleenwerktijd?Werktijd.WerkTijdNodigTotLeverdatum(time, DateTime.Now) : (time - DateTime.Now);
-                double urenlater = Math.Round(tg.TotalHours,2);
-                double minlater = Math.Round(tg.TotalMinutes, 2);
-                double seclater = Math.Round(tg.TotalSeconds, 0);
+                var tg = alleenwerktijd ? Werktijd.WerkTijdNodigTotLeverdatum(time, DateTime.Now) : time - DateTime.Now;
+                var urenlater = Math.Round(tg.TotalHours, 2);
+                var minlater = Math.Round(tg.TotalMinutes, 2);
+                var seclater = Math.Round(tg.TotalSeconds, 0);
                 if (seclater == 0) return "nu";
                 if (seclater < 60)
-                    return string.Format(telaatformat, new object[] { seclater, "seconden" });
+                    return string.Format(telaatformat, new object[] {seclater, "seconden"});
                 if (minlater < 60)
-                    return string.Format(telaatformat, new object[] { minlater, "minuten" });
+                    return string.Format(telaatformat, new object[] {minlater, "minuten"});
                 if (urenlater <= maxuren)
-                    return string.Format(telaatformat, new object[] { urenlater, "uur" });
+                    return string.Format(telaatformat, new object[] {urenlater, "uur"});
             }
             else
             {
-                var tg = alleenwerktijd ? Werktijd.TijdGewerkt(time, DateTime.Now, null, null) : (DateTime.Now - time);
-                double ureneerder = Math.Round(tg.TotalHours, 2);
-                double mineerder = Math.Round(tg.TotalMinutes, 2);
-                double seceerder = Math.Round(tg.TotalSeconds, 0);
+                var tg = alleenwerktijd ? Werktijd.TijdGewerkt(time, DateTime.Now, null, null) : DateTime.Now - time;
+                var ureneerder = Math.Round(tg.TotalHours, 2);
+                var mineerder = Math.Round(tg.TotalMinutes, 2);
+                var seceerder = Math.Round(tg.TotalSeconds, 0);
                 if (seceerder == 0) return "nu";
                 if (seceerder < 60)
-                    return string.Format(tevroegformat, new object[] { seceerder, "seconden" });
+                    return string.Format(tevroegformat, new object[] {seceerder, "seconden"});
                 if (mineerder < 60)
-                    return string.Format(tevroegformat, new object[] { mineerder, "minuten" });
+                    return string.Format(tevroegformat, new object[] {mineerder, "minuten"});
                 if (ureneerder <= maxuren)
-                    return string.Format(tevroegformat, new object[] { ureneerder, "uur" });
+                    return string.Format(tevroegformat, new object[] {ureneerder, "uur"});
             }
 
             return time.ToString();
@@ -1889,21 +1881,21 @@ namespace Rpm.Misc
 
         public static string ToHexString(this byte[] data, int length = -1)
         {
-            string s = string.Empty;
+            var s = string.Empty;
             if (data == null) return s;
-            int count = length <= 0 || length > data.Length ? data.Length : length;
+            var count = length <= 0 || length > data.Length ? data.Length : length;
             for (var i = 0; i < count; i++)
             {
-                byte b = data[i];
+                var b = data[i];
                 var n = (int) b;
                 var n1 = n & 15;
                 var n2 = (n >> 4) & 15;
                 if (n2 > 9)
-                    s += ((char) (n2 - 10 + (int) 'A')).ToString();
+                    s += ((char) (n2 - 10 + 'A')).ToString();
                 else
                     s += n2.ToString();
                 if (n1 > 9)
-                    s += ((char) (n1 - 10 + (int) 'A')).ToString();
+                    s += ((char) (n1 - 10 + 'A')).ToString();
                 else
                     s += n1.ToString();
                 //if ((i + 1) != bt.Length && (i + 1) % 2 == 0) s += "-";
@@ -1912,13 +1904,15 @@ namespace Rpm.Misc
             return s;
         }
 
-        public static string FirstCharToUpper(this string input) =>
-            input switch
+        public static string FirstCharToUpper(this string input)
+        {
+            return input switch
             {
                 null => throw new ArgumentNullException(nameof(input)),
                 "" => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
                 _ => input[0].ToString().ToUpper() + input.Substring(1)
             };
+        }
 
         #endregion Conversions
 
@@ -1931,7 +1925,7 @@ namespace Rpm.Misc
         private const int SB_BOTTOM = 7;
 
         /// <summary>
-        /// Scrolls the vertical scroll bar of a multi-line text box to the bottom.
+        ///     Scrolls the vertical scroll bar of a multi-line text box to the bottom.
         /// </summary>
         /// <param name="tb">The text box to scroll</param>
         public static void ScrollToBottom(this Control tb)
@@ -1944,8 +1938,8 @@ namespace Rpm.Misc
         {
             try
             {
-                bool xreturn = false;
-                using FileStream fs = new FileStream(filepath, FileMode.Open, FileAccess.Read);
+                var xreturn = false;
+                using var fs = new FileStream(filepath, FileMode.Open, FileAccess.Read);
                 xreturn = fs.CanRead;
                 fs.Close();
 
@@ -1974,20 +1968,21 @@ namespace Rpm.Misc
 
         public static string GetLastOfPathName(this string path, int depth)
         {
-            string fpath = path;
-            string xreturn = Path.GetFileName(fpath);
-            for (int i = 0; i < depth; i++)
+            var fpath = path;
+            var xreturn = Path.GetFileName(fpath);
+            for (var i = 0; i < depth; i++)
             {
                 //string fname = Path.GetFileName(fpath);
                 fpath = Path.GetDirectoryName(fpath);
-                string xp = Path.GetFileName(fpath);
-                bool br = false;
+                var xp = Path.GetFileName(fpath);
+                var br = false;
                 if (string.IsNullOrEmpty(xp))
                 {
-                    xp = fpath?.TrimEnd(new char[]{'\\'});
+                    xp = fpath?.TrimEnd('\\');
                     br = true;
                 }
-                xreturn =  xp + "\\" + xreturn;
+
+                xreturn = xp + "\\" + xreturn;
                 if (br) break;
             }
 
@@ -2000,17 +1995,19 @@ namespace Rpm.Misc
             RegistryKey regkey;
 
             // Check if we are on Vista or Higher
-            OperatingSystem OS = Environment.OSVersion;
-            if ((OS.Platform == PlatformID.Win32NT) && (OS.Version.Major >= 6))
+            var OS = Environment.OSVersion;
+            if (OS.Platform == PlatformID.Win32NT && OS.Version.Major >= 6)
             {
-                regkey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\shell\\Associations\\UrlAssociations\\http\\UserChoice", false);
+                regkey = Registry.CurrentUser.OpenSubKey(
+                    "SOFTWARE\\Microsoft\\Windows\\shell\\Associations\\UrlAssociations\\http\\UserChoice", false);
                 if (regkey != null)
                 {
                     defaultBrowserPath = regkey.GetValue("Progid").ToString();
                 }
                 else
                 {
-                    regkey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Classes\\IE.HTTP\\shell\\open\\command", false);
+                    regkey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Classes\\IE.HTTP\\shell\\open\\command",
+                        false);
                     if (regkey != null) defaultBrowserPath = regkey.GetValue("").ToString();
                 }
             }
@@ -2032,10 +2029,10 @@ namespace Rpm.Misc
 
             var ext = Path.GetExtension(filename);
 
-            var newfilename = filename.Replace(ext,"");
+            var newfilename = filename.Replace(ext, "");
             var count = Directory.GetFiles(fp).Where(x =>
-                    string.Equals((Path.GetFileName(x).Replace(ext, "").Split('[')[0] + ext),
-                        ($"{newfilename}".Split('[')[0] + ext), StringComparison.CurrentCultureIgnoreCase))
+                    string.Equals(Path.GetFileName(x).Replace(ext, "").Split('[')[0] + ext,
+                        $"{newfilename}".Split('[')[0] + ext, StringComparison.CurrentCultureIgnoreCase))
                 .ToArray().Length;
             if (count > 0)
                 newfilename += $"[{count}]";
@@ -2047,10 +2044,10 @@ namespace Rpm.Misc
         {
             return Task.Factory.StartNew(() =>
             {
-                using PrintDialog Dialog = new PrintDialog();
+                using var Dialog = new PrintDialog();
                 Dialog.ShowDialog();
 
-                ProcessStartInfo printProcessInfo = new ProcessStartInfo()
+                var printProcessInfo = new ProcessStartInfo
                 {
                     Verb = "print",
                     CreateNoWindow = true,
@@ -2058,7 +2055,7 @@ namespace Rpm.Misc
                     WindowStyle = ProcessWindowStyle.Hidden
                 };
 
-                Process printProcess = new Process();
+                var printProcess = new Process();
                 printProcess.StartInfo = printProcessInfo;
                 printProcess.Start();
 
@@ -2066,14 +2063,12 @@ namespace Rpm.Misc
 
                 Task.Delay(3000).Wait();
 
-                if (false == printProcess.CloseMainWindow())
-                {
-                    printProcess.Kill();
-                }
+                if (false == printProcess.CloseMainWindow()) printProcess.Kill();
             });
         }
 
-        public static bool CleanupFilePath(this string filepath, string directorypath, string filename, bool move, bool rename)
+        public static bool CleanupFilePath(this string filepath, string directorypath, string filename, bool move,
+            bool rename)
         {
             try
             {
@@ -2093,8 +2088,8 @@ namespace Rpm.Misc
                     if (rename)
                     {
                         var count = Directory.GetFiles(fp).Where(x =>
-                                string.Equals((Path.GetFileName(x).Replace(ext, "").Split('[')[0] + ext),
-                                    ($"{filename}".Split('[')[0] + ext), StringComparison.CurrentCultureIgnoreCase))
+                                string.Equals(Path.GetFileName(x).Replace(ext, "").Split('[')[0] + ext,
+                                    $"{filename}".Split('[')[0] + ext, StringComparison.CurrentCultureIgnoreCase))
                             .ToArray().Length;
                         if (count > 0)
                             newfilename = newfilename + $"[{count}]";
@@ -2133,9 +2128,9 @@ namespace Rpm.Misc
                 datum,
                 CalendarWeekRule.FirstDay,
                 DayOfWeek.Monday);
-           
+
             //if (datum.DayOfWeek == DayOfWeek.Monday)
-                weekNum--;
+            weekNum--;
             return weekNum;
         }
 
@@ -2150,19 +2145,19 @@ namespace Rpm.Misc
             var xreturn = new List<WeekRange>();
             var rooster = Manager.Opties?.GetWerkRooster();
             if (rooster == null) return xreturn;
-            DateTime xnow = Werktijd.EerstVolgendeWerkdag(DateTime.Now.Date, ref rooster,rooster,null);
-            TimeSpan startday = rooster.StartWerkdag;
-            TimeSpan endday = rooster.EindWerkdag;
+            var xnow = Werktijd.EerstVolgendeWerkdag(DateTime.Now.Date, ref rooster, rooster, null);
+            var startday = rooster.StartWerkdag;
+            var endday = rooster.EindWerkdag;
             while (startday <= endday)
             {
                 var xstart = new DateTime(xnow.Year, xnow.Month, xnow.Day, startday.Hours, startday.Minutes, 0);
                 var xstop = new DateTime(xnow.Year, xnow.Month, xnow.Day, startday.Hours + 1, startday.Minutes, 0);
-                var weekrange = new WeekRange()
+                var weekrange = new WeekRange
                 {
                     Name = $"{startday} uur",
-                    StartDate =xstart,
+                    StartDate = xstart,
                     EndDate = xstop,
-                    Range = xstart.ToString() + '-' + xstop.ToString(),
+                    Range = xstart.ToString() + '-' + xstop,
                     Month = xstart.Month,
                     Year = xstart.Year
                 };
@@ -2215,20 +2210,20 @@ namespace Rpm.Misc
 
         public static DateTime DateOfWeek(int year, DayOfWeek day, int week)
         {
-            var startOfYear = new DateTime(year, 1, 1,0,0,0);
+            var startOfYear = new DateTime(year, 1, 1, 0, 0, 0);
 
             // The +7 and %7 stuff is to avoid negative numbers etc.
             var daysToFirstCorrectDay = ((int) day - (int) startOfYear.DayOfWeek + 7) % 7;
             if (day != DayOfWeek.Sunday && day != DayOfWeek.Saturday) week--;
-            return startOfYear.AddDays(7 * (week) + daysToFirstCorrectDay);
+            return startOfYear.AddDays(7 * week + daysToFirstCorrectDay);
         }
 
         public static DateTime DateOfWeek(this DateTime dt, DayOfWeek startOfWeek)
         {
             // System.Globalization.CultureInfo ci = System.Threading.Thread.CurrentThread.CurrentCulture;
             //DayOfWeek fdow = ci.DateTimeFormat.FirstDayOfWeek;
-            int daynr =(startOfWeek == DayOfWeek.Sunday? 7 : (int)startOfWeek);
-            daynr -= (int)dt.DayOfWeek;
+            var daynr = startOfWeek == DayOfWeek.Sunday ? 7 : (int) startOfWeek;
+            daynr -= (int) dt.DayOfWeek;
             var xdt = dt.AddDays(daynr);
             return xdt;
         }
@@ -2305,7 +2300,7 @@ namespace Rpm.Misc
             if (startup) key.SetValue(filename, filepath);
             else key.DeleteValue(filename, false);
         }
-        
+
         public static Dictionary<string, List<WerkPlek>> CreateStoringCollection(this WerkPlek[] werkplekken)
         {
             var xreturn = new Dictionary<string, List<WerkPlek>>();
@@ -2382,7 +2377,7 @@ namespace Rpm.Misc
                         var item = wps.FirstOrDefault(x => x.Equals(plek));
                         if (item != null)
                         {
-                            if (storingen == null || (storingen.Count == 0 &&  !withoutstoringen))
+                            if (storingen == null || storingen.Count == 0 && !withoutstoringen)
                                 wps.Remove(item);
                             else
                                 item.Storingen = storingen;
@@ -2524,7 +2519,9 @@ namespace Rpm.Misc
 
         public static bool IsCollectionType(this Type type)
         {
-            return type.GetInterfaces().Any(s => s.Namespace == "System.Collections.Generic" && (s.Name == "ICollection" || s.Name.StartsWith("ICollection`")));
+            return type.GetInterfaces().Any(s =>
+                s.Namespace == "System.Collections.Generic" &&
+                (s.Name == "ICollection" || s.Name.StartsWith("ICollection`")));
         }
 
         public static string GetPropertyDescription(this Type type, string name)
@@ -2534,10 +2531,8 @@ namespace Rpm.Misc
                 var atri = type.GetProperty(name)?.GetCustomAttributes(false);
                 if (atri == null) return null;
                 if (atri.Length > 0)
-                {
                     if (atri[0] is DisplayAttribute attrib)
                         return attrib.Description;
-                }
 
                 return null;
             }
@@ -2552,7 +2547,7 @@ namespace Rpm.Misc
             var result = string.Empty;
             try
             {
-                using var webClient = new System.Net.WebClient();
+                using var webClient = new WebClient();
                 result = webClient.DownloadString(url);
             }
             catch (Exception e)
@@ -2576,8 +2571,8 @@ namespace Rpm.Misc
                     if (string.IsNullOrEmpty(line)) continue;
                     if (line.StartsWith("[") && line.EndsWith("]"))
                     {
-                        var xsplit = line.TrimStart(new char[] {'['}).TrimEnd(new char[] {']'}).Split(';');
-                        if(xsplit.Length < 2) continue;
+                        var xsplit = line.TrimStart('[').TrimEnd(']').Split(';');
+                        if (xsplit.Length < 2) continue;
                         if (result.ContainsKey(xsplit[0])) continue;
                         result.Add(xsplit[0].Trim(), xsplit[1].Trim());
                     }
@@ -2636,10 +2631,11 @@ namespace Rpm.Misc
 
         public static double GetPercentageDifference(this double a, double b)
         {
-            return (b - a) == 0 ? 0 : Math.Round((((b - a) / (a == 0 ? b : a)) * 100), 2);
+            return b - a == 0 ? 0 : Math.Round((b - a) / (a == 0 ? b : a) * 100, 2);
         }
 
-        public static bool IsWindowOnAnyScreen(this Form Window, int WindowSizeX, int WindowSizeY, bool AutoAdjustWindow)
+        public static bool IsWindowOnAnyScreen(this Form Window, int WindowSizeX, int WindowSizeY,
+            bool AutoAdjustWindow)
         {
             var Screen = System.Windows.Forms.Screen.FromHandle(Window.Handle);
 
@@ -2651,30 +2647,27 @@ namespace Rpm.Misc
             if (Window.Top >= Screen.WorkingArea.Top)
                 TopSideTest = true;
 
-            if ((Window.Top + WindowSizeY) <= Screen.WorkingArea.Bottom)
+            if (Window.Top + WindowSizeY <= Screen.WorkingArea.Bottom)
                 BottomSideTest = true;
 
-            if ((Window.Left + WindowSizeX) <= Screen.WorkingArea.Right)
+            if (Window.Left + WindowSizeX <= Screen.WorkingArea.Right)
                 RightSideTest = true;
 
-            if (LeftSideTest && TopSideTest && BottomSideTest && RightSideTest)
-                return true;
-            else
+            if (LeftSideTest && TopSideTest && BottomSideTest && RightSideTest) return true;
+
+            if (AutoAdjustWindow)
             {
-                if (AutoAdjustWindow)
-                {
-                    if (!LeftSideTest)
-                        Window.Left = Window.Left - (Window.Left - Screen.WorkingArea.Left);
+                if (!LeftSideTest)
+                    Window.Left = Window.Left - (Window.Left - Screen.WorkingArea.Left);
 
-                    if (!TopSideTest)
-                        Window.Top = Window.Top - (Window.Top - Screen.WorkingArea.Top);
+                if (!TopSideTest)
+                    Window.Top = Window.Top - (Window.Top - Screen.WorkingArea.Top);
 
-                    if (!BottomSideTest)
-                        Window.Top = Window.Top - ((Window.Top + WindowSizeY) - Screen.WorkingArea.Bottom);
+                if (!BottomSideTest)
+                    Window.Top = Window.Top - (Window.Top + WindowSizeY - Screen.WorkingArea.Bottom);
 
-                    if (!RightSideTest)
-                        Window.Left = Window.Left - ((Window.Left + WindowSizeX) - Screen.WorkingArea.Right);
-                }
+                if (!RightSideTest)
+                    Window.Left = Window.Left - (Window.Left + WindowSizeX - Screen.WorkingArea.Right);
             }
 
             return false;

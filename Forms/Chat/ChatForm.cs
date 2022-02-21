@@ -21,7 +21,7 @@ namespace ProductieManager.Forms
         {
             this.InitLastInfo();
             if (!productieChatUI1.InitUI())
-                this.Close();
+                Close();
         }
 
         private void ChatForm_FormClosing(object sender, FormClosingEventArgs e)

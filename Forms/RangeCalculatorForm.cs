@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using System;
 using System.Windows.Forms;
 using Controls;
 using Forms.MetroBase;
@@ -16,12 +16,12 @@ namespace Forms
         public ZoekProductiesUI.RangeFilter Filter
         {
             get => zoekProductiesUI1.ShowFilter;
-            set=> zoekProductiesUI1.ShowFilter = value;
+            set => zoekProductiesUI1.ShowFilter = value;
         }
 
-        private void zoekProductiesUI1_ClosedClicked(object sender, System.EventArgs e)
+        private void zoekProductiesUI1_ClosedClicked(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void RangeCalculatorForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -29,7 +29,7 @@ namespace Forms
             zoekProductiesUI1.CloseUI();
         }
 
-        private void RangeCalculatorForm_Shown(object sender, System.EventArgs e)
+        private void RangeCalculatorForm_Shown(object sender, EventArgs e)
         {
             zoekProductiesUI1.InitUI();
             if (!Filter.IsDefault())
@@ -39,10 +39,10 @@ namespace Forms
             }
         }
 
-        private void zoekProductiesUI1_StatusTextChanged(object sender, System.EventArgs e)
+        private void zoekProductiesUI1_StatusTextChanged(object sender, EventArgs e)
         {
-            this.Text = sender as string;
-            this.Invalidate();
+            Text = sender as string;
+            Invalidate();
         }
     }
 }

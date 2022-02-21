@@ -194,9 +194,9 @@ namespace Controls
 
         private void UpdateButtonEnable()
         {
-            if (this.IsDisposed || this.Disposing) return;
-            if (this.InvokeRequired)
-                this.Invoke(new MethodInvoker(xUpdateButtonEnable));
+            if (IsDisposed || Disposing) return;
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(xUpdateButtonEnable));
             else xUpdateButtonEnable();
         }
 
@@ -214,9 +214,9 @@ namespace Controls
 
         private void UpdateHeaderLabel()
         {
-            if (this.IsDisposed || this.Disposing) return;
-            if (this.InvokeRequired)
-                this.Invoke(new MethodInvoker(xUpdateHeaderLabel));
+            if (IsDisposed || Disposing) return;
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(xUpdateHeaderLabel));
             else xUpdateHeaderLabel();
         }
 
@@ -236,7 +236,8 @@ namespace Controls
                     if (enumerable.Any())
                     {
                         var xarg = enumerable.Count() == 1 ? "onderbreking" : "onderbrekeningen";
-                        title = $"{enumerable.Count()} {xarg} van {enumerable.Sum(x => x.GetTotaleTijd())} uur op {Plek.Key}.";
+                        title =
+                            $"{enumerable.Count()} {xarg} van {enumerable.Sum(x => x.GetTotaleTijd())} uur op {Plek.Key}.";
                         xomschrijving.Text = title;
                     }
                     else
@@ -257,9 +258,9 @@ namespace Controls
 
         private void UpdateStatusLabel()
         {
-            if (this.IsDisposed || this.Disposing) return;
-            if (this.InvokeRequired)
-                this.Invoke(new MethodInvoker(xUpdateStatusLabel));
+            if (IsDisposed || Disposing) return;
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(xUpdateStatusLabel));
             else xUpdateStatusLabel();
         }
 
@@ -385,7 +386,6 @@ namespace Controls
             var acces1 = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
             if (!acces1) return;
             if (!Plek.IsDefault() && xskillview.SelectedObject != null)
-            {
                 if (xskillview.SelectedObject is Storing st)
                 {
                     var plek = Plek.Value.FirstOrDefault(x =>
@@ -411,7 +411,6 @@ namespace Controls
                         }
                     }
                 }
-            }
         }
 
         public async void VerwijderSelected()
@@ -422,8 +421,9 @@ namespace Controls
             {
                 var xvalue = count == 1 ? "onderbreking" : "onderbrekeningen";
                 if (XMessageBox.Show(
-                        this, $"Je staat op de punt om {count} {xvalue} te verwijderen!\n\nWeet je zeker dat je dat wilt doen?\nClick op 'Nee' om te annuleren.",
-                    "Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                        this,
+                        $"Je staat op de punt om {count} {xvalue} te verwijderen!\n\nWeet je zeker dat je dat wilt doen?\nClick op 'Nee' om te annuleren.",
+                        "Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     DisableEvents();
                     var removed = 0;
@@ -451,7 +451,8 @@ namespace Controls
                     if (removed > 0)
                         ListItems();
                     else
-                        XMessageBox.Show(this, $"Het is niet gelukt om de geselecteerde {xvalue} te verwijderen.", "Mislukt",
+                        XMessageBox.Show(this, $"Het is niet gelukt om de geselecteerde {xvalue} te verwijderen.",
+                            "Mislukt",
                             MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                     EnableEvents();
@@ -511,20 +512,16 @@ namespace Controls
 
         private void toonProductieToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var acces1 = Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieBasis };
+            var acces1 = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
             if (!acces1) return;
             if (!Plek.IsDefault() && xskillview.SelectedObject != null)
-            {
                 if (xskillview.SelectedObject is Storing st)
                 {
                     var plek = Plek.Value.FirstOrDefault(x =>
                         x.Storingen != null && x.Storingen.Any(s => s.InstanceId == st.InstanceId));
                     if (plek?.Werk != null)
-                    {
                         Manager.FormulierActie(new object[] {plek.Werk.Parent, plek.Werk}, MainAktie.OpenProductie);
-                    }
                 }
-            }
         }
     }
 }

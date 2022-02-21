@@ -1,34 +1,45 @@
-﻿using BrightIdeasSoftware;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using BrightIdeasSoftware;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Productie.ArtikelRecords;
 using Rpm.Various;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace Forms.ArtikelRecords
 {
     public partial class ArtikelRecordsUI : UserControl
     {
-        internal List<ArtikelRecord> Records = new List<ArtikelRecord>();
+        private readonly List<ProductieLijstForm> _Productelijsten = new();
+
+        private string _Filter = string.Empty;
+
+        private string _Filter2 = string.Empty;
+        private ProductieLijsten _productielijstdock;
+        internal List<ArtikelRecord> Records = new();
+
         public ArtikelRecordsUI()
         {
             InitializeComponent();
-           
         }
+
+        public string Filter1 => xsearchbox.Text.ToLower().Replace("zoeken...", "").Trim();
+        public string Filter2 => xsearch2.Text.ToLower().Replace("zoeken...", "").Trim();
 
         public void InitUI()
         {
             imageList1.Images.Add(Resources.time_management_tasks_32x32);
-            imageList1.Images.Add(Resources.time_management_tasks_32x32.CombineImage(Resources.Note_msgIcon_32x32, 1.75));
-            ((OLVColumn)xArtikelList.Columns[7]).AspectGetter = AantalproductiesGetter;
-            ((OLVColumn)xArtikelList.Columns[0]).ImageGetter = ImageGetter;
-            ((OLVColumn)xwerkpleklist.Columns[7]).AspectGetter = AantalproductiesGetter;
-            ((OLVColumn)xwerkpleklist.Columns[0]).ImageGetter = ImageGetter;
+            imageList1.Images.Add(
+                Resources.time_management_tasks_32x32.CombineImage(Resources.Note_msgIcon_32x32, 1.75));
+            ((OLVColumn) xArtikelList.Columns[7]).AspectGetter = AantalproductiesGetter;
+            ((OLVColumn) xArtikelList.Columns[0]).ImageGetter = ImageGetter;
+            ((OLVColumn) xwerkpleklist.Columns[7]).AspectGetter = AantalproductiesGetter;
+            ((OLVColumn) xwerkpleklist.Columns[0]).ImageGetter = ImageGetter;
             LoadArtikels(true);
             InitEvents();
         }
@@ -79,16 +90,16 @@ namespace Forms.ArtikelRecords
             return 0;
         }
 
-        private void button1_Click(object sender, System.EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
             OnCloseClicked();
         }
 
         public void EnableButton(bool updatetitle)
         {
-            if (this.IsDisposed || this.Disposing) return;
-            if (this.InvokeRequired)
-                this.Invoke(new MethodInvoker(() => xEnableButton(updatetitle)));
+            if (IsDisposed || Disposing) return;
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(() => xEnableButton(updatetitle)));
             else xEnableButton(updatetitle);
         }
 
@@ -119,7 +130,7 @@ namespace Forms.ArtikelRecords
             {
                 AccesLevel: >= AccesType.ProductieAdvance
             };
-            
+
             xeditWerkplek.Enabled = xwerkpleklist.SelectedObjects.Count > 0 && Manager.LogedInGebruiker is
             {
                 AccesLevel: >= AccesType.ProductieAdvance
@@ -142,8 +153,8 @@ namespace Forms.ArtikelRecords
             {
                 if (Manager.ArtikelRecords?.Database == null) return;
                 if (reloaddb)
-                    Records = Manager.ArtikelRecords.Database.GetAllEntries<ArtikelRecord>(new List<string>()
-                        {"algemeen"});
+                    Records = Manager.ArtikelRecords.Database.GetAllEntries<ArtikelRecord>(
+                        new List<string> {"algemeen"});
                 xArtikelList.BeginUpdate();
                 xArtikelList.SetObjects(Records.Where(x => IsAllowed(x) && !x.IsWerkplek));
                 xArtikelList.EndUpdate();
@@ -164,8 +175,8 @@ namespace Forms.ArtikelRecords
             {
                 var r1 = Records.Where(x => !x.IsWerkplek).ToList();
                 var r2 = Records.Where(x => x.IsWerkplek).ToList();
-                string x1 = r1.Count == 1 ? "Artikel" : "Artikels";
-                string x2 = r2.Count == 1 ? "Werkplek" : "Werkplaatsen";
+                var x1 = r1.Count == 1 ? "Artikel" : "Artikels";
+                var x2 = r2.Count == 1 ? "Werkplek" : "Werkplaatsen";
                 var txt = $"Totaal {r1.Count} {x1} en {r2.Count} {x2}";
                 OnStatusTextChanged(txt);
             }
@@ -175,13 +186,13 @@ namespace Forms.ArtikelRecords
             }
         }
 
-        private void Database_InstanceDeleted(object sender, System.IO.FileSystemEventArgs e)
+        private void Database_InstanceDeleted(object sender, FileSystemEventArgs e)
         {
             if (Manager.ArtikelRecords?.Database == null) return;
             var xname = Path.GetFileNameWithoutExtension(e.FullPath);
             if (xname.ToLower().StartsWith("algemeen")) return;
-            if (this.InvokeRequired)
-                this.Invoke(new MethodInvoker(() => DeleteFromList(xname)));
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(() => DeleteFromList(xname)));
             else DeleteFromList(xname);
         }
 
@@ -193,7 +204,9 @@ namespace Forms.ArtikelRecords
                 var xremove = xArtikelList.Objects.Cast<ArtikelRecord>().Where(x =>
                     string.Equals(artnr, x.ArtikelNr, StringComparison.CurrentCultureIgnoreCase)).ToList();
                 if (xremove.Count > 0)
+                {
                     xArtikelList.RemoveObjects(xremove);
+                }
                 else
                 {
                     xremove = xwerkpleklist.Objects.Cast<ArtikelRecord>().Where(x =>
@@ -201,6 +214,7 @@ namespace Forms.ArtikelRecords
                     if (xremove.Count > 0)
                         xwerkpleklist.RemoveObjects(xremove);
                 }
+
                 Records.RemoveAll(x => string.Equals(artnr, x.ArtikelNr, StringComparison.CurrentCultureIgnoreCase));
                 EnableButton(true);
             }
@@ -220,7 +234,7 @@ namespace Forms.ArtikelRecords
                 var xwps = xwerkpleklist.Objects.Cast<ArtikelRecord>().ToList();
                 xitems.AddRange(xwps);
                 var xold = xitems.FirstOrDefault(x => x.Equals(record));
-                bool valid = IsAllowed(record);
+                var valid = IsAllowed(record);
                 if (xold != null)
                 {
                     if (!valid)
@@ -260,9 +274,6 @@ namespace Forms.ArtikelRecords
             }
         }
 
-        public string Filter1 => xsearchbox.Text.ToLower().Replace("zoeken...", "").Trim();
-        public string Filter2 => xsearch2.Text.ToLower().Replace("zoeken...", "").Trim();
-
         public bool IsAllowed(ArtikelRecord record)
         {
             if (record.IsWerkplek)
@@ -270,13 +281,13 @@ namespace Forms.ArtikelRecords
                 if (string.IsNullOrEmpty(Filter2)) return true;
                 return record.ArtikelNr != null && record.ArtikelNr.ToLower().Contains(Filter2);
             }
-            if (string.IsNullOrEmpty(Filter1)) return true;
-            return (record.Omschrijving != null && record.Omschrijving.ToLower().Contains(Filter1)) ||
-                   (record.ArtikelNr != null && record.ArtikelNr.ToLower().Contains(Filter1));
 
+            if (string.IsNullOrEmpty(Filter1)) return true;
+            return record.Omschrijving != null && record.Omschrijving.ToLower().Contains(Filter1) ||
+                   record.ArtikelNr != null && record.ArtikelNr.ToLower().Contains(Filter1);
         }
 
-        private void Database_InstanceChanged(object sender, System.IO.FileSystemEventArgs e)
+        private void Database_InstanceChanged(object sender, FileSystemEventArgs e)
         {
             if (Manager.ArtikelRecords?.Database == null) return;
             try
@@ -286,8 +297,8 @@ namespace Forms.ArtikelRecords
                 var xrecord = Manager.ArtikelRecords.Database.GetEntry<ArtikelRecord>(xname);
                 if (xrecord != null)
                 {
-                    if (this.InvokeRequired)
-                        this.Invoke(new MethodInvoker(() => UpdateArtikel(xrecord)));
+                    if (InvokeRequired)
+                        Invoke(new MethodInvoker(() => UpdateArtikel(xrecord)));
                     else UpdateArtikel(xrecord);
                 }
             }
@@ -295,7 +306,6 @@ namespace Forms.ArtikelRecords
             {
                 Console.WriteLine(exception);
             }
-           
         }
 
         private void xsearchArtikel_Enter(object sender, EventArgs e)
@@ -304,10 +314,9 @@ namespace Forms.ArtikelRecords
                 xsearchbox.Text = @"";
         }
 
-        private string _Filter = String.Empty;
-        private void xsearchArtikel_TextChanged(object sender, System.EventArgs e)
+        private void xsearchArtikel_TextChanged(object sender, EventArgs e)
         {
-            string filter = xsearchbox.Text.Replace("Zoeken...", "").Trim().ToLower();
+            var filter = xsearchbox.Text.Replace("Zoeken...", "").Trim().ToLower();
             if (string.Equals(filter, _Filter, StringComparison.CurrentCultureIgnoreCase)) return;
             LoadArtikels(false);
             _Filter = filter;
@@ -326,7 +335,7 @@ namespace Forms.ArtikelRecords
             Manager.ArtikelRecords.ArtikelDeleted -= Database_InstanceDeleted;
         }
 
-        private void ArtikelRecordsForm_Shown(object sender, System.EventArgs e)
+        private void ArtikelRecordsForm_Shown(object sender, EventArgs e)
         {
             if (Manager.ArtikelRecords?.Database == null) return;
             Manager.ArtikelRecords.ArtikelChanged += Database_InstanceChanged;
@@ -341,7 +350,6 @@ namespace Forms.ArtikelRecords
         private void xaddartikel_Click(object sender, EventArgs e)
         {
             if (Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieAdvance})
-            {
                 try
                 {
                     var xnew = new NewArtikelRecord();
@@ -350,7 +358,7 @@ namespace Forms.ArtikelRecords
                     {
                         if (Manager.ArtikelRecords?.Database == null) return;
                         var xs = xnew.SelectedRecord;
-                        bool exist = Manager.ArtikelRecords.Database.Exists(xs.ArtikelNr);
+                        var exist = Manager.ArtikelRecords.Database.Exists(xs.ArtikelNr);
                         if (exist)
                         {
                             XMessageBox.Show(this, $"Artikelnr/ Werkplek '{xs.ArtikelNr}' bestaat al!", "Bestaat Al",
@@ -375,15 +383,14 @@ namespace Forms.ArtikelRecords
                                 metroTabControl1.SelectedIndex = 0;
                             }
                         }
-                        Manager.ArtikelRecords.Database.Upsert(xs.ArtikelNr, xs, false);
 
+                        Manager.ArtikelRecords.Database.Upsert(xs.ArtikelNr, xs, false);
                     }
                 }
                 catch (Exception exception)
                 {
                     Console.WriteLine(exception);
                 }
-            }
         }
 
         private void DeleteSelectedArtikelen()
@@ -452,21 +459,15 @@ namespace Forms.ArtikelRecords
 
         private void xdeleteartikel_Click(object sender, EventArgs e)
         {
-            if (Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieAdvance })
+            if (Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieAdvance})
             {
                 if (metroTabControl1.SelectedIndex == 0)
                 {
-                    if (xArtikelList.SelectedObjects.Count > 0)
-                    {
-                        DeleteSelectedArtikelen();
-                    }
+                    if (xArtikelList.SelectedObjects.Count > 0) DeleteSelectedArtikelen();
                 }
                 else
                 {
-                    if (xwerkpleklist.SelectedObjects.Count > 0)
-                    {
-                        DeleteSelectedWerkPlaatsen();
-                    }
+                    if (xwerkpleklist.SelectedObjects.Count > 0) DeleteSelectedWerkPlaatsen();
                 }
             }
         }
@@ -516,10 +517,9 @@ namespace Forms.ArtikelRecords
                 xsearch2.Text = @"Zoeken...";
         }
 
-        private string _Filter2 = String.Empty;
         private void xsearch2_TextChanged(object sender, EventArgs e)
         {
-            string filter = xsearch2.Text.Replace("Zoeken...", "").Trim().ToLower();
+            var filter = xsearch2.Text.Replace("Zoeken...", "").Trim().ToLower();
             if (string.Equals(filter, _Filter2, StringComparison.CurrentCultureIgnoreCase)) return;
             LoadArtikels(false);
             _Filter2 = filter;
@@ -527,8 +527,7 @@ namespace Forms.ArtikelRecords
 
         private void xeditArtikel_Click(object sender, EventArgs e)
         {
-            if (Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieAdvance })
-            {
+            if (Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieAdvance})
                 try
                 {
                     if (metroTabControl1.SelectedIndex == 0 && xArtikelList.SelectedObject is ArtikelRecord record)
@@ -542,7 +541,8 @@ namespace Forms.ArtikelRecords
                             Manager.ArtikelRecords.Database.Upsert(record.ArtikelNr, record, false);
                         }
                     }
-                    else if(metroTabControl1.SelectedIndex == 1 && xwerkpleklist.SelectedObject is ArtikelRecord xrecord)
+                    else if (metroTabControl1.SelectedIndex == 1 &&
+                             xwerkpleklist.SelectedObject is ArtikelRecord xrecord)
                     {
                         var xform = new NewArtikelRecord(xrecord);
                         xform.AllowArtikelEdit = false;
@@ -558,29 +558,25 @@ namespace Forms.ArtikelRecords
                 {
                     Console.WriteLine(exception);
                 }
-            }
         }
 
-        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             meldingenToolStripMenuItem.Enabled = metroTabControl1.SelectedIndex == 0 && xopmerkingen.Enabled ||
-                                                 (metroTabControl1.SelectedIndex == 1 && xwerkplekopmerkingen.Enabled);
+                                                 metroTabControl1.SelectedIndex == 1 && xwerkplekopmerkingen.Enabled;
             wijzigenToolStripMenuItem.Enabled = metroTabControl1.SelectedIndex == 0 && xeditArtikel.Enabled ||
-                                                (metroTabControl1.SelectedIndex == 1 && xeditWerkplek.Enabled);
+                                                metroTabControl1.SelectedIndex == 1 && xeditWerkplek.Enabled;
             verwijderenToolStripMenuItem.Enabled = metroTabControl1.SelectedIndex == 0 && xdeleteartikel.Enabled ||
-                                                   (metroTabControl1.SelectedIndex == 1 && xdeletewerkplek.Enabled);
+                                                   metroTabControl1.SelectedIndex == 1 && xdeletewerkplek.Enabled;
             toonProductiesToolStripMenuItem.Enabled =
                 metroTabControl1.SelectedIndex == 0 && xArtikelList.SelectedObjects.Count > 0 ||
-                (metroTabControl1.SelectedIndex == 1 && xwerkpleklist.SelectedObjects.Count > 0);
+                metroTabControl1.SelectedIndex == 1 && xwerkpleklist.SelectedObjects.Count > 0;
         }
 
         private void toonProductiesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowProductieLijstForm(metroTabControl1.SelectedIndex == 1);
         }
-
-        private readonly List<ProductieLijstForm> _Productelijsten = new();
-        private ProductieLijsten _productielijstdock;
 
         public void ShowProductieLijstForm(bool iswerkplek)
         {
@@ -607,7 +603,7 @@ namespace Forms.ArtikelRecords
 
                     if (_productielijstdock == null || _productielijstdock.IsDisposed)
                     {
-                        _productielijstdock = new ProductieLijsten()
+                        _productielijstdock = new ProductieLijsten
                         {
                             Tag = prodform,
                             StartPosition = FormStartPosition.CenterScreen
@@ -625,7 +621,6 @@ namespace Forms.ArtikelRecords
 
                         _productielijstdock.Focus();
                     }
-
                 }
             }
             catch (Exception e)

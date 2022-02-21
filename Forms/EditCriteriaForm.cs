@@ -1,27 +1,28 @@
-﻿using Rpm.Misc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using Rpm.Misc;
 
 namespace Forms
 {
-    public partial class EditCriteriaForm : Forms.MetroBase.MetroBaseForm
+    public partial class EditCriteriaForm : MetroBaseForm
     {
-        public List<FilterEntry> SelectedFilter { get; private set; }
-
         public EditCriteriaForm(Type type, List<FilterEntry> filters)
         {
             InitializeComponent();
-            filterEntryEditorUI1.LoadFilterEntries(type, filters,true);
+            filterEntryEditorUI1.LoadFilterEntries(type, filters, true);
             SelectedFilter = new List<FilterEntry>();
         }
 
-        private void xannuleren_Click(object sender, System.EventArgs e)
+        public List<FilterEntry> SelectedFilter { get; private set; }
+
+        private void xannuleren_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
         }
 
-        private void xok_Click(object sender, System.EventArgs e)
+        private void xok_Click(object sender, EventArgs e)
         {
             SelectedFilter = filterEntryEditorUI1.Criterias;
             DialogResult = DialogResult.OK;

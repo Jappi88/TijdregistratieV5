@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Windows.Forms;
-using ProductieManager.Properties;
 
 namespace Forms
 {
     public partial class SplashScreen : Form
     {
-        public bool CanClose { get; set; }
         private readonly int _duraction;
         private Timer _timer;
 
@@ -24,6 +21,8 @@ namespace Forms
             _duraction = duraction;
             Shown += SplashScreen_Shown;
         }
+
+        public bool CanClose { get; set; }
 
         private void SetImage()
         {
@@ -61,12 +60,10 @@ namespace Forms
             if (CanClose)
                 Close();
             else
-            {
                 CanClose = true;
-            }
         }
 
-        public event  EventHandler FinishedLoading;
+        public event EventHandler FinishedLoading;
 
         protected virtual void OnFinishedLoading()
         {

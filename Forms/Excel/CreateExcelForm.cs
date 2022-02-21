@@ -1,10 +1,4 @@
-﻿using ProductieManager.Properties;
-using ProductieManager.Rpm.ExcelHelper;
-using ProductieManager.Rpm.Settings;
-using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -12,44 +6,54 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.ExcelHelper;
+using ProductieManager.Rpm.Settings;
+using Rpm.Misc;
+using Rpm.Productie;
+using Rpm.Various;
 
 namespace Forms
 {
-    public partial class CreateExcelForm : Forms.MetroBase.MetroBaseForm
+    public partial class CreateExcelForm : MetroBaseForm
     {
-        public List<Bewerking> Bewerkingen { get; private set; }
+        private bool _isbusy;
+
         public CreateExcelForm()
         {
             InitializeComponent();
             xvanafdate.Value = DateTime.Now.Subtract(TimeSpan.FromDays(365));
         }
 
-        public CreateExcelForm(List<Bewerking> bewerkingen) :this()
+        public CreateExcelForm(List<Bewerking> bewerkingen) : this()
         {
             Bewerkingen = bewerkingen;
         }
 
-        public CreateExcelForm(List<ProductieFormulier> producties):this()
+        public CreateExcelForm(List<ProductieFormulier> producties) : this()
         {
             if (producties == null || producties.Count == 0) return;
             Bewerkingen = new List<Bewerking>();
-            for (int i = 0; i < producties.Count; i++)
+            for (var i = 0; i < producties.Count; i++)
             {
                 var prod = producties[i];
                 if (prod?.Bewerkingen == null || prod.Bewerkingen.Length == 0) continue;
-                foreach(var bw in prod.Bewerkingen)
+                foreach (var bw in prod.Bewerkingen)
                     if (bw != null && bw.IsAllowed())
                         Bewerkingen.Add(bw);
             }
         }
 
+        public List<Bewerking> Bewerkingen { get; }
+
         public string Title
         {
-            get => this.Text;
+            get => Text;
             set
             {
-                this.Text = value;
-                this.Invalidate();
+                Text = value;
+                Invalidate();
             }
         }
 
@@ -60,11 +64,16 @@ namespace Forms
                 var x1 = Bewerkingen.Count == 1 ? "bewerking" : "bewerkingen";
                 var x2 = Bewerkingen.Count == 1 ? "is" : "zijn";
                 xinfolabel.Text = $"{Bewerkingen.Count} {x1} {x2} geselecteerd.\n\n" +
-                                  $"Creeër een excel overzicht van de bewerkingen.";
+                                  "Creeër een excel overzicht van de bewerkingen.";
                 xinfolabel.Visible = true;
             }
-            else xinfolabel.Visible = false;
-            var selected = Manager.ListLayouts?.GetAlleLayouts()?.FirstOrDefault(x => x.IsUsed("ExcelColumns") && x.IsExcelSettings);
+            else
+            {
+                xinfolabel.Visible = false;
+            }
+
+            var selected = Manager.ListLayouts?.GetAlleLayouts()
+                ?.FirstOrDefault(x => x.IsUsed("ExcelColumns") && x.IsExcelSettings);
             if (selected != null)
             {
                 xcolumnsStatusLabel.Text = $@"Opties Geselecteerd: {selected.Name}";
@@ -72,14 +81,14 @@ namespace Forms
             }
             else
             {
-                xcolumnsStatusLabel.Text = $@"Geen Opties Geselecteerd!";
+                xcolumnsStatusLabel.Text = @"Geen Opties Geselecteerd!";
                 xcolumnsStatusLabel.ForeColor = Color.DarkRed;
             }
         }
 
         private void xsluiten_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
+            DialogResult = DialogResult.Cancel;
         }
 
         private async void xOpslaan_Click(object sender, EventArgs e)
@@ -90,39 +99,39 @@ namespace Forms
                 return;
             }
 
-            var xlists = Manager.ListLayouts?.GetAlleLayouts()??new List<ExcelSettings>();
+            var xlists = Manager.ListLayouts?.GetAlleLayouts() ?? new List<ExcelSettings>();
             var selected = xlists.FirstOrDefault(x => x.IsUsed("ExcelColumns"));
             if (selected == null)
             {
                 var xf = new ExcelOptiesForm();
-                xf.LoadOpties("ExcelColumns",true);
+                xf.LoadOpties("ExcelColumns", true);
                 xf.IsSelectDialog = true;
                 if (xf.ShowDialog() == DialogResult.OK)
-                {
                     if (Manager.Opties != null)
                     {
-                        Manager.UpdateExcelColumns(xf.Settings,true,true,true);
+                        Manager.UpdateExcelColumns(xf.Settings, true, true, true);
                         SetFieldInfo();
                         selected = xlists.FirstOrDefault(x => x.IsUsed("ExcelColumns"));
                     }
-                   
-                }
             }
+
             if (selected == null) return;
             var ofd = new SaveFileDialog
             {
                 Title = "creëer Productie Overzicht",
                 Filter = "Xlsx Bestand|*.Xlsx",
-                FileName = "ProductieOverzicht_" + DateTime.Now.ToString("g").Replace(" ","_").Replace("/","").Replace("-","_").Replace(":","")
+                FileName = "ProductieOverzicht_" + DateTime.Now.ToString("g").Replace(" ", "_").Replace("/", "")
+                    .Replace("-", "_").Replace(":", "")
             };
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 StartWait();
                 try
                 {
-                    var producties = Bewerkingen?? await Manager.Database.GetAllBewerkingen(true,true);
-                    TijdEntry te = Bewerkingen == null ? new TijdEntry(xvanafdate.Value, xtotdate.Value, null) : null;
-                    var file = await ExcelWorkbook.CreateWeekOverzicht(te, producties, xcreeroverzicht.Checked, ofd.FileName,$"Overzicht vanaf {xvanafdate.Value} t/m {xtotdate.Value}",IsRunning);
+                    var producties = Bewerkingen ?? await Manager.Database.GetAllBewerkingen(true, true);
+                    var te = Bewerkingen == null ? new TijdEntry(xvanafdate.Value, xtotdate.Value, null) : null;
+                    var file = await ExcelWorkbook.CreateWeekOverzicht(te, producties, xcreeroverzicht.Checked,
+                        ofd.FileName, $"Overzicht vanaf {xvanafdate.Value} t/m {xtotdate.Value}", IsRunning);
                     if (file != null && File.Exists(file) && xopenexcel.Checked)
                         Process.Start(file);
                 }
@@ -130,11 +139,11 @@ namespace Forms
                 {
                     XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
                 }
+
                 StopWait();
             }
         }
 
-        private bool _isbusy = false;
         private void StartWait()
         {
             if (_isbusy) return;
@@ -145,10 +154,10 @@ namespace Forms
             xbezig.Visible = true;
             Task.Run(async () =>
             {
-                int count = 0;
+                var count = 0;
                 while (_isbusy)
                 {
-                    var xvalue = ("Overzicht Aanmaken").PadRight(count + 19, '.');
+                    var xvalue = "Overzicht Aanmaken".PadRight(count + 19, '.');
                     //xbezig.Invoke(new Action(() => xbezig.Text = xvalue));
                     count++;
                     if (count > 4)
@@ -156,7 +165,7 @@ namespace Forms
                     await Task.Delay(1000);
                 }
 
-                if (!this.IsDisposed)
+                if (!IsDisposed)
                 {
                     xbezig.Invoke(new Action(() => xbezig.Text = "Overzicht Aangemaakt!"));
                     await Task.Delay(2000);
@@ -168,7 +177,7 @@ namespace Forms
         private void StopWait()
         {
             _isbusy = false;
-            if (!this.IsDisposed)
+            if (!IsDisposed)
             {
                 xOpslaan.Text = "Opslaan";
                 xOpslaan.Image = Resources.diskette_save_saveas_1514;
@@ -179,13 +188,11 @@ namespace Forms
         public bool IsRunning(ProgressArg arg)
         {
             if (arg?.Message != null)
-            {
-                this.BeginInvoke(new MethodInvoker(() =>
+                BeginInvoke(new MethodInvoker(() =>
                 {
                     xbezig.Text = arg.Message;
                     xbezig.Invalidate();
                 }));
-            }
 
             return _isbusy;
         }
@@ -198,10 +205,10 @@ namespace Forms
         private void button1_Click(object sender, EventArgs e)
         {
             var xf = new ExcelOptiesForm();
-            xf.LoadOpties( "ExcelColumns",true);
+            xf.LoadOpties("ExcelColumns", true);
             if (xf.ShowDialog() == DialogResult.OK)
             {
-                Manager.UpdateExcelColumns(xf.Settings,true,true,true);
+                Manager.UpdateExcelColumns(xf.Settings, true, true, true);
                 SetFieldInfo();
             }
         }
@@ -213,7 +220,6 @@ namespace Forms
 
         private void xcolumnsStatusLabel_Click(object sender, EventArgs e)
         {
-
         }
     }
 }

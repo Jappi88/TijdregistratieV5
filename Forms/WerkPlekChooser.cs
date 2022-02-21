@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Forms.MetroBase;
 using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class WerkPlekChooser : Forms.MetroBase.MetroBaseForm
+    public partial class WerkPlekChooser : MetroBaseForm
     {
         public WerkPlekChooser(List<WerkPlek> plekken, string selected)
         {
@@ -47,11 +48,11 @@ namespace Forms
 
         public string Title
         {
-            get => this.Text;
+            get => Text;
             set
             {
-                this.Text = value;
-                this.Invalidate();
+                Text = value;
+                Invalidate();
             }
         }
 

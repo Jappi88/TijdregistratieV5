@@ -3,7 +3,6 @@ using System.Linq;
 using System.Windows.Forms;
 using MetroFramework.Forms;
 using ProductieManager.Forms.MetroDock;
-using ProductieManager.Properties;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
@@ -14,7 +13,8 @@ namespace Forms
 {
     public partial class StartProductie : DockInstance
     {
-        private Bewerking _selected;
+        private readonly Bewerking _selected;
+
         public StartProductie(ProductieFormulier formulier, Bewerking bewerking)
         {
             InitializeComponent();
@@ -40,28 +40,24 @@ namespace Forms
 
         private void ProductieForm1_OnCloseButtonPressed(object sender, EventArgs e)
         {
-           // DialogResult = DialogResult.Cancel;
-           Close();
+            // DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         private void Formulier_OnFormulierChanged(object sender, ProductieFormulier changedform)
         {
-            if (this.IsDisposed || this.Disposing || !Visible) return;
+            if (IsDisposed || Disposing || !Visible) return;
             if (changedform.Equals(Formulier))
-            {
                 try
                 {
-                   
                     if (InvokeRequired)
-                        this.BeginInvoke(new Action(()=> UpdateFields(changedform,null)));
-                    else UpdateFields(changedform,null);
+                        BeginInvoke(new Action(() => UpdateFields(changedform, null)));
+                    else UpdateFields(changedform, null);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
-              
-            }
         }
 
         public new void Show(DockPanel dock)
@@ -95,10 +91,10 @@ namespace Forms
                         productieForm1.SelectedBewerking = selected;
                     var plekken = productieForm1.SelectedBewerking?.WerkPlekken;
                     if (plekken is {Count: > 0})
-                        TabText = $"{string.Join(",",plekken.Select(x=> x.Naam))} [{Formulier.ProductieNr}, {Formulier.ArtikelNr}]";
+                        TabText =
+                            $"{string.Join(",", plekken.Select(x => x.Naam))} [{Formulier.ProductieNr}, {Formulier.ArtikelNr}]";
                     else TabText = $"[{Formulier.ProductieNr}, {Formulier.ArtikelNr}]";
                 }
-
             }
             catch (Exception e)
             {
@@ -139,17 +135,20 @@ namespace Forms
 
         private void _manager_OnSettingsChanged(object instance, UserSettings settings, bool init)
         {
-            if (this.Disposing || this.IsDisposed) return;
+            if (Disposing || IsDisposed) return;
             var user = Manager.LogedInGebruiker;
             if (user is not {AccesLevel: > AccesType.AlleenKijken})
             {
                 DetachEvents();
-                if (this.InvokeRequired)
-                    this.Invoke(new MethodInvoker(Close));
+                if (InvokeRequired)
+                    Invoke(new MethodInvoker(Close));
                 else
                     Close();
             }
-            else productieForm1.OnSettingChanged(instance, settings, init);
+            else
+            {
+                productieForm1.OnSettingChanged(instance, settings, init);
+            }
         }
 
         private void StartProductie_FormClosing(object sender, FormClosingEventArgs e)
@@ -161,12 +160,12 @@ namespace Forms
         {
             try
             {
-                this.BeginInvoke(new MethodInvoker(() =>
+                BeginInvoke(new MethodInvoker(() =>
                 {
                     if (Disposing || IsDisposed || Formulier?.ProductieNr == null) return;
                     if (!string.Equals(id, Formulier.ProductieNr, StringComparison.CurrentCultureIgnoreCase)) return;
                     DetachEvents();
-                    this.Close();
+                    Close();
                 }));
             }
             catch (Exception e)

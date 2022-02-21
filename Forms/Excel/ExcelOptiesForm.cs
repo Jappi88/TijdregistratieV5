@@ -1,20 +1,21 @@
-﻿using BrightIdeasSoftware;
-using Forms.Excel;
-using ProductieManager.Properties;
-using ProductieManager.Rpm.ExcelHelper;
-using ProductieManager.Rpm.Settings;
-using Rpm.Misc;
-using Rpm.Productie;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
+using Forms.Excel;
+using Forms.MetroBase;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.ExcelHelper;
+using ProductieManager.Rpm.Settings;
+using Rpm.Misc;
+using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class ExcelOptiesForm : Forms.MetroBase.MetroBaseForm
+    public partial class ExcelOptiesForm : MetroBaseForm
     {
         public ExcelOptiesForm()
         {
@@ -28,6 +29,7 @@ namespace Forms
 
         public string ListName { get; set; }
         public bool IsExcelColumnSettings { get; set; }
+
         public bool EnableCalculation
         {
             get => xBerekeningGroup.Visible;
@@ -40,32 +42,32 @@ namespace Forms
             set => xKleurenGroup.Visible = value;
         }
 
+        public List<ExcelSettings> Settings { get; set; }
+
         public object GetImageIndex(object model)
         {
             if (string.IsNullOrEmpty(ListName)) return 0;
             if (model is ExcelSettings settings)
-            {
-                
-                if (settings.IsUsed(ListName) && settings.IsExcelSettings == IsExcelColumnSettings) return 1;
-            }
+                if (settings.IsUsed(ListName) && settings.IsExcelSettings == IsExcelColumnSettings)
+                    return 1;
 
             return 0;
         }
 
-        public List<ExcelSettings> Settings { get; set; }
-
-        public void LoadSettings(List<ExcelSettings> settings, string listname, bool isExcelColumns, ExcelSettings selected = null)
+        public void LoadSettings(List<ExcelSettings> settings, string listname, bool isExcelColumns,
+            ExcelSettings selected = null)
         {
             ListName = listname;
             IsExcelColumnSettings = isExcelColumns;
             selected ??= Settings.FirstOrDefault(x =>
-                (x.IsUsed(listname) && x.IsExcelSettings == isExcelColumns));
+                x.IsUsed(listname) && x.IsExcelSettings == isExcelColumns);
             selected ??= Settings.FirstOrDefault(x =>
                 string.Equals(x.Name, listname, StringComparison.CurrentCultureIgnoreCase));
             xOptiesView.SetObjects(settings);
             xOptiesView.SelectedObject = selected;
             xOptiesView.SelectedItem?.EnsureVisible();
-            var properties = typeof(IProductieBase).GetProperties().Where(x => x.CanRead && x.PropertyType.IsSupportedType()).OrderBy(x=> x.Name).ToArray();
+            var properties = typeof(IProductieBase).GetProperties()
+                .Where(x => x.CanRead && x.PropertyType.IsSupportedType()).OrderBy(x => x.Name).ToArray();
             xBeschikbareColumns.SetObjects(properties);
         }
 
@@ -73,7 +75,8 @@ namespace Forms
         {
             try
             {
-                Settings = settings??Manager.ListLayouts?.GetAlleLayouts()?.Where(x => x.IsExcelSettings == isExcelColumns)
+                Settings = settings ?? Manager.ListLayouts?.GetAlleLayouts()
+                    ?.Where(x => x.IsExcelSettings == isExcelColumns)
                     .ToList() ?? new List<ExcelSettings>();
                 LoadSettings(Settings, listname, isExcelColumns);
             }
@@ -84,7 +87,7 @@ namespace Forms
             }
         }
 
-        private void xColumnKleurB_Click(object sender, System.EventArgs e)
+        private void xColumnKleurB_Click(object sender, EventArgs e)
         {
             if (xZichtbareColumnsView.SelectedObject is ExcelColumnEntry colentry)
             {
@@ -107,6 +110,7 @@ namespace Forms
 
                     return;
                 }
+
                 var xpicker = new ColorDialog();
                 xpicker.AllowFullOpen = true;
                 xpicker.AnyColor = true;
@@ -124,7 +128,7 @@ namespace Forms
             }
         }
 
-        private void xTextKleurB_Click(object sender, System.EventArgs e)
+        private void xTextKleurB_Click(object sender, EventArgs e)
         {
             if (xZichtbareColumnsView.SelectedObject is ExcelColumnEntry colentry)
             {
@@ -147,6 +151,7 @@ namespace Forms
 
                     return;
                 }
+
                 var xpicker = new ColorDialog();
                 xpicker.AllowFullOpen = true;
                 xpicker.AnyColor = true;
@@ -174,7 +179,10 @@ namespace Forms
                     xZichtbareColumnsView.Items[0].Selected = true;
                     xZichtbareColumnsView.SelectedItem?.EnsureVisible();
                 }
-                else UpdateSelectedFields();
+                else
+                {
+                    UpdateSelectedFields();
+                }
             }
             else
             {
@@ -194,11 +202,11 @@ namespace Forms
                 xZichtbareColumnsView.SelectedObject is ExcelColumnEntry ent)
             {
                 var index = settings.Columns.IndexOf(ent);
-                if (index <  1) return;
+                if (index < 1) return;
                 settings.Columns.Remove(ent);
-                settings.Columns.Insert(index -1 , ent);
+                settings.Columns.Insert(index - 1, ent);
                 xZichtbareColumnsView.RemoveObject(ent);
-                xZichtbareColumnsView.InsertObjects(index -1 , new ExcelColumnEntry[] { ent });
+                xZichtbareColumnsView.InsertObjects(index - 1, new[] {ent});
                 xZichtbareColumnsView.SelectedObject = ent;
                 xZichtbareColumnsView.SelectedItem?.EnsureVisible();
                 settings.ReIndexColumns();
@@ -215,7 +223,7 @@ namespace Forms
                 settings.Columns.Remove(ent);
                 settings.Columns.Insert(index + 1, ent);
                 xZichtbareColumnsView.RemoveObject(ent);
-                xZichtbareColumnsView.InsertObjects(index + 1, new ExcelColumnEntry[] {ent});
+                xZichtbareColumnsView.InsertObjects(index + 1, new[] {ent});
                 xZichtbareColumnsView.SelectedObject = ent;
                 xZichtbareColumnsView.SelectedItem?.EnsureVisible();
                 settings.ReIndexColumns();
@@ -233,7 +241,7 @@ namespace Forms
                 xBeschikbareColumns.SelectedObject is PropertyInfo prop)
             {
                 if (settings.Columns.Any(x =>
-                    string.Equals(x.Naam, prop.Name, StringComparison.CurrentCultureIgnoreCase)))
+                        string.Equals(x.Naam, prop.Name, StringComparison.CurrentCultureIgnoreCase)))
                     return;
                 var xnew = new ExcelColumnEntry(prop.Name);
                 xnew.ColumnIndex = settings.Columns.Count;
@@ -250,12 +258,14 @@ namespace Forms
             if (xZichtbareColumnsView.SelectedObjects.Count > 0 && xOptiesView.SelectedObject is ExcelSettings settings)
             {
                 var xcount = xZichtbareColumnsView.SelectedObjects.Count;
-                var x1 = xcount == 1 ? $"'{(xZichtbareColumnsView.SelectedObject as ExcelColumnEntry)?.Naam}'" : $"{xcount} columns";
+                var x1 = xcount == 1
+                    ? $"'{(xZichtbareColumnsView.SelectedObject as ExcelColumnEntry)?.Naam}'"
+                    : $"{xcount} columns";
                 if (XMessageBox.Show(this, $"Weetje zeker dat je {x1} wilt verwijderen?", "Columns Verwijderen",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
                     return;
                 var xitems = xZichtbareColumnsView.SelectedObjects.Cast<ExcelColumnEntry>().ToArray();
-                int xc = 0;
+                var xc = 0;
                 foreach (var item in xitems)
                     if (item.Naam != "ArtikelNr" && settings.Columns.Remove(item))
                         xc++;
@@ -280,10 +290,11 @@ namespace Forms
                 }
                 else
                 {
-                    var xs = new ExcelSettings(txt,ListName,IsExcelColumnSettings);
-                    xs.SetSelected(!Settings.Any(x => x.IsUsed(ListName) && x.IsExcelSettings == IsExcelColumnSettings), ListName);
+                    var xs = new ExcelSettings(txt, ListName, IsExcelColumnSettings);
+                    xs.SetSelected(!Settings.Any(x => x.IsUsed(ListName) && x.IsExcelSettings == IsExcelColumnSettings),
+                        ListName);
                     Settings.Add(xs);
-                    LoadSettings(Settings, ListName, IsExcelColumnSettings,xs);
+                    LoadSettings(Settings, ListName, IsExcelColumnSettings, xs);
                 }
             }
         }
@@ -295,10 +306,10 @@ namespace Forms
                 var xcount = xOptiesView.SelectedObjects.Count;
                 var x1 = xcount == 1 ? $"'{(xOptiesView.SelectedObject as ExcelSettings)?.Name}'" : $"{xcount} opties";
                 if (XMessageBox.Show(this, $"Weetje zeker dat je {x1} wilt verwijderen?", "Opties Verwijderen",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.None)
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.None)
                     return;
                 var xitems = xOptiesView.SelectedObjects.Cast<ExcelSettings>().ToArray();
-                int xc = 0;
+                var xc = 0;
                 foreach (var item in xitems)
                     if (Settings.Remove(item))
                         xc++;
@@ -312,7 +323,8 @@ namespace Forms
 
         private void UpdateSelectedFields()
         {
-            if (xOptiesView.SelectedObject is ExcelSettings settings && xZichtbareColumnsView.SelectedObject is ExcelColumnEntry entry)
+            if (xOptiesView.SelectedObject is ExcelSettings settings &&
+                xZichtbareColumnsView.SelectedObject is ExcelColumnEntry entry)
             {
                 var desc = typeof(IProductieBase).GetPropertyDescription(entry.Naam);
                 xColumnTextBox.Text = entry.ColumnText?.Trim();
@@ -337,6 +349,7 @@ namespace Forms
                         xBerekenGemiddeldRadio.Checked = true;
                         break;
                 }
+
                 switch (entry.ColorType)
                 {
                     case ColorRuleType.None:
@@ -349,11 +362,10 @@ namespace Forms
                     case ColorRuleType.Static:
                         xVasteKleurRadio.Checked = true;
                         var color = entry.ColumnColorIndex > -1
-                            ?
-                            ExcelColumnEntry.GetColorFromIndex(entry.ColumnColorIndex)
+                            ? ExcelColumnEntry.GetColorFromIndex(entry.ColumnColorIndex)
                             : Color.FromArgb(entry.ColomnRGB);
 
-                        xColumnKleurB.BackColor = color.IsEmpty?Color.White : color;
+                        xColumnKleurB.BackColor = color.IsEmpty ? Color.White : color;
                         xTextKleurB.BackColor = color.IsEmpty ? Color.White : color;
                         color = entry.ColumnColorIndex > -1
                             ? ExcelColumnEntry.GetColorFromIndex(entry.ColumnTextColorIndex)
@@ -369,8 +381,10 @@ namespace Forms
                         break;
                 }
 
-                xItemUp.Enabled = (entry.Naam.ToLower() == "artikelnr" && settings.Columns.IndexOf(entry) > 0) || settings.Columns.IndexOf(entry) > 1;
-                xItemDown.Enabled = entry.Naam.ToLower() != "artikelnr" && settings.Columns.IndexOf(entry) < settings.Columns.Count -1;
+                xItemUp.Enabled = entry.Naam.ToLower() == "artikelnr" && settings.Columns.IndexOf(entry) > 0 ||
+                                  settings.Columns.IndexOf(entry) > 1;
+                xItemDown.Enabled = entry.Naam.ToLower() != "artikelnr" &&
+                                    settings.Columns.IndexOf(entry) < settings.Columns.Count - 1;
             }
             else
             {
@@ -387,6 +401,7 @@ namespace Forms
                 xItemDown.Enabled = false;
                 xItemDelete.Enabled = false;
             }
+
             xDeleteOptieButton.Enabled = xOptiesView.SelectedObjects.Count > 0;
             xEditOpties.Enabled = xOptiesView.SelectedObject is ExcelSettings;
             if (xZichtbareColumnsView.SelectedObject is ExcelColumnEntry {Naam: "ArtikelNr"})
@@ -396,10 +411,8 @@ namespace Forms
             if (xOptiesView.SelectedObject is ExcelSettings &&
                 xZichtbareColumnsView.SelectedObject is ExcelColumnEntry &&
                 xBeschikbareColumns.SelectedObject is PropertyInfo prop)
-            {
                 xItemRight.Enabled = !xZichtbareColumnsView.Objects?.Cast<ExcelColumnEntry>().Any(x =>
                     string.Equals(prop.Name, x.Naam, StringComparison.CurrentCultureIgnoreCase)) ?? false;
-            }
             else xItemRight.Enabled = false;
         }
 
@@ -452,10 +465,8 @@ namespace Forms
         private void xColumnTextBox_TextChanged(object sender, EventArgs e)
         {
             if (xZichtbareColumnsView.SelectedObject is ExcelColumnEntry entry)
-            {
                 xWijzigColumnText.Visible = !string.Equals(entry.ColumnText?.Trim(), xColumnTextBox.Text.Trim(),
                     StringComparison.CurrentCultureIgnoreCase);
-            }
             else
                 xWijzigColumnText.Visible = false;
         }
@@ -473,10 +484,8 @@ namespace Forms
         {
             if (xOptiesView.SelectedObject is ExcelSettings &&
                 xBeschikbareColumns.SelectedObject is PropertyInfo prop)
-            {
                 xItemRight.Enabled = !xZichtbareColumnsView.Objects?.Cast<ExcelColumnEntry>().Any(x =>
                     string.Equals(prop.Name, x.Naam, StringComparison.CurrentCultureIgnoreCase)) ?? false;
-            }
             else xItemRight.Enabled = false;
         }
 
@@ -489,37 +498,33 @@ namespace Forms
         {
             if (IsSelectDialog && !Settings.Any(x => x.IsUsed("ExcelColumns")))
             {
-                XMessageBox.Show(this, $"Selecteer een optie om te gebruiken", "Selecteer Optie", MessageBoxIcon.Exclamation);
+                XMessageBox.Show(this, "Selecteer een optie om te gebruiken", "Selecteer Optie",
+                    MessageBoxIcon.Exclamation);
                 return;
             }
+
             DialogResult = DialogResult.OK;
         }
 
         private void xGeenBerekeningRadio_CheckedChanged(object sender, EventArgs e)
         {
             if (xZichtbareColumnsView.SelectedObject is ExcelColumnEntry entry)
-            {
                 if (xGeenBerekeningRadio.Checked)
                     entry.Type = CalculationType.None;
-            }
         }
 
         private void xSomAllesRadio_CheckedChanged(object sender, EventArgs e)
         {
             if (xZichtbareColumnsView.SelectedObject is ExcelColumnEntry entry)
-            {
                 if (xSomAllesRadio.Checked)
                     entry.Type = CalculationType.SOM;
-            }
         }
 
         private void xBerekenGemiddeldRadio_CheckedChanged(object sender, EventArgs e)
         {
             if (xZichtbareColumnsView.SelectedObject is ExcelColumnEntry entry)
-            {
                 if (xBerekenGemiddeldRadio.Checked)
                     entry.Type = CalculationType.Gemiddeld;
-            }
         }
 
         private void xautoculmncheckbox_CheckedChanged(object sender, EventArgs e)
@@ -534,9 +539,7 @@ namespace Forms
         private void xverborgencheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (xZichtbareColumnsView.SelectedObject is ExcelColumnEntry entry)
-            {
                 entry.IsVerborgen = xverborgencheckbox.Checked;
-            }
         }
 
         private void xOptiesView_DoubleClick(object sender, EventArgs e)
@@ -547,12 +550,9 @@ namespace Forms
                 var enabled = !setting.IsUsed(ListName);
                 if (enabled)
                     Settings.ForEach(x => x.SetSelected(false, ListName));
-                setting.SetSelected(enabled,ListName);
+                setting.SetSelected(enabled, ListName);
                 xOptiesView.RefreshObjects(Settings);
-                if (enabled && IsSelectDialog)
-                {
-                    DialogResult = DialogResult.OK;
-                }
+                if (enabled && IsSelectDialog) DialogResult = DialogResult.OK;
             }
         }
 
@@ -581,7 +581,6 @@ namespace Forms
                         setting.IsExcelSettings = IsExcelColumnSettings;
                         setting.Name = txt;
                         xOptiesView.RefreshObject(setting);
-                        
                     }
                 }
             }
@@ -607,10 +606,9 @@ namespace Forms
         private void xColumnFormatTextbox_TextChanged(object sender, EventArgs e)
         {
             if (xZichtbareColumnsView.SelectedObject is ExcelColumnEntry entry)
-            {
-                xWijzigColumnFormat.Visible = !string.Equals(entry.ColumnFormat?.Trim(), xColumnFormatTextbox.Text.Trim(),
+                xWijzigColumnFormat.Visible = !string.Equals(entry.ColumnFormat?.Trim(),
+                    xColumnFormatTextbox.Text.Trim(),
                     StringComparison.CurrentCultureIgnoreCase);
-            }
             else
                 xWijzigColumnFormat.Visible = false;
         }
@@ -627,9 +625,7 @@ namespace Forms
         private void xColumnBreedte_ValueChanged(object sender, EventArgs e)
         {
             if (xZichtbareColumnsView.SelectedObject is ExcelColumnEntry entry)
-            {
                 xWijzigColumnBreedte.Visible = entry.ColumnBreedte != xColumnBreedte.Value;
-            }
             else
                 xWijzigColumnBreedte.Visible = false;
         }
@@ -646,9 +642,7 @@ namespace Forms
         private void xColumnBreedte_KeyDown(object sender, KeyEventArgs e)
         {
             if (xZichtbareColumnsView.SelectedObject is ExcelColumnEntry entry)
-            {
                 xWijzigColumnBreedte.Visible = entry.ColumnBreedte != xColumnBreedte.Value;
-            }
             else
                 xWijzigColumnBreedte.Visible = false;
         }
@@ -676,7 +670,7 @@ namespace Forms
         private void xtoepassen_Click(object sender, EventArgs e)
         {
             if (Settings == null) return;
-            Manager.UpdateExcelColumns(Settings,true,true,IsExcelColumnSettings);
+            Manager.UpdateExcelColumns(Settings, true, true, IsExcelColumnSettings);
         }
 
         private void xstandaard_CheckedChanged(object sender, EventArgs e)
@@ -686,13 +680,11 @@ namespace Forms
                 var xindex = Settings.IndexOf(xset);
                 if (xindex == -1) return;
                 if (xstandaard.Checked)
-                {
                     Settings.ForEach(x =>
                     {
                         x.UseAsDefault = false;
                         xOptiesView.RefreshObject(x);
                     });
-                }
 
                 Settings[xindex].UseAsDefault = xstandaard.Checked;
                 xOptiesView.RefreshObject(Settings[xindex]);

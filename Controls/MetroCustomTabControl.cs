@@ -1,26 +1,29 @@
-﻿using MetroFramework.Controls;
-using ProductieManager.Properties;
-using ProductieManager.Rpm.Misc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using MetroFramework;
+using MetroFramework.Controls;
 using MetroFramework.Drawing;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
 
 namespace Controls
 {
     public class MetroCustomTabControl : MetroTabControl
     {
-        public Image FirstPageImage { get; set; } = Resources.home_icon_32x32.ResizeImage(16, 16);
+        private readonly Dictionary<int, Point> CloseButtons = new();
 
         public MetroCustomTabControl()
         {
-            this.DrawMode = TabDrawMode.OwnerDrawFixed;
-            this.DrawItem += MetroCustomTabControl_DrawItem;
-            this.MouseDown += MetroCustomTabPage_MouseClick;
-            this.SizeMode = TabSizeMode.Normal;
+            DrawMode = TabDrawMode.OwnerDrawFixed;
+            DrawItem += MetroCustomTabControl_DrawItem;
+            MouseDown += MetroCustomTabPage_MouseClick;
+            SizeMode = TabSizeMode.Normal;
         }
+
+        public Image FirstPageImage { get; set; } = Resources.home_icon_32x32.ResizeImage(16, 16);
+        public bool ShowCloseButton { get; set; }
 
         private void MetroCustomTabControl_DrawItem(object sender, DrawItemEventArgs e)
         {
@@ -28,33 +31,34 @@ namespace Controls
             {
                 try
                 {
-                    Image img = new Bitmap(Resources.cancel_close_cross_delete_32x32.ResizeImage(16,16));
+                    Image img = new Bitmap(Resources.cancel_close_cross_delete_32x32.ResizeImage(16, 16));
                     var r = e.Bounds;
-                    var xtab = this.TabPages[e.Index];
-                    string title = xtab.Text.Trim().Replace("    ", "");
+                    var xtab = TabPages[e.Index];
+                    var title = xtab.Text.Trim().Replace("    ", "");
                     if (e.Index == 0 && FirstPageImage != null)
                     {
-                        var xloc = new Point((r.X),
+                        var xloc = new Point(r.X,
                             r.Y + 10);
                         e.Graphics.DrawImage(FirstPageImage, xloc);
                         r.X += 16;
                     }
-                    TextRenderer.DrawText(e.Graphics, title, MetroFonts.TabControl(this.FontSize, this.FontWeight),
+
+                    TextRenderer.DrawText(e.Graphics, title, MetroFonts.TabControl(FontSize, FontWeight),
                         r, e.ForeColor, e.BackColor, MetroPaint.GetTextFormatFlags(TextAlign));
                     if (e.Index >= 1 && ShowCloseButton)
                     {
                         r = GetTabRect(e.Index);
-                        var xloc = new Point((r.X + (r.Width -22)),
+                        var xloc = new Point(r.X + (r.Width - 22),
                             r.Y + 10);
                         e.Graphics.DrawImage(img, xloc);
                         if (CloseButtons.ContainsKey(e.Index))
                             CloseButtons[e.Index] = xloc;
                         else CloseButtons.Add(e.Index, xloc);
-                        
                     }
-
                 }
-                catch (Exception) { }
+                catch (Exception)
+                {
+                }
             }
             catch (Exception exception)
             {
@@ -62,22 +66,19 @@ namespace Controls
             }
         }
 
-        private readonly Dictionary<int, Point> CloseButtons = new Dictionary<int, Point>();
-        public bool ShowCloseButton { get; set; }
-
         private void MetroCustomTabPage_MouseClick(object sender, MouseEventArgs e)
         {
             if (!ShowCloseButton) return;
-            MetroTabControl tc = (MetroTabControl)sender;
-            Point p = e.Location;
-            int xremove = -1;
+            var tc = (MetroTabControl) sender;
+            var p = e.Location;
+            var xremove = -1;
             foreach (var xk in CloseButtons)
             {
-                Rectangle r = new Rectangle(xk.Value, new Size(16, 16));
+                var r = new Rectangle(xk.Value, new Size(16, 16));
                 if (r.Contains(p))
                 {
                     xremove = xk.Key;
-                    MetroTabPage TabP = (MetroTabPage)tc.TabPages[tc.SelectedIndex];
+                    var TabP = (MetroTabPage) tc.TabPages[tc.SelectedIndex];
                     tc.TabPages.Remove(TabP);
                     OnTabClosed(TabP);
                     break;
@@ -94,7 +95,7 @@ namespace Controls
             {
                 if (page != null)
                 {
-                    this.TabPages.Remove(page);
+                    TabPages.Remove(page);
                     OnTabClosed(page);
                 }
             }

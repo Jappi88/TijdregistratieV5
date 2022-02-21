@@ -1,26 +1,12 @@
-﻿using Rpm.Productie;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.RightsManagement;
+using Rpm.Productie;
 
 namespace Rpm.Opmerking
 {
     public class OpmerkingEntry
     {
-        public string Afzender { get; set; }
-        public List<string> Ontvangers { get; set; }
-        public List<ReactieEntry> Reacties { get; set; }
-        public string Title { get; set; }
-        public string Opmerking { get; set; }
-        public DateTime GeplaatstOp { get; set; }
-        public Dictionary<string, byte[]> Bijlages { get; set; } = new Dictionary<string, byte[]>();
-        public List<string> Producties { get; set; }
-
-        public bool IsGelezen =>
-            string.Equals(Afzender, Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase) ||
-            (Reacties is {Count: > 0} && Reacties.All(x => x.IsGelezen));
-
         public OpmerkingEntry()
         {
             Title = "";
@@ -30,6 +16,19 @@ namespace Rpm.Opmerking
             Ontvangers = new List<string>();
             GeplaatstOp = DateTime.Now;
         }
+
+        public string Afzender { get; set; }
+        public List<string> Ontvangers { get; set; }
+        public List<ReactieEntry> Reacties { get; set; }
+        public string Title { get; set; }
+        public string Opmerking { get; set; }
+        public DateTime GeplaatstOp { get; set; }
+        public Dictionary<string, byte[]> Bijlages { get; set; } = new();
+        public List<string> Producties { get; set; }
+
+        public bool IsGelezen =>
+            string.Equals(Afzender, Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase) ||
+            Reacties is {Count: > 0} && Reacties.All(x => x.IsGelezen);
 
         public void SetOpmerking(string title, string opmerking, List<string> ontvangers)
         {
@@ -71,12 +70,10 @@ namespace Rpm.Opmerking
             var xrea = Reacties.FirstOrDefault(x =>
                 string.Equals(Manager.Opties?.Username, x.ReactieVan, StringComparison.CurrentCultureIgnoreCase));
             if (!gelezen && xrea != null)
-            {
                 Reacties.Remove(xrea);
-            }
             else if (xrea == null && gelezen)
                 Reacties.Add(new ReactieEntry());
-            else if(gelezen)
+            else if (gelezen)
                 xrea.SetGelezen();
             foreach (var rea in Reacties)
             {
@@ -97,9 +94,9 @@ namespace Rpm.Opmerking
         public bool CanRead()
         {
             return string.Equals(Afzender, Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase) ||
-                   (Ontvangers != null && Ontvangers.Any(x =>
-                string.Equals(x, "iedereen", StringComparison.CurrentCultureIgnoreCase) ||
-                string.Equals(x, Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase)));
+                   Ontvangers != null && Ontvangers.Any(x =>
+                       string.Equals(x, "iedereen", StringComparison.CurrentCultureIgnoreCase) ||
+                       string.Equals(x, Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }

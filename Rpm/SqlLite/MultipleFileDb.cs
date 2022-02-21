@@ -4,9 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
-using iTextSharp.text.pdf;
-using iTextSharp.text.pdf.parser.clipper;
-using NPOI.SS.Formula.Functions;
 using Polenter.Serialization;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
@@ -18,32 +15,17 @@ namespace Rpm.SqlLite
 {
     public class MultipleFileDb : IDisposable
     {
+        private readonly List<string> _changes = new();
+        private readonly Timer _FileChangedNotifyTimer;
+        private bool _canread;
+
+        private bool _disposed;
         private FileSystemWatcher _pathwatcher;
         private FileSystemWatcher _secondarypathwatcher;
-        private readonly Timer _FileChangedNotifyTimer;
-
-        //private static readonly object _locker = new object();
-        public string SecondaryDestination { get; private set; }
-        public DbVersion Version { get; private set; }
-        private bool _canread;
-        public bool CanRead { get=> _canread && !_disposed;
-            private set => _canread = value;
-        }
-        public SecondaryManageType[] SecondaryManagedTypes { get; private set; }
-        public event FileSystemEventHandler FileChanged;
-        public event FileSystemEventHandler FileDeleted;
-        public event FileSystemEventHandler SecondaryFileChanged;
-        public event FileSystemEventHandler SecondaryFileDeleted;
-        public event ProgressChangedHandler ProgressChanged;
-        public bool MonitorCorrupted { get; set; }
-        public bool RaiseChangeEvent { get; set; } = true;
-        public static List<string> CorruptedFilePaths { get; private set; } = new List<string>();
-
-        public static event EventHandler CorruptedFilesChanged;
 
         public MultipleFileDb(string path, bool watchdb, string version, DbType type)
         {
-            _FileChangedNotifyTimer = new Timer(1000);//500 ms vertraging
+            _FileChangedNotifyTimer = new Timer(1000); //500 ms vertraging
             _FileChangedNotifyTimer.Elapsed += _FileChangedNotifyTimer_Elapsed;
             Path = path;
             if (!Directory.Exists(path))
@@ -53,12 +35,46 @@ namespace Rpm.SqlLite
             {
                 _pathwatcher = new FileSystemWatcher(Path);
                 _pathwatcher.EnableRaisingEvents = true;
-                _pathwatcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName;
+                _pathwatcher.NotifyFilter =
+                    NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName;
                 _pathwatcher.Filter = "*.rpm";
                 _pathwatcher.Changed += _pathwatcher_Changed;
                 _pathwatcher.Deleted += _pathwatcher_Deleted;
             }
         }
+
+        //private static readonly object _locker = new object();
+        public string SecondaryDestination { get; private set; }
+        public DbVersion Version { get; private set; }
+
+        public bool CanRead
+        {
+            get => _canread && !_disposed;
+            private set => _canread = value;
+        }
+
+        public SecondaryManageType[] SecondaryManagedTypes { get; private set; }
+        public bool MonitorCorrupted { get; set; }
+        public bool RaiseChangeEvent { get; set; } = true;
+        public static List<string> CorruptedFilePaths { get; } = new();
+
+        public string Path { get; private set; }
+
+        public void Dispose()
+        {
+            // Dispose of unmanaged resources.
+            Dispose(true);
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
+        }
+
+        public event FileSystemEventHandler FileChanged;
+        public event FileSystemEventHandler FileDeleted;
+        public event FileSystemEventHandler SecondaryFileChanged;
+        public event FileSystemEventHandler SecondaryFileDeleted;
+        public event ProgressChangedHandler ProgressChanged;
+
+        public static event EventHandler CorruptedFilesChanged;
 
         private void InitVersion(string version, DbType type)
         {
@@ -66,9 +82,8 @@ namespace Rpm.SqlLite
             {
                 if (string.IsNullOrEmpty(Path)) return;
                 var dbfile = System.IO.Path.Combine(Path, "Version.db");
-                bool done = false;
+                var done = false;
                 if (File.Exists(dbfile))
-                {
                     try
                     {
                         Version = dbfile.DeSerialize<DbVersion>();
@@ -80,6 +95,7 @@ namespace Rpm.SqlLite
                             Version.Version = version;
                             Version.Serialize(dbfile);
                         }
+
                         done = true;
                     }
                     catch (Exception e)
@@ -87,10 +103,10 @@ namespace Rpm.SqlLite
                         Console.WriteLine(e);
                         done = false;
                     }
-                }
+
                 if (!done)
                 {
-                    Version = new DbVersion() {DateChanged = DateTime.Now, DbType = type, Version = version};
+                    Version = new DbVersion {DateChanged = DateTime.Now, DbType = type, Version = version};
                     Version.Serialize(dbfile);
                 }
             }
@@ -103,8 +119,6 @@ namespace Rpm.SqlLite
                        string.Equals(version, Version.Version, StringComparison.CurrentCultureIgnoreCase);
         }
 
-        private readonly List<string> _changes = new List<string>();
-
         private void _FileChangedNotifyTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             _FileChangedNotifyTimer?.Stop();
@@ -113,7 +127,7 @@ namespace Rpm.SqlLite
             {
                 lock (_changes)
                 {
-                    for (int i = 0; i < _changes.Count; i++)
+                    for (var i = 0; i < _changes.Count; i++)
                     {
                         var x = _changes[i];
                         OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Changed,
@@ -145,6 +159,7 @@ namespace Rpm.SqlLite
                 if (!_changes.Any(x => string.Equals(x, e.FullPath, StringComparison.CurrentCultureIgnoreCase)))
                     _changes.Add(e.FullPath);
             }
+
             _FileChangedNotifyTimer?.Start();
         }
 
@@ -174,6 +189,7 @@ namespace Rpm.SqlLite
                 if (!_changes.Any(x => string.Equals(x, e.FullPath, StringComparison.CurrentCultureIgnoreCase)))
                     _changes.Add(e.FullPath);
             }
+
             _FileChangedNotifyTimer?.Start();
         }
 
@@ -193,7 +209,8 @@ namespace Rpm.SqlLite
                     _secondarypathwatcher?.Dispose();
                     _secondarypathwatcher = new FileSystemWatcher(path);
                     _secondarypathwatcher.EnableRaisingEvents = true;
-                    _secondarypathwatcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName;
+                    _secondarypathwatcher.NotifyFilter =
+                        NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName;
                     _secondarypathwatcher.Filter = "*.rpm";
                     _secondarypathwatcher.Deleted += _secondarypathwatcher_Deleted;
                     _secondarypathwatcher.Changed += _secondarypathwatcher_Changed;
@@ -209,22 +226,17 @@ namespace Rpm.SqlLite
             }
         }
 
-        public string Path { get; private set; }
-
         public List<T> GetAllEntries<T>(List<string> skip = default)
         {
-
             var xreturn = new List<T>();
             try
             {
                 if (!CanRead) return xreturn;
-                string path = GetReadPath(true);
+                var path = GetReadPath(true);
                 var files = Directory.GetFiles(path, "*.rpm").ToList();
                 if (skip is {Count: > 0})
-                {
                     files.RemoveAll(x => skip.Any(s => string.Equals(System.IO.Path.GetFileNameWithoutExtension(x), s,
                         StringComparison.CurrentCultureIgnoreCase)));
-                }
                 foreach (var file in files)
                 {
                     var xent = GetInstanceFromFile<T>(file, MonitorCorrupted);
@@ -244,8 +256,8 @@ namespace Rpm.SqlLite
         {
             try
             {
-                if(!CanRead) return new List<string>();
-                string path = GetReadPath(checksecondary);
+                if (!CanRead) return new List<string>();
+                var path = GetReadPath(checksecondary);
                 return Directory.GetFiles(path, "*.rpm").Select(System.IO.Path.GetFileNameWithoutExtension).ToList();
             }
             catch (Exception ex)
@@ -260,7 +272,7 @@ namespace Rpm.SqlLite
             try
             {
                 if (!CanRead) return new List<string>();
-                string path = GetReadPath(checksecondary);
+                var path = GetReadPath(checksecondary);
                 return Directory.GetFiles(path, "*.rpm").ToList();
             }
             catch (Exception ex)
@@ -284,8 +296,6 @@ namespace Rpm.SqlLite
                     if (xent != null)
                         xreturn.Add(xent);
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -304,20 +314,18 @@ namespace Rpm.SqlLite
             try
             {
                 if (!CanRead) return xreturn;
-                string path = GetReadPath(true);
+                var path = GetReadPath(true);
                 var files = Directory.GetFiles(path, "*.rpm");
                 foreach (var file in files)
                 {
-
-                    var xent = GetInstanceFromFile<T>(file,MonitorCorrupted, null, false, new TijdEntry(vanaf, tot, null));
+                    var xent = GetInstanceFromFile<T>(file, MonitorCorrupted, null, false,
+                        new TijdEntry(vanaf, tot, null));
                     if (xent != null)
                     {
                         if (validhandler != null && !validhandler.Invoke(xent, null)) continue;
                         xreturn.Add(xent);
                     }
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -336,11 +344,10 @@ namespace Rpm.SqlLite
             try
             {
                 if (!CanRead) return xreturn;
-                string path = GetReadPath(true);
+                var path = GetReadPath(true);
                 var files = Directory.GetFiles(path, "*.rpm");
                 foreach (var file in files)
                 {
-
                     var xent = GetInstanceFromFile<T>(file, MonitorCorrupted);
                     if (xent != null)
                     {
@@ -361,7 +368,7 @@ namespace Rpm.SqlLite
         public T GetEntry<T>(string id)
         {
             if (!CanRead) return default;
-            string path = GetReadPath(true,$"{id}.rpm");
+            var path = GetReadPath(true, $"{id}.rpm");
             path = $"{path}\\{id}.rpm";
             return GetInstanceFromFile<T>(path, MonitorCorrupted);
         }
@@ -370,41 +377,41 @@ namespace Rpm.SqlLite
         {
             //lock (_locker)
             //{
-                var xreturn = new List<T>();
-                if (!CanRead) return xreturn;
-                string xpath = GetReadPath(false);
-                if (criterias != null)
+            var xreturn = new List<T>();
+            if (!CanRead) return xreturn;
+            var xpath = GetReadPath(false);
+            if (criterias != null)
+            {
+                var crits = criterias.Split(';');
+                foreach (var crit in crits)
                 {
-                    string[] crits = criterias.Split(';');
-                    foreach (var crit in crits)
+                    var path = $"{xpath}\\{crit}.rpm";
+                    if (File.Exists(path))
                     {
-                        var path = $"{xpath}\\{crit}.rpm";
-                        if (File.Exists(path))
-                        {
-                            var xent = GetInstanceFromFile<T>(path, MonitorCorrupted);
-                            if (xent != null)
-                                xreturn.Add(xent);
-                            criterias = criterias.Replace(crit, "");
-                        }
+                        var xent = GetInstanceFromFile<T>(path, MonitorCorrupted);
+                        if (xent != null)
+                            xreturn.Add(xent);
+                        criterias = criterias.Replace(crit, "");
                     }
-
-                    if (criterias.Replace(";", "").Trim().Length < 4)
-                        return xreturn;
                 }
 
-                var ids = GetAllIDs(true);
-                foreach (var id in ids)
-                {
-                    string path = null;
-                    if (!string.IsNullOrEmpty(id))
-                        path = $"{xpath}\\{id}.rpm";
-                    if (path == null) continue;
-                    var ent = GetInstanceFromFile<T>(path,MonitorCorrupted, criterias, fullmatch);
-                    if (ent != null)
-                        xreturn.Add(ent);
-                }
+                if (criterias.Replace(";", "").Trim().Length < 4)
+                    return xreturn;
+            }
 
-                return xreturn;
+            var ids = GetAllIDs(true);
+            foreach (var id in ids)
+            {
+                string path = null;
+                if (!string.IsNullOrEmpty(id))
+                    path = $"{xpath}\\{id}.rpm";
+                if (path == null) continue;
+                var ent = GetInstanceFromFile<T>(path, MonitorCorrupted, criterias, fullmatch);
+                if (ent != null)
+                    xreturn.Add(ent);
+            }
+
+            return xreturn;
             //}
         }
 
@@ -423,13 +430,14 @@ namespace Rpm.SqlLite
                             rpm.Criterias.Add(x.ArtikelNr);
                         if (!string.IsNullOrEmpty(x.Omschrijving))
                             rpm.Criterias.Add(x.Omschrijving);
-                        if(x.Bewerkingen is {Length: > 0})
+                        if (x.Bewerkingen is {Length: > 0})
                             foreach (var b in x.Bewerkingen)
                             {
                                 rpm.Criterias.Add(b.Naam);
-                                if(b.WerkPlekken.Count > 0)
-                                    rpm.Criterias.AddRange(b.WerkPlekken.Select(w=> w.Naam));
+                                if (b.WerkPlekken.Count > 0)
+                                    rpm.Criterias.AddRange(b.WerkPlekken.Select(w => w.Naam));
                             }
+
                         break;
                     case UserSettings x:
                         rpm.ID = x.Username?.Trim();
@@ -462,7 +470,6 @@ namespace Rpm.SqlLite
                         if (!string.IsNullOrEmpty(x.Message))
                             rpm.Criterias.Add(x.Message.Trim());
                         break;
-
                 }
 
                 return rpm;
@@ -472,7 +479,6 @@ namespace Rpm.SqlLite
                 Console.WriteLine(e);
                 return null;
             }
-
         }
 
         public static RpmPacket ReadPacket(Stream input)
@@ -497,62 +503,61 @@ namespace Rpm.SqlLite
         {
             //lock (_locker)
             //{
-                try
+            try
+            {
+                if (!CanRead) return false;
+                if (string.IsNullOrEmpty(filepath)) return false;
+                //string tmp = Manager.TempPath + "\\" + System.IO.Path.GetRandomFileName();
+                byte[] bytes = null;
+                using var fs = new MemoryStream();
                 {
-                    if (!CanRead) return false;
-                    if (string.IsNullOrEmpty(filepath)) return false;
-                    //string tmp = Manager.TempPath + "\\" + System.IO.Path.GetRandomFileName();
-                    byte[] bytes = null;
-                    using var fs = new MemoryStream();
-                    {
-                        RpmPacket packet = CreatePacketFromObject(data);
-                        var ser = new SharpSerializer(true);
-                        if (packet != null)
-                            ser.Serialize(packet, fs);
+                    var packet = CreatePacketFromObject(data);
+                    var ser = new SharpSerializer(true);
+                    if (packet != null)
+                        ser.Serialize(packet, fs);
 
-                        ser.Serialize(data, fs);
-                        bytes = fs.ToArray();
-                        fs.Close();
-                    }
-                    for (int i = 0; i < 10; i++)
+                    ser.Serialize(data, fs);
+                    bytes = fs.ToArray();
+                    fs.Close();
+                }
+                for (var i = 0; i < 10; i++)
+                    try
                     {
-                        try
-                        {
-                            var dir = System.IO.Path.GetDirectoryName(filepath);
-                            if (!Directory.Exists(dir)) break;
-                            using var xs = new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.ReadWrite,
-                                FileShare.None);
-                            xs.Write(bytes, 0, bytes.Length);
-                            xs.Close();
-                            return true;
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e);
-                        }
+                        var dir = System.IO.Path.GetDirectoryName(filepath);
+                        if (!Directory.Exists(dir)) break;
+                        using var xs = new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.ReadWrite,
+                            FileShare.None);
+                        xs.Write(bytes, 0, bytes.Length);
+                        xs.Close();
+                        return true;
                     }
-                    //OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Changed,
-                    //    System.IO.Path.GetDirectoryName(filepath) ?? string.Empty, System.IO.Path.GetFileName(filepath)));
-                    return false;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    return false;
-                }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+
+                //OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Changed,
+                //    System.IO.Path.GetDirectoryName(filepath) ?? string.Empty, System.IO.Path.GetFileName(filepath)));
+                return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
             //}
         }
 
-        public static T GetInstanceFromFile<T>(string filepath, bool monitorcorrupted = true,string criteria = null, bool fullmatch = false,
+        public static T GetInstanceFromFile<T>(string filepath, bool monitorcorrupted = true, string criteria = null,
+            bool fullmatch = false,
             TijdEntry bereik = null)
         {
-
             //lock (_locker)
             //{
             T xreturn = default;
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
-                bool xbreak = false;
+                var xbreak = false;
                 try
                 {
                     if (!File.Exists(filepath)) return default;
@@ -569,17 +574,15 @@ namespace Rpm.SqlLite
                         xbreak = true;
                         xreturn = (T) ser.Deserialize(fs);
                         if (monitorcorrupted)
-                        {
                             lock (CorruptedFilePaths)
                             {
-                                int index = 0;
+                                var index = 0;
                                 if ((index = CorruptedFilePaths.IndexOf(filepath.ToLower())) > -1)
                                 {
                                     CorruptedFilePaths.RemoveAt(index);
                                     OnCorruptedFilesChanged();
                                 }
                             }
-                        }
                     }
 
                     fs.Close();
@@ -610,14 +613,14 @@ namespace Rpm.SqlLite
 
         public bool Replace<T>(string id, T newitem, bool onlylocal)
         {
-            return Upsert<T>(id, newitem,onlylocal);
+            return Upsert(id, newitem, onlylocal);
         }
 
         public bool Exists(string id)
         {
             try
             {
-                string path = GetReadPath(true, $"{id}.rpm");
+                var path = GetReadPath(true, $"{id}.rpm");
                 path = $"{path}\\{id}.rpm";
                 return File.Exists(path);
             }
@@ -638,11 +641,10 @@ namespace Rpm.SqlLite
                 var path1 = $"{xfirst}\\{id.Trim()}.rpm";
                 if (WriteInstanceToFile(item, path1))
                 {
-                    for (int i = 1; i < paths.Length; i++)
+                    for (var i = 1; i < paths.Length; i++)
                     {
                         var path2 = System.IO.Path.Combine(paths[i], id + ".rpm");
-                        for (int j = 0; j < 5; j++)
-                        {
+                        for (var j = 0; j < 5; j++)
                             try
                             {
                                 File.Copy(path1, path2, true);
@@ -652,7 +654,6 @@ namespace Rpm.SqlLite
                             {
                                 Console.WriteLine(e);
                             }
-                        }
                     }
 
                     return true;
@@ -671,7 +672,6 @@ namespace Rpm.SqlLite
         {
             return Task.Factory.StartNew(() =>
             {
-
                 try
                 {
                     return GetInstanceFromFile<T>(path, monitorcorrupted);
@@ -690,20 +690,15 @@ namespace Rpm.SqlLite
                 if (!CanRead) return false;
                 var paths = GetWritePaths(false);
                 foreach (var path in paths)
-                {
                     try
                     {
                         var path1 = $"{path}\\{id.Trim()}.rpm";
-                        if (File.Exists(path1))
-                        {
-                            File.Delete(path1);
-                        }
+                        if (File.Exists(path1)) File.Delete(path1);
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(e);
                     }
-                }
 
                 return true;
             }
@@ -721,10 +716,8 @@ namespace Rpm.SqlLite
                 if (!CanRead) return 0;
 
                 foreach (var id in ids)
-                {
                     if (Delete(id))
                         done++;
-                }
             }
             catch (Exception ex)
             {
@@ -737,7 +730,7 @@ namespace Rpm.SqlLite
         public int DeleteAll()
         {
             var done = 0;
-            int max = 0;
+            var max = 0;
             try
             {
                 if (!CanRead) return 0;
@@ -750,7 +743,8 @@ namespace Rpm.SqlLite
                     foreach (var file in files)
                         try
                         {
-                            DoProgress($"Verwijderen van: '{System.IO.Path.GetFileName(file)}'", done, max, file, ProgressType.WriteBussy);
+                            DoProgress($"Verwijderen van: '{System.IO.Path.GetFileName(file)}'", done, max, file,
+                                ProgressType.WriteBussy);
                             File.Delete(file);
                             done++;
                         }
@@ -758,12 +752,12 @@ namespace Rpm.SqlLite
                         {
                         }
                 }
-
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
+
             DoProgress($"{done} Entries verwijderd!", done, max, null, ProgressType.WriteCompleet);
             return done;
         }
@@ -772,7 +766,7 @@ namespace Rpm.SqlLite
         {
             try
             {
-                string path = GetReadPath(true);
+                var path = GetReadPath(true);
                 return Directory.GetFiles(path, "*.rpm").Length;
             }
             catch (Exception)
@@ -783,8 +777,8 @@ namespace Rpm.SqlLite
 
         public void DoProgress(string message, int min, int max, object value, ProgressType type)
         {
-            int perc = max > min ? ((min / max) * 100) : 100;
-            ProgressArg arg = new ProgressArg()
+            var perc = max > min ? min / max * 100 : 100;
+            var arg = new ProgressArg
             {
                 Message = message, Pogress = perc, Value = value, Type = type
             };
@@ -792,11 +786,11 @@ namespace Rpm.SqlLite
 
         public string GetReadPath(bool checksecondary, string filename = null)
         {
-            string xpath = SecondaryDestination;
+            var xpath = SecondaryDestination;
             var x = checksecondary && !string.IsNullOrEmpty(xpath) && SecondaryManagedTypes != null &&
-                   SecondaryManagedTypes.Any(x => x == SecondaryManageType.Read)
-                   && (((!string.IsNullOrEmpty(filename) && File.Exists(xpath + $"\\{filename}"))
-                        || Directory.Exists(xpath)))
+                    SecondaryManagedTypes.Any(x => x == SecondaryManageType.Read)
+                    && (!string.IsNullOrEmpty(filename) && File.Exists(xpath + $"\\{filename}")
+                        || Directory.Exists(xpath))
                 ? xpath
                 : Path;
             return x;
@@ -805,16 +799,14 @@ namespace Rpm.SqlLite
         public string[] GetWritePaths(bool onlylocal)
         {
             var xreturn = new List<string>();
-            string xpath = SecondaryDestination;
-           
+            var xpath = SecondaryDestination;
+
             if (!string.IsNullOrEmpty(xpath) &&
                 !string.Equals(xpath, Path, StringComparison.CurrentCultureIgnoreCase) &&
                 SecondaryManagedTypes != null && SecondaryManagedTypes.Any(
                     x => x == SecondaryManageType.Write
                          && Directory.Exists(xpath)))
-            {
                 xreturn.Add(xpath);
-            }
 
             if (!onlylocal)
                 xreturn.Insert(0, Path);
@@ -863,21 +855,9 @@ namespace Rpm.SqlLite
             CorruptedFilesChanged?.Invoke(CorruptedFilePaths, EventArgs.Empty);
         }
 
-        public void Dispose()
-        {
-            // Dispose of unmanaged resources.
-            Dispose(true);
-            // Suppress finalization.
-            GC.SuppressFinalize(this);
-        }
-
-        private bool _disposed;
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposed)
-            {
-                return;
-            }
+            if (_disposed) return;
 
             if (disposing)
             {

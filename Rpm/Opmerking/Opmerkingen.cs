@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using Rpm.Misc;
@@ -12,15 +11,9 @@ namespace Rpm.Opmerking
 {
     public class Opmerkingen
     {
-        public List<OpmerkingEntry> OpmerkingenLijst { get; set; }
-
-        public string FilePath { get; private set; }
-
         private readonly Timer _changedtimer;
 
-        public event EventHandler OnOpmerkingenChanged;
-
-        private FileSystemWatcher _watcher;
+        private readonly FileSystemWatcher _watcher;
 
         public Opmerkingen()
         {
@@ -28,12 +21,18 @@ namespace Rpm.Opmerking
             _changedtimer.Elapsed += _changedtimer_Elapsed;
             OpmerkingenLijst = new List<OpmerkingEntry>();
             SetFilePath();
-            _watcher = new FileSystemWatcher(Manager.DbPath + $"\\Opmerkingen");
+            _watcher = new FileSystemWatcher(Manager.DbPath + "\\Opmerkingen");
             _watcher.EnableRaisingEvents = true;
             _watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite | NotifyFilters.CreationTime;
             _watcher.Changed += _watcher_Changed;
             _watcher.Deleted += _watcher_Deleted;
         }
+
+        public List<OpmerkingEntry> OpmerkingenLijst { get; set; }
+
+        public string FilePath { get; private set; }
+
+        public event EventHandler OnOpmerkingenChanged;
 
         private void _watcher_Deleted(object sender, FileSystemEventArgs e)
         {
@@ -60,7 +59,7 @@ namespace Rpm.Opmerking
 
         private void SetFilePath()
         {
-            var dir = Manager.DbPath + $"\\Opmerkingen";
+            var dir = Manager.DbPath + "\\Opmerkingen";
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
             FilePath = dir + "\\Opmerkingen.rpm";
@@ -94,7 +93,6 @@ namespace Rpm.Opmerking
                     lock (OpmerkingenLijst)
                     {
                         OpmerkingenLijst = FilePath.DeSerialize<List<OpmerkingEntry>>();
-
                     }
 
                     if (OpmerkingenLijst == null)
@@ -143,13 +141,13 @@ namespace Rpm.Opmerking
 
         public int SetNotes(List<OpmerkingEntry> notes)
         {
-            int xreturn = 0;
+            var xreturn = 0;
             lock (OpmerkingenLijst)
             {
                 foreach (var note in notes)
                 {
                     OpmerkingenLijst.RemoveAll(x =>
-                        string.Equals(note.Title, x.Title, StringComparison.CurrentCultureIgnoreCase) && 
+                        string.Equals(note.Title, x.Title, StringComparison.CurrentCultureIgnoreCase) &&
                         string.Equals(note.Afzender, x.Afzender, StringComparison.CurrentCultureIgnoreCase));
                     OpmerkingenLijst.Add(note);
                     xreturn++;

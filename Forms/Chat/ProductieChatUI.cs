@@ -1,11 +1,4 @@
-﻿using BrightIdeasSoftware;
-using Forms;
-using ProductieManager.Rpm.Misc;
-using ProductieManager.Rpm.Various;
-using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -14,6 +7,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
+using Forms;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
+using ProductieManager.Rpm.Various;
+using Rpm.Misc;
+using Rpm.Productie;
+using Rpm.Various;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
 using TextAlign = NPOI.XSSF.UserModel.TextAlign;
 
@@ -21,6 +22,7 @@ namespace ProductieManager.Forms
 {
     public partial class ProductieChatUI : UserControl
     {
+        internal string _Selected = null;
         //public ImageList LoadedUserImages { get; private set; } = new ImageList();
 
         public ProductieChatUI()
@@ -35,7 +37,7 @@ namespace ProductieManager.Forms
             ((OLVColumn) xuserlist.Columns[0]).AspectGetter = ProfileNameGet;
             ((OLVColumn) xuserlist.Columns[1]).AspectGetter = ProfileStatusGet;
             ((OLVColumn) xuserlist.Columns[2]).AspectGetter = ProfileLastSeenGet;
-           // LoadedUserImages.ColorDepth = ColorDepth.Depth32Bit;
+            // LoadedUserImages.ColorDepth = ColorDepth.Depth32Bit;
             //LoadedUserImages.ImageSize = new Size(64, 64);
         }
 
@@ -43,10 +45,11 @@ namespace ProductieManager.Forms
         {
             if (!ProductieChat.LoggedIn || ProductieChat.Chat == null)
             {
-                XMessageBox.Show(this, $"Je bent niet ingelogd!\n\n Log in om te kunnen chatten met productie.",
+                XMessageBox.Show(this, "Je bent niet ingelogd!\n\n Log in om te kunnen chatten met productie.",
                     "Niet Ingelogd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
+
             LoadProfile();
             LoadProfiles();
             LoadSelectedUser();
@@ -72,8 +75,8 @@ namespace ProductieManager.Forms
         {
             if (user is UserChat chat)
             {
-                string id = string.IsNullOrEmpty(chat.UserName) ? "Iedereen" : chat.UserName;
-                int index = xuserimages.Images.IndexOfKey(id);
+                var id = string.IsNullOrEmpty(chat.UserName) ? "Iedereen" : chat.UserName;
+                var index = xuserimages.Images.IndexOfKey(id);
                 return index;
             }
 
@@ -94,7 +97,7 @@ namespace ProductieManager.Forms
                 if (string.Equals(chat.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase))
                 {
                     var count = ProductieChat.Gebruikers.Count - 1;
-                    string x1 = count == 1 ? "Gebruiker" : "Gebruikers";
+                    var x1 = count == 1 ? "Gebruiker" : "Gebruikers";
                     return $"Totaal {count} {x1}";
                 }
 
@@ -111,8 +114,8 @@ namespace ProductieManager.Forms
         {
             if (ProductieChat.Chat == null) return string.Empty;
 
-            string html = CreateHtmlString($"", Color.DarkGray, Color.Transparent, 0,
-                entry.Afzender.UserName, new Size(48, 48), ImageAlign.Right, new Size(85,0), TextAlign.RIGHT,
+            var html = CreateHtmlString("", Color.DarkGray, Color.Transparent, 0,
+                entry.Afzender.UserName, new Size(48, 48), ImageAlign.Right, new Size(85, 0), TextAlign.RIGHT,
                 0, 0, Color.Transparent);
 
             html += CreateHtmlString($"<b>{entry.Afzender.UserName} zegt:</b><br><br>{entry.Bericht}", Color.White,
@@ -127,8 +130,7 @@ namespace ProductieManager.Forms
 
         private string CreateRecieveMessage(ProductieChatEntry entry)
         {
-
-            string html = CreateHtmlString($"", Color.DarkGray, Color.Transparent, 0,
+            var html = CreateHtmlString("", Color.DarkGray, Color.Transparent, 0,
                 entry.Afzender.UserName, new Size(48, 48), ImageAlign.Left, new Size(110, 0), TextAlign.LEFT,
                 0, 0, Color.Transparent);
 
@@ -145,25 +147,26 @@ namespace ProductieManager.Forms
             return html;
         }
 
-        public string CreateHtmlString(string value, Color textcolor, Color backcolor, int padding, string imagename,Size imagesize, ImageAlign imagealign, Size margin, TextAlign align, int borderwidth, int borderradius,
+        public string CreateHtmlString(string value, Color textcolor, Color backcolor, int padding, string imagename,
+            Size imagesize, ImageAlign imagealign, Size margin, TextAlign align, int borderwidth, int borderradius,
             Color bordercolor)
         {
-            string txt = $"{value.Replace("\n", "<br>")}";
-            string img = GetImageHtml(imagename, imagesize);
-            string cmb = "";
+            var txt = $"{value.Replace("\n", "<br>")}";
+            var img = GetImageHtml(imagename, imagesize);
+            var cmb = "";
             if (imagealign == ImageAlign.Right)
                 cmb = txt + img;
             else cmb = img + txt;
-            string field = $"<div style= 'padding: {padding}px; " +
-                           $"margin: {margin.Height}px {margin.Width}px; " +
-                           $"text-align: {Enum.GetName(typeof(TextAlign), align)?.ToLower()}; " +
-                           $"background-color: {backcolor.Name}; " +
-                           $"border: {borderwidth}px {bordercolor.Name}; " +
-                           $"color: {textcolor.Name}; " +
-                           $"corner-radius: {borderradius}px; " +
-                           "'>" +
-                           $"{cmb}" +
-                           $"</div>";
+            var field = $"<div style= 'padding: {padding}px; " +
+                        $"margin: {margin.Height}px {margin.Width}px; " +
+                        $"text-align: {Enum.GetName(typeof(TextAlign), align)?.ToLower()}; " +
+                        $"background-color: {backcolor.Name}; " +
+                        $"border: {borderwidth}px {bordercolor.Name}; " +
+                        $"color: {textcolor.Name}; " +
+                        $"corner-radius: {borderradius}px; " +
+                        "'>" +
+                        $"{cmb}" +
+                        "</div>";
 
 
             return field;
@@ -172,27 +175,27 @@ namespace ProductieManager.Forms
         public string CheckProductieLinks(string value)
         {
             if (string.IsNullOrEmpty(value)) return string.Empty;
-            int index = 0;
-            string xreturn = value;
-            var xreplaces = new List<string> { };
+            var index = 0;
+            var xreturn = value;
+            var xreplaces = new List<string>();
             //eerst productie checken met een "X" letter.
-            while((index = value.ToLower().IndexOf('x',index)) > -1)
+            while ((index = value.ToLower().IndexOf('x', index)) > -1)
             {
-                int xstart = index;
+                var xstart = index;
                 index++;
                 try
                 {
-                    
-                    int xend = value.IndexOf(' ', xstart);
+                    var xend = value.IndexOf(' ', xstart);
                     if (xend < 0) xend = value.Length;
-                    int length = xend - xstart;
+                    var length = xend - xstart;
                     if (length < 7)
                         continue; //productie nr bestaat uit 7 characters.
 
-                    string xvalue = value.Substring(xstart, 7);
-                    var prod = Manager.Database.GetProductie(xvalue).Result;
+                    var xvalue = value.Substring(xstart, 7);
+                    var prod = Manager.Database.GetProductie(xvalue);
                     if (prod == null || xreplaces.Contains(prod.ProductieNr)) continue;
-                    xreturn = xreturn.Replace(xvalue, $"<a color= white href='{prod.ProductieNr}'>[{prod.Omschrijving}]</a>");
+                    xreturn = xreturn.Replace(xvalue,
+                        $"<a color= white href='{prod.ProductieNr}'>[{prod.Omschrijving}]</a>");
                     xreplaces.Add(prod.ProductieNr);
                 }
                 catch (Exception e)
@@ -206,23 +209,24 @@ namespace ProductieManager.Forms
             xreplaces.Clear();
             while ((index = value.ToLower().IndexOf('p', index)) > -1)
             {
-                int xstart = index;
+                var xstart = index;
                 index++;
-                if ((xstart + 3) < value.Length && !string.Equals(value.Substring(xstart, 2), "PM", StringComparison.CurrentCultureIgnoreCase))
+                if (xstart + 3 < value.Length && !string.Equals(value.Substring(xstart, 2), "PM",
+                        StringComparison.CurrentCultureIgnoreCase))
                     continue;
                 try
                 {
-
-                    int xend = value.IndexOf(' ', xstart);
+                    var xend = value.IndexOf(' ', xstart);
                     if (xend < 0) xend = value.Length;
-                    int length = xend - xstart;
+                    var length = xend - xstart;
                     if (length < 10)
                         continue; //productie nr bestaat uit 10 characters.
 
-                    string xvalue = value.Substring(xstart, 10);
-                    var prod = Manager.Database.GetProductie(xvalue).Result;
+                    var xvalue = value.Substring(xstart, 10);
+                    var prod = Manager.Database.GetProductie(xvalue);
                     if (prod == null || xreplaces.Contains(prod.ProductieNr)) continue;
-                    xreturn = xreturn.Replace(xvalue, $"<a color= white href='{prod.ProductieNr}'>{prod.Omschrijving}</a>");
+                    xreturn = xreturn.Replace(xvalue,
+                        $"<a color= white href='{prod.ProductieNr}'>{prod.Omschrijving}</a>");
                     xreplaces.Add(prod.ProductieNr);
                 }
                 catch (Exception e)
@@ -237,10 +241,8 @@ namespace ProductieManager.Forms
         public void SelectedUser(UserChat selecteduser)
         {
             if (xuserlist.SelectedObject is UserChat user)
-            {
                 if (user.Equals(selecteduser))
                     xuserlist.SelectedObject = null;
-            }
             xuserlist.SelectedObject = selecteduser;
             xuserlist.SelectedItem?.EnsureVisible();
         }
@@ -257,13 +259,10 @@ namespace ProductieManager.Forms
             return $"<img src='{name};width:{imagesize.Width};height:{imagesize.Height};'</>";
         }
 
-        internal string _Selected = null;
-
         private void ProductieChat_MessageRecieved(ProductieChatEntry message)
         {
-            this.BeginInvoke(new MethodInvoker(() =>
+            BeginInvoke(new MethodInvoker(() =>
             {
-
                 LoadProfiles();
                 var selected = SelectedUser();
                 if (selected != null && (string.Equals(selected.UserName, message.Afzender.UserName,
@@ -271,14 +270,13 @@ namespace ProductieManager.Forms
                         message.Ontvanger,
                         StringComparison.CurrentCultureIgnoreCase)))
                     LoadConversation(true);
-
             }));
         }
 
         private void ProductieChat_GebruikerUpdate(UserChat user)
         {
-            if (this.Disposing || this.IsDisposed) return;
-            this.BeginInvoke(new MethodInvoker(() =>
+            if (Disposing || IsDisposed) return;
+            BeginInvoke(new MethodInvoker(() =>
             {
                 LoadProfile();
                 LoadProfiles();
@@ -289,12 +287,12 @@ namespace ProductieManager.Forms
         private void LoadProfile()
         {
             if (ProductieChat.Chat == null) return;
-                xprofileimage.Image = ProductieChat.Chat.GetProfielImage();
-                xprofilenaam.Text = ProductieChat.Chat.UserName;
-                xprofilestatus.Text = ProductieChat.Chat.IsOnline ? "Online" : "Offline";
-                xprofilestatusimage.Image = ProductieChat.Chat.IsOnline
-                    ? Properties.Resources.Online_32
-                    : Properties.Resources.offline_32x32;
+            xprofileimage.Image = ProductieChat.Chat.GetProfielImage();
+            xprofilenaam.Text = ProductieChat.Chat.UserName;
+            xprofilestatus.Text = ProductieChat.Chat.IsOnline ? "Online" : "Offline";
+            xprofilestatusimage.Image = ProductieChat.Chat.IsOnline
+                ? Resources.Online_32
+                : Resources.offline_32x32;
         }
 
         private void LoadProfiles()
@@ -311,23 +309,25 @@ namespace ProductieManager.Forms
                 var selected = SelectedUser();
                 var toremove = xuserlist.Objects?.Cast<UserChat>().ToList() ?? new List<UserChat>();
                 xuserimages.Images.Clear();
-               // xuserimages.Images.Add("Iedereen", Properties.Resources.users_clients_group_16774);
+                // xuserimages.Images.Add("Iedereen", Properties.Resources.users_clients_group_16774);
                 //LoadedUserImages.Images.Clear();
-               // LoadedUserImages.Images.Add(ProductieChat.Chat.UserName, ProductieChat.Chat.GetProfielImage());
+                // LoadedUserImages.Images.Add(ProductieChat.Chat.UserName, ProductieChat.Chat.GetProfielImage());
                 //LoadedUserImages.Images.Add("Iedereen", Properties.Resources.users_clients_group_16774);
 
-                if (!ProductieChat.Gebruikers.Any(x => string.Equals(x.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase)))
+                if (!ProductieChat.Gebruikers.Any(x =>
+                        string.Equals(x.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase)))
                 {
-                    var iedereen = new UserChat()
-                        { UserName = "Iedereen", IsOnline = true, ProfielImage = ProductieChat.GroupChatImagePath };
+                    var iedereen = new UserChat
+                        {UserName = "Iedereen", IsOnline = true, ProfielImage = ProductieChat.GroupChatImagePath};
                     ProductieChat.Gebruikers.Add(iedereen);
                     ProductieChat.Gebruikers = ProductieChat.Gebruikers.OrderBy(x => x.UserName).ToList();
                 }
+
                 //load eerst de default gebruiker.
                 if (ProductieChat.Chat != null)
                 {
-                    var img = ProductieChat.Chat.GetProfielImage() ?? Properties.Resources.avatardefault_92824;
-                    int unread = ProductieChat.Chat.UnreadMessages(ProductieChat.Chat.UserName);
+                    var img = ProductieChat.Chat.GetProfielImage() ?? Resources.avatardefault_92824;
+                    var unread = ProductieChat.Chat.UnreadMessages(ProductieChat.Chat.UserName);
                     if (unread > 0)
                     {
                         var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White, unread.ToString(),
@@ -336,21 +336,21 @@ namespace ProductieManager.Forms
                     }
 
                     if (ProductieChat.Chat.IsOnline)
-                        img = img.CombineImage(Properties.Resources.Online_32, 3.5);
+                        img = img.CombineImage(Resources.Online_32, 3.5);
                     else
-                        img = img.CombineImage(Properties.Resources.offline_32x32, 3.5);
+                        img = img.CombineImage(Resources.offline_32x32, 3.5);
                     xuserimages.Images.Add(ProductieChat.Chat.UserName, img);
                 }
 
-                for (int i = 0; i < ProductieChat.Gebruikers.Count; i++)
+                for (var i = 0; i < ProductieChat.Gebruikers.Count; i++)
                 {
                     var user = ProductieChat.Gebruikers[i];
                     if (_Selected != null &&
                         string.Equals(user.UserName, _Selected, StringComparison.CurrentCultureIgnoreCase))
                         selected = user;
-                    var img = user.GetProfielImage() ?? Properties.Resources.avatardefault_92824;
+                    var img = user.GetProfielImage() ?? Resources.avatardefault_92824;
                     //LoadedUserImages.Images.Add(user.UserName, img);
-                    int unread = ProductieChat.Chat.UnreadMessages(user.UserName);
+                    var unread = ProductieChat.Chat.UnreadMessages(user.UserName);
                     if (unread > 0)
                     {
                         var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White, unread.ToString(),
@@ -359,9 +359,9 @@ namespace ProductieManager.Forms
                     }
 
                     if (user.IsOnline)
-                        img = img.CombineImage(Properties.Resources.Online_32, 3.5);
+                        img = img.CombineImage(Resources.Online_32, 3.5);
                     else
-                        img = img.CombineImage(Properties.Resources.offline_32x32, 3.5);
+                        img = img.CombineImage(Resources.offline_32x32, 3.5);
                     xuserimages.Images.Add(user.UserName, img);
 
                     var old = toremove.FirstOrDefault(x => x.Equals(user));
@@ -376,18 +376,13 @@ namespace ProductieManager.Forms
                     }
                 }
 
-                if (toremove.Count > 0)
-                {
-                    xuserlist.RemoveObjects(toremove);
-                }
+                if (toremove.Count > 0) xuserlist.RemoveObjects(toremove);
                 xuserlist.EndUpdate();
                 xuserlist.SelectedObject = selected;
                 xuserlist.SelectedItem?.EnsureVisible();
                 if (xuserlist.SelectedObject == null && xuserlist.Items.Count > 0)
-                {
                     xuserlist.LowLevelScroll(0, -100);
-                    //xuserlist.Items[0].EnsureVisible();
-                }
+                //xuserlist.Items[0].EnsureVisible();
 
                 LoadSelectedUser();
             }
@@ -403,24 +398,26 @@ namespace ProductieManager.Forms
             var user = SelectedUser();
             xselecteduserimage.Image = user?.GetProfielImage();
             xselectedusername.Text = user?.UserName;
-            xselecteduserstatus.Text = user == null ? "" : (user.IsOnline ? "Online" : "Offline");
+            xselecteduserstatus.Text = user == null ? "" : user.IsOnline ? "Online" : "Offline";
             xselecteduserstatusimage.Image = user == null
                 ? null
                 : user.IsOnline
-                    ? Properties.Resources.Online_32
-                    : Properties.Resources.offline_32x32;
+                    ? Resources.Online_32
+                    : Resources.offline_32x32;
             if (string.Equals(user?.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase))
             {
                 var users = ProductieChat.Gebruikers.Where(x => !string.Equals(Manager.LogedInGebruiker.Username,
                     x.UserName, StringComparison.CurrentCultureIgnoreCase) && !string.Equals("iedereen",
                     x.UserName, StringComparison.CurrentCultureIgnoreCase)).ToList();
-                var onlineusers = ProductieChat.Gebruikers.Where(x => x.IsOnline && !string.Equals(Manager.LogedInGebruiker.Username,
+                var onlineusers = ProductieChat.Gebruikers.Where(x => x.IsOnline && !string.Equals(
+                    Manager.LogedInGebruiker.Username,
                     x.UserName, StringComparison.CurrentCultureIgnoreCase) && !string.Equals("iedereen",
                     x.UserName, StringComparison.CurrentCultureIgnoreCase)).ToList();
-                var x0 = users.Count == 1 ? $"gebruiker" : "gebruikers";
-                var x1 = onlineusers.Count == 1 ? $"gebruiker" : "gebruikers";
+                var x0 = users.Count == 1 ? "gebruiker" : "gebruikers";
+                var x1 = onlineusers.Count == 1 ? "gebruiker" : "gebruikers";
 
-                xselecteduserdate.Text = $"Stuur bericht naar {users.Count} {x0}, waarvan online: {onlineusers.Count} {x1}";
+                xselecteduserdate.Text =
+                    $"Stuur bericht naar {users.Count} {x0}, waarvan online: {onlineusers.Count} {x1}";
             }
             else
             {
@@ -445,24 +442,24 @@ namespace ProductieManager.Forms
         {
             await Task.Run(() =>
             {
-                this.BeginInvoke(new MethodInvoker(() =>
+                BeginInvoke(new MethodInvoker(() =>
                 {
                     try
                     {
                         var selected = SelectedUser();
                         if (selected != null)
                         {
-                            int curpos = xchatpanel.VerticalScroll.Value;
+                            var curpos = xchatpanel.VerticalScroll.Value;
                             //load conversation
                             var messages =
                                 ProductieChat.GetConversation(selected, !string.IsNullOrEmpty(selected.UserName));
-                            string msg = "";
-                            bool notifyuser = false;
+                            var msg = "";
+                            var notifyuser = false;
                             ProductieChat.RaiseNewMessageEvent = false;
-                            for(int i = 0; i < messages.Count; i++)
+                            for (var i = 0; i < messages.Count; i++)
                             {
                                 var message = messages[i];
-                                bool isme = string.Equals(message.Afzender.UserName, ProductieChat.Chat.UserName,
+                                var isme = string.Equals(message.Afzender.UserName, ProductieChat.Chat.UserName,
                                     StringComparison.CurrentCultureIgnoreCase);
                                 if (!isme && !message.IsGelezen)
                                 {
@@ -479,7 +476,7 @@ namespace ProductieManager.Forms
                                 selected.Save();
                             xchatpanel.Text = msg;
                             var xpos = scrolltoend ? xchatpanel.VerticalScroll.Maximum : curpos;
-                            for (int i = 0; i < 5; i++)
+                            for (var i = 0; i < 5; i++)
                             {
                                 xchatpanel.VerticalScroll.Value = xpos;
                                 xchatpanel.Update();
@@ -488,7 +485,10 @@ namespace ProductieManager.Forms
                                     break;
                             }
                         }
-                        else xchatpanel.Text = "";
+                        else
+                        {
+                            xchatpanel.Text = "";
+                        }
                     }
                     catch (Exception e)
                     {
@@ -512,12 +512,13 @@ namespace ProductieManager.Forms
                 xchattextbox.Text = xchattextbox.Text.Trim();
                 return;
             }
+
             var selected = SelectedUser();
             if (selected == null) return;
-            string ontvangers = string.IsNullOrEmpty(selected.UserName)
+            var ontvangers = string.IsNullOrEmpty(selected.UserName)
                 ? string.Join(";", ProductieChat.Gebruikers.Select(x => x.UserName))
                 : selected.UserName;
-            string xmessage = CheckProductieLinks(xchattextbox.Text.Trim());
+            var xmessage = CheckProductieLinks(xchattextbox.Text.Trim());
             ProductieChat.SendMessage(xmessage, ontvangers);
             xchattextbox.Text = "";
             xchattextbox.Select();
@@ -549,17 +550,15 @@ namespace ProductieManager.Forms
                 {
                     //Image.FromStream(new MemoryStream(File.ReadAllBytes(ofd.FileName)));
                     if (!ProductieChat.ChangeProfielImage(ofd.FileName))
-                    {
-                        XMessageBox.Show(this, $"Het is niet gelukt om je profiel foto te wijzigen, probeer het later nog eens.",
+                        XMessageBox.Show(this,
+                            "Het is niet gelukt om je profiel foto te wijzigen, probeer het later nog eens.",
                             "Ongeldige Afbeelding", MessageBoxIcon.Exclamation);
-                    }
                 }
                 catch (Exception exception)
                 {
                     XMessageBox.Show(this, exception.Message,
                         "Ongeldige Afbeelding", MessageBoxIcon.Error);
                 }
-
             }
         }
 
@@ -583,37 +582,36 @@ namespace ProductieManager.Forms
 
         private void xchatview_ImageLoad(object sender, HtmlImageLoadEventArgs e)
         {
-            string[] values = e.Src.Split(';');
+            var values = e.Src.Split(';');
             if (values.Length == 0) return;
             var xmg = xuserimages.Images[values[0]];
             if (xmg == null)
-            {
                 switch (values[0])
                 {
                     case "gelezen":
-                        xmg = Properties.Resources.MsgRead_32;
+                        xmg = Resources.MsgRead_32;
                         break;
                     case "verzonden":
-                        xmg = Properties.Resources.message_send_32x32;
+                        xmg = Resources.message_send_32x32;
                         break;
                 }
-            }
 
             if (xmg != null)
             {
-                string width = values.FirstOrDefault(x => x.ToLower().Contains("width"));
-                string height = values.FirstOrDefault(x => x.ToLower().Contains("height"));
-                int xwidth = -1;
-                int xheight = -1;
+                var width = values.FirstOrDefault(x => x.ToLower().Contains("width"));
+                var height = values.FirstOrDefault(x => x.ToLower().Contains("height"));
+                var xwidth = -1;
+                var xheight = -1;
                 if (width != null)
                 {
-                    string[] xw = width.Split(':');
+                    var xw = width.Split(':');
                     if (xw.Length > 1)
                         int.TryParse(xw[1], out xwidth);
                 }
+
                 if (height != null)
                 {
-                    string[] xw = height.Split(':');
+                    var xw = height.Split(':');
                     if (xw.Length > 1)
                         int.TryParse(xw[1], out xheight);
                 }
@@ -624,15 +622,15 @@ namespace ProductieManager.Forms
             }
         }
 
-        private async void xchatpanel_LinkClicked(object sender, HtmlLinkClickedEventArgs e)
+        private void xchatpanel_LinkClicked(object sender, HtmlLinkClickedEventArgs e)
         {
             if (Manager.Database == null || Manager.Database.IsDisposed) return;
             try
             {
-                var prod = await Manager.Database.GetProductie(e.Link);
+                var prod = Manager.Database.GetProductie(e.Link);
                 if (prod == null) return;
                 var bew = prod.Bewerkingen?.FirstOrDefault(x => x.IsAllowed());
-                Manager.FormulierActie(new object[] { prod, bew }, MainAktie.OpenProductie);
+                Manager.FormulierActie(new object[] {prod, bew}, MainAktie.OpenProductie);
             }
             catch (Exception exception)
             {
@@ -642,10 +640,7 @@ namespace ProductieManager.Forms
 
         private void xchatpanel_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetData("Producties") is ArrayList)
-            {
-                e.Effect = DragDropEffects.Link;
-            }
+            if (e.Data.GetData("Producties") is ArrayList) e.Effect = DragDropEffects.Link;
         }
 
         private void xchatpanel_DragDrop(object sender, DragEventArgs e)
@@ -653,8 +648,9 @@ namespace ProductieManager.Forms
             if (e.Data.GetData("Producties") is ArrayList collection)
             {
                 var data = collection.Cast<IProductieBase>().ToList();
-                string xvalue = string.Join(", ", data.Select(x => x.ProductieNr));
-                if (xchattextbox.Text.Trim().ToLower() == "typ bericht..." || string.IsNullOrEmpty(xchattextbox.Text.Trim()))
+                var xvalue = string.Join(", ", data.Select(x => x.ProductieNr));
+                if (xchattextbox.Text.Trim().ToLower() == "typ bericht..." ||
+                    string.IsNullOrEmpty(xchattextbox.Text.Trim()))
                     xchattextbox.Text = xvalue;
                 else xchattextbox.Text += ", " + xvalue;
                 xchattextbox.ForeColor = Color.Black;

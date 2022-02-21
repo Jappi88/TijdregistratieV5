@@ -68,7 +68,7 @@ namespace Controls
                         Dock = DockStyle.Top,
                         Size = new Size(cursize, 40),
                         Font = Font,
-                        ContextMenuStrip = _menButtons[i].ContextMenu,
+                        ContextMenuStrip = _menButtons[i].ContextMenu
                     };
                     if (!string.IsNullOrEmpty(_menButtons[i].Tooltip))
                         toolTip1.SetToolTip(xbutton, _menButtons[i].Tooltip);

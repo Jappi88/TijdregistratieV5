@@ -1,26 +1,28 @@
-﻿using BrightIdeasSoftware;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using BrightIdeasSoftware;
 using Forms;
 using Forms.Aantal;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
+using Rpm.Settings;
 using Rpm.Various;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Controls
 {
     public partial class WerkPlekkenUI : UserControl
     {
+        private bool _IsLoading;
+
         public WerkPlekkenUI()
         {
             InitializeComponent();
-           
         }
 
         public WerkPlek SelectedWerkplek
@@ -36,9 +38,11 @@ namespace Controls
         public Manager PManager { get; private set; }
         public bool IsSyncing { get; private set; }
         public bool EnableSync { get; set; }
+
         public void InitUI(Manager manager)
         {
-            xwerkpleklist.CustomSorter = delegate (OLVColumn column, SortOrder order) {
+            xwerkpleklist.CustomSorter = delegate(OLVColumn column, SortOrder order)
+            {
                 // check which column is about to be sorted and set your custom comparer
                 xwerkpleklist.ListViewItemSorter = new Comparer(order, column);
             };
@@ -47,13 +51,13 @@ namespace Controls
             imageList1.Images.Add(Resources.iconfinder_technology);
             imageList1.Images.Add(
                 Resources.iconfinder_technology.CombineImage(Resources.exclamation_warning_15590, 2));
-           LoadLayout();
+            LoadLayout();
             foreach (var col in xwerkpleklist.Columns.Cast<OLVColumn>())
             {
                 col.Groupable = true;
                 col.Name = col.AspectName;
                 col.ImageGetter = ImageGetter;
-                col.GroupFormatter = (@group, parms) =>
+                col.GroupFormatter = (group, parms) =>
                 {
                     parms.GroupComparer = Comparer<OLVGroup>.Create((x, y) =>
                         Comparer.Compare(x, y, parms.PrimarySortOrder, parms.PrimarySort ?? parms.SecondarySort));
@@ -86,8 +90,9 @@ namespace Controls
                 var msg = $"{wp.Werk.Omschrijving}\nMedewerkers: {wp.PersonenLijst}";
                 if (xrs > 1)
                     msg += $"\nLet op!!\nEr {x2} {xrs} {x1} open!";
-                else if(xrs ==1 && first != null)
-                    msg += $"\nLet op!!\n{first.StoringType} {(string.IsNullOrEmpty(first.Omschrijving)? "" : first.Omschrijving.Trim())} staat al {first.TotaalTijd} uur open...";
+                else if (xrs == 1 && first != null)
+                    msg +=
+                        $"\nLet op!!\n{first.StoringType} {(string.IsNullOrEmpty(first.Omschrijving) ? "" : first.Omschrijving.Trim())} staat al {first.TotaalTijd} uur open...";
                 e.Text += msg;
             }
         }
@@ -111,13 +116,12 @@ namespace Controls
         {
             try
             {
-                if (this.IsDisposed || this.Disposing || xwerkpleklist == null || xwerkpleklist.IsDisposed) return;
+                if (IsDisposed || Disposing || xwerkpleklist == null || xwerkpleklist.IsDisposed) return;
                 if (Manager.Opties?._viewwerkplekdata == null) return;
                 if (xwerkpleklist.InvokeRequired)
                     xwerkpleklist.Invoke(new MethodInvoker(() =>
                         xwerkpleklist.RestoreState(Manager.Opties.ViewDataWerkplekState)));
                 else xwerkpleklist.RestoreState(Manager.Opties.ViewDataWerkplekState);
-
             }
             catch (Exception e)
             {
@@ -125,30 +129,27 @@ namespace Controls
             }
         }
 
-        private void Manager_OnSettingsChanged(object instance, Rpm.Settings.UserSettings settings, bool reinit)
+        private void Manager_OnSettingsChanged(object instance, UserSettings settings, bool reinit)
         {
             LoadLayout();
         }
 
         public void SaveLayout()
         {
-            if (this.IsDisposed || this.Disposing || xwerkpleklist == null || xwerkpleklist.IsDisposed) return;
+            if (IsDisposed || Disposing || xwerkpleklist == null || xwerkpleklist.IsDisposed) return;
             if (Manager.Opties == null) return;
             if (xwerkpleklist.InvokeRequired)
                 xwerkpleklist.Invoke(new MethodInvoker(() =>
                     Manager.Opties.ViewDataWerkplekState = xwerkpleklist.SaveState()));
             else Manager.Opties.ViewDataWerkplekState = xwerkpleklist.SaveState();
-
         }
 
         private void Manager_FilterChanged(object sender, EventArgs e)
         {
             try
             {
-                if (this.InvokeRequired)
-                {
-                    this.BeginInvoke(new MethodInvoker(() => LoadPlekken(true)));
-                }
+                if (InvokeRequired)
+                    BeginInvoke(new MethodInvoker(() => LoadPlekken(true)));
                 else LoadPlekken(true);
             }
             catch (Exception exception)
@@ -159,7 +160,7 @@ namespace Controls
 
         private void Manager_OnFormulierDeleted(object sender, string id)
         {
-            this.BeginInvoke(new MethodInvoker(()=> LoadPlekken(true)));
+            BeginInvoke(new MethodInvoker(() => LoadPlekken(true)));
         }
 
         public void DetachEvents()
@@ -170,26 +171,25 @@ namespace Controls
             Manager.OnSettingsChanged -= Manager_OnSettingsChanged;
         }
 
-        private bool _IsLoading;
         public async void LoadPlekken(bool startsync)
         {
             if (_IsLoading) return;
             _IsLoading = true;
-            bool changed = false;
+            var changed = false;
             try
             {
-                int count = xwerkpleklist.Items.Count;
+                var count = xwerkpleklist.Items.Count;
                 var selected = xwerkpleklist.SelectedObject;
                 var items = await Manager.GetProducties(ViewState.Gestart, true, false);
                 var plekken = new List<WerkPlek>();
                 foreach (var item in items)
                 {
-
                     await item.UpdateForm(true, false, null, "", false, false, false);
                     var xpl = GetWerkplekken(item);
-                    if(xpl.Length > 0)
+                    if (xpl.Length > 0)
                         plekken.AddRange(xpl);
                 }
+
                 xwerkpleklist.BeginUpdate();
                 xwerkpleklist.SetObjects(plekken);
                 xwerkpleklist.SelectedObject = selected;
@@ -197,10 +197,11 @@ namespace Controls
                 xwerkpleklist.EndUpdate();
                 changed = count != xwerkpleklist.Items.Count;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
+
             _IsLoading = false;
             if (EnableSync && Manager.Opties.AutoProductieLijstSync && !IsSyncing && startsync)
                 StartSync();
@@ -261,83 +262,19 @@ namespace Controls
                                 }
                             }
                         }
+
                         if (changed)
                             PlekkenChanged();
                     }
                     catch
                     {
                     }
-                    finally { xwerkpleklist.EndUpdate();}
+                    finally
+                    {
+                        xwerkpleklist.EndUpdate();
+                    }
             }));
         }
-
-        #region Syncing
-        public void StartSync()
-        {
-            if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || IsSyncing || Disposing || IsDisposed) return;
-            IsSyncing = true;
-            Task.Factory.StartNew(async () =>
-            {
-                while(EnableSync && Manager.Opties.AutoProductieLijstSync && IsSyncing && !Disposing && !IsDisposed)
-                {
-                    await Task.Delay(Manager.Opties.ProductieLijstSyncInterval);
-                    if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || !IsSyncing || IsDisposed || Disposing) break;
-                    this.BeginInvoke(new MethodInvoker(()=> LoadPlekken(false)));
-                }
-            });
-        }
-
-        public void StopSync()
-        {
-            IsSyncing = false;
-        }
-
-        public Task<bool> SyncWerkplekken()
-        {
-            return Task.Run(async () =>
-            {
-                try
-                {
-                    bool changed = false;
-                    if (xwerkpleklist.Items.Count > 0)
-                    {
-                        var xwerkplekken = xwerkpleklist.Objects?.Cast<WerkPlek>().ToList();
-                        if (xwerkplekken != null)
-                        {
-                            for (int i = 0; i < xwerkplekken.Count; i++)
-                            {
-                                var wp = xwerkplekken[i];
-                                var werk = Werk.FromPath(wp.Path);
-                                if (!IsSyncing || Disposing || IsDisposed) return changed;
-                                if (werk?.Plek == null || !werk.Bewerking.IsAllowed(null) ||
-                                    werk.Bewerking.State != ProductieState.Gestart ||
-                                    !werk.Plek.Personen.Any(personeel => personeel.WerktAanKlus(werk.Bewerking, out _)))
-                                {
-                                    xwerkpleklist.BeginUpdate();
-                                    xwerkpleklist.RemoveObject(wp);
-                                    xwerkpleklist.EndUpdate();
-                                    changed = true;
-                                    continue;
-                                }
-
-                                await werk.Formulier.UpdateForm(true, false, null, "", false, false, false);
-                                xwerkpleklist.RefreshObject(werk.Plek);
-                            }
-
-                            if (changed)
-                                PlekkenChanged();
-                        }
-                    }
-                    return changed;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    return false;
-                }
-            });
-        }
-        #endregion;
 
         public WerkPlek[] GetWerkplekken(List<ProductieFormulier> forms)
         {
@@ -355,7 +292,8 @@ namespace Controls
                         {
                             foreach (var b in bws)
                                 if (b.IsAllowed(null) && b.WerkPlekken is {Count: > 0})
-                                    werkplekken.AddRange(b.WerkPlekken.Where(x => x.Personen.Any(t => t.WerktAanKlus(b,out _))));
+                                    werkplekken.AddRange(b.WerkPlekken.Where(x =>
+                                        x.Personen.Any(t => t.WerktAanKlus(b, out _))));
                         }
                     }
             }
@@ -377,12 +315,10 @@ namespace Controls
                 {
                     var bws = form.Bewerkingen.Where(x => x.State == ProductieState.Gestart).ToArray();
                     if (bws.Length > 0)
-                    {
                         foreach (var b in bws)
                             if (b.IsAllowed(null) && b.WerkPlekken is {Count: > 0})
                                 werkplekken.AddRange(b.WerkPlekken.Where(x =>
                                     x.Personen.Any(t => t.WerktAanKlus(b, out _))));
-                    }
                 }
             }
             catch
@@ -441,6 +377,7 @@ namespace Controls
                 e.Cancel = true;
                 return;
             }
+
             werkTijdToolStripMenuItem.Enabled = xwerkpleklist.SelectedObjects.Count == 1;
             wijzigAantalGemaaktToolStripMenuItem.Enabled = xwerkpleklist.SelectedObjects.Count == 1;
             openProductieToolStripMenuItem.Enabled = xwerkpleklist.SelectedObjects.Count > 0;
@@ -469,13 +406,11 @@ namespace Controls
         private void storingenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (xwerkpleklist.SelectedObjects.Count > 0)
-            {
                 if (xwerkpleklist.SelectedObjects[0] is WerkPlek wp)
                 {
                     var sf = new StoringForm(wp);
                     sf.ShowDialog();
                 }
-            }
         }
 
         private void xwerkpleklist_DoubleClick(object sender, EventArgs e)
@@ -522,7 +457,8 @@ namespace Controls
                 if (xtxtform.ShowDialog() == DialogResult.OK)
                 {
                     wp.Note = xtxtform.Notitie;
-                    await form.UpdateBewerking(null, $"[{form.ProductieNr}, {form.ArtikelNr}] {form.Naam} {wp.Naam} Notitie Gewijzigd");
+                    await form.UpdateBewerking(null,
+                        $"[{form.ProductieNr}, {form.ArtikelNr}] {form.Naam} {wp.Naam} Notitie Gewijzigd");
                 }
             }
         }
@@ -530,7 +466,7 @@ namespace Controls
 
         private void ShowSelectedAfkeur()
         {
-            if (xwerkpleklist.SelectedObject is WerkPlek { Werk: { } } wp)
+            if (xwerkpleklist.SelectedObject is WerkPlek {Werk: { }} wp)
             {
                 var bw = wp.Werk;
                 var form = bw.GetParent();
@@ -564,10 +500,11 @@ namespace Controls
             if (xwerkpleklist.SelectedObjects.Count > 0)
             {
                 var xst = new Storing();
-                var wps = xwerkpleklist.SelectedObjects.Cast<WerkPlek>().Where(x=> x.Storingen.All(s=> s.IsVerholpen)).ToList();
+                var wps = xwerkpleklist.SelectedObjects.Cast<WerkPlek>().Where(x => x.Storingen.All(s => s.IsVerholpen))
+                    .ToList();
                 if (wps.Count == 0)
                 {
-                    XMessageBox.Show(this,"Geselecteerde werkplekken zijn al onderbroken!", "Al Onderbroken",
+                    XMessageBox.Show(this, "Geselecteerde werkplekken zijn al onderbroken!", "Al Onderbroken",
                         MessageBoxIcon.Exclamation);
                     return;
                 }
@@ -588,7 +525,6 @@ namespace Controls
                         wp.Werk?.UpdateBewerking(null, $"[{wp.Path}] is Onderbroken voor {xst.StoringType}!");
                     }
                 }
-
             }
         }
 
@@ -596,14 +532,15 @@ namespace Controls
         {
             if (xwerkpleklist.SelectedObjects.Count > 0)
             {
-              
-                var wps = xwerkpleklist.SelectedObjects.Cast<WerkPlek>().Where(x=> x.Storingen.Any(s=> !s.IsVerholpen)).ToList();
+                var wps = xwerkpleklist.SelectedObjects.Cast<WerkPlek>()
+                    .Where(x => x.Storingen.Any(s => !s.IsVerholpen)).ToList();
                 if (wps.Count == 0)
                 {
-                    XMessageBox.Show(this,"Geselecteerde werkplekken zijn al bezig!", "Al Bezig",
+                    XMessageBox.Show(this, "Geselecteerde werkplekken zijn al bezig!", "Al Bezig",
                         MessageBoxIcon.Exclamation);
                     return;
                 }
+
                 var xwp = wps.FirstOrDefault();
                 if (xwp == null) return;
                 var xst = xwp.Storingen.FirstOrDefault(x => !x.IsVerholpen);
@@ -613,7 +550,6 @@ namespace Controls
                 xstform.SetOnderbreking(xwp, xst, true);
 
                 if (xstform.ShowDialog() == DialogResult.OK)
-                {
                     foreach (var wp in wps)
                     {
                         xst = wp.Storingen.FirstOrDefault(x =>
@@ -624,11 +560,82 @@ namespace Controls
                         if ((index = wp.Storingen.IndexOf(xstform.Onderbreking)) > -1)
                             wp.Storingen[index] = xstform.Onderbreking;
                         xwerkpleklist.RefreshObject(wp);
-                        wp.Werk?.UpdateBewerking(null, $"[{wp.Path}] is weer hervat van een {xstform.Onderbreking.StoringType}!");
+                        wp.Werk?.UpdateBewerking(null,
+                            $"[{wp.Path}] is weer hervat van een {xstform.Onderbreking.StoringType}!");
                     }
-                }
-
             }
         }
+
+        #region Syncing
+
+        public void StartSync()
+        {
+            if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || IsSyncing || Disposing || IsDisposed) return;
+            IsSyncing = true;
+            Task.Factory.StartNew(async () =>
+            {
+                while (EnableSync && Manager.Opties.AutoProductieLijstSync && IsSyncing && !Disposing && !IsDisposed)
+                {
+                    await Task.Delay(Manager.Opties.ProductieLijstSyncInterval);
+                    if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || !IsSyncing || IsDisposed ||
+                        Disposing) break;
+                    BeginInvoke(new MethodInvoker(() => LoadPlekken(false)));
+                }
+            });
+        }
+
+        public void StopSync()
+        {
+            IsSyncing = false;
+        }
+
+        public Task<bool> SyncWerkplekken()
+        {
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    var changed = false;
+                    if (xwerkpleklist.Items.Count > 0)
+                    {
+                        var xwerkplekken = xwerkpleklist.Objects?.Cast<WerkPlek>().ToList();
+                        if (xwerkplekken != null)
+                        {
+                            for (var i = 0; i < xwerkplekken.Count; i++)
+                            {
+                                var wp = xwerkplekken[i];
+                                var werk = Werk.FromPath(wp.Path);
+                                if (!IsSyncing || Disposing || IsDisposed) return changed;
+                                if (werk?.Plek == null || !werk.Bewerking.IsAllowed(null) ||
+                                    werk.Bewerking.State != ProductieState.Gestart ||
+                                    !werk.Plek.Personen.Any(personeel => personeel.WerktAanKlus(werk.Bewerking, out _)))
+                                {
+                                    xwerkpleklist.BeginUpdate();
+                                    xwerkpleklist.RemoveObject(wp);
+                                    xwerkpleklist.EndUpdate();
+                                    changed = true;
+                                    continue;
+                                }
+
+                                await werk.Formulier.UpdateForm(true, false, null, "", false, false, false);
+                                xwerkpleklist.RefreshObject(werk.Plek);
+                            }
+
+                            if (changed)
+                                PlekkenChanged();
+                        }
+                    }
+
+                    return changed;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return false;
+                }
+            });
+        }
+
+        #endregion;
     }
 }

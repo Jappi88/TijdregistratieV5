@@ -1,17 +1,26 @@
-﻿using Rpm.Productie;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Timers;
 using System.Windows.Forms;
-using iTextSharp.text.pdf.parser.clipper;
-using ProductieManager.Rpm.Misc;
+using Rpm.Productie;
+using Timer = System.Timers.Timer;
 
 namespace Controls
 {
     public partial class TileViewer : FlowLayoutPanel
     {
-        private readonly System.Timers.Timer _timer;
+        private readonly Timer _timer;
+
+        public TileViewer()
+        {
+            InitializeComponent();
+            _timer = new Timer();
+            _timer.Interval = TileInfoRefresInterval;
+            _timer.Elapsed += _timer_Elapsed;
+        }
+
         public bool EnableSaveTiles { get; set; } = true;
         public int TileInfoRefresInterval { get; set; } = 10000;
         public bool EnableTileSelection { get; set; }
@@ -21,14 +30,6 @@ namespace Controls
         {
             get => _timer.Enabled;
             set => _timer.Enabled = value;
-        }
-
-        public TileViewer()
-        {
-            InitializeComponent();
-            _timer = new System.Timers.Timer();
-            _timer.Interval = TileInfoRefresInterval;
-            _timer.Elapsed += _timer_Elapsed;
         }
 
         public void StartTimer()
@@ -41,20 +42,20 @@ namespace Controls
             _timer?.Stop();
         }
 
-        private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             StopTimer();
             try
             {
                 var _Tiles = GetAllTiles();
-                for (int i = 0; i < _Tiles.Count; i++)
+                for (var i = 0; i < _Tiles.Count; i++)
                 {
                     var xtileinfo = _Tiles[i];
                     if (xtileinfo.Tag is TileInfoEntry entry)
                     {
                         Tile xtile = null;
-                        if (this.InvokeRequired)
-                            this.Invoke(new MethodInvoker(() => xtile = GetTile(entry)));
+                        if (InvokeRequired)
+                            Invoke(new MethodInvoker(() => xtile = GetTile(entry)));
                         else
                             xtile = GetTile(entry);
                         if (xtile != null)
@@ -62,10 +63,10 @@ namespace Controls
                             var xupdate = OnTileRequestInfo(xtile);
                             if (xupdate != null)
                             {
-                                if (this.InvokeRequired)
+                                if (InvokeRequired)
                                 {
-                                    this.Invoke(new MethodInvoker(() => UpdateTile(xupdate, xtile)));
-                                    this.Invoke(new MethodInvoker(Invalidate));
+                                    Invoke(new MethodInvoker(() => UpdateTile(xupdate, xtile)));
+                                    Invoke(new MethodInvoker(Invalidate));
                                 }
                                 else
                                 {
@@ -100,7 +101,7 @@ namespace Controls
                     ResumeLayout();
                 }
 
-                for (int i = 0; i < xTiles.Count; i++)
+                for (var i = 0; i < xTiles.Count; i++)
                 {
                     var xtileinfo = xTiles[i];
                     if (xtileinfo == null)
@@ -119,7 +120,6 @@ namespace Controls
                     if (x.Tag is TileInfoEntry ent)
                         Controls.SetChildIndex(x, ent.TileIndex);
                 });
-
             }
             catch (Exception e)
             {
@@ -140,6 +140,7 @@ namespace Controls
                     entry.TileIndex = Controls.Count;
                     Controls.Add(xtile);
                 }
+
                 xtile.AllowTileEdit = EnableSaveTiles;
                 return xtile.UpdateTile(entry);
             }
@@ -160,7 +161,7 @@ namespace Controls
             try
             {
                 var xcontrols = Controls.Cast<Control>().ToList();
-                for (int i = 0; i < xcontrols.Count; i++)
+                for (var i = 0; i < xcontrols.Count; i++)
                 {
                     var xcon = xcontrols[i];
                     if (xcon is Tile {Tag: TileInfoEntry xinfo} xtile)
@@ -176,16 +177,17 @@ namespace Controls
                 return null;
             }
         }
+
         public Tile GetTile(string name)
         {
             try
             {
                 var xcontrols = Controls.Cast<Control>().ToList();
-                for (int i = 0; i < xcontrols.Count; i++)
+                for (var i = 0; i < xcontrols.Count; i++)
                 {
                     var xcon = xcontrols[i];
-                    if (xcon is Tile { Tag: TileInfoEntry xinfo } xtile)
-                        if (string.Equals(name,xinfo.Name, StringComparison.CurrentCultureIgnoreCase))
+                    if (xcon is Tile {Tag: TileInfoEntry xinfo} xtile)
+                        if (string.Equals(name, xinfo.Name, StringComparison.CurrentCultureIgnoreCase))
                             return xtile;
                 }
 
@@ -205,7 +207,7 @@ namespace Controls
             try
             {
                 var xcontrols = Controls.Cast<Control>().ToList();
-                for (int i = 0; i < xcontrols.Count; i++)
+                for (var i = 0; i < xcontrols.Count; i++)
                 {
                     var xcon = xcontrols[i];
                     if (xcon is Tile tile)
@@ -226,7 +228,7 @@ namespace Controls
             try
             {
                 var xcontrols = Controls.Cast<Control>().ToList();
-                for (int i = 0; i < xcontrols.Count; i++)
+                for (var i = 0; i < xcontrols.Count; i++)
                 {
                     var xcon = xcontrols[i];
                     if (xcon is Tile {Tag: TileInfoEntry entry})
@@ -247,15 +249,13 @@ namespace Controls
             {
                 var xtiles = GetAllTiles();
                 var xlist = new List<TileInfoEntry>();
-                int index = 0;
+                var index = 0;
                 foreach (var tile in xtiles)
-                {
                     if (tile.Tag is TileInfoEntry ent)
                     {
                         ent.TileIndex = index++;
                         xlist.Add(ent);
                     }
-                }
 
                 Manager.Opties.TileLayout = xlist;
                 if (save)
@@ -288,14 +288,14 @@ namespace Controls
         {
             try
             {
-                for (int i = 0; i < this.Controls.Count; i++)
+                for (var i = 0; i < Controls.Count; i++)
                 {
-                    var xtile = this.Controls[i] as Tile;
+                    var xtile = Controls[i] as Tile;
                     if (xtile == null) continue;
                     var xloc = new Rectangle(xtile.Location, new Size(xtile.Width + marge, xtile.Height + marge));
-                    bool flag = xloc.Contains(location);
-                        if (flag)
-                            return xtile;
+                    var flag = xloc.Contains(location);
+                    if (flag)
+                        return xtile;
                 }
 
                 return null;
@@ -315,7 +315,7 @@ namespace Controls
             // Just add the control to the new panel.
             // No need to remove from the other panel, this changes the Control.Parent property.
             var p = _destination.PointToClient(new Point(e.X, e.Y));
-            var item = GetTileFromPoint(p,10); //??_destination.Controls[_destination.Controls.Count - 1];
+            var item = GetTileFromPoint(p, 10); //??_destination.Controls[_destination.Controls.Count - 1];
             var index = item == null ? 0 : _destination.Controls.GetChildIndex(item, false);
             var xoldindex = _destination.Controls.GetChildIndex(data, false);
 
@@ -330,6 +330,7 @@ namespace Controls
                         Manager.Opties.TileLayout[xindex] = xent;
                 }
             }
+
             _destination.Controls.SetChildIndex(data, index);
             if (data.Tag is TileInfoEntry ent)
             {
@@ -338,12 +339,18 @@ namespace Controls
                 if (EnableSaveTiles && xindex > -1 && Manager.Opties?.TileLayout != null)
                     Manager.Opties.TileLayout[xindex] = ent;
             }
+
             _destination.Invalidate();
         }
 
         private void flowLayoutPanel1_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Move;
+        }
+
+        protected virtual void OnSelectionChanged(object sender)
+        {
+            SelectionChanged?.Invoke(sender, EventArgs.Empty);
         }
 
         #region Events
@@ -361,18 +368,14 @@ namespace Controls
         protected virtual void OnTileClicked(object sender)
         {
             if (EnableTileSelection)
-            {
                 if (sender is Tile tile)
-                {
                     TogleTile(tile);
-                }
-            }
             TileClicked?.Invoke(sender, EventArgs.Empty);
         }
 
         public bool TogleTile(Tile tile)
         {
-            bool select = !tile.Selected;
+            var select = !tile.Selected;
             return SelectTile(tile, select);
         }
 
@@ -384,7 +387,7 @@ namespace Controls
                 xtiles.ForEach(x => x.Selected = false);
             }
 
-            bool flag = tile.Selected != enable;
+            var flag = tile.Selected != enable;
             tile.Selected = enable;
             if (flag)
                 OnSelectionChanged(tile);
@@ -404,10 +407,5 @@ namespace Controls
         }
 
         #endregion Events
-
-        protected virtual void OnSelectionChanged(object sender)
-        {
-            SelectionChanged?.Invoke(sender, EventArgs.Empty);
-        }
     }
 }

@@ -1,36 +1,44 @@
-﻿using BrightIdeasSoftware;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using BrightIdeasSoftware;
 using ProductieManager.Properties;
 using Rpm.Productie;
 using Rpm.Productie.AantalHistory;
 using Rpm.Various;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace Forms.Aantal.Controls
 {
     public partial class AantalGemaaktHistoryUI : UserControl
     {
-        public WerkPlek Plek { get; private set; }
         public AantalGemaaktHistoryUI()
         {
             InitializeComponent();
             ((OLVColumn) xHistoryList.Columns[3]).AspectGetter = TijdGewerktGetter;
-            ((OLVColumn)xHistoryList.Columns[4]).AspectGetter = PerUurGetter;
-            ((OLVColumn)xHistoryList.Columns[6]).AspectGetter = GestoptGetter;
+            ((OLVColumn) xHistoryList.Columns[4]).AspectGetter = PerUurGetter;
+            ((OLVColumn) xHistoryList.Columns[6]).AspectGetter = GestoptGetter;
             //((OLVColumn) xHistoryList.Columns[0]).ImageGetter = (o) => 0;
             imageList1.Images.Add(Resources.Count_tool_34564);
             UpdateStatus();
         }
 
+        public WerkPlek Plek { get; private set; }
+
+        public AantalRecord Selected
+        {
+            get => xHistoryList.SelectedObject as AantalRecord;
+            set
+            {
+                xHistoryList.SelectedObject = value;
+                xHistoryList.SelectedItem?.EnsureVisible();
+            }
+        }
+
         private object TijdGewerktGetter(object item)
         {
             if (Plek == null) return 0;
-            if (item is AantalRecord record)
-            {
-                return record.GetTijdGewerkt(Plek.Tijden, Plek.GetStoringen());
-            }
+            if (item is AantalRecord record) return record.GetTijdGewerkt(Plek.Tijden, Plek.GetStoringen());
 
             return 0;
         }
@@ -38,10 +46,7 @@ namespace Forms.Aantal.Controls
         private object PerUurGetter(object item)
         {
             if (Plek == null) return 0;
-            if (item is AantalRecord record)
-            {
-                return record.GetPerUur(Plek.Tijden, Plek.GetStoringen());
-            }
+            if (item is AantalRecord record) return record.GetPerUur(Plek.Tijden, Plek.GetStoringen());
 
             return 0;
         }
@@ -49,10 +54,7 @@ namespace Forms.Aantal.Controls
         private object GestoptGetter(object item)
         {
             if (Plek == null) return "N.V.T.";
-            if (item is AantalRecord record)
-            {
-                return record.GetGestopt();
-            }
+            if (item is AantalRecord record) return record.GetGestopt();
 
             return "N.V.T.";
         }
@@ -63,7 +65,7 @@ namespace Forms.Aantal.Controls
             {
                 var xitems = xHistoryList.SelectedObjects.Cast<AantalRecord>().ToList();
                 var x1 = xitems.Count == 1 ? "regel" : "regels";
-              
+
                 var aantal = xitems.Sum(x => x.GetGemaakt());
                 var tijd = xitems.Sum(x => x.GetTijdGewerkt(Plek?.Tijden, Plek?.GetStoringen()));
                 var pu = aantal > 0 ? tijd == 0 ? aantal : Math.Round(aantal / tijd, 0) : 0;
@@ -95,7 +97,7 @@ namespace Forms.Aantal.Controls
             try
             {
                 if (InvokeRequired)
-                    this.Invoke(new MethodInvoker(() => xUpdateList(plek)));
+                    Invoke(new MethodInvoker(() => xUpdateList(plek)));
                 else xUpdateList(plek);
             }
             catch (Exception e)
@@ -119,7 +121,7 @@ namespace Forms.Aantal.Controls
                 var xcuritems = xHistoryList.Items.Count > 0
                     ? xHistoryList.Objects.Cast<AantalRecord>().ToList()
                     : new List<AantalRecord>();
-                var remove = xcuritems.Where(x => !plek.AantalHistory.Aantallen.Any(a=> a.Equals(x))).ToList();
+                var remove = xcuritems.Where(x => !plek.AantalHistory.Aantallen.Any(a => a.Equals(x))).ToList();
                 xHistoryList.BeginUpdate();
                 var selected = xHistoryList.SelectedObjects;
                 foreach (var item in remove)
@@ -128,7 +130,7 @@ namespace Forms.Aantal.Controls
                     xcuritems.Remove(item);
                 }
 
-                
+
                 foreach (var aantal in plek.AantalHistory.Aantallen)
                 {
                     var xold = xcuritems.FirstOrDefault(aantal.Equals);
@@ -151,21 +153,11 @@ namespace Forms.Aantal.Controls
             }
         }
 
-        public AantalRecord Selected
-        {
-            get => xHistoryList.SelectedObject as AantalRecord;
-            set
-            {
-                xHistoryList.SelectedObject = value;
-                xHistoryList.SelectedItem?.EnsureVisible();
-            }
-        }
-
         private void verwijderenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var sel = Selected;
             if (sel == null || Plek?.Werk == null) return;
-            bool actief = sel.IsActive;
+            var actief = sel.IsActive;
             if (Plek.AantalHistory.Aantallen.Remove(sel))
             {
                 xHistoryList.RemoveObject(sel);
@@ -175,6 +167,7 @@ namespace Forms.Aantal.Controls
                     if (xlast != null)
                         xlast.EndDate = new DateTime();
                 }
+
                 Plek.Werk.UpdateBewerking(null, $"[{Plek.Path}]\n" +
                                                 $"Aantalregel van {sel.Aantal} succesvol verwijderd!");
             }
@@ -209,9 +202,9 @@ namespace Forms.Aantal.Controls
             if (xnew.ShowDialog() == DialogResult.OK)
             {
                 Plek.AantalHistory.Aantallen.Insert(0, xnew.SelectedRecord);
-                xHistoryList.InsertObjects(0, new List<AantalRecord>() {xnew.SelectedRecord});
+                xHistoryList.InsertObjects(0, new List<AantalRecord> {xnew.SelectedRecord});
                 Plek.Werk.UpdateBewerking(null, $"[{Plek.Path}]\n" +
-                                                $"Nieuwe 'Aantal Record' toegevoegd!");
+                                                "Nieuwe 'Aantal Record' toegevoegd!");
             }
         }
 
@@ -229,7 +222,7 @@ namespace Forms.Aantal.Controls
                         Plek.AantalHistory.Aantallen[index] = xnew.SelectedRecord;
                         xHistoryList.RefreshObject(xnew.SelectedRecord);
                         Plek.Werk.UpdateBewerking(null, $"[{Plek.Path}]\n" +
-                                                        $"'Aantal Record' Gewijzigd!");
+                                                        "'Aantal Record' Gewijzigd!");
                     }
                 }
             }

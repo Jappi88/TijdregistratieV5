@@ -7,17 +7,28 @@ namespace Rpm.Productie.AantalHistory
 {
     public class AantalRecord
     {
-        public int ID { get; private set; }
+        internal DateTime _endDate;
+
+        public AantalRecord()
+        {
+            DateChanged = DateTime.Now;
+            ID = DateChanged.GetHashCode();
+        }
+
+        public AantalRecord(int aantal) : this()
+        {
+            Aantal = aantal;
+        }
+
+        public int ID { get; }
         public int Aantal { get; set; }
         public int LastAantal { get; set; }
         public int Gemaakt => GetGemaakt();
 
         public DateTime DateChanged { get; set; }
 
-        internal DateTime _endDate;
-
         public bool IsActive => _endDate.IsDefault();
-        
+
 
         public DateTime EndDate
         {
@@ -35,18 +46,8 @@ namespace Rpm.Productie.AantalHistory
                     return new DateTime(xt.Year, xt.Month, xt.Day, DateChanged.Hour, DateChanged.Minute, 0);
                 return dt;
             }
+
             return EndDate;
-        }
-
-        public AantalRecord()
-        {
-            DateChanged = DateTime.Now;
-            ID = DateChanged.GetHashCode();
-        }
-
-        public AantalRecord(int aantal) : this()
-        {
-            Aantal = aantal;
         }
 
         public int GetGemaakt()
@@ -69,6 +70,7 @@ namespace Rpm.Productie.AantalHistory
                 if (xstartr != null)
                     xstart = bereik.Start.Add(xstartr.StartWerkdag);
             }
+
             if (bereik.Stop.TimeOfDay == new TimeSpan())
             {
                 var xstartr = specialeroosters?.FirstOrDefault(x => x.Vanaf.Date == bereik.Stop.Date) ??
@@ -82,16 +84,17 @@ namespace Rpm.Productie.AantalHistory
 
         public double GetPerUur(UrenLijst uren, Dictionary<DateTime, DateTime> exclude = null)
         {
-            var aantal = (double)GetGemaakt();
+            var aantal = (double) GetGemaakt();
             var tijd = GetTijdGewerkt(uren, exclude);
-            var pu = tijd > 0 ? aantal > 0 ? (aantal / tijd) : 0 : aantal;
-            return (int)pu;
+            var pu = tijd > 0 ? aantal > 0 ? aantal / tijd : 0 : aantal;
+            return (int) pu;
         }
 
         public double GetTijdGewerkt(UrenLijst uren, Dictionary<DateTime, DateTime> exclude = null)
         {
             return Math.Round(
-                Werktijd.TijdGewerkt(new TijdEntry(DateChanged, GetGestopt()), uren?.WerkRooster, uren?.SpecialeRoosters,exclude).TotalHours, 2);
+                Werktijd.TijdGewerkt(new TijdEntry(DateChanged, GetGestopt()), uren?.WerkRooster,
+                    uren?.SpecialeRoosters, exclude).TotalHours, 2);
         }
 
         public override bool Equals(object obj)

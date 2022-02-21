@@ -1,31 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NPOI.OpenXmlFormats.Dml;
-using Polenter.Serialization;
 using Rpm.Various;
 
 namespace Rpm.Misc
 {
     public class Filter
     {
-        public string Name { get; set; }
-        public bool IsTempFilter { get; set; }
-        /// <summary>
-        /// De lijst waarop gefiltered moet worden.
-        /// </summary>
-        public List<string> ListNames { get; set; } = new();
-        //public Operand OperandType { get; set; }
-        public List<FilterEntry> Filters { get; set; } = new List<FilterEntry>();
-
-        public int ID { get; set; }
-
         public Filter()
         {
             ID = Functions.GenerateRandomID();
         }
+
+        public string Name { get; set; }
+        public bool IsTempFilter { get; set; }
+
+        /// <summary>
+        ///     De lijst waarop gefiltered moet worden.
+        /// </summary>
+        public List<string> ListNames { get; set; } = new();
+
+        //public Operand OperandType { get; set; }
+        public List<FilterEntry> Filters { get; set; } = new();
+
+        public int ID { get; set; }
 
         public bool IsAllowed(object value, string listname)
         {
@@ -34,10 +32,9 @@ namespace Rpm.Misc
                 if (!string.IsNullOrEmpty(listname) && !ListNames.Any(x => string.Equals(x, listname))) return true;
                 if (value == null) return false;
                 if (Filters == null || Filters.Count == 0) return true;
-                bool xdone = false;
-                bool xreturn = false;
+                var xdone = false;
+                var xreturn = false;
                 foreach (var f in Filters)
-                {
                     if (!xdone)
                     {
                         xreturn = f.ContainsFilter(value);
@@ -59,8 +56,6 @@ namespace Rpm.Misc
                         }
                     }
 
-                }
-
                 return xreturn;
             }
             catch (Exception e)
@@ -74,10 +69,9 @@ namespace Rpm.Misc
         {
             try
             {
-                string xreturn = "(";
+                var xreturn = "(";
                 //bool xdone = false;
                 foreach (var filter in Filters)
-                {
                     //if (!xdone)
                     //{
                     //    xreturn = $"'{filter.ToString()}'";
@@ -85,7 +79,6 @@ namespace Rpm.Misc
                     //    continue;
                     //}
                     xreturn += $"{filter.ToString()} ";
-                }
 
                 return xreturn.Trim() + ")";
             }
@@ -100,17 +93,15 @@ namespace Rpm.Misc
         {
             try
             {
-                string xreturn = "";
+                var xreturn = "";
                 //bool xdone = false;
                 foreach (var filter in Filters)
-                {
                     //if (xdone)
                     //{
                     //    xreturn += $"<li Color = RoyalBlue><b>{Enum.GetName(typeof(Operand), filter.OperandType)}</b></li>";
                     //}
                     //else xdone = true;
                     xreturn += $"{filter.ToHtmlString()}";
-                }
 
                 return xreturn;
             }

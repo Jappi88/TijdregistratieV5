@@ -16,6 +16,7 @@ namespace Rpm.Productie
         {
             Parent = form;
         }
+
         public int ID { get; set; }
         public ProductieFormulier Parent { get; set; }
 
@@ -33,13 +34,13 @@ namespace Rpm.Productie
             get
             {
                 if (Parent == null) return _aantal;
-                var xret = Math.Round(Parent.TotaalGemaakt * AantalPerStuk,4);
+                var xret = Math.Round(Parent.TotaalGemaakt * AantalPerStuk, 4);
                 return xret == 0 && Parent.TotaalGemaakt > 0 ? 1 : xret;
             }
             set
             {
                 if (Parent is {TotaalGemaakt: > 0})
-                    AantalPerStuk = Math.Round(value / Parent.TotaalGemaakt,4);
+                    AantalPerStuk = Math.Round(value / Parent.TotaalGemaakt, 4);
                 _aantal = value;
             }
         }
@@ -51,9 +52,9 @@ namespace Rpm.Productie
         {
             try
             {
-                var aantal = (decimal)(AantalPerStuk * Parent?.TotaalGemaakt ?? Aantal);
+                var aantal = (decimal) (AantalPerStuk * Parent?.TotaalGemaakt ?? Aantal);
                 var afkeur = (decimal) AantalAfkeur;
-                decimal value = afkeur == 0 || aantal == 0? 0 : (afkeur / aantal);
+                var value = afkeur == 0 || aantal == 0 ? 0 : afkeur / aantal;
                 return value.ToString("0.00%");
             }
             catch (Exception e)

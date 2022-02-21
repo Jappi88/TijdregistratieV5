@@ -1,11 +1,11 @@
-﻿using Polenter.Serialization;
-using Rpm.Misc;
-using Rpm.Productie.AantalHistory;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Polenter.Serialization;
+using Rpm.Misc;
+using Rpm.Productie.AantalHistory;
+using Rpm.Various;
 
 namespace Rpm.Productie
 {
@@ -18,6 +18,8 @@ namespace Rpm.Productie
         private DateTime _gestoptop;
 
         private int _peruur;
+
+        private List<Storing> _Storingen = new();
 
         public WerkPlek(Personeel[] personen, string werkplek, Bewerking werk)
         {
@@ -42,14 +44,12 @@ namespace Rpm.Productie
 
         public int Id { get; set; }
 
-        
+
         public Bewerking Werk { get; set; }
 
-        public UrenLijst Tijden { get; set; } = new UrenLijst();
+        public UrenLijst Tijden { get; set; } = new();
 
         public List<Personeel> Personen { get; set; }
-
-        private List<Storing> _Storingen = new List<Storing>();
 
         public List<Storing> Storingen
         {
@@ -66,7 +66,7 @@ namespace Rpm.Productie
 
         public NotitieEntry Note { get; set; }
 
-        public string Notitie => Note?.Notitie?? string.Empty;
+        public string Notitie => Note?.Notitie ?? string.Empty;
 
         public DateTime LaatstAantalUpdate { get; set; } = DateTime.Now;
 
@@ -77,32 +77,14 @@ namespace Rpm.Productie
         public string WerkNaam => Werk?.Naam;
         public string ArtikelNr => Werk?.ArtikelNr;
         public string ProductieNr => Werk?.ProductieNr;
-        public AantalHistory.AantallenRecords AantalHistory { get; private set; } = new AantallenRecords();
+        public AantallenRecords AantalHistory { get; } = new();
+
         public DateTime FriendlyVerwachtGereed =>
             Werk?.VerwachtDatumGereed() ?? DateTime.Now;
 
-        [ExcludeFromSerialization]
-        public int PerUur => GetPerUur();
+        [ExcludeFromSerialization] public int PerUur => GetPerUur();
 
-        public int GetPerUur()
-        {
-            try
-            {
-                int aantal = TotaalGemaakt;
-                double tijd = TijdGewerkt;
-                if (TijdGewerkt > 0)
-                    return (int)(aantal / tijd);
-                return aantal;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return 0;
-            }
-        }
-
-        [ExcludeFromSerialization]
-        public double PerUurBase => Werk?.PerUur ?? 0;
+        [ExcludeFromSerialization] public double PerUurBase => Werk?.PerUur ?? 0;
 
         // public double LastTijdGewerkt { get; set; }
 
@@ -119,7 +101,7 @@ namespace Rpm.Productie
                 {
                     _aantalgemaakt = value;
                     Werk?.UpdateAantal();
-                    AantalHistory?.UpdateAantal(value,Tijden);
+                    AantalHistory?.UpdateAantal(value, Tijden);
                 }
             }
         }
@@ -131,34 +113,7 @@ namespace Rpm.Productie
                 double xdt = 0;
                 var xt = GetActueelAantalGemaakt(ref xdt);
                 return xt;
-            } 
-        }
-
-        public int GetAantalGemaakt(DateTime start, DateTime stop,ref double tijd ,bool predict)
-        {
-           
-            if (AantalHistory == null)
-            {
-                return _aantalgemaakt;
             }
-
-            int multiply = 1;
-            if (Werk is {IsBemand: true})
-            {
-                multiply = Personen.Where(x => x.IngezetAanKlus(Werk, true, out _)).ToList().Count;
-            }
-            return AantalHistory.AantalGemaakt(start, stop, ref tijd, Tijden, predict, multiply, - 1, GetStoringen());
-        }
-
-        public int GetActueelAantalGemaakt(ref double tijd)
-        {
-            if (AantalHistory == null)
-            {
-                return _aantalgemaakt;
-            }
-
-            int xmultyply = (Werk?.IsBemand ?? false) ? Personen.Count : 1;
-            return AantalHistory.AantalGemaakt(Tijden, ref tijd,Werk is {State: ProductieState.Gestart },xmultyply, -1,GetStoringen());
         }
 
         public int TotaalGemaakt
@@ -182,10 +137,7 @@ namespace Rpm.Productie
             get
             {
                 var value = "Geen Personeel";
-                if (Personen is {Count: > 0})
-                {
-                    value = string.Join(", ", Personen.Select(x => x.PersoneelNaam));
-                }
+                if (Personen is {Count: > 0}) value = string.Join(", ", Personen.Select(x => x.PersoneelNaam));
 
                 return value;
             }
@@ -205,6 +157,42 @@ namespace Rpm.Productie
             set => _gestoptop = value;
         }
 
+        public int GetPerUur()
+        {
+            try
+            {
+                var aantal = TotaalGemaakt;
+                var tijd = TijdGewerkt;
+                if (TijdGewerkt > 0)
+                    return (int) (aantal / tijd);
+                return aantal;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return 0;
+            }
+        }
+
+        public int GetAantalGemaakt(DateTime start, DateTime stop, ref double tijd, bool predict)
+        {
+            if (AantalHistory == null) return _aantalgemaakt;
+
+            var multiply = 1;
+            if (Werk is {IsBemand: true})
+                multiply = Personen.Where(x => x.IngezetAanKlus(Werk, true, out _)).ToList().Count;
+            return AantalHistory.AantalGemaakt(start, stop, ref tijd, Tijden, predict, multiply, -1, GetStoringen());
+        }
+
+        public int GetActueelAantalGemaakt(ref double tijd)
+        {
+            if (AantalHistory == null) return _aantalgemaakt;
+
+            var xmultyply = Werk?.IsBemand ?? false ? Personen.Count : 1;
+            return AantalHistory.AantalGemaakt(Tijden, ref tijd, Werk is {State: ProductieState.Gestart}, xmultyply, -1,
+                GetStoringen());
+        }
+
         public DateTime GestartOp()
         {
             if (Werk == null)
@@ -212,10 +200,7 @@ namespace Rpm.Productie
             if (!Werk.IsBemand)
                 return Tijden.GetFirstStart();
             //return _gestartop;
-            if (Personen == null || Personen.Count == 0)
-            {
-                return _gestartop;
-            }
+            if (Personen == null || Personen.Count == 0) return _gestartop;
 
             var dt = new DateTime();
             foreach (var per in Personen)
@@ -233,13 +218,12 @@ namespace Rpm.Productie
                 {
                     var xgestart = per.GestartOp(this);
                     var xgestopt = per.GestoptOp(this);
-                    var bereikstop = bereik.Stop.TimeOfDay == new TimeSpan()? DateTime.Now : bereik.Stop;
+                    var bereikstop = bereik.Stop.TimeOfDay == new TimeSpan() ? DateTime.Now : bereik.Stop;
                     var xb = new TijdEntry(xgestart, xgestopt);
                     var t = xb.CreateRange(bereik.Start, bereikstop, Tijden.WerkRooster, Tijden.SpecialeRoosters);
                     if (t == null) continue;
                     if (t.Start < dt || dt.IsDefault())
                         dt = t.Start;
-
                 }
 
                 return dt;
@@ -266,10 +250,7 @@ namespace Rpm.Productie
             if (!Werk.IsBemand)
                 return Tijden.GetLastStop();
             //return _gestoptop;
-            if (Personen == null || Personen.Count == 0)
-            {
-                return _gestoptop;
-            }
+            if (Personen == null || Personen.Count == 0) return _gestoptop;
 
             var dt = new DateTime();
             foreach (var per in Personen)
@@ -293,11 +274,11 @@ namespace Rpm.Productie
                     if (t == null) continue;
                     if (t.Stop > dt)
                         dt = t.Stop;
-
                 }
 
                 return dt;
             }
+
             if (Tijden?.Uren == null)
                 return _gestoptop;
             DateTime xret = default;
@@ -305,10 +286,11 @@ namespace Rpm.Productie
             {
                 var t = uur.CreateRange(bereik.Start, bereik.Stop, Tijden.WerkRooster, Tijden.SpecialeRoosters);
                 if (t == null) continue;
-               
+
                 if (t.Stop > xret)
                     xret = t.Stop;
             }
+
             return xret;
         }
 
@@ -340,13 +322,9 @@ namespace Rpm.Productie
                     string.Equals(werk.Path + "\\" + Naam, k.Path, StringComparison.CurrentCultureIgnoreCase));
 
                 if (klus != null)
-                {
                     xpers.ReplaceKlus(klus);
-                }
                 else
-                {
                     xpers.ReplaceKlus(new Klus(persoon, this));
-                }
             }
             else
             {
@@ -400,6 +378,7 @@ namespace Rpm.Productie
                     if (xcount > 0)
                         pu /= xcount;
                 }
+
                 return Math.Round(pu, 0);
             }
 
@@ -431,10 +410,12 @@ namespace Rpm.Productie
             return true;
         }
 
-        public void UpdateWerkRooster(Rooster rooster, bool alleengestart,bool updatetijdenrooster, bool editpersoneelklusjes, bool savepersoneelklusjes,bool updatewerkplek, bool showsavenotofication, bool checkforspecialrooster)
+        public void UpdateWerkRooster(Rooster rooster, bool alleengestart, bool updatetijdenrooster,
+            bool editpersoneelklusjes, bool savepersoneelklusjes, bool updatewerkplek, bool showsavenotofication,
+            bool checkforspecialrooster)
         {
-            if (Werk == null || (alleengestart && Werk.State != ProductieState.Gestart)) return;
-            rooster ??= Tijden.WerkRooster??Manager.Opties.GetWerkRooster();
+            if (Werk == null || alleengestart && Werk.State != ProductieState.Gestart) return;
+            rooster ??= Tijden.WerkRooster ?? Manager.Opties.GetWerkRooster();
             if (Werk.IsBemand)
             {
                 var actiefroosters = Personen.Where(x => x.Actief && x.WerkRooster != null)
@@ -451,36 +432,35 @@ namespace Rpm.Productie
 
             if (updatetijdenrooster)
                 Tijden.UpdateUrenRooster(checkforspecialrooster, rooster);
-            for (int i = 0; i < Personen.Count; i++)
+            for (var i = 0; i < Personen.Count; i++)
             {
                 var pers = Personen[i];
                 pers.WerktAan = Werk.Path;
                 pers.Werkplek = Naam;
                 if (editpersoneelklusjes)
-                {
-                        if (pers.IngezetAanKlus(Path, true, out var klusjes))
+                    if (pers.IngezetAanKlus(Path, true, out var klusjes))
+                    {
+                        Personeel dbpers = null;
+                        if (savepersoneelklusjes)
+                            dbpers = Manager.Database.GetPersoneel(pers.PersoneelNaam).Result;
+                        var save = false;
+                        foreach (var klus in klusjes)
                         {
-                            Personeel dbpers = null;
-                            if (savepersoneelklusjes)
-                                dbpers = Manager.Database.GetPersoneel(pers.PersoneelNaam).Result;
-                            bool save = false;
-                            foreach (var klus in klusjes)
-                            {
-                                klus.Tijden.WerkRooster = rooster;
-                                klus.Tijden.SpecialeRoosters = Tijden.SpecialeRoosters;
-                                klus.Tijden.SetUren(Tijden.Uren.ToArray(), Werk.State == ProductieState.Gestart,true);
-                                save |= dbpers?.ReplaceKlus(klus) ?? false;
-                            }
-
-                            if (save)
-                                save |= Manager.Database.UpSert(dbpers, $"{dbpers.PersoneelNaam} Werktijden aangepast.",showsavenotofication)
-                                    .Result;
+                            klus.Tijden.WerkRooster = rooster;
+                            klus.Tijden.SpecialeRoosters = Tijden.SpecialeRoosters;
+                            klus.Tijden.SetUren(Tijden.Uren.ToArray(), Werk.State == ProductieState.Gestart, true);
+                            save |= dbpers?.ReplaceKlus(klus) ?? false;
                         }
-                }
+
+                        if (save)
+                            save |= Manager.Database.UpSert(dbpers, $"{dbpers.PersoneelNaam} Werktijden aangepast.",
+                                    showsavenotofication)
+                                .Result;
+                    }
             }
 
 
-            for (int i = 0; i < Storingen.Count; i++)
+            for (var i = 0; i < Storingen.Count; i++)
             {
                 var st = Storingen[i];
                 if (st.IsVerholpen) continue;
@@ -495,7 +475,6 @@ namespace Rpm.Productie
         {
             try
             {
-
                 Personen.RemoveAll(
                     t => !string.Equals(t.WerktAan, Werk.Path, StringComparison.CurrentCultureIgnoreCase));
                 if (Werk.State == ProductieState.Gestart)
@@ -506,7 +485,10 @@ namespace Rpm.Productie
                         Tijden.SetStop();
                 }
                 else if (Tijden.IsActief)
+                {
                     Tijden.SetStop();
+                }
+
                 if (updaterooster)
                     Tijden?.UpdateUrenRooster(false, null);
                 //AantalHistory?.SetActive((Werk?.State ?? ProductieState.Gestopt) == ProductieState.Gestart);
@@ -537,7 +519,7 @@ namespace Rpm.Productie
             if (Personen?.Count > 0 && Werk is {State: ProductieState.Gestart} && xtotaal > 0)
             {
                 var tijd = TijdAanGewerkt();
-                for (int i = 0; i < Personen.Count; i++)
+                for (var i = 0; i < Personen.Count; i++)
                 {
                     var per = Personen[i];
                     var tg = per.TijdAanGewerkt(GetStoringen(), this, per.WerkRooster ?? Tijden?.WerkRooster)
@@ -548,7 +530,7 @@ namespace Rpm.Productie
                         if (klus == null) continue;
                         //pak het percentage van hoveel tijd gewerkt is.
                         var percentage = tg / tijd * 100;
-                        var eachp = percentage > 0 ? (int) ((xtotaal / 100) * percentage) : 0;
+                        var eachp = percentage > 0 ? (int) (xtotaal / 100 * percentage) : 0;
                         var peruur = tg == 0 ? eachp : (int) (eachp / tg);
                         var same = peruur == per.PerUur;
                         klus.PerUur = peruur;
@@ -574,7 +556,7 @@ namespace Rpm.Productie
         public double TijdAanGewerkt(bool includestoringen = true, bool calculatecombis = true)
         {
             double tijd = 0;
-            Dictionary<DateTime, DateTime> xstoringen = new Dictionary<DateTime, DateTime>();
+            var xstoringen = new Dictionary<DateTime, DateTime>();
             if (includestoringen)
                 xstoringen = GetStoringen();
             if (Werk is {IsBemand: false})
@@ -583,24 +565,22 @@ namespace Rpm.Productie
                 tijd = Personen.Sum(x =>
                     x.TijdAanGewerkt(xstoringen, this, x.WerkRooster ?? Tijden?.WerkRooster).TotalHours);
             if (Werk != null && Werk.Combies.Count > 0 && calculatecombis)
-            {
-                for (int i = 0; i < Werk.Combies.Count; i++)
+                for (var i = 0; i < Werk.Combies.Count; i++)
                 {
                     var combi = Werk.Combies[i];
                     var xstop = combi.IsRunning ? DateTime.Now : combi.Periode.Stop;
                     var combitijd = TijdAanGewerkt(combi.Periode.Start, xstop, true, false);
-                    tijd = (tijd - combitijd) + ((combitijd / 100) * (100 - combi.Activiteit));
+                    tijd = tijd - combitijd + combitijd / 100 * (100 - combi.Activiteit);
                 }
-            }
 
             if (tijd <= 0) return 0;
-            return Math.Round(((tijd / 100) * Activiteit), 2);
+            return Math.Round(tijd / 100 * Activiteit, 2);
         }
 
         public double TijdAanGewerkt(DateTime vanaf, DateTime tot, bool includestoringen, bool calculatecombis = true)
         {
             double tijd = 0;
-            Dictionary<DateTime, DateTime> xstoringen = new Dictionary<DateTime, DateTime>();
+            var xstoringen = new Dictionary<DateTime, DateTime>();
             if (includestoringen)
                 xstoringen = GetStoringen();
             if (Werk is {IsBemand: false})
@@ -610,8 +590,7 @@ namespace Rpm.Productie
                     x.TijdAanGewerkt(xstoringen, this, vanaf, tot, x.WerkRooster ?? Tijden?.WerkRooster)
                         .TotalHours);
             if (Werk != null && Werk.Combies.Count > 0 && calculatecombis)
-            {
-                for (int i = 0; i < Werk.Combies.Count; i++)
+                for (var i = 0; i < Werk.Combies.Count; i++)
                 {
                     var combi = Werk.Combies[i];
                     var xstart = combi.Periode.Start < vanaf ? vanaf : combi.Periode.Start;
@@ -619,18 +598,18 @@ namespace Rpm.Productie
                     if (xstop > tot)
                         xstop = tot;
                     var combitijd = TijdAanGewerkt(xstart, xstop, true, false);
-                    tijd = (tijd - combitijd) + ((combitijd / 100) * (100 - combi.Activiteit));
+                    tijd = tijd - combitijd + combitijd / 100 * (100 - combi.Activiteit);
                 }
-            }
 
             if (tijd <= 0) return 0;
-            return Math.Round(((tijd / 100) * Activiteit), 2);
+            return Math.Round(tijd / 100 * Activiteit, 2);
         }
 
         public double LaatsAantalUpdateMinutes()
         {
             var xstoringen = GetStoringen();
-            var tijd = TimeSpan.FromHours(Tijden.TijdGewerkt(null, LaatstAantalUpdate, DateTime.Now, xstoringen)).TotalMinutes;
+            var tijd = TimeSpan.FromHours(Tijden.TijdGewerkt(null, LaatstAantalUpdate, DateTime.Now, xstoringen))
+                .TotalMinutes;
             return tijd;
         }
 
@@ -639,10 +618,8 @@ namespace Rpm.Productie
             var xvalue = AantalHistory.Aantallen.Where(x => x.Gemaakt > 0).ToList();
             var xtijd = TijdGewerkt;
             if (Werk is {IsBemand: true})
-            {
                 if (Personen is {Count: > 0})
                     xtijd /= Personen.Count;
-            }
             var xratio = xtijd.GetPercentageDifference(xvalue.Count * 1.5d);
             return xratio;
         }

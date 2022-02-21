@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using NPOI.SS.UserModel;
-using Polenter.Serialization;
 
 namespace ProductieManager.Rpm.ExcelHelper
 {
@@ -30,6 +29,16 @@ namespace ProductieManager.Rpm.ExcelHelper
 
     public class ExcelColumnEntry
     {
+        public ExcelColumnEntry()
+        {
+        }
+
+        public ExcelColumnEntry(string name)
+        {
+            Naam = name;
+            ColumnText = name;
+        }
+
         public string Naam { get; set; }
         public int ColumnIndex { get; set; }
         public string ColumnText { get; set; }
@@ -43,7 +52,7 @@ namespace ProductieManager.Rpm.ExcelHelper
         public short ColumnTextColorIndex { get; set; } = -1;
         public int ColomnTextRGB { get; set; }
         public CalculationType Type { get; set; } = CalculationType.None;
-        public List<ExcelRegelEntry> KleurRegels { get; set; } = new List<ExcelRegelEntry>();
+        public List<ExcelRegelEntry> KleurRegels { get; set; } = new();
         public ColorRuleType ColorType { get; set; }
 
         public static Color GetColorFromIndex(int index)
@@ -58,17 +67,14 @@ namespace ProductieManager.Rpm.ExcelHelper
             {
                 return Color.Empty;
             }
-
         }
 
         public static List<Color> GetExcelCollors()
         {
             var xreturn = new List<Color>();
-            var props = typeof(IndexedColors).GetFields().Select(x => (IndexedColors)x.GetValue("Index")).ToArray();
+            var props = typeof(IndexedColors).GetFields().Select(x => (IndexedColors) x.GetValue("Index")).ToArray();
             if (props.Length > 0)
-            {
                 xreturn.AddRange(props.Select(prop => Color.FromArgb(prop.RGB[0], prop.RGB[1], prop.RGB[2])).ToArray());
-            }
 
             return xreturn;
         }
@@ -85,29 +91,18 @@ namespace ProductieManager.Rpm.ExcelHelper
 
         public static short GetColorIndex(Color color)
         {
-            var props = typeof(IndexedColors).GetFields().Select(x => ((IndexedColors)x.GetValue("Index"))).ToArray();
+            var props = typeof(IndexedColors).GetFields().Select(x => (IndexedColors) x.GetValue("Index")).ToArray();
             if (props.Length > 0)
             {
                 //var rgb = $"{color.R:X2}{color.G:X2}{color.B:X2}";
                 var prop = props.FirstOrDefault(x =>
                     string.Equals(ColorFromRGB(x.RGB).Name, color.Name, StringComparison.CurrentCultureIgnoreCase));
                 if (prop == null) return -1;
-                var xindex = ((IndexedColors)prop).Index;
+                var xindex = prop.Index;
                 return xindex;
             }
 
             return -1;
-        }
-
-        public ExcelColumnEntry()
-        {
-
-        }
-
-        public ExcelColumnEntry(string name)
-        {
-            Naam = name;
-            ColumnText = name;
         }
     }
 }

@@ -9,10 +9,6 @@ namespace AutoUpdaterDotNET
     /// </summary>
     public class BasicAuthentication : IAuthentication
     {
-        private string Username { get; }
-
-        private string Password { get; }
-
         /// <summary>
         ///     Initializes credentials for Basic Authentication.
         /// </summary>
@@ -24,17 +20,21 @@ namespace AutoUpdaterDotNET
             Password = password;
         }
 
+        private string Username { get; }
+
+        private string Password { get; }
+
+        /// <inheritdoc />
+        public void Apply(ref MyWebClient webClient)
+        {
+            webClient.Headers[HttpRequestHeader.Authorization] = ToString();
+        }
+
         /// <inheritdoc />
         public override string ToString()
         {
             var token = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{Username}:{Password}"));
             return $"Basic {token}";
-        }
-        
-        /// <inheritdoc />
-        public void Apply(ref MyWebClient webClient)
-        {
-            webClient.Headers[HttpRequestHeader.Authorization] = ToString();
         }
     }
 }

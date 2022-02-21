@@ -1,28 +1,18 @@
-﻿using Rpm.Productie;
-using Rpm.Various;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using Rpm.Productie;
+using Rpm.Various;
 
 namespace Forms
 {
-    public partial class NotitieForms : Forms.MetroBase.MetroBaseForm
+    public partial class NotitieForms : MetroBaseForm
     {
-        public NotitieEntry Notitie { get; set; }
         public NotitieForms()
         {
             InitializeComponent();
             Notitie = new NotitieEntry("", NotitieType.Algemeen);
             SetTitle();
-        }
-
-        private void SetTitle()
-        {
-            if (Notitie == null)
-                this.Text = "Nieuwe Notitie";
-            else
-            {
-                this.Text = $"{Enum.GetName(typeof(NotitieType), Notitie.Type)} Notitie voor {Notitie.Path}";
-            }
         }
 
         public NotitieForms(NotitieEntry note) : this()
@@ -40,6 +30,7 @@ namespace Forms
             xnotitie.Text = Notitie.Notitie;
             SetTitle();
         }
+
         public NotitieForms(NotitieEntry note, Bewerking bew) : this()
         {
             Notitie = note ?? new NotitieEntry("", bew);
@@ -56,11 +47,21 @@ namespace Forms
             SetTitle();
         }
 
+        public NotitieEntry Notitie { get; set; }
+
 
         public string Title
         {
-            get => this.Text;
-            set => this.Text = value;
+            get => Text;
+            set => Text = value;
+        }
+
+        private void SetTitle()
+        {
+            if (Notitie == null)
+                Text = "Nieuwe Notitie";
+            else
+                Text = $"{Enum.GetName(typeof(NotitieType), Notitie.Type)} Notitie voor {Notitie.Path}";
         }
 
         private void xokb_Click(object sender, EventArgs e)

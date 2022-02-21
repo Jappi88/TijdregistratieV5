@@ -1,29 +1,31 @@
-﻿using ProductieManager.Rpm.Misc;
-using Rpm.Productie;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
+using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class NiewProductieForm : Forms.MetroBase.MetroBaseForm
+    public partial class NiewProductieForm : MetroBaseForm
     {
-        public ProductieFormulier CreatedFormulier { get; private set; }
-
         public NiewProductieForm()
         {
             InitializeComponent();
             Init();
         }
 
+        public ProductieFormulier CreatedFormulier { get; private set; }
+
         private void Init()
         {
             xbewerking.Items.Clear();
             xbewerking.Items.AddRange(Manager.BewerkingenLijst.GetAllEntries().Select(x => (object) x.Naam).ToArray());
             pictureBox1.Image =
-                ProductieManager.Properties.Resources.page_document_16748_128_128.CombineImage(
-                    ProductieManager.Properties.Resources.lightning_weather_storm_2781, 1.75);
+                Resources.page_document_16748_128_128.CombineImage(
+                    Resources.lightning_weather_storm_2781, 1.75);
         }
 
         private async void xstarten_Click(object sender, EventArgs e)
@@ -38,7 +40,7 @@ namespace Forms
 
         private async Task<bool> Save()
         {
-            bool xreturn = false;
+            var xreturn = false;
             try
             {
                 if (string.IsNullOrEmpty(xartikelnr.Text))
@@ -49,7 +51,7 @@ namespace Forms
                     throw new Exception("Omschrijving kan niet leeg zijn!\nVul in een omschrijving a.u.b.");
                 var bewent = Manager.BewerkingenLijst.GetEntry(xbewerking.SelectedItem.ToString());
                 if (bewent == null)
-                    throw new Exception($"Bewerking '{xbewerking.SelectedItem.ToString()}' bestaat niet!");
+                    throw new Exception($"Bewerking '{xbewerking.SelectedItem}' bestaat niet!");
                 var prod = await ProductieFormulier.CreateNewProductie(xartikelnr.Text.Replace(" ", ""),
                     xomschrijving.Text.Trim(),
                     (int) xaantal.Value, xleverdatum.Value, (int) xperuur.Value, bewent,
@@ -60,8 +62,10 @@ namespace Forms
                     xreturn = true;
                 }
                 else
+                {
                     throw new Exception(
                         "Het is niet  gelukt om een nieuwe productieformulier aan te maken!\nRaadpleeg Ihab a.u.b.");
+                }
             }
             catch (Exception e)
             {

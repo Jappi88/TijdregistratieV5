@@ -12,34 +12,36 @@ namespace ProductieManager.Rpm.Various
 {
     public class UserChat
     {
+        public UserChat()
+        {
+            ID = DateTime.Now.GetHashCode();
+        }
+
         public int ID { get; set; }
         public DateTime LastOnline { get; set; }
         public bool IsOnline { get; set; }
         public string UserName { get; set; }
         public string ProfielImage { get; set; }
 
-        public UserChat()
-        {
-            ID = DateTime.Now.GetHashCode();
-        }
-
         public List<ProductieChatEntry> GetMessagesFromAfzender(string afzender, bool onlyunread = false)
         {
             var xreturn = new List<ProductieChatEntry>();
             if (string.IsNullOrEmpty(UserName)) return xreturn;
-            string xname = string.Equals(afzender, "iedereen", StringComparison.CurrentCultureIgnoreCase)
+            var xname = string.Equals(afzender, "iedereen", StringComparison.CurrentCultureIgnoreCase)
                 ? afzender
                 : UserName;
-            string path = Path.Combine(ProductieChat.GetReadPath(true), "Chat", xname, "Berichten");
+            var path = Path.Combine(ProductieChat.GetReadPath(true), "Chat", xname, "Berichten");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            List<string> files = Directory.GetFiles(path, "*.rpm", SearchOption.TopDirectoryOnly).ToList();
+            var files = Directory.GetFiles(path, "*.rpm", SearchOption.TopDirectoryOnly).ToList();
             if (string.IsNullOrEmpty(afzender) && Directory.Exists(ProductieChat.PublicLobyPath))
             {
-                var publicfiles = Directory.GetFiles(ProductieChat.PublicLobyPath, "*.rpm", SearchOption.TopDirectoryOnly);
+                var publicfiles =
+                    Directory.GetFiles(ProductieChat.PublicLobyPath, "*.rpm", SearchOption.TopDirectoryOnly);
                 if (publicfiles.Length > 0)
                     files.AddRange(publicfiles);
             }
+
             try
             {
                 foreach (var file in files)
@@ -48,11 +50,9 @@ namespace ProductieManager.Rpm.Various
                     if (ent?.Afzender == null) continue;
                     if (!string.IsNullOrEmpty(afzender) &&
                         !string.Equals(afzender, "iedereen", StringComparison.CurrentCultureIgnoreCase))
-                    {
                         if (!string.Equals(ent.Afzender.UserName, afzender,
-                                StringComparison.CurrentCultureIgnoreCase)) continue;
-
-                    }
+                                StringComparison.CurrentCultureIgnoreCase))
+                            continue;
 
                     if (onlyunread && ent.IsGelezen)
                         continue;
@@ -83,7 +83,7 @@ namespace ProductieManager.Rpm.Various
 
         public List<ProductieChatEntry> GetAllMessages()
         {
-            return GetMessagesFromAfzender(null, false);
+            return GetMessagesFromAfzender(null);
         }
 
         public bool Save()
@@ -97,11 +97,10 @@ namespace ProductieManager.Rpm.Various
                 var xfile = Path.Combine(xfirst, "Chat", $"{UserName}.rpm");
                 if (this.Serialize(xfile))
                 {
-                    for (int i = 1; i < paths.Length; i++)
+                    for (var i = 1; i < paths.Length; i++)
                     {
                         var path2 = Path.Combine(paths[i], "Chat", $"{UserName}.rpm");
-                        for (int j = 0; j < 5; j++)
-                        {
+                        for (var j = 0; j < 5; j++)
                             try
                             {
                                 File.Copy(xfile, path2, true);
@@ -111,7 +110,6 @@ namespace ProductieManager.Rpm.Various
                             {
                                 Console.WriteLine(e);
                             }
-                        }
                     }
 
                     return true;
@@ -132,13 +130,12 @@ namespace ProductieManager.Rpm.Various
             try
             {
                 if (Manager.LogedInGebruiker == null) return null;
-                if(File.Exists(ProfielImage))
+                if (File.Exists(ProfielImage))
                     return Image.FromStream(new MemoryStream(File.ReadAllBytes(ProfielImage))).ResizeImage(64, 64);
                 var xfile = Path.Combine(ProductieChat.GetReadPath(true), "Chat", UserName, "ProfielFoto.png");
                 if (!File.Exists(xfile))
                     return Resources.avatardefault_92824;
                 return Image.FromStream(new MemoryStream(File.ReadAllBytes(xfile))).ResizeImage(64, 64);
-
             }
             catch (Exception exception)
             {

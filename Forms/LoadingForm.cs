@@ -1,37 +1,38 @@
-﻿using Rpm.Various;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using Rpm.Various;
 
 namespace Forms
 {
-    public partial class LoadingForm : Forms.MetroBase.MetroBaseForm
+    public partial class LoadingForm : MetroBaseForm
     {
-        public ProgressArg Arg { get; set; } = new ProgressArg();
-
         public LoadingForm()
         {
             InitializeComponent();
             Arg.Changed += Arg_Changed;
         }
 
+        public ProgressArg Arg { get; set; } = new();
+
         private void Arg_Changed(object sender, ProgressArg arg)
         {
             if (InvokeRequired)
                 Invoke(new Action(() => UpdateArg(arg)));
             else UpdateArg(arg);
-
         }
 
         private void UpdateArg(ProgressArg arg)
         {
             try
             {
-                if (this.IsDisposed || this.Disposing) return;
+                if (IsDisposed || Disposing) return;
                 if (arg.IsCanceled)
                 {
-                    this.Dispose();
+                    Dispose();
                     return;
                 }
+
                 xstatustext.Text = arg.Message;
                 xstatustext.Invalidate();
                 xsluiten.Text = arg.Type == ProgressType.ReadCompleet ? "Sluiten" : "Annuleren";

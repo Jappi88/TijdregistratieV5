@@ -1,15 +1,15 @@
-﻿using ProductieManager.Properties;
-using Rpm.Mailing;
-using Rpm.Misc;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Forms.MetroBase;
+using ProductieManager.Properties;
+using Rpm.Mailing;
+using Rpm.Misc;
 
 namespace Forms
 {
-    public partial class EmailHostForm : Forms.MetroBase.MetroBaseForm
+    public partial class EmailHostForm : MetroBaseForm
     {
-        public EmailHost SelectedHost { get; private set; } = new();
         public EmailHostForm()
         {
             InitializeComponent();
@@ -24,8 +24,10 @@ namespace Forms
                 xpasstextbox.Text = SelectedHost.Password?.Trim();
                 xusessl.Checked = SelectedHost.UseSsl;
             }
-
         }
+
+        public EmailHost SelectedHost { get; } = new();
+
         private void pictureBox_Click(object sender, EventArgs e)
         {
             if (sender is PictureBox box)
@@ -51,7 +53,7 @@ namespace Forms
 
         public EmailHost GetMailHost()
         {
-            return new EmailHost()
+            return new EmailHost
             {
                 EmailAdres = xemailtextbox.Text.Trim(),
                 Password = xpasstextbox.Text.Trim(),
@@ -111,9 +113,6 @@ namespace Forms
             {
                 XMessageBox.Show(this, exception.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            
         }
-
-       
     }
 }

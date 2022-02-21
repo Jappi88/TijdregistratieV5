@@ -1,9 +1,9 @@
-﻿using ProductieManager.Properties;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Controls;
+using ProductieManager.Properties;
 
 namespace ProductieManager.Rpm.Misc
 {
@@ -17,15 +17,9 @@ namespace ProductieManager.Rpm.Misc
 
     public class DrawArrow : IDisposable
     {
-        public  Direction Direction { get; private set; }
-        public bool IsMoving { get; private set; }
-        public Point Location { get; set; }
-        public Control UserControl { get; set; }
-       // public Graphics View { get; set; }
-        public int MoveMargin { get; set; } = 10;
-        public int AnimationSpeed { get; set; } = 10;
-        public Point Position { get; set; }
-        public CustomImageBox ImageBox { get; private set; }
+        private bool _disposed;
+
+        private bool _positive;
 
         public DrawArrow(Control control, Direction direction, bool move, Point location)
         {
@@ -41,12 +35,32 @@ namespace ProductieManager.Rpm.Misc
             // View = control.CreateGraphics();
         }
 
+        public Direction Direction { get; }
+        public bool IsMoving { get; private set; }
+        public Point Location { get; set; }
+
+        public Control UserControl { get; set; }
+
+        // public Graphics View { get; set; }
+        public int MoveMargin { get; set; } = 10;
+        public int AnimationSpeed { get; set; } = 10;
+        public Point Position { get; set; }
+        public CustomImageBox ImageBox { get; }
+
+        public void Dispose()
+        {
+            // Dispose of unmanaged resources.
+            Dispose(true);
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
+        }
+
         public void Draw()
         {
-           // if (UserControl == null || UserControl.IsDisposed) return;
+            // if (UserControl == null || UserControl.IsDisposed) return;
             try
             {
-                Task.Factory.StartNew( () =>
+                Task.Factory.StartNew(() =>
                 {
                     UserControl.Invoke(new MethodInvoker(() =>
                     {
@@ -68,7 +82,6 @@ namespace ProductieManager.Rpm.Misc
                         Task.Delay(AnimationSpeed).Wait();
                     }
                 });
-
             }
             catch (Exception ex)
             {
@@ -76,7 +89,6 @@ namespace ProductieManager.Rpm.Misc
             }
         }
 
-        private bool _positive;
         private Point GetLocation()
         {
             var xloc = Position;
@@ -86,39 +98,28 @@ namespace ProductieManager.Rpm.Misc
                 {
                     case Direction.Top:
                         if (_positive)
-                        {
                             xloc.Y++;
-                        }
                         else xloc.Y--;
                         break;
                     case Direction.Left:
                         if (_positive)
-                        {
                             xloc.X--;
-                        }
                         else xloc.X++;
                         break;
                     case Direction.Right:
                         if (_positive)
-                        {
                             xloc.X++;
-                        }
                         else xloc.X--;
                         break;
                     case Direction.Down:
                         if (_positive)
-                        {
                             xloc.Y--;
-                        }
                         else xloc.Y++;
                         break;
                 }
 
-                if (xloc.Y > MoveMargin || xloc.Y < -MoveMargin ||
-                    (xloc.X > MoveMargin || xloc.X < -MoveMargin))
-                {
+                if (xloc.Y > MoveMargin || xloc.Y < -MoveMargin || xloc.X > MoveMargin || xloc.X < -MoveMargin)
                     _positive = !_positive;
-                }
 
                 Position = xloc;
             }
@@ -145,26 +146,13 @@ namespace ProductieManager.Rpm.Misc
 
         public void Move(bool move)
         {
-
         }
 
-        public void Dispose()
-        {
-            // Dispose of unmanaged resources.
-            Dispose(true);
-            // Suppress finalization.
-            GC.SuppressFinalize(this);
-        }
-
-        private bool _disposed;
         protected virtual void Dispose(bool disposing)
         {
             IsMoving = false;
-            
-            if (_disposed)
-            {
-                return;
-            }
+
+            if (_disposed) return;
 
             if (disposing)
             {
