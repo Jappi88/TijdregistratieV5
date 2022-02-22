@@ -94,6 +94,21 @@ namespace Rpm.Productie.AantalHistory
                 Werktijd.TijdGewerkt(new TijdEntry(DateChanged, GetGestopt()), uren?.WerkRooster, uren?.SpecialeRoosters,exclude).TotalHours, 2);
         }
 
+        public double GetTijdGewerkt(UrenLijst uren, TijdEntry bereik,  Dictionary<DateTime, DateTime> exclude = null)
+        {
+            var xstart = DateChanged;
+            var xstop = GetGestopt();
+            if (bereik != null)
+            {
+                if(bereik.Start > xstart)
+                    xstart = bereik.Start;
+                if(bereik.Stop < xstop)
+                    xstop = bereik.Stop;
+            }
+            return Math.Round(
+                Werktijd.TijdGewerkt(new TijdEntry(xstart, xstop), uren?.WerkRooster, uren?.SpecialeRoosters, exclude).TotalHours, 2);
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is AantalRecord record)

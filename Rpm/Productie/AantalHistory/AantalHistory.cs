@@ -174,7 +174,7 @@ namespace Rpm.Productie.AantalHistory
                 foreach (var x in xaantallen)
                 {
                     int xgemaakt = x.GetGemaakt();
-                    double xtijd = x.GetTijdGewerkt(uren, exc);
+                    double xtijd = x.GetTijdGewerkt(uren,new TijdEntry(start,stop), exc);
                     gemaakt += xgemaakt;
                     tijd += xtijd;
                     if (xtijd > 0 && xgemaakt > 0)

@@ -161,7 +161,7 @@ namespace Forms.Excel
         private bool _isbusy = false;
         private void StartWait()
         {
-            if (_isbusy) return;
+            if (_isbusy || this.Disposing || this.IsDisposed) return;
             _isbusy = true;
             xOpslaan.Text = "Stoppen";
             xOpslaan.Image = Resources.stop_red256_24890;
@@ -190,16 +190,25 @@ namespace Forms.Excel
 
         public bool IsRunning(ProgressArg arg)
         {
-            if (arg?.Message != null)
+            try
             {
-                this.BeginInvoke(new MethodInvoker(() =>
+                if (arg?.Message != null)
                 {
-                    xbezig.Text = arg.Message;
-                    xbezig.Invalidate();
-                }));
-            }
+                    if (this.Disposing || this.IsDisposed) return false;
+                    this.BeginInvoke(new MethodInvoker(() =>
+                    {
+                        xbezig.Text = arg.Message;
+                        xbezig.Invalidate();
+                    }));
+                }
 
-            return _isbusy;
+                return _isbusy;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            
         }
 
         private void StopWait()

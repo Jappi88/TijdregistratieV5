@@ -3,6 +3,8 @@ using NPOI.SS.UserModel;
 using NPOI.SS.UserModel.Charts;
 using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
 using Rpm.Mailing;
 using Rpm.Misc;
 using Rpm.Productie;
@@ -13,9 +15,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using ProductieManager.Properties;
-using ProductieManager.Rpm.Misc;
-using ProductieManager.Rpm.Settings;
 using ICell = NPOI.SS.UserModel.ICell;
 
 // ReSharper disable All

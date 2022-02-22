@@ -106,7 +106,7 @@ namespace Rpm.Productie.ArtikelRecords
             }
         }
 
-        public Task<int> SaveRecords(List<ArtikelRecord> records)
+        public Task<int> SaveRecords(List<ArtikelRecord> records, ProgressArg changed = null)
         {
             return Task.Factory.StartNew(() =>
             {
@@ -115,10 +115,24 @@ namespace Rpm.Productie.ArtikelRecords
                 {
                     if (records == null || records.Count == 0)
                         return 0;
+                    if (changed != null)
+                    {
+                        changed.Message = $"Updating ArtikelRecords...";
+                        changed.Current = 0;
+                        changed.Max = records.Count;
+                        changed.OnChanged(this);
+                    }
 
-                    for (int i = 0; i < records.Count; i++)
+                    for (var i = 0; i < records.Count; i++)
                     {
                         var xrec = records[i];
+                        if (changed != null)
+                        {
+                            changed.Value = xrec;
+                            changed.Current = i;
+                            changed.Max = records.Count;
+                            changed.OnChanged(this);
+                        }
                         if (SaveRecord(xrec))
                             xret++;
                     }
