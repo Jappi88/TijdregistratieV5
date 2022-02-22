@@ -331,7 +331,7 @@ namespace Rpm.Settings
                 {
                     Text = "Productie Chat",
                     ForeColor = Color.Navy,
-                    GroupName = "Chat",
+                    GroupName = "Beheer",
                     Name = "xchat",
                     Size = new Size(256, 96),
                     TileColor = Color.LightSteelBlue,

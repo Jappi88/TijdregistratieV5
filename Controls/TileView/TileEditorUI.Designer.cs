@@ -29,9 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.tileViewer1 = new Controls.TileViewer();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.xtileview = new MetroFramework.Controls.MetroComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
@@ -58,6 +56,8 @@
             this.xomschrijving = new MetroFramework.Controls.MetroTextBox();
             this.xafbeeldingbutton = new System.Windows.Forms.Button();
             this.xafbeelding = new System.Windows.Forms.PictureBox();
+            this.tileViewer1 = new Controls.TileViewer();
+            this.xtileview = new MetroFramework.Controls.MetroComboBox();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -87,24 +87,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Voorbeeld";
             // 
-            // tileViewer1
-            // 
-            this.tileViewer1.AllowDrop = true;
-            this.tileViewer1.AutoScroll = true;
-            this.tileViewer1.BackColor = System.Drawing.Color.White;
-            this.tileViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tileViewer1.EnableSaveTiles = false;
-            this.tileViewer1.EnableTileSelection = false;
-            this.tileViewer1.EnableTimer = false;
-            this.tileViewer1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tileViewer1.Location = new System.Drawing.Point(3, 25);
-            this.tileViewer1.MultipleSelections = false;
-            this.tileViewer1.Name = "tileViewer1";
-            this.tileViewer1.Size = new System.Drawing.Size(478, 435);
-            this.tileViewer1.TabIndex = 0;
-            this.tileViewer1.TileInfoRefresInterval = 10000;
-            this.tileViewer1.SelectionChanged += new System.EventHandler(this.tileViewer1_SelectionChanged);
-            // 
             // panel1
             // 
             this.panel1.AutoScroll = true;
@@ -126,25 +108,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(356, 463);
             this.panel1.TabIndex = 1;
-            // 
-            // xtileview
-            // 
-            this.xtileview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xtileview.FormattingEnabled = true;
-            this.xtileview.ItemHeight = 23;
-            this.xtileview.Items.AddRange(new object[] {
-            "Van Links Naar Rechts",
-            "Van Boven Naar Onder",
-            "Van Rechts Naar Links",
-            "Van Onder Naar Boven"});
-            this.xtileview.Location = new System.Drawing.Point(6, 329);
-            this.xtileview.Name = "xtileview";
-            this.xtileview.Size = new System.Drawing.Size(341, 29);
-            this.xtileview.TabIndex = 14;
-            this.xtileview.UseSelectable = true;
-            this.xtileview.Visible = false;
-            this.xtileview.SelectedIndexChanged += new System.EventHandler(this.xtileview_SelectedIndexChanged);
             // 
             // groupBox3
             // 
@@ -526,6 +489,43 @@
             this.xafbeelding.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.xafbeelding.TabIndex = 0;
             this.xafbeelding.TabStop = false;
+            // 
+            // tileViewer1
+            // 
+            this.tileViewer1.AllowDrop = true;
+            this.tileViewer1.AutoScroll = true;
+            this.tileViewer1.BackColor = System.Drawing.Color.White;
+            this.tileViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tileViewer1.EnableSaveTiles = false;
+            this.tileViewer1.EnableTileSelection = false;
+            this.tileViewer1.EnableTimer = false;
+            this.tileViewer1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tileViewer1.Location = new System.Drawing.Point(3, 25);
+            this.tileViewer1.MultipleSelections = false;
+            this.tileViewer1.Name = "tileViewer1";
+            this.tileViewer1.Size = new System.Drawing.Size(478, 435);
+            this.tileViewer1.TabIndex = 0;
+            this.tileViewer1.TileInfoRefresInterval = 10000;
+            this.tileViewer1.SelectionChanged += new System.EventHandler(this.tileViewer1_SelectionChanged);
+            // 
+            // xtileview
+            // 
+            this.xtileview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xtileview.FormattingEnabled = true;
+            this.xtileview.ItemHeight = 23;
+            this.xtileview.Items.AddRange(new object[] {
+            "Van Links Naar Rechts",
+            "Van Boven Naar Onder",
+            "Van Rechts Naar Links",
+            "Van Onder Naar Boven"});
+            this.xtileview.Location = new System.Drawing.Point(6, 329);
+            this.xtileview.Name = "xtileview";
+            this.xtileview.Size = new System.Drawing.Size(341, 29);
+            this.xtileview.TabIndex = 14;
+            this.xtileview.UseSelectable = true;
+            this.xtileview.Visible = false;
+            this.xtileview.SelectedIndexChanged += new System.EventHandler(this.xtileview_SelectedIndexChanged);
             // 
             // TileEditorUI
             // 

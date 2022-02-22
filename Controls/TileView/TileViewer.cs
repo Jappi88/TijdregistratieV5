@@ -109,7 +109,6 @@ namespace Controls
                     xtileinfo.TileIndex = i;
                     var xtile = GetTile(xtileinfo);
                     xtile = UpdateTile(xtileinfo, xtile);
-                    xtile.AllowSelection = EnableTileSelection;
                     if (EnableTileSelection && selected != null && selected.Equals(xtileinfo))
                         SelectTile(xtile, true);
                 }
@@ -133,7 +132,6 @@ namespace Controls
             {
                 tile ??= GetTile(entry);
                 var xtile = tile ?? new Tile();
-                xtile.AllowSelection = EnableTileSelection;
                 if (tile == null)
                 {
                     xtile.Click += Xtile_Click;
