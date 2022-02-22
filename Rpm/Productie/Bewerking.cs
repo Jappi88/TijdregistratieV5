@@ -881,7 +881,7 @@ namespace Rpm.Productie
         {
             if (string.IsNullOrEmpty(ProductieNr))
                 return null;
-            var parent = Manager.Database.GetProductie(ProductieNr).Result;
+            var parent = Manager.Database.GetProductie(ProductieNr);
             if (parent?.Bewerkingen != null)
                 for (var i = 0; i < parent.Bewerkingen.Length; i++)
                     if (string.Equals(parent.Bewerkingen[i].Naam, Naam, StringComparison.CurrentCultureIgnoreCase))

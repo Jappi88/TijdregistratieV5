@@ -190,7 +190,7 @@ namespace ProductieManager.Forms
                         continue; //productie nr bestaat uit 7 characters.
 
                     string xvalue = value.Substring(xstart, 7);
-                    var prod = Manager.Database.GetProductie(xvalue).Result;
+                    var prod = Manager.Database.GetProductie(xvalue);
                     if (prod == null || xreplaces.Contains(prod.ProductieNr)) continue;
                     xreturn = xreturn.Replace(xvalue, $"<a color= white href='{prod.ProductieNr}'>[{prod.Omschrijving}]</a>");
                     xreplaces.Add(prod.ProductieNr);
@@ -220,7 +220,7 @@ namespace ProductieManager.Forms
                         continue; //productie nr bestaat uit 10 characters.
 
                     string xvalue = value.Substring(xstart, 10);
-                    var prod = Manager.Database.GetProductie(xvalue).Result;
+                    var prod = Manager.Database.GetProductie(xvalue);
                     if (prod == null || xreplaces.Contains(prod.ProductieNr)) continue;
                     xreturn = xreturn.Replace(xvalue, $"<a color= white href='{prod.ProductieNr}'>{prod.Omschrijving}</a>");
                     xreplaces.Add(prod.ProductieNr);
@@ -624,12 +624,12 @@ namespace ProductieManager.Forms
             }
         }
 
-        private async void xchatpanel_LinkClicked(object sender, HtmlLinkClickedEventArgs e)
+        private void xchatpanel_LinkClicked(object sender, HtmlLinkClickedEventArgs e)
         {
             if (Manager.Database == null || Manager.Database.IsDisposed) return;
             try
             {
-                var prod = await Manager.Database.GetProductie(e.Link);
+                var prod = Manager.Database.GetProductie(e.Link);
                 if (prod == null) return;
                 var bew = prod.Bewerkingen?.FirstOrDefault(x => x.IsAllowed());
                 Manager.FormulierActie(new object[] { prod, bew }, MainAktie.OpenProductie);

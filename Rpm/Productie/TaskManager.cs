@@ -149,7 +149,7 @@ namespace Rpm.Productie
                     case MessageAction.ProductieNotitie:
                         if (!string.IsNullOrEmpty(message.ProductieNummer))
                         {
-                            var xpr = await Manager.Database.GetProductie(message.ProductieNummer);
+                            var xpr = Manager.Database.GetProductie(message.ProductieNummer);
                             xpr.Note ??= new NotitieEntry(message.Message, xpr);
                             xpr.Note.Notitie = message.Message;
                             if (!await Manager.Database.UpSert(xpr))
@@ -159,7 +159,7 @@ namespace Rpm.Productie
                         break;
 
                     case MessageAction.ProductieWijziging:
-                        var form = await Manager.Database.GetProductie(message.ProductieNummer);
+                        var form = Manager.Database.GetProductie(message.ProductieNummer);
                         if (form != null)
                         {
                             var properties = typeof(ProductieFormulier).GetProperties();

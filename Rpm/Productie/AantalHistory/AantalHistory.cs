@@ -17,7 +17,6 @@ namespace Rpm.Productie.AantalHistory
 
         public AantallenRecords()
         {
-            Aantallen.Add(new AantalRecord(0));
         }
 
         public void SetActive(bool active, AantalRecord record = null)
@@ -58,10 +57,10 @@ namespace Rpm.Productie.AantalHistory
                         : null;
                     var xlast = Aantallen.LastOrDefault();
 
-                    var xstart = xlast?.EndDate ?? tijden?.GetFirstStart() ?? DateTime.Now;
+                    var xstart = xlast?.EndDate ?? tijden?.GetFirstStart()??new DateTime();
                     var xtijd = tijden?.Uren.FirstOrDefault(x =>
                         x.ContainsBereik(new TijdEntry(DateTime.Now, DateTime.Now)));
-                    if (xtijd != null)
+                    if (xstart.IsDefault() && xtijd != null)
                     {
                         if (xlast != null && xtijd.ContainsBereik(new TijdEntry(xlast.DateChanged, xlast.EndDate)))
                             xstart = xlast.EndDate;

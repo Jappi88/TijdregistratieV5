@@ -77,7 +77,7 @@ namespace Rpm.Productie
         public string WerkNaam => Werk?.Naam;
         public string ArtikelNr => Werk?.ArtikelNr;
         public string ProductieNr => Werk?.ProductieNr;
-        public AantalHistory.AantallenRecords AantalHistory { get; private set; } = new AantallenRecords();
+        public AantalHistory.AantallenRecords AantalHistory { get; set; } = new AantallenRecords();
         public DateTime FriendlyVerwachtGereed =>
             Werk?.VerwachtDatumGereed() ?? DateTime.Now;
 

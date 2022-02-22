@@ -207,7 +207,7 @@ namespace Forms.Klachten
                 else
                 {
                     var name = tb.SelectedText;
-                    var xprod = Manager.Database.GetProductie(name).Result;
+                    var xprod = Manager.Database.GetProductie(name);
                     if (xprod == null)
                     {
                         if (XMessageBox.Show(this, $"ProductieNr '{name}' bestaat niet, wil je alsnog toevoegen?",

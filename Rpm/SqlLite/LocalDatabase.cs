@@ -165,26 +165,23 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<ProductieFormulier> GetProductie(string productienr)
+        public ProductieFormulier GetProductie(string productienr)
         {
-            return Task.Run( () =>
+            try
             {
-                try
-                {
-                    ProductieFormulier prod = null;
-                    if (ProductieFormulieren != null)
-                        prod = ProductieFormulieren.FindOne(productienr).Result;
-                    if (prod == null && GereedFormulieren != null)
-                        prod = GereedFormulieren.FindOne(productienr).Result;
-                    prod?.UpdateForm(true, false, null, null, false, false, false);
-                    return prod;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    return null;
-                }
-            });
+                ProductieFormulier prod = null;
+                if (ProductieFormulieren != null)
+                    prod = ProductieFormulieren.FindOne(productienr).Result;
+                if (prod == null && GereedFormulieren != null)
+                    prod = GereedFormulieren.FindOne(productienr).Result;
+                prod?.UpdateForm(true, false, null, null, false, false, false);
+                return prod;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
 
         }
 
@@ -239,7 +236,7 @@ namespace Rpm.SqlLite
                 {
                     foreach (var id in ids)
                     {
-                        var xprod = Manager.Database?.GetProductie(id).Result;
+                        var xprod = Manager.Database?.GetProductie(id);
                         if (xprod == null) continue;
                         xret.Add(xprod);
                     }
@@ -262,7 +259,7 @@ namespace Rpm.SqlLite
                 {
                     foreach (var id in ids)
                     {
-                        var xprod = Manager.Database?.GetProductie(id).Result;
+                        var xprod = Manager.Database?.GetProductie(id);
                         if (xprod?.Bewerkingen == null) continue;
                         foreach (var bw in xprod.Bewerkingen)
                         {
@@ -2410,7 +2407,7 @@ namespace Rpm.SqlLite
                                 foreach (var s in xs3)
                                 {
                                     token.Token.ThrowIfCancellationRequested();
-                                    var myitem = await Manager.Database.GetProductie(s.ProductieNr);
+                                    var myitem = Manager.Database.GetProductie(s.ProductieNr);
                                     if (myitem != null)
                                     {
                                         if (await myitem.UpdateFrom(s,
@@ -2446,7 +2443,7 @@ namespace Rpm.SqlLite
                                 foreach (var s in xs3)
                                 {
                                     token.Token.ThrowIfCancellationRequested();
-                                    var myitem = await Manager.Database.GetProductie(s.ProductieNr);
+                                    var myitem = Manager.Database.GetProductie(s.ProductieNr);
                                     if (myitem != null)
                                     {
                                         if (await myitem.UpdateFrom(s,

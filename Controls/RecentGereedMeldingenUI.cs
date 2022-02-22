@@ -219,7 +219,7 @@ namespace Controls
                         if (IsDisposed || Disposing) return;
                         var id = xprodids[i];
                         if (string.IsNullOrEmpty(id)) continue;
-                        var prod = await Manager.Database.GetProductie(id);
+                        var prod = Manager.Database.GetProductie(id);
                         if (prod?.Bewerkingen == null) continue;
                         foreach (var bw in prod.Bewerkingen)
                             if (IsAllowed(bw, null))

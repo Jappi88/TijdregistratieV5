@@ -585,7 +585,6 @@ namespace Rpm.Productie
             foreach (var tijd in uren)
             {
                 if (tijd.ExtraTijd != null) continue;
-                if (tijd.InUse) return tijd.Start;
                 if (tijd.Start < dt || dt.IsDefault())
                     dt = tijd.Start;
             }

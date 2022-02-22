@@ -51,7 +51,7 @@ namespace Forms.Klachten
             }
             else
             {
-                var prod = Manager.Database.GetProductie(link).Result;
+                var prod = Manager.Database.GetProductie(link);
                 if (prod != null)
                 {
                     Manager.FormulierActie(new object[] {prod}, MainAktie.OpenProductie);

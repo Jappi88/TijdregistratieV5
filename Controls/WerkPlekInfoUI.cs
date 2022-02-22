@@ -126,11 +126,11 @@ namespace Controls
                 c.BackColor = Color.White;
         }
 
-        private async void xmeebezig_DoubleClick(object sender, EventArgs e)
+        private void xmeebezig_DoubleClick(object sender, EventArgs e)
         {
             if (Huidig != null)
             {
-                var prod = await Manager.Database.GetProductie(Huidig.ProductieNr);
+                var prod = Manager.Database.GetProductie(Huidig.ProductieNr);
                 if (prod == null) return;
                 var bew = prod.Bewerkingen?.FirstOrDefault(x =>
                     x.IsAllowed() && string.Equals(x.Naam, Huidig.Naam, StringComparison.CurrentCultureIgnoreCase));
@@ -138,11 +138,11 @@ namespace Controls
             }
         }
 
-        private async void xvolgende_DoubleClick(object sender, EventArgs e)
+        private void xvolgende_DoubleClick(object sender, EventArgs e)
         {
             if (Volgende != null)
             {
-                var prod = await Manager.Database.GetProductie(Volgende.ProductieNr);
+                var prod = Manager.Database.GetProductie(Volgende.ProductieNr);
                 if (prod == null) return;
                 var bew = prod.Bewerkingen?.FirstOrDefault(x =>
                     x.IsAllowed() && string.Equals(x.Naam, Volgende.Naam, StringComparison.CurrentCultureIgnoreCase));
@@ -178,7 +178,7 @@ namespace Controls
                 {
                     var xvals = e.Link.Split(';');
                     if (xvals.Length < 3) return;
-                    var prod = await Manager.Database.GetProductie(xvals[0]);
+                    var prod = Manager.Database.GetProductie(xvals[0]);
                     if (prod == null) return;
                     var bew = prod.Bewerkingen?.FirstOrDefault(x =>
                         x.IsAllowed() && string.Equals(x.Naam, xvals[1], StringComparison.CurrentCultureIgnoreCase));

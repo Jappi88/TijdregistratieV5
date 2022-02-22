@@ -1,5 +1,7 @@
 ﻿using Forms;
+using ProductieManager.Rpm.Misc;
 using ProductieManager.Rpm.Productie;
+using ProductieManager.Rpm.Various;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
@@ -8,9 +10,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using ProductieManager.Properties;
-using ProductieManager.Rpm.Misc;
-using ProductieManager.Rpm.Various;
 
 namespace Controls.TileView
 {
@@ -252,7 +251,7 @@ namespace Controls.TileView
                         entry.TileCount = Manager.Opties?.Filters?.Count ?? 0;
                         break;
                     case "xchat":
-                        entry.TileCount = ProductieChat.Gebruikers.Count(x=> x.IsOnline && x.UserName.ToLower() != "iedereen");
+                        entry.TileCount = ProductieChat.Gebruikers?.Count(x=> x.IsOnline && x.UserName.ToLower() != "iedereen")??0;
                         var xunread = ProductieChat.Chat?.GetAllUnreadMessages().Count ?? 0;
                         if (xunread > 0)
                         {

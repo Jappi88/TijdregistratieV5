@@ -28,7 +28,7 @@ namespace ProductieManager.Rpm.Various
         public static bool RaiseNewMessageEvent { get; set; } = true;
         public static bool RaiseUserUpdateEvent { get; set; } = true;
 
-        public static List<UserChat> Gebruikers { get; set; }
+        public static List<UserChat> Gebruikers { get; set; } = new List<UserChat>();
 
         private readonly Timer _FileChangedNotifyTimer;
 

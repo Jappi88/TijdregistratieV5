@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Contexts;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
 using Rpm.Misc;
@@ -877,27 +878,94 @@ Color textcolor, bool useimage)
 
         public Bitmap GetImageFromResources()
         {
-            Bitmap img = this is ProductieFormulier ? Resources.page_document_16748_128_128 : Resources.operation;
-            switch (State)
+            string xname = "";
+            return GetImageFromResources(ref xname);
+        }
+
+        public Bitmap GetImageFromResources(ref string name)
+        {
+            var img = this is ProductieFormulier ? Resources.page_document_16748_128_128 : Resources.operation;
+            bool onderbroken = this.GetStoringen(true).Length > 0;
+            if (this is Bewerking bew)
             {
-                case ProductieState.Gestopt:
-                    if (IsNieuw)
-                        img = img.CombineImage(Resources.new_25355, 2);
-                    else if (TeLaat)
-                        img = img.CombineImage(Resources.Warning_36828, 2);
-                    break;
-                case ProductieState.Gestart:
-                    img = img.CombineImage(Resources.play_button_icon_icons_com_60615, 2);
-                    break;
-                case ProductieState.Gereed:
-                    img = img.CombineImage(Resources.check_1582, 2);
-                    break;
-                case ProductieState.Verwijderd:
-                    img = img.CombineImage(Resources.delete_1577, 2);
-                    break;
+                name += "bew";
+                if (bew.Combies.Count > 0)
+                {
+                    name += "_combi";
+                    img = img.CombineImage(Resources.UnMerge_arrows_32x32, ContentAlignment.BottomLeft, 2);
+                }
+                if (!string.IsNullOrEmpty(bew.Note?.Notitie))
+                {
+                    name += "_note";
+                    img = img.CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, 2);
+                }
+            }
+            else if (this is ProductieFormulier prod)
+            {
+                name += "prod";
+                if (prod.Bewerkingen?.Any(x => x.Combies.Count > 0) ?? false)
+                {
+                    name += "_combi";
+                    img = img.CombineImage(Resources.UnMerge_arrows_32x32, ContentAlignment.BottomLeft, 2);
+                }
+
+                if (!string.IsNullOrEmpty(prod.Note?.Notitie))
+                {
+                    name += "_note";
+                    img = img.CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, 2);
+                }
             }
 
+            if (onderbroken)
+            {
+                name += "_onderbroken";
+                img = img.CombineImage(Resources.Stop_Hand__32x32, ContentAlignment.BottomRight, 2);
+            }
+            else
+            {
+                name += "_" + Enum.GetName(typeof(ProductieState), State)?.ToLower();
+                switch (State)
+                {
+                    case ProductieState.Gestopt:
+                        if (IsNieuw)
+                        {
+                            name += "_nieuw";
+                            img = img.CombineImage(Resources.new_25355, 2);
+                        }
+                        else if (TeLaat)
+                        {
+                            name += "_telaat";
+                            img = img.CombineImage(Resources.Warning_36828, 2);
+                        }
+
+                        break;
+                    case ProductieState.Gestart:
+                        img = img.CombineImage(Resources.play_button_icon_icons_com_60615, 2);
+                        break;
+                    case ProductieState.Gereed:
+                        img = img.CombineImage(Resources.check_1582, 2);
+                        break;
+                    case ProductieState.Verwijderd:
+                        img = img.CombineImage(Resources.delete_1577, 2);
+                        break;
+                }
+            }
             return img;
+        }
+
+        public int GetImageIndexFromList(ImageList list)
+        {
+            if (list == null) return -1;
+            string name = "";
+            var img = this.GetImageFromResources(ref name);
+            if (!string.IsNullOrEmpty(name) && img != null)
+            {
+                if (!list.Images.ContainsKey(name))
+                    list.Images.Add(name, img);
+                return list.Images.IndexOfKey(name);
+            }
+
+            return -1;
         }
     }
 }
