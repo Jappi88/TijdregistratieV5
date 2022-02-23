@@ -1589,8 +1589,7 @@ namespace Rpm.Productie
             }
             _isbusy = false;
         }
-
-        private static bool _isChecking;
+        
 
         private static DateTime _lastchecked = default;
 

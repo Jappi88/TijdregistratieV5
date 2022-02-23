@@ -121,7 +121,6 @@
             this.xartikelnr.MaxLength = 32767;
             this.xartikelnr.Name = "xartikelnr";
             this.xartikelnr.PasswordChar = '\0';
-            this.xartikelnr.PromptText = "Vul in een ArtikelNr of een Werkplek naam";
             this.xartikelnr.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.xartikelnr.SelectedText = "";
             this.xartikelnr.SelectionLength = 0;
@@ -158,7 +157,6 @@
             this.xomschrijving.Multiline = true;
             this.xomschrijving.Name = "xomschrijving";
             this.xomschrijving.PasswordChar = '\0';
-            this.xomschrijving.PromptText = "Vul in een Omschrijving";
             this.xomschrijving.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.xomschrijving.SelectedText = "";
             this.xomschrijving.SelectionLength = 0;

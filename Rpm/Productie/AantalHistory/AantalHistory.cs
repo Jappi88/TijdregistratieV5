@@ -175,6 +175,12 @@ namespace Rpm.Productie.AantalHistory
                 {
                     int xgemaakt = x.GetGemaakt();
                     double xtijd = x.GetTijdGewerkt(uren,new TijdEntry(start,stop), exc);
+                    double xcompletetijd = x.GetTijdGewerkt(uren, exc);
+                    if (xcompletetijd > xtijd)
+                    {
+                        var percent = ((xtijd / xcompletetijd) * 100);
+                        xgemaakt = (int)((xgemaakt / 100) * percent);
+                    }
                     gemaakt += xgemaakt;
                     tijd += xtijd;
                     if (xtijd > 0 && xgemaakt > 0)

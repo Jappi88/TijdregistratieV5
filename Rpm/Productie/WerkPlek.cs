@@ -16,8 +16,7 @@ namespace Rpm.Productie
 
         private DateTime _gestartop;
         private DateTime _gestoptop;
-
-        private int _peruur;
+        
 
         public WerkPlek(Personeel[] personen, string werkplek, Bewerking werk)
         {

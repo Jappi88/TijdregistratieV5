@@ -22,7 +22,7 @@ namespace AutoUpdaterDotNET
             InitializeComponent();
         }
 
-        private async void LoadFields()
+        private void LoadFields()
         {
             buttonSkip.Visible = AutoUpdater.ShowSkipButton;
             buttonRemindLater.Visible = AutoUpdater.ShowRemindLaterButton;
@@ -55,11 +55,6 @@ namespace AutoUpdaterDotNET
             {
                 ControlBox = false;
             }
-        }
-
-        private void UpdateFormLoad(object sender, EventArgs e)
-        {
-           
         }
 
         private string ChangeLogTxtToHtml(string text, string title, string versie)

@@ -279,7 +279,6 @@ namespace Forms
             }
             else if(Werklplek != null)
             {
-                bool isgestart = false;
                 if (Werklplek.Personen is {Count: > 0})
                 {
                     var xpers = Werklplek.Personen.Where(x => x.IngezetAanKlus(Werklplek.Path,true)).ToList();

@@ -485,7 +485,6 @@ namespace Rpm.Productie
             Dictionary<string, BewerkingEntry> bws = new Dictionary<string, BewerkingEntry>();
             try
             {
-                TODO://Voor andere soort bewerkingen laten lezen i.p.v alleen interne
                 var xinternbws = sections.Where(x => x.Text == "I").ToList();
                 bool isextern = false;
                 if (xinternbws.Count == 0)

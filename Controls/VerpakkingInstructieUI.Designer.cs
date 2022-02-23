@@ -114,7 +114,6 @@ namespace Controls
             this.xbulklocatie.MaxLength = 32767;
             this.xbulklocatie.Name = "xbulklocatie";
             this.xbulklocatie.PasswordChar = '\0';
-            this.xbulklocatie.PromptText = "Type in een bulk locatie...";
             this.xbulklocatie.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.xbulklocatie.SelectedText = "";
             this.xbulklocatie.SelectionLength = 0;
@@ -150,7 +149,6 @@ namespace Controls
             this.xstandaardlocatie.MaxLength = 32767;
             this.xstandaardlocatie.Name = "xstandaardlocatie";
             this.xstandaardlocatie.PasswordChar = '\0';
-            this.xstandaardlocatie.PromptText = "Type in een standaard locatie...";
             this.xstandaardlocatie.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.xstandaardlocatie.SelectedText = "";
             this.xstandaardlocatie.SelectionLength = 0;
@@ -338,7 +336,6 @@ namespace Controls
             this.xpalletsoort.MaxLength = 32767;
             this.xpalletsoort.Name = "xpalletsoort";
             this.xpalletsoort.PasswordChar = '\0';
-            this.xpalletsoort.PromptText = "Type in een pallet soort...";
             this.xpalletsoort.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.xpalletsoort.SelectedText = "";
             this.xpalletsoort.SelectionLength = 0;
@@ -374,7 +371,6 @@ namespace Controls
             this.xverpakkingsoort.MaxLength = 32767;
             this.xverpakkingsoort.Name = "xverpakkingsoort";
             this.xverpakkingsoort.PasswordChar = '\0';
-            this.xverpakkingsoort.PromptText = "Type in een verpakking soort...";
             this.xverpakkingsoort.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.xverpakkingsoort.SelectedText = "";
             this.xverpakkingsoort.SelectionLength = 0;

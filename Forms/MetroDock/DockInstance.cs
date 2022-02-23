@@ -21,8 +21,7 @@ namespace ProductieManager.Forms.MetroDock
             InitializeComponent();
             this.m_dockHandler.DockStateChanged += new EventHandler(this.DockHandler_DockStateChanged);
             var fontInheritanceFix = PatchController.EnableFontInheritanceFix;
-
-            bool flag = true;
+            
             if (fontInheritanceFix.GetValueOrDefault() == true & fontInheritanceFix.HasValue)
                 return;
             this.ParentChanged += new EventHandler(this.DockContent_ParentChanged);

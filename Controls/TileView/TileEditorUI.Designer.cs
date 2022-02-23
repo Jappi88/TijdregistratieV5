@@ -493,7 +493,6 @@
             this.xomschrijving.MaxLength = 32767;
             this.xomschrijving.Name = "xomschrijving";
             this.xomschrijving.PasswordChar = '\0';
-            this.xomschrijving.PromptText = "Tile Omschrijving";
             this.xomschrijving.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.xomschrijving.SelectedText = "";
             this.xomschrijving.SelectionLength = 0;

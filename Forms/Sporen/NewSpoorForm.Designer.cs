@@ -100,7 +100,6 @@
             this.xnaam.MaxLength = 32767;
             this.xnaam.Name = "xnaam";
             this.xnaam.PasswordChar = '\0';
-            this.xnaam.PromptText = "Vul in jou naam";
             this.xnaam.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.xnaam.SelectedText = "";
             this.xnaam.SelectionLength = 0;
@@ -136,7 +135,6 @@
             this.xomschrijving.Multiline = true;
             this.xomschrijving.Name = "xomschrijving";
             this.xomschrijving.PasswordChar = '\0';
-            this.xomschrijving.PromptText = "Vul in een omschrijving";
             this.xomschrijving.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.xomschrijving.SelectedText = "";
             this.xomschrijving.SelectionLength = 0;
@@ -186,7 +184,6 @@
             this.xartikelnr.MaxLength = 32767;
             this.xartikelnr.Name = "xartikelnr";
             this.xartikelnr.PasswordChar = '\0';
-            this.xartikelnr.PromptText = "Vul in een ArtikelNr";
             this.xartikelnr.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.xartikelnr.SelectedText = "";
             this.xartikelnr.SelectionLength = 0;

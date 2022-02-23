@@ -254,7 +254,6 @@
             this.xtitletextbox.MaxLength = 32767;
             this.xtitletextbox.Name = "xtitletextbox";
             this.xtitletextbox.PasswordChar = '\0';
-            this.xtitletextbox.PromptText = "Vul in de melding title";
             this.xtitletextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.xtitletextbox.SelectedText = "";
             this.xtitletextbox.SelectionLength = 0;
@@ -406,7 +405,6 @@
             this.xOpmerking.Multiline = true;
             this.xOpmerking.Name = "xOpmerking";
             this.xOpmerking.PasswordChar = '\0';
-            this.xOpmerking.PromptText = "Vul in de melding die je wilt laten zien";
             this.xOpmerking.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.xOpmerking.SelectedText = "";
             this.xOpmerking.SelectionLength = 0;

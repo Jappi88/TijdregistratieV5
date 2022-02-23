@@ -1498,24 +1498,6 @@ namespace Controls
             }
         }
 
-        private void _manager_OnManagerLoaded()
-        {
-            return;
-            if (IsDisposed || Disposing) return;
-            try
-            {
-                BeginInvoke(new Action(() =>
-                {
-                    //RunProductieRefresh();
-                    //UpdateAllLists();
-                }));
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
         private void Manager_OnFormulierDeleted(object sender, string id)
         {
             if (IsDisposed || Disposing || !IsLoaded || string.IsNullOrEmpty(id)) return;

@@ -140,7 +140,6 @@
             this.xsearch.MaxLength = 32767;
             this.xsearch.Name = "xsearch";
             this.xsearch.PasswordChar = '\0';
-            this.xsearch.PromptText = "Zoeken...";
             this.xsearch.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.xsearch.SelectedText = "";
             this.xsearch.SelectionLength = 0;
