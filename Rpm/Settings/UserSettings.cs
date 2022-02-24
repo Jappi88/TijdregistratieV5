@@ -46,6 +46,7 @@ namespace Rpm.Settings
         public int TileViewBackgroundColorRGB { get; set; } = Color.White.ToArgb();
         public List<TileInfoEntry> TileLayout { get; set; }
         public FlowDirection TileFlowDirection { get; set; } = FlowDirection.TopDown;
+        public string LastShownTabName { get; set; }
         public bool PreviewShown { get; set; }
         #region "Methods"
 

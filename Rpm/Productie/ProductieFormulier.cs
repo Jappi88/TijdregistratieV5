@@ -1799,12 +1799,16 @@ namespace Rpm.Productie
 
             return Bewerkingen.FirstOrDefault(x => x.IsAllowed());
         }
-        public Task<bool> MeldGereed(int aantal, string paraaf, string notitie, bool sendmail, bool showmessage)
+        public Task<bool> MeldGereed(int aantal, string paraaf, string notitie, bool sendmail, bool showmessage, ProgressArg arg = null)
         {
             return Task.Factory.StartNew(() =>
             {
                 try
                 {
+                    arg ??= new ProgressArg();
+                    arg.Message = $"Bezig met het gereedmelden van '{this.Path}'...";
+                    arg.Type = ProgressType.WriteBussy;
+
                     //if (State == ProductieState.Gereed) return true;
                     if (State == ProductieState.Verwijderd)
                         throw new Exception(
@@ -1815,16 +1819,23 @@ namespace Rpm.Productie
                     LaatstAantalUpdate = DateTime.Now;
                     Paraaf = paraaf;
                     GereedNote = new NotitieEntry(notitie, this) {Naam = paraaf, Type = NotitieType.ProductieGereed};
-
+                    if (arg.Max == 0)
+                        arg.Max = 100;
+                    arg.Value = this;
+                    arg.OnChanged(this);
+                    if (arg.IsCanceled)
+                        return false;
                     double tijd = 0;
                     foreach (var b in Bewerkingen)
                     {
                         if (!b.IsAllowed(null)) continue;
                         if (b.State != ProductieState.Verwijderd && b.State != ProductieState.Gereed)
-                            if (b.MeldBewerkingGereed(paraaf, aantal, notitie, false, false, false).Result)
+                            if (b.MeldBewerkingGereed(paraaf, aantal, notitie, false, false, false, arg).Result)
                                 tijd += b.TijdGewerkt;
+                        arg.OnChanged(this);
+                        if (arg.IsCanceled)
+                            return false;
                     }
-
                     if (tijd > 0 && TotaalGemaakt > 0)
                         ActueelPerUur = Math.Round(TotaalGemaakt / tijd);
                     State = ProductieState.Gereed;
@@ -1832,16 +1843,42 @@ namespace Rpm.Productie
                     var xa = TotaalGemaakt == 1 ? "stuk" : "stuks";
                     var change =
                         $"[{ProductieNr.ToUpper()}|{ArtikelNr}] {paraaf} heeft is zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u).";
-
-                    _ = UpdateForm(false, false, null, change, true, showmessage);
+                    arg.Current++;
+                    arg.OnChanged(this);
+                    if (arg.IsCanceled)
+                        return false;
+                    _ = UpdateForm(false, false, null, change, true, showmessage).Result;
+                    arg.Current++;
+                    arg.OnChanged(this);
+                    if (arg.IsCanceled)
+                        return false;
                     Manager.ArtikelRecords?.UpdateWaardes(this);
+                    arg.Current++;
+                    arg.OnChanged(this);
+                    if (arg.IsCanceled)
+                        return false;
                     var wps = GetWerkPlekken();
+                    arg.Current = arg.Max - wps.Count + 1;
                     foreach (var wp in wps)
+                    {
                         Manager.ArtikelRecords?.UpdateWaardes(wp);
+                        arg.Current++;
+                        arg.OnChanged(this);
+                        if (arg.IsCanceled)
+                            return false;
+                    }
+
+                   
                     _ = UpdateDoorloopTijd(null, this, null, false, true, false);
                     if (sendmail)
                         RemoteProductie.RespondByEmail(this, change);
-
+                    arg.Current++;
+                    arg.Max = 100;
+                    arg.Type = ProgressType.WriteCompleet;
+                    arg.Value = this;
+                    arg.OnChanged(this);
+                    if (arg.IsCanceled)
+                        return false;
                     return true;
                 }
                 catch (Exception ex)

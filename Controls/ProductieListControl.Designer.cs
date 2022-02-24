@@ -76,11 +76,19 @@ namespace Controls
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.vouwAllGroepenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ontvouwAlleGroepenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ximagelist = new System.Windows.Forms.ImageList(this.components);
             this.xBottomToolMenu = new System.Windows.Forms.ToolStrip();
             this.xBeheerweergavetoolstrip = new System.Windows.Forms.ToolStripSplitButton();
             this.xBeheerLijstenToolstripItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.xitemcount = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+            this.xgemiddeldpu = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+            this.xgemaaktlabel = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
+            this.xtotaaltijdlabel = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
+            this.xstatuslabel = new System.Windows.Forms.ToolStripLabel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.xfiltersStrip = new System.Windows.Forms.MenuStrip();
             this.xfiltertoolstrip = new System.Windows.Forms.ToolStripMenuItem();
@@ -176,7 +184,6 @@ namespace Controls
             this.xProductieLijst1.HeaderWordWrap = true;
             this.xProductieLijst1.HideSelection = false;
             this.xProductieLijst1.IsSimpleDragSource = true;
-            this.xProductieLijst1.LargeImageList = this.ximagelist;
             this.xProductieLijst1.Location = new System.Drawing.Point(0, 73);
             this.xProductieLijst1.MenuLabelGroupBy = "Groep op \'{0}\'";
             this.xProductieLijst1.MenuLabelLockGroupingOn = "Vergrendel groupering op \'{0}\'";
@@ -191,7 +198,6 @@ namespace Controls
             this.xProductieLijst1.ShowItemCountOnGroups = true;
             this.xProductieLijst1.ShowItemToolTips = true;
             this.xProductieLijst1.Size = new System.Drawing.Size(1149, 536);
-            this.xProductieLijst1.SmallImageList = this.ximagelist;
             this.xProductieLijst1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.xProductieLijst1.TabIndex = 31;
             this.xProductieLijst1.TintSortColumn = true;
@@ -609,19 +615,22 @@ namespace Controls
             this.ontvouwAlleGroepenToolStripMenuItem.Text = "Ontvouw Alle Groepen";
             this.ontvouwAlleGroepenToolStripMenuItem.Click += new System.EventHandler(this.ontvouwAlleGroepenToolStripMenuItem_Click);
             // 
-            // ximagelist
-            // 
-            this.ximagelist.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.ximagelist.ImageSize = new System.Drawing.Size(32, 32);
-            this.ximagelist.TransparentColor = System.Drawing.Color.Transparent;
-            // 
             // xBottomToolMenu
             // 
             this.xBottomToolMenu.BackColor = System.Drawing.SystemColors.Window;
             this.xBottomToolMenu.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.xBottomToolMenu.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.xBottomToolMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.xBeheerweergavetoolstrip});
+            this.xBeheerweergavetoolstrip,
+            this.xitemcount,
+            this.toolStripSeparator10,
+            this.xgemiddeldpu,
+            this.toolStripSeparator11,
+            this.xgemaaktlabel,
+            this.toolStripSeparator14,
+            this.xtotaaltijdlabel,
+            this.toolStripSeparator16,
+            this.xstatuslabel});
             this.xBottomToolMenu.Location = new System.Drawing.Point(0, 609);
             this.xBottomToolMenu.Name = "xBottomToolMenu";
             this.xBottomToolMenu.Size = new System.Drawing.Size(1149, 25);
@@ -655,6 +664,55 @@ namespace Controls
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
             this.toolStripSeparator9.Size = new System.Drawing.Size(191, 6);
+            // 
+            // xitemcount
+            // 
+            this.xitemcount.Name = "xitemcount";
+            this.xitemcount.Size = new System.Drawing.Size(13, 22);
+            this.xitemcount.Text = "0";
+            // 
+            // toolStripSeparator10
+            // 
+            this.toolStripSeparator10.Name = "toolStripSeparator10";
+            this.toolStripSeparator10.Size = new System.Drawing.Size(6, 25);
+            // 
+            // xgemiddeldpu
+            // 
+            this.xgemiddeldpu.Name = "xgemiddeldpu";
+            this.xgemiddeldpu.Size = new System.Drawing.Size(99, 22);
+            this.xgemiddeldpu.Text = "Gemiddeld: 0 p/u";
+            // 
+            // toolStripSeparator11
+            // 
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(6, 25);
+            // 
+            // xgemaaktlabel
+            // 
+            this.xgemaaktlabel.Name = "xgemaaktlabel";
+            this.xgemaaktlabel.Size = new System.Drawing.Size(103, 22);
+            this.xgemaaktlabel.Text = "Totaal Gemaakt: 0 ";
+            // 
+            // toolStripSeparator14
+            // 
+            this.toolStripSeparator14.Name = "toolStripSeparator14";
+            this.toolStripSeparator14.Size = new System.Drawing.Size(6, 25);
+            // 
+            // xtotaaltijdlabel
+            // 
+            this.xtotaaltijdlabel.Name = "xtotaaltijdlabel";
+            this.xtotaaltijdlabel.Size = new System.Drawing.Size(93, 22);
+            this.xtotaaltijdlabel.Text = "Totaal Tijd: 0 uur";
+            // 
+            // toolStripSeparator16
+            // 
+            this.toolStripSeparator16.Name = "toolStripSeparator16";
+            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 25);
+            // 
+            // xstatuslabel
+            // 
+            this.xstatuslabel.Name = "xstatuslabel";
+            this.xstatuslabel.Size = new System.Drawing.Size(0, 22);
             // 
             // panel3
             // 
@@ -698,14 +756,14 @@ namespace Controls
             // 
             this.xbeheerfilterstoolstripbutton.Image = global::ProductieManager.Properties.Resources.filter_filters_navigation_32x32;
             this.xbeheerfilterstoolstripbutton.Name = "xbeheerfilterstoolstripbutton";
-            this.xbeheerfilterstoolstripbutton.Size = new System.Drawing.Size(180, 22);
+            this.xbeheerfilterstoolstripbutton.Size = new System.Drawing.Size(147, 22);
             this.xbeheerfilterstoolstripbutton.Text = "Beheer Regels";
             this.xbeheerfilterstoolstripbutton.ToolTipText = "Beheer filters";
             // 
             // toolStripSeparator15
             // 
             this.toolStripSeparator15.Name = "toolStripSeparator15";
-            this.toolStripSeparator15.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator15.Size = new System.Drawing.Size(144, 6);
             // 
             // xsearch
             // 
@@ -1226,7 +1284,6 @@ namespace Controls
         private System.Windows.Forms.ToolStripMenuItem ontvouwAlleGroepenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem benodigdeMaterialenToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ImageList ximagelist;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ToolStripMenuItem exportExcelToolStripMenuItem;
         private System.Windows.Forms.Label xloadinglabel;
@@ -1281,5 +1338,14 @@ namespace Controls
         private System.Windows.Forms.ToolStripSplitButton xBeheerweergavetoolstrip;
         private System.Windows.Forms.ToolStripMenuItem xBeheerLijstenToolstripItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+        private System.Windows.Forms.ToolStripLabel xitemcount;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
+        private System.Windows.Forms.ToolStripLabel xstatuslabel;
+        private System.Windows.Forms.ToolStripLabel xgemiddeldpu;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
+        private System.Windows.Forms.ToolStripLabel xgemaaktlabel;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
+        private System.Windows.Forms.ToolStripLabel xtotaaltijdlabel;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
     }
 }

@@ -497,6 +497,7 @@ namespace Forms
                 xs.TileLayout = _LoadedOpties.TileLayout;
                 xs.TileFlowDirection = _LoadedOpties.TileFlowDirection;
                 xs.TileViewBackgroundColorRGB = _LoadedOpties.TileViewBackgroundColorRGB;
+                xs.LastShownTabName = _LoadedOpties.LastShownTabName;
 
                 xs.DeelAllesIn = _LoadedOpties.DeelAllesIn;
                 xs.DeelInPerAfdeling = _LoadedOpties.DeelInPerAfdeling;

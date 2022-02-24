@@ -472,8 +472,9 @@ namespace Rpm.Productie
                             }
 
                             if (save)
-                                save |= Manager.Database.UpSert(dbpers, $"{dbpers.PersoneelNaam} Werktijden aangepast.",showsavenotofication)
-                                    .Result;
+                                Manager.Database.UpSert(dbpers, $"{dbpers.PersoneelNaam} Werktijden aangepast.",
+                                    showsavenotofication);
+                                    
                         }
                 }
             }

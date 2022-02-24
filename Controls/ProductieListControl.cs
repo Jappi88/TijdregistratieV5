@@ -25,6 +25,8 @@ namespace Controls
 {
     public partial class ProductieListControl : UserControl
     {
+        public static ImageList ProductieImageList = new ImageList()
+            {ColorDepth = ColorDepth.Depth32Bit, ImageSize = new Size(32, 32)};
         private bool _enableEntryFilter;
 
         private bool _enableFilter;
@@ -35,6 +37,8 @@ namespace Controls
         public ProductieListControl()
         {
             InitializeComponent();
+            ProductieLijst.SmallImageList = ProductieImageList;
+            ProductieLijst.LargeImageList = ProductieImageList;
             ProductieLijst.CustomSorter = delegate (OLVColumn column, SortOrder order)
             {
                 if (order != SortOrder.None)
@@ -186,32 +190,26 @@ namespace Controls
         {
             try
             {
-                var xvalue = "Totaal";
-                var xitems = new List<IProductieBase>();
-                if (ProductieLijst.SelectedObjects.Count > 0)
+                var xvalue = "";
+                //var xitems = new List<IProductieBase>();
+                if (ProductieLijst.SelectedObjects.Count == 1)
                 {
-                    xitems = ProductieLijst.SelectedObjects.Cast<IProductieBase>().ToList();
-                    xvalue = "Geselecteerd:";
-                }
-                else if (ProductieLijst.Objects != null)
-                {
-                    xitems = ProductieLijst.Objects.Cast<IProductieBase>().ToList();
-                    xvalue = "Totaal";
+                    if (ProductieLijst.SelectedObject is IProductieBase xitem)
+                        xvalue = $"{xitem.Omschrijving} ({xitem.ArtikelNr})";
                 }
 
-                var x0 = xitems.Count == 1
-                    ? $"({xitems[0].ArtikelNr}){xitems[0].Omschrijving}"
-                    : xitems.Count.ToString();
-                var x1 = xitems.Count == 1 ? "" : " producties";
-                var xtijd = xitems.Sum(x => x.TijdGewerkt);
-                var xtotaaltijd = xitems.Sum(x => x.DoorloopTijd);
-                var xpu = xitems.Count > 0 ? Math.Round(xitems.Sum(x => x.ActueelPerUur) / xitems.Count, 0) : 0;
+                var xitems =
+                    (ProductieLijst.SelectedObjects.Count > 1 ? ProductieLijst.SelectedObjects : ProductieLijst.Objects)
+                    ?.Cast<IProductieBase>().ToList() ?? new List<IProductieBase>();
+                var xtijd = xitems.Sum(x => x.TotaalTijdGewerkt);
                 var xgemaakt = xitems.Sum(x => x.TotaalGemaakt);
-                var xtotaal = xitems.Sum(x => x.Aantal);
-                var xret = $"<span color='{Color.Navy.Name}'>" +
-                           $"{xvalue} <b>{x0}</b>{x1}, Gemaakt <b>{xgemaakt}/ {xtotaal}</b>, in <b>{xtijd}/ {xtotaaltijd} uur</b>, met een gemiddelde van <b>{xpu}p/u</b>" +
-                           "</span>";
-                //xStatusLabel.Text = xret;
+                var xpu = xtijd == 0 ? xgemaakt : xgemaakt == 0 ? 0 : (int)Math.Round(xgemaakt / xtijd, 0);
+                var x1 = xitems.Count == 1 ? "Productie" : "Producties";
+                xstatuslabel.Text = xvalue.Replace("\n", " ");
+                xgemiddeldpu.Text = $"Gemiddeld: {xpu} p/u";
+                xgemaaktlabel.Text = $"Totaal Gemaakt: {(xgemaakt == 0 ? "0" : xgemaakt.ToString("#,##0"))}";
+                xtotaaltijdlabel.Text = $"Totaal Tijd: {xtijd:#,##0.##} uur";
+                xitemcount.Text = xitems.Count == 0 ? "0" : xitems.Count.ToString("#,##0") + $" {x1}";
             }
             catch (Exception e)
             {
@@ -318,7 +316,7 @@ namespace Controls
                 //resetToolStripMenuItem.Visible = Manager.Opties?.Filters?.Any(x =>
                 //    x.IsTempFilter && x.ListNames.Any(s =>
                 //        string.Equals(s, ListName, StringComparison.CurrentCultureIgnoreCase))) ?? false;
-                //UpdateStatusText();
+                UpdateStatusText();
             }
             catch (Exception e)
             {
@@ -711,62 +709,10 @@ namespace Controls
                         BeginInvoke(new Action(InitColumns));
         }
 
-        private void InitImageList()
-        {
-            ximagelist.Images.Clear();
-            Bitmap img = null;
-            img = !IsBewerkingView ? Resources.page_document_16748 : Resources.operation;
-            if (img == null) return;
-            //Productieformulieren afbeeldingen
-            ximagelist.Images.Add(img); // regular document
-            ximagelist.Images.Add(img.CombineImage(Resources.new_25355, 2)); //new document
-            ximagelist.Images.Add(img.CombineImage(Resources.Warning_36828, 2)); //warning document
-            ximagelist.Images.Add(img.CombineImage(Resources.play_button_icon_icons_com_60615, 2.5)); //play document
-            ximagelist.Images.Add(img.CombineImage(Resources.delete_1577, 2)); //deleted document
-            ximagelist.Images.Add(img.CombineImage(Resources.check_1582, 2)); // checked document
-            ximagelist.Images.Add(img.CombineImage(Resources.Stop_Hand__32x32, 1.5)); // onderbroken document
-
-            var imgscale = 1.75;
-            //zelfde afbeeldingen, maar dan met de note icon
-            ximagelist.Images.Add(img.CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft,
-                imgscale)); // regular document
-            ximagelist.Images.Add(img.CombineImage(Resources.new_25355, 2)
-                .CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); //new document
-            ximagelist.Images.Add(img.CombineImage(Resources.Warning_36828, 2)
-                .CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); //warning document
-            ximagelist.Images.Add(img.CombineImage(Resources.play_button_icon_icons_com_60615, 2.5)
-                .CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); //play document
-            ximagelist.Images.Add(img.CombineImage(Resources.delete_1577, 2)
-                .CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); //deleted document
-            ximagelist.Images.Add(img.CombineImage(Resources.check_1582, 2)
-                .CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); // checked document
-            ximagelist.Images.Add(img.CombineImage(Resources.Stop_Hand__32x32, 1.5)
-                .CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft,
-                    imgscale)); // onderbroken document
-
-            imgscale = 1.75;
-            //zelfde afbeeldingen, maar dan met de combi icon
-            ximagelist.Images.Add(img.CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft,
-                imgscale)); // regular document
-            ximagelist.Images.Add(img.CombineImage(Resources.new_25355, 2)
-                .CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); //new document
-            ximagelist.Images.Add(img.CombineImage(Resources.Warning_36828, 2)
-                .CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); //warning document
-            ximagelist.Images.Add(img.CombineImage(Resources.play_button_icon_icons_com_60615, 2.5)
-                .CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); //play document
-            ximagelist.Images.Add(img.CombineImage(Resources.delete_1577, 2)
-                .CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); //deleted document
-            ximagelist.Images.Add(img.CombineImage(Resources.check_1582, 2)
-                .CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, imgscale)); // checked document
-            ximagelist.Images.Add(img.CombineImage(Resources.Stop_Hand__32x32, 1.5)
-                .CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft,
-                    imgscale));
-        }
-
         private int GetProductieImageIndex(IProductieBase productie)
         {
             if (productie == null) return 0;
-            return productie.GetImageIndexFromList(ximagelist);
+            return productie.GetImageIndexFromList(ProductieImageList);
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

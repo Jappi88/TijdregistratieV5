@@ -1,13 +1,17 @@
 ﻿using AutoUpdaterDotNET;
-using BrightIdeasSoftware;
 using Forms;
 using Forms.Aantal;
+using Forms.ArtikelRecords;
 using Forms.Excel;
 using MetroFramework;
+using MetroFramework.Controls;
+using MetroFramework.Forms;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using ProductieManager.Rpm.Various;
+using Rpm.Controls;
+using Rpm.DailyUpdate;
 using Rpm.Mailing;
 using Rpm.Misc;
 using Rpm.Productie;
@@ -24,14 +28,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Navigation;
-using Forms.ArtikelRecords;
-using Forms.MetroBase;
-using MetroFramework.Controls;
-using MetroFramework.Forms;
-using Org.BouncyCastle.Pkcs;
-using Rpm.Controls;
-using Rpm.DailyUpdate;
 using Various;
 
 namespace Controls
@@ -749,7 +745,7 @@ namespace Controls
             else UpdateTileViewed(entry, true);
         }
 
-        private void CloseTabPage(object sender)
+        private void CloseTabPage(object sender, bool updateview)
         {
             if (sender is MetroTabPage page && page.Controls.Count > 0)
             {
@@ -813,9 +809,12 @@ namespace Controls
                 {
                     xchat.CloseUI();
                 }
+                else if (xcontrol is ChartView xchart)
+                {
+                    xchart.CloseUI();
+                }
 
-
-                if (page.Tag is TileInfoEntry info)
+                if (updateview && page.Tag is TileInfoEntry info)
                     UpdateTileViewed(info, false);
                 xcontrol?.Dispose();
             }
@@ -856,7 +855,7 @@ namespace Controls
 
         private void metroCustomTabControl1_TabClosed(object sender, EventArgs e)
         {
-            CloseTabPage(sender);
+            CloseTabPage(sender, true);
         }
 
         public void ShowTileTabPage(TileInfoEntry entry, bool select)
@@ -1112,11 +1111,32 @@ namespace Controls
                 _manager.OnShutdown -= _manager_OnShutdown;
         }
 
+        public void CloseUI()
+        {
+            try
+            {
+                DetachEvents();
+                for (int i = 0; i < metroCustomTabControl1.TabCount; i++)
+                {
+                    var xtab = metroCustomTabControl1.TabPages[i];
+                    CloseTabPage(xtab,false);
+                    metroCustomTabControl1.TabPages.Remove(xtab);
+                    i--;
+                }
+                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         public void SaveLayouts()
         {
             try
             {
                 tileMainView1.SaveLayout(false);
+                Manager.Opties.LastShownTabName = (metroCustomTabControl1.SelectedTab?.Tag as TileInfoEntry)?.Name;
                 foreach (var xtab in metroCustomTabControl1.TabPages)
                 {
                     if (xtab is MetroTabPage page && page.Controls.Count > 0)
@@ -1314,6 +1334,10 @@ namespace Controls
                         Text = @$"ProductieManager [{name}]";
                         tileMainView1.SetBackgroundImage(Manager.Opties?.BackgroundImagePath);
                         tileMainView1.LoadTileViewer();
+                        if (!string.IsNullOrEmpty(Manager.Opties?.LastShownTabName))
+                            metroCustomTabControl1.SelectedTab = metroCustomTabControl1.TabPages?.Cast<MetroTabPage>()
+                                .FirstOrDefault(x => x.Tag is TileInfoEntry entry && string.Equals(entry.Name,
+                                    Manager.Opties.LastShownTabName, StringComparison.CurrentCultureIgnoreCase));
                         tileMainView1.TileCountRefreshInterval = Manager.Opties?.TileCountRefreshRate??30000;
                         var xrooster = mainMenu1.GetButton("xroostermenubutton");
                         if (xrooster != null)
@@ -2578,8 +2602,9 @@ namespace Controls
                     _producties.Show();
                 if (_producties.WindowState == FormWindowState.Minimized)
                     _producties.WindowState = FormWindowState.Normal;
-
+                _producties.BringToFront();
                 _producties.Focus();
+                _producties.Select();
                 return productie;
             }
             catch (Exception e)
@@ -2613,8 +2638,9 @@ namespace Controls
                     _productielijstdock.Show();
                 if (_productielijstdock.WindowState == FormWindowState.Minimized)
                     _productielijstdock.WindowState = FormWindowState.Normal;
-
+                _productielijstdock.BringToFront();
                 _productielijstdock.Focus();
+                _productielijstdock.Select();
                 return prodform;
             }
             catch (Exception e)

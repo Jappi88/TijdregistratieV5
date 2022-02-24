@@ -99,6 +99,14 @@ namespace Forms.MetroBase
         {
             if (SaveLastSize)
                 this.SetLastInfo();
+            var xform = this.Parent ?? Application.OpenForms["Mainform"];
+            if (xform != null)
+            {
+                xform.BringToFront();
+                xform.Focus();
+                xform.Select();
+                xform.Invalidate();
+            }
         }
     }
 }

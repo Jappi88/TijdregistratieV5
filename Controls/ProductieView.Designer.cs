@@ -152,7 +152,7 @@ namespace Controls
             this.xspeciaalroosterbutton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.xspeciaalroosterbutton.Location = new System.Drawing.Point(3, 2);
             this.xspeciaalroosterbutton.Name = "xspeciaalroosterbutton";
-            this.xspeciaalroosterbutton.Size = new System.Drawing.Size(1115, 40);
+            this.xspeciaalroosterbutton.Size = new System.Drawing.Size(1297, 40);
             this.xspeciaalroosterbutton.TabIndex = 0;
             this.xspeciaalroosterbutton.Text = "Rooster is momenteel inactief en zal geen tijd worden gemeten";
             this.xspeciaalroosterbutton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -169,7 +169,7 @@ namespace Controls
             this.panel6.Location = new System.Drawing.Point(0, 0);
             this.panel6.Name = "panel6";
             this.panel6.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
-            this.panel6.Size = new System.Drawing.Size(1121, 43);
+            this.panel6.Size = new System.Drawing.Size(1303, 43);
             this.panel6.TabIndex = 25;
             // 
             // xToolButtons
@@ -208,7 +208,7 @@ namespace Controls
             this.xArtikelRecordsToolstripButton});
             this.xToolButtons.Location = new System.Drawing.Point(5, 0);
             this.xToolButtons.Name = "xToolButtons";
-            this.xToolButtons.Size = new System.Drawing.Size(980, 39);
+            this.xToolButtons.Size = new System.Drawing.Size(1162, 39);
             this.xToolButtons.TabIndex = 46;
             this.xToolButtons.Text = "toolStrip2";
             // 
@@ -545,7 +545,7 @@ namespace Controls
             // 
             this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Right;
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(985, 0);
+            this.pictureBox2.Location = new System.Drawing.Point(1167, 0);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(68, 43);
@@ -558,7 +558,7 @@ namespace Controls
             // 
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(1053, 0);
+            this.pictureBox1.Location = new System.Drawing.Point(1235, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(68, 43);
@@ -600,7 +600,7 @@ namespace Controls
             this.xspeciaalroosterlabel.Dock = System.Windows.Forms.DockStyle.Top;
             this.xspeciaalroosterlabel.Location = new System.Drawing.Point(0, 43);
             this.xspeciaalroosterlabel.Name = "xspeciaalroosterlabel";
-            this.xspeciaalroosterlabel.Size = new System.Drawing.Size(1121, 45);
+            this.xspeciaalroosterlabel.Size = new System.Drawing.Size(1303, 45);
             this.xspeciaalroosterlabel.TabIndex = 29;
             this.xspeciaalroosterlabel.Visible = false;
             // 
@@ -625,7 +625,7 @@ namespace Controls
             this.metroCustomTabControl1.Name = "metroCustomTabControl1";
             this.metroCustomTabControl1.SelectedIndex = 0;
             this.metroCustomTabControl1.ShowCloseButton = true;
-            this.metroCustomTabControl1.Size = new System.Drawing.Size(1043, 538);
+            this.metroCustomTabControl1.Size = new System.Drawing.Size(1225, 538);
             this.metroCustomTabControl1.TabIndex = 30;
             this.metroCustomTabControl1.UseSelectable = true;
             this.metroCustomTabControl1.TabClosed += new System.EventHandler(this.metroCustomTabControl1_TabClosed);
@@ -640,7 +640,7 @@ namespace Controls
             this.metroTabPage5.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage5.Name = "metroTabPage5";
             this.metroTabPage5.Padding = new System.Windows.Forms.Padding(5);
-            this.metroTabPage5.Size = new System.Drawing.Size(1035, 496);
+            this.metroTabPage5.Size = new System.Drawing.Size(1217, 496);
             this.metroTabPage5.TabIndex = 0;
             this.metroTabPage5.Text = "     Start Pagina";
             this.metroTabPage5.VerticalScrollbarBarColor = true;
@@ -655,7 +655,7 @@ namespace Controls
             this.tileMainView1.Location = new System.Drawing.Point(5, 5);
             this.tileMainView1.Margin = new System.Windows.Forms.Padding(4);
             this.tileMainView1.Name = "tileMainView1";
-            this.tileMainView1.Size = new System.Drawing.Size(1025, 486);
+            this.tileMainView1.Size = new System.Drawing.Size(1207, 486);
             this.tileMainView1.TabIndex = 2;
             this.tileMainView1.TileCountRefreshInterval = 10000;
             this.tileMainView1.TileClicked += new System.EventHandler(this.tileMainView1_TileClicked);
@@ -666,7 +666,7 @@ namespace Controls
             this.takenManager1.BackColor = System.Drawing.Color.White;
             this.takenManager1.Dock = System.Windows.Forms.DockStyle.Right;
             this.takenManager1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.takenManager1.Location = new System.Drawing.Point(1083, 88);
+            this.takenManager1.Location = new System.Drawing.Point(1265, 88);
             this.takenManager1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.takenManager1.Name = "takenManager1";
             this.takenManager1.SelectedItem = null;
@@ -1170,7 +1170,7 @@ namespace Controls
             this.Controls.Add(this.panel6);
             this.DoubleBuffered = true;
             this.Name = "ProductieView";
-            this.Size = new System.Drawing.Size(1121, 626);
+            this.Size = new System.Drawing.Size(1303, 626);
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
             this.xToolButtons.ResumeLayout(false);

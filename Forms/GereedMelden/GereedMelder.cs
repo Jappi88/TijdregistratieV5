@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Rpm.Various;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
 
 namespace Forms.GereedMelden
@@ -74,11 +76,13 @@ namespace Forms.GereedMelden
             return ShowDialog();
         }
 
+        private LoadingForm _loading;
         private void MeldGereed()
         {
+            if (_loading is {IsDisposed: false}) return;
             if (DoCheck() && XMessageBox.Show(this,Melding,
-                "Gereed Melden",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    "Gereed Melden",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 _prod.AantalGemaakt = (int)xaantal.Value;
                 if (_prod.TotaalGemaakt < _prod.Aantal)
@@ -93,72 +97,96 @@ namespace Forms.GereedMelden
                 if (afwijking is < -10 or > 10)
                 {
                     var xt = new GereedAfwijkingForm();
-                    if (xt.ShowDialog(_prod) == DialogResult.Cancel) return;
+                    if (xt.ShowDialog(_prod, xparaaf.Text.Trim()) == DialogResult.Cancel) return;
                     if (string.IsNullOrEmpty(Notitie))
                         Notitie = xt.Reden;
                     else Notitie += $"\n\nDe reden voor een te hoge 'PerUur' afwijking van '{afwijking}%':\n\n" + xt.Reden?.Trim().Split(':').LastOrDefault()?.Trim();
                 }
-                if (_prod is ProductieFormulier form)
-                {
-                    Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
-                    if (form.MeldGereed((int) xaantal.Value, xparaaf.Text.Trim(), Notitie, true, true).Result)
-                        DialogResult = DialogResult.OK;
 
-                }
-                else if (_prod is Bewerking bew)
+                Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
+                _loading = new LoadingForm();
+                _loading.FormClosed += (x, y) =>
                 {
-                    var xcombies = bew.Combies.Where(x =>
-                        !string.Equals(x.Path, ParentCombi, StringComparison.CurrentCultureIgnoreCase) && x.IsRunning).ToList();
-                    if (xcombies.Count > 0)
+                    _loading?.Dispose();
+                    _loading = null;
+                };
+                Task.Factory.StartNew( () =>
+                {
+                    if (_prod is ProductieFormulier form)
                     {
-                        var x0 = xcombies.Count == 1 ? "is" : "zijn";
-                        var x1 = xcombies.Count == 1 ? "productie" : "producties";
-                        var result = XMessageBox.Show(this, $"Er {x0} {xcombies.Count} gecombineerde {x1}...\n\n" +
-                                                      $"Wil je die ook gereedmelden?", "Gereed Melden",
-                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                        if (result == DialogResult.Cancel) return;
-                        for(int i =0; i < xcombies.Count; i++)
-                        {
-                            var combi = xcombies[i];
-                            combi.IsRunning = false;
-                            var xbw = combi.GetProductie();
-                            if (xbw == null)
-                            {
-                                continue;
-                            }
+                        
+                        if (form.MeldGereed((int) xaantal.Value, xparaaf.Text.Trim(), Notitie, true, true, _loading.Arg)
+                            .Result)
+                            DialogResult = DialogResult.OK;
 
-                            var xcombi = xbw.Combies?.FirstOrDefault(x => string.Equals(x.Path, bew.Path, StringComparison.CurrentCultureIgnoreCase));
-                            if (xcombi != null)
+                    }
+                    else if (_prod is Bewerking bew)
+                    {
+                        var xcombies = bew.Combies.Where(x =>
+                            !string.Equals(x.Path, ParentCombi, StringComparison.CurrentCultureIgnoreCase) &&
+                            x.IsRunning).ToList();
+                        if (xcombies.Count > 0)
+                        {
+                            var x0 = xcombies.Count == 1 ? "is" : "zijn";
+                            var x1 = xcombies.Count == 1 ? "productie" : "producties";
+                            var result = XMessageBox.Show(this, $"Er {x0} {xcombies.Count} gecombineerde {x1}...\n\n" +
+                                                                $"Wil je die ook gereedmelden?", "Gereed Melden",
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                            if (result == DialogResult.Cancel) return;
+                            for (int i = 0; i < xcombies.Count; i++)
                             {
-                                xcombi.IsRunning = false;
-                                if (result != DialogResult.No)
+                                var combi = xcombies[i];
+                                combi.IsRunning = false;
+                                var xbw = combi.GetProductie();
+                                if (xbw == null)
                                 {
-                                    if (!xbw.UpdateBewerking(null,
-                                                $"[{bew.Path}] Combinatie is op inactief gezet in '{xbw.Path}'")
-                                            .Result) return;
+                                    continue;
+                                }
+
+                                var xcombi = xbw.Combies?.FirstOrDefault(x =>
+                                    string.Equals(x.Path, bew.Path, StringComparison.CurrentCultureIgnoreCase));
+                                if (xcombi != null)
+                                {
+                                    xcombi.IsRunning = false;
+                                    if (result != DialogResult.No)
+                                    {
+                                        xbw.UpdateBewerking(null,
+                                            $"[{bew.Path}] Combinatie is op inactief gezet in '{xbw.Path}'");
+                                    }
+                                }
+
+                                if (result == DialogResult.No)
+                                    _ = xbw.StopProductie(true, true);
+                                else
+                                {
+                                    var gereedmelder = new GereedMelder();
+                                    gereedmelder.ParentCombi = bew.Path;
+                                    gereedmelder.ShowDialog(xbw);
                                 }
                             }
-                            if (result == DialogResult.No)
-                                _= xbw.StopProductie(true,true);
-                            else
-                            {
-                                var gereedmelder = new GereedMelder();
-                                gereedmelder.ParentCombi = bew.Path;
-                                gereedmelder.ShowDialog(xbw);
-                            }
+                        }
+                        
+                        if (bew.MeldBewerkingGereed(xparaaf.Text.Trim(), (int) xaantal.Value, Notitie, true, true, true,
+                                _loading.Arg)
+                            .Result)
+                        {
+                            ProductieManager.Properties.Settings.Default.Paraaf = xparaaf.Text.Trim();
+                            ProductieManager.Properties.Settings.Default.Save();
+                            DialogResult = DialogResult.OK;
+                            
                         }
                     }
+                    else DialogResult = DialogResult.Cancel;
 
-                    Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
-                    if (bew.MeldBewerkingGereed(xparaaf.Text.Trim(), (int) xaantal.Value, Notitie, true, true, true)
-                        .Result)
+                    if (_loading is {IsDisposed: false})
                     {
-                        ProductieManager.Properties.Settings.Default.Paraaf = xparaaf.Text.Trim();
-                        ProductieManager.Properties.Settings.Default.Save();
-                        DialogResult = DialogResult.OK;
+                        if (_loading.InvokeRequired)
+                            _loading.Invoke(new MethodInvoker(_loading.Close));
+                        else
+                            _loading.Close();
                     }
-                }
-                else DialogResult = DialogResult.Cancel;
+                });
+                _loading.ShowDialog();
             }
         }
 

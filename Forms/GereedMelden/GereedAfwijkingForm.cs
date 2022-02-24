@@ -16,26 +16,26 @@ namespace Forms.GereedMelden
             InitializeComponent();
         }
 
-        public DialogResult ShowDialog(IProductieBase productie)
+        public DialogResult ShowDialog(IProductieBase productie, string paraaf)
         {
             _Productie = productie;
             this.Text = $"Productie Afwijking: {productie.ProductieNr} | {productie.ArtikelNr}";
             this.Invalidate();
-            CreateMessage(productie);
+            CreateMessage(productie, paraaf);
             return base.ShowDialog();
         }
 
         public string Reden { get; private set; }
 
-        private void CreateMessage(IProductieBase productie)
+        private void CreateMessage(IProductieBase productie, string paraaf)
         {
             if (productie == null) return;
             decimal afwijking = productie.GetAfwijking();
             xfieldmessage.Text = GetText(productie, afwijking);
-            InitRedenen(productie, afwijking);
+            InitRedenen(productie, afwijking, paraaf);
         }
 
-        private void InitRedenen(IProductieBase productie, decimal afwijking)
+        private void InitRedenen(IProductieBase productie, decimal afwijking, string paraaf)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace Forms.GereedMelden
                     }
                    
                 }
-                redens.Add("Alle tijden kloppen, en alles is gewoon goed gegaan.");
+                redens.Add($"Ik '{paraaf}' heb alle tijden gecontrolleerd en het klopt allemaal.");
                 redens.Add("Andere reden, namelijk: ");
                 foreach (var xreden in redens)
                 {
@@ -112,12 +112,12 @@ namespace Forms.GereedMelden
             if (afwijking < 0)
             {
                 color = IProductieBase.GetNegativeColorByPercentage(afwijking);
-                return string.Format(xbase,Color.DarkRed.Name, "negatieve", color.Name, xafw);
+                return string.Format(xbase,Color.DarkRed.Name, "<u>Negatieve</u>", color.Name, xafw);
             }
             else
             {
                 color = IProductieBase.GetNegativeColorByPercentage(afwijking);
-                return string.Format(xbase, Color.DarkGreen.Name, "positieve", color.Name, xafw);
+                return string.Format(xbase, Color.DarkGreen.Name, "<u>Positieve</u>", color.Name, xafw);
             }
         }
 

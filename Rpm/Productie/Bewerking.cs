@@ -892,20 +892,31 @@ namespace Rpm.Productie
 
         public Task<bool> MeldBewerkingGereed(string paraaf, int aantal,
             string notitie,
-            bool update, bool sendmail, bool showmessage)
+            bool update, bool sendmail, bool showmessage, ProgressArg arg = null)
         {
             return Task.Factory.StartNew(() =>
             {
                 try
                 {
-                    _ = StopProductie(false, true);
+                    arg ??= new ProgressArg();
+                    arg.Message = $"Bezig met het gereedmelden van '{this.Path}'...";
+                    arg.Type = ProgressType.WriteBussy;
+                    if (arg.Max == 0)
+                        arg.Max = 100;
+                    arg.Value = this;
+                    _ = StopProductie(false, true).Result;
                     AantalGemaakt = aantal;
                     DatumGereed = DateTime.Now;
                     GereedNote = new NotitieEntry(notitie, this) {Type = NotitieType.BewerkingGereed, Naam = paraaf};
                     Paraaf = paraaf;
                     State = ProductieState.Gereed;
                     var personen = GetPersoneel();
+                    arg.Current = 1;
+                    arg.OnChanged(this);
+                    if (arg.IsCanceled)
+                        return false;
                     foreach (var per in personen)
+                    {
                         if (per.IngezetAanKlus(this, false, out var klusjes))
                         {
                             var count = 0;
@@ -919,6 +930,12 @@ namespace Rpm.Productie
                                 _ = Manager.Database.UpSert(xper, $"[{xper.PersoneelNaam}] {Path} klus gereed gemeld");
                         }
 
+                        arg.Current++;
+                        arg.OnChanged(this);
+                        if (arg.IsCanceled)
+                            return false;
+                    }
+
                     var xa = aantal == 1 ? "stuk" : "stuks";
 
                     var change =
@@ -931,15 +948,17 @@ namespace Rpm.Productie
                     var parent = Parent;
                     if (parent.Bewerkingen != null)
                         xcount = parent.Bewerkingen.Count(t => t.State != ProductieState.Gereed && !t.Equals(this));
+                    arg.Current = arg.Current > 50 ? arg.Current + 1 : 50;
+                    arg.Current++;
+                    arg.OnChanged(this);
+                    if (arg.IsCanceled) return false;
                     if (xcount == 0)
-                        return parent.MeldGereed(aantal, paraaf, notitie, false, false).Result;
-                    //else
-                    //{
-                    //    if (sendmail)
-                    //        RemoteProductie.RespondByEmail(this, change);
-                    //    await UpdateBewerking(null, change, update);
-                    //}
-
+                        return parent.MeldGereed(aantal, paraaf, notitie, false, false, arg).Result;
+                    arg.Current++;
+                    arg.Max = 100;
+                    arg.Type = ProgressType.WriteCompleet;
+                    arg.Value = this;
+                    arg.OnChanged(this);
                     return true;
                 }
                 catch (Exception e)

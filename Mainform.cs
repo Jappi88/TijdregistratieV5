@@ -12,11 +12,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Various;
-using WeifenLuo.WinFormsUI.Docking;
 using Timer = System.Windows.Forms.Timer;
 
 namespace ProductieManager
@@ -539,7 +537,7 @@ namespace ProductieManager
                 if (Manager.LogedInGebruiker != null)
                     Manager.LogOut(this,false);
                 else Manager.SaveSettings(Manager.Opties, false, false, true);
-                productieView1.DetachEvents();
+                productieView1.CloseUI();
                 //  _updatechecker?.Stop();
                 // _updatechecker = null;
                 //Manager.Database?.Dispose();

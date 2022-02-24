@@ -145,6 +145,7 @@ namespace Controls
         {
             try
             {
+                if (this.Disposing || this.IsDisposed) return;
                 if (this.InvokeRequired)
                 {
                     this.BeginInvoke(new MethodInvoker(() => LoadPlekken(true)));
@@ -159,7 +160,15 @@ namespace Controls
 
         private void Manager_OnFormulierDeleted(object sender, string id)
         {
-            this.BeginInvoke(new MethodInvoker(()=> LoadPlekken(true)));
+            if (this.Disposing || this.IsDisposed) return;
+            try
+            {
+                this.BeginInvoke(new MethodInvoker(()=> LoadPlekken(true)));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void DetachEvents()
@@ -282,7 +291,15 @@ namespace Controls
                 {
                     await Task.Delay(Manager.Opties.ProductieLijstSyncInterval);
                     if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || !IsSyncing || IsDisposed || Disposing) break;
-                    this.BeginInvoke(new MethodInvoker(()=> LoadPlekken(false)));
+                    try
+                    {
+                        this.BeginInvoke(new MethodInvoker(()=> LoadPlekken(false)));
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        break;
+                    }
                 }
             });
         }
@@ -421,8 +438,7 @@ namespace Controls
         {
             if (xwerkpleklist.SelectedObjects.Count > 0)
             {
-                var wp = xwerkpleklist.SelectedObjects[0] as WerkPlek;
-                if (wp != null)
+                if (xwerkpleklist.SelectedObjects[0] is WerkPlek wp)
                 {
                     var ac = new AantalChanger {StartPosition = FormStartPosition.CenterParent};
                     if (wp.Werk == null || ac.ShowDialog(wp) != DialogResult.OK) return;
