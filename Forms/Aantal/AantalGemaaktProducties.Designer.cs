@@ -79,10 +79,9 @@
             this.Controls.Add(this.panel2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "AantalGemaaktProducties";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Style = MetroFramework.MetroColorStyle.Red;
             this.Text = "Wijzig Aantal Gemaakt";
+            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AantalGemaaktProducties_FormClosing);
             this.Shown += new System.EventHandler(this.AantalGemaaktProducties_Shown);
             this.panel2.ResumeLayout(false);

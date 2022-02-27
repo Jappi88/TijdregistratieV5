@@ -86,10 +86,10 @@ namespace Controls
             xtotdate.Enabled = xtotcheck.Checked;
         }
 
-        private async void xverwerkb_Click(object sender, EventArgs e)
+        private void xverwerkb_Click(object sender, EventArgs e)
         {
-            if (_isbussy) return;
-            await Verwerk();
+            if (_isbussy) return; 
+            Verwerk();
         }
 
         private bool DoCheck()
@@ -258,67 +258,78 @@ namespace Controls
 
         private bool _isbussy;
 
-        public Task Verwerk()
+        public void Verwerk()
         {
-            return Task.Run(new Action(()=>  this.Invoke(new Action(() =>
+            if (_isbussy) return;
+            if (!DoCheck())
+                return;
+            ShowFilter.Enabled = true;
+            ShowFilter.VanafCheck = xvanafcheck.Checked;
+            ShowFilter.VanafTime = xvanafdate.Value;
+            ShowFilter.TotCheck = xtotcheck.Checked;
+            ShowFilter.TotTime = xtotdate.Value;
+            ShowFilter.Bewerking = xbewerkingcheck.Checked ? xbewerkingen.Text.Trim() : null;
+            ShowFilter.werkPlek = xwerkplekcheck.Checked ? xwerkplekken.Text.Trim() : null;
+            ShowFilter.Criteria = xcriteriacheckbox.Checked ? xcriteria.Text.Trim() : null;
+            Task.Run(() =>
             {
                 try
                 {
-                    if (_isbussy) return;
-
-                    if (DoCheck())
+                    if (IsDisposed || Disposing)
                     {
-                        _isbussy = true;
-                        ShowFilter.Enabled = true;
-                        ShowFilter.VanafCheck = xvanafcheck.Checked;
-                        ShowFilter.VanafTime = xvanafdate.Value;
-                        ShowFilter.TotCheck = xtotcheck.Checked;
-                        ShowFilter.TotTime = xtotdate.Value;
-                        ShowFilter.Bewerking = xbewerkingcheck.Checked ? xbewerkingen.Text.Trim() : null;
-                        ShowFilter.werkPlek = xwerkplekcheck.Checked ? xwerkplekken.Text.Trim() : null;
-                        ShowFilter.Criteria = xcriteriacheckbox.Checked ? xcriteria.Text.Trim() : null;
-                        EnableProgressLabel(true);
-                        SetProgressLabelText("Producties Laden...");
-                        var ids = Manager.GetAllProductieIDs(true,true).Result;
-                        int cur = 0;
-                        int max = ids.Count;
-                        var loaded = new List<Bewerking>();
-                        foreach (var id in ids)
-                        {
-                            if (IsDisposed || !Visible) break;
-                            if (string.IsNullOrEmpty(id)) continue;
-                            var x = Manager.Database.GetProductie(id);
-                            if (x == null) continue;
-                            if (x.Bewerkingen is {Length: > 0})
-                            {
-                                var bws = x.Bewerkingen.Where(b => IsAllowed(b, null)).ToArray();
-                                if (bws.Length > 0)
-                                {
-                                    loaded.AddRange(bws);
-                                }
-                            }
-
-                            cur++;
-                            double perc = (double)cur / max;
-                            SetProgressLabelText($"Producties laden ({perc:0.0%})...");
-                        }
-                        if (IsDisposed) return;
-                        productieListControl1.InitProductie(loaded, true, true, false);
-                    }
-                    else
+                        _isbussy = false;
                         return;
+                    }
+                    _isbussy = true;
+                    EnableProgressLabel(true);
+                    SetProgressLabelText("Producties Laden...");
+                    var ids = Manager.GetAllProductieIDs(true, true).Result;
+                    int cur = 0;
+                    int max = ids.Count;
+                    var loaded = new List<Bewerking>();
+                    foreach (var id in ids)
+                    {
+                        if (IsDisposed || !Visible) break;
+                        if (string.IsNullOrEmpty(id)) continue;
+                        var x = Manager.Database.GetProductie(id);
+                        if (x == null) continue;
+                        if (x.Bewerkingen is {Length: > 0})
+                        {
+                            var bws = x.Bewerkingen.Where(b => IsAllowed(b, null)).ToArray();
+                            if (bws.Length > 0)
+                            {
+                                loaded.AddRange(bws);
+                            }
+                        }
+
+                        cur++;
+                        double perc = (double) cur / max;
+                        SetProgressLabelText($"Producties laden ({perc:0.0%})...");
+                    }
+
+                    if (IsDisposed || Disposing)
+                    {
+                        _isbussy = false;
+                        return;
+                    }
+                    productieListControl1.InitProductie(loaded, true, true, false);
                 }
                 catch (Exception e)
                 {
-                    XMessageBox.Show(this, e.Message, "Fout", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                    _isbussy = false;
+                    if (IsDisposed || Disposing) return;
+                    this.Invoke(new MethodInvoker(() =>
+                    {
+                        XMessageBox.Show(this, e.Message, "Fout", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                    }));
                 }
 
                 _isbussy = false;
-
+                if (IsDisposed || Disposing) return;
                 EnableProgressLabel(false);
-                UpdateStatusLabel();
-            }))));
+                this.Invoke(new MethodInvoker(UpdateStatusLabel));
+            });
         }
 
         private void UpdateStatusLabel()
@@ -351,13 +362,13 @@ namespace Controls
            OnClosedClicked();
         }
 
-        private async void xcriteria_KeyDown(object sender, KeyEventArgs e)
+        private void xcriteria_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 e.Handled = e.SuppressKeyPress = true;
                 if (_isbussy) return;
-                await Verwerk();
+                Verwerk();
 
             }
         }

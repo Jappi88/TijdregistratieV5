@@ -11,12 +11,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Forms.MetroBase;
 using Various;
 using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 
 namespace ProductieManager.Forms
 {
-    public partial class WebBrowserForm : Form
+    public partial class WebBrowserForm : MetroBaseForm
     {
         public string[] FilesFormatToOpen { get; set; }
         public List<string> FilesToOpen { get; set; } = new List<string>();

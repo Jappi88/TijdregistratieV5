@@ -182,7 +182,7 @@ namespace Rpm.Productie
                     var ent = Tijden.GetInUseEntry(true);
                     if (ent != null)
                         ent.Stop = DateTime.Now;
-                    Tijden.Uren.ForEach(x => x.InUse = false);
+                    Tijden.TijdenToInactive();
                     Tijden.RemoveAllEmpty();
                     return true;
             }

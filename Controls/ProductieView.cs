@@ -28,6 +28,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ProductieManager.Forms.Welcome;
 using Various;
 
 namespace Controls
@@ -138,8 +139,7 @@ namespace Controls
         #endregion Variables
 
         #region Manager
-
-        private async void InitManager(string path, bool autologin, bool disposeold)
+        private void InitManager(string path, bool autologin, bool disposeold)
         {
             try
             {
@@ -151,11 +151,15 @@ namespace Controls
                 }
 
                 DetachEvents();
-
+                //if (Manager.DefaultSettings is {WelcomeShown: false})
+                //{
+                //    var xwelcome = new WelcomeForm();
+                //    xwelcome.ShowDialog();
+                //}
                 _manager.InitManager();
                 takenManager1.InitManager();
                 InitEvents();
-                await _manager.Load(path, autologin, true, true);
+                _manager.Load(path, autologin, true, true);
                 if (Manager.Opmerkingen != null)
                     Manager.Opmerkingen.OnOpmerkingenChanged += Opmerkingen_OnOpmerkingenChanged;
                 // _manager.StartMonitor();
@@ -1141,13 +1145,15 @@ namespace Controls
                 {
                     if (xtab is MetroTabPage page && page.Controls.Count > 0)
                     {
-                        var xcontrol = page.Controls[0];
-                        if (xcontrol is ProductieListControl xprod)
-                            xprod.SaveColumns(true);
-                        else if (xcontrol is RecentGereedMeldingenUI gereed)
-                            gereed.productieListControl1.SaveColumns(true);
-                        else if (xcontrol is WerkPlekkenUI werkplekken)
-                            werkplekken.SaveLayout();
+                        foreach (var xcontrol in page.Controls)
+                        {
+                            if (xcontrol is ProductieListControl xprod)
+                                xprod.SaveColumns(true);
+                            else if (xcontrol is RecentGereedMeldingenUI gereed)
+                                gereed.productieListControl1.SaveColumns(true);
+                            else if (xcontrol is WerkPlekkenUI werkplekken)
+                                werkplekken.SaveLayout();
+                        }
                     }
                 }
             }
@@ -1354,6 +1360,7 @@ namespace Controls
                         //    CheckForSpecialRooster(true);
                         if (_specialRoosterWatcher is {Enabled: false})
                             _specialRoosterWatcher.Start();
+                        metroCustomTabControl1.Invalidate();
                     }
                     catch (Exception e)
                     {
@@ -3058,14 +3065,12 @@ namespace Controls
             {
                 if (Manager.Database == null)
                     throw new Exception("Database is niet geladen!");
-                if (Manager.Database == null)
-                    throw new Exception("Database is niet geladen!");
                 var tb = new TextFieldEditor();
                 tb.FieldImage = Resources.search_page_document_128x128;
                 tb.MultiLine = false;
-                tb.Title = "Zoek productienr";
+                tb.Title = "Zoek Productie";
                 tb.EnableSecondaryField = true;
-                tb.SecondaryDescription = "Vul in een Artikelnr, bewerking naam of een stukje omschrijving";
+                tb.SecondaryDescription = "Vul in een Artikelnr, bewerking naam of een omschrijving";
                 if (tb.ShowDialog() == DialogResult.OK)
                 {
                     if (tb.UseSecondary)

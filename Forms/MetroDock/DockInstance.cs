@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MetroFramework.Forms;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using MetroFramework.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace ProductieManager.Forms.MetroDock
@@ -257,12 +257,11 @@ namespace ProductieManager.Forms.MetroDock
             // 
             // DockInstance
             // 
-            this.ClientSize = new System.Drawing.Size(583, 431);
+            this.ClientSize = new System.Drawing.Size(860, 539);
             this.DisplayHeader = false;
             this.Movable = false;
             this.Name = "DockInstance";
             this.Padding = new System.Windows.Forms.Padding(10, 30, 10, 10);
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.TransparencyKey = System.Drawing.Color.Empty;

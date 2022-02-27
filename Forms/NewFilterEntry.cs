@@ -1,19 +1,17 @@
-﻿using System;
+﻿using Forms;
+using Forms.MetroBase;
+using Rpm.Misc;
+using Rpm.Various;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Windows.Forms;
-using Forms;
-using MetroFramework.Forms;
-using Rpm.Misc;
-using Rpm.Productie;
-using Rpm.Various;
 
 namespace ProductieManager.Forms
 {
-    public partial class NewFilterEntry : MetroForm
+    public partial class NewFilterEntry : MetroBaseForm
     {
         public PropertyInfo Property { get; private set; }
 

@@ -131,6 +131,14 @@ namespace Rpm.Productie
             }
         }
 
+        public void TijdenToInactive()
+        {
+            lock (Uren)
+            {
+                Uren.ForEach(x => x.InUse = false);
+            }
+        }
+
         public int RemoveAllEmpty()
         {
             lock (Uren)
@@ -162,15 +170,18 @@ namespace Rpm.Productie
                 }
                 foreach (var uur in Uren)
                 {
-                   
-                    if (uur.Start >= xstart && uur.Start < xstop)
+                    if (uur.ContainsBereik(new TijdEntry(xstart, xstop)))
                         return true;
-                    if (uur.Start <= xstart && uur.Stop > xstop)
-                        return true;
+                    //if (uur.Start >= xstart && uur.Start < xstop)
+                    //    return true;
+                    //if (uur.Start <= xstart && uur.Stop > xstop)
+                    //    return true;
                 }
-                return Uren.Any(x =>
-                    (x.Start >= xstart && x.Start < xstop) ||
-                    x.Stop > xstart && x.Stop <= xstop);
+
+                return false;
+                //return Uren.Any(x =>
+                //    (x.Start >= xstart && x.Start < xstop) ||
+                //    x.Stop > xstart && x.Stop <= xstop);
             }
             catch (Exception e)
             {

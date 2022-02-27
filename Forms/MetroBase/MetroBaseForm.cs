@@ -105,7 +105,6 @@ namespace Forms.MetroBase
                 xform.BringToFront();
                 xform.Focus();
                 xform.Select();
-                xform.Invalidate();
             }
         }
     }

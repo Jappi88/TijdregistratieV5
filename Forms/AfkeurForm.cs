@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Controls;
+using Forms.MetroBase;
+using Rpm.Misc;
+using Rpm.Productie;
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Controls;
-using MetroFramework.Forms;
-using Rpm.Misc;
-using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class AfkeurForm : MetroForm
+    public partial class AfkeurForm : MetroBaseForm
     {
         public ProductieFormulier Productie { get; private set; }
         public AfkeurForm()

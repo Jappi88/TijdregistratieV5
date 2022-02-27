@@ -1,13 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms;
-using MetroFramework.Forms;
+﻿using MetroFramework.Forms;
 using ProductieManager.Forms.MetroDock;
-using ProductieManager.Properties;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.Various;
+using System;
+using System.Linq;
+using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Forms

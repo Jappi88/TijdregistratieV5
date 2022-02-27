@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-using System.Windows.Navigation;
-using MetroFramework.Forms;
+﻿using Forms.MetroBase;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class BewerkingSelectorForm : MetroForm
+    public partial class BewerkingSelectorForm : MetroBaseForm
     {
         public bool ShowWerkPlekken { get; set; }
 

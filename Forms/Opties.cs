@@ -484,6 +484,7 @@ namespace Forms
             {
                 xs.BackgroundImagePath = _LoadedOpties.BackgroundImagePath;
                 xs.PreviewShown = _LoadedOpties.PreviewShown;
+                xs.WelcomeShown = _LoadedOpties.WelcomeShown;
                 xs.LastPreviewVersion = _LoadedOpties.LastPreviewVersion;
                 xs.BoundUsername = _LoadedOpties.BoundUsername;
                 xs.OntvangAdres = _LoadedOpties.OntvangAdres;

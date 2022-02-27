@@ -1,11 +1,11 @@
-﻿using MetroFramework.Forms;
+﻿using Forms.MetroBase;
 using Rpm.Productie;
 using System;
 using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class AantalChanger : MetroForm
+    public partial class AantalChanger : MetroBaseForm
     {
         public AantalChanger()
         {

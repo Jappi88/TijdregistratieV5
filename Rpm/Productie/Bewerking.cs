@@ -10,7 +10,9 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using System.Windows;
 using Controls;
+using Application = System.Windows.Forms.Application;
 
 namespace Rpm.Productie
 {
@@ -660,37 +662,41 @@ namespace Rpm.Productie
             });
         }
 
-        public void ZetPersoneelActief(string personeelnaam,string werkplek,bool actief)
+        public Personeel ZetPersoneelActief(string personeelnaam,string werkplek,bool actief)
         {
             if (WerkPlekken != null)
             {
                 var xwp = WerkPlekken.FirstOrDefault(x => string.Equals(x.Naam, werkplek, StringComparison.CurrentCultureIgnoreCase));
-                if(xwp != null)
+                Personeel xper = null;
+                if (xwp != null)
                 {
-                    var xpers = xwp.Personen.Where(x =>
-                   string.Equals(x.PersoneelNaam, personeelnaam, StringComparison.CurrentCultureIgnoreCase)).ToList();
-                    foreach (var xper in xpers)
-                    {
-                        var xklus = xper.Klusjes.GetKlus($"{Path}\\{werkplek}");
-                        xklus?.ZetActief(actief, State == ProductieState.Gestart && actief);
-                        if (actief && xklus?.Tijden != null)
-                            xwp.Tijden.UpdateLijst(xklus.Tijden,false);
-                    }
+                    xper = xwp.Personen.FirstOrDefault(x =>
+                        string.Equals(x.PersoneelNaam, personeelnaam, StringComparison.CurrentCultureIgnoreCase));
+                    var xklus = xper?.Klusjes.GetKlus($"{Path}\\{werkplek}")?.CreateCopy();
+                    xklus?.ZetActief(actief, State == ProductieState.Gestart && actief);
+                    xper.ReplaceKlus(xklus);
+                    if (actief && xklus?.Tijden != null)
+                        xwp.Tijden.UpdateLijst(xklus.Tijden, false);
                     xwp.UpdateWerkplek(false);
                 }
-                if (!actief) return;
+
+                if (!actief) return xper;
                 foreach (var wp in WerkPlekken)
                 {
                     if (string.Equals(wp.Naam, werkplek, StringComparison.CurrentCultureIgnoreCase)) continue;
                     var xpers = wp.Personen.Where(x =>
                     string.Equals(x.PersoneelNaam, personeelnaam, StringComparison.CurrentCultureIgnoreCase)).ToList();
-                    foreach (var xper in xpers)
+                    foreach (var xp in xpers)
                     {
-                        var xklus = xper.Klusjes.GetKlus($"{Path}\\{wp.Naam}");
+                        var xklus = xp.Klusjes.GetKlus($"{Path}\\{wp.Naam}");
                         xklus?.ZetActief(false, false);
                     }
                 }
+
+                return xper;
             }
+
+            return null;
         }
 
         public async Task<bool> StopProductie(bool email, bool updatecombis)

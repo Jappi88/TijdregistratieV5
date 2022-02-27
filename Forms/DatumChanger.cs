@@ -1,10 +1,10 @@
-﻿using MetroFramework.Forms;
+﻿using Forms.MetroBase;
 using System;
 using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class DatumChanger : MetroForm
+    public partial class DatumChanger : MetroBaseForm
     {
         public DatumChanger()
         {

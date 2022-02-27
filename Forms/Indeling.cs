@@ -1,5 +1,4 @@
 ﻿using BrightIdeasSoftware;
-using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
@@ -14,7 +13,7 @@ using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class Indeling : Forms.MetroBase.MetroBaseForm
+    public partial class Indeling : MetroBase.MetroBaseForm
     {
         private Bewerking _bew;
 
@@ -314,7 +313,8 @@ namespace Forms
                 if (s.Werkplek != null)
                 {
                     var xwp = xwerkplekken.Objects.Cast<WerkPlek>()
-                        .FirstOrDefault(t => t.Naam.ToLower().StartsWith(s.Werkplek.ToLower()));
+                        .FirstOrDefault(t =>
+                            string.Equals(t.Naam, s.Werkplek, StringComparison.CurrentCultureIgnoreCase));
                     if (xwp != null)
                         xwerkplekken.SelectedObject = xwp;
                 }
@@ -338,7 +338,6 @@ namespace Forms
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
             }
         }
 
@@ -431,12 +430,12 @@ namespace Forms
 
         private Bewerking GetCurrentBewerking()
         {
-            var bew = _bew;
+           // var bew = _bew;
             if (Formulier?.Bewerkingen != null && xbewerking.SelectedItem != null)
-                bew = Formulier.Bewerkingen.FirstOrDefault(x =>
+                _bew = Formulier.Bewerkingen.FirstOrDefault(x =>
                     string.Equals(x.Naam, xbewerking.SelectedItem.ToString(),
                         StringComparison.CurrentCultureIgnoreCase));
-            return bew;
+            return _bew;
         }
 
         private Klus GetCurrentKlus(Personeel pers, bool createnew)
@@ -589,9 +588,7 @@ namespace Forms
 
             return Array.Empty<Personeel>();
         }
-
-        private readonly Timer _textTimer = new Timer() { Interval = 2000 };
-
+        
         private void UpdatePersoneelNaamTextbox()
         {
             var pers = Manager.Database.GetPersoneel(xnaampersoneel.Text.Trim()).Result;
@@ -630,14 +627,8 @@ namespace Forms
         private void SetPersoneelActief(Personeel per, bool actief)
         {
             if (per == null) return;
-            //var klus = GetCurrentKlus(per, true);
-            //if (klus == null) return;
-            //klus.ZetActief(actief, Bewerking.State == ProductieState.Gestart);
-            //if(actief)
-            //{
             var bew = GetCurrentBewerking();
-            bew?.ZetPersoneelActief(per.PersoneelNaam, per.Werkplek, actief);
-            //}
+            per = bew?.ZetPersoneelActief(per.PersoneelNaam, per.Werkplek, actief);
             xshiftlist.RefreshObject(per);
             xshiftlist.SelectedObject = per;
             xshiftlist.SelectedItem?.EnsureVisible();
@@ -649,7 +640,8 @@ namespace Forms
             if (xshiftlist.SelectedObjects == null) return;
             var selected = xshiftlist.SelectedObjects;
             var actief = ClickImage();
-            foreach (var per in xshiftlist.SelectedObjects.Cast<Personeel>()) SetPersoneelActief(per, actief);
+            foreach (var per in xshiftlist.SelectedObjects.Cast<Personeel>())
+                SetPersoneelActief(per, actief);
             xshiftlist.SelectedObjects = selected;
             xshiftlist.SelectedItem?.EnsureVisible();
         }
@@ -828,7 +820,7 @@ namespace Forms
         {
             var prodnr = Formulier?.ProductieNr;
             if (changedform == null || !string.Equals(changedform.ProductieNr, prodnr)) return;
-            this.BeginInvoke(new MethodInvoker(() =>
+            this.Invoke(new MethodInvoker(() =>
             {
                 try
                 {

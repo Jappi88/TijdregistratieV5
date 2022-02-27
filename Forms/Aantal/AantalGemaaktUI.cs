@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Forms.MetroBase;
+using Rpm.Misc;
+using Rpm.Productie;
+using System;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using MetroFramework.Forms;
-using Rpm.Misc;
-using Rpm.Productie;
 
 namespace Forms
 {
-    public partial class AantalGemaaktUI : MetroForm
+    public partial class AantalGemaaktUI : MetroBaseForm
     {
         public AantalGemaaktUI()
         {

@@ -35,7 +35,7 @@ namespace Forms
             if (!Filter.IsDefault())
             {
                 zoekProductiesUI1.SetFilter(Filter);
-                _ = zoekProductiesUI1.Verwerk();
+                zoekProductiesUI1.Verwerk();
             }
         }
 

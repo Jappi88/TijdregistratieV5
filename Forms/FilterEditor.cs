@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Documents;
-using System.Windows.Forms;
-using Forms;
-using MetroFramework.Forms;
+﻿using Forms;
+using Forms.MetroBase;
 using Rpm.Misc;
 using Rpm.Productie;
-using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace ProductieManager.Forms
 {
-    public partial class FilterEditor : MetroForm
+    public partial class FilterEditor : MetroBaseForm
     {
         public List<Filter> Filters { get; set; } = new List<Filter>();
 

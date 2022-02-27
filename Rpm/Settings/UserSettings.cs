@@ -48,6 +48,8 @@ namespace Rpm.Settings
         public FlowDirection TileFlowDirection { get; set; } = FlowDirection.TopDown;
         public string LastShownTabName { get; set; }
         public bool PreviewShown { get; set; }
+        public bool WelcomeShown { get; set; }
+
         #region "Methods"
 
         public List<TileInfoEntry> GetAllDefaultEntries(bool incextra)
@@ -519,7 +521,7 @@ namespace Rpm.Settings
                     Application.DoEvents();
                 }
             }
-
+            
             xreturn ??= Manager.Opties?.CreateCopy();
             if (xreturn != null)
                 xreturn.Username = "Default Settings";

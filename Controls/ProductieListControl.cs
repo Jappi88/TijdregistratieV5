@@ -201,7 +201,7 @@ namespace Controls
                 var xitems =
                     (ProductieLijst.SelectedObjects.Count > 1 ? ProductieLijst.SelectedObjects : ProductieLijst.Objects)
                     ?.Cast<IProductieBase>().ToList() ?? new List<IProductieBase>();
-                var xtijd = xitems.Sum(x => x.TotaalTijdGewerkt);
+                var xtijd = xitems.Sum(x => x.TijdGewerkt);
                 var xgemaakt = xitems.Sum(x => x.TotaalGemaakt);
                 var xpu = xtijd == 0 ? xgemaakt : xgemaakt == 0 ? 0 : (int)Math.Round(xgemaakt / xtijd, 0);
                 var x1 = xitems.Count == 1 ? "Productie" : "Producties";
