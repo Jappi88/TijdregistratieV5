@@ -102,9 +102,22 @@ namespace Forms.MetroBase
             var xform = this.Parent ?? Application.OpenForms["Mainform"];
             if (xform != null)
             {
-                xform.BringToFront();
-                xform.Focus();
-                xform.Select();
+                if (xform.InvokeRequired)
+                {
+                    xform.Invoke(new MethodInvoker(() =>
+                    {
+                        xform.BringToFront();
+                        xform.Focus();
+                        xform.Select();
+                    }));
+
+                }
+                else
+                {
+                    xform.BringToFront();
+                    xform.Focus();
+                    xform.Select();
+                }
             }
         }
     }

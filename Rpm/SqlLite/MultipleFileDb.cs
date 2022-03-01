@@ -1,26 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Timers;
-using iTextSharp.text.pdf;
-using iTextSharp.text.pdf.parser.clipper;
-using NPOI.SS.Formula.Functions;
-using Polenter.Serialization;
+﻿using Polenter.Serialization;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Rpm.SqlLite
 {
     public class MultipleFileDb : IDisposable
     {
-        private FileSystemWatcher _pathwatcher;
-        private FileSystemWatcher _secondarypathwatcher;
-        private readonly Timer _FileChangedNotifyTimer;
+        private CustomFileWatcher _pathwatcher;
+        private CustomFileWatcher _secondarypathwatcher;
+        //private readonly Timer _FileChangedNotifyTimer;
 
         //private static readonly object _locker = new object();
         public string SecondaryDestination { get; private set; }
@@ -43,20 +39,17 @@ namespace Rpm.SqlLite
 
         public MultipleFileDb(string path, bool watchdb, string version, DbType type)
         {
-            _FileChangedNotifyTimer = new Timer(1000);//500 ms vertraging
-            _FileChangedNotifyTimer.Elapsed += _FileChangedNotifyTimer_Elapsed;
+            //_FileChangedNotifyTimer = new Timer(1000);//500 ms vertraging
+            //_FileChangedNotifyTimer.Elapsed += _FileChangedNotifyTimer_Elapsed;
             Path = path;
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             InitVersion(version, type);
             if (watchdb)
             {
-                _pathwatcher = new FileSystemWatcher(Path);
-                _pathwatcher.EnableRaisingEvents = true;
-                _pathwatcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName;
-                _pathwatcher.Filter = "*.rpm";
-                _pathwatcher.Changed += _pathwatcher_Changed;
-                _pathwatcher.Deleted += _pathwatcher_Deleted;
+                _pathwatcher = new CustomFileWatcher(Path, "*.rpm");
+                _pathwatcher.FileChanged += _pathwatcher_Changed;
+                _pathwatcher.FileDeleted += _pathwatcher_Deleted;
             }
         }
 
@@ -105,28 +98,28 @@ namespace Rpm.SqlLite
 
         private readonly List<string> _changes = new List<string>();
 
-        private void _FileChangedNotifyTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            _FileChangedNotifyTimer?.Stop();
-            if (_changes == null) return;
-            try
-            {
-                lock (_changes)
-                {
-                    for (int i = 0; i < _changes.Count; i++)
-                    {
-                        var x = _changes[i];
-                        OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Changed,
-                            System.IO.Path.GetDirectoryName(x) ?? x, System.IO.Path.GetFileName(x)));
-                        _changes.RemoveAt(i--);
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
-        }
+        //private void _FileChangedNotifyTimer_Elapsed(object sender, ElapsedEventArgs e)
+        //{
+        //    _FileChangedNotifyTimer?.Stop();
+        //    if (_changes == null) return;
+        //    try
+        //    {
+        //        lock (_changes)
+        //        {
+        //            for (int i = 0; i < _changes.Count; i++)
+        //            {
+        //                var x = _changes[i];
+        //                OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Changed,
+        //                    System.IO.Path.GetDirectoryName(x) ?? x, System.IO.Path.GetFileName(x)));
+        //                _changes.RemoveAt(i--);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        Console.WriteLine(exception);
+        //    }
+        //}
 
         private void _pathwatcher_Deleted(object sender, FileSystemEventArgs e)
         {
@@ -137,24 +130,25 @@ namespace Rpm.SqlLite
         {
             if (!_canread) return;
             if (!RaiseChangeEvent) return;
-            _FileChangedNotifyTimer?.Stop();
-            var rpath = GetReadPath(true).ToLower();
-            if (!e.FullPath.ToLower().StartsWith(rpath)) return;
-            lock (_changes)
-            {
-                if (!_changes.Any(x => string.Equals(x, e.FullPath, StringComparison.CurrentCultureIgnoreCase)))
-                    _changes.Add(e.FullPath);
-            }
-            _FileChangedNotifyTimer?.Start();
+            OnFileChanged(e);
+            //_FileChangedNotifyTimer?.Stop();
+            //var rpath = GetReadPath(true).ToLower();
+            //if (!e.FullPath.ToLower().StartsWith(rpath)) return;
+            //lock (_changes)
+            //{
+            //    if (!_changes.Any(x => string.Equals(x, e.FullPath, StringComparison.CurrentCultureIgnoreCase)))
+            //        _changes.Add(e.FullPath);
+            //}
+            //_FileChangedNotifyTimer?.Start();
         }
 
         public void DisposeSecondayPath()
         {
             if (_secondarypathwatcher != null)
             {
-                _secondarypathwatcher.Deleted -= _secondarypathwatcher_Deleted;
-                _secondarypathwatcher.Changed -= _secondarypathwatcher_Changed;
-                //_secondarypathwatcher.Dispose();
+                _secondarypathwatcher.FileDeleted -= _secondarypathwatcher_Deleted;
+                _secondarypathwatcher.FileChanged -= _secondarypathwatcher_Changed;
+                _secondarypathwatcher.Dispose();
                 _secondarypathwatcher = null;
             }
 
@@ -166,15 +160,16 @@ namespace Rpm.SqlLite
         {
             if (!_canread) return;
             if (!RaiseChangeEvent) return;
-            _FileChangedNotifyTimer?.Stop();
-            var rpath = GetReadPath(true).ToLower();
-            if (!e.FullPath.ToLower().StartsWith(rpath)) return;
-            lock (_changes)
-            {
-                if (!_changes.Any(x => string.Equals(x, e.FullPath, StringComparison.CurrentCultureIgnoreCase)))
-                    _changes.Add(e.FullPath);
-            }
-            _FileChangedNotifyTimer?.Start();
+            OnSecondaryFileChanged(e);
+            //_FileChangedNotifyTimer?.Stop();
+            //var rpath = GetReadPath(true).ToLower();
+            //if (!e.FullPath.ToLower().StartsWith(rpath)) return;
+            //lock (_changes)
+            //{
+            //    if (!_changes.Any(x => string.Equals(x, e.FullPath, StringComparison.CurrentCultureIgnoreCase)))
+            //        _changes.Add(e.FullPath);
+            //}
+            //_FileChangedNotifyTimer?.Start();
         }
 
         private void _secondarypathwatcher_Deleted(object sender, FileSystemEventArgs e)
@@ -186,17 +181,16 @@ namespace Rpm.SqlLite
         {
             try
             {
+                return false;
                 if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
                 {
                     SecondaryDestination = path;
                     SecondaryManagedTypes = managetypes;
                     _secondarypathwatcher?.Dispose();
-                    _secondarypathwatcher = new FileSystemWatcher(path);
-                    _secondarypathwatcher.EnableRaisingEvents = true;
-                    _secondarypathwatcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName;
+                    _secondarypathwatcher = new CustomFileWatcher(path, "*.rpm");
                     _secondarypathwatcher.Filter = "*.rpm";
-                    _secondarypathwatcher.Deleted += _secondarypathwatcher_Deleted;
-                    _secondarypathwatcher.Changed += _secondarypathwatcher_Changed;
+                    _secondarypathwatcher.FileDeleted += _secondarypathwatcher_Deleted;
+                    _secondarypathwatcher.FileChanged += _secondarypathwatcher_Changed;
                     return true;
                 }
 
@@ -826,8 +820,8 @@ namespace Rpm.SqlLite
             DisposeSecondayPath();
             if (_pathwatcher != null)
             {
-                _pathwatcher.Changed -= _pathwatcher_Changed;
-                _pathwatcher.Deleted -= _pathwatcher_Deleted;
+                _pathwatcher.FileChanged -= _pathwatcher_Changed;
+                _pathwatcher.FileDeleted -= _pathwatcher_Deleted;
                 _pathwatcher?.Dispose();
                 _pathwatcher = null;
             }
@@ -881,7 +875,7 @@ namespace Rpm.SqlLite
 
             if (disposing)
             {
-                _FileChangedNotifyTimer?.Dispose();
+               // _FileChangedNotifyTimer?.Dispose();
                 _pathwatcher?.Dispose();
                 _secondarypathwatcher?.Dispose();
             }

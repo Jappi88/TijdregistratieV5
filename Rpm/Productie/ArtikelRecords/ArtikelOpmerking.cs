@@ -43,7 +43,7 @@ namespace Rpm.Productie.ArtikelRecords
         public List<string> OpmerkingVoor { get; set; } = new List<string>();
         public Dictionary<string, DateTime> GelezenDoor { get; set; } = new Dictionary<string, DateTime>();
         public bool IsAlgemeen { get; set; }
-
+        public int AantalGetoond { get; set; }
         public string Ontvangers => string.Join(", ", OpmerkingVoor);
 
         public bool IsFromMe =>

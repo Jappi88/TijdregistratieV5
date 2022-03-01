@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
 
@@ -16,23 +17,17 @@ namespace Rpm.Opmerking
 
         public string FilePath { get; private set; }
 
-        private readonly Timer _changedtimer;
-
         public event EventHandler OnOpmerkingenChanged;
 
-        private FileSystemWatcher _watcher;
+        private CustomFileWatcher _watcher;
 
         public Opmerkingen()
         {
-            _changedtimer = new Timer(1000);
-            _changedtimer.Elapsed += _changedtimer_Elapsed;
             OpmerkingenLijst = new List<OpmerkingEntry>();
             SetFilePath();
-            _watcher = new FileSystemWatcher(Manager.DbPath + $"\\Opmerkingen");
-            _watcher.EnableRaisingEvents = true;
-            _watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite | NotifyFilters.CreationTime;
-            _watcher.Changed += _watcher_Changed;
-            _watcher.Deleted += _watcher_Deleted;
+            _watcher = new CustomFileWatcher(Manager.DbPath + $"\\Opmerkingen", "*.rpm");
+            _watcher.FileChanged += _watcher_Changed;
+            _watcher.FileDeleted += _watcher_Deleted;
         }
 
         private void _watcher_Deleted(object sender, FileSystemEventArgs e)
@@ -48,13 +43,11 @@ namespace Rpm.Opmerking
 
         private void _watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            _changedtimer.Stop();
-            _changedtimer.Start();
+            OpmerkingenChanged();
         }
 
         private void _changedtimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            _changedtimer.Stop();
             OpmerkingenChanged();
         }
 

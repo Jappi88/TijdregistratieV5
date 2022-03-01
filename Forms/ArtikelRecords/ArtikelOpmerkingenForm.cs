@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Forms.ArtikelRecords
@@ -242,9 +243,13 @@ namespace Forms.ArtikelRecords
         private void xAddOpmerking_Click(object sender, EventArgs e)
         {
             Opmerkingen ??= new List<ArtikelOpmerking>();
-            var newopmerking = new ArtikelOpmerkingForm();
+            var xtype = Record == null ? FilterOp.Beiden :
+                Record.IsWerkplek ? FilterOp.Werkplaatsen : FilterOp.Artikelen;
+            var newopmerking = new ArtikelOpmerkingForm(xtype);
             if (Record != null)
+            {
                 newopmerking.Title = $"{Record.ArtikelNr} Melding Aanmaken";
+            }
             else
             {
                 newopmerking.Title = $"Algemene Melding Aanmaken";

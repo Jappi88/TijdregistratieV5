@@ -926,14 +926,18 @@ namespace Rpm.Productie
                         if (per.IngezetAanKlus(this, false, out var klusjes))
                         {
                             var count = 0;
-                            var xper = Manager.Database.GetPersoneel(per.PersoneelNaam).Result;
-                            foreach (var klus in klusjes)
-                                if (klus.MeldGereed())
-                                    if (xper != null && xper.ReplaceKlus(klus))
-                                        count++;
+                            var xper = Manager.Database.GetPersoneel(per.PersoneelNaam.Trim()).Result;
+                            if (xper != null)
+                            {
+                                foreach (var klus in klusjes)
+                                    if (klus.MeldGereed())
+                                        if (xper.ReplaceKlus(klus))
+                                            count++;
 
-                            if (count > 0 && xper != null)
-                                _ = Manager.Database.UpSert(xper, $"[{xper.PersoneelNaam}] {Path} klus gereed gemeld");
+                                if (count > 0)
+                                    _ = Manager.Database.UpSert(xper,
+                                        $"[{xper.PersoneelNaam}] {Path} klus gereed gemeld").Result;
+                            }
                         }
 
                         arg.Current++;

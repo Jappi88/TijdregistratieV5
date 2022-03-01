@@ -243,12 +243,14 @@ namespace Controls
                                         {
                                             xwerkpleklist.BeginUpdate();
                                             xwerkpleklist.AddObject(plek);
+                                            xwerkpleklist.EndUpdate();
                                             changed = true;
                                         }
                                         else if (xplek != null && (bewerking.State != ProductieState.Gestart || !valid))
                                         {
                                             xwerkpleklist.BeginUpdate();
                                             xwerkpleklist.RemoveObject(xplek);
+                                            xwerkpleklist.EndUpdate();
                                             formplekken.Remove(xplek);
                                             changed = true;
                                         }
@@ -268,6 +270,7 @@ namespace Controls
                                     xwerkpleklist.RemoveObject(formplek);
                                     changed = true;
                                 }
+                                xwerkpleklist.EndUpdate();
                             }
                         }
                         if (changed)
@@ -276,7 +279,6 @@ namespace Controls
                     catch
                     {
                     }
-                    finally { xwerkpleklist.EndUpdate();}
             }));
         }
 

@@ -19,9 +19,9 @@ namespace ProductieManager.Rpm.Various
         public static string GroupChatImagePath { get; set; }
 
         public static string GebruikerPath { get; set; }
-        private FileSystemWatcher _PublicberichtenWatcher;
-        private FileSystemWatcher _berichtenWatcher;
-        private FileSystemWatcher _gebruikerWatcher;
+        private CustomFileWatcher _PublicberichtenWatcher;
+        private CustomFileWatcher _berichtenWatcher;
+        private CustomFileWatcher _gebruikerWatcher;
         public static bool LoggedIn { get; private set; }
         public static UserChat Chat { get; private set; }
 
@@ -30,63 +30,47 @@ namespace ProductieManager.Rpm.Various
 
         public static List<UserChat> Gebruikers { get; set; } = new List<UserChat>();
 
-        private readonly Timer _FileChangedNotifyTimer;
-
-        public ProductieChat()
+        private static readonly object _locker = new object();
+        private void _berichtenWatcher_Changed(object sender, FileSystemEventArgs e)
         {
-            _FileChangedNotifyTimer = new Timer(1000);//500 ms vertraging
-            _FileChangedNotifyTimer.Elapsed += _FileChangedNotifyTimer_Elapsed;
-        }
-
-        private readonly List<string> _changes = new List<string>();
-        private void _FileChangedNotifyTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            _FileChangedNotifyTimer?.Stop();
-            if (_changes == null) return;
-            try
+            lock (_locker)
             {
-                lock (_changes)
+                try
                 {
-                    for (int i = 0; i < _changes.Count; i++)
+                    if (Chat == null || !LoggedIn) return;
+                    try
                     {
-                        try
+                        var x = e.FullPath;
+                        var dirname = Path.GetDirectoryName(x);
+                        if (dirname != null && dirname.ToLower().EndsWith("berichten"))
                         {
-                            var x = _changes[i];
-                            //if (x.ToLower().EndsWith("iedereen.rpm"))
-                            //{
-                            //    _changes.RemoveAt(i--);
-                            //    continue;
-                            //}
-                            var dirname = Path.GetDirectoryName(x);
-                            if (dirname != null && dirname.ToLower().EndsWith("berichten"))
+                            if (!RaiseNewMessageEvent) return;
+                            var ent = x.DeSerialize<ProductieChatEntry>();
+                            if (ent != null)
                             {
-                                var ent = x.DeSerialize<ProductieChatEntry>();
-                                if (ent != null)
-                                {
-                                    OnMessageRecieved(ent);
-                                }
+                                OnMessageRecieved(ent);
                             }
-                            else
-                            {
-                                var ent = x.DeSerialize<UserChat>();
-                                if (ent != null)
-                                {
-                                    UpdateGebruikers();
-                                    OnGebruikerUpdate(ent);
-                                }
-                            }
-                            _changes.RemoveAt(i--);
                         }
-                        catch (Exception exception)
+                        else
                         {
-                            Console.WriteLine(exception);
+                            var ent = x.DeSerialize<UserChat>();
+                            if (ent != null)
+                            {
+                                UpdateGebruikers();
+                                if (RaiseUserUpdateEvent)
+                                    OnGebruikerUpdate(ent);
+                            }
                         }
                     }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine(exception);
+                    }
                 }
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                }
             }
         }
 
@@ -184,21 +168,14 @@ namespace ProductieManager.Rpm.Various
                 Chat.Save();
                 UpdateGebruikers();
                
-                _PublicberichtenWatcher = new FileSystemWatcher(PublicLobyPath);
-                _PublicberichtenWatcher.EnableRaisingEvents = true;
-                _PublicberichtenWatcher.Changed += _berichtenWatcher_Changed;
-                _PublicberichtenWatcher.Filter = "*.rpm";
+                _PublicberichtenWatcher = new CustomFileWatcher(PublicLobyPath, "*.rpm");
+                _PublicberichtenWatcher.FileChanged += _berichtenWatcher_Changed;
 
-                _berichtenWatcher = new FileSystemWatcher(BerichtenPath);
-                _berichtenWatcher.EnableRaisingEvents = true;
-                _berichtenWatcher.Changed += _berichtenWatcher_Changed;
-                _berichtenWatcher.Filter = "*.rpm";
+                _berichtenWatcher = new CustomFileWatcher(BerichtenPath, "*.rpm");
+                _berichtenWatcher.FileChanged += _berichtenWatcher_Changed;
 
-                _gebruikerWatcher = new FileSystemWatcher(ChatPath);
-                _gebruikerWatcher.EnableRaisingEvents = true;
-                _gebruikerWatcher.Filter = "*.rpm";
-                _gebruikerWatcher.NotifyFilter = NotifyFilters.LastWrite;
-                _gebruikerWatcher.Changed += _berichtenWatcher_Changed;
+                _gebruikerWatcher = new CustomFileWatcher(ChatPath, "*.rpm");
+                _gebruikerWatcher.FileChanged += _berichtenWatcher_Changed;
                 LoggedIn = true;
                 OnGebruikerUpdate(Chat);
                 return true;
@@ -316,28 +293,6 @@ namespace ProductieManager.Rpm.Various
             }
         }
 
-        private static readonly object _locker = new object();
-        private void _berichtenWatcher_Changed(object sender, FileSystemEventArgs e)
-        {
-            lock(_locker)
-            {
-                try
-                {
-                    if (Chat == null || !LoggedIn || !RaiseNewMessageEvent) return;
-                    _FileChangedNotifyTimer?.Stop();
-                    lock (_changes)
-                    {
-                        if (!_changes.Any(x => string.Equals(x, e.FullPath, StringComparison.CurrentCultureIgnoreCase)))
-                            _changes.Add(e.FullPath);
-                    }
-                    _FileChangedNotifyTimer?.Start();
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception);
-                }
-            }
-        }
 
         public static List<ProductieChatEntry> GetConversation(UserChat user, bool privatemessages)
         {

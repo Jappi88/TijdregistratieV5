@@ -360,7 +360,7 @@ namespace Rpm.Productie.ArtikelRecords
                         }
                         else
                             op.GelezenDoor.Add(Manager.Opties.Username, DateTime.Now);
-
+                        op.AantalGetoond++;
                         if (op.IsAlgemeen)
                         {
                             var alg = GetAllAlgemeenRecordsOpmerkingen();
@@ -452,20 +452,19 @@ namespace Rpm.Productie.ArtikelRecords
                             switch (op.FilterSoort)
                             {
                                 case ArtikelFilterSoort.AantalGemaakt:
-                                    var xoldaantal = (int) (record.VorigeAantalGemaakt / op.FilterWaarde);
                                     var xnewaantal = (int)(record.AantalGemaakt / op.FilterWaarde);
-                                    if (xnewaantal > xoldaantal)
+                                    if (xnewaantal > op.AantalGetoond)
                                     {
-                                        //op.GelezenDoor.Remove(Manager.Opties.Username);
+                                        op.GelezenDoor.Clear();
                                         break;
                                     }
                                     continue;
                                 case ArtikelFilterSoort.TijdGewerkt:
-                                    var xoldtijd = (int)(record.VorigeTijdGewerkt / (double)op.FilterWaarde);
+                                    //var xoldtijd = (int)(record.VorigeTijdGewerkt / (double)op.FilterWaarde);
                                     var xnewtijd = (int)(record.TijdGewerkt / (double)op.FilterWaarde);
-                                    if (xnewtijd > xoldtijd)
+                                    if (xnewtijd > op.AantalGetoond)
                                     {
-                                        //op.GelezenDoor.Remove(Manager.Opties.Username);
+                                        op.GelezenDoor.Clear();
                                         break;
                                     }
                                     continue;

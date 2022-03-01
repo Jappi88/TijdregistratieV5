@@ -3184,21 +3184,6 @@ namespace Controls
             }
         }
 
-        private void xProductieLijst1_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
-        {
-            if (e.ColumnIndex > ProductieLijst.Columns.Count - 1)
-                return;
-            if (ProductieLijst.Columns[e.ColumnIndex]?.Tag is ExcelColumnEntry entry)
-            {
-                if (entry.ColumnBreedte == e.NewWidth) return;
-                SaveColumns(false);
-                //var xset = Manager.Opties.ExcelColumns.FirstOrDefault(x =>
-                //    x.IsUsed(ListName) && !x.IsExcelSettings);
-                //if (xset == null) return;
-                //entry.ColumnBreedte = ProductieLijst.Columns[e.ColumnIndex].Width;
-            }
-        }
-
         #endregion ProductieLijst Events
 
         #region Events

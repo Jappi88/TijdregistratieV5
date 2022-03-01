@@ -302,6 +302,7 @@ namespace Rpm.Productie
                         ArtikelRecords?.Dispose();
                         ArtikelRecords = new ArtikelRecords.ArtikelRecords(DbPath);
                         Opmerkingen = new Opmerkingen();
+                        Opmerkingen.OnOpmerkingenChanged += Opmerkingen_OnOpmerkingenChanged;
                         _= Opmerkingen.Load();
                         ProductieProvider?.InitOfflineDb();
                     }
@@ -319,6 +320,11 @@ namespace Rpm.Productie
                     return false;
                 }
             });
+        }
+
+        private void Opmerkingen_OnOpmerkingenChanged(object sender, EventArgs e)
+        {
+            OnOpmerkingenChanged();
         }
 
         #endregion Manager Init
@@ -1706,6 +1712,12 @@ namespace Rpm.Productie
         #endregion "Private Methods"
 
         #region "Events"
+
+        public static event EventHandler OpmerkingenChanged;
+        private static void OnOpmerkingenChanged()
+        {
+            OpmerkingenChanged?.Invoke(Opmerkingen, EventArgs.Empty);
+        }
         /// <summary>
         /// Een event om een dialog te verzoeken vanuit de beheerder
         /// </summary>
@@ -2245,8 +2257,6 @@ namespace Rpm.Productie
         }
 
         #endregion Disposing
-
-
-
+        
     }
 }

@@ -263,13 +263,19 @@ namespace Forms
 
         private void xOpslaan_Click(object sender, EventArgs e)
         {
+            Save();
+        }
+
+        public void Save(string change = null)
+        {
             if (Manager.Opmerkingen == null) return;
             Manager.Opmerkingen.SetNotes(Opmerkingen);
             foreach (var r in _removed)
                 Manager.Opmerkingen?.Remove(r);
             _removed.Clear();
             Manager.Opmerkingen.Save().Wait();
-            Manager.RemoteMessage(new RemoteMessage("Opmerkingen Opgeslagen!", MessageAction.AlgemeneMelding, MsgType.Info));
+            Manager.RemoteMessage(new RemoteMessage(change??"Opmerkingen Opgeslagen!", MessageAction.AlgemeneMelding,
+                MsgType.Info));
         }
 
         private void xannuleren_Click(object sender, EventArgs e)
@@ -297,6 +303,7 @@ namespace Forms
 
                 Opmerkingen.Add(op);
                 LoadOpmerkingen(op);
+                Save($"Nieuwe Opmerking Aangemaakt: '{op.Title}'");
             }
         }
 

@@ -89,6 +89,8 @@ namespace Forms
             string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null,
             Image customImage = null, MetroColorStyle style = MetroColorStyle.Default)
         {
+            if (this.Parent == null)
+                this.StartPosition = FormStartPosition.CenterScreen;
             Text = title;
             xmessage.Text = message;
             var maxSize = new Size(xmessage.Width, int.MaxValue);

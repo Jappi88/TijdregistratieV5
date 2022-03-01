@@ -62,7 +62,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -1303,6 +1303,7 @@
     <Compile Include="Rpm\ExcelHelper\ExcelColumnEntry.cs" />
     <Compile Include="Rpm\ExcelHelper\ExcelRegelEntry.cs" />
     <Compile Include="Rpm\ExcelHelper\ExcelWorkbook.cs" />
+    <Compile Include="Rpm\Misc\CustomFileWatcher.cs" />
     <Compile Include="Rpm\Misc\DrawArrow.cs" />
     <Compile Include="Rpm\Misc\Filter.cs" />
     <Compile Include="Rpm\Misc\FilterEntry.cs" />
@@ -2369,7 +2370,6 @@
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Code to merge the assemblies into one:setup.exe -->
 </Project>

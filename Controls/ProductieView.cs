@@ -160,8 +160,6 @@ namespace Controls
                 takenManager1.InitManager();
                 InitEvents();
                 _manager.Load(path, autologin, true, true);
-                if (Manager.Opmerkingen != null)
-                    Manager.Opmerkingen.OnOpmerkingenChanged += Opmerkingen_OnOpmerkingenChanged;
                 // _manager.StartMonitor();
                 FormLoaded();
             }
@@ -1045,6 +1043,7 @@ namespace Controls
             //Manager.OnDbBeginUpdate += Manager_OnDbBeginUpdate;
             //Manager.OnDbEndUpdate += Manager_OnDbEndUpdate;
             Manager.OnManagerLoaded += _manager_OnManagerLoaded;
+            Manager.OpmerkingenChanged += Opmerkingen_OnOpmerkingenChanged;
             ProductieChat.MessageRecieved += ProductieChat_MessageRecieved;
             ProductieChat.GebruikerUpdate += ProductieChat_GebruikerUpdate;
             MultipleFileDb.CorruptedFilesChanged += MultipleFileDb_CorruptedFilesChanged;
@@ -1095,8 +1094,7 @@ namespace Controls
             // Manager.OnProductiesLoaded -= Manager_OnProductiesChanged;
             //Manager.DbUpdater.DbEntryUpdated -= DbUpdater_DbEntryUpdated;
             Manager.OnLoginChanged -= _manager_OnLoginChanged;
-            if (Manager.Opmerkingen != null)
-                Manager.Opmerkingen.OnOpmerkingenChanged -= Opmerkingen_OnOpmerkingenChanged;
+            Manager.OpmerkingenChanged -= Opmerkingen_OnOpmerkingenChanged;
             Manager.RequestRespondDialog -= Manager_RequestRespondDialog;
             ProductieChat.MessageRecieved -= ProductieChat_MessageRecieved;
             ProductieChat.GebruikerUpdate -= ProductieChat_GebruikerUpdate;
@@ -1313,8 +1311,6 @@ namespace Controls
         {
             UpdateUnreadMessages(message?.Afzender);
         }
-
-      
 
         private DialogResult _manager_OnShutdown(Manager instance, ref TimeSpan verlengtijd)
         {
@@ -2443,13 +2439,20 @@ namespace Controls
                 }
                 else if (unread.Count > 0 && ShowUnreadMessage)
                 {
-                    if (_unreadMessages != null && !_unreadMessages.IsDisposed)
+                    if (_unreadMessages is {IsDisposed: false})
                     {
                         if (!_unreadMessages.Visible)
                             _unreadMessages.Show();
                         _unreadMessages.BringToFront();
                         _unreadMessages.Select();
                         _unreadMessages.Focus();
+                        return;
+                    }
+
+                    if (metroCustomTabControl1.SelectedTab is {Tag: TileInfoEntry xtab} && xtab.Name.ToLower().StartsWith("xchat"))
+                    {
+                        metroCustomTabControl1.Select();
+                        metroCustomTabControl1.Focus();
                         return;
                     }
                     _unreadMessages?.Dispose();

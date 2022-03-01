@@ -163,9 +163,9 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xloadinglabel.BackColor = System.Drawing.Color.Transparent;
             this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xloadinglabel.Location = new System.Drawing.Point(0, 76);
+            this.xloadinglabel.Location = new System.Drawing.Point(0, 343);
             this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(1146, 533);
+            this.xloadinglabel.Size = new System.Drawing.Size(897, 266);
             this.xloadinglabel.TabIndex = 29;
             this.xloadinglabel.Text = "Producties Laden...";
             this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -216,8 +216,6 @@ namespace Controls
             this.xProductieLijst1.CellRightClick += new System.EventHandler<BrightIdeasSoftware.CellRightClickEventArgs>(this.xProductieLijst1_CellRightClick);
             this.xProductieLijst1.CellToolTipShowing += new System.EventHandler<BrightIdeasSoftware.ToolTipShowingEventArgs>(this.xproductieLijst_CellToolTipShowing);
             this.xProductieLijst1.FormatCell += new System.EventHandler<BrightIdeasSoftware.FormatCellEventArgs>(this.xProductieLijst_FormatCell);
-            this.xProductieLijst1.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.xProductieLijst_ColumnReordered);
-            this.xProductieLijst1.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.xProductieLijst1_ColumnWidthChanging);
             this.xProductieLijst1.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.xproductieLijst_ItemDrag);
             this.xProductieLijst1.SelectedIndexChanged += new System.EventHandler(this.xproductieLijst_SelectedIndexChanged);
             this.xProductieLijst1.DragEnter += new System.Windows.Forms.DragEventHandler(this.xproductieLijst_DragEnter);

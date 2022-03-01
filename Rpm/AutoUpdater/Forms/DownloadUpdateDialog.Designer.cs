@@ -39,7 +39,7 @@
             // pictureBoxIcon
             // 
             resources.ApplyResources(this.pictureBoxIcon, "pictureBoxIcon");
-            this.pictureBoxIcon.Image = global:: ProductieManager.Properties.Resources.clouddown_icon_icons_com_54405;
+            this.pictureBoxIcon.Image = global::ProductieManager.Properties.Resources.clouddown_icon_icons_com_54405;
             this.pictureBoxIcon.Name = "pictureBoxIcon";
             this.pictureBoxIcon.TabStop = false;
             // 
@@ -71,6 +71,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DownloadUpdateDialog";
+            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DownloadUpdateDialog_FormClosing);
             this.Load += new System.EventHandler(this.DownloadUpdateDialogLoad);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIcon)).EndInit();

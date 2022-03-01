@@ -401,6 +401,7 @@ namespace ProductieManager.Forms
         {
             if (Manager.ProductieChat == null || Manager.LogedInGebruiker == null) return;
             var user = SelectedUser();
+            xchattextbox.Enabled = user != null;
             xselecteduserimage.Image = user?.GetProfielImage();
             xselectedusername.Text = user?.UserName;
             xselecteduserstatus.Text = user == null ? "" : (user.IsOnline ? "Online" : "Offline");
@@ -434,6 +435,7 @@ namespace ProductieManager.Forms
 
             if (user != null)
                 LoadConversation(true);
+            else xchatpanel.Text = "";
         }
 
         private UserChat SelectedUser()

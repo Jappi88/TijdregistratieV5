@@ -126,6 +126,7 @@
             this.Name = "RemindLaterForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.RemindLaterFormLoad);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIcon)).EndInit();
             this.tableLayoutPanel.ResumeLayout(false);

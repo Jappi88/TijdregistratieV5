@@ -16,15 +16,17 @@ namespace Forms.ArtikelRecords
     public partial class ArtikelOpmerkingForm : Forms.MetroBase.MetroBaseForm
     {
         public ArtikelOpmerking SelectedOpmerking { get; set; }
+        public FilterOp FilterType { get; set; }
 
-        public ArtikelOpmerkingForm()
+        public ArtikelOpmerkingForm(FilterOp filterop)
         {
             InitializeComponent();
             xGelezenDoorImageList.Images.Add(Resources.user_customer_person_32x32);
             ((OLVColumn) xGelezenDoorList.Columns[0]).ImageGetter = (x) => 0;
+            FilterType = filterop;
         }
 
-        public ArtikelOpmerkingForm(ArtikelOpmerking opmerking):this()
+        public ArtikelOpmerkingForm(ArtikelOpmerking opmerking):this(opmerking?.FilterOp?? FilterOp.Beiden)
         {
             if (opmerking == null) return;
             Title = $"Wijzig Melding van '{opmerking.GeplaatstDoor}'";
@@ -176,9 +178,11 @@ namespace Forms.ArtikelRecords
                 if (xFilterTypeCombo.SelectedIndex > -1)
                     SelectedOpmerking.FilterSoort = (ArtikelFilterSoort)xFilterTypeCombo.SelectedIndex;
                 else throw new Exception("Kies een FilterSoort a.u.b.");
-                if (xfilterOp.SelectedIndex > -1)
-                    SelectedOpmerking.FilterOp = (FilterOp)xfilterOp.SelectedIndex;
-                else throw new Exception("Kies waarop je wilt filteren a.u.b.");
+                if (xfilterOp.Visible && xfilterOp.SelectedIndex > -1)
+                    SelectedOpmerking.FilterOp = (FilterOp) xfilterOp.SelectedIndex;
+                else if (xfilterOp.Visible) throw new Exception("Kies waarop je wilt filteren a.u.b.");
+                else SelectedOpmerking.FilterOp = FilterType;
+               
                 var ontvangers = GetOntvangers();
                 if(ontvangers.Count == 0)
                     throw new Exception("Kies onvanger(s) a.u.b.");

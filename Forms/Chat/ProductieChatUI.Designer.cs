@@ -240,17 +240,15 @@ namespace ProductieManager.Forms
             // xchattextbox
             // 
             this.xchattextbox.AllowDrop = true;
-            this.xchattextbox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.xchattextbox.BackColor = System.Drawing.Color.White;
+            this.xchattextbox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xchattextbox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xchattextbox.ForeColor = System.Drawing.Color.Gray;
-            this.xchattextbox.Location = new System.Drawing.Point(6, 3);
+            this.xchattextbox.Location = new System.Drawing.Point(0, 0);
             this.xchattextbox.MinimumSize = new System.Drawing.Size(4, 30);
             this.xchattextbox.Multiline = true;
             this.xchattextbox.Name = "xchattextbox";
-            this.xchattextbox.Size = new System.Drawing.Size(476, 51);
+            this.xchattextbox.Size = new System.Drawing.Size(529, 57);
             this.xchattextbox.TabIndex = 4;
             this.xchattextbox.Text = "Typ bericht...";
             this.toolTip1.SetToolTip(this.xchattextbox, "Type in een bericht...");
@@ -273,15 +271,17 @@ namespace ProductieManager.Forms
             // 
             // xsendbutton
             // 
-            this.xsendbutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xsendbutton.BackColor = System.Drawing.Color.Transparent;
+            this.xsendbutton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.xsendbutton.FlatAppearance.BorderSize = 0;
             this.xsendbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xsendbutton.Image = global::ProductieManager.Properties.Resources.ic_send_128_28719;
-            this.xsendbutton.Location = new System.Drawing.Point(482, 28);
+            this.xsendbutton.Location = new System.Drawing.Point(529, 0);
             this.xsendbutton.Name = "xsendbutton";
-            this.xsendbutton.Size = new System.Drawing.Size(76, 26);
+            this.xsendbutton.Size = new System.Drawing.Size(32, 57);
             this.xsendbutton.TabIndex = 5;
             this.toolTip1.SetToolTip(this.xsendbutton, "Verzend bericht...");
-            this.xsendbutton.UseVisualStyleBackColor = true;
+            this.xsendbutton.UseVisualStyleBackColor = false;
             this.xsendbutton.Click += new System.EventHandler(this.xsendbutton_Click);
             // 
             // panel4

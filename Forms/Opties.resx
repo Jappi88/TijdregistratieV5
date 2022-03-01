@@ -124,11 +124,10 @@
     <value>321, 17</value>
   </metadata>
   <data name="label34.Text" xml:space="preserve">
-    <value>Kies de datase(s) die je offline wilt gebruiken en gesynchroniseerd wilt houden.
+    <value>Kies de datase(s) die je met  de secondary database gesynchroniseerd wilt houden.
 
-Dit Is aanbevolen.
-Hierdoor zal je veel sneller kunnen werken met een optimale ervaring.
-Hou rekening mee dat dit enige geheugen zal verbruiken op je PC na verloop van tijd.</value>
+Dit Is aanbevolen als je Primary database trager is.
+Hierdoor zal je veel sneller kunnen werken met een optimale ervaring.</value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>38</value>

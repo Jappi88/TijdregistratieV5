@@ -80,16 +80,14 @@ namespace Controls
             // 
             // xupdatetijdb
             // 
+            this.xupdatetijdb.FlatAppearance.BorderSize = 0;
             this.xupdatetijdb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xupdatetijdb.Image = global::ProductieManager.Properties.Resources.Time_machine__40675;
-            this.xupdatetijdb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xupdatetijdb.Location = new System.Drawing.Point(512, 3);
+            this.xupdatetijdb.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
+            this.xupdatetijdb.Location = new System.Drawing.Point(511, 4);
             this.xupdatetijdb.Margin = new System.Windows.Forms.Padding(0);
             this.xupdatetijdb.Name = "xupdatetijdb";
-            this.xupdatetijdb.Size = new System.Drawing.Size(92, 34);
+            this.xupdatetijdb.Size = new System.Drawing.Size(32, 32);
             this.xupdatetijdb.TabIndex = 5;
-            this.xupdatetijdb.Text = "Update";
-            this.xupdatetijdb.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolTip1.SetToolTip(this.xupdatetijdb, "Update volgens de ingevulde dagen");
             this.xupdatetijdb.UseVisualStyleBackColor = true;
             this.xupdatetijdb.Click += new System.EventHandler(this.xupdatetijdb_Click);
