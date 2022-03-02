@@ -48,18 +48,28 @@ namespace Rpm.Productie.AantalHistory
             {
                 lock (Aantallen)
                 {
-                    if (aantal > 0 && Aantallen.Any(x => x.LastAantal == aantal)) return false;
-                    Aantallen.RemoveAll(x => x.LastAantal >= aantal);
+                    var xcuraantal = Aantallen.Sum(x => x.Gemaakt);
+                    if (aantal > 0 && xcuraantal == aantal) return false;
+                    if (Aantallen.RemoveAll(x => x.LastAantal >= aantal) > 0)
+                    {
+                        xcuraantal = Aantallen.Sum(x => x.Gemaakt);
+                        Aantallen = Aantallen.OrderBy(x => x.EndDate).ToList();
+                    }
+                    
+                    if (aantal > 0 && xcuraantal == aantal) return false;
                     if (aantal == 0) return true;
+                    var xstop = tijden.GetLastStop();
+                    if(xstop.IsDefault())
+                        xstop = DateTime.Now;
                     var xent = Aantallen.Count > 0
                         ? Aantallen.LastOrDefault(x => x.IsActive ||
-                            x.EndDate.AddMinutes(5) >= DateTime.Now)
+                            x.EndDate.AddMinutes(5) >= xstop)
                         : null;
                     var xlast = Aantallen.LastOrDefault();
 
                     var xstart = xlast?.EndDate ?? tijden?.GetFirstStart()??new DateTime();
                     var xtijd = tijden?.Uren.FirstOrDefault(x =>
-                        x.ContainsBereik(new TijdEntry(DateTime.Now, DateTime.Now)));
+                        x.ContainsBereik(new TijdEntry(DateTime.Now, xstop)));
                     if (xstart.IsDefault() && xtijd != null)
                     {
                         if (xlast != null && xtijd.ContainsBereik(new TijdEntry(xlast.DateChanged, xlast.EndDate)))
@@ -77,17 +87,16 @@ namespace Rpm.Productie.AantalHistory
                         if (xindex > -1)
                         {
                             Aantallen[xindex].LastAantal = aantal;
-                            Aantallen[xindex].EndDate = DateTime.Now;
+                            Aantallen[xindex].EndDate = xstop;
                             return true;
                         }
                     }
 
-
-                    var xaantal = xlast?.LastAantal??0;
-                    xent = new AantalRecord(xaantal)
+                    
+                    xent = new AantalRecord(xcuraantal)
                     {
                         DateChanged = xstart,
-                        EndDate = DateTime.Now,
+                        EndDate = xstop,
                         LastAantal = aantal
                     };
                     Aantallen.Add(xent);

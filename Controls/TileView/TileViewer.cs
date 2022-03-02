@@ -245,21 +245,16 @@ namespace Controls
         {
             try
             {
-                var xtiles = GetAllTiles();
-                var xlist = new List<TileInfoEntry>();
+                var xtiles = GetAllTileEntries().OrderBy(x=> x.TileIndex).ToList();
                 int index = 0;
                 foreach (var tile in xtiles)
                 {
-                    if (tile.Tag is TileInfoEntry ent)
-                    {
-                        ent.TileIndex = index++;
-                        xlist.Add(ent);
-                    }
+                    tile.TileIndex = index++;
                 }
 
-                Manager.Opties.TileLayout = xlist;
+                Manager.Opties.TileLayout = xtiles;
                 if (save)
-                    Manager.Opties.Save(null, false, false, false);
+                    return Manager.Opties.Save(null, false, false, false).Result;
                 return true;
             }
             catch (Exception e)
@@ -327,7 +322,9 @@ namespace Controls
                     xent.TileIndex = xoldindex;
                     var xindex = Manager.Opties?.TileLayout?.IndexOf(xent) ?? -1;
                     if (EnableSaveTiles && xindex > -1 && Manager.Opties?.TileLayout != null)
+                    {
                         Manager.Opties.TileLayout[xindex] = xent;
+                    }
                 }
             }
             _destination.Controls.SetChildIndex(data, index);
@@ -336,8 +333,11 @@ namespace Controls
                 ent.TileIndex = index;
                 var xindex = Manager.Opties?.TileLayout?.IndexOf(ent) ?? -1;
                 if (EnableSaveTiles && xindex > -1 && Manager.Opties?.TileLayout != null)
+                {
                     Manager.Opties.TileLayout[xindex] = ent;
+                }
             }
+            SaveTiles(true);
             _destination.Invalidate();
         }
 

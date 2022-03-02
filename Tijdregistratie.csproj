@@ -62,7 +62,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -1322,6 +1322,7 @@
     <Compile Include="Rpm\Misc\StickyWindow.cs" />
     <Compile Include="Rpm\Misc\WeekRange.cs" />
     <Compile Include="Rpm\Opmerking\Opmerkingen.cs" />
+    <Compile Include="Rpm\Planner\PlannerBeheer.cs" />
     <Compile Include="Rpm\Productie\AantalHistory\AantalHistory.cs" />
     <Compile Include="Rpm\Productie\AantalHistory\AantalRecord.cs" />
     <Compile Include="Rpm\Productie\ArtikelRecords\ArtikelOpmerking.cs" />
@@ -1885,6 +1886,7 @@
     <EmbeddedResource Include="Forms\StartProductie.resx">
       <DependentUpon>StartProductie.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>

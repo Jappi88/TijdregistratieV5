@@ -23,9 +23,14 @@ namespace Controls
 
         private void xopslaan_Click(object sender, System.EventArgs e)
         {
-            Manager.Opties.TileLayout = xlist.Objects.Cast<TileInfoEntry>().ToList();
-            for (int i = 0; i < Manager.Opties.TileLayout.Count; i++)
-                Manager.Opties.TileLayout[i].TileIndex = i;
+            if (Manager.Opties != null)
+            {
+                Manager.Opties.TileLayout = xlist.Objects.Cast<TileInfoEntry>().ToList();
+                for (int i = 0; i < Manager.Opties.TileLayout.Count; i++)
+                    Manager.Opties.TileLayout[i].TileIndex = i;
+                Manager.Opties.Save(null, false, false, false);
+            }
+
             DialogResult = DialogResult.OK;
         }
 

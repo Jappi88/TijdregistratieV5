@@ -28,6 +28,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Forms.MetroBase;
 using ProductieManager.Forms.Welcome;
 using Various;
 
@@ -3458,6 +3459,17 @@ namespace Controls
         private void xSporenButton_Click(object sender, EventArgs e)
         {
            new ArtikelenVerbruikForm().ShowDialog();
+        }
+
+        private void button5_Click_1(object sender, EventArgs e)
+        {
+            //var xform = new MetroBaseForm();
+            //xform.SaveLastSize = false;
+            //xform.Size = new Size(640, 450);
+            //var xshed = new PlannerUI();
+            //xshed.Dock = DockStyle.Fill;
+            //xform.Controls.Add(xshed);
+            //xform.ShowDialog();
         }
     }
 }

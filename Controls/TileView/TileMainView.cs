@@ -332,6 +332,7 @@ namespace Controls.TileView
             {
                 Manager.Opties.TileFlowDirection = FlowDirection.LeftToRight;
                 Manager.Opties.TileLayout = Manager.Opties.GetAllDefaultEntries(false);
+                Manager.Opties.Save("Tiles gereset!");
                 LoadTileViewer();
             }
         }
@@ -342,7 +343,8 @@ namespace Controls.TileView
             if (xindex > -1 && Manager.Opties != null)
             {
                 Manager.Opties.TileFlowDirection = (FlowDirection) xindex;
-               LoadTileViewer();
+                Manager.Opties.Save(null, false, false, false);
+                LoadTileViewer();
             }
         }
 
@@ -360,7 +362,7 @@ namespace Controls.TileView
             TilesLoaded?.Invoke(Viewer, EventArgs.Empty);
         }
 
-        private void SowTileLayoutEditor()
+        private void ShowTileLayoutEditor()
         {
             try
             {
@@ -371,6 +373,7 @@ namespace Controls.TileView
                 {
                     Manager.Opties.TileLayout = xeditor.SelectedEntries;
                     Manager.Opties.TileFlowDirection = xeditor.Direction;
+                    Manager.Opties.Save(null, false, false, false);
                     LoadTileViewer();
                 }
 
@@ -383,12 +386,12 @@ namespace Controls.TileView
 
         private void beheerTileLayoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SowTileLayoutEditor();
+            ShowTileLayoutEditor();
         }
 
         private void beheerTileLayoutToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            SowTileLayoutEditor();
+            ShowTileLayoutEditor();
         }
 
         public void SetBackgroundImage(string path)
@@ -465,6 +468,7 @@ namespace Controls.TileView
                 if (xcolorpicker.ShowDialog() == DialogResult.OK)
                 {
                     Manager.Opties.TileViewBackgroundColorRGB = xcolorpicker.Color.ToArgb();
+                    Manager.Opties.Save(null, false, false, false);
                     LoadTileViewer();
                 }
             }
