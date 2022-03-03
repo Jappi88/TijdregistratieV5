@@ -468,9 +468,9 @@ namespace Rpm.SqlLite
             return UpSert(form.ProductieNr, form, change, showmessage,onlylocal);
         }
 
-        public Task<bool> UpSert(ProductieFormulier form, bool showmessage = true, bool onlylocal = false)
+        public Task<bool> UpSert(ProductieFormulier form, bool showmessage = true, bool onlylocal = false, string change = null)
         {
-            return UpSert(form.ProductieNr, form, $"[{form.ArtikelNr}|{form.ProductieNr}] ProductieFormulier Update",
+            return UpSert(form.ProductieNr, form, change??$"[{form.ArtikelNr}|{form.ProductieNr}] ProductieFormulier Update",
                 showmessage,onlylocal);
         }
 
@@ -488,7 +488,7 @@ namespace Rpm.SqlLite
                     if (ProductieFormulieren != null && form.Bewerkingen.All(x => x.State == ProductieState.Gereed))
                     {
                         GereedFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
-                        if (await GereedFormulieren.Upsert(id, form,onlylocal))
+                        if (await GereedFormulieren.Upsert(id, form,onlylocal,change))
                         {
                             _=UpdateChange(form.LastChanged, DbType.GereedProducties,
                                 showmessage);
@@ -509,7 +509,7 @@ namespace Rpm.SqlLite
                     else if (ProductieFormulieren != null)
                     {
                         ProductieFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
-                        if (await ProductieFormulieren.Upsert(id, form,onlylocal))
+                        if (await ProductieFormulieren.Upsert(id, form,onlylocal,change))
                         {
                             _= UpdateChange(form.LastChanged, DbType.Producties,
                                 showmessage);
@@ -777,7 +777,7 @@ namespace Rpm.SqlLite
                 {
                     account.LastChanged = account.LastChanged.UpdateChange(change, DbType.Accounts);
                     _=UpdateChange(account.LastChanged, DbType.Accounts, showmessage);
-                    await UserAccounts.Upsert(id, account,onlylocal);
+                    await UserAccounts.Upsert(id, account,onlylocal,change);
                     Manager.AccountChanged(this, account);
                     return true;
                 }
@@ -998,7 +998,7 @@ namespace Rpm.SqlLite
                     account.LastChanged = account.LastChanged.UpdateChange(change, DbType.Opties);
                     await UpdateChange(account.LastChanged, DbType.Opties, showmessage);
                     if (AllSettings != null)
-                        await AllSettings.Upsert(id, account,onlylocal);
+                        await AllSettings.Upsert(id, account,onlylocal,change);
                     return true;
                 }
                 catch
@@ -1305,7 +1305,7 @@ namespace Rpm.SqlLite
                     UpdateChange(persoon.LastChanged, DbType.Medewerkers,
                         showmessage);
                     PersoneelLijst.RaiseEventWhenChanged = !RaiseEventWhenChanged;
-                    _= PersoneelLijst.Upsert(id, persoon,onlylocal).Result;
+                    _= PersoneelLijst.Upsert(id, persoon,onlylocal,change).Result;
                     if (RaiseEventWhenChanged)
                         Manager.PersoneelChanged(this, persoon);
                     PersoneelLijst.RaiseEventWhenChanged = true;
@@ -1517,8 +1517,9 @@ namespace Rpm.SqlLite
             {
                 try
                 {
-                    if (NotificationEnabled && showmessage) Manager.RemoteMessage(change.CreateMessage(dbname));
-                    if (LoggerEnabled && showmessage) await AddLog(change.Change, MsgType.Info);
+                    if (NotificationEnabled && showmessage && !string.IsNullOrEmpty(change?.Change))
+                        Manager.RemoteMessage(change.CreateMessage(dbname));
+                    if (LoggerEnabled && showmessage && !string.IsNullOrEmpty(change?.Change)) await AddLog(change.Change, MsgType.Info);
                     // PManager.RemoteMessage(new Mailing.RemoteMessage(change.Change, MessageAction.None, MsgType.Info));
                 }
                 catch
@@ -1536,7 +1537,7 @@ namespace Rpm.SqlLite
                     try
                     {
                         var ent = new LogEntry(message.Replace("\n", " "), type);
-                        return await Logger.Upsert(ent.Id.ToString(), ent, false);
+                        return await Logger.Upsert(ent.Id.ToString(), ent, false,null);
                     }
                     catch (Exception)
                     {
@@ -1951,7 +1952,7 @@ namespace Rpm.SqlLite
                         dbfilename, "ProductieFormulieren", false);
                     var prods = await prodsdb.FindAll();
                     foreach (var prod in prods)
-                        await ProductieFormulieren.Upsert(prod.ProductieNr, prod,false);
+                        await ProductieFormulieren.Upsert(prod.ProductieNr, prod,false,null);
                     Directory.Move(dbpath, dbpath + "_migrated");
                 }
 
@@ -1973,7 +1974,7 @@ namespace Rpm.SqlLite
                         "Personeel", false);
                     var prods = await prodsdb.FindAll();
                     foreach (var prod in prods)
-                        await PersoneelLijst.Upsert(prod.PersoneelNaam, prod,false);
+                        await PersoneelLijst.Upsert(prod.PersoneelNaam, prod,false,null);
                     Directory.Move(dbpath, dbpath + "_migrated");
                 }
 
@@ -1984,7 +1985,7 @@ namespace Rpm.SqlLite
                         Gereeddb, "GereedFormulieren", false);
                     var prods = await prodsdb.FindAll();
                     foreach (var prod in prods)
-                        await GereedFormulieren.Upsert(prod.ProductieNr, prod,false);
+                        await GereedFormulieren.Upsert(prod.ProductieNr, prod,false,null);
                     Directory.Move(dbpath, dbpath + "_migrated");
                 }
 
@@ -1995,7 +1996,7 @@ namespace Rpm.SqlLite
                         "AllSettings", false);
                     var prods = await prodsdb.FindAll();
                     foreach (var prod in prods)
-                        await AllSettings.Upsert(prod.Username, prod,false);
+                        await AllSettings.Upsert(prod.Username, prod,false,null);
                     Directory.Move(dbpath, dbpath + "_migrated");
                 }
 
@@ -2006,7 +2007,7 @@ namespace Rpm.SqlLite
                         "UserAccounts", false);
                     var prods = await prodsdb.FindAll();
                     foreach (var prod in prods)
-                        await UserAccounts.Upsert(prod.Username, prod,false);
+                        await UserAccounts.Upsert(prod.Username, prod,false,null);
                     Directory.Move(dbpath, dbpath + "_migrated");
                 }
 
@@ -2017,7 +2018,7 @@ namespace Rpm.SqlLite
                         "DbVersions", false);
                     var prods = await prodsdb.FindAll();
                     foreach (var prod in prods)
-                        await DbVersions.Upsert(Enum.GetName(typeof(DbType),prod.DbType), prod,false);
+                        await DbVersions.Upsert(Enum.GetName(typeof(DbType),prod.DbType), prod,false,null);
                     Directory.Move(dbpath, dbpath + "_migrated");
                 }
             });
@@ -2228,7 +2229,7 @@ namespace Rpm.SqlLite
                     var personen = await PersoneelLijst?.FindAll();
                     if (personen == null)
                         return false;
-                    foreach (var v in personen) await PersoneelLijst?.Upsert(v.PersoneelNaam, v,false);
+                    foreach (var v in personen) await PersoneelLijst?.Upsert(v.PersoneelNaam, v,false,null);
                 }
 
                 if (Logger != null)

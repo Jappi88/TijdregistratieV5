@@ -1294,6 +1294,21 @@ namespace Controls
                             }
                         }
                     }
+
+                var xremove = xbewerkingen?.Where(x =>
+                    string.Equals(x.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase) &&
+                    !form.Bewerkingen.Any(xb => xb.Equals(x))).ToList();
+                if (xremove is {Count: > 0})
+                {
+                    ProductieLijst.BeginUpdate();
+                    xremove.ForEach(xr =>
+                    {
+                        changed = true;
+                        Bewerkingen?.Remove(xr);
+                        ProductieLijst.RemoveObject(xr);
+                    });
+                    ProductieLijst.EndUpdate();
+                }
             }
             catch (Exception e)
             {

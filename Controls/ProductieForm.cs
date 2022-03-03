@@ -10,6 +10,7 @@ using Rpm.Various;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using PdfSharp.Drawing;
@@ -711,5 +712,55 @@ namespace Controls
             if (bw == null) return;
             new AantalMonitorForm(bw).ShowDialog();
         }
+
+        private void productieNrToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var bw = CurrentBewerking();
+            if (bw == null) return;
+            Clipboard.SetText(bw.ProductieNr);
+        }
+
+        private void artikelNrToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var bw = CurrentBewerking();
+            if (bw == null) return;
+            Clipboard.SetText(bw.ArtikelNr);
+        }
+
+        private void omschrijvingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var bw = CurrentBewerking();
+            if (bw == null) return;
+            Clipboard.SetText(bw.Omschrijving);
+        }
+
+        private void leverdatumToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var bw = CurrentBewerking();
+            if (bw == null) return;
+            Clipboard.SetText(bw.LeverDatum.ToString("f"));
+        }
+
+        private void verwachteLeverdatumToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var bw = CurrentBewerking();
+            if (bw == null) return;
+            Clipboard.SetText(bw.VerwachtLeverDatum.ToString("f"));
+        }
+
+        private void gemaaktToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var bw = CurrentBewerking();
+            if (bw == null) return;
+            Clipboard.SetText(bw.TotaalGemaakt.ToString());
+        }
+
+        private void aantalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var bw = CurrentBewerking();
+            if (bw == null) return;
+            Clipboard.SetText(bw.Aantal.ToString());
+        }
+
     }
 }

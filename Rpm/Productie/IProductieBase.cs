@@ -15,12 +15,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
+using ProductieManager.Rpm.SqlLite;
 using Rpm.Misc;
 
 namespace Rpm.Productie
 {
-    [DataContract]
-    public class IProductieBase
+    public class IProductieBase : IDbLogging
     {
         [Display(Name = "Root", Description = "BASIS formulier waarvan de informatie wordt gehaald")]
         public virtual ProductieFormulier Root { get; }

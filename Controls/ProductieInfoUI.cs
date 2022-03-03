@@ -8,6 +8,9 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
+using ProductieManager.Rpm.SqlLite;
+using Rpm.Various;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
 using TheArtOfDev.HtmlRenderer.WinForms;
 
@@ -35,9 +38,52 @@ namespace Controls
         public ProductieInfoUI()
         {
             InitializeComponent();
+            imageList1.Images.Add(Resources.infolog);
             productieVerbruikUI1.ShowMateriaalSelector = true;
             productieVerbruikUI1.ShowOpslaan = true;
-            metroTabControl1.SelectedIndex = 0;
+            xTabControl.SelectedIndex = 0;
+            ((OLVColumn) xLogDataList.Columns[0]).ImageGetter = (x) => 0;
+        }
+
+        private void UpdateLogData(List<LogEntry> entries)
+        {
+            try
+            {
+                var xcurents = xLogDataList.Objects?.Cast<LogEntry>().ToList() ?? new List<LogEntry>();
+                var xremove = xcurents.Where(xc => entries.All(e => e.Id != xc.Id)).ToList();
+                if (xremove.Count > 0)
+                {
+                    xLogDataList.BeginUpdate();
+                    xremove.ForEach(x =>
+                    {
+                        xcurents.Remove(x);
+                        xLogDataList.RemoveObject(x);
+                    });
+                    xLogDataList.EndUpdate();
+                }
+
+                for (int i = 0; i < entries.Count; i++)
+                {
+                    var xent = entries[i];
+                    var xold = xcurents.FirstOrDefault(x => x.Id == xent.Id);
+                    if (xold != null)
+                    {
+                        xLogDataList.RefreshObject(xold);
+                    }
+                    else
+                    {
+                        xLogDataList.BeginUpdate();
+                        xLogDataList.AddObject(xent);
+                        xLogDataList.EndUpdate();
+                        xLogDataList.SelectedObject = xent;
+                        xLogDataList.SelectedItem?.EnsureVisible();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void UpdateView()
@@ -54,10 +100,11 @@ namespace Controls
                 int index = -1;
                 if (Productie is Bewerking bew && bew.Combies.Count > 0)
                 {
-                    metroTabControl1.TabPages[2].Text = $"Combinaties[{bew.Combies.Count}]";
+                    xTabControl.TabPages[2].Text = $"Combinaties[{bew.Combies.Count}]";
                 }
-                else metroTabControl1.TabPages[2].Text = "Combineren";
-                switch (metroTabControl1.SelectedIndex)
+                else xTabControl.TabPages[2].Text = "Combineren";
+
+                switch (xTabControl.SelectedIndex)
                 {
                     case 0:
                         //Header Html
@@ -114,11 +161,19 @@ namespace Controls
                         //Aantal Geschiedenis
                         alleWerkPlekAantalHistoryUI1.UpdateBewerking(Productie as Bewerking);
                         break;
+                    case 10:
+                        //Productie Logs
+                        if (Productie is Bewerking {Parent: IDbLogging entry})
+                        {
+                            var xlogs = entry?.Logs ?? new List<LogEntry>();
+                            UpdateLogData(xlogs);
+                        }
+                        break;
                 }
 
                 if (index > -1)
                 {
-                    var xpanel = metroTabControl1.TabPages[index].Controls.Find($"htmlpanel_{index}", false)
+                    var xpanel = xTabControl.TabPages[index].Controls.Find($"htmlpanel_{index}", false)
                         .FirstOrDefault() as HtmlPanel;
                     bool xinit = xpanel == null;
                     xpanel ??= new HtmlPanel()
@@ -134,8 +189,8 @@ namespace Controls
                     xpanel.Dock = DockStyle.Fill;
                     if (!string.Equals(xpanel.Text, txt, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        metroTabControl1.TabPages[index].SuspendLayout();
-                        metroTabControl1.TabPages[index].Controls.Remove(xpanel);
+                        xTabControl.TabPages[index].SuspendLayout();
+                        xTabControl.TabPages[index].Controls.Remove(xpanel);
                         var curpos = xpanel.VerticalScroll.Value;
                         xpanel.Text = txt;
                         if (curpos > 0)
@@ -145,8 +200,8 @@ namespace Controls
                                 xpanel.VerticalScroll.Value = curpos;
                             }
                         }
-                        metroTabControl1.TabPages[index].Controls.Add(xpanel);
-                        metroTabControl1.TabPages[index].ResumeLayout(true);
+                        xTabControl.TabPages[index].Controls.Add(xpanel);
+                        xTabControl.TabPages[index].ResumeLayout(true);
                         //panel.AutoScrollPosition.Offset(curpos);
                         //panel.Invalidate();
                     }
@@ -230,6 +285,31 @@ namespace Controls
         private void metroTabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateView();
+        }
+
+        private async void xLogDataList_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete && xLogDataList.SelectedObjects.Count > 0)
+            {
+                if (Manager.LogedInGebruiker == null || Manager.LogedInGebruiker.AccesLevel < AccesType.Manager)
+                    return;
+                var xents = xLogDataList.SelectedObjects.Cast<LogEntry>().ToList();
+               
+                var xprod = (Productie as Bewerking)?.Parent ?? (Productie as ProductieFormulier);
+                if (xprod != null)
+                {
+                    var xlist = xprod.Logs ?? new List<LogEntry>();
+                    xents.ForEach(x =>
+                    {
+                        xlist.Remove(x);
+                    });
+                    if (Manager.Database?.ProductieFormulieren != null)
+                    {
+                       await Manager.Database.UpSert(xprod, false, false, "");
+                    }
+                }
+               
+            }
         }
     }
 }

@@ -1377,6 +1377,7 @@
     <Compile Include="Rpm\SqlLite\BewerkingLijst.cs" />
     <Compile Include="Rpm\SqlLite\DatabaseInstance.cs" />
     <Compile Include="Rpm\SqlLite\DatabaseUpdater.cs" />
+    <Compile Include="Rpm\SqlLite\IDbEntry.cs" />
     <Compile Include="Rpm\SqlLite\PathWatcher.cs" />
     <Compile Include="Rpm\SqlLite\DbType.cs" />
     <Compile Include="Rpm\SqlLite\DbVersion.cs" />
@@ -2045,6 +2046,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\share_icon_32x32.png" />
     <None Include="Resources\chat-26_icon_96x96.png" />
     <None Include="Resources\Edit_color_32x32.png" />
     <None Include="Resources\photos-Outling_32x32.png" />

@@ -42,9 +42,15 @@
             this.toevoegenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wijzigenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.xstatuslabel = new System.Windows.Forms.Label();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.xgemaakt = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.xgemiddeldpu = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.xtijd = new System.Windows.Forms.ToolStripLabel();
             ((System.ComponentModel.ISupportInitialize)(this.xHistoryList)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // xHistoryList
@@ -77,7 +83,7 @@
             this.xHistoryList.Name = "xHistoryList";
             this.xHistoryList.ShowGroups = false;
             this.xHistoryList.ShowItemToolTips = true;
-            this.xHistoryList.Size = new System.Drawing.Size(815, 491);
+            this.xHistoryList.Size = new System.Drawing.Size(815, 483);
             this.xHistoryList.TabIndex = 0;
             this.xHistoryList.TintSortColumn = true;
             this.xHistoryList.UseAlternatingBackColors = true;
@@ -180,22 +186,56 @@
             this.imageList1.ImageSize = new System.Drawing.Size(32, 32);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // xstatuslabel
+            // toolStrip1
             // 
-            this.xstatuslabel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.xstatuslabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xstatuslabel.Location = new System.Drawing.Point(0, 491);
-            this.xstatuslabel.Name = "xstatuslabel";
-            this.xstatuslabel.Size = new System.Drawing.Size(815, 17);
-            this.xstatuslabel.TabIndex = 1;
-            this.xstatuslabel.Text = "Status";
+            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.xgemaakt,
+            this.toolStripSeparator1,
+            this.xgemiddeldpu,
+            this.toolStripSeparator2,
+            this.xtijd});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 483);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(815, 25);
+            this.toolStrip1.TabIndex = 2;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // xgemaakt
+            // 
+            this.xgemaakt.Name = "xgemaakt";
+            this.xgemaakt.Size = new System.Drawing.Size(66, 22);
+            this.xgemaakt.Text = "Gemaakt: 0";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // xgemiddeldpu
+            // 
+            this.xgemiddeldpu.Name = "xgemiddeldpu";
+            this.xgemiddeldpu.Size = new System.Drawing.Size(99, 22);
+            this.xgemiddeldpu.Text = "Gemiddeld: 0 p/u";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // xtijd
+            // 
+            this.xtijd.Name = "xtijd";
+            this.xtijd.Size = new System.Drawing.Size(59, 22);
+            this.xtijd.Text = "Tijd: 0 uur";
             // 
             // AantalGemaaktHistoryUI
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.xHistoryList);
-            this.Controls.Add(this.xstatuslabel);
+            this.Controls.Add(this.toolStrip1);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -203,7 +243,10 @@
             this.Size = new System.Drawing.Size(815, 508);
             ((System.ComponentModel.ISupportInitialize)(this.xHistoryList)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -222,6 +265,11 @@
         private System.Windows.Forms.ToolStripMenuItem toevoegenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wijzigenToolStripMenuItem;
         private BrightIdeasSoftware.OLVColumn olvColumn7;
-        private System.Windows.Forms.Label xstatuslabel;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripLabel xgemaakt;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripLabel xgemiddeldpu;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripLabel xtijd;
     }
 }

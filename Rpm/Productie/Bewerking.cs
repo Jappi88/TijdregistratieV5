@@ -46,7 +46,6 @@ namespace Rpm.Productie
         }
 
         public int Id { get; set; }
-
         public List<WerkPlek> WerkPlekken { get; set; } = new();
         public override string WerkplekkenName => string.Join(", ", WerkPlekken.Select(x => x.Naam));
         public override string PersoneelNamen => string.Join(", ", Personen.Select(x => x.PersoneelNaam));
@@ -487,7 +486,7 @@ namespace Rpm.Productie
         {
             return Task.Factory.StartNew(() =>
             {
-                change ??= $"[{Path}] Update.";
+                //change ??= $"[{Path}] Update.";
                 if (allforms != null)
                 {
                     var forms = ArtikelNr == null
@@ -619,7 +618,7 @@ namespace Rpm.Productie
                                         per.WerkRooster = x.WerkRooster;
                                     klus.Tijden.WerkRooster = per.WerkRooster;
                                     x.ReplaceKlus(klus);
-                                    _= Manager.Database.PersoneelLijst.Upsert(x.PersoneelNaam.Trim(), x, false);
+                                    _= Manager.Database.PersoneelLijst.Upsert(x.PersoneelNaam.Trim(), x, false,$"Gestart aan klus '{klus.Path}'");
                                 }
                             }
 
@@ -1326,8 +1325,8 @@ namespace Rpm.Productie
 
         public async void BewerkingChanged(string change = null)
         {
-            if (change == null)
-                change = $"[{Path}] Bewerking Gewijzigd";
+            //if (change == null)
+            //    change = $"[{Path}] Bewerking Gewijzigd";
             await UpdateBewerking(null, change);
         }
 

@@ -30,89 +30,315 @@ namespace Controls
         /// </summary>
         private void InitializeComponent()
         {
-            this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
-            this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
-            this.metroTabPage10 = new MetroFramework.Controls.MetroTabPage();
+            this.components = new System.ComponentModel.Container();
+            this.xTabControl = new MetroFramework.Controls.MetroTabControl();
+            this.xtab0 = new MetroFramework.Controls.MetroTabPage();
+            this.xtab1 = new MetroFramework.Controls.MetroTabPage();
+            this.xtab2 = new MetroFramework.Controls.MetroTabPage();
+            this.xtab3 = new MetroFramework.Controls.MetroTabPage();
+            this.xtab4 = new MetroFramework.Controls.MetroTabPage();
+            this.xtab5 = new MetroFramework.Controls.MetroTabPage();
+            this.xtab6 = new MetroFramework.Controls.MetroTabPage();
+            this.xtab7 = new MetroFramework.Controls.MetroTabPage();
+            this.xtab8 = new MetroFramework.Controls.MetroTabPage();
+            this.xtab9 = new MetroFramework.Controls.MetroTabPage();
+            this.xtab10 = new MetroFramework.Controls.MetroTabPage();
+            this.xLogDataList = new BrightIdeasSoftware.ObjectListView();
+            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.productieVerbruikUI1 = new Controls.ProductieVerbruikUI();
-            this.metroTabPage8 = new MetroFramework.Controls.MetroTabPage();
             this.combineerUI1 = new Controls.CombineerUI();
-            this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
-            this.metroTabPage3 = new MetroFramework.Controls.MetroTabPage();
-            this.metroTabPage4 = new MetroFramework.Controls.MetroTabPage();
-            this.metroTabPage6 = new MetroFramework.Controls.MetroTabPage();
             this.verpakkingInstructieUI1 = new Controls.VerpakkingInstructieUI();
-            this.metroTabPage5 = new MetroFramework.Controls.MetroTabPage();
-            this.metroTabPage7 = new MetroFramework.Controls.MetroTabPage();
-            this.metroTabPage9 = new MetroFramework.Controls.MetroTabPage();
             this.alleWerkPlekAantalHistoryUI1 = new Forms.Aantal.Controls.AlleWerkPlekAantalHistoryUI();
             this.aantalChangerUI1 = new ProductieManager.Forms.Aantal.Controls.AantalChangerUI();
-            this.metroTabControl1.SuspendLayout();
-            this.metroTabPage10.SuspendLayout();
-            this.metroTabPage8.SuspendLayout();
-            this.metroTabPage6.SuspendLayout();
-            this.metroTabPage9.SuspendLayout();
+            this.xTabControl.SuspendLayout();
+            this.xtab1.SuspendLayout();
+            this.xtab2.SuspendLayout();
+            this.xtab6.SuspendLayout();
+            this.xtab9.SuspendLayout();
+            this.xtab10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.xLogDataList)).BeginInit();
             this.SuspendLayout();
             // 
-            // metroTabControl1
+            // xTabControl
             // 
-            this.metroTabControl1.Controls.Add(this.metroTabPage1);
-            this.metroTabControl1.Controls.Add(this.metroTabPage10);
-            this.metroTabControl1.Controls.Add(this.metroTabPage8);
-            this.metroTabControl1.Controls.Add(this.metroTabPage2);
-            this.metroTabControl1.Controls.Add(this.metroTabPage3);
-            this.metroTabControl1.Controls.Add(this.metroTabPage4);
-            this.metroTabControl1.Controls.Add(this.metroTabPage6);
-            this.metroTabControl1.Controls.Add(this.metroTabPage5);
-            this.metroTabControl1.Controls.Add(this.metroTabPage7);
-            this.metroTabControl1.Controls.Add(this.metroTabPage9);
-            this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.metroTabControl1.FontWeight = MetroFramework.MetroTabControlWeight.Regular;
-            this.metroTabControl1.HotTrack = true;
-            this.metroTabControl1.Location = new System.Drawing.Point(5, 5);
-            this.metroTabControl1.Multiline = true;
-            this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 3;
-            this.metroTabControl1.ShowToolTips = true;
-            this.metroTabControl1.Size = new System.Drawing.Size(633, 327);
-            this.metroTabControl1.Style = MetroFramework.MetroColorStyle.Blue;
-            this.metroTabControl1.TabIndex = 12;
-            this.metroTabControl1.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.metroTabControl1.UseSelectable = true;
-            this.metroTabControl1.SelectedIndexChanged += new System.EventHandler(this.metroTabControl1_SelectedIndexChanged);
+            this.xTabControl.Controls.Add(this.xtab0);
+            this.xTabControl.Controls.Add(this.xtab1);
+            this.xTabControl.Controls.Add(this.xtab2);
+            this.xTabControl.Controls.Add(this.xtab3);
+            this.xTabControl.Controls.Add(this.xtab4);
+            this.xTabControl.Controls.Add(this.xtab5);
+            this.xTabControl.Controls.Add(this.xtab6);
+            this.xTabControl.Controls.Add(this.xtab7);
+            this.xTabControl.Controls.Add(this.xtab8);
+            this.xTabControl.Controls.Add(this.xtab9);
+            this.xTabControl.Controls.Add(this.xtab10);
+            this.xTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xTabControl.FontWeight = MetroFramework.MetroTabControlWeight.Regular;
+            this.xTabControl.HotTrack = true;
+            this.xTabControl.Location = new System.Drawing.Point(5, 5);
+            this.xTabControl.Multiline = true;
+            this.xTabControl.Name = "xTabControl";
+            this.xTabControl.SelectedIndex = 0;
+            this.xTabControl.ShowToolTips = true;
+            this.xTabControl.Size = new System.Drawing.Size(921, 493);
+            this.xTabControl.Style = MetroFramework.MetroColorStyle.Blue;
+            this.xTabControl.TabIndex = 12;
+            this.xTabControl.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.xTabControl.UseSelectable = true;
+            this.xTabControl.SelectedIndexChanged += new System.EventHandler(this.metroTabControl1_SelectedIndexChanged);
             // 
-            // metroTabPage1
+            // xtab0
             // 
-            this.metroTabPage1.HorizontalScrollbarBarColor = true;
-            this.metroTabPage1.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage1.HorizontalScrollbarSize = 2;
-            this.metroTabPage1.Location = new System.Drawing.Point(4, 72);
-            this.metroTabPage1.Name = "metroTabPage1";
-            this.metroTabPage1.Padding = new System.Windows.Forms.Padding(5);
-            this.metroTabPage1.Size = new System.Drawing.Size(625, 251);
-            this.metroTabPage1.Style = MetroFramework.MetroColorStyle.Blue;
-            this.metroTabPage1.TabIndex = 6;
-            this.metroTabPage1.Text = "Status";
-            this.metroTabPage1.ToolTipText = "Productie Status";
-            this.metroTabPage1.VerticalScrollbarBarColor = true;
-            this.metroTabPage1.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage1.VerticalScrollbarSize = 3;
+            this.xtab0.HorizontalScrollbarBarColor = true;
+            this.xtab0.HorizontalScrollbarHighlightOnWheel = false;
+            this.xtab0.HorizontalScrollbarSize = 2;
+            this.xtab0.Location = new System.Drawing.Point(4, 38);
+            this.xtab0.Name = "xtab0";
+            this.xtab0.Padding = new System.Windows.Forms.Padding(5);
+            this.xtab0.Size = new System.Drawing.Size(913, 451);
+            this.xtab0.Style = MetroFramework.MetroColorStyle.Blue;
+            this.xtab0.TabIndex = 6;
+            this.xtab0.Text = "Status";
+            this.xtab0.ToolTipText = "Productie Status";
+            this.xtab0.VerticalScrollbarBarColor = true;
+            this.xtab0.VerticalScrollbarHighlightOnWheel = false;
+            this.xtab0.VerticalScrollbarSize = 3;
             // 
-            // metroTabPage10
+            // xtab1
             // 
-            this.metroTabPage10.Controls.Add(this.productieVerbruikUI1);
-            this.metroTabPage10.HorizontalScrollbarBarColor = true;
-            this.metroTabPage10.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage10.HorizontalScrollbarSize = 5;
-            this.metroTabPage10.Location = new System.Drawing.Point(4, 72);
-            this.metroTabPage10.Name = "metroTabPage10";
-            this.metroTabPage10.Padding = new System.Windows.Forms.Padding(5);
-            this.metroTabPage10.Size = new System.Drawing.Size(625, 251);
-            this.metroTabPage10.TabIndex = 12;
-            this.metroTabPage10.Text = "Verbruik";
-            this.metroTabPage10.ToolTipText = "Verbruik berekenen";
-            this.metroTabPage10.VerticalScrollbarBarColor = true;
-            this.metroTabPage10.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage10.VerticalScrollbarSize = 7;
+            this.xtab1.Controls.Add(this.productieVerbruikUI1);
+            this.xtab1.HorizontalScrollbarBarColor = true;
+            this.xtab1.HorizontalScrollbarHighlightOnWheel = false;
+            this.xtab1.HorizontalScrollbarSize = 2;
+            this.xtab1.Location = new System.Drawing.Point(4, 38);
+            this.xtab1.Name = "xtab1";
+            this.xtab1.Padding = new System.Windows.Forms.Padding(5);
+            this.xtab1.Size = new System.Drawing.Size(913, 451);
+            this.xtab1.TabIndex = 12;
+            this.xtab1.Text = "Verbruik";
+            this.xtab1.ToolTipText = "Verbruik berekenen";
+            this.xtab1.VerticalScrollbarBarColor = true;
+            this.xtab1.VerticalScrollbarHighlightOnWheel = false;
+            this.xtab1.VerticalScrollbarSize = 3;
+            // 
+            // xtab2
+            // 
+            this.xtab2.Controls.Add(this.combineerUI1);
+            this.xtab2.HorizontalScrollbarBarColor = true;
+            this.xtab2.HorizontalScrollbarHighlightOnWheel = false;
+            this.xtab2.HorizontalScrollbarSize = 2;
+            this.xtab2.Location = new System.Drawing.Point(4, 38);
+            this.xtab2.Name = "xtab2";
+            this.xtab2.Padding = new System.Windows.Forms.Padding(5);
+            this.xtab2.Size = new System.Drawing.Size(913, 451);
+            this.xtab2.TabIndex = 10;
+            this.xtab2.Text = "Combineer";
+            this.xtab2.ToolTipText = "Combineer producties";
+            this.xtab2.VerticalScrollbarBarColor = true;
+            this.xtab2.VerticalScrollbarHighlightOnWheel = false;
+            this.xtab2.VerticalScrollbarSize = 3;
+            // 
+            // xtab3
+            // 
+            this.xtab3.HorizontalScrollbarBarColor = true;
+            this.xtab3.HorizontalScrollbarHighlightOnWheel = false;
+            this.xtab3.HorizontalScrollbarSize = 2;
+            this.xtab3.Location = new System.Drawing.Point(4, 38);
+            this.xtab3.Name = "xtab3";
+            this.xtab3.Padding = new System.Windows.Forms.Padding(5);
+            this.xtab3.Size = new System.Drawing.Size(913, 451);
+            this.xtab3.TabIndex = 1;
+            this.xtab3.Text = "   Info";
+            this.xtab3.ToolTipText = "Productie info";
+            this.xtab3.VerticalScrollbarBarColor = true;
+            this.xtab3.VerticalScrollbarHighlightOnWheel = false;
+            this.xtab3.VerticalScrollbarSize = 3;
+            // 
+            // xtab4
+            // 
+            this.xtab4.HorizontalScrollbarBarColor = true;
+            this.xtab4.HorizontalScrollbarHighlightOnWheel = false;
+            this.xtab4.HorizontalScrollbarSize = 2;
+            this.xtab4.Location = new System.Drawing.Point(4, 38);
+            this.xtab4.Name = "xtab4";
+            this.xtab4.Padding = new System.Windows.Forms.Padding(5);
+            this.xtab4.Size = new System.Drawing.Size(913, 451);
+            this.xtab4.TabIndex = 2;
+            this.xtab4.Text = "Notities";
+            this.xtab4.ToolTipText = "Alle genoteerde notities";
+            this.xtab4.VerticalScrollbarBarColor = true;
+            this.xtab4.VerticalScrollbarHighlightOnWheel = false;
+            this.xtab4.VerticalScrollbarSize = 3;
+            // 
+            // xtab5
+            // 
+            this.xtab5.HorizontalScrollbarBarColor = true;
+            this.xtab5.HorizontalScrollbarHighlightOnWheel = false;
+            this.xtab5.HorizontalScrollbarSize = 2;
+            this.xtab5.Location = new System.Drawing.Point(4, 38);
+            this.xtab5.Name = "xtab5";
+            this.xtab5.Padding = new System.Windows.Forms.Padding(5);
+            this.xtab5.Size = new System.Drawing.Size(913, 451);
+            this.xtab5.TabIndex = 7;
+            this.xtab5.Text = "Datums";
+            this.xtab5.ToolTipText = "Alle relevante datums";
+            this.xtab5.VerticalScrollbarBarColor = true;
+            this.xtab5.VerticalScrollbarHighlightOnWheel = false;
+            this.xtab5.VerticalScrollbarSize = 3;
+            // 
+            // xtab6
+            // 
+            this.xtab6.AutoScroll = true;
+            this.xtab6.Controls.Add(this.verpakkingInstructieUI1);
+            this.xtab6.HorizontalScrollbar = true;
+            this.xtab6.HorizontalScrollbarBarColor = true;
+            this.xtab6.HorizontalScrollbarHighlightOnWheel = false;
+            this.xtab6.HorizontalScrollbarSize = 2;
+            this.xtab6.Location = new System.Drawing.Point(4, 38);
+            this.xtab6.Name = "xtab6";
+            this.xtab6.Padding = new System.Windows.Forms.Padding(5);
+            this.xtab6.Size = new System.Drawing.Size(913, 451);
+            this.xtab6.TabIndex = 5;
+            this.xtab6.Text = "Verpakking";
+            this.xtab6.ToolTipText = "VerpakkingsInstructies";
+            this.xtab6.VerticalScrollbar = true;
+            this.xtab6.VerticalScrollbarBarColor = true;
+            this.xtab6.VerticalScrollbarHighlightOnWheel = false;
+            this.xtab6.VerticalScrollbarSize = 3;
+            // 
+            // xtab7
+            // 
+            this.xtab7.HorizontalScrollbarBarColor = true;
+            this.xtab7.HorizontalScrollbarHighlightOnWheel = false;
+            this.xtab7.HorizontalScrollbarSize = 2;
+            this.xtab7.Location = new System.Drawing.Point(4, 38);
+            this.xtab7.Name = "xtab7";
+            this.xtab7.Padding = new System.Windows.Forms.Padding(5);
+            this.xtab7.Size = new System.Drawing.Size(913, 451);
+            this.xtab7.TabIndex = 8;
+            this.xtab7.Text = "Materialen";
+            this.xtab7.ToolTipText = "Benodigde Materialen";
+            this.xtab7.VerticalScrollbarBarColor = true;
+            this.xtab7.VerticalScrollbarHighlightOnWheel = false;
+            this.xtab7.VerticalScrollbarSize = 3;
+            // 
+            // xtab8
+            // 
+            this.xtab8.HorizontalScrollbarBarColor = true;
+            this.xtab8.HorizontalScrollbarHighlightOnWheel = false;
+            this.xtab8.HorizontalScrollbarSize = 2;
+            this.xtab8.Location = new System.Drawing.Point(4, 38);
+            this.xtab8.Name = "xtab8";
+            this.xtab8.Padding = new System.Windows.Forms.Padding(5);
+            this.xtab8.Size = new System.Drawing.Size(913, 451);
+            this.xtab8.TabIndex = 9;
+            this.xtab8.Text = "WerkPlaatsen";
+            this.xtab8.ToolTipText = "Alle werkplaatsen";
+            this.xtab8.VerticalScrollbarBarColor = true;
+            this.xtab8.VerticalScrollbarHighlightOnWheel = false;
+            this.xtab8.VerticalScrollbarSize = 3;
+            // 
+            // xtab9
+            // 
+            this.xtab9.Controls.Add(this.alleWerkPlekAantalHistoryUI1);
+            this.xtab9.HorizontalScrollbarBarColor = true;
+            this.xtab9.HorizontalScrollbarHighlightOnWheel = false;
+            this.xtab9.HorizontalScrollbarSize = 2;
+            this.xtab9.Location = new System.Drawing.Point(4, 38);
+            this.xtab9.Name = "xtab9";
+            this.xtab9.Padding = new System.Windows.Forms.Padding(5);
+            this.xtab9.Size = new System.Drawing.Size(913, 451);
+            this.xtab9.TabIndex = 11;
+            this.xtab9.Text = "Aantallen";
+            this.xtab9.ToolTipText = "Aantallen geschiedenis";
+            this.xtab9.VerticalScrollbarBarColor = true;
+            this.xtab9.VerticalScrollbarHighlightOnWheel = false;
+            this.xtab9.VerticalScrollbarSize = 3;
+            // 
+            // xtab10
+            // 
+            this.xtab10.Controls.Add(this.xLogDataList);
+            this.xtab10.HorizontalScrollbarBarColor = true;
+            this.xtab10.HorizontalScrollbarHighlightOnWheel = false;
+            this.xtab10.HorizontalScrollbarSize = 2;
+            this.xtab10.Location = new System.Drawing.Point(4, 38);
+            this.xtab10.Name = "xtab10";
+            this.xtab10.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
+            this.xtab10.Size = new System.Drawing.Size(913, 451);
+            this.xtab10.TabIndex = 13;
+            this.xtab10.Text = "Productie Log";
+            this.xtab10.VerticalScrollbarBarColor = true;
+            this.xtab10.VerticalScrollbarHighlightOnWheel = false;
+            this.xtab10.VerticalScrollbarSize = 4;
+            // 
+            // xLogDataList
+            // 
+            this.xLogDataList.AllColumns.Add(this.olvColumn1);
+            this.xLogDataList.AllColumns.Add(this.olvColumn3);
+            this.xLogDataList.AllColumns.Add(this.olvColumn2);
+            this.xLogDataList.AlternateRowBackColor = System.Drawing.Color.AliceBlue;
+            this.xLogDataList.CellEditUseWholeCell = false;
+            this.xLogDataList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn1,
+            this.olvColumn3,
+            this.olvColumn2});
+            this.xLogDataList.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xLogDataList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xLogDataList.FullRowSelect = true;
+            this.xLogDataList.GridLines = true;
+            this.xLogDataList.HideSelection = false;
+            this.xLogDataList.LargeImageList = this.imageList1;
+            this.xLogDataList.Location = new System.Drawing.Point(5, 5);
+            this.xLogDataList.Name = "xLogDataList";
+            this.xLogDataList.ShowFilterMenuOnRightClick = false;
+            this.xLogDataList.ShowGroups = false;
+            this.xLogDataList.ShowItemToolTips = true;
+            this.xLogDataList.Size = new System.Drawing.Size(908, 446);
+            this.xLogDataList.SmallImageList = this.imageList1;
+            this.xLogDataList.TabIndex = 2;
+            this.xLogDataList.TintSortColumn = true;
+            this.xLogDataList.UseAlternatingBackColors = true;
+            this.xLogDataList.UseCompatibleStateImageBehavior = false;
+            this.xLogDataList.UseExplorerTheme = true;
+            this.xLogDataList.UseHotControls = false;
+            this.xLogDataList.UseHotItem = true;
+            this.xLogDataList.UseTranslucentHotItem = true;
+            this.xLogDataList.UseTranslucentSelection = true;
+            this.xLogDataList.View = System.Windows.Forms.View.Details;
+            this.xLogDataList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xLogDataList_KeyDown);
+            // 
+            // olvColumn1
+            // 
+            this.olvColumn1.AspectName = "Added";
+            this.olvColumn1.Groupable = false;
+            this.olvColumn1.Text = "Log Datum";
+            this.olvColumn1.Width = 175;
+            // 
+            // olvColumn3
+            // 
+            this.olvColumn3.AspectName = "Username";
+            this.olvColumn3.Text = "Gebruiker";
+            this.olvColumn3.Width = 120;
+            this.olvColumn3.WordWrap = true;
+            // 
+            // olvColumn2
+            // 
+            this.olvColumn2.AspectName = "Message";
+            this.olvColumn2.FillsFreeSpace = true;
+            this.olvColumn2.Groupable = false;
+            this.olvColumn2.IsEditable = false;
+            this.olvColumn2.Text = "Omschrijving";
+            this.olvColumn2.Width = 250;
+            this.olvColumn2.WordWrap = true;
+            // 
+            // imageList1
+            // 
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.imageList1.ImageSize = new System.Drawing.Size(32, 32);
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // productieVerbruikUI1
             // 
@@ -120,30 +346,27 @@ namespace Controls
             this.productieVerbruikUI1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.productieVerbruikUI1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.productieVerbruikUI1.Location = new System.Drawing.Point(5, 5);
+            this.productieVerbruikUI1.MaxUitgangsLengte = new decimal(new int[] {
+            7500,
+            0,
+            0,
+            0});
             this.productieVerbruikUI1.Name = "productieVerbruikUI1";
+            this.productieVerbruikUI1.OpdrukkerArtikel = null;
             this.productieVerbruikUI1.Padding = new System.Windows.Forms.Padding(5);
+            this.productieVerbruikUI1.RestStuk = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
             this.productieVerbruikUI1.ShowMateriaalSelector = false;
+            this.productieVerbruikUI1.ShowOpdrukkerArtikelNr = false;
             this.productieVerbruikUI1.ShowOpslaan = false;
-            this.productieVerbruikUI1.Size = new System.Drawing.Size(615, 241);
+            this.productieVerbruikUI1.ShowPerUur = false;
+            this.productieVerbruikUI1.ShowSluiten = false;
+            this.productieVerbruikUI1.Size = new System.Drawing.Size(903, 441);
             this.productieVerbruikUI1.TabIndex = 2;
             this.productieVerbruikUI1.Title = "Verbruik Berekenen";
-            // 
-            // metroTabPage8
-            // 
-            this.metroTabPage8.Controls.Add(this.combineerUI1);
-            this.metroTabPage8.HorizontalScrollbarBarColor = true;
-            this.metroTabPage8.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage8.HorizontalScrollbarSize = 2;
-            this.metroTabPage8.Location = new System.Drawing.Point(4, 72);
-            this.metroTabPage8.Name = "metroTabPage8";
-            this.metroTabPage8.Padding = new System.Windows.Forms.Padding(5);
-            this.metroTabPage8.Size = new System.Drawing.Size(625, 251);
-            this.metroTabPage8.TabIndex = 10;
-            this.metroTabPage8.Text = "Combineer";
-            this.metroTabPage8.ToolTipText = "Combineer producties";
-            this.metroTabPage8.VerticalScrollbarBarColor = true;
-            this.metroTabPage8.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage8.VerticalScrollbarSize = 3;
             // 
             // combineerUI1
             // 
@@ -153,76 +376,8 @@ namespace Controls
             this.combineerUI1.Location = new System.Drawing.Point(5, 5);
             this.combineerUI1.Name = "combineerUI1";
             this.combineerUI1.Padding = new System.Windows.Forms.Padding(5);
-            this.combineerUI1.Size = new System.Drawing.Size(615, 241);
+            this.combineerUI1.Size = new System.Drawing.Size(903, 441);
             this.combineerUI1.TabIndex = 2;
-            // 
-            // metroTabPage2
-            // 
-            this.metroTabPage2.HorizontalScrollbarBarColor = true;
-            this.metroTabPage2.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage2.HorizontalScrollbarSize = 2;
-            this.metroTabPage2.Location = new System.Drawing.Point(4, 72);
-            this.metroTabPage2.Name = "metroTabPage2";
-            this.metroTabPage2.Padding = new System.Windows.Forms.Padding(5);
-            this.metroTabPage2.Size = new System.Drawing.Size(625, 251);
-            this.metroTabPage2.TabIndex = 1;
-            this.metroTabPage2.Text = "   Info";
-            this.metroTabPage2.ToolTipText = "Productie info";
-            this.metroTabPage2.VerticalScrollbarBarColor = true;
-            this.metroTabPage2.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage2.VerticalScrollbarSize = 3;
-            // 
-            // metroTabPage3
-            // 
-            this.metroTabPage3.HorizontalScrollbarBarColor = true;
-            this.metroTabPage3.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage3.HorizontalScrollbarSize = 2;
-            this.metroTabPage3.Location = new System.Drawing.Point(4, 72);
-            this.metroTabPage3.Name = "metroTabPage3";
-            this.metroTabPage3.Padding = new System.Windows.Forms.Padding(5);
-            this.metroTabPage3.Size = new System.Drawing.Size(625, 251);
-            this.metroTabPage3.TabIndex = 2;
-            this.metroTabPage3.Text = "Notities";
-            this.metroTabPage3.ToolTipText = "Alle genoteerde notities";
-            this.metroTabPage3.VerticalScrollbarBarColor = true;
-            this.metroTabPage3.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage3.VerticalScrollbarSize = 3;
-            // 
-            // metroTabPage4
-            // 
-            this.metroTabPage4.HorizontalScrollbarBarColor = true;
-            this.metroTabPage4.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage4.HorizontalScrollbarSize = 2;
-            this.metroTabPage4.Location = new System.Drawing.Point(4, 72);
-            this.metroTabPage4.Name = "metroTabPage4";
-            this.metroTabPage4.Padding = new System.Windows.Forms.Padding(5);
-            this.metroTabPage4.Size = new System.Drawing.Size(625, 251);
-            this.metroTabPage4.TabIndex = 7;
-            this.metroTabPage4.Text = "Datums";
-            this.metroTabPage4.ToolTipText = "Alle relevante datums";
-            this.metroTabPage4.VerticalScrollbarBarColor = true;
-            this.metroTabPage4.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage4.VerticalScrollbarSize = 3;
-            // 
-            // metroTabPage6
-            // 
-            this.metroTabPage6.AutoScroll = true;
-            this.metroTabPage6.Controls.Add(this.verpakkingInstructieUI1);
-            this.metroTabPage6.HorizontalScrollbar = true;
-            this.metroTabPage6.HorizontalScrollbarBarColor = true;
-            this.metroTabPage6.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage6.HorizontalScrollbarSize = 2;
-            this.metroTabPage6.Location = new System.Drawing.Point(4, 72);
-            this.metroTabPage6.Name = "metroTabPage6";
-            this.metroTabPage6.Padding = new System.Windows.Forms.Padding(5);
-            this.metroTabPage6.Size = new System.Drawing.Size(625, 251);
-            this.metroTabPage6.TabIndex = 5;
-            this.metroTabPage6.Text = "Verpakking";
-            this.metroTabPage6.ToolTipText = "VerpakkingsInstructies";
-            this.metroTabPage6.VerticalScrollbar = true;
-            this.metroTabPage6.VerticalScrollbarBarColor = true;
-            this.metroTabPage6.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage6.VerticalScrollbarSize = 3;
             // 
             // verpakkingInstructieUI1
             // 
@@ -236,59 +391,10 @@ namespace Controls
             this.verpakkingInstructieUI1.Name = "verpakkingInstructieUI1";
             this.verpakkingInstructieUI1.Padding = new System.Windows.Forms.Padding(5);
             this.verpakkingInstructieUI1.Productie = null;
-            this.verpakkingInstructieUI1.Size = new System.Drawing.Size(615, 241);
+            this.verpakkingInstructieUI1.Size = new System.Drawing.Size(903, 441);
             this.verpakkingInstructieUI1.TabIndex = 2;
             this.verpakkingInstructieUI1.TextColor = System.Drawing.Color.Empty;
             this.verpakkingInstructieUI1.Title = null;
-            // 
-            // metroTabPage5
-            // 
-            this.metroTabPage5.HorizontalScrollbarBarColor = true;
-            this.metroTabPage5.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage5.HorizontalScrollbarSize = 2;
-            this.metroTabPage5.Location = new System.Drawing.Point(4, 72);
-            this.metroTabPage5.Name = "metroTabPage5";
-            this.metroTabPage5.Padding = new System.Windows.Forms.Padding(5);
-            this.metroTabPage5.Size = new System.Drawing.Size(625, 251);
-            this.metroTabPage5.TabIndex = 8;
-            this.metroTabPage5.Text = "Materialen";
-            this.metroTabPage5.ToolTipText = "Benodigde Materialen";
-            this.metroTabPage5.VerticalScrollbarBarColor = true;
-            this.metroTabPage5.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage5.VerticalScrollbarSize = 3;
-            // 
-            // metroTabPage7
-            // 
-            this.metroTabPage7.HorizontalScrollbarBarColor = true;
-            this.metroTabPage7.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage7.HorizontalScrollbarSize = 2;
-            this.metroTabPage7.Location = new System.Drawing.Point(4, 72);
-            this.metroTabPage7.Name = "metroTabPage7";
-            this.metroTabPage7.Padding = new System.Windows.Forms.Padding(5);
-            this.metroTabPage7.Size = new System.Drawing.Size(625, 251);
-            this.metroTabPage7.TabIndex = 9;
-            this.metroTabPage7.Text = "WerkPlaatsen";
-            this.metroTabPage7.ToolTipText = "Alle werkplaatsen";
-            this.metroTabPage7.VerticalScrollbarBarColor = true;
-            this.metroTabPage7.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage7.VerticalScrollbarSize = 3;
-            // 
-            // metroTabPage9
-            // 
-            this.metroTabPage9.Controls.Add(this.alleWerkPlekAantalHistoryUI1);
-            this.metroTabPage9.HorizontalScrollbarBarColor = true;
-            this.metroTabPage9.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage9.HorizontalScrollbarSize = 2;
-            this.metroTabPage9.Location = new System.Drawing.Point(4, 72);
-            this.metroTabPage9.Name = "metroTabPage9";
-            this.metroTabPage9.Padding = new System.Windows.Forms.Padding(5);
-            this.metroTabPage9.Size = new System.Drawing.Size(625, 251);
-            this.metroTabPage9.TabIndex = 11;
-            this.metroTabPage9.Text = "Aantallen";
-            this.metroTabPage9.ToolTipText = "Aantallen geschiedenis";
-            this.metroTabPage9.VerticalScrollbarBarColor = true;
-            this.metroTabPage9.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage9.VerticalScrollbarSize = 4;
             // 
             // alleWerkPlekAantalHistoryUI1
             // 
@@ -299,18 +405,18 @@ namespace Controls
             this.alleWerkPlekAantalHistoryUI1.Margin = new System.Windows.Forms.Padding(4);
             this.alleWerkPlekAantalHistoryUI1.Name = "alleWerkPlekAantalHistoryUI1";
             this.alleWerkPlekAantalHistoryUI1.Padding = new System.Windows.Forms.Padding(10);
-            this.alleWerkPlekAantalHistoryUI1.Size = new System.Drawing.Size(615, 241);
+            this.alleWerkPlekAantalHistoryUI1.Size = new System.Drawing.Size(903, 441);
             this.alleWerkPlekAantalHistoryUI1.TabIndex = 2;
             // 
             // aantalChangerUI1
             // 
             this.aantalChangerUI1.BackColor = System.Drawing.Color.Transparent;
             this.aantalChangerUI1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.aantalChangerUI1.Location = new System.Drawing.Point(5, 332);
+            this.aantalChangerUI1.Location = new System.Drawing.Point(5, 498);
             this.aantalChangerUI1.Margin = new System.Windows.Forms.Padding(4);
             this.aantalChangerUI1.MinimumSize = new System.Drawing.Size(582, 100);
             this.aantalChangerUI1.Name = "aantalChangerUI1";
-            this.aantalChangerUI1.Size = new System.Drawing.Size(633, 100);
+            this.aantalChangerUI1.Size = new System.Drawing.Size(921, 100);
             this.aantalChangerUI1.TabIndex = 0;
             // 
             // ProductieInfoUI
@@ -319,39 +425,47 @@ namespace Controls
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.metroTabControl1);
+            this.Controls.Add(this.xTabControl);
             this.Controls.Add(this.aantalChangerUI1);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ProductieInfoUI";
             this.Padding = new System.Windows.Forms.Padding(5);
-            this.Size = new System.Drawing.Size(643, 437);
-            this.metroTabControl1.ResumeLayout(false);
-            this.metroTabPage10.ResumeLayout(false);
-            this.metroTabPage8.ResumeLayout(false);
-            this.metroTabPage6.ResumeLayout(false);
-            this.metroTabPage9.ResumeLayout(false);
+            this.Size = new System.Drawing.Size(931, 603);
+            this.xTabControl.ResumeLayout(false);
+            this.xtab1.ResumeLayout(false);
+            this.xtab2.ResumeLayout(false);
+            this.xtab6.ResumeLayout(false);
+            this.xtab9.ResumeLayout(false);
+            this.xtab10.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.xLogDataList)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private MetroFramework.Controls.MetroTabControl metroTabControl1;
-        private MetroFramework.Controls.MetroTabPage metroTabPage2;
-        private MetroFramework.Controls.MetroTabPage metroTabPage3;
-        private MetroFramework.Controls.MetroTabPage metroTabPage6;
-        private MetroFramework.Controls.MetroTabPage metroTabPage1;
-        private MetroFramework.Controls.MetroTabPage metroTabPage4;
-        private MetroFramework.Controls.MetroTabPage metroTabPage5;
-        private MetroFramework.Controls.MetroTabPage metroTabPage7;
+        private MetroFramework.Controls.MetroTabControl xTabControl;
+        private MetroFramework.Controls.MetroTabPage xtab3;
+        private MetroFramework.Controls.MetroTabPage xtab4;
+        private MetroFramework.Controls.MetroTabPage xtab6;
+        private MetroFramework.Controls.MetroTabPage xtab0;
+        private MetroFramework.Controls.MetroTabPage xtab5;
+        private MetroFramework.Controls.MetroTabPage xtab7;
+        private MetroFramework.Controls.MetroTabPage xtab8;
         private VerpakkingInstructieUI verpakkingInstructieUI1;
         private ProductieManager.Forms.Aantal.Controls.AantalChangerUI aantalChangerUI1;
-        private MetroFramework.Controls.MetroTabPage metroTabPage8;
+        private MetroFramework.Controls.MetroTabPage xtab2;
         private CombineerUI combineerUI1;
-        private MetroFramework.Controls.MetroTabPage metroTabPage9;
+        private MetroFramework.Controls.MetroTabPage xtab9;
         private Forms.Aantal.Controls.AlleWerkPlekAantalHistoryUI alleWerkPlekAantalHistoryUI1;
-        private MetroFramework.Controls.MetroTabPage metroTabPage10;
+        private MetroFramework.Controls.MetroTabPage xtab1;
         private ProductieVerbruikUI productieVerbruikUI1;
+        private MetroFramework.Controls.MetroTabPage xtab10;
+        private BrightIdeasSoftware.ObjectListView xLogDataList;
+        private BrightIdeasSoftware.OLVColumn olvColumn1;
+        private BrightIdeasSoftware.OLVColumn olvColumn2;
+        private System.Windows.Forms.ImageList imageList1;
+        private BrightIdeasSoftware.OLVColumn olvColumn3;
     }
 }

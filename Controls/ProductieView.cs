@@ -820,6 +820,9 @@ namespace Controls
                 if (updateview && page.Tag is TileInfoEntry info)
                     UpdateTileViewed(info, false);
                 xcontrol?.Dispose();
+                if (metroCustomTabControl1.SelectedTab == null)
+                    metroCustomTabControl1.SelectedIndex = 0;
+                metroCustomTabControl1.Invalidate();
             }
         }
 
@@ -1341,6 +1344,9 @@ namespace Controls
                             metroCustomTabControl1.SelectedTab = metroCustomTabControl1.TabPages?.Cast<MetroTabPage>()
                                 .FirstOrDefault(x => x.Tag is TileInfoEntry entry && string.Equals(entry.Name,
                                     Manager.Opties.LastShownTabName, StringComparison.CurrentCultureIgnoreCase));
+                        if (metroCustomTabControl1.SelectedTab == null)
+                            metroCustomTabControl1.SelectedIndex = 0;
+                        metroCustomTabControl1.Invalidate();
                         tileMainView1.TileCountRefreshInterval = Manager.Opties?.TileCountRefreshRate??30000;
                         var xrooster = mainMenu1.GetButton("xroostermenubutton");
                         if (xrooster != null)

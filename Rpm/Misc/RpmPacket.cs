@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Polenter.Serialization;
+using Rpm.Misc;
 using Rpm.SqlLite;
 
 namespace ProductieManager.Rpm.Misc
@@ -12,6 +14,8 @@ namespace ProductieManager.Rpm.Misc
         public List<string> Criterias { get; set; } = new List<string>();
         public bool IsCompressed { get; set; }
         public DbType Type { get; set; }
+        //[ExcludeFromSerialization]
+      //  public List<LogEntry> Logs { get; set; } = new List<LogEntry>();
 
         public RpmPacket()
         {

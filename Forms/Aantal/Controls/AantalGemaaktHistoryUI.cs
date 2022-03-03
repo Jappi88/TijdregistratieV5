@@ -62,30 +62,31 @@ namespace Forms.Aantal.Controls
             if (xHistoryList.SelectedObjects.Count > 0)
             {
                 var xitems = xHistoryList.SelectedObjects.Cast<AantalRecord>().ToList();
-                var x1 = xitems.Count == 1 ? "regel" : "regels";
               
                 var aantal = xitems.Sum(x => x.GetGemaakt());
                 var tijd = xitems.Sum(x => x.GetTijdGewerkt(Plek?.Tijden, Plek?.GetStoringen()));
                 var pu = aantal > 0 ? tijd == 0 ? aantal : Math.Round(aantal / tijd, 0) : 0;
-                xstatuslabel.Text =
-                    $"{xitems.Count} {x1} geselecteerd met een aantal van {aantal}, gemaakt in {tijd} uur met een gemiddelde van {pu}p/u";
+                xgemaakt.Text = $"Gemaakt: {aantal}";
+                xgemiddeldpu.Text = $"Gemiddeld: {pu} p/u";
+                xtijd.Text = $"Tijd: {tijd} uur";
             }
             else
             {
                 var xitems = xHistoryList.Objects?.Cast<AantalRecord>().ToList();
                 if (xitems != null && xitems.Count > 0)
                 {
-                    var x1 = xitems.Count == 1 ? "regel" : "regels";
-
                     var aantal = xitems.Sum(x => x.GetGemaakt());
                     var tijd = xitems.Sum(x => x.GetTijdGewerkt(Plek?.Tijden, Plek?.GetStoringen()));
                     var pu = aantal > 0 ? tijd == 0 ? aantal : Math.Round(aantal / tijd, 0) : 0;
-                    xstatuslabel.Text =
-                        $"{xitems.Count} {x1} met een aantal van {aantal}, gemaakt in {tijd} uur, met een gemiddelde van {pu}p/u";
+                    xgemaakt.Text = $"Gemaakt: {aantal}";
+                    xgemiddeldpu.Text = $"Gemiddeld: {pu} p/u";
+                    xtijd.Text = $"Tijd: {tijd} uur";
                 }
                 else
                 {
-                    xstatuslabel.Text = "Geen aantallen doorgegeven";
+                    xgemaakt.Text = "Gemaakt: 0";
+                    xgemiddeldpu.Text = "Gemiddeld: 0 p/u";
+                    xtijd.Text = "Tijd: 0 uur";
                 }
             }
         }

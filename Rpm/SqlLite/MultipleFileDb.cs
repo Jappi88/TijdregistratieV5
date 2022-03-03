@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ProductieManager.Rpm.SqlLite;
 
 namespace Rpm.SqlLite
 {
@@ -98,29 +99,6 @@ namespace Rpm.SqlLite
 
         private readonly List<string> _changes = new List<string>();
 
-        //private void _FileChangedNotifyTimer_Elapsed(object sender, ElapsedEventArgs e)
-        //{
-        //    _FileChangedNotifyTimer?.Stop();
-        //    if (_changes == null) return;
-        //    try
-        //    {
-        //        lock (_changes)
-        //        {
-        //            for (int i = 0; i < _changes.Count; i++)
-        //            {
-        //                var x = _changes[i];
-        //                OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Changed,
-        //                    System.IO.Path.GetDirectoryName(x) ?? x, System.IO.Path.GetFileName(x)));
-        //                _changes.RemoveAt(i--);
-        //            }
-        //        }
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        Console.WriteLine(exception);
-        //    }
-        //}
-
         private void _pathwatcher_Deleted(object sender, FileSystemEventArgs e)
         {
             OnFileDeleted(e);
@@ -130,7 +108,24 @@ namespace Rpm.SqlLite
         {
             if (!_canread) return;
             if (!RaiseChangeEvent) return;
-            OnFileChanged(e);
+            bool valid = false;
+            for (int i = 0; i < 5; i++)
+            {
+                try
+                {
+                    using var fs = new FileStream(e.FullPath, FileMode.Open);
+                    fs.Close();
+                    valid = true;
+                    break;
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                }
+            }
+
+            if (valid)
+                OnFileChanged(e);
             //_FileChangedNotifyTimer?.Stop();
             //var rpath = GetReadPath(true).ToLower();
             //if (!e.FullPath.ToLower().StartsWith(rpath)) return;
@@ -160,7 +155,24 @@ namespace Rpm.SqlLite
         {
             if (!_canread) return;
             if (!RaiseChangeEvent) return;
-            OnSecondaryFileChanged(e);
+            bool valid = false;
+            for (int i = 0; i < 5; i++)
+            {
+                try
+                {
+                    using var fs = new FileStream(e.FullPath, FileMode.Open);
+                    fs.Close();
+                    valid = true;
+                    break;
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                }
+            }
+
+            if (valid)
+                OnSecondaryFileChanged(e);
             //_FileChangedNotifyTimer?.Stop();
             //var rpath = GetReadPath(true).ToLower();
             //if (!e.FullPath.ToLower().StartsWith(rpath)) return;
@@ -407,6 +419,7 @@ namespace Rpm.SqlLite
             try
             {
                 var rpm = new RpmPacket();
+                rpm.Criterias.Clear();
                 switch (value)
                 {
                     case ProductieFormulier x:

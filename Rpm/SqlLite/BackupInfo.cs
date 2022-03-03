@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.IO.Compression;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using ICSharpCode.SharpZipLib.Checksum;
+﻿using ICSharpCode.SharpZipLib.Checksum;
 using ICSharpCode.SharpZipLib.Zip;
 using Polenter.Serialization;
 using Rpm.Misc;
 using Rpm.Productie;
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Timer = System.Timers.Timer;
 
 namespace Rpm.SqlLite

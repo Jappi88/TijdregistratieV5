@@ -17,12 +17,12 @@ namespace Rpm.SqlLite
         public Task<List<string>> GetAllPaths(bool checksecondary);
         public Task<List<T>> FindAll(string[] ids);
         public Task<List<T>> FindAll(string criteria, bool fullmatch);
-        public Task<bool> Replace(string oldid, T newitem, bool onlylocal);
+        public Task<bool> Replace(string oldid, T newitem, bool onlylocal, string change);
         public Task<bool> Delete(string id);
         public Task<int> DeleteAll();
         public Task<int> Delete(string[] ids);
-        public Task<bool> Update(string id, T item, bool onlylocal);
-        public Task<bool> Upsert(string id, T item, bool onlylocal);
+        public Task<bool> Update(string id, T item, bool onlylocal, string change);
+        public Task<bool> Upsert(string id, T item, bool onlylocal, string change);
         public Task<T> FromPath<T>(string filepath);
         public Task<bool> Exists(string id);
 

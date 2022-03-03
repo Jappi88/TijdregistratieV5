@@ -27,5 +27,17 @@ namespace Rpm.Misc
         public string Username { get; set; }
         public string MachineId { get; set; }
         public MsgType Type { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is LogEntry entry)
+                return entry.Id == Id;
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id;
+        }
     }
 }

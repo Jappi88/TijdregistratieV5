@@ -764,7 +764,7 @@ namespace Forms
                             $"Klusjes van '{Formulier.ProductieNr}' zijn verwijderd");
                 }
 
-                await Formulier.UpdateForm(true, false, null, "Indeling Aangepast");
+                await Formulier.UpdateForm(true, false, null, "Indeling Gewijzigd");
 
                 return true;
             }

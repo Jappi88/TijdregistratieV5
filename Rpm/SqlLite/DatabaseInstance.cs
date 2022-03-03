@@ -5,6 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Timers;
+using ProductieManager.Rpm.Misc;
+using ProductieManager.Rpm.SqlLite;
+using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
 
@@ -376,7 +379,7 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<bool> Replace(string oldid, T newitem, bool onlylocal)
+        public Task<bool> Replace(string oldid, T newitem, bool onlylocal, string change)
         {
             return Task.Run(async () =>
             {
@@ -391,6 +394,11 @@ namespace Rpm.SqlLite
                             return true;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
+                            if (!string.IsNullOrEmpty(change) && newitem is  IDbLogging ent)
+                            {
+                                ent.Logs ??= new List<LogEntry>();
+                                ent.Logs.Add(new LogEntry(change, MsgType.Info));
+                            }
                             return MultiFiles.Replace<T>(oldid, newitem,onlylocal);
                         case DbInstanceType.Server:
                             if (ServerDb == null) throw new NullReferenceException();
@@ -497,7 +505,7 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<bool> Update(string id, T item, bool onlylocal)
+        public Task<bool> Update(string id, T item, bool onlylocal, string change)
         {
             return Task.Run(async () =>
             {
@@ -511,6 +519,12 @@ namespace Rpm.SqlLite
                             return false;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
+                            if (!string.IsNullOrEmpty(change) && item is IDbLogging ent)
+                            {
+                                ent.Logs ??= new List<LogEntry>();
+                                ent.Logs.Add(new LogEntry(change, MsgType.Info));
+                            }
+
                             return MultiFiles.Upsert(id, item,onlylocal);
                         case DbInstanceType.Server:
                             if (ServerDb == null) throw new NullReferenceException();
@@ -583,9 +597,9 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<bool> Upsert(string id, T item, bool onlylocal)
+        public Task<bool> Upsert(string id, T item, bool onlylocal, string change)
         {
-            return Update(id, item,onlylocal);
+            return Update(id, item,onlylocal,change);
         }
 
 
