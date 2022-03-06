@@ -41,6 +41,14 @@
             this.xalgemeen = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.xeditArtikel = new System.Windows.Forms.Button();
+            this.xdeleteartikel = new System.Windows.Forms.Button();
+            this.xopmerkingen = new System.Windows.Forms.Button();
+            this.xaddartikel = new System.Windows.Forms.Button();
+            this.xeditWerkplek = new System.Windows.Forms.Button();
+            this.xdeletewerkplek = new System.Windows.Forms.Button();
+            this.xwerkplekopmerkingen = new System.Windows.Forms.Button();
+            this.xaddwerkplek = new System.Windows.Forms.Button();
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
             this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -54,10 +62,6 @@
             this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.panel3 = new System.Windows.Forms.Panel();
-            this.xeditArtikel = new System.Windows.Forms.Button();
-            this.xdeleteartikel = new System.Windows.Forms.Button();
-            this.xopmerkingen = new System.Windows.Forms.Button();
-            this.xaddartikel = new System.Windows.Forms.Button();
             this.xsearchbox = new MetroFramework.Controls.MetroTextBox();
             this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -71,10 +75,6 @@
             this.olvColumn15 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn16 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.panel5 = new System.Windows.Forms.Panel();
-            this.xeditWerkplek = new System.Windows.Forms.Button();
-            this.xdeletewerkplek = new System.Windows.Forms.Button();
-            this.xwerkplekopmerkingen = new System.Windows.Forms.Button();
-            this.xaddwerkplek = new System.Windows.Forms.Button();
             this.xsearch2 = new MetroFramework.Controls.MetroTextBox();
             this.contextMenuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -204,6 +204,126 @@
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
+            // xeditArtikel
+            // 
+            this.xeditArtikel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xeditArtikel.Enabled = false;
+            this.xeditArtikel.FlatAppearance.BorderSize = 0;
+            this.xeditArtikel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xeditArtikel.Image = global::ProductieManager.Properties.Resources.edit__52382;
+            this.xeditArtikel.Location = new System.Drawing.Point(717, 1);
+            this.xeditArtikel.Name = "xeditArtikel";
+            this.xeditArtikel.Size = new System.Drawing.Size(34, 34);
+            this.xeditArtikel.TabIndex = 13;
+            this.toolTip1.SetToolTip(this.xeditArtikel, "Wijzig Artikel");
+            this.xeditArtikel.UseVisualStyleBackColor = true;
+            this.xeditArtikel.Click += new System.EventHandler(this.xeditArtikel_Click);
+            // 
+            // xdeleteartikel
+            // 
+            this.xdeleteartikel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xdeleteartikel.Enabled = false;
+            this.xdeleteartikel.FlatAppearance.BorderSize = 0;
+            this.xdeleteartikel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xdeleteartikel.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.xdeleteartikel.Location = new System.Drawing.Point(757, 1);
+            this.xdeleteartikel.Name = "xdeleteartikel";
+            this.xdeleteartikel.Size = new System.Drawing.Size(34, 34);
+            this.xdeleteartikel.TabIndex = 12;
+            this.toolTip1.SetToolTip(this.xdeleteartikel, "Verwijder geselecteerde Artikel");
+            this.xdeleteartikel.UseVisualStyleBackColor = true;
+            this.xdeleteartikel.Click += new System.EventHandler(this.xdeleteartikel_Click);
+            // 
+            // xopmerkingen
+            // 
+            this.xopmerkingen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xopmerkingen.Enabled = false;
+            this.xopmerkingen.FlatAppearance.BorderSize = 0;
+            this.xopmerkingen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xopmerkingen.Image = global::ProductieManager.Properties.Resources.default_opmerking_16757_32x32;
+            this.xopmerkingen.Location = new System.Drawing.Point(797, 1);
+            this.xopmerkingen.Name = "xopmerkingen";
+            this.xopmerkingen.Size = new System.Drawing.Size(34, 34);
+            this.xopmerkingen.TabIndex = 11;
+            this.toolTip1.SetToolTip(this.xopmerkingen, "Artikel Meldingen");
+            this.xopmerkingen.UseVisualStyleBackColor = true;
+            this.xopmerkingen.Click += new System.EventHandler(this.xopmerkingen_Click);
+            // 
+            // xaddartikel
+            // 
+            this.xaddartikel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xaddartikel.Enabled = false;
+            this.xaddartikel.FlatAppearance.BorderSize = 0;
+            this.xaddartikel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xaddartikel.Image = global::ProductieManager.Properties.Resources.add_Blue_circle_32x32;
+            this.xaddartikel.Location = new System.Drawing.Point(677, 1);
+            this.xaddartikel.Name = "xaddartikel";
+            this.xaddartikel.Size = new System.Drawing.Size(34, 34);
+            this.xaddartikel.TabIndex = 10;
+            this.toolTip1.SetToolTip(this.xaddartikel, "Voeg een nieuwe Artikel toe");
+            this.xaddartikel.UseVisualStyleBackColor = true;
+            this.xaddartikel.Click += new System.EventHandler(this.xaddartikel_Click);
+            // 
+            // xeditWerkplek
+            // 
+            this.xeditWerkplek.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xeditWerkplek.Enabled = false;
+            this.xeditWerkplek.FlatAppearance.BorderSize = 0;
+            this.xeditWerkplek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xeditWerkplek.Image = global::ProductieManager.Properties.Resources.edit__52382;
+            this.xeditWerkplek.Location = new System.Drawing.Point(717, 1);
+            this.xeditWerkplek.Name = "xeditWerkplek";
+            this.xeditWerkplek.Size = new System.Drawing.Size(34, 34);
+            this.xeditWerkplek.TabIndex = 14;
+            this.toolTip1.SetToolTip(this.xeditWerkplek, "Wijzig Werkplek");
+            this.xeditWerkplek.UseVisualStyleBackColor = true;
+            this.xeditWerkplek.Click += new System.EventHandler(this.xeditArtikel_Click);
+            // 
+            // xdeletewerkplek
+            // 
+            this.xdeletewerkplek.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xdeletewerkplek.Enabled = false;
+            this.xdeletewerkplek.FlatAppearance.BorderSize = 0;
+            this.xdeletewerkplek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xdeletewerkplek.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.xdeletewerkplek.Location = new System.Drawing.Point(757, 1);
+            this.xdeletewerkplek.Name = "xdeletewerkplek";
+            this.xdeletewerkplek.Size = new System.Drawing.Size(34, 34);
+            this.xdeletewerkplek.TabIndex = 12;
+            this.toolTip1.SetToolTip(this.xdeletewerkplek, "Verwijder geselecteerde Werkplek");
+            this.xdeletewerkplek.UseVisualStyleBackColor = true;
+            this.xdeletewerkplek.Click += new System.EventHandler(this.xdeleteartikel_Click);
+            // 
+            // xwerkplekopmerkingen
+            // 
+            this.xwerkplekopmerkingen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xwerkplekopmerkingen.Enabled = false;
+            this.xwerkplekopmerkingen.FlatAppearance.BorderSize = 0;
+            this.xwerkplekopmerkingen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xwerkplekopmerkingen.Image = global::ProductieManager.Properties.Resources.default_opmerking_16757_32x32;
+            this.xwerkplekopmerkingen.Location = new System.Drawing.Point(797, 1);
+            this.xwerkplekopmerkingen.Name = "xwerkplekopmerkingen";
+            this.xwerkplekopmerkingen.Size = new System.Drawing.Size(34, 34);
+            this.xwerkplekopmerkingen.TabIndex = 11;
+            this.toolTip1.SetToolTip(this.xwerkplekopmerkingen, "Werkplek Meldingen");
+            this.xwerkplekopmerkingen.UseVisualStyleBackColor = true;
+            this.xwerkplekopmerkingen.Click += new System.EventHandler(this.xopmerkingen_Click);
+            // 
+            // xaddwerkplek
+            // 
+            this.xaddwerkplek.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xaddwerkplek.Enabled = false;
+            this.xaddwerkplek.FlatAppearance.BorderSize = 0;
+            this.xaddwerkplek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xaddwerkplek.Image = global::ProductieManager.Properties.Resources.add_Blue_circle_32x32;
+            this.xaddwerkplek.Location = new System.Drawing.Point(677, 1);
+            this.xaddwerkplek.Name = "xaddwerkplek";
+            this.xaddwerkplek.Size = new System.Drawing.Size(34, 34);
+            this.xaddwerkplek.TabIndex = 10;
+            this.toolTip1.SetToolTip(this.xaddwerkplek, "Voeg een nieuwe Werkplek toe");
+            this.xaddwerkplek.UseVisualStyleBackColor = true;
+            this.xaddwerkplek.Click += new System.EventHandler(this.xaddartikel_Click);
+            // 
             // metroTabControl1
             // 
             this.metroTabControl1.Controls.Add(this.metroTabPage1);
@@ -226,7 +346,7 @@
             this.metroTabPage1.HorizontalScrollbarSize = 10;
             this.metroTabPage1.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage1.Name = "metroTabPage1";
-            this.metroTabPage1.Padding = new System.Windows.Forms.Padding(5);
+            this.metroTabPage1.Padding = new System.Windows.Forms.Padding(5, 5, 5, 0);
             this.metroTabPage1.Size = new System.Drawing.Size(846, 441);
             this.metroTabPage1.TabIndex = 0;
             this.metroTabPage1.Text = "Artikelen";
@@ -243,7 +363,7 @@
             this.panel1.Location = new System.Drawing.Point(5, 5);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(836, 431);
+            this.panel1.Size = new System.Drawing.Size(836, 436);
             this.panel1.TabIndex = 0;
             // 
             // xArtikelList
@@ -278,7 +398,7 @@
             this.xArtikelList.Name = "xArtikelList";
             this.xArtikelList.ShowGroups = false;
             this.xArtikelList.ShowItemToolTips = true;
-            this.xArtikelList.Size = new System.Drawing.Size(836, 393);
+            this.xArtikelList.Size = new System.Drawing.Size(836, 398);
             this.xArtikelList.SmallImageList = this.imageList1;
             this.xArtikelList.TabIndex = 0;
             this.xArtikelList.TintSortColumn = true;
@@ -372,66 +492,6 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(836, 38);
             this.panel3.TabIndex = 10;
-            // 
-            // xeditArtikel
-            // 
-            this.xeditArtikel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xeditArtikel.Enabled = false;
-            this.xeditArtikel.FlatAppearance.BorderSize = 0;
-            this.xeditArtikel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xeditArtikel.Image = global::ProductieManager.Properties.Resources.edit__52382;
-            this.xeditArtikel.Location = new System.Drawing.Point(717, 1);
-            this.xeditArtikel.Name = "xeditArtikel";
-            this.xeditArtikel.Size = new System.Drawing.Size(34, 34);
-            this.xeditArtikel.TabIndex = 13;
-            this.toolTip1.SetToolTip(this.xeditArtikel, "Wijzig Artikel");
-            this.xeditArtikel.UseVisualStyleBackColor = true;
-            this.xeditArtikel.Click += new System.EventHandler(this.xeditArtikel_Click);
-            // 
-            // xdeleteartikel
-            // 
-            this.xdeleteartikel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xdeleteartikel.Enabled = false;
-            this.xdeleteartikel.FlatAppearance.BorderSize = 0;
-            this.xdeleteartikel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xdeleteartikel.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xdeleteartikel.Location = new System.Drawing.Point(757, 1);
-            this.xdeleteartikel.Name = "xdeleteartikel";
-            this.xdeleteartikel.Size = new System.Drawing.Size(34, 34);
-            this.xdeleteartikel.TabIndex = 12;
-            this.toolTip1.SetToolTip(this.xdeleteartikel, "Verwijder geselecteerde Artikel");
-            this.xdeleteartikel.UseVisualStyleBackColor = true;
-            this.xdeleteartikel.Click += new System.EventHandler(this.xdeleteartikel_Click);
-            // 
-            // xopmerkingen
-            // 
-            this.xopmerkingen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xopmerkingen.Enabled = false;
-            this.xopmerkingen.FlatAppearance.BorderSize = 0;
-            this.xopmerkingen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xopmerkingen.Image = global::ProductieManager.Properties.Resources.default_opmerking_16757_32x32;
-            this.xopmerkingen.Location = new System.Drawing.Point(797, 1);
-            this.xopmerkingen.Name = "xopmerkingen";
-            this.xopmerkingen.Size = new System.Drawing.Size(34, 34);
-            this.xopmerkingen.TabIndex = 11;
-            this.toolTip1.SetToolTip(this.xopmerkingen, "Artikel Meldingen");
-            this.xopmerkingen.UseVisualStyleBackColor = true;
-            this.xopmerkingen.Click += new System.EventHandler(this.xopmerkingen_Click);
-            // 
-            // xaddartikel
-            // 
-            this.xaddartikel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xaddartikel.Enabled = false;
-            this.xaddartikel.FlatAppearance.BorderSize = 0;
-            this.xaddartikel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xaddartikel.Image = global::ProductieManager.Properties.Resources.add_Blue_circle_32x32;
-            this.xaddartikel.Location = new System.Drawing.Point(677, 1);
-            this.xaddartikel.Name = "xaddartikel";
-            this.xaddartikel.Size = new System.Drawing.Size(34, 34);
-            this.xaddartikel.TabIndex = 10;
-            this.toolTip1.SetToolTip(this.xaddartikel, "Voeg een nieuwe Artikel toe");
-            this.xaddartikel.UseVisualStyleBackColor = true;
-            this.xaddartikel.Click += new System.EventHandler(this.xaddartikel_Click);
             // 
             // xsearchbox
             // 
@@ -627,66 +687,6 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(836, 38);
             this.panel5.TabIndex = 10;
-            // 
-            // xeditWerkplek
-            // 
-            this.xeditWerkplek.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xeditWerkplek.Enabled = false;
-            this.xeditWerkplek.FlatAppearance.BorderSize = 0;
-            this.xeditWerkplek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xeditWerkplek.Image = global::ProductieManager.Properties.Resources.edit__52382;
-            this.xeditWerkplek.Location = new System.Drawing.Point(717, 1);
-            this.xeditWerkplek.Name = "xeditWerkplek";
-            this.xeditWerkplek.Size = new System.Drawing.Size(34, 34);
-            this.xeditWerkplek.TabIndex = 14;
-            this.toolTip1.SetToolTip(this.xeditWerkplek, "Wijzig Werkplek");
-            this.xeditWerkplek.UseVisualStyleBackColor = true;
-            this.xeditWerkplek.Click += new System.EventHandler(this.xeditArtikel_Click);
-            // 
-            // xdeletewerkplek
-            // 
-            this.xdeletewerkplek.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xdeletewerkplek.Enabled = false;
-            this.xdeletewerkplek.FlatAppearance.BorderSize = 0;
-            this.xdeletewerkplek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xdeletewerkplek.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xdeletewerkplek.Location = new System.Drawing.Point(757, 1);
-            this.xdeletewerkplek.Name = "xdeletewerkplek";
-            this.xdeletewerkplek.Size = new System.Drawing.Size(34, 34);
-            this.xdeletewerkplek.TabIndex = 12;
-            this.toolTip1.SetToolTip(this.xdeletewerkplek, "Verwijder geselecteerde Werkplek");
-            this.xdeletewerkplek.UseVisualStyleBackColor = true;
-            this.xdeletewerkplek.Click += new System.EventHandler(this.xdeleteartikel_Click);
-            // 
-            // xwerkplekopmerkingen
-            // 
-            this.xwerkplekopmerkingen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xwerkplekopmerkingen.Enabled = false;
-            this.xwerkplekopmerkingen.FlatAppearance.BorderSize = 0;
-            this.xwerkplekopmerkingen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xwerkplekopmerkingen.Image = global::ProductieManager.Properties.Resources.default_opmerking_16757_32x32;
-            this.xwerkplekopmerkingen.Location = new System.Drawing.Point(797, 1);
-            this.xwerkplekopmerkingen.Name = "xwerkplekopmerkingen";
-            this.xwerkplekopmerkingen.Size = new System.Drawing.Size(34, 34);
-            this.xwerkplekopmerkingen.TabIndex = 11;
-            this.toolTip1.SetToolTip(this.xwerkplekopmerkingen, "Werkplek Meldingen");
-            this.xwerkplekopmerkingen.UseVisualStyleBackColor = true;
-            this.xwerkplekopmerkingen.Click += new System.EventHandler(this.xopmerkingen_Click);
-            // 
-            // xaddwerkplek
-            // 
-            this.xaddwerkplek.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xaddwerkplek.Enabled = false;
-            this.xaddwerkplek.FlatAppearance.BorderSize = 0;
-            this.xaddwerkplek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xaddwerkplek.Image = global::ProductieManager.Properties.Resources.add_Blue_circle_32x32;
-            this.xaddwerkplek.Location = new System.Drawing.Point(677, 1);
-            this.xaddwerkplek.Name = "xaddwerkplek";
-            this.xaddwerkplek.Size = new System.Drawing.Size(34, 34);
-            this.xaddwerkplek.TabIndex = 10;
-            this.toolTip1.SetToolTip(this.xaddwerkplek, "Voeg een nieuwe Werkplek toe");
-            this.xaddwerkplek.UseVisualStyleBackColor = true;
-            this.xaddwerkplek.Click += new System.EventHandler(this.xaddartikel_Click);
             // 
             // xsearch2
             // 

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -69,7 +70,7 @@ namespace Rpm.Productie.ArtikelRecords
         {
             try
             {
-                return Database?.GetEntry<ArtikelRecord>(artnr);
+                return Database?.GetEntry<ArtikelRecord>(artnr, false);
             }
             catch (Exception e)
             {
@@ -82,7 +83,7 @@ namespace Rpm.Productie.ArtikelRecords
         {
             try
             {
-                return Database?.GetAllEntries<ArtikelRecord>()??new List<ArtikelRecord>();
+                return Database?.GetAllEntries<ArtikelRecord>(true)??new List<ArtikelRecord>();
             }
             catch (Exception e)
             {
@@ -158,8 +159,7 @@ namespace Rpm.Productie.ArtikelRecords
                 if (string.IsNullOrEmpty(form?.ArtikelNr))
                     return false;
                 if (form.State != ProductieState.Gereed) return false;
-                var file = record??Database?.GetEntry<ArtikelRecord>(form.ArtikelNr);
-
+                var file = record??Database?.GetEntry<ArtikelRecord>(form.ArtikelNr, false);
                 if (file != null)
                 {
                     if (file.UpdatedProducties.Exists(x =>
@@ -171,7 +171,7 @@ namespace Rpm.Productie.ArtikelRecords
                     file.AantalGemaakt += form.TotaalGemaakt;
                     file.VorigeTijdGewerkt = form.TijdGewerkt;
                     file.TijdGewerkt += form.TijdAanGewerkt();
-                    if (form.DatumGereed > file.LaatstGeupdate)
+                    if (file.LaatstGeupdate.IsDefault() || form.DatumGereed > file.LaatstGeupdate)
                         file.LaatstGeupdate = form.DatumGereed;
                     if (file.Vanaf.IsDefault() || form.TijdGestart < file.Vanaf)
                         file.Vanaf = form.TijdGestart;
@@ -208,7 +208,7 @@ namespace Rpm.Productie.ArtikelRecords
                 if (string.IsNullOrEmpty(plek?.Naam))
                     return false;
                 if (plek.Werk is not {State: ProductieState.Gereed}) return false;
-                var file = record??Database.GetEntry<ArtikelRecord>(plek.Naam);
+                var file = record??Database.GetEntry<ArtikelRecord>(plek.Naam, false);
                 if (file != null)
                 {
                     if (file.UpdatedProducties.Exists(x =>
@@ -253,7 +253,7 @@ namespace Rpm.Productie.ArtikelRecords
             }
         }
 
-        private bool _checking = false;
+        private bool _checking;
 
         public async void CheckForOpmerkingen(bool includealgemeen)
         {
@@ -266,7 +266,7 @@ namespace Rpm.Productie.ArtikelRecords
                 _checking = true;
                 try
                 {
-                    var records = Database.GetAllEntries<ArtikelRecord>(new List<string>() {"algemeen"});
+                    var records = Database.GetAllEntries<ArtikelRecord>(false, new List<string>() {"algemeen"});
                     foreach (var file in records)
                     {
                         var rs = CheckForRecordOpmerkingen(file, false);
@@ -318,7 +318,7 @@ namespace Rpm.Productie.ArtikelRecords
                 var opmerkingen = GetAllAlgemeenRecordsOpmerkingen();
                 if (opmerkingen.Count > 0)
                 {
-                    records ??= Database.GetAllEntries<ArtikelRecord>(new List<string>() {"algemeen"});
+                    records ??= Database.GetAllEntries<ArtikelRecord>(false,new List<string>() {"algemeen"});
                     foreach (var file in records)
                     {
                         var rs = CheckForOpmerkingen(file, opmerkingen,true);
@@ -347,6 +347,12 @@ namespace Rpm.Productie.ArtikelRecords
                     bttns.Add("Sluiten", DialogResult.No);
                     bttns.Add("Begrepen", DialogResult.Yes);
                     //Opmerking Tonen
+                    Task.Factory.StartNew(() =>
+                    {
+                        using var soundPlayer = new SoundPlayer(Resources.mixkit_happy_bells_notification_937);
+                        soundPlayer.Play();
+                    });
+                    
                     if (Manager.OnRequestRespondDialog(record.GetOpmerking(op), record.GetTitle(op),
                             MessageBoxButtons.OK, MessageBoxIcon.Information, null, bttns,
                             op.ImageData?.ImageFromBytes() ?? Resources.default_opmerking_16757_256x256,

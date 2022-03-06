@@ -27,12 +27,20 @@ namespace Rpm.Productie.ArtikelRecords
            //    peruur /= UpdatedProducties.Count;
            return peruur;
        }
-        
-        public ArtikelRecord()
-        {
-        }
 
-        public string GetOpmerking(ArtikelOpmerking opmerking)
+       public void ResetValues(bool opmerkingen)
+       {
+           UpdatedProducties?.Clear();
+           Vanaf = new DateTime();
+           VorigeAantalGemaakt = 0;
+           AantalGemaakt = 0;
+           VorigeTijdGewerkt = 0;
+           TijdGewerkt = 0;
+           if (opmerkingen)
+               Opmerkingen?.Clear();
+       }
+
+       public string GetOpmerking(ArtikelOpmerking opmerking)
         {
             if (string.IsNullOrEmpty(opmerking?.Opmerking)) return string.Empty;
             return string.Format(opmerking.Opmerking, ArtikelNr, Omschrijving, opmerking.FilterWaarde, AantalGemaakt, TijdGewerkt, PerUur,

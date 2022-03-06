@@ -127,7 +127,13 @@ namespace Controls
 
         private void Manager_OnSettingsChanged(object instance, Rpm.Settings.UserSettings settings, bool reinit)
         {
+            if (this.Disposing || this.IsDisposed) return;
             LoadLayout();
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new MethodInvoker(() => LoadPlekken(true)));
+            }
+            else LoadPlekken(true);
         }
 
         public void SaveLayout()
@@ -180,36 +186,39 @@ namespace Controls
         }
 
         private bool _IsLoading;
-        public async void LoadPlekken(bool startsync)
+
+        public void LoadPlekken(bool startsync)
         {
             if (_IsLoading) return;
             _IsLoading = true;
             bool changed = false;
             try
             {
-                int count = xwerkpleklist.Items.Count;
-                var selected = xwerkpleklist.SelectedObject;
-                var items = await Manager.GetProducties(ViewState.Gestart, true, false);
+
+                var items = Manager.GetProducties(ViewState.Gestart, true, false).Result;
                 var plekken = new List<WerkPlek>();
                 foreach (var item in items)
                 {
-
-                    await item.UpdateForm(true, false, null, "", false, false, false);
                     var xpl = GetWerkplekken(item);
-                    if(xpl.Length > 0)
+                    if (xpl.Length > 0)
                         plekken.AddRange(xpl);
                 }
+
+                int count = xwerkpleklist.Items.Count;
+                var selected = xwerkpleklist.SelectedObject;
                 xwerkpleklist.BeginUpdate();
                 xwerkpleklist.SetObjects(plekken);
                 xwerkpleklist.SelectedObject = selected;
                 xwerkpleklist.SelectedItem?.EnsureVisible();
                 xwerkpleklist.EndUpdate();
                 changed = count != xwerkpleklist.Items.Count;
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
+
             _IsLoading = false;
             if (EnableSync && Manager.Opties.AutoProductieLijstSync && !IsSyncing && startsync)
                 StartSync();

@@ -116,7 +116,7 @@ namespace Controls
             if (IsDisposed || Disposing) return;
             try
             {
-                Invoke(new Action(() => ProcessUser(pers)));
+                ProcessUser(pers);
             }
             catch (Exception e)
             {
@@ -205,7 +205,7 @@ namespace Controls
                 return;
             try
             {
-                this.BeginInvoke(new MethodInvoker(() =>
+                this.Invoke(new MethodInvoker(() =>
                 {
 
 
@@ -227,11 +227,7 @@ namespace Controls
                     else if (per != null)
                     {
                         resort = per.PersoneelLid.IsUitzendKracht != pers.IsUitzendKracht;
-                        per.PersoneelLid.Actief = true;
-                        per.PersoneelLid.WerktAan = pers.WerktAan;
-                        per.PersoneelLid.Werkplek = pers.Werkplek;
-                        per.PersoneelLid.Klusjes = pers.Klusjes;
-                        per.PersoneelLid.PerUur = pers.PerUur;
+                        per.PersoneelLid = pers;
                         xuserlist.RefreshObject(per);
                     }
 

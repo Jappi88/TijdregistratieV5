@@ -7,6 +7,7 @@ using Rpm.Various;
 using System;
 using System.Linq;
 using System.Windows.Forms;
+using MetroFramework.Controls;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Forms
@@ -35,6 +36,12 @@ namespace Forms
         {
             get => productieForm1.SelectedBewerking;
             set => productieForm1.SelectedBewerking = value;
+        }
+
+        public MetroTabControl TabControl
+        {
+            get => productieForm1.TabControl;
+            set => productieForm1.TabControl = value;
         }
 
         private void ProductieForm1_OnCloseButtonPressed(object sender, EventArgs e)

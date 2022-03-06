@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NPOI.OpenXmlFormats.Dml;
 
 namespace ProductieManager.Rpm.Settings
 {
@@ -32,7 +31,7 @@ namespace ProductieManager.Rpm.Settings
         {
             try
             {
-                return Database?.GetEntry<ExcelSettings>(listname);
+                return Database?.GetEntry<ExcelSettings>(listname, false);
             }
             catch (Exception e)
             {
@@ -136,7 +135,7 @@ namespace ProductieManager.Rpm.Settings
             try
             {
                 if (Database == null) return xreturn;
-                xreturn = Database.GetAllEntries<ExcelSettings>().ToList();
+                xreturn = Database.GetAllEntries<ExcelSettings>(true).ToList();
             }
             catch (Exception e)
             {
@@ -170,7 +169,7 @@ namespace ProductieManager.Rpm.Settings
             try
             {
                 if (Database == null) return;
-                var xk = Database.GetEntry<ExcelSettings>(Path.GetFileNameWithoutExtension(e.FullPath));
+                var xk = Database.GetEntry<ExcelSettings>(Path.GetFileNameWithoutExtension(e.FullPath), false);
                 if (xk != null)
                     OnLayoutChanged(xk);
             }

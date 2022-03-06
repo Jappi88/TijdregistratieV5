@@ -62,7 +62,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -402,6 +402,12 @@
     <Compile Include="Forms\Chat\ChatForm.Designer.cs">
       <DependentUpon>ChatForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ChooseValuesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChooseValuesForm.Designer.cs">
+      <DependentUpon>ChooseValuesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Combineer\CombineerPeriodeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -455,6 +461,12 @@
     </Compile>
     <Compile Include="Controls\ObjectEditorUI.Designer.cs">
       <DependentUpon>ObjectEditorUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DbSelectorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DbSelectorForm.Designer.cs">
+      <DependentUpon>DbSelectorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Indeling\WerkplaatsIndelingForm.cs">
       <SubType>Form</SubType>
@@ -1481,6 +1493,9 @@
     <EmbeddedResource Include="Forms\Chat\ChatForm.resx">
       <DependentUpon>ChatForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ChooseValuesForm.resx">
+      <DependentUpon>ChooseValuesForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Combineer\CombineerPeriodeForm.resx">
       <DependentUpon>CombineerPeriodeForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1504,6 +1519,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ObjectEditorUI.resx">
       <DependentUpon>ObjectEditorUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DbSelectorForm.resx">
+      <DependentUpon>DbSelectorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Indeling\WerkplaatsIndelingForm.resx">
       <DependentUpon>WerkplaatsIndelingForm.cs</DependentUpon>
@@ -2046,6 +2064,11 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\mixkit-happy-bells-notification-937.wav" />
+    <None Include="Resources\mixkit-alert-bells-echo-765.wav" />
+    <None Include="Resources\database_load_96x96.png" />
+    <None Include="Resources\load_database_96x96.png" />
+    <None Include="Resources\database_21835_96x96.png" />
     <None Include="Resources\share_icon_32x32.png" />
     <None Include="Resources\chat-26_icon_96x96.png" />
     <None Include="Resources\Edit_color_32x32.png" />

@@ -518,6 +518,7 @@ namespace Forms
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "DbUpdater";
             this.Text = "Update Database";
+            this.Title = "Update Database";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DbUpdater_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);

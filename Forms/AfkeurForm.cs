@@ -67,7 +67,7 @@ namespace Forms
                 {
                     Productie.Materialen = xmaterialpanel.Controls.Cast<AfkeurEntryUI>().Select(x => x.Materiaal).ToList();
                     await Productie.UpdateForm(false, false, null,
-                        $"[{Productie.ProductieNr} | {Productie.ArtikelNr}] Afkeur aangepast");
+                        $"[{Productie.ProductieNr} | {Productie.ArtikelNr}] Afkeur Gewijzigd!");
                 }
                 catch (Exception exception)
                 {

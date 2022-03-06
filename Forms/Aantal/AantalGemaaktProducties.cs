@@ -159,7 +159,6 @@ namespace Forms.Aantal
                 if (closeifnocounts && xcontainer.Controls.Count == 0)
                 {
                     this.Close();
-                    this.Dispose();
                 }
             }
             catch (Exception e)

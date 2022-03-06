@@ -433,6 +433,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap choose_database_96x96 {
+            get {
+                object obj = ResourceManager.GetObject("choose_database_96x96", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap clock_go {
             get {
                 object obj = ResourceManager.GetObject("clock_go", resourceCulture);
@@ -546,6 +556,26 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap Count_tool_34564__1_ {
             get {
                 object obj = ResourceManager.GetObject("Count-tool_34564 (1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap database_21835_96x96 {
+            get {
+                object obj = ResourceManager.GetObject("database_21835_96x96", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap database_load_96x96 {
+            get {
+                object obj = ResourceManager.GetObject("database_load_96x96", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1692,6 +1722,24 @@ namespace ProductieManager.Properties {
             get {
                 object obj = ResourceManager.GetObject("minusflat_105990", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream mixkit_alert_bells_echo_765 {
+            get {
+                return ResourceManager.GetStream("mixkit_alert_bells_echo_765", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream mixkit_happy_bells_notification_937 {
+            get {
+                return ResourceManager.GetStream("mixkit_happy_bells_notification_937", resourceCulture);
             }
         }
         

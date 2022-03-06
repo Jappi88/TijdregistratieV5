@@ -8,11 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using System.Windows;
-using Controls;
-using Application = System.Windows.Forms.Application;
 
 namespace Rpm.Productie
 {
@@ -51,6 +47,7 @@ namespace Rpm.Productie
         public override string PersoneelNamen => string.Join(", ", Personen.Select(x => x.PersoneelNaam));
         public List<DeelsGereedMelding> DeelGereedMeldingen { get; set; } = new();
         public override int AanbevolenPersonen { get; set; }
+        public List<string> SharedUsers { get; set; } = new();
 
         private string _Eenheid;
         public override string Eenheid
@@ -618,7 +615,7 @@ namespace Rpm.Productie
                                         per.WerkRooster = x.WerkRooster;
                                     klus.Tijden.WerkRooster = per.WerkRooster;
                                     x.ReplaceKlus(klus);
-                                    _= Manager.Database.PersoneelLijst.Upsert(x.PersoneelNaam.Trim(), x, false,$"Gestart aan klus '{klus.Path}'");
+                                    _= Manager.Database.PersoneelLijst.Upsert(x.PersoneelNaam.Trim(), x, false,$"Gestart aan klus '{klus.Path}'").Result;
                                 }
                             }
 
@@ -949,7 +946,7 @@ namespace Rpm.Productie
 
                     var change =
                         $"[{Path}] {paraaf} heeft is zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u) op {WerkplekkenName}.";
-                    _ = UpdateBewerking(null, change, update, showmessage);
+                    _ = UpdateBewerking(null, change, update, showmessage).Result;
                     if (sendmail)
                         RemoteProductie.RespondByEmail(this, change);
 

@@ -9,14 +9,14 @@ namespace Rpm.SqlLite
     public interface IDbCollection<T>
     {
         public Task<int> Count();
-        public Task<T> FindOne(string id);
-        public Task<List<T>> FindAll();
+        public Task<T> FindOne(string id, bool usesecondary);
+        public Task<List<T>> FindAll(bool usesecondary);
         public Task<List<T>> FindAll(IsValidHandler validhandler);
         public Task<List<T>> FindAll(TijdEntry bereik, IsValidHandler validhandler);
         public Task<List<string>> GetAllIDs(bool checksecondary);
         public Task<List<string>> GetAllPaths(bool checksecondary);
-        public Task<List<T>> FindAll(string[] ids);
-        public Task<List<T>> FindAll(string criteria, bool fullmatch);
+        public Task<List<T>> FindAll(string[] ids, bool usesecondary);
+        public Task<List<T>> FindAll(string criteria, bool fullmatch, bool usesecondary);
         public Task<bool> Replace(string oldid, T newitem, bool onlylocal, string change);
         public Task<bool> Delete(string id);
         public Task<int> DeleteAll();

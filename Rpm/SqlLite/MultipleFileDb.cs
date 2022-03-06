@@ -9,14 +9,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using ProductieManager.Rpm.SqlLite;
 
 namespace Rpm.SqlLite
 {
     public class MultipleFileDb : IDisposable
     {
         private CustomFileWatcher _pathwatcher;
-        private CustomFileWatcher _secondarypathwatcher;
         //private readonly Timer _FileChangedNotifyTimer;
 
         //private static readonly object _locker = new object();
@@ -29,8 +27,6 @@ namespace Rpm.SqlLite
         public SecondaryManageType[] SecondaryManagedTypes { get; private set; }
         public event FileSystemEventHandler FileChanged;
         public event FileSystemEventHandler FileDeleted;
-        public event FileSystemEventHandler SecondaryFileChanged;
-        public event FileSystemEventHandler SecondaryFileDeleted;
         public event ProgressChangedHandler ProgressChanged;
         public bool MonitorCorrupted { get; set; }
         public bool RaiseChangeEvent { get; set; } = true;
@@ -139,70 +135,19 @@ namespace Rpm.SqlLite
 
         public void DisposeSecondayPath()
         {
-            if (_secondarypathwatcher != null)
-            {
-                _secondarypathwatcher.FileDeleted -= _secondarypathwatcher_Deleted;
-                _secondarypathwatcher.FileChanged -= _secondarypathwatcher_Changed;
-                _secondarypathwatcher.Dispose();
-                _secondarypathwatcher = null;
-            }
-
             SecondaryManagedTypes = new SecondaryManageType[] { };
             SecondaryDestination = null;
         }
 
-        private void _secondarypathwatcher_Changed(object sender, FileSystemEventArgs e)
-        {
-            if (!_canread) return;
-            if (!RaiseChangeEvent) return;
-            bool valid = false;
-            for (int i = 0; i < 5; i++)
-            {
-                try
-                {
-                    using var fs = new FileStream(e.FullPath, FileMode.Open);
-                    fs.Close();
-                    valid = true;
-                    break;
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception);
-                }
-            }
-
-            if (valid)
-                OnSecondaryFileChanged(e);
-            //_FileChangedNotifyTimer?.Stop();
-            //var rpath = GetReadPath(true).ToLower();
-            //if (!e.FullPath.ToLower().StartsWith(rpath)) return;
-            //lock (_changes)
-            //{
-            //    if (!_changes.Any(x => string.Equals(x, e.FullPath, StringComparison.CurrentCultureIgnoreCase)))
-            //        _changes.Add(e.FullPath);
-            //}
-            //_FileChangedNotifyTimer?.Start();
-        }
-
-        private void _secondarypathwatcher_Deleted(object sender, FileSystemEventArgs e)
-        {
-            OnSecondayFileDeleted(e);
-        }
 
         public bool SetSecondaryPath(string path, SecondaryManageType[] managetypes)
         {
             try
             {
-                return false;
                 if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
                 {
                     SecondaryDestination = path;
                     SecondaryManagedTypes = managetypes;
-                    _secondarypathwatcher?.Dispose();
-                    _secondarypathwatcher = new CustomFileWatcher(path, "*.rpm");
-                    _secondarypathwatcher.Filter = "*.rpm";
-                    _secondarypathwatcher.FileDeleted += _secondarypathwatcher_Deleted;
-                    _secondarypathwatcher.FileChanged += _secondarypathwatcher_Changed;
                     return true;
                 }
 
@@ -217,14 +162,14 @@ namespace Rpm.SqlLite
 
         public string Path { get; private set; }
 
-        public List<T> GetAllEntries<T>(List<string> skip = default)
+        public List<T> GetAllEntries<T>(bool usesecondary, List<string> skip = default)
         {
 
             var xreturn = new List<T>();
             try
             {
                 if (!CanRead) return xreturn;
-                string path = GetReadPath(true);
+                string path = GetReadPath(usesecondary);
                 var files = Directory.GetFiles(path, "*.rpm").ToList();
                 if (skip is {Count: > 0})
                 {
@@ -276,7 +221,7 @@ namespace Rpm.SqlLite
             }
         }
 
-        public List<T> GetEntries<T>(string[] ids)
+        public List<T> GetEntries<T>(string[] ids, bool usesecondary)
         {
             //lock (_locker)
             //{
@@ -286,7 +231,7 @@ namespace Rpm.SqlLite
                 if (!CanRead) return xreturn;
                 foreach (var id in ids)
                 {
-                    var xent = GetEntry<T>(id);
+                    var xent = GetEntry<T>(id, usesecondary);
                     if (xent != null)
                         xreturn.Add(xent);
                 }
@@ -364,21 +309,21 @@ namespace Rpm.SqlLite
             //}
         }
 
-        public T GetEntry<T>(string id)
+        public T GetEntry<T>(string id, bool usesecondary)
         {
             if (!CanRead) return default;
-            string path = GetReadPath(true,$"{id}.rpm");
+            string path = GetReadPath(usesecondary, $"{id}.rpm");
             path = $"{path}\\{id}.rpm";
             return GetInstanceFromFile<T>(path, MonitorCorrupted);
         }
 
-        public List<T> FindEntries<T>(string criterias, bool fullmatch)
+        public List<T> FindEntries<T>(string criterias, bool fullmatch, bool usesecondary)
         {
             //lock (_locker)
             //{
                 var xreturn = new List<T>();
                 if (!CanRead) return xreturn;
-                string xpath = GetReadPath(false);
+                string xpath = GetReadPath(usesecondary);
                 if (criterias != null)
                 {
                     string[] crits = criterias.Split(';');
@@ -509,7 +454,7 @@ namespace Rpm.SqlLite
                     if (!CanRead) return false;
                     if (string.IsNullOrEmpty(filepath)) return false;
                     //string tmp = Manager.TempPath + "\\" + System.IO.Path.GetRandomFileName();
-                    byte[] bytes = null;
+                    byte[] bytes;
                     using var fs = new MemoryStream();
                     {
                         RpmPacket packet = CreatePacketFromObject(data);
@@ -850,16 +795,6 @@ namespace Rpm.SqlLite
             FileDeleted?.Invoke(this, e);
         }
 
-        protected virtual void OnSecondaryFileChanged(FileSystemEventArgs e)
-        {
-            SecondaryFileChanged?.Invoke(this, e);
-        }
-
-        protected virtual void OnSecondayFileDeleted(FileSystemEventArgs e)
-        {
-            SecondaryFileDeleted?.Invoke(this, e);
-        }
-
         protected virtual void OnProgressChanged(ProgressArg arg)
         {
             ProgressChanged?.Invoke(this, arg);
@@ -890,7 +825,6 @@ namespace Rpm.SqlLite
             {
                // _FileChangedNotifyTimer?.Dispose();
                 _pathwatcher?.Dispose();
-                _secondarypathwatcher?.Dispose();
             }
 
             _canread = false;
@@ -899,8 +833,6 @@ namespace Rpm.SqlLite
             // TODO: set large fields to null.
             FileChanged = null;
             FileDeleted = null;
-            SecondaryFileChanged = null;
-            SecondaryFileDeleted = null;
             ProgressChanged = null;
             SecondaryDestination = null;
             SecondaryManagedTypes = null;

@@ -29,9 +29,16 @@ namespace ProductieManager.Rpm.Misc
 
         private void _Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            _Timer.Stop();
-           CheckFiles();
-           _Timer.Start();
+            try
+            {
+                _Timer.Stop();
+                CheckFiles();
+                _Timer.Start();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
         }
 
         private void CheckFiles()
@@ -40,14 +47,15 @@ namespace ProductieManager.Rpm.Misc
             {
                 if (!Directory.Exists(Path))
                     return;
-                var xfiles = Directory.GetFiles(Path,Filter);
-               
-                foreach (var file in xfiles)
+                var xfiles = Directory.GetFiles(Path, Filter);
+
+                for (var i = 0; i < xfiles.Length; i++)
                 {
+                    var file = xfiles[i];
                     var fi = new FileInfo(file);
                     if (Records.ContainsKey(file))
                     {
-                        
+
                         if (Records[file] < fi.LastWriteTime)
                         {
                             Records[file] = fi.LastWriteTime;
@@ -60,13 +68,16 @@ namespace ProductieManager.Rpm.Misc
                         OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Created, Path, fi.Name));
                     }
                 }
-                var xold = Records.Where(x =>
-                    !xfiles.Any(f => string.Equals(f, x.Key, StringComparison.CurrentCultureIgnoreCase))).ToList();
-                xold.ForEach(x =>
+
+                for (int i = 0; i < Records.Count; i++)
                 {
-                    Records.Remove(x.Key);
-                    OnFileDeleted(new FileSystemEventArgs(WatcherChangeTypes.Deleted, Path, System.IO.Path.GetFileName(x.Key)));
-                });
+                    var xrec = Records.ElementAt(i);
+                    if (xfiles.Any(f => string.Equals(f, xrec.Key, StringComparison.CurrentCultureIgnoreCase)))
+                        continue;
+                    Records.Remove(xrec.Key);
+                    OnFileDeleted(new FileSystemEventArgs(WatcherChangeTypes.Deleted, Path,
+                        System.IO.Path.GetFileName(xrec.Key)));
+                }
             }
             catch (Exception e)
             {
@@ -111,7 +122,7 @@ namespace ProductieManager.Rpm.Misc
 
             if (disposing)
             {
-                _Timer?.Dispose();
+                _Timer?.Stop();
             }
             
             Records?.Clear();

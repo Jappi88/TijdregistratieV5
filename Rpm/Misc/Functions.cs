@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Interop;
+using Application = System.Windows.Forms.Application;
 using IWin32Window = System.Windows.Forms.IWin32Window;
 using Size = System.Drawing.Size;
 
@@ -2237,12 +2238,17 @@ namespace Rpm.Misc
         {
             if (change == null)
                 change = new UserChange(message, type);
-            else
+            else if(!string.IsNullOrEmpty(message))
+            {
                 change.Change = message;
+                change.ReadBy.Clear();
+            }
             change.DbIds[type] = DateTime.Now;
             change.PcId = Manager.SystemId;
             change.TimeChanged = DateTime.Now;
             change.User = Manager.Opties == null ? Manager.SystemId : Manager.Opties.Username;
+            if (!change.ReadBy.Contains(change.User))
+                change.ReadBy.Add(change.User);
             return change;
         }
 
@@ -2297,6 +2303,31 @@ namespace Rpm.Misc
                 Assembly.GetExecutingAssembly().GetName()
                     .Name; // for getting the name of exe file( it can change when you change the name of exe)
             StartExeWhenPcStartup(fileName, path, autostart); // start the exe autometically when computer is stared.
+        }
+
+        public static Form GetParentForm(this Form form)
+        {
+            Form xform = null;
+            try
+            {
+
+                if (form.ParentForm != null)
+                    xform = form.ParentForm;
+                else
+                {
+                    var xforms = Application.OpenForms.Cast<Form>().Where(x=> x is not StartProductie).ToList();
+                    var xcur = xforms.IndexOf(form) - 1;
+                    if (xcur > -1)
+                        xform = xforms[xcur];
+                }
+                xform ??= Application.OpenForms["Mainform"];
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return xform;
         }
 
         public static void StartExeWhenPcStartup(string filename, string filepath, bool startup)

@@ -68,8 +68,6 @@ namespace Rpm.SqlLite
                     {
                         MultiFiles.FileChanged += MultiFiles_FileChanged;
                         MultiFiles.FileDeleted += MultiFiles_FileDeleted;
-                        MultiFiles.SecondaryFileChanged += MultiFiles_SecondaryFileChanged;
-                        MultiFiles.SecondaryFileDeleted += MultiFiles_SecondaryFileDeleted;
                     }
 
                     break;
@@ -81,16 +79,6 @@ namespace Rpm.SqlLite
         }
 
         #region Multi Events
-        private void MultiFiles_SecondaryFileDeleted(object sender, System.IO.FileSystemEventArgs e)
-        {
-          OnInstanceDeleted(e);
-        }
-
-        private void MultiFiles_SecondaryFileChanged(object sender, System.IO.FileSystemEventArgs e)
-        {
-           OnInstanceChanged(e);
-        }
-
         private void MultiFiles_FileDeleted(object sender, System.IO.FileSystemEventArgs e)
         {
             OnInstanceDeleted(e);
@@ -130,7 +118,7 @@ namespace Rpm.SqlLite
 
 
 
-        public Task<T> FindOne(string id)
+        public Task<T> FindOne(string id, bool usesecondary)
         {
             return Task.Run(async () =>
             {
@@ -143,7 +131,7 @@ namespace Rpm.SqlLite
                             //return LocalDbCollection.FindById(id);
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
-                            return MultiFiles.GetEntry<T>(id);
+                            return MultiFiles.GetEntry<T>(id, usesecondary);
                         case DbInstanceType.Server:
                             if (ServerDb == null) throw new NullReferenceException();
                             return await ServerDb.GetInstance<T>(id);
@@ -158,7 +146,7 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<List<T>> FindAll()
+        public Task<List<T>> FindAll(bool usesecondary)
         {
             return Task.Run(async () =>
             {
@@ -173,7 +161,7 @@ namespace Rpm.SqlLite
                             break;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
-                            xreturn = MultiFiles.GetAllEntries<T>();
+                            xreturn = MultiFiles.GetAllEntries<T>(usesecondary);
                             break;
                         case DbInstanceType.Server:
                             if (ServerDb == null) throw new NullReferenceException();
@@ -313,7 +301,7 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<List<T>> FindAll(string[] ids)
+        public Task<List<T>> FindAll(string[] ids, bool usesecondary)
         {
             return Task.Run(async () =>
             {
@@ -334,7 +322,7 @@ namespace Rpm.SqlLite
                             break;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
-                            xreturn = MultiFiles.GetEntries<T>(ids);
+                            xreturn = MultiFiles.GetEntries<T>(ids, usesecondary);
                             break;
                         case DbInstanceType.Server:
                             if (ServerDb == null) throw new NullReferenceException();
@@ -350,7 +338,7 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<List<T>> FindAll(string criteria, bool fullmatch)
+        public Task<List<T>> FindAll(string criteria, bool fullmatch, bool usesecondary)
         {
             return Task.Run(() =>
             {
@@ -364,7 +352,7 @@ namespace Rpm.SqlLite
                             break;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
-                            xreturn = MultiFiles.FindEntries<T>(criteria,fullmatch);
+                            xreturn = MultiFiles.FindEntries<T>(criteria,fullmatch, usesecondary);
                             break;
                         case DbInstanceType.Server:
                             if (ServerDb == null) throw new NullReferenceException();

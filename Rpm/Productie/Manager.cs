@@ -49,7 +49,7 @@ namespace Rpm.Productie
         /// <summary>
         /// De productiechat
         /// </summary>
-        public static ProductieChat ProductieChat { get; private set; } = new();
+        public static ProductieChat ProductieChat { get; private set; }
         /// <summary>
         /// De database die de bestanden kan lezen, schrijven en zoeken
         /// </summary>
@@ -255,14 +255,15 @@ namespace Rpm.Productie
                             return false;
                     }
 
+                    Close();
                     LoadPath(path);
-
                     Database = new LocalDatabase(this, SystemId, DbPath, true)
                     {
                         LoggerEnabled = LoggerEnabled,
                         NotificationEnabled = false
                     }; 
                     Database.LoadMultiFiles().Wait();
+                    ProductieChat = new ProductieChat();
                     ProductieProvider = new ProductieProvider();
                     // LocalConnection = new LocalService();
                     //Server = new SqlDatabase();
@@ -2187,6 +2188,14 @@ namespace Rpm.Productie
         /// </summary>
         public void Dispose()
         {
+            Close();
+            _syncTimer?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public void Close()
+        {
             IsLoaded = false;
             if (LogedInGebruiker != null)
                 LogOut(null, false);
@@ -2196,17 +2205,16 @@ namespace Rpm.Productie
             //_backemailchecker?.Dispose();
             _fileWatchers?.ForEach(x => x.Dispose());
             _syncTimer?.Stop();
-            _syncTimer?.Dispose();
             Database?.Dispose();
             ProductieProvider?.Dispose();
+            ProductieChat?.Dispose();
             Opmerkingen = null;
+            ProductieChat = null;
             Klachten?.Dispose();
             Verpakkingen?.Dispose();
             SporenBeheer?.Dispose();
             ArtikelRecords?.Dispose();
             ListLayouts?.Dispose();
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         /// <summary>

@@ -142,7 +142,7 @@ namespace Forms.ArtikelRecords
             {
                 if (Manager.ArtikelRecords?.Database == null) return;
                 if (reloaddb)
-                    Records = Manager.ArtikelRecords.Database.GetAllEntries<ArtikelRecord>(new List<string>()
+                    Records = Manager.ArtikelRecords.Database.GetAllEntries<ArtikelRecord>(true,new List<string>()
                         {"algemeen"});
                 xArtikelList.BeginUpdate();
                 xArtikelList.SetObjects(Records.Where(x => IsAllowed(x) && !x.IsWerkplek));
@@ -150,6 +150,8 @@ namespace Forms.ArtikelRecords
                 xwerkpleklist.BeginUpdate();
                 xwerkpleklist.SetObjects(Records.Where(x => IsAllowed(x) && x.IsWerkplek));
                 xwerkpleklist.EndUpdate();
+                metroTabPage1.Text = $"Artikelen[{xArtikelList.Items.Count}]";
+                metroTabPage2.Text = $"Werkplaatsen[{xwerkpleklist.Items.Count}]";
                 EnableButton(true);
             }
             catch (Exception e)
@@ -252,7 +254,43 @@ namespace Forms.ArtikelRecords
                 if (index > -1)
                     Records[index] = record;
                 else Records.Add(record);
+                RemoveOld();
                 EnableButton(true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        private void RemoveOld()
+        {
+            try
+            {
+                var xitems = xArtikelList.Objects.Cast<ArtikelRecord>().ToList();
+                var xwps = xwerkpleklist.Objects.Cast<ArtikelRecord>().ToList();
+                var xremoveitems = xitems.Where(x => !Records.Any(r => r.Equals(x))).ToList();
+                var xremovewps = xwps.Where(x => !Records.Any(r => r.Equals(x))).ToList();
+                if (xremoveitems.Count > 0)
+                {
+                    xArtikelList.BeginUpdate();
+                    for (int i = 0; i < xremoveitems.Count; i++)
+                    {
+                        xArtikelList.RemoveObject(xremoveitems[i]);
+                    }
+
+                    xArtikelList.EndUpdate();
+                }
+                if (xremovewps.Count > 0)
+                {
+                    xwerkpleklist.BeginUpdate();
+                    for (int i = 0; i < xremovewps.Count; i++)
+                    {
+                        xwerkpleklist.RemoveObject(xremovewps[i]);
+                    }
+
+                    xwerkpleklist.EndUpdate();
+                }
             }
             catch (Exception e)
             {
@@ -283,7 +321,7 @@ namespace Forms.ArtikelRecords
             {
                 var xname = Path.GetFileNameWithoutExtension(e.FullPath);
                 if (xname.ToLower().StartsWith("algemeen")) return;
-                var xrecord = Manager.ArtikelRecords.Database.GetEntry<ArtikelRecord>(xname);
+                var xrecord = Manager.ArtikelRecords.Database.GetEntry<ArtikelRecord>(xname, false);
                 if (xrecord != null)
                 {
                     if (this.InvokeRequired)
@@ -305,7 +343,7 @@ namespace Forms.ArtikelRecords
         }
 
         private string _Filter = String.Empty;
-        private void xsearchArtikel_TextChanged(object sender, System.EventArgs e)
+        private void xsearchArtikel_TextChanged(object sender, EventArgs e)
         {
             string filter = xsearchbox.Text.Replace("Zoeken...", "").Trim().ToLower();
             if (string.Equals(filter, _Filter, StringComparison.CurrentCultureIgnoreCase)) return;
@@ -317,20 +355,6 @@ namespace Forms.ArtikelRecords
         {
             if (xsearchbox.Text.Trim() == "")
                 xsearchbox.Text = @"Zoeken...";
-        }
-
-        private void ArtikelRecordsForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (Manager.ArtikelRecords?.Database == null) return;
-            Manager.ArtikelRecords.ArtikelChanged -= Database_InstanceChanged;
-            Manager.ArtikelRecords.ArtikelDeleted -= Database_InstanceDeleted;
-        }
-
-        private void ArtikelRecordsForm_Shown(object sender, System.EventArgs e)
-        {
-            if (Manager.ArtikelRecords?.Database == null) return;
-            Manager.ArtikelRecords.ArtikelChanged += Database_InstanceChanged;
-            Manager.ArtikelRecords.ArtikelDeleted += Database_InstanceDeleted;
         }
 
         private void xArtikelList_SelectedIndexChanged(object sender, EventArgs e)

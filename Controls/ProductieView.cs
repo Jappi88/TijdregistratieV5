@@ -1,4 +1,15 @@
-﻿using AutoUpdaterDotNET;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Media;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using AutoUpdaterDotNET;
 using Forms;
 using Forms.Aantal;
 using Forms.ArtikelRecords;
@@ -18,18 +29,6 @@ using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.SqlLite;
 using Rpm.Various;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Forms.MetroBase;
-using ProductieManager.Forms.Welcome;
 using Various;
 
 namespace Controls
@@ -41,7 +40,7 @@ namespace Controls
             InitializeComponent();
             _specialRoosterWatcher = new Timer();
             _specialRoosterWatcher.Interval = 60000; //1 minuut;
-            _specialRoosterWatcher.Tick += (x, y) => CheckForSpecialRooster(false);
+            _specialRoosterWatcher.Tick += (_, _) => CheckForSpecialRooster(false);
             DailyMessage = new Daily
             {
                 ImageList =
@@ -54,8 +53,8 @@ namespace Controls
 
         private void DailyMessage_DailyCreated(object sender, EventArgs e)
         {
-            if (this.InvokeRequired)
-                this.Invoke(new MethodInvoker(ShowDaily));
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(ShowDaily));
             else ShowDaily();
         }
 
@@ -181,10 +180,10 @@ namespace Controls
             xtabpage.Tag = entry;
             var xprodlist = new WerkPlekkenUI();
             xprodlist.AutoScroll = true;
-            xprodlist.BackColor = System.Drawing.Color.White;
-            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            xprodlist.OnPlekkenChanged += (sender, args) =>
+            xprodlist.BackColor = Color.White;
+            xprodlist.Dock = DockStyle.Fill;
+            xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            xprodlist.OnPlekkenChanged += (_, _) =>
             {
                 if (xprodlist.Parent is MetroTabPage page)
                 {
@@ -220,10 +219,10 @@ namespace Controls
             xtabpage.Tag = entry;
             var xprodlist = new RecentGereedMeldingenUI();
             xprodlist.AutoScroll = true;
-            xprodlist.BackColor = System.Drawing.Color.White;
-            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            xprodlist.ItemCountChanged += (sender, args) =>
+            xprodlist.BackColor = Color.White;
+            xprodlist.Dock = DockStyle.Fill;
+            xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            xprodlist.ItemCountChanged += (_, _) =>
             {
                 if (xprodlist.Parent is MetroTabPage page)
                 {
@@ -272,16 +271,16 @@ namespace Controls
                 xtabpage.Tag = entry;
                 var xprodlist = new ProductieListControl();
                 xprodlist.AutoScroll = true;
-                xprodlist.BackColor = System.Drawing.Color.White;
+                xprodlist.BackColor = Color.White;
                 xprodlist.CanLoad = true;
-                xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+                xprodlist.Dock = DockStyle.Fill;
                 xprodlist.EnableEntryFiltering = true;
                 xprodlist.EnableFiltering = true;
                 xprodlist.EnableSync = false;
-                xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
                 xprodlist.IsBewerkingView = true;
                 xprodlist.ListName = entry.Name;
-                xprodlist.ItemCountChanged += (sender, args) =>
+                xprodlist.ItemCountChanged += (_, _) =>
                 {
                     if (xprodlist.Parent is MetroTabPage page)
                     {
@@ -335,18 +334,18 @@ namespace Controls
                 xtabpage.Tag = entry;
                 var xprodlist = new ProductieListControl();
                 xprodlist.AutoScroll = true;
-                xprodlist.BackColor = System.Drawing.Color.White;
+                xprodlist.BackColor = Color.White;
                 xprodlist.CanLoad = true;
-                xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
+                xprodlist.Dock = DockStyle.Fill;
                 xprodlist.EnableEntryFiltering = true;
                 xprodlist.EnableFiltering = true;
                 xprodlist.EnableSync = false;
-                xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
                 xprodlist.IsBewerkingView = true;
                 xprodlist.ListName = entry.Name;
                 if (xfilter.ListNames.IndexOf(entry.Name) == -1)
                     xfilter.ListNames.Add(entry.Name);
-                xprodlist.ItemCountChanged += (sender, args) =>
+                xprodlist.ItemCountChanged += (_, _) =>
                 {
                     if (xprodlist.Parent is MetroTabPage page)
                     {
@@ -387,11 +386,11 @@ namespace Controls
             var xprodlist = new ZoekProductiesUI();
 
             xprodlist.AutoScroll = true;
-            xprodlist.BackColor = System.Drawing.Color.White;
-            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.BackColor = Color.White;
+            xprodlist.Dock = DockStyle.Fill;
+            xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             xprodlist.Name = entry.Name;
-            xprodlist.ClosedClicked += (x, y) =>
+            xprodlist.ClosedClicked += (_, _) =>
             {
                 if (xprodlist.Parent is MetroTabPage page)
                     metroCustomTabControl1.CloseTab(page);
@@ -418,11 +417,11 @@ namespace Controls
             var xprodlist = new AlleStoringenUI();
 
             xprodlist.AutoScroll = true;
-            xprodlist.BackColor = System.Drawing.Color.White;
-            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.BackColor = Color.White;
+            xprodlist.Dock = DockStyle.Fill;
+            xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             xprodlist.Name = entry.Name;
-            xprodlist.CloseClicked += (x, y) =>
+            xprodlist.CloseClicked += (_, _) =>
             {
                 if (xprodlist.Parent is MetroTabPage page)
                     metroCustomTabControl1.CloseTab(page);
@@ -450,11 +449,11 @@ namespace Controls
             var xprodlist = new ArtikelenVerbruikUI();
 
             xprodlist.AutoScroll = true;
-            xprodlist.BackColor = System.Drawing.Color.White;
-            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.BackColor = Color.White;
+            xprodlist.Dock = DockStyle.Fill;
+            xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             xprodlist.Name = entry.Name;
-            xprodlist.CloseClicked += (x, y) =>
+            xprodlist.CloseClicked += (_, _) =>
             {
                 if (xprodlist.Parent is MetroTabPage page)
                     metroCustomTabControl1.CloseTab(page);
@@ -482,9 +481,9 @@ namespace Controls
             var xprodlist = new PersoneelIndelingUI();
 
             xprodlist.AutoScroll = true;
-            xprodlist.BackColor = System.Drawing.Color.White;
-            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.BackColor = Color.White;
+            xprodlist.Dock = DockStyle.Fill;
+            xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             xprodlist.Name = entry.Name;
            
             xtabpage.Controls.Add(xprodlist);
@@ -508,9 +507,9 @@ namespace Controls
             var xprodlist = new WerkplaatsIndelingUI();
 
             xprodlist.AutoScroll = true;
-            xprodlist.BackColor = System.Drawing.Color.White;
-            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.BackColor = Color.White;
+            xprodlist.Dock = DockStyle.Fill;
+            xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             xprodlist.Name = entry.Name;
           
             xtabpage.Controls.Add(xprodlist);
@@ -534,9 +533,9 @@ namespace Controls
             var xprodlist = new PersoneelsUI();
 
             xprodlist.AutoScroll = true;
-            xprodlist.BackColor = System.Drawing.Color.White;
-            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.BackColor = Color.White;
+            xprodlist.Dock = DockStyle.Fill;
+            xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             xprodlist.Name = entry.Name;
           
             xtabpage.Controls.Add(xprodlist);
@@ -560,9 +559,9 @@ namespace Controls
             var xprodlist = new ArtikelsUI();
 
             xprodlist.AutoScroll = true;
-            xprodlist.BackColor = System.Drawing.Color.White;
-            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.BackColor = Color.White;
+            xprodlist.Dock = DockStyle.Fill;
+            xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             xprodlist.Name = entry.Name;
             xtabpage.Controls.Add(xprodlist);
             metroCustomTabControl1.SuspendLayout();
@@ -585,11 +584,11 @@ namespace Controls
             var xprodlist = new ArtikelRecordsUI();
 
             xprodlist.AutoScroll = true;
-            xprodlist.BackColor = System.Drawing.Color.White;
-            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.BackColor = Color.White;
+            xprodlist.Dock = DockStyle.Fill;
+            xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             xprodlist.Name = entry.Name;
-            xprodlist.CloseClicked += (x, y) =>
+            xprodlist.CloseClicked += (_, _) =>
             {
                 if (xprodlist.Parent is MetroTabPage page)
                     metroCustomTabControl1.CloseTab(page);
@@ -624,11 +623,11 @@ namespace Controls
             xprodlist.MaxUitgangsLengte = 12450;
             xprodlist.RestStuk = 50;
             xprodlist.AutoScroll = true;
-            xprodlist.BackColor = System.Drawing.Color.White;
-            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.BackColor = Color.White;
+            xprodlist.Dock = DockStyle.Fill;
+            xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             xprodlist.Name = entry.Name;
-            xprodlist.CloseClicked += (x, y) =>
+            xprodlist.CloseClicked += (_, _) =>
             {
                 if (xprodlist.Parent is MetroTabPage page)
                     metroCustomTabControl1.CloseTab(page);
@@ -653,9 +652,9 @@ namespace Controls
             var xprodlist = new AlleNotitiesUI();
 
             xprodlist.AutoScroll = true;
-            xprodlist.BackColor = System.Drawing.Color.White;
-            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.BackColor = Color.White;
+            xprodlist.Dock = DockStyle.Fill;
+            xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             xprodlist.Name = entry.Name;
             xtabpage.Controls.Add(xprodlist);
             metroCustomTabControl1.SuspendLayout();
@@ -678,9 +677,9 @@ namespace Controls
             var xprodlist = new ProductieOverzichtUI();
 
             xprodlist.AutoScroll = true;
-            xprodlist.BackColor = System.Drawing.Color.White;
-            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.BackColor = Color.White;
+            xprodlist.Dock = DockStyle.Fill;
+            xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             xprodlist.Name = entry.Name;
            
             xtabpage.Controls.Add(xprodlist);
@@ -703,9 +702,9 @@ namespace Controls
             var xprodlist = new ChartView();
 
             xprodlist.AutoScroll = true;
-            xprodlist.BackColor = System.Drawing.Color.White;
-            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.BackColor = Color.White;
+            xprodlist.Dock = DockStyle.Fill;
+            xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             xprodlist.Name = entry.Name;
             
             xtabpage.Controls.Add(xprodlist);
@@ -729,9 +728,9 @@ namespace Controls
             var xprodlist = new ProductieChatUI();
             xprodlist._Selected = username;
             xprodlist.AutoScroll = true;
-            xprodlist.BackColor = System.Drawing.Color.White;
-            xprodlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            xprodlist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xprodlist.BackColor = Color.White;
+            xprodlist.Dock = DockStyle.Fill;
+            xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             xprodlist.Name = entry.Name;
 
             xtabpage.Controls.Add(xprodlist);
@@ -998,8 +997,8 @@ namespace Controls
         {
             try
             {
-                if (this.Disposing || this.IsDisposed) return;
-                this.BeginInvoke(new Action(() =>
+                if (Disposing || IsDisposed) return;
+                BeginInvoke(new Action(() =>
                 {
                     try
                     {
@@ -1039,13 +1038,16 @@ namespace Controls
 
         public void InitEvents()
         {
+            //Manager.OnSettingsChanging += Manager_OnSettingsChanging;
             Manager.OnSettingsChanged += _manager_OnSettingsChanged;
             //Manager.OnProductiesLoaded += Manager_OnProductiesChanged;
             Manager.OnLoginChanged += _manager_OnLoginChanged;
             Manager.OnFormulierActie += Manager_OnFormulierActie;
+            Manager.OnFormulierChanged += Manager_OnFormulierChanged;
             //Manager.DbUpdater.DbEntryUpdated += DbUpdater_DbEntryUpdated;
             //Manager.OnDbBeginUpdate += Manager_OnDbBeginUpdate;
             //Manager.OnDbEndUpdate += Manager_OnDbEndUpdate;
+            Manager.OnManagerLoading += Manager_OnManagerLoading;
             Manager.OnManagerLoaded += _manager_OnManagerLoaded;
             Manager.OpmerkingenChanged += Opmerkingen_OnOpmerkingenChanged;
             ProductieChat.MessageRecieved += ProductieChat_MessageRecieved;
@@ -1064,6 +1066,70 @@ namespace Controls
             _manager.OnShutdown += _manager_OnShutdown;
         }
 
+        private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
+        {
+            if(Disposing || IsDisposed) return;
+            try
+            {
+                BeginInvoke(new Action(()=> CheckForShared(changedform)));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        private void CheckForShared(ProductieFormulier form)
+        {
+            try
+            {
+                if (form?.Bewerkingen == null || Manager.Opties == null) return;
+                if (form.LastChanged == null) return;
+                if (form.LastChanged.ReadBy.Any(x => string.Equals(x, Manager.Opties.Username,
+                        StringComparison.CurrentCultureIgnoreCase))) return;
+                if (string.Equals(form.LastChanged.User, Manager.Opties.Username,
+                        StringComparison.CurrentCultureIgnoreCase)) return;
+                var bw = form.Bewerkingen.FirstOrDefault(x => x.SharedUsers.Any(s =>
+                    string.Equals(s, Manager.Opties.Username, StringComparison.CurrentCultureIgnoreCase)));
+                if (bw == null) return;
+                Task.Factory.StartNew(() =>
+                {
+                    using var soundPlayer = new SoundPlayer(Resources.mixkit_alert_bells_echo_765);
+                    soundPlayer.Play();
+                });
+                if (bw.IsAllowed())
+                {
+                    var xprod = ShowProductieForm(this, form, true, bw);
+                    if (xprod != null)
+                        xprod.TabControl.SelectedIndex = xprod.TabControl.TabPages.Count - 1;
+                }
+
+                form.UpdateForm(true, false, null, "", true, false, false);
+                Manager.RemoteMessage(form.LastChanged.CreateMessage(DbType.Producties));
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        private void Manager_OnManagerLoading(ref bool cancel)
+        {
+            if (Disposing || IsDisposed) return;
+            try
+            {
+                if (Manager.Opties != null)
+                    Invoke(new Action(SaveLayouts));
+                BeginInvoke(new Action(CloseAllTabs));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         private void Manager_FilterChanged(object sender, EventArgs e)
         {
             if (tileMainView1.InvokeRequired)
@@ -1075,14 +1141,14 @@ namespace Controls
         private DialogResult Manager_RequestRespondDialog(object sender, string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon, string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null, Image customImage = null, MetroColorStyle style = MetroColorStyle.Default)
         {
             var xret = DialogResult.Cancel;
-            if (this.InvokeRequired)
-                this.Invoke(new MethodInvoker(() =>
-                    xret = DoOpmerking(sender, message, title, buttons, icon, chooseitems, custombuttons, customImage, style)));
-            else xret = DoOpmerking(sender, message, title, buttons, icon, chooseitems, custombuttons, customImage, style);
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(() =>
+                    xret = DoOpmerking(message, title, buttons, icon, chooseitems, custombuttons, customImage, style)));
+            else xret = DoOpmerking(message, title, buttons, icon, chooseitems, custombuttons, customImage, style);
             return xret;
         }
 
-        private DialogResult DoOpmerking(object sender, string message, string title, MessageBoxButtons buttons,
+        private DialogResult DoOpmerking(string message, string title, MessageBoxButtons buttons,
             MessageBoxIcon icon, string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null,
             Image customImage = null, MetroColorStyle style = MetroColorStyle.Default)
         {
@@ -1093,8 +1159,10 @@ namespace Controls
 
         public void DetachEvents()
         {
+            //Manager.OnSettingsChanging -= Manager_OnSettingsChanging;
             Manager.OnSettingsChanged -= _manager_OnSettingsChanged;
             Manager.OnFormulierActie -= Manager_OnFormulierActie;
+            Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
             // Manager.OnProductiesLoaded -= Manager_OnProductiesChanged;
             //Manager.DbUpdater.DbEntryUpdated -= DbUpdater_DbEntryUpdated;
             Manager.OnLoginChanged -= _manager_OnLoginChanged;
@@ -1107,6 +1175,7 @@ namespace Controls
             //Manager.OnDbBeginUpdate -= Manager_OnDbBeginUpdate;
             //Manager.OnDbEndUpdate -= Manager_OnDbEndUpdate;
             Manager.OnManagerLoaded -= _manager_OnManagerLoaded;
+            Manager.OnManagerLoading -= Manager_OnManagerLoading;
 
             Manager.KlachtChanged -= Klachten_KlachtChanged;
             Manager.KlachtDeleted -= Klachten_KlachtChanged;
@@ -1122,18 +1191,26 @@ namespace Controls
             try
             {
                 DetachEvents();
-                for (int i = 0; i < metroCustomTabControl1.TabCount; i++)
-                {
-                    var xtab = metroCustomTabControl1.TabPages[i];
-                    CloseTabPage(xtab,false);
-                    metroCustomTabControl1.TabPages.Remove(xtab);
-                    i--;
-                }
-                
+
+                CloseAllTabs();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+            }
+        }
+
+        public void CloseAllTabs()
+        {
+            for (int i = 0; i < metroCustomTabControl1.TabCount; i++)
+            {
+                var xtab = metroCustomTabControl1.TabPages[i];
+                if (xtab.Tag is TileInfoEntry)
+                {
+                    CloseTabPage(xtab, false);
+                    metroCustomTabControl1.TabPages.Remove(xtab);
+                    i--;
+                }
             }
         }
 
@@ -1182,15 +1259,15 @@ namespace Controls
 
         private void UpdateKlachtButton()
         {
-            if (this.InvokeRequired)
-                this.Invoke(new MethodInvoker(xUpdateKlachtButton));
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(xUpdateKlachtButton));
             else xUpdateKlachtButton();
         }
 
         private void UpdateVerpakkingenButton()
         {
-            if (this.InvokeRequired)
-                this.Invoke(new MethodInvoker(xUpdateVerpakkingenButton));
+            if (InvokeRequired)
+                Invoke(new MethodInvoker(xUpdateVerpakkingenButton));
             else xUpdateVerpakkingenButton();
         }
 
@@ -1212,7 +1289,7 @@ namespace Controls
                     var x0 = xkl.Count == 1 ? "is" : "zijn";
                     var x1 = xkl.Count == 1 ? "klacht" : "klachten";
                     if (XMessageBox.Show(this,$"Er {x0} {xkl.Count} nieuwe {x1}!\n\n" +
-                                         $"Nu bekijken?", $"Nieuwe {x1}", MessageBoxButtons.YesNo, Resources.Leave_80_icon_icons_com_57305_128x128, MetroColorStyle.Red) == DialogResult.Yes)
+                                         "Nu bekijken?", $"Nieuwe {x1}", MessageBoxButtons.YesNo, Resources.Leave_80_icon_icons_com_57305_128x128, MetroColorStyle.Red) == DialogResult.Yes)
                     {
                         xklachten_Click(this, EventArgs.Empty);
                     }
@@ -1268,8 +1345,8 @@ namespace Controls
         {
             try
             {
-                if (this.InvokeRequired)
-                    this.Invoke(new MethodInvoker(UpdateCorruptedButtonImage));
+                if (InvokeRequired)
+                    Invoke(new MethodInvoker(UpdateCorruptedButtonImage));
                 else UpdateCorruptedButtonImage();
             }
             catch (Exception exception)
@@ -1357,7 +1434,7 @@ namespace Controls
                         //LoadFilter();
                         _manager.SetSettings(settings);
                         CheckForSpecialRooster(false);
-                        this.Invalidate();
+                        Invalidate();
                         //Manager.Taken?.StartBeheer();
                         //if (Manager.IsLoaded)
                         //    CheckForSpecialRooster(true);
@@ -1401,7 +1478,7 @@ namespace Controls
         private void _manager_OnManagerLoaded()
         {
             if (IsDisposed || Disposing) return;
-            this.BeginInvoke(new Action(() => { _specialRoosterWatcher?.Start();}));
+            BeginInvoke(new Action(() => { _specialRoosterWatcher?.Start();}));
 
         }
 
@@ -1501,7 +1578,7 @@ namespace Controls
                     break;
                 case MainAktie.StartBewerking:
                     if (values.FirstOrDefault() is Bewerking bew2)
-                        ProductieListControl.StartBewerkingen(this, new Bewerking[] {bew2});
+                        ProductieListControl.StartBewerkingen(this, new[] {bew2});
                     break;
                 case MainAktie.StopBewerking:
                     if (values.FirstOrDefault() is Bewerking bew3)
@@ -1608,11 +1685,11 @@ namespace Controls
                         var xplekken = x.GetAlleWerkplekken();
                         if (xplekken.Count > 0)
                             foreach (var plek in xplekken)
-                                if (plek.Storingen.Any(x => !x.IsVerholpen))
+                                if (plek.Storingen.Any(w => !w.IsVerholpen))
                                     plekken.Add(plek);
                     });
                     if (plekken.Count == 0)
-                        XMessageBox.Show(this, $"Er zijn geen openstaande onderbrekeningen om te wijzigen.", "Onderbreking",
+                        XMessageBox.Show(this, "Er zijn geen openstaande onderbrekeningen om te wijzigen.", "Onderbreking",
                             MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     break;
             }
@@ -1640,13 +1717,14 @@ namespace Controls
 
                                 var msgbox = new XMessageBox();
                                 if (msgbox.ShowDialog(this, msg, "Kies Onderbreking", MessageBoxButtons.OKCancel,
-                                    MessageBoxIcon.Information,
-                                    storingen.Select(x => x.ToString()).ToArray()) == DialogResult.OK)
+                                        MessageBoxIcon.Information,
+                                        storingen.Select(x => x.ToString()).ToArray()) == DialogResult.OK)
                                 {
                                     var selected = msgbox.SelectedValue;
                                     if (selected != null)
                                     {
-                                        var storing = storingen.FirstOrDefault(x => x.Equals(selected));
+                                        var storing = storingen.FirstOrDefault(x =>
+                                            string.Equals(x.Path, selected, StringComparison.CurrentCultureIgnoreCase));
                                         if (storing != null) storingform = new NewStoringForm(plek, storing);
                                     }
                                 }
@@ -1748,7 +1826,7 @@ namespace Controls
                 var thesame = xold.SameTijden(Manager.Opties?.GetWerkRooster());
                 if (!thesame)
                 {
-                    var bws = await Manager.GetBewerkingen(new ViewState[] {ViewState.Gestart}, true);
+                    var bws = await Manager.GetBewerkingen(new[] {ViewState.Gestart}, true);
 
                     bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
                         StringComparison.CurrentCultureIgnoreCase)).ToList();
@@ -1787,7 +1865,7 @@ namespace Controls
                     .ToArray();
                 if (startedprods.Length == 0)
                 {
-                    XMessageBox.Show(this, $"Er zijn geen gestarte producties om te openen.", "Geen Producties",
+                    XMessageBox.Show(this, "Er zijn geen gestarte producties om te openen.", "Geen Producties",
                         MessageBoxIcon.Exclamation);
                 }
                 else
@@ -1820,7 +1898,7 @@ namespace Controls
         {
             if (Manager.LogedInGebruiker == null ||
                 Manager.LogedInGebruiker.AccesLevel <= AccesType.ProductieBasis) return;
-            var ofd = new FolderBrowserDialog()
+            var ofd = new FolderBrowserDialog
             {
                 Description = "Kies een folder met productieFormulieren pdf's"
 
@@ -1840,75 +1918,8 @@ namespace Controls
         {
             try
             {
-                var msgbox = new XMessageBox();
-                var msg = "Kies een database om te laden";
-                var bttns = new Dictionary<string, DialogResult>();
-                bttns.Add("Annuleren", DialogResult.Cancel);
-                bttns.Add("Database Laden", DialogResult.OK);
-                bttns.Add("Kies Folder", DialogResult.Yes);
-                //var dbs = Manager.DefaultSettings?.DbUpdateEntries ??
-                          //UserSettings.GetDefaultSettings()?.DbUpdateEntries ?? new List<DatabaseUpdateEntry>();
-                          var dbnames = new List<string>();
-                var xroot = Path.GetDirectoryName(Manager.AppRootPath);
-                if (Directory.Exists(xroot))
-                {
-                    var dirs = Directory.GetDirectories(xroot);
-                    foreach (var dir in dirs)
-                    {
-                        if (Directory.Exists(Path.Combine(dir, "RPM_Data")))
-                        {
-                            dbnames.Add(dir);
-                        }
-                    }
-                }
-
-                dbnames.Add( "Standaard Database");
-                var result = msgbox.ShowDialog(this, msg, "Database Laden", MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Information, dbnames.ToArray(), bttns);
-                if (result == DialogResult.Cancel) return;
-                string path = null;
-                if (result == DialogResult.OK)
-                {
-                    if (msgbox.SelectedValue != null && msgbox.SelectedValue.ToLower() == "standaard database")
-                    {
-                        var stng = Manager.DefaultSettings ?? UserSettings.GetDefaultSettings();
-                        if (Directory.Exists(stng.MainDB.RootPath))
-                            path = stng.MainDB.RootPath;
-                        else path = Application.StartupPath;
-                    }
-                    else
-                    {
-                        var ent = dbnames.FirstOrDefault(x =>
-                            string.Equals(x, msgbox.SelectedValue, StringComparison.CurrentCultureIgnoreCase));
-                        path = ent;
-                    }
-                }
-
-                if (path == null)
-                {
-                    var fb = new FolderBrowserDialog {Description = "Kies een database locatie"};
-                    if (fb.ShowDialog() == DialogResult.OK)
-                        path = fb.SelectedPath;
-                }
-
-                if (path != null)
-                {
-                    if (!Directory.Exists(path))
-                    {
-                        XMessageBox.Show(this, $"'{path}' bestaat niet, of is niet toegankelijk!", "Fout",
-                            MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    //if (name != null)
-                    //{
-                    //    var opties = await Manager.Database.GetSetting(name);
-                    //    if (opties != null)
-                    //        Manager.Opties = opties;
-                    //}
-                    this.BeginInvoke(new Action(()=> LoadManager(path,true)));
-                    //await _manager.Load(path, true, true, true);
-                }
+                var xdbloader = new DbSelectorForm();
+                xdbloader.ShowDialog();
             }
             catch (Exception e)
             {
@@ -1930,16 +1941,16 @@ namespace Controls
                         case "xniewproductie":
                             if (Manager.Database?.ProductieFormulieren == null)
                             {
-                                XMessageBox.Show(this, $"Kan geen productie aanmaken, omdat de Database niet is geladen.", "Database niet geladen!", MessageBoxButtons.OK,
+                                XMessageBox.Show(this, "Kan geen productie aanmaken, omdat de Database niet is geladen.", "Database niet geladen!", MessageBoxButtons.OK,
                                     MessageBoxIcon.Exclamation);
                                 return;
                             }
                             var AddProduction = new WijzigProductie();
                             if (AddProduction.ShowDialog() == DialogResult.OK)
-                                BeginInvoke(new MethodInvoker(async () =>
+                                BeginInvoke(new MethodInvoker(() =>
                                 {
                                     var form = AddProduction.Formulier;
-                                    var msg = await Manager.AddProductie(form,false);
+                                    var msg = Manager.AddProductie(form,false).Result;
                                     Manager.RemoteMessage(msg);
                                 }));
 
@@ -1947,7 +1958,7 @@ namespace Controls
                         case "xopenproductie":
                             if (Manager.Database?.ProductieFormulieren == null)
                             {
-                                XMessageBox.Show(this, $"Kan geen productie toevoegen, omdat de Database niet is geladen.", "Database niet geladen!", MessageBoxButtons.OK,
+                                XMessageBox.Show(this, "Kan geen productie toevoegen, omdat de Database niet is geladen.", "Database niet geladen!", MessageBoxButtons.OK,
                                     MessageBoxIcon.Exclamation);
                                 return;
                             }
@@ -2270,7 +2281,7 @@ namespace Controls
                     Manager.Opties.SpecialeRoosters.Add(newrooster);
                     Manager.Opties.SpecialeRoosters = Manager.Opties.SpecialeRoosters.OrderBy(x => x.Vanaf).ToList();
 
-                    var bws = Manager.GetBewerkingen(new ViewState[] { ViewState.Gestart }, true).Result;
+                    var bws = Manager.GetBewerkingen(new[] { ViewState.Gestart }, true).Result;
                     bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
                         StringComparison.CurrentCultureIgnoreCase)).ToList();
                     if (bws.Count > 0)
@@ -2308,7 +2319,7 @@ namespace Controls
                 }
                 if (acces1 && sproosters.Roosters.Count > 0)
                 {
-                    var bws = await Manager.GetBewerkingen(new ViewState[] { ViewState.Gestart }, true);
+                    var bws = await Manager.GetBewerkingen(new[] { ViewState.Gestart }, true);
                     bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
                         StringComparison.CurrentCultureIgnoreCase)).ToList();
                     if (bws.Count > 0)
@@ -2397,7 +2408,7 @@ namespace Controls
 
         public void UpdateUnreadMessages(UserChat user)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
                 Invoke(new Action(xUpdateUnreadMessages));
             else xUpdateUnreadMessages();
         }
@@ -2478,7 +2489,7 @@ namespace Controls
                         bttns.Add("Toon Bericht", DialogResult.Yes);
                         _unreadMessages = new XMessageBox();
                         _unreadMessages.StartPosition = FormStartPosition.CenterScreen;
-                        _unreadMessages.Location = new Point(0, this.Height / 2);
+                        _unreadMessages.Location = new Point(0, Height / 2);
                         var result = _unreadMessages.ShowDialog(
                             this, $"Je hebt {unread.Count} ongelezen {xv} van {string.Join(", ", names)}",
                             $"{unread.Count} ongelezen berichten", MessageBoxButtons.OK, MessageBoxIcon.None, null,
@@ -2506,7 +2517,7 @@ namespace Controls
 
         public void UpdateUnreadOpmerkingen()
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
                 BeginInvoke(new Action(xUpdateUnreadOpmerkingen));
             else xUpdateUnreadOpmerkingen();
         }
@@ -2597,6 +2608,9 @@ namespace Controls
                         Name = pform.ProductieNr.Trim().Replace(" ", ""),
                         TabText = $"[{pform.ProductieNr}, {pform.ArtikelNr}]"
                     };
+                    if (owner is Control control)
+                        productie.Location = new Point(control.Location.X + productie.Width / 2,
+                            control.Location.Y + productie.Height / 2);
                     productie.FormClosing += AddProduction_FormClosing;
                     productie.SelectedBewerking = bewerking;
                     _formuis.Add(productie);
@@ -2608,7 +2622,7 @@ namespace Controls
                             Tag = productie,
                             StartPosition = FormStartPosition.CenterScreen
                         };
-                        _producties.FormClosed += (x, y) => _producties = null;
+                        _producties.FormClosed += (_, _) => _producties = null;
                     }
 
                     if (showform)
@@ -2619,9 +2633,10 @@ namespace Controls
                     _producties.Show();
                 if (_producties.WindowState == FormWindowState.Minimized)
                     _producties.WindowState = FormWindowState.Normal;
-                _producties.BringToFront();
+               
                 _producties.Focus();
                 _producties.Select();
+                _producties.BringToFront();
                 return productie;
             }
             catch (Exception e)
@@ -2646,7 +2661,7 @@ namespace Controls
                         Tag = prodform,
                         StartPosition = FormStartPosition.CenterScreen
                     };
-                    _productielijstdock.FormClosed += (x, y) => _productielijstdock = null;
+                    _productielijstdock.FormClosed += (_, _) => _productielijstdock = null;
                 }
 
                 prodform.Show(_productielijstdock.DockPanel);
@@ -2680,7 +2695,7 @@ namespace Controls
             if (_logform == null)
             {
                 _logform = new LogForm();
-                _logform.FormClosed += (x, y) =>
+                _logform.FormClosed += (_, _) =>
                 {
                     _logform?.Dispose();
                     _logform = null;
@@ -2707,7 +2722,7 @@ namespace Controls
             if (_chatform == null)
             {
                 _chatform = new ChatForm();
-                _chatform.FormClosed += (x, y) =>
+                _chatform.FormClosed += (_, _) =>
                 {
                     _chatform?.Dispose();
                     _chatform = null;
@@ -2727,7 +2742,7 @@ namespace Controls
             {
                 _opmerkingform = new OpmerkingenForm();
                 _opmerkingform.LoadOpmerkingen();
-                _opmerkingform.FormClosed += (x, y) =>
+                _opmerkingform.FormClosed += (_, _) =>
                 {
                     _opmerkingform?.Dispose();
                     _opmerkingform = null;
@@ -2746,7 +2761,7 @@ namespace Controls
             if (_ArtikelsForm == null)
             {
                 _ArtikelsForm = new ArtikelsForm();
-                _ArtikelsForm.FormClosed += (x, y) =>
+                _ArtikelsForm.FormClosed += (_, _) =>
                 {
                     _ArtikelsForm?.Dispose();
                     _ArtikelsForm = null;
@@ -2779,7 +2794,7 @@ namespace Controls
             if (_PersoneelForm == null)
             {
                 _PersoneelForm = new PersoneelsForm();
-                _PersoneelForm.FormClosed += (x, y) =>
+                _PersoneelForm.FormClosed += (_, _) =>
                 {
                     _PersoneelForm?.Dispose();
                     _PersoneelForm = null;
@@ -2798,7 +2813,7 @@ namespace Controls
             if (_WerkplaatsIndeling == null)
             {
                 _WerkplaatsIndeling = new WerkplaatsIndelingForm();
-                _WerkplaatsIndeling.FormClosed += (x, y) =>
+                _WerkplaatsIndeling.FormClosed += (_, _) =>
                 {
                     _WerkplaatsIndeling?.Dispose();
                     _WerkplaatsIndeling = null;
@@ -2817,7 +2832,7 @@ namespace Controls
             if (_PersoneelIndeling == null)
             {
                 _PersoneelIndeling = new PersoneelIndelingForm();
-                _PersoneelIndeling.FormClosed += (x, y) =>
+                _PersoneelIndeling.FormClosed += (_, _) =>
                 {
                     _PersoneelIndeling?.Dispose();
                     _PersoneelIndeling = null;
@@ -2851,12 +2866,12 @@ namespace Controls
                 xver.UpdateFields(true);
                 xver.MaxUitgangsLengte = 12450;
                 xver.RestStuk = 50;
-                xver.CloseClicked += (x, y) =>
+                xver.CloseClicked += (_, _) =>
                 {
                     _berekenverbruik.Close();
                 };
                 _berekenverbruik.Controls.Add(xver);
-                _berekenverbruik.FormClosed += (x, y) =>
+                _berekenverbruik.FormClosed += (_, _) =>
                 {
                     _berekenverbruik?.Dispose();
                     _berekenverbruik = null;
@@ -2925,7 +2940,7 @@ namespace Controls
                 if (_gemaaktform != null) return;
                 var bws = bewerkingen??await Manager.Database.GetBewerkingen(ViewState.Gestart, true,null, null);
                 _gemaaktform = new AantalGemaaktProducties(bws, lastchangedminutes);
-                _gemaaktform.FormClosed += (o,e) =>
+                _gemaaktform.FormClosed += (_,_) =>
                 {
                     _gemaaktform?.Dispose();
                     _gemaaktform = null;
@@ -2941,8 +2956,8 @@ namespace Controls
 
         private void TekeningClosed(object sender, EventArgs e)
         {
-            this.Parent?.BringToFront();
-            this.Parent?.Focus();
+            Parent?.BringToFront();
+            Parent?.Focus();
         }
 
         public static void ShowProductieSettings(ProductieFormulier form)
@@ -2986,7 +3001,7 @@ namespace Controls
             if (_ProductieOverzicht == null)
             {
                 _ProductieOverzicht = new ProductieOverzichtForm();
-                _ProductieOverzicht.FormClosed += (x, y) =>
+                _ProductieOverzicht.FormClosed += (_, _) =>
                 {
                     _ProductieOverzicht?.Dispose();
                     _ProductieOverzicht = null;
@@ -3005,7 +3020,7 @@ namespace Controls
             if (_Klachten == null)
             {
                 _Klachten = new KlachtenForm();
-                _Klachten.FormClosed += (x, y) =>
+                _Klachten.FormClosed += (_, _) =>
                 {
                     _Klachten?.Dispose();
                     _Klachten = null;
@@ -3172,7 +3187,7 @@ namespace Controls
             }
             else
             {
-                XMessageBox.Show(this, $"HelpDesk is tijdelijk niet beschikbaar", "Niet Beschikbaar",
+                XMessageBox.Show(this, "HelpDesk is tijdelijk niet beschikbaar", "Niet Beschikbaar",
                     MessageBoxIcon.Exclamation);
             }
         }
@@ -3187,7 +3202,7 @@ namespace Controls
 
             MultipleFileDb.CorruptedFilesChanged += xweergave.OnItemsChanged;
 
-            xweergave.ItemRemoved += (x, y) =>
+            xweergave.ItemRemoved += (x, _) =>
             {
 
                 if (x is string[] items)
@@ -3198,7 +3213,7 @@ namespace Controls
                         var itemname = Path.GetFileNameWithoutExtension(item);
                         var xdir = Path.GetDirectoryName(item);
                         var xdirname = Path.GetFileName(xdir);
-                        var xdel = Manager.Database.RemoveFromCollection(xdirname, new string[] {itemname}).Result;
+                        var xdel = Manager.Database.RemoveFromCollection(xdirname, new[] {itemname}).Result;
                         if(xdel > 0)
                             MultipleFileDb.CorruptedFilePaths.Remove(item);
                         deleted += xdel;
@@ -3228,7 +3243,7 @@ namespace Controls
             var wb = new WebBrowserForm();
             wb.ShowErrorMessage = false;
             wb.Arg = progarg;
-            wb.FilesFormatToOpen = new string[] { "{0}_fbr.pdf" };
+            wb.FilesFormatToOpen = new[] { "{0}_fbr.pdf" };
             wb.ShowNotFoundList = true;
             wb.StopNavigatingAfterError = false;
             Task.Factory.StartNew(async () =>
@@ -3252,16 +3267,16 @@ namespace Controls
             wb.Show();
             xloading.ShowDialog();
             wb.Close();
-            this.BringToFront();
-            this.Focus();
+            BringToFront();
+            Focus();
             _xtekeningbusy = false;
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            var xdraw = new DrawArrow(this, Direction.Top, true, this.PointToScreen(xToolButtons.Location));
+            var xdraw = new DrawArrow(this, Direction.Top, true, PointToScreen(xToolButtons.Location));
             xdraw.Draw();
-            var xdraw1 = new DrawArrow(this, Direction.Left, true,this.PointToScreen(mainMenu1.Location));
+            var xdraw1 = new DrawArrow(this, Direction.Left, true,PointToScreen(mainMenu1.Location));
             xdraw1.Draw();
             //var xdraw = new DrawArrow(this, Direction.Top, true, this.PointToScreen(xToolButtons.Location));
             //xdraw.Draw();

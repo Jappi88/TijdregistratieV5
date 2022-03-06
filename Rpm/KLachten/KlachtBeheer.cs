@@ -105,7 +105,7 @@ namespace Rpm.Klachten
         {
             try
             {
-                return Database?.GetEntry<KlachtEntry>(id);
+                return Database?.GetEntry<KlachtEntry>(id, false);
             }
             catch (Exception e)
             {
@@ -161,7 +161,7 @@ namespace Rpm.Klachten
             try
             {
                 if (Database == null) return xklachten;
-                xklachten = Database.GetAllEntries<KlachtEntry>().Where(x=> x.IsValid).ToList();
+                xklachten = Database.GetAllEntries<KlachtEntry>(true).Where(x=> x.IsValid).ToList();
             }
             catch (Exception e)
             {
@@ -185,7 +185,7 @@ namespace Rpm.Klachten
             try
             {
                 if (Database == null) return;
-                var xk = Database.GetEntry<KlachtEntry>(Path.GetFileNameWithoutExtension(e.FullPath));
+                var xk = Database.GetEntry<KlachtEntry>(Path.GetFileNameWithoutExtension(e.FullPath), false);
                 if (xk != null)
                     OnKlachtChanged(xk);
             }

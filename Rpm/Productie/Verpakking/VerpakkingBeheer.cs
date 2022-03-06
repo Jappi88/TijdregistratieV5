@@ -32,7 +32,7 @@ namespace ProductieManager.Rpm.Productie.Verpakking
         {
             try
             {
-                return Database?.GetEntry<VerpakkingInstructie>(artikelnr);
+                return Database?.GetEntry<VerpakkingInstructie>(artikelnr, false);
             }
             catch (Exception e)
             {
@@ -88,7 +88,7 @@ namespace ProductieManager.Rpm.Productie.Verpakking
             try
             {
                 if (Database == null) return xklachten;
-                xklachten = Database.GetAllEntries<VerpakkingInstructie>().ToList();
+                xklachten = Database.GetAllEntries<VerpakkingInstructie>(true).ToList();
             }
             catch (Exception e)
             {
@@ -107,7 +107,7 @@ namespace ProductieManager.Rpm.Productie.Verpakking
             try
             {
                 if (Database == null) return;
-                var xk = Database.GetEntry<VerpakkingInstructie>(Path.GetFileNameWithoutExtension(e.FullPath));
+                var xk = Database.GetEntry<VerpakkingInstructie>(Path.GetFileNameWithoutExtension(e.FullPath), false);
                 if (xk != null)
                     OnVerpakkingChanged(xk);
             }

@@ -1,6 +1,5 @@
 ﻿using Forms;
 using Forms.GereedMelden;
-using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
@@ -10,10 +9,9 @@ using Rpm.Various;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using PdfSharp.Drawing;
+using MetroFramework.Controls;
 using Various;
 
 namespace Controls
@@ -51,6 +49,12 @@ namespace Controls
                     UpdateFields();
                 }
             }
+        }
+
+        public MetroTabControl TabControl
+        {
+            get => productieInfoUI1.TabControl;
+            set => productieInfoUI1.TabControl = value;
         }
 
         public void SetParent(ProductieFormulier form)
@@ -604,8 +608,8 @@ namespace Controls
             if (dc.ShowDialog(bew.Parent.Aantal, $"Wijzig aantal voor {bew.Naam} van {bew.Omschrijving}.") ==
                 DialogResult.OK)
             {
-                var change = $"[{bew.ProductieNr}|{bew.ArtikelNr}] Aantal gewijzigd!\n" +
-                             $"Van: {bew.Aantal}\n" +
+                var change = $"[{bew.Path}] Aantal gewijzigd!\n " +
+                             $"Van: {bew.Aantal}\n " +
                              $"Naar: {dc.Aantal}";
                 bew.Aantal = dc.Aantal;
                 await bew.UpdateBewerking(null, change);
@@ -649,8 +653,8 @@ namespace Controls
             var dc = new DatumChanger();
             if (dc.ShowDialog(bew.LeverDatum, $"Wijzig leverdatum voor {bew.Naam}.") == DialogResult.OK)
             {
-                var change = $"[{bew.ProductieNr}|{bew.ArtikelNr}] Leverdatum gewijzigd!\n" +
-                             $"Van: {bew.LeverDatum:dd MMMM yyyy HH:mm} uur\n" +
+                var change = $"[{bew.Path}] Leverdatum gewijzigd!\n " +
+                             $"Van: {bew.LeverDatum:dd MMMM yyyy HH:mm} uur\n " +
                              $"Naar: {dc.SelectedValue:dd MMMM yyyy HH:mm} uur";
                 bew.LeverDatum = dc.SelectedValue;
                 await bew.UpdateBewerking(null, change);
@@ -668,7 +672,7 @@ namespace Controls
             if (xtxtform.ShowDialog() == DialogResult.OK)
             {
                 bew.Note = xtxtform.Notitie;
-                await bew.UpdateBewerking(null, $"[{bew.ProductieNr}, {bew.ArtikelNr}] {bew.Naam} Notitie Gewijzigd");
+                await bew.UpdateBewerking(null, $"[{bew.Path}] Notitie Gewijzigd");
             }
         }
 
@@ -762,5 +766,36 @@ namespace Controls
             Clipboard.SetText(bw.Aantal.ToString());
         }
 
+        private void xdeelvoortgang_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.IsDisposed || Manager.Opties == null || Manager.Database.IsDisposed || Manager.Database == null) return;
+                var xitems = Manager.Database.GetAllAccounts().Result
+                    .Select(x => x.Username.FirstCharToUpper())
+                    .ToList();
+                if(xitems.Count == 0) return;
+                var bw = CurrentBewerking();
+                if (bw == null) return;
+                var xchoose = new ChooseValuesForm();
+                xchoose.Title = "Kies gebruikers om de voortgang mee te delen";
+                xchoose.SetChooseItems(xitems);
+                xchoose.SelectedValues = bw.SharedUsers;
+                if (xchoose.ShowDialog() == DialogResult.OK)
+                {
+                    var xsel = xchoose.SelectedValues;
+                    string xvalue = string.Join(", ", xsel);
+                    bw.SharedUsers = xsel;
+                    if (xsel.Count > 0)
+                        xvalue = $"[{bw.Path}] Voortgang gedeeld met:\n {xvalue}";
+                    else xvalue = $"[{bw.Path}] Voortgang wordt niet meer gedeeld";
+                    bw.UpdateBewerking(null, xvalue);
+                }
+            }
+            catch (Exception exception)
+            {
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
+            }
+        }
     }
 }

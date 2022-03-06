@@ -1491,7 +1491,7 @@ namespace Rpm.Productie
                             foreach (var b in form.Bewerkingen)
                                 await b.UpdateBewerking(forms, null, false);
                         await form.UpdateForm(false, false, null, 
-                            $"[{form.ProductieNr}|{form.ArtikelNr}]{change}\nDoorlooptijd opnieuw berekend",true, showmessage, raiseevent,onlylocal);
+                            change,true, showmessage, raiseevent,onlylocal);
                     }
                     catch (Exception ex)
                     {
@@ -1842,7 +1842,7 @@ namespace Rpm.Productie
                     TijdGewerkt = tijd;
                     var xa = TotaalGemaakt == 1 ? "stuk" : "stuks";
                     var change =
-                        $"[{ProductieNr.ToUpper()}|{ArtikelNr}] {paraaf} heeft is zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u).";
+                        $"[{ProductieNr.ToUpper()}, {ArtikelNr}] {paraaf} heeft zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u).";
                     arg.Current++;
                     arg.OnChanged(this);
                     if (arg.IsCanceled)

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
+using MetroFramework.Controls;
 using ProductieManager.Rpm.SqlLite;
 using Rpm.Various;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
@@ -33,6 +34,12 @@ namespace Controls
         {
             get => verpakkingInstructieUI1.AllowEditMode;
             set => verpakkingInstructieUI1.AllowEditMode = value;
+        }
+
+        public MetroTabControl TabControl
+        {
+            get => xTabControl;
+            set => xTabControl = value;
         }
 
         public ProductieInfoUI()
@@ -75,10 +82,12 @@ namespace Controls
                         xLogDataList.BeginUpdate();
                         xLogDataList.AddObject(xent);
                         xLogDataList.EndUpdate();
-                        xLogDataList.SelectedObject = xent;
-                        xLogDataList.SelectedItem?.EnsureVisible();
+
                     }
                 }
+
+                xLogDataList.SelectedIndex = xLogDataList.Items.Count - 1;
+                xLogDataList.SelectedItem?.EnsureVisible();
             }
             catch (Exception e)
             {

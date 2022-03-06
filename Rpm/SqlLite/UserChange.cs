@@ -21,9 +21,11 @@ namespace Rpm.SqlLite
             DbIds[dbName] = DateTime.Now;
         }
 
+        public List<string> ReadBy { get; set; } = new List<string>();
+
         public string User { get; set; }
 
-         public string PcId { get; set; }
+        public string PcId { get; set; }
 
         public string Change { get; set; }
         public DateTime TimeChanged { get; set; }

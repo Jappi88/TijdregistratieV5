@@ -43,8 +43,7 @@
             // 
             // ArtikelsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1118, 607);
             this.Controls.Add(this.artikelsUI1);
             this.Name = "ArtikelsForm";

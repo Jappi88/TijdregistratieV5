@@ -206,7 +206,7 @@ namespace Forms.ArtikelRecords
                     var xid = Path.GetFileNameWithoutExtension(e.FullPath);
                     if (string.Equals(Record.ArtikelNr, xid, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        var xrecord = Manager.ArtikelRecords?.Database?.GetEntry<ArtikelRecord>(xid);
+                        var xrecord = Manager.ArtikelRecords?.Database?.GetEntry<ArtikelRecord>(xid, false);
                         if (xrecord == null)
                             return;
                         Record = xrecord;

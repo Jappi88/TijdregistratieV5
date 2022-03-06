@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Rpm.Misc;
 using Various;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -254,6 +255,18 @@ namespace Forms
         private void Producties_Load(object sender, EventArgs e)
         {
             this.InitLastInfo();
+            if (this.Parent == null)
+            {
+                var xparent = this.GetParentForm();
+                if (xparent != null)
+                {
+                    var y = (xparent.Location.Y + xparent.Height / 2) - this.Height / 2;
+                    var x = (xparent.Location.X + xparent.Width / 2) - this.Width / 2;
+                    this.Location = new Point(x, y);
+                }
+                else
+                    this.StartPosition = FormStartPosition.CenterScreen;
+            }
         }
 
         private void Producties_FormClosing(object sender, FormClosingEventArgs e)

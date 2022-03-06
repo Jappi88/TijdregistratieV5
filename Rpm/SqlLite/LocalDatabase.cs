@@ -171,9 +171,9 @@ namespace Rpm.SqlLite
             {
                 ProductieFormulier prod = null;
                 if (ProductieFormulieren != null)
-                    prod = ProductieFormulieren.FindOne(productienr).Result;
+                    prod = ProductieFormulieren.FindOne(productienr,false).Result;
                 if (prod == null && GereedFormulieren != null)
-                    prod = GereedFormulieren.FindOne(productienr).Result;
+                    prod = GereedFormulieren.FindOne(productienr,false).Result;
                 prod?.UpdateForm(true, false, null, null, false, false, false);
                 return prod;
             }
@@ -313,11 +313,11 @@ namespace Rpm.SqlLite
                 if (IsDisposed)
                     return new List<Bewerking>();
                 var prods = new List<ProductieFormulier>();
-                if (ProductieFormulieren != null) prods = await ProductieFormulieren.FindAll();
+                if (ProductieFormulieren != null) prods = await ProductieFormulieren.FindAll(true);
 
                 if (incgereed && GereedFormulieren != null)
                 {
-                    var xprods = await GereedFormulieren.FindAll();
+                    var xprods = await GereedFormulieren.FindAll(true);
                     if (xprods.Count > 0)
                         prods.AddRange(xprods);
                 }
@@ -430,11 +430,11 @@ namespace Rpm.SqlLite
                 if (IsDisposed)
                     return new List<ProductieFormulier>();
                 var prods = new List<ProductieFormulier>();
-                if (!alleengereed && ProductieFormulieren != null) prods = await ProductieFormulieren.FindAll(criteria, fullmatch);
+                if (!alleengereed && ProductieFormulieren != null) prods = await ProductieFormulieren.FindAll(criteria, fullmatch,true);
 
                 if (incgereed && GereedFormulieren != null)
                 {
-                    var xprods = await GereedFormulieren.FindAll(criteria, fullmatch);
+                    var xprods = await GereedFormulieren.FindAll(criteria, fullmatch,true);
                     if (xprods.Count > 0)
                         prods.AddRange(xprods);
                 }
@@ -459,7 +459,7 @@ namespace Rpm.SqlLite
             {
                 if (IsDisposed || GereedFormulieren == null)
                     return new List<ProductieFormulier>();
-                return await GereedFormulieren.FindAll();
+                return await GereedFormulieren.FindAll(true);
             });
         }
 
@@ -574,7 +574,7 @@ namespace Rpm.SqlLite
                 try
                 {
                     var change = $"[{id}] Productie Verwijderd";
-                    var form = await ProductieFormulieren.FindOne(id);
+                    var form = await ProductieFormulieren.FindOne(id,false);
                     if (form == null) return false;
                     form.ExcludeFromUpdate();
                     var changed = new UserChange().UpdateChange(change, DbType.Producties);
@@ -738,7 +738,7 @@ namespace Rpm.SqlLite
                     return null;
                 try
                 {
-                    return await UserAccounts?.FindOne(username);
+                    return UserAccounts?.FindOne(username, false).Result;
                 }
                 catch
                 {
@@ -753,7 +753,7 @@ namespace Rpm.SqlLite
             {
                 if (IsDisposed || UserAccounts == null)
                     return new List<UserAccount>();
-                return await UserAccounts.FindAll();
+                return await UserAccounts.FindAll(false);
             });
         }
 
@@ -861,7 +861,7 @@ namespace Rpm.SqlLite
                     return false;
                 try
                 {
-                    var pers = await UserAccounts.FindOne(id);
+                    var pers = await UserAccounts.FindOne(id, false);
                     if (pers != null && await UserAccounts.Delete(id))
                     {
                         var changed = new UserChange
@@ -957,7 +957,7 @@ namespace Rpm.SqlLite
                 return null;
             try
             {
-                return AllSettings.FindOne(username);
+                return AllSettings.FindOne(username, false);
             }
             catch
             {
@@ -971,7 +971,7 @@ namespace Rpm.SqlLite
             {
                 if (IsDisposed || AllSettings == null)
                     return new List<UserSettings>();
-                return AllSettings.FindAll().Result;
+                return AllSettings.FindAll(false).Result;
             });
         }
 
@@ -1076,7 +1076,7 @@ namespace Rpm.SqlLite
                     return false;
                 try
                 {
-                    var xset = AllSettings.FindOne(id);
+                    var xset = AllSettings.FindOne(id, false);
                     if (xset != null && await AllSettings.Delete(id))
                     {
                         var lastchange = new UserChange().UpdateChange($"[{id}] Optie Verwijderd", DbType.Opties);
@@ -1177,7 +1177,7 @@ namespace Rpm.SqlLite
                     return null;
                 try
                 {
-                    return await PersoneelLijst.FindOne(username);
+                    return await PersoneelLijst.FindOne(username, false);
                 }
                 catch
                 {
@@ -1197,9 +1197,9 @@ namespace Rpm.SqlLite
                     var personen = new List<Personeel>();
                     foreach (var name in usernames)
                     {
-                        if (personen.Any(x => x.PersoneelNaam.ToLower() == name.ToLower()))
+                        if (personen.Any(x => string.Equals(x.PersoneelNaam, name, StringComparison.CurrentCultureIgnoreCase)))
                             continue;
-                        var pers = await PersoneelLijst.FindOne(name);
+                        var pers = await PersoneelLijst.FindOne(name, false);
                         if (pers != null)
                             personen.Add(pers);
                     }
@@ -1219,7 +1219,7 @@ namespace Rpm.SqlLite
             {
                 if (IsDisposed || PersoneelLijst == null)
                     return new List<Personeel>();
-                return await PersoneelLijst.FindAll();
+                return await PersoneelLijst.FindAll(true);
             });
         }
 
@@ -1229,7 +1229,7 @@ namespace Rpm.SqlLite
             {
                 if (personeel != null && !IsDisposed && PersoneelLijst != null)
                 {
-                    var xpers = await PersoneelLijst.FindOne(personeel);
+                    var xpers = await PersoneelLijst.FindOne(personeel, false);
                     if (xpers != null)
                     {
                         xpers.WerktAan = null;
@@ -1249,7 +1249,7 @@ namespace Rpm.SqlLite
                 if (personen is {Length: > 0} && !IsDisposed && PersoneelLijst != null)
                     foreach (var personeel in personen)
                     {
-                        var xpers = await PersoneelLijst.FindOne(personeel.PersoneelNaam);
+                        var xpers = await PersoneelLijst.FindOne(personeel.PersoneelNaam, false);
                         if (xpers != null)
                         {
                             xpers.WerktAan = null;
@@ -1269,7 +1269,7 @@ namespace Rpm.SqlLite
                 var done = 0;
                 if (!IsDisposed && PersoneelLijst != null)
                 {
-                    var personen = await PersoneelLijst.FindAll();
+                    var personen = await PersoneelLijst.FindAll(true);
                     foreach (var personeel in personen)
                         if (personeel.WerktAan != null)
                         {
@@ -1381,7 +1381,7 @@ namespace Rpm.SqlLite
                 try
                 {
                    
-                    var per = await PersoneelLijst.FindOne(id);
+                    var per = await PersoneelLijst.FindOne(id, false);
                     PersoneelLijst.RaiseEventWhenDeleted = !RaiseEventWhenDeleted;
                     if (per != null && await PersoneelLijst.Delete(id))
                     {
@@ -1658,7 +1658,7 @@ namespace Rpm.SqlLite
                 {
                     if (AllSettings == null || !RaiseEventWhenChanged) return;
                     var id = Path.GetFileNameWithoutExtension(y.FullPath);
-                    var xset = AllSettings.FindOne(id).Result;
+                    var xset = AllSettings.FindOne(id, false).Result;
                     if(xset != null && Manager.Opties != null && string.Equals(Manager.Opties.Username, xset.Username, StringComparison.CurrentCultureIgnoreCase))
                     {
                         var xdiffers = new List<string>();
@@ -1703,22 +1703,21 @@ namespace Rpm.SqlLite
             //}
         }
 
-        private async void PersoneelLijst_InstanceChanged(object sender, FileSystemEventArgs y)
+        private void PersoneelLijst_InstanceChanged(object sender, FileSystemEventArgs y)
         {
-           // lock (_locker2)
-           // {
-                try
-                {
-                    if (!RaiseEventWhenChanged || PersoneelLijst == null) return;
-                    var id = Path.GetFileNameWithoutExtension(y.FullPath);
-                    var pers = await PersoneelLijst.FindOne(id);
-                    if (pers != null)
-                        Manager.PersoneelChanged(this, pers);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
+            // lock (_locker2)
+            // {
+            try
+            {
+                if (!RaiseEventWhenChanged || PersoneelLijst == null) return;
+                var pers = PersoneelLijst.FromPath<Personeel>(y.FullPath).Result;
+                if (pers != null)
+                    Manager.PersoneelChanged(this, pers);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
             //}
         }
 
@@ -1950,7 +1949,7 @@ namespace Rpm.SqlLite
                 {
                     var prodsdb = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, RootPath,
                         dbfilename, "ProductieFormulieren", false);
-                    var prods = await prodsdb.FindAll();
+                    var prods = await prodsdb.FindAll(true);
                     foreach (var prod in prods)
                         await ProductieFormulieren.Upsert(prod.ProductieNr, prod,false,null);
                     Directory.Move(dbpath, dbpath + "_migrated");
@@ -1972,7 +1971,7 @@ namespace Rpm.SqlLite
                 {
                     var prodsdb = new DatabaseInstance<Personeel>(DbInstanceType.MultipleFiles, RootPath, personeeldb,
                         "Personeel", false);
-                    var prods = await prodsdb.FindAll();
+                    var prods = await prodsdb.FindAll(true);
                     foreach (var prod in prods)
                         await PersoneelLijst.Upsert(prod.PersoneelNaam, prod,false,null);
                     Directory.Move(dbpath, dbpath + "_migrated");
@@ -1983,7 +1982,7 @@ namespace Rpm.SqlLite
                 {
                     var prodsdb = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, RootPath,
                         Gereeddb, "GereedFormulieren", false);
-                    var prods = await prodsdb.FindAll();
+                    var prods = await prodsdb.FindAll(true);
                     foreach (var prod in prods)
                         await GereedFormulieren.Upsert(prod.ProductieNr, prod,false,null);
                     Directory.Move(dbpath, dbpath + "_migrated");
@@ -1994,7 +1993,7 @@ namespace Rpm.SqlLite
                 {
                     var prodsdb = new DatabaseInstance<UserSettings>(DbInstanceType.MultipleFiles, RootPath, Settingdb,
                         "AllSettings", false);
-                    var prods = await prodsdb.FindAll();
+                    var prods = await prodsdb.FindAll(true);
                     foreach (var prod in prods)
                         await AllSettings.Upsert(prod.Username, prod,false,null);
                     Directory.Move(dbpath, dbpath + "_migrated");
@@ -2005,7 +2004,7 @@ namespace Rpm.SqlLite
                 {
                     var prodsdb = new DatabaseInstance<UserAccount>(DbInstanceType.MultipleFiles, RootPath, Accountdb,
                         "UserAccounts", false);
-                    var prods = await prodsdb.FindAll();
+                    var prods = await prodsdb.FindAll(true);
                     foreach (var prod in prods)
                         await UserAccounts.Upsert(prod.Username, prod,false,null);
                     Directory.Move(dbpath, dbpath + "_migrated");
@@ -2016,7 +2015,7 @@ namespace Rpm.SqlLite
                 {
                     var prodsdb = new DatabaseInstance<DbVersion>(DbInstanceType.MultipleFiles, RootPath, versiondb,
                         "DbVersions", false);
-                    var prods = await prodsdb.FindAll();
+                    var prods = await prodsdb.FindAll(true);
                     foreach (var prod in prods)
                         await DbVersions.Upsert(Enum.GetName(typeof(DbType),prod.DbType), prod,false,null);
                     Directory.Move(dbpath, dbpath + "_migrated");
@@ -2226,7 +2225,7 @@ namespace Rpm.SqlLite
             {
                 if (PersoneelLijst != null)
                 {
-                    var personen = await PersoneelLijst?.FindAll();
+                    var personen = await PersoneelLijst?.FindAll(true);
                     if (personen == null)
                         return false;
                     foreach (var v in personen) await PersoneelLijst?.Upsert(v.PersoneelNaam, v,false,null);

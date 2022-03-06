@@ -130,14 +130,16 @@ namespace Forms
                                 break;
                             var form = await MultipleFileDb.FromPath<ProductieFormulier>(file, true);
                             if (form == null) continue;
-                            await form.UpdateForm(true, true, forms, null, true, false, true, true);
+                            await form.UpdateForm(true, true, forms, "", true, false, true, true);
                             if (form.State == ProductieState.Gereed)
                             {
                                 var xartikel = artikels.FirstOrDefault(x => string.Equals(form.ArtikelNr, x.ArtikelNr,
                                     StringComparison.CurrentCultureIgnoreCase));
                                 if (xartikel == null)
                                 {
-                                    xartikel = new ArtikelRecord();
+                                    xartikel = Manager.ArtikelRecords?.GetRecord(form.ArtikelNr ) ??
+                                               new ArtikelRecord();
+                                    xartikel.ResetValues(false);
                                     if (Manager.ArtikelRecords?.UpdateWaardes(form, xartikel, false) ?? false)
                                         artikels.Add(xartikel);
                                 }
@@ -153,7 +155,9 @@ namespace Forms
                                             StringComparison.CurrentCultureIgnoreCase));
                                         if (xartikel == null)
                                         {
-                                            xartikel = new ArtikelRecord();
+                                            xartikel = Manager.ArtikelRecords?.GetRecord(plek.Naam) ??
+                                                       new ArtikelRecord();
+                                            xartikel.ResetValues(false);
                                             if (Manager.ArtikelRecords?.UpdateWaardes(plek, xartikel, false) ?? false)
                                                 artikels.Add(xartikel);
                                         }

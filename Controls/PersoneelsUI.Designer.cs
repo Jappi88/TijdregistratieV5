@@ -79,10 +79,10 @@ namespace Controls
             this.xnaam = new System.Windows.Forms.TextBox();
             this.xok = new System.Windows.Forms.Button();
             this.xannueer = new System.Windows.Forms.Button();
+            this.xsearchbox = new MetroFramework.Controls.MetroTextBox();
             this.xdialogbuttonpanel = new System.Windows.Forms.Panel();
             this.xformbuttonpanel = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.xsearchbox = new MetroFramework.Controls.MetroTextBox();
             this.xafdelingfilter = new MetroFramework.Controls.MetroComboBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xuserlist)).BeginInit();
@@ -689,38 +689,6 @@ namespace Controls
             this.xannueer.UseVisualStyleBackColor = true;
             this.xannueer.Click += new System.EventHandler(this.xannueer_Click);
             // 
-            // xdialogbuttonpanel
-            // 
-            this.xdialogbuttonpanel.Controls.Add(this.xok);
-            this.xdialogbuttonpanel.Controls.Add(this.xannueer);
-            this.xdialogbuttonpanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.xdialogbuttonpanel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xdialogbuttonpanel.Location = new System.Drawing.Point(778, 0);
-            this.xdialogbuttonpanel.Name = "xdialogbuttonpanel";
-            this.xdialogbuttonpanel.Size = new System.Drawing.Size(126, 44);
-            this.xdialogbuttonpanel.TabIndex = 7;
-            // 
-            // xformbuttonpanel
-            // 
-            this.xformbuttonpanel.Controls.Add(this.xdialogbuttonpanel);
-            this.xformbuttonpanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.xformbuttonpanel.Location = new System.Drawing.Point(0, 458);
-            this.xformbuttonpanel.Name = "xformbuttonpanel";
-            this.xformbuttonpanel.Size = new System.Drawing.Size(904, 44);
-            this.xformbuttonpanel.TabIndex = 3;
-            this.xformbuttonpanel.Visible = false;
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.label2);
-            this.panel2.Controls.Add(this.xsearchbox);
-            this.panel2.Controls.Add(this.xafdelingfilter);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(0, 40);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(733, 30);
-            this.panel2.TabIndex = 8;
-            // 
             // xsearchbox
             // 
             this.xsearchbox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -762,6 +730,38 @@ namespace Controls
             this.xsearchbox.TextChanged += new System.EventHandler(this.xsearchbox_TextChanged);
             this.xsearchbox.Enter += new System.EventHandler(this.xsearch_Enter);
             this.xsearchbox.Leave += new System.EventHandler(this.xsearch_Leave);
+            // 
+            // xdialogbuttonpanel
+            // 
+            this.xdialogbuttonpanel.Controls.Add(this.xok);
+            this.xdialogbuttonpanel.Controls.Add(this.xannueer);
+            this.xdialogbuttonpanel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.xdialogbuttonpanel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xdialogbuttonpanel.Location = new System.Drawing.Point(778, 0);
+            this.xdialogbuttonpanel.Name = "xdialogbuttonpanel";
+            this.xdialogbuttonpanel.Size = new System.Drawing.Size(126, 44);
+            this.xdialogbuttonpanel.TabIndex = 7;
+            // 
+            // xformbuttonpanel
+            // 
+            this.xformbuttonpanel.Controls.Add(this.xdialogbuttonpanel);
+            this.xformbuttonpanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.xformbuttonpanel.Location = new System.Drawing.Point(0, 458);
+            this.xformbuttonpanel.Name = "xformbuttonpanel";
+            this.xformbuttonpanel.Size = new System.Drawing.Size(904, 44);
+            this.xformbuttonpanel.TabIndex = 3;
+            this.xformbuttonpanel.Visible = false;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.label2);
+            this.panel2.Controls.Add(this.xsearchbox);
+            this.panel2.Controls.Add(this.xafdelingfilter);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(0, 40);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(733, 30);
+            this.panel2.TabIndex = 8;
             // 
             // xafdelingfilter
             // 

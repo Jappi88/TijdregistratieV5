@@ -34,7 +34,7 @@ namespace Rpm.Productie.Verpakking
         {
             try
             {
-                return Database?.GetEntry<SpoorEntry>(artikelnr);
+                return Database?.GetEntry<SpoorEntry>(artikelnr, false);
             }
             catch (Exception e)
             {
@@ -112,7 +112,7 @@ namespace Rpm.Productie.Verpakking
             try
             {
                 if (Database == null) return xsporen;
-                xsporen = Database.GetAllEntries<SpoorEntry>().ToList();
+                xsporen = Database.GetAllEntries<SpoorEntry>(true).ToList();
             }
             catch (Exception e)
             {
@@ -146,7 +146,7 @@ namespace Rpm.Productie.Verpakking
             try
             {
                 if (Database == null) return;
-                var xk = Database.GetEntry<SpoorEntry>(Path.GetFileNameWithoutExtension(e.FullPath));
+                var xk = Database.GetEntry<SpoorEntry>(Path.GetFileNameWithoutExtension(e.FullPath), false);
                 if (xk != null)
                     OnSpoorChanged(xk);
             }

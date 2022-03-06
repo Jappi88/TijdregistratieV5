@@ -10,7 +10,7 @@ using System.Timers;
 
 namespace ProductieManager.Rpm.Various
 {
-    public class ProductieChat
+    public class ProductieChat : IDisposable
     {
         public static string ChatPath;
         public static string ProfielPath;
@@ -33,6 +33,7 @@ namespace ProductieManager.Rpm.Various
         private static readonly object _locker = new object();
         private void _berichtenWatcher_Changed(object sender, FileSystemEventArgs e)
         {
+            if (IsDisposed) return;
             lock (_locker)
             {
                 try
@@ -333,6 +334,17 @@ namespace ProductieManager.Rpm.Various
         protected virtual void OnGebruikerUpdate(UserChat user)
         {
             GebruikerUpdate?.Invoke(user);
+        }
+
+        public bool IsDisposed { get; set; }
+        public void Dispose()
+        {
+            LogOut();
+            IsDisposed = true;
+            _PublicberichtenWatcher?.Dispose();
+            _berichtenWatcher?.Dispose();
+            _gebruikerWatcher?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

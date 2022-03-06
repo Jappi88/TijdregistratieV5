@@ -34,8 +34,6 @@ namespace Controls
             this.panel1 = new System.Windows.Forms.Panel();
             this.xstatuslabel = new System.Windows.Forms.Label();
             this.xoptionpanel = new System.Windows.Forms.Panel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.xbewerkingradio = new System.Windows.Forms.RadioButton();
             this.xwerkplekradio = new System.Windows.Forms.RadioButton();
             this.xweergaveperiodegroup = new System.Windows.Forms.GroupBox();
@@ -54,25 +52,25 @@ namespace Controls
             this.xstatus = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.panel2 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.xoptionpanel.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             this.xweergaveperiodegroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xstartjaar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xstartweek)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xserieslist)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // xdatachart
             // 
             this.xdatachart.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xdatachart.Location = new System.Drawing.Point(208, 167);
+            this.xdatachart.Location = new System.Drawing.Point(208, 156);
             this.xdatachart.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.xdatachart.Name = "xdatachart";
-            this.xdatachart.Size = new System.Drawing.Size(665, 391);
+            this.xdatachart.Size = new System.Drawing.Size(665, 402);
             this.xdatachart.TabIndex = 0;
             // 
             // panel1
@@ -98,48 +96,19 @@ namespace Controls
             // xoptionpanel
             // 
             this.xoptionpanel.AutoScroll = true;
-            this.xoptionpanel.Controls.Add(this.groupBox1);
+            this.xoptionpanel.Controls.Add(this.xweergaveperiodegroup);
             this.xoptionpanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.xoptionpanel.Location = new System.Drawing.Point(0, 36);
             this.xoptionpanel.Name = "xoptionpanel";
-            this.xoptionpanel.Size = new System.Drawing.Size(873, 131);
+            this.xoptionpanel.Size = new System.Drawing.Size(873, 120);
             this.xoptionpanel.TabIndex = 3;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.groupBox3);
-            this.groupBox1.Controls.Add(this.xweergaveperiodegroup);
-            this.groupBox1.Controls.Add(this.xstoringenradio);
-            this.groupBox1.Controls.Add(this.xaantalperuurradio);
-            this.groupBox1.Controls.Add(this.xaantalgemaaktradio);
-            this.groupBox1.Controls.Add(this.xtijdgewerktradio);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(873, 129);
-            this.groupBox1.TabIndex = 1;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Data Weergave";
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.xbewerkingradio);
-            this.groupBox3.Controls.Add(this.xwerkplekradio);
-            this.groupBox3.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.Location = new System.Drawing.Point(162, 0);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(140, 129);
-            this.groupBox3.TabIndex = 4;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Soort Weergave";
             // 
             // xbewerkingradio
             // 
             this.xbewerkingradio.AutoSize = true;
             this.xbewerkingradio.Checked = true;
             this.xbewerkingradio.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xbewerkingradio.Location = new System.Drawing.Point(6, 26);
+            this.xbewerkingradio.Location = new System.Drawing.Point(3, 3);
             this.xbewerkingradio.Name = "xbewerkingradio";
             this.xbewerkingradio.Size = new System.Drawing.Size(99, 21);
             this.xbewerkingradio.TabIndex = 1;
@@ -152,36 +121,40 @@ namespace Controls
             // 
             this.xwerkplekradio.AutoSize = true;
             this.xwerkplekradio.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xwerkplekradio.Location = new System.Drawing.Point(6, 53);
+            this.xwerkplekradio.Location = new System.Drawing.Point(108, 3);
             this.xwerkplekradio.Name = "xwerkplekradio";
-            this.xwerkplekradio.Size = new System.Drawing.Size(99, 21);
+            this.xwerkplekradio.Size = new System.Drawing.Size(104, 21);
             this.xwerkplekradio.TabIndex = 0;
-            this.xwerkplekradio.Text = "Werkplekken";
+            this.xwerkplekradio.Text = "Werkplaatsen";
             this.xwerkplekradio.UseVisualStyleBackColor = true;
             this.xwerkplekradio.CheckedChanged += new System.EventHandler(this.radiocheckchanged_CheckedChanged);
             // 
             // xweergaveperiodegroup
             // 
-            this.xweergaveperiodegroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xweergaveperiodegroup.Controls.Add(this.panel2);
             this.xweergaveperiodegroup.Controls.Add(this.xalleennucheckbox);
             this.xweergaveperiodegroup.Controls.Add(this.label2);
+            this.xweergaveperiodegroup.Controls.Add(this.xstoringenradio);
             this.xweergaveperiodegroup.Controls.Add(this.xstartjaar);
+            this.xweergaveperiodegroup.Controls.Add(this.xaantalperuurradio);
             this.xweergaveperiodegroup.Controls.Add(this.xstartweek);
+            this.xweergaveperiodegroup.Controls.Add(this.xaantalgemaaktradio);
             this.xweergaveperiodegroup.Controls.Add(this.label1);
+            this.xweergaveperiodegroup.Controls.Add(this.xtijdgewerktradio);
+            this.xweergaveperiodegroup.Dock = System.Windows.Forms.DockStyle.Top;
             this.xweergaveperiodegroup.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xweergaveperiodegroup.Location = new System.Drawing.Point(301, 0);
+            this.xweergaveperiodegroup.Location = new System.Drawing.Point(0, 0);
             this.xweergaveperiodegroup.Name = "xweergaveperiodegroup";
-            this.xweergaveperiodegroup.Size = new System.Drawing.Size(572, 129);
+            this.xweergaveperiodegroup.Size = new System.Drawing.Size(873, 114);
             this.xweergaveperiodegroup.TabIndex = 2;
             this.xweergaveperiodegroup.TabStop = false;
-            this.xweergaveperiodegroup.Text = "Weergave Periode";
+            this.xweergaveperiodegroup.Text = "Statistieken Weergave";
             // 
             // xalleennucheckbox
             // 
             this.xalleennucheckbox.AutoSize = true;
             this.xalleennucheckbox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xalleennucheckbox.Location = new System.Drawing.Point(6, 81);
+            this.xalleennucheckbox.Location = new System.Drawing.Point(261, 56);
             this.xalleennucheckbox.Name = "xalleennucheckbox";
             this.xalleennucheckbox.Size = new System.Drawing.Size(123, 21);
             this.xalleennucheckbox.TabIndex = 4;
@@ -193,16 +166,16 @@ namespace Controls
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(73, 53);
+            this.label2.Location = new System.Drawing.Point(155, 55);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(13, 17);
+            this.label2.Size = new System.Drawing.Size(32, 17);
             this.label2.TabIndex = 3;
-            this.label2.Text = "/";
+            this.label2.Text = "Jaar";
             // 
             // xstartjaar
             // 
             this.xstartjaar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xstartjaar.Location = new System.Drawing.Point(94, 50);
+            this.xstartjaar.Location = new System.Drawing.Point(193, 53);
             this.xstartjaar.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -226,7 +199,7 @@ namespace Controls
             // xstartweek
             // 
             this.xstartweek.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xstartweek.Location = new System.Drawing.Point(6, 50);
+            this.xstartweek.Location = new System.Drawing.Point(87, 53);
             this.xstartweek.Maximum = new decimal(new int[] {
             52,
             0,
@@ -251,17 +224,17 @@ namespace Controls
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(3, 23);
+            this.label1.Location = new System.Drawing.Point(6, 55);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(104, 17);
+            this.label1.Size = new System.Drawing.Size(75, 17);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Vanaf Week/Jaar";
+            this.label1.Text = "Vanaf Week";
             // 
             // xstoringenradio
             // 
             this.xstoringenradio.AutoSize = true;
             this.xstoringenradio.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xstoringenradio.Location = new System.Drawing.Point(6, 96);
+            this.xstoringenradio.Location = new System.Drawing.Point(353, 25);
             this.xstoringenradio.Name = "xstoringenradio";
             this.xstoringenradio.Size = new System.Drawing.Size(133, 21);
             this.xstoringenradio.TabIndex = 3;
@@ -273,7 +246,7 @@ namespace Controls
             // 
             this.xaantalperuurradio.AutoSize = true;
             this.xaantalperuurradio.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xaantalperuurradio.Location = new System.Drawing.Point(6, 73);
+            this.xaantalperuurradio.Location = new System.Drawing.Point(237, 25);
             this.xaantalperuurradio.Name = "xaantalperuurradio";
             this.xaantalperuurradio.Size = new System.Drawing.Size(110, 21);
             this.xaantalperuurradio.TabIndex = 2;
@@ -285,7 +258,7 @@ namespace Controls
             // 
             this.xaantalgemaaktradio.AutoSize = true;
             this.xaantalgemaaktradio.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xaantalgemaaktradio.Location = new System.Drawing.Point(6, 50);
+            this.xaantalgemaaktradio.Location = new System.Drawing.Point(114, 25);
             this.xaantalgemaaktradio.Name = "xaantalgemaaktradio";
             this.xaantalgemaaktradio.Size = new System.Drawing.Size(117, 21);
             this.xaantalgemaaktradio.TabIndex = 1;
@@ -298,7 +271,7 @@ namespace Controls
             this.xtijdgewerktradio.AutoSize = true;
             this.xtijdgewerktradio.Checked = true;
             this.xtijdgewerktradio.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xtijdgewerktradio.Location = new System.Drawing.Point(6, 26);
+            this.xtijdgewerktradio.Location = new System.Drawing.Point(9, 26);
             this.xtijdgewerktradio.Name = "xtijdgewerktradio";
             this.xtijdgewerktradio.Size = new System.Drawing.Size(98, 21);
             this.xtijdgewerktradio.TabIndex = 0;
@@ -318,11 +291,11 @@ namespace Controls
             this.xserieslist.Dock = System.Windows.Forms.DockStyle.Left;
             this.xserieslist.FullRowSelect = true;
             this.xserieslist.HideSelection = false;
-            this.xserieslist.Location = new System.Drawing.Point(0, 167);
+            this.xserieslist.Location = new System.Drawing.Point(0, 156);
             this.xserieslist.Name = "xserieslist";
             this.xserieslist.ShowGroups = false;
             this.xserieslist.ShowItemToolTips = true;
-            this.xserieslist.Size = new System.Drawing.Size(208, 391);
+            this.xserieslist.Size = new System.Drawing.Size(208, 402);
             this.xserieslist.TabIndex = 5;
             this.xserieslist.UseCompatibleStateImageBehavior = false;
             this.xserieslist.UseExplorerTheme = true;
@@ -361,9 +334,9 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xstatus.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xstatus.Location = new System.Drawing.Point(3, 167);
+            this.xstatus.Location = new System.Drawing.Point(3, 156);
             this.xstatus.Name = "xstatus";
-            this.xstatus.Size = new System.Drawing.Size(870, 391);
+            this.xstatus.Size = new System.Drawing.Size(870, 402);
             this.xstatus.TabIndex = 6;
             this.xstatus.Text = "Producties Laden...";
             this.xstatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -378,10 +351,18 @@ namespace Controls
             this.panel4.Size = new System.Drawing.Size(873, 558);
             this.panel4.TabIndex = 5;
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.xwerkplekradio);
+            this.panel2.Controls.Add(this.xbewerkingradio);
+            this.panel2.Location = new System.Drawing.Point(6, 83);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(485, 28);
+            this.panel2.TabIndex = 5;
+            // 
             // ChartView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.panel4);
             this.DoubleBuffered = true;
@@ -391,10 +372,6 @@ namespace Controls
             this.Size = new System.Drawing.Size(873, 558);
             this.panel1.ResumeLayout(false);
             this.xoptionpanel.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             this.xweergaveperiodegroup.ResumeLayout(false);
             this.xweergaveperiodegroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xstartjaar)).EndInit();
@@ -402,6 +379,8 @@ namespace Controls
             ((System.ComponentModel.ISupportInitialize)(this.xserieslist)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -414,11 +393,9 @@ namespace Controls
         private System.Windows.Forms.Panel xoptionpanel;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RadioButton xbewerkingradio;
         private System.Windows.Forms.RadioButton xwerkplekradio;
         private System.Windows.Forms.GroupBox xweergaveperiodegroup;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton xstoringenradio;
         private System.Windows.Forms.RadioButton xaantalperuurradio;
         private System.Windows.Forms.RadioButton xaantalgemaaktradio;
@@ -432,5 +409,6 @@ namespace Controls
         private System.Windows.Forms.CheckBox xalleennucheckbox;
         private System.Windows.Forms.Label xstatus;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Panel panel2;
     }
 }
