@@ -34,6 +34,8 @@ namespace Controls
         protected Timer _WaitTimer;
         //private object _selectedItem;
 
+        public bool ShowWaitUI { get; set; }
+
         public ProductieListControl()
         {
             InitializeComponent();
@@ -162,11 +164,7 @@ namespace Controls
                     xsearch.TextChanged += xsearchbox_TextChanged;
                     if (InvokeRequired)
                     {
-                        Invoke(new MethodInvoker(() =>
-                        {
-                            //InitImageList();
-                            InitColumns();
-                        }));
+                        Invoke(new MethodInvoker(InitColumns));
                     }
                     else
                     {
@@ -183,7 +181,7 @@ namespace Controls
                 }
 
             if (loadproducties)
-                UpdateProductieList(reload, true);
+                UpdateProductieList(reload);
         }
 
         private void UpdateStatusText()
@@ -830,31 +828,6 @@ namespace Controls
 
         private bool _loadingproductielist;
 
-        public void StartSync()
-        {
-            if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || IsSyncing || Disposing || IsDisposed) return;
-            IsSyncing = true;
-            Task.Factory.StartNew(async () =>
-            {
-                try
-                {
-                    while (EnableSync && Manager.Opties.AutoProductieLijstSync && IsSyncing && !IsDisposed &&
-                           !Disposing)
-                    {
-                        await Task.Delay(Manager.Opties.ProductieLijstSyncInterval);
-                        if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || !IsSyncing || IsDisposed ||
-                            Disposing) break;
-                        if (!_loadingproductielist && CanLoad)
-                            UpdateProductieList(true, false);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            });
-        }
-
         public string GetFilter()
         {
             return xsearch.Text.ToLower() == "zoeken..." ? "" : xsearch.Text;
@@ -935,15 +908,15 @@ namespace Controls
             return xprods;
         }
 
-        public void UpdateProductieList(bool reload, bool showwaitui)
+        public void UpdateProductieList(bool reload)
         {
-            if (Manager.Opties == null || !CanLoad) return;
+            if (Manager.Opties == null || !CanLoad || _loadingproductielist) return;
             try
             {
                 if (InvokeRequired)
-                    Invoke(new MethodInvoker(() => { xUpdateProductieList(reload, showwaitui); }));
+                    Invoke(new MethodInvoker(() => { xUpdateProductieList(reload, ShowWaitUI); }));
                 else
-                    xUpdateProductieList(reload, showwaitui);
+                    xUpdateProductieList(reload, ShowWaitUI);
             }
             catch (Exception e)
             {
@@ -953,7 +926,7 @@ namespace Controls
 
         public void xUpdateProductieList(bool reload, bool showwaitui)
         {
-            if (Manager.Opties == null || !CanLoad) return;
+            if (Manager.Opties == null || !CanLoad || _loadingproductielist) return;
             try
             {
                 if (showwaitui)
@@ -968,21 +941,22 @@ namespace Controls
                         .ToArray();
                     // Manager.Opties.ProductieWeergaveFilters = GetCurrentProductieViewStates();
 
-
-                    var xlistcount = ProductieLijst.Items.Count;
-                    if (!IsBewerkingView)
-                    {
-                        if (CanLoad)
+                   
+                        if (!IsBewerkingView)
                         {
-                            var xprods = GetProducties(reload, true);
-                            UpdateListObjects(xprods);
+                            if (CanLoad)
+                            {
+                                var xprods = GetProducties(reload, true);
+                                if (!IsDisposed && !Disposing)
+                                     UpdateListObjects(xprods);
+                            }
                         }
-                    }
-                    else if (CanLoad)
-                    {
-                        var bws = GetBewerkingen(reload, true);
-                        UpdateListObjects(bws);
-                    }
+                        else if (CanLoad)
+                        {
+                            var bws = GetBewerkingen(reload, true);
+                            if (!IsDisposed && !Disposing)
+                                 UpdateListObjects(bws);
+                        }
 
                     var xgroups = ProductieLijst.Groups.Cast<ListViewGroup>().ToList();
                     if (groups1.Length > 0)
@@ -1015,13 +989,12 @@ namespace Controls
                 }
 
                 _loadingproductielist = false;
-                if (EnableSync)
-                    StartSync();
                 StopWait();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                _loadingproductielist = false;
             }
         }
 
@@ -1380,7 +1353,7 @@ namespace Controls
                         reload = true;
                     else
                         reload = !xfilters.All(x => x.IsTempFilter);
-                    BeginInvoke(new MethodInvoker(() => { UpdateProductieList(reload, false); }));
+                    BeginInvoke(new MethodInvoker(() => { xUpdateProductieList(reload, false); }));
                 }
             }
             catch (Exception exception)
@@ -1398,7 +1371,7 @@ namespace Controls
                 {
                     //InitColumns();
                     if (CanLoad)
-                        UpdateProductieList(true, true);
+                        xUpdateProductieList(true, ShowWaitUI);
                 }));
             }
             catch (Exception e)
@@ -1493,7 +1466,7 @@ namespace Controls
             if (xsearch.Text.ToLower().Trim() != "zoeken..." && !_iswaiting)
             {
                 OnSearchItems(xsearch.Text.Trim());
-                UpdateProductieList(false, false);
+                xUpdateProductieList(false, false);
             }
         }
 
@@ -2561,10 +2534,11 @@ namespace Controls
 
         private void xfiltercontainer_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
+            if (Manager.Opties == null || !CanLoad || _loadingproductielist) return;
             if (e.ClickedItem is ToolStripMenuItem b)
             {
                 b.Checked = !b.Checked;
-                UpdateProductieList(true, true);
+                xUpdateProductieList(true, ShowWaitUI);
             }
         }
 

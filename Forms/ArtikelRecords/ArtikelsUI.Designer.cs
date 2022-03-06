@@ -35,10 +35,10 @@ namespace Controls
             this.xartikelsList = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.xloadinglabel = new System.Windows.Forms.Label();
-            this.productieListControl1 = new Controls.ProductieListControl();
             this.xsearchbox = new MetroFramework.Controls.MetroTextBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.productieListControl1 = new Controls.ProductieListControl();
+            this.xloadinglabel = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xartikelsList)).BeginInit();
             this.panel2.SuspendLayout();
@@ -97,51 +97,6 @@ namespace Controls
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "product_document_file_32x32.png");
             // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.productieListControl1);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.panel2.Location = new System.Drawing.Point(200, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(722, 561);
-            this.panel2.TabIndex = 1;
-            // 
-            // xloadinglabel
-            // 
-            this.xloadinglabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xloadinglabel.Location = new System.Drawing.Point(0, 0);
-            this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(922, 561);
-            this.xloadinglabel.TabIndex = 30;
-            this.xloadinglabel.Text = "Artikelen Laden...";
-            this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.xloadinglabel.Visible = false;
-            // 
-            // productieListControl1
-            // 
-            this.productieListControl1.AutoScroll = true;
-            this.productieListControl1.BackColor = System.Drawing.Color.White;
-            this.productieListControl1.CanLoad = true;
-            this.productieListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.productieListControl1.EnableEntryFiltering = true;
-            this.productieListControl1.EnableFiltering = false;
-            this.productieListControl1.EnableSync = false;
-            this.productieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productieListControl1.IsBewerkingView = true;
-            this.productieListControl1.ListName = "ArtikelsLijst";
-            this.productieListControl1.Location = new System.Drawing.Point(0, 0);
-            this.productieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.productieListControl1.Name = "productieListControl1";
-            this.productieListControl1.RemoveCustomItemIfNotValid = false;
-            this.productieListControl1.SelectedItem = null;
-            this.productieListControl1.Size = new System.Drawing.Size(722, 561);
-            this.productieListControl1.TabIndex = 0;
-            this.productieListControl1.ValidHandler = null;
-            // 
             // xsearchbox
             // 
             // 
@@ -181,10 +136,56 @@ namespace Controls
             this.xsearchbox.Enter += new System.EventHandler(this.xsearchArtikel_Enter);
             this.xsearchbox.Leave += new System.EventHandler(this.xsearchArtikel_Leave);
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.xloadinglabel);
+            this.panel2.Controls.Add(this.productieListControl1);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.panel2.Location = new System.Drawing.Point(200, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(722, 561);
+            this.panel2.TabIndex = 1;
+            // 
+            // productieListControl1
+            // 
+            this.productieListControl1.AutoScroll = true;
+            this.productieListControl1.BackColor = System.Drawing.Color.White;
+            this.productieListControl1.CanLoad = true;
+            this.productieListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieListControl1.EnableEntryFiltering = true;
+            this.productieListControl1.EnableFiltering = false;
+            this.productieListControl1.EnableSync = false;
+            this.productieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productieListControl1.IsBewerkingView = true;
+            this.productieListControl1.ListName = "ArtikelsLijst";
+            this.productieListControl1.Location = new System.Drawing.Point(0, 0);
+            this.productieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.productieListControl1.Name = "productieListControl1";
+            this.productieListControl1.RemoveCustomItemIfNotValid = false;
+            this.productieListControl1.SelectedItem = null;
+            this.productieListControl1.Size = new System.Drawing.Size(722, 561);
+            this.productieListControl1.TabIndex = 0;
+            this.productieListControl1.ValidHandler = null;
+            // 
+            // xloadinglabel
+            // 
+            this.xloadinglabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xloadinglabel.BackColor = System.Drawing.Color.White;
+            this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xloadinglabel.Location = new System.Drawing.Point(-197, 0);
+            this.xloadinglabel.Name = "xloadinglabel";
+            this.xloadinglabel.Size = new System.Drawing.Size(919, 561);
+            this.xloadinglabel.TabIndex = 30;
+            this.xloadinglabel.Text = "Artikelen Laden...";
+            this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.xloadinglabel.Visible = false;
+            // 
             // ArtikelsUI
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.Controls.Add(this.xloadinglabel);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.DoubleBuffered = true;

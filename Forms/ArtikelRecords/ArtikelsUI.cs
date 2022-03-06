@@ -16,6 +16,7 @@ namespace Controls
         public ArtikelsUI()
         {
             InitializeComponent();
+            productieListControl1.ShowWaitUI = false;
         }
 
         public void InitUI()
@@ -220,7 +221,25 @@ namespace Controls
             xartikelsList_SelectedIndexChanged(this, EventArgs.Empty);
         }
 
-        public bool IsValidHandler(object value, string filter)
+        private bool IsValidHandler(object value, string filter)
+        {
+            if (Disposing || IsDisposed) return false;
+            try
+            {
+                var xret = false;
+                if (this.InvokeRequired)
+                    this.Invoke(new MethodInvoker(() => xret = xIsValidHandler(value, filter)));
+                else xret = xIsValidHandler(value, filter);
+                return xret;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        public bool xIsValidHandler(object value, string filter)
         {
             if (xartikelsList.SelectedItems.Count > 0)
             {

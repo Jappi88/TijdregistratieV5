@@ -153,7 +153,7 @@ namespace Controls
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1149, 634);
+            this.panel1.Size = new System.Drawing.Size(923, 547);
             this.panel1.TabIndex = 0;
             // 
             // xloadinglabel
@@ -165,7 +165,7 @@ namespace Controls
             this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xloadinglabel.Location = new System.Drawing.Point(0, 39);
             this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(1058, 570);
+            this.xloadinglabel.Size = new System.Drawing.Size(923, 483);
             this.xloadinglabel.TabIndex = 29;
             this.xloadinglabel.Text = "Producties Laden...";
             this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -197,7 +197,7 @@ namespace Controls
             this.xProductieLijst1.ShowCommandMenuOnRightClick = true;
             this.xProductieLijst1.ShowItemCountOnGroups = true;
             this.xProductieLijst1.ShowItemToolTips = true;
-            this.xProductieLijst1.Size = new System.Drawing.Size(1149, 536);
+            this.xProductieLijst1.Size = new System.Drawing.Size(923, 449);
             this.xProductieLijst1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.xProductieLijst1.TabIndex = 31;
             this.xProductieLijst1.TintSortColumn = true;
@@ -615,7 +615,7 @@ namespace Controls
             // 
             // xBottomToolMenu
             // 
-            this.xBottomToolMenu.BackColor = System.Drawing.SystemColors.Window;
+            this.xBottomToolMenu.BackColor = System.Drawing.Color.Transparent;
             this.xBottomToolMenu.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.xBottomToolMenu.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.xBottomToolMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -629,9 +629,9 @@ namespace Controls
             this.xtotaaltijdlabel,
             this.toolStripSeparator16,
             this.xstatuslabel});
-            this.xBottomToolMenu.Location = new System.Drawing.Point(0, 609);
+            this.xBottomToolMenu.Location = new System.Drawing.Point(0, 522);
             this.xBottomToolMenu.Name = "xBottomToolMenu";
-            this.xBottomToolMenu.Size = new System.Drawing.Size(1149, 25);
+            this.xBottomToolMenu.Size = new System.Drawing.Size(923, 25);
             this.xBottomToolMenu.TabIndex = 33;
             this.xBottomToolMenu.Text = "toolStrip1";
             // 
@@ -720,7 +720,7 @@ namespace Controls
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 40);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1149, 33);
+            this.panel3.Size = new System.Drawing.Size(923, 33);
             this.panel3.TabIndex = 27;
             // 
             // xfiltersStrip
@@ -734,7 +734,7 @@ namespace Controls
             this.xfiltersStrip.Location = new System.Drawing.Point(380, 0);
             this.xfiltersStrip.Name = "xfiltersStrip";
             this.xfiltersStrip.ShowItemToolTips = true;
-            this.xfiltersStrip.Size = new System.Drawing.Size(769, 33);
+            this.xfiltersStrip.Size = new System.Drawing.Size(543, 33);
             this.xfiltersStrip.TabIndex = 9;
             this.xfiltersStrip.Text = "menuStrip1";
             // 
@@ -809,7 +809,7 @@ namespace Controls
             this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel7.Location = new System.Drawing.Point(0, 0);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(1149, 40);
+            this.panel7.Size = new System.Drawing.Size(923, 40);
             this.panel7.TabIndex = 3;
             // 
             // toolStrip2
@@ -843,7 +843,7 @@ namespace Controls
             this.xfiltercontainer});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(1149, 39);
+            this.toolStrip2.Size = new System.Drawing.Size(923, 39);
             this.toolStrip2.TabIndex = 30;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -1224,7 +1224,7 @@ namespace Controls
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "ProductieListControl";
-            this.Size = new System.Drawing.Size(1149, 634);
+            this.Size = new System.Drawing.Size(923, 547);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst1)).EndInit();
