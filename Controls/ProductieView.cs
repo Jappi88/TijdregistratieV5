@@ -2385,10 +2385,10 @@ namespace Controls
                 return;
             if (Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis})
             {
-                var prs = await Manager.GetAllProductieIDs(false, true);
+                var prs = await Manager.GetAllProductieIDs(false, false);
                 foreach (var v in prs)
                 {
-                    var prod = Manager.Database.GetProductie(v);
+                    var prod = Manager.Database.GetProductie(v, false);
                     if (prod?.Bewerkingen == null || prod.Bewerkingen.Length == 0) continue;
                     var xs = prod.Bewerkingen.FirstOrDefault(x => x.State == ProductieState.Gestart);
                     if (xs == null) continue;
@@ -3112,7 +3112,7 @@ namespace Controls
                     else
                     {
                         var xsel = tb.SelectedText.Trim();
-                        var prod = Manager.Database.GetProductie(xsel);
+                        var prod = Manager.Database.GetProductie(xsel, false);
                         if (prod == null)
                             throw new Exception($"Er is geen productie gevonden met '{xsel}'.");
                         var bw = prod.Bewerkingen?.FirstOrDefault(x => x.IsAllowed());
@@ -3402,7 +3402,7 @@ namespace Controls
                                 $"Wijzig leverdatum voor ({taak.Bewerking.Path}) {taak.Bewerking.Omschrijving}.") ==
                             DialogResult.OK)
                         {
-                            taak.Formulier = Manager.Database.GetProductie(taak.Bewerking.ProductieNr);
+                            taak.Formulier = Manager.Database.GetProductie(taak.Bewerking.ProductieNr, false);
                             taak.Bewerking = taak.Formulier.Bewerkingen?.FirstOrDefault(x =>
                                 string.Equals(x.Naam, taak.Bewerking.Naam, StringComparison.CurrentCultureIgnoreCase));
 
@@ -3421,7 +3421,7 @@ namespace Controls
                         if (dt.ShowDialog(taak.Formulier.LeverDatum,
                             $"Wijzig leverdatum voor {taak.Formulier.Omschrijving}.") == DialogResult.OK)
                         {
-                            taak.Formulier = Manager.Database.GetProductie(taak.Formulier.ProductieNr);
+                            taak.Formulier = Manager.Database.GetProductie(taak.Formulier.ProductieNr, false);
                             if (taak.Formulier.Bewerkingen.Length > 0)
                                 taak.Formulier.Bewerkingen[taak.Formulier.Bewerkingen.Length - 1].LeverDatum =
                                     dt.SelectedValue;

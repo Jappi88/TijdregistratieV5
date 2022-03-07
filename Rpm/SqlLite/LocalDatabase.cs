@@ -144,7 +144,7 @@ namespace Rpm.SqlLite
 
         #region ProductieFormulieren
 
-        public Task<ProductieFormulier> GetProductie(string criteria, bool Fullmatch)
+        public Task<ProductieFormulier> FindProductie(string criteria, bool Fullmatch)
         {
             return Task.Run(async () =>
             {
@@ -165,15 +165,15 @@ namespace Rpm.SqlLite
             });
         }
 
-        public ProductieFormulier GetProductie(string productienr)
+        public ProductieFormulier GetProductie(string productienr, bool usesecondary)
         {
             try
             {
                 ProductieFormulier prod = null;
                 if (ProductieFormulieren != null)
-                    prod = ProductieFormulieren.FindOne(productienr,false).Result;
+                    prod = ProductieFormulieren.FindOne(productienr, usesecondary).Result;
                 if (prod == null && GereedFormulieren != null)
-                    prod = GereedFormulieren.FindOne(productienr,false).Result;
+                    prod = GereedFormulieren.FindOne(productienr, usesecondary).Result;
                 prod?.UpdateForm(true, false, null, null, false, false, false);
                 return prod;
             }
@@ -236,7 +236,7 @@ namespace Rpm.SqlLite
                 {
                     foreach (var id in ids)
                     {
-                        var xprod = Manager.Database?.GetProductie(id);
+                        var xprod = Manager.Database?.GetProductie(id, true);
                         if (xprod == null) continue;
                         xret.Add(xprod);
                     }
@@ -259,7 +259,7 @@ namespace Rpm.SqlLite
                 {
                     foreach (var id in ids)
                     {
-                        var xprod = Manager.Database?.GetProductie(id);
+                        var xprod = Manager.Database?.GetProductie(id, true);
                         if (xprod?.Bewerkingen == null) continue;
                         foreach (var bw in xprod.Bewerkingen)
                         {
@@ -2407,7 +2407,7 @@ namespace Rpm.SqlLite
                                 foreach (var s in xs3)
                                 {
                                     token.Token.ThrowIfCancellationRequested();
-                                    var myitem = Manager.Database.GetProductie(s.ProductieNr);
+                                    var myitem = Manager.Database.GetProductie(s.ProductieNr, true);
                                     if (myitem != null)
                                     {
                                         if (await myitem.UpdateFrom(s,
@@ -2443,7 +2443,7 @@ namespace Rpm.SqlLite
                                 foreach (var s in xs3)
                                 {
                                     token.Token.ThrowIfCancellationRequested();
-                                    var myitem = Manager.Database.GetProductie(s.ProductieNr);
+                                    var myitem = Manager.Database.GetProductie(s.ProductieNr, true);
                                     if (myitem != null)
                                     {
                                         if (await myitem.UpdateFrom(s,

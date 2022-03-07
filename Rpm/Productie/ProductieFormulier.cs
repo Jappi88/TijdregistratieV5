@@ -1471,7 +1471,7 @@ namespace Rpm.Productie
                             forms = form.ArtikelNr != null ? forms.Where(x => x.ArtikelNr != null &&
                             string.Equals(x.ArtikelNr, form.ArtikelNr, StringComparison.CurrentCultureIgnoreCase)).ToList() : new List<ProductieFormulier>();
                         else forms = await Manager.Database.GetProducties(form.ArtikelNr, true, ProductieState.Gereed, true);
-                        form = Manager.Database.GetProductie(form.ProductieNr);
+                        form = Manager.Database.GetProductie(form.ProductieNr, false);
                         if (form == null) return null;
                         form.GemiddeldPerUur = form.ActueelPerUur;
                         if (form.ActueelPerUur > 0 && form.Aantal > 0)

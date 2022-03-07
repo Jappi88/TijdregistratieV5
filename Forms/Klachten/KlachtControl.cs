@@ -133,7 +133,7 @@ namespace ProductieManager.Forms.Klachten
             }
             else
             {
-                var prod = Manager.Database.GetProductie(link);
+                var prod = Manager.Database.GetProductie(link, false);
                 if (prod != null)
                 {
                     Manager.FormulierActie(new object[] { prod }, MainAktie.OpenProductie);

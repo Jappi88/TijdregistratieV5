@@ -722,7 +722,7 @@ namespace Rpm.Productie
                            
                             changedhandler?.Invoke(null, xprog);
                             if (xprog.IsCanceled) break;
-                            var xold = Database?.GetProductie(prod.ProductieNr);
+                            var xold = Database?.GetProductie(prod.ProductieNr, true);
                             if (xold == null)
                             {
                                 if (addifnotexists)
@@ -940,7 +940,7 @@ namespace Rpm.Productie
                     ProductieFormulier xprod = null;
                     if (await Database.Exist(prod))
                     {
-                        xprod = Database.GetProductie(prod.ProductieNr);
+                        xprod = Database.GetProductie(prod.ProductieNr, false);
                         if (xprod == null)
                             return new RemoteMessage("Er is iets fout gegaan bij toevoegen van een Productie",
                                 MessageAction.AlgemeneMelding, MsgType.Fout);
@@ -993,7 +993,7 @@ namespace Rpm.Productie
                        return new RemoteMessage($"Het is niet gelukt om {prod.ProductieNr} toe te voegen!",
                            MessageAction.None,
                            MsgType.Fout, null, prod, prod.ProductieNr);
-                    xprod = Database.GetProductie(prod.ProductieNr);
+                    xprod = Database.GetProductie(prod.ProductieNr, true);
                    if (xprod != null)
                    {
                        prod = xprod;
@@ -1264,7 +1264,7 @@ namespace Rpm.Productie
             {
                 try
                 {
-                    var current = Database.GetProductie(prodnr);
+                    var current = Database.GetProductie(prodnr, true);
                     var removed = false;
                     if (current != null)
                     {

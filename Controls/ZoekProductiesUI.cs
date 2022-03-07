@@ -291,7 +291,7 @@ namespace Controls
                     {
                         if (IsDisposed || !Visible) break;
                         if (string.IsNullOrEmpty(id)) continue;
-                        var x = Manager.Database.GetProductie(id);
+                        var x = Manager.Database.GetProductie(id, true);
                         if (x == null) continue;
                         if (x.Bewerkingen is {Length: > 0})
                         {

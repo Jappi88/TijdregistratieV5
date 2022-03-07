@@ -19,7 +19,7 @@ namespace Rpm.Productie
                 if (string.IsNullOrEmpty(path)) return werk;
                 string[] xpaths = path.Split('\\');
                 if (xpaths.Length == 0) return werk;
-                var prod = parent ?? Manager.Database.GetProductie(xpaths[0]);
+                var prod = parent ?? Manager.Database.GetProductie(xpaths[0], false);
                 if (prod == null)
                     return null;
                 werk.Formulier = prod;

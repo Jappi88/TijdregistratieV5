@@ -130,7 +130,7 @@ namespace Controls
         {
             if (Huidig != null)
             {
-                var prod = Manager.Database.GetProductie(Huidig.ProductieNr);
+                var prod = Manager.Database.GetProductie(Huidig.ProductieNr, false);
                 if (prod == null) return;
                 var bew = prod.Bewerkingen?.FirstOrDefault(x =>
                     x.IsAllowed() && string.Equals(x.Naam, Huidig.Naam, StringComparison.CurrentCultureIgnoreCase));
@@ -142,7 +142,7 @@ namespace Controls
         {
             if (Volgende != null)
             {
-                var prod = Manager.Database.GetProductie(Volgende.ProductieNr);
+                var prod = Manager.Database.GetProductie(Volgende.ProductieNr, false);
                 if (prod == null) return;
                 var bew = prod.Bewerkingen?.FirstOrDefault(x =>
                     x.IsAllowed() && string.Equals(x.Naam, Volgende.Naam, StringComparison.CurrentCultureIgnoreCase));
@@ -178,7 +178,7 @@ namespace Controls
                 {
                     var xvals = e.Link.Split(';');
                     if (xvals.Length < 3) return;
-                    var prod = Manager.Database.GetProductie(xvals[0]);
+                    var prod = Manager.Database.GetProductie(xvals[0], false);
                     if (prod == null) return;
                     var bew = prod.Bewerkingen?.FirstOrDefault(x =>
                         x.IsAllowed() && string.Equals(x.Naam, xvals[1], StringComparison.CurrentCultureIgnoreCase));

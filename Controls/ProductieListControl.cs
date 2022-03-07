@@ -1127,7 +1127,7 @@ namespace Controls
                             for (var i = 0; i < Producties.Count; i++)
                             {
                                 var prod = Producties[i];
-                                var xprod = Manager.Database.GetProductie(prod.ProductieNr);
+                                var xprod = Manager.Database.GetProductie(prod.ProductieNr, true);
                                 if (onlywhilesyncing && !IsSyncing) break;
                                 if (IsDisposed || Disposing) break;
                                 var valid = xprod != null && IsAllowd(xprod);

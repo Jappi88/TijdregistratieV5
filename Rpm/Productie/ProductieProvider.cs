@@ -615,7 +615,7 @@ namespace ProductieManager.Rpm.Productie
                         for (int i = 0; i < forms.Count; i++)
                         {
                             if (Manager.LogedInGebruiker == null || !IsProductiesSyncing || (!Manager.Opties.GebruikLocalSync && !Manager.Opties.GebruikTaken)) break;
-                            var prod = Manager.Database.GetProductie(forms[i]);
+                            var prod = Manager.Database.GetProductie(forms[i], false);
                             if (prod == null || !prod.IsAllowed(null) || IsExcluded(prod))
                                 continue;
                             if (prod.State is ProductieState.Verwijderd or ProductieState.Gereed)

@@ -453,9 +453,10 @@ namespace Controls
                 {
                     var ac = new AantalChanger {StartPosition = FormStartPosition.CenterParent};
                     if (wp.Werk == null || ac.ShowDialog(wp) != DialogResult.OK) return;
+                    var xmsg = $"[{wp.Path}]Aantal aangepast van {wp.AantalGemaakt} naar {ac.Aantal}";
                     wp.AantalGemaakt = ac.Aantal;
                     wp.LaatstAantalUpdate = DateTime.Now;
-                    wp.Werk.UpdateBewerking(null, "Aantal Gemaakt Gewijzigd").Wait();
+                    wp.Werk.UpdateBewerking(null, xmsg);
                 }
             }
         }
@@ -526,7 +527,7 @@ namespace Controls
                     if (wp.Werk == null) return;
                     var wc = new WerktijdChanger(wp) {SaveChanges = true};
                     if (wc.ShowDialog() == DialogResult.OK)
-                        wp.Werk.UpdateBewerking(null, $"[{wp.Path}] Werktijd Aangepast").Wait();
+                        wp.Werk.UpdateBewerking(null, $"[{wp.Path}] Werktijd Aangepast");
                 }
         }
 
@@ -537,7 +538,7 @@ namespace Controls
             WerkPlekClicked?.Invoke(sender, e);
         }
 
-        private async void ShowSelectedProductieNotitie()
+        private void ShowSelectedProductieNotitie()
         {
             if (xwerkpleklist.SelectedObject is WerkPlek {Werk: { }} wp)
             {
@@ -549,7 +550,7 @@ namespace Controls
                 if (xtxtform.ShowDialog() == DialogResult.OK)
                 {
                     wp.Note = xtxtform.Notitie;
-                    await form.UpdateBewerking(null, $"[{form.ProductieNr}, {form.ArtikelNr}] {form.Naam} {wp.Naam} Notitie Gewijzigd");
+                    form.UpdateBewerking(null, $"[{form.ProductieNr}, {form.ArtikelNr}] {form.Naam} {wp.Naam} Notitie Gewijzigd");
                 }
             }
         }
