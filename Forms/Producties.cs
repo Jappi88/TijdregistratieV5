@@ -262,11 +262,14 @@ namespace Forms
                 {
                     var y = (xparent.Location.Y + xparent.Height / 2) - this.Height / 2;
                     var x = (xparent.Location.X + xparent.Width / 2) - this.Width / 2;
-                    this.Location = new Point(x, y);
+                    if (Screen.GetWorkingArea(xparent).Contains(new Point(x, y)))
+                        this.Location = new Point(x, y);
+                    else this.StartPosition = FormStartPosition.CenterScreen;
                 }
                 else
                     this.StartPosition = FormStartPosition.CenterScreen;
             }
+            else this.StartPosition = FormStartPosition.CenterParent;
         }
 
         private void Producties_FormClosing(object sender, FormClosingEventArgs e)

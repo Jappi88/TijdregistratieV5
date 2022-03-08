@@ -947,16 +947,16 @@ namespace Rpm.Productie
                         if (updateifexist || (xprod.Bewerkingen == null || xprod.Bewerkingen.Length == 0))
                         {
                             if (await xprod.UpdateFieldsFrom(prod) && await Database.UpSert(xprod,
-                                $"[{xprod.ArtikelNr}|{xprod.ProductieNr}] geupdate!",false))
+                                $"[{xprod.ArtikelNr}, {xprod.ProductieNr}] geupdate!",false))
                             {
                                 return new RemoteMessage(
-                                    $"Productie [{prod.ProductieNr}] geupdate!",
+                                    $"Productie [{prod.ProductieNr}, {prod.ArtikelNr}] geupdate!",
                                     MessageAction.ProductieWijziging, MsgType.Info, null, prod,
                                     prod.ProductieNr);
                             }
                             else
                                 return new RemoteMessage(
-                                    $"Productie [{prod.ProductieNr}] bestaat al, en kan niet nogmaals worden toegevoegd!",
+                                    $"Productie [{prod.ProductieNr}, {xprod.ProductieNr}] bestaat al, en kan niet nogmaals worden toegevoegd!",
                                     MessageAction.ProductieWijziging, MsgType.Waarschuwing, null, prod,
                                     prod.ProductieNr);
                         }
@@ -989,7 +989,7 @@ namespace Rpm.Productie
                         Console.WriteLine(e);
                     }
                     if (!await Database.UpSert(prod,
-                       $"[{prod.ArtikelNr}|{prod.ProductieNr}] Nieuwe productie toegevoegd({prod.Aantal} {xa}) met doorlooptijd van {prod.DoorloopTijd} uur."))
+                       $"[{prod.ArtikelNr}, {prod.ProductieNr}] Nieuwe productie toegevoegd({prod.Aantal} {xa}) met doorlooptijd van {prod.DoorloopTijd} uur."))
                        return new RemoteMessage($"Het is niet gelukt om {prod.ProductieNr} toe te voegen!",
                            MessageAction.None,
                            MsgType.Fout, null, prod, prod.ProductieNr);
@@ -997,7 +997,7 @@ namespace Rpm.Productie
                    if (xprod != null)
                    {
                        prod = xprod;
-                       _ = ProductieFormulier.UpdateDoorloopTijd(null, prod, null, false, true, false);
+                       _ = ProductieFormulier.UpdateDoorloopTijd(null, prod, "", false, true, false);
 
                        return new RemoteMessage($"{prod.ProductieNr} toegevoegd!", MessageAction.NieweProductie,
                            MsgType.Success, null, prod, prod.ProductieNr);

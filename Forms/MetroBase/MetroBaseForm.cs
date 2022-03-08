@@ -111,7 +111,9 @@ namespace Forms.MetroBase
                 {
                     var y = (xparent.Location.Y + xparent.Height / 2) - this.Height / 2;
                     var x = (xparent.Location.X + xparent.Width / 2) - this.Width / 2;
-                    this.Location = this.PointToClient(new Point(x, y));
+                    if (Screen.GetWorkingArea(xparent).Contains(new Point(x, y)))
+                        this.Location = new Point(x, y);
+                    else this.StartPosition = FormStartPosition.CenterScreen;
                 }
                 else
                     this.StartPosition = FormStartPosition.CenterScreen;

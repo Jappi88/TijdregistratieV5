@@ -58,6 +58,7 @@ namespace Controls
             {
                 var xcurents = xLogDataList.Objects?.Cast<LogEntry>().ToList() ?? new List<LogEntry>();
                 var xremove = xcurents.Where(xc => entries.All(e => e.Id != xc.Id)).ToList();
+                bool selected = xremove.Count > 0;
                 if (xremove.Count > 0)
                 {
                     xLogDataList.BeginUpdate();
@@ -69,6 +70,7 @@ namespace Controls
                     xLogDataList.EndUpdate();
                 }
 
+               
                 for (int i = 0; i < entries.Count; i++)
                 {
                     var xent = entries[i];
@@ -79,6 +81,7 @@ namespace Controls
                     }
                     else
                     {
+                        selected = true;
                         xLogDataList.BeginUpdate();
                         xLogDataList.AddObject(xent);
                         xLogDataList.EndUpdate();
@@ -86,8 +89,11 @@ namespace Controls
                     }
                 }
 
-                xLogDataList.SelectedIndex = xLogDataList.Items.Count - 1;
-                xLogDataList.SelectedItem?.EnsureVisible();
+                if (selected)
+                {
+                    xLogDataList.SelectedIndex = xLogDataList.Items.Count - 1;
+                    xLogDataList.SelectedItem?.EnsureVisible();
+                }
             }
             catch (Exception e)
             {
