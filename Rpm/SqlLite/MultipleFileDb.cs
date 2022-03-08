@@ -641,6 +641,7 @@ namespace Rpm.SqlLite
             {
                 if (!CanRead) return false;
                 var paths = GetWritePaths(false);
+                bool xdel = false;
                 foreach (var path in paths)
                 {
                     try
@@ -649,6 +650,7 @@ namespace Rpm.SqlLite
                         if (File.Exists(path1))
                         {
                             File.Delete(path1);
+                            xdel = true;
                         }
                     }
                     catch (Exception e)
@@ -657,7 +659,7 @@ namespace Rpm.SqlLite
                     }
                 }
 
-                return true;
+                return xdel;
             }
             catch (Exception)
             {

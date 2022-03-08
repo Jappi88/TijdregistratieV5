@@ -211,7 +211,7 @@ namespace Controls.TileView
                     case "xzoekproducties":
                         break;
                     case "xpersoneel":
-                        entry.TileCount = Manager.Database?.PersoneelLijst.Count().Result??0;
+                        entry.TileCount = Manager.Database?.PersoneelLijst?.Count().Result??0;
                         break;
                     case "xalleartikelen":
                         bws = Manager.ProductieProvider.GetBewerkingen(ProductieProvider.LoadedType.Alles,
@@ -229,7 +229,7 @@ namespace Controls.TileView
                         entry.TileCount = xlist.Count;
                         break;
                     case "xartikelrecords":
-                        entry.TileCount = Manager.ArtikelRecords?.Database.Count()??0;
+                        entry.TileCount = Manager.ArtikelRecords?.Database?.Count()??0;
                         break;
                     case "xproductievolgorde":
                         break;

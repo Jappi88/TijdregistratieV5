@@ -257,6 +257,7 @@ namespace Rpm.Productie
 
                     Close();
                     LoadPath(path);
+                    InitManager();
                     Database = new LocalDatabase(this, SystemId, DbPath, true)
                     {
                         LoggerEnabled = LoggerEnabled,
@@ -999,7 +1000,7 @@ namespace Rpm.Productie
                        prod = xprod;
                        _ = ProductieFormulier.UpdateDoorloopTijd(null, prod, "", false, true, false);
 
-                       return new RemoteMessage($"{prod.ProductieNr} toegevoegd!", MessageAction.NieweProductie,
+                       return new RemoteMessage($"{prod.ProductieNr} toegevoegd!", MessageAction.AlgemeneMelding,
                            MsgType.Success, null, prod, prod.ProductieNr);
                    }
                    return new RemoteMessage($"Het is niet gelukt om {prod.ProductieNr} toe te voegen!",
@@ -1128,6 +1129,7 @@ namespace Rpm.Productie
         /// Voeg meerdere bestanden toe
         /// </summary>
         /// <param name="pdffiles">Een reeks pdf bestanden die toegevoegd moeten worden</param>
+        /// <param name="updateifexist"></param>
         /// <param name="delete">True voor als je de bestanden wilt verwijderen zodra ze zijn toegevoegd</param>
         /// <param name="showerror">True voor als je een foutmelding wilt laten zien</param>
         /// <returns></returns>
@@ -1401,19 +1403,15 @@ namespace Rpm.Productie
                     int done = 0;
                     var acces1 = LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
                     if (!acces1) return -1;
-                        var changes = new List<string>();
                         foreach (var wp in werkplekken)
                         {
                             var bw = wp.Werk;
                             if (!wp.IsActief() || !bw.IsAllowed() || bw.State != ProductieState.Gestart) continue;
 
                             wp.UpdateWerkRooster(rooster, true, true, true, true, false, true, true);
-
-                            changes.Add(wp.Naam);
                         
                             if (bw.UpdateBewerking(null,
-                                    $"[{bw.ProductieNr} | {bw.ArtikelNr}] Werkrooster aangepast voor: \n" +
-                                    $"{string.Join(", ", changes)}").Result)
+                                    $"[{wp.Path}] Werkrooster aangepast").Result)
                                 done++;
                         }
 
@@ -1453,12 +1451,15 @@ namespace Rpm.Productie
                         _fileWatchers.Add(sw);
                     }
 
-                    foreach (var fs in _fileWatchers)
+                    for (int i = 0; i < _fileWatchers.Count; i++)
+                    {
+                        var fs = _fileWatchers[i];
                         if (!Opties.SyncLocaties.Contains(fs.Path))
                         {
                             fs.Dispose();
-                            _fileWatchers.Remove(fs);
+                            _fileWatchers.RemoveAt(i--);
                         }
+                    }
 
                     LoadUnloadedFiles();
                 }

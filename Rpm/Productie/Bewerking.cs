@@ -762,20 +762,23 @@ namespace Rpm.Productie
                                 }
                             }
                         }
-                        if(completeremove)
-                            return await Manager.Database.Delete(Parent);
-                        var bws = Parent.Bewerkingen.Where(x => !x.Equals(this)).ToArray();
-                        var deleted = bws.Length < Parent.Bewerkingen.Length;
-                        Parent.Bewerkingen = bws;
-                        if (Parent.Bewerkingen.Length == 0)
+
+                        var deleted = false;
+                        if (completeremove)
                         {
-                            return await Manager.Database.Delete(Parent);
+                            var bws = Parent.Bewerkingen.Where(x => !x.Equals(this)).ToArray();
+                            deleted = bws.Length < Parent.Bewerkingen.Length;
+                            Parent.Bewerkingen = bws;
+                            if (Parent.Bewerkingen.Length == 0)
+                            {
+                                return await Manager.Database.Delete(Parent);
+                            }
                         }
 
                         if (deleted)
                         {
                             Manager.BewerkingDeleted(this, this,false);
-                            await Parent.UpdateForm(true, false);
+                            await Parent.UpdateForm(true, false,null, $"[{this.Path}] Is Verwijderd!");
 
                         }
 
@@ -810,7 +813,7 @@ namespace Rpm.Productie
                 if (completeremove)
                     await RemoveBewerking(false, true);
                 else
-                    await UpdateBewerking(null, $"[{Path}] Verwijderd.");
+                    await UpdateBewerking(null, $"[{Path}] Verwijderd");
                 return true;
             });
         }
@@ -821,6 +824,7 @@ namespace Rpm.Productie
             {
                 if (State != ProductieState.Gestart && State != ProductieState.Gestopt)
                 {
+                    var change = $"[{this.Path}] Status omgezet van '{Enum.GetName(typeof(ProductieState), this.State)}' naar 'Gestopt'";
                     State = ProductieState.Gestopt;
                     var personen = GetPersoneel();
                     foreach (var per in personen)
@@ -836,12 +840,12 @@ namespace Rpm.Productie
                                     dbpers.ReplaceKlus(klus);
                                 }
 
-                                await Manager.Database.UpSert(dbpers, $"{Path} Klusjes terug gezet");
+                                await Manager.Database.UpSert(dbpers, change);
                             }
                         }
                     }
 
-                    await UpdateBewerking();
+                    await UpdateBewerking(null,change);
                     return true;
                 }
 

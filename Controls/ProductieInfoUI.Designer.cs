@@ -34,24 +34,24 @@ namespace Controls
             this.xTabControl = new MetroFramework.Controls.MetroTabControl();
             this.xtab0 = new MetroFramework.Controls.MetroTabPage();
             this.xtab1 = new MetroFramework.Controls.MetroTabPage();
+            this.productieVerbruikUI1 = new Controls.ProductieVerbruikUI();
             this.xtab2 = new MetroFramework.Controls.MetroTabPage();
+            this.combineerUI1 = new Controls.CombineerUI();
             this.xtab3 = new MetroFramework.Controls.MetroTabPage();
             this.xtab4 = new MetroFramework.Controls.MetroTabPage();
             this.xtab5 = new MetroFramework.Controls.MetroTabPage();
             this.xtab6 = new MetroFramework.Controls.MetroTabPage();
+            this.verpakkingInstructieUI1 = new Controls.VerpakkingInstructieUI();
             this.xtab7 = new MetroFramework.Controls.MetroTabPage();
             this.xtab8 = new MetroFramework.Controls.MetroTabPage();
             this.xtab9 = new MetroFramework.Controls.MetroTabPage();
+            this.alleWerkPlekAantalHistoryUI1 = new Forms.Aantal.Controls.AlleWerkPlekAantalHistoryUI();
             this.xtab10 = new MetroFramework.Controls.MetroTabPage();
             this.xLogDataList = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.productieVerbruikUI1 = new Controls.ProductieVerbruikUI();
-            this.combineerUI1 = new Controls.CombineerUI();
-            this.verpakkingInstructieUI1 = new Controls.VerpakkingInstructieUI();
-            this.alleWerkPlekAantalHistoryUI1 = new Forms.Aantal.Controls.AlleWerkPlekAantalHistoryUI();
             this.aantalChangerUI1 = new ProductieManager.Forms.Aantal.Controls.AantalChangerUI();
             this.xTabControl.SuspendLayout();
             this.xtab1.SuspendLayout();
@@ -124,6 +124,34 @@ namespace Controls
             this.xtab1.VerticalScrollbarHighlightOnWheel = false;
             this.xtab1.VerticalScrollbarSize = 3;
             // 
+            // productieVerbruikUI1
+            // 
+            this.productieVerbruikUI1.BackColor = System.Drawing.Color.White;
+            this.productieVerbruikUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieVerbruikUI1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productieVerbruikUI1.Location = new System.Drawing.Point(5, 5);
+            this.productieVerbruikUI1.MaxUitgangsLengte = new decimal(new int[] {
+            7500,
+            0,
+            0,
+            0});
+            this.productieVerbruikUI1.Name = "productieVerbruikUI1";
+            this.productieVerbruikUI1.OpdrukkerArtikel = null;
+            this.productieVerbruikUI1.Padding = new System.Windows.Forms.Padding(5);
+            this.productieVerbruikUI1.RestStuk = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.productieVerbruikUI1.ShowMateriaalSelector = false;
+            this.productieVerbruikUI1.ShowOpdrukkerArtikelNr = false;
+            this.productieVerbruikUI1.ShowOpslaan = false;
+            this.productieVerbruikUI1.ShowPerUur = false;
+            this.productieVerbruikUI1.ShowSluiten = false;
+            this.productieVerbruikUI1.Size = new System.Drawing.Size(903, 441);
+            this.productieVerbruikUI1.TabIndex = 2;
+            this.productieVerbruikUI1.Title = "Verbruik Berekenen";
+            // 
             // xtab2
             // 
             this.xtab2.Controls.Add(this.combineerUI1);
@@ -140,6 +168,17 @@ namespace Controls
             this.xtab2.VerticalScrollbarBarColor = true;
             this.xtab2.VerticalScrollbarHighlightOnWheel = false;
             this.xtab2.VerticalScrollbarSize = 3;
+            // 
+            // combineerUI1
+            // 
+            this.combineerUI1.BackColor = System.Drawing.Color.White;
+            this.combineerUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.combineerUI1.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.combineerUI1.Location = new System.Drawing.Point(5, 5);
+            this.combineerUI1.Name = "combineerUI1";
+            this.combineerUI1.Padding = new System.Windows.Forms.Padding(5);
+            this.combineerUI1.Size = new System.Drawing.Size(903, 441);
+            this.combineerUI1.TabIndex = 2;
             // 
             // xtab3
             // 
@@ -209,6 +248,23 @@ namespace Controls
             this.xtab6.VerticalScrollbarHighlightOnWheel = false;
             this.xtab6.VerticalScrollbarSize = 3;
             // 
+            // verpakkingInstructieUI1
+            // 
+            this.verpakkingInstructieUI1.AllowEditMode = false;
+            this.verpakkingInstructieUI1.AutoScroll = true;
+            this.verpakkingInstructieUI1.BackColor = System.Drawing.Color.White;
+            this.verpakkingInstructieUI1.BodyColor = System.Drawing.Color.Empty;
+            this.verpakkingInstructieUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.verpakkingInstructieUI1.IsEditmode = false;
+            this.verpakkingInstructieUI1.Location = new System.Drawing.Point(5, 5);
+            this.verpakkingInstructieUI1.Name = "verpakkingInstructieUI1";
+            this.verpakkingInstructieUI1.Padding = new System.Windows.Forms.Padding(5);
+            this.verpakkingInstructieUI1.Productie = null;
+            this.verpakkingInstructieUI1.Size = new System.Drawing.Size(903, 441);
+            this.verpakkingInstructieUI1.TabIndex = 2;
+            this.verpakkingInstructieUI1.TextColor = System.Drawing.Color.Empty;
+            this.verpakkingInstructieUI1.Title = null;
+            // 
             // xtab7
             // 
             this.xtab7.HorizontalScrollbarBarColor = true;
@@ -258,6 +314,18 @@ namespace Controls
             this.xtab9.VerticalScrollbarHighlightOnWheel = false;
             this.xtab9.VerticalScrollbarSize = 3;
             // 
+            // alleWerkPlekAantalHistoryUI1
+            // 
+            this.alleWerkPlekAantalHistoryUI1.BackColor = System.Drawing.Color.White;
+            this.alleWerkPlekAantalHistoryUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.alleWerkPlekAantalHistoryUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.alleWerkPlekAantalHistoryUI1.Location = new System.Drawing.Point(5, 5);
+            this.alleWerkPlekAantalHistoryUI1.Margin = new System.Windows.Forms.Padding(4);
+            this.alleWerkPlekAantalHistoryUI1.Name = "alleWerkPlekAantalHistoryUI1";
+            this.alleWerkPlekAantalHistoryUI1.Padding = new System.Windows.Forms.Padding(10);
+            this.alleWerkPlekAantalHistoryUI1.Size = new System.Drawing.Size(903, 441);
+            this.alleWerkPlekAantalHistoryUI1.TabIndex = 2;
+            // 
             // xtab10
             // 
             this.xtab10.Controls.Add(this.xLogDataList);
@@ -272,7 +340,7 @@ namespace Controls
             this.xtab10.Text = "Productie Log";
             this.xtab10.VerticalScrollbarBarColor = true;
             this.xtab10.VerticalScrollbarHighlightOnWheel = false;
-            this.xtab10.VerticalScrollbarSize = 4;
+            this.xtab10.VerticalScrollbarSize = 3;
             // 
             // xLogDataList
             // 
@@ -327,11 +395,10 @@ namespace Controls
             // olvColumn2
             // 
             this.olvColumn2.AspectName = "Message";
-            this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Groupable = false;
             this.olvColumn2.IsEditable = false;
             this.olvColumn2.Text = "Omschrijving";
-            this.olvColumn2.Width = 250;
+            this.olvColumn2.Width = 500;
             this.olvColumn2.WordWrap = true;
             // 
             // imageList1
@@ -339,74 +406,6 @@ namespace Controls
             this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
             this.imageList1.ImageSize = new System.Drawing.Size(32, 32);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // productieVerbruikUI1
-            // 
-            this.productieVerbruikUI1.BackColor = System.Drawing.Color.White;
-            this.productieVerbruikUI1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.productieVerbruikUI1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productieVerbruikUI1.Location = new System.Drawing.Point(5, 5);
-            this.productieVerbruikUI1.MaxUitgangsLengte = new decimal(new int[] {
-            7500,
-            0,
-            0,
-            0});
-            this.productieVerbruikUI1.Name = "productieVerbruikUI1";
-            this.productieVerbruikUI1.OpdrukkerArtikel = null;
-            this.productieVerbruikUI1.Padding = new System.Windows.Forms.Padding(5);
-            this.productieVerbruikUI1.RestStuk = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.productieVerbruikUI1.ShowMateriaalSelector = false;
-            this.productieVerbruikUI1.ShowOpdrukkerArtikelNr = false;
-            this.productieVerbruikUI1.ShowOpslaan = false;
-            this.productieVerbruikUI1.ShowPerUur = false;
-            this.productieVerbruikUI1.ShowSluiten = false;
-            this.productieVerbruikUI1.Size = new System.Drawing.Size(903, 441);
-            this.productieVerbruikUI1.TabIndex = 2;
-            this.productieVerbruikUI1.Title = "Verbruik Berekenen";
-            // 
-            // combineerUI1
-            // 
-            this.combineerUI1.BackColor = System.Drawing.Color.White;
-            this.combineerUI1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.combineerUI1.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.combineerUI1.Location = new System.Drawing.Point(5, 5);
-            this.combineerUI1.Name = "combineerUI1";
-            this.combineerUI1.Padding = new System.Windows.Forms.Padding(5);
-            this.combineerUI1.Size = new System.Drawing.Size(903, 441);
-            this.combineerUI1.TabIndex = 2;
-            // 
-            // verpakkingInstructieUI1
-            // 
-            this.verpakkingInstructieUI1.AllowEditMode = false;
-            this.verpakkingInstructieUI1.AutoScroll = true;
-            this.verpakkingInstructieUI1.BackColor = System.Drawing.Color.White;
-            this.verpakkingInstructieUI1.BodyColor = System.Drawing.Color.Empty;
-            this.verpakkingInstructieUI1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.verpakkingInstructieUI1.IsEditmode = false;
-            this.verpakkingInstructieUI1.Location = new System.Drawing.Point(5, 5);
-            this.verpakkingInstructieUI1.Name = "verpakkingInstructieUI1";
-            this.verpakkingInstructieUI1.Padding = new System.Windows.Forms.Padding(5);
-            this.verpakkingInstructieUI1.Productie = null;
-            this.verpakkingInstructieUI1.Size = new System.Drawing.Size(903, 441);
-            this.verpakkingInstructieUI1.TabIndex = 2;
-            this.verpakkingInstructieUI1.TextColor = System.Drawing.Color.Empty;
-            this.verpakkingInstructieUI1.Title = null;
-            // 
-            // alleWerkPlekAantalHistoryUI1
-            // 
-            this.alleWerkPlekAantalHistoryUI1.BackColor = System.Drawing.Color.White;
-            this.alleWerkPlekAantalHistoryUI1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.alleWerkPlekAantalHistoryUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.alleWerkPlekAantalHistoryUI1.Location = new System.Drawing.Point(5, 5);
-            this.alleWerkPlekAantalHistoryUI1.Margin = new System.Windows.Forms.Padding(4);
-            this.alleWerkPlekAantalHistoryUI1.Name = "alleWerkPlekAantalHistoryUI1";
-            this.alleWerkPlekAantalHistoryUI1.Padding = new System.Windows.Forms.Padding(10);
-            this.alleWerkPlekAantalHistoryUI1.Size = new System.Drawing.Size(903, 441);
-            this.alleWerkPlekAantalHistoryUI1.TabIndex = 2;
             // 
             // aantalChangerUI1
             // 

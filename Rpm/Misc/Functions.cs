@@ -772,8 +772,9 @@ namespace Rpm.Misc
                     }
                     else wp.Storingen.Add(xnew.Onderbreking);
                     xsts = wp.Storingen.Where(x => !x.IsVerholpen).ToList();
-                    var x1 = xsts.Count > 0 ? "onderbroken" : "hervat";
-
+                    var x1 = xsts.Count > 0 ? "onderbroken" : "hervatten";
+                    var x2 = xsts.Count > 0 ? "voor" : "na";
+                    var change = $"{x1} {x2} een {xnew.Onderbreking.StoringType.FirstCharToUpper()}";
                     if (bw.Combies.Count > 0 && xnew.Onderbreking != null)
                     {
                         foreach (var comb in bw.Combies)
@@ -790,12 +791,12 @@ namespace Rpm.Misc
                             if (xindex > -1)
                                 xwp.Storingen[xindex] = xst;
                             else xwp.Storingen.Add(xst);
-                            _ = xwp.Werk.UpdateBewerking(null, $"'{xwp.Werk.Naam}' op '{xwp.Naam}' is {x1}");
+                            _ = xwp.Werk.UpdateBewerking(null, $"[{xwp.Path}]{change}");
                         }
                     }
 
-                 
-                    _= bw.UpdateBewerking(null, $"'{bw.Naam}' op '{wp.Naam}' is {x1}").Result;
+
+                    _ = bw.UpdateBewerking(null, $"[{wp.Path}]{change}").Result;
                 }
             }
             catch (Exception e)
@@ -950,7 +951,7 @@ namespace Rpm.Misc
                         }
 
                         if (saved)
-                            await bew.UpdateBewerking(null, $"{personeel.PersoneelNaam} inactief gezet op {bew.Path}.");
+                            await bew.UpdateBewerking(null, $"[{bew.Path}]{personeel.PersoneelNaam} inactief gezet");
                     }
                 }
 

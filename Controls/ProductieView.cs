@@ -156,7 +156,7 @@ namespace Controls
                 //    var xwelcome = new WelcomeForm();
                 //    xwelcome.ShowDialog();
                 //}
-                _manager.InitManager();
+                //_manager.InitManager();
                 takenManager1.InitManager();
                 InitEvents();
                 _manager.Load(path, autologin, true, true);
@@ -1745,7 +1745,7 @@ namespace Controls
                             if (plek.Werk != null)
                             {
                                 await plek.Werk?.UpdateBewerking(null,
-                                    $"Onderbreking aangepast op {storingform.Onderbreking.Path}");
+                                    $"{storingform.Onderbreking.StoringType.FirstCharToUpper()} aangepast op {storingform.Onderbreking.Path}");
                                 RemoteProductie.SendStoringMail(storingform.Onderbreking, plek.Werk);
                             }
 

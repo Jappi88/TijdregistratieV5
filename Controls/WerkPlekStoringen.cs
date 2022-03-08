@@ -364,7 +364,7 @@ namespace Controls
                     plek.Storingen.Add(sf.Onderbreking);
                     ListItems();
                     await plek.Werk.UpdateBewerking(null,
-                        $"Niewe onderbreking toegevoegd door '{sf.Onderbreking.GemeldDoor} op {Plek.Value[0].Path}'");
+                        $"[{Plek.Value[0].Path}] '{sf.Onderbreking.GemeldDoor}' heeft een {sf.Onderbreking.StoringType} geplaatst");
                     RemoteProductie.SendStoringMail(sf.Onderbreking, plek.Werk);
                 }
             }
@@ -402,7 +402,7 @@ namespace Controls
                                 plek.Storingen[xindex] = sf.Onderbreking;
                             //plek.Storingen = xskillview.Objects.Cast<Storing>().Where(x=> string.Equals(x.Path, plek.Path, StringComparison.CurrentCultureIgnoreCase)).Union(plek.Storingen).ToList();
                             plek.Werk.UpdateBewerking(null,
-                                $"Onderbreking aangepast door '{sf.Onderbreking.GemeldDoor} op {plek.Path}'");
+                                $"[{plek.Path}] '{sf.Onderbreking.StoringType}' aangepast door '{sf.Onderbreking.GemeldDoor}'");
                             //xskillview.SetObjects(plek.Storingen);
                             xskillview.SelectedObject = sf.Onderbreking;
                             xskillview.SelectedItem?.EnsureVisible();
