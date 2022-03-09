@@ -1048,7 +1048,7 @@ namespace Rpm.Productie
 
                                         var bew = xprod.Bewerkingen?.FirstOrDefault(x => x.IsAllowed());
                                         if (Opties is {ToonProductieNaToevoegen: true} && bew != null)
-                                            FormulierActie(new object[] { xprod, bew}, MainAktie.OpenProductie);
+                                            FormulierActie(new object[] {xprod, bew}, MainAktie.OpenProductie);
                                     }
                                 }
                                 catch (Exception e)
@@ -1057,56 +1057,55 @@ namespace Rpm.Productie
                                 }
                             }
                             else
-                                msg = new RemoteMessage($"[{prod.ProductieNr}, {prod.ArtikelNr}]Kan niet toevoegen omdat de bewerking is gefilterd!",
+                                msg = new RemoteMessage(
+                                    $"[{prod.ProductieNr}, {prod.ArtikelNr}]Kan niet toevoegen omdat de bewerking is gefilterd!",
                                     MessageAction.AlgemeneMelding, MsgType.Info);
+
                             rms.Add(msg);
-                            if (msg.Action is MessageAction.NieweProductie or MessageAction.ProductieWijziging)
+                            try
                             {
-                                try
+                                string fpath = Path.Combine(ProductieFormPath, $"{prod.ProductieNr}.pdf");
+                                if (!string.Equals(fpath, pdffile, StringComparison.CurrentCultureIgnoreCase))
                                 {
-                                    string fpath = Path.Combine(ProductieFormPath, $"{prod.ProductieNr}.pdf");
-                                    if (!string.Equals(fpath, pdffile, StringComparison.CurrentCultureIgnoreCase))
+                                    for (int i = 0; i < 5; i++)
                                     {
-                                        for (int i = 0; i < 5; i++)
+                                        try
                                         {
-                                            try
+                                            if (delete)
                                             {
-                                                if (delete)
-                                                {
 
-                                                    if (File.Exists(fpath))
-                                                        File.Delete(pdffile);
-                                                    else
-                                                        File.Move(pdffile, fpath);
-                                                }
+                                                if (File.Exists(fpath))
+                                                    File.Delete(pdffile);
                                                 else
-                                                    File.Copy(pdffile, fpath, true);
+                                                    File.Move(pdffile, fpath);
+                                            }
+                                            else
+                                                File.Copy(pdffile, fpath, true);
 
-                                                if (File.Exists(fpath)) break;
-                                            }
-                                            catch (Exception e)
-                                            {
-                                                Console.WriteLine(e);
-                                            }
+                                            if (File.Exists(fpath)) break;
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            Console.WriteLine(e);
                                         }
                                     }
                                 }
-                                catch (Exception e)
-                                {
-                                    Console.WriteLine(e.Message);
-                                }
-
-                                // pdffile.CleanupFilePath(ProductieFormPath, prod.ProductieNr, false,false);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.Message);
                             }
 
-                            if (msg.Action == MessageAction.NieweProductie && delete && Opties is
+                            // pdffile.CleanupFilePath(ProductieFormPath, prod.ProductieNr, false,false);
+
+                            if (delete && Opties is
                             {
                                 VerwijderVerwerkteBestanden: true
                             } && File.Exists(pdffile))
                             {
                                 try
                                 {
-                                        File.Delete(pdffile);
+                                    File.Delete(pdffile);
                                 }
                                 catch
                                 {
