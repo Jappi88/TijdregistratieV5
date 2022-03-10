@@ -204,7 +204,7 @@ namespace Controls
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
             xprodlist.InitUI(_manager);
-            xprodlist.LoadPlekken(true);
+            xprodlist.LoadPlekken();
             xprodlist.InitEvents();
             UpdateTileViewed(entry, true);
         }

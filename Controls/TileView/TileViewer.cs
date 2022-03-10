@@ -338,7 +338,7 @@ namespace Controls
                     Manager.Opties.TileLayout[xindex] = ent;
                 }
             }
-            SaveTiles(true);
+            SaveTiles(false);
             _destination.Invalidate();
         }
 

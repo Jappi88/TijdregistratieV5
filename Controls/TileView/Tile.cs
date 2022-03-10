@@ -18,9 +18,6 @@ namespace Controls
     {
         private readonly Button flatbutton;
         public List<string> InfoFields { get; set; }
-        private bool isHovered;
-        private bool isPressed;
-        private bool isFocused;
 
         public bool AllowTileEdit
         {
@@ -45,33 +42,6 @@ namespace Controls
         public Tile()
         {
             InitializeComponent();
-            this.GotFocus += (_, _) =>
-            {
-                this.isFocused = true;
-                this.isHovered = true;
-                this.Invalidate();
-            };
-            this.LostFocus += (_, _) =>
-            {
-                this.isFocused = false;
-                this.isHovered = false;
-                this.isPressed = false;
-                this.Invalidate();
-            };
-            this.Enter += (_, _) =>
-            {
-                this.isFocused = true;
-                this.isHovered = true;
-                this.Invalidate();
-            };
-            this.Leave += (_, _) =>
-            {
-                this.isFocused = false;
-                this.isHovered = false;
-                this.isPressed = false;
-                this.Invalidate();
-            };
-
             UseTileImage = true;
             UseCustomBackColor = true;
             UseCustomForeColor = true;
@@ -294,11 +264,6 @@ namespace Controls
 
         public void TileMouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-            {
-                this.isPressed = true;
-                this.Invalidate();
-            }
             Focus();
             //base.OnMouseDown(e);
             _mX = e.X;
@@ -361,33 +326,5 @@ namespace Controls
         }
         #endregion
 
-        private void Tile_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Space)
-            {
-                this.isHovered = true;
-                this.isPressed = true;
-                this.Invalidate();
-            }
-        }
-
-        private void Tile_MouseUp(object sender, MouseEventArgs e)
-        {
-            this.isPressed = false;
-            this.Invalidate();
-        }
-
-        private void Tile_MouseEnter(object sender, EventArgs e)
-        {
-            this.isHovered = true;
-            this.Invalidate();
-        }
-
-        private void Tile_MouseLeave(object sender, EventArgs e)
-        {
-            if (!this.isFocused)
-                this.isHovered = false;
-            this.Invalidate();
-        }
     }
 }

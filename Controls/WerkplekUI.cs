@@ -103,7 +103,6 @@ namespace Controls
         {
             Manager.OnFormulierChanged += PManager_FormulierChanged;
             Manager.OnFormulierDeleted += Manager_OnFormulierDeleted;
-            Manager.FilterChanged += Manager_FilterChanged;
             Manager.OnSettingsChanged += Manager_OnSettingsChanged;
         }
 
@@ -131,9 +130,9 @@ namespace Controls
             LoadLayout();
             if (this.InvokeRequired)
             {
-                this.BeginInvoke(new MethodInvoker(() => LoadPlekken(true)));
+                this.BeginInvoke(new MethodInvoker(LoadPlekken));
             }
-            else LoadPlekken(true);
+            else LoadPlekken();
         }
 
         public void SaveLayout()
@@ -147,29 +146,12 @@ namespace Controls
 
         }
 
-        private void Manager_FilterChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (this.Disposing || this.IsDisposed) return;
-                if (this.InvokeRequired)
-                {
-                    this.BeginInvoke(new MethodInvoker(() => LoadPlekken(true)));
-                }
-                else LoadPlekken(true);
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
-        }
-
         private void Manager_OnFormulierDeleted(object sender, string id)
         {
             if (this.Disposing || this.IsDisposed) return;
             try
             {
-                this.BeginInvoke(new MethodInvoker(()=> LoadPlekken(true)));
+                this.BeginInvoke(new MethodInvoker(LoadPlekken));
             }
             catch (Exception e)
             {
@@ -181,13 +163,12 @@ namespace Controls
         {
             Manager.OnFormulierChanged -= PManager_FormulierChanged;
             Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
-            Manager.FilterChanged -= Manager_FilterChanged;
             Manager.OnSettingsChanged -= Manager_OnSettingsChanged;
         }
 
         private bool _IsLoading;
 
-        public void LoadPlekken(bool startsync)
+        public void LoadPlekken()
         {
             if (_IsLoading) return;
             _IsLoading = true;
@@ -220,152 +201,165 @@ namespace Controls
             }
 
             _IsLoading = false;
-            if (EnableSync && Manager.Opties.AutoProductieLijstSync && !IsSyncing && startsync)
-                StartSync();
+            //if (EnableSync && Manager.Opties.AutoProductieLijstSync && !IsSyncing && startsync)
+            //    StartSync();
             if (changed)
                 PlekkenChanged();
         }
 
         private void PManager_FormulierChanged(object sender, ProductieFormulier form)
         {
-            Invoke(new Action(() =>
+            if (this.Disposing || this.IsDisposed) return;
+            try
             {
-                var changed = false;
-                if (form != null)
-                    try
-                    {
-                        var xwerkplekken = xwerkpleklist.Objects?.Cast<WerkPlek>().ToList();
-                        if (xwerkplekken != null && form.Bewerkingen is {Length: > 0})
-                        {
-                            var formplekken = xwerkplekken
-                                .Where(x => string.Equals(x.Werk.ProductieNr, form.ProductieNr)).ToList();
-                            foreach (var bewerking in form.Bewerkingen)
-                                if (bewerking.WerkPlekken is {Count: > 0})
-                                {
-                                    var isvalid = bewerking.IsAllowed(null);
-                                    foreach (var plek in bewerking.WerkPlekken)
-                                    {
-                                        //&& x.WerktAanKlus(plek.Path, out _)
-                                        var valid = isvalid && plek.Personen.Any(x => x.WerktAanKlus(bewerking, out _));
-                                        var xplek = xwerkplekken.FirstOrDefault(x => x.Equals(plek));
-                                        if (xplek == null && bewerking.State == ProductieState.Gestart && valid)
-                                        {
-                                            xwerkpleklist.BeginUpdate();
-                                            xwerkpleklist.AddObject(plek);
-                                            xwerkpleklist.EndUpdate();
-                                            changed = true;
-                                        }
-                                        else if (xplek != null && (bewerking.State != ProductieState.Gestart || !valid))
-                                        {
-                                            xwerkpleklist.BeginUpdate();
-                                            xwerkpleklist.RemoveObject(xplek);
-                                            xwerkpleklist.EndUpdate();
-                                            formplekken.Remove(xplek);
-                                            changed = true;
-                                        }
-                                        else if (xplek != null)
-                                        {
-                                            xwerkpleklist.RefreshObject(plek);
-                                            formplekken.Remove(xplek);
-                                        }
-                                    }
-                                }
-
-                            if (formplekken.Count > 0)
-                            {
-                                xwerkpleklist.BeginUpdate();
-                                foreach (var formplek in formplekken)
-                                {
-                                    xwerkpleklist.RemoveObject(formplek);
-                                    changed = true;
-                                }
-                                xwerkpleklist.EndUpdate();
-                            }
-                        }
-                        if (changed)
-                            PlekkenChanged();
-                    }
-                    catch
-                    {
-                    }
-            }));
+                this.BeginInvoke(new Action(() => UpdateForm(form)));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
-        #region Syncing
-        public void StartSync()
+        private void UpdateForm(ProductieFormulier form)
         {
-            if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || IsSyncing || Disposing || IsDisposed) return;
-            IsSyncing = true;
-            Task.Factory.StartNew(async () =>
-            {
-                while(EnableSync && Manager.Opties.AutoProductieLijstSync && IsSyncing && !Disposing && !IsDisposed)
-                {
-                    await Task.Delay(Manager.Opties.ProductieLijstSyncInterval);
-                    if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || !IsSyncing || IsDisposed || Disposing) break;
-                    try
-                    {
-                        this.BeginInvoke(new MethodInvoker(()=> LoadPlekken(false)));
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        break;
-                    }
-                }
-            });
-        }
-
-        public void StopSync()
-        {
-            IsSyncing = false;
-        }
-
-        public Task<bool> SyncWerkplekken()
-        {
-            return Task.Run(async () =>
-            {
+            if (this.Disposing || this.IsDisposed) return;
+            var changed = false;
+            if (form != null)
                 try
                 {
-                    bool changed = false;
-                    if (xwerkpleklist.Items.Count > 0)
+                    var xwerkplekken = xwerkpleklist.Objects?.Cast<WerkPlek>().ToList();
+                    if (xwerkplekken != null && form.Bewerkingen is {Length: > 0})
                     {
-                        var xwerkplekken = xwerkpleklist.Objects?.Cast<WerkPlek>().ToList();
-                        if (xwerkplekken != null)
-                        {
-                            for (int i = 0; i < xwerkplekken.Count; i++)
+                        var formplekken = xwerkplekken
+                            .Where(x => string.Equals(x.Werk.ProductieNr, form.ProductieNr)).ToList();
+                        foreach (var bewerking in form.Bewerkingen)
+                            if (bewerking.WerkPlekken is {Count: > 0})
                             {
-                                var wp = xwerkplekken[i];
-                                var werk = Werk.FromPath(wp.Path);
-                                if (!IsSyncing || Disposing || IsDisposed) return changed;
-                                if (werk?.Plek == null || !werk.Bewerking.IsAllowed(null) ||
-                                    werk.Bewerking.State != ProductieState.Gestart ||
-                                    !werk.Plek.Personen.Any(personeel => personeel.WerktAanKlus(werk.Bewerking, out _)))
+                                var isvalid = bewerking.IsAllowed(null);
+                                foreach (var plek in bewerking.WerkPlekken)
                                 {
-                                    xwerkpleklist.BeginUpdate();
-                                    xwerkpleklist.RemoveObject(wp);
-                                    xwerkpleklist.EndUpdate();
-                                    changed = true;
-                                    continue;
+                                    //&& x.WerktAanKlus(plek.Path, out _)
+                                    var valid = isvalid && plek.Personen.Any(x => x.WerktAanKlus(bewerking, out _));
+                                    var xplek = xwerkplekken.FirstOrDefault(x => x.Equals(plek));
+                                    if (xplek == null && bewerking.State == ProductieState.Gestart && valid)
+                                    {
+                                        xwerkpleklist.BeginUpdate();
+                                        xwerkpleklist.AddObject(plek);
+                                        xwerkpleklist.EndUpdate();
+                                        changed = true;
+                                    }
+                                    else if (xplek != null && (bewerking.State != ProductieState.Gestart || !valid))
+                                    {
+                                        xwerkpleklist.BeginUpdate();
+                                        xwerkpleklist.RemoveObject(xplek);
+                                        xwerkpleklist.EndUpdate();
+                                        formplekken.Remove(xplek);
+                                        changed = true;
+                                    }
+                                    else if (xplek != null)
+                                    {
+                                        xwerkpleklist.RefreshObject(plek);
+                                        formplekken.Remove(xplek);
+                                    }
                                 }
-
-                                await werk.Formulier.UpdateForm(true, false, null, "", false, false, false);
-                                xwerkpleklist.RefreshObject(werk.Plek);
                             }
 
-                            if (changed)
-                                PlekkenChanged();
+                        if (formplekken.Count > 0)
+                        {
+                            xwerkpleklist.BeginUpdate();
+                            foreach (var formplek in formplekken)
+                            {
+                                xwerkpleklist.RemoveObject(formplek);
+                                changed = true;
+                            }
+
+                            xwerkpleklist.EndUpdate();
                         }
                     }
-                    return changed;
+
+                    if (changed)
+                        PlekkenChanged();
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Console.WriteLine(ex.Message);
-                    return false;
                 }
-            });
         }
-        #endregion;
+
+        //#region Syncing
+        //public void StartSync()
+        //{
+        //    if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || IsSyncing || Disposing || IsDisposed) return;
+        //    IsSyncing = true;
+        //    Task.Factory.StartNew(async () =>
+        //    {
+        //        while(EnableSync && Manager.Opties.AutoProductieLijstSync && IsSyncing && !Disposing && !IsDisposed)
+        //        {
+        //            await Task.Delay(Manager.Opties.ProductieLijstSyncInterval);
+        //            if (!EnableSync || !Manager.Opties.AutoProductieLijstSync || !IsSyncing || IsDisposed || Disposing) break;
+        //            try
+        //            {
+        //                this.BeginInvoke(new MethodInvoker(()=> LoadPlekken(false)));
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                Console.WriteLine(e);
+        //                break;
+        //            }
+        //        }
+        //    });
+        //}
+
+        //public void StopSync()
+        //{
+        //    IsSyncing = false;
+        //}
+
+        //public Task<bool> SyncWerkplekken()
+        //{
+        //    return Task.Run(async () =>
+        //    {
+        //        try
+        //        {
+        //            bool changed = false;
+        //            if (xwerkpleklist.Items.Count > 0)
+        //            {
+        //                var xwerkplekken = xwerkpleklist.Objects?.Cast<WerkPlek>().ToList();
+        //                if (xwerkplekken != null)
+        //                {
+        //                    for (int i = 0; i < xwerkplekken.Count; i++)
+        //                    {
+        //                        var wp = xwerkplekken[i];
+        //                        var werk = Werk.FromPath(wp.Path);
+        //                        if (!IsSyncing || Disposing || IsDisposed) return changed;
+        //                        if (werk?.Plek == null || !werk.Bewerking.IsAllowed(null) ||
+        //                            werk.Bewerking.State != ProductieState.Gestart ||
+        //                            !werk.Plek.Personen.Any(personeel => personeel.WerktAanKlus(werk.Bewerking, out _)))
+        //                        {
+        //                            xwerkpleklist.BeginUpdate();
+        //                            xwerkpleklist.RemoveObject(wp);
+        //                            xwerkpleklist.EndUpdate();
+        //                            changed = true;
+        //                            continue;
+        //                        }
+
+        //                        await werk.Formulier.UpdateForm(true, false, null, "", false, false, false);
+        //                        xwerkpleklist.RefreshObject(werk.Plek);
+        //                    }
+
+        //                    if (changed)
+        //                        PlekkenChanged();
+        //                }
+        //            }
+        //            return changed;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Console.WriteLine(ex.Message);
+        //            return false;
+        //        }
+        //    });
+        //}
+        //#endregion;
 
         public WerkPlek[] GetWerkplekken(List<ProductieFormulier> forms)
         {
