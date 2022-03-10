@@ -34,9 +34,10 @@ namespace ProductieManager.Rpm.Various
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             List<string> files = Directory.GetFiles(path, "*.rpm", SearchOption.TopDirectoryOnly).ToList();
-            if (string.IsNullOrEmpty(afzender) && Directory.Exists(ProductieChat.PublicLobyPath))
+            if (string.IsNullOrEmpty(afzender))
             {
-                var publicfiles = Directory.GetFiles(ProductieChat.PublicLobyPath, "*.rpm", SearchOption.TopDirectoryOnly);
+                var xpath = Path.Combine(ProductieChat.GetReadPath(true), "Chat", "iedereen", "Berichten");
+                var publicfiles = Directory.GetFiles(xpath, "*.rpm", SearchOption.TopDirectoryOnly);
                 if (publicfiles.Length > 0)
                     files.AddRange(publicfiles);
             }

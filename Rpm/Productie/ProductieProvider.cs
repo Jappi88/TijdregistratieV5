@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Rpm.SqlLite;
 
@@ -31,24 +32,26 @@ namespace ProductieManager.Rpm.Productie
        // public static Synchronisation MicSync { get; private set; } = new Synchronisation();
        public string AppRootPath { get; private set; }
        public string SecondaryRootPath { get; private set; }
-        public void StartSyncProducties()
-        {
-            if (IsProductiesSyncing) return;
-            IsProductiesSyncing = true;
-            Task.Run(async () =>
-            {
-                while (IsProductiesSyncing)
-                {
-                    if (Manager.Opties.GebruikLocalSync || Manager.Opties.GebruikTaken)
-                        UpdateProducties();
-                    await Task.Delay(Manager.Opties.SyncInterval);
-                }
 
-                IsProductiesSyncing = false;
-            });
-        }
+       public void StartSyncProducties()
+       {
+           if (IsProductiesSyncing) return;
+           IsProductiesSyncing = true;
+           Task.Factory.StartNew(() =>
+           {
+               while (IsProductiesSyncing)
+               {
+                   if (Manager.Opties.GebruikLocalSync || Manager.Opties.GebruikTaken)
+                       UpdateProducties();
+                   // await Task.Delay(Manager.Opties.SyncInterval);
+                   Thread.Sleep(Manager.Opties.SyncInterval);
+               }
 
-        public void AddToExclude(IProductieBase productie)
+               IsProductiesSyncing = false;
+           });
+       }
+
+       public void AddToExclude(IProductieBase productie)
         {
             if (string.IsNullOrEmpty(productie?.ProductieNr)) return;
             if (ExcludeProducties == null)
@@ -605,40 +608,42 @@ namespace ProductieManager.Rpm.Productie
         {
             if (_isupdating) return;
             _isupdating = true;
-            Task.Run(async () =>
+            // Task.Run(async () =>
+            //{
+            try
             {
-                try
+                if (Manager.LogedInGebruiker != null &&
+                    (Manager.Opties.GebruikLocalSync || Manager.Opties.GebruikTaken))
                 {
-                    if (Manager.LogedInGebruiker != null && (Manager.Opties.GebruikLocalSync || Manager.Opties.GebruikTaken))
+                    var forms = Manager.GetAllProductieIDs(false, false).Result;
+                    for (int i = 0; i < forms.Count; i++)
                     {
-                        var forms = await Manager.GetAllProductieIDs(false,false);
-                        for (int i = 0; i < forms.Count; i++)
-                        {
-                            if (Manager.LogedInGebruiker == null || !IsProductiesSyncing || (!Manager.Opties.GebruikLocalSync && !Manager.Opties.GebruikTaken)) break;
-                            var prod = Manager.Database.GetProductie(forms[i], false);
-                            if (prod == null || !prod.IsAllowed(null) || IsExcluded(prod))
-                                continue;
-                            if (prod.State is ProductieState.Verwijderd or ProductieState.Gereed)
-                                continue;
-                            // bool invoke = true;
+                        if (Manager.LogedInGebruiker == null || !IsProductiesSyncing ||
+                            (!Manager.Opties.GebruikLocalSync && !Manager.Opties.GebruikTaken)) break;
+                        var prod = Manager.Database.GetProductie(forms[i], false);
+                        if (prod == null || !prod.IsAllowed(null) || IsExcluded(prod))
+                            continue;
+                        if (prod.State is ProductieState.Verwijderd or ProductieState.Gereed)
+                            continue;
+                        // bool invoke = true;
 
-                            //opslaan als de productie voor het laatst is gestart door de huidige gebruiker.
-                            bool save = prod.Bewerkingen != null && prod.Bewerkingen.Any(x =>
-                                string.Equals(x.GestartDoor, Manager.Opties.Username,
-                                    StringComparison.CurrentCultureIgnoreCase));
-                            prod.FormulierChanged(this);
-                            Manager.FormulierChanged(this, prod);
-                            //await prod.UpdateForm(true, false, null, "",false, false, true);
-                        }
+                        //opslaan als de productie voor het laatst is gestart door de huidige gebruiker.
+                        //bool save = prod.Bewerkingen != null && prod.Bewerkingen.Any(x =>
+                        //    string.Equals(x.GestartDoor, Manager.Opties.Username,
+                        //        StringComparison.CurrentCultureIgnoreCase));
+                        prod.FormulierChanged(this);
+                        Manager.FormulierChanged(this, prod);
+                        //await prod.UpdateForm(true, false, null, "",false, false, true);
                     }
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
-                _isupdating = false;
-            });
+            _isupdating = false;
+            //});
         }
 
         public void StopSync()

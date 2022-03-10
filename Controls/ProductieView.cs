@@ -469,7 +469,6 @@ namespace Controls
             UpdateTileViewed(entry, true);
         }
 
-
         private void InitPersoneelIndelingTab(TileInfoEntry entry, bool select)
         {
             if (CheckTab(entry, select))
@@ -861,6 +860,12 @@ namespace Controls
         private void metroCustomTabControl1_TabClosed(object sender, EventArgs e)
         {
             CloseTabPage(sender, true);
+        }
+
+        private void metroCustomTabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Manager.Opties != null)
+                Manager.Opties.LastShownTabName = (metroCustomTabControl1.SelectedTab?.Tag as TileInfoEntry)?.Name;
         }
 
         public void ShowTileTabPage(TileInfoEntry entry, bool select)
@@ -1644,11 +1649,13 @@ namespace Controls
             var message =
                 "Wat zou je willen doen?\n" +
                 "Wil je een storing/onderbreking bekijken, toevoegen of wijzigen?";
-            var bttns = new Dictionary<string, DialogResult>();
-            bttns.Add("Annuleren", DialogResult.Cancel);
-            bttns.Add("Wijzigen", DialogResult.No);
-            bttns.Add("Toevoegen", DialogResult.Yes);
-            bttns.Add("Bekijken", DialogResult.Ignore);
+            var bttns = new Dictionary<string, DialogResult>
+            {
+                {"Annuleren", DialogResult.Cancel},
+                {"Wijzigen", DialogResult.No},
+                {"Toevoegen", DialogResult.Yes},
+                {"Bekijken", DialogResult.Ignore}
+            };
 
 
             var res = XMessageBox.Show(this, message, "Onderbreking", MessageBoxButtons.OK, MessageBoxIcon.Question, null,
@@ -1969,10 +1976,10 @@ namespace Controls
                                 Multiselect = true
                             };
                             if (ofd.ShowDialog() == DialogResult.OK)
-                                BeginInvoke(new MethodInvoker(async () =>
+                                BeginInvoke(new MethodInvoker(() =>
                                 {
                                     var files = ofd.FileNames;
-                                    await _manager.AddProductie(files,true, false, true);
+                                    _= _manager.AddProductie(files,true, false, true).Result;
                                 }));
                             break;
                         case "xquickproductie":
@@ -2100,11 +2107,6 @@ namespace Controls
             ShowOnderbrekeningenWidow();
         }
 
-        private void xtoonlogsb_Click(object sender, EventArgs e)
-        {
-            ShowProductieLogWindow();
-        }
-
         private void xallevaardighedenb_Click(object sender, EventArgs e)
         {
             ShowAlleVaardighedenWidow();
@@ -2148,47 +2150,10 @@ namespace Controls
         {
             Process.Start("https://www.valksystemen.nl/");
         }
-
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start("https://www.valksystemen.nl/");
-        }
-
         #endregion Control Events
 
         #region Methods
-
-        public Task RunProductieRefresh()
-        {
-            return Task.Run(async () =>
-            {
-                try
-                {
-                    while (ProductieSyncEnabled && !IsDisposed && !Disposing)
-                    {
-                        await Task.Delay(ProductieRefreshInterval);
-                        if (!ProductieSyncEnabled || IsDisposed || Disposing) break;
-                        BeginInvoke(new MethodInvoker(xUpdateList));
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            });
-        }
-
-        private void xUpdateList()
-        {
-            try
-            {
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
+        
         private void CheckForSpecialRooster(bool prompchange)
         {
             if (Manager.Opties == null || Manager.LogedInGebruiker == null ||
@@ -2252,12 +2217,12 @@ namespace Controls
             if (Manager.Opties == null) return;
             var xtime = DateTime.Now;
             //eerst kijken of het weekend is.
-            var culture = new CultureInfo("nl-NL");
-            var day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
+            //var culture = new CultureInfo("nl-NL");
+            //var day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
             if (xtime.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
             {
                 var rooster = Manager.Opties?.SpecialeRoosters?.FirstOrDefault(x => x.Vanaf.Date == DateTime.Now.Date);
-                var xreturn = rooster != null;
+               // var xreturn = rooster != null;
                 if (rooster == null)
                 {
                     rooster = Rooster.StandaartRooster();
@@ -2336,31 +2301,31 @@ namespace Controls
             }
         }
 
-        private void CheckForSyncDatabase()
-        {
-            var opties = Manager.DefaultSettings ?? UserSettings.GetDefaultSettings();
-            if (opties?.TempMainDB != null && opties.MainDB != null &&
-                opties.TempMainDB.LastUpdated > opties.MainDB.LastUpdated && Directory.Exists(opties.MainDB.UpdatePath))
-            {
-                var splash = (SplashScreen) Application.OpenForms["SplashScreen"];
-                if (splash != null)
-                {
-                    while (splash.Visible && !splash.CanClose)
-                        Application.DoEvents();
-                    splash.Close();
-                }
+        //private void CheckForSyncDatabase()
+        //{
+        //    var opties = Manager.DefaultSettings ?? UserSettings.GetDefaultSettings();
+        //    if (opties?.TempMainDB != null && opties.MainDB != null &&
+        //        opties.TempMainDB.LastUpdated > opties.MainDB.LastUpdated && Directory.Exists(opties.MainDB.UpdatePath))
+        //    {
+        //        var splash = (SplashScreen) Application.OpenForms["SplashScreen"];
+        //        if (splash != null)
+        //        {
+        //            while (splash.Visible && !splash.CanClose)
+        //                Application.DoEvents();
+        //            splash.Close();
+        //        }
 
-                opties.TempMainDB.LastUpdated = opties.MainDB.LastUpdated;
-                var prod = new UpdateProducties(opties.TempMainDB)
-                    {CloseWhenFinished = true, ShowStop = false, StartWhenShown = true};
-                prod.ShowDialog();
-                if (prod.IsFinished)
-                {
-                    opties.MainDB.LastUpdated = DateTime.Now;
-                    opties.SaveAsDefault();
-                }
-            }
-        }
+        //        opties.TempMainDB.LastUpdated = opties.MainDB.LastUpdated;
+        //        var prod = new UpdateProducties(opties.TempMainDB)
+        //            {CloseWhenFinished = true, ShowStop = false, StartWhenShown = true};
+        //        prod.ShowDialog();
+        //        if (prod.IsFinished)
+        //        {
+        //            opties.MainDB.LastUpdated = DateTime.Now;
+        //            opties.SaveAsDefault();
+        //        }
+        //    }
+        //}
 
         //public static void CheckForUpdateDatabase()
         //{
@@ -2397,12 +2362,12 @@ namespace Controls
             }
         }
 
-        private void LoadProductieLogs()
-        {
-            if (_manager == null || Manager.Opties == null || !Manager.Opties.ToonProductieLogs)
-                return;
-            ShowProductieLogWindow();
-        }
+       // private void LoadProductieLogs()
+        //{
+        //    if (_manager == null || Manager.Opties == null || !Manager.Opties.ToonProductieLogs)
+        //        return;
+        //    ShowProductieLogWindow();
+        //}
 
         private XMessageBox _unreadMessages;
 
@@ -2413,6 +2378,7 @@ namespace Controls
             else xUpdateUnreadMessages();
         }
 
+        private int _unread;
         private void xUpdateUnreadMessages()
         {
             try
@@ -2480,6 +2446,8 @@ namespace Controls
                         names.Add(msg.Afzender.UserName);
                     bool iedereen = unread.Any(x =>
                         string.Equals(x.Ontvanger, "iedereen", StringComparison.CurrentCultureIgnoreCase));
+                    if (unread.Count <= _unread) return;
+                    _unread = unread.Count;
                     if (names.Count == 0) return;
                     {
                         Application.OpenForms["SplashScreen"]?.Close();
@@ -2505,6 +2473,8 @@ namespace Controls
                             }
                             else
                                 ShowChatWindow(iedereen ? "Iedereen" : names[0]);
+
+                            _unread = 0;
                         }
                     }
                 }
@@ -2585,8 +2555,7 @@ namespace Controls
                 return null;
             try
             {
-                var bws = pform.Bewerkingen;
-                    //.Where(x =>
+                //.Where(x =>
                    // x.IsAllowed() && x.State != ProductieState.Verwijderd).ToList();
                // if (bws.Count == 0)
                    // throw new Exception(
@@ -3049,7 +3018,7 @@ namespace Controls
                 var xvers = Assembly.GetExecutingAssembly().GetName().Version;
                 if (xprevs.Count > 0)
                 {
-                    UpdatePreviewForm xshowform = null;
+                    UpdatePreviewForm xshowform;
                     if (!showall)
                     {
                         
@@ -3272,29 +3241,29 @@ namespace Controls
             _xtekeningbusy = false;
         }
 
-        private void button5_Click(object sender, EventArgs e)
-        {
-            var xdraw = new DrawArrow(this, Direction.Top, true, PointToScreen(xToolButtons.Location));
-            xdraw.Draw();
-            var xdraw1 = new DrawArrow(this, Direction.Left, true,PointToScreen(mainMenu1.Location));
-            xdraw1.Draw();
-            //var xdraw = new DrawArrow(this, Direction.Top, true, this.PointToScreen(xToolButtons.Location));
-            //xdraw.Draw();
-            //var xdraw = new DrawArrow(this, Direction.Top, true, this.PointToScreen(xToolButtons.Location));
-            //xdraw.Draw();
-        }
+        //private void button5_Click(object sender, EventArgs e)
+        //{
+        //    var xdraw = new DrawArrow(this, Direction.Top, true, PointToScreen(xToolButtons.Location));
+        //    xdraw.Draw();
+        //    var xdraw1 = new DrawArrow(this, Direction.Left, true,PointToScreen(mainMenu1.Location));
+        //    xdraw1.Draw();
+        //    //var xdraw = new DrawArrow(this, Direction.Top, true, this.PointToScreen(xToolButtons.Location));
+        //    //xdraw.Draw();
+        //    //var xdraw = new DrawArrow(this, Direction.Top, true, this.PointToScreen(xToolButtons.Location));
+        //    //xdraw.Draw();
+        //}
 
-        private Point FindLocation(Control ctrl, bool height)
-        {
-            if (ctrl.Parent is Form)
-                return new Point(ctrl.Location.X + (height ? 0 : ctrl.Width),
-                    ctrl.Location.Y + (height ? ctrl.Height : 0));
+        //private Point FindLocation(Control ctrl, bool height)
+        //{
+        //    if (ctrl.Parent is Form)
+        //        return new Point(ctrl.Location.X + (height ? 0 : ctrl.Width),
+        //            ctrl.Location.Y + (height ? ctrl.Height : 0));
 
-            Point p = FindLocation(ctrl.Parent, height);
-            p.X += ctrl.Location.X;
-            p.Y += ctrl.Location.Y;
-            return p;
-        }
+        //    Point p = FindLocation(ctrl.Parent, height);
+        //    p.X += ctrl.Location.X;
+        //    p.Y += ctrl.Location.Y;
+        //    return p;
+        //}
 
         private void xklachten_Click(object sender, EventArgs e)
         {
@@ -3311,6 +3280,22 @@ namespace Controls
         {
             ShowCreateWeekOverzicht();
         }
+
+        private void xArtikelRecordsToolstripButton_Click(object sender, EventArgs e)
+        {
+            var artikels = new ArtikelRecordsForm();
+            artikels.ShowDialog();
+        }
+
+        private void xShowDaily_Click(object sender, EventArgs e)
+        {
+            DailyMessage.CreateDaily(true);
+        }
+
+        private void xSporenButton_Click(object sender, EventArgs e)
+        {
+            new ArtikelenVerbruikForm().ShowDialog();
+        }
         #endregion Menu Button Events
 
         #region Taken Lijst
@@ -3324,9 +3309,7 @@ namespace Controls
                     if (taak.Bewerking != null)
                     {
                         var xui = new AantalGemaaktUI();
-                        if (xui.ShowDialog(taak.Formulier, taak.Bewerking, taak.Plek) == DialogResult.OK)
-                            //taak.Update();
-                            save = false;
+                        xui.ShowDialog(taak.Formulier, taak.Bewerking, taak.Plek);
                     }
 
                     break;
@@ -3385,11 +3368,7 @@ namespace Controls
                     {
                         var ind = new Indeling(taak.Formulier, taak.Bewerking);
                         ind.StartPosition = FormStartPosition.CenterParent;
-                        if (ind.ShowDialog() == DialogResult.OK)
-                        {
-                            save = false;
-                        }//taak.Update();
-                           
+                        ind.ShowDialog();
                     }
 
                     break;
@@ -3465,32 +3444,5 @@ namespace Controls
 
 
         #endregion Taken Lijst
-
-        private void xArtikelRecordsToolstripButton_Click(object sender, EventArgs e)
-        {
-            var artikels = new ArtikelRecordsForm();
-            artikels.ShowDialog();
-        }
-
-        private void xShowDaily_Click(object sender, EventArgs e)
-        {
-            DailyMessage.CreateDaily(true);
-        }
-
-        private void xSporenButton_Click(object sender, EventArgs e)
-        {
-           new ArtikelenVerbruikForm().ShowDialog();
-        }
-
-        private void button5_Click_1(object sender, EventArgs e)
-        {
-            //var xform = new MetroBaseForm();
-            //xform.SaveLastSize = false;
-            //xform.Size = new Size(640, 450);
-            //var xshed = new PlannerUI();
-            //xshed.Dock = DockStyle.Fill;
-            //xform.Controls.Add(xshed);
-            //xform.ShowDialog();
-        }
     }
 }

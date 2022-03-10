@@ -31,49 +31,6 @@ namespace ProductieManager.Rpm.Various
         public static List<UserChat> Gebruikers { get; set; } = new List<UserChat>();
 
         private static readonly object _locker = new object();
-        private void _berichtenWatcher_Changed(object sender, FileSystemEventArgs e)
-        {
-            if (IsDisposed) return;
-            lock (_locker)
-            {
-                try
-                {
-                    if (Chat == null || !LoggedIn) return;
-                    try
-                    {
-                        var x = e.FullPath;
-                        var dirname = Path.GetDirectoryName(x);
-                        if (dirname != null && dirname.ToLower().EndsWith("berichten"))
-                        {
-                            if (!RaiseNewMessageEvent) return;
-                            var ent = x.DeSerialize<ProductieChatEntry>();
-                            if (ent != null)
-                            {
-                                OnMessageRecieved(ent);
-                            }
-                        }
-                        else
-                        {
-                            var ent = x.DeSerialize<UserChat>();
-                            if (ent != null)
-                            {
-                                UpdateGebruikers();
-                                if (RaiseUserUpdateEvent)
-                                    OnGebruikerUpdate(ent);
-                            }
-                        }
-                    }
-                    catch (Exception exception)
-                    {
-                        Console.WriteLine(exception);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception);
-                }
-            }
-        }
 
         public static string GetReadPath(bool checksecondary, string filename = null)
         {
@@ -170,13 +127,13 @@ namespace ProductieManager.Rpm.Various
                 UpdateGebruikers();
                
                 _PublicberichtenWatcher = new CustomFileWatcher(PublicLobyPath, "*.rpm");
-                _PublicberichtenWatcher.FileChanged += _berichtenWatcher_Changed;
+                _PublicberichtenWatcher.FileChanged += _PublicberichtenWatcher_FileChanged;
 
                 _berichtenWatcher = new CustomFileWatcher(BerichtenPath, "*.rpm");
                 _berichtenWatcher.FileChanged += _berichtenWatcher_Changed;
 
                 _gebruikerWatcher = new CustomFileWatcher(ChatPath, "*.rpm");
-                _gebruikerWatcher.FileChanged += _berichtenWatcher_Changed;
+                _gebruikerWatcher.FileChanged += _gebruikerWatcher_FileChanged;
                 LoggedIn = true;
                 OnGebruikerUpdate(Chat);
                 return true;
@@ -185,6 +142,113 @@ namespace ProductieManager.Rpm.Various
             {
                 Console.WriteLine(e);
                 return false;
+            }
+        }
+
+        private void _PublicberichtenWatcher_FileChanged(object sender, FileSystemEventArgs e)
+        {
+            if (IsDisposed || Chat == null || !RaiseNewMessageEvent) return;
+            try
+            {
+                var x = e.FullPath;
+                var dirname = Path.GetDirectoryName(x);
+                if (dirname != null && dirname.ToLower().EndsWith("berichten"))
+                {
+                    if (!RaiseNewMessageEvent) return;
+                    var ent = x.DeSerialize<ProductieChatEntry>();
+                    if (ent != null)
+                    {
+                        UpdateFilePath(e);
+                        OnMessageRecieved(ent);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+        }
+
+        private void _berichtenWatcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            if (IsDisposed || Chat == null) return;
+            try
+            {
+                if (Chat == null || !LoggedIn) return;
+                try
+                {
+                    var x = e.FullPath;
+                    var dirname = Path.GetDirectoryName(x);
+                    if (dirname != null && dirname.ToLower().EndsWith("berichten"))
+                    {
+                        if (!RaiseNewMessageEvent) return;
+                        var ent = x.DeSerialize<ProductieChatEntry>();
+                        if (ent != null)
+                        {
+                            UpdateFilePath(e);
+                            OnMessageRecieved(ent);
+                        }
+                    }
+                    else
+                    {
+                        var ent = x.DeSerialize<UserChat>();
+                        if (ent != null)
+                        {
+                            UpdateFilePath(e);
+                            UpdateGebruikers();
+                            if (RaiseUserUpdateEvent)
+                                OnGebruikerUpdate(ent);
+                        }
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+        }
+
+        private void UpdateFilePath(FileSystemEventArgs e)
+        {
+            var xindex = e.FullPath.IndexOf("RPM_Data", StringComparison.CurrentCultureIgnoreCase);
+            if (xindex == -1) return;
+            xindex += 8;
+            var xpart = e.FullPath.Substring(xindex, e.FullPath.Length - xindex).TrimStart('\\');
+            var xread = Path.Combine(GetReadPath(true), xpart);
+            if (!string.Equals(e.FullPath, xread, StringComparison.CurrentCultureIgnoreCase))
+            {
+                try
+                {
+                    File.Copy(e.FullPath, xread, true);
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                }
+            }
+        }
+
+        private void _gebruikerWatcher_FileChanged(object sender, FileSystemEventArgs e)
+        {
+            if (IsDisposed || Chat == null) return;
+            try
+            {
+                var ent = e.FullPath.DeSerialize<UserChat>();
+                if (ent != null)
+                {
+                    UpdateFilePath(e);
+                    UpdateGebruikers();
+                    if (RaiseUserUpdateEvent)
+                        OnGebruikerUpdate(ent);
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
             }
         }
 

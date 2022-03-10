@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Interop;
+using Rpm.Controls;
 using Application = System.Windows.Forms.Application;
 using IWin32Window = System.Windows.Forms.IWin32Window;
 using Size = System.Drawing.Size;
@@ -2316,7 +2317,7 @@ namespace Rpm.Misc
                     xform = form.ParentForm;
                 else
                 {
-                    var xforms = Application.OpenForms.Cast<Form>().Where(x=> x is not StartProductie).ToList();
+                    var xforms = Application.OpenForms.Cast<Form>().Where(x=> x is not StartProductie && x is not Form_Alert).ToList();
                     var xcur = xforms.IndexOf(form) - 1;
                     if (xcur > -1)
                         xform = xforms[xcur];

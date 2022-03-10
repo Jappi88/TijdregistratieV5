@@ -19,9 +19,9 @@ namespace Rpm.ViewModels
 
         public string WerkTijd => PersoneelLid == null
             ? "N.V.T"
-            : $"Werkt van {(PersoneelLid.WerkRooster ?? Manager.Opties.GetWerkRooster()).StartWerkdag.ToString(@"hh\:mm", new CultureInfo("fr-FR"))} " +
-              $"tot {(PersoneelLid.WerkRooster ?? Manager.Opties.GetWerkRooster()).EindWerkdag.ToString(@"hh\:mm", new CultureInfo("fr-FR"))} uur " +
-              $"{((PersoneelLid.WerkRooster ?? Manager.Opties.GetWerkRooster()).GebruiktPauze ? "met" : "zonder")} pauze.";
+            : $"Werkt van {(PersoneelLid.WerkRooster ?? Rooster.StandaartRooster()).StartWerkdag.ToString(@"hh\:mm", new CultureInfo("fr-FR"))} " +
+              $"tot {(PersoneelLid.WerkRooster ?? Rooster.StandaartRooster()).EindWerkdag.ToString(@"hh\:mm", new CultureInfo("fr-FR"))} uur " +
+              $"{((PersoneelLid.WerkRooster ?? Rooster.StandaartRooster()).GebruiktPauze ? "met" : "zonder")} pauze.";
 
         public string IsVrij => PersoneelLid == null ? "N.V.T" :
             PersoneelLid.IsVrij(DateTime.Now) ? "Is Vrij" : "Is Aanwezig";

@@ -23,7 +23,7 @@ namespace ProductieManager.Rpm.Various
 
         public ProductieChatEntry()
         {
-            ID = DateTime.Now.Ticks.ToString();
+            ID = Functions.GenerateRandomID().ToString();
             Tijd = DateTime.Now;
         }
 

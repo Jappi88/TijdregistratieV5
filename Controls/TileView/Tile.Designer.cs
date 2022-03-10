@@ -33,9 +33,14 @@
             // Tile
             // 
             this.Size = new System.Drawing.Size(692, 368);
+            this.Style = MetroFramework.MetroColorStyle.Purple;
             this.GiveFeedback += new System.Windows.Forms.GiveFeedbackEventHandler(this.Tile_GiveFeedback);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Tile_KeyDown);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TileMouseDown);
+            this.MouseEnter += new System.EventHandler(this.Tile_MouseEnter);
+            this.MouseLeave += new System.EventHandler(this.Tile_MouseLeave);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TileMouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Tile_MouseUp);
             this.ResumeLayout(false);
 
         }

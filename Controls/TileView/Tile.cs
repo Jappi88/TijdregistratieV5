@@ -7,7 +7,10 @@ using Rpm.Productie;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Windows.Forms;
+using MetroFramework.Drawing;
 
 namespace Controls
 {
@@ -15,6 +18,9 @@ namespace Controls
     {
         private readonly Button flatbutton;
         public List<string> InfoFields { get; set; }
+        private bool isHovered;
+        private bool isPressed;
+        private bool isFocused;
 
         public bool AllowTileEdit
         {
@@ -39,7 +45,33 @@ namespace Controls
         public Tile()
         {
             InitializeComponent();
-            this.Resize += Tile_Resize;
+            this.GotFocus += (_, _) =>
+            {
+                this.isFocused = true;
+                this.isHovered = true;
+                this.Invalidate();
+            };
+            this.LostFocus += (_, _) =>
+            {
+                this.isFocused = false;
+                this.isHovered = false;
+                this.isPressed = false;
+                this.Invalidate();
+            };
+            this.Enter += (_, _) =>
+            {
+                this.isFocused = true;
+                this.isHovered = true;
+                this.Invalidate();
+            };
+            this.Leave += (_, _) =>
+            {
+                this.isFocused = false;
+                this.isHovered = false;
+                this.isPressed = false;
+                this.Invalidate();
+            };
+
             UseTileImage = true;
             UseCustomBackColor = true;
             UseCustomForeColor = true;
@@ -47,6 +79,7 @@ namespace Controls
             Size = new Size(128, 64);
             Padding = new Padding(5);
             UseStyleColors = true;
+            this.Style = MetroColorStyle.Purple;
             BackColor = Color.DeepSkyBlue;
             flatbutton = new Button();
             flatbutton.FlatStyle = FlatStyle.Flat;
@@ -82,6 +115,85 @@ namespace Controls
             UpdateSelectedImageLocation();
             this.ResumeLayout(false);
         }
+
+        //protected override void OnPaintForeground(PaintEventArgs e)
+        //{
+        //    Color color = IProductieBase.GetProductSoortColor("solar");
+        //    Color foreColor1 = !this.isHovered || this.isPressed || !this.Enabled ? (!this.isHovered || !this.isPressed || !this.Enabled ? (this.Enabled ? MetroPaint.ForeColor.Tile.Normal(this.Theme) : MetroPaint.ForeColor.Tile.Disabled(this.Theme)) : MetroPaint.ForeColor.Tile.Press(this.Theme)) : MetroPaint.ForeColor.Tile.Hover(this.Theme);
+        //    if (this.UseCustomForeColor)
+        //        foreColor1 = this.ForeColor;
+        //    if (this.isPressed || (this.isHovered || this.isFocused) && this.DisplayFocusBorder)
+        //    {
+        //        using (Pen pen = new Pen(color))
+        //        {
+        //            pen.Width = 5f;
+        //            Rectangle rect = new Rectangle(1, 1, this.Width - 5, this.Height - 5);
+        //            e.Graphics.DrawRectangle(pen, rect);
+        //        }
+        //    }
+        //    e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+        //    e.Graphics.CompositingQuality = CompositingQuality.HighQuality;
+        //    if (this.UseTileImage && this.TileImage != null)
+        //    {
+        //        Rectangle rect;
+        //        switch (this.TileImageAlign)
+        //        {
+        //            case ContentAlignment.TopLeft:
+        //                rect = new Rectangle(new Point(0, 0), new Size(this.TileImage.Width, this.TileImage.Height));
+        //                break;
+        //            case ContentAlignment.TopCenter:
+        //                rect = new Rectangle(new Point(this.Width / 2 - this.TileImage.Width / 2, 0), new Size(this.TileImage.Width, this.TileImage.Height));
+        //                break;
+        //            case ContentAlignment.TopRight:
+        //                rect = new Rectangle(new Point(this.Width - this.TileImage.Width, 0), new Size(this.TileImage.Width, this.TileImage.Height));
+        //                break;
+        //            case ContentAlignment.MiddleLeft:
+        //                rect = new Rectangle(new Point(0, this.Height / 2 - this.TileImage.Height / 2), new Size(this.TileImage.Width, this.TileImage.Height));
+        //                break;
+        //            case ContentAlignment.MiddleCenter:
+        //                rect = new Rectangle(new Point(this.Width / 2 - this.TileImage.Width / 2, this.Height / 2 - this.TileImage.Height / 2), new Size(this.TileImage.Width, this.TileImage.Height));
+        //                break;
+        //            case ContentAlignment.MiddleRight:
+        //                rect = new Rectangle(new Point(this.Width - this.TileImage.Width, this.Height / 2 - this.TileImage.Height / 2), new Size(this.TileImage.Width, this.TileImage.Height));
+        //                break;
+        //            case ContentAlignment.BottomLeft:
+        //                rect = new Rectangle(new Point(0, this.Height - this.TileImage.Height), new Size(this.TileImage.Width, this.TileImage.Height));
+        //                break;
+        //            case ContentAlignment.BottomCenter:
+        //                rect = new Rectangle(new Point(this.Width / 2 - this.TileImage.Width / 2, this.Height - this.TileImage.Height), new Size(this.TileImage.Width, this.TileImage.Height));
+        //                break;
+        //            case ContentAlignment.BottomRight:
+        //                rect = new Rectangle(new Point(this.Width - this.TileImage.Width, this.Height - this.TileImage.Height), new Size(this.TileImage.Width, this.TileImage.Height));
+        //                break;
+        //            default:
+        //                rect = new Rectangle(new Point(0, 0), new Size(this.TileImage.Width, this.TileImage.Height));
+        //                break;
+        //        }
+        //        e.Graphics.DrawImage(this.TileImage, rect);
+        //    }
+        //    if (this.TileCount > 0 && this.PaintTileCount)
+        //    {
+        //        int tileCount = this.TileCount;
+        //        Size size = TextRenderer.MeasureText(tileCount.ToString(), this.TileCountFont);
+        //        e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+        //        Graphics graphics = e.Graphics;
+        //        tileCount = this.TileCount;
+        //        string text = tileCount.ToString();
+        //        Font tileCountFont = this.TileCountFont;
+        //        Point pt = new Point(this.Width - size.Width, 0);
+        //        Color foreColor2 = foreColor1;
+        //        TextRenderer.DrawText((IDeviceContext)graphics, text, tileCountFont, pt, foreColor2);
+        //        e.Graphics.TextRenderingHint = TextRenderingHint.SystemDefault;
+        //    }
+        //    TextRenderer.MeasureText(this.Text, MetroFonts.Tile(this.TileTextFontSize, this.TileTextFontWeight));
+        //    TextFormatFlags flags = MetroPaint.GetTextFormatFlags(this.TextAlign) | TextFormatFlags.LeftAndRightPadding | TextFormatFlags.EndEllipsis;
+        //    Rectangle clientRectangle = this.ClientRectangle;
+        //    if (this.isPressed)
+        //        clientRectangle.Inflate(-4, -12);
+        //    else
+        //        clientRectangle.Inflate(-2, -10);
+        //    TextRenderer.DrawText((IDeviceContext)e.Graphics, this.Text, this.Font, clientRectangle, foreColor1, flags);
+        //}
 
         private void UpdateSelectedImageLocation()
         {
@@ -182,6 +294,11 @@ namespace Controls
 
         public void TileMouseDown(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Left)
+            {
+                this.isPressed = true;
+                this.Invalidate();
+            }
             Focus();
             //base.OnMouseDown(e);
             _mX = e.X;
@@ -243,5 +360,34 @@ namespace Controls
            // base.OnGiveFeedback(e);
         }
         #endregion
+
+        private void Tile_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Space)
+            {
+                this.isHovered = true;
+                this.isPressed = true;
+                this.Invalidate();
+            }
+        }
+
+        private void Tile_MouseUp(object sender, MouseEventArgs e)
+        {
+            this.isPressed = false;
+            this.Invalidate();
+        }
+
+        private void Tile_MouseEnter(object sender, EventArgs e)
+        {
+            this.isHovered = true;
+            this.Invalidate();
+        }
+
+        private void Tile_MouseLeave(object sender, EventArgs e)
+        {
+            if (!this.isFocused)
+                this.isHovered = false;
+            this.Invalidate();
+        }
     }
 }

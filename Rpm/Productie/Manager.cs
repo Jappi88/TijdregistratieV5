@@ -660,7 +660,6 @@ namespace Rpm.Productie
                 if (options.GebruikLocalSync || options.GebruikTaken)
                 {
                     ProductieProvider?.StartSyncProducties();
-                    ProductieProvider?.UpdateProducties();
                 }
 
                 if (options.DbUpdateEntries != null)

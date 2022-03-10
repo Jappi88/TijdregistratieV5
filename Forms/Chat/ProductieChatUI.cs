@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
+using TheArtOfDev.HtmlRenderer.WinForms;
 using TextAlign = NPOI.XSSF.UserModel.TextAlign;
 
 namespace ProductieManager.Forms
@@ -111,15 +112,15 @@ namespace ProductieManager.Forms
         {
             if (ProductieChat.Chat == null) return string.Empty;
 
-            string html = CreateHtmlString($"", Color.DarkGray, Color.Transparent, 0,
+            string html = CreateHtmlString($"", entry.ID, Color.DarkGray, Color.Transparent, 0,
                 entry.Afzender.UserName, new Size(48, 48), ImageAlign.Right, new Size(85,0), TextAlign.RIGHT,
                 0, 0, Color.Transparent);
 
-            html += CreateHtmlString($"<b>{entry.Afzender.UserName} zegt:</b><br><br>{entry.Bericht}", Color.White,
+            html += CreateHtmlString($"<b>{entry.Afzender.UserName} zegt:</b><br><br>{entry.Bericht}", entry.ID, Color.White,
                 Color.CornflowerBlue, 10,
                 null, new Size(32, 32), ImageAlign.Right, new Size(125, 0), TextAlign.RIGHT, 10, 15, Color.Transparent);
 
-            html += CreateHtmlString(entry.Tijd.ToString("F"), Color.LightSlateGray, Color.Transparent, 5,
+            html += CreateHtmlString(entry.Tijd.ToString("F"), entry.ID, Color.LightSlateGray, Color.Transparent, 5,
                 entry.IsGelezen ? "gelezen" : "verzonden",
                 new Size(24, 24), ImageAlign.Right, new Size(150, 0), TextAlign.RIGHT, 10, 10, Color.Transparent);
             return html;
@@ -127,25 +128,24 @@ namespace ProductieManager.Forms
 
         private string CreateRecieveMessage(ProductieChatEntry entry)
         {
-
-            string html = CreateHtmlString($"", Color.DarkGray, Color.Transparent, 0,
+            string html = CreateHtmlString($"",entry.ID, Color.DarkGray, Color.Transparent, 0,
                 entry.Afzender.UserName, new Size(48, 48), ImageAlign.Left, new Size(110, 0), TextAlign.LEFT,
                 0, 0, Color.Transparent);
 
             //html += CreateHtmlString($"{user} zegt:", Color.DarkGray, Color.Transparent, 5,
             //    null, new Size(48, 48), ImageAlign.Left, new Size(150, 0), TextAlign.LEFT, 0, 0, Color.Transparent);
 
-            html += CreateHtmlString($"<b>{entry.Afzender.UserName} zegt:</b><br><br>{entry.Bericht}", Color.Black,
+            html += CreateHtmlString($"<b>{entry.Afzender.UserName} zegt:</b><br><br>{entry.Bericht}", entry.ID, Color.Black,
                 Color.PowderBlue, 10,
                 null, new Size(32, 32), ImageAlign.Left, new Size(150, 0), TextAlign.LEFT, 10, 15, Color.Transparent);
 
-            html += CreateHtmlString(entry.Tijd.ToString("F"), Color.LightSlateGray, Color.Transparent, 5,
+            html += CreateHtmlString(entry.Tijd.ToString("F"), entry.ID, Color.LightSlateGray, Color.Transparent, 5,
                 entry.IsGelezen ? "gelezen" : "verzonden",
                 new Size(24, 24), ImageAlign.Left, new Size(175, 0), TextAlign.LEFT, 10, 10, Color.Transparent);
             return html;
         }
 
-        public string CreateHtmlString(string value, Color textcolor, Color backcolor, int padding, string imagename,Size imagesize, ImageAlign imagealign, Size margin, TextAlign align, int borderwidth, int borderradius,
+        public string CreateHtmlString(string value, string id, Color textcolor, Color backcolor, int padding, string imagename,Size imagesize, ImageAlign imagealign, Size margin, TextAlign align, int borderwidth, int borderradius,
             Color bordercolor)
         {
             string txt = $"{value.Replace("\n", "<br>")}";
@@ -154,7 +154,7 @@ namespace ProductieManager.Forms
             if (imagealign == ImageAlign.Right)
                 cmb = txt + img;
             else cmb = img + txt;
-            string field = $"<div style= 'padding: {padding}px; " +
+            string field = $"<div id='{id}' style= 'padding: {padding}px; " +
                            $"margin: {margin.Height}px {margin.Width}px; " +
                            $"text-align: {Enum.GetName(typeof(TextAlign), align)?.ToLower()}; " +
                            $"background-color: {backcolor.Name}; " +
@@ -261,28 +261,27 @@ namespace ProductieManager.Forms
 
         private void ProductieChat_MessageRecieved(ProductieChatEntry message)
         {
-            this.BeginInvoke(new MethodInvoker(() =>
+            BeginInvoke(new MethodInvoker(() =>
             {
 
                 LoadProfiles();
-                var selected = SelectedUser();
-                if (selected != null && (string.Equals(selected.UserName, message.Afzender.UserName,
-                        StringComparison.CurrentCultureIgnoreCase) || string.Equals(selected.UserName,
-                        message.Ontvanger,
-                        StringComparison.CurrentCultureIgnoreCase)))
-                    LoadConversation(true);
+                //var selected = SelectedUser();
+                //if (selected != null && (string.Equals(selected.UserName, message.Afzender.UserName,
+                //        StringComparison.CurrentCultureIgnoreCase) || string.Equals(selected.UserName,
+                //        message.Ontvanger,
+                //        StringComparison.CurrentCultureIgnoreCase)))
+                //    LoadConversation(true);
 
             }));
         }
 
         private void ProductieChat_GebruikerUpdate(UserChat user)
         {
-            if (this.Disposing || this.IsDisposed) return;
-            this.BeginInvoke(new MethodInvoker(() =>
+            if (Disposing || IsDisposed) return;
+            BeginInvoke(new MethodInvoker(() =>
             {
                 LoadProfile();
                 LoadProfiles();
-                LoadSelectedUser();
             }));
         }
 
@@ -383,12 +382,6 @@ namespace ProductieManager.Forms
                 xuserlist.EndUpdate();
                 xuserlist.SelectedObject = selected;
                 xuserlist.SelectedItem?.EnsureVisible();
-                if (xuserlist.SelectedObject == null && xuserlist.Items.Count > 0)
-                {
-                    xuserlist.LowLevelScroll(0, -100);
-                    //xuserlist.Items[0].EnsureVisible();
-                }
-
                 LoadSelectedUser();
             }
             catch (Exception e)
@@ -435,7 +428,11 @@ namespace ProductieManager.Forms
 
             if (user != null)
                 LoadConversation(true);
-            else xchatpanel.Text = "";
+            else
+            {
+                 xchatpanel.Text = "";
+            }
+           
         }
 
         private UserChat SelectedUser()
@@ -447,20 +444,22 @@ namespace ProductieManager.Forms
         {
             await Task.Run(() =>
             {
-                this.BeginInvoke(new MethodInvoker(() =>
+                BeginInvoke(new MethodInvoker(() =>
                 {
                     try
                     {
                         var selected = SelectedUser();
                         if (selected != null)
                         {
-                            int curpos = xchatpanel.VerticalScroll.Value;
+                            // int curpos = scrolltoend? xchatpanel.VerticalScroll.Maximum : xchatpanel.VerticalScroll.Value;
+                            var xpos = scrolltoend ? xchatpanel.VerticalScroll.Maximum : xchatpanel.VerticalScroll.Value;
                             //load conversation
                             var messages =
                                 ProductieChat.GetConversation(selected, !string.IsNullOrEmpty(selected.UserName));
                             string msg = "";
                             bool notifyuser = false;
                             ProductieChat.RaiseNewMessageEvent = false;
+                            List<ProductieChatEntry> toupdate = new List<ProductieChatEntry>();
                             for(int i = 0; i < messages.Count; i++)
                             {
                                 var message = messages[i];
@@ -469,26 +468,23 @@ namespace ProductieManager.Forms
                                 if (!isme && !message.IsGelezen)
                                 {
                                     message.IsGelezen = true;
-                                    message.UpdateMessage();
                                     notifyuser = true;
+                                    toupdate.Add(message);
                                 }
-
                                 msg += isme ? CreateSendMessage(message) : CreateRecieveMessage(message);
                             }
 
                             ProductieChat.RaiseNewMessageEvent = true;
+                            xchatpanel.Text = msg;
+                            xpos = scrolltoend ? xchatpanel.VerticalScroll.Maximum : xpos;
+                            xchatpanel.VerticalScroll.Value = xpos;
+                            toupdate.ForEach(x => x.UpdateMessage());
+                            Application.DoEvents();
+                            xchatpanel.VerticalScroll.Value = xpos;
+                            xchatpanel.PerformLayout();
+                           
                             if (notifyuser)
                                 selected.Save();
-                            xchatpanel.Text = msg;
-                            var xpos = scrolltoend ? xchatpanel.VerticalScroll.Maximum : curpos;
-                            for (int i = 0; i < 5; i++)
-                            {
-                                xchatpanel.VerticalScroll.Value = xpos;
-                                xchatpanel.Update();
-                                //Application.DoEvents();
-                                if (xchatpanel.VerticalScroll.Value == xpos)
-                                    break;
-                            }
                         }
                         else xchatpanel.Text = "";
                     }

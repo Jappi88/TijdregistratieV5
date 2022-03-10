@@ -50,14 +50,16 @@ namespace Forms.Aantal
                 {
                     var x1 = bws.Count == 1 ? "Productie" : "Producties";
                     Title = $"Wijzig AantalGemaakt Van {bws.Count} Actieve {x1}";
-
+                    xcontainer.SuspendLayout();
                     xcontainer.Controls.Clear();
                     foreach (var bw in bws)
                     {
                         AddGroup(bw);
                     }
 
+                    xcontainer.ResumeLayout(false);
                     UpdateHeight();
+                    this.Invalidate();
                 }
             }
             catch (Exception e)
@@ -107,6 +109,7 @@ namespace Forms.Aantal
                 if (xloading) return;
                 xloading = true;
                 var bws = GetBewerkingen();
+                xcontainer.SuspendLayout();
                 if (bws.Count == 0)
                 {
                     Title = "Geen Actieve Producties";
@@ -116,7 +119,7 @@ namespace Forms.Aantal
                 {
                     var x1 = bws.Count == 1 ? "Productie" : "Producties";
                     Title = $"Wijzig AantalGemaakt Van {bws.Count} Actieve {x1}";
-                    xcontainer.SuspendLayout();
+                   
                     var groups = xcontainer.Controls.Cast<GroupBox>().ToList();
                     
                     var xremove = groups.Where(x =>
@@ -153,8 +156,9 @@ namespace Forms.Aantal
 
                     }
 
-                    xcontainer.ResumeLayout(true);
+                    xcontainer.ResumeLayout(false);
                     UpdateHeight();
+                    this.Invalidate();
                 }
                 if (closeifnocounts && xcontainer.Controls.Count == 0)
                 {
@@ -280,7 +284,7 @@ namespace Forms.Aantal
             {
                 if (this.Disposing || this.IsDisposed) return;
                 if (InvokeRequired)
-                    this.Invoke(new MethodInvoker(() => UpdateProductie(changedform)));
+                    this.BeginInvoke(new MethodInvoker(() => UpdateProductie(changedform)));
                 else
                     UpdateProductie(changedform);
             }

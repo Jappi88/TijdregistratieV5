@@ -629,6 +629,7 @@ namespace Controls
             this.metroCustomTabControl1.TabIndex = 30;
             this.metroCustomTabControl1.UseSelectable = true;
             this.metroCustomTabControl1.TabClosed += new System.EventHandler(this.metroCustomTabControl1_TabClosed);
+            this.metroCustomTabControl1.SelectedIndexChanged += new System.EventHandler(this.metroCustomTabControl1_SelectedIndexChanged);
             // 
             // metroTabPage5
             // 
