@@ -787,7 +787,7 @@ namespace Controls
                     string xvalue = string.Join(", ", xsel);
                     bw.SharedUsers = xsel;
                     if (xsel.Count > 0)
-                        xvalue = $"[{bw.Path}] Voortgang gedeeld met:\n {xvalue}";
+                        xvalue = $"[{bw.Path}] Voortgang gedeeld met: {xvalue}";
                     else xvalue = $"[{bw.Path}] Voortgang wordt niet meer gedeeld";
                     bw.UpdateBewerking(null, xvalue);
                 }

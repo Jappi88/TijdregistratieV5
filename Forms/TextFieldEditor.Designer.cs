@@ -187,9 +187,10 @@ namespace Forms
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MinimumSize = new System.Drawing.Size(625, 210);
             this.Name = "TextFieldEditor";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
+            this.SaveLastSize = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Vul In Text";
+            this.Title = "Vul In Text";
             this.Shown += new System.EventHandler(this.TextFieldEditor_Shown);
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);

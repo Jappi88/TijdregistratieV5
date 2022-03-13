@@ -630,7 +630,7 @@ namespace Rpm.Misc
             return xreturn?.ToArray() ?? Array.Empty<string>();
         }
 
-        public static async void DoBewerkingEigenRooster(this Bewerking bew, IWin32Window owner)
+        public static void DoBewerkingEigenRooster(this Bewerking bew, IWin32Window owner)
         {
             try
             {
@@ -681,8 +681,8 @@ namespace Rpm.Misc
                         var xchange = wp.Tijden.WerkRooster != null && wp.Tijden.WerkRooster.IsCustom()
                             ? "eigen rooster"
                             : "standaard rooster";
-                        await b.UpdateBewerking(null,
-                            $"{Manager.Opties.Username} heeft voor een {xchange} gekozen voor {wp.Path}", true);
+                        b.UpdateBewerking(null,
+                            $"[{wp.Path}]{Manager.Opties.Username} heeft voor een {xchange} gekozen", true);
                         
                     }
                 }
@@ -693,7 +693,7 @@ namespace Rpm.Misc
             }
         }
 
-        public static async void ShowWerktIjden(this Bewerking bew, IWin32Window owner)
+        public static void ShowWerktIjden(this Bewerking bew, IWin32Window owner)
         {
             var b = bew;
             if (b == null) return;
@@ -720,7 +720,7 @@ namespace Rpm.Misc
 
             var wc = new WerktijdChanger(wp) {SaveChanges = true};
             if (wc.ShowDialog() == DialogResult.OK)
-                await b.UpdateBewerking(null, $"[{b.Path}] Werktijd Aangepast");
+                b.UpdateBewerking(null, $"[{b.Path}] Werktijd Aangepast");
         }
 
         public static void DoOnderbreking(this Bewerking bw, IWin32Window owner)
@@ -2321,6 +2321,7 @@ namespace Rpm.Misc
                     var xcur = xforms.IndexOf(form) - 1;
                     if (xcur > -1)
                         xform = xforms[xcur];
+                    else xform = xforms.LastOrDefault();
                 }
                 xform ??= Application.OpenForms["Mainform"];
             }

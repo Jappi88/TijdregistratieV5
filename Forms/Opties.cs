@@ -1384,7 +1384,7 @@ namespace Forms
                     if (bws.Count > 0)
                     {
                         var bwselector = new BewerkingSelectorForm(bws,true,true);
-                        bwselector.Title = "Selecteer Wekplekken waarvan de rooster aangepast moet worden";
+                        bwselector.Title = "Selecteer Werkplaatsen waarvan de rooster aangepast moet worden";
                         if (bwselector.ShowDialog() == DialogResult.OK)
                             _= Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
                     }

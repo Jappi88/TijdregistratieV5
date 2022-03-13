@@ -3,6 +3,7 @@ using Rpm.Various;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Rpm.Misc;
 
 namespace Rpm.Controls
 {
@@ -138,6 +139,22 @@ namespace Rpm.Controls
             lblMsg.Text = msg;
         }
 
+        private void FocusParent()
+        {
+            var xform = this.GetParentForm();
+            if (xform != null)
+            {
+                xform.BringToFront();
+                xform.Focus();
+                xform.Select();
+            }
+        }
+
+        private void Form_Alert_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            FocusParent();
+        }
+
         public new void Show()
         {
             base.Show();
@@ -145,6 +162,7 @@ namespace Rpm.Controls
             timer1.Interval = 100;
             timer1.Start();
             Invalidate();
+            FocusParent();
         }
 
     }

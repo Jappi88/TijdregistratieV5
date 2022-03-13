@@ -479,7 +479,7 @@ namespace Rpm.Productie
         }
 
         public Task<bool> UpdateBewerking(List<ProductieFormulier> allforms = null, string change = null,
-            bool save = true, bool shownotification = true)
+            bool save = true, bool shownotification = true, bool updaterooster = false)
         {
             return Task.Factory.StartNew(() =>
             {
@@ -505,7 +505,7 @@ namespace Rpm.Productie
                 if (WerkPlekken != null)
                     foreach (WerkPlek wp in WerkPlekken)
                     {
-                        wp.UpdateWerkplek(true);
+                        wp.UpdateWerkplek(updaterooster);
                     }
 
                 if (DeelGereedMeldingen != null)

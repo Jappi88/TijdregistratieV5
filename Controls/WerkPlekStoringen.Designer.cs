@@ -58,10 +58,19 @@ namespace Controls
             this.xwijzigstoring = new System.Windows.Forms.Button();
             this.xaddstoring = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.xstatuslabel = new System.Windows.Forms.Label();
             this.xclosepanel = new System.Windows.Forms.Panel();
             this.xsluiten = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.xBottomToolMenu = new System.Windows.Forms.ToolStrip();
+            this.xitemcount = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+            this.xopenstaand = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+            this.xtotaaltijd = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
+            this.xgemiddeldtijd = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
+            this.xstatuslabel = new System.Windows.Forms.ToolStripLabel();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xskillview)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -69,6 +78,7 @@ namespace Controls
             this.xeditpanelcontainer.SuspendLayout();
             this.panel2.SuspendLayout();
             this.xclosepanel.SuspendLayout();
+            this.xBottomToolMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // xomschrijving
@@ -391,7 +401,7 @@ namespace Controls
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.xstatuslabel);
+            this.panel2.Controls.Add(this.xBottomToolMenu);
             this.panel2.Controls.Add(this.xclosepanel);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel2.Location = new System.Drawing.Point(0, 398);
@@ -399,18 +409,6 @@ namespace Controls
             this.panel2.Padding = new System.Windows.Forms.Padding(5);
             this.panel2.Size = new System.Drawing.Size(786, 44);
             this.panel2.TabIndex = 2;
-            // 
-            // xstatuslabel
-            // 
-            this.xstatuslabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xstatuslabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xstatuslabel.Location = new System.Drawing.Point(5, 5);
-            this.xstatuslabel.Name = "xstatuslabel";
-            this.xstatuslabel.Padding = new System.Windows.Forms.Padding(5);
-            this.xstatuslabel.Size = new System.Drawing.Size(680, 34);
-            this.xstatuslabel.TabIndex = 0;
-            this.xstatuslabel.Text = "Geen Onderbrekeningen";
-            this.xstatuslabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // xclosepanel
             // 
@@ -443,6 +441,77 @@ namespace Controls
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip1.ToolTipTitle = "Onderbrekeningen";
             // 
+            // xBottomToolMenu
+            // 
+            this.xBottomToolMenu.BackColor = System.Drawing.Color.Transparent;
+            this.xBottomToolMenu.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xBottomToolMenu.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.xBottomToolMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.xitemcount,
+            this.toolStripSeparator10,
+            this.xopenstaand,
+            this.toolStripSeparator11,
+            this.xtotaaltijd,
+            this.toolStripSeparator14,
+            this.xgemiddeldtijd,
+            this.toolStripSeparator16,
+            this.xstatuslabel});
+            this.xBottomToolMenu.Location = new System.Drawing.Point(5, 5);
+            this.xBottomToolMenu.Name = "xBottomToolMenu";
+            this.xBottomToolMenu.Size = new System.Drawing.Size(680, 34);
+            this.xBottomToolMenu.TabIndex = 34;
+            this.xBottomToolMenu.Text = "toolStrip1";
+            // 
+            // xitemcount
+            // 
+            this.xitemcount.Name = "xitemcount";
+            this.xitemcount.Size = new System.Drawing.Size(13, 31);
+            this.xitemcount.Text = "0";
+            // 
+            // toolStripSeparator10
+            // 
+            this.toolStripSeparator10.Name = "toolStripSeparator10";
+            this.toolStripSeparator10.Size = new System.Drawing.Size(6, 34);
+            // 
+            // xopenstaand
+            // 
+            this.xopenstaand.Name = "xopenstaand";
+            this.xopenstaand.Size = new System.Drawing.Size(83, 31);
+            this.xopenstaand.Text = "Openstaand: 0";
+            // 
+            // toolStripSeparator11
+            // 
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(6, 34);
+            // 
+            // xtotaaltijd
+            // 
+            this.xtotaaltijd.Name = "xtotaaltijd";
+            this.xtotaaltijd.Size = new System.Drawing.Size(93, 31);
+            this.xtotaaltijd.Text = "Totaal Tijd: 0 uur";
+            // 
+            // toolStripSeparator14
+            // 
+            this.toolStripSeparator14.Name = "toolStripSeparator14";
+            this.toolStripSeparator14.Size = new System.Drawing.Size(6, 34);
+            // 
+            // xgemiddeldtijd
+            // 
+            this.xgemiddeldtijd.Name = "xgemiddeldtijd";
+            this.xgemiddeldtijd.Size = new System.Drawing.Size(120, 31);
+            this.xgemiddeldtijd.Text = "Gemiddeld Tijd: 0 uur";
+            // 
+            // toolStripSeparator16
+            // 
+            this.toolStripSeparator16.Name = "toolStripSeparator16";
+            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 34);
+            // 
+            // xstatuslabel
+            // 
+            this.xstatuslabel.Name = "xstatuslabel";
+            this.xstatuslabel.Size = new System.Drawing.Size(39, 31);
+            this.xstatuslabel.Text = "Status";
+            // 
             // WerkPlekStoringen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -459,7 +528,10 @@ namespace Controls
             this.panel3.PerformLayout();
             this.xeditpanelcontainer.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.xclosepanel.ResumeLayout(false);
+            this.xBottomToolMenu.ResumeLayout(false);
+            this.xBottomToolMenu.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -471,7 +543,6 @@ namespace Controls
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.TextBox xsearchbox;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Label xstatuslabel;
         private System.Windows.Forms.Panel xclosepanel;
         private System.Windows.Forms.Button xsluiten;
         public BrightIdeasSoftware.ObjectListView xskillview;
@@ -497,5 +568,15 @@ namespace Controls
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem verwijderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toonProductieToolStripMenuItem;
+        private System.Windows.Forms.ToolStrip xBottomToolMenu;
+        private System.Windows.Forms.ToolStripLabel xitemcount;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
+        private System.Windows.Forms.ToolStripLabel xopenstaand;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
+        private System.Windows.Forms.ToolStripLabel xtotaaltijd;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
+        private System.Windows.Forms.ToolStripLabel xgemiddeldtijd;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
+        private System.Windows.Forms.ToolStripLabel xstatuslabel;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
@@ -19,7 +20,7 @@ namespace Controls
         public WerkPlekStoringen()
         {
             InitializeComponent();
-            imageList1.Images.Add(Resources.onderhoud128_128);
+            imageList1.Images.Add(Resources.onderhoud128_128.CombineImage(Resources.exclamation_warning_24x24, 2));
             imageList1.Images.Add(Resources.onderhoud128_128.CombineImage(Resources.check_1582, 2));
             ((OLVColumn) xskillview.Columns[0]).ImageGetter = ImageGetter;
         }
@@ -42,8 +43,7 @@ namespace Controls
         {
             if (sender is Storing)
             {
-                var st = sender as Storing;
-                if (st != null) return st.IsVerholpen ? 1 : 0;
+                if (sender is Storing st) return st.IsVerholpen ? 1 : 0;
             }
 
             return 0;
@@ -265,44 +265,43 @@ namespace Controls
 
         private void xUpdateStatusLabel()
         {
+            List<Storing> xitems;
             if (xskillview.SelectedObjects.Count > 0)
             {
-                var selected = xskillview.SelectedObjects.Cast<Storing>().ToArray();
-                if (selected.Length == 1)
-                    xstatuslabel.Text = $"1 Onderbreking geselecteerd van {selected[0].GetTotaleTijd()} uur";
+                xitems = xskillview.SelectedObjects.Cast<Storing>().ToList();
+                if (xitems.Count == 1)
+                {
+                    xstatuslabel.Text = $"[{xitems[0].StoringType} Gemeld door {xitems[0].GemeldDoor.FirstCharToUpper()}]{xitems[0].Omschrijving}";
+                    xitems = xskillview.Objects?.Cast<Storing>().ToList();
+                }
                 else
                     xstatuslabel.Text =
-                        $"{selected.Length} Onderbrekeningen geselecteerd van totaal {selected.Sum(s => s.GetTotaleTijd())} uur";
+                        $"{xitems.Count} Onderbrekeningen geselecteerd";
             }
             else
             {
-                if (xskillview.Objects != null)
-                {
-                    var items = xskillview.Objects.Cast<Storing>().ToArray();
-                    var selected = items;
-                    if (selected.Length == 1)
-                        xstatuslabel.Text = $"1 Onderbreking van {selected[0].GetTotaleTijd()} uur";
-                    else
-                        xstatuslabel.Text =
-                            $"{selected.Length} Onderbrekeningen van totaal {selected.Sum(s => s.GetTotaleTijd())} uur";
-                }
-                else
-                {
-                    xstatuslabel.Text = "Geen Onderbrekeningen";
-                }
+                xstatuslabel.Text = "";
+                xitems = xskillview.Objects?.Cast<Storing>().ToList();
             }
+
+            xitems ??= new List<Storing>();
+            var xtotaal = Math.Round(xitems.Sum(x => x.TotaalTijd),2);
+            var xgemiddeld = xitems.Count > 0 ? Math.Round(xtotaal / xitems.Count, 2) : 0;
+            var xopen = xitems.Where(x => !x.IsVerholpen).ToList();
+            xitemcount.Text = $"Onderbrekeningen: {xitems.Count}";
+            xtotaaltijd.Text = $"Totaal Tijd: {xtotaal.ToString(CultureInfo.CurrentCulture)} uur";
+            xgemiddeldtijd.Text = $"Gemiddeld Tijd: {xgemiddeld.ToString(CultureInfo.CurrentCulture)} uur";
+            xopenstaand.Text = $"Openstaand: {xopen.Count}";
         }
 
         private void xsearch_Enter(object sender, EventArgs e)
         {
-            var tb = sender as TextBox;
-            if (tb is {Text: "Zoeken..."}) tb.Text = "";
+            if (sender is TextBox {Text: "Zoeken..."} tb) tb.Text = "";
         }
 
         private void xsearch_Leave(object sender, EventArgs e)
         {
-            var tb = sender as TextBox;
-            if (tb != null)
+            if (sender is TextBox tb)
                 if (string.IsNullOrWhiteSpace(tb.Text))
                     tb.Text = "Zoeken...";
         }

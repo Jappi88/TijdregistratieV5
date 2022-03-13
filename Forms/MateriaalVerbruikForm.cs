@@ -73,45 +73,46 @@ namespace Forms
         {
             if (xmateriaalList.Items.Count > 0)
             {
-                var items = xmateriaalList.Objects.Cast<MateriaalEntryInfo>().ToList();
-                var x1 = items.Count == 1 ? "materiaal" : "materialen";
-                xstatuslabel.Text = $"<div Color= RoyalBlue><b>{(items.Count == 0 ? "Geen" : items.Count)} {x1} geladen.</b></div>";
-                if (items.Count > 0)
+                List<MateriaalEntryInfo> xitems = new List<MateriaalEntryInfo>();
+                if (xmateriaalList.SelectedObjects.Count > 0)
                 {
-                    var xverbruik = new Dictionary<string, double>();
-                    var xafkeur = new Dictionary<string, double>();
-                    foreach (var item in items)
+                    if (xmateriaalList.SelectedObjects.Count == 1)
                     {
-                        var verbruik = item.Verbruik;
-                        if (xverbruik.ContainsKey(item.Eenheid))
-                            xverbruik[item.Eenheid] += verbruik;
-                        else if (verbruik > 0)
-                        {
-                            xverbruik.Add(item.Eenheid, verbruik);
-                        }
-
-                        if (xafkeur.ContainsKey(item.Eenheid))
-                            xafkeur[item.Eenheid] += item.Afkeur;
-                        else if (item.Afkeur > 0)
-                        {
-                            xafkeur.Add(item.Eenheid, item.Afkeur);
-                        }
+                        var item = xmateriaalList.SelectedObject as MateriaalEntryInfo;
+                        xselected.Text = $"[{item?.ArtikelNr}]{item?.Omschrijving}";
+                        xitems = xmateriaalList.Objects.Cast<MateriaalEntryInfo>().ToList();
                     }
-
-                    if (xverbruik.Count > 0)
+                    else
                     {
-                        xstatuslabel.Text +=
-                            $"<div Color= DarkGreen><b>Totaal {string.Join(", ", xverbruik.Select(x => $"{x.Value} {x.Key}"))} verbruikt.</b></div>";
-                    }
-
-                    if (xafkeur.Count > 0)
-                    {
-                        xstatuslabel.Text +=
-                            $"<div Color= Red><b>Totaal {string.Join(", ", xafkeur.Select(x => $"{x.Value} {x.Key}"))} afkeur.</b></div>";
+                        xselected.Text = "";
+                        xitems = xmateriaalList.SelectedObjects.Cast<MateriaalEntryInfo>().ToList();
                     }
                 }
+                else
+                {
+                    xselected.Text = "";
+                    xitems = xmateriaalList.Objects.Cast<MateriaalEntryInfo>().ToList();
+                }
+
+                var xafkstuks = xitems.Where(x => x.Eenheid.ToLower().StartsWith("stuks")).Sum(x => x.Afkeur);
+                var xafkmeter = xitems.Where(x => !x.Eenheid.ToLower().StartsWith("stuks")).Sum(x => x.Afkeur);
+                var xverbrstuks = xitems.Where(x => x.Eenheid.ToLower().StartsWith("stuks")).Sum(x => x.Verbruik);
+                var xverbrmeter = xitems.Where(x => !x.Eenheid.ToLower().StartsWith("stuks")).Sum(x => x.Verbruik);
+                xmaterialencount.Text = $"Materialen: {xitems.Count}";
+                xafkeurstuks.Text = $"Afkeur(Stuks): {xafkstuks} stuk";
+                xafkeurmeter.Text = $"Afkeur(m): {xafkmeter} meter";
+                xverbruikstuks.Text = $"Vebruik(Stuks): {xverbrstuks} stuk";
+                xverbruikmeter.Text = $"Verbruik(m): {xverbrmeter} meter";
             }
-            else xstatuslabel.Text = "<b>Geen materialen geladen.</b>";
+            else
+            {
+                xselected.Text = "";
+                xmaterialencount.Text = "Materialen: 0";
+                xafkeurstuks.Text = "Afkeur(Stuks): 0 stuk";
+                xafkeurmeter.Text = "Afkeur(m): 0 meter";
+                xverbruikstuks.Text = "Vebruik(Stuks): 0 stuk";
+                xverbruikmeter.Text = "Verbruik(m): 0 meter";
+            }
         }
 
         private void DoProgress(object sender, ProgressArg arg)
@@ -189,6 +190,11 @@ namespace Forms
         private void MateriaalVerbruikForm_Shown(object sender, EventArgs e)
         {
             LoadMaterialen();
+        }
+
+        private void xmateriaalList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateStatus();
         }
     }
 }

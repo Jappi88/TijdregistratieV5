@@ -195,9 +195,9 @@ namespace Forms
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(700, 240);
             this.Name = "XMessageBox";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MessageForm";
+            this.Title = "MessageForm";
             this.xmainpanel.ResumeLayout(false);
             this.xchooserpanel.ResumeLayout(false);
             this.xbuttonpanel.ResumeLayout(false);

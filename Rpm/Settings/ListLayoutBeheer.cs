@@ -52,7 +52,8 @@ namespace ProductieManager.Rpm.Settings
                 {
                     if (!string.IsNullOrEmpty(change))
                         Manager.RemoteMessage(new RemoteMessage(change, MessageAction.AlgemeneMelding, MsgType.Info));
-                    Database.RaiseChangeEvent = xlast;
+                    if (Database != null)
+                        Database.RaiseChangeEvent = xlast;
                     return true;
                 }
 

@@ -51,14 +51,26 @@ namespace Forms
             this.panel3 = new System.Windows.Forms.Panel();
             this.xsearchbox = new MetroFramework.Controls.MetroTextBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.xmaterialencount = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.xafkeurstuks = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.xafkeurmeter = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.xverbruikstuks = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.xverbruikmeter = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.xselected = new System.Windows.Forms.ToolStripLabel();
             this.xsluiten = new System.Windows.Forms.Button();
             this.metroToolTip1 = new MetroFramework.Components.MetroToolTip();
-            this.xstatuslabel = new TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xmateriaalList)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -135,7 +147,7 @@ namespace Forms
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(10, 60);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(848, 434);
+            this.panel1.Size = new System.Drawing.Size(848, 465);
             this.panel1.TabIndex = 2;
             // 
             // xloadinglabel
@@ -146,7 +158,7 @@ namespace Forms
             this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xloadinglabel.Location = new System.Drawing.Point(4, 87);
             this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(844, 344);
+            this.xloadinglabel.Size = new System.Drawing.Size(841, 375);
             this.xloadinglabel.TabIndex = 3;
             this.xloadinglabel.Text = "Materialen Laden...";
             this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -179,7 +191,7 @@ namespace Forms
             this.xmateriaalList.Name = "xmateriaalList";
             this.xmateriaalList.ShowGroups = false;
             this.xmateriaalList.ShowItemToolTips = true;
-            this.xmateriaalList.Size = new System.Drawing.Size(848, 350);
+            this.xmateriaalList.Size = new System.Drawing.Size(848, 381);
             this.xmateriaalList.SpaceBetweenGroups = 10;
             this.xmateriaalList.TabIndex = 3;
             this.xmateriaalList.TintSortColumn = true;
@@ -192,6 +204,7 @@ namespace Forms
             this.xmateriaalList.UseTranslucentSelection = true;
             this.xmateriaalList.View = System.Windows.Forms.View.Details;
             this.xmateriaalList.FormatCell += new System.EventHandler<BrightIdeasSoftware.FormatCellEventArgs>(this.xmateriaalList_FormatCell);
+            this.xmateriaalList.SelectedIndexChanged += new System.EventHandler(this.xmateriaalList_SelectedIndexChanged);
             // 
             // olvColumn1
             // 
@@ -305,26 +318,108 @@ namespace Forms
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.xstatuslabel);
+            this.panel2.Controls.Add(this.toolStrip1);
             this.panel2.Controls.Add(this.xsluiten);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(10, 494);
+            this.panel2.Location = new System.Drawing.Point(10, 525);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(848, 63);
+            this.panel2.Size = new System.Drawing.Size(848, 32);
             this.panel2.TabIndex = 3;
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.BackColor = System.Drawing.Color.Transparent;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.xmaterialencount,
+            this.toolStripSeparator1,
+            this.xafkeurstuks,
+            this.toolStripSeparator2,
+            this.xafkeurmeter,
+            this.toolStripSeparator3,
+            this.xverbruikstuks,
+            this.toolStripSeparator4,
+            this.xverbruikmeter,
+            this.toolStripSeparator5,
+            this.xselected});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(750, 25);
+            this.toolStrip1.TabIndex = 13;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // xmaterialencount
+            // 
+            this.xmaterialencount.Name = "xmaterialencount";
+            this.xmaterialencount.Size = new System.Drawing.Size(83, 22);
+            this.xmaterialencount.Text = "Materialen: {0}";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // xafkeurstuks
+            // 
+            this.xafkeurstuks.Name = "xafkeurstuks";
+            this.xafkeurstuks.Size = new System.Drawing.Size(98, 22);
+            this.xafkeurstuks.Text = "Afkeur(Stuks): {0}";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // xafkeurmeter
+            // 
+            this.xafkeurmeter.Name = "xafkeurmeter";
+            this.xafkeurmeter.Size = new System.Drawing.Size(81, 22);
+            this.xafkeurmeter.Text = "Afkeur(m): {0}";
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // xverbruikstuks
+            // 
+            this.xverbruikstuks.Name = "xverbruikstuks";
+            this.xverbruikstuks.Size = new System.Drawing.Size(106, 22);
+            this.xverbruikstuks.Text = "Verbruik(Stuks): {0}";
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
+            // xverbruikmeter
+            // 
+            this.xverbruikmeter.Name = "xverbruikmeter";
+            this.xverbruikmeter.Size = new System.Drawing.Size(89, 22);
+            this.xverbruikmeter.Text = "Verbruik(m): {0}";
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            // 
+            // xselected
+            // 
+            this.xselected.Name = "xselected";
+            this.xselected.Size = new System.Drawing.Size(0, 22);
             // 
             // xsluiten
             // 
-            this.xsluiten.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.xsluiten.Dock = System.Windows.Forms.DockStyle.Right;
             this.xsluiten.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xsluiten.Location = new System.Drawing.Point(710, 23);
+            this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xsluiten.Location = new System.Drawing.Point(750, 0);
             this.xsluiten.Name = "xsluiten";
-            this.xsluiten.Size = new System.Drawing.Size(135, 37);
+            this.xsluiten.Size = new System.Drawing.Size(98, 32);
             this.xsluiten.TabIndex = 12;
             this.xsluiten.Text = "&Sluiten";
-            this.xsluiten.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.xsluiten.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.metroToolTip1.SetToolTip(this.xsluiten, "Sluit materiaal overzicht");
             this.xsluiten.UseVisualStyleBackColor = true;
             this.xsluiten.Click += new System.EventHandler(this.xsluiten_Click);
@@ -334,19 +429,6 @@ namespace Forms
             this.metroToolTip1.Style = MetroFramework.MetroColorStyle.Default;
             this.metroToolTip1.StyleManager = null;
             this.metroToolTip1.Theme = MetroFramework.MetroThemeStyle.Default;
-            // 
-            // xstatuslabel
-            // 
-            this.xstatuslabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xstatuslabel.AutoSize = false;
-            this.xstatuslabel.BackColor = System.Drawing.SystemColors.Window;
-            this.xstatuslabel.BaseStylesheet = null;
-            this.xstatuslabel.Location = new System.Drawing.Point(3, 3);
-            this.xstatuslabel.Name = "xstatuslabel";
-            this.xstatuslabel.Size = new System.Drawing.Size(701, 57);
-            this.xstatuslabel.TabIndex = 4;
             // 
             // MateriaalVerbruikForm
             // 
@@ -361,8 +443,9 @@ namespace Forms
             this.MinimumSize = new System.Drawing.Size(725, 465);
             this.Name = "MateriaalVerbruikForm";
             this.Padding = new System.Windows.Forms.Padding(10, 60, 10, 10);
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Materiaal Verbruik";
+            this.Title = "Materiaal Verbruik";
             this.Shown += new System.EventHandler(this.MateriaalVerbruikForm_Shown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -370,6 +453,9 @@ namespace Forms
             ((System.ComponentModel.ISupportInitialize)(this.xmateriaalList)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -396,6 +482,17 @@ namespace Forms
         private BrightIdeasSoftware.OLVColumn olvColumn5;
         private BrightIdeasSoftware.OLVColumn olvColumn6;
         private BrightIdeasSoftware.OLVColumn olvColumn7;
-        private HtmlLabel xstatuslabel;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripLabel xmaterialencount;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripLabel xafkeurstuks;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripLabel xafkeurmeter;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripLabel xverbruikstuks;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripLabel xverbruikmeter;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripLabel xselected;
     }
 }
