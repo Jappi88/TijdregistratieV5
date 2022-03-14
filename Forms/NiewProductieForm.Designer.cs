@@ -172,11 +172,14 @@ namespace Forms
             // 
             // xleverdatum
             // 
+            this.xleverdatum.CustomFormat = "dddd dd MMMM yyyy HH:mm";
             this.xleverdatum.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xleverdatum.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.xleverdatum.Location = new System.Drawing.Point(140, 196);
             this.xleverdatum.Name = "xleverdatum";
             this.xleverdatum.Size = new System.Drawing.Size(282, 25);
             this.xleverdatum.TabIndex = 9;
+            this.xleverdatum.Value = new System.DateTime(2022, 3, 13, 16, 30, 0, 0);
             // 
             // label5
             // 
@@ -284,9 +287,9 @@ namespace Forms
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MinimumSize = new System.Drawing.Size(490, 475);
             this.Name = "NiewProductieForm";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Nieuwe Productie Aanmaken";
+            this.Title = "Nieuwe Productie Aanmaken";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

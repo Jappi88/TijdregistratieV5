@@ -1406,7 +1406,7 @@ namespace Rpm.Productie
                             var bw = wp.Werk;
                             if (!wp.IsActief() || !bw.IsAllowed() || bw.State != ProductieState.Gestart) continue;
 
-                            wp.UpdateWerkRooster(rooster, true, true, true, true, false, true, true);
+                            wp.UpdateWerkRooster(rooster.CreateCopy(), true, true, true, true, false, true, true);
                         
                             if (bw.UpdateBewerking(null,
                                     $"[{wp.Path}] Werkrooster aangepast").Result)

@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls.Primitives;
+using System.Xaml;
 using NPOI.XSSF.Util;
 
 namespace Rpm.Productie
@@ -108,7 +110,24 @@ namespace Rpm.Productie
                         if (xent.ExtraTijd != null) continue;
                         if (xent.InUse)
                         {
-                            xent.WerkRooster = currooster;
+                            if (xent.WerkRooster != null && !xent.WerkRooster.SameTijden(currooster))
+                            {
+                                Rooster rs = null;
+                                var curdag = DateTime.Now.Date.Add(xent.WerkRooster.StartWerkdag);
+                                var lastdag = Werktijd.EerstVorigeWerkdag(DateTime.Now.Date,
+                                    ref rs, xent.WerkRooster, SpecialeRoosters);
+                                if (lastdag < curdag && lastdag > xent.Start)
+                                {
+                                    xent.InUse = false;
+                                    xent.Stop = lastdag.Date.Add(rs.EindWerkdag);
+                                    Uren.Add(new TijdEntry(DateTime.Now.Date.Add(currooster.StartWerkdag), DateTime.Now,
+                                            currooster)
+                                        {InUse = true});
+                                }
+                                else xent.WerkRooster = currooster;
+                            }
+                            else
+                                xent.WerkRooster = currooster;
                             break;
                         }
                         
