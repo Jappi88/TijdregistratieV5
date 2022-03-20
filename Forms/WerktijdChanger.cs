@@ -28,8 +28,8 @@ namespace Forms
         }
         public WerktijdChanger(Klus klus):this()
         {
-            
-            Klusje = klus;
+
+            Klusje = klus.CreateCopy();
             CurrentRooster = klus.Tijden.WerkRooster?.CreateCopy();
             SpecialeRoosters = klus.Tijden.SpecialeRoosters?.CreateCopy();
             xwerktijden.SetObjects(klus.Tijden.Uren);

@@ -317,7 +317,8 @@ namespace ProductieManager.Forms.Aantal.Controls
             {
                 if (!DoLogicalTest())
                 {
-                    xaantalgemaakt.SetValue((int) xaantalgemaakt.Tag);
+                    if (xaantalgemaakt.Tag != null)
+                        xaantalgemaakt.SetValue((int) xaantalgemaakt.Tag);
                     return;
                 }
                 var selected = xwerkplekken.SelectedItem.ToString();

@@ -7,7 +7,7 @@ namespace ProductieManager.Rpm.Various
 {
     public class ProductieChatEntry
     {
-        public string ID { get; set; }
+        public string ID { get; private set; }
         public UserChat Afzender { get; set; }
         public string Ontvanger { get; set; }
 
@@ -79,6 +79,16 @@ namespace ProductieManager.Rpm.Various
             return false;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is ProductieChatEntry entry)
+                return string.Equals(ID, entry.ID, StringComparison.CurrentCultureIgnoreCase);
+            return false;
+        }
 
+        public override int GetHashCode()
+        {
+            return ID?.GetHashCode() ?? 0;
+        }
     }
 }

@@ -283,16 +283,17 @@ namespace ProductieManager.Rpm.Various
             }
         }
 
-        public static bool SendMessage(string message, string destination)
+        public static ProductieChatEntry SendMessage(string message, string destination)
         {
-            if (string.IsNullOrEmpty(message) || string.IsNullOrEmpty(destination) || Chat == null) return false;
+            if (string.IsNullOrEmpty(message) || string.IsNullOrEmpty(destination) || Chat == null) return null;
             var ent = new ProductieChatEntry()
             {
                 Afzender = Chat,
                 Bericht = message,
                 Ontvanger = destination
             };
-            return ent.UpdateMessage();
+            ent.UpdateMessage();
+            return ent;
             //string[] users = destination.Split(';');
             //bool xreturn = false;
             //foreach (var user in users)

@@ -531,7 +531,7 @@ namespace Rpm.Productie
             return xreturn;
         }
 
-        public async void CalculatePerUur(bool updatedb)
+        public void CalculatePerUur(bool updatedb)
         {
             var xtotaal = TotaalGemaakt;
             if (Personen?.Count > 0 && Werk is {State: ProductieState.Gestart} && xtotaal > 0)
@@ -540,32 +540,30 @@ namespace Rpm.Productie
                 for (int i = 0; i < Personen.Count; i++)
                 {
                     var per = Personen[i];
+                    var klus = per.Klusjes.GetKlus(Path);
+                    if (klus == null || klus.Status != ProductieState.Gestart) continue;
                     var tg = per.TijdAanGewerkt(GetStoringen(), this, per.WerkRooster ?? Tijden?.WerkRooster)
                         .TotalHours;
-                    if (tg > 0)
+                    if (tg <= 0) continue;
+                    //pak het percentage van hoveel tijd gewerkt is.
+                    var percentage = tg / tijd * 100;
+                    var eachp = percentage > 0 ? (int) ((xtotaal / 100) * percentage) : 0;
+                    var peruur = tg == 0 ? eachp : (int) (eachp / tg);
+                    var same = peruur == per.PerUur;
+                    klus.PerUur = peruur;
+                    if (!same || tg > 0)
                     {
-                        var klus = per.Klusjes.GetKlus(Path);
-                        if (klus == null) continue;
-                        //pak het percentage van hoveel tijd gewerkt is.
-                        var percentage = tg / tijd * 100;
-                        var eachp = percentage > 0 ? (int) ((xtotaal / 100) * percentage) : 0;
-                        var peruur = tg == 0 ? eachp : (int) (eachp / tg);
-                        var same = peruur == per.PerUur;
-                        klus.PerUur = peruur;
-                        if (!same || tg > 0)
-                        {
-                            var xdbpers = await Manager.Database.GetPersoneel(per.PersoneelNaam);
-                            if (xdbpers == null) continue;
-                            xdbpers.ReplaceKlus(klus);
-                            per.VrijeDagen = xdbpers.VrijeDagen;
-                            xdbpers.PerUur = peruur;
-                            if (per.WerkRooster == null)
-                                per.WerkRooster = xdbpers.WerkRooster;
-                            if (updatedb)
-                                await Manager.Database.UpSert(xdbpers, $"{xdbpers.PersoneelNaam} productie update.");
-                            else
-                                Manager.PersoneelChanged(this, xdbpers);
-                        }
+                        var xdbpers = Manager.Database.GetPersoneel(per.PersoneelNaam).Result;
+                        if (xdbpers == null) continue;
+                        xdbpers.ReplaceKlus(klus);
+                        per.VrijeDagen = xdbpers.VrijeDagen;
+                        xdbpers.PerUur = peruur;
+                        if (per.WerkRooster == null)
+                            per.WerkRooster = xdbpers.WerkRooster;
+                        if (updatedb)
+                            Manager.Database.UpSert(xdbpers, $"{xdbpers.PersoneelNaam} productie update.");
+                        else
+                            Manager.PersoneelChanged(this, xdbpers);
                     }
                 }
             }

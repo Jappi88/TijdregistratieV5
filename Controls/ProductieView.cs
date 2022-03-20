@@ -1032,8 +1032,6 @@ namespace Controls
                         Console.WriteLine(e);
                     }
                 }));
-
-
             }
             catch (Exception e)
             {
@@ -1084,6 +1082,33 @@ namespace Controls
             }
         }
 
+        public static void ShowProductie(IWin32Window owner, Bewerking bew, bool playsound, int selectedtab)
+        {
+            try
+            {
+                if (bew == null) return;
+                if (playsound)
+                {
+                    Task.Factory.StartNew(() =>
+                    {
+                        using var soundPlayer = new SoundPlayer(Resources.mixkit_alert_bells_echo_765);
+                        soundPlayer.Play();
+                    });
+                }
+
+                if (bew.IsAllowed())
+                {
+                    var xprod = ShowProductieForm(owner, bew.Parent, true, bew);
+                    if (xprod != null)
+                        xprod.TabControl.SelectedIndex = selectedtab;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         private void CheckForShared(ProductieFormulier form)
         {
             try
@@ -1097,18 +1122,7 @@ namespace Controls
                 var bw = form.Bewerkingen.FirstOrDefault(x => x.SharedUsers.Any(s =>
                     string.Equals(s, Manager.Opties.Username, StringComparison.CurrentCultureIgnoreCase)));
                 if (bw == null) return;
-                Task.Factory.StartNew(() =>
-                {
-                    using var soundPlayer = new SoundPlayer(Resources.mixkit_alert_bells_echo_765);
-                    soundPlayer.Play();
-                });
-                if (bw.IsAllowed())
-                {
-                    var xprod = ShowProductieForm(this, form, true, bw);
-                    if (xprod != null)
-                        xprod.TabControl.SelectedIndex = xprod.TabControl.TabPages.Count - 1;
-                }
-
+                ShowProductie(this,bw, true, 10);
                 form.UpdateForm(true, false, null, "", true, false, false);
                 Manager.RemoteMessage(form.LastChanged.CreateMessage(DbType.Producties));
 
@@ -1446,6 +1460,8 @@ namespace Controls
                         if (_specialRoosterWatcher is {Enabled: false})
                             _specialRoosterWatcher.Start();
                         metroCustomTabControl1.Invalidate();
+                        Application.DoEvents();
+                        Manager.Meldingen?.CheckForMeldingen(5000);
                     }
                     catch (Exception e)
                     {
@@ -1521,8 +1537,10 @@ namespace Controls
                         var form =
                             (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
                         var bew = (Bewerking) values.FirstOrDefault(x => x is Bewerking);
-                        if (form != null)
-                            ShowProductieForm(this,form, true, bew);
+                        var index = (int)(values.FirstOrDefault(x => x is int)??0);
+                        var playsound = (bool)(values.FirstOrDefault(x => x is bool) ?? false);
+                        if (bew != null)
+                            ShowProductie(this,bew, playsound, index);
                     }
 
                     break;

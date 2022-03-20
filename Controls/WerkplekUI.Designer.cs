@@ -39,6 +39,7 @@ namespace Controls
             this.xaantalpersc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xtijdgestartc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xtijdgewerktc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xaantalc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xactueelgemaakt = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xaantalupdatec = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -67,7 +68,7 @@ namespace Controls
             this.notitieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
-            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.bijlagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.xwerkpleklist)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -231,6 +232,13 @@ namespace Controls
             this.xtijdgewerktc.Width = 120;
             this.xtijdgewerktc.WordWrap = true;
             // 
+            // olvColumn1
+            // 
+            this.olvColumn1.AspectName = "Aantal";
+            this.olvColumn1.Text = "Aantal";
+            this.olvColumn1.ToolTipText = "Aantal te produceren";
+            this.olvColumn1.Width = 100;
+            // 
             // xaantalc
             // 
             this.xaantalc.AspectName = "AantalGemaakt";
@@ -330,6 +338,7 @@ namespace Controls
             this.openWerkplekToolStripMenuItem,
             this.toolStripSeparator3,
             this.werkTijdToolStripMenuItem,
+            this.bijlagesToolStripMenuItem,
             this.xafkeurstoolstrip,
             this.storingenToolStripMenuItem,
             this.toolStripSeparator4,
@@ -342,7 +351,7 @@ namespace Controls
             this.toolStripSeparator2,
             this.notitieToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(193, 254);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(193, 298);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // openProductieToolStripMenuItem
@@ -468,12 +477,13 @@ namespace Controls
             this.panel2.Size = new System.Drawing.Size(977, 580);
             this.panel2.TabIndex = 2;
             // 
-            // olvColumn1
+            // bijlagesToolStripMenuItem
             // 
-            this.olvColumn1.AspectName = "Aantal";
-            this.olvColumn1.Text = "Aantal";
-            this.olvColumn1.ToolTipText = "Aantal te produceren";
-            this.olvColumn1.Width = 100;
+            this.bijlagesToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.attachment256_24841_32x32;
+            this.bijlagesToolStripMenuItem.Name = "bijlagesToolStripMenuItem";
+            this.bijlagesToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.bijlagesToolStripMenuItem.Text = "Bijlages";
+            this.bijlagesToolStripMenuItem.Click += new System.EventHandler(this.bijlagesToolStripMenuItem_Click);
             // 
             // WerkPlekkenUI
             // 
@@ -529,5 +539,6 @@ namespace Controls
         private System.Windows.Forms.ToolStripMenuItem hervattenToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private BrightIdeasSoftware.OLVColumn olvColumn1;
+        private System.Windows.Forms.ToolStripMenuItem bijlagesToolStripMenuItem;
     }
 }

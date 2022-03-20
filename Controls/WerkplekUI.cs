@@ -473,14 +473,14 @@ namespace Controls
             aantalGeschiedenisToolStripMenuItem.Enabled = xwerkpleklist.SelectedObjects.Count == 1;
             onderbrekenToolStripMenuItem.Enabled = xwerkpleklist.SelectedObjects.Count > 0;
             hervattenToolStripMenuItem.Enabled = xwerkpleklist.SelectedObjects.Count > 0;
+            bijlagesToolStripMenuItem.Enabled = xwerkpleklist.SelectedObjects.Count == 1;
         }
 
         private void openWerkplekToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (xwerkpleklist.SelectedObjects.Count > 0)
             {
-                var wp = xwerkpleklist.SelectedObjects[0] as WerkPlek;
-                if (wp != null)
+                if (xwerkpleklist.SelectedObjects[0] is WerkPlek wp)
                 {
                     var ind = new Indeling(wp);
                     ind.ShowDialog();
@@ -650,6 +650,16 @@ namespace Controls
                     }
                 }
 
+            }
+        }
+
+        private void bijlagesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (xwerkpleklist.SelectedObject is WerkPlek plek)
+            {
+                var bl = new BijlageForm(plek.Werk);
+                bl.Title = $"Bijlages Voor: {plek.ArtikelNr}";
+                bl.ShowDialog();
             }
         }
     }

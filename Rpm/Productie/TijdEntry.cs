@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Polenter.Serialization;
+using Rpm.Misc;
 
 namespace Rpm.Productie
 {
@@ -14,7 +15,6 @@ namespace Rpm.Productie
             Omschrijving = omschrijving;
             Start = start;
             Stop = stop;
-            ID = start.GetHashCode();
             WerkRooster = rooster;
         }
 
@@ -23,7 +23,6 @@ namespace Rpm.Productie
             Omschrijving = string.Empty;
             Start = start;
             Stop = stop;
-            ID = start.GetHashCode();
         }
 
         public TijdEntry(DateTime start, DateTime stop, Rooster rooster)
@@ -31,17 +30,14 @@ namespace Rpm.Productie
             Omschrijving = string.Empty;
             Start = start;
             Stop = stop;
-            ID = start.GetHashCode();
             WerkRooster = rooster;
         }
 
         public TijdEntry()
         {
-            Omschrijving = string.Empty;
-            ID = Start.GetHashCode();
         }
-
-        public int ID { get; set; }
+        [ExcludeFromSerialization]
+        public int ID { get; private set; } = Functions.GenerateRandomID();
         public string Omschrijving { get; set; }
         public DateTime Start { get; set; }
         public DateTime Stop

@@ -36,8 +36,9 @@
             // 
             this.productieChatUI1.BackColor = System.Drawing.Color.AliceBlue;
             this.productieChatUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieChatUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.productieChatUI1.Location = new System.Drawing.Point(0, 0);
-            this.productieChatUI1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.productieChatUI1.Margin = new System.Windows.Forms.Padding(4);
             this.productieChatUI1.Name = "productieChatUI1";
             this.productieChatUI1.Size = new System.Drawing.Size(775, 430);
             this.productieChatUI1.TabIndex = 0;

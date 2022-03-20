@@ -1,11 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using Rpm.Connection;
+using Rpm.Misc;
+using System;
 using System.Net;
 using System.Net.Mail;
-using System.Net.Security;
-using System.Net.Sockets;
-using Rpm.Connection;
-using Rpm.Misc;
+using MailKit.Net.Imap;
+using MailKit.Security;
 
 namespace Rpm.Mailing
 {
@@ -25,6 +24,7 @@ namespace Rpm.Mailing
         private string _host;
         public string EmailAdres { get; set; }
         public string Password { get; set; }
+
 
         public int Port {
             get => UseSsl ? 587 : 25;
@@ -79,6 +79,30 @@ namespace Rpm.Mailing
             }
         }
 
+        public string GetImapHost()
+        {
+            var xtype = GetEmailType();
+            switch (xtype)
+            {
+                case EmailType.None:
+                    return null;
+                case EmailType.Gmail:
+                    return "imap.gmail.com";
+                case EmailType.Outlook:
+                    return "imap-mail.outlook.com";
+                case EmailType.Yahoo:
+                    return "imap.mail.yahoo.com";
+                case EmailType.Office365:
+                    return "outlook.office365.com";
+                case EmailType.Sendgrid:
+                    return "imap.sendgrid.net";
+                case EmailType.Custom:
+                    return _host;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         public SmtpClient CreateClient()
         {
             try
@@ -93,6 +117,24 @@ namespace Rpm.Mailing
                 };
                 smtp.Port = Port;
                 return smtp;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public ImapClient CreateImapClient()
+        {
+            try
+            {
+                var host = GetImapHost();
+                if (string.IsNullOrEmpty(host)) return null;
+                var client = new ImapClient();
+                client.Connect(host, 993, SecureSocketOptions.SslOnConnect);
+                client.Authenticate(EmailAdres, Password);
+                return client;
             }
             catch (Exception e)
             {

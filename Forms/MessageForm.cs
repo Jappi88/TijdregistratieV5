@@ -22,7 +22,7 @@ namespace Forms
             InitializeComponent();
             SaveLastSize = false;
             MinimizeBox = false;
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = Parent == null ? FormStartPosition.CenterScreen : FormStartPosition.CenterParent;
         }
 
         public string SelectedValue => (string) xchooser.SelectedItem;

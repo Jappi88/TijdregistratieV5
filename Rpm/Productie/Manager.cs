@@ -23,6 +23,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ProductieManager.Rpm.Mailing;
+using Rpm.MeldingCenter;
 using Timer = System.Timers.Timer;
 
 namespace Rpm.Productie
@@ -46,6 +48,7 @@ namespace Rpm.Productie
         public static SporenBeheer SporenBeheer { get; private set; }
         public static KlachtBeheer Klachten { get; private set; }
         public static ListLayoutBeheer ListLayouts { get; private set; }
+        public static EmailServer MailServer { get; private set; }
         /// <summary>
         /// De productiechat
         /// </summary>
@@ -62,6 +65,7 @@ namespace Rpm.Productie
         /// De database voor alle opmerkingen.
         /// </summary>
         public static Opmerkingen Opmerkingen { get; private set; }
+        public static MeldingCenter.MeldingBeheer Meldingen { get; private set; }
         /// <summary>
         /// De productieprovider zorgt ervoor dat altijd je altijd de actuele infomatie krijgt.
         /// </summary>
@@ -287,6 +291,7 @@ namespace Rpm.Productie
                     DbUpdater = new DatabaseUpdater();
                     BackupInfo = BackupInfo.Load();
                     BewerkingenLijst = new BewerkingLijst();
+                    Meldingen = new MeldingBeheer(Path.Combine(DbPath, "Meldingen"));
                     if (string.IsNullOrEmpty(DefaultSettings.SystemID))
                     {
                         DefaultSettings.SystemID = Guid.NewGuid().ToByteArray().ToHexString(4);
@@ -312,6 +317,8 @@ namespace Rpm.Productie
                     DbUpdater.UpdateStartupDbs();
                     //while (Mainform.IsLoading)
                     //    Application.DoEvents();
+                    MailServer = new EmailServer();
+                    MailServer.Start();
                     IsLoaded = true;
                     if (raiseManagerLoadingEvents)
                         ManagerLoaded();
@@ -532,16 +539,18 @@ namespace Rpm.Productie
                     UserSettings xt = await Database.GetSetting(id);
                     if (xt == null)
                     {
-                        xt = (await Database.GetAllSettings()).FirstOrDefault(x=> x.Username.ToLower().StartsWith(name.ToLower()));
+                        xt = (await Database.GetAllSettings()).FirstOrDefault(x =>
+                            x.Username.ToLower().StartsWith(name.ToLower()));
                         if (xt != null)
                         {
                             await Database.DeleteSettings($"{xt.Username}[{xt.SystemID}]", false);
                             xt.SystemID = os;
+                            xt.Username = name;
                             await xt.Save(null, false, false, false);
                         }
                         else name += "_tmp";
                     }
-
+                    else xt.Username = name;
                     Opties = xt;
                 }
                 catch (Exception)
@@ -1606,7 +1615,7 @@ namespace Rpm.Productie
                 try
                 {
                     var form = Application.OpenForms["AantalGemaaktProducties"];
-                    if (form == null && Database is {IsDisposed: false} && Manager.LogedInGebruiker != null)
+                    if (form == null && Database is {IsDisposed: false} && Manager.LogedInGebruiker != null && Manager.Opties != null)
                     {
                         List<Bewerking> bws = new List<Bewerking>();
                         int mins = Opties.MinVoorControle;
@@ -2214,6 +2223,8 @@ namespace Rpm.Productie
             SporenBeheer?.Dispose();
             ArtikelRecords?.Dispose();
             ListLayouts?.Dispose();
+            MailServer?.Stop();
+            Meldingen?.Dispose();
         }
 
         /// <summary>

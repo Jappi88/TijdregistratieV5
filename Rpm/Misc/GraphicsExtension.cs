@@ -59,7 +59,9 @@ namespace ProductieManager.Rpm.Misc
             try
             {
                 if (data == null) return null;
-                return Image.FromStream(new MemoryStream(data));
+                if (data.IsImage())
+                    return Image.FromStream(new MemoryStream(data));
+                return null;
             }
             catch (Exception e)
             {

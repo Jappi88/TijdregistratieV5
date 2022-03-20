@@ -17,6 +17,7 @@
         ArtikelRecords,
         SpoorOverzicht,
         LijstLayouts,
+        MeldingCenter,
         Alles,
         None
     }

@@ -5,8 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using MetroFramework.Controls;
@@ -22,8 +25,9 @@ namespace Controls
         public IProductieBase Productie { get; private set; }
         public string Title { get; private set; }
         public Color HtmlBackColor { get; private set; }
-        public Color BackColorGradient { get;private set; }
+        public Color BackColorGradient { get; private set; }
         public Color TextColor { get; private set; }
+
         public bool ShowAantal
         {
             get => aantalChangerUI1.Visible;
@@ -50,6 +54,7 @@ namespace Controls
             productieVerbruikUI1.ShowOpslaan = true;
             xTabControl.SelectedIndex = 0;
             ((OLVColumn) xLogDataList.Columns[0]).ImageGetter = (x) => 0;
+            //webBrowser1.Navigated += webBrowser1_Navigated;
         }
 
         private void UpdateLogData(List<LogEntry> entries)
@@ -70,7 +75,7 @@ namespace Controls
                     xLogDataList.EndUpdate();
                 }
 
-               
+
                 for (int i = 0; i < entries.Count; i++)
                 {
                     var xent = entries[i];
@@ -109,8 +114,9 @@ namespace Controls
                 if (ShowAantal)
                 {
                     aantalChangerUI1.Visible = true;
-                   aantalChangerUI1.LoadAantalGemaakt(Productie);
+                    aantalChangerUI1.LoadAantalGemaakt(Productie);
                 }
+
                 string txt = String.Empty;
                 int index = -1;
                 if (Productie is Bewerking bew && bew.Combies.Count > 0)
@@ -183,6 +189,11 @@ namespace Controls
                             var xlogs = entry?.Logs ?? new List<LogEntry>();
                             UpdateLogData(xlogs);
                         }
+
+                        break;
+                    case 11:
+                        string xpath = Path.Combine(Manager.DbPath, "Bijlages", Productie.ArtikelNr);
+                        bijlageUI1.SetPath(xpath);
                         break;
                 }
 
@@ -201,6 +212,7 @@ namespace Controls
                     {
                         xpanel.ImageLoad += xVerpakkingHtmlPanel_ImageLoad;
                     }
+
                     xpanel.Dock = DockStyle.Fill;
                     if (!string.Equals(xpanel.Text, txt, StringComparison.CurrentCultureIgnoreCase))
                     {
@@ -215,6 +227,7 @@ namespace Controls
                                 xpanel.VerticalScroll.Value = curpos;
                             }
                         }
+
                         xTabControl.TabPages[index].Controls.Add(xpanel);
                         xTabControl.TabPages[index].ResumeLayout(true);
                         //panel.AutoScrollPosition.Offset(curpos);
@@ -248,7 +261,8 @@ namespace Controls
             }
         }
 
-        public void SetInfo(IProductieBase productie,string title, Color backColor, Color backGroundGradient, Color textColor)
+        public void SetInfo(IProductieBase productie, string title, Color backColor, Color backGroundGradient,
+            Color textColor)
         {
             if (productie == null) return;
             try
@@ -309,22 +323,131 @@ namespace Controls
                 if (Manager.LogedInGebruiker == null || Manager.LogedInGebruiker.AccesLevel < AccesType.Manager)
                     return;
                 var xents = xLogDataList.SelectedObjects.Cast<LogEntry>().ToList();
-               
+
                 var xprod = (Productie as Bewerking)?.Parent ?? (Productie as ProductieFormulier);
                 if (xprod != null)
                 {
                     var xlist = xprod.Logs ?? new List<LogEntry>();
-                    xents.ForEach(x =>
-                    {
-                        xlist.Remove(x);
-                    });
+                    xents.ForEach(x => { xlist.Remove(x); });
                     if (Manager.Database?.ProductieFormulieren != null)
                     {
-                       await Manager.Database.UpSert(xprod, false, false, "");
+                        await Manager.Database.UpSert(xprod, false, false, "");
                     }
                 }
-               
+
             }
         }
+
+        //private delegate int EnumChildProc(IntPtr hwnd, IntPtr lParam);
+
+        //[DllImport("user32.dll", SetLastError = true)]
+        //private static extern IntPtr SendMessage(IntPtr hWnd, int Msg,
+        //    IntPtr wParam, IntPtr lParam);
+
+        //[DllImport("user32.dll", SetLastError = true)]
+        //private static extern int EnumChildWindows(IntPtr hWndParent,
+        //    EnumChildProc lpEnumFunc, IntPtr lParam);
+
+        //[DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        //private static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName,
+        //    int nMaxCount);
+
+        //private const int WM_COMMAND = 0x108E;
+        //private const int SHVIEW_REPORT = 0x702C;
+        //private const string SHELLVIEW_CLASS = "SHELLDLL_DefView";
+
+        //private IntPtr m_ShellView;
+
+        //private int EnumChildren(IntPtr hwnd, IntPtr lParam)
+        //{
+        //    int retval = 1;
+
+        //    StringBuilder sb = new StringBuilder(SHELLVIEW_CLASS.Length -1);
+        //    int numChars = GetClassName(hwnd, sb, sb.Capacity);
+        //    if (numChars == SHELLVIEW_CLASS.Length)
+        //    {
+        //        if (sb.ToString(0, numChars) == SHELLVIEW_CLASS)
+        //        {
+        //            m_ShellView = hwnd;
+        //            retval = 0;
+        //        }
+        //    }
+
+        //    return retval;
+        //}
+
+        //#region WebrowserViewStyle
+
+        //private const int LV_VIEW_ICON = 0x0;
+
+        //private const int LV_VIEW_DETAILS = 0x1;
+
+        //private const int LV_VIEW_SMALLICON = 0x2;
+
+        //private const int LV_VIEW_LIST = 0x3;
+
+        //private const int LV_VIEW_TILE = 0x4;
+
+        //private const int EM_HIDEBALLOONTIP = 0x1504;
+
+        //private const int LVM_SETVIEW = 0x108E;
+
+        //private const string ListViewClassName = "SHELLDLL_DefView";
+
+        //private readonly System.Runtime.InteropServices.HandleRef NullHandleRef =
+        //    new System.Runtime.InteropServices.HandleRef(null, System.IntPtr.Zero);
+
+
+
+        //[DllImport("user32.dll", ExactSpelling = true)]
+
+        //private static extern bool EnumChildWindows(HandleRef hwndParent,
+        //    EnumChildrenCallback lpEnumFunc, HandleRef lParam);
+
+        //[DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        //static extern int SendMessage(HandleRef hWnd, uint Msg, int wParam, int lParam);
+
+
+        //[DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+
+        //private static extern uint RealGetWindowClass(IntPtr hwnd, [Out] StringBuilder pszType, uint cchType);
+
+
+        //private delegate bool EnumChildrenCallback(IntPtr hwnd, IntPtr lParam);
+
+        //private HandleRef listViewHandle;
+        //private void FindListViewHandle()
+        //{
+        //    this.listViewHandle = NullHandleRef;
+        //    var lpEnumFunc = new EnumChildrenCallback(EnumChildren);
+
+        //    EnumChildWindows(new HandleRef(this.webBrowser1, this.webBrowser1.Handle),
+        //        lpEnumFunc, NullHandleRef);
+        //}
+
+
+
+
+        //private bool EnumChildren(IntPtr hwnd, IntPtr lparam)
+        //{
+        //    var sb = new StringBuilder(100);
+
+        //    RealGetWindowClass(hwnd, sb, 100);
+
+        //    if (sb.ToString() == ListViewClassName)
+        //        this.listViewHandle = new System.Runtime.InteropServices.HandleRef(null, hwnd);
+        //    return true;
+
+        //}
+
+        //#endregion
+
+        //private void webBrowser1_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        //{
+        //    FindListViewHandle();
+        //    var view = 2;
+
+        //    SendMessage(this.listViewHandle, LVM_SETVIEW, view, 0);
+        //}
     }
 }

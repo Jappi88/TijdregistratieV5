@@ -23,6 +23,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -1355,7 +1356,7 @@ namespace Rpm.Misc
         {
             try
             {
-               return Guid.NewGuid().GetHashCode();
+               return (Guid.NewGuid().ToString() + DateTime.Now.Ticks).GetHashCode();
 
             }
             catch (Exception e)
@@ -1922,6 +1923,22 @@ namespace Rpm.Misc
                 "" => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
                 _ => input[0].ToString().ToUpper() + input.Substring(1)
             };
+
+        public static string GetBlockBySeperator(this string text, char seperator, bool lastblock)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(text) || !text.Contains(seperator)) return text;
+                var xindex = text.LastIndexOf(seperator);
+                int xstart = lastblock ? xindex + 1 : 0;
+                int xend = lastblock ? (text.Length - xindex) -1 : xindex;
+                return text.Substring(xstart, xend).Trim();
+            }
+            catch (Exception e)
+            {
+                return text;
+            }
+        }
 
         #endregion Conversions
 

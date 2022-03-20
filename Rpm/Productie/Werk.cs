@@ -10,13 +10,14 @@ namespace Rpm.Productie
         public ProductieFormulier Formulier { get; set; }
         public Bewerking Bewerking { get; set; }
         public WerkPlek Plek { get; set; }
-
+        public string Path { get; set; }
         public static Werk FromPath(string path, ProductieFormulier parent)
         {
             var werk = new Werk();
             try
             {
                 if (string.IsNullOrEmpty(path)) return werk;
+                werk.Path = path;
                 string[] xpaths = path.Split('\\');
                 if (xpaths.Length == 0) return werk;
                 var prod = parent ?? Manager.Database.GetProductie(xpaths[0], false);

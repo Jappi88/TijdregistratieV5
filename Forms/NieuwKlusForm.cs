@@ -168,8 +168,12 @@ namespace Forms
                 rooster = wp?.Tijden?.WerkRooster ?? Manager.Opties?.GetWerkRooster() ?? Rooster.StandaartRooster();
             SelectedKlus.Tijden.WerkRooster = rooster;
             var tent = SelectedKlus.GetAvailibleTijdEntry();
+            xstart.ValueChanged -= xstart_ValueChanged;
+            xstop.ValueChanged -= xstop_ValueChanged;
             xstart.SetValue(tent.Start);
             xstop.SetValue(tent.Stop);
+            xstart.ValueChanged += xstart_ValueChanged;
+            xstop.ValueChanged += xstop_ValueChanged;
             if (SelectedKlus.Status == ProductieState.Gestart)
             {
                 xstop.Enabled = false;
@@ -186,10 +190,10 @@ namespace Forms
         {
             if (pers?.Werkplek == null || pers?.WerktAan == null)
                 return null;
-            var bew = Formulier.Bewerkingen.FirstOrDefault(x => x.Path.ToLower() == pers.WerktAan.ToLower());
+            var bew = Formulier.Bewerkingen.FirstOrDefault(x => string.Equals(x.Path, pers.WerktAan, StringComparison.CurrentCultureIgnoreCase));
             if (bew == null)
                 return null;
-            var wp = bew.WerkPlekken.FirstOrDefault(x => x.Naam.ToLower() == pers.Werkplek.ToLower());
+            var wp = bew.WerkPlekken.FirstOrDefault(x => string.Equals(x.Naam, pers.Werkplek, StringComparison.CurrentCultureIgnoreCase));
             if (wp == null && createnew)
             {
                 wp = new WerkPlek(pers, pers.Werkplek, bew);
@@ -204,7 +208,7 @@ namespace Forms
             if (naam == null || bewerking == null)
                 return null;
             //var bew = Formulier.Bewerkingen.FirstOrDefault(x => x.Path.ToLower() == bewerking.Path.ToLower());
-            var wp = bewerking.WerkPlekken.FirstOrDefault(x => x.Naam.ToLower() == naam.ToLower());
+            var wp = bewerking.WerkPlekken.FirstOrDefault(x => string.Equals(x.Naam, naam, StringComparison.CurrentCultureIgnoreCase));
             if (wp == null && createnew)
             {
                 wp = new WerkPlek(naam, bewerking);
@@ -223,7 +227,7 @@ namespace Forms
                 var pair = _origklus.GetWerk(Formulier);
                 var prod = pair.Formulier;
                 var bewerking = pair.Bewerking;
-                var wp = GetWerkPlek(_origklus.WerkPlek, bewerking, false);
+                var wp = pair.Plek;//GetWerkPlek(_origklus.WerkPlek, bewerking, false);
                 var xpersonen = new List<Personeel>();
                 //Rooster rooster = Persoon.Length == 1
                 //    ? Persoon[0].WerkRooster : null;

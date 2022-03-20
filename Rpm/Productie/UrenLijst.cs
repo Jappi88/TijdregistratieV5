@@ -559,12 +559,14 @@ namespace Rpm.Productie
                 var changed = false;
                 lock (Uren)
                 {
-                    foreach (var t in Uren)
+                    for (int i = 0; i < Uren.Count; i++)
                     {
+                        var t = Uren[i];
                         if (t.WerkRooster == null || !t.WerkRooster.IsCustom())
                             t.WerkRooster = WerkRooster;
                         if (t.Equals(tijd))
                         {
+                            Uren[i] = t.CreateCopy();
                             if (t.WerkRooster == null || !t.WerkRooster.IsCustom())
                                 t.WerkRooster = tijd.WerkRooster != null && tijd.WerkRooster.IsCustom()
                                     ? tijd.WerkRooster
@@ -591,6 +593,7 @@ namespace Rpm.Productie
                             done++;
                             break;
                         }
+
                     }
                 }
 

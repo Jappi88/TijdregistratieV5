@@ -289,6 +289,7 @@ namespace Controls
                 xexportexcel.Enabled = enable3;
                 xaanbevolenpersb.Enabled = enable1;
                 xtoonTekening.Enabled = enable1;
+                xbijlage.Enabled = enable1 && acces1;
                 //set context menu
                 xopenProductieToolStripMenuItem.Enabled = enable3 && acces1 && verwijderd2;
                 xtoolstripstart.Enabled = acces1 && isgestopt;
@@ -311,6 +312,7 @@ namespace Controls
                 verpakkingsInstructieToolStripMenuItem.Enabled = enable1;
                 kopiërenToolStripMenuItem.Enabled = !_selectedSubitem.IsDefault() && _selectedSubitem.Value != null;
                 werkTekeningToolStripMenuItem.Enabled = enable1;
+                bijlagesToolStripMenuItem.Enabled = enable1 && acces1;
                 //resetToolStripMenuItem.Visible = Manager.Opties?.Filters?.Any(x =>
                 //    x.IsTempFilter && x.ListNames.Any(s =>
                 //        string.Equals(s, ListName, StringComparison.CurrentCultureIgnoreCase))) ?? false;
@@ -2591,6 +2593,16 @@ namespace Controls
 
                     new ProductieInfoForm(bws).ShowDialog();
                 }
+            }
+        }
+
+        private void xbijlage_Click(object sender, EventArgs e)
+        {
+            if (ProductieLijst.SelectedObject is IProductieBase productie)
+            {
+                var bl = new BijlageForm(productie);
+                bl.Title = $"Bijlages Voor: {productie.ArtikelNr}";
+                bl.ShowDialog();
             }
         }
 

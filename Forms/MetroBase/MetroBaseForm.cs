@@ -102,23 +102,38 @@ namespace Forms.MetroBase
 
         private void MetroBaseForm_Load(object sender, EventArgs e)
         {
-            if (SaveLastSize)
-                this.InitLastInfo();
-            if (this.Parent == null)
+            if (IsDisposed || Disposing) return;
+            if (InvokeRequired)
+                this.Invoke(new Action(InitInfo));
+            else InitInfo();
+        }
+
+        private void InitInfo()
+        {
+            try
             {
-                var xparent = this.GetParentForm();
-                if (xparent != null)
+                if (SaveLastSize)
+                    this.InitLastInfo();
+                if (this.Parent == null)
                 {
-                    var y = (xparent.Location.Y + xparent.Height / 2) - this.Height / 2;
-                    var x = (xparent.Location.X + xparent.Width / 2) - this.Width / 2;
-                    if (Screen.GetWorkingArea(xparent).Contains(new Point(x, y)))
-                        this.Location = new Point(x, y);
-                    else this.StartPosition = FormStartPosition.CenterScreen;
+                    var xparent = this.GetParentForm();
+                    if (xparent != null)
+                    {
+                        var y = (xparent.Location.Y + xparent.Height / 2) - this.Height / 2;
+                        var x = (xparent.Location.X + xparent.Width / 2) - this.Width / 2;
+                        if (Screen.GetWorkingArea(xparent).Contains(new Point(x, y)))
+                            this.Location = new Point(x, y);
+                        else this.StartPosition = FormStartPosition.CenterScreen;
+                    }
+                    else
+                        this.StartPosition = FormStartPosition.CenterScreen;
                 }
-                else
-                    this.StartPosition = FormStartPosition.CenterScreen;
+                else this.StartPosition = FormStartPosition.CenterParent;
             }
-            else this.StartPosition = FormStartPosition.CenterParent;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private void MetroBaseForm_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)

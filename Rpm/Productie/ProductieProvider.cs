@@ -41,7 +41,12 @@ namespace ProductieManager.Rpm.Productie
            {
                while (IsProductiesSyncing)
                {
-                   if (Manager.Opties.GebruikLocalSync || Manager.Opties.GebruikTaken)
+                   if (Manager.Opties == null)
+                   {
+                       Thread.Sleep(1000);
+                       continue;
+                   }
+                   if (Manager.Opties is {GebruikLocalSync: true} || Manager.Opties.GebruikTaken)
                        UpdateProducties();
                    // await Task.Delay(Manager.Opties.SyncInterval);
                    Thread.Sleep(Manager.Opties.SyncInterval);

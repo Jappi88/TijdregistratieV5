@@ -52,11 +52,12 @@
             this.ClientSize = new System.Drawing.Size(1122, 702);
             this.Controls.Add(this.htmlPanel1);
             this.Name = "DailyMessageForm";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Style = MetroFramework.MetroColorStyle.Green;
             this.Text = "DailyMessageForm";
+            this.Title = "DailyMessageForm";
+            this.TopMost = true;
             this.ResumeLayout(false);
 
         }

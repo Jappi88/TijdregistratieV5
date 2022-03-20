@@ -1551,7 +1551,7 @@ namespace Rpm.Productie
                         foreach (var b in Bewerkingen)
                         {
                             if (!b.IsAllowed(null)) continue;
-                            b.UpdateBewerking(forms, $"[{b.Path}] Bewerking Update", false);
+                            _=b.UpdateBewerking(forms, $"[{b.Path}] Bewerking Update", false).Result;
                         }
 
                 var peruur = ActueelProductenPerUur();

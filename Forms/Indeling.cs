@@ -942,6 +942,7 @@ namespace Forms
                 var wc = new WerktijdChanger(klus);
                 if (wc.ShowDialog() == DialogResult.OK)
                 {
+                    per.ReplaceKlus(wc.Klusje);
                     if (per.WerkRooster == null || !per.WerkRooster.IsCustom())
                         per.WerkRooster = klus.Tijden.WerkRooster;
 

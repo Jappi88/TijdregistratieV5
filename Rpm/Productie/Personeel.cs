@@ -457,7 +457,7 @@ namespace Rpm.Productie
                 var oldklus = Klusjes.GetKlus(klus.Path);
                 if (oldklus != null)
                     Klusjes.Remove(oldklus);
-                Klusjes.Add(klus);
+                Klusjes.Add(klus.CreateCopy());
                 return true;
             }
             catch (Exception)

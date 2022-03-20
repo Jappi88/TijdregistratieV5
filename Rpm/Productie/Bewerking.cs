@@ -670,7 +670,7 @@ namespace Rpm.Productie
                         string.Equals(x.PersoneelNaam, personeelnaam, StringComparison.CurrentCultureIgnoreCase));
                     var xklus = xper?.Klusjes.GetKlus($"{Path}\\{werkplek}")?.CreateCopy();
                     xklus?.ZetActief(actief, State == ProductieState.Gestart && actief);
-                    xper.ReplaceKlus(xklus);
+                    xper?.ReplaceKlus(xklus);
                     if (actief && xklus?.Tijden != null)
                         xwp.Tijden.UpdateLijst(xklus.Tijden, false);
                     xwp.UpdateWerkplek(false);

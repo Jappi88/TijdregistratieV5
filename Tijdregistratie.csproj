@@ -119,14 +119,14 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto">
-      <HintPath>..\..\..\Desktop\ProductieManager\BouncyCastle.Crypto.dll</HintPath>
+    <Reference Include="BouncyCastle.Crypto, Version=1.9.0.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>packages\Portable.BouncyCastle.1.9.0\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="CircularProgressBar">
       <HintPath>..\..\..\Desktop\ProductieManager\CircularProgressBar.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.11.40.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>packages\HtmlAgilityPack.1.11.40\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="HtmlAgilityPack, Version=1.11.42.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>packages\HtmlAgilityPack.1.11.42\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="HtmlRenderer, Version=1.5.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -164,6 +164,9 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MailKit, Version=3.1.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
+      <HintPath>packages\MailKit.3.1.1\lib\net47\MailKit.dll</HintPath>
+    </Reference>
     <Reference Include="MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Desktop\ProductieManager\MetroFramework.dll</HintPath>
@@ -180,6 +183,9 @@
     <Reference Include="Microsoft.VisualBasic">
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="MimeKit, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
+      <HintPath>packages\MimeKit.3.1.1\lib\net47\MimeKit.dll</HintPath>
     </Reference>
     <Reference Include="NPOI">
       <HintPath>..\..\..\Desktop\ProductieManager\NPOI.dll</HintPath>
@@ -228,6 +234,7 @@
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing.Common, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Drawing.Common.6.0.0\lib\net461\System.Drawing.Common.dll</HintPath>
     </Reference>
@@ -235,6 +242,7 @@
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
@@ -244,6 +252,7 @@
       <HintPath>packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Data" />
@@ -266,6 +275,12 @@
     <Compile Include="Controls\AfkeurEntryUI.Designer.cs">
       <DependentUpon>AfkeurEntryUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\BijlageUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\BijlageUI.Designer.cs">
+      <DependentUpon>BijlageUI.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ChartView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -280,6 +295,9 @@
     </Compile>
     <Compile Include="Controls\ProductieVerbruikUI.Designer.cs">
       <DependentUpon>ProductieVerbruikUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RoundControl.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\TileView\BeheerTilesForm.cs">
       <SubType>Form</SubType>
@@ -390,11 +408,23 @@
     <Compile Include="Forms\ArtikelsForm.Designer.cs">
       <DependentUpon>ArtikelsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BijlageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BijlageForm.Designer.cs">
+      <DependentUpon>BijlageForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ChangeSizeForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ChangeSizeForm.Designer.cs">
       <DependentUpon>ChangeSizeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Chat\ChatBubble.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\Chat\ChatBubble.Designer.cs">
+      <DependentUpon>ChatBubble.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Chat\ChatForm.cs">
       <SubType>Form</SubType>
@@ -402,6 +432,10 @@
     <Compile Include="Forms\Chat\ChatForm.Designer.cs">
       <DependentUpon>ChatForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Rpm\Mailing\EmailServer.cs" />
+    <Compile Include="Rpm\MeldingCenter\MeldingBeheer.cs" />
+    <Compile Include="Rpm\MeldingCenter\MeldingEntry.cs" />
+    <Compile Include="Rpm\Misc\Radius.cs" />
     <Compile Include="Forms\ChooseValuesForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1341,6 +1375,7 @@
     <Compile Include="Rpm\Productie\ArtikelRecords\ArtikelRecord.cs" />
     <Compile Include="Rpm\Productie\ArtikelRecords\ArtikelRecords.cs" />
     <Compile Include="Rpm\Productie\Bewerking.cs" />
+    <Compile Include="Rpm\Productie\BijlageBeheer.cs" />
     <Compile Include="Rpm\Productie\CombineerEntry.cs" />
     <Compile Include="Rpm\Productie\DeelsGereedMelding.cs" />
     <Compile Include="Rpm\Productie\ExtraTijd.cs" />
@@ -1426,6 +1461,9 @@
     <EmbeddedResource Include="Controls\AfkeurEntryUI.resx">
       <DependentUpon>AfkeurEntryUI.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\BijlageUI.resx">
+      <DependentUpon>BijlageUI.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ChartView.resx">
       <DependentUpon>ChartView.cs</DependentUpon>
     </EmbeddedResource>
@@ -1487,8 +1525,14 @@
     <EmbeddedResource Include="Forms\ArtikelsForm.resx">
       <DependentUpon>ArtikelsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BijlageForm.resx">
+      <DependentUpon>BijlageForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ChangeSizeForm.resx">
       <DependentUpon>ChangeSizeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Chat\ChatBubble.resx">
+      <DependentUpon>ChatBubble.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Chat\ChatForm.resx">
       <DependentUpon>ChatForm.cs</DependentUpon>
@@ -2063,6 +2107,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\attachment256_24841_32x32.png" />
     <None Include="Resources\mixkit-happy-bells-notification-937.wav" />
     <None Include="Resources\mixkit-alert-bells-echo-765.wav" />
     <None Include="Resources\database_load_96x96.png" />
@@ -2396,6 +2441,7 @@
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Code to merge the assemblies into one:setup.exe -->
 </Project>

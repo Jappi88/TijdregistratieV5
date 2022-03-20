@@ -1,10 +1,10 @@
 ﻿using BrightIdeasSoftware;
 using Forms;
+using ProductieManager.Forms.Chat;
 using ProductieManager.Rpm.Misc;
 using ProductieManager.Rpm.Various;
 using Rpm.Misc;
 using Rpm.Productie;
-using Rpm.Various;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,8 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
-using TheArtOfDev.HtmlRenderer.Core.Entities;
-using TheArtOfDev.HtmlRenderer.WinForms;
+using ContentAlignment = System.Drawing.ContentAlignment;
 using TextAlign = NPOI.XSSF.UserModel.TextAlign;
 
 namespace ProductieManager.Forms
@@ -108,25 +107,27 @@ namespace ProductieManager.Forms
             return "n.v.t.";
         }
 
-        private string CreateSendMessage(ProductieChatEntry entry)
+        private ChatBubble CreateSendMessage(ProductieChatEntry entry, ChatBubble chat = null)
         {
-            if (ProductieChat.Chat == null) return string.Empty;
-
+            if (ProductieChat.Chat == null) return null;
+            var xret = chat ?? new ChatBubble();
             string html = CreateHtmlString($"", entry.ID, Color.DarkGray, Color.Transparent, 0,
-                entry.Afzender.UserName, new Size(48, 48), ImageAlign.Right, new Size(85,0), TextAlign.RIGHT,
+                entry.Afzender.UserName, new Size(48, 48), ImageAlign.Left, new Size(85, 0), TextAlign.LEFT,
                 0, 0, Color.Transparent);
 
-            html += CreateHtmlString($"<b>{entry.Afzender.UserName} zegt:</b><br><br>{entry.Bericht}", entry.ID, Color.White,
+            html += CreateHtmlString($"<b>{entry.Afzender.UserName} zegt:</b><br><br>{entry.Bericht}", entry.ID,
+                Color.White,
                 Color.CornflowerBlue, 10,
-                null, new Size(32, 32), ImageAlign.Right, new Size(125, 0), TextAlign.RIGHT, 10, 15, Color.Transparent);
+                null, new Size(32, 32), ImageAlign.Left, new Size(125, 0), TextAlign.LEFT, 10, 15, Color.Transparent);
 
             html += CreateHtmlString(entry.Tijd.ToString("F"), entry.ID, Color.LightSlateGray, Color.Transparent, 5,
                 entry.IsGelezen ? "gelezen" : "verzonden",
-                new Size(24, 24), ImageAlign.Right, new Size(150, 0), TextAlign.RIGHT, 10, 10, Color.Transparent);
-            return html;
+                new Size(24, 24), ImageAlign.Left, new Size(150, 0), TextAlign.LEFT, 10, 10, Color.Transparent);
+            xret.SetMessage(entry, html, xuserimages.Images[entry.Afzender.UserName]);
+            return xret;
         }
 
-        private string CreateRecieveMessage(ProductieChatEntry entry)
+        private ChatBubble CreateRecieveMessage(ProductieChatEntry entry, ChatBubble chat = null)
         {
             string html = CreateHtmlString($"",entry.ID, Color.DarkGray, Color.Transparent, 0,
                 entry.Afzender.UserName, new Size(48, 48), ImageAlign.Left, new Size(110, 0), TextAlign.LEFT,
@@ -134,7 +135,7 @@ namespace ProductieManager.Forms
 
             //html += CreateHtmlString($"{user} zegt:", Color.DarkGray, Color.Transparent, 5,
             //    null, new Size(48, 48), ImageAlign.Left, new Size(150, 0), TextAlign.LEFT, 0, 0, Color.Transparent);
-
+            var xret = chat ?? new ChatBubble();
             html += CreateHtmlString($"<b>{entry.Afzender.UserName} zegt:</b><br><br>{entry.Bericht}", entry.ID, Color.Black,
                 Color.PowderBlue, 10,
                 null, new Size(32, 32), ImageAlign.Left, new Size(150, 0), TextAlign.LEFT, 10, 15, Color.Transparent);
@@ -142,7 +143,8 @@ namespace ProductieManager.Forms
             html += CreateHtmlString(entry.Tijd.ToString("F"), entry.ID, Color.LightSlateGray, Color.Transparent, 5,
                 entry.IsGelezen ? "gelezen" : "verzonden",
                 new Size(24, 24), ImageAlign.Left, new Size(175, 0), TextAlign.LEFT, 10, 10, Color.Transparent);
-            return html;
+            xret.SetMessage(entry, html, xuserimages.Images[entry.Afzender.UserName]);
+            return xret;
         }
 
         public string CreateHtmlString(string value, string id, Color textcolor, Color backcolor, int padding, string imagename,Size imagesize, ImageAlign imagealign, Size margin, TextAlign align, int borderwidth, int borderradius,
@@ -261,18 +263,7 @@ namespace ProductieManager.Forms
 
         private void ProductieChat_MessageRecieved(ProductieChatEntry message)
         {
-            BeginInvoke(new MethodInvoker(() =>
-            {
-
-                LoadProfiles();
-                //var selected = SelectedUser();
-                //if (selected != null && (string.Equals(selected.UserName, message.Afzender.UserName,
-                //        StringComparison.CurrentCultureIgnoreCase) || string.Equals(selected.UserName,
-                //        message.Ontvanger,
-                //        StringComparison.CurrentCultureIgnoreCase)))
-                //    LoadConversation(true);
-
-            }));
+            BeginInvoke(new MethodInvoker(LoadProfiles));
         }
 
         private void ProductieChat_GebruikerUpdate(UserChat user)
@@ -344,7 +335,7 @@ namespace ProductieManager.Forms
                 for (int i = 0; i < ProductieChat.Gebruikers.Count; i++)
                 {
                     var user = ProductieChat.Gebruikers[i];
-                    if (_Selected != null &&
+                    if (_selecteduser != null &&
                         string.Equals(user.UserName, _Selected, StringComparison.CurrentCultureIgnoreCase))
                         selected = user;
                     var img = user.GetProfielImage() ?? Properties.Resources.avatardefault_92824;
@@ -390,6 +381,8 @@ namespace ProductieManager.Forms
             }
         }
 
+        private UserChat _selecteduser;
+
         private void LoadSelectedUser()
         {
             if (Manager.ProductieChat == null || Manager.LogedInGebruiker == null) return;
@@ -427,12 +420,15 @@ namespace ProductieManager.Forms
             }
 
             if (user != null)
-                LoadConversation(true);
+                LoadConversation(_selecteduser == null || !_selecteduser.Equals(user));
             else
             {
-                 xchatpanel.Text = "";
+                xchatpanel.SuspendLayout();
+                xchatpanel.Controls.Clear();
+                xchatpanel.ResumeLayout(false);
             }
-           
+
+            _selecteduser = user;
         }
 
         private UserChat SelectedUser()
@@ -440,60 +436,106 @@ namespace ProductieManager.Forms
             return (UserChat) xuserlist.SelectedObject;
         }
 
-        private async void LoadConversation(bool scrolltoend)
+        private void UpdateMessages(List<ProductieChatEntry> entries, bool scroltoend, UserChat selected = null)
         {
-            await Task.Run(() =>
+            try
             {
-                BeginInvoke(new MethodInvoker(() =>
+                if (selected != null && !selected.Equals(_selecteduser))
                 {
-                    try
+                    xchatpanel.Controls.Clear();
+                }
+                else
+                {
+                    var toremove = xchatpanel.Controls.Cast<ChatBubble>().Where(x => entries.IndexOf(x.Message) == -1)
+                        .ToList();
+                    if (toremove.Count > 0)
                     {
-                        var selected = SelectedUser();
-                        if (selected != null)
-                        {
-                            // int curpos = scrolltoend? xchatpanel.VerticalScroll.Maximum : xchatpanel.VerticalScroll.Value;
-                            var xpos = scrolltoend ? xchatpanel.VerticalScroll.Maximum : xchatpanel.VerticalScroll.Value;
-                            //load conversation
-                            var messages =
-                                ProductieChat.GetConversation(selected, !string.IsNullOrEmpty(selected.UserName));
-                            string msg = "";
-                            bool notifyuser = false;
-                            ProductieChat.RaiseNewMessageEvent = false;
-                            List<ProductieChatEntry> toupdate = new List<ProductieChatEntry>();
-                            for(int i = 0; i < messages.Count; i++)
-                            {
-                                var message = messages[i];
-                                bool isme = string.Equals(message.Afzender.UserName, ProductieChat.Chat.UserName,
-                                    StringComparison.CurrentCultureIgnoreCase);
-                                if (!isme && !message.IsGelezen)
-                                {
-                                    message.IsGelezen = true;
-                                    notifyuser = true;
-                                    toupdate.Add(message);
-                                }
-                                msg += isme ? CreateSendMessage(message) : CreateRecieveMessage(message);
-                            }
+                        xchatpanel.SuspendLayout();
+                        toremove.ForEach(x => xchatpanel.Controls.Remove(x));
+                        xchatpanel.ResumeLayout(true);
+                    }
+                }
 
-                            ProductieChat.RaiseNewMessageEvent = true;
-                            xchatpanel.Text = msg;
-                            xpos = scrolltoend ? xchatpanel.VerticalScroll.Maximum : xpos;
-                            xchatpanel.VerticalScroll.Value = xpos;
-                            toupdate.ForEach(x => x.UpdateMessage());
-                            Application.DoEvents();
-                            xchatpanel.VerticalScroll.Value = xpos;
-                            xchatpanel.PerformLayout();
-                           
-                            if (notifyuser)
-                                selected.Save();
-                        }
-                        else xchatpanel.Text = "";
-                    }
-                    catch (Exception e)
+                var xmessages = xchatpanel.Controls.Cast<ChatBubble>().ToList();
+                bool updated = false;
+                bool added = false;
+                xchatpanel.SuspendLayout();
+                for (int i = 0; i < entries.Count; i++)
+                {
+                    var xent = entries[i];
+                    bool isme = string.Equals(xent.Afzender.UserName, ProductieChat.Chat.UserName,
+                        StringComparison.CurrentCultureIgnoreCase);
+
+                    if (!isme && !xent.IsGelezen)
                     {
-                        Console.WriteLine(e);
+                        xent.IsGelezen = true;
+                        updated = true;
+                        xent.UpdateMessage();
                     }
-                }));
-            });
+
+                    var xmsg = isme ? CreateSendMessage(xent) : CreateRecieveMessage(xent);
+                    var xold = xmessages.FirstOrDefault(x => x.Message.Equals(xent));
+                    if (xold != null)
+                    {
+                        xold.SetMessage(xmsg);
+                    }
+                    else
+                    {
+                      
+                        xchatpanel.Controls.Add(xmsg);
+                        xchatpanel.Controls.SetChildIndex(xmsg, i);
+                        added = true;
+                    }
+                }
+                xchatpanel.ResumeLayout(false);
+                if (updated)
+                {
+                    selected?.Save();
+                }
+
+                if ((added || scroltoend) && xchatpanel.Controls.Count > 0)
+                {
+                    var xlast = xchatpanel.Controls[xchatpanel.Controls.Count -1];
+                    xchatpanel.PerformLayout();
+                    xchatpanel.ScrollControlIntoView(xlast);
+                    xchatpanel.PerformLayout();
+                    xchatpanel.ScrollControlIntoView(xlast);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        private void LoadConversation(bool scrolltoend)
+        {
+            //BeginInvoke(new MethodInvoker(() =>
+            //{
+                try
+                {
+                    var selected = SelectedUser();
+                    if (selected != null)
+                    {
+                        //load conversation
+                        var messages =
+                            ProductieChat.GetConversation(selected, !string.IsNullOrEmpty(selected.UserName));
+                        if (this.Disposing || this.IsDisposed) return;
+                        ProductieChat.RaiseNewMessageEvent = false;
+                        UpdateMessages(messages, scrolltoend, selected);
+                        ProductieChat.RaiseNewMessageEvent = true;
+                    }
+                    else
+                    {
+                        xchatpanel.Controls.Clear();
+                        xchatpanel.Invalidate();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+           // }));
         }
 
         private void xuserlist_SelectedIndexChanged(object sender, EventArgs e)
@@ -516,11 +558,18 @@ namespace ProductieManager.Forms
                 ? string.Join(";", ProductieChat.Gebruikers.Select(x => x.UserName))
                 : selected.UserName;
             string xmessage = CheckProductieLinks(xchattextbox.Text.Trim());
-            ProductieChat.SendMessage(xmessage, ontvangers);
+            var xent = ProductieChat.SendMessage(xmessage, ontvangers);
+            if (xent != null)
+            {
+                var xmsg = CreateSendMessage(xent);
+                xchatpanel.Controls.Add(xmsg);
+                xchatpanel.Controls.SetChildIndex(xmsg, xchatpanel.Controls.Count - 1);
+                xchatpanel.ScrollControlIntoView(xmsg);
+            }
             xchattextbox.Text = "";
             xchattextbox.Select();
             xchattextbox.Focus();
-            LoadConversation(true);
+            //LoadConversation(true);
         }
 
         private void xsendbutton_Click(object sender, EventArgs e)
@@ -576,65 +625,6 @@ namespace ProductieManager.Forms
             {
                 xchattextbox.Text = "Typ bericht...";
                 xchattextbox.ForeColor = Color.Gray;
-            }
-        }
-
-        private void xchatview_ImageLoad(object sender, HtmlImageLoadEventArgs e)
-        {
-            string[] values = e.Src.Split(';');
-            if (values.Length == 0) return;
-            var xmg = xuserimages.Images[values[0]];
-            if (xmg == null)
-            {
-                switch (values[0])
-                {
-                    case "gelezen":
-                        xmg = Properties.Resources.MsgRead_32;
-                        break;
-                    case "verzonden":
-                        xmg = Properties.Resources.message_send_32x32;
-                        break;
-                }
-            }
-
-            if (xmg != null)
-            {
-                string width = values.FirstOrDefault(x => x.ToLower().Contains("width"));
-                string height = values.FirstOrDefault(x => x.ToLower().Contains("height"));
-                int xwidth = -1;
-                int xheight = -1;
-                if (width != null)
-                {
-                    string[] xw = width.Split(':');
-                    if (xw.Length > 1)
-                        int.TryParse(xw[1], out xwidth);
-                }
-                if (height != null)
-                {
-                    string[] xw = height.Split(':');
-                    if (xw.Length > 1)
-                        int.TryParse(xw[1], out xheight);
-                }
-
-                if (xwidth > 0 && xheight > 0)
-                    xmg = xmg.ResizeImage(xwidth, xheight);
-                e.Callback(xmg);
-            }
-        }
-
-        private void xchatpanel_LinkClicked(object sender, HtmlLinkClickedEventArgs e)
-        {
-            if (Manager.Database == null || Manager.Database.IsDisposed) return;
-            try
-            {
-                var prod = Manager.Database.GetProductie(e.Link, false);
-                if (prod == null) return;
-                var bew = prod.Bewerkingen?.FirstOrDefault(x => x.IsAllowed());
-                Manager.FormulierActie(new object[] { prod, bew }, MainAktie.OpenProductie);
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
             }
         }
 

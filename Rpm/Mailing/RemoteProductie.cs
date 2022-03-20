@@ -1,137 +1,251 @@
-﻿using ProductieManager.Rpm.Mailing;
+﻿using MetroFramework;
+using ProductieManager.Rpm.Mailing;
+using ProductieManager.Rpm.Misc;
+using ProductieManager.Rpm.Productie;
+using ProductieManager.Rpm.Various;
+using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using MailKit;
+using MailKit.Net.Imap;
+using MailKit.Search;
+using MimeKit;
+using Org.BouncyCastle.Crypto.Paddings;
 using MailMessage = System.Net.Mail.MailMessage;
 
 namespace Rpm.Mailing
 {
     public class RemoteProductie
     {
-        //public static RemoteMessage[] ControlleerOpMessages()
-        //{
-        //    try
-        //    {
-        //        var xreturn = new List<RemoteMessage>();
-        //        // Gmail IMAP4 server is "imap.gmail.com"
-        //        var oServer = new MailServer("imap.gmail.com",
-        //            "valk.rpm@gmail.com",
-        //            "XXXXXXXXXX",
-        //            ServerProtocol.Imap4);
+        private static bool _IsProcessing;
+        public static bool ProcessInkomingMail(MimeMessage message)
+        {
+            try
+            {
+                if (message == null) return false;
+                var body = "";
+                var mail = message;
+                if (mail.TextBody != null)
+                    body += mail.TextBody;
 
-        //        // Enable SSL connection.
-        //        oServer.SSLConnection = true;
+                var xendindex = body.IndexOf("Met vriendelijke groet", StringComparison.CurrentCultureIgnoreCase);
+                if(xendindex == -1)
+                    xendindex = body.IndexOf("Verzonden vanuit", StringComparison.CurrentCultureIgnoreCase);
+                if (xendindex > -1)
+                {
+                    body = body.Substring(0, xendindex);
+                }
+                var xonderwerp = mail.Subject.ToLower().Replace("fw:", "").Replace("re:", "").Trim();
+                var x1 = xonderwerp.GetBlockBySeperator(':', false);
+                var x2 = xonderwerp.GetBlockBySeperator(':', true);
+                var ret = true;
+                switch (x1.ToLower())
+                {
+                    case "wijzig":
+                        if (!string.IsNullOrEmpty(x1) && !string.IsNullOrEmpty(body))
+                        {
+                            var logs = new List<string>();
+                            if (WijzigData(body, logs))
+                            {
+                                var xatt = mail.Attachments?.FirstOrDefault(x => x.ContentDisposition != null && x.ContentDisposition.Disposition != "inline");
+                                byte[] xmg = GetMessageData((MimePart)xatt);
+                                Manager.Meldingen.CreateMelding(string.Join("\n", logs),
+                                    $"Productie Wijzigingen van {mail.From?.First()?.Name}", new List<string>(), xmg,
+                                    true);
+                            }
+                        }
+                        break;
+                    case "bijlage":
+                        if (!string.IsNullOrEmpty(x2))
+                        {
+                            var xatt = mail.Attachments?.Cast<MimePart>().ToList() ?? new List<MimePart>();
+                            xatt.ForEach(x =>
+                            {
+                                if (x.ContentDisposition.Disposition != "inline")
+                                {
+                                    BijlageBeheer.UpdateBijlage(x2, GetMessageData(x), x.ContentDescription);
+                                }
+                            });
+                        }
+                        break;
+                    case "melding":
+                        if (Manager.Meldingen == null || Manager.Meldingen.IsDisposed)
+                        {
+                            ret = false;
+                            break;
+                        }
+                        if (!string.IsNullOrEmpty(x2) && !string.IsNullOrEmpty(body))
+                        {
+                            var xatt = mail.Attachments?.FirstOrDefault(x=> x.ContentDisposition != null && x.ContentDisposition.Disposition != "inline");
+                            byte[] xmg = GetMessageData((MimePart) xatt);
+                            if (Manager.Meldingen.CreateMelding(body, "Melding van " + mail.From?.First()?.Name,
+                                    x2.Split(';').ToList(), xmg, true) == null)
+                                ret = false;
+                        }
+                        break;
+                }
+                return ret;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
 
-        //        // Set 993 SSL port
-        //        oServer.Port = 993;
-        //        oServer.SSLType = SSLConnectType.ConnectSSLAuto;
-        //        var oClient = new MailClient("TryIt");
-        //        oClient.Connect(oServer);
-        //        // retrieve unread/new email only
-        //        oClient.GetMailInfosParam.Reset();
-        //        oClient.GetMailInfosParam.GetMailInfosOptions = GetMailInfosOptionType.NewOnly;
+        private static bool WijzigValue(string value,Werk werk, List<string> logs)
+        {
+            if (string.IsNullOrEmpty(value) || werk == null || !werk.IsValid) return false;
+            var type = werk.Plek?.GetType() ?? werk.Bewerking?.GetType() ?? werk.Formulier?.GetType();
+            object data = (object)werk.Plek ?? (object)werk.Bewerking ?? (object)werk.Formulier;
+            if (type == null) return false;
+            var properties = type.GetProperties();
+            var changed = false;
+            if (value.Length > 4 && value.Contains("="))
+            {
+                logs ??= new List<string>();
+                var xs = value.Split('=');
+                foreach (var p in properties)
+                    if (p.CanWrite && string.Equals(p.Name, xs[0].Trim(), StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        var xset = xs[1].Trim().ToObjectValue(p.PropertyType);
+                        if (xset != null)
+                        {
+                            try
+                            {
+                                var xold = p.GetValue(data);
+                                p.SetValue(data, xset);
+                                logs.Add($"{p.Name} Gewijzigd van {xold.ToString()} naar {xs[1].Trim()}");
+                                changed = true;
+                            }
+                            catch (Exception e)
+                            {
+                            }
+                        }
 
-        //        var infos = oClient.GetMailInfos();
-        //        for (var i = 0; i < infos.Length; i++)
-        //        {
-        //            var info = infos[i];
-        //            Console.WriteLine("Index: {0}; Size: {1}; UIDL: {2}",
-        //                info.Index, info.Size, info.UIDL);
-        //            var oMail = oClient.GetMail(info);
+                        break;
+                    }
+            }
 
-        //            var fromadmin = oMail.From.Address.ToLower() == "jappi88@gmail.com" ||
-        //                            oMail.From.Address.ToLower() == "iabed@valksystemen.nl" ||
-        //                            oMail.From.Address.ToLower() == "irjappi88@hotmail.com";
+            return changed;
+        }
 
-        //            // Receive email from IMAP4 server
+        private static bool WijzigData(string data, List<string> logs)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(data)) return false;
+                logs ??= new List<string>();
+                using var sr = new StringReader(data);
+                string line = null;
+                while (sr.Peek() > -1)
+                {
+                    line ??= sr.ReadLine();
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        line = null;
+                        continue;
+                    }
+                    if (line.StartsWith("*"))
+                    {
+                        string id = line.Replace("*", "").Trim();
+                        line = null;
+                        if (string.IsNullOrEmpty(id)) continue;
+                        var werk = Werk.FromPath(id);
+                        if (!werk.IsValid) continue;
+                        var xlogs = new List<string>();
+                        while (sr.Peek() > -1)
+                        {
+                            var info = sr.ReadLine();
+                            if (string.IsNullOrEmpty(info)) continue;
+                            if (info.StartsWith("*"))
+                            {
+                                line = info;
+                                break;
+                            }
 
-        //            if (Manager.Opties != null && Manager.Opties.OntvangAdres != null &&
-        //                Manager.Opties.OntvangAdres.Count > 0 || fromadmin)
-        //            {
-        //                var deletemail = false;
-        //                var ink = new InkomendAdres();
-        //                if (fromadmin)
-        //                    ink.Actions = new[]
-        //                    {
-        //                        MessageAction.AlgemeneMelding,
-        //                        MessageAction.NieweProductie, MessageAction.ProductieNotitie,
-        //                        MessageAction.ProductieVerwijderen, MessageAction.ProductieWijziging,
-        //                        MessageAction.GebruikerUpdate
-        //                    };
-        //                else
-        //                    ink = Manager.Opties.OntvangAdres.FirstOrDefault(x =>
-        //                        x.Adres.Trim().ToLower() == oMail.From.Address.ToLower());
+                            if (info.Contains("="))
+                                WijzigValue(info, werk, xlogs);
+                        }
 
-        //                if (ink != null)
-        //                {
-        //                    var body = oMail.TextBody;
-        //                    var end = body.ToLower().IndexOf("met vriendelijke groet", StringComparison.Ordinal);
-        //                    if (end > -1 || (end = body.ToLower().IndexOf("\r\n\r\n", StringComparison.Ordinal)) > -1)
-        //                        body = body.Substring(0, end).Trim();
-        //                    var messages = GetRemoteMessages(body);
-        //                    if (messages != null && messages.Length > 0)
-        //                    {
-        //                        messages = messages.Where(t => ink.Actions.Any(x => x == t.Action)).ToArray();
-        //                        if (messages.Length > 0)
-        //                        {
-        //                            xreturn.AddRange(messages);
-        //                            deletemail = true;
-        //                        }
-        //                    }
-        //                    else
-        //                    {
-        //                        deletemail = true;
-        //                    }
+                        if (xlogs.Count > 0)
+                        {
+                            xlogs.Insert(0, $"[{werk.Path}]Gewijzigd: ");
+                            logs.AddRange(xlogs);
+                            werk.Formulier.UpdateForm(true, false, null, string.Join(", ", xlogs));
+                        }
+                    }
+                }
 
-        //                    var x = oMail.Attachments;
-        //                    if (x != null && ink.Actions.Any(x => x == MessageAction.NieweProductie))
-        //                    {
-        //                        foreach (var a in x)
-        //                        {
-        //                            if (a.Content == null || a.Content.Length < 10 || a.ContentType.Contains("png"))
-        //                                continue;
-        //                            xreturn.Add(new RemoteMessage("Nieuwe Productiebon", MessageAction.NieweProductie,
-        //                                MsgType.Success, a.Content));
-        //                        }
+                return logs.Count > 0;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
 
-        //                        deletemail = true;
-        //                    }
-        //                    else
-        //                    {
-        //                        deletemail &= true;
-        //                    }
-        //                }
+        private static byte[] GetMessageData(MimePart entity)
+        {
+            try
+            {
+                if (entity == null) return null;
+                using var ms = new MemoryStream();
+                entity.Content.DecodeTo(ms);
+                return ms.ToArray();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
 
-        //                Console.WriteLine("From: {0}", oMail.From);
-        //                Console.WriteLine("Subject: {0}\r\n", oMail.Subject);
-        //                // verwijder de verwerkte email
-        //                if (!info.Read && deletemail)
-        //                    oClient.Delete(info);
-        //                else
-        //                    oClient.MarkAsRead(info, true);
-        //            }
-        //        }
+        public static Task ControlleerOpMessages()
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                if (_IsProcessing) return;
+                _IsProcessing = true;
+                try
+                {
+                    // Gmail IMAP4 server is "imap.gmail.com"
+                    var oServer = CreateImapClient(out var email);
+                    if (oServer != null)
+                    {
+                        var inbox = oServer.Inbox;
+                        inbox.Open(FolderAccess.ReadWrite);
+                        var ids = inbox.Search(SearchQuery.All);
+                        for (var i = 0; i < ids.Count; i++)
+                        {
+                            var id = ids[i];
+                            var info = inbox.GetMessage(id);
+                            if (ProcessInkomingMail(info))
+                            {
+                                inbox.AddFlags(new UniqueId[] {id}, MessageFlags.Deleted, false);
+                                inbox.Expunge();
+                            }
+                        }
+                        oServer.Disconnect(true);
+                    }
+                }
+                catch (Exception ep)
+                {
+                    Console.WriteLine(ep.Message);
+                }
 
-        //        try
-        //        {
-        //            oClient.Quit();
-        //        }
-        //        catch
-        //        {
-        //        }
-
-        //        return xreturn.ToArray();
-        //    }
-        //    catch (Exception ep)
-        //    {
-        //        Console.WriteLine(ep.Message);
-        //        return null;
-        //    }
-        //}
+                _IsProcessing = false;
+            });
+        }
 
         public static bool RespondByEmail(ProductieFormulier formulier, string title = "")
         {
@@ -204,6 +318,28 @@ namespace Rpm.Mailing
             }
         }
 
+        public static ImapClient CreateImapClient(out string email)
+        {
+            email = string.Empty;
+            try
+            {
+
+                if (Manager.Opties == null || string.IsNullOrEmpty(Manager.Opties.BoundUsername)) return null;
+                var acc = Manager.Database?.GetAccount(Manager.Opties.BoundUsername).Result;
+                var host = acc?.MailingHost;
+                if (host == null) return null;
+                email = host.EmailAdres;
+                var smtp = host.CreateImapClient();
+               // smtp.SendCompleted += Smtp_SendCompleted;
+                return smtp;
+
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         private static void Smtp_SendCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
             if (e.UserState is MailMessage mail)
@@ -266,7 +402,7 @@ namespace Rpm.Mailing
             }
         }
 
-        public static RemoteMessage[] GetRemoteMessages(string body)
+        public static RemoteMessage[] GetRemoteMessages(string onderwerp, string body)
         {
             var messages = new List<RemoteMessage>();
             using (var sr = new StringReader(body))
