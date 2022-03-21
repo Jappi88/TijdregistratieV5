@@ -228,7 +228,7 @@ namespace ProductieManager
         private void InitBootDir(string path = null)
         {
 
-            _bootDir = Application.StartupPath;
+            _bootDir = Path.Combine(Application.StartupPath,"ProductieManager");
             Manager.AppRootPath = path ?? _bootDir;
 
             if (Manager.DefaultSettings != null)
@@ -238,7 +238,7 @@ namespace ProductieManager
                 dbent ??= new DatabaseUpdateEntry()
                 {
                     Naam = "Main Boot Dir",
-                    RootPath = Manager.DefaultSettings.MainDbPath ?? Application.StartupPath,
+                    RootPath = Manager.DefaultSettings.MainDbPath ?? Path.Combine(Application.StartupPath,"ProductieManager"),
                     UpdateDatabases =
                         new List<DbType>()
                         {
@@ -252,7 +252,7 @@ namespace ProductieManager
                 tempdbent ??= new DatabaseUpdateEntry()
                 {
                     Naam = "Temp Boot Dir",
-                    RootPath = Application.StartupPath,
+                    RootPath = Path.Combine(Application.StartupPath,"ProductieManager"),
                     UpdateDatabases =
                         new List<DbType>()
                         {

@@ -22,7 +22,7 @@ namespace Controls
                     Directory.CreateDirectory(path);
                 BasePath = path;
                 var xlink = new Uri(path);
-                xbijlagebrowser.Url = xlink;
+                xbijlagebrowser.Navigate(BasePath);
             }
         }
 

@@ -126,7 +126,7 @@ namespace ProductieManager.Forms
                     var stng = Manager.DefaultSettings ?? UserSettings.GetDefaultSettings();
                     if (Directory.Exists(stng.MainDB.RootPath))
                         path = stng.MainDB.RootPath;
-                    else path = Application.StartupPath;
+                    else path = Path.Combine(Application.StartupPath,"ProductieManager");
                     var xyearpath = Path.Combine(path, DateTime.Now.Year.ToString());
                     if (Directory.Exists(xyearpath))
                     {

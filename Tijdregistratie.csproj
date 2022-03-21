@@ -28,16 +28,16 @@
     <MapFileExtensions>false</MapFileExtensions>
     <InstallUrl>\\Server\ProductieManager\</InstallUrl>
     <TargetCulture>nl-NL</TargetCulture>
-    <ProductName>Productie Manager</ProductName>
+    <ProductName>ProductieManager</ProductName>
     <PublisherName>Ihab</PublisherName>
-    <SuiteName>Productie Manager</SuiteName>
+    <SuiteName>ProductieManager</SuiteName>
     <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <AutorunEnabled>true</AutorunEnabled>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>3.2.8.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
+    <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -86,7 +86,8 @@
     <ManifestCertificateThumbprint>39A5329C52E5F7DBD3A24D86BC7DCE2FF014F85E</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Tijdregistratie_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -96,7 +97,7 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
@@ -106,7 +107,7 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>RPMLicense.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>ProductieManager.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <DelaySign>false</DelaySign>
@@ -233,6 +234,7 @@
       <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing.Common, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -1988,6 +1990,7 @@
     <None Include="bin\Debug\ProductieManager.exe.config" />
     <None Include="bin\Release\ProductieManager.zip" />
     <None Include="packages.config" />
+    <None Include="ProductieManager.pfx" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
@@ -2003,6 +2006,7 @@
     <EmbeddedResource Include="Rpm\Controls\ImageCombineForm.resx">
       <DependentUpon>ImageCombineForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Tijdregistratie_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

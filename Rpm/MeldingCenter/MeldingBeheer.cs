@@ -31,7 +31,16 @@ namespace Rpm.MeldingCenter
                 if (xent != null)
                 {
                     if (xent.ShouldShow() && xent.ShowMelding())
+                    {
+                        var xold = Database.GetEntry<MeldingEntry>(name, false);
+                        if (xold != null)
+                        {
+                            xent.ReadUsers.AddRange(xold.Recievers.Where(x =>
+                                !xent.ReadUsers.Any(r =>
+                                    string.Equals(r, x, StringComparison.CurrentCultureIgnoreCase))));
+                        }
                         SaveMelding(xent);
+                    }
                 }
             }
             catch (Exception exception)

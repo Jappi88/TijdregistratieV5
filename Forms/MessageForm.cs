@@ -246,7 +246,8 @@ namespace Forms
                    // xMessagePanel.BackColor = _errorColor;
                     break;
             }
-
+            if (customImage != null)
+                xmessageicon.SizeMode = PictureBoxSizeMode.StretchImage;
             if (style != MetroColorStyle.Default)
                 this.Style = style;
             xchooser.Items.Clear();

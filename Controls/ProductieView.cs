@@ -1994,11 +1994,12 @@ namespace Controls
                                 Multiselect = true
                             };
                             if (ofd.ShowDialog() == DialogResult.OK)
-                                BeginInvoke(new MethodInvoker(() =>
-                                {
-                                    var files = ofd.FileNames;
-                                    _= _manager.AddProductie(files,true, false, true).Result;
-                                }));
+                            {  //BeginInvoke(new MethodInvoker(() =>
+                               //{
+                                var files = ofd.FileNames;
+                                _ = _manager.AddProductie(files, true, false, true);
+                                //}));
+                            }
                             break;
                         case "xquickproductie":
                             DoQuickProductie();
