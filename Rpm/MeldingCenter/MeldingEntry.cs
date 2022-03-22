@@ -108,7 +108,8 @@ namespace Rpm.MeldingCenter
                 var xret = string.Equals(melding.Body, Body, StringComparison.CurrentCultureIgnoreCase);
                 xret &= string.Equals(melding.Subject, Subject, StringComparison.CurrentCultureIgnoreCase);
                 xret &= string.Equals(xxrec, xrec, StringComparison.CurrentCultureIgnoreCase);
-                xret &= melding.DateAdded.Equals(DateAdded);
+                xret &= string.Equals(Action, melding.Action, StringComparison.CurrentCultureIgnoreCase);
+                xret &= string.Equals(ActionID, melding.ActionID, StringComparison.CurrentCultureIgnoreCase);
                 return xret;
             }
             return false;
@@ -121,7 +122,8 @@ namespace Rpm.MeldingCenter
             xhash ^= Subject?.GetHashCode() ?? 0;
             string xrec = string.Join(", ", Recievers);
             xhash ^= xrec?.GetHashCode() ?? 0;
-            xhash ^= DateAdded.GetHashCode();
+            xhash ^= Action?.GetHashCode() ?? 0;
+            xhash ^= ActionID?.GetHashCode() ?? 0;
             return xhash;
         }
 

@@ -113,7 +113,16 @@ namespace Rpm.MeldingCenter
                         foreach (var melding in xmeldingen)
                         {
                             if (melding.ShowMelding())
+                            {
+                                var xold = Database.GetEntry<MeldingEntry>(melding.ID.ToString(), false);
+                                if (xold != null)
+                                {
+                                    melding.ReadUsers.AddRange(xold.Recievers.Where(x =>
+                                        !melding.ReadUsers.Any(r =>
+                                            string.Equals(r, x, StringComparison.CurrentCultureIgnoreCase))));
+                                }
                                 SaveMelding(melding);
+                            }
                         }
                 }
                 catch (Exception ex)
