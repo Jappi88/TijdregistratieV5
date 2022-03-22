@@ -138,37 +138,6 @@ namespace Controls
 
         #endregion Variables
 
-        #region Manager
-        private void InitManager(string path, bool autologin, bool disposeold)
-        {
-            try
-            {
-                if (_manager == null || disposeold)
-                {
-                    _manager?.Dispose();
-                    //if (_manager == null)
-                    _manager = new Manager(false);
-                }
-
-                DetachEvents();
-                //if (Manager.DefaultSettings is {WelcomeShown: false})
-                //{
-                //    var xwelcome = new WelcomeForm();
-                //    xwelcome.ShowDialog();
-                //}
-                //_manager.InitManager();
-                takenManager1.InitManager();
-                InitEvents();
-                _manager.Load(path, autologin, true, true);
-                // _manager.StartMonitor();
-                FormLoaded();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-        }
-
         #region Tab Buttons
         private void InitWerkplekkenUITab(TileInfoEntry entry, bool select)
         {
@@ -885,7 +854,8 @@ namespace Controls
                         InitGereedmeldingenTab(entry, select);
                         break;
                     case "onderbrekingen":
-                        InitAlleStoringenUITab(entry, select);
+                        ShowOnderbrekeningenWidow();
+                        //InitAlleStoringenUITab(entry, select);
                         break;
                     case "xverbruik":
                         InitBerekenVerbruikUITab(entry, select);
@@ -992,6 +962,39 @@ namespace Controls
         }
 
         #endregion Tab Buttons
+
+        #region Manager
+        private void InitManager(string path, bool autologin, bool disposeold)
+        {
+            try
+            {
+                if (_manager == null || disposeold)
+                {
+                    _manager?.Dispose();
+                    //if (_manager == null)
+                    _manager = new Manager(false);
+                }
+
+                DetachEvents();
+                //if (Manager.DefaultSettings is {WelcomeShown: false})
+                //{
+                //    var xwelcome = new WelcomeForm();
+                //    xwelcome.ShowDialog();
+                //}
+                //_manager.InitManager();
+                takenManager1.InitManager();
+                InitEvents();
+                _manager.Load(path, autologin, true, true);
+                // _manager.StartMonitor();
+                FormLoaded();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+       
 
         public void LoadManager(string path, bool disposeOld, bool autologin = true)
         {

@@ -797,5 +797,19 @@ namespace Controls
                 XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
             }
         }
+
+        private void bewerkingNaamToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var bw = CurrentBewerking();
+            if (bw == null) return;
+            Clipboard.SetText(bw.Naam?.ToString());
+        }
+
+        private void werkLocatieToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var bw = CurrentBewerking();
+            if (bw == null) return;
+            Clipboard.SetText(bw.Path?.ToString());
+        }
     }
 }

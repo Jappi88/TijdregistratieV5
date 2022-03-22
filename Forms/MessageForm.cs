@@ -1,8 +1,11 @@
 ﻿using MetroFramework;
 using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -84,11 +87,13 @@ namespace Forms
             DialogResult = (DialogResult) xmessageb4.Tag;
         }
 
+        private bool _CustomImage = false;
         public DialogResult ShowDialog(IWin32Window owner, string message, string title, MessageBoxButtons buttons,
             MessageBoxIcon icon,
             string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null,
             Image customImage = null, MetroColorStyle style = MetroColorStyle.Default)
         {
+            _CustomImage = customImage != null;
             Text = title;
             xmessage.Text = message;
             var maxSize = new Size(xmessage.Width, int.MaxValue);
@@ -270,6 +275,24 @@ namespace Forms
             this.Invalidate();
             BringToFront();
             return ShowDialog();
+        }
+
+        private void xmessageicon_DoubleClick(object sender, EventArgs e)
+        {
+            if(_CustomImage && xmessageicon.Image != null)
+            {
+                try
+                {
+                    var xtmp = Path.Combine(Path.GetTempPath(), $"rpm_tmp_img{xmessageicon.Image.GetImageExstension()}");
+                    xmessageicon.Image.Save(xtmp);
+                    if (File.Exists(xtmp))
+                        System.Diagnostics.Process.Start(xtmp);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
         }
     }
 }

@@ -171,6 +171,7 @@ namespace Forms
             this.xmessageicon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.xmessageicon.TabIndex = 1;
             this.xmessageicon.TabStop = false;
+            this.xmessageicon.DoubleClick += new System.EventHandler(this.xmessageicon_DoubleClick);
             // 
             // xMessagePanel
             // 

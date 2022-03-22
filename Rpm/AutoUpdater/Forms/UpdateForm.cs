@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MetroFramework.Drawing.Html;
@@ -23,7 +22,7 @@ namespace AutoUpdaterDotNET
             InitializeComponent();
         }
 
-        private void LoadFields()
+        private async void LoadFields()
         {
             buttonSkip.Visible = AutoUpdater.ShowSkipButton;
             buttonRemindLater.Visible = AutoUpdater.ShowRemindLaterButton;
@@ -58,64 +57,56 @@ namespace AutoUpdaterDotNET
             }
         }
 
+        private void UpdateFormLoad(object sender, EventArgs e)
+        {
+           
+        }
+
         private string ChangeLogTxtToHtml(string text, string title, string versie)
         {
             if (string.IsNullOrEmpty(text)) return text; 
-           // var xbody = text.Replace("[", "</ul>\n<h2>").Replace("]", "</h2>\n<ul>");
-            //xbody = xbody.Substring(7) + "\n</ul>\n";
-            var sb = new StringBuilder();
-            using var streamreader = new StringReader(text);
+            var xbody = text.Replace("[", "</ul>\n<h2>").Replace("]", "</h2>\n<ul>");
+            xbody = xbody.Substring(7) + "\n</ul>\n";
+            using var streamreader = new StringReader(xbody);
             string xline = null;
-            sb.AppendLine("<ul>");
             while (streamreader.Peek() > -1)
             {
                 xline ??= streamreader.ReadLine();
-                if (xline != null && xline.StartsWith("["))
+                if (!string.IsNullOrEmpty(xline) && xline.StartsWith("*"))
                 {
-                    xline = xline.Replace("[", "<h2>").Replace("]", "</h2>");
-                    sb.AppendLine($"{xline}");
-                    xline = null;
-                    continue;
-                }
-                if (!string.IsNullOrEmpty(xline))
-                {
-                    string xnextline = xline;
-                    sb.AppendLine("<ul>");
+                    string xnextline = null;
+                    string xtoadd = "";
                     while (streamreader.Peek() > -1)
                     {
-                        xnextline ??= streamreader.ReadLine();
-                        if (!string.IsNullOrEmpty(xnextline) && xnextline.StartsWith("["))
+                        xnextline = streamreader.ReadLine();
+                        if (!string.IsNullOrEmpty(xnextline) && !xnextline.StartsWith("*") &&
+                            !xnextline.StartsWith("<"))
                         {
-                            xline = xnextline;
+                            xtoadd += "<br>" + xnextline.TrimStart();
+                            if (!string.IsNullOrWhiteSpace(xnextline))
+                                xbody = xbody.Replace(xnextline, "");
+                        }
+                        else
                             break;
-                        }
-
-                        xline = null;
-                        if (!string.IsNullOrEmpty(xnextline))
-                        {
-                            var isblock = xnextline.StartsWith("*");
-                            if (isblock)
-                            {
-                              
-                                string ximagekey = xnextline.ToLower().Contains("opgelost") ? "opgelost" :
-                                    xnextline.ToLower().Contains("toegevoegd") ? "toegevoegd" : "geen idee";
-                                var xlineimage = $"<img src=\"{ximagekey}\"/>";
-                                string newline = xnextline.Replace("* ", $"<li>{xlineimage}") + xnextline + "</li>";
-                                sb.AppendLine(newline);
-                            }
-                            else
-                            {
-                                sb.AppendLine(xnextline + "<br>");
-                            }
-                        }
-                        xnextline = null;
                     }
 
-                    sb.AppendLine("</ul>");
+                    string ximagekey = xline.ToLower().Contains("opgelost") ? "opgelost" :
+                        xline.ToLower().Contains("toegevoegd") ? "toegevoegd" : "geen idee";
+                    var xlineimage = $"<img src=\"{ximagekey}\" />";
+                    string newline = xline;
+                    if (xline.StartsWith("*"))
+                    {
+                        newline = xline.Replace("* ", "<li>{0}") + xtoadd + "</li>";
+                        newline = string.Format(newline, xlineimage);
+                    }
+                    xbody = xbody.Replace(xline, newline);
+                    if (!string.IsNullOrEmpty(xnextline))
+                        xline = xnextline;
+                    else xline = null;
+
                 }
                 else xline = null;
             }
-            
             string xreturn = $"<html>\n" +
                              $"<head>\n" +
                              $"<title>Changelogs</title>\n" +
@@ -123,7 +114,7 @@ namespace AutoUpdaterDotNET
                              $"</head>\n" +
                              $"<body style=\"background - color: #333; background-gradient: #707; background-gradient-angle: 60; margin: 0;\">\n" +
                              $"<blockquote class=\"whitehole\">\n" +
-                             $"{sb.ToString()}\n" +
+                             $"{xbody}\n" +
                              $"</blockquote>\n" +
                              $"</body>\n" +
                              $"</html>";

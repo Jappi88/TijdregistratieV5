@@ -29,34 +29,15 @@ namespace ProductieManager.Rpm.Productie
         {
             try
             {
+                if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(id) || data == null || data.Length == 0) return false;
                 var xpath = Path.Combine(Manager.DbPath, "Bijlages", id);
                 if (!Directory.Exists(xpath))
                     Directory.CreateDirectory(xpath);
                 var xfile = Path.Combine(xpath, name);
-                using var fs = new FileStream(xfile, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
+                using var fs = new FileStream(xfile, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
                 fs.Write(data, 0, data.Length);
                 fs.Flush();
                 fs.Close();
-                if (Manager.Database != null)
-                {
-                    var xbase = id;
-                    if (id.Contains("\\") || id.Contains("/"))
-                    {
-                        var xindex = id.IndexOf("\\", StringComparison.CurrentCultureIgnoreCase);
-                        if(xindex == -1)
-                            xindex = id.IndexOf("/", StringComparison.CurrentCultureIgnoreCase);
-                        if (xindex > -1)
-                        {
-                            xbase = id.Substring(0, xindex);
-                        }
-                    }
-                    var bw = Manager.Database.GetBewerkingen(ViewState.Gestart, true, null, null).Result
-                        .FirstOrDefault(x => string.Equals(x.ArtikelNr, xbase, StringComparison.CurrentCultureIgnoreCase));
-                    if (bw != null)
-                    {
-                        Manager.FormulierActie(new object[] {bw.Parent, bw,true, 11}, MainAktie.OpenProductie);
-                    }
-                }
                 return true;
             }
             catch (Exception e)

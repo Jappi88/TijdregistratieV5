@@ -1928,11 +1928,12 @@ namespace Rpm.Misc
         {
             try
             {
-                if (string.IsNullOrEmpty(text) || !text.Contains(seperator)) return text;
+                if (string.IsNullOrEmpty(text) || !text.Contains(seperator)) return lastblock? string.Empty : text;
                 var xindex = text.LastIndexOf(seperator);
                 int xstart = lastblock ? xindex + 1 : 0;
                 int xend = lastblock ? (text.Length - xindex) -1 : xindex;
-                return text.Substring(xstart, xend).Trim();
+                var xresult = text.Substring(xstart, xend).Trim();
+                return xresult;
             }
             catch (Exception e)
             {

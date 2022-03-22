@@ -20,9 +20,9 @@ namespace Rpm.Productie
                 werk.Path = path;
                 string[] xpaths = path.Split('\\');
                 if (xpaths.Length == 0) return werk;
-                var prod = parent ?? Manager.Database.GetProductie(xpaths[0], false);
+                var prod = parent ?? Manager.Database.GetProductie(xpaths[0].Trim(), false);
                 if (prod == null)
-                    return null;
+                    return werk;
                 werk.Formulier = prod;
                 if (xpaths.Length > 1)
                     werk.Bewerking = prod.Bewerkingen?.FirstOrDefault(x =>

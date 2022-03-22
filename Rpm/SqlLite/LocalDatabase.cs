@@ -171,9 +171,9 @@ namespace Rpm.SqlLite
             {
                 ProductieFormulier prod = null;
                 if (ProductieFormulieren != null)
-                    prod = ProductieFormulieren.FindOne(productienr, usesecondary).Result;
+                    prod = ProductieFormulieren.FindOne(productienr.Trim(), usesecondary).Result;
                 if (prod == null && GereedFormulieren != null)
-                    prod = GereedFormulieren.FindOne(productienr, usesecondary).Result;
+                    prod = GereedFormulieren.FindOne(productienr.Trim(), usesecondary).Result;
                 prod?.UpdateForm(true, false, null, null, false, false, false);
                 return prod;
             }

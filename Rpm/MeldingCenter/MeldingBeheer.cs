@@ -1,12 +1,10 @@
-﻿using System;
+﻿using Rpm.SqlLite;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Rpm.Productie;
-using Rpm.SqlLite;
 
 namespace Rpm.MeldingCenter
 {
@@ -50,19 +48,30 @@ namespace Rpm.MeldingCenter
         }
 
         public MeldingEntry CreateMelding(string message, string title, List<string> recievers, byte[] imagedata,
-            bool save)
+            bool save,bool overwrite, string action = null,string actionid = null, int actionviewindex = 0)
         {
             try
             {
+                if(recievers != null && recievers.Count > 0)
+                {
+                    recievers.RemoveAll(x => string.IsNullOrEmpty(x));
+                }
                 var melding = new MeldingEntry
                 {
                     Body = message,
                     Subject = title,
                     Recievers = recievers,
-                    ImageData = imagedata
+                    ImageData = imagedata,
+                    Action = action,
+                    ActionID = actionid,
+                    ActionViewIndex = actionviewindex,
                 };
                 if (save)
+                {
+                    if (!overwrite && Database.Exists(melding.ID.ToString()))
+                        return melding;
                     SaveMelding(melding);
+                }
                 return melding;
             }
             catch (Exception ex)

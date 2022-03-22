@@ -77,6 +77,8 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.xstatusimage = new System.Windows.Forms.PictureBox();
             this.mainMenu1 = new Controls.MainMenu();
+            this.bewerkingNaamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.werkLocatieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.xpanelcontainer.SuspendLayout();
@@ -97,14 +99,14 @@
             this.notitieToolStripMenuItem,
             this.kopiërenToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(189, 232);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(208, 254);
             // 
             // aantalTeMakenToolStripMenuItem
             // 
             this.aantalTeMakenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.hashtag_icon_152828_32_32;
             this.aantalTeMakenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.aantalTeMakenToolStripMenuItem.Name = "aantalTeMakenToolStripMenuItem";
-            this.aantalTeMakenToolStripMenuItem.Size = new System.Drawing.Size(188, 38);
+            this.aantalTeMakenToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
             this.aantalTeMakenToolStripMenuItem.Text = "Aantal Te Maken";
             this.aantalTeMakenToolStripMenuItem.Click += new System.EventHandler(this.aantalTeMakenToolStripMenuItem_Click);
             // 
@@ -113,7 +115,7 @@
             this.leverdatumToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.systemtime_778_32_32;
             this.leverdatumToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.leverdatumToolStripMenuItem.Name = "leverdatumToolStripMenuItem";
-            this.leverdatumToolStripMenuItem.Size = new System.Drawing.Size(188, 38);
+            this.leverdatumToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
             this.leverdatumToolStripMenuItem.Text = "Leverdatum";
             this.leverdatumToolStripMenuItem.Click += new System.EventHandler(this.leverdatumToolStripMenuItem_Click);
             // 
@@ -122,7 +124,7 @@
             this.materialenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.pngegg__1_;
             this.materialenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.materialenToolStripMenuItem.Name = "materialenToolStripMenuItem";
-            this.materialenToolStripMenuItem.Size = new System.Drawing.Size(188, 38);
+            this.materialenToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
             this.materialenToolStripMenuItem.Text = "Materialen";
             this.materialenToolStripMenuItem.ToolTipText = "Beheer materialen";
             this.materialenToolStripMenuItem.Click += new System.EventHandler(this.materialenToolStripMenuItem_Click);
@@ -132,7 +134,7 @@
             this.xprodafkeurtoolstrip.Image = global::ProductieManager.Properties.Resources.bin_icon_icons_com_32x32;
             this.xprodafkeurtoolstrip.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xprodafkeurtoolstrip.Name = "xprodafkeurtoolstrip";
-            this.xprodafkeurtoolstrip.Size = new System.Drawing.Size(188, 38);
+            this.xprodafkeurtoolstrip.Size = new System.Drawing.Size(207, 38);
             this.xprodafkeurtoolstrip.Text = "Afkeur";
             this.xprodafkeurtoolstrip.ToolTipText = "Vul in product afkeur";
             this.xprodafkeurtoolstrip.Click += new System.EventHandler(this.xprodafkeurtoolstrip_Click);
@@ -142,7 +144,7 @@
             this.notitieToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Note_34576_32x32;
             this.notitieToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.notitieToolStripMenuItem.Name = "notitieToolStripMenuItem";
-            this.notitieToolStripMenuItem.Size = new System.Drawing.Size(188, 38);
+            this.notitieToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
             this.notitieToolStripMenuItem.Text = "Notitie";
             this.notitieToolStripMenuItem.Click += new System.EventHandler(this.notitieToolStripMenuItem_Click);
             // 
@@ -151,15 +153,17 @@
             this.kopiërenToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.productieNrToolStripMenuItem,
             this.artikelNrToolStripMenuItem,
+            this.bewerkingNaamToolStripMenuItem,
             this.omschrijvingToolStripMenuItem,
             this.leverdatumToolStripMenuItem1,
             this.verwachteLeverdatumToolStripMenuItem,
             this.gemaaktToolStripMenuItem,
-            this.aantalToolStripMenuItem});
+            this.aantalToolStripMenuItem,
+            this.werkLocatieToolStripMenuItem});
             this.kopiërenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.copy_paste_document_file_1557;
             this.kopiërenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.kopiërenToolStripMenuItem.Name = "kopiërenToolStripMenuItem";
-            this.kopiërenToolStripMenuItem.Size = new System.Drawing.Size(188, 38);
+            this.kopiërenToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
             this.kopiërenToolStripMenuItem.Text = "Kopiëren";
             // 
             // productieNrToolStripMenuItem
@@ -715,6 +719,20 @@
             this.mainMenu1.TabIndex = 4;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
             // 
+            // bewerkingNaamToolStripMenuItem
+            // 
+            this.bewerkingNaamToolStripMenuItem.Name = "bewerkingNaamToolStripMenuItem";
+            this.bewerkingNaamToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.bewerkingNaamToolStripMenuItem.Text = "Bewerking Naam";
+            this.bewerkingNaamToolStripMenuItem.Click += new System.EventHandler(this.bewerkingNaamToolStripMenuItem_Click);
+            // 
+            // werkLocatieToolStripMenuItem
+            // 
+            this.werkLocatieToolStripMenuItem.Name = "werkLocatieToolStripMenuItem";
+            this.werkLocatieToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.werkLocatieToolStripMenuItem.Text = "Werk Locatie";
+            this.werkLocatieToolStripMenuItem.Click += new System.EventHandler(this.werkLocatieToolStripMenuItem_Click);
+            // 
             // ProductieForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -774,5 +792,7 @@
         private System.Windows.Forms.ToolStripMenuItem gemaaktToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aantalToolStripMenuItem;
         private System.Windows.Forms.Button xdeelvoortgang;
+        private System.Windows.Forms.ToolStripMenuItem bewerkingNaamToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem werkLocatieToolStripMenuItem;
     }
 }

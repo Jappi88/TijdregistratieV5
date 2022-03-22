@@ -1,4 +1,5 @@
 ﻿using Polenter.Serialization;
+using Rpm.Misc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace Rpm.Productie
         public Storing()
         {
             Gestart = DateTime.Now;
-            InstanceId = Gestart.GetHashCode();
+            InstanceId = Functions.GenerateRandomID();
             Gestopt = DateTime.Now;
             StoringType = "";
             Omschrijving = "";

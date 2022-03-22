@@ -69,6 +69,28 @@ namespace ProductieManager.Rpm.Misc
             }
         }
 
+        public static string GetImageExstension(this Image image)
+        {
+            if (image == null) return null;
+            if (image.RawFormat == ImageFormat.MemoryBmp)
+                return @".bmp";
+            if (image.RawFormat == ImageFormat.Bmp)
+                return @".bmp";
+            if (image.RawFormat == ImageFormat.Gif)
+                return @".gif";
+            if (image.RawFormat == ImageFormat.Icon)
+                return @".ico";
+            if (image.RawFormat == ImageFormat.Jpeg)
+                return @".jpeg";
+            if (image.RawFormat == ImageFormat.Png)
+                return @".png";
+            if (image.RawFormat == ImageFormat.Tiff)
+                return @".tiff";
+            if (image.RawFormat == ImageFormat.Wmf)
+                return @".wmf";
+             return @".jpeg"; ;
+        }
+
         public static Bitmap ColorToImage(this Color color, int width, int height)
         {
             var bitmap = new Bitmap(width, height);

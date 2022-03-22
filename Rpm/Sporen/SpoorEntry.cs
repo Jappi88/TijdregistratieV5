@@ -41,7 +41,7 @@ namespace Rpm.Productie
             return false;
         }
 
-        public string CreateHtmlText(int aantal, bool checkperuur)
+        public string CreateHtmlText(int aantal, bool checkperuur, int teproduceren, int geproduceert)
         {
             var xvalue = Math.Round(ProductLengte, 4);
             var xtotal = Math.Round(UitgangsLengte, 4);
@@ -84,6 +84,15 @@ namespace Rpm.Productie
                 var x3 = overschot == 1 ? "product" : "producten";
                 var xpakket = "";
                 var peruur = "";
+                var afkeur = "";
+                if(teproduceren > -1 && geproduceert > -1 && teproduceren > geproduceert)
+                {
+                    int xrestaantal = teproduceren - geproduceert;
+                    var x4 = xrestaantal == 1 ? "product" : "producten";
+                    var x5 = xrestaantal == 1 ? "is" : "zijn";
+                    decimal afval = xrestaantal * ProductLengte;
+                    afkeur = $"Er {x5} <b>{xrestaantal}</b> {x4} minder geproduceerd => <b>{Math.Round(afval, 4)}mm ({Math.Round(afval / UitgangsLengte, 4)} stuk)</b><br>";
+                }
                 if (PakketAantal > 0)
                 {
                     var xaantalpakketten = xnodig > 0 ? xnodig < PakketAantal ? 1 : xnodig / PakketAantal : 0;
@@ -141,6 +150,7 @@ namespace Rpm.Productie
                        $"{xoverschotmaat}" +
                        $"Met <b>{xsporen}</b> {x1} is dat <b>{xaantalladen}</b> keer laden{(xrestsporen > 0 ? $" en een restlading van <b>{xrestsporen}</b> {x2}" : "")}.<br><br>" +
                        $"Je haalt <b>{(int) xprodsperlengte}</b> producten uit <b>{xtotal / 1000} meter</b> met een reststuk van <b>{xrest}mm({Math.Round((xrest / xtotal) * 100,4)}%)</b>.<br>" +
+                       $"{afkeur}" +
                       // $"</ul>" +
                        $"</p>";
             }

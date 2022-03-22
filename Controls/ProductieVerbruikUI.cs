@@ -17,7 +17,7 @@ namespace Controls
 {
     public partial class ProductieVerbruikUI : UserControl
     {
-        private ProductieFormulier _form;
+        private IProductieBase _form;
 
         public bool ShowMateriaalSelector
         {
@@ -150,7 +150,7 @@ namespace Controls
 
         private readonly List<decimal> xprods = new List<decimal>();
 
-        public void InitFields(ProductieFormulier form)
+        public void InitFields(IProductieBase form)
         {
             try
             {
@@ -158,11 +158,12 @@ namespace Controls
                 xprods.Clear();
                 var xselected = xmaterialen.SelectedIndex;
                 xmaterialen.Items.Clear();
-                if (form?.Materialen == null) return;
-                xprods.AddRange(form.Materialen.Select(x => (decimal) x.AantalPerStuk * ((int)(x.Eenheid.ToLower().StartsWith("m") ? 1000 : 1))));
+                var mats = _form?.GetMaterialen();
+                if (mats == null) return;
+                xprods.AddRange(mats.Select(x => (decimal) x.AantalPerStuk * ((int)(x.Eenheid.ToLower().StartsWith("m") ? 1000 : 1))));
                
                 
-                xmaterialen.Items.AddRange(form.Materialen.Select(x => (object) $"[{x.ArtikelNr}]{x.Omschrijving} ({x.AantalPerStuk * ((int)(x.Eenheid.ToLower().StartsWith("m") ? 1000 : 1))} mm)")
+                xmaterialen.Items.AddRange(mats.Select(x => (object) $"[{x.ArtikelNr}]{x.Omschrijving} ({x.AantalPerStuk * ((int)(x.Eenheid.ToLower().StartsWith("m") ? 1000 : 1))} mm)")
                     .ToArray());
                 if (xselected > -1 && xmaterialen.Items.Count > xselected)
                     xmaterialen.SelectedIndex = xselected;
@@ -219,7 +220,7 @@ namespace Controls
 
             xprodlabel.Text = $"Productlengte({xvalue}m)";
             xlengtelabel.Text = $"Uitgangslengte({xtotal}m)";
-            xinfo.Text = _spoor.CreateHtmlText(aantal, ShowPerUur);
+            xinfo.Text = _spoor.CreateHtmlText(aantal, ShowPerUur, _form?.Aantal ?? -1, _form?.AantalGemaakt??-1);
 
             if (!string.IsNullOrEmpty(_spoor?.AangepastDoor))
             {
@@ -263,12 +264,13 @@ namespace Controls
         {
             try
             {
-                if (_form?.Materialen == null)
+                var mats = _form.GetMaterialen();
+                if (mats == null)
                     return null;
                 var index = xmaterialen.SelectedIndex;
-                if (index > -1 && _form.Materialen.Count > index)
+                if (index > -1 && mats.Count > index)
                 {
-                    var xmat = _form.Materialen[index];
+                    var xmat = mats[index];
                     return xmat;
                 }
 

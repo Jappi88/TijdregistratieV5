@@ -20,6 +20,7 @@ using MailKit.Search;
 using MimeKit;
 using Org.BouncyCastle.Crypto.Paddings;
 using MailMessage = System.Net.Mail.MailMessage;
+using System.Text;
 
 namespace Rpm.Mailing
 {
@@ -39,11 +40,13 @@ namespace Rpm.Mailing
                 var xendindex = body.IndexOf("Met vriendelijke groet", StringComparison.CurrentCultureIgnoreCase);
                 if(xendindex == -1)
                     xendindex = body.IndexOf("Verzonden vanuit", StringComparison.CurrentCultureIgnoreCase);
+                if (xendindex == -1)
+                    xendindex = body.IndexOf("Verstuurd vanaf mijn", StringComparison.CurrentCultureIgnoreCase);
                 if (xendindex > -1)
                 {
                     body = body.Substring(0, xendindex);
                 }
-                var xonderwerp = mail.Subject.ToLower().Replace("fw:", "").Replace("re:", "").Trim();
+                var xonderwerp = ClearSubject(mail.Subject).Trim();
                 var x1 = xonderwerp.GetBlockBySeperator(':', false);
                 var x2 = xonderwerp.GetBlockBySeperator(':', true);
                 var ret = true;
@@ -57,9 +60,19 @@ namespace Rpm.Mailing
                             {
                                 var xatt = mail.Attachments?.FirstOrDefault(x => x.ContentDisposition != null && x.ContentDisposition.Disposition != "inline");
                                 byte[] xmg = GetMessageData((MimePart)xatt);
+                                var xprods = logs.Where(x => x.StartsWith("["));
+                                var xactionids = new List<string>();
+                                foreach(var log in xprods)
+                                {
+                                    var xend = log.IndexOf("]");
+                                    if(xend > -1)
+                                        xactionids.Add(log.Substring(1, xend - 1));
+                                }
+                                string action = "openproductie";
+                                string actionid = string.Join(";", xactionids);
                                 Manager.Meldingen.CreateMelding(string.Join("\n", logs),
                                     $"Productie Wijzigingen van {mail.From?.First()?.Name}", new List<string>(), xmg,
-                                    true);
+                                    true,false, xactionids.Count > 0? action: null, xactionids.Count > 0 ? actionid : null);
                             }
                         }
                         break;
@@ -67,13 +80,35 @@ namespace Rpm.Mailing
                         if (!string.IsNullOrEmpty(x2))
                         {
                             var xatt = mail.Attachments?.Cast<MimePart>().ToList() ?? new List<MimePart>();
-                            xatt.ForEach(x =>
+                            var xlog = new StringBuilder();
+                            int done = 0;
+                            var id = x2;
+                            if (id.Contains("\\") || id.Contains("/"))
                             {
-                                if (x.ContentDisposition.Disposition != "inline")
+                                var xindex = id.IndexOf("\\", StringComparison.CurrentCultureIgnoreCase);
+                                if (xindex == -1)
+                                    xindex = id.IndexOf("/", StringComparison.CurrentCultureIgnoreCase);
+                                if (xindex > -1)
                                 {
-                                    BijlageBeheer.UpdateBijlage(x2, GetMessageData(x), x.ContentDescription);
+                                    id = id.Substring(0, xindex);
                                 }
-                            });
+                            }
+                            foreach (var x in xatt)
+                            {
+                                var xname = x?.FileName ?? x.ContentDisposition?.FileName;
+                                if (string.IsNullOrEmpty(xname))
+                                    continue;
+                                if (BijlageBeheer.UpdateBijlage(x2, GetMessageData(x), xname))
+                                {
+                                    done++;
+                                    xlog.AppendLine($"'{xname}' toegevoegd als bijlage in \\{x2}");
+                                }
+                            }
+                            if(done > 0 && Manager.Meldingen?.Database != null && !Manager.Meldingen.IsDisposed)
+                            {
+                                var melding = Manager.Meldingen.CreateMelding(xlog.ToString(), "Bijlages toegevoegd door " + mail.From?.First()?.Name,
+                                    new List<string>(), null, true,false, "openproductie", id,11);
+                            }
                         }
                         break;
                     case "melding":
@@ -82,13 +117,14 @@ namespace Rpm.Mailing
                             ret = false;
                             break;
                         }
-                        if (!string.IsNullOrEmpty(x2) && !string.IsNullOrEmpty(body))
+                        if (!string.IsNullOrEmpty(body))
                         {
                             var xatt = mail.Attachments?.FirstOrDefault(x=> x.ContentDisposition != null && x.ContentDisposition.Disposition != "inline");
                             byte[] xmg = GetMessageData((MimePart) xatt);
-                            if (Manager.Meldingen.CreateMelding(body, "Melding van " + mail.From?.First()?.Name,
-                                    x2.Split(';').ToList(), xmg, true) == null)
-                                ret = false;
+                            var xaction = GetActionFromBody(ref body, out var actionid);
+                            var melding = Manager.Meldingen.CreateMelding(body, "Melding van " + mail.From?.First()?.Name,
+                                    x2.Split(';').ToList(), xmg, true, false, xaction, actionid);
+                            ret = melding != null;
                         }
                         break;
                 }
@@ -99,6 +135,45 @@ namespace Rpm.Mailing
                 Console.WriteLine(e);
                 return false;
             }
+        }
+
+        public static string ClearSubject(string value)
+        {
+            var charsToRemove = new string[] { "fw:", "fwd:", "re:", "rep:" };
+            string xret = value;
+            foreach (var c in charsToRemove)
+            {
+                xret = xret.Replace(c, string.Empty);
+                xret = xret.Replace(c.ToUpper(), string.Empty);
+            }
+            return xret;
+        }
+
+        public static string GetActionFromBody(ref string body, out string actionid)
+        {
+           var xlines = body.Split('\n');
+            string xret = null;
+            actionid = null;
+            foreach(var line in xlines)
+            {
+                var xl = line.Trim();
+                if (xl.ToLower().Replace(" ", "").StartsWith("action=") ||
+                    xl.ToLower().Replace(" ", "").StartsWith("actie="))
+                {
+                    xret = xl.Split('=').LastOrDefault();
+                    body = body.Replace(xl, "");
+                }
+                if (xl.ToLower().Replace(" ", "").StartsWith("actionid=") ||
+                    xl.ToLower().Replace(" ", "").StartsWith("actieid="))
+                {
+                    actionid = xl.Split('=').LastOrDefault();
+                    body = body.Replace(xl, "");
+                }
+                body = body.Trim();
+                if (!string.IsNullOrEmpty(actionid) && !string.IsNullOrEmpty(xret))
+                    break;
+            }
+            return xret;
         }
 
         private static bool WijzigValue(string value,Werk werk, List<string> logs)

@@ -135,7 +135,7 @@ namespace Controls
                             new Size(64, 64), BackColor, BackColorGradient, TextColor, true);
                         break;
                     case 1:
-                        productieVerbruikUI1.InitFields((Productie as Bewerking)?.Parent);
+                        productieVerbruikUI1.InitFields(Productie);
                         break;
                     case 2:
                         combineerUI1.UpdateBewerking(Productie as Bewerking);
