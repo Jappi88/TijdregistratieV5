@@ -220,7 +220,7 @@ namespace Controls
 
             xprodlabel.Text = $"Productlengte({xvalue}m)";
             xlengtelabel.Text = $"Uitgangslengte({xtotal}m)";
-            xinfo.Text = _spoor.CreateHtmlText(aantal, ShowPerUur, _form?.Aantal ?? -1, _form?.AantalGemaakt??-1);
+            xinfo.Text = _spoor.CreateHtmlText(aantal, ShowPerUur, _form?.AantalGemaakt??-1);
 
             if (!string.IsNullOrEmpty(_spoor?.AangepastDoor))
             {

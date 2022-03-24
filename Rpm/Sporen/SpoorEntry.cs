@@ -41,7 +41,7 @@ namespace Rpm.Productie
             return false;
         }
 
-        public string CreateHtmlText(int aantal, bool checkperuur, int teproduceren, int geproduceert)
+        public string CreateHtmlText(int aantal, bool checkperuur, int geproduceert)
         {
             var xvalue = Math.Round(ProductLengte, 4);
             var xtotal = Math.Round(UitgangsLengte, 4);
@@ -85,9 +85,9 @@ namespace Rpm.Productie
                 var xpakket = "";
                 var peruur = "";
                 var afkeur = "";
-                if(teproduceren > -1 && geproduceert > -1 && teproduceren > geproduceert)
+                if(aantal > -1 && geproduceert > -1 && aantal > geproduceert)
                 {
-                    int xrestaantal = teproduceren - geproduceert;
+                    int xrestaantal = aantal - geproduceert;
                     var x4 = xrestaantal == 1 ? "product" : "producten";
                     var x5 = xrestaantal == 1 ? "is" : "zijn";
                     decimal afval = xrestaantal * ProductLengte;

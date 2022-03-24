@@ -28,16 +28,11 @@ namespace Rpm.MeldingCenter
                 var xent = Database.GetEntry<MeldingEntry>(name, false);
                 if (xent != null)
                 {
-                    if (xent.ShouldShow() && xent.ShowMelding())
+                    if (xent.ShouldShow())
                     {
-                        var xold = Database.GetEntry<MeldingEntry>(name, false);
-                        if (xold != null)
-                        {
-                            xent.ReadUsers.AddRange(xold.Recievers.Where(x =>
-                                !xent.ReadUsers.Any(r =>
-                                    string.Equals(r, x, StringComparison.CurrentCultureIgnoreCase))));
-                        }
+                        xent.UpdateRead(true);
                         SaveMelding(xent);
+                        xent.ShowMelding();
                     }
                 }
             }
@@ -54,7 +49,7 @@ namespace Rpm.MeldingCenter
             {
                 if(recievers != null && recievers.Count > 0)
                 {
-                    recievers.RemoveAll(x => string.IsNullOrEmpty(x));
+                    recievers.RemoveAll(string.IsNullOrEmpty);
                 }
                 var melding = new MeldingEntry
                 {
@@ -112,17 +107,9 @@ namespace Rpm.MeldingCenter
                     if (xmeldingen.Count > 0)
                         foreach (var melding in xmeldingen)
                         {
-                            if (melding.ShowMelding())
-                            {
-                                var xold = Database.GetEntry<MeldingEntry>(melding.ID.ToString(), false);
-                                if (xold != null)
-                                {
-                                    melding.ReadUsers.AddRange(xold.Recievers.Where(x =>
-                                        !melding.ReadUsers.Any(r =>
-                                            string.Equals(r, x, StringComparison.CurrentCultureIgnoreCase))));
-                                }
-                                SaveMelding(melding);
-                            }
+                            melding.UpdateRead(true);
+                            SaveMelding(melding);
+                            melding.ShowMelding();
                         }
                 }
                 catch (Exception ex)
