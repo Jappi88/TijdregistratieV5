@@ -994,8 +994,6 @@ namespace Controls
             }
         }
 
-       
-
         public void LoadManager(string path, bool disposeOld, bool autologin = true)
         {
             InitManager(path, autologin, disposeOld);
@@ -1102,6 +1100,33 @@ namespace Controls
                 if (bew.IsAllowed())
                 {
                     var xprod = ShowProductieForm(owner, bew.Parent, true, bew);
+                    if (xprod != null)
+                        xprod.TabControl.SelectedIndex = selectedtab;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        public static void ShowProductie(IWin32Window owner, ProductieFormulier form, Bewerking bew, bool playsound, int selectedtab)
+        {
+            try
+            {
+                if (form == null) return;
+                if (playsound)
+                {
+                    Task.Factory.StartNew(() =>
+                    {
+                        using var soundPlayer = new SoundPlayer(Resources.mixkit_alert_bells_echo_765);
+                        soundPlayer.Play();
+                    });
+                }
+
+                if (form.IsAllowed(null))
+                {
+                    var xprod = ShowProductieForm(owner, form, true, bew);
                     if (xprod != null)
                         xprod.TabControl.SelectedIndex = selectedtab;
                 }
@@ -1529,87 +1554,100 @@ namespace Controls
 
         public void DoActie(object[] values, MainAktie type)
         {
-            var flag = values is {Length: > 0};
-            var xforms = Application.OpenForms.Cast<Form>().Where(x => x is Form_Alert).ToList();
-            xforms.ForEach(x=> x.Close());
-            switch (type)
+            if (InvokeRequired)
             {
-                case MainAktie.OpenProductie:
-                    if (flag)
-                    {
-                        var form =
-                            (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
-                        var bew = (Bewerking) values.FirstOrDefault(x => x is Bewerking);
-                        var index = (int)(values.FirstOrDefault(x => x is int)??0);
-                        var playsound = (bool)(values.FirstOrDefault(x => x is bool) ?? false);
-                        if (bew != null)
-                            ShowProductie(this,bew, playsound, index);
-                    }
+                this.Invoke(new MethodInvoker(() => DoActie(values, type)));
+            }
+            else
+            {
+                var flag = values is { Length: > 0 };
+                var xforms = Application.OpenForms.Cast<Form>().Where(x => x is Form_Alert).ToList();
+                xforms.ForEach(x => x.Close());
+                switch (type)
+                {
+                    case MainAktie.OpenProductie:
+                        if (flag)
+                        {
+                            var form =
+                                (ProductieFormulier)values.FirstOrDefault(x => x is ProductieFormulier);
+                            var bew = (Bewerking)values.FirstOrDefault(x => x is Bewerking);
+                            var index = (int)(values.FirstOrDefault(x => x is int) ?? 0);
+                            var playsound = (bool)(values.FirstOrDefault(x => x is bool) ?? false);
+                            if (form != null)
+                                ShowProductie(this, form, bew, playsound, index);
+                        }
 
-                    break;
-                case MainAktie.OpenIndeling:
-                    if (flag)
-                    {
-                        var form =
-                            (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
-                        ShowWerkplekken(form);
-                    }
+                        break;
+                    case MainAktie.OpenIndeling:
+                        if (flag)
+                        {
+                            var form =
+                                (ProductieFormulier)values.FirstOrDefault(x => x is ProductieFormulier);
+                            ShowWerkplekken(form);
+                        }
 
-                    break;
-                case MainAktie.OpenProductieWijziging:
-                    if (flag)
-                    {
-                        var form =
-                            (ProductieFormulier) values.FirstOrDefault(x => x is ProductieFormulier);
-                        ShowProductieSettings(form);
-                    }
+                        break;
+                    case MainAktie.OpenProductieWijziging:
+                        if (flag)
+                        {
+                            var form =
+                                (ProductieFormulier)values.FirstOrDefault(x => x is ProductieFormulier);
+                            ShowProductieSettings(form);
+                        }
 
-                    break;
-                case MainAktie.OpenInstellingen:
-                    ShowOptieWidow();
-                    break;
-                case MainAktie.OpenRangeSearcher:
-                    ShowCalculatieWindow();
-                    break;
-                case MainAktie.OpenPersoneel:
-                    ShowPersoneelWindow();
-                    break;
-                case MainAktie.OpenStoringen:
-                    if (flag)
-                    {
-                        var bew = (Bewerking) values.FirstOrDefault(x => x is Bewerking);
-                        if (bew != null)
-                            ShowBewStoringen(bew);
-                    }
+                        break;
+                    case MainAktie.OpenInstellingen:
+                        ShowOptieWidow();
+                        break;
+                    case MainAktie.OpenRangeSearcher:
+                        ShowCalculatieWindow();
+                        break;
+                    case MainAktie.OpenPersoneel:
+                        ShowPersoneelWindow();
+                        break;
+                    case MainAktie.OpenStoringen:
+                        if (flag)
+                        {
+                            var bew = (Bewerking)values.FirstOrDefault(x => x is Bewerking);
+                            if (bew != null)
+                                ShowBewStoringen(bew);
+                        }
 
-                    break;
-                case MainAktie.OpenAlleStoringen:
-                    ShowOnderbrekeningenWidow();
-                    break;
-                case MainAktie.OpenVaardigheden:
-                    if (flag)
-                    {
-                        var per = (Personeel) values.FirstOrDefault(x => x is Personeel);
-                        if (per != null)
-                            ShowPersoonVaardigheden(per);
-                    }
+                        break;
+                    case MainAktie.OpenAlleStoringen:
+                        ShowOnderbrekeningenWidow();
+                        break;
+                    case MainAktie.OpenVaardigheden:
+                        if (flag)
+                        {
+                            var per = (Personeel)values.FirstOrDefault(x => x is Personeel);
+                            if (per != null)
+                                ShowPersoonVaardigheden(per);
+                        }
 
-                    break;
-                case MainAktie.OpenAlleVaardigheden:
-                    ShowAlleVaardighedenWidow();
-                    break;
-                case MainAktie.OpenAantalGemaaktProducties:
-                    if (values.FirstOrDefault() is List<Bewerking> bws && values.LastOrDefault() is int mins)
-                        DoAantalGemaakt(this,bws, mins);
-                    break;
-                case MainAktie.StartBewerking:
-                    if (values.FirstOrDefault() is Bewerking bew2)
-                        ProductieListControl.StartBewerkingen(this, new[] {bew2});
-                    break;
-                case MainAktie.StopBewerking:
-                    if (values.FirstOrDefault() is Bewerking bew3)
-                        _= bew3.StopProductie(true,true);
-                    break;
+                        break;
+                    case MainAktie.OpenAlleVaardigheden:
+                        ShowAlleVaardighedenWidow();
+                        break;
+                    case MainAktie.OpenAantalGemaaktProducties:
+                        if (values.FirstOrDefault() is List<Bewerking> bws && values.LastOrDefault() is int mins)
+                            DoAantalGemaakt(this, bws, mins);
+                        break;
+                    case MainAktie.StartBewerking:
+                        if (values.FirstOrDefault() is Bewerking bew2)
+                            ProductieListControl.StartBewerkingen(this, new[] { bew2 });
+                        break;
+                    case MainAktie.StopBewerking:
+                        if (values.FirstOrDefault() is Bewerking bew3)
+                            _ = bew3.StopProductie(true, true);
+                        break;
+                    case MainAktie.OpenBijlage:
+                        if (values.FirstOrDefault() is string id)
+                        {
+                            ShowBijlageWindow(id);
+                        }
+                        break;
+                }
             }
         }
 
@@ -1618,12 +1656,7 @@ namespace Controls
             if (IsDisposed || Disposing) return;
             try
             {
-                if (InvokeRequired)
-                    Invoke(new MethodInvoker(() =>
-                    {
-                        DoActie(values, type);
-                    }));
-                else DoActie(values, type);
+                DoActie(values, type);
             }
             catch (Exception e)
             {
@@ -2000,7 +2033,7 @@ namespace Controls
                             {  //BeginInvoke(new MethodInvoker(() =>
                                //{
                                 var files = ofd.FileNames;
-                                _ = _manager.AddProductie(files, true, false, true);
+                                _ = Manager.AddProductie(files, true, false, true);
                                 //}));
                             }
                             break;
@@ -2898,6 +2931,28 @@ namespace Controls
                 return;
             var ind = new Indeling(form);
             ind.ShowDialog();
+        }
+
+        public void ShowBijlageWindow(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return;
+            var bl = new BijlageForm(id);
+            var xforms = Application.OpenForms.Cast<Form>().FirstOrDefault(x => x is BijlageForm b && b.Equals(bl));
+            if (xforms != null)
+            {
+                if (xforms.WindowState == FormWindowState.Minimized)
+                    xforms.WindowState = FormWindowState.Normal;
+                xforms.BringToFront();
+                xforms.Select();
+                xforms.Focus();
+            }
+            else
+            {
+                bl.Title = $"Bijlages Voor: {id}";
+                bl.ShowDialog();
+            }
+            bl.Dispose();
         }
 
         public void ZoekWerkTekening()

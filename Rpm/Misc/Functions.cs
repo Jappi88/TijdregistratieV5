@@ -2,6 +2,7 @@
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
 using Polenter.Serialization;
+using Rpm.Controls;
 using Rpm.Mailing;
 using Rpm.Productie;
 using Rpm.Settings;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -23,15 +25,11 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Interop;
-using Rpm.Controls;
 using Application = System.Windows.Forms.Application;
 using IWin32Window = System.Windows.Forms.IWin32Window;
 using Size = System.Drawing.Size;
@@ -1413,27 +1411,15 @@ namespace Rpm.Misc
         {
             var path = string.Format("{0}.{1}", self, to);
             var dif = new List<string>();
-            return CheckForEquality(path, self, to, dif, ignore);
+            bool xret = CheckForEquality(path, self, to, dif, ignore);
+            return xret;
         }
 
         public static bool xPublicInstancePropertiesEqual<T>(this T self, T to, List<string> differences,
             Type[] ignore = null) where T : class
         {
-            var path = string.Format("{0}.{1}", self, to);
+            var path = $"{self}.{to}";
             return CheckForEquality(path, self, to, differences, ignore);
-            //if (self == null && to == null)
-            //    return true;
-            //if (self == null || to == null)
-            //    return false;
-            //var prop1 = self.GetType().GetProperties().Where(t => t.PropertyType != typeof(byte[])).ToArray();
-            //var prop2 = to.GetType().GetProperties().Where(t => t.PropertyType != typeof(byte[])).ToArray();
-            //if (prop1.Length != prop2.Length)
-            //    return false;
-            //foreach (var prop in prop1)
-            //    if (prop2.Any(t =>
-            //        t.Name == prop.Name && !xCompareObjectTo(t.GetValue(self), prop.GetValue(to))))
-            //        return false;
-            //return true;
         }
 
         public static bool CheckForEquality(string path, object a, object b, List<string> differences,
@@ -1449,21 +1435,11 @@ namespace Rpm.Misc
                     return true;
                 if (ignore != null && ignore.Any(x => x == a.GetType()))
                     return true;
-                var comparableA = a as IComparable;
-                if (comparableA != null && comparableA.CompareTo(b) != 0)
+                if (a is IComparable comparableA && comparableA.CompareTo(b) != 0)
                 {
                     differences.Add(path);
                     return false;
                 }
-
-                if (ReferenceEquals(b, null))
-                {
-                    differences.Add(path);
-                    return false; // This is mandatory: nothing else to compare
-                }
-
-                if (b.Equals(a))
-                    return true;
 
                 var type = a.GetType();
                 if (type != b.GetType())
@@ -1472,29 +1448,27 @@ namespace Rpm.Misc
                     return false; // This is mandatory: we can't go on comparing different types
                 }
 
-                var listA = a as ICollection;
-                if (listA != null)
+                if (a is ICollection listA)
                 {
-                    var listB = b as ICollection;
-
-                    if (listA.Count == listB.Count)
+                    if (b is ICollection listB && listA.Count == listB.Count)
                     {
                         var aEnumerator = listA.GetEnumerator();
                         var bEnumerator = listB.GetEnumerator();
-
                         var i = 0;
                         while (aEnumerator.MoveNext() && bEnumerator.MoveNext())
+                        {
                             if (!CheckForEquality($"{path}[{i++}]",
-                                aEnumerator.Current, bEnumerator.Current, differences, ignore))
+                                    aEnumerator.Current, bEnumerator.Current, differences, ignore))
                                 return false;
+                        }
+
+                        return true;
                     }
                     else
                     {
                         differences.Add(path);
                         return false;
                     }
-
-                    return true;
                 }
 
                 var properties = type.GetProperties().Where(x => x.GetMethod != null);
@@ -1508,115 +1482,6 @@ namespace Rpm.Misc
             {
                 return false;
             }
-        }
-
-        public static bool xCompareObjectTo(this object a, object b)
-        {
-            if (a == null && b == null)
-                return true;
-            if (a == null || b == null || a.GetType() != b.GetType())
-                return false;
-            if (a is byte[] || b is byte[])
-                return true;
-            if (a is List<DatabaseUpdateEntry> crit1)
-            {
-                var crit2 = b as List<DatabaseUpdateEntry>;
-                if (crit1.Count != crit2.Count)
-                    return false;
-                for (var i = 0; i < crit1.Count; i++)
-                    if (!crit1[i].Equals(crit2[i]))
-                        return false;
-                return true;
-            }
-
-            if (a is DateTime[])
-            {
-                var xa = a as DateTime[];
-                var xb = b as DateTime[];
-                if (xa.Length != xb.Length)
-                    return false;
-                for (var i = 0; i < xa.Length; i++)
-                    if (xa[i] != xb[i])
-                        return false;
-                return true;
-            }
-
-            if (a is List<UitgaandAdres> a4)
-            {
-                var a2 = b as List<UitgaandAdres>;
-                if (a4.Count != a2.Count)
-                    return false;
-                for (var i = 0; i < a4.Count; i++)
-                {
-                    if (a4[i].Adres.ToLower() != a2[i].Adres.ToLower())
-                        return false;
-
-                    if (a4[i].States != null && a2[i].States == null)
-                        return false;
-                    if (a2[i].States != null && a4[i].States == null)
-                        return false;
-                    if (a4[i].States.Length != a2[i].States.Length)
-                        return false;
-                    if (a4[i].States.Any(t => a2[i].States.All(x => x != t))) return false;
-                }
-
-                return true;
-            }
-
-            if (a is List<InkomendAdres> a3)
-            {
-                var a2 = b as List<InkomendAdres>;
-                if (a3.Count != a2.Count)
-                    return false;
-                for (var i = 0; i < a3.Count; i++)
-                {
-                    if (a3[i].Adres.ToLower() != a2[i].Adres.ToLower())
-                        return false;
-
-                    if (a3[i].Actions != null && a2[i].Actions == null)
-                        return false;
-                    if (a2[i].Actions != null && a3[i].Actions == null)
-                        return false;
-                    if (a3[i].Actions.Length != a2[i].Actions.Length)
-                        return false;
-                    for (var j = 0; j < a3[i].Actions.Length; j++)
-                        if (a2[i].Actions.All(x => x != a3[i].Actions[j]))
-                            return false;
-                }
-
-                return true;
-            }
-
-            if (a is ViewState[])
-            {
-                var a1 = a as ViewState[];
-                var a2 = b as ViewState[];
-                if (a1.Length != a2.Length)
-                    return false;
-                for (var i = 0; i < a1.Length; i++)
-                    if (a1[i] != a2[i])
-                        return false;
-                return true;
-            }
-
-            if (a is string[])
-            {
-                var xa = a as string[];
-                var xb = b as string[];
-                if (xa.Length != xb.Length)
-                    return false;
-                for (var i = 0; i < xa.Length; i++)
-                    if (xa[i].ToLower() != xb[i].ToLower())
-                        return false;
-                return true;
-            }
-
-            if (a is UserChange) return true;
-
-            var xs = a.Equals(b);
-            if (!xs)
-                Console.WriteLine(@"");
-            return xs;
         }
 
         public static bool IsSimpleType(
@@ -1646,28 +1511,62 @@ namespace Rpm.Misc
             return ValidEmailRegex.IsMatch(emailAddress);
         }
 
-        public static bool IsImage(this byte[] data)
+        public static bool IsImage(this byte[] bytes)
         {
-            var jpg = new List<string> {"FF", "D8"};
-            var bmp = new List<string> {"42", "4D"};
-            List<string> gif = new List<string> { "47", "49", "46" };
-            List<string> png = new List<string> { "89", "50", "4E", "47", "0D", "0A", "1A", "0A" };
-            var imgTypes = new List<List<string>> {jpg, bmp, gif, png};
+            var bmp = Encoding.ASCII.GetBytes("BM");     // BMP
+            var gif = Encoding.ASCII.GetBytes("GIF");    // GIF
+            var png = new byte[] { 137, 80, 78, 71 };    // PNG
+            var tiff = new byte[] { 73, 73, 42 };         // TIFF
+            var tiff2 = new byte[] { 77, 77, 42 };         // TIFF
+            var jpeg = new byte[] { 255, 216, 255, 224 }; // jpeg
+            var jpeg2 = new byte[] { 255, 216, 255, 225 }; // jpeg canon
 
-            var bytesIterated = new List<string>();
+            if (bmp.SequenceEqual(bytes.Take(bmp.Length)))
+                return true;
 
-            for (var i = 0; i < 8; i++)
-            {
-                var bit = data[i].ToString("X2");
-                bytesIterated.Add(bit);
+            if (gif.SequenceEqual(bytes.Take(gif.Length)))
+                return true;
 
-                var isImage = imgTypes.Any(img => !img.Except(bytesIterated).Any());
-                if (isImage)
-                    return true;
-            }
+            if (png.SequenceEqual(bytes.Take(png.Length)))
+                return true;
+
+            if (tiff.SequenceEqual(bytes.Take(tiff.Length)))
+                return true;
+
+            if (tiff2.SequenceEqual(bytes.Take(tiff2.Length)))
+                return true;
+
+            if (jpeg.SequenceEqual(bytes.Take(jpeg.Length)))
+                return true;
+
+            if (jpeg2.SequenceEqual(bytes.Take(jpeg2.Length)))
+                return true;
 
             return false;
         }
+
+        //public static bool IsImage(this byte[] data)
+        //{
+        //    var jpg = new List<string> {"FF", "D8"};
+        //    var bmp = new List<string> {"42", "4D"};
+        //    List<string> gif = new List<string> { "47", "49", "46" };
+        //    List<string> png = new List<string> { "89", "50", "4E", "47", "0D", "0A", "1A", "0A" };
+        //    var imgTypes = new List<List<string>> {jpg, bmp, gif, png};
+
+        //    var bytesIterated = new List<string>();
+
+        //    for (var i = 0; i < 8; i++)
+        //    {
+        //        var bit = data[i].ToString("X2");
+        //        bytesIterated.Add(bit);
+
+        //        var isImage = imgTypes.Any(img => !img.Except(bytesIterated).Any());
+        //        if (isImage)
+        //            return true;
+        //    }
+
+        //    return false;
+        //}
 
         public static bool IsImageFile(this string filepath)
         {
@@ -1929,11 +1828,27 @@ namespace Rpm.Misc
             try
             {
                 if (string.IsNullOrEmpty(text) || !text.Contains(seperator)) return lastblock? string.Empty : text;
-                var xindex = text.LastIndexOf(seperator);
-                int xstart = lastblock ? xindex + 1 : 0;
-                int xend = lastblock ? (text.Length - xindex) -1 : xindex;
-                var xresult = text.Substring(xstart, xend).Trim();
-                return xresult;
+                var xindex0 = text.IndexOf(seperator);
+                if (xindex0 > -1)
+                {
+                    var xindex1 = text.IndexOf(seperator, xindex0 + 1);
+                    if (xindex1 > -1)
+                    {
+                        text = text.Substring(xindex0 + 1, text.Length - (xindex0 + 1)).Trim();
+                    }
+                    var xindex = text.IndexOf(seperator);
+                    if (xindex < 0)
+                        if (lastblock)
+                            return null;
+                        else return text.Trim();
+
+                    int xstart = lastblock ? xindex + 1 : 0;
+                    int xend = lastblock ? (text.Length - xindex) - 1 : xindex;
+                    var xresult = text.Substring(xstart, xend).Trim();
+                    return xresult.Trim();
+                }
+                else if (lastblock) return null;
+                return text.Trim();
             }
             catch (Exception e)
             {
@@ -2052,16 +1967,25 @@ namespace Rpm.Misc
                 Directory.CreateDirectory(directory);
 
             var ext = Path.GetExtension(filename);
+            var name = Path.GetFileNameWithoutExtension(filename);
+            int cur = 0;
+            var path = Path.Combine(fp, name + ext);
+            while (true)
+            {
+                if (Directory.Exists(path))
+                {
+                    cur++;
+                    path = Path.Combine(fp, name + $" ({cur})" + ext);
+                }
+                else if (File.Exists(path))
+                {
+                    cur++;
+                    path = Path.Combine(fp, name + $" ({cur})" + ext);
+                }
+                else break;
 
-            var newfilename = filename.Replace(ext,"");
-            var count = Directory.GetFiles(fp).Where(x =>
-                    string.Equals((Path.GetFileName(x).Replace(ext, "").Split('[')[0] + ext),
-                        ($"{newfilename}".Split('[')[0] + ext), StringComparison.CurrentCultureIgnoreCase))
-                .ToArray().Length;
-            if (count > 0)
-                newfilename += $"[{count}]";
-            newfilename += ext;
-            return directory + "\\" + newfilename;
+            }
+            return path;
         }
 
         public static Task PrintPDFWithAcrobat(string pdffile)
@@ -2286,12 +2210,18 @@ namespace Rpm.Misc
 
         public static Size MeasureString(this string value, Font font)
         {
-            return TextRenderer.MeasureText(value, font);
+            SizeF size = new SizeF();
+            using (Graphics graphics = Graphics.FromHwnd(IntPtr.Zero))
+                size = graphics.MeasureString(value, font);
+            return size.ToSize();
         }
 
         public static Size MeasureString(this string value, Font font, Size maxsize)
         {
-            return TextRenderer.MeasureText(value, font, maxsize);
+            SizeF size = new SizeF();
+            using (Graphics graphics = Graphics.FromHwnd(IntPtr.Zero))
+                size = graphics.MeasureString(value, font,maxsize);
+            return size.ToSize();
         }
 
         public static void Shutdown()

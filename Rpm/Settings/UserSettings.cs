@@ -703,6 +703,8 @@ namespace Rpm.Settings
         #region "Admin Opties"
         public List<EmailClient> EmailClients { get; set; }
         public List<UitgaandAdres> VerzendAdres { get; set; }
+        public InkomendMailSetting InkomendMail { get; set; } = new InkomendMailSetting();
+        [ExcludeFromSerialization]
         public List<InkomendAdres> OntvangAdres { get; set; }
         public int SyncInterval { get; set; }
         public int GereedSyncInterval { get; set; }

@@ -65,8 +65,9 @@ namespace ProductieManager.Rpm.Mailing
                     {
                         //if (CanCheck())
                         //{
-                            //LastUpdated = DateTime.Now;
-                            //UpdateServer();
+                        //LastUpdated = DateTime.Now;
+                        //UpdateServer();
+                        if (Manager.Opties?.InkomendMail != null && Manager.Opties.InkomendMail.AllowedActions.Count > 0)
                             RemoteProductie.ControlleerOpMessages();
                         //}
 

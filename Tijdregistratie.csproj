@@ -71,10 +71,11 @@
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisIgnoreGeneratedCode>false</CodeAnalysisIgnoreGeneratedCode>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
     <DocumentationFile>
     </DocumentationFile>
+    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>ProductieManager.Program</StartupObject>
@@ -83,7 +84,7 @@
     <ApplicationIcon>logo-vanderValk.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>FEF40C489EF9E7E0271D02416C9484FDB79EF52A</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>3963A6E136D1C634E20BD198326D06AF653C9C25</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>ProductieManager.pfx</ManifestKeyFile>
@@ -181,10 +182,7 @@
       <HintPath>..\..\..\Desktop\ProductieManager\MetroFramework.Fonts.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualBasic">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="MimeKit, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
       <HintPath>packages\MimeKit.3.1.1\lib\net47\MimeKit.dll</HintPath>
     </Reference>
@@ -208,20 +206,15 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ObjectListView">
-      <HintPath>..\..\..\Desktop\ProductieManager\ObjectListView.dll</HintPath>
+    <Reference Include="ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Desktop\ProductieManager Libs\ObjectListView.dll</HintPath>
     </Reference>
     <Reference Include="PdfSharp">
       <HintPath>..\..\..\Desktop\ProductieManager\PdfSharp.dll</HintPath>
     </Reference>
     <Reference Include="PdfSharp.Charting">
       <HintPath>..\..\..\Desktop\ProductieManager\PdfSharp.Charting.dll</HintPath>
-    </Reference>
-    <Reference Include="Polenter.SharpSerializer, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Desktop\ProductieManager\Polenter.SharpSerializer.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore">
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -233,11 +226,11 @@
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
+    <Reference Include="System.Collections.Immutable, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Collections.Immutable.5.0.0\lib\net461\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing.Common, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Drawing.Common.6.0.0\lib\net461\System.Drawing.Common.dll</HintPath>
     </Reference>
@@ -245,19 +238,21 @@
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Metadata, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Reflection.Metadata.5.0.0\lib\net461\System.Reflection.Metadata.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -436,9 +431,22 @@
     <Compile Include="Forms\Chat\ChatForm.Designer.cs">
       <DependentUpon>ChatForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FileBrowser\BrowseEntry.cs" />
+    <Compile Include="Forms\FileBrowser\FileBrowserUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\FileBrowser\FileBrowserUI.Designer.cs">
+      <DependentUpon>FileBrowserUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FileBrowser\HistoryEntry.cs" />
     <Compile Include="Rpm\Mailing\EmailServer.cs" />
     <Compile Include="Rpm\MeldingCenter\MeldingBeheer.cs" />
     <Compile Include="Rpm\MeldingCenter\MeldingEntry.cs" />
+    <Compile Include="Rpm\Misc\HtmlUtilities.cs" />
+    <Compile Include="Rpm\NativeMethods\DefaultIcons.cs" />
+    <Compile Include="Rpm\NativeMethods\Executable.cs" />
+    <Compile Include="Rpm\NativeMethods\ThumbnailGenerator.cs" />
+    <Compile Include="Rpm\NativeMethods\NativeFileInfo.cs" />
     <Compile Include="Rpm\Misc\Radius.cs" />
     <Compile Include="Forms\ChooseValuesForm.cs">
       <SubType>Form</SubType>
@@ -1417,6 +1425,7 @@
     <Compile Include="Rpm\Settings\DatabaseUpdateEntry.cs" />
     <Compile Include="Rpm\Mailing\EmailHost.cs" />
     <Compile Include="Rpm\Settings\ExcelSettings.cs" />
+    <Compile Include="Rpm\Mailing\InkomendMailSetting.cs" />
     <Compile Include="Rpm\Settings\LastFormScreenInfo.cs" />
     <Compile Include="Rpm\Settings\ListLayoutBeheer.cs" />
     <Compile Include="Rpm\Settings\UserAccount.cs" />
@@ -1570,6 +1579,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DbSelectorForm.resx">
       <DependentUpon>DbSelectorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FileBrowser\FileBrowserUI.resx">
+      <DependentUpon>FileBrowserUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Indeling\WerkplaatsIndelingForm.resx">
       <DependentUpon>WerkplaatsIndelingForm.cs</DependentUpon>
@@ -1953,6 +1965,7 @@
     <EmbeddedResource Include="Forms\StartProductie.resx">
       <DependentUpon>StartProductie.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
@@ -2003,6 +2016,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\Nieuw - Microsoft Excel-werkblad.xlsx" />
     <None Include="Resources\ZipExtractor.exe.config" />
     <None Include="RPMLicense.snk" />
     <EmbeddedResource Include="Rpm\Controls\ImageCombineForm.resx">
@@ -2114,6 +2128,10 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\word_icon_130070_32x32.png" />
+    <None Include="Resources\folder_636_32x32.png" />
+    <None Include="Resources\viewmorecolumns_6276.png" />
+    <None Include="Resources\home_icon_color_32x32.png" />
     <None Include="Resources\attachment256_24841_32x32.png" />
     <None Include="Resources\mixkit-happy-bells-notification-937.wav" />
     <None Include="Resources\mixkit-alert-bells-echo-765.wav" />
@@ -2447,6 +2465,12 @@
       <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpSerializer-master\SharpSerializer\SharpSerializer.csproj">
+      <Project>{d8aac35c-ea97-490b-a9a0-3e1bc57d9a67}</Project>
+      <Name>SharpSerializer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Code to merge the assemblies into one:setup.exe -->

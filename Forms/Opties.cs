@@ -408,7 +408,7 @@ namespace Forms
             xs.ProductieLijstSyncInterval = (int)(xproductielijstsyncinterval.Value * 60000);
             xs.AutoProductieLijstSync = xenableproductielijstsync.Checked;
             xs.VerzendAdres = GetUitgaandadreses();
-           // xs.OntvangAdres = GetInkomendadreses();
+            xs.InkomendMail = GetInkomendInfo();
             xs.SyncLocaties = xlocatielist.Items.Cast<ListViewItem>().Select(t => t.Text).ToArray();
             xs.VerwijderVerwerkteBestanden = xverwijderverwerkt.Checked;
             xs.StartNaOpstart = xstartopnaopstart.Checked;
@@ -979,19 +979,48 @@ namespace Forms
                 if (xuitgaandemailijst.Items.Count > 0)
                     xuitgaandemailijst.Items[0].Selected = true;
             }
-
+            SetInkomendInfo(settings.InkomendMail);
             Invalidate();
             AddCheckBoxEvents();
         }
 
-        //private List<InkomendAdres> GetInkomendadreses()
-        //{
-        //    var xreturn = new List<InkomendAdres>();
-        //    foreach (ListViewItem item in xinkomendemaillijst.Items)
-        //        if (item.Tag is InkomendAdres)
-        //            xreturn.Add(item.Tag as InkomendAdres);
-        //    return xreturn;
-        //}
+        private InkomendMailSetting GetInkomendInfo()
+        {
+            var xset = new InkomendMailSetting();
+
+            var actions = new List<MessageAction>();
+            if(xinkprodwijz.Checked)
+                actions.Add(MessageAction.ProductieWijziging);
+            if (xinkniewprod.Checked)
+                actions.Add(MessageAction.NieweProductie);
+            if(xinkmelding.Checked)
+                actions.Add(MessageAction.AlgemeneMelding);
+            if(xinkbijlages.Checked)
+                actions.Add(MessageAction.BijlageUpdate);
+            xset.AllowedActions = actions.OrderBy(x=> (int)x).ToList();
+            xset.OnlyAllowedSenders = xradiolijst.Checked;
+            if(xset.OnlyAllowedSenders)
+            {
+                var xmails = new List<string>();
+                foreach (ListViewItem item in xuitgaandemailijst.Items)
+                    if (item.Tag is UitgaandAdres ink)
+                        xmails.Add(ink.Adres);
+                xset.AllowedSenders = xmails.OrderBy(x=> x).ToList();
+            }
+            return xset;
+        }
+
+        private void SetInkomendInfo(InkomendMailSetting xset)
+        {
+            xinkprodwijz.Checked = xset.AllowedActions != null && xset.AllowedActions.Any(x => x == MessageAction.ProductieWijziging);
+            xinkniewprod.Checked = xset.AllowedActions != null && xset.AllowedActions.Any(x => x == MessageAction.NieweProductie);
+            xinkmelding.Checked = xset.AllowedActions != null && xset.AllowedActions.Any(x => x == MessageAction.AlgemeneMelding);
+            xinkbijlages.Checked = xset.AllowedActions != null && xset.AllowedActions.Any(x => x == MessageAction.BijlageUpdate);
+
+            if (xset.OnlyAllowedSenders)
+                xradiolijst.Checked = true;
+            else xradioiedereen.Checked = true;
+        }
 
         private List<UitgaandAdres> GetUitgaandadreses()
         {

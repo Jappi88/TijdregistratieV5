@@ -70,6 +70,12 @@ namespace Controls
             }
         }
 
+        public void CloseUI()
+        {
+            productieInfoUI1?.CloseUI();
+            productieInfoUI1?.Dispose();
+        }
+
         private void ResizeStatusLable()
         {
             if (Disposing || IsDisposed) return;

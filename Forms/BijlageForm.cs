@@ -11,9 +11,15 @@ namespace Forms
             InitializeComponent();
         }
 
-        public BijlageForm(IProductieBase productie):this()
+        public string RootPath => fileBrowserUI1.RootPath;
+
+        public BijlageForm(IProductieBase productie):this(productie.ArtikelNr)
         {
-            string xpath = Path.Combine(Manager.DbPath, "Bijlages", productie.ArtikelNr);
+        }
+
+        public BijlageForm(string id) : this()
+        {
+            string xpath = Path.Combine(Manager.DbPath, "Bijlages", id);
             SetPath(xpath);
         }
 
@@ -24,7 +30,24 @@ namespace Forms
 
         public void SetPath(string path)
         {
-            bijlageUI1.SetPath(path);
+           fileBrowserUI1.Navigate(path);
+        }
+
+        public override bool Equals(object obj)
+        {
+           if(obj is BijlageForm form)
+                return string.Equals(form.RootPath, RootPath, System.StringComparison.CurrentCultureIgnoreCase);
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return RootPath?.GetHashCode() ?? 0;
+        }
+
+        private void BijlageForm_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
+        {
+            fileBrowserUI1?.Close();
         }
     }
 }

@@ -142,7 +142,7 @@
     <value>chartView1</value>
   </data>
   <data name="&gt;&gt;chartView1.Type" xml:space="preserve">
-    <value>Controls.ChartView, ProductieManager, Version=3.2.5.9, Culture=neutral, PublicKeyToken=null</value>
+    <value>Controls.ChartView, ProductieManager, Version=3.3.9.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;chartView1.Parent" xml:space="preserve">
     <value>$this</value>
@@ -462,6 +462,6 @@
     <value>ViewChartForm</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>MetroFramework.Forms.MetroForm, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+    <value>Forms.MetroBase.MetroBaseForm, ProductieManager, Version=3.3.9.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
 </root>

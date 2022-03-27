@@ -76,6 +76,7 @@ namespace Rpm.Various
         ProductieVerwijderen,
         AlgemeneMelding,
         GebruikerUpdate,
+        BijlageUpdate,
         None
     }
 
@@ -111,7 +112,9 @@ namespace Rpm.Various
         OpenAantalGemaaktProducties,
         MeldBewerkingGereed,
         StartBewerking,
-        StopBewerking
+        StopBewerking,
+        OpenBijlage,
+        OpenAlleBijlages,
     }
 
     [Serializable]

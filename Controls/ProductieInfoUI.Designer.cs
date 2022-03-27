@@ -53,8 +53,8 @@ namespace Controls
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.xtab11 = new MetroFramework.Controls.MetroTabPage();
-            this.bijlageUI1 = new Controls.BijlageUI();
             this.aantalChangerUI1 = new ProductieManager.Forms.Aantal.Controls.AantalChangerUI();
+            this.fileBrowserUI1 = new Forms.FileBrowser.FileBrowserUI();
             this.xTabControl.SuspendLayout();
             this.xtab1.SuspendLayout();
             this.xtab2.SuspendLayout();
@@ -85,7 +85,7 @@ namespace Controls
             this.xTabControl.Location = new System.Drawing.Point(5, 5);
             this.xTabControl.Multiline = true;
             this.xTabControl.Name = "xTabControl";
-            this.xTabControl.SelectedIndex = 0;
+            this.xTabControl.SelectedIndex = 11;
             this.xTabControl.ShowToolTips = true;
             this.xTabControl.Size = new System.Drawing.Size(921, 493);
             this.xTabControl.Style = MetroFramework.MetroColorStyle.Blue;
@@ -413,7 +413,7 @@ namespace Controls
             // 
             // xtab11
             // 
-            this.xtab11.Controls.Add(this.bijlageUI1);
+            this.xtab11.Controls.Add(this.fileBrowserUI1);
             this.xtab11.HorizontalScrollbarBarColor = true;
             this.xtab11.HorizontalScrollbarHighlightOnWheel = false;
             this.xtab11.HorizontalScrollbarSize = 2;
@@ -425,17 +425,7 @@ namespace Controls
             this.xtab11.Text = "Bijlages";
             this.xtab11.VerticalScrollbarBarColor = true;
             this.xtab11.VerticalScrollbarHighlightOnWheel = false;
-            this.xtab11.VerticalScrollbarSize = 4;
-            // 
-            // bijlageUI1
-            // 
-            this.bijlageUI1.BackColor = System.Drawing.Color.White;
-            this.bijlageUI1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bijlageUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bijlageUI1.Location = new System.Drawing.Point(5, 5);
-            this.bijlageUI1.Name = "bijlageUI1";
-            this.bijlageUI1.Size = new System.Drawing.Size(903, 441);
-            this.bijlageUI1.TabIndex = 2;
+            this.xtab11.VerticalScrollbarSize = 3;
             // 
             // aantalChangerUI1
             // 
@@ -447,6 +437,16 @@ namespace Controls
             this.aantalChangerUI1.Name = "aantalChangerUI1";
             this.aantalChangerUI1.Size = new System.Drawing.Size(921, 100);
             this.aantalChangerUI1.TabIndex = 0;
+            // 
+            // fileBrowserUI1
+            // 
+            this.fileBrowserUI1.BackColor = System.Drawing.Color.White;
+            this.fileBrowserUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fileBrowserUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fileBrowserUI1.Location = new System.Drawing.Point(5, 5);
+            this.fileBrowserUI1.Name = "fileBrowserUI1";
+            this.fileBrowserUI1.Size = new System.Drawing.Size(903, 441);
+            this.fileBrowserUI1.TabIndex = 2;
             // 
             // ProductieInfoUI
             // 
@@ -498,6 +498,6 @@ namespace Controls
         private System.Windows.Forms.ImageList imageList1;
         private BrightIdeasSoftware.OLVColumn olvColumn3;
         private MetroFramework.Controls.MetroTabPage xtab11;
-        private BijlageUI bijlageUI1;
+        private Forms.FileBrowser.FileBrowserUI fileBrowserUI1;
     }
 }

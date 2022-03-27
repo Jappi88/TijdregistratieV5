@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Org.BouncyCastle.Math.EC.Rfc7748;
+using Rpm.Misc;
+using Rpm.NativeMethods;
 using Rpm.Productie;
 using Rpm.Various;
 
@@ -30,6 +31,7 @@ namespace ProductieManager.Rpm.Productie
             try
             {
                 if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(id) || data == null || data.Length == 0) return false;
+                if (!data.IsImage()) return false;
                 var xpath = Path.Combine(Manager.DbPath, "Bijlages", id);
                 if (!Directory.Exists(xpath))
                     Directory.CreateDirectory(xpath);

@@ -22,6 +22,7 @@ namespace Rpm.MeldingCenter
         public string Action { get; set; }
         public string ActionID { get; set; }
         public int ActionViewIndex { get; set; }
+        public string MessageID { get; set; }
         public bool ShowMelding()
         {
             try
@@ -33,10 +34,20 @@ namespace Rpm.MeldingCenter
                         null, ximage, MetroColorStyle.Red) == DialogResult.OK)
                 {
                     UpdateRead(true);
-                    ShowProductie();
+                    if (!string.IsNullOrEmpty(Action))
+                    {
+                        switch (Action.ToLower())
+                        {
+                            case "openproductie":
+                                ShowProductie();
+                                break;
+                            case "openbijlage":
+                                ShowBijlage();
+                                break;
+                        }
+                    }
                     return true;
                 }
-
                 return false;
             }
             catch (Exception ex)
@@ -53,20 +64,36 @@ namespace Rpm.MeldingCenter
                 if(string.IsNullOrEmpty(Action) || string.IsNullOrEmpty(ActionID)) return;
                 if (Manager.Database != null)
                 {
-                    string id = ActionID;
-                    var werk = Werk.FromPath(id);
-                    if (werk.IsValid)
+                    string[] ids = ActionID.Split(';');
+                    foreach (string id in ids)
                     {
-                        Manager.FormulierActie(new object[] { werk.Formulier, werk.Bewerking, true, ActionViewIndex }, MainAktie.OpenProductie);
-                        return;
-                    }
-                    var bw = Manager.Database.GetBewerkingen(ViewState.Gestart, true, null, null).Result
-                        .FirstOrDefault(x => string.Equals(x.ArtikelNr, id, StringComparison.CurrentCultureIgnoreCase));
-                    if (bw != null)
-                    {
-                        Manager.FormulierActie(new object[] { bw.Parent, bw, true, ActionViewIndex }, MainAktie.OpenProductie);
+                        var werk = Werk.FromPath(id.Trim());
+                        if (werk.IsValid)
+                        {
+                            Manager.FormulierActie(new object[] { werk.Formulier, werk.Bewerking, true, ActionViewIndex }, MainAktie.OpenProductie);
+                            continue;
+                        }
+                        var bw = Manager.Database.GetBewerkingen(ViewState.Gestart, true, null, null).Result
+                            .FirstOrDefault(x => string.Equals(x.ArtikelNr, id, StringComparison.CurrentCultureIgnoreCase));
+                        if (bw != null)
+                        {
+                            Manager.FormulierActie(new object[] { bw.Parent, bw, true, ActionViewIndex }, MainAktie.OpenProductie);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public void ShowBijlage()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(Action) || string.IsNullOrEmpty(ActionID)) return;
+                Manager.FormulierActie(new object[] {ActionID}, MainAktie.OpenBijlage);
             }
             catch (Exception ex)
             {
@@ -110,6 +137,7 @@ namespace Rpm.MeldingCenter
                 xret &= string.Equals(xxrec, xrec, StringComparison.CurrentCultureIgnoreCase);
                 xret &= string.Equals(Action, melding.Action, StringComparison.CurrentCultureIgnoreCase);
                 xret &= string.Equals(ActionID, melding.ActionID, StringComparison.CurrentCultureIgnoreCase);
+                xret &= string.Equals(MessageID, melding.MessageID, StringComparison.CurrentCultureIgnoreCase);
                 return xret;
             }
             return false;
@@ -124,6 +152,7 @@ namespace Rpm.MeldingCenter
             xhash ^= xrec?.GetHashCode() ?? 0;
             xhash ^= Action?.GetHashCode() ?? 0;
             xhash ^= ActionID?.GetHashCode() ?? 0;
+            xhash ^= MessageID?.GetHashCode()??0;
             return xhash;
         }
 

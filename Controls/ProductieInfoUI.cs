@@ -193,7 +193,8 @@ namespace Controls
                         break;
                     case 11:
                         string xpath = Path.Combine(Manager.DbPath, "Bijlages", Productie.ArtikelNr);
-                        bijlageUI1.SetPath(xpath);
+                        if(!string.Equals(xpath,fileBrowserUI1.RootPath, StringComparison.CurrentCultureIgnoreCase))
+                            fileBrowserUI1.Navigate(xpath);
                         break;
                 }
 
@@ -283,7 +284,17 @@ namespace Controls
             }
         }
 
-
+        public void CloseUI()
+        {
+            fileBrowserUI1?.Close();
+            fileBrowserUI1?.Dispose();
+            xLogDataList?.Items.Clear();
+            xLogDataList?.Dispose();
+            alleWerkPlekAantalHistoryUI1?.Dispose();
+            verpakkingInstructieUI1?.Dispose();
+            combineerUI1?.Dispose();
+            productieVerbruikUI1?.Dispose();
+        }
 
         private void xVerpakkingHtmlPanel_ImageLoad(object sender, HtmlImageLoadEventArgs e)
         {

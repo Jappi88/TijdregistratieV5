@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Rpm.Productie;
+using System;
 using System.Collections.Generic;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using Rpm.Productie;
-using Various;
 
 namespace Forms
 {
@@ -23,7 +21,27 @@ namespace Forms
 
         private void ViewChartForm_Load(object sender, EventArgs e)
         {
-            chartView1.LoadData();
+            try
+            {
+                chartView1.LoadData();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+        }
+
+        private void ViewChartForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                chartView1.CloseUI();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+
         }
     }
 }

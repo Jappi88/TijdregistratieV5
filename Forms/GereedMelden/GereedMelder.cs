@@ -282,6 +282,7 @@ namespace Forms.GereedMelden
         private void GereedMelder_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
         {
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
+            productieInfoUI1.CloseUI();
         }
 
         private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)

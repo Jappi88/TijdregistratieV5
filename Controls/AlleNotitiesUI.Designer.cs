@@ -72,7 +72,6 @@ namespace Controls
             this.xnotitielist.AllColumns.Add(this.olvColumn4);
             this.xnotitielist.AllColumns.Add(this.olvColumn5);
             this.xnotitielist.AllowColumnReorder = true;
-            this.xnotitielist.CellEditUseWholeCell = false;
             this.xnotitielist.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn1,
             this.olvColumn2,

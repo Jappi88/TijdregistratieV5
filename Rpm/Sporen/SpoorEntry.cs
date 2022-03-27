@@ -85,13 +85,22 @@ namespace Rpm.Productie
                 var xpakket = "";
                 var peruur = "";
                 var afkeur = "";
-                if(aantal > -1 && geproduceert > -1 && aantal > geproduceert)
+                if(aantal > -1 && geproduceert > -1)
                 {
                     int xrestaantal = aantal - geproduceert;
                     var x4 = xrestaantal == 1 ? "product" : "producten";
                     var x5 = xrestaantal == 1 ? "is" : "zijn";
-                    decimal afval = xrestaantal * ProductLengte;
-                    afkeur = $"Er {x5} <b>{xrestaantal}</b> {x4} minder geproduceerd => <b>{Math.Round(afval, 4)}mm ({Math.Round(afval / UitgangsLengte, 4)} stuk)</b><br>";
+                    var x6 = "<u>meer</u>";
+                    if(xrestaantal < 0)
+                    {
+                        x6 = "<u>minder</u>";
+                        xrestaantal = -xrestaantal;
+                    }
+                    if (xrestaantal > 0)
+                    {
+                        decimal afval = xrestaantal * ProductLengte;
+                        afkeur = $"Er {x5} <b>{xrestaantal}</b> {x4} {x6} geproduceerd => <b>{Math.Round(afval, 4)}mm ({Math.Round(afval / UitgangsLengte, 4)} stuk)</b><br>";
+                    }
                 }
                 if (PakketAantal > 0)
                 {

@@ -362,6 +362,7 @@ namespace Forms
         private void AantalGemaaktUI_FormClosing(object sender, FormClosingEventArgs e)
         {
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
+            productieInfoUI1.CloseUI();
         }
     }
 }

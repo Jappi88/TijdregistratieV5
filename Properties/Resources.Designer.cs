@@ -1080,6 +1080,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap folder_636_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("folder_636_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap geometry_measure_32x32 {
             get {
                 object obj = ResourceManager.GetObject("geometry_measure_32x32", resourceCulture);
@@ -1181,6 +1191,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap home_icon_32x32 {
             get {
                 object obj = ResourceManager.GetObject("home_icon_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap home_icon_color_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("home_icon_color_32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1870,6 +1890,16 @@ namespace ProductieManager.Properties {
             get {
                 object obj = ResourceManager.GetObject("next_window_16720", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Nieuw___Microsoft_Excel_werkblad {
+            get {
+                object obj = ResourceManager.GetObject("Nieuw___Microsoft_Excel_werkblad", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
@@ -2802,6 +2832,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap viewmorecolumns_6276 {
+            get {
+                object obj = ResourceManager.GetObject("viewmorecolumns_6276", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap warning {
             get {
                 object obj = ResourceManager.GetObject("warning", resourceCulture);
@@ -2855,6 +2895,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap window_16756_32x32 {
             get {
                 object obj = ResourceManager.GetObject("window_16756_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap word_icon_130070_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("word_icon_130070_32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

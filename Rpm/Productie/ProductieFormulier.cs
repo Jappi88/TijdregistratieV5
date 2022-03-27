@@ -220,6 +220,18 @@ namespace Rpm.Productie
             set => _tijdgestop = value;
         }
 
+        public override DateTime LeverDatum
+        {
+            get => Bewerkingen?.LastOrDefault()?.LeverDatum ?? base.LeverDatum;
+            set
+            {
+                base.LeverDatum = value;
+                var bw = Bewerkingen?.LastOrDefault();
+                if (bw != null)
+                    bw.LeverDatum = value;
+            }
+        }
+
         private string _note;
         private string _gereednote;
         [ExcludeFromSerialization]

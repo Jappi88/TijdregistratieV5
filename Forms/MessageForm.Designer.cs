@@ -55,10 +55,10 @@ namespace Forms
             this.xmainpanel.Controls.Add(this.xmessage);
             this.xmainpanel.Controls.Add(this.xchooserpanel);
             this.xmainpanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xmainpanel.Location = new System.Drawing.Point(159, 5);
+            this.xmainpanel.Location = new System.Drawing.Point(150, 5);
             this.xmainpanel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.xmainpanel.Name = "xmainpanel";
-            this.xmainpanel.Size = new System.Drawing.Size(551, 165);
+            this.xmainpanel.Size = new System.Drawing.Size(520, 109);
             this.xmainpanel.TabIndex = 0;
             // 
             // xmessage
@@ -67,7 +67,7 @@ namespace Forms
             this.xmessage.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xmessage.Location = new System.Drawing.Point(0, 0);
             this.xmessage.Name = "xmessage";
-            this.xmessage.Size = new System.Drawing.Size(551, 115);
+            this.xmessage.Size = new System.Drawing.Size(520, 59);
             this.xmessage.TabIndex = 0;
             this.xmessage.Text = "Message Text";
             this.xmessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -76,9 +76,9 @@ namespace Forms
             // 
             this.xchooserpanel.Controls.Add(this.xchooser);
             this.xchooserpanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.xchooserpanel.Location = new System.Drawing.Point(0, 115);
+            this.xchooserpanel.Location = new System.Drawing.Point(0, 59);
             this.xchooserpanel.Name = "xchooserpanel";
-            this.xchooserpanel.Size = new System.Drawing.Size(551, 50);
+            this.xchooserpanel.Size = new System.Drawing.Size(520, 50);
             this.xchooserpanel.TabIndex = 1;
             // 
             // xchooser
@@ -90,7 +90,7 @@ namespace Forms
             this.xchooser.ItemHeight = 29;
             this.xchooser.Location = new System.Drawing.Point(0, 0);
             this.xchooser.Name = "xchooser";
-            this.xchooser.Size = new System.Drawing.Size(551, 35);
+            this.xchooser.Size = new System.Drawing.Size(520, 35);
             this.xchooser.TabIndex = 0;
             this.xchooser.UseSelectable = true;
             this.xchooser.UseStyleColors = true;
@@ -102,17 +102,17 @@ namespace Forms
             this.xbuttonpanel.Controls.Add(this.xmessageb1);
             this.xbuttonpanel.Controls.Add(this.xmessageb4);
             this.xbuttonpanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.xbuttonpanel.Location = new System.Drawing.Point(0, 175);
+            this.xbuttonpanel.Location = new System.Drawing.Point(0, 119);
             this.xbuttonpanel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.xbuttonpanel.Name = "xbuttonpanel";
-            this.xbuttonpanel.Size = new System.Drawing.Size(714, 41);
+            this.xbuttonpanel.Size = new System.Drawing.Size(674, 41);
             this.xbuttonpanel.TabIndex = 2;
             // 
             // xmessageb2
             // 
             this.xmessageb2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xmessageb2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xmessageb2.Location = new System.Drawing.Point(434, 3);
+            this.xmessageb2.Location = new System.Drawing.Point(394, 3);
             this.xmessageb2.Name = "xmessageb2";
             this.xmessageb2.Size = new System.Drawing.Size(135, 34);
             this.xmessageb2.TabIndex = 1;
@@ -125,7 +125,7 @@ namespace Forms
             // 
             this.xmessageb3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xmessageb3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xmessageb3.Location = new System.Drawing.Point(575, 3);
+            this.xmessageb3.Location = new System.Drawing.Point(535, 3);
             this.xmessageb3.Name = "xmessageb3";
             this.xmessageb3.Size = new System.Drawing.Size(135, 34);
             this.xmessageb3.TabIndex = 0;
@@ -138,7 +138,7 @@ namespace Forms
             // 
             this.xmessageb1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xmessageb1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xmessageb1.Location = new System.Drawing.Point(293, 3);
+            this.xmessageb1.Location = new System.Drawing.Point(253, 3);
             this.xmessageb1.Name = "xmessageb1";
             this.xmessageb1.Size = new System.Drawing.Size(135, 34);
             this.xmessageb1.TabIndex = 2;
@@ -151,7 +151,7 @@ namespace Forms
             // 
             this.xmessageb4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xmessageb4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xmessageb4.Location = new System.Drawing.Point(152, 3);
+            this.xmessageb4.Location = new System.Drawing.Point(112, 3);
             this.xmessageb4.Name = "xmessageb4";
             this.xmessageb4.Size = new System.Drawing.Size(135, 34);
             this.xmessageb4.TabIndex = 3;
@@ -167,8 +167,8 @@ namespace Forms
             this.xmessageicon.Location = new System.Drawing.Point(4, 5);
             this.xmessageicon.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.xmessageicon.Name = "xmessageicon";
-            this.xmessageicon.Size = new System.Drawing.Size(147, 165);
-            this.xmessageicon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.xmessageicon.Size = new System.Drawing.Size(138, 109);
+            this.xmessageicon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.xmessageicon.TabIndex = 1;
             this.xmessageicon.TabStop = false;
             this.xmessageicon.DoubleClick += new System.EventHandler(this.xmessageicon_DoubleClick);
@@ -180,7 +180,7 @@ namespace Forms
             this.xMessagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xMessagePanel.Location = new System.Drawing.Point(20, 60);
             this.xMessagePanel.Name = "xMessagePanel";
-            this.xMessagePanel.Size = new System.Drawing.Size(714, 216);
+            this.xMessagePanel.Size = new System.Drawing.Size(674, 160);
             this.xMessagePanel.TabIndex = 3;
             // 
             // tableLayoutPanel1
@@ -195,14 +195,14 @@ namespace Forms
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(714, 175);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(674, 119);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
             // XMessageBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(754, 296);
+            this.ClientSize = new System.Drawing.Size(714, 240);
             this.Controls.Add(this.xMessagePanel);
             this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

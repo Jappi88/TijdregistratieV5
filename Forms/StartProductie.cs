@@ -160,6 +160,7 @@ namespace Forms
 
         private void StartProductie_FormClosing(object sender, FormClosingEventArgs e)
         {
+            productieForm1.CloseUI();
             DetachEvents();
         }
 

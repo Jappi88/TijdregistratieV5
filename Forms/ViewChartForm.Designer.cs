@@ -38,6 +38,7 @@ namespace Forms
             this.chartView1.BackColor = System.Drawing.Color.White;
             resources.ApplyResources(this.chartView1, "chartView1");
             this.chartView1.Name = "chartView1";
+            this.chartView1.PeriodeWeergave = true;
             // 
             // ViewChartForm
             // 
@@ -45,7 +46,8 @@ namespace Forms
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.chartView1);
             this.Name = "ViewChartForm";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
+            this.Title = "Productie Statistieken ";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ViewChartForm_FormClosing);
             this.Load += new System.EventHandler(this.ViewChartForm_Load);
             this.ResumeLayout(false);
 

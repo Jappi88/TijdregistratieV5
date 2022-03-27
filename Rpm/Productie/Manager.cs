@@ -655,6 +655,7 @@ namespace Rpm.Productie
                 return;
             Task.Factory.StartNew(() =>
             {
+                _afsluittijd = options.AfsluitTijd;
                 options.SystemID = SystemId;
                 var bkms = TimeSpan.FromHours(0.10).TotalMilliseconds;
                 SyncInterval = options.SyncInterval < 10000 ? 10000 : options.SyncInterval;
@@ -665,7 +666,7 @@ namespace Rpm.Productie
                 if (Database != null)
                     Database.NotificationEnabled = options.ToonLogNotificatie;
               
-                _afsluittijd = options.AfsluitTijd;
+               
                 if (options.GebruikLocalSync || options.GebruikTaken)
                 {
                     ProductieProvider?.StartSyncProducties();
@@ -1030,7 +1031,7 @@ namespace Rpm.Productie
         /// <param name="updateifexist">True voor als je een productie wilt updaten als die bestaat</param>
         /// <param name="delete">True voor als je het bestand wilt verwijderen zodra het is toegevoegd</param>
         /// <returns>Een taak die een productie toevoegd op de achtergrond</returns>
-        public Task<List<RemoteMessage>> AddProductie(string pdffile, bool updateifexist, bool delete)
+        public static Task<List<RemoteMessage>> AddProductie(string pdffile, bool updateifexist, bool delete)
         {
             return Task.Run(async () =>
             {
@@ -1140,7 +1141,7 @@ namespace Rpm.Productie
         /// <param name="delete">True voor als je de bestanden wilt verwijderen zodra ze zijn toegevoegd</param>
         /// <param name="showerror">True voor als je een foutmelding wilt laten zien</param>
         /// <returns></returns>
-        public Task<int> AddProductie(string[] pdffiles, bool updateifexist, bool delete, bool showerror)
+        public static Task<int> AddProductie(string[] pdffiles, bool updateifexist, bool delete, bool showerror)
         {
             return Task.Run(() =>
             {

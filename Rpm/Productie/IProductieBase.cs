@@ -344,6 +344,11 @@ namespace Rpm.Productie
             return Root?.GetAlleWerkplekken() ?? new List<WerkPlek>();
         }
 
+        public virtual Bewerking[] GetBewerkingen()
+        {
+            return Root?.Bewerkingen ?? new Bewerking[] { };
+        }
+
         public virtual List<Materiaal> GetMaterialen()
         {
             return Root?.Materialen?.Where(x=> x != null).ToList() ?? new List<Materiaal>();
@@ -817,6 +822,17 @@ Color textcolor, bool useimage)
             return xreturn;
         }
 
+        private string GetBewerkingenGemaaktHtml()
+        {
+            var bws = GetBewerkingen().Where(x => !x.Equals(this)).ToArray();
+            if (bws.Length == 0) return string.Empty;
+            return $"" + 
+                string.Join("\n", bws.Select(x => $"<li><span style = 'color:purple'>{x.Naam}=> <b>{x.TotaalGemaakt}/{x.Aantal}</b>" +
+                $" <span style = 'color: {GetPositiveColorByPercentage((decimal)x.Gereed).Name}'>({x.Gereed}%)</span>" +
+                $"</span></li>"))
+                + "<br>";
+        }
+
         public string GetHeaderHtmlBody(string title, Bitmap image, Size imagesize, Color backcolor,
             Color backgroundgradient,
             Color textcolor, bool useimage)
@@ -857,7 +873,9 @@ Color textcolor, bool useimage)
                           $"{(State != ProductieState.Gereed ? $"Verwachte Leverdatum: <span style = 'color:{GetValidColor(VerwachtLeverDatum < LeverDatum).Name}> {VerwachtLeverDatum:f}</span>." : $"Gereed Gemeld Op: <span style = 'color:{GetValidColor(true).Name}>{DatumGereed:f}</span>.")}\r\n" +
                           $"</h2><hr />\r\n<h2>" +
                           $"Aantal Gemaakt: <u>{TotaalGemaakt}</u> / {Aantal} <span style = 'color: {GetPositiveColorByPercentage((decimal) Gereed).Name}'>({Gereed}%)</span><br>" +
-                          $"<ul><li><u>Actueel</u> Aantal Gemaakt: <b><u>{ActueelAantalGemaakt}</u></b> / {Aantal}</li></ul>" +
+                          $"<ul><li><u>Actueel</u> Aantal Gemaakt: <b><u>{ActueelAantalGemaakt}</u></b> / {Aantal}</li>" +
+                           GetBewerkingenGemaaktHtml() +
+                          $"</ul>" +
                           $"Tijd Gewerkt: <u>{TijdGewerkt}</u> / {Math.Round(DoorloopTijd, 2)} uur <span style = 'color:{GetPositiveColorByPercentage((decimal) TijdGewerktPercentage).Name}'>({TijdGewerktPercentage}%)</span><br>" +
                           $"{CombiesHtml()}" +
                           $"Per Uur: <u>{ActueelPerUur}</u> i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span><br>" +

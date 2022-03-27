@@ -34,17 +34,18 @@ namespace Controls
             this.panel1 = new System.Windows.Forms.Panel();
             this.xstatuslabel = new System.Windows.Forms.Label();
             this.xoptionpanel = new System.Windows.Forms.Panel();
-            this.xbewerkingradio = new System.Windows.Forms.RadioButton();
-            this.xwerkplekradio = new System.Windows.Forms.RadioButton();
             this.xweergaveperiodegroup = new System.Windows.Forms.GroupBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.xwerkplekradio = new System.Windows.Forms.RadioButton();
+            this.xbewerkingradio = new System.Windows.Forms.RadioButton();
             this.xalleennucheckbox = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.xstartjaar = new System.Windows.Forms.NumericUpDown();
-            this.xstartweek = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
             this.xstoringenradio = new System.Windows.Forms.RadioButton();
+            this.xstartjaar = new System.Windows.Forms.NumericUpDown();
             this.xaantalperuurradio = new System.Windows.Forms.RadioButton();
+            this.xstartweek = new System.Windows.Forms.NumericUpDown();
             this.xaantalgemaaktradio = new System.Windows.Forms.RadioButton();
+            this.label1 = new System.Windows.Forms.Label();
             this.xtijdgewerktradio = new System.Windows.Forms.RadioButton();
             this.xserieslist = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -52,16 +53,15 @@ namespace Controls
             this.xstatus = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.panel2 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.xoptionpanel.SuspendLayout();
             this.xweergaveperiodegroup.SuspendLayout();
+            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xstartjaar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xstartweek)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xserieslist)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // xdatachart
@@ -103,32 +103,6 @@ namespace Controls
             this.xoptionpanel.Size = new System.Drawing.Size(873, 120);
             this.xoptionpanel.TabIndex = 3;
             // 
-            // xbewerkingradio
-            // 
-            this.xbewerkingradio.AutoSize = true;
-            this.xbewerkingradio.Checked = true;
-            this.xbewerkingradio.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xbewerkingradio.Location = new System.Drawing.Point(3, 3);
-            this.xbewerkingradio.Name = "xbewerkingradio";
-            this.xbewerkingradio.Size = new System.Drawing.Size(99, 21);
-            this.xbewerkingradio.TabIndex = 1;
-            this.xbewerkingradio.TabStop = true;
-            this.xbewerkingradio.Text = "Bewerkingen";
-            this.xbewerkingradio.UseVisualStyleBackColor = true;
-            this.xbewerkingradio.CheckedChanged += new System.EventHandler(this.radiocheckchanged_CheckedChanged);
-            // 
-            // xwerkplekradio
-            // 
-            this.xwerkplekradio.AutoSize = true;
-            this.xwerkplekradio.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xwerkplekradio.Location = new System.Drawing.Point(108, 3);
-            this.xwerkplekradio.Name = "xwerkplekradio";
-            this.xwerkplekradio.Size = new System.Drawing.Size(104, 21);
-            this.xwerkplekradio.TabIndex = 0;
-            this.xwerkplekradio.Text = "Werkplaatsen";
-            this.xwerkplekradio.UseVisualStyleBackColor = true;
-            this.xwerkplekradio.CheckedChanged += new System.EventHandler(this.radiocheckchanged_CheckedChanged);
-            // 
             // xweergaveperiodegroup
             // 
             this.xweergaveperiodegroup.Controls.Add(this.panel2);
@@ -149,6 +123,41 @@ namespace Controls
             this.xweergaveperiodegroup.TabIndex = 2;
             this.xweergaveperiodegroup.TabStop = false;
             this.xweergaveperiodegroup.Text = "Statistieken Weergave";
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.xwerkplekradio);
+            this.panel2.Controls.Add(this.xbewerkingradio);
+            this.panel2.Location = new System.Drawing.Point(6, 83);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(485, 28);
+            this.panel2.TabIndex = 5;
+            // 
+            // xwerkplekradio
+            // 
+            this.xwerkplekradio.AutoSize = true;
+            this.xwerkplekradio.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xwerkplekradio.Location = new System.Drawing.Point(108, 3);
+            this.xwerkplekradio.Name = "xwerkplekradio";
+            this.xwerkplekradio.Size = new System.Drawing.Size(104, 21);
+            this.xwerkplekradio.TabIndex = 0;
+            this.xwerkplekradio.Text = "Werkplaatsen";
+            this.xwerkplekradio.UseVisualStyleBackColor = true;
+            this.xwerkplekradio.CheckedChanged += new System.EventHandler(this.radiocheckchanged_CheckedChanged);
+            // 
+            // xbewerkingradio
+            // 
+            this.xbewerkingradio.AutoSize = true;
+            this.xbewerkingradio.Checked = true;
+            this.xbewerkingradio.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xbewerkingradio.Location = new System.Drawing.Point(3, 3);
+            this.xbewerkingradio.Name = "xbewerkingradio";
+            this.xbewerkingradio.Size = new System.Drawing.Size(99, 21);
+            this.xbewerkingradio.TabIndex = 1;
+            this.xbewerkingradio.TabStop = true;
+            this.xbewerkingradio.Text = "Bewerkingen";
+            this.xbewerkingradio.UseVisualStyleBackColor = true;
+            this.xbewerkingradio.CheckedChanged += new System.EventHandler(this.radiocheckchanged_CheckedChanged);
             // 
             // xalleennucheckbox
             // 
@@ -171,6 +180,18 @@ namespace Controls
             this.label2.Size = new System.Drawing.Size(32, 17);
             this.label2.TabIndex = 3;
             this.label2.Text = "Jaar";
+            // 
+            // xstoringenradio
+            // 
+            this.xstoringenradio.AutoSize = true;
+            this.xstoringenradio.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xstoringenradio.Location = new System.Drawing.Point(353, 25);
+            this.xstoringenradio.Name = "xstoringenradio";
+            this.xstoringenradio.Size = new System.Drawing.Size(133, 21);
+            this.xstoringenradio.TabIndex = 3;
+            this.xstoringenradio.Text = "Tijd Aan Storingen";
+            this.xstoringenradio.UseVisualStyleBackColor = true;
+            this.xstoringenradio.CheckedChanged += new System.EventHandler(this.radiocheckchanged_CheckedChanged);
             // 
             // xstartjaar
             // 
@@ -196,6 +217,18 @@ namespace Controls
             0});
             this.xstartjaar.ValueChanged += new System.EventHandler(this.xstartweek_ValueChanged);
             // 
+            // xaantalperuurradio
+            // 
+            this.xaantalperuurradio.AutoSize = true;
+            this.xaantalperuurradio.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xaantalperuurradio.Location = new System.Drawing.Point(237, 25);
+            this.xaantalperuurradio.Name = "xaantalperuurradio";
+            this.xaantalperuurradio.Size = new System.Drawing.Size(110, 21);
+            this.xaantalperuurradio.TabIndex = 2;
+            this.xaantalperuurradio.Text = "Aantal Per Uur";
+            this.xaantalperuurradio.UseVisualStyleBackColor = true;
+            this.xaantalperuurradio.CheckedChanged += new System.EventHandler(this.radiocheckchanged_CheckedChanged);
+            // 
             // xstartweek
             // 
             this.xstartweek.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -220,40 +253,6 @@ namespace Controls
             0});
             this.xstartweek.ValueChanged += new System.EventHandler(this.xstartweek_ValueChanged);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(6, 55);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(75, 17);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Vanaf Week";
-            // 
-            // xstoringenradio
-            // 
-            this.xstoringenradio.AutoSize = true;
-            this.xstoringenradio.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xstoringenradio.Location = new System.Drawing.Point(353, 25);
-            this.xstoringenradio.Name = "xstoringenradio";
-            this.xstoringenradio.Size = new System.Drawing.Size(133, 21);
-            this.xstoringenradio.TabIndex = 3;
-            this.xstoringenradio.Text = "Tijd Aan Storingen";
-            this.xstoringenradio.UseVisualStyleBackColor = true;
-            this.xstoringenradio.CheckedChanged += new System.EventHandler(this.radiocheckchanged_CheckedChanged);
-            // 
-            // xaantalperuurradio
-            // 
-            this.xaantalperuurradio.AutoSize = true;
-            this.xaantalperuurradio.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xaantalperuurradio.Location = new System.Drawing.Point(237, 25);
-            this.xaantalperuurradio.Name = "xaantalperuurradio";
-            this.xaantalperuurradio.Size = new System.Drawing.Size(110, 21);
-            this.xaantalperuurradio.TabIndex = 2;
-            this.xaantalperuurradio.Text = "Aantal Per Uur";
-            this.xaantalperuurradio.UseVisualStyleBackColor = true;
-            this.xaantalperuurradio.CheckedChanged += new System.EventHandler(this.radiocheckchanged_CheckedChanged);
-            // 
             // xaantalgemaaktradio
             // 
             this.xaantalgemaaktradio.AutoSize = true;
@@ -265,6 +264,16 @@ namespace Controls
             this.xaantalgemaaktradio.Text = "Aantal Gemaakt";
             this.xaantalgemaaktradio.UseVisualStyleBackColor = true;
             this.xaantalgemaaktradio.CheckedChanged += new System.EventHandler(this.radiocheckchanged_CheckedChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(6, 55);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(75, 17);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Vanaf Week";
             // 
             // xtijdgewerktradio
             // 
@@ -351,15 +360,6 @@ namespace Controls
             this.panel4.Size = new System.Drawing.Size(873, 558);
             this.panel4.TabIndex = 5;
             // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.xwerkplekradio);
-            this.panel2.Controls.Add(this.xbewerkingradio);
-            this.panel2.Location = new System.Drawing.Point(6, 83);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(485, 28);
-            this.panel2.TabIndex = 5;
-            // 
             // ChartView
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -374,13 +374,13 @@ namespace Controls
             this.xoptionpanel.ResumeLayout(false);
             this.xweergaveperiodegroup.ResumeLayout(false);
             this.xweergaveperiodegroup.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xstartjaar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xstartweek)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xserieslist)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
