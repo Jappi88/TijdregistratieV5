@@ -296,6 +296,7 @@ namespace Rpm.Productie.ArtikelRecords
             });
             if (xreturn.Count > 0)
             {
+                if (Manager.Opties is not { ToonArtikelRecordMeldingen: true }) return;
                 var xopen = Application.OpenForms.Cast<Form>().Where(x =>
                     string.Equals(x.Text, "form_alert", StringComparison.CurrentCultureIgnoreCase)).ToList();
                 xopen.ForEach(x =>
@@ -338,6 +339,7 @@ namespace Rpm.Productie.ArtikelRecords
 
         public void DoOpmerkingenRecords(Dictionary<ArtikelRecord, List<ArtikelOpmerking>> values)
         {
+            if (Manager.Opties is not { ToonArtikelRecordMeldingen: true }) return;
             foreach (var value in values)
             {
                 var record = value.Key;

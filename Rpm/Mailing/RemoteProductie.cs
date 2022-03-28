@@ -56,7 +56,7 @@ namespace Rpm.Mailing
                 switch (x1.ToLower())
                 {
                     case "wijzig":
-                        if (!Manager.Opties.InkomendMail.AllowedActions.Any(x => x == MessageAction.ProductieWijziging))
+                        if (Manager.Opties.InkomendMail.AllowedActions.All(x => x != MessageAction.ProductieWijziging))
                             return false;
                         if (!string.IsNullOrEmpty(x1) && !string.IsNullOrEmpty(body))
                         {
@@ -76,13 +76,13 @@ namespace Rpm.Mailing
                                 string action = "openproductie";
                                 string actionid = string.Join(";", xactionids);
                                 Manager.Meldingen.CreateMelding(string.Join("\n", logs),
-                                    $"Productie Wijzigingen van {mail.From?.First()?.Name}",mail.MessageId, new List<string>(), xmg,
+                                    $"Productie Wijzigingen van {mail.From?.First()?.Name}",mail.MessageId,x1, new List<string>(), xmg,
                                     true,false, xactionids.Count > 0? action: null, xactionids.Count > 0 ? actionid : null);
                             }
                         }
                         break;
                     case "bijlage":
-                        if (!Manager.Opties.InkomendMail.AllowedActions.Any(x => x == MessageAction.BijlageUpdate))
+                        if (Manager.Opties.InkomendMail.AllowedActions.All(x => x != MessageAction.BijlageUpdate))
                             return false;
                         if (!string.IsNullOrEmpty(x2))
                         {
@@ -113,13 +113,13 @@ namespace Rpm.Mailing
                             }
                             if(done > 0 && Manager.Meldingen?.Database != null && !Manager.Meldingen.IsDisposed)
                             {
-                                var melding = Manager.Meldingen.CreateMelding(log.ToString(), "Bijlages toegevoegd door " + mail.From?.First()?.Name,mail.MessageId,
+                                var melding = Manager.Meldingen.CreateMelding(log.ToString(), "Bijlages toegevoegd door " + mail.From?.First()?.Name,mail.MessageId,x1,
                                     new List<string>(), null, true,false, "openbijlage", id,11);
                             }
                         }
                         break;
                     case "melding":
-                        if (!Manager.Opties.InkomendMail.AllowedActions.Any(x => x == MessageAction.AlgemeneMelding))
+                        if (Manager.Opties.InkomendMail.AllowedActions.All(x => x != MessageAction.AlgemeneMelding))
                             return false;
                         if (Manager.Meldingen == null || Manager.Meldingen.IsDisposed)
                         {
@@ -132,7 +132,7 @@ namespace Rpm.Mailing
 
                             byte[] xmg = GetMessageData((MimePart) att);
                             var xaction = GetActionFromBody(ref body, out var actionid);
-                            var melding = Manager.Meldingen.CreateMelding(body, "Melding van " + mail.From?.First()?.Name,mail.MessageId,
+                            var melding = Manager.Meldingen.CreateMelding(body, "Melding van " + mail.From?.First()?.Name,mail.MessageId,x1,
                                     x2.Split(';').ToList(), xmg, true, false, xaction, actionid);
                             ret = melding != null;
                         }
@@ -171,7 +171,7 @@ namespace Rpm.Mailing
                         }
                         if (ids.Count > 0 && Manager.Meldingen?.Database != null && !Manager.Meldingen.IsDisposed)
                         {
-                            var melding = Manager.Meldingen.CreateMelding(xlog.ToString(), "Producties toegevoegd door " + mail.From?.First()?.Name, mail.MessageId,
+                            var melding = Manager.Meldingen.CreateMelding(xlog.ToString(), "Producties toegevoegd door " + mail.From?.First()?.Name, mail.MessageId,x1,
                                 new List<string>(), null, true, false, "openproductie", string.Join(";",ids), 0);
                         }
                         break;

@@ -150,6 +150,10 @@ namespace Forms
             xminvoorcontrole.Value = x.MinVoorControle;
             xsyncinterval.Value = x.SyncInterval;
 
+            xmeldingOpmerking.Checked = x.ToonNieweOpmerkingMelding;
+            xmeldingChat.Checked = x.ToonNieweChatBerichtMelding;
+            xmeldingRecords.Checked = x.ToonArtikelRecordMeldingen;
+            xmeldingBijlage.Checked = x.ToonNieweBijlageMelding;
             xtilesrefresh.SetValue(x.TileCountRefreshRate);
 
             //weergave producties
@@ -432,6 +436,11 @@ namespace Forms
             xs.BackupInterval = TimeSpan.FromHours((double)xcreatebackupinterval.Value).TotalMilliseconds;
             xs.MaxBackupCount = (int)xmaxbackups.Value;
             xs.ToonLogNotificatie = xtoonlognotificatie.Checked;
+
+            xs.ToonNieweOpmerkingMelding = xmeldingOpmerking.Checked;
+            xs.ToonNieweChatBerichtMelding = xmeldingChat.Checked;
+            xs.ToonArtikelRecordMeldingen = xmeldingRecords.Checked;
+            xs.ToonNieweBijlageMelding = xmeldingBijlage.Checked;
 
             Manager.DefaultSettings.OfflineDbSyncInterval = (int) xoffdbsyncinterval.Value;
             Manager.DefaultSettings.OfflineDabaseTypes.Clear();

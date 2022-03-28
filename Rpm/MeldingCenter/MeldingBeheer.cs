@@ -42,12 +42,12 @@ namespace Rpm.MeldingCenter
             }
         }
 
-        public MeldingEntry CreateMelding(string message, string title,string messageid, List<string> recievers, byte[] imagedata,
+        public MeldingEntry CreateMelding(string message, string title,string messageid,string messagetype, List<string> recievers, byte[] imagedata,
             bool save,bool overwrite, string action = null,string actionid = null, int actionviewindex = 0)
         {
             try
             {
-                if(recievers != null && recievers.Count > 0)
+                if(recievers is { Count: > 0 })
                 {
                     recievers.RemoveAll(string.IsNullOrEmpty);
                 }
@@ -60,7 +60,8 @@ namespace Rpm.MeldingCenter
                     Action = action,
                     ActionID = actionid,
                     ActionViewIndex = actionviewindex,
-                    MessageID = messageid
+                    MessageID = messageid,
+                    MessageType = messagetype
                 };
                 if (save)
                 {

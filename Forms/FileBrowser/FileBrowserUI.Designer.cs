@@ -32,6 +32,7 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.xvorige = new System.Windows.Forms.ToolStripButton();
             this.xvolgende = new System.Windows.Forms.ToolStripButton();
+            this.xrefreshdirectory = new System.Windows.Forms.ToolStripButton();
             this.xhomebutton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.xViewStyle = new System.Windows.Forms.ToolStripSplitButton();
@@ -64,6 +65,7 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.xvorige,
             this.xvolgende,
+            this.xrefreshdirectory,
             this.xhomebutton,
             this.toolStripSeparator1,
             this.xViewStyle,
@@ -72,7 +74,7 @@
             this.xstatus});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(892, 35);
+            this.toolStrip1.Size = new System.Drawing.Size(892, 38);
             this.toolStrip1.TabIndex = 5;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -84,7 +86,7 @@
             this.xvorige.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xvorige.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xvorige.Name = "xvorige";
-            this.xvorige.Size = new System.Drawing.Size(36, 32);
+            this.xvorige.Size = new System.Drawing.Size(36, 35);
             this.xvorige.ToolTipText = "Vorige";
             this.xvorige.Click += new System.EventHandler(this.xvorige_Click);
             // 
@@ -96,9 +98,20 @@
             this.xvolgende.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xvolgende.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xvolgende.Name = "xvolgende";
-            this.xvolgende.Size = new System.Drawing.Size(36, 32);
+            this.xvolgende.Size = new System.Drawing.Size(36, 35);
             this.xvolgende.ToolTipText = "Volgende";
             this.xvolgende.Click += new System.EventHandler(this.xvolgende_Click);
+            // 
+            // xrefreshdirectory
+            // 
+            this.xrefreshdirectory.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xrefreshdirectory.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
+            this.xrefreshdirectory.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xrefreshdirectory.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xrefreshdirectory.Name = "xrefreshdirectory";
+            this.xrefreshdirectory.Size = new System.Drawing.Size(36, 35);
+            this.xrefreshdirectory.ToolTipText = "Refresh pagina";
+            this.xrefreshdirectory.Click += new System.EventHandler(this.Refresh_Click);
             // 
             // xhomebutton
             // 
@@ -108,14 +121,14 @@
             this.xhomebutton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xhomebutton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xhomebutton.Name = "xhomebutton";
-            this.xhomebutton.Size = new System.Drawing.Size(36, 32);
+            this.xhomebutton.Size = new System.Drawing.Size(36, 35);
             this.xhomebutton.ToolTipText = "Startpagina";
             this.xhomebutton.Click += new System.EventHandler(this.xhomebutton_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 35);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 38);
             // 
             // xViewStyle
             // 
@@ -126,7 +139,7 @@
             this.xViewStyle.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xViewStyle.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xViewStyle.Name = "xViewStyle";
-            this.xViewStyle.Size = new System.Drawing.Size(48, 32);
+            this.xViewStyle.Size = new System.Drawing.Size(48, 35);
             this.xViewStyle.Text = "toolStripButton2";
             this.xViewStyle.ToolTipText = "Indeling en weergaveopties";
             this.xViewStyle.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.xViewStyle_DropDownItemClicked);
@@ -139,7 +152,7 @@
             this.xclearsearchbox.Image = global::ProductieManager.Properties.Resources.cancel_close_cross_delete_32x32;
             this.xclearsearchbox.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xclearsearchbox.Name = "xclearsearchbox";
-            this.xclearsearchbox.Size = new System.Drawing.Size(23, 32);
+            this.xclearsearchbox.Size = new System.Drawing.Size(23, 35);
             this.xclearsearchbox.ToolTipText = "Zoekbalk leegmaken...";
             this.xclearsearchbox.Click += new System.EventHandler(this.xclearsearchbox_Click);
             // 
@@ -148,7 +161,7 @@
             this.xsearchbox.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.xsearchbox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.xsearchbox.Name = "xsearchbox";
-            this.xsearchbox.Size = new System.Drawing.Size(200, 35);
+            this.xsearchbox.Size = new System.Drawing.Size(200, 38);
             this.xsearchbox.Text = "Zoeken...";
             this.xsearchbox.Enter += new System.EventHandler(this.xsearchbox_Enter);
             this.xsearchbox.Leave += new System.EventHandler(this.xsearchbox_Leave);
@@ -157,7 +170,7 @@
             // xstatus
             // 
             this.xstatus.Name = "xstatus";
-            this.xstatus.Size = new System.Drawing.Size(0, 32);
+            this.xstatus.Size = new System.Drawing.Size(0, 35);
             // 
             // xbrowser
             // 
@@ -184,7 +197,7 @@
             this.xbrowser.IsSimpleDragSource = true;
             this.xbrowser.IsSimpleDropSink = true;
             this.xbrowser.LargeImageList = this.xlargeimagelist;
-            this.xbrowser.Location = new System.Drawing.Point(0, 35);
+            this.xbrowser.Location = new System.Drawing.Point(0, 38);
             this.xbrowser.MenuLabelColumns = "kolommen";
             this.xbrowser.MenuLabelGroupBy = "Groeperen op \'{0}\'";
             this.xbrowser.MenuLabelLockGroupingOn = "Vergrending groupering op \'{0}\'";
@@ -198,7 +211,7 @@
             this.xbrowser.ShowCommandMenuOnRightClick = true;
             this.xbrowser.ShowItemCountOnGroups = true;
             this.xbrowser.ShowItemToolTips = true;
-            this.xbrowser.Size = new System.Drawing.Size(892, 525);
+            this.xbrowser.Size = new System.Drawing.Size(892, 522);
             this.xbrowser.SmallImageList = this.xsmallImageList;
             this.xbrowser.TabIndex = 6;
             this.xbrowser.TileSize = new System.Drawing.Size(300, 96);
@@ -348,5 +361,6 @@
         private System.Windows.Forms.ToolStripTextBox xsearchbox;
         private System.Windows.Forms.ToolStripLabel xstatus;
         private System.Windows.Forms.ContextMenuStrip xContextMenu;
+        private System.Windows.Forms.ToolStripButton xrefreshdirectory;
     }
 }

@@ -16,7 +16,6 @@ namespace Forms.FileBrowser
         public string Type { get; private set; }
         public long Size { get; private set; }
         public bool IsDirectory { get; private set; }
-        public Image Icon => GetIcon();
         public string FriendlySize { get; private set; }
         public DateTime LastChanged { get;private set; }
 
@@ -46,12 +45,12 @@ namespace Forms.FileBrowser
             }
         }
 
-        public Image GetIcon()
+        public Image GetIcon(Size size)
         {
             try
             {
                 if (!Exists()) return null;
-                return WindowsThumbnailProvider.GetThumbnail(Path, 96, 96, ThumbnailOptions.BiggerSizeOk);
+                return WindowsThumbnailProvider.GetThumbnail(Path,size.Width, size.Height, ThumbnailOptions.BiggerSizeOk);
             }
             catch(Exception ex)
             {
@@ -160,7 +159,7 @@ namespace Forms.FileBrowser
                     return FileAttributes.Normal;
                 return  File.GetAttributes(Path);
             }
-            catch(Exception ex)
+            catch
             {
                 return FileAttributes.Normal;
             }

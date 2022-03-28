@@ -274,7 +274,7 @@ namespace ProductieManager
                             break;
                         }
                     }
-                    catch (Exception e)
+                    catch
                     {
                         // ignored
                     }
@@ -366,7 +366,6 @@ namespace ProductieManager
                     InitBootDir();
                     xversie.Text = $@"Versie {ProductVersion}";
                     productieView1.LoadManager(_bootDir,true);
-                    productieView1.ShowUnreadMessage = true;
                 }
                 catch (Exception e)
                 {

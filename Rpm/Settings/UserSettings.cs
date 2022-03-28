@@ -50,6 +50,13 @@ namespace Rpm.Settings
         public bool PreviewShown { get; set; }
         public bool WelcomeShown { get; set; }
 
+        #region Meldingen
+        public bool ToonNieweOpmerkingMelding { get; set; } = true;
+        public bool ToonNieweChatBerichtMelding { get; set; } = true;
+        public bool ToonArtikelRecordMeldingen { get; set; } = true;
+        public bool ToonNieweBijlageMelding { get; set; } = true;
+        #endregion Meldingen
+
         #region "Methods"
 
         public List<TileInfoEntry> GetAllDefaultEntries(bool incextra)

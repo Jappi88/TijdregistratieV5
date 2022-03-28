@@ -23,6 +23,7 @@ namespace Rpm.MeldingCenter
         public string ActionID { get; set; }
         public int ActionViewIndex { get; set; }
         public string MessageID { get; set; }
+        public string MessageType { get; set; }
         public bool ShowMelding()
         {
             try
@@ -113,9 +114,32 @@ namespace Rpm.MeldingCenter
                 string.Equals(x, Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase));
         }
 
+        public bool IsAllowed()
+        {
+            bool flag = Manager.Opties != null && Manager.LogedInGebruiker is
+                { AccesLevel: >= AccesType.ProductieBasis };
+            if (flag && !string.IsNullOrEmpty(MessageType))
+            {
+                switch (MessageType.ToLower().Trim())
+                {
+                    case "toevoegen":
+                        break;
+                    case "wijzig":
+                        break;
+                    case "bijlage":
+                        flag &= Manager.Opties.ToonNieweBijlageMelding;
+                        break;
+                    case "melding":
+                        break;
+                }
+            }
+
+            return flag;
+        }
+
         public bool ShouldShow()
         {
-            return DateAdded.AddDays(7) > DateTime.Now && ForMe() && !HasRead();
+            return IsAllowed() && DateAdded.AddDays(2) > DateTime.Now && ForMe() && !HasRead();
         }
 
         public void UpdateRead(bool read)

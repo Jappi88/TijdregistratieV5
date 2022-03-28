@@ -1462,6 +1462,7 @@ namespace Controls
                     {
                         var name = Manager.Opties == null ? "Default" : Manager.Opties.Username;
                         Text = @$"ProductieManager [{name}]";
+                        ShowUnreadMessage = Manager.Opties?.ToonNieweChatBerichtMelding ?? false;
                         tileMainView1.SetBackgroundImage(Manager.Opties?.BackgroundImagePath);
                         tileMainView1.LoadTileViewer();
                         if (!string.IsNullOrEmpty(Manager.Opties?.LastShownTabName))
@@ -2466,6 +2467,7 @@ namespace Controls
                     xchatformbutton.Image = Resources.conversation_chat_32x321;
                 }
 
+                if (Manager.Opties is not { ToonNieweChatBerichtMelding: true }) return;
                 if (_chatform != null)
                 {
                     if (_chatform.WindowState == FormWindowState.Minimized)
@@ -2476,7 +2478,7 @@ namespace Controls
                     _chatform.BringToFront();
                     _chatform.Focus();
                 }
-                else if (unread.Count > 0 && ShowUnreadMessage)
+                else if (unread.Count > 0)
                 {
                     if (_unreadMessages is {IsDisposed: false})
                     {
@@ -2551,6 +2553,7 @@ namespace Controls
         {
             try
             {
+                
                 if (Manager.Opmerkingen?.OpmerkingenLijst == null) return;
                 var unread = Manager.Opmerkingen.GetUnreadNotes();
                 if (unread.Count > 0)
@@ -2564,7 +2567,7 @@ namespace Controls
                 {
                     xopmerkingentoolstripbutton.Image = Resources.notes_office_page_papers_32x32;
                 }
-
+                if (Manager.Opties is not { ToonNieweOpmerkingMelding: true }) return;
                 if (_opmerkingform != null)
                 {
                     if (_opmerkingform.WindowState == FormWindowState.Minimized)
@@ -2575,7 +2578,7 @@ namespace Controls
                     _opmerkingform.BringToFront();
                     _opmerkingform.Focus();
                 }
-                else if (unread.Count > 0 && ShowUnreadMessage)
+                else if (unread.Count > 0)
                 {
                     Application.OpenForms["SplashScreen"]?.Close();
                     var xv = unread.Count == 1 ? "opmerking" : "opmerkingen";
@@ -2938,6 +2941,7 @@ namespace Controls
             if (string.IsNullOrEmpty(id))
                 return;
             var bl = new BijlageForm(id);
+            bl.TopMost = true;
             var xforms = Application.OpenForms.Cast<Form>().FirstOrDefault(x => x is BijlageForm b && b.Equals(bl));
             if (xforms != null)
             {

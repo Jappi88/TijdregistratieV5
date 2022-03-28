@@ -537,7 +537,7 @@ namespace Rpm.SqlLite
                     fs.Close();
                     return xreturn;
                 }
-                catch (Exception e)
+                catch
                 {
                     xreturn = default;
                     if (xbreak && monitorcorrupted)
@@ -628,7 +628,7 @@ namespace Rpm.SqlLite
                 {
                     return GetInstanceFromFile<T>(path, monitorcorrupted);
                 }
-                catch (Exception e)
+                catch
                 {
                     return default;
                 }
