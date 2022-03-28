@@ -1,7 +1,4 @@
-﻿
-using TheArtOfDev.HtmlRenderer.WinForms;
-
-namespace ProductieManager.Forms
+﻿namespace ProductieManager.Forms
 {
     partial class ProductieChatUI
     {

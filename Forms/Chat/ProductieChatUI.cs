@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using ContentAlignment = System.Drawing.ContentAlignment;
@@ -523,6 +522,7 @@ namespace ProductieManager.Forms
                         if (this.Disposing || this.IsDisposed) return;
                         ProductieChat.RaiseNewMessageEvent = false;
                         UpdateMessages(messages, scrolltoend, selected);
+                        _selecteduser = selected;
                         ProductieChat.RaiseNewMessageEvent = true;
                     }
                     else
