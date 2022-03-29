@@ -2148,6 +2148,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\folder_windows_14566.png" />
     <None Include="Resources\word_icon_130070_32x32.png" />
     <None Include="Resources\folder_636_32x32.png" />
     <None Include="Resources\viewmorecolumns_6276.png" />

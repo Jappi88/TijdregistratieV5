@@ -380,6 +380,19 @@ namespace Forms.FileBrowser
             }
         }
 
+        private void OpenInWindowsPhoto_Click(object sender, EventArgs e)
+        {
+            if (xbrowser.SelectedObject is BrowseEntry ent)
+            {
+                if (ent.IsDirectory)
+                    Navigate(ent.Path);
+                else
+                {
+                    Process.Start(ent.Path);
+                }
+            }
+        }
+
         private void OpenImage(string image)
         {
             try
@@ -1059,6 +1072,13 @@ namespace Forms.FileBrowser
                 xopen.ShowShortcutKeys = true;
                 xopen.ShortcutKeyDisplayString = "Enter";
                 xContextMenu.Items.Add(xopen);
+                if (xbrowser.SelectedObject is BrowseEntry selected && selected.Path.IsImageFile())
+                {
+                    var xopenwin = new ToolStripMenuItem("Openen In Windows Photo", Resources.folder_windows_14566, OpenInWindowsPhoto_Click);
+                    xopenwin.ShowShortcutKeys = true;
+                    xopenwin.ShortcutKeys = Keys.Control | Keys.Enter;
+                    xContextMenu.Items.Add(xopenwin);
+                }
                 xContextMenu.Items.Add(new ToolStripSeparator());
                 if (!InitNavigationContextMenu()) return false;
                 bool flag = CanEdit();
