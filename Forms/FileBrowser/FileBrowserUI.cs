@@ -11,6 +11,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Forms.ImageViewer;
 using Rpm.Various;
 
 namespace Forms.FileBrowser
@@ -361,10 +362,10 @@ namespace Forms.FileBrowser
                         var exe = new Executable().IsExecutable(ent.Path);
                         if (exe == Executable.ExecutableType.Unknown)
                         {
-                            //if (ent.Path.IsImageFile())
-                            //    OpenImage(ent.Path);
-                            ////else
-                            Process.Start(ent.Path);
+                            if (ent.Path.IsImageFile())
+                                OpenImage(ent.Path);
+                            else
+                                Process.Start(ent.Path);
                         }
                         else
                             XMessageBox.Show(this, "Het is niet toegestaan om een Uitvoerbaar bestand te openen!",
@@ -381,15 +382,17 @@ namespace Forms.FileBrowser
 
         private void OpenImage(string image)
         {
-            ProcessStartInfo processInfo = new ProcessStartInfo(image,
-                @"%SystemRoot%\System32\rundll32.exe % ProgramFiles %\Windows Photo Viewer\PhotoViewer.dll, ImageView_Fullscreen %1")
+            try
             {
-                WorkingDirectory = Path.GetDirectoryName(image) ?? string.Empty,
-                FileName = image,
-                Verb = "OPEN"
-            };
-            processInfo.UseShellExecute = true;
-            Process.Start(processInfo);
+                var imageform = new ImageViewerForm(image);
+                imageform.StartPosition = FormStartPosition.CenterScreen;
+                imageform.Location = new (MousePosition.X, MousePosition.Y);
+                imageform.ShowDialog();
+            }
+            catch (Exception e)
+            {
+                Process.Start(image);
+            }
         }
 
         private void xbrowser_CellEditStarting(object sender, CellEditEventArgs e)
@@ -1357,7 +1360,7 @@ namespace Forms.FileBrowser
                         var f = files.FirstOrDefault();
                         f?.Delete();
                         xbrowser.RemoveObject(f);
-                        ClearPathHistory(f.Path);
+                        ClearPathHistory(f?.Path);
                     }
                     else
                     {
@@ -1374,6 +1377,7 @@ namespace Forms.FileBrowser
                             }
                             catch
                             {
+                                // ignored
                             }
                         }
                     }

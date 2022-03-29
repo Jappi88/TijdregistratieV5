@@ -514,6 +514,7 @@ namespace ProductieManager.Forms
                 try
                 {
                     var selected = SelectedUser();
+                    bool seltext = xchattextbox.Focused;
                     if (selected != null)
                     {
                         //load conversation
@@ -530,6 +531,8 @@ namespace ProductieManager.Forms
                         xchatpanel.Controls.Clear();
                         xchatpanel.Invalidate();
                     }
+                    if (seltext)
+                        xchattextbox.Focus();
                 }
                 catch (Exception e)
                 {

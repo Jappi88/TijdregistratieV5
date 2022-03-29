@@ -32,7 +32,12 @@ namespace ProductieManager.Rpm.Misc
             return bytes;
         }
 
-        public static Bitmap ResizeImage(this Image image, int width, int height)
+        public static Bitmap ResizeImage(this Image image, Size size)
+        {
+            return image.ResizeImage(size.Width, size.Height);
+        }
+
+    public static Bitmap ResizeImage(this Image image, int width, int height)
         {
             if (image == null) return null;
             var destRect = new Rectangle(0, 0, width, height);

@@ -54,10 +54,11 @@
     <LangVersion>9.0</LangVersion>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Debug\ProductieManager.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -73,9 +74,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
-    <DocumentationFile>
-    </DocumentationFile>
-    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
+    <DocumentationFile>bin\Release\ProductieManager.xml</DocumentationFile>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>ProductieManager.Program</StartupObject>
@@ -443,6 +443,20 @@
       <DependentUpon>FileBrowserUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FileBrowser\HistoryEntry.cs" />
+    <Compile Include="Forms\ImageViewer\ImageBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\ImageViewer\ImageBox.designer.cs">
+      <DependentUpon>ImageBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ImageViewer\ImageBoxGridDisplayMode.cs" />
+    <Compile Include="Forms\ImageViewer\ImageBoxGridScale.cs" />
+    <Compile Include="Forms\ImageViewer\ImageViewerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ImageViewer\ImageViewerForm.Designer.cs">
+      <DependentUpon>ImageViewerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Rpm\Mailing\EmailServer.cs" />
     <Compile Include="Rpm\MeldingCenter\MeldingBeheer.cs" />
     <Compile Include="Rpm\MeldingCenter\MeldingEntry.cs" />
@@ -1587,6 +1601,9 @@
     <EmbeddedResource Include="Forms\FileBrowser\FileBrowserUI.resx">
       <DependentUpon>FileBrowserUI.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ImageViewer\ImageViewerForm.resx">
+      <DependentUpon>ImageViewerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Indeling\WerkplaatsIndelingForm.resx">
       <DependentUpon>WerkplaatsIndelingForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -2469,6 +2486,7 @@
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Code to merge the assemblies into one:setup.exe -->
 </Project>
