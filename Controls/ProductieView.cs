@@ -2941,7 +2941,6 @@ namespace Controls
             if (string.IsNullOrEmpty(id))
                 return;
             var bl = new BijlageForm(id);
-            bl.TopMost = true;
             var xforms = Application.OpenForms.Cast<Form>().FirstOrDefault(x => x is BijlageForm b && b.Equals(bl));
             if (xforms != null)
             {

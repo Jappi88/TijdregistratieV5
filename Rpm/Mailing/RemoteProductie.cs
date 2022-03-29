@@ -69,7 +69,7 @@ namespace Rpm.Mailing
                                 var xactionids = new List<string>();
                                 foreach(var log in xprods)
                                 {
-                                    var xend = log.IndexOf("]");
+                                    var xend = log.IndexOf("]", StringComparison.Ordinal);
                                     if(xend > -1)
                                         xactionids.Add(log.Substring(1, xend - 1));
                                 }
@@ -102,10 +102,10 @@ namespace Rpm.Mailing
                             }
                             foreach (var x in att)
                             {
-                                var xname = x?.FileName ?? x.ContentDisposition?.FileName;
+                                var xname = (x?.FileName ?? x?.ContentDisposition?.FileName)?.Trim();
                                 if (string.IsNullOrEmpty(xname))
                                     continue;
-                                if (BijlageBeheer.UpdateBijlage(x2, GetMessageData(x), xname))
+                                if (BijlageBeheer.UpdateBijlage(x2, GetMessageData(x), xname.FirstCharToUpper()))
                                 {
                                     done++;
                                     log.AppendLine($"'{xname}' toegevoegd als bijlage in \\{x2}");
@@ -150,8 +150,7 @@ namespace Rpm.Mailing
                             if (string.IsNullOrEmpty(ext) || ext.ToLower() != ".pdf")
                                 continue;
                             var filename = Path.Combine(Path.GetTempPath(), "tempproductie" + ext);
-                            int count = 0;
-                           
+
                             if(SaveMessageData(x,filename))
                             {
                                 var msg = Manager.AddProductie(filename, true, true).Result;
@@ -161,7 +160,6 @@ namespace Rpm.Mailing
                                     {
                                         if ((m.MessageType == MsgType.Success || m.MessageType == MsgType.Info) && !string.IsNullOrEmpty(m.ProductieNummer))
                                         {
-                                            count++;
                                             xlog.AppendLine(m.Message);
                                             ids.Add(m.ProductieNummer);
                                         }

@@ -61,6 +61,7 @@ namespace Forms.FileBrowser
 
         public void Rename(string newname)
         {
+            if (string.IsNullOrEmpty(Path)) return;
             var xxt = IsDirectory? "" : System.IO.Path.GetExtension(Path);
             if (!IsDirectory && System.IO.Path.HasExtension(newname))
             {

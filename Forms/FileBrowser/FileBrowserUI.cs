@@ -32,7 +32,7 @@ namespace Forms.FileBrowser
         public FileBrowserUI()
         {
             InitializeComponent();
-            ((OLVColumn)xbrowser.Columns[0]).ImageGetter = GetIndexImage;
+            ((OLVColumn) xbrowser.Columns[0]).ImageGetter = GetIndexImage;
             InitViewStyles(xViewStyle);
         }
 
@@ -288,6 +288,7 @@ namespace Forms.FileBrowser
                         xsmallImageList.Images.RemoveAt(xindex);
                         xlargeimagelist.Images.RemoveAt(xindex);
                     }
+                    UpdateBrowserEntry(brw);
                 }
                 catch (Exception ex)
                 {
@@ -338,9 +339,9 @@ namespace Forms.FileBrowser
         {
             if (e.ClickedItem.Tag is View v)
             {
-                bool check = !SelectedToolstripItem()?.Equals((ToolStripMenuItem)e.ClickedItem) ?? true;
+                bool check = !SelectedToolstripItem()?.Equals((ToolStripMenuItem) e.ClickedItem) ?? true;
                 if (!check) return;
-                CheckViewToolStripCheck((ToolStripMenuItem)e.ClickedItem, check);
+                CheckViewToolStripCheck((ToolStripMenuItem) e.ClickedItem, check);
                 xbrowser.View = v;
                 if (xbrowser.Items.Count > 0)
                     xbrowser.RedrawItems(0, xbrowser.Items.Count - 1, false);
@@ -363,7 +364,7 @@ namespace Forms.FileBrowser
                             //if (ent.Path.IsImageFile())
                             //    OpenImage(ent.Path);
                             ////else
-                                Process.Start(ent.Path);
+                            Process.Start(ent.Path);
                         }
                         else
                             XMessageBox.Show(this, "Het is niet toegestaan om een Uitvoerbaar bestand te openen!",
@@ -380,7 +381,8 @@ namespace Forms.FileBrowser
 
         private void OpenImage(string image)
         {
-            ProcessStartInfo processInfo = new ProcessStartInfo(image, @"%SystemRoot%\System32\rundll32.exe % ProgramFiles %\Windows Photo Viewer\PhotoViewer.dll, ImageView_Fullscreen %1")
+            ProcessStartInfo processInfo = new ProcessStartInfo(image,
+                @"%SystemRoot%\System32\rundll32.exe % ProgramFiles %\Windows Photo Viewer\PhotoViewer.dll, ImageView_Fullscreen %1")
             {
                 WorkingDirectory = Path.GetDirectoryName(image) ?? string.Empty,
                 FileName = image,
@@ -668,7 +670,7 @@ namespace Forms.FileBrowser
                     {
                         var xxitem = new ToolStripMenuItem(Enum.GetName(typeof(View), value));
                         xxitem.Tag = value;
-                        xxitem.Checked = xbrowser.View == (View)value;
+                        xxitem.Checked = xbrowser.View == (View) value;
                         xitem.DropDownItems.Add(xxitem);
                     }
                 }
@@ -680,7 +682,7 @@ namespace Forms.FileBrowser
                     {
                         var xxitem = new ToolStripMenuItem(Enum.GetName(typeof(View), value));
                         xxitem.Tag = value;
-                        xxitem.Checked = xbrowser.View == (View)value;
+                        xxitem.Checked = xbrowser.View == (View) value;
                         tb.DropDownItems.Add(xxitem);
                     }
                 }
@@ -827,9 +829,11 @@ namespace Forms.FileBrowser
             if (e.Handled) return true;
             return base.ProcessCmdKey(ref msg, keyData);
         }
+
         #endregion This Methods
 
         #region Drag&Drop
+
         private bool CanDrop(object dataobject, DropTargetLocation location, OLVListItem target)
         {
             if (!CanEdit()) return false;
@@ -972,6 +976,7 @@ namespace Forms.FileBrowser
                     if (xpar.ToLower().Contains(RootPath.ToLower()))
                         bwr.MoveTo(Path.Combine(path, Path.GetFileName(item)));
                     else bwr.CopyTo(Path.Combine(path, Path.GetFileName(item)), true);
+                    UpdateBrowserEntry(bwr);
                 }
             }
             catch (Exception ex)
@@ -1023,6 +1028,7 @@ namespace Forms.FileBrowser
         #endregion Drag&Drop
 
         #region ContextMenu
+
         private bool InitContextMenu()
         {
             try
@@ -1097,7 +1103,7 @@ namespace Forms.FileBrowser
                         xContextMenu.Items.Add(home);
                     }
 
-                    
+
                 }
 
                 var refresh = new ToolStripMenuItem("Refreshen", Resources.refresh_arrow_1546,
@@ -1175,11 +1181,71 @@ namespace Forms.FileBrowser
             }
         }
 
+        private void Xnew_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            try
+            {
+                string name = string.Empty;
+                string filename = string.Empty;
+                switch (e.ClickedItem.Text.ToLower())
+                {
+                    case "map":
+                        name = "Nieuwe map";
+                        filename = Functions.GetAvailibleFilepath(this.CurrentPath, name);
+                        Microsoft.VisualBasic.FileIO.FileSystem.CreateDirectory(filename);
+                        var bwr = new BrowseEntry(filename);
+                        UpdateBrowserEntry(bwr);
+                        EditModel(bwr);
+                        return;
+                    case "word-document":
+                        name = "Nieuw - Word-document.docx";
+                        break;
+                    case "tekstdocument":
+                        name = "Nieuw - Tekstdocument.txt";
+                        break;
+                    case "excel-werkblad":
+                        name = "Nieuw - Excel-werkblad.xlsx";
+                        filename = Functions.GetAvailibleFilepath(this.CurrentPath, name);
+                        File.WriteAllBytes(filename, Resources.Nieuw___Microsoft_Excel_werkblad);
+                        var xbwr = new BrowseEntry(filename);
+                        UpdateBrowserEntry(xbwr);
+                        EditModel(xbwr);
+                        return;
+                    case "bitmapafbeelding":
+                        name = "Nieuw - Bitmapafbeelding.bmp";
+                        break;
+                }
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    filename = Functions.GetAvailibleFilepath(this.CurrentPath, name);
+                    using (var fs = File.Create(filename))
+                        fs.Close();
+                    var bwr = new BrowseEntry(filename);
+                    UpdateBrowserEntry(bwr);
+                    EditModel(bwr);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private void xContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = !InitContextMenu();
+        }
+
+        #endregion ContextMenu
+
+        #region ClipBoard Methods
+
         private DataObject GetDataObject()
         {
             try
             {
-                return Clipboard.ContainsFileDropList() ? (DataObject)Clipboard.GetDataObject() : _clipboard;
+                return Clipboard.ContainsFileDropList() ? (DataObject) Clipboard.GetDataObject() : _clipboard;
             }
             catch (Exception ex)
             {
@@ -1289,7 +1355,7 @@ namespace Forms.FileBrowser
                     if (files.Count == 1)
                     {
                         var f = files.FirstOrDefault();
-                        f.Delete();
+                        f?.Delete();
                         xbrowser.RemoveObject(f);
                         ClearPathHistory(f.Path);
                     }
@@ -1322,62 +1388,6 @@ namespace Forms.FileBrowser
             }
         }
 
-        private void Xnew_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            try
-            {
-                string name = string.Empty;
-                string filename = string.Empty;
-                switch (e.ClickedItem.Text.ToLower())
-                {
-                    case "map":
-                        name = "Nieuwe map";
-                        filename = Functions.GetAvailibleFilepath(this.CurrentPath, name);
-                        Microsoft.VisualBasic.FileIO.FileSystem.CreateDirectory(filename);
-                        var bwr = new BrowseEntry(filename);
-                        UpdateBrowserEntry(bwr);
-                        EditModel(bwr);
-                        return;
-                    case "word-document":
-                        name = "Nieuw - Word-document.docx";
-                        break;
-                    case "tekstdocument":
-                        name = "Nieuw - Tekstdocument.txt";
-                        break;
-                    case "excel-werkblad":
-                        name = "Nieuw - Excel-werkblad.xlsx";
-                        filename = Functions.GetAvailibleFilepath(this.CurrentPath, name);
-                        File.WriteAllBytes(filename, Resources.Nieuw___Microsoft_Excel_werkblad);
-                        var xbwr = new BrowseEntry(filename);
-                        UpdateBrowserEntry(xbwr);
-                        EditModel(xbwr);
-                        return;
-                    case "bitmapafbeelding":
-                        name = "Nieuw - Bitmapafbeelding.bmp";
-                        break;
-                }
-
-                if (!string.IsNullOrEmpty(name))
-                {
-                    filename = Functions.GetAvailibleFilepath(this.CurrentPath, name);
-                    using (var fs = File.Create(filename))
-                        fs.Close();
-                    var bwr = new BrowseEntry(filename);
-                    UpdateBrowserEntry(bwr);
-                    EditModel(bwr);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        private void xContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            e.Cancel = !InitContextMenu();
-        }
-
-        #endregion ContextMenu
+        #endregion
     }
 }

@@ -90,10 +90,10 @@ namespace Rpm.Productie
                     int xrestaantal = aantal - geproduceert;
                     var x4 = xrestaantal == 1 ? "product" : "producten";
                     var x5 = xrestaantal == 1 ? "is" : "zijn";
-                    var x6 = "<u>meer</u>";
+                    var x6 = "<u>minder</u>";
                     if(xrestaantal < 0)
                     {
-                        x6 = "<u>minder</u>";
+                        x6 = "<u>meer</u>";
                         xrestaantal = -xrestaantal;
                     }
                     if (xrestaantal > 0)
