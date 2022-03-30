@@ -1,9 +1,11 @@
 ﻿using Forms.MetroBase;
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using MetroFramework.Components;
 
 namespace Forms.ImageViewer
 {
@@ -18,8 +20,8 @@ namespace Forms.ImageViewer
         public ImageViewerForm(string filename)
         {
             InitializeComponent();
+            this.StyleManager = metroStyleManager1;
             LoadedFile = filename;
-            LoadImages();
         }
 
         private void LoadImages()
@@ -53,7 +55,7 @@ namespace Forms.ImageViewer
                 XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
 
-            xFlowImagePanel.ResumeLayout(false);
+            xFlowImagePanel.ResumeLayout(true);
         }
 
         public void LoadImage(string filename)
@@ -63,7 +65,31 @@ namespace Forms.ImageViewer
                 var img = Image.FromFile(filename);
                 if (img == null)
                     throw new Exception($"'{filename}' is geen geldige afbeelding");
+               
+                if (img.PropertyIdList.Contains(0x0112))
+                {
+                    PropertyItem propOrientation = img.GetPropertyItem(0x0112);
+                    short orientation = BitConverter.ToInt16(propOrientation.Value, 0);
+                    if (orientation == 6)
+                    {
+                        img.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                    }
+                    else if (orientation == 8)
+                    {
+                        img.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                    }
+                }
+
+                bool flag = (img.Width > this.Width - 40 ||
+                             img.Height > this.Height - 80);
+                xMainImage.AutoScroll = false;
                 xMainImage.Image = img;
+                if (flag)
+                {
+                    xMainImage.ZoomToFit();
+                }
+                else xMainImage.Zoom = 80;
+                xMainImage.AutoScroll = true;
                 this.Text = $"{Path.GetFileName(filename)}";
                 SelectImageBox(filename);
                 InitNavigationButton();
@@ -87,6 +113,8 @@ namespace Forms.ImageViewer
                 {
                     fs.BackColor = Color.AliceBlue;
                     SelectedImage = fs;
+                    xFlowImagePanel.ScrollControlIntoView(fs);
+                    fs.Focus();
                 }
             }
             catch (Exception e)
@@ -226,14 +254,61 @@ namespace Forms.ImageViewer
             try
             {
                 var rec =  new Rectangle(0,60,60, xMainImage.Height);
-                xleftpanel.Visible = rec.Contains(e.Location) && CanNavigateBack();
+                xnavigateleft.Visible = rec.Contains(e.Location) && CanNavigateBack();
                 rec = new Rectangle(this.Width - 60, 60,60 , xMainImage.Height);
-                xrechtpanel.Visible = rec.Contains(e.Location) && CanNavigateForward();
+                xnavigateright.Visible = rec.Contains(e.Location) && CanNavigateForward();
+                xleftbutton.Enabled = CanNavigateBack();
+                xrechtbutton.Enabled = CanNavigateForward();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
+        }
+
+        private void xrotaterecht_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                xMainImage.Image.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                xMainImage.Invalidate();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        private void xrotateleft_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                xMainImage.Image.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                xMainImage.Invalidate();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        private void xopeninexplorer_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(LoadedFile)) return;
+                if (!File.Exists(LoadedFile)) return;
+                System.Diagnostics.Process.Start(LoadedFile);
+            }
+            catch (Exception exception)
+            {
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
+            }
+        }
+
+        private void ImageViewerForm_Shown(object sender, EventArgs e)
+        {
+            LoadImages();
         }
     }
 }

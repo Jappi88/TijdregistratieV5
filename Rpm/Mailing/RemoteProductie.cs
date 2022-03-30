@@ -113,7 +113,7 @@ namespace Rpm.Mailing
                                 if (BijlageBeheer.UpdateBijlage(id, GetMessageData(x), xname.FirstCharToUpper()))
                                 {
                                     done++;
-                                    log.AppendLine($"'{xname}' toegevoegd als bijlage in \\{x2}");
+                                    log.AppendLine($"'{xname}' toegevoegd als bijlage in {id}");
                                 }
                             }
                             if(done > 0 && Manager.Meldingen?.Database != null && !Manager.Meldingen.IsDisposed)

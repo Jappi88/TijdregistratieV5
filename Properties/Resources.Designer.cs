@@ -2326,6 +2326,26 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Rotate_Left_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("Rotate_Left-32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Rotate_Right_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("Rotate_Right-32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap schedule_32_32 {
             get {
                 object obj = ResourceManager.GetObject("schedule_32_32", resourceCulture);
