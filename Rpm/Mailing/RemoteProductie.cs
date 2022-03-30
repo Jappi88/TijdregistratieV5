@@ -90,14 +90,19 @@ namespace Rpm.Mailing
                             var log = new StringBuilder();
                             int done = 0;
                             var id = x2;
-                            if (id.Contains("\\") || id.Contains("/"))
+                            if (x2.Contains("\\") || x2.Contains("/"))
                             {
-                                var xindex = id.IndexOf("\\", StringComparison.CurrentCultureIgnoreCase);
+                                var xindex = x2.IndexOf("\\", StringComparison.CurrentCultureIgnoreCase);
                                 if (xindex == -1)
-                                    xindex = id.IndexOf("/", StringComparison.CurrentCultureIgnoreCase);
+                                    xindex = x2.IndexOf("/", StringComparison.CurrentCultureIgnoreCase);
                                 if (xindex > -1)
                                 {
-                                    id = id.Substring(0, xindex);
+                                    id = x2.Substring(0, xindex).FirstCharToUpper();
+                                    if (xindex + 1 < x2.Length)
+                                    {
+                                        id = Path.Combine(id,
+                                            x2.Substring(xindex + 1, x2.Length - (xindex + 1)).FirstCharToUpper());
+                                    }
                                 }
                             }
                             foreach (var x in att)
@@ -105,7 +110,7 @@ namespace Rpm.Mailing
                                 var xname = (x?.FileName ?? x?.ContentDisposition?.FileName)?.Trim();
                                 if (string.IsNullOrEmpty(xname))
                                     continue;
-                                if (BijlageBeheer.UpdateBijlage(x2, GetMessageData(x), xname.FirstCharToUpper()))
+                                if (BijlageBeheer.UpdateBijlage(id, GetMessageData(x), xname.FirstCharToUpper()))
                                 {
                                     done++;
                                     log.AppendLine($"'{xname}' toegevoegd als bijlage in \\{x2}");
