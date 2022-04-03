@@ -1,6 +1,5 @@
 ﻿using MetroFramework;
 using ProductieManager.Rpm.Misc;
-using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
 using System;
@@ -66,19 +65,27 @@ namespace Rpm.MeldingCenter
                 if (Manager.Database != null)
                 {
                     string[] ids = ActionID.Split(';');
-                    foreach (string id in ids)
+                    if (ids.Length > 0)
                     {
-                        var werk = Werk.FromPath(id.Trim());
-                        if (werk.IsValid)
+                        var bws = Manager.Database.GetBewerkingen(ViewState.Gestart, true, null, null,false).Result;
+                        foreach (string id in ids)
                         {
-                            Manager.FormulierActie(new object[] { werk.Formulier, werk.Bewerking, true, ActionViewIndex }, MainAktie.OpenProductie);
-                            continue;
-                        }
-                        var bw = Manager.Database.GetBewerkingen(ViewState.Gestart, true, null, null).Result
-                            .FirstOrDefault(x => string.Equals(x.ArtikelNr, id, StringComparison.CurrentCultureIgnoreCase));
-                        if (bw != null)
-                        {
-                            Manager.FormulierActie(new object[] { bw.Parent, bw, true, ActionViewIndex }, MainAktie.OpenProductie);
+                            var werk = Werk.FromPath(id.Trim());
+                            if (werk.IsValid)
+                            {
+                                Manager.FormulierActie(
+                                    new object[] { werk.Formulier, werk.Bewerking, true, ActionViewIndex },
+                                    MainAktie.OpenProductie);
+                                continue;
+                            }
+
+                            var bw = bws.FirstOrDefault(x =>
+                                string.Equals(x.ArtikelNr, id, StringComparison.CurrentCultureIgnoreCase));
+                            if (bw != null)
+                            {
+                                Manager.FormulierActie(new object[] { bw.Parent, bw, true, ActionViewIndex },
+                                    MainAktie.OpenProductie);
+                            }
                         }
                     }
                 }
@@ -173,7 +180,7 @@ namespace Rpm.MeldingCenter
             xhash ^= Body?.GetHashCode() ?? 0;
             xhash ^= Subject?.GetHashCode() ?? 0;
             string xrec = string.Join(", ", Recievers);
-            xhash ^= xrec?.GetHashCode() ?? 0;
+            xhash ^= xrec.GetHashCode();
             xhash ^= Action?.GetHashCode() ?? 0;
             xhash ^= ActionID?.GetHashCode() ?? 0;
             xhash ^= MessageID?.GetHashCode()??0;

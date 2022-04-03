@@ -46,8 +46,14 @@ namespace FolderSync
             DirectorySecurity security = info.GetAccessControl();
             WindowsIdentity wi = WindowsIdentity.GetCurrent();
 
-            security.AddAccessRule(new FileSystemAccessRule(wi.User, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
-            security.AddAccessRule(new FileSystemAccessRule(wi.User, FileSystemRights.FullControl, InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow));
+            if (wi.User != null)
+            {
+                security.AddAccessRule(new FileSystemAccessRule(wi.User, FileSystemRights.FullControl,
+                    InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
+                security.AddAccessRule(new FileSystemAccessRule(wi.User, FileSystemRights.FullControl,
+                    InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow));
+            }
+
             info.SetAccessControl(security);
 
             File.SetAttributes(path, FileAttributes.Normal);

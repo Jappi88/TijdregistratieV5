@@ -15,6 +15,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Drawing.Printing;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -28,10 +29,17 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using NPOI.Util;
+using PdfSharp.Pdf;
 using Application = System.Windows.Forms.Application;
+using Font = System.Drawing.Font;
 using IWin32Window = System.Windows.Forms.IWin32Window;
+using PdfDocument = PdfSharp.Pdf.PdfDocument;
 using Size = System.Drawing.Size;
 
 namespace Rpm.Misc
@@ -1520,7 +1528,6 @@ namespace Rpm.Misc
             var tiff2 = new byte[] { 77, 77, 42 };         // TIFF
             var jpeg = new byte[] { 255, 216, 255, 224 }; // jpeg
             var jpeg2 = new byte[] { 255, 216, 255, 225 }; // jpeg canon
-
             if (bmp.SequenceEqual(bytes.Take(bmp.Length)))
                 return true;
 
@@ -1574,15 +1581,16 @@ namespace Rpm.Misc
             {
                 if (string.IsNullOrEmpty(filepath) || !File.Exists(filepath))
                     return false;
-                bool isvalid = false;
-                using FileStream fs = new FileStream(filepath, FileMode.Open,FileAccess.Read, FileShare.ReadWrite);
-                var data = new byte[8];
-                if (fs.Length >= data.Length)
-                {
-                    if (fs.Read(data, 0, data.Length) == data.Length)
-                        isvalid = data.IsImage();
+                bool isvalid = System.Web.MimeMapping.GetMimeMapping(filepath)
+                    .StartsWith("image", StringComparison.CurrentCultureIgnoreCase); //IsRecognisedImageFile(filepath);
+                //using FileStream fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                //var data = new byte[8];
+                //if (fs.Length >= data.Length)
+                //{
+                //    if (fs.Read(data, 0, data.Length) == data.Length)
+                //        isvalid = data.IsImage();
 
-                }
+                //}
 
                 return isvalid;
             }
@@ -1590,6 +1598,29 @@ namespace Rpm.Misc
             {
                 return false;
             }
+        }
+
+        public static bool IsRecognisedImageFile(string fileName)
+        {
+            string targetExtension = System.IO.Path.GetExtension(fileName);
+            if (String.IsNullOrEmpty(targetExtension))
+                return false;
+            else
+                targetExtension = "*" + targetExtension.ToLowerInvariant();
+
+            List<string> recognisedImageExtensions = new List<string>();
+
+            foreach (ImageCodecInfo imageCodec in System.Drawing.Imaging.ImageCodecInfo.GetImageEncoders())
+                recognisedImageExtensions.AddRange(imageCodec.FilenameExtension.ToLowerInvariant().Split(";".ToCharArray()));
+
+            foreach (string extension in recognisedImageExtensions)
+            {
+                if (extension.Equals(targetExtension))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public static bool IsDefault<T>(this T value) where T : struct
@@ -1930,6 +1961,101 @@ namespace Rpm.Misc
             return xreturn;
         }
 
+        public static bool CanPrint()
+        {
+            var printApplicationRegistryPaths = new[]
+            {
+                @"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Acrobat.exe",
+                @"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\AcroRD32.exe"
+            };
+            foreach (var printApplicationRegistryPath in printApplicationRegistryPaths)
+            {
+                using var regKeyAppRoot = Registry.LocalMachine.OpenSubKey(printApplicationRegistryPath);
+                if (regKeyAppRoot == null)
+                {
+                    continue;
+                }
+
+                var applicationPath = (string)regKeyAppRoot.GetValue(null); 
+
+                if (!string.IsNullOrEmpty(applicationPath))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static void PrintPDFWithAcrobat(string filepath)
+        {
+            var printApplicationRegistryPaths = new[]
+            {
+                @"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Acrobat.exe",
+                @"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\AcroRD32.exe"
+            };
+            string xpath = null;
+            foreach (var printApplicationRegistryPath in printApplicationRegistryPaths)
+            {
+                using (var regKeyAppRoot = Registry.LocalMachine.OpenSubKey(printApplicationRegistryPath))
+                {
+                    if (regKeyAppRoot == null)
+                    {
+                        continue;
+                    }
+
+                    var applicationPath = (string)regKeyAppRoot.GetValue(null);
+
+                    if (!string.IsNullOrEmpty(applicationPath))
+                    {
+                        xpath = applicationPath;
+                        break;
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(xpath)) return;
+            var xprint = new PrintDialog();
+            xprint.ShowHelp = false;
+            xprint.AllowSomePages = false;
+            xprint.AllowCurrentPage = false;
+            if (xprint.ShowDialog() == DialogResult.OK)
+            {
+                // Print to Acrobat
+                try
+                {
+                    string flagNoSplashScreen = "/s";
+                    string flagOpenMinimized = "/h";
+
+                    var flagPrintFileToPrinter =  $"/t \"{filepath}\" \"{xprint.PrinterSettings.PrinterName}\"";
+
+                    var args = $"{flagNoSplashScreen} {flagOpenMinimized} {flagPrintFileToPrinter}";
+
+                    var startInfo = new ProcessStartInfo
+                    {
+                        FileName = xpath,
+                        Arguments = args,
+                        CreateNoWindow = true,
+                        ErrorDialog = false,
+                        UseShellExecute = false,
+                        WindowStyle = ProcessWindowStyle.Hidden
+                    };
+
+                    var process = Process.Start(startInfo);
+                  
+                    if (process != null)
+                    {
+                        process.WaitForInputIdle();
+                        process.CloseMainWindow();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+
+        }
+
         public static string GetDefaultBrowserPath()
         {
             string defaultBrowserPath = null;
@@ -1986,36 +2112,6 @@ namespace Rpm.Misc
 
             }
             return path;
-        }
-
-        public static Task PrintPDFWithAcrobat(string pdffile)
-        {
-            return Task.Factory.StartNew(() =>
-            {
-                using PrintDialog Dialog = new PrintDialog();
-                Dialog.ShowDialog();
-
-                ProcessStartInfo printProcessInfo = new ProcessStartInfo()
-                {
-                    Verb = "print",
-                    CreateNoWindow = true,
-                    FileName = pdffile,
-                    WindowStyle = ProcessWindowStyle.Hidden
-                };
-
-                Process printProcess = new Process();
-                printProcess.StartInfo = printProcessInfo;
-                printProcess.Start();
-
-                printProcess.WaitForInputIdle();
-
-                Task.Delay(3000).Wait();
-
-                if (false == printProcess.CloseMainWindow())
-                {
-                    printProcess.Kill();
-                }
-            });
         }
 
         public static bool CleanupFilePath(this string filepath, string directorypath, string filename, bool move, bool rename)

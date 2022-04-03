@@ -12,13 +12,16 @@ using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.Various;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 using Various;
+using Comparer = Rpm.Various.Comparer;
 using Timer = System.Timers.Timer;
 
 namespace Controls
@@ -34,7 +37,7 @@ namespace Controls
         protected Timer _WaitTimer;
         //private object _selectedItem;
 
-        public bool ShowWaitUI { get; set; }
+        public bool ShowWaitUI { get; set; } = true;
 
         public ProductieListControl()
         {
@@ -114,11 +117,8 @@ namespace Controls
         {
             _WaitTimer?.Stop();
             if (Disposing || IsDisposed) return;
-            BeginInvoke(new Action(() =>
-            {
-                SetButtonEnable();
-                OnSelectedItemChanged();
-            }));
+            SetButtonEnable();
+            OnSelectedItemChanged();
         }
 
         #region Init Methods
@@ -217,110 +217,117 @@ namespace Controls
 
         private void SetButtonEnable()
         {
-            try
+            if (this.InvokeRequired)
             {
-                var enable1 = ProductieLijst.SelectedObjects is { Count: 1 };
-                var enable2 = ProductieLijst.SelectedObjects is { Count: > 1 };
-                var enable3 = enable1 || enable2;
-                var acces1 = Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieBasis };
-                //var acces2 = Manager.LogedInGebruiker != null &&
-                //Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieAdvance;
-
-                var bws = new List<Bewerking>();
-                if (ProductieLijst.SelectedObjects != null)
-                {
-                    if (!IsBewerkingView)
-                        foreach (var prod in ProductieLijst.SelectedObjects.Cast<ProductieFormulier>().ToArray())
-                        {
-                            if (prod.Bewerkingen == null) continue;
-                            var xbws = prod.Bewerkingen.Where(x => x.IsAllowed()).ToList();
-                            if (xbws.Count > 0)
-                                bws.AddRange(xbws);
-                        }
-                    else
-                        bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToList();
-                }
-
-                if (SelectedItem is Bewerking bw && acces1 &&
-                    bw.State is ProductieState.Gestart or ProductieState.Gestopt)
-                {
-                    xonderbreek.Enabled = true;
-                    var xont = bw.GetStoringen(true);
-                    xonderbreek.Image =
-                        xont.Length == 0 ? Resources.Stop_Hand__32x32 : Resources.playcircle_32x32;
-                }
-                else
-                {
-                    xonderbreek.Enabled = false;
-                }
-
-                var isprod = !IsBewerkingView;
-                var verwijderd1 = enable3 && isprod
-                    ? bws.All(x => x.State == ProductieState.Verwijderd)
-                    : bws.Any(x => x.State == ProductieState.Verwijderd);
-                var verwijderd2 = enable3 && bws.Any(x => x.State != ProductieState.Verwijderd);
-                var isgereed1 = enable3 && isprod
-                    ? bws.All(x => x.State == ProductieState.Gereed)
-                    : bws.Any(x => x.State == ProductieState.Gereed);
-                var isgereed2 = enable3 && bws.Any(x => x.State != ProductieState.Gereed);
-                var isgestart = enable3 && bws.Any(x => x.State == ProductieState.Gestart);
-                var isgestopt = enable3 && bws.Any(x => x.State == ProductieState.Gestopt);
-                var haspdf = bws.Count > 0 && bws[0].Parent != null && bws[0].Parent.ContainsProductiePdf();
-                //var nietbemand = bws.Any(x => !x.IsBemand);
-                xbewerkingeninfob.Enabled = ProductieLijst.Items.Count > 0;
-                xwijzigproductieinfo.Enabled = enable3 && acces1;
-                xtoonpdfb.Enabled = haspdf;
-                xverpakkingb.Enabled = enable1;
-                xopenproductieb.Enabled = enable3 && acces1 && verwijderd2;
-                xstartb.Enabled = acces1 && isgestopt;
-                xstopb.Enabled = acces1 && isgestart;
-                xwijzigformb.Enabled = enable1 && acces1;
-                xwerktijdenb.Enabled = acces1 && enable1;
-                xwerkplekkenb.Enabled = enable1 && acces1;
-                xaantalgemaaktb.Enabled = enable1 && acces1;
-                xverwijderb.Enabled = enable3 && acces1;
-                xzetterugb.Enabled = enable3 && acces1 && (verwijderd1 || isgereed1);
-                xmeldgereedb.Enabled = enable1 && acces1 && !verwijderd1 && !isgereed1;
-                xdeelgereedmeldingenb.Enabled = enable1 && acces1;
-                xonderbrekingb.Enabled = enable1 && acces1;
-                xmaterialenb.Enabled = enable1 && acces1;
-                xafkeurb.Enabled = enable1 && acces1;
-                xproductieInfob.Enabled = enable1;
-                xexportexcel.Enabled = enable3;
-                xaanbevolenpersb.Enabled = enable1;
-                xtoonTekening.Enabled = enable1;
-                xbijlage.Enabled = enable1 && acces1;
-                //set context menu
-                xopenProductieToolStripMenuItem.Enabled = enable3 && acces1 && verwijderd2;
-                xtoolstripstart.Enabled = acces1 && isgestopt;
-                xtoolstripstop.Enabled = acces1 && isgestart;
-                productieToolStripMenuItem.Enabled = enable1 && acces1;
-                xtoolstripbehwerktijden.Enabled = acces1 && enable1;
-                xtoolstripbehwerkplekken.Enabled = enable1 && acces1;
-                xwijzigToolStripMenuItem1.Enabled = enable3 && acces1;
-                xverwijdertoolstrip.Enabled = enable3 && acces1;
-                xzetterugtoolstrip.Enabled = enable3 && acces1 && (verwijderd1 || isgereed1);
-                xmeldGereedToolStripMenuItem1.Enabled = enable1 && acces1 && !verwijderd1 && !isgereed1;
-                xdeelGereedmeldingenToolStripMenuItem.Enabled = enable1 && acces1;
-                xonderbrekingtoolstripbutton.Enabled = enable1 && acces1;
-                benodigdeMaterialenToolStripMenuItem.Enabled = enable1 && acces1;
-                xafkeurstoolstrip.Enabled = enable1 && acces1;
-                xshowproductieinfo.Enabled = enable1;
-                exportExcelToolStripMenuItem.Enabled = enable3;
-                xtoolstripaanbevolenpersonen.Enabled = enable1;
-                zoekToolStripMenuItem.Enabled = enable3;
-                verpakkingsInstructieToolStripMenuItem.Enabled = enable1;
-                kopiërenToolStripMenuItem.Enabled = !_selectedSubitem.IsDefault() && _selectedSubitem.Value != null;
-                werkTekeningToolStripMenuItem.Enabled = enable1;
-                bijlagesToolStripMenuItem.Enabled = enable1 && acces1;
-                //resetToolStripMenuItem.Visible = Manager.Opties?.Filters?.Any(x =>
-                //    x.IsTempFilter && x.ListNames.Any(s =>
-                //        string.Equals(s, ListName, StringComparison.CurrentCultureIgnoreCase))) ?? false;
-                UpdateStatusText();
+                this.Invoke(new MethodInvoker(SetButtonEnable));
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine(e);
+                try
+                {
+                    var enable1 = ProductieLijst.SelectedObjects is { Count: 1 };
+                    var enable2 = ProductieLijst.SelectedObjects is { Count: > 1 };
+                    var enable3 = enable1 || enable2;
+                    var acces1 = Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieBasis };
+                    //var acces2 = Manager.LogedInGebruiker != null &&
+                    //Manager.LogedInGebruiker.AccesLevel >= AccesType.ProductieAdvance;
+
+                    var bws = new List<Bewerking>();
+                    if (ProductieLijst.SelectedObjects != null)
+                    {
+                        if (!IsBewerkingView)
+                            foreach (var prod in ProductieLijst.SelectedObjects.Cast<ProductieFormulier>().ToArray())
+                            {
+                                if (prod.Bewerkingen == null) continue;
+                                var xbws = prod.Bewerkingen.Where(x => x.IsAllowed()).ToList();
+                                if (xbws.Count > 0)
+                                    bws.AddRange(xbws);
+                            }
+                        else
+                            bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToList();
+                    }
+
+                    if (SelectedItem is Bewerking bw && acces1 &&
+                        bw.State is ProductieState.Gestart or ProductieState.Gestopt)
+                    {
+                        xonderbreek.Enabled = true;
+                        var xont = bw.GetStoringen(true);
+                        xonderbreek.Image =
+                            xont.Length == 0 ? Resources.Stop_Hand__32x32 : Resources.playcircle_32x32;
+                    }
+                    else
+                    {
+                        xonderbreek.Enabled = false;
+                    }
+
+                    var isprod = !IsBewerkingView;
+                    var verwijderd1 = enable3 && isprod
+                        ? bws.All(x => x.State == ProductieState.Verwijderd)
+                        : bws.Any(x => x.State == ProductieState.Verwijderd);
+                    var verwijderd2 = enable3 && bws.Any(x => x.State != ProductieState.Verwijderd);
+                    var isgereed1 = enable3 && isprod
+                        ? bws.All(x => x.State == ProductieState.Gereed)
+                        : bws.Any(x => x.State == ProductieState.Gereed);
+                    var isgereed2 = enable3 && bws.Any(x => x.State != ProductieState.Gereed);
+                    var isgestart = enable3 && bws.Any(x => x.State == ProductieState.Gestart);
+                    var isgestopt = enable3 && bws.Any(x => x.State == ProductieState.Gestopt);
+                    var haspdf = bws.Count > 0 && bws[0].Parent != null && bws[0].Parent.ContainsProductiePdf();
+                    //var nietbemand = bws.Any(x => !x.IsBemand);
+                    xbewerkingeninfob.Enabled = ProductieLijst.Items.Count > 0;
+                    xwijzigproductieinfo.Enabled = enable3 && acces1;
+                    xtoonpdfb.Enabled = haspdf;
+                    xverpakkingb.Enabled = enable1;
+                    xopenproductieb.Enabled = enable3 && acces1 && verwijderd2;
+                    xstartb.Enabled = acces1 && isgestopt;
+                    xstopb.Enabled = acces1 && isgestart;
+                    xwijzigformb.Enabled = enable1 && acces1;
+                    xwerktijdenb.Enabled = acces1 && enable1;
+                    xwerkplekkenb.Enabled = enable1 && acces1;
+                    xaantalgemaaktb.Enabled = enable1 && acces1;
+                    xverwijderb.Enabled = enable3 && acces1;
+                    xzetterugb.Enabled = enable3 && acces1 && (verwijderd1 || isgereed1);
+                    xmeldgereedb.Enabled = enable1 && acces1 && !verwijderd1 && !isgereed1;
+                    xdeelgereedmeldingenb.Enabled = enable1 && acces1;
+                    xonderbrekingb.Enabled = enable1 && acces1;
+                    xmaterialenb.Enabled = enable1 && acces1;
+                    xafkeurb.Enabled = enable1 && acces1;
+                    xproductieInfob.Enabled = enable1;
+                    xexportexcel.Enabled = enable3;
+                    xaanbevolenpersb.Enabled = enable1;
+                    xtoonTekening.Enabled = enable1;
+                    xbijlage.Enabled = enable1 && acces1;
+                    //set context menu
+                    xopenProductieToolStripMenuItem.Enabled = enable3 && acces1 && verwijderd2;
+                    xtoolstripstart.Enabled = acces1 && isgestopt;
+                    xtoolstripstop.Enabled = acces1 && isgestart;
+                    productieToolStripMenuItem.Enabled = enable1 && acces1;
+                    xtoolstripbehwerktijden.Enabled = acces1 && enable1;
+                    xtoolstripbehwerkplekken.Enabled = enable1 && acces1;
+                    xwijzigToolStripMenuItem1.Enabled = enable3 && acces1;
+                    xverwijdertoolstrip.Enabled = enable3 && acces1;
+                    xzetterugtoolstrip.Enabled = enable3 && acces1 && (verwijderd1 || isgereed1);
+                    xmeldGereedToolStripMenuItem1.Enabled = enable1 && acces1 && !verwijderd1 && !isgereed1;
+                    xdeelGereedmeldingenToolStripMenuItem.Enabled = enable1 && acces1;
+                    xonderbrekingtoolstripbutton.Enabled = enable1 && acces1;
+                    benodigdeMaterialenToolStripMenuItem.Enabled = enable1 && acces1;
+                    xafkeurstoolstrip.Enabled = enable1 && acces1;
+                    xshowproductieinfo.Enabled = enable1;
+                    exportExcelToolStripMenuItem.Enabled = enable3;
+                    xtoolstripaanbevolenpersonen.Enabled = enable1;
+                    zoekToolStripMenuItem.Enabled = enable3;
+                    verpakkingsInstructieToolStripMenuItem.Enabled = enable1;
+                    kopiërenToolStripMenuItem.Enabled = !_selectedSubitem.IsDefault() && _selectedSubitem.Value != null;
+                    werkTekeningToolStripMenuItem.Enabled = enable1;
+                    bijlagesToolStripMenuItem.Enabled = enable1 && acces1;
+                    //resetToolStripMenuItem.Visible = Manager.Opties?.Filters?.Any(x =>
+                    //    x.IsTempFilter && x.ListNames.Any(s =>
+                    //        string.Equals(s, ListName, StringComparison.CurrentCultureIgnoreCase))) ?? false;
+                    UpdateStatusText();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             }
         }
 
@@ -381,7 +388,7 @@ namespace Controls
         {
             if (_iswaiting) return;
             _iswaiting = true;
-            Task.Run(async () =>
+            Task.Run(() =>
             {
                 try
                 {
@@ -398,15 +405,15 @@ namespace Controls
                         if (Disposing || IsDisposed) return;
                         var curvalue = xwv.PadRight(xwv.Length + cur, '.');
                         //xcurvalue = curvalue;
-                        xloadinglabel.BeginInvoke(new MethodInvoker(() =>
+                        xloadinglabel.Invoke(new MethodInvoker(() =>
                         {
                             xloadinglabel.Text = curvalue;
                             xloadinglabel.Invalidate();
                         }));
-                        Application.DoEvents();
+                        //Application.DoEvents();
 
-                        await Task.Delay(500);
-                        Application.DoEvents();
+                        Thread.Sleep(250);
+                        //Application.DoEvents();
                         tries++;
                         cur++;
                     }
@@ -866,26 +873,32 @@ namespace Controls
 
         private void UpdateListObjects<T>(List<T> objects)
         {
-            if (objects != null && (objects.Count != ProductieLijst.Items.Count || ProductieLijst.Items.Count > 0 &&
-                    !ProductieLijst.Objects.Cast<T>().Any(x => objects.Any(o => o.Equals(x)))))
+            if (this.InvokeRequired)
+                this.BeginInvoke(new MethodInvoker(() => UpdateListObjects<T>(objects)));
+            else
             {
-                ProductieLijst.BeginUpdate();
-                //var sel = ProductieLijst.SelectedObject;
-                ProductieLijst.SetObjects(objects);
-                //ProductieLijst.SelectedObject = sel;
-                //ProductieLijst.SelectedItem?.EnsureVisible();
-                ProductieLijst.EndUpdate();
-                OnItemCountChanged();
+                if (objects != null && (objects.Count != ProductieLijst.Items.Count || ProductieLijst.Items.Count > 0 &&
+                        !ProductieLijst.Objects.Cast<T>().Any(x => objects.Any(o => o.Equals(x)))))
+                {
+                    ProductieLijst.BeginUpdate();
+                    //var sel = ProductieLijst.SelectedObject;
+                    ProductieLijst.SetObjects(objects);
+                    //ProductieLijst.SelectedObject = sel;
+                    //ProductieLijst.SelectedItem?.EnsureVisible();
+                    ProductieLijst.EndUpdate();
+                    OnItemCountChanged();
+                }
             }
         }
 
         public List<Bewerking> GetBewerkingen(bool reload, bool customfilter)
         {
             var states = GetCurrentViewStates();
+            bool check = states.Any(x => x is ViewState.Alles or ViewState.Gereed);
             var bws = !reload && CustomList && Bewerkingen != null
                 ? Bewerkingen.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
                     .ToList()
-                : Bewerkingen = Manager.GetBewerkingen(states, true).Result;
+                : Bewerkingen = Manager.GetBewerkingen(states, true, check).Result;
             if (customfilter && ValidHandler != null)
                 bws = bws.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
                     .ToList();
@@ -897,10 +910,11 @@ namespace Controls
         public List<ProductieFormulier> GetProducties(bool reload, bool customfilter)
         {
             var states = GetCurrentViewStates();
+            bool check = states.Any(x => x is ViewState.Alles or ViewState.Gereed);
             var xprods = !reload && CustomList && Producties != null
                 ? Producties.Where(x => states.Any(x.IsValidState) && x.ContainsFilter(GetFilter()))
                     .ToList()
-                : Producties = Manager.GetProducties(states, true, true, null).Result;
+                : Producties = Manager.GetProducties(states, true, true, null,check).Result;
             if (customfilter && ValidHandler != null)
                 xprods = xprods.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
                     .ToList();
@@ -933,70 +947,78 @@ namespace Controls
             {
                 if (showwaitui)
                     SetWaitUI();
-                try
+                Task.Factory.StartNew(() =>
                 {
-                    _loadingproductielist = true;
-                    InitFilterStrips();
-                    var selected1 = ProductieLijst.SelectedObjects;
-                    var groups1 = ProductieLijst.Groups.Cast<ListViewGroup>().Select(t => (OLVGroup)t.Tag)
-                        .Where(x => x.Collapsed)
-                        .ToArray();
-                    // Manager.Opties.ProductieWeergaveFilters = GetCurrentProductieViewStates();
+                    try
+                    {
+                        _loadingproductielist = true;
+                        InitFilterStrips();
+                        IList selected1 = null;
+                        OLVGroup[] groups1 = Array.Empty<OLVGroup>();
+                        this.Invoke(new MethodInvoker(() =>
+                        {
+                            selected1 = ProductieLijst.SelectedObjects;
 
-                   
-                        if (!IsBewerkingView)
+                            groups1 = ProductieLijst.Groups.Cast<ListViewGroup>().Select(t => (OLVGroup)t.Tag)
+                                .Where(x => x.Collapsed)
+                                .ToArray();
+                        }));
+
+                    if (!IsBewerkingView)
                         {
                             if (CanLoad)
                             {
                                 var xprods = GetProducties(reload, true);
                                 if (!IsDisposed && !Disposing)
-                                     UpdateListObjects(xprods);
+                                    UpdateListObjects(xprods);
                             }
                         }
                         else if (CanLoad)
                         {
                             var bws = GetBewerkingen(reload, true);
                             if (!IsDisposed && !Disposing)
-                                 UpdateListObjects(bws);
+                                UpdateListObjects(bws);
                         }
 
-                    var xgroups = ProductieLijst.Groups.Cast<ListViewGroup>().ToList();
-                    if (groups1.Length > 0)
-                        for (var i = 0; i < xgroups.Count; i++)
+                        //this.Invoke(new MethodInvoker(() =>
+                        //{
+                        //    var xgroups = ProductieLijst.Groups.Cast<ListViewGroup>().ToList();
+                        //    if (groups1.Length > 0)
+                        //        for (var i = 0; i < xgroups.Count; i++)
+                        //        {
+                        //            var group = xgroups[i].Tag as OLVGroup;
+                        //            if (group == null)
+                        //                continue;
+                        //            if (groups1.Any(t => !group.Collapsed && t.Header == group.Header))
+                        //                group.Collapsed = true;
+                        //        }
+                        //}));
+
+                        SetButtonEnable();
+                        OnSelectedItemChanged();
+
+                        this.Invoke(new MethodInvoker(() =>
                         {
-                            var group = xgroups[i].Tag as OLVGroup;
-                            if (group == null)
-                                continue;
-                            if (groups1.Any(t => !group.Collapsed && t.Header == group.Header))
-                                group.Collapsed = true;
-                        }
+                            ProductieLijst.SelectedObjects = selected1;
+                            if (ProductieLijst.SelectedObject == null)
+                                ProductieLijst.SelectedIndex = 0;
+                        }));
 
-                    SetButtonEnable();
-                    OnSelectedItemChanged();
-                    //if (xfocused != null)
-                    //{
-                    //    ProductieLijst.FocusedObject = xfocused;
-                    //    ProductieLijst.FocusedItem?.EnsureVisible();
-                    //}
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
 
-                    ProductieLijst.SelectedObjects = selected1;
-                    if (ProductieLijst.SelectedObject == null)
-                        ProductieLijst.SelectedIndex = 0;
-                    //if (xfocused == null)
-                    //    ProductieLijst.SelectedItem?.EnsureVisible();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-
-                _loadingproductielist = false;
-                StopWait();
+                    _loadingproductielist = false;
+                    StopWait();
+                });
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 _loadingproductielist = false;
+                StopWait();
             }
         }
 
@@ -2325,6 +2347,12 @@ namespace Controls
 
         public ViewState[] GetCurrentViewStates()
         {
+            if (this.InvokeRequired)
+            {
+                var xret = new ViewState[]{};
+                this.Invoke(new MethodInvoker(() => xret = GetCurrentViewStates()));
+                return xret;
+            }
             var states = new List<ViewState>();
             var items = xfiltercontainer.DropDownItems;
             foreach (var tb in items.Cast<ToolStripMenuItem>())
@@ -2888,7 +2916,11 @@ namespace Controls
 
         public void InitFilterStrips()
         {
-            //verwijder alle gekozen filters.
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(InitFilterStrips));
+                return;
+            }
             var items = xfiltersStrip.Items.Cast<ToolStripMenuItem>().ToList();
             ToolStripMenuItem menuitem = null;
             for (var i = 0; i < items.Count; i++)
@@ -3195,12 +3227,18 @@ namespace Controls
 
         protected virtual void OnSelectedItemChanged()
         {
-            SelectedItemChanged?.Invoke(this, EventArgs.Empty);
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(OnSelectedItemChanged));
+            else
+                SelectedItemChanged?.Invoke(this, EventArgs.Empty);
         }
 
         protected virtual void OnItemCountChanged()
         {
-            ItemCountChanged?.Invoke(this, EventArgs.Empty);
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(OnItemCountChanged));
+            else
+                ItemCountChanged?.Invoke(this, EventArgs.Empty);
         }
 
         protected virtual void OnSearchItems(object sender)

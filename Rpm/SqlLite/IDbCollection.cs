@@ -11,8 +11,8 @@ namespace Rpm.SqlLite
         public Task<int> Count();
         public Task<T> FindOne(string id, bool usesecondary);
         public Task<List<T>> FindAll(bool usesecondary);
-        public Task<List<T>> FindAll(IsValidHandler validhandler);
-        public Task<List<T>> FindAll(TijdEntry bereik, IsValidHandler validhandler);
+        public Task<List<T>> FindAll(IsValidHandler validhandler, bool checksecondary);
+        public Task<List<T>> FindAll(TijdEntry bereik, IsValidHandler validhandler, bool checksecondary);
         public Task<List<string>> GetAllIDs(bool checksecondary);
         public Task<List<string>> GetAllPaths(bool checksecondary);
         public Task<List<T>> FindAll(string[] ids, bool usesecondary);

@@ -128,7 +128,7 @@ namespace Controls.TileView
                             new ViewState[]
                             {
                                 ViewState.Gestart, ViewState.Gestopt
-                            }, true, null).Result;
+                            }, true, null, true).Result;
                         entry.TileCount = bws.Count;
                         break;
                     case "werkplaatsen":
@@ -137,7 +137,7 @@ namespace Controls.TileView
                                 new ViewState[]
                                 {
                                     ViewState.Gestart
-                                }, true, null).Result;
+                                }, true, null, true).Result;
                             var wps = xxbws.SelectMany(x => x.WerkPlekken.Where(w => w.IsActief())).ToList();
                             entry.TileCount = wps.Count;
                            
@@ -147,7 +147,7 @@ namespace Controls.TileView
                             new ViewState[]
                             {
                                 ViewState.Gereed
-                            }, true, null).Result;
+                            }, true, null, true).Result;
                         if (Manager.Opties != null)
                         {
                             if (Manager.Opties.UseLastGereedStart || Manager.Opties.UseLastGereedStop)
@@ -175,7 +175,7 @@ namespace Controls.TileView
                             new ViewState[]
                             {
                                ViewState.Alles
-                            }, true, null).Result;
+                            }, true, null, true).Result;
                         var storingen = bws.SelectMany(x => x.GetStoringen(false)).ToList();
                         entry.TileCount = storingen.Count;
                        
@@ -190,7 +190,7 @@ namespace Controls.TileView
                             new ViewState[]
                             {
                                 ViewState.Gestart
-                            }, true, null).Result;
+                            }, true, null, true).Result;
                         bws = bws
                             .Where(x => x.State == ProductieState.Gestart && string.Equals(x.GestartDoor, Manager.Opties.Username,
                                 StringComparison.CurrentCultureIgnoreCase)).ToList();
@@ -218,7 +218,7 @@ namespace Controls.TileView
                             new ViewState[]
                             {
                                 ViewState.Alles
-                            }, true, null).Result;
+                            }, true, null, true).Result;
                         var xlist = new List<string>();
                         for (int i = 0; i < bws.Count; i++)
                         {
@@ -243,7 +243,7 @@ namespace Controls.TileView
                             new ViewState[]
                             {
                                 ViewState.Alles
-                            }, true, null).Result;
+                            }, true, null, true).Result;
                         var xnots = bws.SelectMany(x => x.GetAlleNotities()).ToList();
                         entry.TileCount = xnots.Count;
                         break;
@@ -279,7 +279,7 @@ namespace Controls.TileView
                                             {
                                                 ViewState.Gestart,
                                                 ViewState.Gestopt,
-                                            }, true, null).Result;
+                                            }, true, null, true).Result;
                                         bws = bws.Where(x => xf.IsAllowed(x, null)).ToList();
                                         entry.TileCount = bws.Count;
                                     }

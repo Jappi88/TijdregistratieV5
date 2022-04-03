@@ -11,7 +11,11 @@ namespace Forms
             InitializeComponent();
         }
 
-        public string RootPath => fileBrowserUI1.RootPath;
+        public string RootPath
+        {
+            get => fileBrowserUI1.RootPath;
+            set=> fileBrowserUI1.RootPath = value;
+        }
 
         public BijlageForm(IProductieBase productie):this(productie.ArtikelNr)
         {
@@ -20,6 +24,13 @@ namespace Forms
         public BijlageForm(string id) : this()
         {
             string xpath = Path.Combine(Manager.DbPath, "Bijlages", id);
+            SetPath(xpath);
+        }
+
+        public BijlageForm(string id, string root) : this()
+        {
+            string xpath = Path.Combine(Manager.DbPath, "Bijlages", id);
+            RootPath = root;
             SetPath(xpath);
         }
 

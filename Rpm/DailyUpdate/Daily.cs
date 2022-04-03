@@ -40,7 +40,8 @@ namespace Rpm.DailyUpdate
                     {
                         return;
                     }
-                    var prods = Manager.Database.GetBewerkingen(ViewState.Gestopt, false, null, null).Result;
+
+                    var prods = Manager.Database.GetAllBewerkingen(false, true, false).Result;
                     if (prods is {Count: > 0})
                         prods = prods.Where(x => x.IsAllowed() && x.State != ProductieState.Gereed && x.State != ProductieState.Verwijderd).ToList();
                     var telaat = prods.Where(x => x.TeLaat).ToList();

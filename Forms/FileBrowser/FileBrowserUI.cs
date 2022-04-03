@@ -21,7 +21,7 @@ namespace Forms.FileBrowser
         #region Variables
 
         private CustomFileWatcher _watcher;
-        public string RootPath { get; private set; }
+        public string RootPath { get; set; }
         public string CurrentPath { get; private set; }
         public List<string> History { get; private set; } = new List<string>();
         public ObjectListView FileView => xbrowser;
@@ -230,13 +230,15 @@ namespace Forms.FileBrowser
         {
             var xsel = xbrowser.SelectedItem;
             if (xsel == null) return;
-            if (xbrowser.View == View.Details || xbrowser.View == View.List) return;
+            if (xbrowser.View is View.Details or View.List) return;
             var subrec = xbrowser.CalculateCellBounds(xsel, 0);
-            var xsize = tb.Text.MeasureString(tb.Font, new Size(175, 100));
+            var xsize = tb.Text.MeasureString(tb.Font, new Size(190, 100));
             var width = xsize.Width;
             var height = xsize.Height;
             if (width < 100)
                 width = 100;
+            if (height < 20)
+                height = 20;
             width += 5;
             height += 5;
             var xloc = new Point((subrec.Location.X + subrec.Width / 2) - (width / 2), subrec.Y);
@@ -266,12 +268,14 @@ namespace Forms.FileBrowser
 
         #region BrowserList Events
 
-        private void xbrowser_CellEditFinished(object sender, CellEditEventArgs e)
+        private void xbrowser_CellEditFinishing(object sender, CellEditEventArgs e)
         {
             if (e.RowObject is BrowseEntry brw)
             {
                 try
                 {
+                    if (string.IsNullOrWhiteSpace(e.NewValue.ToString().Trim()))
+                        throw new Exception("Vul in een geldige naam");
                     var xnewname = e.NewValue.ToString();
                     var xoldname = e.Value.ToString();
                     if (string.Equals(xnewname, xoldname, StringComparison.CurrentCultureIgnoreCase))
@@ -293,11 +297,17 @@ namespace Forms.FileBrowser
                 }
                 catch (Exception ex)
                 {
-                    XMessageBox.Show(this, ex.Message, "Fout", MessageBoxIcon.Error);
                     e.Cancel = true;
+                    e.Control.Text = e.Value.ToString();
+                    e.NewValue = e.Value;
+                    XMessageBox.Show(this, ex.Message, "Fout", MessageBoxIcon.Error);
+                
                 }
             }
-            else e.Cancel = true;
+            else
+            {
+                e.Cancel = true;
+            }
         }
 
         BrowseEntry _lastselected = null;
@@ -1129,7 +1139,7 @@ namespace Forms.FileBrowser
 
                 }
 
-                var refresh = new ToolStripMenuItem("Refreshen", Resources.refresh_arrow_1546,
+                var refresh = new ToolStripMenuItem("Vernieuwen", Resources.refresh_arrow_1546,
                     Refresh_Click);
                 xContextMenu.Items.Add(refresh);
                 xContextMenu.Items.Add(new ToolStripSeparator());

@@ -18,7 +18,7 @@ namespace Rpm.SqlLite
     {
         //public static readonly string DbVersion = Version;
 
-        public LocalDatabase(Manager instance, string pcid, string path, bool createnew)
+        public LocalDatabase(Manager instance, string pcid, string path)
         {
             OwnerId = pcid;
             LastProductieUpdate = DateTime.Now;
@@ -279,12 +279,12 @@ namespace Rpm.SqlLite
         }
 
 
-        public Task<List<ProductieFormulier>> GetAllProducties(bool incgereed, bool filter)
+        public Task<List<ProductieFormulier>> GetAllProducties(bool incgereed, bool filter, bool checksecondary)
         {
-            return GetAllProducties(incgereed, filter, null);
+            return GetAllProducties(incgereed, filter, null, checksecondary);
         }
 
-        public Task<List<ProductieFormulier>> GetAllProducties(bool incgereed, bool filter, IsValidHandler validhandler)
+        public Task<List<ProductieFormulier>> GetAllProducties(bool incgereed, bool filter, IsValidHandler validhandler, bool checksecondary)
         {
             return Task.Run(async () =>
             {
@@ -293,11 +293,11 @@ namespace Rpm.SqlLite
                 var prods = new List<ProductieFormulier>();
                 if (filter && validhandler == null)
                     validhandler = Functions.IsAllowed;
-                if (ProductieFormulieren != null) prods = await ProductieFormulieren.FindAll(validhandler);
+                if (ProductieFormulieren != null) prods = await ProductieFormulieren.FindAll(validhandler, checksecondary);
 
                 if (incgereed && GereedFormulieren != null)
                 {
-                    var xprods = await GereedFormulieren.FindAll(validhandler);
+                    var xprods = await GereedFormulieren.FindAll(validhandler, checksecondary);
                     if (xprods.Count > 0)
                         prods.AddRange(xprods);
                 }
@@ -306,18 +306,18 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<List<Bewerking>> GetAllBewerkingen(bool incgereed, bool filter)
+        public Task<List<Bewerking>> GetAllBewerkingen(bool incgereed, bool filter, bool checksecondary)
         {
             return Task.Run(async () =>
             {
                 if (IsDisposed)
                     return new List<Bewerking>();
                 var prods = new List<ProductieFormulier>();
-                if (ProductieFormulieren != null) prods = await ProductieFormulieren.FindAll(true);
+                if (ProductieFormulieren != null) prods = await ProductieFormulieren.FindAll(checksecondary);
 
                 if (incgereed && GereedFormulieren != null)
                 {
-                    var xprods = await GereedFormulieren.FindAll(true);
+                    var xprods = await GereedFormulieren.FindAll(checksecondary);
                     if (xprods.Count > 0)
                         prods.AddRange(xprods);
                 }
@@ -340,20 +340,20 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<Dictionary<string, List<Bewerking>>> GetBewerkingenInArtnrSections(bool incgereed, bool filter)
+        public Task<Dictionary<string, List<Bewerking>>> GetBewerkingenInArtnrSections(bool incgereed, bool filter, bool checksecondary)
         {
             return Task.Factory.StartNew(() =>
             {
                 var xreturn = new Dictionary<string, List<Bewerking>>();
                 try
                 {
-                    var bws = Manager.Database.GetAllBewerkingen(true, true).Result;
+                    var bws = Manager.Database.GetAllBewerkingen(true, true, checksecondary).Result;
                     foreach (var bw in bws)
                     {
-                        if (xreturn.ContainsKey(bw.ArtikelNr.ToLower()))
-                            xreturn[bw.ArtikelNr.ToLower()].Add(bw);
+                        if (xreturn.ContainsKey(bw.ArtikelNr.ToUpper()))
+                            xreturn[bw.ArtikelNr.ToUpper()].Add(bw);
                         else
-                            xreturn.Add(bw.ArtikelNr.ToLower(), new List<Bewerking>() { bw });
+                            xreturn.Add(bw.ArtikelNr.ToUpper(), new List<Bewerking>() { bw });
                     }
                 }
                 catch (Exception e)
@@ -366,23 +366,23 @@ namespace Rpm.SqlLite
            
         }
 
-        public Task<List<ProductieFormulier>> GetAllProducties(bool incgereed, bool filter, TijdEntry bereik, IsValidHandler validhandler)
+        public Task<List<ProductieFormulier>> GetAllProducties(bool incgereed, bool filter, TijdEntry bereik, IsValidHandler validhandler, bool checksecondary)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 if (IsDisposed)
                     return new List<ProductieFormulier>();
                 var prods = new List<ProductieFormulier>();
                 if (ProductieFormulieren != null)
                 {
-                    prods = await ProductieFormulieren.FindAll(validhandler);
+                    prods = ProductieFormulieren.FindAll(validhandler, checksecondary).Result;
                     if (bereik != null)
                         prods = prods.Where(x => x.HeeftGewerkt(bereik)).ToList();
                 }
 
                 if (incgereed && GereedFormulieren != null)
                 {
-                    var xprods = await GereedFormulieren.FindAll(validhandler);
+                    var xprods = GereedFormulieren.FindAll(validhandler, checksecondary).Result;
                     if (bereik != null)
                         xprods = xprods.Where(x => x.HeeftGewerkt(bereik)).ToList();
                     if (xprods.Count > 0)
@@ -394,14 +394,14 @@ namespace Rpm.SqlLite
         }
 
         public Task<List<Bewerking>> GetBewerkingen(ViewState state, bool filter, TijdEntry bereik,
-            IsValidHandler validhandler)
+            IsValidHandler validhandler, bool checksecondary)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 if (IsDisposed)
                     return new List<Bewerking>();
-                var prods = await GetAllProducties(state is ViewState.Alles or ViewState.Gereed, filter,
-                    bereik, validhandler);
+                var prods = GetAllProducties(state is ViewState.Alles or ViewState.Gereed, filter,
+                    bereik, validhandler, checksecondary).Result;
 
                 var bws = new List<Bewerking>();
                 foreach (var pr in prods)
@@ -445,21 +445,21 @@ namespace Rpm.SqlLite
 
         public Task<List<ProductieFormulier>> GetAllGereedProducties(IsValidHandler validhandler)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 if (IsDisposed || GereedFormulieren == null)
                     return new List<ProductieFormulier>();
-                return await GereedFormulieren.FindAll(validhandler);
+                return GereedFormulieren.FindAll(validhandler, true).Result;
             });
         }
 
         public Task<List<ProductieFormulier>> GetAllGereedProducties()
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 if (IsDisposed || GereedFormulieren == null)
                     return new List<ProductieFormulier>();
-                return await GereedFormulieren.FindAll(true);
+                return GereedFormulieren.FindAll(true).Result;
             });
         }
 
@@ -749,11 +749,11 @@ namespace Rpm.SqlLite
 
         public Task<List<UserAccount>> GetAllAccounts()
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 if (IsDisposed || UserAccounts == null)
                     return new List<UserAccount>();
-                return await UserAccounts.FindAll(false);
+                return UserAccounts.FindAll(false).Result;
             });
         }
 
@@ -967,7 +967,7 @@ namespace Rpm.SqlLite
 
         public Task<List<UserSettings>> GetAllSettings()
         {
-            return Task.Run( () =>
+            return Task.Run(() =>
             {
                 if (IsDisposed || AllSettings == null)
                     return new List<UserSettings>();
@@ -1215,11 +1215,11 @@ namespace Rpm.SqlLite
 
         public Task<List<Personeel>> GetAllPersoneel()
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 if (IsDisposed || PersoneelLijst == null)
                     return new List<Personeel>();
-                return await PersoneelLijst.FindAll(true);
+                return PersoneelLijst.FindAll(true).Result;
             });
         }
 
@@ -1264,17 +1264,17 @@ namespace Rpm.SqlLite
 
         public Task<int> MaakAllePersoneelVrijVanWerk(bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 var done = 0;
                 if (!IsDisposed && PersoneelLijst != null)
                 {
-                    var personen = await PersoneelLijst.FindAll(true);
+                    var personen = PersoneelLijst.FindAll(false).Result;
                     foreach (var personeel in personen)
                         if (personeel.WerktAan != null)
                         {
                             personeel.WerktAan = null;
-                            if (await UpSert(personeel, "Vrij gemaakt van werk", showmessage))
+                            if (UpSert(personeel, "Vrij gemaakt van werk", showmessage).Result)
                                 done++;
                         }
                 }
@@ -1524,6 +1524,7 @@ namespace Rpm.SqlLite
                 }
                 catch
                 {
+                    // ignored
                 }
             });
         }
@@ -1556,7 +1557,7 @@ namespace Rpm.SqlLite
                 if (Logger != null && !IsDisposed)
                     try
                     {
-                        var found = await Logger.FindAll(new TijdEntry(from, to),validhandler);
+                        var found = await Logger.FindAll(new TijdEntry(from, to),validhandler,true);
                         if (found.Any())
                             logs.AddRange(found);
                         logs.Sort((x, y) => DateTime.Compare(x.Added, y.Added));
@@ -1597,51 +1598,49 @@ namespace Rpm.SqlLite
             return Task<int>.Factory.StartNew(() => 0);
         }
 
-        public Task LoadMultiFiles()
+        public void LoadMultiFiles()
         {
-            return Task.Run(() =>
-            {
-                var dbfilename = "SqlDatabase";
-               // var changeddb = "ChangeDb";
-                var personeeldb = "PersoneelDb";
-                var Gereeddb = "GereedDb";
-                var Settingdb = "SettingDb";
-                var Accountdb = "AccountsDb";
-                var Logdb = "LogDb";
-                var versiondb = "VersionDb";
-                //var bewerkingentriesdb = "BewerkingLijst";
-                ProductieFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, RootPath,
-                    dbfilename, "ProductieFormulieren",true);
-                ProductieFormulieren.InstanceChanged += ProductieFormulieren_InstanceChanged;
-                ProductieFormulieren.InstanceDeleted += ProductieFormulieren_InstanceDeleted;
+            var dbfilename = "SqlDatabase";
+            // var changeddb = "ChangeDb";
+            var personeeldb = "PersoneelDb";
+            var Gereeddb = "GereedDb";
+            var Settingdb = "SettingDb";
+            var Accountdb = "AccountsDb";
+            var Logdb = "LogDb";
+            var versiondb = "VersionDb";
+            //var bewerkingentriesdb = "BewerkingLijst";
+            ProductieFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, RootPath,
+                dbfilename, "ProductieFormulieren", true);
+            ProductieFormulieren.InstanceChanged += ProductieFormulieren_InstanceChanged;
+            ProductieFormulieren.InstanceDeleted += ProductieFormulieren_InstanceDeleted;
 
-                PersoneelLijst =
-                    new DatabaseInstance<Personeel>(DbInstanceType.MultipleFiles, RootPath, personeeldb, "Personeel",true);
-                PersoneelLijst.InstanceChanged += PersoneelLijst_InstanceChanged;
-                PersoneelLijst.InstanceDeleted += PersoneelLijst_InstanceDeleted;
+            PersoneelLijst =
+                new DatabaseInstance<Personeel>(DbInstanceType.MultipleFiles, RootPath, personeeldb, "Personeel", true);
+            PersoneelLijst.InstanceChanged += PersoneelLijst_InstanceChanged;
+            PersoneelLijst.InstanceDeleted += PersoneelLijst_InstanceDeleted;
 
-                UserAccounts = new DatabaseInstance<UserAccount>(DbInstanceType.MultipleFiles, RootPath, Accountdb,
-                    "UserAccounts",true);
-                UserAccounts.InstanceChanged += UserAccounts_InstanceChanged;
-                UserAccounts.InstanceDeleted += UserAccounts_InstanceDeleted;
+            UserAccounts = new DatabaseInstance<UserAccount>(DbInstanceType.MultipleFiles, RootPath, Accountdb,
+                "UserAccounts", true);
+            UserAccounts.InstanceChanged += UserAccounts_InstanceChanged;
+            UserAccounts.InstanceDeleted += UserAccounts_InstanceDeleted;
 
-                AllSettings = new DatabaseInstance<UserSettings>(DbInstanceType.MultipleFiles, RootPath, Settingdb,
-                    "AllSettings",true);
-                AllSettings.InstanceChanged += AllSettings_InstanceChanged;
-                AllSettings.InstanceDeleted += AllSettings_InstanceDeleted;
+            AllSettings = new DatabaseInstance<UserSettings>(DbInstanceType.MultipleFiles, RootPath, Settingdb,
+                "AllSettings", true);
+            AllSettings.InstanceChanged += AllSettings_InstanceChanged;
+            AllSettings.InstanceDeleted += AllSettings_InstanceDeleted;
 
-                Logger = new DatabaseInstance<LogEntry>(DbInstanceType.MultipleFiles, RootPath, Logdb, "Logs",false);
-               // ChangeLog = new DatabaseInstance<UserChange>(DbInstanceType.MultipleFiles, RootPath, changeddb,
-                   // "ChangeLog");
-                GereedFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, RootPath,
-                    Gereeddb, "GereedFormulieren",true);
-                GereedFormulieren.InstanceChanged += ProductieFormulieren_InstanceChanged;
-                GereedFormulieren.InstanceDeleted += ProductieFormulieren_InstanceDeleted;
+            Logger = new DatabaseInstance<LogEntry>(DbInstanceType.MultipleFiles, RootPath, Logdb, "Logs", false);
+            // ChangeLog = new DatabaseInstance<UserChange>(DbInstanceType.MultipleFiles, RootPath, changeddb,
+            // "ChangeLog");
+            GereedFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, RootPath,
+                Gereeddb, "GereedFormulieren", true);
+            GereedFormulieren.InstanceChanged += ProductieFormulieren_InstanceChanged;
+            GereedFormulieren.InstanceDeleted += ProductieFormulieren_InstanceDeleted;
 
-                DbVersions = new DatabaseInstance<DbVersion>(DbInstanceType.MultipleFiles, RootPath, versiondb, "DbVersions",false);
-                //BewerkingEntries = new DatabaseInstance<BewerkingEntry>(DbInstanceType.MultipleFiles, RootPath,
-                //    bewerkingentriesdb, "BewerkingEntries");
-            });
+            DbVersions = new DatabaseInstance<DbVersion>(DbInstanceType.MultipleFiles, RootPath, versiondb,
+                "DbVersions", false);
+            //BewerkingEntries = new DatabaseInstance<BewerkingEntry>(DbInstanceType.MultipleFiles, RootPath,
+            //    bewerkingentriesdb, "BewerkingEntries");
         }
 
         #region Database Events
@@ -2218,34 +2217,15 @@ namespace Rpm.SqlLite
             }
         }
 
-
-        private Task<bool> Imigrate()
-        {
-            return Task.Run(async () =>
-            {
-                if (PersoneelLijst != null)
-                {
-                    var personen = await PersoneelLijst?.FindAll(true);
-                    if (personen == null)
-                        return false;
-                    foreach (var v in personen) await PersoneelLijst?.Upsert(v.PersoneelNaam, v,false,null);
-                }
-
-                if (Logger != null)
-                    await Logger?.DeleteAll();
-                return true;
-            });
-        }
-
         //public Task<bool> NeedDbCheck()
         //{
         //    return Task.Run(async () => (await GetLastDbChanges()).Count > 0);
         //}
 
-        public async Task<int> UpdateDbFromDb(DatabaseUpdateEntry dbentry, CancellationTokenSource token,
+        public Task<int> UpdateDbFromDb(DatabaseUpdateEntry dbentry, CancellationTokenSource token,
             ProgressChangedHandler changed = null)
         {
-            return await Task.Run(async () =>
+            return Task.Run(() =>
             {
                 var updated = 0;
                 var oldnotif = NotificationEnabled;
@@ -2258,7 +2238,7 @@ namespace Rpm.SqlLite
 
                     DoProgress(changed, "Database gegevens laden...", 0, 0);
                     token.Token.ThrowIfCancellationRequested();
-                    var database = new LocalDatabase(PManager, Manager.SystemId, dbpath, false);
+                    var database = new LocalDatabase(PManager, Manager.SystemId, dbpath);
                     database.NotificationEnabled = false;
                     database.LoggerEnabled = false;
 
@@ -2266,7 +2246,7 @@ namespace Rpm.SqlLite
                     LoggerEnabled = false;
                     RaiseEventWhenChanged = false;
                     RaiseEventWhenDeleted = false;
-                    await database.LoadMultiFiles();
+                    database.LoadMultiFiles();
                     //foreach (var dbtype in Enum.GetValues(typeof(DbType)))
                     //    database.CheckVersions((DbType) dbtype);
 
@@ -2279,7 +2259,7 @@ namespace Rpm.SqlLite
                         DoProgress(changed, "Instellingen laden...", count, max);
                         try
                         {
-                            var xs = await database.AllSettings.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue),null);
+                            var xs = database.AllSettings.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue),null,false).Result;
                             if (xs is {Count: > 0})
                             {
                                 max = xs.Count;
@@ -2287,13 +2267,13 @@ namespace Rpm.SqlLite
                                 foreach (var s in xs)
                                 {
                                     token.Token.ThrowIfCancellationRequested();
-                                    var myitem = await GetSetting($"{s.Username}[{s.SystemID}]");
+                                    var myitem = GetSetting($"{s.Username}[{s.SystemID}]").Result;
                                     if (myitem == null || myitem.LastChanged != null &&
                                         (myitem.LastChanged == null && s.LastChanged != null ||
                                          s.LastChanged != null && myitem.LastChanged.TimeChanged <
                                          s.LastChanged.TimeChanged))
                                     {
-                                        await UpSert(s,
+                                         UpSert(s,
                                             $"{s.Username} Instellingen geupdate vanuit {dbentry.Naam} database.");
                                         updated++;
                                     }
@@ -2316,7 +2296,7 @@ namespace Rpm.SqlLite
                         token.Token.ThrowIfCancellationRequested();
                         try
                         {
-                            var xs1 = await database.UserAccounts.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue),null);
+                            var xs1 = database.UserAccounts.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue),null, false).Result;
                             if (xs1 is {Count: > 0})
                             {
                                 //count = 0;
@@ -2324,13 +2304,13 @@ namespace Rpm.SqlLite
                                 foreach (var s in xs1)
                                 {
                                     token.Token.ThrowIfCancellationRequested();
-                                    var myitem = await GetAccount(s.Username);
+                                    var myitem = GetAccount(s.Username).Result;
                                     if (myitem == null || myitem.LastChanged != null &&
                                         (myitem.LastChanged == null && s.LastChanged != null ||
                                          s.LastChanged != null && myitem.LastChanged.TimeChanged <
                                          s.LastChanged.TimeChanged))
                                     {
-                                        await UpSert(s,
+                                        UpSert(s,
                                             $"{s.Username} Account geupdate vanuit {dbentry.Naam} database.");
                                         updated++;
                                     }
@@ -2353,7 +2333,7 @@ namespace Rpm.SqlLite
                         token.Token.ThrowIfCancellationRequested();
                         try
                         {
-                            var xs2 = await database.PersoneelLijst.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue),null);
+                            var xs2 = database.PersoneelLijst.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue),null,false).Result;
                             if (xs2 is {Count: > 0})
                             {
                                 // count = 0;
@@ -2361,14 +2341,14 @@ namespace Rpm.SqlLite
                                 foreach (var s in xs2)
                                 {
                                     token.Token.ThrowIfCancellationRequested();
-                                    var myitem = await GetPersoneel(s.PersoneelNaam);
+                                    var myitem = GetPersoneel(s.PersoneelNaam).Result;
                                     if (myitem != null)
                                     {
                                         updated += myitem.UpdateFrom(s, true);
                                     }
                                     else
                                     {
-                                        await UpSert(s,
+                                        UpSert(s,
                                             $"{s.PersoneelNaam} Instellingen geupdate vanuit {dbentry.Naam} database.");
                                         updated++;
                                     }
@@ -2400,7 +2380,7 @@ namespace Rpm.SqlLite
                         try
                         {
                            
-                            var xs3 = await database.ProductieFormulieren?.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue), null);
+                            var xs3 = database.ProductieFormulieren?.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue), null, false).Result;
                             if (xs3 is {Count: > 0})
                             {
                                 max += xs3.Count;
@@ -2410,8 +2390,8 @@ namespace Rpm.SqlLite
                                     var myitem = Manager.Database.GetProductie(s.ProductieNr, true);
                                     if (myitem != null)
                                     {
-                                        if (await myitem.UpdateFrom(s,
-                                            $"[{myitem.ProductieNr}, {myitem.ArtikelNr}] geupdate vanuit {dbentry.Naam} database.")
+                                        if (myitem.UpdateFrom(s,
+                                            $"[{myitem.ProductieNr}, {myitem.ArtikelNr}] geupdate vanuit {dbentry.Naam} database.").Result
                                         ) updated++;
                                     }
                                     //else if(s.IsAllowed(null))
@@ -2436,7 +2416,7 @@ namespace Rpm.SqlLite
                         token.Token.ThrowIfCancellationRequested();
                         try
                         {
-                            var xs3 = await database.GereedFormulieren?.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue), null);
+                            var xs3 = database.GereedFormulieren?.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue), null, false).Result;
                             if (xs3 is {Count: > 0})
                             {
                                 max += xs3.Count;
@@ -2446,8 +2426,8 @@ namespace Rpm.SqlLite
                                     var myitem = Manager.Database.GetProductie(s.ProductieNr, true);
                                     if (myitem != null)
                                     {
-                                        if (await myitem.UpdateFrom(s,
-                                            $"[{myitem.ProductieNr}, {myitem.ArtikelNr}] geupdate vanuit {dbentry.Naam} database.")
+                                        if (myitem.UpdateFrom(s,
+                                            $"[{myitem.ProductieNr}, {myitem.ArtikelNr}] geupdate vanuit {dbentry.Naam} database.").Result
                                         ) updated++;
                                     }
                                     //else if(s.IsAllowed(null))
@@ -2474,9 +2454,11 @@ namespace Rpm.SqlLite
                     else
                         DoProgress(changed, "Geen updates gevonden...", 0, 0);
                 }
-                catch (Exception)
+                catch
                 {
+                    // ignored
                 }
+
                 RaiseEventWhenChanged = true;
                 RaiseEventWhenDeleted = true;
                 NotificationEnabled = oldnotif;

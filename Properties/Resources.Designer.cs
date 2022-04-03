@@ -2256,6 +2256,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap print_Doc_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("print_Doc_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Private_80_icon_icons_com_57286 {
             get {
                 object obj = ResourceManager.GetObject("Private-80_icon-icons.com_57286", resourceCulture);
@@ -2925,6 +2935,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap window_16756_32x32 {
             get {
                 object obj = ResourceManager.GetObject("window_16756_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap windows_folder_20788 {
+            get {
+                object obj = ResourceManager.GetObject("windows_folder_20788", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

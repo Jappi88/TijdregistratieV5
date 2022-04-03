@@ -2,16 +2,15 @@
 using Microsoft.Win32.SafeHandles;
 using Rpm.Misc;
 using Rpm.Productie;
+using Rpm.SqlLite;
 using Rpm.Various;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Rpm.SqlLite;
 
 namespace ProductieManager.Rpm.Productie
 {
@@ -25,7 +24,6 @@ namespace ProductieManager.Rpm.Productie
             None,
         }
 
-        private static readonly object _locker = new object();
         public bool IsProductiesSyncing { get; private set; }
         public List<IProductieBase> ExcludeProducties { get; set; } = new List<IProductieBase>();
         public static FolderSynchronization FolderSynchronization { get; private set; } = new FolderSynchronization();
@@ -80,7 +78,7 @@ namespace ProductieManager.Rpm.Productie
                 string.Equals(productie.Naam, x.Naam, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        private bool _isupdating = false;
+        private bool _isupdating;
 
         public void InitOfflineDb()
         {
@@ -161,7 +159,7 @@ namespace ProductieManager.Rpm.Productie
                                 localproductiepath = path2 + $"\\SqlDatabase";
                                 remoteproductiepath = path1 + $"\\SqlDatabase";
                                 Manager.Database?.ProductieFormulieren?.MultiFiles?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
@@ -171,7 +169,7 @@ namespace ProductieManager.Rpm.Productie
                                 localproductiepath = path2 + $"\\PersoneelDb";
                                 remoteproductiepath = path1 + $"\\PersoneelDb";
                                 Manager.Database?.PersoneelLijst?.MultiFiles?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
@@ -181,7 +179,7 @@ namespace ProductieManager.Rpm.Productie
                                 localproductiepath = path2 + $"\\GereedDb";
                                 remoteproductiepath = path1 + $"\\GereedDb";
                                 Manager.Database?.GereedFormulieren?.MultiFiles?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
@@ -191,7 +189,7 @@ namespace ProductieManager.Rpm.Productie
                                 localproductiepath = path2 + $"\\SettingDb";
                                 remoteproductiepath = path1 + $"\\SettingDb";
                                 Manager.Database?.AllSettings?.MultiFiles?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
@@ -201,7 +199,7 @@ namespace ProductieManager.Rpm.Productie
                                 localproductiepath = path2 + $"\\AccountsDb";
                                 remoteproductiepath = path1 + $"\\AccountsDb";
                                 Manager.Database?.UserAccounts?.MultiFiles?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
@@ -211,7 +209,7 @@ namespace ProductieManager.Rpm.Productie
                                 localproductiepath = path2 + $"\\Klachten";
                                 remoteproductiepath = path1 + $"\\Klachten";
                                 Manager.Klachten?.Database?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
@@ -221,7 +219,7 @@ namespace ProductieManager.Rpm.Productie
                                 localproductiepath = path2 + $"\\Verpakking";
                                 remoteproductiepath = path1 + $"\\Verpakking";
                                 Manager.Verpakkingen?.Database?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
@@ -231,7 +229,7 @@ namespace ProductieManager.Rpm.Productie
                                 localproductiepath = path2 + $"\\Sporen";
                                 remoteproductiepath = path1 + $"\\Sporen";
                                 Manager.SporenBeheer?.Database?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
@@ -241,7 +239,7 @@ namespace ProductieManager.Rpm.Productie
                                 localproductiepath = path2 + $"\\LijstLayouts";
                                 remoteproductiepath = path1 + $"\\LijstLayouts";
                                 Manager.ListLayouts?.Database?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
@@ -259,7 +257,7 @@ namespace ProductieManager.Rpm.Productie
                                 localproductiepath = path2 + $"\\ArtikelRecords";
                                 remoteproductiepath = path1 + $"\\ArtikelRecords";
                                 Manager.ArtikelRecords?.Database?.SetSecondaryPath(
-                                    localproductiepath, new SecondaryManageType[]
+                                    localproductiepath, new[]
                                     {
                                         SecondaryManageType.Write,
                                         SecondaryManageType.Read
@@ -665,14 +663,14 @@ namespace ProductieManager.Rpm.Productie
         /// <param name="incform">true als de productie ook die aangegeven status moet zijn, false je alleen wilt verkrijgen op basis van een geldige bewerking</param>
         /// <param name="loaddb">true als je de producties als standaard wilt laden.</param>
         /// <returns></returns>
-        public async Task<List<ProductieFormulier>> GetProducties(LoadedType type, ViewState[] states, bool filter, IsValidHandler validhandler)
+        public async Task<List<ProductieFormulier>> GetProducties(LoadedType type, ViewState[] states, bool filter, IsValidHandler validhandler, bool checksecondary)
         {
-            return await GetProducties(type, filter, validhandler);
+            return await GetProducties(type, filter, validhandler, checksecondary);
         }
 
-        public async Task<List<Bewerking>> GetBewerkingen(LoadedType type, ViewState[] states, bool filter, IsValidHandler validhandler)
+        public async Task<List<Bewerking>> GetBewerkingen(LoadedType type, ViewState[] states, bool filter, IsValidHandler validhandler, bool checksecondary)
         {
-            var prods = await GetProducties(type, false, validhandler);
+            var prods = await GetProducties(type, false, validhandler, checksecondary);
             var bws = GetBewerkingen(prods, type, states, filter);
             return bws;
         }
@@ -687,7 +685,7 @@ namespace ProductieManager.Rpm.Productie
                 select bw).ToList();
         }
 
-        private async Task<List<ProductieFormulier>> GetProducties(LoadedType type, bool filter, IsValidHandler validhandler)
+        private async Task<List<ProductieFormulier>> GetProducties(LoadedType type, bool filter, IsValidHandler validhandler, bool checksecondary)
         {
             var prods = new List<ProductieFormulier>();
             //Manager.DbBeginUpdate();
@@ -700,10 +698,10 @@ namespace ProductieManager.Rpm.Productie
                     // break;
                     case LoadedType.Gereed:
                         //  IsValidHandler validhandler = filter ? Functions.IsAllowed : null;
-                        prods = await Manager.Database.GetAllProducties(true, filter, validhandler);
+                        prods = await Manager.Database.GetAllProducties(true, filter, validhandler, checksecondary);
                         break;
                     case LoadedType.Producties:
-                        prods = await Manager.Database.GetAllProducties(false, filter, validhandler);
+                        prods = await Manager.Database.GetAllProducties(false, filter, validhandler, checksecondary);
                         break;
                     case LoadedType.None:
                         prods = new List<ProductieFormulier>();

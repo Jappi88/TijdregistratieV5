@@ -108,7 +108,7 @@ namespace Controls
                 _isbussy = true;
                 if (_producties == null)
                     _producties =
-                        await Manager.GetBewerkingen(new[] {ViewState.Alles, ViewState.Gereed}, true);
+                        await Manager.GetBewerkingen(new[] {ViewState.Alles, ViewState.Gereed}, true, true);
                 var chartdata = _producties.CreateChartData(iswerkplek, startweek, startjaar, type, true, shownow);
 
                 //xtijdgewerktlist.Columns?.Clear();

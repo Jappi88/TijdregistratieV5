@@ -177,7 +177,7 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<List<T>> FindAll(IsValidHandler validhandler)
+        public Task<List<T>> FindAll(IsValidHandler validhandler, bool checksecondary)
         {
             return Task.Run(async () =>
             {
@@ -192,7 +192,7 @@ namespace Rpm.SqlLite
                             break;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
-                            xreturn = MultiFiles.GetEntries<T>(validhandler);
+                            xreturn = MultiFiles.GetEntries<T>(validhandler, checksecondary);
                             break;
                         case DbInstanceType.Server:
                             if (ServerDb == null) throw new NullReferenceException();
@@ -208,7 +208,7 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<List<T>> FindAll(TijdEntry bereik, IsValidHandler validhandler)
+        public Task<List<T>> FindAll(TijdEntry bereik, IsValidHandler validhandler, bool checksecondary)
         {
             return Task.Run(async () =>
             {
@@ -223,7 +223,7 @@ namespace Rpm.SqlLite
                             break;
                         case DbInstanceType.MultipleFiles:
                             if (MultiFiles == null) throw new NullReferenceException();
-                            xreturn = MultiFiles.GetEntries<T>(validhandler);
+                            xreturn = MultiFiles.GetEntries<T>(validhandler, checksecondary);
                             break;
                         case DbInstanceType.Server:
                             if (ServerDb == null) throw new NullReferenceException();

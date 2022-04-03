@@ -1716,7 +1716,7 @@ namespace Controls
             var res = XMessageBox.Show(this, message, "Onderbreking", MessageBoxButtons.OK, MessageBoxIcon.Question, null,
                 bttns);
             if (res == DialogResult.Cancel) return;
-            var prods = await Manager.GetProducties(new[] {ViewState.Gestart, ViewState.Gestopt}, true, false,null);
+            var prods = await Manager.GetProducties(new[] {ViewState.Gestart, ViewState.Gestopt}, true, false,null,false);
             var plekken = new List<WerkPlek>();
             switch (res)
             {
@@ -1888,7 +1888,7 @@ namespace Controls
                 var thesame = xold.SameTijden(Manager.Opties?.GetWerkRooster());
                 if (!thesame)
                 {
-                    var bws = await Manager.GetBewerkingen(new[] {ViewState.Gestart}, true);
+                    var bws = await Manager.GetBewerkingen(new[] {ViewState.Gestart}, true,false);
 
                     bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
                         StringComparison.CurrentCultureIgnoreCase)).ToList();
@@ -1922,7 +1922,7 @@ namespace Controls
             try
             {
                 var startedprods =
-                    (await Manager.Database.GetAllProducties(false, true, null))
+                    (await Manager.Database.GetAllProducties(false, true, null,false))
                     .Where(x => x.State == ProductieState.Gestart)
                     .ToArray();
                 if (startedprods.Length == 0)
@@ -2302,7 +2302,7 @@ namespace Controls
                     Manager.Opties.SpecialeRoosters.Add(newrooster);
                     Manager.Opties.SpecialeRoosters = Manager.Opties.SpecialeRoosters.OrderBy(x => x.Vanaf).ToList();
 
-                    var bws = Manager.GetBewerkingen(new[] { ViewState.Gestart }, true).Result;
+                    var bws = Manager.GetBewerkingen(new[] { ViewState.Gestart }, true, false).Result;
                     bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
                         StringComparison.CurrentCultureIgnoreCase)).ToList();
                     if (bws.Count > 0)
@@ -2340,7 +2340,7 @@ namespace Controls
                 }
                 if (acces1 && sproosters.Roosters.Count > 0)
                 {
-                    var bws = await Manager.GetBewerkingen(new[] { ViewState.Gestart }, true);
+                    var bws = await Manager.GetBewerkingen(new[] { ViewState.Gestart }, true, false);
                     bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
                         StringComparison.CurrentCultureIgnoreCase)).ToList();
                     if (bws.Count > 0)
@@ -2940,7 +2940,18 @@ namespace Controls
         {
             if (string.IsNullOrEmpty(id))
                 return;
-            var bl = new BijlageForm(id);
+           
+            string root = null;
+            if (id.Contains("/") || id.Contains("\\"))
+            {
+                root = Path.GetDirectoryName(id);
+                if (root != null) root = Path.Combine(Manager.DbPath, "Bijlages", root);
+            }
+            var bl = new BijlageForm();
+            if(!string.IsNullOrEmpty(root))
+                bl.SetPath(root);
+            id = Path.Combine(Manager.DbPath, "Bijlages", id);
+            bl.SetPath(id);
             var xforms = Application.OpenForms.Cast<Form>().FirstOrDefault(x => x is BijlageForm b && b.Equals(bl));
             if (xforms != null)
             {
@@ -2987,7 +2998,7 @@ namespace Controls
                 if (Manager.Database == null || Manager.Database.IsDisposed)
                     return;
                 if (_gemaaktform != null) return;
-                var bws = bewerkingen??await Manager.Database.GetBewerkingen(ViewState.Gestart, true,null, null);
+                var bws = bewerkingen??await Manager.Database.GetBewerkingen(ViewState.Gestart, true,null, null,false);
                 _gemaaktform = new AantalGemaaktProducties(bws, lastchangedminutes);
                 _gemaaktform.FormClosed += (_,_) =>
                 {
@@ -3295,10 +3306,10 @@ namespace Controls
             wb.FilesFormatToOpen = new[] { "{0}_fbr.pdf" };
             wb.ShowNotFoundList = true;
             wb.StopNavigatingAfterError = false;
-            Task.Factory.StartNew(async () =>
+            Task.Factory.StartNew(() =>
             {
                
-                var prods = await Manager.Database.GetBewerkingenInArtnrSections(true, false);
+                var prods = Manager.Database.GetBewerkingenInArtnrSections(true, false,true).Result;
                 progarg.Max = prods.Count;
                 progarg.OnChanged(this);
                 if (progarg.IsCanceled) return;

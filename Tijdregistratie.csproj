@@ -199,11 +199,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Desktop\ProductieManager Libs\ObjectListView.dll</HintPath>
     </Reference>
-    <Reference Include="PdfSharp">
-      <HintPath>..\..\..\Desktop\ProductieManager\PdfSharp.dll</HintPath>
+    <Reference Include="PdfSharp, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>packages\PDFsharp.1.50.5147\lib\net20\PdfSharp.dll</HintPath>
     </Reference>
-    <Reference Include="PdfSharp.Charting">
-      <HintPath>..\..\..\Desktop\ProductieManager\PdfSharp.Charting.dll</HintPath>
+    <Reference Include="PdfSharp.Charting, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>packages\PDFsharp.1.50.5147\lib\net20\PdfSharp.Charting.dll</HintPath>
     </Reference>
     <Reference Include="Polenter.SharpSerializer, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -1458,6 +1458,7 @@
     <Compile Include="Rpm\Various\Comparer.cs" />
     <Compile Include="Rpm\Various\Delegates.cs" />
     <Compile Include="Rpm\Various\Enums.cs" />
+    <Compile Include="Rpm\Various\GlobalMouseHandler.cs" />
     <Compile Include="Rpm\Various\MyLocationTextExtractionStrategy.cs" />
     <Compile Include="Rpm\Various\ProductieChat.cs" />
     <Compile Include="Rpm\Various\ProductieChatEntry.cs" />
@@ -2137,6 +2138,8 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\print_Doc_32x32.png" />
+    <None Include="Resources\windows_folder_20788.png" />
     <None Include="Resources\Rotate_Left-32x323.png" />
     <None Include="Resources\Rotate_Right-32x322.png" />
     <None Include="Resources\Rotate_Left-32x322.png" />

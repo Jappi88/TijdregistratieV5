@@ -1416,7 +1416,7 @@ namespace Forms
                 var acces1 = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
                 if (acces1 && sproosters.Roosters.Count > 0)
                 {
-                    var bws = Manager.GetBewerkingen(new ViewState[] { ViewState.Gestart }, true).Result;
+                    var bws = Manager.GetBewerkingen(new ViewState[] { ViewState.Gestart }, true,false).Result;
                     bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
                         StringComparison.CurrentCultureIgnoreCase)).ToList();
                     if (bws.Count > 0)

@@ -47,7 +47,7 @@ namespace Forms
         {
             try
             {
-                Bewerkingen = await Manager.GetBewerkingen(bewerkingstates, filter);
+                Bewerkingen = await Manager.GetBewerkingen(bewerkingstates, filter,true);
                 ListBewerkingen(Bewerkingen, showwerkplekken, checkall);
             }
             catch (Exception e)

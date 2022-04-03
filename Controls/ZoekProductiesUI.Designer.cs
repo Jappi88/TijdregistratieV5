@@ -290,9 +290,9 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xprogresslabel.BackColor = System.Drawing.Color.White;
             this.xprogresslabel.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xprogresslabel.Location = new System.Drawing.Point(3, 124);
+            this.xprogresslabel.Location = new System.Drawing.Point(0, 124);
             this.xprogresslabel.Name = "xprogresslabel";
-            this.xprogresslabel.Size = new System.Drawing.Size(940, 322);
+            this.xprogresslabel.Size = new System.Drawing.Size(943, 322);
             this.xprogresslabel.TabIndex = 23;
             this.xprogresslabel.Text = "Producties laden...";
             this.xprogresslabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -315,6 +315,7 @@ namespace Controls
             this.productieListControl1.Name = "productieListControl1";
             this.productieListControl1.RemoveCustomItemIfNotValid = false;
             this.productieListControl1.SelectedItem = null;
+            this.productieListControl1.ShowWaitUI = true;
             this.productieListControl1.Size = new System.Drawing.Size(943, 325);
             this.productieListControl1.TabIndex = 23;
             this.productieListControl1.ValidHandler = null;

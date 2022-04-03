@@ -192,7 +192,7 @@ namespace Rpm.Productie
                 var xtaken = new List<Taak>();
                 try
                 {
-                    var bws = Manager.Database?.GetAllBewerkingen(false, true).Result;
+                    var bws = Manager.Database?.GetAllBewerkingen(false, true,false).Result;
                     if (bws == null || bws.Count == 0) return xtaken;
                     foreach (var bw in bws)
                     {

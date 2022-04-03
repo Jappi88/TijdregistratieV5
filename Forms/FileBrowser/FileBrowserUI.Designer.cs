@@ -170,7 +170,8 @@
             // xstatus
             // 
             this.xstatus.Name = "xstatus";
-            this.xstatus.Size = new System.Drawing.Size(0, 35);
+            this.xstatus.Size = new System.Drawing.Size(90, 35);
+            this.xstatus.Text = "Header Text";
             // 
             // xbrowser
             // 
@@ -179,6 +180,7 @@
             this.xbrowser.AllColumns.Add(this.xtypecol);
             this.xbrowser.AllColumns.Add(this.xsizecol);
             this.xbrowser.AllowDrop = true;
+            this.xbrowser.BackColor = System.Drawing.Color.White;
             this.xbrowser.CellEditUseWholeCell = false;
             this.xbrowser.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.xnaamcol,
@@ -226,7 +228,7 @@
             this.xbrowser.UseTranslucentSelection = true;
             this.xbrowser.View = System.Windows.Forms.View.Tile;
             this.xbrowser.CanDrop += new System.EventHandler<BrightIdeasSoftware.OlvDropEventArgs>(this.xbrowser_CanDrop);
-            this.xbrowser.CellEditFinished += new BrightIdeasSoftware.CellEditEventHandler(this.xbrowser_CellEditFinished);
+            this.xbrowser.CellEditFinishing += new BrightIdeasSoftware.CellEditEventHandler(this.xbrowser_CellEditFinishing);
             this.xbrowser.CellEditStarting += new BrightIdeasSoftware.CellEditEventHandler(this.xbrowser_CellEditStarting);
             this.xbrowser.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.xbrowser_CellClick);
             this.xbrowser.Dropped += new System.EventHandler<BrightIdeasSoftware.OlvDropEventArgs>(this.xbrowser_Dropped);
@@ -239,6 +241,7 @@
             // 
             this.xnaamcol.AspectName = "Name";
             this.xnaamcol.Groupable = false;
+            this.xnaamcol.HeaderForeColor = System.Drawing.Color.White;
             this.xnaamcol.IsTileViewColumn = true;
             this.xnaamcol.Text = "Naam";
             this.xnaamcol.Width = 294;
@@ -246,6 +249,7 @@
             // xgewijzigdcol
             // 
             this.xgewijzigdcol.AspectName = "LastChanged";
+            this.xgewijzigdcol.HeaderForeColor = System.Drawing.Color.White;
             this.xgewijzigdcol.IsEditable = false;
             this.xgewijzigdcol.IsTileViewColumn = true;
             this.xgewijzigdcol.Text = "Gewijzigd Op";
@@ -254,6 +258,7 @@
             // xtypecol
             // 
             this.xtypecol.AspectName = "Type";
+            this.xtypecol.HeaderForeColor = System.Drawing.Color.White;
             this.xtypecol.IsEditable = false;
             this.xtypecol.IsTileViewColumn = true;
             this.xtypecol.Text = "Type";
@@ -262,6 +267,7 @@
             // xsizecol
             // 
             this.xsizecol.AspectName = "FriendlySize";
+            this.xsizecol.HeaderForeColor = System.Drawing.Color.White;
             this.xsizecol.IsEditable = false;
             this.xsizecol.IsTileViewColumn = true;
             this.xsizecol.Text = "Grootte";
@@ -302,6 +308,7 @@
             // 
             // xtotalitems
             // 
+            this.xtotalitems.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.xtotalitems.Name = "xtotalitems";
             this.xtotalitems.Size = new System.Drawing.Size(45, 22);
             this.xtotalitems.Text = "0 Items";
@@ -313,6 +320,7 @@
             // 
             // xselected
             // 
+            this.xselected.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.xselected.Name = "xselected";
             this.xselected.Size = new System.Drawing.Size(133, 22);
             this.xselected.Text = "0 Items geselecteerd 0 B";

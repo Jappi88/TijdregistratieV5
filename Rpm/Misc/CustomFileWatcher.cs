@@ -31,6 +31,8 @@ namespace ProductieManager.Rpm.Misc
         public bool CheckForFolderChanges { get; set; }
         public string Path { get; private set; }
         public Dictionary<string, DateTime> Records = new Dictionary<string, DateTime>();
+        
+
         private Timer _Timer;
 
         public CustomFileWatcher(string path, string filter = "*.*")
@@ -52,7 +54,7 @@ namespace ProductieManager.Rpm.Misc
             try
             {
                 _Timer?.Stop();
-                CheckChanges();
+                CheckChanges(Path);
                 _Timer?.Start();
             }
             catch (Exception exception)
@@ -61,13 +63,13 @@ namespace ProductieManager.Rpm.Misc
             }
         }
 
-        private void CheckFiles()
+        private void CheckFiles(string path)
         {
             try
             {
-                if (!Directory.Exists(Path))
+                if (!Directory.Exists(path))
                     return;
-                var xfiles = Directory.GetFiles(Path, Filter).ToList();
+                var xfiles = Directory.GetFiles(path, Filter).ToList();
                 lock (Records)
                 {
                     for (var i = 0; i < xfiles.Count; i++)
@@ -80,25 +82,25 @@ namespace ProductieManager.Rpm.Misc
                             if (Records[file] < fi.LastWriteTime)
                             {
                                 Records[file] = fi.LastWriteTime;
-                                OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Changed, Path, fi.Name));
+                                OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Changed, path, fi.Name));
                             }
                         }
                         else
                         {
                             Records.Add(file, fi.LastWriteTime);
-                            OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Created, Path, fi.Name));
+                            OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Created, path, fi.Name));
                         }
                     }
 
                     if(CheckForFolderChanges)
-                        xfiles.AddRange(Directory.GetDirectories(Path));
+                        xfiles.AddRange(Directory.GetDirectories(path));
                     var xdeletes = Records.Where(x => !xfiles.Any(f => string.Equals(f, x.Key, StringComparison.CurrentCultureIgnoreCase))).Select(x => x.Key).ToList();
 
                     for (int i = 0; i < xdeletes.Count; i++)
                     {
                         var xrec = xdeletes[i];
                         Records.Remove(xrec);
-                        OnFileDeleted(new FileSystemEventArgs(WatcherChangeTypes.Deleted, Path,
+                        OnFileDeleted(new FileSystemEventArgs(WatcherChangeTypes.Deleted, path,
                             System.IO.Path.GetFileName(xrec)));
                     }
                 }
@@ -109,13 +111,13 @@ namespace ProductieManager.Rpm.Misc
             }
         }
 
-        private void CheckFolders()
+        private void CheckFolders(string path)
         {
             try
             {
-                if (!Directory.Exists(Path))
+                if (!Directory.Exists(path))
                     return;
-                var xdirs = Directory.GetDirectories(Path).ToList();
+                var xdirs = Directory.GetDirectories(path).ToList();
                 lock (Records)
                 {
                     for (var i = 0; i < xdirs.Count; i++)
@@ -129,23 +131,23 @@ namespace ProductieManager.Rpm.Misc
                             if (Records[dir] < xinfo.LastWriteTime)
                             {
                                 Records[dir] = xinfo.LastWriteTime;
-                                OnFolderChanged(new FileSystemEventArgs(WatcherChangeTypes.Changed, Path, xinfo.Name));
+                                OnFolderChanged(new FileSystemEventArgs(WatcherChangeTypes.Changed, path, xinfo.Name));
                             }
                         }
                         else
                         {
                             Records.Add(dir, xinfo.LastWriteTime);
-                            OnFolderChanged(new FileSystemEventArgs(WatcherChangeTypes.Created, Path, xinfo.Name));
+                            OnFolderChanged(new FileSystemEventArgs(WatcherChangeTypes.Created, path, xinfo.Name));
                         }
                     }
-                    xdirs.AddRange(Directory.GetFiles(Path, Filter));
+                    xdirs.AddRange(Directory.GetFiles(path, Filter));
                     var xdeletes = Records.Where(x => !xdirs.Any(f => string.Equals(f, x.Key, StringComparison.CurrentCultureIgnoreCase))).Select(x => x.Key).ToList();
 
                     for (int i = 0; i < xdeletes.Count; i++)
                     {
                         var xrec = xdeletes[i];
                         Records.Remove(xrec);
-                        OnFolderDeleted(new FileSystemEventArgs(WatcherChangeTypes.Deleted, Path,
+                        OnFolderDeleted(new FileSystemEventArgs(WatcherChangeTypes.Deleted, path,
                             System.IO.Path.GetFileName(xrec)));
                     }
                 }
@@ -156,12 +158,12 @@ namespace ProductieManager.Rpm.Misc
             }
         }
 
-        private void CheckChanges()
+        private void CheckChanges(string path)
         {
             if (_disposed) return;
-                CheckFiles();
-                if (CheckForFolderChanges)
-                    CheckFolders();
+            CheckFiles(path);
+            if (CheckForFolderChanges)
+                CheckFolders(path);
         }
 
         public void InitWatcher(string path, string filter, bool checkforlders)
@@ -170,7 +172,7 @@ namespace ProductieManager.Rpm.Misc
             {
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
-                if(_Timer == null)
+                if (_Timer == null)
                 {
                     _Timer = new Timer();
                     _Timer.Interval = 3000;
@@ -178,14 +180,24 @@ namespace ProductieManager.Rpm.Misc
                     _Timer.Elapsed += _Timer_Elapsed;
                 }
                 else _Timer.Stop();
+
                 CheckForFolderChanges = checkforlders;
                 Path = path;
                 Filter = filter;
-                Records ??= new Dictionary<string, DateTime>();
+                if (Records == null)
+                {
+                    lock (this)
+                    {
+                        Records = new Dictionary<string, DateTime>();
+                    }
+                }
+
                 lock (Records)
                 {
                     Records?.Clear();
-                    Records = Directory.GetFiles(path, Filter).ToDictionary(x => x, x => new FileInfo(x).LastWriteTime);
+                    Records = Directory.GetFiles(path, Filter)
+                        .ToDictionary(x => x, x => new FileInfo(x).LastWriteTime);
+
                     if (CheckForFolderChanges)
                     {
                         var xdirs = Directory.GetDirectories(path, Filter).ToList();
@@ -237,7 +249,10 @@ namespace ProductieManager.Rpm.Misc
                 _Timer = null;
             }
             
-            Records?.Clear();
+            lock (Records)
+            {
+                Records?.Clear();
+            }
 
             _disposed = true;
         }

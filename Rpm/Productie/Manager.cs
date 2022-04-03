@@ -262,12 +262,12 @@ namespace Rpm.Productie
                     Close();
                     LoadPath(path);
                     InitManager();
-                    Database = new LocalDatabase(this, SystemId, DbPath, true)
+                    Database = new LocalDatabase(this, SystemId, DbPath)
                     {
                         LoggerEnabled = LoggerEnabled,
                         NotificationEnabled = false
                     }; 
-                    Database.LoadMultiFiles().Wait();
+                    Database.LoadMultiFiles();
                     ProductieChat = new ProductieChat();
                     ProductieProvider = new ProductieProvider();
                     // LocalConnection = new LocalService();
@@ -776,7 +776,7 @@ namespace Rpm.Productie
         /// <param name="incform">true als de productie ook die aangegeven status moet zijn, false je alleen wilt verkrijgen op basis van een geldige bewerking</param>
         /// <param name="handler"></param>
         /// <returns>Lijst van productieformulieren</returns>
-        public static Task<List<ProductieFormulier>> GetProducties(ViewState[] states, bool filter, bool incform, IsValidHandler handler)
+        public static Task<List<ProductieFormulier>> GetProducties(ViewState[] states, bool filter, bool incform, IsValidHandler handler, bool checksecondary)
         {
             return Task.Run(async () =>
             {
@@ -791,7 +791,7 @@ namespace Rpm.Productie
                         : ProductieProvider.LoadedType.Producties;
                 }
 
-                var xitems = await ProductieProvider.GetProducties(type, states, filter,handler);
+                var xitems = await ProductieProvider.GetProducties(type, states, filter,handler, checksecondary);
                 return xitems;
             });
         }
@@ -803,9 +803,9 @@ namespace Rpm.Productie
         /// <param name="filter">True voor als je de bewerkingen wilt laten filteren volgens de basis filter instellingen</param>
         /// <param name="handler"></param>
         /// <returns>Een taak die op de achtergrond de bewerkinglijst samen stelt</returns>
-        public static Task<List<Bewerking>> GetBewerkingen(ViewState[] states, bool filter, IsValidHandler handler = null)
+        public static Task<List<Bewerking>> GetBewerkingen(ViewState[] states, bool filter, bool checksecondary, IsValidHandler handler = null)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 if (ProductieProvider == null) return new List<Bewerking>();
                 var type = ProductieProvider.LoadedType.Producties;
@@ -813,7 +813,7 @@ namespace Rpm.Productie
                     type = ProductieProvider.LoadedType.Gereed;
                 if (states.Any(x => x is ViewState.Alles))
                     type = ProductieProvider.LoadedType.Alles;
-                var xitems = await ProductieProvider.GetBewerkingen(type, states, filter, handler);
+                var xitems = ProductieProvider.GetBewerkingen(type, states, filter, handler, checksecondary).Result;
                 return xitems;
             });
         }
@@ -906,10 +906,11 @@ namespace Rpm.Productie
         /// <param name="state">De staat waaraan de producties moeten voldoen</param>
         /// <param name="filter">True voor als je wilt filteren vanuit de basis instellingen</param>
         /// <param name="incform">True voor als de filter ook moet gelden voor de ProductieFormulier i.p.v alleen de bewerking</param>
+        /// <param name="checksecondary"></param>
         /// <returns>Een taak die op de achtergrond de productieformulieren verkrijgt</returns>
-        public static Task<List<ProductieFormulier>> GetProducties(ViewState state, bool filter, bool incform)
+        public static Task<List<ProductieFormulier>> GetProducties(ViewState state, bool filter, bool incform, bool checksecondary)
         {
-            return GetProducties(new[] {state}, filter, incform,null);
+            return GetProducties(new[] {state}, filter, incform,null, checksecondary);
         }
 
         /// <summary>
@@ -918,9 +919,9 @@ namespace Rpm.Productie
         /// <returns>Een taak die opp de achtergrond kijkt of er onderbroken producties zijn</returns>
         public static Task<bool> ContainsOnderbrokenProductie()
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
-                var prods = await GetProducties(new[] {ViewState.Gestart, ViewState.Gestopt}, true, false,null);
+                var prods = GetProducties(new[] {ViewState.Gestart, ViewState.Gestopt}, true, false,null,true).Result;
                 return prods.Any(x => x.IsOnderbroken());
             });
         }
@@ -1625,7 +1626,7 @@ namespace Rpm.Productie
 
                             // Task.Factory.StartNew(() =>
                             //{
-                            bws = Database.GetBewerkingen(ViewState.Gestart, true, null, null).Result;
+                            bws = Database.GetBewerkingen(ViewState.Gestart, true, null, null, false).Result;
 
                             var rooster = Opties.GetWerkRooster();
                             var einddag = DateTime.Now.Date.Add(rooster.EindWerkdag);

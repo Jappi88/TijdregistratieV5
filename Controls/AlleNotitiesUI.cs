@@ -85,7 +85,7 @@ namespace Controls
             if (Notities == null)
             {
                 Notities = new List<NotitieEntry>();
-                var prods = await Manager.Database.GetAllProducties(true, true);
+                var prods = await Manager.Database.GetAllProducties(true, true, true);
                 foreach (var prod in prods)
                 {
                     var xnotes = prod.GetNotities();

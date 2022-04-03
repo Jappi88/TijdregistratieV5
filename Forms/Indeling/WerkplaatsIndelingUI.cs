@@ -314,7 +314,7 @@ namespace Forms
                     throw new Exception("Database is niet beschikbaar!");
                 lock (Bewerkingen)
                 {
-                    Bewerkingen = Manager.Database.GetAllBewerkingen(false, true).Result.Where(x =>
+                    Bewerkingen = Manager.Database.GetAllBewerkingen(false, true,false).Result.Where(x =>
                         x.State != ProductieState.Gereed && x.State != ProductieState.Verwijderd).ToList();
                 }
 

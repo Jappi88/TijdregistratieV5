@@ -1005,14 +1005,13 @@ namespace Rpm.Productie
                     using var reader = new PdfReader(data);
                     var txt = "";
                     var xlocextraction = new MyLocationTextExtractionStrategy();
-                   
+                  
                     for (var i = 1; i <= reader.NumberOfPages; i++)
                     {
                         ProductieFormulier pf = null;
                         var xxlocextraction = new MyLocationTextExtractionStrategy();
                         var pdftext = PdfTextExtractor.GetTextFromPage(reader, i,xxlocextraction);
                         var xbase = 1000 * (reader.NumberOfPages - i);
-                      
                         if(reader.NumberOfPages > 1)
                         {
                             if (xbase > 0)
@@ -1047,20 +1046,13 @@ namespace Rpm.Productie
                         }
                         if (xxlocextraction.myPoints.Count > 0)
                             xlocextraction.myPoints.AddRange(xxlocextraction.myPoints);
-                        //for(int o = 0; o < xxlocextraction.myPoints.Count; o++)
-                        //{
-                        //    var xtxt = xxlocextraction.myPoints[o].Text;
-                        //    Console.WriteLine($"[{o}]{xtxt}");
-
-                        //}
                         if (string.IsNullOrEmpty(pdftext))
                         {
                             var pg = reader.GetPageN(i);
-                            var res = PdfReader.GetPdfObject(pg.Get(PdfName.RESOURCES)) as PdfDictionary;
-                            if (res != null)
+                            if (PdfReader.GetPdfObject(pg.Get(PdfName.RESOURCES)) is PdfDictionary res)
                             {
-                                var xobj = PdfReader.GetPdfObject(res.Get(PdfName.XOBJECT)) as PdfDictionary;
-                                if (xobj == null) continue;
+                                if (PdfReader.GetPdfObject(res.Get(PdfName.XOBJECT)) is not PdfDictionary xobj)
+                                    continue;
 
                                 var keys = xobj.Keys;
                                 if (keys.Count == 0) continue;

@@ -58,13 +58,12 @@ namespace Forms.ImageViewer
             // 
             // xFlowImagePanel
             // 
-            this.xFlowImagePanel.AutoScroll = true;
             this.xFlowImagePanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.xFlowImagePanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.xFlowImagePanel.Location = new System.Drawing.Point(47, 430);
+            this.xFlowImagePanel.Location = new System.Drawing.Point(47, 420);
             this.xFlowImagePanel.Name = "xFlowImagePanel";
             this.xFlowImagePanel.Padding = new System.Windows.Forms.Padding(5);
-            this.xFlowImagePanel.Size = new System.Drawing.Size(875, 125);
+            this.xFlowImagePanel.Size = new System.Drawing.Size(875, 135);
             this.xFlowImagePanel.TabIndex = 0;
             this.xFlowImagePanel.WrapContents = false;
             // 
@@ -79,9 +78,8 @@ namespace Forms.ImageViewer
             this.xMainImage.GridColorAlternate = System.Drawing.Color.Transparent;
             this.xMainImage.Location = new System.Drawing.Point(47, 60);
             this.xMainImage.Name = "xMainImage";
-            this.xMainImage.Size = new System.Drawing.Size(875, 332);
+            this.xMainImage.Size = new System.Drawing.Size(875, 322);
             this.xMainImage.TabIndex = 0;
-            this.xMainImage.MouseMove += new System.Windows.Forms.MouseEventHandler(this.xMainImage_MouseMove);
             // 
             // xnavigateleft
             // 
@@ -93,6 +91,7 @@ namespace Forms.ImageViewer
             this.xnavigateleft.Name = "xnavigateleft";
             this.xnavigateleft.Size = new System.Drawing.Size(31, 90);
             this.xnavigateleft.TabIndex = 0;
+            this.toolTip1.SetToolTip(this.xnavigateleft, "Navigeer naar links");
             this.xnavigateleft.UseVisualStyleBackColor = true;
             this.xnavigateleft.Visible = false;
             this.xnavigateleft.Click += new System.EventHandler(this.xnavigateleft_Click);
@@ -139,6 +138,7 @@ namespace Forms.ImageViewer
             this.xnavigateright.Name = "xnavigateright";
             this.xnavigateright.Size = new System.Drawing.Size(31, 90);
             this.xnavigateright.TabIndex = 0;
+            this.toolTip1.SetToolTip(this.xnavigateright, "Navigeer naar rechts");
             this.xnavigateright.UseVisualStyleBackColor = true;
             this.xnavigateright.Visible = false;
             this.xnavigateright.Click += new System.EventHandler(this.xnavigateright_Click);
@@ -156,7 +156,7 @@ namespace Forms.ImageViewer
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(47, 392);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(47, 382);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -197,7 +197,7 @@ namespace Forms.ImageViewer
             this.xopeninexplorer.FlatAppearance.BorderSize = 0;
             this.xopeninexplorer.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
             this.xopeninexplorer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xopeninexplorer.Image = global::ProductieManager.Properties.Resources.folder_windows_14566;
+            this.xopeninexplorer.Image = global::ProductieManager.Properties.Resources.windows_folder_20788;
             this.xopeninexplorer.Location = new System.Drawing.Point(93, 0);
             this.xopeninexplorer.Name = "xopeninexplorer";
             this.xopeninexplorer.Size = new System.Drawing.Size(31, 32);
@@ -274,8 +274,9 @@ namespace Forms.ImageViewer
             this.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.Title = "Afbeeldingen";
             this.TransparencyKey = System.Drawing.Color.White;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ImageViewerForm_FormClosing);
             this.Shown += new System.EventHandler(this.ImageViewerForm_Shown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ImageViewerForm_MouseMove);
+            this.Resize += new System.EventHandler(this.frmNewForm_ResizeEnd);
             this.xleftpanel.ResumeLayout(false);
             this.xrechtpanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).EndInit();

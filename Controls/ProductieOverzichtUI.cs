@@ -293,7 +293,7 @@ namespace Controls
                 {
                     List<string> plekken = GetWerkplekkenFromList();
                     var bws = await Manager.GetBewerkingen(new ViewState[] {ViewState.Gestopt, ViewState.Gestart},
-                        true);
+                        true,true);
                     var gestart = bws.Where(x => x.State == ProductieState.Gestart).OrderBy(x=> x.VerwachtDatumGereed()).ToList();
                     bws = bws.Where(x => x.State == ProductieState.Gestopt).Distinct(new BewerkingDistinctComparer()).ToList();
                     List<Bewerking> xremove = new List<Bewerking>();

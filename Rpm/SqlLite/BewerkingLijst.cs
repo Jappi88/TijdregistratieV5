@@ -149,66 +149,69 @@ namespace Rpm.SqlLite
         //    }
         //}
 
-        public async Task<int> UpdateDatabase()
+        public Task<int> UpdateDatabase()
         {
-            try
+            return Task.Run(() =>
             {
-                if (Manager.Database == null || Manager.Database.IsDisposed)
-                    return -1;
-                if (Entries == null && !LoadDb()) return 0;
-                var prods = await Manager.Database.GetAllBewerkingen(true, false);
-                var done = 0;
-                foreach (var bw in prods)
+                try
                 {
-                    var changed = false;
-                    var ent = GetEntry(bw.Naam.Split('[')[0]);
-                    if (ent != null)
+                    if (Manager.Database == null || Manager.Database.IsDisposed)
+                        return -1;
+                    if (Entries == null && !LoadDb()) return 0;
+                    var prods = Manager.Database.GetAllBewerkingen(true, false, true).Result;
+                    var done = 0;
+                    foreach (var bw in prods)
                     {
-                        if (bw.IsBemand != ent.IsBemand)
+                        var changed = false;
+                        var ent = GetEntry(bw.Naam.Split('[')[0]);
+                        if (ent != null)
                         {
-                            bw.IsBemand = ent.IsBemand;
-                            changed = true;
-                            done++;
-                        }
-
-                        if (ent.HasChanged)
-                        {
-                            bw.Naam = ent.NewName;
-                            changed = true;
-                            done++;
-                            foreach (var wp in bw.WerkPlekken)
+                            if (bw.IsBemand != ent.IsBemand)
                             {
-                                foreach (var st in wp.Storingen)
+                                bw.IsBemand = ent.IsBemand;
+                                changed = true;
+                                done++;
+                            }
+
+                            if (ent.HasChanged)
+                            {
+                                bw.Naam = ent.NewName;
+                                changed = true;
+                                done++;
+                                foreach (var wp in bw.WerkPlekken)
                                 {
-                                    st.Path = wp.Path;
+                                    foreach (var st in wp.Storingen)
+                                    {
+                                        st.Path = wp.Path;
+                                    }
                                 }
                             }
                         }
+
+                        if (changed)
+                            _ = bw.UpdateBewerking(null, null, true, false);
                     }
 
-                    if (changed)
-                        _=bw.UpdateBewerking(null, null, true, false);
+                    var entries = GetAllEntries();
+                    var reload = false;
+                    foreach (var ent in entries)
+                        if (ent.HasChanged)
+                        {
+                            DeleteEntry(ent.Naam);
+                            ent.Naam = ent.NewName;
+                            UpdateEntry(ent);
+                            reload = done > 0;
+                        }
+
+                    if (reload)
+                        Manager.ProductiesChanged();
+                    return done;
                 }
-
-                var entries = GetAllEntries();
-                var reload = false;
-                foreach (var ent in entries)
-                    if (ent.HasChanged)
-                    {
-                        DeleteEntry(ent.Naam);
-                        ent.Naam = ent.NewName;
-                        UpdateEntry(ent);
-                        reload = done > 0;
-                    }
-
-                if (reload)
-                    Manager.ProductiesChanged();
-                return done;
-            }
-            catch
-            {
-                return -1;
-            }
+                catch
+                {
+                    return -1;
+                }
+            });
         }
 
         public bool CreateNew()

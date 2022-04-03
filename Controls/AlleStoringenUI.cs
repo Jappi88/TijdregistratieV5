@@ -134,7 +134,7 @@ namespace Controls
                                 new ViewState[]
                                 {
                                     ViewState.Alles
-                                }, true, null).Result;
+                                }, true, null, true).Result;
                           
                             foreach (var bw in bws)
                                 UpdateStoringen(bw, Bereik,null);

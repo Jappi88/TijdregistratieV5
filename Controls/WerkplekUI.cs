@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PdfSharp.Charting;
 
 namespace Controls
 {
@@ -32,8 +33,7 @@ namespace Controls
                 xwerkpleklist.SelectedItem?.EnsureVisible();
             }
         }
-
-        public Manager PManager { get; private set; }
+        
         public bool IsSyncing { get; private set; }
         public bool EnableSync { get; set; }
         public void InitUI(Manager manager)
@@ -42,7 +42,6 @@ namespace Controls
                 // check which column is about to be sorted and set your custom comparer
                 xwerkpleklist.ListViewItemSorter = new Comparer(order, column);
             };
-            PManager = manager;
             imageList1.Images.Clear();
             imageList1.Images.Add(Resources.iconfinder_technology);
             imageList1.Images.Add(
@@ -148,10 +147,31 @@ namespace Controls
 
         private void Manager_OnFormulierDeleted(object sender, string id)
         {
+            RemoveWerkplekken(id);
+        }
+
+        private void RemoveWerkplekken(string id)
+        {
             if (this.Disposing || this.IsDisposed) return;
             try
             {
-                this.BeginInvoke(new MethodInvoker(LoadPlekken));
+                if (this.InvokeRequired)
+                {
+                    this.Invoke(new MethodInvoker(() => RemoveWerkplekken(id)));
+                }
+                else
+                {
+                    if (xwerkpleklist.Items.Count > 0)
+                    {
+                        var wps = xwerkpleklist.Objects.Cast<WerkPlek>().Where(x =>
+                            string.Equals(id, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                        if (wps.Count > 0)
+                        {
+                            wps.ForEach(x => xwerkpleklist.RemoveObject(x));
+                            xwerkpleklist.Invalidate();
+                        }
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -175,14 +195,20 @@ namespace Controls
             bool changed = false;
             try
             {
-
-                var items = Manager.GetProducties(ViewState.Gestart, true, false).Result;
+                
+                var ids = Manager.Database.ProductieFormulieren.GetAllIDs(false).Result;
                 var plekken = new List<WerkPlek>();
-                foreach (var item in items)
+                if (ids.Count > 0)
                 {
-                    var xpl = GetWerkplekken(item);
-                    if (xpl.Length > 0)
-                        plekken.AddRange(xpl);
+
+                    foreach (var id in ids)
+                    {
+                        var prod = Manager.Database.GetProductie(id,false);
+                        if (prod == null || prod.State != ProductieState.Gestart) continue;
+                        var xpl = GetWerkplekken(prod);
+                        if (xpl.Length > 0)
+                            plekken.AddRange(xpl);
+                    }
                 }
 
                 int count = xwerkpleklist.Items.Count;
@@ -278,7 +304,9 @@ namespace Controls
                     }
 
                     if (changed)
+                    {
                         PlekkenChanged();
+                    }
                 }
                 catch
                 {
@@ -366,9 +394,6 @@ namespace Controls
             var werkplekken = new List<WerkPlek>();
             try
             {
-                if (PManager == null)
-                    return werkplekken.ToArray();
-
                 foreach (var form in forms)
                     if (form.Bewerkingen is {Length: > 0})
                     {
@@ -393,8 +418,6 @@ namespace Controls
             var werkplekken = new List<WerkPlek>();
             try
             {
-                if (PManager == null)
-                    return werkplekken.ToArray();
                 if (form.Bewerkingen is {Length: > 0})
                 {
                     var bws = form.Bewerkingen.Where(x => x.State == ProductieState.Gestart).ToArray();

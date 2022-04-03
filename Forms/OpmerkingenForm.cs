@@ -417,7 +417,12 @@ namespace Forms
 
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (xselectedopmerkingpanel.Tag is OpmerkingEntry entry && string.Equals(entry.Afzender, Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase))
+            if (xselectedopmerkingpanel.Tag is OpmerkingEntry entry &&
+                (string.Equals(entry.Afzender, Manager.Opties?.Username, StringComparison.CurrentCultureIgnoreCase) ||
+                 Manager.LogedInGebruiker is
+                 {
+                     AccesLevel: > AccesType.ProductieAdvance
+                 }))
             {
                 wijzigToolStripMenuItem.Enabled = true;
                 verwijderToolStripMenuItem.Enabled = true;

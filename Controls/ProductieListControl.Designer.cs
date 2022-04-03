@@ -165,9 +165,9 @@ namespace Controls
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xloadinglabel.BackColor = System.Drawing.Color.Transparent;
             this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xloadinglabel.Location = new System.Drawing.Point(0, 160);
+            this.xloadinglabel.Location = new System.Drawing.Point(0, 73);
             this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(876, 404);
+            this.xloadinglabel.Size = new System.Drawing.Size(985, 516);
             this.xloadinglabel.TabIndex = 29;
             this.xloadinglabel.Text = "Producties Laden...";
             this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -598,14 +598,14 @@ namespace Controls
             // 
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
             this.resetToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.R)));
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.resetToolStripMenuItem.Text = "Reset";
             this.resetToolStripMenuItem.Click += new System.EventHandler(this.verwijderFiltersToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(136, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
             // 
             // toolStripSeparator3
             // 

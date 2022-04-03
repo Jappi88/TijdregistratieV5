@@ -109,7 +109,7 @@ namespace Controls
             try
             {
                 if (Manager.Database == null || Manager.Database.IsDisposed || Productie == null) return;
-                var prods = Manager.Database.GetBewerkingen(ViewState.Gestopt, true, null, null).Result;
+                var prods = Manager.Database.GetAllBewerkingen(false, true, true).Result;
                 prods.Remove(Productie);
                 prods.RemoveAll(x =>
                     x.Combies.Any(c =>

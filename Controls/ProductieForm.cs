@@ -9,6 +9,7 @@ using Rpm.Various;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using MetroFramework.Controls;
@@ -259,6 +260,7 @@ namespace Controls
 
                     //mainMenu1.Enable("xwerktijden", !b.IsBemand);
                     mainMenu1.Enable("xopenpdf", b.Parent != null && b.Parent.ContainsProductiePdf());
+                    mainMenu1.Enable("xprintform", b.Parent != null && b.Parent.ContainsProductiePdf() && Functions.CanPrint());
                     //update de start knop
                     switch (b.State)
                     {
@@ -560,6 +562,9 @@ namespace Controls
                     case "xdelete":
                         RemoveBewerking();
                         break;
+                    case "xprintform":
+                        PrintFormulier();
+                        break;
                 }
         }
 
@@ -706,6 +711,26 @@ namespace Controls
             x.ShowDialog();
         }
 
+        public void PrintFormulier()
+        {
+            try
+            {
+                var bw = CurrentBewerking();
+                if (bw != null && bw.Parent != null && bw.Parent.ContainsProductiePdf())
+                {
+                    var pdf = bw.Parent.GetProductieFormulierPDF();
+                    if (!string.IsNullOrEmpty(pdf) && File.Exists(pdf))
+                    {
+                        Functions.PrintPDFWithAcrobat(pdf);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         private void xtoonwerktekening_Click(object sender, EventArgs e)
         {
             ShowWerkTekening();
@@ -808,14 +833,14 @@ namespace Controls
         {
             var bw = CurrentBewerking();
             if (bw == null) return;
-            Clipboard.SetText(bw.Naam?.ToString());
+            Clipboard.SetText(bw.Naam ?? string.Empty);
         }
 
         private void werkLocatieToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var bw = CurrentBewerking();
             if (bw == null) return;
-            Clipboard.SetText(bw.Path?.ToString());
+            Clipboard.SetText(bw.Path ?? string.Empty);
         }
     }
 }

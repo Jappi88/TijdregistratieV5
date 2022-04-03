@@ -122,7 +122,7 @@ namespace Forms
                             return;
                         DoProgress("Producties laden...", count, 100);
                         var files = await Manager.GetAllProductiePaths(true, true);
-                        var forms = await Manager.Database.GetAllProducties(true, false);
+                        var forms = await Manager.Database.GetAllProducties(true, false, true);
                         var artikels = new List<ArtikelRecord>();
                         foreach (var file in files)
                         {

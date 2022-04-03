@@ -247,7 +247,7 @@ namespace Rpm.SqlLite
             //}
         }
 
-        public List<T> GetEntries<T>(DateTime vanaf, DateTime tot, IsValidHandler validhandler)
+        public List<T> GetEntries<T>(DateTime vanaf, DateTime tot, IsValidHandler validhandler, bool checksecondary)
         {
             //lock (_locker)
             //{
@@ -255,7 +255,7 @@ namespace Rpm.SqlLite
             try
             {
                 if (!CanRead) return xreturn;
-                string path = GetReadPath(true);
+                string path = GetReadPath(checksecondary);
                 var files = Directory.GetFiles(path, "*.rpm");
                 foreach (var file in files)
                 {
@@ -279,7 +279,7 @@ namespace Rpm.SqlLite
             //}
         }
 
-        public List<T> GetEntries<T>(IsValidHandler validhandler)
+        public List<T> GetEntries<T>(IsValidHandler validhandler, bool checksecondary)
         {
             //lock (_locker)
             // {
@@ -287,7 +287,7 @@ namespace Rpm.SqlLite
             try
             {
                 if (!CanRead) return xreturn;
-                string path = GetReadPath(true);
+                string path = GetReadPath(checksecondary);
                 var files = Directory.GetFiles(path, "*.rpm");
                 foreach (var file in files)
                 {

@@ -11,7 +11,7 @@ namespace ProductieManager.Rpm.Productie
 
         public static Task<Dictionary<string, MateriaalEntryInfo>> GetMateriaalVerbruik(TijdEntry bereik, ProgressChangedHandler progressChanged = null)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                
                 var xreturn = new Dictionary<string, MateriaalEntryInfo> ();
@@ -23,7 +23,7 @@ namespace ProductieManager.Rpm.Productie
                         {
                             Message = "Producties laden...", Pogress = 0, Type = ProgressType.ReadBussy, Value = xreturn
                         });
-                    var prods = await Manager.Database.GetAllProducties(true, true, bereik,null);
+                    var prods = Manager.Database.GetAllProducties(true, true, bereik,null,true).Result;
                     for (int i = 0; i < prods.Count; i++)
                     {
                         int percent = ((i / prods.Count) * 100);

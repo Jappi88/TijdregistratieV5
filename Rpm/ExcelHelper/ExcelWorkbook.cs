@@ -1807,7 +1807,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                     arg.Message = $"Producties Verzamelen...";
                     if (handler != null && !handler.Invoke(arg)) return false;
                     var producties = Manager.Database
-                        .GetBewerkingen(ViewState.Alles, true, null, null).Result;
+                        .GetBewerkingen(ViewState.Alles, true, null, null,false).Result;
                     if (filters != null && filters.Count > 0)
                         producties = producties.Where(x => filters.Any(f => f.IsAllowed(x,"ExcelWeekOverzicht"))).ToList();
                     arg.Message = $"Geen producties gevonden!";

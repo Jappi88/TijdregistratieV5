@@ -39,20 +39,22 @@
             // 
             this.panel1.Controls.Add(this.xclose);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(20, 512);
+            this.panel1.Location = new System.Drawing.Point(20, 530);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(694, 39);
+            this.panel1.Size = new System.Drawing.Size(725, 39);
             this.panel1.TabIndex = 0;
             // 
             // xclose
             // 
             this.xclose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xclose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.xclose.FlatAppearance.BorderColor = System.Drawing.Color.Red;
             this.xclose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xclose.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xclose.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.xclose.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xclose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xclose.Location = new System.Drawing.Point(591, 3);
+            this.xclose.Location = new System.Drawing.Point(622, 3);
             this.xclose.Name = "xclose";
             this.xclose.Size = new System.Drawing.Size(100, 32);
             this.xclose.TabIndex = 0;
@@ -68,14 +70,15 @@
             this.fileBrowserUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fileBrowserUI1.Location = new System.Drawing.Point(20, 60);
             this.fileBrowserUI1.Name = "fileBrowserUI1";
-            this.fileBrowserUI1.Size = new System.Drawing.Size(694, 452);
+            this.fileBrowserUI1.RootPath = null;
+            this.fileBrowserUI1.Size = new System.Drawing.Size(725, 470);
             this.fileBrowserUI1.TabIndex = 1;
             // 
             // BijlageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(734, 571);
+            this.ClientSize = new System.Drawing.Size(765, 589);
             this.Controls.Add(this.fileBrowserUI1);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

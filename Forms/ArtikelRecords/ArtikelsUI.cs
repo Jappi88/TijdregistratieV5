@@ -158,7 +158,7 @@ namespace Controls
                 SetWaitUI();
                 productieListControl1.InitProductie(true, true, true, true, false, false);
                 _Values.Clear();
-                var bws = await Manager.Database.GetAllBewerkingen(true, true);
+                var bws = await Manager.Database.GetAllBewerkingen(true, true,true);
                 foreach (var bw in bws)
                 {
                     if (IsDisposed || Disposing)

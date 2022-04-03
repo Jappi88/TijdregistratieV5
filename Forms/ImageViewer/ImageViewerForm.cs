@@ -5,7 +5,10 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using MetroFramework.Components;
+using ProductieManager.Rpm.Misc;
+using Rpm.Misc;
+using Rpm.Various;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Forms.ImageViewer
 {
@@ -17,12 +20,42 @@ namespace Forms.ImageViewer
         
         #endregion
 
+        private GlobalMouseHandler _globalMouse;
         public ImageViewerForm(string filename)
         {
             InitializeComponent();
             this.StyleManager = metroStyleManager1;
             LoadedFile = filename;
+            _globalMouse = new GlobalMouseHandler();
+            _globalMouse.MouseMovedEvent += GlobalMouseHandler_MouseMovedEvent;
+            Application.AddMessageFilter(_globalMouse);
         }
+
+        private void GlobalMouseHandler_MouseMovedEvent(object sender, MouseEventArgs e)
+        {
+            InitNavigationButton(e);
+        }
+
+        private void frmNewForm_ResizeEnd(object sender, EventArgs e)
+        {
+            CenterFlowLayoutPanelNavigationControls();
+        }
+
+        /// <summary>
+
+        /// ''' Sets the padding-left of the FlowLayoutPanelNavigation to imitate as if the controls are centered
+
+        /// ''' </summary>
+        private void CenterFlowLayoutPanelNavigationControls()
+        {
+            // Get the total width of all Buttons in FlowLayoutPanelNavigation
+            int totalControlWidth = xFlowImagePanel.Controls.OfType<PictureBox>().Sum(btn => btn.Width + 5);
+
+            if (totalControlWidth > 0 && totalControlWidth < xFlowImagePanel.Width)
+                // If the total width is less than FlowLayoutPanelNavigation then get the difference, divide by 2, and set that as the left-padding
+                xFlowImagePanel.Padding = new Padding(Convert.ToInt32(((xFlowImagePanel.Width - totalControlWidth) / (double)2)), 5, 5, 5);
+        }
+
 
         private void LoadImages()
         {
@@ -47,6 +80,7 @@ namespace Forms.ImageViewer
                         }
                     }
                     xFlowImagePanel.FlowDirection = FlowDirection.LeftToRight;
+                    CenterFlowLayoutPanelNavigationControls();
                 }
                 LoadImage(LoadedFile);
             }
@@ -63,6 +97,7 @@ namespace Forms.ImageViewer
             try
             {
                 var img = Image.FromFile(filename);
+               
                 if (img == null)
                     throw new Exception($"'{filename}' is geen geldige afbeelding");
                
@@ -83,7 +118,8 @@ namespace Forms.ImageViewer
                 bool flag = (img.Width > this.Width - 40 ||
                              img.Height > this.Height - 80);
                 xMainImage.AutoScroll = false;
-                xMainImage.Image = img;
+                xMainImage.Image = img.ResizeImage(img.Size);
+                img.Dispose();
                 if (flag)
                 {
                     xMainImage.ZoomToFit();
@@ -91,6 +127,7 @@ namespace Forms.ImageViewer
                 else xMainImage.Zoom = 80;
                 xMainImage.AutoScroll = true;
                 this.Text = $"{Path.GetFileName(filename)}";
+                LoadedFile = filename;
                 SelectImageBox(filename);
                 InitNavigationButton();
                 this.Invalidate();
@@ -111,7 +148,7 @@ namespace Forms.ImageViewer
                 fcs.ForEach(x => x.BackColor = Color.Transparent);
                 if (fs != null)
                 {
-                    fs.BackColor = Color.AliceBlue;
+                    fs.BackColor = Color.DodgerBlue;
                     SelectedImage = fs;
                     xFlowImagePanel.ScrollControlIntoView(fs);
                     fs.Focus();
@@ -130,14 +167,30 @@ namespace Forms.ImageViewer
                 var img = Image.FromFile(filename);
                 if (img == null)
                     throw new Exception($"'{filename}' is geen geldige afbeelding");
+                if (img.PropertyIdList.Contains(0x0112))
+                {
+                    PropertyItem propOrientation = img.GetPropertyItem(0x0112);
+                    short orientation = BitConverter.ToInt16(propOrientation.Value, 0);
+                    if (orientation == 6)
+                    {
+                        img.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                    }
+                    else if (orientation == 8)
+                    {
+                        img.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                    }
+                }
+
                 var pc = new PictureBox();
                 pc.SizeMode = PictureBoxSizeMode.StretchImage;
-                pc.Image = img;
+                pc.Image = img.ResizeImage(128, 96);
+                img.Dispose();
                 pc.Size = new Size(128, 96);
                 pc.Tag = filename;
                 pc.Click += Pc_Click;
                 pc.MouseEnter += Pc_MouseEnter;
                 pc.MouseLeave += Pc_MouseLeave;
+                
                 return pc;
             }
             catch (Exception e)
@@ -152,8 +205,10 @@ namespace Forms.ImageViewer
             if (sender is PictureBox pic)
             {
                 if (pic.Equals(SelectedImage))
-                    pic.BackColor = Color.AliceBlue;
+                    pic.BackColor = Color.DodgerBlue;
                 else pic.BackColor = Color.Transparent;
+                pic.Margin = new Padding(5, 5, 5, 5);
+                pic.Invalidate();
             }
         }
 
@@ -161,7 +216,9 @@ namespace Forms.ImageViewer
         {
             if (sender is PictureBox pic)
             {
-                pic.BackColor = Color.AliceBlue;
+                pic.BackColor = Color.DodgerBlue;
+                pic.Margin = new Padding(5, 10, 5, 10);
+                pic.Invalidate();
             }
         }
 
@@ -234,16 +291,6 @@ namespace Forms.ImageViewer
             }
         }
 
-        private void xMainImage_MouseMove(object sender, MouseEventArgs e)
-        {
-            InitNavigationButton(e);
-        }
-
-        private void ImageViewerForm_MouseMove(object sender, MouseEventArgs e)
-        {
-            InitNavigationButton(e);
-        }
-
         private void InitNavigationButton()
         {
             InitNavigationButton(new MouseEventArgs(MouseButtons.None, 0, MousePosition.X, MousePosition.Y, 0));
@@ -253,12 +300,16 @@ namespace Forms.ImageViewer
         {
             try
             {
-                var rec =  new Rectangle(0,60,60, xMainImage.Height);
-                xnavigateleft.Visible = rec.Contains(e.Location) && CanNavigateBack();
-                rec = new Rectangle(this.Width - 60, 60,60 , xMainImage.Height);
-                xnavigateright.Visible = rec.Contains(e.Location) && CanNavigateForward();
-                xleftbutton.Enabled = CanNavigateBack();
-                xrechtbutton.Enabled = CanNavigateForward();
+                var xloc = this.PointToClient(e.Location);
+                bool xb = CanNavigateBack();
+                bool xf = CanNavigateForward();
+               
+                var rec =  new Rectangle(0,60,100, xMainImage.Height);
+                xnavigateleft.Visible = rec.Contains(xloc) && xb;
+                rec = new Rectangle(this.Width - 60, 60,100 , xMainImage.Height);
+                xnavigateright.Visible = rec.Contains(xloc) && xf;
+                xleftbutton.Enabled = xb;
+                xrechtbutton.Enabled = xf;
             }
             catch (Exception ex)
             {
@@ -309,6 +360,15 @@ namespace Forms.ImageViewer
         private void ImageViewerForm_Shown(object sender, EventArgs e)
         {
             LoadImages();
+        }
+
+        private void ImageViewerForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (_globalMouse != null)
+            {
+                Application.RemoveMessageFilter(_globalMouse);
+                _globalMouse = null;
+            }
         }
     }
 }
