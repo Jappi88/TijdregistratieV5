@@ -573,6 +573,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap cut_icon_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("cut_icon_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap database_21835_96x96 {
             get {
                 object obj = ResourceManager.GetObject("database_21835_96x96", resourceCulture);
@@ -1000,6 +1010,26 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap files_folder_icon_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("files_folder_icon_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon files_folder_icon_64x64 {
+            get {
+                object obj = ResourceManager.GetObject("files_folder_icon_64x64", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap filter_32x32 {
             get {
                 object obj = ResourceManager.GetObject("filter_32x32", resourceCulture);
@@ -1090,9 +1120,29 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap folder_open_Empty_96x96 {
+            get {
+                object obj = ResourceManager.GetObject("folder_open_Empty_96x96", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap folder_windows_14566 {
             get {
                 object obj = ResourceManager.GetObject("folder_windows_14566", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap folder_with_contents_96x96 {
+            get {
+                object obj = ResourceManager.GetObject("folder_with_contents_96x96", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

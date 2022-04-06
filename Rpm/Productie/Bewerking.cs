@@ -563,6 +563,7 @@ namespace Rpm.Productie
                 Omschrijving = parent.Omschrijving,
                 Paraaf = Paraaf,
                 Aantal = parent.Aantal,
+                Parent = parent,
                 DatumVerwijderd = DatumVerwijderd
             };
             b.SetPersoneel(GetPersoneel().Select(Personeel.CreateNew).ToArray());

@@ -46,11 +46,12 @@
             this.xsizecol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.xlargeimagelist = new System.Windows.Forms.ImageList(this.components);
-            this.xsmallImageList = new System.Windows.Forms.ImageList(this.components);
+            this.xsmallimageList = new System.Windows.Forms.ImageList(this.components);
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.xtotalitems = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.xselected = new System.Windows.Forms.ToolStripLabel();
+            this.xloadinglabel = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xbrowser)).BeginInit();
             this.toolStrip2.SuspendLayout();
@@ -214,10 +215,10 @@
             this.xbrowser.ShowItemCountOnGroups = true;
             this.xbrowser.ShowItemToolTips = true;
             this.xbrowser.Size = new System.Drawing.Size(892, 522);
-            this.xbrowser.SmallImageList = this.xsmallImageList;
+            this.xbrowser.SmallImageList = this.xsmallimageList;
             this.xbrowser.TabIndex = 6;
             this.xbrowser.TileSize = new System.Drawing.Size(300, 96);
-            this.xbrowser.TintSortColumn = true;
+            this.xbrowser.UseCellFormatEvents = true;
             this.xbrowser.UseCompatibleStateImageBehavior = false;
             this.xbrowser.UseExplorerTheme = true;
             this.xbrowser.UseFilterIndicator = true;
@@ -232,6 +233,8 @@
             this.xbrowser.CellEditStarting += new BrightIdeasSoftware.CellEditEventHandler(this.xbrowser_CellEditStarting);
             this.xbrowser.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.xbrowser_CellClick);
             this.xbrowser.Dropped += new System.EventHandler<BrightIdeasSoftware.OlvDropEventArgs>(this.xbrowser_Dropped);
+            this.xbrowser.FormatCell += new System.EventHandler<BrightIdeasSoftware.FormatCellEventArgs>(this.xbrowser_FormatCell);
+            this.xbrowser.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.xbrowser_FormatRow);
             this.xbrowser.ModelCanDrop += new System.EventHandler<BrightIdeasSoftware.ModelDropEventArgs>(this.xbrowser_ModelCanDrop);
             this.xbrowser.ModelDropped += new System.EventHandler<BrightIdeasSoftware.ModelDropEventArgs>(this.xbrowser_ModelDropped);
             this.xbrowser.SelectedIndexChanged += new System.EventHandler(this.xbrowser_SelectedIndexChanged);
@@ -241,7 +244,7 @@
             // 
             this.xnaamcol.AspectName = "Name";
             this.xnaamcol.Groupable = false;
-            this.xnaamcol.HeaderForeColor = System.Drawing.Color.White;
+            this.xnaamcol.HeaderForeColor = System.Drawing.Color.Black;
             this.xnaamcol.IsTileViewColumn = true;
             this.xnaamcol.Text = "Naam";
             this.xnaamcol.Width = 294;
@@ -249,7 +252,7 @@
             // xgewijzigdcol
             // 
             this.xgewijzigdcol.AspectName = "LastChanged";
-            this.xgewijzigdcol.HeaderForeColor = System.Drawing.Color.White;
+            this.xgewijzigdcol.HeaderForeColor = System.Drawing.Color.Black;
             this.xgewijzigdcol.IsEditable = false;
             this.xgewijzigdcol.IsTileViewColumn = true;
             this.xgewijzigdcol.Text = "Gewijzigd Op";
@@ -258,7 +261,7 @@
             // xtypecol
             // 
             this.xtypecol.AspectName = "Type";
-            this.xtypecol.HeaderForeColor = System.Drawing.Color.White;
+            this.xtypecol.HeaderForeColor = System.Drawing.Color.Black;
             this.xtypecol.IsEditable = false;
             this.xtypecol.IsTileViewColumn = true;
             this.xtypecol.Text = "Type";
@@ -267,7 +270,7 @@
             // xsizecol
             // 
             this.xsizecol.AspectName = "FriendlySize";
-            this.xsizecol.HeaderForeColor = System.Drawing.Color.White;
+            this.xsizecol.HeaderForeColor = System.Drawing.Color.Black;
             this.xsizecol.IsEditable = false;
             this.xsizecol.IsTileViewColumn = true;
             this.xsizecol.Text = "Grootte";
@@ -285,11 +288,11 @@
             this.xlargeimagelist.ImageSize = new System.Drawing.Size(96, 96);
             this.xlargeimagelist.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // xsmallImageList
+            // xsmallimageList
             // 
-            this.xsmallImageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.xsmallImageList.ImageSize = new System.Drawing.Size(32, 32);
-            this.xsmallImageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.xsmallimageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.xsmallimageList.ImageSize = new System.Drawing.Size(48, 48);
+            this.xsmallimageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // toolStrip2
             // 
@@ -325,6 +328,21 @@
             this.xselected.Size = new System.Drawing.Size(133, 22);
             this.xselected.Text = "0 Items geselecteerd 0 B";
             // 
+            // xloadinglabel
+            // 
+            this.xloadinglabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xloadinglabel.BackColor = System.Drawing.Color.Transparent;
+            this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xloadinglabel.Location = new System.Drawing.Point(0, 38);
+            this.xloadinglabel.Name = "xloadinglabel";
+            this.xloadinglabel.Size = new System.Drawing.Size(889, 526);
+            this.xloadinglabel.TabIndex = 30;
+            this.xloadinglabel.Text = "Bijlages Laden...";
+            this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.xloadinglabel.Visible = false;
+            // 
             // FileBrowserUI
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -332,6 +350,7 @@
             this.Controls.Add(this.xbrowser);
             this.Controls.Add(this.toolStrip2);
             this.Controls.Add(this.toolStrip1);
+            this.Controls.Add(this.xloadinglabel);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "FileBrowserUI";
@@ -363,12 +382,13 @@
         private System.Windows.Forms.ToolStripLabel xtotalitems;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripLabel xselected;
-        private System.Windows.Forms.ImageList xsmallImageList;
         private System.Windows.Forms.ImageList xlargeimagelist;
         private System.Windows.Forms.ToolStripButton xclearsearchbox;
         private System.Windows.Forms.ToolStripTextBox xsearchbox;
         private System.Windows.Forms.ToolStripLabel xstatus;
         private System.Windows.Forms.ContextMenuStrip xContextMenu;
         private System.Windows.Forms.ToolStripButton xrefreshdirectory;
+        private System.Windows.Forms.Label xloadinglabel;
+        private System.Windows.Forms.ImageList xsmallimageList;
     }
 }

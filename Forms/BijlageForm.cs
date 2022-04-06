@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Forms.FileBrowser;
 using Forms.MetroBase;
 using Rpm.Productie;
 
@@ -9,6 +10,15 @@ namespace Forms
         public BijlageForm()
         {
             InitializeComponent();
+            this.Shown += BijlageForm_Shown;
+        }
+
+        private void BijlageForm_Shown(object sender, System.EventArgs e)
+        {
+            if(!string.IsNullOrEmpty(NavigationPath))
+                SetPath(NavigationPath);
+            else if(!string.IsNullOrEmpty(RootPath))
+                SetPath(RootPath);
         }
 
         public string RootPath
@@ -17,6 +27,10 @@ namespace Forms
             set=> fileBrowserUI1.RootPath = value;
         }
 
+        public string NavigationPath { get; set; }
+
+        public FileBrowserUI Browser => fileBrowserUI1;
+
         public BijlageForm(IProductieBase productie):this(productie.ArtikelNr)
         {
         }
@@ -24,14 +38,15 @@ namespace Forms
         public BijlageForm(string id) : this()
         {
             string xpath = Path.Combine(Manager.DbPath, "Bijlages", id);
-            SetPath(xpath);
+            RootPath = xpath;
+            //SetPath(xpath);
         }
 
         public BijlageForm(string id, string root) : this()
         {
             string xpath = Path.Combine(Manager.DbPath, "Bijlages", id);
             RootPath = root;
-            SetPath(xpath);
+           // SetPath(xpath);
         }
 
         private void xclose_Click(object sender, System.EventArgs e)
@@ -46,7 +61,7 @@ namespace Forms
 
         public override bool Equals(object obj)
         {
-           if(obj is BijlageForm form)
+            if (obj is BijlageForm form)
                 return string.Equals(form.RootPath, RootPath, System.StringComparison.CurrentCultureIgnoreCase);
             return false;
         }

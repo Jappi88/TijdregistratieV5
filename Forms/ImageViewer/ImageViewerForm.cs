@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using NPOI.SS.Formula.Functions;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Various;
@@ -97,7 +98,7 @@ namespace Forms.ImageViewer
             try
             {
                 var img = Image.FromFile(filename);
-               
+                img.Tag = true;
                 if (img == null)
                     throw new Exception($"'{filename}' is geen geldige afbeelding");
                
@@ -118,8 +119,7 @@ namespace Forms.ImageViewer
                 bool flag = (img.Width > this.Width - 40 ||
                              img.Height > this.Height - 80);
                 xMainImage.AutoScroll = false;
-                xMainImage.Image = img.ResizeImage(img.Size);
-                img.Dispose();
+                xMainImage.Image = img;
                 if (flag)
                 {
                     xMainImage.ZoomToFit();
@@ -183,8 +183,7 @@ namespace Forms.ImageViewer
 
                 var pc = new PictureBox();
                 pc.SizeMode = PictureBoxSizeMode.StretchImage;
-                pc.Image = img.ResizeImage(128, 96);
-                img.Dispose();
+                pc.Image = img;
                 pc.Size = new Size(128, 96);
                 pc.Tag = filename;
                 pc.Click += Pc_Click;
@@ -349,6 +348,32 @@ namespace Forms.ImageViewer
             {
                 if (string.IsNullOrEmpty(LoadedFile)) return;
                 if (!File.Exists(LoadedFile)) return;
+                if (xMainImage.Image.Tag is bool and true)
+                {
+                    try
+                    {
+                        using var ms = new MemoryStream(xMainImage.Image.ToByteArray());
+                        var xmg = xMainImage.Image;
+                        xMainImage.Image = Image.FromStream(ms);
+                        ms.Close();
+                        xmg.Dispose();
+                        var xpic = xFlowImagePanel.Controls.OfType<PictureBox>()
+                            .FirstOrDefault(x => x.Tag is string val && string.Equals(val, LoadedFile));
+                        if (xpic != null)
+                        {
+                            xmg = xpic.Image;
+                            xpic.Image = xMainImage.Image;
+                            xmg.Dispose();
+                        }
+
+                        xMainImage.Image.Tag = false;
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine(exception);
+                    }
+                }
+
                 System.Diagnostics.Process.Start(LoadedFile);
             }
             catch (Exception exception)

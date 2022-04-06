@@ -2138,6 +2138,11 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\folder_open_Empty_96x96.png" />
+    <None Include="Resources\folder_with_contents_96x96.png" />
+    <None Include="Resources\files_folder_icon_64x64.ico" />
+    <None Include="Resources\files_folder_icon_32x32.png" />
+    <None Include="Resources\cut_icon-icons.com_52391.png" />
     <None Include="Resources\print_Doc_32x32.png" />
     <None Include="Resources\windows_folder_20788.png" />
     <None Include="Resources\Rotate_Left-32x323.png" />

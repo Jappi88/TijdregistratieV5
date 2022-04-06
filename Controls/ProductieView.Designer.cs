@@ -85,6 +85,7 @@ namespace Controls
             this.xMissingTekening = new System.Windows.Forms.ToolStripButton();
             this.xMaakWeekOverzichtToolstrip = new System.Windows.Forms.ToolStripButton();
             this.xArtikelRecordsToolstripButton = new System.Windows.Forms.ToolStripButton();
+            this.xBijlagesButton = new System.Windows.Forms.ToolStripButton();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button2 = new System.Windows.Forms.Button();
@@ -92,11 +93,6 @@ namespace Controls
             this.button4 = new System.Windows.Forms.Button();
             this.xspeciaalroosterlabel = new System.Windows.Forms.Panel();
             this.xtabimages = new System.Windows.Forms.ImageList(this.components);
-            this.metroCustomTabControl1 = new Controls.MetroCustomTabControl();
-            this.metroTabPage5 = new MetroFramework.Controls.MetroTabPage();
-            this.tileMainView1 = new Controls.TileView.TileMainView();
-            this.takenManager1 = new Controls.TakenManager();
-            this.mainMenu1 = new Controls.MainMenu();
             this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
             this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
             this.metroTabPage3 = new MetroFramework.Controls.MetroTabPage();
@@ -116,6 +112,11 @@ namespace Controls
             this.metroTabPage18 = new MetroFramework.Controls.MetroTabPage();
             this.metroTabPage19 = new MetroFramework.Controls.MetroTabPage();
             this.metroTabPage20 = new MetroFramework.Controls.MetroTabPage();
+            this.metroCustomTabControl1 = new Controls.MetroCustomTabControl();
+            this.metroTabPage5 = new MetroFramework.Controls.MetroTabPage();
+            this.tileMainView1 = new Controls.TileView.TileMainView();
+            this.takenManager1 = new Controls.TakenManager();
+            this.mainMenu1 = new Controls.MainMenu();
             this.panel6.SuspendLayout();
             this.xToolButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -205,7 +206,8 @@ namespace Controls
             this.xcorruptedfilesbutton,
             this.xMissingTekening,
             this.xMaakWeekOverzichtToolstrip,
-            this.xArtikelRecordsToolstripButton});
+            this.xArtikelRecordsToolstripButton,
+            this.xBijlagesButton});
             this.xToolButtons.Location = new System.Drawing.Point(5, 0);
             this.xToolButtons.Name = "xToolButtons";
             this.xToolButtons.Size = new System.Drawing.Size(1162, 39);
@@ -541,6 +543,17 @@ namespace Controls
             this.xArtikelRecordsToolstripButton.Text = "Toon Artikel Records";
             this.xArtikelRecordsToolstripButton.Click += new System.EventHandler(this.xArtikelRecordsToolstripButton_Click);
             // 
+            // xBijlagesButton
+            // 
+            this.xBijlagesButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xBijlagesButton.Image = global::ProductieManager.Properties.Resources.files_folder_icon_32x32;
+            this.xBijlagesButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xBijlagesButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xBijlagesButton.Name = "xBijlagesButton";
+            this.xBijlagesButton.Size = new System.Drawing.Size(36, 36);
+            this.xBijlagesButton.ToolTipText = "Alle bijlages";
+            this.xBijlagesButton.Click += new System.EventHandler(this.xBijlagesButton_Click);
+            // 
             // pictureBox2
             // 
             this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Right;
@@ -612,6 +625,272 @@ namespace Controls
             this.xtabimages.Images.SetKeyName(1, "operation.png");
             this.xtabimages.Images.SetKeyName(2, "iconfinder-technologymachineelectronic32_32.png");
             this.xtabimages.Images.SetKeyName(3, "ic_done_all_128_28243.png");
+            // 
+            // metroTabPage1
+            // 
+            this.metroTabPage1.HorizontalScrollbarBarColor = true;
+            this.metroTabPage1.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage1.HorizontalScrollbarSize = 10;
+            this.metroTabPage1.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage1.Name = "metroTabPage1";
+            this.metroTabPage1.Size = new System.Drawing.Size(362, 157);
+            this.metroTabPage1.TabIndex = 0;
+            this.metroTabPage1.Text = "metroTabPage1";
+            this.metroTabPage1.VerticalScrollbarBarColor = true;
+            this.metroTabPage1.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage1.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage2
+            // 
+            this.metroTabPage2.HorizontalScrollbarBarColor = true;
+            this.metroTabPage2.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage2.HorizontalScrollbarSize = 10;
+            this.metroTabPage2.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage2.Name = "metroTabPage2";
+            this.metroTabPage2.Size = new System.Drawing.Size(362, 157);
+            this.metroTabPage2.TabIndex = 1;
+            this.metroTabPage2.Text = "metroTabPage2";
+            this.metroTabPage2.VerticalScrollbarBarColor = true;
+            this.metroTabPage2.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage2.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage3
+            // 
+            this.metroTabPage3.HorizontalScrollbarBarColor = true;
+            this.metroTabPage3.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage3.HorizontalScrollbarSize = 10;
+            this.metroTabPage3.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage3.Name = "metroTabPage3";
+            this.metroTabPage3.Size = new System.Drawing.Size(362, 157);
+            this.metroTabPage3.TabIndex = 2;
+            this.metroTabPage3.Text = "metroTabPage3";
+            this.metroTabPage3.VerticalScrollbarBarColor = true;
+            this.metroTabPage3.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage3.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage4
+            // 
+            this.metroTabPage4.HorizontalScrollbarBarColor = true;
+            this.metroTabPage4.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage4.HorizontalScrollbarSize = 10;
+            this.metroTabPage4.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage4.Name = "metroTabPage4";
+            this.metroTabPage4.Size = new System.Drawing.Size(362, 157);
+            this.metroTabPage4.TabIndex = 3;
+            this.metroTabPage4.Text = "metroTabPage4";
+            this.metroTabPage4.VerticalScrollbarBarColor = true;
+            this.metroTabPage4.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage4.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage6
+            // 
+            this.metroTabPage6.HorizontalScrollbarBarColor = true;
+            this.metroTabPage6.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage6.HorizontalScrollbarSize = 10;
+            this.metroTabPage6.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage6.Name = "metroTabPage6";
+            this.metroTabPage6.Size = new System.Drawing.Size(519, 318);
+            this.metroTabPage6.TabIndex = 1;
+            this.metroTabPage6.Text = "metroTabPage6";
+            this.metroTabPage6.VerticalScrollbarBarColor = true;
+            this.metroTabPage6.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage6.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage7
+            // 
+            this.metroTabPage7.HorizontalScrollbarBarColor = true;
+            this.metroTabPage7.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage7.HorizontalScrollbarSize = 10;
+            this.metroTabPage7.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage7.Name = "metroTabPage7";
+            this.metroTabPage7.Size = new System.Drawing.Size(519, 318);
+            this.metroTabPage7.TabIndex = 2;
+            this.metroTabPage7.Text = "metroTabPage7";
+            this.metroTabPage7.VerticalScrollbarBarColor = true;
+            this.metroTabPage7.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage7.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage8
+            // 
+            this.metroTabPage8.HorizontalScrollbarBarColor = true;
+            this.metroTabPage8.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage8.HorizontalScrollbarSize = 10;
+            this.metroTabPage8.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage8.Name = "metroTabPage8";
+            this.metroTabPage8.Size = new System.Drawing.Size(519, 318);
+            this.metroTabPage8.TabIndex = 3;
+            this.metroTabPage8.Text = "metroTabPage8";
+            this.metroTabPage8.VerticalScrollbarBarColor = true;
+            this.metroTabPage8.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage8.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage9
+            // 
+            this.metroTabPage9.HorizontalScrollbarBarColor = true;
+            this.metroTabPage9.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage9.HorizontalScrollbarSize = 10;
+            this.metroTabPage9.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage9.Name = "metroTabPage9";
+            this.metroTabPage9.Size = new System.Drawing.Size(487, 178);
+            this.metroTabPage9.TabIndex = 1;
+            this.metroTabPage9.Text = "metroTabPage9";
+            this.metroTabPage9.VerticalScrollbarBarColor = true;
+            this.metroTabPage9.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage9.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage10
+            // 
+            this.metroTabPage10.HorizontalScrollbarBarColor = true;
+            this.metroTabPage10.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage10.HorizontalScrollbarSize = 10;
+            this.metroTabPage10.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage10.Name = "metroTabPage10";
+            this.metroTabPage10.Size = new System.Drawing.Size(487, 178);
+            this.metroTabPage10.TabIndex = 2;
+            this.metroTabPage10.Text = "metroTabPage10";
+            this.metroTabPage10.VerticalScrollbarBarColor = true;
+            this.metroTabPage10.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage10.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage11
+            // 
+            this.metroTabPage11.HorizontalScrollbarBarColor = true;
+            this.metroTabPage11.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage11.HorizontalScrollbarSize = 10;
+            this.metroTabPage11.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage11.Name = "metroTabPage11";
+            this.metroTabPage11.Size = new System.Drawing.Size(487, 178);
+            this.metroTabPage11.TabIndex = 1;
+            this.metroTabPage11.Text = "metroTabPage11";
+            this.metroTabPage11.VerticalScrollbarBarColor = true;
+            this.metroTabPage11.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage11.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage12
+            // 
+            this.metroTabPage12.HorizontalScrollbarBarColor = true;
+            this.metroTabPage12.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage12.HorizontalScrollbarSize = 10;
+            this.metroTabPage12.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage12.Name = "metroTabPage12";
+            this.metroTabPage12.Size = new System.Drawing.Size(487, 178);
+            this.metroTabPage12.TabIndex = 2;
+            this.metroTabPage12.Text = "metroTabPage12";
+            this.metroTabPage12.VerticalScrollbarBarColor = true;
+            this.metroTabPage12.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage12.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage13
+            // 
+            this.metroTabPage13.HorizontalScrollbarBarColor = true;
+            this.metroTabPage13.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage13.HorizontalScrollbarSize = 10;
+            this.metroTabPage13.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage13.Name = "metroTabPage13";
+            this.metroTabPage13.Size = new System.Drawing.Size(487, 178);
+            this.metroTabPage13.TabIndex = 3;
+            this.metroTabPage13.Text = "metroTabPage13";
+            this.metroTabPage13.VerticalScrollbarBarColor = true;
+            this.metroTabPage13.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage13.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage14
+            // 
+            this.metroTabPage14.HorizontalScrollbarBarColor = true;
+            this.metroTabPage14.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage14.HorizontalScrollbarSize = 10;
+            this.metroTabPage14.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage14.Name = "metroTabPage14";
+            this.metroTabPage14.Size = new System.Drawing.Size(487, 178);
+            this.metroTabPage14.TabIndex = 1;
+            this.metroTabPage14.Text = "metroTabPage14";
+            this.metroTabPage14.VerticalScrollbarBarColor = true;
+            this.metroTabPage14.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage14.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage15
+            // 
+            this.metroTabPage15.HorizontalScrollbarBarColor = true;
+            this.metroTabPage15.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage15.HorizontalScrollbarSize = 10;
+            this.metroTabPage15.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage15.Name = "metroTabPage15";
+            this.metroTabPage15.Size = new System.Drawing.Size(487, 178);
+            this.metroTabPage15.TabIndex = 2;
+            this.metroTabPage15.Text = "metroTabPage15";
+            this.metroTabPage15.VerticalScrollbarBarColor = true;
+            this.metroTabPage15.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage15.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage16
+            // 
+            this.metroTabPage16.HorizontalScrollbarBarColor = true;
+            this.metroTabPage16.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage16.HorizontalScrollbarSize = 10;
+            this.metroTabPage16.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage16.Name = "metroTabPage16";
+            this.metroTabPage16.Size = new System.Drawing.Size(487, 178);
+            this.metroTabPage16.TabIndex = 3;
+            this.metroTabPage16.Text = "metroTabPage16";
+            this.metroTabPage16.VerticalScrollbarBarColor = true;
+            this.metroTabPage16.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage16.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage17
+            // 
+            this.metroTabPage17.HorizontalScrollbarBarColor = true;
+            this.metroTabPage17.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage17.HorizontalScrollbarSize = 10;
+            this.metroTabPage17.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage17.Name = "metroTabPage17";
+            this.metroTabPage17.Size = new System.Drawing.Size(487, 178);
+            this.metroTabPage17.TabIndex = 1;
+            this.metroTabPage17.Text = "metroTabPage17";
+            this.metroTabPage17.VerticalScrollbarBarColor = true;
+            this.metroTabPage17.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage17.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage18
+            // 
+            this.metroTabPage18.HorizontalScrollbarBarColor = true;
+            this.metroTabPage18.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage18.HorizontalScrollbarSize = 10;
+            this.metroTabPage18.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage18.Name = "metroTabPage18";
+            this.metroTabPage18.Size = new System.Drawing.Size(487, 178);
+            this.metroTabPage18.TabIndex = 2;
+            this.metroTabPage18.Text = "metroTabPage18";
+            this.metroTabPage18.VerticalScrollbarBarColor = true;
+            this.metroTabPage18.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage18.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage19
+            // 
+            this.metroTabPage19.HorizontalScrollbarBarColor = true;
+            this.metroTabPage19.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage19.HorizontalScrollbarSize = 10;
+            this.metroTabPage19.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage19.Name = "metroTabPage19";
+            this.metroTabPage19.Size = new System.Drawing.Size(487, 178);
+            this.metroTabPage19.TabIndex = 3;
+            this.metroTabPage19.Text = "metroTabPage19";
+            this.metroTabPage19.VerticalScrollbarBarColor = true;
+            this.metroTabPage19.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage19.VerticalScrollbarSize = 10;
+            // 
+            // metroTabPage20
+            // 
+            this.metroTabPage20.HorizontalScrollbarBarColor = true;
+            this.metroTabPage20.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage20.HorizontalScrollbarSize = 10;
+            this.metroTabPage20.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage20.Name = "metroTabPage20";
+            this.metroTabPage20.Size = new System.Drawing.Size(1035, 496);
+            this.metroTabPage20.TabIndex = 1;
+            this.metroTabPage20.Text = "metroTabPage20";
+            this.metroTabPage20.VerticalScrollbarBarColor = true;
+            this.metroTabPage20.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage20.VerticalScrollbarSize = 10;
             // 
             // metroCustomTabControl1
             // 
@@ -893,272 +1172,6 @@ namespace Controls
             this.mainMenu1.TabIndex = 27;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
             // 
-            // metroTabPage1
-            // 
-            this.metroTabPage1.HorizontalScrollbarBarColor = true;
-            this.metroTabPage1.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage1.HorizontalScrollbarSize = 10;
-            this.metroTabPage1.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage1.Name = "metroTabPage1";
-            this.metroTabPage1.Size = new System.Drawing.Size(362, 157);
-            this.metroTabPage1.TabIndex = 0;
-            this.metroTabPage1.Text = "metroTabPage1";
-            this.metroTabPage1.VerticalScrollbarBarColor = true;
-            this.metroTabPage1.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage1.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage2
-            // 
-            this.metroTabPage2.HorizontalScrollbarBarColor = true;
-            this.metroTabPage2.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage2.HorizontalScrollbarSize = 10;
-            this.metroTabPage2.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage2.Name = "metroTabPage2";
-            this.metroTabPage2.Size = new System.Drawing.Size(362, 157);
-            this.metroTabPage2.TabIndex = 1;
-            this.metroTabPage2.Text = "metroTabPage2";
-            this.metroTabPage2.VerticalScrollbarBarColor = true;
-            this.metroTabPage2.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage2.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage3
-            // 
-            this.metroTabPage3.HorizontalScrollbarBarColor = true;
-            this.metroTabPage3.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage3.HorizontalScrollbarSize = 10;
-            this.metroTabPage3.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage3.Name = "metroTabPage3";
-            this.metroTabPage3.Size = new System.Drawing.Size(362, 157);
-            this.metroTabPage3.TabIndex = 2;
-            this.metroTabPage3.Text = "metroTabPage3";
-            this.metroTabPage3.VerticalScrollbarBarColor = true;
-            this.metroTabPage3.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage3.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage4
-            // 
-            this.metroTabPage4.HorizontalScrollbarBarColor = true;
-            this.metroTabPage4.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage4.HorizontalScrollbarSize = 10;
-            this.metroTabPage4.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage4.Name = "metroTabPage4";
-            this.metroTabPage4.Size = new System.Drawing.Size(362, 157);
-            this.metroTabPage4.TabIndex = 3;
-            this.metroTabPage4.Text = "metroTabPage4";
-            this.metroTabPage4.VerticalScrollbarBarColor = true;
-            this.metroTabPage4.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage4.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage6
-            // 
-            this.metroTabPage6.HorizontalScrollbarBarColor = true;
-            this.metroTabPage6.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage6.HorizontalScrollbarSize = 10;
-            this.metroTabPage6.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage6.Name = "metroTabPage6";
-            this.metroTabPage6.Size = new System.Drawing.Size(519, 318);
-            this.metroTabPage6.TabIndex = 1;
-            this.metroTabPage6.Text = "metroTabPage6";
-            this.metroTabPage6.VerticalScrollbarBarColor = true;
-            this.metroTabPage6.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage6.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage7
-            // 
-            this.metroTabPage7.HorizontalScrollbarBarColor = true;
-            this.metroTabPage7.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage7.HorizontalScrollbarSize = 10;
-            this.metroTabPage7.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage7.Name = "metroTabPage7";
-            this.metroTabPage7.Size = new System.Drawing.Size(519, 318);
-            this.metroTabPage7.TabIndex = 2;
-            this.metroTabPage7.Text = "metroTabPage7";
-            this.metroTabPage7.VerticalScrollbarBarColor = true;
-            this.metroTabPage7.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage7.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage8
-            // 
-            this.metroTabPage8.HorizontalScrollbarBarColor = true;
-            this.metroTabPage8.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage8.HorizontalScrollbarSize = 10;
-            this.metroTabPage8.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage8.Name = "metroTabPage8";
-            this.metroTabPage8.Size = new System.Drawing.Size(519, 318);
-            this.metroTabPage8.TabIndex = 3;
-            this.metroTabPage8.Text = "metroTabPage8";
-            this.metroTabPage8.VerticalScrollbarBarColor = true;
-            this.metroTabPage8.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage8.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage9
-            // 
-            this.metroTabPage9.HorizontalScrollbarBarColor = true;
-            this.metroTabPage9.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage9.HorizontalScrollbarSize = 10;
-            this.metroTabPage9.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage9.Name = "metroTabPage9";
-            this.metroTabPage9.Size = new System.Drawing.Size(487, 178);
-            this.metroTabPage9.TabIndex = 1;
-            this.metroTabPage9.Text = "metroTabPage9";
-            this.metroTabPage9.VerticalScrollbarBarColor = true;
-            this.metroTabPage9.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage9.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage10
-            // 
-            this.metroTabPage10.HorizontalScrollbarBarColor = true;
-            this.metroTabPage10.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage10.HorizontalScrollbarSize = 10;
-            this.metroTabPage10.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage10.Name = "metroTabPage10";
-            this.metroTabPage10.Size = new System.Drawing.Size(487, 178);
-            this.metroTabPage10.TabIndex = 2;
-            this.metroTabPage10.Text = "metroTabPage10";
-            this.metroTabPage10.VerticalScrollbarBarColor = true;
-            this.metroTabPage10.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage10.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage11
-            // 
-            this.metroTabPage11.HorizontalScrollbarBarColor = true;
-            this.metroTabPage11.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage11.HorizontalScrollbarSize = 10;
-            this.metroTabPage11.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage11.Name = "metroTabPage11";
-            this.metroTabPage11.Size = new System.Drawing.Size(487, 178);
-            this.metroTabPage11.TabIndex = 1;
-            this.metroTabPage11.Text = "metroTabPage11";
-            this.metroTabPage11.VerticalScrollbarBarColor = true;
-            this.metroTabPage11.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage11.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage12
-            // 
-            this.metroTabPage12.HorizontalScrollbarBarColor = true;
-            this.metroTabPage12.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage12.HorizontalScrollbarSize = 10;
-            this.metroTabPage12.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage12.Name = "metroTabPage12";
-            this.metroTabPage12.Size = new System.Drawing.Size(487, 178);
-            this.metroTabPage12.TabIndex = 2;
-            this.metroTabPage12.Text = "metroTabPage12";
-            this.metroTabPage12.VerticalScrollbarBarColor = true;
-            this.metroTabPage12.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage12.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage13
-            // 
-            this.metroTabPage13.HorizontalScrollbarBarColor = true;
-            this.metroTabPage13.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage13.HorizontalScrollbarSize = 10;
-            this.metroTabPage13.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage13.Name = "metroTabPage13";
-            this.metroTabPage13.Size = new System.Drawing.Size(487, 178);
-            this.metroTabPage13.TabIndex = 3;
-            this.metroTabPage13.Text = "metroTabPage13";
-            this.metroTabPage13.VerticalScrollbarBarColor = true;
-            this.metroTabPage13.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage13.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage14
-            // 
-            this.metroTabPage14.HorizontalScrollbarBarColor = true;
-            this.metroTabPage14.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage14.HorizontalScrollbarSize = 10;
-            this.metroTabPage14.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage14.Name = "metroTabPage14";
-            this.metroTabPage14.Size = new System.Drawing.Size(487, 178);
-            this.metroTabPage14.TabIndex = 1;
-            this.metroTabPage14.Text = "metroTabPage14";
-            this.metroTabPage14.VerticalScrollbarBarColor = true;
-            this.metroTabPage14.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage14.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage15
-            // 
-            this.metroTabPage15.HorizontalScrollbarBarColor = true;
-            this.metroTabPage15.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage15.HorizontalScrollbarSize = 10;
-            this.metroTabPage15.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage15.Name = "metroTabPage15";
-            this.metroTabPage15.Size = new System.Drawing.Size(487, 178);
-            this.metroTabPage15.TabIndex = 2;
-            this.metroTabPage15.Text = "metroTabPage15";
-            this.metroTabPage15.VerticalScrollbarBarColor = true;
-            this.metroTabPage15.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage15.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage16
-            // 
-            this.metroTabPage16.HorizontalScrollbarBarColor = true;
-            this.metroTabPage16.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage16.HorizontalScrollbarSize = 10;
-            this.metroTabPage16.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage16.Name = "metroTabPage16";
-            this.metroTabPage16.Size = new System.Drawing.Size(487, 178);
-            this.metroTabPage16.TabIndex = 3;
-            this.metroTabPage16.Text = "metroTabPage16";
-            this.metroTabPage16.VerticalScrollbarBarColor = true;
-            this.metroTabPage16.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage16.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage17
-            // 
-            this.metroTabPage17.HorizontalScrollbarBarColor = true;
-            this.metroTabPage17.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage17.HorizontalScrollbarSize = 10;
-            this.metroTabPage17.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage17.Name = "metroTabPage17";
-            this.metroTabPage17.Size = new System.Drawing.Size(487, 178);
-            this.metroTabPage17.TabIndex = 1;
-            this.metroTabPage17.Text = "metroTabPage17";
-            this.metroTabPage17.VerticalScrollbarBarColor = true;
-            this.metroTabPage17.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage17.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage18
-            // 
-            this.metroTabPage18.HorizontalScrollbarBarColor = true;
-            this.metroTabPage18.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage18.HorizontalScrollbarSize = 10;
-            this.metroTabPage18.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage18.Name = "metroTabPage18";
-            this.metroTabPage18.Size = new System.Drawing.Size(487, 178);
-            this.metroTabPage18.TabIndex = 2;
-            this.metroTabPage18.Text = "metroTabPage18";
-            this.metroTabPage18.VerticalScrollbarBarColor = true;
-            this.metroTabPage18.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage18.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage19
-            // 
-            this.metroTabPage19.HorizontalScrollbarBarColor = true;
-            this.metroTabPage19.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage19.HorizontalScrollbarSize = 10;
-            this.metroTabPage19.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage19.Name = "metroTabPage19";
-            this.metroTabPage19.Size = new System.Drawing.Size(487, 178);
-            this.metroTabPage19.TabIndex = 3;
-            this.metroTabPage19.Text = "metroTabPage19";
-            this.metroTabPage19.VerticalScrollbarBarColor = true;
-            this.metroTabPage19.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage19.VerticalScrollbarSize = 10;
-            // 
-            // metroTabPage20
-            // 
-            this.metroTabPage20.HorizontalScrollbarBarColor = true;
-            this.metroTabPage20.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage20.HorizontalScrollbarSize = 10;
-            this.metroTabPage20.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage20.Name = "metroTabPage20";
-            this.metroTabPage20.Size = new System.Drawing.Size(1035, 496);
-            this.metroTabPage20.TabIndex = 1;
-            this.metroTabPage20.Text = "metroTabPage20";
-            this.metroTabPage20.VerticalScrollbarBarColor = true;
-            this.metroTabPage20.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage20.VerticalScrollbarSize = 10;
-            // 
             // ProductieView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1251,5 +1264,6 @@ namespace Controls
         private MetroTabPage metroTabPage18;
         private MetroTabPage metroTabPage19;
         private MetroTabPage metroTabPage20;
+        private ToolStripButton xBijlagesButton;
     }
 }

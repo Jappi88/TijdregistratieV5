@@ -1011,21 +1011,30 @@ namespace Controls
                         //CheckForSyncDatabase();
                         //CheckForUpdateDatabase();
                         CheckForPreview(false, true);
-                        CheckForSpecialRooster(true);
-                        LoadStartedProducties();
-                        //LoadProductieLogs();
-                        //RunProductieRefresh();
-                        UpdateKlachtButton();
-                        UpdateVerpakkingenButton();
-                        Manager.ArtikelRecords?.CheckForOpmerkingen(true);
-                        InitDBCorupptedMonitor();
-                        DailyMessage.CreateDaily();
-                        UpdateUnreadMessages(null);
-                        UpdateUnreadOpmerkingen();
-                        if(Manager.Opties is {ToonPersoneelIndelingNaOpstart: true})
-                            ShowPersoneelIndelingWindow();
-                        if (Manager.Opties is {ToonWerkplaatsIndelingNaOpstart: true})
-                            ShowWerkplaatsIndelingWindow();
+                        if (Manager.LogedInGebruiker != null)
+                        {
+                            CheckForSpecialRooster(true);
+                            LoadStartedProducties();
+                            //LoadProductieLogs();
+                            //RunProductieRefresh();
+                            UpdateKlachtButton();
+                            UpdateVerpakkingenButton();
+                            Manager.ArtikelRecords?.CheckForOpmerkingen(true);
+                            InitDBCorupptedMonitor();
+                            DailyMessage.CreateDaily();
+                            UpdateUnreadMessages(null);
+                            UpdateUnreadOpmerkingen();
+                            if (Manager.Opties is { ToonPersoneelIndelingNaOpstart: true })
+                                ShowPersoneelIndelingWindow();
+                            if (Manager.Opties is { ToonWerkplaatsIndelingNaOpstart: true })
+                                ShowWerkplaatsIndelingWindow();
+                        }
+                        else
+                        {
+                            var xlogin = new LogIn();
+                            xlogin.StartPosition = FormStartPosition.CenterParent;
+                            xlogin.ShowDialog();
+                        }
                         //UpdateAllLists();
                     }
                     catch (Exception e)
@@ -2942,16 +2951,18 @@ namespace Controls
                 return;
            
             string root = null;
-            if (id.Contains("/") || id.Contains("\\"))
+            id = id.Replace("/", "\\");
+            if (id.Contains("\\"))
             {
                 root = Path.GetDirectoryName(id);
                 if (root != null) root = Path.Combine(Manager.DbPath, "Bijlages", root);
             }
             var bl = new BijlageForm();
-            if(!string.IsNullOrEmpty(root))
-                bl.SetPath(root);
-            id = Path.Combine(Manager.DbPath, "Bijlages", id);
-            bl.SetPath(id);
+            bl.RootPath = root;
+            //if(!string.IsNullOrEmpty(root))
+            //    bl.SetPath(root);
+            var newid = Path.Combine(Manager.DbPath, "Bijlages", id);
+            bl.NavigationPath = newid;
             var xforms = Application.OpenForms.Cast<Form>().FirstOrDefault(x => x is BijlageForm b && b.Equals(bl));
             if (xforms != null)
             {
@@ -3142,6 +3153,27 @@ namespace Controls
         private void xproductieoverzichtb_Click(object sender, EventArgs e)
         {
             ShowProductieOverzicht();
+        }
+
+        private void xBijlagesButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var bl = new BijlageForm();
+                bl.Title = $"Alle Bijlages";
+                bl.StartPosition = FormStartPosition.CenterParent;
+                bl.Icon = Resources.files_folder_icon_64x64;
+                bl.ShowIcon = true;
+                bl.RootPath = Path.Combine(Manager.DbPath, "Bijlages");
+                bl.Browser.RootOnlyFilledDirectories = true;
+                bl.Browser.AllowEditRoot  = false;
+                bl.Browser.FileView.View = View.Details;
+                bl.ShowDialog();
+            }
+            catch (Exception exception)
+            {
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
+            }
         }
 
         private void xsearchprodnr_Click(object sender, EventArgs e)

@@ -87,14 +87,19 @@ namespace Rpm.Mailing
                         if (!string.IsNullOrEmpty(x2))
                         {
                             var att = mail.Attachments?.Cast<MimePart>().ToList() ?? new List<MimePart>();
+                            var att2 = mail.BodyParts.OfType<MimePart>().Where(x =>
+                                x.ContentType?.MediaType?.ToLower().StartsWith("image") ?? false).ToList();
+                            if (att2.Count > 0)
+                            {
+                                att.AddRange(att2);
+                            }
                             var log = new StringBuilder();
                             int done = 0;
+                            x2 = x2.Replace("/", "\\");
                             var id = x2;
-                            if (x2.Contains("\\") || x2.Contains("/"))
+                            if (x2.Contains("\\"))
                             {
                                 var xindex = x2.IndexOf("\\", StringComparison.CurrentCultureIgnoreCase);
-                                if (xindex == -1)
-                                    xindex = x2.IndexOf("/", StringComparison.CurrentCultureIgnoreCase);
                                 if (xindex > -1)
                                 {
                                     id = x2.Substring(0, xindex).FirstCharToUpper();

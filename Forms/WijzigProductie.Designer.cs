@@ -40,6 +40,8 @@ namespace Forms
             this.xbeheeronderbrekeningen = new System.Windows.Forms.Button();
             this.xverwijderbewerking = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.xsetbewerkingnaam = new System.Windows.Forms.Button();
+            this.xedit = new System.Windows.Forms.Button();
             this.xbewerkinglijst = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xnaambewerkingc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -64,10 +66,9 @@ namespace Forms
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
             this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
+            this.objectEditorUI1 = new Controls.ObjectEditorUI();
             this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
             this.metroTabPage3 = new MetroFramework.Controls.MetroTabPage();
-            this.xedit = new System.Windows.Forms.Button();
-            this.objectEditorUI1 = new Controls.ObjectEditorUI();
             this.materiaalUI1 = new Controls.MateriaalUI();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xbewerkinglijst)).BeginInit();
@@ -173,12 +174,11 @@ namespace Forms
             // 
             // xverwijderbewerking
             // 
-            this.xverwijderbewerking.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xverwijderbewerking.Enabled = false;
             this.xverwijderbewerking.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xverwijderbewerking.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xverwijderbewerking.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xverwijderbewerking.Location = new System.Drawing.Point(800, 21);
+            this.xverwijderbewerking.Location = new System.Drawing.Point(547, 21);
             this.xverwijderbewerking.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xverwijderbewerking.Name = "xverwijderbewerking";
             this.xverwijderbewerking.Size = new System.Drawing.Size(40, 40);
@@ -191,6 +191,7 @@ namespace Forms
             // groupBox4
             // 
             this.groupBox4.BackColor = System.Drawing.Color.Transparent;
+            this.groupBox4.Controls.Add(this.xsetbewerkingnaam);
             this.groupBox4.Controls.Add(this.xedit);
             this.groupBox4.Controls.Add(this.xbewerkinglijst);
             this.groupBox4.Controls.Add(this.xverwijderbewerking);
@@ -205,10 +206,44 @@ namespace Forms
             this.groupBox4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox4.Size = new System.Drawing.Size(845, 382);
+            this.groupBox4.Size = new System.Drawing.Size(822, 442);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Bewerkingen";
+            // 
+            // xsetbewerkingnaam
+            // 
+            this.xsetbewerkingnaam.Enabled = false;
+            this.xsetbewerkingnaam.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xsetbewerkingnaam.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xsetbewerkingnaam.Image = global::ProductieManager.Properties.Resources.edit__52382;
+            this.xsetbewerkingnaam.Location = new System.Drawing.Point(355, 21);
+            this.xsetbewerkingnaam.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.xsetbewerkingnaam.Name = "xsetbewerkingnaam";
+            this.xsetbewerkingnaam.Size = new System.Drawing.Size(44, 40);
+            this.xsetbewerkingnaam.TabIndex = 45;
+            this.xsetbewerkingnaam.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xsetbewerkingnaam.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xsetbewerkingnaam, "Wijzig bewerkingnaam met de geselecteerd item");
+            this.xsetbewerkingnaam.UseVisualStyleBackColor = true;
+            this.xsetbewerkingnaam.Click += new System.EventHandler(this.xsetbewerkingnaam_Click);
+            // 
+            // xedit
+            // 
+            this.xedit.Enabled = false;
+            this.xedit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xedit.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xedit.Image = global::ProductieManager.Properties.Resources.document_edit_icon_icons_com_52428;
+            this.xedit.Location = new System.Drawing.Point(497, 21);
+            this.xedit.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.xedit.Name = "xedit";
+            this.xedit.Size = new System.Drawing.Size(44, 40);
+            this.xedit.TabIndex = 44;
+            this.xedit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xedit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xedit, "Wijzig bewerking");
+            this.xedit.UseVisualStyleBackColor = true;
+            this.xedit.Click += new System.EventHandler(this.xedit_Click);
             // 
             // xbewerkinglijst
             // 
@@ -259,11 +294,22 @@ namespace Forms
             this.xbewerkinglijst.HideSelection = false;
             this.xbewerkinglijst.LargeImageList = this.imageList1;
             this.xbewerkinglijst.Location = new System.Drawing.Point(6, 66);
+            this.xbewerkinglijst.MenuLabelColumns = "kolommen";
+            this.xbewerkinglijst.MenuLabelGroupBy = "Groeperen op \'{0}\'";
+            this.xbewerkinglijst.MenuLabelLockGroupingOn = "Groepering vergrendelen op \'{0}\'";
+            this.xbewerkinglijst.MenuLabelSelectColumns = "Selecteer kolommen...";
+            this.xbewerkinglijst.MenuLabelSortAscending = "Sorteer oplopend op \'{0}\'";
+            this.xbewerkinglijst.MenuLabelSortDescending = "Aflopend sorteren op \'{0}\'";
+            this.xbewerkinglijst.MenuLabelTurnOffGroups = "Groepen uitschakelen";
+            this.xbewerkinglijst.MenuLabelUnlockGroupingOn = "Ontgrendel groeperen van \'{0}\'";
+            this.xbewerkinglijst.MenuLabelUnsort = "Uitsorteren";
             this.xbewerkinglijst.Name = "xbewerkinglijst";
             this.xbewerkinglijst.OwnerDraw = false;
+            this.xbewerkinglijst.ShowCommandMenuOnRightClick = true;
+            this.xbewerkinglijst.ShowGroups = false;
             this.xbewerkinglijst.ShowItemCountOnGroups = true;
             this.xbewerkinglijst.ShowItemToolTips = true;
-            this.xbewerkinglijst.Size = new System.Drawing.Size(833, 311);
+            this.xbewerkinglijst.Size = new System.Drawing.Size(810, 371);
             this.xbewerkinglijst.SmallImageList = this.imageList1;
             this.xbewerkinglijst.SpaceBetweenGroups = 10;
             this.xbewerkinglijst.TabIndex = 26;
@@ -472,10 +518,10 @@ namespace Forms
             this.panel2.BackColor = System.Drawing.Color.White;
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(20, 489);
+            this.panel2.Location = new System.Drawing.Point(20, 549);
             this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(853, 46);
+            this.panel2.Size = new System.Drawing.Size(830, 46);
             this.panel2.TabIndex = 25;
             // 
             // panel3
@@ -484,7 +530,7 @@ namespace Forms
             this.panel3.Controls.Add(this.xsluiten);
             this.panel3.Controls.Add(this.xOpslaan);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.Location = new System.Drawing.Point(600, 0);
+            this.panel3.Location = new System.Drawing.Point(577, 0);
             this.panel3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(253, 46);
@@ -506,7 +552,7 @@ namespace Forms
             this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
             this.metroTabControl1.Name = "metroTabControl1";
             this.metroTabControl1.SelectedIndex = 1;
-            this.metroTabControl1.Size = new System.Drawing.Size(853, 424);
+            this.metroTabControl1.Size = new System.Drawing.Size(830, 484);
             this.metroTabControl1.TabIndex = 26;
             this.metroTabControl1.UseSelectable = true;
             // 
@@ -525,6 +571,22 @@ namespace Forms
             this.metroTabPage1.VerticalScrollbarHighlightOnWheel = false;
             this.metroTabPage1.VerticalScrollbarSize = 10;
             // 
+            // objectEditorUI1
+            // 
+            this.objectEditorUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.objectEditorUI1.BackColor = System.Drawing.Color.White;
+            this.objectEditorUI1.DisplayTypes = ((System.Collections.Generic.List<System.Type>)(resources.GetObject("objectEditorUI1.DisplayTypes")));
+            this.objectEditorUI1.ExcludeItems = ((System.Collections.Generic.List<string>)(resources.GetObject("objectEditorUI1.ExcludeItems")));
+            this.objectEditorUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.objectEditorUI1.Instance = null;
+            this.objectEditorUI1.Location = new System.Drawing.Point(4, 4);
+            this.objectEditorUI1.Margin = new System.Windows.Forms.Padding(4);
+            this.objectEditorUI1.Name = "objectEditorUI1";
+            this.objectEditorUI1.Size = new System.Drawing.Size(837, 374);
+            this.objectEditorUI1.TabIndex = 2;
+            // 
             // metroTabPage2
             // 
             this.metroTabPage2.Controls.Add(this.groupBox4);
@@ -533,7 +595,7 @@ namespace Forms
             this.metroTabPage2.HorizontalScrollbarSize = 10;
             this.metroTabPage2.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage2.Name = "metroTabPage2";
-            this.metroTabPage2.Size = new System.Drawing.Size(845, 382);
+            this.metroTabPage2.Size = new System.Drawing.Size(822, 442);
             this.metroTabPage2.TabIndex = 1;
             this.metroTabPage2.Text = "Bewerkingen";
             this.metroTabPage2.VerticalScrollbarBarColor = true;
@@ -557,38 +619,6 @@ namespace Forms
             this.metroTabPage3.VerticalScrollbarSize = 10;
             this.metroTabPage3.Visible = false;
             // 
-            // xedit
-            // 
-            this.xedit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xedit.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xedit.Image = global::ProductieManager.Properties.Resources.edit__52382;
-            this.xedit.Location = new System.Drawing.Point(355, 21);
-            this.xedit.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.xedit.Name = "xedit";
-            this.xedit.Size = new System.Drawing.Size(44, 40);
-            this.xedit.TabIndex = 44;
-            this.xedit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xedit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTip1.SetToolTip(this.xedit, "Wijzig bewerking");
-            this.xedit.UseVisualStyleBackColor = true;
-            this.xedit.Click += new System.EventHandler(this.xedit_Click);
-            // 
-            // objectEditorUI1
-            // 
-            this.objectEditorUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.objectEditorUI1.BackColor = System.Drawing.Color.White;
-            this.objectEditorUI1.DisplayTypes = ((System.Collections.Generic.List<System.Type>)(resources.GetObject("objectEditorUI1.DisplayTypes")));
-            this.objectEditorUI1.ExcludeItems = ((System.Collections.Generic.List<string>)(resources.GetObject("objectEditorUI1.ExcludeItems")));
-            this.objectEditorUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.objectEditorUI1.Instance = null;
-            this.objectEditorUI1.Location = new System.Drawing.Point(4, 4);
-            this.objectEditorUI1.Margin = new System.Windows.Forms.Padding(4);
-            this.objectEditorUI1.Name = "objectEditorUI1";
-            this.objectEditorUI1.Size = new System.Drawing.Size(837, 374);
-            this.objectEditorUI1.TabIndex = 2;
-            // 
             // materiaalUI1
             // 
             this.materiaalUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -606,16 +636,17 @@ namespace Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(893, 555);
+            this.ClientSize = new System.Drawing.Size(870, 615);
             this.Controls.Add(this.metroTabControl1);
             this.Controls.Add(this.panel2);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(705, 480);
             this.Name = "WijzigProductie";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Productie Formulier";
+            this.Title = "Productie Formulier";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.AddProduction_FormClosed);
             this.Shown += new System.EventHandler(this.WijzigProductie_Shown);
             this.groupBox4.ResumeLayout(false);
@@ -668,5 +699,6 @@ namespace Forms
         private MetroFramework.Controls.MetroTabPage metroTabPage3;
         private ObjectEditorUI objectEditorUI1;
         private System.Windows.Forms.Button xedit;
+        private System.Windows.Forms.Button xsetbewerkingnaam;
     }
 }

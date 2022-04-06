@@ -9,8 +9,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ProductieManager.Rpm.Productie;
 
 namespace Rpm.Productie.ArtikelRecords
 {
@@ -136,6 +138,9 @@ namespace Rpm.Productie.ArtikelRecords
                         }
                         if (SaveRecord(xrec))
                             xret++;
+                        //if (!xrec.IsWerkplek)
+                        //    BijlageBeheer.UpdateBijlage(xrec.ArtikelNr, Encoding.UTF8.GetBytes(GetRecordInfo(xrec)),
+                        //        $"{xrec.ArtikelNr}_ProductieInfo.txt");
                     }
                 }
                 catch (Exception e)
@@ -191,7 +196,13 @@ namespace Rpm.Productie.ArtikelRecords
                 }
                 file.UpdatedProducties.Add(form.ProductieNr);
                 if (save)
+                {
+                    //if (!file.IsWerkplek)
+                    //    BijlageBeheer.UpdateBijlage(form.ArtikelNr, Encoding.UTF8.GetBytes(GetRecordInfo(file)),
+                    //        $"{form.ArtikelNr}_ProductieInfo.txt");
                     return Database?.Upsert(form.ArtikelNr, file, false)??false;
+                }
+
                 return true;
             }
             catch (Exception e)
@@ -199,6 +210,33 @@ namespace Rpm.Productie.ArtikelRecords
                 Console.WriteLine(e);
                 return false;
             }
+        }
+
+        public static string GetRecordInfo(ArtikelRecord record)
+        {
+            StringBuilder sb = new StringBuilder();
+            try
+            {
+                if (record == null)
+                    throw new Exception("ArtikelRecord kan niet null zijn!");
+                var pu = 0;
+                if (record.AantalGemaakt > 0 && record.TijdGewerkt > 0)
+                    pu = (int)((double)record.AantalGemaakt / record.TijdGewerkt);
+                sb.AppendLine($"Product Informatie Voor {record.ArtikelNr}");
+                sb.AppendLine($"{record.Omschrijving}\n");
+                sb.AppendLine($"Aantal Geproduceerd: {record.UpdatedProducties.Count}");
+                sb.AppendLine($"Totaal Gemaakt: {record.AantalGemaakt}");
+                sb.AppendLine($"Totaal Tijd Gewerkt: {record.TijdGewerkt}");
+                sb.AppendLine($"Gemiddeld Per Uur: {pu} P/u");
+                sb.AppendLine($"Gemeten Vanaf: {record.Vanaf:D}");
+                sb.AppendLine($"Geüpdate Op: {record.LaatstGeupdate:D}");
+                sb.AppendLine($"Producties: {string.Join(", ", record.UpdatedProducties)}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return sb.ToString();
         }
 
         public bool UpdateWaardes(WerkPlek plek, ArtikelRecord record = null, bool save = true)

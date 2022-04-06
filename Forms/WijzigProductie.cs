@@ -252,6 +252,8 @@ namespace Forms
             xverwijderbewerking.Enabled = xbewerkinglijst.SelectedObjects.Count > 0;
             xwerkplekken.Enabled = xbewerkinglijst.SelectedObject != null;
             xbeheeronderbrekeningen.Enabled = xbewerkinglijst.SelectedObject != null;
+            xsetbewerkingnaam.Enabled = xbewerkinglijst.SelectedObject != null;
+            xedit.Enabled = xbewerkinglijst.SelectedObject != null;
         }
 
         private void xbeheeronderbrekeningen_Click(object sender, EventArgs e)
@@ -283,6 +285,44 @@ namespace Forms
         private void xbewerkinglijst_DoubleClick(object sender, EventArgs e)
         {
             xedit_Click(sender,e);
+        }
+
+        private void xsetbewerkingnaam_Click(object sender, EventArgs e)
+        {
+            switch (xbewerkinglijst.SelectedObject)
+            {
+                case null:
+                    return;
+                case Bewerking b:
+                {
+                    var xselected = xbewerkingen.Text.Trim();
+                    if (string.IsNullOrEmpty(xselected))
+                        return;
+                    if (string.Equals(b.Naam, xselected, StringComparison.CurrentCultureIgnoreCase))
+                        return;
+                    if (xbewerkinglijst.Objects.OfType<Bewerking>().Any(x =>
+                            string.Equals(x.Naam, xselected, StringComparison.CurrentCultureIgnoreCase)))
+                    {
+                        XMessageBox.Show(this, $"Bewerking '{xselected}' bestaat al!", "Bestaat Al!",
+                            MessageBoxIcon.Exclamation);
+                        return;
+                    }
+
+                    if (XMessageBox.Show(this, $"Wil je de bewerkingnaam '{b.Naam}' wijzigen naar '{xselected}'?",
+                            "Bewerking Naam Wijzigen", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
+                        DialogResult.Yes)
+                    {
+                        var xindex = xbewerkinglijst.IndexOf(b);
+                        xbewerkinglijst.RemoveObject(b);
+                        b.Naam = xselected;
+                        xbewerkinglijst.InsertObjects(xindex, new Bewerking[] { b });
+                        xbewerkinglijst.SelectedObject = b;
+                        xbewerkinglijst.SelectedItem?.EnsureVisible();
+                    }
+
+                    break;
+                }
+            }
         }
     }
 }

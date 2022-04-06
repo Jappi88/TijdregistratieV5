@@ -26,12 +26,33 @@ namespace ProductieManager.Rpm.Productie
             return new List<string>();
         }
 
+        public static bool HasValidExtension(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var ext = Path.GetExtension(name);
+            if (string.IsNullOrEmpty(ext)) return false;
+            switch (ext.ToLower())
+            {
+                case ".txt":
+                case ".docx" :
+                case ".xlsx" :
+                case ".pdf" :
+                    return true;
+            }
+
+            return false;
+        }
+
         public static bool UpdateBijlage(string id, byte[] data, string name)
         {
             try
             {
                 if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(id) || data == null || data.Length == 0) return false;
-                if (!data.IsImage()) return false;
+                if (!HasValidExtension(name))
+                {
+                    if (!data.IsImage()) return false;
+                    if (!Functions.IsRecognisedImageFile(name)) return false;
+                }
                 var xpath = Path.Combine(Manager.DbPath, "Bijlages", id);
                 if (!Directory.Exists(xpath))
                     Directory.CreateDirectory(xpath);

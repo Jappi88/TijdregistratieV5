@@ -10,6 +10,10 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Management;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Forms.ImageViewer;
 using Rpm.Various;
@@ -25,7 +29,8 @@ namespace Forms.FileBrowser
         public string CurrentPath { get; private set; }
         public List<string> History { get; private set; } = new List<string>();
         public ObjectListView FileView => xbrowser;
-
+        public bool RootOnlyFilledDirectories { get; set; }
+        public bool AllowEditRoot { get; set; } = true;
         #endregion Variables
 
         #region Ctor()
@@ -34,6 +39,7 @@ namespace Forms.FileBrowser
         {
             InitializeComponent();
             ((OLVColumn) xbrowser.Columns[0]).ImageGetter = GetIndexImage;
+            xbrowser.VirtualListSize = 300;
             InitViewStyles(xViewStyle);
         }
 
@@ -51,7 +57,7 @@ namespace Forms.FileBrowser
             try
             {
                 if (item is BrowseEntry ent)
-                    return xsmallImageList.Images.IndexOfKey(ent.Name);
+                    return xlargeimagelist.Images.IndexOfKey(ent.GetImageKey());
                 return 0;
             }
             catch
@@ -60,81 +66,303 @@ namespace Forms.FileBrowser
             }
         }
 
-        private void LoadList(bool reload)
+        private bool _Loading;
+        //private void LoadList(bool reload, bool onlyfilleddirectories)
+        //{
+        //    try
+        //    {
+        //        if(_Loading) return;
+        //        _Loading = true;
+        //        if (reload)
+        //        {
+        //            Task.Factory.StartNew(() =>
+        //            {
+        //                try
+        //                {
+        //                    xLoadList(true, onlyfilleddirectories);
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    Console.WriteLine(ex);
+        //                }
+
+        //                _Loading = false;
+        //            });
+        //        }
+        //        else
+        //        {
+        //            try
+        //            {
+        //                xLoadList(false, onlyfilleddirectories);
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                Console.WriteLine(ex);
+        //            }
+        //            _Loading = false;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex);
+        //    }
+        //}
+
+        private async void LoadList(bool reload, bool onlyfilleddirectories)
         {
+            if (_Loading) return;
+            //        
             if (InvokeRequired)
-                this.Invoke(new MethodInvoker(() => LoadList(reload)));
+                this.Invoke(new MethodInvoker(() => LoadList(reload, onlyfilleddirectories)));
             else
             {
-                string crit = xsearchbox.Text.ToLower().Replace("zoeken...", "").Trim();
-
-                if (reload || _lastterm == null ||
-                    !string.Equals(_lastterm, crit, StringComparison.CurrentCultureIgnoreCase))
+                SetWaitUI();
+                try
                 {
-                    _lastterm = crit;
-                    var xitems = GetAllItems(crit);
-                    xbrowser.BeginUpdate();
-                    var selected = xbrowser.SelectedObjects;
-                    UpdateImageList(xitems);
-                    xbrowser.SetObjects(xitems);
-                    xbrowser.SelectedObjects = selected;
-                    xbrowser.EndUpdate();
-                    UpdateStatusPanel();
-                    _lastselected = xbrowser.SelectedObject as BrowseEntry;
+                    string crit = xsearchbox.Text.ToLower().Replace("zoeken...", "").Trim();
+                    xbrowser.CancelCellEdit();
+                    if (reload || _lastterm == null ||
+                        !string.Equals(_lastterm, crit, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        _lastterm = crit;
+                        var xitems = await GetAllItems(crit, onlyfilleddirectories);
+                        await Task.Run(() =>
+                        {
+                            UpdateBrowseItems(xitems);
+                        });
+                        
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+
+                StopWait();
             }
         }
 
-        private List<BrowseEntry> GetAllItems(string filter)
+        private void UpdateBrowseItems(List<BrowseEntry> items)
         {
-            var xret = new List<BrowseEntry>();
             try
             {
-                List<string> xitems = new List<string>();
-                lock (_watcher.Records)
+                if (this.InvokeRequired)
+                    this.Invoke(new MethodInvoker(() => UpdateBrowseItems(items)));
+                else
                 {
-                    xitems = _watcher.Records.Select(x => x.Key).ToList();
-                }
-
-                for (int i = 0; i < xitems.Count; i++)
-                {
-                    var item = xitems[i];
-                    var br = new BrowseEntry(item);
-                    if (!string.IsNullOrEmpty(filter))
-                        if (!br.Name.ToLower().Contains(filter.ToLower()))
-                            continue;
-                    xret.Add(br);
+                    xbrowser.BeginUpdate();
+                    var selected = xbrowser.SelectedObjects;
+                    UpdateImageList(items, false);
+                    xbrowser.SetObjects(items);
+                    xbrowser.EndUpdate();
+                    xbrowser.SelectedObjects = selected;
+                    UpdateStatusPanel();
+                    _lastselected = xbrowser.SelectedObject as BrowseEntry;
+                    RefresBrowseItems(items);
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(e);
             }
-
-            return xret;
         }
 
-        private void UpdateImageList(List<BrowseEntry> entries)
+        //private void RefresBrowseItems()
+        //{
+        //    try
+        //    {
+        //        Task.Run(xRefresBrowseItems);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e);
+        //    }
+        //}
+
+        //private void RefresBrowseItems(List<BrowseEntry> items)
+        //{
+        //    try
+        //    {
+        //        Task.Run(()=> xRefresBrowseItems(items));
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e);
+        //    }
+        //}
+
+        private void RefresBrowseItems()
+        {
+            try
+            {
+                if (this.InvokeRequired)
+                    this.Invoke(new MethodInvoker(RefresBrowseItems));
+                else
+                {
+                    if (xbrowser.Items.Count > 0)
+                    {
+                        var xitems = xbrowser.Objects.OfType<BrowseEntry>().ToList();
+                        xbrowser.RefreshObjects(xitems);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        private void RefresBrowseItems(List<BrowseEntry> items)
+        {
+            try
+            {
+                if (this.InvokeRequired)
+                    this.Invoke(new MethodInvoker(RefresBrowseItems));
+                else
+                {
+                    if (items.Count > 0)
+                    {
+                        xbrowser.RefreshObjects(items);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        public void SetWaitUI()
+        {
+            if (_Loading) return;
+            _Loading = true;
+            Task.Run(() =>
+            {
+                try
+                {
+                    if (Disposing || IsDisposed) return;
+                    xloadinglabel.Invoke(new MethodInvoker(() =>
+                    {
+                        xloadinglabel.Visible = true;
+                        xloadinglabel.BringToFront();
+                    }));
+
+                    var cur = 0;
+                    var xwv = "Bijlages laden";
+                    //var xcurvalue = xwv;
+                    var tries = 0;
+                    try
+                    {
+                        while (_Loading && tries < 200)
+                        {
+                            if (cur > 5) cur = 0;
+                            if (Disposing || IsDisposed) return;
+                            var curvalue = xwv.PadRight(xwv.Length + cur, '.');
+                            //xcurvalue = curvalue;
+                            xloadinglabel.Invoke(new MethodInvoker(() =>
+                            {
+                                xloadinglabel.Text = curvalue;
+                                xloadinglabel.Invalidate();
+                            }));
+                            //Application.DoEvents();
+
+                            Thread.Sleep(250);
+                            //Application.DoEvents();
+                            tries++;
+                            cur++;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+
+                    if (Disposing || IsDisposed) return;
+                    xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
+                }
+                catch (Exception e)
+                {
+                }
+            });
+        }
+
+        /// <summary>
+        ///     verberg het laad scherm
+        /// </summary>
+        public void StopWait()
+        {
+            _Loading = false;
+        }
+
+        private Task<List<BrowseEntry>> GetAllItems(string filter, bool onlyfilleddirectories)
+        {
+            return Task.Run(() =>
+            {
+                var xret = new List<BrowseEntry>();
+                try
+                {
+                    List<string> xitems = new List<string>();
+                    lock (_watcher.Records)
+                    {
+                        xitems = _watcher.Records.Select(x => x.Key).ToList();
+                    }
+
+                    for (int i = 0; i < xitems.Count; i++)
+                    {
+                        var item = xitems[i];
+                        var br = new BrowseEntry(item);
+                        if (!string.IsNullOrEmpty(filter))
+                            if (!br.Name.ToLower().Contains(filter.ToLower()))
+                                continue;
+                        if (onlyfilleddirectories &&
+                            string.Equals(RootPath, CurrentPath, StringComparison.CurrentCultureIgnoreCase) &&
+                            br.IsDirectory && !new DirectoryInfo(item).EnumerateFileSystemInfos().Any())
+                            continue;
+                        xret.Add(br);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                return xret;
+            });
+        }
+
+        private void UpdateImageList(List<BrowseEntry> entries, bool refresh)
         {
             try
             {
                 if (InvokeRequired)
-                    this.Invoke(new MethodInvoker(() => UpdateImageList(entries)));
+                    this.Invoke(new MethodInvoker(() => UpdateImageList(entries, refresh)));
                 else
                 {
                     xbrowser.BeginUpdate();
-                    xsmallImageList.Images.Clear();
+                    xsmallimageList.Images.Clear();
                     xlargeimagelist.Images.Clear();
-                    xsmallImageList.Images.Add("default", SystemIcons.WinLogo);
+                    xsmallimageList.Images.Add("default", SystemIcons.WinLogo);
                     xlargeimagelist.Images.Add("default", SystemIcons.WinLogo);
                     var xents = entries.Where(x => x.Exists()).ToList();
-                    foreach (var br in xents)
+                    foreach (var br in entries)
                     {
-                        xsmallImageList.Images.Add(br.Name, br.GetIcon(xsmallImageList.ImageSize));
-                        xlargeimagelist.Images.Add(br.Name, br.GetIcon(xlargeimagelist.ImageSize));
+                        var xkey = br.GetImageKey();
+                        if (string.IsNullOrEmpty(xkey)) continue;
+                        if (!xlargeimagelist.Images.ContainsKey(xkey))
+                        {
+                            var img = br.GetIcon(xlargeimagelist.ImageSize);
+                            var img2 = br.GetIcon(xsmallimageList.ImageSize);
+                            if (img == null) continue;
+                            xlargeimagelist.Images.Add(xkey, img);
+                            xsmallimageList.Images.Add(xkey, img2);
+                        }
                     }
 
-                    xbrowser.RefreshObjects(xents);
+                    if (refresh)
+                    {
+                       // xbrowser.RefreshObjects(xents);
+                       RefresBrowseItems(xents);
+                    }
                 }
             }
             catch (Exception ex)
@@ -174,7 +402,9 @@ namespace Forms.FileBrowser
                     else if (xold != null)
                     {
                         if (xflag)
+                        {
                             xbrowser.RefreshObject(xw);
+                        }
                         else
                         {
                             xbrowser.RemoveObject(xold);
@@ -187,7 +417,7 @@ namespace Forms.FileBrowser
                     {
                         UpdateNavigationBar();
                         UpdateStatusPanel();
-                        UpdateImageList(xbrowser.Objects.Cast<BrowseEntry>().ToList());
+                        UpdateImageList(xbrowser.Objects.Cast<BrowseEntry>().ToList(),true);
                     }
 
                     xbrowser.Invalidate();
@@ -216,7 +446,7 @@ namespace Forms.FileBrowser
                             ClearPathHistory(v.Path);
                         UpdateNavigationBar();
                         UpdateStatusPanel();
-                        UpdateImageList(xbrowser.Objects.Cast<BrowseEntry>().ToList());
+                        UpdateImageList(xbrowser.Objects.Cast<BrowseEntry>().ToList(),true);
                     }
                 }
             }
@@ -231,17 +461,23 @@ namespace Forms.FileBrowser
             var xsel = xbrowser.SelectedItem;
             if (xsel == null) return;
             if (xbrowser.View is View.Details or View.List) return;
-            var subrec = xbrowser.CalculateCellBounds(xsel, 0);
-            var xsize = tb.Text.MeasureString(tb.Font, new Size(190, 100));
-            var width = xsize.Width;
+            var subrec = xbrowser.CalculateCellTextBounds(xsel, 0);
+            var xsize = tb.Text.MeasureString(tb.Font, new Size(220, 100));
+            var width = xsize.Width + 10;
             var height = xsize.Height;
             if (width < 100)
                 width = 100;
             if (height < 20)
                 height = 20;
-            width += 5;
             height += 5;
-            var xloc = new Point((subrec.Location.X + subrec.Width / 2) - (width / 2), subrec.Y);
+            var Y = subrec.Y;
+            if (xbrowser.View == View.LargeIcon)
+            {
+                Y = subrec.Height;
+            }
+            else if (xbrowser.View == View.Tile)
+                Y += 20;
+            var xloc = new Point((subrec.Location.X + subrec.Width / 2) - (width / 2), Y);
             tb.Bounds = new Rectangle(xloc, new Size(width, height));
         }
 
@@ -249,6 +485,7 @@ namespace Forms.FileBrowser
         {
             try
             {
+                if (!CanEdit()) return;
                 xbrowser.SelectedObject = ent;
                 xbrowser.EditModel(ent);
                 if (xbrowser.CellEditor != null)
@@ -278,21 +515,29 @@ namespace Forms.FileBrowser
                         throw new Exception("Vul in een geldige naam");
                     var xnewname = e.NewValue.ToString();
                     var xoldname = e.Value.ToString();
-                    if (string.Equals(xnewname, xoldname, StringComparison.CurrentCultureIgnoreCase))
+                    if (string.Equals(xnewname, xoldname))
                     {
                         e.Cancel = true;
                         return;
                     }
 
                     brw.Rename(xnewname);
-                    var xindex = xsmallImageList.Images.IndexOfKey(xoldname);
-                    xsmallImageList.Images.Add(xnewname, brw.GetIcon(xsmallImageList.ImageSize));
-                    xlargeimagelist.Images.Add(xnewname, brw.GetIcon(xlargeimagelist.ImageSize));
+                   
+                    //xsmallImageList.Images.Add(xnewname, brw.GetIcon(xsmallImageList.ImageSize));
+                    var xkey = brw.GetImageKey();
+                    var xindex = xlargeimagelist.Images.IndexOfKey(xkey);
                     if (xindex > -1)
                     {
-                        xsmallImageList.Images.RemoveAt(xindex);
                         xlargeimagelist.Images.RemoveAt(xindex);
+                        xsmallimageList.Images.RemoveAt(xindex);
                     }
+
+                    if (!xlargeimagelist.Images.ContainsKey(xkey))
+                    {
+                        xlargeimagelist.Images.Add(xkey, brw.GetIcon(xlargeimagelist.ImageSize));
+                        xsmallimageList.Images.Add(xkey, brw.GetIcon(xsmallimageList.ImageSize));
+                    }
+
                     UpdateBrowserEntry(brw);
                 }
                 catch (Exception ex)
@@ -320,7 +565,7 @@ namespace Forms.FileBrowser
             var xlast = (xdt - _lastclicked).TotalMilliseconds;
             if (e.Model is BrowseEntry ent)
             {
-                if (_lastselected != null && _lastselected.Equals(ent) && xlast > 500 && xlast <= 1500)
+                if (_lastselected != null && _lastselected.Equals(ent) && xlast is > 500 and <= 1500)
                 {
                     EditModel(ent);
                 }
@@ -352,10 +597,10 @@ namespace Forms.FileBrowser
             {
                 bool check = !SelectedToolstripItem()?.Equals((ToolStripMenuItem) e.ClickedItem) ?? true;
                 if (!check) return;
-                CheckViewToolStripCheck((ToolStripMenuItem) e.ClickedItem, check);
+                xbrowser.CancelCellEdit();
+                CheckViewToolStripCheck((ToolStripMenuItem) e.ClickedItem, true);
                 xbrowser.View = v;
-                if (xbrowser.Items.Count > 0)
-                    xbrowser.RedrawItems(0, xbrowser.Items.Count - 1, false);
+                RefresBrowseItems();
             }
         }
 
@@ -422,6 +667,11 @@ namespace Forms.FileBrowser
         {
             try
             {
+                if (!CanEdit())
+                {
+                    e.Cancel = true;
+                    return;
+                }
                 if (e.Control is TextBox tb)
                 {
                     tb.AutoCompleteMode = AutoCompleteMode.Suggest;
@@ -442,13 +692,49 @@ namespace Forms.FileBrowser
             }
         }
 
+        private void xbrowser_FormatRow(object sender, FormatRowEventArgs e)
+        {
+            if (e.ListView.View != View.Details && e.Model is BrowseEntry ent)
+            {
+                if (ContainsDataObjectEntry(ent, DragDropEffects.Move))
+                {
+                    var decoration = new ImageDecoration(Resources.cut_icon_32x32);
+                    e.Item.Decoration = decoration;
+                }
+                else
+                {
+                    e.Item.Decoration = null;
+                }
+            }
+        }
+
+        private void xbrowser_FormatCell(object sender, FormatCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.Model is BrowseEntry ent)
+            {
+                if (ContainsDataObjectEntry(ent, DragDropEffects.Move))
+                {
+                    var decoration = new ImageDecoration(Resources.cut_icon_32x32);
+                    if (e.ListView.View == View.Details)
+                        e.SubItem.Decoration = decoration;
+                    else e.Item.Decoration = decoration;
+                }
+                else
+                {
+                    e.SubItem.Decoration = null;
+                    e.Item.Decoration = null;
+                }
+            }
+        }
+
         #endregion BrowserList Events
 
         #region ItemWatcher Events
 
         private void _watcher_WatcherLoaded(object sender, System.EventArgs e)
         {
-            LoadList(true);
+            CheckViewToolStripCheck(xbrowser.View, true);
+            LoadList(true,RootOnlyFilledDirectories);
         }
 
         private void _watcher_FolderDeleted(object sender, System.IO.FileSystemEventArgs e)
@@ -602,7 +888,7 @@ namespace Forms.FileBrowser
         {
             try
             {
-                LoadList(true);
+                LoadList(true,RootOnlyFilledDirectories);
             }
             catch (Exception e)
             {
@@ -619,7 +905,8 @@ namespace Forms.FileBrowser
                 xvorige.Enabled = CanNavigateBack();
                 xvolgende.Enabled = CanNavigateForward();
                 xhomebutton.Enabled = CanNavigateHome();
-                xstatus.Text = CurrentPath.Replace(Manager.DbPath + "\\", "");
+                xstatus.Text = CurrentPath.Replace(Manager.DbPath, "").TrimStart('\\').Trim();
+                xstatus.Invalidate();
             }
         }
 
@@ -725,12 +1012,34 @@ namespace Forms.FileBrowser
                 foreach (var x in xViewStyle.DropDownItems.Cast<ToolStripMenuItem>())
                 {
                     if (string.Equals(item.Text, x.Text, StringComparison.CurrentCultureIgnoreCase))
-                        x.Checked = ischecked;
+                        x.Checked = true;
                     else
                         x.Checked = false;
                 }
 
             item.Checked = ischecked;
+        }
+
+        private void CheckViewToolStripCheck(View view, bool ischecked)
+        {
+            var xname = Enum.GetName(typeof(View), view);
+            if (ischecked)
+            {
+                foreach (var x in xViewStyle.DropDownItems.OfType<ToolStripMenuItem>())
+                {
+                    if (string.Equals(xname, x.Text, StringComparison.CurrentCultureIgnoreCase))
+                        x.Checked = true;
+                    else
+                        x.Checked = false;
+                }
+            }
+            else
+            {
+                var item = xViewStyle.DropDownItems.OfType<ToolStripMenuItem>().FirstOrDefault(x =>
+                    string.Equals(xname, x.Text, StringComparison.CurrentCultureIgnoreCase));
+                if (item != null)
+                    item.Checked = false;
+            }
         }
 
         #endregion NavigationBar Methods
@@ -777,7 +1086,7 @@ namespace Forms.FileBrowser
 
         private void xsearchbox_TextChanged(object sender, EventArgs e)
         {
-            LoadList(false);
+            LoadList(false, RootOnlyFilledDirectories);
         }
 
         private void xsearchbox_Enter(object sender, EventArgs e)
@@ -799,6 +1108,8 @@ namespace Forms.FileBrowser
         public void Close()
         {
             _watcher?.Dispose();
+            xlargeimagelist.Images.Clear();
+            xsmallimageList.Images.Clear();
             History.Clear();
             CurrentPath = null;
             RootPath = null;
@@ -819,36 +1130,51 @@ namespace Forms.FileBrowser
             if (Manager.LogedInGebruiker == null) return false;
             if (Manager.LogedInGebruiker.AccesLevel < AccesType.ProductieBasis)
                 return false;
+            if (!AllowEditRoot && string.Equals(CurrentPath, RootPath, StringComparison.CurrentCultureIgnoreCase))
+                return false;
             return true;
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
+            if (xbrowser.IsCellEditing) return false;
             var e = new KeyEventArgs(keyData);
-
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = e.Handled = true;
                 xbrowser_DoubleClick(xbrowser, EventArgs.Empty);
+                return true;
             }
-            else if (e.KeyCode == Keys.Delete)
+
+            if (CanEdit())
             {
-                e.SuppressKeyPress = e.Handled = true;
-                DeleteDocuments(xbrowser, EventArgs.Empty);
-            }
-            else if (e.Control)
-            {
-                if (e.KeyCode == Keys.C)
+                if (e.KeyCode == Keys.Delete)
                 {
-                    e.SuppressKeyPress = e.Handled = true;
-                    CopyDocuments(this, e);
+                        e.SuppressKeyPress = e.Handled = true;
+                        DeleteDocuments(xbrowser, EventArgs.Empty);
                 }
-
-                if (e.KeyCode == Keys.V)
+                else if (e.Control)
                 {
-                    e.SuppressKeyPress = e.Handled = true;
-                    PasteDocuments(this, e);
-
+                    if (e.KeyCode == Keys.C)
+                    {
+                        e.SuppressKeyPress = e.Handled = true;
+                        CopyDocuments(this, e);
+                    }
+                    else if (e.KeyCode == Keys.V)
+                    {
+                        e.SuppressKeyPress = e.Handled = true;
+                        PasteDocuments(this, e);
+                    }
+                    else if (e.KeyCode == Keys.X)
+                    {
+                        e.SuppressKeyPress = e.Handled = true;
+                        CutDocuments(this, e);
+                    }
+                    else if (e.KeyCode == Keys.Enter)
+                    {
+                        e.SuppressKeyPress = e.Handled = true;
+                        OpenInWindowsPhoto_Click(this,e);
+                    }
                 }
             }
 
@@ -1097,6 +1423,10 @@ namespace Forms.FileBrowser
                 xcopy.ShowShortcutKeys = true;
                 xcopy.ShortcutKeys = Keys.Control | Keys.C;
                 xContextMenu.Items.Add(xcopy);
+                var xknip = new ToolStripMenuItem("Knippen", Resources.cut_icon_32x32, CutDocuments);
+                xknip.ShowShortcutKeys = true;
+                xknip.ShortcutKeys = Keys.Control | Keys.X;
+                xContextMenu.Items.Add(xknip);
                 InitPasteContextMenu();
                 var xdel = new ToolStripMenuItem("Verwijderen", Resources.delete_1577, DeleteDocuments);
                 xdel.ShowShortcutKeys = true;
@@ -1267,7 +1597,7 @@ namespace Forms.FileBrowser
 
         private void xContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            e.Cancel = !InitContextMenu();
+            e.Cancel = !CanEdit() || !InitContextMenu();
         }
 
         #endregion ContextMenu
@@ -1287,7 +1617,47 @@ namespace Forms.FileBrowser
             }
         }
 
-        private void SetCollectionToClipBoard(string[] collection)
+        private List<string> GetDataObjectCollection(DragDropEffects effect)
+        {
+            try
+            {
+                var data = GetDataObject();
+                if (data != null && data.ContainsFileDropList())
+                {
+                    var xdata = data.GetFileDropList();
+                    var xeff = GetEffect(data);
+                    if ((xeff == effect || effect == DragDropEffects.All) && xdata.Count > 0)
+                    {
+
+                        return xdata.Cast<string>().ToList();
+                    }
+                }
+
+                return new List<string>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new List<string>();
+            }
+        }
+
+        private  bool ContainsDataObjectEntry(BrowseEntry entry, DragDropEffects effect)
+        {
+            try
+            {
+                var collection = GetDataObjectCollection(effect);
+                if (collection == null || collection.Count == 0) return false;
+                return collection.Any(x => string.Equals(entry.Path, x, StringComparison.CurrentCultureIgnoreCase));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+        private void SetCollectionToClipBoard(string[] collection, DragDropEffects effect)
         {
             try
             {
@@ -1295,7 +1665,7 @@ namespace Forms.FileBrowser
                 xcol.AddRange(collection);
                 _clipboard = new DataObject();
                 _clipboard.SetFileDropList(xcol);
-                _clipboard.SetData("Preferred DropEffect", DragDropEffects.Copy);
+                _clipboard.SetData("Preferred DropEffect", effect);
                 Clipboard.SetDataObject(_clipboard);
             }
             catch (Exception e)
@@ -1317,6 +1687,30 @@ namespace Forms.FileBrowser
             }
         }
 
+        private DragDropEffects GetEffect(DataObject data)
+        {
+            try
+            {
+                var aDataDropEffect = Clipboard.GetData("Preferred DropEffect");
+                if (aDataDropEffect is MemoryStream ms)
+                {
+                    byte[] aMoveEffect = new byte[4];
+                    var read = ms.Read(aMoveEffect, 0, aMoveEffect.Length);
+                    if(read < 4)  return DragDropEffects.None;
+                    return (DragDropEffects)BitConverter.ToInt32(aMoveEffect, 0);
+                }
+
+                if (aDataDropEffect is DragDropEffects effect)
+                    return effect;
+
+                return DragDropEffects.None;
+            }
+            catch (Exception e)
+            {
+                return DragDropEffects.None;
+            }
+        }
+
         private void PasteDocuments(object sender, EventArgs e)
         {
             try
@@ -1325,8 +1719,10 @@ namespace Forms.FileBrowser
                 if (data != null && data.ContainsFileDropList())
                 {
                     var xdata = data.GetFileDropList();
-                    if (xdata.Count > 0)
+                    var effect = GetEffect(data);
+                    if (effect != DragDropEffects.None && xdata.Count > 0)
                     {
+                      
                         var files = xdata.Cast<string>().Where(x =>
                             new BrowseEntry(x).Exists() &&
                             new Executable().IsExecutable(x) == Executable.ExecutableType.Unknown).ToList();
@@ -1337,12 +1733,29 @@ namespace Forms.FileBrowser
                                 try
                                 {
                                     var xbw = new BrowseEntry(f);
-                                    var path = Functions.GetAvailibleFilepath(CurrentPath, Path.GetFileName(f));
-                                    xbw.CopyTo(path, true);
+                                    if (effect == DragDropEffects.Move)
+                                    {
+                                        var path = Path.Combine(CurrentPath, Path.GetFileName(f));
+                                        try
+                                        {
+                                            xbw.MoveTo(path);
+                                        }
+                                        catch
+                                        {
+                                            //ignore
+                                        }
+
+                                        ClearClipBoard();
+                                    }
+                                    else
+                                    {
+                                        var path = Functions.GetAvailibleFilepath(CurrentPath, Path.GetFileName(f));
+                                        xbw.CopyTo(path, true);
+                                    }
                                     UpdateBrowserEntry(xbw);
                                     xbrowser.SelectedObject = xbw;
                                     xbrowser.SelectedItem?.EnsureVisible();
-                                    ClearClipBoard();
+                                   
                                 }
                                 catch (Exception ex)
                                 {
@@ -1369,7 +1782,26 @@ namespace Forms.FileBrowser
                 if (files.Count > 0)
                 {
                     var xd = files.Select(x => x.Path).ToArray();
-                    SetCollectionToClipBoard(xd);
+                    SetCollectionToClipBoard(xd, DragDropEffects.Copy);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private void CutDocuments(object sender, EventArgs e)
+        {
+            try
+            {
+                var files = xbrowser.SelectedObjects?.Cast<BrowseEntry>().ToList() ?? new List<BrowseEntry>();
+                if (files.Count > 0)
+                {
+                    var xd = files.Select(x => x.Path).ToArray();
+                    SetCollectionToClipBoard(xd, DragDropEffects.Move);
+                    RefresBrowseItems();
+                    //xbrowser.RefreshObjects(xbrowser.Objects.Cast<BrowseEntry>().ToArray());
                 }
             }
             catch (Exception ex)

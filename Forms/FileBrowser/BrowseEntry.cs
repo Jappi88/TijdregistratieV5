@@ -2,8 +2,12 @@
 using System.Drawing;
 using System.IO;
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
+using Rpm.Misc;
 using Rpm.NativeMethods;
 
 namespace Forms.FileBrowser
@@ -50,13 +54,55 @@ namespace Forms.FileBrowser
             try
             {
                 if (!Exists()) return null;
-                return WindowsThumbnailProvider.GetThumbnail(Path,size.Width, size.Height, ThumbnailOptions.BiggerSizeOk);
+               
+                var key = GetImageKey();
+                if (string.IsNullOrEmpty(key)) return null;
+                Bitmap image = null;
+                if(IsDirectory)
+                {
+                    if (key.Contains("content"))
+                        image = Resources.folder_with_contents_96x96;
+                    else image = Resources.folder_open_Empty_96x96;
+                    if (size != image.Size)
+                        image = image.ResizeImage(size);
+                }
+                else
+                {
+                    image = WindowsThumbnailProvider.GetThumbnail(Path,size.Width, size.Height, ThumbnailOptions.None);
+                }
+
+                if (image == null) return null;
+                image.Tag = key;
+                return image;
             }
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return null;
             }
+        }
+
+        public string GetImageKey()
+        {
+            if (IsDirectory)
+            {
+                if (HasContent())
+                    return "directory_content";
+                return "directory_empty";
+            }
+            if (Path.IsImageFile())
+                return System.IO.Path.GetFileName(Path);
+            var ext = System.IO.Path.GetExtension(Path);
+            if (string.IsNullOrEmpty(ext))
+                ext = "file";
+            return ext;
+        }
+
+        public bool HasContent()
+        {
+            if (!IsDirectory) return false;
+            if (!Directory.Exists(Path)) return false;
+            return Directory.EnumerateFileSystemEntries(Path).Any();
         }
 
         public void Rename(string newname)
@@ -70,10 +116,32 @@ namespace Forms.FileBrowser
             }
             else
                 newname += xxt;
+
+            string oldname = System.IO.Path.GetFileName(Path);
+            string newpath = System.IO.Path.Combine(RootPath, newname);
+            bool flag = string.Equals(oldname, newname, StringComparison.CurrentCultureIgnoreCase) &&
+                        !string.Equals(newname, oldname);
             if (IsDirectory)
-                Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(Path, newname);
-            else Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(Path, newname);
-            SetPath(System.IO.Path.Combine(RootPath, newname));
+            {
+                if (flag)
+                {
+                    Directory.Move(Path, Path + "_tmp");
+                    Directory.Move(Path + "_tmp", newpath);
+                }
+                else
+                    Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(Path, newname);
+            }
+            else
+            {
+                if (flag)
+                {
+                    File.Move(Path, Path + "_tmp");
+                    File.Move(Path + "_tmp", newpath);
+                }
+                else
+                    Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(Path, newname);
+            }
+            SetPath(newpath);
         }
 
         public void MoveTo(string path)

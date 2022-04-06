@@ -228,7 +228,8 @@ namespace Rpm.Productie
                 if(!string.IsNullOrEmpty(SecondaryAppRootPath))
                     SecondaryAppRootPath = Path.Combine(SecondaryAppRootPath, DateTime.Now.Year.ToString());
             }
-            
+
+            AppRootPath = Path.Combine(Directory.GetParent(AppRootPath)?.FullName??"", Path.GetFileName(AppRootPath));
             DbPath = Path.Combine(AppRootPath, "RPM_Data");
             TempPath = Path.Combine(AppRootPath, "Temp");
             BackupPath = Path.Combine(AppRootPath, "Backup");
