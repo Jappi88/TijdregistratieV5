@@ -28,13 +28,13 @@ namespace Rpm.SqlLite
         public event FileSystemEventHandler InstanceDeleted;
         public event ProgressChangedHandler ProgressChanged;
 
-        public DatabaseInstance(DbInstanceType instanceType, string dbrootpath, string dbname, string collectionname, bool watchdatabase)
+        public DatabaseInstance(DbInstanceType instanceType,DbType type, string dbrootpath, string dbname, string collectionname, bool watchdatabase)
         {
             DbName = dbname;
             DbRootPath = dbrootpath;
             CollectionName = collectionname;
             InstanceType = instanceType;
-            InitInstance(watchdatabase);
+            InitInstance(watchdatabase,type);
         }
 
         public string DbName { get; }
@@ -48,11 +48,11 @@ namespace Rpm.SqlLite
         //public ILiteCollection<T> LocalDbCollection { get; private set; }
         public MultipleFileDb MultiFiles { get; private set; }
 
-        private void InitInstance(bool watchdatabase)
+        private void InitInstance(bool watchdatabase, DbType dbtype)
         {
             var type = typeof(T);
             TypeName = type.Name;
-            Type = GetType(TypeName);
+            Type = dbtype;
             var rootpath = $"{DbRootPath}\\{DbName}";
             switch (InstanceType)
             {
@@ -105,13 +105,11 @@ namespace Rpm.SqlLite
                     return DbType.Opties;
                 case "logentry":
                     return DbType.Logs;
-                case "userchange":
-                    return DbType.Changes;
                 case "dbversion":
                     return DbType.Versions;
             }
 
-            return DbType.None;
+            return DbType.Geen;
         }
 
         #region Implemented

@@ -398,13 +398,6 @@ namespace Rpm.SqlLite
                         rpm.Changed = x.LastChanged?.TimeChanged ?? DateTime.Now;
                         rpm.Type = DbType.Medewerkers;
                         break;
-                    case UserChange x:
-                        rpm.ID = x.User?.Trim();
-                        rpm.Changed = x.TimeChanged;
-                        rpm.Type = DbType.Changes;
-                        if (!string.IsNullOrEmpty(x.Change))
-                            rpm.Criterias.Add(x.Change.Trim());
-                        break;
                     case LogEntry x:
                         rpm.ID = x.Id.ToString();
                         rpm.Type = DbType.Logs;

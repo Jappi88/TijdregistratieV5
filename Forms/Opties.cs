@@ -33,8 +33,14 @@ namespace Forms
             InitializeComponent();
             // _stickyWindow = new StickyWindow(this);
             metroTabControl1.SelectedIndex = 0;
+            imageList2.Images.Add(Resources.database_21835_96x96);
             ((OLVColumn) xoptielist.Columns[0]).GroupKeyGetter = GroupName;
             ((OLVColumn) xoptielist.Columns[0]).ImageGetter = ImageGetter;
+
+            ((OLVColumn) xdatabaseview.Columns[0]).ImageGetter = (_) => 0;
+            ((OLVColumn) xdatabaseview.Columns[0]).AspectGetter = DbNamegetter;
+            xdatabaseview.CheckStateGetter = IsSelectedDatabase;
+
             imageList1.Images.Add(Resources.industry_setting_114090);
             imageList1.Images.Add(Resources.industry_setting_114090.CombineImage(Resources.check_1582, 2));
             xoptielist.Groups.Clear();
@@ -42,6 +48,32 @@ namespace Forms
             if (Manager.Opties == null && !Manager.LoadSettings(this,true).Result)
                 return;
             Manager.DefaultSettings ??= UserSettings.GetDefaultSettings();
+        }
+
+        private object DbNamegetter(object item)
+        {
+            if(item is string xval)
+                return xval;
+            return null;
+        }
+
+        private CheckState IsSelectedDatabase(object value)
+        {
+            try
+            {
+                if (_backupinfo?.ExcludeNames == null || _backupinfo.ExcludeNames.Count == 0)  return CheckState.Checked;
+                if (value is string xstr)
+                {
+                    return !_backupinfo.ExcludeNames.Any(x =>
+                        string.Equals(x, xstr, StringComparison.CurrentCultureIgnoreCase))? CheckState.Checked : CheckState.Unchecked;
+                }
+
+                return CheckState.Checked;
+            }
+            catch 
+            {
+                return CheckState.Indeterminate;
+            }
         }
 
 
@@ -224,9 +256,15 @@ namespace Forms
             xmaakvanafweek.SetValue(x.VanafWeek);
             xmaakvanafjaar.SetValue(x.VanafJaar);
             xexcelinterval.SetValue((decimal) x.WeekOverzichtUpdateInterval / 60000);
-            xcreatebackupinterval.SetValue((decimal) TimeSpan.FromMilliseconds(x.BackupInterval).TotalHours);
+           //load backupInfo
             xcreatebackup.Checked = x.CreateBackup;
-            xmaxbackups.SetValue(x.MaxBackupCount);
+            if (Manager.LogedInGebruiker is { AccesLevel: > AccesType.ProductieAdvance })
+            {
+                LoadBackupInfo();
+                xbackupgroup.Visible = true;
+            }
+            else 
+                xbackupgroup.Visible = false;
             xtoonlognotificatie.Checked = x.ToonLogNotificatie;
             xtoonproductieNaToevoegen.Checked = x.ToonProductieNaToevoegen;
             xoffdbsyncinterval.SetValue(Manager.DefaultSettings.OfflineDbSyncInterval);
@@ -335,6 +373,47 @@ namespace Forms
             xweergavelijst.EndUpdate();
         }
 
+        private void SaveBackupInfo()
+        {
+            try
+            {
+                var info = BackupInfo.Load();
+                info.BackupInterval = TimeSpan.FromHours((double)xcreatebackupinterval.Value).TotalMilliseconds;
+                info.MaxBackupCount = (int)xmaxbackups.Value;
+                info.ExcludeNames = xdatabaseview.Items.OfType<OLVListItem>().Where(x => x.CheckState != CheckState.Checked)
+                    .Select(x => x.RowObject as string).ToList();
+                info.Save();
+                if (Manager.BackupInfo != null)
+                {
+                    Manager.BackupInfo.BackupInterval = info.BackupInterval;
+                    Manager.BackupInfo.MaxBackupCount = info.MaxBackupCount;
+                    Manager.BackupInfo.ExcludeNames = info.ExcludeNames;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        private BackupInfo _backupinfo;
+
+        private void LoadBackupInfo()
+        {
+            try
+            {
+                var info = BackupInfo.Load();
+                xcreatebackupinterval.SetValue((decimal) TimeSpan.FromMilliseconds(info.BackupInterval).TotalHours);
+                xmaxbackups.SetValue(info.MaxBackupCount);
+                _backupinfo = info;
+                xdatabaseview.SetObjects(Enum.GetNames(typeof(DbType)).Where(x=> x.ToLower() != "alles" && x.ToLower() != "geen"));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         public UserSettings CreateInstance(string username)
         {
             var xs = new UserSettings();
@@ -432,9 +511,9 @@ namespace Forms
             xs.VanafWeek = (int) xmaakvanafweek.Value;
             xs.VanafJaar = (int) xmaakvanafjaar.Value;
             xs.WeekOverzichtUpdateInterval = (int)xexcelinterval.Value * 60000;
+            //backup info
             xs.CreateBackup = xcreatebackup.Checked;
-            xs.BackupInterval = TimeSpan.FromHours((double)xcreatebackupinterval.Value).TotalMilliseconds;
-            xs.MaxBackupCount = (int)xmaxbackups.Value;
+
             xs.ToonLogNotificatie = xtoonlognotificatie.Checked;
 
             xs.ToonNieweOpmerkingMelding = xmeldingOpmerking.Checked;
@@ -625,6 +704,8 @@ namespace Forms
                 Manager.DefaultSettings.MainDB.RootPath = db;
             }
 
+            if (Manager.LogedInGebruiker is { AccesLevel: > AccesType.ProductieAdvance })
+                SaveBackupInfo();
             Manager.DefaultSettings.GebruikOfflineMetSync = xgebruikofflinemetsync.Checked;
             if (Manager.DefaultSettings.GebruikOfflineMetSync)
             {
@@ -1635,6 +1716,37 @@ namespace Forms
         private void xfiltertype_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void xdatabaseview_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            if(_backupinfo == null) { return; }
+
+            _backupinfo.ExcludeNames ??= new List<string>();
+            if (e.Item is OLVListItem item)
+            {
+                var index = _backupinfo.ExcludeNames.IndexOf(item.Text);
+                if (!item.Checked)
+                {
+                    if (index > -1)
+                        _backupinfo.ExcludeNames.RemoveAt(index);
+                }
+                else
+                {
+                    if (index == -1)
+                        _backupinfo.ExcludeNames.Add(item.Text);
+                }
+
+                xdatabaseview.RefreshItem(item);
+            }
+        }
+
+        private void xdatabaseview_DoubleClick(object sender, EventArgs e)
+        {
+            if (xdatabaseview.SelectedItem != null)
+            {
+                xdatabaseview.SelectedItem.Checked = !xdatabaseview.SelectedItem.Checked;
+            }
         }
 
         //private void xKiesExcelColumnButton_Click(object sender, EventArgs e)

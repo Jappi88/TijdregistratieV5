@@ -662,7 +662,7 @@ namespace Rpm.Productie
                 SyncInterval = options.SyncInterval < 10000 ? 10000 : options.SyncInterval;
                 options.BackupInterval = options.BackupInterval < bkms ? bkms : options.BackupInterval;
                 if (options.CreateBackup)
-                    BackupInfo?.StartBackupSyncer(options.BackupInterval);
+                    BackupInfo?.StartBackupSyncer();
                 //MailInterval = options.MailSyncInterval < 10000 ? 10000 : options.MailSyncInterval;
                 if (Database != null)
                     Database.NotificationEnabled = options.ToonLogNotificatie;

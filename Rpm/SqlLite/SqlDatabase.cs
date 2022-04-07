@@ -117,8 +117,6 @@ namespace Rpm.SqlLite
                                 await Manager.Database.UpSert(prod, false);
                                 count++;
                                 break;
-                            case DbType.Changes:
-                                break;
                             case DbType.Medewerkers:
                                 var pers = entry.DataObject.DeCompress().DeSerialize<Personeel>();
                                 if (pers == null) continue;

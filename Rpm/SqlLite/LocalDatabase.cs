@@ -126,7 +126,7 @@ namespace Rpm.SqlLite
                                         break;
                                     case DbType.Medewerkers:
                                         break;
-                                    case DbType.None:
+                                    case DbType.Geen:
                                         break;
                                     default:
                                         throw new ArgumentOutOfRangeException();
@@ -1609,35 +1609,35 @@ namespace Rpm.SqlLite
             var Logdb = "LogDb";
             var versiondb = "VersionDb";
             //var bewerkingentriesdb = "BewerkingLijst";
-            ProductieFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, RootPath,
+            ProductieFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, DbType.Producties, RootPath,
                 dbfilename, "ProductieFormulieren", true);
             ProductieFormulieren.InstanceChanged += ProductieFormulieren_InstanceChanged;
             ProductieFormulieren.InstanceDeleted += ProductieFormulieren_InstanceDeleted;
 
             PersoneelLijst =
-                new DatabaseInstance<Personeel>(DbInstanceType.MultipleFiles, RootPath, personeeldb, "Personeel", true);
+                new DatabaseInstance<Personeel>(DbInstanceType.MultipleFiles, DbType.Medewerkers, RootPath, personeeldb, "Personeel", true);
             PersoneelLijst.InstanceChanged += PersoneelLijst_InstanceChanged;
             PersoneelLijst.InstanceDeleted += PersoneelLijst_InstanceDeleted;
 
-            UserAccounts = new DatabaseInstance<UserAccount>(DbInstanceType.MultipleFiles, RootPath, Accountdb,
+            UserAccounts = new DatabaseInstance<UserAccount>(DbInstanceType.MultipleFiles, DbType.Accounts, RootPath, Accountdb,
                 "UserAccounts", true);
             UserAccounts.InstanceChanged += UserAccounts_InstanceChanged;
             UserAccounts.InstanceDeleted += UserAccounts_InstanceDeleted;
 
-            AllSettings = new DatabaseInstance<UserSettings>(DbInstanceType.MultipleFiles, RootPath, Settingdb,
+            AllSettings = new DatabaseInstance<UserSettings>(DbInstanceType.MultipleFiles, DbType.Opties, RootPath, Settingdb,
                 "AllSettings", true);
             AllSettings.InstanceChanged += AllSettings_InstanceChanged;
             AllSettings.InstanceDeleted += AllSettings_InstanceDeleted;
 
-            Logger = new DatabaseInstance<LogEntry>(DbInstanceType.MultipleFiles, RootPath, Logdb, "Logs", false);
+            Logger = new DatabaseInstance<LogEntry>(DbInstanceType.MultipleFiles, DbType.Logs, RootPath, Logdb, "Logs", false);
             // ChangeLog = new DatabaseInstance<UserChange>(DbInstanceType.MultipleFiles, RootPath, changeddb,
             // "ChangeLog");
-            GereedFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, RootPath,
+            GereedFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, DbType.GereedProducties, RootPath,
                 Gereeddb, "GereedFormulieren", true);
             GereedFormulieren.InstanceChanged += ProductieFormulieren_InstanceChanged;
             GereedFormulieren.InstanceDeleted += ProductieFormulieren_InstanceDeleted;
 
-            DbVersions = new DatabaseInstance<DbVersion>(DbInstanceType.MultipleFiles, RootPath, versiondb,
+            DbVersions = new DatabaseInstance<DbVersion>(DbInstanceType.MultipleFiles, DbType.Versions, RootPath, versiondb,
                 "DbVersions", false);
             //BewerkingEntries = new DatabaseInstance<BewerkingEntry>(DbInstanceType.MultipleFiles, RootPath,
             //    bewerkingentriesdb, "BewerkingEntries");
@@ -1916,112 +1916,6 @@ namespace Rpm.SqlLite
         //    }
         //}
 
-        public Task LoadServerFiles(bool migrate)
-        {
-            return Task.Run(async () =>
-            {
-                var dbfilename = "SqlDatabase";
-               // var changeddb = "ChangeDb";
-                var personeeldb = "PersoneelDb";
-                var Gereeddb = "GereedDb";
-                var Settingdb = "SettingDb";
-                var Accountdb = "AccountsDb";
-                var Logdb = "LogDb";
-                var versiondb = "VersionDb";
-
-                ProductieFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.Server, RootPath,
-                    dbfilename, "ProductieFormulieren",false);
-                PersoneelLijst =
-                    new DatabaseInstance<Personeel>(DbInstanceType.Server, RootPath, personeeldb, "Personeel", false);
-                UserAccounts =
-                    new DatabaseInstance<UserAccount>(DbInstanceType.Server, RootPath, Accountdb, "UserAccounts", false);
-                AllSettings =
-                    new DatabaseInstance<UserSettings>(DbInstanceType.Server, RootPath, Settingdb, "AllSettings", false);
-                Logger = new DatabaseInstance<LogEntry>(DbInstanceType.MultipleFiles, RootPath, Logdb, "Logs", false);
-                //ChangeLog = new DatabaseInstance<UserChange>(DbInstanceType.Server, RootPath, changeddb, "ChangeLog");
-                GereedFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.Server, RootPath, Gereeddb,
-                    "GereedFormulieren", false);
-                DbVersions = new DatabaseInstance<DbVersion>(DbInstanceType.Server, RootPath, versiondb, "DbVersions", false);
-                if (!migrate) return;
-                var dbpath = RootPath + "\\" + dbfilename;
-                if (Directory.Exists(dbpath) && !Directory.Exists(dbpath + "_migrated"))
-                {
-                    var prodsdb = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, RootPath,
-                        dbfilename, "ProductieFormulieren", false);
-                    var prods = await prodsdb.FindAll(true);
-                    foreach (var prod in prods)
-                        await ProductieFormulieren.Upsert(prod.ProductieNr, prod,false,null);
-                    Directory.Move(dbpath, dbpath + "_migrated");
-                }
-
-                //dbpath = RootPath + "\\" + changeddb;
-                //if (Directory.Exists(dbpath) && !Directory.Exists(dbpath + "_migrated"))
-                //{
-                //    var prodsdb = new DatabaseInstance<UserChange>(DbInstanceType.MultipleFiles, RootPath, changeddb,
-                //        "ChangeLog");
-                //    var prods = await prodsdb.FindAll();
-                //    foreach (var prod in prods)
-                //        await ChangeLog.Upsert(prod.User, prod);
-                //    Directory.Move(dbpath, dbpath + "_migrated");
-                //}
-
-                dbpath = RootPath + "\\" + personeeldb;
-                if (Directory.Exists(dbpath) && !Directory.Exists(dbpath + "_migrated"))
-                {
-                    var prodsdb = new DatabaseInstance<Personeel>(DbInstanceType.MultipleFiles, RootPath, personeeldb,
-                        "Personeel", false);
-                    var prods = await prodsdb.FindAll(true);
-                    foreach (var prod in prods)
-                        await PersoneelLijst.Upsert(prod.PersoneelNaam, prod,false,null);
-                    Directory.Move(dbpath, dbpath + "_migrated");
-                }
-
-                dbpath = RootPath + "\\" + Gereeddb;
-                if (Directory.Exists(dbpath) && !Directory.Exists(dbpath + "_migrated"))
-                {
-                    var prodsdb = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, RootPath,
-                        Gereeddb, "GereedFormulieren", false);
-                    var prods = await prodsdb.FindAll(true);
-                    foreach (var prod in prods)
-                        await GereedFormulieren.Upsert(prod.ProductieNr, prod,false,null);
-                    Directory.Move(dbpath, dbpath + "_migrated");
-                }
-
-                dbpath = RootPath + "\\" + Settingdb;
-                if (Directory.Exists(dbpath) && !Directory.Exists(dbpath + "_migrated"))
-                {
-                    var prodsdb = new DatabaseInstance<UserSettings>(DbInstanceType.MultipleFiles, RootPath, Settingdb,
-                        "AllSettings", false);
-                    var prods = await prodsdb.FindAll(true);
-                    foreach (var prod in prods)
-                        await AllSettings.Upsert(prod.Username, prod,false,null);
-                    Directory.Move(dbpath, dbpath + "_migrated");
-                }
-
-                dbpath = RootPath + "\\" + Accountdb;
-                if (Directory.Exists(dbpath) && !Directory.Exists(dbpath + "_migrated"))
-                {
-                    var prodsdb = new DatabaseInstance<UserAccount>(DbInstanceType.MultipleFiles, RootPath, Accountdb,
-                        "UserAccounts", false);
-                    var prods = await prodsdb.FindAll(true);
-                    foreach (var prod in prods)
-                        await UserAccounts.Upsert(prod.Username, prod,false,null);
-                    Directory.Move(dbpath, dbpath + "_migrated");
-                }
-
-                dbpath = RootPath + "\\" + versiondb;
-                if (Directory.Exists(dbpath) && !Directory.Exists(dbpath + "_migrated"))
-                {
-                    var prodsdb = new DatabaseInstance<DbVersion>(DbInstanceType.MultipleFiles, RootPath, versiondb,
-                        "DbVersions", false);
-                    var prods = await prodsdb.FindAll(true);
-                    foreach (var prod in prods)
-                        await DbVersions.Upsert(Enum.GetName(typeof(DbType),prod.DbType), prod,false,null);
-                    Directory.Move(dbpath, dbpath + "_migrated");
-                }
-            });
-        }
-
         //private void InitDbs(bool createnew)
         //{
         //    if (File.Exists(SqlDatabaseFileName) || createnew)
@@ -2091,8 +1985,6 @@ namespace Rpm.SqlLite
                         if (ProductieFormulieren == null)
                             return 0;
                         return await ProductieFormulieren.Count();
-                    case DbType.Changes:
-                        return 0;
                     case DbType.Medewerkers:
                         if (PersoneelLijst == null)
                             return 0;
@@ -2124,14 +2016,30 @@ namespace Rpm.SqlLite
                         var types = (DbType[])Enum.GetValues(typeof(DbType));
                         foreach (var t in types)
                         {
-                            if (t == DbType.Alles || t == DbType.None)
+                            if (t == DbType.Alles || t == DbType.Geen)
                                 continue;
                             count += await Count(t);
                         }
 
                         return count;
-                    case DbType.None:
+                    case DbType.Opmerkingen:
                         break;
+                    case DbType.Klachten:
+                        break;
+                    case DbType.Verpakkingen:
+                        break;
+                    case DbType.ArtikelRecords:
+                        break;
+                    case DbType.SpoorOverzicht:
+                        break;
+                    case DbType.LijstLayouts:
+                        break;
+                    case DbType.MeldingCenter:
+                        break;
+                    case DbType.Bijlages:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }
 
                 return 0;
@@ -2190,9 +2098,6 @@ namespace Rpm.SqlLite
             {
                 case DbType.Producties:
                     ProductieFormulieren = null;
-                    break;
-                case DbType.Changes:
-                    //ChangeLog = null;
                     break;
                 case DbType.Medewerkers:
                     PersoneelLijst = null;

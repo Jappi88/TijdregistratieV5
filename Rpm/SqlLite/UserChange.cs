@@ -42,8 +42,6 @@ namespace Rpm.SqlLite
                 case DbType.Producties:
                     xreturn.Title = $"[{User}] Productie Update";
                     break;
-                case DbType.Changes:
-                    break;
                 case DbType.Medewerkers:
                     xreturn.Title = $"[{User}] Gebruiker Update";
                     xreturn.MessageType = MsgType.Gebruiker;
@@ -71,7 +69,7 @@ namespace Rpm.SqlLite
                 case DbType.Alles:
                     xreturn.Title = $"[{User}] Algemene Update";
                     break;
-                case DbType.None:
+                case DbType.Geen:
                     xreturn.Title = $"[{User}] Update";
                     break;
                 default:

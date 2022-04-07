@@ -279,6 +279,12 @@
     <Compile Include="Controls\ChartView.Designer.cs">
       <DependentUpon>ChartView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CustomObjectListview.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\CustomObjectListview.Designer.cs">
+      <DependentUpon>CustomObjectListview.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MetroCustomTabControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1487,6 +1493,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ChartView.resx">
       <DependentUpon>ChartView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\CustomObjectListview.resx">
+      <DependentUpon>CustomObjectListview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ProductieVerbruikUI.resx">
       <DependentUpon>ProductieVerbruikUI.cs</DependentUpon>

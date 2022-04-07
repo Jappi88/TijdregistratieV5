@@ -3,7 +3,6 @@
     public enum DbType
     {
         Producties,
-        Changes,
         Opmerkingen,
         Medewerkers,
         GereedProducties,
@@ -18,7 +17,9 @@
         SpoorOverzicht,
         LijstLayouts,
         MeldingCenter,
+        Bijlages,
+        ProductieFormulieren,
         Alles,
-        None
+        Geen
     }
 }

@@ -2499,12 +2499,10 @@ namespace Rpm.Misc
                     return DbType.Opties;
                 case nameof(DbVersion):
                     return DbType.Versions;
-                case nameof(UserChange):
-                    return DbType.Changes;
                 case nameof(LogEntry):
                     return DbType.Logs;
                 default:
-                    return DbType.None;
+                    return DbType.Geen;
             }
         }
 

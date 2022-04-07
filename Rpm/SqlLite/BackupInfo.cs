@@ -4,11 +4,13 @@ using Polenter.Serialization;
 using Rpm.Misc;
 using Rpm.Productie;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Timer = System.Timers.Timer;
 
 namespace Rpm.SqlLite
@@ -18,15 +20,17 @@ namespace Rpm.SqlLite
         public string DbVersion { get; set; }
         public string CreatedBy { get; set; }
         public string CreatedFileName { get; set; }
+        public int MaxBackupCount { get; set; }
         public DateTime Created { get; set; }
         public bool IsCreating { get; set; }
         public DateTime Creating { get; set; }
+        public List<string> ExcludeNames { get; set; } = new List<string>();
         [ExcludeFromSerialization]
         public bool IsSyncing { get; private set; }
         public CancellationTokenSource CancellationToken;
 
-        internal Timer _BackupSyncTimer = new Timer();
-        private double _interval;
+        internal Timer _BackupSyncTimer;
+        public double _interval { get; set; } = TimeSpan.FromHours(1).TotalMilliseconds;
 
         [ExcludeFromSerialization]
         public double BackupInterval
@@ -53,18 +57,17 @@ namespace Rpm.SqlLite
             DbVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
-        public void StartBackupSyncer(double interval)
+        public void StartBackupSyncer()
         {
 
             if (IsSyncing)
             {
-                BackupInterval = interval;
                 return;
             }
             IsSyncing = true;
             _BackupSyncTimer?.Stop();
             _BackupSyncTimer?.Dispose();
-            _BackupSyncTimer = new Timer(interval);
+            _BackupSyncTimer = new Timer(BackupInterval);
             _BackupSyncTimer.Elapsed += _BackupSyncTimer_Elapsed;
             _BackupSyncTimer.Start();
         }
@@ -75,28 +78,118 @@ namespace Rpm.SqlLite
             {
                 IsSyncing = true;
                 _BackupSyncTimer?.Stop();
-                var bki = BackupInfo.Load();
-                if (!bki.IsCreating || (bki.IsCreating && (DateTime.Now - bki.Creating).TotalHours > 2))
+                if (Manager.Opties is { CreateBackup: true })
                 {
-                    if (Manager.Opties is {CreateBackup: true} && (DateTime.Now - bki.Created).TotalHours >
-                        TimeSpan.FromMilliseconds(Manager.Opties.BackupInterval).TotalHours)
+                    var bki = BackupInfo.Load();
+                    if (Manager.BackupInfo != null)
                     {
-                        IsCreating = false;
-                        await CreateBackup();
+                        lock (Manager.BackupInfo)
+                        {
+                            Manager.BackupInfo.ExcludeNames = bki.ExcludeNames;
+                            Manager.BackupInfo.BackupInterval = bki.BackupInterval;
+                            Manager.BackupInfo.MaxBackupCount = bki.MaxBackupCount;
+                        }
                     }
+
+                    if (!bki.IsCreating || (bki.IsCreating && (DateTime.Now - bki.Creating).TotalHours > 1))
+                    {
+                        if ((DateTime.Now - bki.Created).TotalHours >
+                            TimeSpan.FromMilliseconds(bki.BackupInterval).TotalHours)
+                        {
+                            IsCreating = false;
+                            await CreateBackup(bki.MaxBackupCount);
+                        }
+                    }
+
+                    _BackupSyncTimer?.Start();
                 }
 
-                if (Manager.Opties is {CreateBackup: true})
-                    _BackupSyncTimer?.Start();
-                else IsSyncing = false;
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
             }
+
+            IsSyncing = false;
         }
 
-        public Task CreateBackup()
+        public List<string> GetExcludeNames()
+        {
+            var xret = new List<string>();
+            try
+            {
+                if (ExcludeNames == null) return xret;
+                for (int i = 0; i < ExcludeNames.Count; i++)
+                {
+                    var xname = ExcludeNames[i];
+                    if (Enum.TryParse(xname, true, out DbType type))
+                    {
+                        switch (type)
+                        {
+                            case DbType.Producties:
+                                xret.Add("SqlDatabase");
+                                break;
+                            case DbType.Opmerkingen:
+                                xret.Add("Opmerkingen");
+                                break;
+                            case DbType.Medewerkers:
+                                xret.Add("PersoneelDb");
+                                break;
+                            case DbType.GereedProducties:
+                                xret.Add("GereedDb");
+                                break;
+                            case DbType.Opties:
+                                xret.Add("SettingDb");
+                                break;
+                            case DbType.Accounts:
+                                xret.Add("AccountsDb");
+                                break;
+                            case DbType.Logs:
+                                xret.Add("LogDb");
+                                break;
+                            case DbType.Versions:
+                                xret.Add("VersionDb");
+                                break;
+                            case DbType.Messages:
+                                xret.Add("Chat");
+                                break;
+                            case DbType.Klachten:
+                                xret.Add("Klachten");
+                                break;
+                            case DbType.Verpakkingen:
+                                xret.Add("Verpakking");
+                                break;
+                            case DbType.ArtikelRecords:
+                                xret.Add("ArtikelRecords");
+                                break;
+                            case DbType.SpoorOverzicht:
+                                xret.Add("Sporen");
+                                break;
+                            case DbType.LijstLayouts:
+                                xret.Add("LijstLayouts");
+                                break;
+                            case DbType.MeldingCenter:
+                                xret.Add("Meldingen");
+                                break;
+                            case DbType.Bijlages:
+                                xret.Add("Bijlages");
+                                break;
+                            case DbType.ProductieFormulieren:
+                                xret.Add("Productie Formulieren");
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return xret;
+        }
+
+        public Task CreateBackup(int max)
         {
 
             if (CancellationToken == null)
@@ -112,7 +205,7 @@ namespace Rpm.SqlLite
 
 
                     string path = Manager.BackupPath + $"\\RPM_Backup_{DateTime.Now: ddMMHHmmss}.zip";
-                    bool valid = await ZipFileDirectory(Manager.DbPath, path, CancellationToken);
+                    bool valid = await ZipFileDirectory(Manager.DbPath, path, GetExcludeNames(), CancellationToken);
                     //zip.Close();
                     IsCreating = false;
                     if (valid && !CancellationToken.IsCancellationRequested)
@@ -125,7 +218,7 @@ namespace Rpm.SqlLite
                         {
                             var backups = Directory.GetFiles(Manager.BackupPath, "*.zip", SearchOption.TopDirectoryOnly)
                                 .OrderBy(x => new FileInfo(x).CreationTime).ToList();
-                            if (backups.Count > Manager.Opties.MaxBackupCount)
+                            if (backups.Count > max)
                             {
                                 try
                                 {
@@ -174,14 +267,14 @@ namespace Rpm.SqlLite
         /// <param name="strDirectory">The directory.</param>
         /// <param name="zipedFile">The ziped file.</param>
         /// <param name="cancellation">A token for possible cancellation</param>
-        public static Task<bool> ZipFileDirectory(string strDirectory, string zipedFile,
+        public static Task<bool> ZipFileDirectory(string strDirectory, string zipedFile,List<string> exclude,
             CancellationTokenSource cancellation = null)
         {
             return Task.Run(async () =>
             {
                 using FileStream ZipFile = File.Create(zipedFile);
                 using ZipOutputStream s = new ZipOutputStream(ZipFile);
-                return await ZipSetp(strDirectory, s, "", cancellation);
+                return await ZipSetp(strDirectory, s, "", exclude, cancellation);
             });
 
         }
@@ -193,7 +286,7 @@ namespace Rpm.SqlLite
         /// <param name="s">The ZipOutputStream Object.</param>
         /// <param name="parentPath">The parent path.</param>
         /// <param name="cancellation">A token for possible cancellation</param>
-        private static Task<bool> ZipSetp(string strDirectory, ZipOutputStream s, string parentPath,
+        private static Task<bool> ZipSetp(string strDirectory, ZipOutputStream s, string parentPath,List<string> exclude,
             CancellationTokenSource cancellation = null)
         {
             return Task.Run(async () =>
@@ -209,7 +302,12 @@ namespace Rpm.SqlLite
                     Crc32 crc = new Crc32();
 
                     string[] filenames = Directory.GetFileSystemEntries(strDirectory);
-
+                    if (exclude != null && exclude.Any())
+                    {
+                        filenames = filenames.Where(x => !exclude.Any(f =>
+                                string.Equals(Path.GetFileName(x), f, StringComparison.CurrentCultureIgnoreCase)))
+                            .ToArray();
+                    }
                     foreach (string file in filenames) // traverse all files and directories
                     {
                         cancellation?.Token.ThrowIfCancellationRequested();
@@ -219,7 +317,7 @@ namespace Rpm.SqlLite
                             string pPath = parentPath;
                             pPath += file.Substring(file.LastIndexOf("\\", StringComparison.Ordinal) + 1);
                             pPath += "\\";
-                            if (!await ZipSetp(file, s, pPath, cancellation)) return false;
+                            if (!await ZipSetp(file, s, pPath,exclude, cancellation)) return false;
                         }
                         else // Otherwise compress the file directly
                         {
@@ -230,7 +328,7 @@ namespace Rpm.SqlLite
                                 // Open the compressed file
                                 using FileStream fs = File.OpenRead(file);
                                 byte[] buffer = new byte[fs.Length];
-                                fs.Read(buffer, 0, buffer.Length);
+                                var read = fs.Read(buffer, 0, buffer.Length);
 
                                 string fileName = parentPath +
                                                   file.Substring(file.LastIndexOf("\\", StringComparison.Ordinal) + 1);

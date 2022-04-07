@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("IAbed@Valksystemen.nl");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("IAbed@Valksystemen.nl");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Opties));
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
@@ -88,6 +88,9 @@
             this.xrebuildb = new System.Windows.Forms.Button();
             this.xcreatebackup = new System.Windows.Forms.CheckBox();
             this.xbackupgroup = new System.Windows.Forms.GroupBox();
+            this.xdatabaseview = new Controls.CustomObjectListview();
+            this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.imageList2 = new System.Windows.Forms.ImageList(this.components);
             this.label16 = new System.Windows.Forms.Label();
             this.xmaxbackups = new System.Windows.Forms.NumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
@@ -190,6 +193,12 @@
             this.xwerkplaatsindeling = new System.Windows.Forms.CheckBox();
             this.xtoonlognotificatie = new System.Windows.Forms.CheckBox();
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
+            this.xemailtabpage = new MetroFramework.Controls.MetroTabPage();
+            this.panel11 = new System.Windows.Forms.Panel();
+            this.panel16 = new System.Windows.Forms.Panel();
+            this.panel15 = new System.Windows.Forms.Panel();
+            this.xdatabasetabpage = new System.Windows.Forms.TabPage();
+            this.metroPanel4 = new MetroFramework.Controls.MetroPanel();
             this.xroostertab = new System.Windows.Forms.TabPage();
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
             this.xproductiefilter = new System.Windows.Forms.TabPage();
@@ -236,12 +245,6 @@
             this.label23 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.xemailtabpage = new MetroFramework.Controls.MetroTabPage();
-            this.panel11 = new System.Windows.Forms.Panel();
-            this.panel16 = new System.Windows.Forms.Panel();
-            this.panel15 = new System.Windows.Forms.Panel();
-            this.xdatabasetabpage = new System.Windows.Forms.TabPage();
-            this.metroPanel4 = new MetroFramework.Controls.MetroPanel();
             this.groupBox5.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.xgroupweergave.SuspendLayout();
@@ -260,6 +263,7 @@
             this.groupBox9.SuspendLayout();
             this.panel14.SuspendLayout();
             this.xbackupgroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.xdatabaseview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xmaxbackups)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xcreatebackupinterval)).BeginInit();
             this.groupBox10.SuspendLayout();
@@ -285,6 +289,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.xproductielijstsyncinterval)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xoffdbsyncinterval)).BeginInit();
             this.metroTabControl1.SuspendLayout();
+            this.xemailtabpage.SuspendLayout();
+            this.panel11.SuspendLayout();
+            this.panel16.SuspendLayout();
+            this.panel15.SuspendLayout();
+            this.xdatabasetabpage.SuspendLayout();
+            this.metroPanel4.SuspendLayout();
             this.xroostertab.SuspendLayout();
             this.metroPanel1.SuspendLayout();
             this.xproductiefilter.SuspendLayout();
@@ -307,12 +317,6 @@
             this.xproductielijstsyncgroup.SuspendLayout();
             this.xgereedproductiesyncgroup.SuspendLayout();
             this.xproductiesyncgroup.SuspendLayout();
-            this.xemailtabpage.SuspendLayout();
-            this.panel11.SuspendLayout();
-            this.panel16.SuspendLayout();
-            this.panel15.SuspendLayout();
-            this.xdatabasetabpage.SuspendLayout();
-            this.metroPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox5
@@ -325,7 +329,7 @@
             this.groupBox5.ForeColor = System.Drawing.Color.Black;
             this.groupBox5.Location = new System.Drawing.Point(0, 0);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(665, 445);
+            this.groupBox5.Size = new System.Drawing.Size(840, 525);
             this.groupBox5.TabIndex = 3;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Weergave";
@@ -341,7 +345,7 @@
             this.groupBox7.ForeColor = System.Drawing.Color.Black;
             this.groupBox7.Location = new System.Drawing.Point(3, 25);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(659, 208);
+            this.groupBox7.Size = new System.Drawing.Size(834, 288);
             this.groupBox7.TabIndex = 19;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Filter Producties";
@@ -357,7 +361,7 @@
             this.xgroupweergave.Location = new System.Drawing.Point(163, 0);
             this.xgroupweergave.Margin = new System.Windows.Forms.Padding(5);
             this.xgroupweergave.Name = "xgroupweergave";
-            this.xgroupweergave.Size = new System.Drawing.Size(498, 208);
+            this.xgroupweergave.Size = new System.Drawing.Size(673, 288);
             this.xgroupweergave.TabIndex = 17;
             this.xgroupweergave.TabStop = false;
             this.xgroupweergave.Text = "Toon Alles";
@@ -375,7 +379,7 @@
             this.xweergavelijst.HideSelection = false;
             this.xweergavelijst.Location = new System.Drawing.Point(3, 60);
             this.xweergavelijst.Name = "xweergavelijst";
-            this.xweergavelijst.Size = new System.Drawing.Size(492, 145);
+            this.xweergavelijst.Size = new System.Drawing.Size(667, 225);
             this.xweergavelijst.TabIndex = 1;
             this.toolTip1.SetToolTip(this.xweergavelijst, "Productie toon indeling lijst");
             this.xweergavelijst.UseCompatibleStateImageBehavior = false;
@@ -395,7 +399,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(3, 25);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(492, 35);
+            this.panel4.Size = new System.Drawing.Size(667, 35);
             this.panel4.TabIndex = 0;
             // 
             // xweergave
@@ -408,7 +412,7 @@
             this.xweergave.FormattingEnabled = true;
             this.xweergave.Location = new System.Drawing.Point(2, 3);
             this.xweergave.Name = "xweergave";
-            this.xweergave.Size = new System.Drawing.Size(402, 29);
+            this.xweergave.Size = new System.Drawing.Size(577, 29);
             this.xweergave.TabIndex = 2;
             this.toolTip1.SetToolTip(this.xweergave, "Kies indeling of bewerking");
             // 
@@ -418,7 +422,7 @@
             this.xaddweergaveb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xaddweergaveb.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xaddweergaveb.Image = global::ProductieManager.Properties.Resources.add_1588;
-            this.xaddweergaveb.Location = new System.Drawing.Point(410, 0);
+            this.xaddweergaveb.Location = new System.Drawing.Point(585, 0);
             this.xaddweergaveb.Name = "xaddweergaveb";
             this.xaddweergaveb.Size = new System.Drawing.Size(41, 35);
             this.xaddweergaveb.TabIndex = 1;
@@ -433,7 +437,7 @@
             this.xremoveweergaveb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xremoveweergaveb.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xremoveweergaveb.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xremoveweergaveb.Location = new System.Drawing.Point(451, 0);
+            this.xremoveweergaveb.Location = new System.Drawing.Point(626, 0);
             this.xremoveweergaveb.Name = "xremoveweergaveb";
             this.xremoveweergaveb.Size = new System.Drawing.Size(41, 35);
             this.xremoveweergaveb.TabIndex = 0;
@@ -502,10 +506,10 @@
             this.groupBox4.Controls.Add(this.panel12);
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupBox4.ForeColor = System.Drawing.Color.Black;
-            this.groupBox4.Location = new System.Drawing.Point(3, 233);
+            this.groupBox4.Location = new System.Drawing.Point(3, 313);
             this.groupBox4.Margin = new System.Windows.Forms.Padding(5);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(659, 209);
+            this.groupBox4.Size = new System.Drawing.Size(834, 209);
             this.groupBox4.TabIndex = 17;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Productie Filter Criteria\'s";
@@ -525,7 +529,7 @@
             this.xcriterialist.Location = new System.Drawing.Point(3, 60);
             this.xcriterialist.Name = "xcriterialist";
             this.xcriterialist.ShowItemToolTips = true;
-            this.xcriterialist.Size = new System.Drawing.Size(653, 146);
+            this.xcriterialist.Size = new System.Drawing.Size(828, 146);
             this.xcriterialist.TabIndex = 1;
             this.toolTip1.SetToolTip(this.xcriterialist, "Toegelaten productie criteria lijst");
             this.xcriterialist.UseCompatibleStateImageBehavior = false;
@@ -551,7 +555,7 @@
             this.panel12.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel12.Location = new System.Drawing.Point(3, 25);
             this.panel12.Name = "panel12";
-            this.panel12.Size = new System.Drawing.Size(653, 35);
+            this.panel12.Size = new System.Drawing.Size(828, 35);
             this.panel12.TabIndex = 0;
             // 
             // xfiltertype
@@ -564,7 +568,7 @@
             this.xfiltertype.Items.AddRange(new object[] {
             "Toelaten",
             "Blokkeren"});
-            this.xfiltertype.Location = new System.Drawing.Point(411, 3);
+            this.xfiltertype.Location = new System.Drawing.Point(586, 3);
             this.xfiltertype.Name = "xfiltertype";
             this.xfiltertype.Size = new System.Drawing.Size(154, 29);
             this.xfiltertype.TabIndex = 3;
@@ -578,7 +582,7 @@
             this.xcriteriatextbox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xcriteriatextbox.Location = new System.Drawing.Point(3, 3);
             this.xcriteriatextbox.Name = "xcriteriatextbox";
-            this.xcriteriatextbox.Size = new System.Drawing.Size(402, 29);
+            this.xcriteriatextbox.Size = new System.Drawing.Size(577, 29);
             this.xcriteriatextbox.TabIndex = 2;
             this.toolTip1.SetToolTip(this.xcriteriatextbox, "Vul in een criteria waar producties aan moeten voldoen.");
             // 
@@ -588,7 +592,7 @@
             this.xaddcrit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xaddcrit.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xaddcrit.Image = global::ProductieManager.Properties.Resources.add_1588;
-            this.xaddcrit.Location = new System.Drawing.Point(571, 0);
+            this.xaddcrit.Location = new System.Drawing.Point(746, 0);
             this.xaddcrit.Name = "xaddcrit";
             this.xaddcrit.Size = new System.Drawing.Size(41, 35);
             this.xaddcrit.TabIndex = 1;
@@ -603,7 +607,7 @@
             this.xdeletecrit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xdeletecrit.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xdeletecrit.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xdeletecrit.Location = new System.Drawing.Point(612, 0);
+            this.xdeletecrit.Location = new System.Drawing.Point(787, 0);
             this.xdeletecrit.Name = "xdeletecrit";
             this.xdeletecrit.Size = new System.Drawing.Size(41, 35);
             this.xdeletecrit.TabIndex = 0;
@@ -620,7 +624,7 @@
             this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel8.Location = new System.Drawing.Point(0, 0);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(665, 445);
+            this.panel8.Size = new System.Drawing.Size(840, 525);
             this.panel8.TabIndex = 17;
             // 
             // xtakengroup
@@ -646,7 +650,7 @@
             this.xtakengroup.Enabled = false;
             this.xtakengroup.Location = new System.Drawing.Point(3, 50);
             this.xtakengroup.Name = "xtakengroup";
-            this.xtakengroup.Size = new System.Drawing.Size(659, 387);
+            this.xtakengroup.Size = new System.Drawing.Size(834, 467);
             this.xtakengroup.TabIndex = 17;
             this.xtakengroup.TabStop = false;
             this.xtakengroup.Text = "Taken Lijst";
@@ -904,7 +908,7 @@
             this.groupBox2.ForeColor = System.Drawing.Color.Black;
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(665, 442);
+            this.groupBox2.Size = new System.Drawing.Size(840, 525);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rooster";
@@ -919,7 +923,7 @@
             this.groupBox3.ForeColor = System.Drawing.Color.Black;
             this.groupBox3.Location = new System.Drawing.Point(244, 0);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(415, 446);
+            this.groupBox3.Size = new System.Drawing.Size(590, 529);
             this.groupBox3.TabIndex = 16;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Nationale Feestdagen";
@@ -938,7 +942,7 @@
             this.xfeestdagen.HideSelection = false;
             this.xfeestdagen.Location = new System.Drawing.Point(3, 60);
             this.xfeestdagen.Name = "xfeestdagen";
-            this.xfeestdagen.Size = new System.Drawing.Size(409, 374);
+            this.xfeestdagen.Size = new System.Drawing.Size(584, 457);
             this.xfeestdagen.TabIndex = 1;
             this.toolTip1.SetToolTip(this.xfeestdagen, "Nationale feestdagen lijst");
             this.xfeestdagen.UseCompatibleStateImageBehavior = false;
@@ -958,7 +962,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(3, 25);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(409, 35);
+            this.panel1.Size = new System.Drawing.Size(584, 35);
             this.panel1.TabIndex = 0;
             // 
             // xfeestdagdate
@@ -967,7 +971,7 @@
             this.xfeestdagdate.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xfeestdagdate.Location = new System.Drawing.Point(0, 0);
             this.xfeestdagdate.Name = "xfeestdagdate";
-            this.xfeestdagdate.Size = new System.Drawing.Size(327, 29);
+            this.xfeestdagdate.Size = new System.Drawing.Size(502, 29);
             this.xfeestdagdate.TabIndex = 2;
             this.toolTip1.SetToolTip(this.xfeestdagdate, "Kies een nationale feestdag");
             // 
@@ -977,7 +981,7 @@
             this.xaddfesstdag.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xaddfesstdag.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xaddfesstdag.Image = global::ProductieManager.Properties.Resources.add_1588;
-            this.xaddfesstdag.Location = new System.Drawing.Point(327, 0);
+            this.xaddfesstdag.Location = new System.Drawing.Point(502, 0);
             this.xaddfesstdag.Name = "xaddfesstdag";
             this.xaddfesstdag.Size = new System.Drawing.Size(41, 35);
             this.xaddfesstdag.TabIndex = 1;
@@ -991,7 +995,7 @@
             this.xremovefeestdag.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xremovefeestdag.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xremovefeestdag.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xremovefeestdag.Location = new System.Drawing.Point(368, 0);
+            this.xremovefeestdag.Location = new System.Drawing.Point(543, 0);
             this.xremovefeestdag.Name = "xremovefeestdag";
             this.xremovefeestdag.Size = new System.Drawing.Size(41, 35);
             this.xremovefeestdag.TabIndex = 0;
@@ -1010,7 +1014,7 @@
             this.panel13.Margin = new System.Windows.Forms.Padding(5);
             this.panel13.Name = "panel13";
             this.panel13.Padding = new System.Windows.Forms.Padding(5);
-            this.panel13.Size = new System.Drawing.Size(244, 414);
+            this.panel13.Size = new System.Drawing.Size(244, 497);
             this.panel13.TabIndex = 19;
             // 
             // roosterUI1
@@ -1022,7 +1026,7 @@
             this.roosterUI1.Location = new System.Drawing.Point(5, 46);
             this.roosterUI1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.roosterUI1.Name = "roosterUI1";
-            this.roosterUI1.Size = new System.Drawing.Size(234, 363);
+            this.roosterUI1.Size = new System.Drawing.Size(234, 446);
             this.roosterUI1.TabIndex = 0;
             this.roosterUI1.WerkRooster = null;
             // 
@@ -1051,7 +1055,7 @@
             this.groupBox9.ForeColor = System.Drawing.Color.Black;
             this.groupBox9.Location = new System.Drawing.Point(0, 0);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(665, 445);
+            this.groupBox9.Size = new System.Drawing.Size(840, 525);
             this.groupBox9.TabIndex = 4;
             this.groupBox9.TabStop = false;
             // 
@@ -1070,7 +1074,7 @@
             this.panel14.Controls.Add(this.xdblocatie);
             this.panel14.Location = new System.Drawing.Point(6, 14);
             this.panel14.Name = "panel14";
-            this.panel14.Size = new System.Drawing.Size(653, 425);
+            this.panel14.Size = new System.Drawing.Size(828, 505);
             this.panel14.TabIndex = 11;
             // 
             // label8
@@ -1090,7 +1094,7 @@
             this.xrebuildb.FlatAppearance.BorderSize = 2;
             this.xrebuildb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xrebuildb.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrebuildb.Location = new System.Drawing.Point(259, 387);
+            this.xrebuildb.Location = new System.Drawing.Point(434, 467);
             this.xrebuildb.Name = "xrebuildb";
             this.xrebuildb.Size = new System.Drawing.Size(193, 35);
             this.xrebuildb.TabIndex = 0;
@@ -1113,7 +1117,11 @@
             // 
             // xbackupgroup
             // 
+            this.xbackupgroup.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.xbackupgroup.BackColor = System.Drawing.Color.Transparent;
+            this.xbackupgroup.Controls.Add(this.xdatabaseview);
             this.xbackupgroup.Controls.Add(this.label16);
             this.xbackupgroup.Controls.Add(this.xmaxbackups);
             this.xbackupgroup.Controls.Add(this.label14);
@@ -1121,16 +1129,82 @@
             this.xbackupgroup.Enabled = false;
             this.xbackupgroup.Location = new System.Drawing.Point(6, 89);
             this.xbackupgroup.Name = "xbackupgroup";
-            this.xbackupgroup.Size = new System.Drawing.Size(252, 105);
+            this.xbackupgroup.Size = new System.Drawing.Size(819, 372);
             this.xbackupgroup.TabIndex = 10;
             this.xbackupgroup.TabStop = false;
             this.xbackupgroup.Text = "Database Backup";
+            this.xbackupgroup.Visible = false;
+            // 
+            // xdatabaseview
+            // 
+            this.xdatabaseview.AllColumns.Add(this.olvColumn4);
+            this.xdatabaseview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xdatabaseview.CellEditUseWholeCell = false;
+            this.xdatabaseview.CheckBoxes = true;
+            this.xdatabaseview.CheckedAspectName = "IsSelectedDatabase";
+            this.xdatabaseview.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn4});
+            this.xdatabaseview.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xdatabaseview.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xdatabaseview.FullRowSelect = true;
+            this.xdatabaseview.HeaderWordWrap = true;
+            this.xdatabaseview.HideSelection = false;
+            this.xdatabaseview.LargeImageList = this.imageList2;
+            this.xdatabaseview.Location = new System.Drawing.Point(9, 61);
+            this.xdatabaseview.MenuLabelColumns = "kolommen";
+            this.xdatabaseview.MenuLabelGroupBy = "Groeperen op \'{0}\'";
+            this.xdatabaseview.MenuLabelLockGroupingOn = "Groepering vergrendelen op \'{0}\'";
+            this.xdatabaseview.MenuLabelSelectColumns = "Selecteer kolommen...";
+            this.xdatabaseview.MenuLabelSortAscending = "Sorteer oplopend op \'{0}\'";
+            this.xdatabaseview.MenuLabelSortDescending = "Aflopend sorteren op \'{0}\'";
+            this.xdatabaseview.MenuLabelTurnOffGroups = "Groepen uitschakelen";
+            this.xdatabaseview.MenuLabelUnlockGroupingOn = "Ontgrendel groeperen van \'{0}\'";
+            this.xdatabaseview.MenuLabelUnsort = "Uitsorteren";
+            this.xdatabaseview.Name = "xdatabaseview";
+            this.xdatabaseview.OwnerDraw = false;
+            this.xdatabaseview.ShowCommandMenuOnRightClick = true;
+            this.xdatabaseview.ShowGroups = false;
+            this.xdatabaseview.ShowItemCountOnGroups = true;
+            this.xdatabaseview.ShowItemToolTips = true;
+            this.xdatabaseview.Size = new System.Drawing.Size(804, 305);
+            this.xdatabaseview.SmallImageList = this.imageList2;
+            this.xdatabaseview.SpaceBetweenGroups = 10;
+            this.xdatabaseview.TabIndex = 26;
+            this.xdatabaseview.TileSize = new System.Drawing.Size(250, 120);
+            this.xdatabaseview.UseCompatibleStateImageBehavior = false;
+            this.xdatabaseview.UseExplorerTheme = true;
+            this.xdatabaseview.UseFiltering = true;
+            this.xdatabaseview.UseHotControls = false;
+            this.xdatabaseview.UseHotItem = true;
+            this.xdatabaseview.UseOverlays = false;
+            this.xdatabaseview.UseTranslucentHotItem = true;
+            this.xdatabaseview.UseTranslucentSelection = true;
+            this.xdatabaseview.View = System.Windows.Forms.View.SmallIcon;
+            this.xdatabaseview.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.xdatabaseview_ItemChecked);
+            this.xdatabaseview.DoubleClick += new System.EventHandler(this.xdatabaseview_DoubleClick);
+            // 
+            // olvColumn4
+            // 
+            this.olvColumn4.FillsFreeSpace = true;
+            this.olvColumn4.IsTileViewColumn = true;
+            this.olvColumn4.Text = "Selecteer Databases";
+            this.olvColumn4.ToolTipText = "Selecteer de databses die je wilt backuppen";
+            this.olvColumn4.Width = 200;
+            this.olvColumn4.WordWrap = true;
+            // 
+            // imageList2
+            // 
+            this.imageList2.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.imageList2.ImageSize = new System.Drawing.Size(32, 32);
+            this.imageList2.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // label16
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(6, 64);
+            this.label16.Location = new System.Drawing.Point(233, 32);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(124, 17);
             this.label16.TabIndex = 7;
@@ -1139,14 +1213,14 @@
             // xmaxbackups
             // 
             this.xmaxbackups.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xmaxbackups.Location = new System.Drawing.Point(138, 62);
+            this.xmaxbackups.Location = new System.Drawing.Point(365, 30);
             this.xmaxbackups.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
             this.xmaxbackups.Minimum = new decimal(new int[] {
-            50,
+            5,
             0,
             0,
             0});
@@ -1205,7 +1279,7 @@
             this.xcopydatabase.FlatAppearance.BorderSize = 2;
             this.xcopydatabase.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xcopydatabase.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xcopydatabase.Location = new System.Drawing.Point(458, 387);
+            this.xcopydatabase.Location = new System.Drawing.Point(633, 467);
             this.xcopydatabase.Name = "xcopydatabase";
             this.xcopydatabase.Size = new System.Drawing.Size(192, 35);
             this.xcopydatabase.TabIndex = 5;
@@ -1220,7 +1294,7 @@
             this.xkiesdbbutton.FlatAppearance.BorderSize = 2;
             this.xkiesdbbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xkiesdbbutton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xkiesdbbutton.Location = new System.Drawing.Point(528, 25);
+            this.xkiesdbbutton.Location = new System.Drawing.Point(703, 25);
             this.xkiesdbbutton.Name = "xkiesdbbutton";
             this.xkiesdbbutton.Size = new System.Drawing.Size(122, 32);
             this.xkiesdbbutton.TabIndex = 9;
@@ -1235,7 +1309,7 @@
             this.xdblocatie.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xdblocatie.Location = new System.Drawing.Point(6, 31);
             this.xdblocatie.Name = "xdblocatie";
-            this.xdblocatie.Size = new System.Drawing.Size(516, 25);
+            this.xdblocatie.Size = new System.Drawing.Size(691, 25);
             this.xdblocatie.TabIndex = 7;
             this.toolTip1.SetToolTip(this.xdblocatie, "Database locatie");
             this.xdblocatie.TextChanged += new System.EventHandler(this.xdblocatie_TextChanged);
@@ -1253,7 +1327,7 @@
             this.groupBox10.Location = new System.Drawing.Point(5, 5);
             this.groupBox10.Margin = new System.Windows.Forms.Padding(5);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(660, 391);
+            this.groupBox10.Size = new System.Drawing.Size(835, 465);
             this.groupBox10.TabIndex = 18;
             this.groupBox10.TabStop = false;
             // 
@@ -1271,7 +1345,7 @@
             this.xlocatielist.HideSelection = false;
             this.xlocatielist.Location = new System.Drawing.Point(3, 88);
             this.xlocatielist.Name = "xlocatielist";
-            this.xlocatielist.Size = new System.Drawing.Size(654, 297);
+            this.xlocatielist.Size = new System.Drawing.Size(829, 371);
             this.xlocatielist.TabIndex = 1;
             this.toolTip1.SetToolTip(this.xlocatielist, "Lijst voor alle locaties waar moet gekeken worden voor nieuwe producties");
             this.xlocatielist.UseCompatibleStateImageBehavior = false;
@@ -1292,7 +1366,7 @@
             this.panel7.ForeColor = System.Drawing.Color.Black;
             this.panel7.Location = new System.Drawing.Point(3, 55);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(654, 30);
+            this.panel7.Size = new System.Drawing.Size(829, 30);
             this.panel7.TabIndex = 2;
             // 
             // xverwijderverwerkt
@@ -1304,7 +1378,7 @@
             this.xverwijderverwerkt.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xverwijderverwerkt.Location = new System.Drawing.Point(0, 0);
             this.xverwijderverwerkt.Name = "xverwijderverwerkt";
-            this.xverwijderverwerkt.Size = new System.Drawing.Size(297, 30);
+            this.xverwijderverwerkt.Size = new System.Drawing.Size(472, 30);
             this.xverwijderverwerkt.TabIndex = 8;
             this.xverwijderverwerkt.Text = "Verwijder producties na het verwerken";
             this.xverwijderverwerkt.UseVisualStyleBackColor = true;
@@ -1315,7 +1389,7 @@
             this.xremovefolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xremovefolder.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xremovefolder.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xremovefolder.Location = new System.Drawing.Point(572, 0);
+            this.xremovefolder.Location = new System.Drawing.Point(747, 0);
             this.xremovefolder.Name = "xremovefolder";
             this.xremovefolder.Size = new System.Drawing.Size(41, 30);
             this.xremovefolder.TabIndex = 0;
@@ -1329,7 +1403,7 @@
             this.xaddfolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xaddfolder.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xaddfolder.Image = global::ProductieManager.Properties.Resources.add_1588;
-            this.xaddfolder.Location = new System.Drawing.Point(613, 0);
+            this.xaddfolder.Location = new System.Drawing.Point(788, 0);
             this.xaddfolder.Name = "xaddfolder";
             this.xaddfolder.Size = new System.Drawing.Size(41, 30);
             this.xaddfolder.TabIndex = 1;
@@ -1343,7 +1417,7 @@
             this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel6.Location = new System.Drawing.Point(3, 25);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(654, 30);
+            this.panel6.Size = new System.Drawing.Size(829, 30);
             this.panel6.TabIndex = 0;
             // 
             // xfolderpath
@@ -1353,7 +1427,7 @@
             this.xfolderpath.Location = new System.Drawing.Point(0, 0);
             this.xfolderpath.Multiline = true;
             this.xfolderpath.Name = "xfolderpath";
-            this.xfolderpath.Size = new System.Drawing.Size(613, 30);
+            this.xfolderpath.Size = new System.Drawing.Size(788, 30);
             this.xfolderpath.TabIndex = 2;
             this.toolTip1.SetToolTip(this.xfolderpath, "Folder locatie voor het kijken naar  nieuwe producties");
             // 
@@ -1363,7 +1437,7 @@
             this.xkiesfolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xkiesfolder.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xkiesfolder.ForeColor = System.Drawing.Color.Black;
-            this.xkiesfolder.Location = new System.Drawing.Point(613, 0);
+            this.xkiesfolder.Location = new System.Drawing.Point(788, 0);
             this.xkiesfolder.Name = "xkiesfolder";
             this.xkiesfolder.Size = new System.Drawing.Size(41, 30);
             this.xkiesfolder.TabIndex = 3;
@@ -1380,7 +1454,7 @@
             this.groupBox14.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox14.Location = new System.Drawing.Point(0, 0);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(274, 445);
+            this.groupBox14.Size = new System.Drawing.Size(449, 525);
             this.groupBox14.TabIndex = 3;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "Emails";
@@ -1396,12 +1470,12 @@
             this.xuitgaandemailijst.HideSelection = false;
             this.xuitgaandemailijst.HoverSelection = true;
             this.xuitgaandemailijst.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
+            listViewItem2});
             this.xuitgaandemailijst.LabelEdit = true;
             this.xuitgaandemailijst.Location = new System.Drawing.Point(3, 55);
             this.xuitgaandemailijst.Name = "xuitgaandemailijst";
             this.xuitgaandemailijst.ShowItemToolTips = true;
-            this.xuitgaandemailijst.Size = new System.Drawing.Size(268, 387);
+            this.xuitgaandemailijst.Size = new System.Drawing.Size(443, 467);
             this.xuitgaandemailijst.TabIndex = 4;
             this.xuitgaandemailijst.UseCompatibleStateImageBehavior = false;
             this.xuitgaandemailijst.View = System.Windows.Forms.View.Details;
@@ -1421,7 +1495,7 @@
             this.panel10.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel10.Location = new System.Drawing.Point(3, 25);
             this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(268, 30);
+            this.panel10.Size = new System.Drawing.Size(443, 30);
             this.panel10.TabIndex = 2;
             // 
             // xuitgaandemailtext
@@ -1430,7 +1504,7 @@
             this.xuitgaandemailtext.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xuitgaandemailtext.Location = new System.Drawing.Point(0, 0);
             this.xuitgaandemailtext.Name = "xuitgaandemailtext";
-            this.xuitgaandemailtext.Size = new System.Drawing.Size(200, 25);
+            this.xuitgaandemailtext.Size = new System.Drawing.Size(375, 25);
             this.xuitgaandemailtext.TabIndex = 1;
             // 
             // xadduitgaanemail
@@ -1439,7 +1513,7 @@
             this.xadduitgaanemail.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xadduitgaanemail.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xadduitgaanemail.Image = global::ProductieManager.Properties.Resources.add_1588;
-            this.xadduitgaanemail.Location = new System.Drawing.Point(200, 0);
+            this.xadduitgaanemail.Location = new System.Drawing.Point(375, 0);
             this.xadduitgaanemail.Name = "xadduitgaanemail";
             this.xadduitgaanemail.Size = new System.Drawing.Size(34, 30);
             this.xadduitgaanemail.TabIndex = 3;
@@ -1452,7 +1526,7 @@
             this.xverwijderuitgaanemail.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xverwijderuitgaanemail.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xverwijderuitgaanemail.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xverwijderuitgaanemail.Location = new System.Drawing.Point(234, 0);
+            this.xverwijderuitgaanemail.Location = new System.Drawing.Point(409, 0);
             this.xverwijderuitgaanemail.Name = "xverwijderuitgaanemail";
             this.xverwijderuitgaanemail.Size = new System.Drawing.Size(34, 30);
             this.xverwijderuitgaanemail.TabIndex = 2;
@@ -2022,9 +2096,9 @@
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox6.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox6.ForeColor = System.Drawing.Color.Black;
-            this.groupBox6.Location = new System.Drawing.Point(683, 60);
+            this.groupBox6.Location = new System.Drawing.Point(858, 60);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(407, 484);
+            this.groupBox6.Size = new System.Drawing.Size(407, 567);
             this.groupBox6.TabIndex = 13;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Alle Instellingen";
@@ -2052,7 +2126,7 @@
             this.xoptielist.Name = "xoptielist";
             this.xoptielist.ShowItemCountOnGroups = true;
             this.xoptielist.ShowItemToolTips = true;
-            this.xoptielist.Size = new System.Drawing.Size(401, 412);
+            this.xoptielist.Size = new System.Drawing.Size(401, 495);
             this.xoptielist.SmallImageList = this.imageList1;
             this.xoptielist.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.xoptielist.TabIndex = 5;
@@ -2105,9 +2179,9 @@
             this.panel3.Controls.Add(this.xsluiten);
             this.panel3.Controls.Add(this.xOpslaan);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(10, 544);
+            this.panel3.Location = new System.Drawing.Point(10, 627);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1080, 42);
+            this.panel3.Size = new System.Drawing.Size(1255, 42);
             this.panel3.TabIndex = 0;
             // 
             // xsluiten
@@ -2117,7 +2191,7 @@
             this.xsluiten.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.ForeColor = System.Drawing.Color.Black;
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xsluiten.Location = new System.Drawing.Point(954, 3);
+            this.xsluiten.Location = new System.Drawing.Point(1129, 3);
             this.xsluiten.Name = "xsluiten";
             this.xsluiten.Size = new System.Drawing.Size(119, 38);
             this.xsluiten.TabIndex = 4;
@@ -2133,7 +2207,7 @@
             this.xOpslaan.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xOpslaan.ForeColor = System.Drawing.Color.Black;
             this.xOpslaan.Image = global::ProductieManager.Properties.Resources.diskette_save_saveas_1514;
-            this.xOpslaan.Location = new System.Drawing.Point(829, 3);
+            this.xOpslaan.Location = new System.Drawing.Point(1004, 3);
             this.xOpslaan.Name = "xOpslaan";
             this.xOpslaan.Size = new System.Drawing.Size(119, 38);
             this.xOpslaan.TabIndex = 5;
@@ -2554,13 +2628,13 @@
             // 
             this.metroTabControl1.Controls.Add(this.xroostertab);
             this.metroTabControl1.Controls.Add(this.xproductiefilter);
-            this.metroTabControl1.Controls.Add(this.xproductietakentab);
             this.metroTabControl1.Controls.Add(this.xmisctabpage);
+            this.metroTabControl1.Controls.Add(this.xproductietakentab);
             this.metroTabControl1.Controls.Add(this.xmeldingtab);
+            this.metroTabControl1.Controls.Add(this.xemailtabpage);
             this.metroTabControl1.Controls.Add(this.xExcelTabPage);
             this.metroTabControl1.Controls.Add(this.metroTabPage1);
             this.metroTabControl1.Controls.Add(this.xsynctabpage);
-            this.metroTabControl1.Controls.Add(this.xemailtabpage);
             this.metroTabControl1.Controls.Add(this.xdatabasetabpage);
             this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl1.HotTrack = true;
@@ -2568,17 +2642,91 @@
             this.metroTabControl1.Name = "metroTabControl1";
             this.metroTabControl1.SelectedIndex = 0;
             this.metroTabControl1.ShowToolTips = true;
-            this.metroTabControl1.Size = new System.Drawing.Size(673, 484);
+            this.metroTabControl1.Size = new System.Drawing.Size(848, 567);
             this.metroTabControl1.TabIndex = 1;
             this.metroTabControl1.Theme = MetroFramework.MetroThemeStyle.Light;
             this.metroTabControl1.UseSelectable = true;
+            // 
+            // xemailtabpage
+            // 
+            this.xemailtabpage.Controls.Add(this.panel11);
+            this.xemailtabpage.HorizontalScrollbarBarColor = true;
+            this.xemailtabpage.HorizontalScrollbarHighlightOnWheel = false;
+            this.xemailtabpage.HorizontalScrollbarSize = 10;
+            this.xemailtabpage.Location = new System.Drawing.Point(4, 38);
+            this.xemailtabpage.Name = "xemailtabpage";
+            this.xemailtabpage.Size = new System.Drawing.Size(840, 525);
+            this.xemailtabpage.TabIndex = 5;
+            this.xemailtabpage.Text = "Email Verkeer";
+            this.xemailtabpage.VerticalScrollbarBarColor = true;
+            this.xemailtabpage.VerticalScrollbarHighlightOnWheel = false;
+            this.xemailtabpage.VerticalScrollbarSize = 10;
+            this.xemailtabpage.Visible = false;
+            // 
+            // panel11
+            // 
+            this.panel11.BackColor = System.Drawing.Color.Transparent;
+            this.panel11.Controls.Add(this.groupBox14);
+            this.panel11.Controls.Add(this.panel16);
+            this.panel11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel11.Location = new System.Drawing.Point(0, 0);
+            this.panel11.Name = "panel11";
+            this.panel11.Size = new System.Drawing.Size(840, 525);
+            this.panel11.TabIndex = 2;
+            // 
+            // panel16
+            // 
+            this.panel16.Controls.Add(this.panel15);
+            this.panel16.Controls.Add(this.xuitgaandgroup);
+            this.panel16.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel16.Location = new System.Drawing.Point(449, 0);
+            this.panel16.Name = "panel16";
+            this.panel16.Size = new System.Drawing.Size(391, 525);
+            this.panel16.TabIndex = 6;
+            // 
+            // panel15
+            // 
+            this.panel15.Controls.Add(this.xdeletehost);
+            this.panel15.Controls.Add(this.groupBox1);
+            this.panel15.Controls.Add(this.xhostlabel);
+            this.panel15.Controls.Add(this.xbeheerEmailhost);
+            this.panel15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel15.Location = new System.Drawing.Point(0, 155);
+            this.panel15.Name = "panel15";
+            this.panel15.Size = new System.Drawing.Size(391, 370);
+            this.panel15.TabIndex = 5;
+            // 
+            // xdatabasetabpage
+            // 
+            this.xdatabasetabpage.Controls.Add(this.metroPanel4);
+            this.xdatabasetabpage.Location = new System.Drawing.Point(4, 38);
+            this.xdatabasetabpage.Name = "xdatabasetabpage";
+            this.xdatabasetabpage.Size = new System.Drawing.Size(840, 525);
+            this.xdatabasetabpage.TabIndex = 3;
+            this.xdatabasetabpage.Text = "Database";
+            this.xdatabasetabpage.ToolTipText = "Database instellingen";
+            // 
+            // metroPanel4
+            // 
+            this.metroPanel4.Controls.Add(this.groupBox9);
+            this.metroPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.metroPanel4.HorizontalScrollbarBarColor = true;
+            this.metroPanel4.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroPanel4.HorizontalScrollbarSize = 10;
+            this.metroPanel4.Location = new System.Drawing.Point(0, 0);
+            this.metroPanel4.Name = "metroPanel4";
+            this.metroPanel4.Size = new System.Drawing.Size(840, 525);
+            this.metroPanel4.TabIndex = 4;
+            this.metroPanel4.VerticalScrollbarBarColor = true;
+            this.metroPanel4.VerticalScrollbarHighlightOnWheel = false;
+            this.metroPanel4.VerticalScrollbarSize = 10;
             // 
             // xroostertab
             // 
             this.xroostertab.Controls.Add(this.metroPanel1);
             this.xroostertab.Location = new System.Drawing.Point(4, 38);
             this.xroostertab.Name = "xroostertab";
-            this.xroostertab.Size = new System.Drawing.Size(665, 442);
+            this.xroostertab.Size = new System.Drawing.Size(840, 525);
             this.xroostertab.TabIndex = 0;
             this.xroostertab.Text = "Rooster";
             this.xroostertab.ToolTipText = "Rooster instellingen";
@@ -2592,7 +2740,7 @@
             this.metroPanel1.HorizontalScrollbarSize = 10;
             this.metroPanel1.Location = new System.Drawing.Point(0, 0);
             this.metroPanel1.Name = "metroPanel1";
-            this.metroPanel1.Size = new System.Drawing.Size(665, 442);
+            this.metroPanel1.Size = new System.Drawing.Size(840, 525);
             this.metroPanel1.TabIndex = 3;
             this.metroPanel1.VerticalScrollbarBarColor = true;
             this.metroPanel1.VerticalScrollbarHighlightOnWheel = false;
@@ -2601,9 +2749,9 @@
             // xproductiefilter
             // 
             this.xproductiefilter.Controls.Add(this.metroPanel2);
-            this.xproductiefilter.Location = new System.Drawing.Point(4, 35);
+            this.xproductiefilter.Location = new System.Drawing.Point(4, 38);
             this.xproductiefilter.Name = "xproductiefilter";
-            this.xproductiefilter.Size = new System.Drawing.Size(665, 445);
+            this.xproductiefilter.Size = new System.Drawing.Size(840, 525);
             this.xproductiefilter.TabIndex = 1;
             this.xproductiefilter.Text = "Filters";
             this.xproductiefilter.ToolTipText = "Productie weergave instellingen";
@@ -2617,7 +2765,7 @@
             this.metroPanel2.HorizontalScrollbarSize = 10;
             this.metroPanel2.Location = new System.Drawing.Point(0, 0);
             this.metroPanel2.Name = "metroPanel2";
-            this.metroPanel2.Size = new System.Drawing.Size(665, 445);
+            this.metroPanel2.Size = new System.Drawing.Size(840, 525);
             this.metroPanel2.TabIndex = 3;
             this.metroPanel2.VerticalScrollbarBarColor = true;
             this.metroPanel2.VerticalScrollbarHighlightOnWheel = false;
@@ -2626,9 +2774,9 @@
             // xproductietakentab
             // 
             this.xproductietakentab.Controls.Add(this.metroPanel3);
-            this.xproductietakentab.Location = new System.Drawing.Point(4, 35);
+            this.xproductietakentab.Location = new System.Drawing.Point(4, 38);
             this.xproductietakentab.Name = "xproductietakentab";
-            this.xproductietakentab.Size = new System.Drawing.Size(665, 445);
+            this.xproductietakentab.Size = new System.Drawing.Size(840, 525);
             this.xproductietakentab.TabIndex = 2;
             this.xproductietakentab.Text = "Taken";
             this.xproductietakentab.ToolTipText = "Productie taken instellingen";
@@ -2642,7 +2790,7 @@
             this.metroPanel3.HorizontalScrollbarSize = 10;
             this.metroPanel3.Location = new System.Drawing.Point(0, 0);
             this.metroPanel3.Name = "metroPanel3";
-            this.metroPanel3.Size = new System.Drawing.Size(665, 445);
+            this.metroPanel3.Size = new System.Drawing.Size(840, 525);
             this.metroPanel3.TabIndex = 3;
             this.metroPanel3.VerticalScrollbarBarColor = true;
             this.metroPanel3.VerticalScrollbarHighlightOnWheel = false;
@@ -2651,9 +2799,9 @@
             // xmisctabpage
             // 
             this.xmisctabpage.Controls.Add(this.metroPanel5);
-            this.xmisctabpage.Location = new System.Drawing.Point(4, 35);
+            this.xmisctabpage.Location = new System.Drawing.Point(4, 38);
             this.xmisctabpage.Name = "xmisctabpage";
-            this.xmisctabpage.Size = new System.Drawing.Size(665, 445);
+            this.xmisctabpage.Size = new System.Drawing.Size(840, 525);
             this.xmisctabpage.TabIndex = 4;
             this.xmisctabpage.Text = "Misc";
             this.xmisctabpage.ToolTipText = "Verschillende soort instellingen";
@@ -2686,7 +2834,7 @@
             this.metroPanel5.HorizontalScrollbarSize = 10;
             this.metroPanel5.Location = new System.Drawing.Point(0, 0);
             this.metroPanel5.Name = "metroPanel5";
-            this.metroPanel5.Size = new System.Drawing.Size(665, 445);
+            this.metroPanel5.Size = new System.Drawing.Size(840, 525);
             this.metroPanel5.TabIndex = 7;
             this.metroPanel5.VerticalScrollbar = true;
             this.metroPanel5.VerticalScrollbarBarColor = true;
@@ -2775,10 +2923,10 @@
             this.xmeldingtab.HorizontalScrollbarBarColor = true;
             this.xmeldingtab.HorizontalScrollbarHighlightOnWheel = false;
             this.xmeldingtab.HorizontalScrollbarSize = 10;
-            this.xmeldingtab.Location = new System.Drawing.Point(4, 35);
+            this.xmeldingtab.Location = new System.Drawing.Point(4, 38);
             this.xmeldingtab.Name = "xmeldingtab";
             this.xmeldingtab.Padding = new System.Windows.Forms.Padding(5);
-            this.xmeldingtab.Size = new System.Drawing.Size(665, 445);
+            this.xmeldingtab.Size = new System.Drawing.Size(840, 525);
             this.xmeldingtab.TabIndex = 9;
             this.xmeldingtab.Text = "Meldingen";
             this.xmeldingtab.ToolTipText = "Wijzig melding voorkeuren";
@@ -2793,7 +2941,7 @@
             this.panel17.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel17.Location = new System.Drawing.Point(5, 5);
             this.panel17.Name = "panel17";
-            this.panel17.Size = new System.Drawing.Size(655, 435);
+            this.panel17.Size = new System.Drawing.Size(830, 515);
             this.panel17.TabIndex = 2;
             // 
             // groupBox8
@@ -2807,7 +2955,7 @@
             this.groupBox8.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox8.Location = new System.Drawing.Point(0, 0);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(655, 296);
+            this.groupBox8.Size = new System.Drawing.Size(830, 296);
             this.groupBox8.TabIndex = 1;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Toon Meldingen";
@@ -2862,9 +3010,9 @@
             this.xExcelTabPage.HorizontalScrollbarBarColor = true;
             this.xExcelTabPage.HorizontalScrollbarHighlightOnWheel = false;
             this.xExcelTabPage.HorizontalScrollbarSize = 10;
-            this.xExcelTabPage.Location = new System.Drawing.Point(4, 35);
+            this.xExcelTabPage.Location = new System.Drawing.Point(4, 38);
             this.xExcelTabPage.Name = "xExcelTabPage";
-            this.xExcelTabPage.Size = new System.Drawing.Size(665, 445);
+            this.xExcelTabPage.Size = new System.Drawing.Size(840, 525);
             this.xExcelTabPage.TabIndex = 7;
             this.xExcelTabPage.Text = "Excel";
             this.xExcelTabPage.VerticalScrollbarBarColor = true;
@@ -2881,7 +3029,7 @@
             this.panel2.Controls.Add(this.xmaakoverichtenaan);
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(616, 334);
+            this.panel2.Size = new System.Drawing.Size(616, 328);
             this.panel2.TabIndex = 9;
             // 
             // metroTabPage1
@@ -2890,9 +3038,9 @@
             this.metroTabPage1.HorizontalScrollbarBarColor = true;
             this.metroTabPage1.HorizontalScrollbarHighlightOnWheel = false;
             this.metroTabPage1.HorizontalScrollbarSize = 10;
-            this.metroTabPage1.Location = new System.Drawing.Point(4, 35);
+            this.metroTabPage1.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage1.Name = "metroTabPage1";
-            this.metroTabPage1.Size = new System.Drawing.Size(665, 445);
+            this.metroTabPage1.Size = new System.Drawing.Size(840, 525);
             this.metroTabPage1.TabIndex = 8;
             this.metroTabPage1.Text = "Folder Sync";
             this.metroTabPage1.VerticalScrollbarBarColor = true;
@@ -2905,9 +3053,9 @@
             this.xsynctabpage.HorizontalScrollbarBarColor = true;
             this.xsynctabpage.HorizontalScrollbarHighlightOnWheel = false;
             this.xsynctabpage.HorizontalScrollbarSize = 10;
-            this.xsynctabpage.Location = new System.Drawing.Point(4, 35);
+            this.xsynctabpage.Location = new System.Drawing.Point(4, 38);
             this.xsynctabpage.Name = "xsynctabpage";
-            this.xsynctabpage.Size = new System.Drawing.Size(665, 445);
+            this.xsynctabpage.Size = new System.Drawing.Size(840, 525);
             this.xsynctabpage.TabIndex = 6;
             this.xsynctabpage.Text = "Productie Sync";
             this.xsynctabpage.VerticalScrollbarBarColor = true;
@@ -2929,7 +3077,7 @@
             this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel9.Location = new System.Drawing.Point(0, 0);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(665, 445);
+            this.panel9.Size = new System.Drawing.Size(840, 525);
             this.panel9.TabIndex = 43;
             // 
             // xofflinedbgroup
@@ -2955,7 +3103,7 @@
             this.xofflinedbgroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xofflinedbgroup.Location = new System.Drawing.Point(3, 319);
             this.xofflinedbgroup.Name = "xofflinedbgroup";
-            this.xofflinedbgroup.Size = new System.Drawing.Size(421, 212);
+            this.xofflinedbgroup.Size = new System.Drawing.Size(392, 212);
             this.xofflinedbgroup.TabIndex = 46;
             this.xofflinedbgroup.TabStop = false;
             this.xofflinedbgroup.Text = "Secondary Database Synchronisatie";
@@ -2968,7 +3116,7 @@
             this.label34.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label34.Location = new System.Drawing.Point(277, 21);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(138, 188);
+            this.label34.Size = new System.Drawing.Size(109, 188);
             this.label34.TabIndex = 49;
             this.label34.Text = resources.GetString("label34.Text");
             // 
@@ -3032,7 +3180,7 @@
             this.xproductielijstsyncgroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xproductielijstsyncgroup.Location = new System.Drawing.Point(3, 229);
             this.xproductielijstsyncgroup.Name = "xproductielijstsyncgroup";
-            this.xproductielijstsyncgroup.Size = new System.Drawing.Size(421, 57);
+            this.xproductielijstsyncgroup.Size = new System.Drawing.Size(392, 57);
             this.xproductielijstsyncgroup.TabIndex = 44;
             this.xproductielijstsyncgroup.TabStop = false;
             this.xproductielijstsyncgroup.Text = "Productielijst Synchronisatie";
@@ -3045,7 +3193,7 @@
             this.label25.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label25.Location = new System.Drawing.Point(280, 9);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(141, 48);
+            this.label25.Size = new System.Drawing.Size(112, 48);
             this.label25.TabIndex = 48;
             this.label25.Text = "Hiermee kan je bepalen om de hoeveel minuten je de lijst weergave van de producti" +
     "es kan laten refreshen.";
@@ -3097,7 +3245,7 @@
             this.xgereedproductiesyncgroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xgereedproductiesyncgroup.Location = new System.Drawing.Point(3, 139);
             this.xgereedproductiesyncgroup.Name = "xgereedproductiesyncgroup";
-            this.xgereedproductiesyncgroup.Size = new System.Drawing.Size(421, 57);
+            this.xgereedproductiesyncgroup.Size = new System.Drawing.Size(392, 57);
             this.xgereedproductiesyncgroup.TabIndex = 42;
             this.xgereedproductiesyncgroup.TabStop = false;
             this.xgereedproductiesyncgroup.Text = "Gereed Productie Synchronisatie";
@@ -3110,7 +3258,7 @@
             this.label24.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label24.Location = new System.Drawing.Point(280, 10);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(141, 44);
+            this.label24.Size = new System.Drawing.Size(112, 44);
             this.label24.TabIndex = 47;
             this.label24.Text = "Hiermee kan je bepalen hoe snel de gereed producties opnieuw worden geladen.";
             // 
@@ -3161,7 +3309,7 @@
             this.xproductiesyncgroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xproductiesyncgroup.Location = new System.Drawing.Point(3, 49);
             this.xproductiesyncgroup.Name = "xproductiesyncgroup";
-            this.xproductiesyncgroup.Size = new System.Drawing.Size(421, 57);
+            this.xproductiesyncgroup.Size = new System.Drawing.Size(392, 57);
             this.xproductiesyncgroup.TabIndex = 38;
             this.xproductiesyncgroup.TabStop = false;
             this.xproductiesyncgroup.Text = "Productie Synchronisatie";
@@ -3174,7 +3322,7 @@
             this.label23.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label23.Location = new System.Drawing.Point(280, 10);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(138, 44);
+            this.label23.Size = new System.Drawing.Size(109, 44);
             this.label23.TabIndex = 37;
             this.label23.Text = "Hiermee kan je bepalen hoe snel de producties refreshen voor de actuele informati" +
     "e.";
@@ -3201,84 +3349,10 @@
             this.label6.TabIndex = 36;
             this.label6.Text = "(ms)";
             // 
-            // xemailtabpage
-            // 
-            this.xemailtabpage.Controls.Add(this.panel11);
-            this.xemailtabpage.HorizontalScrollbarBarColor = true;
-            this.xemailtabpage.HorizontalScrollbarHighlightOnWheel = false;
-            this.xemailtabpage.HorizontalScrollbarSize = 10;
-            this.xemailtabpage.Location = new System.Drawing.Point(4, 35);
-            this.xemailtabpage.Name = "xemailtabpage";
-            this.xemailtabpage.Size = new System.Drawing.Size(665, 445);
-            this.xemailtabpage.TabIndex = 5;
-            this.xemailtabpage.Text = "Email Verkeer";
-            this.xemailtabpage.VerticalScrollbarBarColor = true;
-            this.xemailtabpage.VerticalScrollbarHighlightOnWheel = false;
-            this.xemailtabpage.VerticalScrollbarSize = 10;
-            this.xemailtabpage.Visible = false;
-            // 
-            // panel11
-            // 
-            this.panel11.BackColor = System.Drawing.Color.Transparent;
-            this.panel11.Controls.Add(this.groupBox14);
-            this.panel11.Controls.Add(this.panel16);
-            this.panel11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel11.Location = new System.Drawing.Point(0, 0);
-            this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(665, 445);
-            this.panel11.TabIndex = 2;
-            // 
-            // panel16
-            // 
-            this.panel16.Controls.Add(this.panel15);
-            this.panel16.Controls.Add(this.xuitgaandgroup);
-            this.panel16.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel16.Location = new System.Drawing.Point(274, 0);
-            this.panel16.Name = "panel16";
-            this.panel16.Size = new System.Drawing.Size(391, 445);
-            this.panel16.TabIndex = 6;
-            // 
-            // panel15
-            // 
-            this.panel15.Controls.Add(this.xdeletehost);
-            this.panel15.Controls.Add(this.groupBox1);
-            this.panel15.Controls.Add(this.xhostlabel);
-            this.panel15.Controls.Add(this.xbeheerEmailhost);
-            this.panel15.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel15.Location = new System.Drawing.Point(0, 155);
-            this.panel15.Name = "panel15";
-            this.panel15.Size = new System.Drawing.Size(391, 290);
-            this.panel15.TabIndex = 5;
-            // 
-            // xdatabasetabpage
-            // 
-            this.xdatabasetabpage.Controls.Add(this.metroPanel4);
-            this.xdatabasetabpage.Location = new System.Drawing.Point(4, 35);
-            this.xdatabasetabpage.Name = "xdatabasetabpage";
-            this.xdatabasetabpage.Size = new System.Drawing.Size(665, 445);
-            this.xdatabasetabpage.TabIndex = 3;
-            this.xdatabasetabpage.Text = "Database";
-            this.xdatabasetabpage.ToolTipText = "Database instellingen";
-            // 
-            // metroPanel4
-            // 
-            this.metroPanel4.Controls.Add(this.groupBox9);
-            this.metroPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.metroPanel4.HorizontalScrollbarBarColor = true;
-            this.metroPanel4.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroPanel4.HorizontalScrollbarSize = 10;
-            this.metroPanel4.Location = new System.Drawing.Point(0, 0);
-            this.metroPanel4.Name = "metroPanel4";
-            this.metroPanel4.Size = new System.Drawing.Size(665, 445);
-            this.metroPanel4.TabIndex = 4;
-            this.metroPanel4.VerticalScrollbarBarColor = true;
-            this.metroPanel4.VerticalScrollbarHighlightOnWheel = false;
-            this.metroPanel4.VerticalScrollbarSize = 10;
-            // 
             // Opties
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.ClientSize = new System.Drawing.Size(1100, 596);
+            this.ClientSize = new System.Drawing.Size(1275, 679);
             this.Controls.Add(this.metroTabControl1);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.panel3);
@@ -3318,6 +3392,7 @@
             this.panel14.PerformLayout();
             this.xbackupgroup.ResumeLayout(false);
             this.xbackupgroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.xdatabaseview)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xmaxbackups)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xcreatebackupinterval)).EndInit();
             this.groupBox10.ResumeLayout(false);
@@ -3349,6 +3424,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.xproductielijstsyncinterval)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xoffdbsyncinterval)).EndInit();
             this.metroTabControl1.ResumeLayout(false);
+            this.xemailtabpage.ResumeLayout(false);
+            this.panel11.ResumeLayout(false);
+            this.panel16.ResumeLayout(false);
+            this.panel15.ResumeLayout(false);
+            this.panel15.PerformLayout();
+            this.xdatabasetabpage.ResumeLayout(false);
+            this.metroPanel4.ResumeLayout(false);
             this.xroostertab.ResumeLayout(false);
             this.metroPanel1.ResumeLayout(false);
             this.xproductiefilter.ResumeLayout(false);
@@ -3379,13 +3461,6 @@
             this.xgereedproductiesyncgroup.PerformLayout();
             this.xproductiesyncgroup.ResumeLayout(false);
             this.xproductiesyncgroup.PerformLayout();
-            this.xemailtabpage.ResumeLayout(false);
-            this.panel11.ResumeLayout(false);
-            this.panel16.ResumeLayout(false);
-            this.panel15.ResumeLayout(false);
-            this.panel15.PerformLayout();
-            this.xdatabasetabpage.ResumeLayout(false);
-            this.metroPanel4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -3602,5 +3677,8 @@
         private System.Windows.Forms.CheckBox xmeldingBijlage;
         private System.Windows.Forms.CheckBox xmeldingOpmerking;
         private System.Windows.Forms.CheckBox xmeldingChat;
+        private Controls.CustomObjectListview xdatabaseview;
+        private BrightIdeasSoftware.OLVColumn olvColumn4;
+        private System.Windows.Forms.ImageList imageList2;
     }
 }
