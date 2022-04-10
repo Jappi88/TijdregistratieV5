@@ -1,4 +1,6 @@
-﻿namespace Forms.ArtikelRecords
+﻿using Controls;
+
+namespace Forms.ArtikelRecords
 {
     partial class ArtikelRecordsUI
     {
@@ -52,7 +54,7 @@
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
             this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.xArtikelList = new BrightIdeasSoftware.ObjectListView();
+            this.xArtikelList = new CustomObjectListview();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -65,7 +67,7 @@
             this.xsearchbox = new MetroFramework.Controls.MetroTextBox();
             this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.xwerkpleklist = new BrightIdeasSoftware.ObjectListView();
+            this.xwerkpleklist = new CustomObjectListview();
             this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -76,6 +78,7 @@
             this.olvColumn16 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.panel5 = new System.Windows.Forms.Panel();
             this.xsearch2 = new MetroFramework.Controls.MetroTextBox();
+            this.xexport = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.metroTabControl1.SuspendLayout();
@@ -156,14 +159,15 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.xexport);
             this.panel2.Controls.Add(this.xalgemeen);
             this.panel2.Controls.Add(this.button1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 483);
+            this.panel2.Location = new System.Drawing.Point(0, 478);
             this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(5);
-            this.panel2.Size = new System.Drawing.Size(854, 42);
+            this.panel2.Size = new System.Drawing.Size(854, 47);
             this.panel2.TabIndex = 5;
             // 
             // xalgemeen
@@ -176,7 +180,7 @@
             this.xalgemeen.Location = new System.Drawing.Point(506, 5);
             this.xalgemeen.Margin = new System.Windows.Forms.Padding(4);
             this.xalgemeen.Name = "xalgemeen";
-            this.xalgemeen.Size = new System.Drawing.Size(226, 32);
+            this.xalgemeen.Size = new System.Drawing.Size(226, 37);
             this.xalgemeen.TabIndex = 1;
             this.xalgemeen.Text = "Algemene Meldingen";
             this.xalgemeen.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -193,7 +197,7 @@
             this.button1.Location = new System.Drawing.Point(740, 5);
             this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(109, 32);
+            this.button1.Size = new System.Drawing.Size(109, 37);
             this.button1.TabIndex = 0;
             this.button1.Text = "Sluiten";
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -332,7 +336,7 @@
             this.metroTabControl1.Location = new System.Drawing.Point(0, 0);
             this.metroTabControl1.Name = "metroTabControl1";
             this.metroTabControl1.SelectedIndex = 0;
-            this.metroTabControl1.Size = new System.Drawing.Size(854, 483);
+            this.metroTabControl1.Size = new System.Drawing.Size(854, 478);
             this.metroTabControl1.Style = MetroFramework.MetroColorStyle.Purple;
             this.metroTabControl1.TabIndex = 6;
             this.metroTabControl1.UseSelectable = true;
@@ -347,7 +351,7 @@
             this.metroTabPage1.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage1.Name = "metroTabPage1";
             this.metroTabPage1.Padding = new System.Windows.Forms.Padding(5, 5, 5, 0);
-            this.metroTabPage1.Size = new System.Drawing.Size(846, 441);
+            this.metroTabPage1.Size = new System.Drawing.Size(846, 436);
             this.metroTabPage1.TabIndex = 0;
             this.metroTabPage1.Text = "Artikelen";
             this.metroTabPage1.VerticalScrollbarBarColor = true;
@@ -363,7 +367,7 @@
             this.panel1.Location = new System.Drawing.Point(5, 5);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(836, 436);
+            this.panel1.Size = new System.Drawing.Size(836, 431);
             this.panel1.TabIndex = 0;
             // 
             // xArtikelList
@@ -398,7 +402,7 @@
             this.xArtikelList.Name = "xArtikelList";
             this.xArtikelList.ShowGroups = false;
             this.xArtikelList.ShowItemToolTips = true;
-            this.xArtikelList.Size = new System.Drawing.Size(836, 398);
+            this.xArtikelList.Size = new System.Drawing.Size(836, 393);
             this.xArtikelList.SmallImageList = this.imageList1;
             this.xArtikelList.TabIndex = 0;
             this.xArtikelList.TintSortColumn = true;
@@ -728,6 +732,24 @@
             this.xsearch2.Enter += new System.EventHandler(this.xsearch2_Enter);
             this.xsearch2.Leave += new System.EventHandler(this.xsearch2_Leave);
             // 
+            // xexport
+            // 
+            this.xexport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xexport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xexport.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xexport.Image = global::ProductieManager.Properties.Resources.microsoft_excel_22733;
+            this.xexport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xexport.Location = new System.Drawing.Point(355, 5);
+            this.xexport.Margin = new System.Windows.Forms.Padding(4);
+            this.xexport.Name = "xexport";
+            this.xexport.Size = new System.Drawing.Size(143, 37);
+            this.xexport.TabIndex = 8;
+            this.xexport.Text = "Export Excel";
+            this.xexport.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTip1.SetToolTip(this.xexport, "Exporteer naar excel");
+            this.xexport.UseVisualStyleBackColor = true;
+            this.xexport.Click += new System.EventHandler(this.xexport_Click);
+            // 
             // ArtikelRecordsUI
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -757,7 +779,7 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private BrightIdeasSoftware.ObjectListView xArtikelList;
+        private CustomObjectListview xArtikelList;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button button1;
         private MetroFramework.Controls.MetroTextBox xsearchbox;
@@ -780,7 +802,7 @@
         private MetroFramework.Controls.MetroTabPage metroTabPage1;
         private MetroFramework.Controls.MetroTabPage metroTabPage2;
         private System.Windows.Forms.Panel panel4;
-        private BrightIdeasSoftware.ObjectListView xwerkpleklist;
+        private CustomObjectListview xwerkpleklist;
         private BrightIdeasSoftware.OLVColumn olvColumn9;
         private BrightIdeasSoftware.OLVColumn olvColumn11;
         private BrightIdeasSoftware.OLVColumn olvColumn12;
@@ -803,5 +825,6 @@
         private System.Windows.Forms.ToolStripMenuItem verwijderenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toonProductiesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.Button xexport;
     }
 }

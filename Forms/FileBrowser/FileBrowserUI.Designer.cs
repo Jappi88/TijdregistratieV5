@@ -1,4 +1,6 @@
-﻿namespace Forms.FileBrowser
+﻿using Controls;
+
+namespace Forms.FileBrowser
 {
     partial class FileBrowserUI
     {
@@ -39,7 +41,7 @@
             this.xclearsearchbox = new System.Windows.Forms.ToolStripButton();
             this.xsearchbox = new System.Windows.Forms.ToolStripTextBox();
             this.xstatus = new System.Windows.Forms.ToolStripLabel();
-            this.xbrowser = new BrightIdeasSoftware.ObjectListView();
+            this.xbrowser = new CustomObjectListview();
             this.xnaamcol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xgewijzigdcol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.xtypecol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -231,7 +233,6 @@
             this.xbrowser.CanDrop += new System.EventHandler<BrightIdeasSoftware.OlvDropEventArgs>(this.xbrowser_CanDrop);
             this.xbrowser.CellEditFinishing += new BrightIdeasSoftware.CellEditEventHandler(this.xbrowser_CellEditFinishing);
             this.xbrowser.CellEditStarting += new BrightIdeasSoftware.CellEditEventHandler(this.xbrowser_CellEditStarting);
-            this.xbrowser.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.xbrowser_CellClick);
             this.xbrowser.Dropped += new System.EventHandler<BrightIdeasSoftware.OlvDropEventArgs>(this.xbrowser_Dropped);
             this.xbrowser.FormatCell += new System.EventHandler<BrightIdeasSoftware.FormatCellEventArgs>(this.xbrowser_FormatCell);
             this.xbrowser.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.xbrowser_FormatRow);
@@ -373,7 +374,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton xhomebutton;
         private System.Windows.Forms.ToolStripSplitButton xViewStyle;
-        private BrightIdeasSoftware.ObjectListView xbrowser;
+        private CustomObjectListview xbrowser;
         private BrightIdeasSoftware.OLVColumn xnaamcol;
         private BrightIdeasSoftware.OLVColumn xgewijzigdcol;
         private BrightIdeasSoftware.OLVColumn xtypecol;

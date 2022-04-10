@@ -3,7 +3,6 @@ using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
 using Polenter.Serialization;
 using Rpm.Controls;
-using Rpm.Mailing;
 using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.SqlLite;
@@ -15,7 +14,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Drawing.Printing;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -25,21 +23,20 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using NPOI.Util;
-using PdfSharp.Pdf;
+using System.Windows.Media;
 using Application = System.Windows.Forms.Application;
+using Color = System.Drawing.Color;
 using Font = System.Drawing.Font;
 using IWin32Window = System.Windows.Forms.IWin32Window;
-using PdfDocument = PdfSharp.Pdf.PdfDocument;
+using Point = System.Drawing.Point;
 using Size = System.Drawing.Size;
 
 namespace Rpm.Misc
@@ -1372,6 +1369,47 @@ namespace Rpm.Misc
             }
         }
 
+        private static Point GetTextLocation(Control control, string text, Font font, TextAlignment align)
+        {
+            var xret = new Point(control.Width / 2, control.Height / 2);
+            Size textsize = text.MeasureString(font);
+            xret.X -= textsize.Width / 2;
+            switch (align)
+            {
+                case TextAlignment.Left:
+                    xret.X = 0;
+                    break;
+                case TextAlignment.Right:
+                    xret.X = control.Width - textsize.Width;
+                    break;
+            }
+
+            return xret;
+        }
+
+        public static bool DrawText(this Control control, string text,TextAlignment align, Color color, Font font)
+        {
+            try
+            {
+                //Create a Graphics object
+                using Graphics g = control.CreateGraphics();
+                //Create Brush and other objects
+
+                Point point = GetTextLocation(control, text, font, align);
+                //Draw text using DrawString
+                g.DrawString(text, font,
+                    new SolidBrush(color), point);
+                //Dispose of objects
+                g.Dispose();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
         #endregion IO
 
         #region Matching
@@ -1764,6 +1802,12 @@ namespace Rpm.Misc
             {
                 double val;
                 if (double.TryParse(value, out val))
+                    xreturn = val;
+            }
+            else if (typeof(decimal) == type)
+            {
+                decimal val;
+                if (decimal.TryParse(value, out val))
                     xreturn = val;
             }
             else if (typeof(DateTime) == type)

@@ -6,9 +6,12 @@ using Rpm.Productie.ArtikelRecords;
 using Rpm.Various;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using ProductieManager.Rpm.ExcelHelper;
+using Rpm.ExcelHelper;
 
 namespace Forms.ArtikelRecords
 {
@@ -668,6 +671,35 @@ namespace Forms.ArtikelRecords
         {
             if (sender is ProductieLijstForm form)
                 _Productelijsten.Remove(form);
+        }
+
+        private async void xexport_Click(object sender, EventArgs e)
+        {
+            var lijst = metroTabControl1.SelectedIndex == 0 ? xArtikelList : xwerkpleklist;
+            if (lijst.IsLoading) return;
+            try
+            {
+                string name =  metroTabControl1.SelectedIndex == 0 ? "Alle Artikelen" : "Alle Werkplaatsen";
+                var save = new SaveFileDialog();
+                save.Filter = "Excel Bestand|*.Xlsx";
+                save.Title = "Exporteer data naar Excel";
+                save.FileName =
+                    $"{name}_{DateTime.Now.ToString("G").Replace("-", "").Replace(":", "").Replace(" ", "")}";
+                if (save.ShowDialog() == DialogResult.OK)
+                {
+                    lijst.StartWaitUI("Exporteren naar Excel");
+                    var path = await ExcelWorkbook.ExportToExcel(lijst, save.FileName, name,
+                        null,new List<CellMargeCheck>());
+                    if (!string.IsNullOrEmpty(path))
+                        Process.Start(path);
+                }
+            }
+            catch (Exception exception)
+            {
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
+            }
+
+            lijst.StopWait();
         }
     }
 }

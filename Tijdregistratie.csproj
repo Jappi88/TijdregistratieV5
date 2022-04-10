@@ -452,6 +452,27 @@
     <Compile Include="Forms\ImageViewer\ImageViewerForm.Designer.cs">
       <DependentUpon>ImageViewerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Sporen\AfrondForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Sporen\AfrondForm.Designer.cs">
+      <DependentUpon>AfrondForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Sporen\OptimaleLengteVerbruikForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Sporen\OptimaleLengteVerbruikForm.Designer.cs">
+      <DependentUpon>OptimaleLengteVerbruikForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Sporen\OptimaleVerbruikEntry.cs" />
+    <Compile Include="Forms\Sporen\OptimaleVerbruikInfo.cs" />
+    <Compile Include="Forms\Sporen\OptimaleVerbruikSettingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Sporen\OptimaleVerbruikSettingForm.Designer.cs">
+      <DependentUpon>OptimaleVerbruikSettingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Rpm\ExcelHelper\CellMargeCheck.cs" />
     <Compile Include="Rpm\Mailing\EmailServer.cs" />
     <Compile Include="Rpm\MeldingCenter\MeldingBeheer.cs" />
     <Compile Include="Rpm\MeldingCenter\MeldingEntry.cs" />
@@ -1901,11 +1922,20 @@
     <EmbeddedResource Include="Forms\ProductieLijstForm.resx">
       <DependentUpon>ProductieLijstForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Sporen\AfrondForm.resx">
+      <DependentUpon>AfrondForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Sporen\ArtikelenVerbruikForm.resx">
       <DependentUpon>ArtikelenVerbruikForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Sporen\NewSpoorForm.resx">
       <DependentUpon>NewSpoorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Sporen\OptimaleLengteVerbruikForm.resx">
+      <DependentUpon>OptimaleLengteVerbruikForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Sporen\OptimaleVerbruikSettingForm.resx">
+      <DependentUpon>OptimaleVerbruikSettingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Sporen\SpoorDatabaseForm.resx">
       <DependentUpon>SpoorDatabaseForm.cs</DependentUpon>
@@ -2516,6 +2546,7 @@
       <Name>MetroFramework</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Code to merge the assemblies into one:setup.exe -->
 </Project>

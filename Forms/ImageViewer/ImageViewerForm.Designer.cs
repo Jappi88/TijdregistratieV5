@@ -69,17 +69,19 @@ namespace Forms.ImageViewer
             // 
             // xMainImage
             // 
+            this.xMainImage.AutoPan = false;
             this.xMainImage.AutoScroll = true;
             this.xMainImage.AutoSize = false;
             this.xMainImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.xMainImage.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.xMainImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xMainImage.GridColor = System.Drawing.Color.Transparent;
-            this.xMainImage.GridColorAlternate = System.Drawing.Color.Transparent;
+            this.xMainImage.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.xMainImage.GridColorAlternate = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.xMainImage.Location = new System.Drawing.Point(47, 60);
             this.xMainImage.Name = "xMainImage";
             this.xMainImage.Size = new System.Drawing.Size(875, 322);
             this.xMainImage.TabIndex = 0;
+            this.xMainImage.Zoom = 80;
             // 
             // xnavigateleft
             // 

@@ -271,7 +271,7 @@ namespace Forms
             // xartikelnr
             // 
             this.xartikelnr.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xartikelnr.Location = new System.Drawing.Point(137, 52);
+            this.xartikelnr.Location = new System.Drawing.Point(140, 52);
             this.xartikelnr.Name = "xartikelnr";
             this.xartikelnr.Size = new System.Drawing.Size(138, 25);
             this.xartikelnr.TabIndex = 0;

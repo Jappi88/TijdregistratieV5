@@ -1,22 +1,19 @@
 ﻿using BrightIdeasSoftware;
+using Forms.ImageViewer;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.NativeMethods;
 using Rpm.Productie;
+using Rpm.Various;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Management;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Forms.ImageViewer;
-using Rpm.Various;
 
 namespace Forms.FileBrowser
 {
@@ -27,7 +24,7 @@ namespace Forms.FileBrowser
         private CustomFileWatcher _watcher;
         public string RootPath { get; set; }
         public string CurrentPath { get; private set; }
-        public List<string> History { get; private set; } = new List<string>();
+        public List<HistoryEntry> History { get; private set; } = new List<HistoryEntry>();
         public ObjectListView FileView => xbrowser;
         public bool RootOnlyFilledDirectories { get; set; }
         public bool AllowEditRoot { get; set; } = true;
@@ -66,7 +63,6 @@ namespace Forms.FileBrowser
             }
         }
 
-        private bool _Loading;
         //private void LoadList(bool reload, bool onlyfilleddirectories)
         //{
         //    try
@@ -110,13 +106,18 @@ namespace Forms.FileBrowser
 
         private async void LoadList(bool reload, bool onlyfilleddirectories)
         {
-            if (_Loading) return;
+            if (xbrowser.IsLoading) return;
             //        
             if (InvokeRequired)
                 this.Invoke(new MethodInvoker(() => LoadList(reload, onlyfilleddirectories)));
             else
             {
-                SetWaitUI();
+                if (reload)
+                {
+                    if (string.Equals(CurrentPath, RootPath, StringComparison.CurrentCultureIgnoreCase))
+                        xbrowser.StartWaitUI("Bijlages Laden");
+                    else xbrowser._isLoading = true;
+                }
                 try
                 {
                     string crit = xsearchbox.Text.ToLower().Replace("zoeken...", "").Trim();
@@ -138,7 +139,7 @@ namespace Forms.FileBrowser
                     Console.WriteLine(ex);
                 }
 
-                StopWait();
+                xbrowser.StopWait();
             }
         }
 
@@ -157,7 +158,6 @@ namespace Forms.FileBrowser
                     xbrowser.EndUpdate();
                     xbrowser.SelectedObjects = selected;
                     UpdateStatusPanel();
-                    _lastselected = xbrowser.SelectedObject as BrowseEntry;
                     RefresBrowseItems(items);
                 }
             }
@@ -230,68 +230,6 @@ namespace Forms.FileBrowser
             {
                 Console.WriteLine(e);
             }
-        }
-
-        public void SetWaitUI()
-        {
-            if (_Loading) return;
-            _Loading = true;
-            Task.Run(() =>
-            {
-                try
-                {
-                    if (Disposing || IsDisposed) return;
-                    xloadinglabel.Invoke(new MethodInvoker(() =>
-                    {
-                        xloadinglabel.Visible = true;
-                        xloadinglabel.BringToFront();
-                    }));
-
-                    var cur = 0;
-                    var xwv = "Bijlages laden";
-                    //var xcurvalue = xwv;
-                    var tries = 0;
-                    try
-                    {
-                        while (_Loading && tries < 200)
-                        {
-                            if (cur > 5) cur = 0;
-                            if (Disposing || IsDisposed) return;
-                            var curvalue = xwv.PadRight(xwv.Length + cur, '.');
-                            //xcurvalue = curvalue;
-                            xloadinglabel.Invoke(new MethodInvoker(() =>
-                            {
-                                xloadinglabel.Text = curvalue;
-                                xloadinglabel.Invalidate();
-                            }));
-                            //Application.DoEvents();
-
-                            Thread.Sleep(250);
-                            //Application.DoEvents();
-                            tries++;
-                            cur++;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
-
-                    if (Disposing || IsDisposed) return;
-                    xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
-                }
-                catch (Exception e)
-                {
-                }
-            });
-        }
-
-        /// <summary>
-        ///     verberg het laad scherm
-        /// </summary>
-        public void StopWait()
-        {
-            _Loading = false;
         }
 
         private Task<List<BrowseEntry>> GetAllItems(string filter, bool onlyfilleddirectories)
@@ -456,31 +394,6 @@ namespace Forms.FileBrowser
             }
         }
 
-        private void UpdateSelectedEditControl(Control tb)
-        {
-            var xsel = xbrowser.SelectedItem;
-            if (xsel == null) return;
-            if (xbrowser.View is View.Details or View.List) return;
-            var subrec = xbrowser.CalculateCellTextBounds(xsel, 0);
-            var xsize = tb.Text.MeasureString(tb.Font, new Size(220, 100));
-            var width = xsize.Width + 10;
-            var height = xsize.Height;
-            if (width < 100)
-                width = 100;
-            if (height < 20)
-                height = 20;
-            height += 5;
-            var Y = subrec.Y;
-            if (xbrowser.View == View.LargeIcon)
-            {
-                Y = subrec.Height;
-            }
-            else if (xbrowser.View == View.Tile)
-                Y += 20;
-            var xloc = new Point((subrec.Location.X + subrec.Width / 2) - (width / 2), Y);
-            tb.Bounds = new Rectangle(xloc, new Size(width, height));
-        }
-
         private void EditModel(BrowseEntry ent)
         {
             try
@@ -488,12 +401,6 @@ namespace Forms.FileBrowser
                 if (!CanEdit()) return;
                 xbrowser.SelectedObject = ent;
                 xbrowser.EditModel(ent);
-                if (xbrowser.CellEditor != null)
-                {
-                    xbrowser.CellEditor.TextChanged -= CellEditor_TextChanged;
-                    xbrowser.CellEditor.TextChanged += CellEditor_TextChanged;
-                    UpdateSelectedEditControl(xbrowser.CellEditor);
-                }
             }
             catch (Exception ex)
             {
@@ -555,36 +462,6 @@ namespace Forms.FileBrowser
             }
         }
 
-        BrowseEntry _lastselected = null;
-        DateTime _lastclicked = DateTime.Now;
-
-        private void xbrowser_CellClick(object sender, CellClickEventArgs e)
-        {
-            if (e.ClickCount > 1) return;
-            var xdt = DateTime.Now;
-            var xlast = (xdt - _lastclicked).TotalMilliseconds;
-            if (e.Model is BrowseEntry ent)
-            {
-                if (_lastselected != null && _lastselected.Equals(ent) && xlast is > 500 and <= 1500)
-                {
-                    EditModel(ent);
-                }
-
-                _lastselected = ent;
-            }
-            else
-                _lastselected = xbrowser.SelectedObject as BrowseEntry;
-
-            _lastclicked = DateTime.Now;
-        }
-
-        private void CellEditor_TextChanged(object sender, EventArgs e)
-        {
-            if (sender is Control tb)
-            {
-                UpdateSelectedEditControl(tb);
-            }
-        }
 
         private void xbrowser_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -670,20 +547,6 @@ namespace Forms.FileBrowser
                 if (!CanEdit())
                 {
                     e.Cancel = true;
-                    return;
-                }
-                if (e.Control is TextBox tb)
-                {
-                    tb.AutoCompleteMode = AutoCompleteMode.Suggest;
-                    var size = tb.Text.MeasureString(this.Font);
-                    if (size.Height < 20)
-                        size.Height = 20;
-                    if (size.Width < 100)
-                        size.Width = 100;
-                    size.Width += 5;
-                    size.Height += 5;
-                    tb.Bounds = new Rectangle(tb.Bounds.X, tb.Bounds.Y, size.Width, size.Height);
-                    tb.Multiline = true;
                 }
             }
             catch (Exception ex)
@@ -734,6 +597,15 @@ namespace Forms.FileBrowser
         private void _watcher_WatcherLoaded(object sender, System.EventArgs e)
         {
             CheckViewToolStripCheck(xbrowser.View, true);
+            var xindex = History.IndexOf(new HistoryEntry(CurrentPath));
+            if (xindex > -1)
+            {
+                xsearchbox.Text = History[xindex].Criteria;
+                if (string.IsNullOrEmpty(xsearchbox.Text.Trim()))
+                    xsearchbox.Text = "Zoeken...";
+            }
+            else xsearchbox.Text = "Zoeken...";
+
             LoadList(true,RootOnlyFilledDirectories);
         }
 
@@ -798,7 +670,7 @@ namespace Forms.FileBrowser
         public bool CanNavigateBack()
         {
             if (History.Count == 0) return false;
-            var xindex = History.IndexOf(CurrentPath);
+            var xindex = History.IndexOf(new HistoryEntry(CurrentPath));
             if (xindex == -1) return false;
             return xindex > 0;
         }
@@ -816,14 +688,14 @@ namespace Forms.FileBrowser
         public bool CanNavigateForward()
         {
             if (History.Count == 0) return false;
-            var xindex = History.IndexOf(CurrentPath);
+            var xindex = History.IndexOf(new HistoryEntry(CurrentPath));
             if (xindex == -1) return false;
             return xindex < History.Count - 1;
         }
 
         private void ClearPathHistory(string path)
         {
-            var xcurindex = History.IndexOf(path);
+            var xcurindex = History.IndexOf(new HistoryEntry(path));
             if (xcurindex > -1)
             {
                 xcurindex++;
@@ -853,13 +725,17 @@ namespace Forms.FileBrowser
                 if (string.IsNullOrEmpty(RootPath))
                     RootPath = path;
                 if (string.Equals(CurrentPath, path, StringComparison.CurrentCultureIgnoreCase)) return;
-                var xindex = History.IndexOf(path);
+                var xindex = History.IndexOf(new HistoryEntry(CurrentPath));
+                if (xindex > -1)
+                {
+                    History[xindex].Criteria = xsearchbox.Text.Trim();
+                }
+                xindex = History.IndexOf(new HistoryEntry(path));
                 if (xindex == -1)
                 {
                     ClearPathHistory(CurrentPath);
-                    History.Add(path);
+                    History.Add(new HistoryEntry(path));
                 }
-
                 CurrentPath = path;
                 xbrowser.EmptyListMsg = $"Geen bijlages voor " +
                                         $"{(CurrentPath?.Replace(GetValidPath(Manager.DbPath) + "\\Bijlages\\", ""))}";
@@ -941,11 +817,11 @@ namespace Forms.FileBrowser
             try
             {
                 if (History.Count == 0) return;
-                var xindex = History.IndexOf(CurrentPath);
+                var xindex = History.IndexOf(new HistoryEntry(CurrentPath));
                 xindex--;
                 if (xindex < 0) return;
-                if (!string.IsNullOrEmpty(History[xindex]))
-                    Navigate(History[xindex]);
+                if (!string.IsNullOrEmpty(History[xindex].Path))
+                    Navigate(History[xindex].Path);
             }
             catch (Exception ex)
             {
@@ -958,12 +834,12 @@ namespace Forms.FileBrowser
             try
             {
                 if (History.Count == 0) return;
-                var xindex = History.IndexOf(CurrentPath);
+                var xindex = History.IndexOf(new HistoryEntry(CurrentPath));
                 if (xindex == -1) return;
                 xindex++;
                 if (xindex > History.Count - 1) return;
-                if (!string.IsNullOrEmpty(History[xindex]))
-                    Navigate(History[xindex]);
+                if (!string.IsNullOrEmpty(History[xindex].Path))
+                    Navigate(History[xindex].Path);
             }
             catch (Exception ex)
             {

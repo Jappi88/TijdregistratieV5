@@ -67,9 +67,9 @@
             this.xsporendownlabel.AutoSize = true;
             this.xsporendownlabel.Location = new System.Drawing.Point(24, 193);
             this.xsporendownlabel.Name = "xsporendownlabel";
-            this.xsporendownlabel.Size = new System.Drawing.Size(131, 21);
+            this.xsporendownlabel.Size = new System.Drawing.Size(139, 21);
             this.xsporendownlabel.TabIndex = 3;
-            this.xsporendownlabel.Text = "Afgerond Benden";
+            this.xsporendownlabel.Text = "Afgerond Beneden";
             // 
             // xsporenuplabel
             // 
@@ -92,8 +92,10 @@
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "VebruikAfrondForm";
             this.Padding = new System.Windows.Forms.Padding(30, 97, 30, 32);
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Style = MetroFramework.MetroColorStyle.Purple;
             this.Text = "Aantal Afronden";
+            this.Title = "Aantal Afronden";
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -1,4 +1,5 @@
-﻿using NPOI.HSSF.Util;
+﻿using BrightIdeasSoftware;
+using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
 using NPOI.SS.UserModel.Charts;
 using NPOI.SS.Util;
@@ -15,6 +16,10 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using Rpm.ExcelHelper;
+using BorderStyle = NPOI.SS.UserModel.BorderStyle;
+using HorizontalAlignment = NPOI.SS.UserModel.HorizontalAlignment;
 using ICell = NPOI.SS.UserModel.ICell;
 
 // ReSharper disable All
@@ -651,6 +656,23 @@ namespace ProductieManager.Rpm.ExcelHelper
             IDataFormat dataFormatCustom = workbook.CreateDataFormat();
             var xstyle = CreateStyle(workbook, false, HorizontalAlignment.Center, 11, txtcolor, BorderStyle.Double, xbackcolor);
             xstyle.DataFormat = dataFormatCustom.GetFormat($"[{txtformatcolor}]####0\" ({xdfstring}%)\"");
+            return xstyle;
+        }
+
+        private static ICellStyle GetMargeCellStyle(XSSFWorkbook workbook, double basevalue,double value, double marge,string customformat, Color backcolor)
+        {
+            var xdiffer = Math.Round(basevalue.GetPercentageDifference(value), 1);
+            var xdfstring = xdiffer < 0 ? xdiffer.ToString() : "+" + xdiffer.ToString();
+            //CreateCellConditionalFormatRules(sheet, startrow + 1, "pdc p/u", xcolmn);
+            var txtcolor = IndexedColors.Black.Index;//xdiffer < 0 ? IndexedColors.Maroon.Index : IndexedColors.DarkGreen.Index;
+            var xbackcolor = xdiffer < 0 ? Color.LightPink : Color.FromArgb(200, 255, 200);
+            if (!backcolor.IsEmpty)
+                xbackcolor = backcolor;
+            var txtformatcolor = xdiffer < marge ? "red" : xdiffer > marge? "color5" : "color10";
+
+            IDataFormat dataFormatCustom = workbook.CreateDataFormat();
+            var xstyle = CreateStyle(workbook, false, HorizontalAlignment.Center, 11, txtcolor, BorderStyle.Double, xbackcolor);
+            xstyle.DataFormat = dataFormatCustom.GetFormat($"{customformat}[{txtformatcolor}]####0\" ({xdfstring}%)\"");
             return xstyle;
         }
 
@@ -1538,6 +1560,143 @@ namespace ProductieManager.Rpm.ExcelHelper
                 }
             });
         }
+
+        public static Task<string> ExportToExcel(ObjectListView listview, string filepath, string sheetname,
+            IsRunningHandler handler, List<CellMargeCheck> checkmarges)
+        {
+            return Task.Run(() =>
+            {
+                try
+                {
+                    var path = filepath; //$"{filepath}.xlsx";
+                    //var bewerkingen = new List<Bewerking>();
+                    var arg = new ProgressArg();
+                    arg.Type = ProgressType.WriteBussy;
+
+                    var workbook = new XSSFWorkbook();
+                    arg.Message = $"Overzicht aanmaken...";
+                    bool flag = handler != null && !handler.Invoke(arg);
+                    if (!flag)
+                    {
+                        var sheet = workbook.CreateSheet(sheetname);
+                        if (listview.Columns.Count > 0)
+                        {
+                            int rowindex = 0;
+                            var row = sheet.GetRow(rowindex) ?? sheet.CreateRow(rowindex);
+                            var cellStyleBorder = CreateStyle(workbook, true, HorizontalAlignment.Left, 12,
+                                IndexedColors.Black.Index, BorderStyle.Medium);
+                            //init the columns and font
+                            var cellindex = 0;
+                            List<OLVColumn> columns = new List<OLVColumn>();
+                            listview.Invoke(new MethodInvoker(() =>
+                                columns = listview.Columns.Cast<OLVColumn>().ToList()));
+                            foreach (var xcol in columns)
+                            {
+
+                                arg.Message = $"Columns Aanmaken {cellindex}/{columns.Count}...";
+                                arg.Pogress = cellindex == 0 ? 0 : (int)((double)(cellindex / columns.Count) * 100);
+                                CreateCell(row, cellindex++, xcol.Text, cellStyleBorder);
+                                if (handler != null && !handler.Invoke(arg)) break;
+                            }
+
+                            rowindex++;
+                            List<OLVListItem> items = new List<OLVListItem>();
+                            listview.Invoke(
+                                new MethodInvoker(() => items = listview.Items.Cast<OLVListItem>().ToList()));
+                            cellStyleBorder = CreateStyle(workbook, false, HorizontalAlignment.Left, 11,
+                                IndexedColors.Black.Index, BorderStyle.Double);
+                            var style = cellStyleBorder;
+                            string lastformat = String.Empty;
+                            for (int i = 0; i < items.Count; i++)
+                            {
+                                var item = items[i];
+                                row = sheet.GetRow(rowindex) ?? sheet.CreateRow(rowindex);
+                               
+                                for (int j = 0; j < columns.Count; j++)
+                                {                                    
+                                    var val = item.GetSubItem(j).ModelValue;
+                                    if (val != null)
+                                    {
+                                        string format = columns[j].AspectToStringFormat;
+                                        if (!string.IsNullOrEmpty(format))
+                                        {
+                                            var index = format.IndexOf("}");
+                                            if (index > -1)
+                                            {
+                                                index++;
+                                                format = format.Substring(index, format.Length - index);
+                                            }
+
+                                            format = $"#,##0\"{format}\"";
+                                        }
+                                        bool changed = false;
+                                        if (checkmarges != null && checkmarges.Count > 0)
+                                        {
+                                            var marge = checkmarges.FirstOrDefault(x =>
+                                                x.Equals(columns[j].AspectName));
+                                            if (marge != null)
+                                            {
+                                                var basevalue = (item.RowObject.GetType()
+                                                    .GetProperty(marge.BasevalueName)?.GetValue(item.RowObject) ?? -1);
+                                                var value = (item.RowObject.GetType()
+                                                    .GetProperty(marge.ColumnName)?.GetValue(item.RowObject) ?? -1);
+                                                if (double.TryParse(basevalue.ToString(), out var baseval) &&
+                                                    double.TryParse(value.ToString(), out var xval))
+                                                {
+                                                    style = GetMargeCellStyle(workbook, baseval,
+                                                        xval, marge.Marge, format, Color.White);
+                                                    changed = true;
+                                                }
+
+                                            }
+                                            else style = cellStyleBorder;
+                                        }
+
+                                        if (!changed && !string.IsNullOrEmpty(format))
+                                        {
+                                            if (!string.Equals(lastformat, format,
+                                                    StringComparison.CurrentCultureIgnoreCase))
+                                            {
+                                                style = CreateStyle(workbook, false, HorizontalAlignment.Left, 11,
+                                                    IndexedColors.Black.Index, BorderStyle.Double);
+                                                IDataFormat dataFormatCustom = workbook.CreateDataFormat();
+                                                style.DataFormat = dataFormatCustom.GetFormat(format);
+                                                lastformat = format;
+                                            }
+                                        }
+                                        else if (!changed)
+                                        {
+                                            style = cellStyleBorder;
+                                            lastformat = String.Empty;
+                                        }
+
+                                        CreateCell(row, j, val, style);
+                                    }
+                                }
+
+                                rowindex++;
+                            }
+
+                            for (var i = 0; i < columns.Count; i++)
+                                sheet.AutoSizeColumn(i, true);
+                        }
+                    }
+
+                    using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                    {
+                        workbook.Write(fs);
+                    }
+
+                    workbook.Close();
+                    return path;
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            });
+        }
+
 
         public static bool CanMakeOverzicht(ProgressArg arg)
         {

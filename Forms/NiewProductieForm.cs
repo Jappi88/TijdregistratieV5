@@ -24,6 +24,7 @@ namespace Forms
             pictureBox1.Image =
                 ProductieManager.Properties.Resources.page_document_16748_128_128.CombineImage(
                     ProductieManager.Properties.Resources.lightning_weather_storm_2781, 1.75);
+            xleverdatum.Value = DateTime.Now.Date.Add(Rooster.StandaartRooster().EindWerkdag);
         }
 
         private async void xstarten_Click(object sender, EventArgs e)

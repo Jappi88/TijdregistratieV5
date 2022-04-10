@@ -14,6 +14,7 @@ using Forms;
 using Forms.Aantal;
 using Forms.ArtikelRecords;
 using Forms.Excel;
+using Forms.Sporen;
 using MetroFramework;
 using MetroFramework.Controls;
 using MetroFramework.Forms;
@@ -3418,6 +3419,12 @@ namespace Controls
         private void xSporenButton_Click(object sender, EventArgs e)
         {
             new ArtikelenVerbruikForm().ShowDialog();
+        }
+
+        private void OptimaleVerbruik_Click(object sender, EventArgs e)
+        {
+            var xform = new OptimaleLengteVerbruikForm();
+            xform.ShowDialog();
         }
         #endregion Menu Button Events
 

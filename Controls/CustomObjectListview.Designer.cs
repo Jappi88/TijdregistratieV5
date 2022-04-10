@@ -29,16 +29,29 @@ namespace Controls
         /// </summary>
         private void InitializeComponent()
         {
+            this.xloadinglabel = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             this.SuspendLayout();
+            // 
+            // xloadinglabel
+            // 
+            this.xloadinglabel.BackColor = System.Drawing.Color.Transparent;
+            this.xloadinglabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xloadinglabel.Location = new System.Drawing.Point(0, 0);
+            this.xloadinglabel.Name = "xloadinglabel";
+            this.xloadinglabel.Size = new System.Drawing.Size(100, 23);
+            this.xloadinglabel.TabIndex = 0;
+            this.xloadinglabel.Text = "Loading...";
+            this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.xloadinglabel.Visible = false;
             // 
             // CustomObjectListview
             // 
-            this.Name = "CustomObjectListview";
-            this.Size = new System.Drawing.Size(650, 350);
+            this.Cursor = System.Windows.Forms.Cursors.Default;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullRowSelect = true;
             this.HeaderWordWrap = true;
-            this.HideSelection = false;
             this.Location = new System.Drawing.Point(6, 66);
             this.MenuLabelColumns = "kolommen";
             this.MenuLabelGroupBy = "Groeperen op \'{0}\'";
@@ -54,6 +67,7 @@ namespace Controls
             this.ShowGroups = false;
             this.ShowItemCountOnGroups = true;
             this.ShowItemToolTips = true;
+            this.Size = new System.Drawing.Size(650, 350);
             this.SpaceBetweenGroups = 10;
             this.TabIndex = 26;
             this.TileSize = new System.Drawing.Size(300, 120);
@@ -65,10 +79,13 @@ namespace Controls
             this.UseOverlays = false;
             this.UseTranslucentHotItem = true;
             this.UseTranslucentSelection = true;
-            this.View = System.Windows.Forms.View.Details;
+            ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
             this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.Label xloadinglabel;
     }
 }
