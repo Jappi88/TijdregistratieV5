@@ -165,7 +165,7 @@ namespace Forms.Sporen
 
         public bool HasChanges()
         {
-            return Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieAdvance } && (HasReloaded || Results.Any(x=> x.Changes.Count > 0));
+            return Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieAdvance } && (HasReloaded || (Results != null && Results.Any(x=> x.Changes.Count > 0)));
         }
 
         public bool IsAllowed(OptimaleVerbruikEntry entry, string crit)

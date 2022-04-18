@@ -508,7 +508,7 @@ namespace Rpm.Productie
                 if (vanaf.TimeOfDay < rooster.StartWerkdag)
                     return new DateTime(vanaf.Year, vanaf.Month, vanaf.Day, rooster.StartWerkdag.Hours,
                         rooster.StartWerkdag.Minutes, 0);
-                if (vanaf.TimeOfDay >= rooster.StartWerkdag && vanaf.TimeOfDay < rooster.EindWerkdag)
+                if (vanaf.TimeOfDay >= rooster.StartWerkdag && vanaf.TimeOfDay <= rooster.EindWerkdag)
                     return new DateTime(vanaf.Year, vanaf.Month, vanaf.Day, vanaf.Hour,
                         vanaf.Minute, 0);
             }

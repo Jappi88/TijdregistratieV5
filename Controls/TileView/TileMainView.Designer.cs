@@ -43,14 +43,18 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.reserLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.beheerTileLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.sorterenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.naamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.typeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.kleurToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.tileViewer1 = new Controls.TileViewer();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.xBottomToolMenu.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -178,9 +182,19 @@
             this.toolStripSeparator2,
             this.toolStripMenuItem2,
             this.toolStripSeparator5,
+            this.sorterenToolStripMenuItem,
             this.resetLayoutToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(225, 168);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(225, 228);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Image = global::ProductieManager.Properties.Resources.Edit_color_32x32;
+            this.toolStripMenuItem3.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(224, 38);
+            this.toolStripMenuItem3.Text = "Kies Achtergrond Kleur";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.kiesAchtergrondKleurToolStripMenuItem_Click);
             // 
             // beheerTileLayoutToolStripMenuItem
             // 
@@ -211,6 +225,39 @@
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(221, 6);
+            // 
+            // sorterenToolStripMenuItem
+            // 
+            this.sorterenToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.naamToolStripMenuItem,
+            this.typeToolStripMenuItem,
+            this.kleurToolStripMenuItem});
+            this.sorterenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.sort_icon_149866_32x32;
+            this.sorterenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.sorterenToolStripMenuItem.Name = "sorterenToolStripMenuItem";
+            this.sorterenToolStripMenuItem.Size = new System.Drawing.Size(224, 38);
+            this.sorterenToolStripMenuItem.Text = "Sorteer Op";
+            // 
+            // naamToolStripMenuItem
+            // 
+            this.naamToolStripMenuItem.Name = "naamToolStripMenuItem";
+            this.naamToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.naamToolStripMenuItem.Text = "Naam";
+            this.naamToolStripMenuItem.Click += new System.EventHandler(this.naamToolStripMenuItem_Click);
+            // 
+            // typeToolStripMenuItem
+            // 
+            this.typeToolStripMenuItem.Name = "typeToolStripMenuItem";
+            this.typeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.typeToolStripMenuItem.Text = "Type";
+            this.typeToolStripMenuItem.Click += new System.EventHandler(this.typeToolStripMenuItem_Click);
+            // 
+            // kleurToolStripMenuItem
+            // 
+            this.kleurToolStripMenuItem.Name = "kleurToolStripMenuItem";
+            this.kleurToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.kleurToolStripMenuItem.Text = "Kleur";
+            this.kleurToolStripMenuItem.Click += new System.EventHandler(this.kleurToolStripMenuItem_Click);
             // 
             // resetLayoutToolStripMenuItem
             // 
@@ -247,15 +294,6 @@
             this.tileViewer1.TilesLoaded += new System.EventHandler(this.tileViewer1_TilesLoaded);
             this.tileViewer1.TileClicked += new System.EventHandler(this.tileViewer1_TileClicked);
             this.tileViewer1.TileRequestInfo += new Controls.TileChangeEventhandler(this.tileViewer1_TileRequestInfo);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Image = global::ProductieManager.Properties.Resources.Edit_color_32x32;
-            this.toolStripMenuItem3.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(224, 38);
-            this.toolStripMenuItem3.Text = "Kies Achtergrond Kleur";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.kiesAchtergrondKleurToolStripMenuItem_Click);
             // 
             // TileMainView
             // 
@@ -298,5 +336,9 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem kiesAchtergrondKleurToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem sorterenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem naamToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem typeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem kleurToolStripMenuItem;
     }
 }

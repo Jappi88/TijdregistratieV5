@@ -482,5 +482,41 @@ namespace Controls.TileView
         {
             ChooseBackgroundColor();
         }
+
+        private void naamToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Manager.Opties?.TileLayout != null)
+            {
+                Manager.Opties.TileLayout = Manager.Opties.TileLayout.OrderBy(x => x.Text).ToList();
+                var index = 0;
+                Manager.Opties.TileLayout.ForEach(x => x.TileIndex = index++);
+                Manager.Opties.Save(null, false, false, false);
+                LoadTileViewer();
+            }
+        }
+
+        private void typeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Manager.Opties?.TileLayout != null)
+            {
+                Manager.Opties.TileLayout = Manager.Opties.TileLayout.OrderBy(x => x.GroupName).ToList();
+                var index = 0;
+                Manager.Opties.TileLayout.ForEach(x => x.TileIndex = index++);
+                Manager.Opties.Save(null, false, false, false);
+                LoadTileViewer();
+            }
+        }
+
+        private void kleurToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Manager.Opties?.TileLayout != null)
+            {
+                Manager.Opties.TileLayout = Manager.Opties.TileLayout.OrderBy(x => x.TileColor.GetHue()).ToList();
+                var index = 0;
+                Manager.Opties.TileLayout.ForEach(x => x.TileIndex = index++);
+                Manager.Opties.Save(null, false, false, false);
+                LoadTileViewer();
+            }
+        }
     }
 }

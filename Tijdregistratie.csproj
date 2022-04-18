@@ -2177,6 +2177,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\sort_icon_149866_32x32.png" />
     <None Include="Resources\folder_open_Empty_96x96.png" />
     <None Include="Resources\folder_with_contents_96x96.png" />
     <None Include="Resources\files_folder_icon_64x64.ico" />

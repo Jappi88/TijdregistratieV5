@@ -143,10 +143,20 @@ namespace Forms.ArtikelRecords
         {
             try
             {
-                if (Manager.ArtikelRecords?.Database == null) return;
+                if (Manager.ArtikelRecords?.Database == null || xArtikelList._isLoading) return;
+                xArtikelList.StartWaitUI("ArtikelRecords Laden");
                 if (reloaddb)
-                    Records = Manager.ArtikelRecords.Database.GetAllEntries<ArtikelRecord>(true,new List<string>()
-                        {"algemeen"});
+                {
+                    xArtikelList.StartWaitUI("ArtikelRecords Laden");
+                    xwerkpleklist.StartWaitUI("WerkplaatsRecords Laden");
+                    Records = Manager.ArtikelRecords.Database.GetAllEntries<ArtikelRecord>(true, new List<string>()
+                        { "algemeen" });
+                }
+                else
+                {
+                    xArtikelList._isLoading = true;
+                    xwerkpleklist._isLoading = true;
+                }
                 xArtikelList.BeginUpdate();
                 xArtikelList.SetObjects(Records.Where(x => IsAllowed(x) && !x.IsWerkplek));
                 xArtikelList.EndUpdate();
@@ -155,6 +165,8 @@ namespace Forms.ArtikelRecords
                 xwerkpleklist.EndUpdate();
                 metroTabPage1.Text = $"Artikelen[{xArtikelList.Items.Count}]";
                 metroTabPage2.Text = $"Werkplaatsen[{xwerkpleklist.Items.Count}]";
+                xArtikelList.StopWait();
+                xwerkpleklist.StopWait();
                 EnableButton(true);
             }
             catch (Exception e)
@@ -626,6 +638,11 @@ namespace Forms.ArtikelRecords
                     {
                         var xprods = Manager.Database.GetBewerkingen(sel.UpdatedProducties, true).Result;
                         if (xprods.Count == 0) continue;
+                        if (sel.IsWerkplek)
+                        {
+                            xprods = xprods.Where(x=>x.WerkPlekken.Any(w =>
+                                string.Equals(w.Naam, sel.ArtikelNr, StringComparison.CurrentCultureIgnoreCase))).ToList();
+                        }
                         prodform = new ProductieLijstForm(xprods, sel.ArtikelNr);
 
                         prodform.FormClosing += AddProduction_FormClosing;
