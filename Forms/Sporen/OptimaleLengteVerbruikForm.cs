@@ -22,6 +22,7 @@ namespace Forms.Sporen
         public OptimaleLengteVerbruikForm()
         {
             InitializeComponent();
+            xMaterialenLijst.AllowCellEdit = true;
             imageList1.Images.Add(Resources.bolts_construction_rivet_screw_screws_128x128);
             Generator.GenerateColumns(this.xMaterialenLijst, typeof(OptimaleVerbruikEntry), false);
             foreach (var col in this.xMaterialenLijst.AllColumns)
@@ -70,6 +71,7 @@ namespace Forms.Sporen
                         var prods = Manager.Database.GetAllProducties(true, false, null, true).Result;
                         if (prods.Count == 0) return;
                         var entries = new List<OptimaleVerbruikEntry>();
+                        Results ??= new List<OptimaleVerbruikEntry>();
                         foreach (var prod in prods)
                         {
                             var xmats = prod.Materialen.Where(x =>
@@ -111,6 +113,17 @@ namespace Forms.Sporen
                                 if (info.Voorkeur3 > optimal.Productlengte)
                                     optimal.Voorkeur3 =
                                         OptimalUitgangsLengte(optimal.Productlengte, optimal.RestStuk, info.Voorkeur3);
+                                var ent = Results.FirstOrDefault(x => x.Equals(optimal));
+                                if (ent != null)
+                                {
+                                   optimal.Uitgangslengte = ent.Uitgangslengte;
+                                   optimal.Productlengte = ent.Productlengte;
+                                   optimal.Omschrijving = ent.Omschrijving;
+                                   //optimal.Changes.Add("Uitgangslengte", ent.Uitgangslengte);
+                                   //optimal.Changes.Add("Productlengte", ent.Productlengte);
+                                   //optimal.Changes.Add("Omschrijving", ent.Omschrijving);
+                                }
+
                                 entries.Add(optimal);
                             }
                         }

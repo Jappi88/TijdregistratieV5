@@ -187,34 +187,20 @@ namespace Forms.Aantal
                 {
                     foreach (var bw in form.Bewerkingen)
                     {
-                        if (LastchangedMinutes > -1)
-                        {
-                            if (!bw.WerkPlekken.Any(x => x.NeedsAantalUpdate(LastchangedMinutes)))
-                                continue;
-                        }
                         var index = Bewerkingen.IndexOf(bw);
                         bool bwvalid = bw.State == ProductieState.Gestart && bw.IsAllowed() && string.Equals(
                             bw.GestartDoor, Manager.Opties?.Username,
                             StringComparison.CurrentCultureIgnoreCase);
-                     
+                        if (LastchangedMinutes > -1)
+                        {
+                            bwvalid &= bw.WerkPlekken.Any(x => x.NeedsAantalUpdate(LastchangedMinutes));
+                        }
                         if (index == -1)
                         {
                             if (bwvalid)
                             {
-                                if (LastchangedMinutes > -1)
-                                {
-                                    if (bw.WerkPlekken.Any(x=> x.NeedsAantalUpdate(LastchangedMinutes)))
-                                    {
-                                        Bewerkingen.Add(bw);
-                                        init = true;
-                                    }
-                                }
-                                else
-                                {
-                                    Bewerkingen.Add(bw);
-                                    init = true;
-                                }
-                                
+                                Bewerkingen.Add(bw);
+                                init = true;
                             }
                         }
                         else

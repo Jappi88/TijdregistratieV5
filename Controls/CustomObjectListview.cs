@@ -1,11 +1,10 @@
-﻿using System;
+﻿using BrightIdeasSoftware;
+using Rpm.Misc;
+using System;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BrightIdeasSoftware;
-using Forms.FileBrowser;
-using Rpm.Misc;
 
 namespace Controls
 {
@@ -14,10 +13,13 @@ namespace Controls
         internal bool _isLoading;
 
         public bool IsLoading => _isLoading;
+        public bool AllowCellEdit { get; set; }
 
         public CustomObjectListview()
         {
             InitializeComponent();
+            xloadinglabel.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
+            xloadinglabel.Size = this.Size;
             this.Controls.Add(xloadinglabel);
             xloadinglabel.BringToFront();
             CellEditStarting += CustomObjectListview_CellEditStarting;
@@ -89,6 +91,7 @@ namespace Controls
 
         public override void EditModel(object rowModel)
         {
+            if (!AllowCellEdit) return;
             base.EditModel(rowModel);
             if (CellEditor != null)
             {
@@ -101,6 +104,7 @@ namespace Controls
 
         public override void EditSubItem(OLVListItem item, int subItemIndex)
         {
+            if (!AllowCellEdit) return;
             var col = GetColumn(subItemIndex);
             if (col is not { IsEditable: true }) return;
             base.StartCellEdit(item, subItemIndex);

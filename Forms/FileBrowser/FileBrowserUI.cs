@@ -37,6 +37,7 @@ namespace Forms.FileBrowser
             InitializeComponent();
             ((OLVColumn) xbrowser.Columns[0]).ImageGetter = GetIndexImage;
             xbrowser.VirtualListSize = 300;
+            xbrowser.AllowCellEdit = true;
             InitViewStyles(xViewStyle);
         }
 

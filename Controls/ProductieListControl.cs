@@ -42,6 +42,7 @@ namespace Controls
         public ProductieListControl()
         {
             InitializeComponent();
+            ProductieLijst.AllowCellEdit = false;
             ProductieLijst.SmallImageList = ProductieImageList;
             ProductieLijst.LargeImageList = ProductieImageList;
             ProductieLijst.CustomSorter = delegate (OLVColumn column, SortOrder order)
@@ -70,7 +71,7 @@ namespace Controls
         }
 
         // ReSharper disable once ConvertToAutoProperty
-        public ObjectListView ProductieLijst => xProductieLijst1;
+        public CustomObjectListview ProductieLijst => xProductieLijst1;
 
         public string ListName { get; set; }
         public bool RemoveCustomItemIfNotValid { get; set; }
@@ -379,52 +380,12 @@ namespace Controls
             Manager.LayoutChanged -= Xcols_OnColumnsSettingsChanged;
         }
 
-        private bool _iswaiting;
-
         /// <summary>
         ///     Toon laad scherm
         /// </summary>
         public void SetWaitUI()
         {
-            if (_iswaiting) return;
-            _iswaiting = true;
-            Task.Run(() =>
-            {
-                try
-                {
-                    if (Disposing || IsDisposed) return;
-                    xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = true; }));
-
-                    var cur = 0;
-                    var xwv = IsBewerkingView ? "Bewerkingen Laden" : "Producties laden";
-                    //var xcurvalue = xwv;
-                    var tries = 0;
-                    while (_iswaiting && tries < 200)
-                    {
-                        if (cur > 5) cur = 0;
-                        if (Disposing || IsDisposed) return;
-                        var curvalue = xwv.PadRight(xwv.Length + cur, '.');
-                        //xcurvalue = curvalue;
-                        xloadinglabel.Invoke(new MethodInvoker(() =>
-                        {
-                            xloadinglabel.Text = curvalue;
-                            xloadinglabel.Invalidate();
-                        }));
-                        //Application.DoEvents();
-
-                        Thread.Sleep(250);
-                        //Application.DoEvents();
-                        tries++;
-                        cur++;
-                    }
-                }
-                catch (Exception e)
-                {
-                }
-
-                if (Disposing || IsDisposed) return;
-                xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
-            });
+            ProductieLijst.StartWaitUI("Bewerkingen laden");
         }
 
         /// <summary>
@@ -432,7 +393,7 @@ namespace Controls
         /// </summary>
         public void StopWait()
         {
-            _iswaiting = false;
+            ProductieLijst.StopWait();
         }
 
         public ExcelSettings SaveColumns(bool raiseevent)
@@ -1473,7 +1434,7 @@ namespace Controls
                 var crit1 = string.IsNullOrEmpty(criteria) ? "Zoeken..." : criteria;
                 var crit2 = string.IsNullOrEmpty(xsearch.Text.Trim()) ? "Zoeken..." : xsearch.Text.Trim();
                 var flag = string.Equals(crit1, crit2, StringComparison.CurrentCultureIgnoreCase) ||
-                           crit1.ToLower().Trim() == "zoeken..." || _iswaiting;
+                           crit1.ToLower().Trim() == "zoeken..." || ProductieLijst._isLoading;
                 xsearch.Text = crit1.ToLower().StartsWith("zoeken...") ? "" : crit1;
                 xsearch.Text = crit1;
                 return !flag;
@@ -1487,7 +1448,7 @@ namespace Controls
 
         private void xsearchbox_TextChanged(object sender, EventArgs e)
         {
-            if (xsearch.Text.ToLower().Trim() != "zoeken..." && !_iswaiting)
+            if (xsearch.Text.ToLower().Trim() != "zoeken..." && !ProductieLijst.IsLoading)
             {
                 OnSearchItems(xsearch.Text.Trim());
                 xUpdateProductieList(false, false);

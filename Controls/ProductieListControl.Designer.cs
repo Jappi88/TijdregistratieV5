@@ -32,8 +32,7 @@ namespace Controls
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieListControl));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.xloadinglabel = new System.Windows.Forms.Label();
-            this.xProductieLijst1 = new BrightIdeasSoftware.ObjectListView();
+            this.xProductieLijst1 = new Controls.CustomObjectListview();
             this.xproductieLijstcontext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.xopenProductieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
@@ -147,7 +146,6 @@ namespace Controls
             // panel1
             // 
             this.panel1.AutoScroll = true;
-            this.panel1.Controls.Add(this.xloadinglabel);
             this.panel1.Controls.Add(this.xProductieLijst1);
             this.panel1.Controls.Add(this.xBottomToolMenu);
             this.panel1.Controls.Add(this.panel3);
@@ -158,21 +156,6 @@ namespace Controls
             this.panel1.Size = new System.Drawing.Size(985, 589);
             this.panel1.TabIndex = 0;
             // 
-            // xloadinglabel
-            // 
-            this.xloadinglabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xloadinglabel.BackColor = System.Drawing.Color.Transparent;
-            this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xloadinglabel.Location = new System.Drawing.Point(0, 73);
-            this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(985, 444);
-            this.xloadinglabel.TabIndex = 29;
-            this.xloadinglabel.Text = "Producties Laden...";
-            this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.xloadinglabel.Visible = false;
-            // 
             // xProductieLijst1
             // 
             this.xProductieLijst1.AllowColumnReorder = true;
@@ -181,12 +164,14 @@ namespace Controls
             this.xProductieLijst1.ContextMenuStrip = this.xproductieLijstcontext;
             this.xProductieLijst1.Cursor = System.Windows.Forms.Cursors.Default;
             this.xProductieLijst1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xProductieLijst1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xProductieLijst1.FullRowSelect = true;
             this.xProductieLijst1.GridLines = true;
             this.xProductieLijst1.HeaderWordWrap = true;
             this.xProductieLijst1.HideSelection = false;
             this.xProductieLijst1.IsSimpleDragSource = true;
             this.xProductieLijst1.Location = new System.Drawing.Point(0, 73);
+            this.xProductieLijst1.MenuLabelColumns = "kolommen";
             this.xProductieLijst1.MenuLabelGroupBy = "Groep op \'{0}\'";
             this.xProductieLijst1.MenuLabelLockGroupingOn = "Vergrendel groupering op \'{0}\'";
             this.xProductieLijst1.MenuLabelSelectColumns = "Selecteer Columns...";
@@ -196,12 +181,16 @@ namespace Controls
             this.xProductieLijst1.MenuLabelUnlockGroupingOn = "Vergrendel groepering op \'{0}\'";
             this.xProductieLijst1.MenuLabelUnsort = "DeSorteer";
             this.xProductieLijst1.Name = "xProductieLijst1";
+            this.xProductieLijst1.OwnerDraw = false;
             this.xProductieLijst1.ShowCommandMenuOnRightClick = true;
+            this.xProductieLijst1.ShowGroups = false;
             this.xProductieLijst1.ShowItemCountOnGroups = true;
             this.xProductieLijst1.ShowItemToolTips = true;
             this.xProductieLijst1.Size = new System.Drawing.Size(985, 491);
             this.xProductieLijst1.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.xProductieLijst1.SpaceBetweenGroups = 10;
             this.xProductieLijst1.TabIndex = 31;
+            this.xProductieLijst1.TileSize = new System.Drawing.Size(300, 120);
             this.xProductieLijst1.TintSortColumn = true;
             this.xProductieLijst1.UseAlternatingBackColors = true;
             this.xProductieLijst1.UseCellFormatEvents = true;
@@ -211,6 +200,7 @@ namespace Controls
             this.xProductieLijst1.UseFiltering = true;
             this.xProductieLijst1.UseHotControls = false;
             this.xProductieLijst1.UseHotItem = true;
+            this.xProductieLijst1.UseOverlays = false;
             this.xProductieLijst1.UseTranslucentHotItem = true;
             this.xProductieLijst1.UseTranslucentSelection = true;
             this.xProductieLijst1.View = System.Windows.Forms.View.Details;
@@ -1311,7 +1301,6 @@ namespace Controls
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ToolStripMenuItem exportExcelToolStripMenuItem;
-        private System.Windows.Forms.Label xloadinglabel;
         private System.Windows.Forms.ToolStripMenuItem xtoolstripaanbevolenpersonen;
         private System.Windows.Forms.ToolStripMenuItem zoekToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem opArtikelNrToolStripMenuItem;
@@ -1349,7 +1338,7 @@ namespace Controls
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem11;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem12;
         private System.Windows.Forms.ToolStripMenuItem verpakkingsInstructieToolStripMenuItem;
-        private BrightIdeasSoftware.ObjectListView xProductieLijst1;
+        private CustomObjectListview xProductieLijst1;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.ToolStripMenuItem xfiltertoolstripitem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;

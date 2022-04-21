@@ -36,7 +36,6 @@ namespace Controls
             // xloadinglabel
             // 
             this.xloadinglabel.BackColor = System.Drawing.Color.Transparent;
-            this.xloadinglabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xloadinglabel.Location = new System.Drawing.Point(0, 0);
             this.xloadinglabel.Name = "xloadinglabel";

@@ -69,7 +69,6 @@ namespace Forms.ImageViewer
             // 
             // xMainImage
             // 
-            this.xMainImage.AutoPan = false;
             this.xMainImage.AutoScroll = true;
             this.xMainImage.AutoSize = false;
             this.xMainImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -275,7 +274,7 @@ namespace Forms.ImageViewer
             this.Text = "Afbeeldingen";
             this.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.Title = "Afbeeldingen";
-            this.TransparencyKey = System.Drawing.Color.White;
+            this.TransparencyKey = System.Drawing.Color.Transparent;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ImageViewerForm_FormClosing);
             this.Shown += new System.EventHandler(this.ImageViewerForm_Shown);
             this.Resize += new System.EventHandler(this.frmNewForm_ResizeEnd);
