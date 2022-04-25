@@ -15,6 +15,8 @@ namespace Forms
         {
             InitializeComponent();
             roosterUI1.Enabled = false;
+            roosterUI1.ShowNationaleFeestDagen = false;
+            roosterUI1.ShowSpecialeRoosterButton = false;
             ((OLVColumn) xroosterlist.Columns[0]).ImageGetter = sender => 0;
             ((OLVColumn) xroosterlist.Columns[0]).AspectGetter = DateGetter;
         }

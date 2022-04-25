@@ -456,6 +456,26 @@ namespace Controls
             }
         }
 
+        private void ShowBerekenleverdatum()
+        {
+            if (Disposing || IsDisposed) return;
+            if (Formulier == null ||
+                Formulier.State == ProductieState.Verwijderd)
+                return;
+            var b = CurrentBewerking();
+            if (b != null)
+                try
+                {
+                    var form = new BerekenLeverdatumForm();
+                    form.SetBewerking(b);
+                    form.ShowDialog();
+                }
+                catch (Exception e)
+                {
+                    XMessageBox.Show(this, e.Message, "Geen Aanbevelingen");
+                }
+        }
+
         private void ShowAanbevolenPersoneel()
         {
             if (Disposing || IsDisposed) return;
@@ -543,6 +563,9 @@ namespace Controls
                         break;
                     case "xaanbevolenpersonen":
                         ShowAanbevolenPersoneel();
+                        break;
+                    case "xberekenleverdatum":
+                        ShowBerekenleverdatum();
                         break;
                     case "xrooster":
                         CurrentBewerking()?.DoBewerkingEigenRooster(this);

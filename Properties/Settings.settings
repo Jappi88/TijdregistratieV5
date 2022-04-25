@@ -8,5 +8,11 @@
     <Setting Name="StoringMelder" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="VaultUserName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Viewer</Value>
+    </Setting>
+    <Setting Name="VaultPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

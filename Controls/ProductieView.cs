@@ -1892,9 +1892,13 @@ namespace Controls
                 var roosterform = new RoosterForm(Manager.Opties.TijdelijkeRooster,
                            "Kies een rooster voor al je werkzaamheden");
                 roosterform.ViewPeriode = false;
+                roosterform.SetRooster(Manager.Opties.TijdelijkeRooster,Manager.Opties.NationaleFeestdagen, Manager.Opties.SpecialeRoosters);
+                roosterform.RoosterUI.AutoUpdateBewerkingen = true;
                 if (roosterform.ShowDialog() == DialogResult.Cancel)
                     return;
                 Manager.Opties.TijdelijkeRooster = roosterform.WerkRooster;
+                Manager.Opties.SpecialeRoosters = roosterform.RoosterUI.SpecialeRoosters;
+                Manager.Opties.NationaleFeestdagen = roosterform.RoosterUI.NationaleFeestdagen().ToArray();
                 var thesame = xold.SameTijden(Manager.Opties?.GetWerkRooster());
                 if (!thesame)
                 {
@@ -2065,6 +2069,9 @@ namespace Controls
                             break;
                         case "xverbruik":
                             ShowBerekenVerbruikWindow();
+                            break;
+                        case "xberekenleverdatum":
+                            ShowBerekenLeverdatum();
                             break;
                         case "xcreateexcel":
                             //maak een nieuwe excel aan
@@ -2300,10 +2307,11 @@ namespace Controls
 
                 var roosterform = new RoosterForm(rooster, "Vul in de speciale werkdag tijden");
                 roosterform.ViewPeriode = false;
+                roosterform.SetRooster(rooster,Manager.Opties?.NationaleFeestdagen, Manager.Opties?.SpecialeRoosters);
                 if (roosterform.ShowDialog() == DialogResult.OK)
                 {
-                    if (Manager.Opties.SpecialeRoosters == null)
-                        Manager.Opties.SpecialeRoosters = new List<Rooster>();
+                    Manager.Opties.SpecialeRoosters = roosterform.RoosterUI.SpecialeRoosters;
+                    Manager.Opties.NationaleFeestdagen = roosterform.RoosterUI.NationaleFeestdagen().ToArray();
                     var newrooster = roosterform.WerkRooster;
                     var dt = DateTime.Now;
                     var tijd = roosterform.WerkRooster.StartWerkdag;
@@ -2922,6 +2930,12 @@ namespace Controls
             _berekenverbruik.Focus();
         }
 
+        public static void ShowBerekenLeverdatum()
+        {
+            var xb = new BerekenLeverdatumForm();
+            xb.ShowDialog();
+        }
+        
         public static void ShowPersoonVaardigheden(Personeel persoon)
         {
             if (persoon == null)

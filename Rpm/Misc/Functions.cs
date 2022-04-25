@@ -660,10 +660,16 @@ namespace Rpm.Misc
                     var roosterform = new RoosterForm(wp.Tijden.WerkRooster,
                         "Kies een rooster voor al je werkzaamheden");
                     roosterform.ViewPeriode = false;
+                    roosterform.SetRooster(wp.Tijden.WerkRooster, Manager.Opties?.NationaleFeestdagen,
+                        wp.Tijden.SpecialeRoosters);
                     if (roosterform.ShowDialog() == DialogResult.OK)
                     {
                         bool flag = wp.Personen.Any(x =>
                             x.WerkRooster == null || !x.WerkRooster.SameTijden(roosterform.WerkRooster));
+                        if (Manager.Opties != null)
+                        {
+                            Manager.Opties.NationaleFeestdagen = roosterform.RoosterUI.NationaleFeestdagen().ToArray();
+                        }
                         if (flag && bew.IsBemand)
                         {
                             foreach (var per in wp.Personen)
@@ -686,7 +692,7 @@ namespace Rpm.Misc
                             ? "eigen rooster"
                             : "standaard rooster";
                         b.UpdateBewerking(null,
-                            $"[{wp.Path}]{Manager.Opties.Username} heeft voor een {xchange} gekozen", true);
+                            $"[{wp.Path}]{Manager.Opties?.Username} heeft voor een {xchange} gekozen", true);
                         
                     }
                 }

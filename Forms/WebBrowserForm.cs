@@ -45,6 +45,7 @@ namespace ProductieManager.Forms
                 Browser.IsWebBrowserContextMenuEnabled = false;
                 // Browser.AllowWebBrowserDrop = false;
                 Browser.Navigated += xBrowser_Navigated;
+                Browser.Navigating += Browser_Navigating;
                 Browser.Dock = DockStyle.Fill;
                 this.Controls.Add(Browser);
                 this.ResumeLayout(true);
@@ -54,6 +55,43 @@ namespace ProductieManager.Forms
                 Console.WriteLine(e);
             }
 
+        }
+
+        private void Browser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+        {
+            try
+            {
+                var xdoc = Browser.Document?.GetElementById("UserName");
+                if (xdoc != null)
+                {
+                    string username = xdoc.GetAttribute("value");
+                    string password = String.Empty;
+                    xdoc = Browser.Document?.GetElementById("Password");
+                    if (xdoc != null)
+                    {
+                        password = xdoc.GetAttribute("value");
+                    }
+
+                    bool save = false;
+                    if (!string.IsNullOrEmpty(username))
+                    {
+                        Properties.Settings.Default.VaultUserName = username;
+                        save = true;
+                    }
+                    if (!string.IsNullOrEmpty(password))
+                    {
+                        Properties.Settings.Default.VaultPassword = password;
+                        save = true;
+                    }
+
+                    if (save)
+                        Properties.Settings.Default.Save();
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
         }
 
         public WebBrowser Browser { get; private set; }
@@ -110,6 +148,19 @@ namespace ProductieManager.Forms
                 var xelements =
                     xdoc.DocumentNode.SelectNodes(
                         "/html[1]/body[1]/div[1]/div[1]/div[2]/section[1]/div[2]/div[1]/div[1]/div[1]/table[1]/tbody[1]");
+                if (xelements == null)
+                {
+                    
+                    var el = xdoc.DocumentNode.SelectSingleNode("//div[@class='login_form']");
+                    if (el != null)
+                    {
+                        return el.ChildNodes;
+                        //var username = el.SelectSingleNode("//input[@id='UserName']")?
+                        //    .SetAttributeValue("value", "jappi88");
+                        //valid = false;
+                        //return null;
+                    }
+                }
                 return xelements;
             }
             catch (Exception e)
@@ -187,7 +238,29 @@ namespace ProductieManager.Forms
                         Navigate(xnext);
                     return;
                 }
-                
+                //Eerst even checken of je moet inloggen...
+
+                var el = xelements.FindFirst("form");
+                if (el != null)
+                {
+                    el = el.SelectSingleNode("//input[@id='UserName']");
+                    if (el != null)
+                    {
+                        var xdoc = Browser.Document?.GetElementById(el.Id);
+                        if (xdoc != null)
+                        {
+                            xdoc.SetAttribute("value",  Properties.Settings.Default.VaultUserName);
+                            xdoc = Browser.Document?.GetElementById("Password");
+                            if (xdoc != null)
+                            {
+                                xdoc.SetAttribute("value", Properties.Settings.Default.VaultPassword);
+                            }
+
+                            return;
+                        }
+                    }
+                }
+
                 string xdefname = "";
                 foreach (var xf in FilesFormatToOpen)
                 {

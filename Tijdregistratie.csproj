@@ -267,6 +267,12 @@
     <Compile Include="Controls\AfkeurEntryUI.Designer.cs">
       <DependentUpon>AfkeurEntryUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\BerekenLeverdatumUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\BerekenLeverdatumUI.Designer.cs">
+      <DependentUpon>BerekenLeverdatumUI.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\BijlageUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -405,6 +411,12 @@
     </Compile>
     <Compile Include="Forms\ArtikelsForm.Designer.cs">
       <DependentUpon>ArtikelsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BerekenLeverdatumForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BerekenLeverdatumForm.Designer.cs">
+      <DependentUpon>BerekenLeverdatumForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BijlageForm.cs">
       <SubType>Form</SubType>
@@ -1509,6 +1521,9 @@
     <EmbeddedResource Include="Controls\AfkeurEntryUI.resx">
       <DependentUpon>AfkeurEntryUI.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\BerekenLeverdatumUI.resx">
+      <DependentUpon>BerekenLeverdatumUI.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\BijlageUI.resx">
       <DependentUpon>BijlageUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -1575,6 +1590,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ArtikelsForm.resx">
       <DependentUpon>ArtikelsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BerekenLeverdatumForm.resx">
+      <DependentUpon>BerekenLeverdatumForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BijlageForm.resx">
       <DependentUpon>BijlageForm.cs</DependentUpon>
@@ -2177,6 +2195,8 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\calculate_office_icon_256x256.png" />
+    <None Include="Resources\calculate_office_icon_32x32.png" />
     <None Include="Resources\sort_icon_149866_32x32.png" />
     <None Include="Resources\folder_open_Empty_96x96.png" />
     <None Include="Resources\folder_with_contents_96x96.png" />

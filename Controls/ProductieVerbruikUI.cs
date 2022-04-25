@@ -264,7 +264,7 @@ namespace Controls
         {
             try
             {
-                var mats = _form.GetMaterialen();
+                var mats = _form?.GetMaterialen();
                 if (mats == null)
                     return null;
                 var index = xmaterialen.SelectedIndex;

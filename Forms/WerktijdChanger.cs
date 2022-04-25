@@ -463,9 +463,13 @@ namespace Forms
             var rooster = GetRooster(null);
             var rs = new RoosterForm(rooster, $"Rooster voor {path}");
             rs.ViewPeriode = false;
+            rs.SetRooster(rooster,Manager.Opties?.NationaleFeestdagen, SpecialeRoosters);
             if (rs.ShowDialog() != DialogResult.OK) return;
             rooster = rs.WerkRooster;
             CurrentRooster = rooster;
+            SpecialeRoosters = rs.RoosterUI.SpecialeRoosters;
+            if (Manager.Opties != null)
+                Manager.Opties.NationaleFeestdagen = rs.RoosterUI.NationaleFeestdagen().ToArray();
             var ents = GetWerkTijden();
             var ent = ents.FirstOrDefault(x => x.InUse);
             if (ent != null)

@@ -373,6 +373,26 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap calculate_office_icon_256x256 {
+            get {
+                object obj = ResourceManager.GetObject("calculate_office_icon_256x256", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap calculate_office_icon_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("calculate_office_icon_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap calculator_icon_icons_com_72046 {
             get {
                 object obj = ResourceManager.GetObject("calculator_icon-icons.com_72046", resourceCulture);

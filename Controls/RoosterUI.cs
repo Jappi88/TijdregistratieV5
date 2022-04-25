@@ -1,8 +1,11 @@
-﻿using System;
-using System.Windows.Forms;
-using Forms;
+﻿using Forms;
 using Rpm.Misc;
 using Rpm.Productie;
+using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace Controls
 {
@@ -21,7 +24,22 @@ namespace Controls
             set => SetRooster(value);
         }
 
-        private void SetRooster(Rooster rooster)
+        public bool ShowSpecialeRoosterButton
+        {
+            get => xspeciaalroosterb.Visible;
+            set => xspeciaalroosterb.Visible = value;
+        }
+        public bool ShowNationaleFeestDagen
+        {
+            get => xnationaleFeestdageGroup.Visible;
+            set => xnationaleFeestdageGroup.Visible = value;
+        }
+
+        public bool AutoUpdateBewerkingen { get; set; }
+
+        public List<Rooster> SpecialeRoosters { get; set; }
+
+        public void SetRooster(Rooster rooster)
         {
             _rooster = rooster ?? Manager.Opties?.WerkRooster?.CreateCopy();
             if (_rooster != null)
@@ -39,6 +57,14 @@ namespace Controls
 
                 xgebruiktpauze.Checked = _rooster.GebruiktPauze;
             }
+        }
+
+        public void SetRooster(Rooster rooster, DateTime[] nationalefeestdagen, List<Rooster> specialeroosters)
+        {
+            SetRooster(rooster);
+            nationalefeestdagen ??= Manager.Opties?.NationaleFeestdagen;
+            SpecialeRoosters = specialeroosters?? Manager.Opties?.SpecialeRoosters??new List<Rooster>();
+            ListFeestdagen(nationalefeestdagen);
         }
 
         private Rooster GetRooster()
@@ -105,6 +131,101 @@ namespace Controls
 
                 OnValueChanged(sender);
             }
+        }
+
+        public List<DateTime> NationaleFeestdagen()
+        {
+            var xlist = new List<DateTime>();
+            try
+            {
+              
+                foreach (ListViewItem lv in xfeestdagen.Items)
+                {
+                    var dt = (DateTime) lv.Tag;
+                    if (!xlist.Contains(dt))
+                        xlist.Add(dt);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return xlist;
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            xremovefeestdag.Visible = xfeestdagen.SelectedItems.Count > 0;
+        }
+
+        private void xaddfesstdag_Click(object sender, EventArgs e)
+        {
+            var date = xfeestdagdate.Value.Date.ToString("dddd dd MMMM yyyy");
+            var lv = new ListViewItem(date);
+            lv.Tag = xfeestdagdate.Value.Date;
+            var exist = false;
+            foreach (ListViewItem x in xfeestdagen.Items)
+                if (string.Equals(x.Text, date, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    exist = true;
+                    break;
+                }
+
+            if (exist)
+                XMessageBox.Show(this, $"Datum is al toegevoegd", "Bestaat Al", MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+            else
+            {
+                xfeestdagen.Items.Add(lv);
+                OnValueChanged(sender);
+            }
+        }
+
+        private void xremovefeestdag_Click(object sender, EventArgs e)
+        {
+            if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde datums wilt verwijderen?", "Verwijderen",
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                foreach (ListViewItem lv in xfeestdagen.SelectedItems)
+                    lv.Remove();
+        }
+
+        private void ListFeestdagen(DateTime[] nationalefeestdagen)
+        {
+            xfeestdagen.BeginUpdate();
+            xfeestdagen.Items.Clear();
+            nationalefeestdagen ??= new DateTime[] { };
+            foreach (var x in nationalefeestdagen)
+                xfeestdagen.Items.Add(new ListViewItem(x.ToString("dddd dd MMMM yyyy")) {Tag = x.Date});
+            xfeestdagen.EndUpdate();
+            xremovefeestdag.Visible = xfeestdagen.SelectedItems.Count > 0;
+        }
+
+        private void xspeciaalroosterb_Click(object sender, EventArgs e)
+        {
+            var sproosters = new SpeciaalWerkRoostersForm(SpecialeRoosters);
+            if (sproosters.ShowDialog() == DialogResult.OK)
+            {
+                SpecialeRoosters = sproosters.Roosters;
+                if (AutoUpdateBewerkingen)
+                {
+                    var acces1 = Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieBasis };
+                    if (acces1 && sproosters.Roosters.Count > 0)
+                    {
+                        var bws = Manager.GetBewerkingen(new ViewState[] { ViewState.Gestart }, true, false).Result;
+                        bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
+                            StringComparison.CurrentCultureIgnoreCase)).ToList();
+                        if (bws.Count > 0)
+                        {
+                            var bwselector = new BewerkingSelectorForm(bws, true, true);
+                            bwselector.Title = "Selecteer Werkplaatsen waarvan de rooster aangepast moet worden";
+                            if (bwselector.ShowDialog() == DialogResult.OK)
+                                _ = Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
+                        }
+                    }
+                }
+            }
+
         }
 
         public event EventHandler ValueChanged;

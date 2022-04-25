@@ -49,14 +49,22 @@ namespace Controls
             this.panel2 = new System.Windows.Forms.Panel();
             this.xgebruiktpauze = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.xspeciaalroosterb = new System.Windows.Forms.Button();
             this.xstandaard = new System.Windows.Forms.Button();
+            this.xnationaleFeestdageGroup = new System.Windows.Forms.GroupBox();
+            this.xfeestdagen = new System.Windows.Forms.ListView();
+            this.xDatum = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.xfeestdagdate = new System.Windows.Forms.DateTimePicker();
+            this.xaddfesstdag = new System.Windows.Forms.Button();
+            this.xremovefeestdag = new System.Windows.Forms.Button();
             this.xpauzetijdengroup.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.xnationaleFeestdageGroup.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // label9
@@ -270,6 +278,8 @@ namespace Controls
             // 
             // xpauzetijdengroup
             // 
+            this.xpauzetijdengroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.xpauzetijdengroup.Controls.Add(this.panel2);
             this.xpauzetijdengroup.Enabled = false;
             this.xpauzetijdengroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -277,7 +287,7 @@ namespace Controls
             this.xpauzetijdengroup.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.xpauzetijdengroup.Name = "xpauzetijdengroup";
             this.xpauzetijdengroup.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.xpauzetijdengroup.Size = new System.Drawing.Size(229, 181);
+            this.xpauzetijdengroup.Size = new System.Drawing.Size(264, 181);
             this.xpauzetijdengroup.TabIndex = 35;
             this.xpauzetijdengroup.TabStop = false;
             this.xpauzetijdengroup.Text = "Pauze Tijden";
@@ -302,7 +312,7 @@ namespace Controls
             this.panel2.Controls.Add(this.xstartpauze3);
             this.panel2.Location = new System.Drawing.Point(3, 22);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(220, 155);
+            this.panel2.Size = new System.Drawing.Size(255, 155);
             this.panel2.TabIndex = 33;
             // 
             // xgebruiktpauze
@@ -319,81 +329,168 @@ namespace Controls
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.xstartwerkdag);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.xeindwerkdag);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(229, 66);
+            this.panel1.Size = new System.Drawing.Size(271, 66);
             this.panel1.TabIndex = 37;
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 242F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.panel3, 1, 1);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 325F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(360, 409);
-            this.tableLayoutPanel1.TabIndex = 38;
             // 
             // panel3
             // 
+            this.panel3.AutoScroll = true;
+            this.panel3.Controls.Add(this.xspeciaalroosterb);
             this.panel3.Controls.Add(this.xstandaard);
             this.panel3.Controls.Add(this.panel1);
             this.panel3.Controls.Add(this.xgebruiktpauze);
             this.panel3.Controls.Add(this.xpauzetijdengroup);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(62, 45);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel3.Location = new System.Drawing.Point(5, 5);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(236, 319);
+            this.panel3.Size = new System.Drawing.Size(271, 380);
             this.panel3.TabIndex = 0;
+            // 
+            // xspeciaalroosterb
+            // 
+            this.xspeciaalroosterb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xspeciaalroosterb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xspeciaalroosterb.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xspeciaalroosterb.Image = global::ProductieManager.Properties.Resources.augmented_reality_calendar_schedule_mountain_32x32;
+            this.xspeciaalroosterb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xspeciaalroosterb.Location = new System.Drawing.Point(5, 331);
+            this.xspeciaalroosterb.Name = "xspeciaalroosterb";
+            this.xspeciaalroosterb.Size = new System.Drawing.Size(262, 42);
+            this.xspeciaalroosterb.TabIndex = 39;
+            this.xspeciaalroosterb.Text = "Speciale Roosters";
+            this.xspeciaalroosterb.UseVisualStyleBackColor = true;
+            this.xspeciaalroosterb.Click += new System.EventHandler(this.xspeciaalroosterb_Click);
             // 
             // xstandaard
             // 
-            this.xstandaard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.xstandaard.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xstandaard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xstandaard.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xstandaard.Image = global::ProductieManager.Properties.Resources.schedule_32_32;
+            this.xstandaard.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.xstandaard.Location = new System.Drawing.Point(6, 282);
             this.xstandaard.Name = "xstandaard";
-            this.xstandaard.Size = new System.Drawing.Size(227, 32);
+            this.xstandaard.Size = new System.Drawing.Size(262, 43);
             this.xstandaard.TabIndex = 38;
             this.xstandaard.Text = "Standaard Rooster";
             this.xstandaard.UseVisualStyleBackColor = true;
             this.xstandaard.Click += new System.EventHandler(this.xstandaard_Click);
+            // 
+            // xnationaleFeestdageGroup
+            // 
+            this.xnationaleFeestdageGroup.Controls.Add(this.xfeestdagen);
+            this.xnationaleFeestdageGroup.Controls.Add(this.panel4);
+            this.xnationaleFeestdageGroup.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xnationaleFeestdageGroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xnationaleFeestdageGroup.ForeColor = System.Drawing.Color.Black;
+            this.xnationaleFeestdageGroup.Location = new System.Drawing.Point(276, 5);
+            this.xnationaleFeestdageGroup.Name = "xnationaleFeestdageGroup";
+            this.xnationaleFeestdageGroup.Size = new System.Drawing.Size(353, 380);
+            this.xnationaleFeestdageGroup.TabIndex = 17;
+            this.xnationaleFeestdageGroup.TabStop = false;
+            this.xnationaleFeestdageGroup.Text = "Nationale Feestdagen";
+            // 
+            // xfeestdagen
+            // 
+            this.xfeestdagen.BackColor = System.Drawing.Color.White;
+            this.xfeestdagen.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.xDatum});
+            this.xfeestdagen.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xfeestdagen.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xfeestdagen.ForeColor = System.Drawing.Color.Black;
+            this.xfeestdagen.FullRowSelect = true;
+            this.xfeestdagen.HideSelection = false;
+            this.xfeestdagen.Location = new System.Drawing.Point(3, 56);
+            this.xfeestdagen.Name = "xfeestdagen";
+            this.xfeestdagen.Size = new System.Drawing.Size(347, 321);
+            this.xfeestdagen.TabIndex = 1;
+            this.xfeestdagen.UseCompatibleStateImageBehavior = false;
+            this.xfeestdagen.View = System.Windows.Forms.View.Details;
+            this.xfeestdagen.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
+            // 
+            // xDatum
+            // 
+            this.xDatum.Text = "Datum";
+            this.xDatum.Width = 280;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.xfeestdagdate);
+            this.panel4.Controls.Add(this.xaddfesstdag);
+            this.panel4.Controls.Add(this.xremovefeestdag);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel4.Location = new System.Drawing.Point(3, 21);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(347, 35);
+            this.panel4.TabIndex = 0;
+            // 
+            // xfeestdagdate
+            // 
+            this.xfeestdagdate.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xfeestdagdate.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xfeestdagdate.Location = new System.Drawing.Point(0, 0);
+            this.xfeestdagdate.Name = "xfeestdagdate";
+            this.xfeestdagdate.Size = new System.Drawing.Size(265, 29);
+            this.xfeestdagdate.TabIndex = 2;
+            // 
+            // xaddfesstdag
+            // 
+            this.xaddfesstdag.Dock = System.Windows.Forms.DockStyle.Right;
+            this.xaddfesstdag.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xaddfesstdag.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xaddfesstdag.Image = global::ProductieManager.Properties.Resources.add_1588;
+            this.xaddfesstdag.Location = new System.Drawing.Point(265, 0);
+            this.xaddfesstdag.Name = "xaddfesstdag";
+            this.xaddfesstdag.Size = new System.Drawing.Size(41, 35);
+            this.xaddfesstdag.TabIndex = 1;
+            this.xaddfesstdag.UseVisualStyleBackColor = true;
+            this.xaddfesstdag.Click += new System.EventHandler(this.xaddfesstdag_Click);
+            // 
+            // xremovefeestdag
+            // 
+            this.xremovefeestdag.Dock = System.Windows.Forms.DockStyle.Right;
+            this.xremovefeestdag.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xremovefeestdag.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xremovefeestdag.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.xremovefeestdag.Location = new System.Drawing.Point(306, 0);
+            this.xremovefeestdag.Name = "xremovefeestdag";
+            this.xremovefeestdag.Size = new System.Drawing.Size(41, 35);
+            this.xremovefeestdag.TabIndex = 0;
+            this.xremovefeestdag.UseVisualStyleBackColor = true;
+            this.xremovefeestdag.Visible = false;
+            this.xremovefeestdag.Click += new System.EventHandler(this.xremovefeestdag_Click);
             // 
             // RoosterUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.xnationaleFeestdageGroup);
+            this.Controls.Add(this.panel3);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "RoosterUI";
-            this.Size = new System.Drawing.Size(360, 409);
+            this.Padding = new System.Windows.Forms.Padding(5);
+            this.Size = new System.Drawing.Size(634, 390);
             this.xpauzetijdengroup.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.xnationaleFeestdageGroup.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -420,8 +517,15 @@ namespace Controls
         private System.Windows.Forms.CheckBox xgebruiktpauze;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button xstandaard;
+        private System.Windows.Forms.Button xspeciaalroosterb;
+        private System.Windows.Forms.GroupBox xnationaleFeestdageGroup;
+        private System.Windows.Forms.ListView xfeestdagen;
+        private System.Windows.Forms.ColumnHeader xDatum;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.DateTimePicker xfeestdagdate;
+        private System.Windows.Forms.Button xaddfesstdag;
+        private System.Windows.Forms.Button xremovefeestdag;
     }
 }

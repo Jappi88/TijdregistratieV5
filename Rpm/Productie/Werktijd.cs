@@ -427,32 +427,20 @@ namespace Rpm.Productie
                 while (tijdover.TotalHours > 0)
                 {
                     xdag = EerstVorigeWerkdag(xdag, ref xrooster, rooster, specialeRoosters);
-                   var xtijdover = WerkTijdOver(xdag.TimeOfDay, xrooster);
+                    var xtijdover = WerkTijdOver(xdag.TimeOfDay, xrooster);
                     var xfulldag = WerkTijdOver(xrooster.StartWerkdag, xrooster);
 
                     //xdag = new DateTime(xdag.Year, xdag.Month, xdag.Day, xrooster.EindWerkdag.Hours,
                     //    xrooster.EindWerkdag.Minutes, 0);
-
                     var xtijd = xfulldag - xtijdover;
-                    if (xtijd.TotalHours > 0)
+                    if (xtijd >= tijdover)
                     {
-                        if (xtijd > tijdover)
-                        {
-                            xtijd = tijdover;
-                            tijdover = new TimeSpan();
-                        }
-                        else
-                            tijdover -= xtijd;
+                        xtijd = tijdover;
+                        tijdover = new TimeSpan();
                     }
-
+                    else tijdover -= xfulldag;
                     var pausegehad = PauzeGehad(xdag.TimeOfDay - xtijd, xdag.TimeOfDay, xrooster);
                     xdag = xdag.Subtract(xtijd + pausegehad);
-                    if (tijdover.TotalHours > 0)
-                    {
-                        xdag = xdag.Subtract(TimeSpan.FromDays(1));
-                        xdag = new DateTime(xdag.Year, xdag.Month, xdag.Day, xrooster.EindWerkdag.Hours,
-                            xrooster.EindWerkdag.Minutes, 0);
-                    }
                 }
 
                 xdag = EerstVorigeWerkdag(xdag, ref xrooster, rooster, specialeRoosters);
@@ -619,15 +607,17 @@ namespace Rpm.Productie
             }
             else rooster = realrooster;
             var startdag = new TimeSpan(rooster.StartWerkdag.Hours, rooster.StartWerkdag.Minutes, 0);
-            while (!IsWerkDag(x,specialeRoosters,ref rooster) || x.TimeOfDay < startdag)
+            while (!IsWerkDag(x,specialeRoosters,ref rooster) || x.TimeOfDay <= startdag)
             {
                 x = x.Subtract(TimeSpan.FromDays(1));
-                startdag = new TimeSpan(rooster.StartWerkdag.Hours, rooster.StartWerkdag.Minutes, 0);
-                x = new DateTime(x.Year, x.Month, x.Day, rooster.StartWerkdag.Hours, rooster.StartWerkdag.Minutes, 0);
+                var xeinddag = new TimeSpan(rooster.EindWerkdag.Hours, rooster.EindWerkdag.Minutes, 0);
+                x = new DateTime(x.Year, x.Month, x.Day).Add(xeinddag);
             }
             var einddag = new TimeSpan(rooster.EindWerkdag.Hours, rooster.EindWerkdag.Minutes, 0);
             var time = startdag;
             if (x.TimeOfDay >= startdag && x.TimeOfDay <= einddag) time = x.TimeOfDay;
+            if (x.TimeOfDay > einddag)
+                time = einddag;
 
             if (time >= rooster.StartPauze1 && time < rooster.StartPauze1.Add(rooster.DuurPauze1))
                 time = rooster.StartPauze1.Add(rooster.DuurPauze1);

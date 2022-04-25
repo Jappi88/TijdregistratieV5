@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Controls;
 using Rpm.Misc;
 using Rpm.Productie;
 
@@ -40,6 +42,13 @@ namespace Forms
             }
         }
 
+        public void SetRooster(Rooster rooster, DateTime[] nationaleFeestdagen, List<Rooster> specialeRoosters)
+        {
+            roosterUI1.SetRooster(rooster, nationaleFeestdagen, specialeRoosters);
+        }
+
+        public RoosterUI RoosterUI => roosterUI1;
+
         public Rooster WerkRooster { get; set; }
 
         public bool ViewPeriode
@@ -50,12 +59,12 @@ namespace Forms
                 xperiodegroup.Visible = value;
                 if (value)
                 {
-                    this.MinimumSize = new Size(550, 600);
+                    this.MinimumSize = new Size(787, 660);
                     
                 }
                 else
                 {
-                    this.MinimumSize = new Size(550, 500);
+                    this.MinimumSize = new Size(787, 560);
                 }
 
                 this.Size = this.MinimumSize;

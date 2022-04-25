@@ -55,9 +55,9 @@ namespace Forms
             this.panel3.Controls.Add(this.xsluiten);
             this.panel3.Controls.Add(this.xOpslaan);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(20, 397);
+            this.panel3.Location = new System.Drawing.Point(20, 476);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(525, 48);
+            this.panel3.Size = new System.Drawing.Size(771, 48);
             this.panel3.TabIndex = 1;
             // 
             // xsluiten
@@ -67,7 +67,7 @@ namespace Forms
             this.xsluiten.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.ForeColor = System.Drawing.Color.Black;
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xsluiten.Location = new System.Drawing.Point(403, 3);
+            this.xsluiten.Location = new System.Drawing.Point(649, 3);
             this.xsluiten.Name = "xsluiten";
             this.xsluiten.Size = new System.Drawing.Size(119, 38);
             this.xsluiten.TabIndex = 4;
@@ -83,7 +83,7 @@ namespace Forms
             this.xOpslaan.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xOpslaan.ForeColor = System.Drawing.Color.Black;
             this.xOpslaan.Image = global::ProductieManager.Properties.Resources.diskette_save_saveas_1514;
-            this.xOpslaan.Location = new System.Drawing.Point(278, 3);
+            this.xOpslaan.Location = new System.Drawing.Point(524, 3);
             this.xOpslaan.Name = "xOpslaan";
             this.xOpslaan.Size = new System.Drawing.Size(119, 38);
             this.xOpslaan.TabIndex = 5;
@@ -107,7 +107,7 @@ namespace Forms
             this.xroosterlist.Name = "xroosterlist";
             this.xroosterlist.ShowGroups = false;
             this.xroosterlist.ShowItemToolTips = true;
-            this.xroosterlist.Size = new System.Drawing.Size(258, 302);
+            this.xroosterlist.Size = new System.Drawing.Size(258, 381);
             this.xroosterlist.SmallImageList = this.imageList1;
             this.xroosterlist.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.xroosterlist.TabIndex = 2;
@@ -140,7 +140,7 @@ namespace Forms
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(20, 60);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(258, 337);
+            this.panel1.Size = new System.Drawing.Size(258, 416);
             this.panel1.TabIndex = 3;
             // 
             // panel2
@@ -205,6 +205,7 @@ namespace Forms
             // 
             // roosterUI1
             // 
+            this.roosterUI1.AutoUpdateBewerkingen = false;
             this.roosterUI1.BackColor = System.Drawing.Color.White;
             this.roosterUI1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.roosterUI1.Enabled = false;
@@ -212,7 +213,9 @@ namespace Forms
             this.roosterUI1.Location = new System.Drawing.Point(278, 85);
             this.roosterUI1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.roosterUI1.Name = "roosterUI1";
-            this.roosterUI1.Size = new System.Drawing.Size(267, 312);
+            this.roosterUI1.Padding = new System.Windows.Forms.Padding(5);
+            this.roosterUI1.Size = new System.Drawing.Size(513, 391);
+            this.roosterUI1.SpecialeRoosters = null;
             this.roosterUI1.TabIndex = 4;
             this.roosterUI1.WerkRooster = null;
             // 
@@ -220,7 +223,7 @@ namespace Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(565, 465);
+            this.ClientSize = new System.Drawing.Size(811, 544);
             this.Controls.Add(this.roosterUI1);
             this.Controls.Add(this.xroosterdatelabel);
             this.Controls.Add(this.panel1);
@@ -231,7 +234,9 @@ namespace Forms
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(565, 465);
             this.Name = "SpeciaalWerkRoostersForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Speciale Werk Roosters";
+            this.Title = "Speciale Werk Roosters";
             this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xroosterlist)).EndInit();
             this.panel1.ResumeLayout(false);

@@ -158,6 +158,7 @@ namespace Controls
             // 
             // xProductieLijst1
             // 
+            this.xProductieLijst1.AllowCellEdit = false;
             this.xProductieLijst1.AllowColumnReorder = true;
             this.xProductieLijst1.AlternateRowBackColor = System.Drawing.Color.AliceBlue;
             this.xProductieLijst1.CellEditUseWholeCell = false;
@@ -188,18 +189,16 @@ namespace Controls
             this.xProductieLijst1.ShowItemToolTips = true;
             this.xProductieLijst1.Size = new System.Drawing.Size(985, 491);
             this.xProductieLijst1.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.xProductieLijst1.SpaceBetweenGroups = 10;
+            this.xProductieLijst1.SpaceBetweenGroups = 5;
             this.xProductieLijst1.TabIndex = 31;
             this.xProductieLijst1.TileSize = new System.Drawing.Size(300, 120);
             this.xProductieLijst1.TintSortColumn = true;
-            this.xProductieLijst1.UseAlternatingBackColors = true;
             this.xProductieLijst1.UseCellFormatEvents = true;
             this.xProductieLijst1.UseCompatibleStateImageBehavior = false;
             this.xProductieLijst1.UseExplorerTheme = true;
             this.xProductieLijst1.UseFilterIndicator = true;
             this.xProductieLijst1.UseFiltering = true;
             this.xProductieLijst1.UseHotControls = false;
-            this.xProductieLijst1.UseHotItem = true;
             this.xProductieLijst1.UseOverlays = false;
             this.xProductieLijst1.UseTranslucentHotItem = true;
             this.xProductieLijst1.UseTranslucentSelection = true;
