@@ -96,8 +96,8 @@ namespace Rpm.SqlLite
                         if ((DateTime.Now - bki.Created).TotalHours >
                             TimeSpan.FromMilliseconds(bki.BackupInterval).TotalHours)
                         {
-                            IsCreating = false;
-                            await CreateBackup(bki.MaxBackupCount);
+                            bki.IsCreating = false;
+                            await CreateBackup(bki);
                         }
                     }
 
@@ -189,36 +189,34 @@ namespace Rpm.SqlLite
             return xret;
         }
 
-        public Task CreateBackup(int max)
+        public static Task CreateBackup(BackupInfo info)
         {
-
-            if (CancellationToken == null)
-                CancellationToken = new CancellationTokenSource();
+          
             return Task.Run(async () =>
             {
-                if (IsCreating) return;
+                if(info == null) return;
+                info.CancellationToken ??= new CancellationTokenSource();
+                if (info.IsCreating) return;
                 try
                 {
-                    Creating = DateTime.Now;
-                    IsCreating = true;
-                    this.Save();
-
-
+                    info.Creating = DateTime.Now;
+                    info.IsCreating = true;
+                    info.Save();
                     string path = Manager.BackupPath + $"\\RPM_Backup_{DateTime.Now: ddMMHHmmss}.zip";
-                    bool valid = await ZipFileDirectory(Manager.DbPath, path, GetExcludeNames(), CancellationToken);
+                    bool valid = await ZipFileDirectory(Manager.DbPath, path, info.GetExcludeNames(), info.CancellationToken);
                     //zip.Close();
-                    IsCreating = false;
-                    if (valid && !CancellationToken.IsCancellationRequested)
+                    info.IsCreating = false;
+                    if (valid && !info.CancellationToken.IsCancellationRequested)
                     {
-                        CreatedBy = Manager.Opties?.Username;
-                        Created = DateTime.Now;
-                        CreatedFileName = path;
+                        info.CreatedBy = Manager.Opties?.Username;
+                        info.Created = DateTime.Now;
+                        info.CreatedFileName = path;
 
                         if (Manager.Opties != null)
                         {
                             var backups = Directory.GetFiles(Manager.BackupPath, "*.zip", SearchOption.TopDirectoryOnly)
                                 .OrderBy(x => new FileInfo(x).CreationTime).ToList();
-                            if (backups.Count > max)
+                            if (backups.Count > info.MaxBackupCount)
                             {
                                 try
                                 {
@@ -242,7 +240,7 @@ namespace Rpm.SqlLite
                         {
                         }
                     }
-                    this.Save();
+                    info.Save();
                 }
                 catch (Exception e)
                 {

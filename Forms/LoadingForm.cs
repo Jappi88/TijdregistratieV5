@@ -27,30 +27,36 @@ namespace Forms
             try
             {
                 if (this.IsDisposed || this.Disposing) return;
-                if (arg.IsCanceled)
-                {
-                    this.Dispose();
-                    return;
-                }
-                xstatustext.Text = arg.Message;
-                xstatustext.Invalidate();
-                xsluiten.Text = arg.Type == ProgressType.ReadCompleet ? "Sluiten" : "Annuleren";
-                if (arg.Current > 0)
-                {
-                    xprogressbar.Style = ProgressBarStyle.Blocks;
-                    xprogressbar.Maximum = arg.Max;
-                    xprogressbar.Value = arg.Current > arg.Max ? arg.Max : arg.Current;
-                    xprogressbar.Text = $"{arg.Current} / {arg.Max}";
-                }
+                if (InvokeRequired)
+                    this.Invoke(new MethodInvoker(() => UpdateArg(arg)));
                 else
                 {
-                    xprogressbar.Text = "";
-                    xprogressbar.Maximum = 100;
-                    xprogressbar.Value = 75;
-                    xprogressbar.Style = ProgressBarStyle.Marquee;
-                }
+                    if (arg.IsCanceled)
+                    {
+                        this.Dispose();
+                        return;
+                    }
 
-                xprogressbar.Invalidate();
+                    xstatustext.Text = arg.Message;
+                    xstatustext.Invalidate();
+                    xsluiten.Text = arg.Type == ProgressType.ReadCompleet ? "Sluiten" : "Annuleren";
+                    if (arg.Current > 0)
+                    {
+                        xprogressbar.Style = ProgressBarStyle.Blocks;
+                        xprogressbar.Maximum = arg.Max;
+                        xprogressbar.Value = arg.Current > arg.Max ? arg.Max : arg.Current;
+                        xprogressbar.Text = $"{arg.Current} / {arg.Max}";
+                    }
+                    else
+                    {
+                        xprogressbar.Text = "";
+                        xprogressbar.Maximum = 100;
+                        xprogressbar.Value = 75;
+                        xprogressbar.Style = ProgressBarStyle.Marquee;
+                    }
+
+                    xprogressbar.Invalidate();
+                }
             }
             catch (Exception e)
             {

@@ -126,8 +126,8 @@ namespace Controls
 
         public void SetBewerking(Bewerking bew)
         {
-            if (IsDefault()) return;
             SelectedBewerking = bew;
+            if (IsDefault()) return;
             UpdateWerkplekInfo();
         }
 
@@ -188,9 +188,11 @@ namespace Controls
                                 if (wps == null || !wps.Any(w =>
                                         string.Equals(w, Werkplek, StringComparison.CurrentCultureIgnoreCase)))
                                     continue;
+                                bew.WerkPlekken.RemoveAll(b =>
+                                    b.TijdGewerkt == 0 && b.TotaalGemaakt == 0);
                                 var wp = bew.GetWerkPlek(Werkplek, true);
                                 _ = bew.UpdateBewerking(null,
-                                    $"[{bew.Naam}] Ingedeeld op {wp.Naam}").Result;
+                                    $"[{bew.Path}] Ingedeeld op {wp.Naam}").Result;
                             }
                         }
                     }
@@ -234,13 +236,13 @@ namespace Controls
             {
                 if (SelectedBewerking == null) return;
                 var xremove = SelectedBewerking.WerkPlekken.Where(x =>
-                    string.Equals(Werkplek, x.Naam, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                    string.Equals(Werkplek.Replace(" ",""), x.Naam.Replace(" ",""), StringComparison.CurrentCultureIgnoreCase)).ToList();
                 var xtijd = xremove.Sum(x => x.TijdAanGewerkt());
                 if (xtijd > 0)
                 {
                     if (XMessageBox.Show(this.Parent?.Parent?.Parent?.Parent?.Parent,
-                            $"Er is {xtijd} uur aan {SelectedBewerking.Naam} op {Werkplek} gewerkt!\n\n" +
-                            $"Weetje zeker dat je alsnog {Werkplek} uit {SelectedBewerking.Naam}({SelectedBewerking.ProductieNr})  wilt verwijderen?",
+                            $"Er is {xtijd} uur gewerkt aan {SelectedBewerking.Naam} op {Werkplek}!\n\n" +
+                            $"Weetje zeker dat je {SelectedBewerking.Naam}({SelectedBewerking.ProductieNr}) uit {Werkplek} wilt verwijderen?",
                             $"{Werkplek} Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
                         DialogResult.No) return;
                 }

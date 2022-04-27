@@ -89,13 +89,13 @@ namespace Controls
             this.xVerwijderKlus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xVerwijderKlus.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xVerwijderKlus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xVerwijderKlus.Location = new System.Drawing.Point(7, 4);
+            this.xVerwijderKlus.Location = new System.Drawing.Point(12, 4);
             this.xVerwijderKlus.Name = "xVerwijderKlus";
             this.xVerwijderKlus.Size = new System.Drawing.Size(136, 29);
             this.xVerwijderKlus.TabIndex = 2;
             this.xVerwijderKlus.Text = "Verwijder Klus";
             this.xVerwijderKlus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolTip1.SetToolTip(this.xVerwijderKlus, "Verwijder de werkplaats uit de geselecteerde productie");
+            this.toolTip1.SetToolTip(this.xVerwijderKlus, "Haal de geselecteerde productie uit de indeling");
             this.xVerwijderKlus.UseVisualStyleBackColor = false;
             this.xVerwijderKlus.Click += new System.EventHandler(this.xVerwijderKlus_Click);
             this.xVerwijderKlus.MouseEnter += new System.EventHandler(this.xPersoonImage_MouseEnter);

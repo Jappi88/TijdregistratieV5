@@ -34,11 +34,14 @@ namespace Forms
             this.xWerkplaatsIndelingPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.xAddPersoneel = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.xautoindeling = new System.Windows.Forms.ToolStripButton();
             this.xDeletePersoneel = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.productieListControl1 = new Controls.ProductieListControl();
             this.xGeselecteerdeGebruikerLabel = new TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel();
-            this.xloadinglabel = new System.Windows.Forms.Label();
+            this.xreset = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.panel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -69,6 +72,7 @@ namespace Forms
             this.xWerkplaatsIndelingPanel.Size = new System.Drawing.Size(490, 592);
             this.xWerkplaatsIndelingPanel.TabIndex = 2;
             this.xWerkplaatsIndelingPanel.WrapContents = false;
+            this.xWerkplaatsIndelingPanel.Click += new System.EventHandler(this.xWerkplaatsIndelingPanel_Click);
             this.xWerkplaatsIndelingPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.flowLayoutPanel1_DragDrop);
             this.xWerkplaatsIndelingPanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.flowLayoutPanel1_DragEnter);
             // 
@@ -77,7 +81,11 @@ namespace Forms
             this.toolStrip1.BackColor = System.Drawing.Color.White;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.xAddPersoneel,
-            this.xDeletePersoneel});
+            this.toolStripSeparator1,
+            this.xautoindeling,
+            this.xDeletePersoneel,
+            this.toolStripSeparator2,
+            this.xreset});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(490, 39);
@@ -95,8 +103,25 @@ namespace Forms
             this.xAddPersoneel.ToolTipText = "Voeg nieuwe werkplaats toe";
             this.xAddPersoneel.Click += new System.EventHandler(this.xAddPersoneel_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 39);
+            // 
+            // xautoindeling
+            // 
+            this.xautoindeling.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xautoindeling.Image = global::ProductieManager.Properties.Resources.indelen_32x32;
+            this.xautoindeling.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xautoindeling.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xautoindeling.Name = "xautoindeling";
+            this.xautoindeling.Size = new System.Drawing.Size(36, 36);
+            this.xautoindeling.ToolTipText = "Deel alle producties automatch in";
+            this.xautoindeling.Click += new System.EventHandler(this.xautoindeling_Click);
+            // 
             // xDeletePersoneel
             // 
+            this.xDeletePersoneel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.xDeletePersoneel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.xDeletePersoneel.Enabled = false;
             this.xDeletePersoneel.Image = global::ProductieManager.Properties.Resources.delete_1577;
@@ -146,6 +171,7 @@ namespace Forms
             this.productieListControl1.Name = "productieListControl1";
             this.productieListControl1.RemoveCustomItemIfNotValid = false;
             this.productieListControl1.SelectedItem = null;
+            this.productieListControl1.ShowWaitUI = true;
             this.productieListControl1.Size = new System.Drawing.Size(656, 591);
             this.productieListControl1.TabIndex = 0;
             this.productieListControl1.ValidHandler = null;
@@ -164,25 +190,26 @@ namespace Forms
             this.xGeselecteerdeGebruikerLabel.TabIndex = 2;
             this.xGeselecteerdeGebruikerLabel.Text = "htmlLabel1";
             // 
-            // xloadinglabel
+            // xreset
             // 
-            this.xloadinglabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xloadinglabel.Location = new System.Drawing.Point(3, 0);
-            this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(1147, 640);
-            this.xloadinglabel.TabIndex = 31;
-            this.xloadinglabel.Text = "Indeling laden...";
-            this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.xloadinglabel.Visible = false;
+            this.xreset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xreset.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
+            this.xreset.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xreset.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xreset.Name = "xreset";
+            this.xreset.Size = new System.Drawing.Size(36, 36);
+            this.xreset.ToolTipText = "Reset alle ingedeelde producties";
+            this.xreset.Click += new System.EventHandler(this.xreset_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 39);
             // 
             // WerkplaatsIndelingUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.xloadinglabel);
             this.Controls.Add(this.splitContainer1);
             this.Name = "WerkplaatsIndelingUI";
             this.Size = new System.Drawing.Size(1150, 631);
@@ -206,8 +233,11 @@ namespace Forms
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton xAddPersoneel;
         private System.Windows.Forms.ToolStripButton xDeletePersoneel;
-        private System.Windows.Forms.Label xloadinglabel;
         private System.Windows.Forms.FlowLayoutPanel xWerkplaatsIndelingPanel;
         private HtmlLabel xGeselecteerdeGebruikerLabel;
+        private System.Windows.Forms.ToolStripButton xautoindeling;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripButton xreset;
     }
 }

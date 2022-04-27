@@ -273,6 +273,26 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap automaticdeliverytable_refreshment_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("automaticdeliverytable_refreshment_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap automaticdeliverytable_refreshment_48x48 {
+            get {
+                object obj = ResourceManager.GetObject("automaticdeliverytable_refreshment_48x48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap avatardefault_92824 {
             get {
                 object obj = ResourceManager.GetObject("avatardefault_92824", resourceCulture);
@@ -1471,6 +1491,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap icons8_subtract_32 {
             get {
                 object obj = ResourceManager.GetObject("icons8-subtract-32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap indelen_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("indelen_32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

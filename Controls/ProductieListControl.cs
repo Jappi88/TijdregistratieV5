@@ -146,14 +146,14 @@ namespace Controls
         }
 
         public void InitProductie(List<Bewerking> bewerkingen, bool initlist, bool enablefilter, bool loadproducties,
-            bool reload)
+            bool reload, bool firstselect = true)
         {
             Bewerkingen = bewerkingen;
-            InitProductie(true, enablefilter, true, initlist, loadproducties, reload);
+            InitProductie(true, enablefilter, true, initlist, loadproducties, reload,firstselect);
         }
 
         public void InitProductie(bool bewerkingen, bool enablefilter, bool customlist, bool initlist,
-            bool loadproducties, bool reload)
+            bool loadproducties, bool reload, bool firstselect = true)
         {
             EnableEntryFiltering = enablefilter;
             CustomList = customlist;
@@ -182,7 +182,7 @@ namespace Controls
                 }
 
             if (loadproducties)
-                UpdateProductieList(reload);
+                UpdateProductieList(reload,firstselect);
         }
 
         private void UpdateStatusText()
@@ -835,7 +835,7 @@ namespace Controls
         private void UpdateListObjects<T>(List<T> objects)
         {
             if (this.InvokeRequired)
-                this.BeginInvoke(new MethodInvoker(() => UpdateListObjects<T>(objects)));
+                this.Invoke(new MethodInvoker(() => UpdateListObjects<T>(objects)));
             else
             {
                 if (objects != null && (objects.Count != ProductieLijst.Items.Count || ProductieLijst.Items.Count > 0 &&
@@ -885,95 +885,95 @@ namespace Controls
             return xprods;
         }
 
-        public void UpdateProductieList(bool reload)
+        public void UpdateProductieList(bool reload, bool firstselect)
         {
             if (Manager.Opties == null || !CanLoad || _loadingproductielist) return;
             try
             {
                 if (InvokeRequired)
-                    Invoke(new MethodInvoker(() => { xUpdateProductieList(reload, ShowWaitUI); }));
+                    Invoke(new MethodInvoker(() => { xUpdateProductieList(reload, ShowWaitUI,firstselect); }));
                 else
-                    xUpdateProductieList(reload, ShowWaitUI);
+                    xUpdateProductieList(reload, ShowWaitUI,firstselect);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
+
+            _loadingproductielist = false;
         }
 
-        public void xUpdateProductieList(bool reload, bool showwaitui)
+        public void xUpdateProductieList(bool reload, bool showwaitui, bool selectfirst)
         {
             if (Manager.Opties == null || !CanLoad || _loadingproductielist) return;
             try
             {
                 if (showwaitui)
                     SetWaitUI();
-                Task.Factory.StartNew(() =>
-                {
-                    try
-                    {
-                        _loadingproductielist = true;
-                        InitFilterStrips();
-                        IList selected1 = null;
-                        OLVGroup[] groups1 = Array.Empty<OLVGroup>();
-                        this.Invoke(new MethodInvoker(() =>
-                        {
-                            selected1 = ProductieLijst.SelectedObjects;
 
-                            groups1 = ProductieLijst.Groups.Cast<ListViewGroup>().Select(t => (OLVGroup)t.Tag)
-                                .Where(x => x.Collapsed)
-                                .ToArray();
-                        }));
+                try
+                {
+                    _loadingproductielist = true;
+                    InitFilterStrips();
+                    IList selected1 = null;
+                    OLVGroup[] groups1 = Array.Empty<OLVGroup>();
+                    this.Invoke(new MethodInvoker(() =>
+                    {
+                        selected1 = ProductieLijst.SelectedObjects;
+
+                        groups1 = ProductieLijst.Groups.Cast<ListViewGroup>().Select(t => (OLVGroup)t.Tag)
+                            .Where(x => x.Collapsed)
+                            .ToArray();
+                    }));
 
                     if (!IsBewerkingView)
-                        {
-                            if (CanLoad)
-                            {
-                                var xprods = GetProducties(reload, true);
-                                if (!IsDisposed && !Disposing)
-                                    UpdateListObjects(xprods);
-                            }
-                        }
-                        else if (CanLoad)
-                        {
-                            var bws = GetBewerkingen(reload, true);
-                            if (!IsDisposed && !Disposing)
-                                UpdateListObjects(bws);
-                        }
-
-                        //this.Invoke(new MethodInvoker(() =>
-                        //{
-                        //    var xgroups = ProductieLijst.Groups.Cast<ListViewGroup>().ToList();
-                        //    if (groups1.Length > 0)
-                        //        for (var i = 0; i < xgroups.Count; i++)
-                        //        {
-                        //            var group = xgroups[i].Tag as OLVGroup;
-                        //            if (group == null)
-                        //                continue;
-                        //            if (groups1.Any(t => !group.Collapsed && t.Header == group.Header))
-                        //                group.Collapsed = true;
-                        //        }
-                        //}));
-
-                        SetButtonEnable();
-                        OnSelectedItemChanged();
-
-                        this.Invoke(new MethodInvoker(() =>
-                        {
-                            ProductieLijst.SelectedObjects = selected1;
-                            if (ProductieLijst.SelectedObject == null)
-                                ProductieLijst.SelectedIndex = 0;
-                        }));
-
-                    }
-                    catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        if (CanLoad)
+                        {
+                            var xprods = GetProducties(reload, true);
+                            if (!IsDisposed && !Disposing)
+                                UpdateListObjects(xprods);
+                        }
+                    }
+                    else if (CanLoad)
+                    {
+                        var bws = GetBewerkingen(reload, true);
+                        if (!IsDisposed && !Disposing)
+                            UpdateListObjects(bws);
                     }
 
-                    _loadingproductielist = false;
-                    StopWait();
-                });
+                    //this.Invoke(new MethodInvoker(() =>
+                    //{
+                    //    var xgroups = ProductieLijst.Groups.Cast<ListViewGroup>().ToList();
+                    //    if (groups1.Length > 0)
+                    //        for (var i = 0; i < xgroups.Count; i++)
+                    //        {
+                    //            var group = xgroups[i].Tag as OLVGroup;
+                    //            if (group == null)
+                    //                continue;
+                    //            if (groups1.Any(t => !group.Collapsed && t.Header == group.Header))
+                    //                group.Collapsed = true;
+                    //        }
+                    //}));
+
+                    SetButtonEnable();
+                    OnSelectedItemChanged();
+
+                    this.Invoke(new MethodInvoker(() =>
+                    {
+                        ProductieLijst.SelectedObjects = selected1;
+                        if (ProductieLijst.SelectedObject == null && selectfirst)
+                            ProductieLijst.SelectedIndex = 0;
+                    }));
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+
+                _loadingproductielist = false;
+                StopWait();
             }
             catch (Exception e)
             {
@@ -1338,7 +1338,7 @@ namespace Controls
                         reload = true;
                     else
                         reload = !xfilters.All(x => x.IsTempFilter);
-                    BeginInvoke(new MethodInvoker(() => { xUpdateProductieList(reload, false); }));
+                    BeginInvoke(new MethodInvoker(() => { xUpdateProductieList(reload, false,true); }));
                 }
             }
             catch (Exception exception)
@@ -1356,7 +1356,7 @@ namespace Controls
                 {
                     //InitColumns();
                     if (CanLoad)
-                        xUpdateProductieList(true, ShowWaitUI);
+                        xUpdateProductieList(true, ShowWaitUI,true);
                 }));
             }
             catch (Exception e)
@@ -1451,7 +1451,7 @@ namespace Controls
             if (xsearch.Text.ToLower().Trim() != "zoeken..." && !ProductieLijst.IsLoading)
             {
                 OnSearchItems(xsearch.Text.Trim());
-                xUpdateProductieList(false, false);
+                xUpdateProductieList(false, false,true);
             }
         }
 
@@ -2529,7 +2529,7 @@ namespace Controls
             if (e.ClickedItem is ToolStripMenuItem b)
             {
                 b.Checked = !b.Checked;
-                xUpdateProductieList(true, ShowWaitUI);
+                xUpdateProductieList(true, ShowWaitUI,true);
             }
         }
 

@@ -464,6 +464,12 @@
     <Compile Include="Forms\ImageViewer\ImageViewerForm.Designer.cs">
       <DependentUpon>ImageViewerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Planning\PlanRowUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Planning\PlanRowUI.Designer.cs">
+      <DependentUpon>PlanRowUI.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Sporen\AfrondForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1844,6 +1850,9 @@
     <EmbeddedResource Include="Forms\PersoneelsForm.resx">
       <DependentUpon>PersoneelsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Planning\PlanRowUI.resx">
+      <DependentUpon>PlanRowUI.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ProductieInfoForm.resx">
       <DependentUpon>ProductieInfoForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -2195,6 +2204,9 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\indelen_32x32.png" />
+    <None Include="Resources\automaticdeliverytable_refreshment_32x32.png" />
+    <None Include="Resources\automaticdeliverytable_refreshment_48x48.png" />
     <None Include="Resources\calculate_office_icon_256x256.png" />
     <None Include="Resources\calculate_office_icon_32x32.png" />
     <None Include="Resources\sort_icon_149866_32x32.png" />
