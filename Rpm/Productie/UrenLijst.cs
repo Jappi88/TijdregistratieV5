@@ -98,6 +98,18 @@ namespace Rpm.Productie
                             if (xspc is {Count: > 0})
                                 SpecialeRoosters.AddRange(xspc);
                         }
+
+                        if (Manager.Opties.SpecialeRoosters != null)
+                            for (int i = 0; i < Manager.Opties.SpecialeRoosters.Count; i++)
+                            {
+                                var xa = Manager.Opties.SpecialeRoosters[i];
+                                var xb = SpecialeRoosters.FirstOrDefault(x => x.Vanaf.Date == xa.Vanaf.Date);
+                                if (xb != null)
+                                {
+                                    var xindex = SpecialeRoosters.IndexOf(xb);
+                                    SpecialeRoosters[xindex] = xa.CreateCopy();
+                                }
+                            }
                     }
                     //if(xflag && Uren.Any(x=> x.InUse))
                     //{

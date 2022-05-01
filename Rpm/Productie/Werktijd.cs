@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Rpm.Misc;
 using Rpm.ViewModels;
 
 namespace Rpm.Productie
@@ -298,6 +299,7 @@ namespace Rpm.Productie
 
         public static TimeSpan PauzeGehad(TimeSpan starttijd, TimeSpan eindtijd, Rooster rooster)
         {
+            if(!rooster.GebruiktPauze)return new TimeSpan();
             var start = starttijd;
             var stop = eindtijd;
             var pauze = new TimeSpan();
@@ -396,11 +398,11 @@ namespace Rpm.Productie
                             xleft -= (rooster.EindWerkdag - nu.Add(pauze).TimeOfDay);
                             break;
                         }
-
                        
                             //xleft += pauze;
                         var xpauze = PauzeGehad(nu.TimeOfDay, nu.Add(pauze).TimeOfDay, rooster);
                         nu = nu.Add(pauze);
+                        xleft += pauze;
                         pauze = xpauze;
                     }
                     
@@ -485,6 +487,58 @@ namespace Rpm.Productie
             return x;
         }
 
+        private static DateTime GetNextDate(DateTime start, Rooster rooster,ref Rooster specialrooster,ref bool isnewday, List<Rooster> specialeRoosters)
+        {
+            var x = start;
+
+            var einddag = specialrooster?.EindWerkdag?? rooster.EindWerkdag;
+            if (specialrooster != null && x.TimeOfDay < specialrooster.EindWerkdag)
+            {
+                return x;
+            }
+            switch (x.DayOfWeek)
+            {
+                case DayOfWeek.Friday:
+                    if (x.TimeOfDay >= einddag)
+                    {
+                        for (int i = 0; i < 3; i++)
+                        {
+                            isnewday = true;
+                            x = x.AddDays(1);
+                            specialrooster =
+                                specialeRoosters?.FirstOrDefault(t =>
+                                    t.Vanaf.Date == x.Date);
+                            if (specialrooster != null)
+                                break;
+                        }
+                    }
+
+                    break;
+                case DayOfWeek.Saturday:
+
+                    for (int i = 0; i < 2; i++)
+                    {
+                        isnewday = true;
+                        x = x.AddDays(1);
+                        specialrooster = specialeRoosters?.FirstOrDefault(t => t.Vanaf.Date == x.Date);
+                        if (specialrooster != null)
+                            break;
+                    }
+                    break;
+
+                default:
+                    if (x.TimeOfDay >= einddag)
+                    {
+                        isnewday = true;
+                        x = x.AddDays(1);
+                        specialrooster = specialeRoosters?.FirstOrDefault(t => t.Vanaf.Date == x.Date);
+                    }
+                    break;
+            }
+
+            return x;
+        }
+
         public static DateTime EerstVolgendeWerkdag(DateTime vanaf, ref Rooster rooster, Rooster realrooster, List<Rooster> specialeRoosters)
         {
             var x = vanaf;
@@ -506,68 +560,17 @@ namespace Rpm.Productie
             var time = vanaf.TimeOfDay;
             bool isnewday = false;
             while (Manager.Opties.NationaleFeestdagen.FirstOrDefault(t => t.Date == x.Date).Date == x.Date)
-                switch (x.DayOfWeek)
-                {
-                    case DayOfWeek.Friday:
-                        x = x.AddDays(3);
-                        isnewday = true;
-                        break;
-
-                    case DayOfWeek.Saturday:
-                        x = x.AddDays(2);
-                        isnewday = true;
-                        break;
-
-                    default:
-                        x = x.AddDays(1);
-                        isnewday = true;
-                        break;
-                }
-
-           
-            switch (x.DayOfWeek)
             {
-                case DayOfWeek.Friday:
-                    if (vanaf.TimeOfDay >= einddag)
-                    {
-                        for (int i = 0; i < 3; i++)
-                        {
-                            x = x.AddDays(1);
-                            specialrooster =
-                                specialeRoosters?.FirstOrDefault(t =>
-                                    t.Vanaf.Date == x.Date);
-                            if (specialrooster != null)
-                                break;
-                        }
-                        isnewday = true;
-                    }
-
-                    break;
-                case DayOfWeek.Sunday:
+                x = GetNextDate(x, rooster, ref specialrooster, ref isnewday, specialeRoosters);
+                if (specialrooster == null)
+                {
                     x = x.AddDays(1);
-                    specialrooster = specialeRoosters?.FirstOrDefault(t => t.Vanaf.Date == x.Date);
-                    isnewday = true;
-                    break;
-
-                case DayOfWeek.Saturday:
-                    for (int i = 0; i < 2; i++)
-                    {
-                        x = x.AddDays(1);
-                        specialrooster = specialeRoosters?.FirstOrDefault(t => t.Vanaf.Date == x.Date);
-                        if (specialrooster != null)
-                            break;
-                    }
-                    isnewday = true;
-                    break;
-
-                default:
-                    if (vanaf.TimeOfDay >= einddag)
-                    {
-                        x = vanaf.AddDays(1);
-                        isnewday = true;
-                    }
-                    break;
+                }
+                else break;
             }
+
+            x = GetNextDate(x, rooster, ref specialrooster, ref isnewday, specialeRoosters);
+
             rooster = specialrooster ?? realrooster ?? Manager.Opties.GetWerkRooster();
 
             if (isnewday)

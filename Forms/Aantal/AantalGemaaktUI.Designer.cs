@@ -53,7 +53,7 @@
             this.xvaluepanel = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.xwerkplekken = new System.Windows.Forms.ComboBox();
+            this.xwerkplekken = new MetroFramework.Controls.MetroComboBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -398,6 +398,6 @@
         private MetroFramework.Controls.MetroButton xaddPacket;
         private System.Windows.Forms.Button button1;
         private Controls.ProductieInfoUI productieInfoUI1;
-        private System.Windows.Forms.ComboBox xwerkplekken;
+        private MetroFramework.Controls.MetroComboBox xwerkplekken;
     }
 }

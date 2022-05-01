@@ -223,32 +223,43 @@ namespace Forms
             }
 
             form ??= Application.OpenForms["Mainform"];
-
-            switch (icon)
+            string iconName = Enum.GetName(typeof(MessageBoxIcon), icon);
+            switch (iconName)
             {
-                case MessageBoxIcon.None:
+                case "None":
                     xmessageicon.Image = customImage ?? Resources.ios_8_Message_icon_64_64;
                     //xMessagePanel.BackColor = _defaultColor;
                     break;
-                case MessageBoxIcon.Question:
+                case "Question":
                     xmessageicon.Image = customImage ?? Resources.help_question_1566;
                     this.Style = MetroColorStyle.Purple;
                     //xMessagePanel.BackColor = _question;
                     break;
-                case MessageBoxIcon.Exclamation:
+                case "Exclamation":
                     xmessageicon.Image = customImage ?? Resources.exclamation_warning_15590__1_;
                     this.Style = MetroColorStyle.Yellow;
                    // xMessagePanel.BackColor = _warningColor;
                     break;
-                case MessageBoxIcon.Information:
+                case "Asterisk" :
+                case "Warning":
+                    xmessageicon.Image = customImage ?? Resources.notification_warning_114460;
+                    this.Style = MetroColorStyle.Orange;
+                    break;
+                case "Information":
                     xmessageicon.Image = customImage ?? Resources.information_info_1565;
                     this.Style = MetroColorStyle.Blue;
                    // xMessagePanel.BackColor = _success;
                     break;
-                case MessageBoxIcon.Error:
+                case "Error":
                     xmessageicon.Image = customImage ?? Resources.exit_close_error_15565;
                     this.Style = MetroColorStyle.Red;
                    // xMessagePanel.BackColor = _errorColor;
+                    break;
+                case "Hand":
+                case "Stop":
+                    xmessageicon.Image = customImage ?? Resources.Private_80_icon_icons_com_57286;
+                    this.Style = MetroColorStyle.Red;
+                    // xMessagePanel.BackColor = _errorColor;
                     break;
             }
             if (customImage != null)

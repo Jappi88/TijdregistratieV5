@@ -154,12 +154,16 @@ namespace Forms
             // 
             // roosterUI1
             // 
+            this.roosterUI1.AutoUpdateBewerkingen = false;
             this.roosterUI1.BackColor = System.Drawing.Color.White;
             this.roosterUI1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.roosterUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.roosterUI1.Location = new System.Drawing.Point(173, 60);
             this.roosterUI1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.roosterUI1.Name = "roosterUI1";
+            this.roosterUI1.Padding = new System.Windows.Forms.Padding(5);
+            this.roosterUI1.ShowNationaleFeestDagen = true;
+            this.roosterUI1.ShowSpecialeRoosterButton = true;
             this.roosterUI1.Size = new System.Drawing.Size(594, 378);
             this.roosterUI1.SpecialeRoosters = null;
             this.roosterUI1.TabIndex = 12;

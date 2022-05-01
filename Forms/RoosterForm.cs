@@ -51,6 +51,12 @@ namespace Forms
 
         public Rooster WerkRooster { get; set; }
 
+        public bool EnablePeriode
+        {
+            get => xgebruikperiode.Visible;
+            set => xgebruikperiode.Visible = value;
+        }
+
         public bool ViewPeriode
         {
             get => xperiodegroup.Visible;

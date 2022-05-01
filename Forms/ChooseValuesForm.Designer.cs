@@ -58,7 +58,6 @@
             // 
             this.xok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.xok.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xok.Image = global::ProductieManager.Properties.Resources.check_1582;
             this.xok.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.xok.Location = new System.Drawing.Point(260, 3);
@@ -72,14 +71,13 @@
             // 
             this.xcancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xcancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.xcancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xcancel.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xcancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.xcancel.Location = new System.Drawing.Point(386, 3);
             this.xcancel.Name = "xcancel";
             this.xcancel.Size = new System.Drawing.Size(120, 34);
             this.xcancel.TabIndex = 0;
-            this.xcancel.Text = "Annuleren";
+            this.xcancel.Text = "Sluiten";
             this.xcancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.xcancel.UseVisualStyleBackColor = true;
             // 
@@ -93,6 +91,7 @@
             this.Name = "ChooseValuesForm";
             this.SaveLastSize = false;
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Style = MetroFramework.MetroColorStyle.Purple;
             this.Text = "Kies Waardes";
             this.Title = "Kies Waardes";

@@ -38,7 +38,6 @@ namespace Controls
             this.xsearchbox = new MetroFramework.Controls.MetroTextBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.productieListControl1 = new Controls.ProductieListControl();
-            this.xloadinglabel = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xartikelsList)).BeginInit();
             this.panel2.SuspendLayout();
@@ -138,7 +137,6 @@ namespace Controls
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.xloadinglabel);
             this.panel2.Controls.Add(this.productieListControl1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -164,24 +162,10 @@ namespace Controls
             this.productieListControl1.Name = "productieListControl1";
             this.productieListControl1.RemoveCustomItemIfNotValid = false;
             this.productieListControl1.SelectedItem = null;
+            this.productieListControl1.ShowWaitUI = true;
             this.productieListControl1.Size = new System.Drawing.Size(722, 561);
             this.productieListControl1.TabIndex = 0;
             this.productieListControl1.ValidHandler = null;
-            // 
-            // xloadinglabel
-            // 
-            this.xloadinglabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xloadinglabel.BackColor = System.Drawing.Color.White;
-            this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xloadinglabel.Location = new System.Drawing.Point(-197, 0);
-            this.xloadinglabel.Name = "xloadinglabel";
-            this.xloadinglabel.Size = new System.Drawing.Size(919, 561);
-            this.xloadinglabel.TabIndex = 30;
-            this.xloadinglabel.Text = "Artikelen Laden...";
-            this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.xloadinglabel.Visible = false;
             // 
             // ArtikelsUI
             // 
@@ -204,7 +188,6 @@ namespace Controls
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ImageList imageList1;
         private Controls.ProductieListControl productieListControl1;
-        private System.Windows.Forms.Label xloadinglabel;
         private BrightIdeasSoftware.ObjectListView xartikelsList;
         private BrightIdeasSoftware.OLVColumn olvColumn1;
         private MetroFramework.Controls.MetroTextBox xsearchbox;

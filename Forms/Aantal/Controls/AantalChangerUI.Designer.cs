@@ -30,7 +30,8 @@
         {
             this.xaantalpanel = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.xwerkplekken = new System.Windows.Forms.ComboBox();
+            this.xnextb = new System.Windows.Forms.Button();
+            this.xwerkplekken = new MetroFramework.Controls.MetroComboBox();
             this.xaantalgemaakt = new System.Windows.Forms.NumericUpDown();
             this.xaantalLabel = new System.Windows.Forms.Label();
             this.xPacketGroup = new System.Windows.Forms.GroupBox();
@@ -39,7 +40,6 @@
             this.xremovePacket = new MetroFramework.Controls.MetroButton();
             this.xpacketvalue = new System.Windows.Forms.NumericUpDown();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.xnextb = new System.Windows.Forms.Button();
             this.xaantalpanel.SuspendLayout();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xaantalgemaakt)).BeginInit();
@@ -72,16 +72,31 @@
             this.panel5.Size = new System.Drawing.Size(514, 37);
             this.panel5.TabIndex = 10;
             // 
+            // xnextb
+            // 
+            this.xnextb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xnextb.FlatAppearance.BorderSize = 0;
+            this.xnextb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xnextb.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
+            this.xnextb.Location = new System.Drawing.Point(343, 1);
+            this.xnextb.Name = "xnextb";
+            this.xnextb.Size = new System.Drawing.Size(32, 32);
+            this.xnextb.TabIndex = 15;
+            this.xnextb.UseVisualStyleBackColor = true;
+            this.xnextb.Click += new System.EventHandler(this.xnextb_Click);
+            // 
             // xwerkplekken
             // 
             this.xwerkplekken.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xwerkplekken.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xwerkplekken.FormattingEnabled = true;
-            this.xwerkplekken.Location = new System.Drawing.Point(3, 2);
+            this.xwerkplekken.ItemHeight = 23;
+            this.xwerkplekken.Location = new System.Drawing.Point(3, 3);
             this.xwerkplekken.Name = "xwerkplekken";
             this.xwerkplekken.Size = new System.Drawing.Size(235, 29);
             this.xwerkplekken.TabIndex = 15;
+            this.xwerkplekken.UseSelectable = true;
             this.xwerkplekken.SelectedIndexChanged += new System.EventHandler(this.xwerkplekken_SelectedIndexChanged);
             // 
             // xaantalgemaakt
@@ -185,19 +200,6 @@
             this.pictureBox1.TabIndex = 11;
             this.pictureBox1.TabStop = false;
             // 
-            // xnextb
-            // 
-            this.xnextb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xnextb.FlatAppearance.BorderSize = 0;
-            this.xnextb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xnextb.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
-            this.xnextb.Location = new System.Drawing.Point(343, 1);
-            this.xnextb.Name = "xnextb";
-            this.xnextb.Size = new System.Drawing.Size(32, 32);
-            this.xnextb.TabIndex = 15;
-            this.xnextb.UseVisualStyleBackColor = true;
-            this.xnextb.Click += new System.EventHandler(this.xnextb_Click);
-            // 
             // AantalChangerUI
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -230,7 +232,7 @@
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.NumericUpDown xaantalgemaakt;
         private System.Windows.Forms.Label xaantalLabel;
-        private System.Windows.Forms.ComboBox xwerkplekken;
+        private MetroFramework.Controls.MetroComboBox xwerkplekken;
         private System.Windows.Forms.Button xnextb;
     }
 }

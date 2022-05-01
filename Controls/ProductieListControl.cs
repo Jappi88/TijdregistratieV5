@@ -4,9 +4,9 @@ using Forms.GereedMelden;
 using MetroFramework.Controls;
 using ProductieManager.Forms;
 using ProductieManager.Properties;
+using ProductieManager.Rpm.ExcelHelper;
 using ProductieManager.Rpm.Misc;
 using ProductieManager.Rpm.Settings;
-using ProductieManager.Rpm.ExcelHelper;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
@@ -16,7 +16,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
@@ -200,14 +199,18 @@ namespace Controls
                 var xitems =
                     (ProductieLijst.SelectedObjects.Count > 1 ? ProductieLijst.SelectedObjects : ProductieLijst.Objects)
                     ?.Cast<IProductieBase>().ToList() ?? new List<IProductieBase>();
-                var xtijd = xitems.Sum(x => x.TijdGewerkt);
+                var xtijdgewerkt = xitems.Sum(x => x.TijdGewerkt);
+                var xtijd = xitems.Sum(x => x.DoorloopTijd);
                 var xgemaakt = xitems.Sum(x => x.TotaalGemaakt);
-                var xpu = xtijd == 0 ? xgemaakt : xgemaakt == 0 ? 0 : (int)Math.Round(xgemaakt / xtijd, 0);
+                var xtotaal = xitems.Sum(x => x.Aantal);
+                var xpu = xtijd == 0 ? xgemaakt : xgemaakt == 0 ? 0 : (int)Math.Round(xgemaakt / xtijdgewerkt, 0);
                 var x1 = xitems.Count == 1 ? "Productie" : "Producties";
                 xstatuslabel.Text = xvalue.Replace("\n", " ");
                 xgemiddeldpu.Text = $"Gemiddeld: {xpu} p/u";
                 xgemaaktlabel.Text = $"Totaal Gemaakt: {(xgemaakt == 0 ? "0" : xgemaakt.ToString("#,##0"))}";
                 xtotaaltijdlabel.Text = $"Totaal Tijd: {xtijd:#,##0.##} uur";
+                xtotaalgewerktlabel.Text = $"Totaal Gewerkt: {xtijdgewerkt:#,##0.##} uur";
+                xtotaalAantallabel.Text =  $"Totaal Aantal: {(xtotaal == 0 ? "0" : xtotaal.ToString("#,##0"))}";
                 xitemcount.Text = xitems.Count == 0 ? "0" : xitems.Count.ToString("#,##0") + $" {x1}";
             }
             catch (Exception e)

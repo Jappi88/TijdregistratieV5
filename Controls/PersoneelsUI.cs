@@ -314,7 +314,7 @@ namespace Controls
             if (Manager.Database?.PersoneelLijst == null) return;
             xafdelingfilter.Items.Clear();
             xafdelingfilter.Items.Add("Iedereen");
-            var pers = Manager.Database.GetAllPersoneel().Result;
+            var pers = Manager.Database.PersoneelLijst.FindAll(true).Result;
             if (pers?.Count > 0)
             {
                 List<string> xafdelingen = new List<string>();

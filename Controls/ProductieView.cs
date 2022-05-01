@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Media;
 using System.Reflection;
+using System.Security;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AutoUpdaterDotNET;
@@ -2240,11 +2241,13 @@ namespace Controls
             //eerst kijken of het weekend is.
             var culture = new CultureInfo("nl-NL");
             var day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
-            if (xtime.DayOfWeek == DayOfWeek.Saturday || xtime.DayOfWeek == DayOfWeek.Sunday)
+            bool isverlofdag = Manager.Opties.NationaleFeestdagen.Any(x => x.Date == DateTime.Today);
+            if (isverlofdag || xtime.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
             {
                 //het is weekend, dus we zullen moeten kijken of er wel gewerkt wordt.
+                string body = isverlofdag ? "Vandaag is een nationale feestdag" : "Vandaag is geen officiële werkdag";
                 var xbttntxt =
-                    $"Het is {day} {xtime.TimeOfDay:hh\\:mm} uur. Vandaag is geen officiële werkdag. Click hier voor de speciale rooster";
+                    $"Het is {day} {xtime.TimeOfDay:hh\\:mm} uur. {body}. Click hier voor de speciale rooster";
                 xspeciaalroosterbutton.Text = xbttntxt;
                 var rooster = Manager.Opties.SpecialeRoosters.FirstOrDefault(x => x.Vanaf.Date == xtime.Date);
                 if (rooster == null && prompchange)
@@ -2292,7 +2295,8 @@ namespace Controls
             //eerst kijken of het weekend is.
             //var culture = new CultureInfo("nl-NL");
             //var day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
-            if (xtime.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
+            bool isverlofdag = Manager.Opties.NationaleFeestdagen.Any(x => x.Date == DateTime.Today);
+            if (isverlofdag || xtime.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
             {
                 var rooster = Manager.Opties?.SpecialeRoosters?.FirstOrDefault(x => x.Vanaf.Date == DateTime.Now.Date);
                // var xreturn = rooster != null;
@@ -2307,6 +2311,8 @@ namespace Controls
 
                 var roosterform = new RoosterForm(rooster, "Vul in de speciale werkdag tijden");
                 roosterform.ViewPeriode = false;
+                roosterform.EnablePeriode = false;
+                roosterform.RoosterUI.ShowSpecialeRoosterButton = false;
                 roosterform.SetRooster(rooster,Manager.Opties?.NationaleFeestdagen, Manager.Opties?.SpecialeRoosters);
                 if (roosterform.ShowDialog() == DialogResult.OK)
                 {
@@ -2316,7 +2322,7 @@ namespace Controls
                     var dt = DateTime.Now;
                     var tijd = roosterform.WerkRooster.StartWerkdag;
                     newrooster.Vanaf = new DateTime(dt.Year, dt.Month, dt.Day, tijd.Hours, tijd.Minutes, 0);
-                    Manager.Opties.SpecialeRoosters.Remove(rooster);
+                    Manager.Opties.SpecialeRoosters.RemoveAll(x => x.Vanaf.Date == newrooster.Vanaf.Date);
                     Manager.Opties.SpecialeRoosters.Add(newrooster);
                     Manager.Opties.SpecialeRoosters = Manager.Opties.SpecialeRoosters.OrderBy(x => x.Vanaf).ToList();
 

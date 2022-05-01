@@ -23,7 +23,6 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -31,7 +30,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Media;
 using Application = System.Windows.Forms.Application;
 using Color = System.Drawing.Color;
 using Font = System.Drawing.Font;
@@ -670,6 +668,8 @@ namespace Rpm.Misc
                         {
                             Manager.Opties.NationaleFeestdagen = roosterform.RoosterUI.NationaleFeestdagen().ToArray();
                         }
+
+                        wp.Tijden.SpecialeRoosters = roosterform.RoosterUI.SpecialeRoosters;
                         if (flag && bew.IsBemand)
                         {
                             foreach (var per in wp.Personen)

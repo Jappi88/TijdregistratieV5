@@ -848,6 +848,18 @@ Color textcolor, bool useimage)
                 ? ""
                 : $"<span color='{xrgb}'><b>[{ProductSoort}]</b></span>";
             var ratio = Math.Round(ControleRatio,2);
+            var startop = StartOp;
+            var gestartop = TijdGestart;
+            var xstartbody = TotaalGemaakt < Aantal && State != ProductieState.Gereed
+                ? $"Starten Op: <span style = 'color: {GetValidColor(startop > DateTime.Now).Name}>{startop:f} ({AanbevolenPersonen}p)</span>.<br>"
+                : "";
+            var xgestartbody = State == ProductieState.Gestart
+                ? $"Gestart Op: <span style = 'color: {GetValidColor(gestartop < startop).Name}>{gestartop:f} ({GetPersonen(false).Length}p)</span>.<br>"
+                : "";
+            if (State == ProductieState.Gestart)
+            {
+
+            }
             if (!useimage) ximage = "";
             var xreturn = $"<html>\r\n" +
                           $"<head>\r\n" +
@@ -868,9 +880,11 @@ Color textcolor, bool useimage)
                           $"<tr style = 'vertical-align: top;' >\r\n" +
                           ximage +
                           $"<td><div>" +
-                          $"<h2>Leverdatum: <span style = 'color: {GetValidColor(LeverDatum > DateTime.Now).Name}>{LeverDatum:f}</span>.</h2>" +
                           $"<h2>" +
-                          $"{(State != ProductieState.Gereed ? $"Verwachte Leverdatum: <span style = 'color:{GetValidColor(VerwachtLeverDatum < LeverDatum).Name}> {VerwachtLeverDatum:f}</span>." : $"Gereed Gemeld Op: <span style = 'color:{GetValidColor(true).Name}>{DatumGereed:f}</span>.")}\r\n" +
+                          xstartbody +
+                          xgestartbody +
+                          $"Leverdatum: <span style = 'color: {GetValidColor(LeverDatum > DateTime.Now).Name}>{LeverDatum:f}</span>.<br>" +
+                           $"{(State != ProductieState.Gereed ? $"Verwachte Leverdatum: <span style = 'color:{GetValidColor(VerwachtLeverDatum < LeverDatum).Name}> {VerwachtLeverDatum:f}</span>." : $"Gereed Gemeld Op: <span style = 'color:{GetValidColor(true).Name}>{DatumGereed:f}</span>.")}\r\n" +
                           $"</h2><hr />\r\n<h2>" +
                           $"Aantal Gemaakt: <u>{TotaalGemaakt}</u> / {Aantal} <span style = 'color: {GetPositiveColorByPercentage((decimal) Gereed).Name}'>({Gereed}%)</span><br>" +
                           $"<ul><li><u>Actueel</u> Aantal Gemaakt: <b><u>{ActueelAantalGemaakt}</u></b> / {Aantal}</li>" +

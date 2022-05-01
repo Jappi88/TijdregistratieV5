@@ -3,6 +3,7 @@ using Rpm.Misc;
 using Rpm.Productie;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -87,6 +88,39 @@ namespace Controls
         }
 
         private bool _iswaiting;
+        private Label _xstatusLabel;
+
+        private void InitStatusLabel(bool visible)
+        {
+            if (InvokeRequired)
+                this.Invoke(new MethodInvoker(()=> InitStatusLabel(visible)));
+            else
+            {
+                if (visible)
+                {
+                    if (_xstatusLabel == null)
+                    {
+                        _xstatusLabel = new Label();
+                        _xstatusLabel.Font = new Font("SegoeUI", 36, FontStyle.Bold);
+                        _xstatusLabel.Size = this.Size;
+                        _xstatusLabel.TextAlign = ContentAlignment.MiddleCenter;
+                        _xstatusLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left |
+                                               AnchorStyles.Right;
+                        this.Controls.Add(_xstatusLabel);
+                    }
+                    _xstatusLabel.BringToFront();
+                }
+                else
+                {
+                    if (_xstatusLabel != null)
+                    {
+                        this.Controls.Remove(_xstatusLabel);
+                        _xstatusLabel.Dispose();
+                        _xstatusLabel = null;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         ///     Toon laad scherm
@@ -101,7 +135,7 @@ namespace Controls
                 {
 
                     if (Disposing || IsDisposed) return;
-                    xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = true; }));
+                    InitStatusLabel(true);
                     var cur = 0;
                     var xwv = "Artikelen laden";
                     //var xcurvalue = xwv;
@@ -114,11 +148,15 @@ namespace Controls
                             if (cur > 5) cur = 0;
                             var curvalue = xwv.PadRight(xwv.Length + cur, '.');
                             //xcurvalue = curvalue;
-                            xloadinglabel.BeginInvoke(new MethodInvoker(() =>
+                            if (_xstatusLabel != null)
                             {
-                                xloadinglabel.Text = curvalue;
-                                xloadinglabel.Invalidate();
-                            }));
+                                _xstatusLabel.BeginInvoke(new MethodInvoker(() =>
+                                {
+                                    _xstatusLabel.Text = curvalue;
+                                    _xstatusLabel.Invalidate();
+                                }));
+                            }
+
                             Application.DoEvents();
 
                             await Task.Delay(500);
@@ -132,7 +170,7 @@ namespace Controls
                         }
                     }
                     if (Disposing || IsDisposed) return;
-                    xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
+                    InitStatusLabel(false);
                 }
                 catch (Exception e)
                 {

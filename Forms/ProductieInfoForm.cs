@@ -188,7 +188,7 @@ namespace Forms
                                     StringComparison.CurrentCultureIgnoreCase)))
                             personen.Add(per);
                 var totaalpersonen = personen.Count;
-
+                var totaal = bewerkingen.Sum(x => x.Aantal);
 
                 var xreturn = "<html>\r\n" +
                               "<head>\r\n" +
@@ -212,6 +212,7 @@ namespace Forms
                               "Cijfers Berekend:\r\n" +
                               "</h3 >\r\n" +
                               "<div>\r\n" +
+                              $"Totaal Aantal: <b>{(totaal == 0 ? "0" : totaal.ToString("##,###"))}</b><br>" +
                               $"Totaal Gemaakt: <b>{(totaalgemaakt == 0 ? "0" : totaalgemaakt.ToString("##,###"))}</b><br>" +
                               $"Totaal Gemaakt Zin: <b>{totaalgemaaktText}</b><br>" +
                               $"Gemeten P/u: <b>{(actueelperuur == 0 ? "0" : actueelperuur.ToString("##,###"))} p/u</b><br>" +

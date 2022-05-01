@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Polenter.Serialization;
 
@@ -56,7 +57,8 @@ namespace Rpm.Productie
 
         public bool IsSpecial()
         {
-            return !GebruiktVanaf && (Vanaf.DayOfWeek == DayOfWeek.Saturday || Vanaf.DayOfWeek == DayOfWeek.Sunday);
+            return !GebruiktVanaf && (Vanaf.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday || (Manager.Opties?.NationaleFeestdagen != null &&
+                Manager.Opties.NationaleFeestdagen.Any(x => x.Date == Vanaf.Date)));
         }
 
         public static Rooster StandaartRooster()

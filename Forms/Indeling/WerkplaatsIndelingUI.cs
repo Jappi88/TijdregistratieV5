@@ -993,13 +993,13 @@ namespace Forms
                 var wps = GetIndelingen(false);
                 if (wps == null || wps.Count == 0)
                 {
-                    XMessageBox.Show(this, "Er zijn geen werkplaatsen om werk voor in te delen!\n\n" +
+                    XMessageBox.Show(this, "Er zijn geen werkplaatsen om werk voor in te delen.\n\n" +
                                            "Voeg eerst werkplaats(en) toe", "Geen Werkplaatsen",
                         MessageBoxIcon.Exclamation);
                     return;
                 }
 
-                var bws = Bewerkingen.Where(x => x.IsAllowed() && x.State == ProductieState.Gestopt).ToList();
+                var bws = Bewerkingen.Where(x => x.IsAllowed() && x.State == ProductieState.Gestopt && IsAllowed(x,GetDefaultIndeling())).ToList();
                 bws = bws.Where(x => x.WerkPlekken == null || x.WerkPlekken.All(f =>
                     !wps.Any(w => string.Equals(w.Werkplek.Replace(" ", ""), f.Naam.Replace(" ", ""),
                         StringComparison.CurrentCultureIgnoreCase)))).OrderBy(x=> x.LeverDatum).ToList();
@@ -1018,7 +1018,7 @@ namespace Forms
                 }
                 else
                 {
-                    XMessageBox.Show(this, "Er zijn geen producties om in te delen!", "Geen Producties",
+                    XMessageBox.Show(this, "Er zijn geen producties om in te delen", "Geen Producties",
                         MessageBoxIcon.Information);
                 }
 

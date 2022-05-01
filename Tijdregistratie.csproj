@@ -2042,6 +2042,12 @@
     <EmbeddedResource Include="Forms\StartProductie.resx">
       <DependentUpon>StartProductie.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.nl-nl.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.nl.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
@@ -2204,6 +2210,8 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\3844441-eye-see-show-view-watch_110305.png" />
+    <None Include="Resources\bolts-screws_32x32.png" />
     <None Include="Resources\indelen_32x32.png" />
     <None Include="Resources\automaticdeliverytable_refreshment_32x32.png" />
     <None Include="Resources\automaticdeliverytable_refreshment_48x48.png" />
@@ -2332,7 +2340,6 @@
     <None Include="Resources\clock_go_32.png" />
     <None Include="Resources\clock_go.png" />
     <None Include="Resources\apps_system_software_update_15746.png" />
-    <None Include="Resources\3844441-eye-see-show-view-watch_110305.png" />
     <None Include="Resources\stats_15267_128x128.png" />
     <None Include="Resources\stats_15267_32x32.png" />
     <None Include="Resources\blue_chartstats.png" />

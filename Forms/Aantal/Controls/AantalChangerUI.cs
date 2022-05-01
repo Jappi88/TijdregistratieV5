@@ -121,8 +121,11 @@ namespace ProductieManager.Forms.Aantal.Controls
                     foreach (var w in bewerking.WerkPlekken)
                         if (w.Werk != null && bewerking.Equals(w.Werk))
                             xwerkplekken.Items.Add(w.Naam);
+
                     if (xwerkplekken.Items.Count > 1)
+                    {
                         xwerkplekken.Items.Add("Alle Werkplekken");
+                    }
                 }
             }
             else
@@ -131,9 +134,29 @@ namespace ProductieManager.Forms.Aantal.Controls
                 if (bewerking != null) xwerkplekken.Items.Add(bewerking.Naam);
             }
 
+            if (bewerking != null)
+            {
+
+            }
+
             if (xwerkplekken.Items.Count > 0 && xwerkplekken.SelectedIndex == -1)
             {
-                xwerkplekken.SelectedItem = "Alle Werkplekken";
+                if (bewerking != null)
+                {
+                    var actief = bewerking.WerkPlekken.Where(x => x.IsActief()).ToList();
+                    if (actief.Count > 0)
+                    {
+                        if (actief.Count == 1)
+                            xwerkplekken.SelectedItem = actief[0].Naam;
+                    }
+                    else
+                    {
+                        xwerkplekken.SelectedItem = "Alle Werkplekken";
+                    }
+                }
+                else
+                    xwerkplekken.SelectedItem = "Alle Werkplekken";
+
                 if (xwerkplekken.SelectedItem == null)
                     xwerkplekken.SelectedIndex = 0;
             }
@@ -294,10 +317,19 @@ namespace ProductieManager.Forms.Aantal.Controls
 
         private bool DoLogicalTest()
         {
-            if (Productie == null) return false;
+            if (Productie == null || xwerkplekken.SelectedIndex == -1) return false;
             if (Productie.AantalGemaakt == 0) return true;
+
             var xnewvalues = (double)xaantalgemaakt.Value;
             var actueel = (double)Productie.ActueelAantalGemaakt;
+          
+            var xitem = xwerkplekken.SelectedItem.ToString();
+            var wp = Productie.GetWerkPlekken()
+                .FirstOrDefault(x => string.Equals(xitem, x.Naam, StringComparison.CurrentCultureIgnoreCase));
+            if (wp != null)
+            {
+                actueel = (double)wp.ActueelAantalGemaakt;
+            }
             double perDiff = actueel.GetPercentageDifference(xnewvalues);
             if (perDiff is < -50 or > 50)
             {

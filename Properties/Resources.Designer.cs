@@ -93,26 +93,6 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap _4137161_building_construction_industry_setting_114090__1_ {
-            get {
-                object obj = ResourceManager.GetObject("4137161-building-construction-industry-setting_114090 (1)", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap activitylogmanager_104624 {
-            get {
-                object obj = ResourceManager.GetObject("activitylogmanager_104624", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap add_1588 {
             get {
                 object obj = ResourceManager.GetObject("add_1588", resourceCulture);
@@ -143,39 +123,9 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap AddStoring_32_32 {
-            get {
-                object obj = ResourceManager.GetObject("AddStoring_32_32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Alle_Opmerkingen_32x321 {
             get {
                 object obj = ResourceManager.GetObject("Alle_Opmerkingen_32x321", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Apps_menu_editor_icon_31767 {
-            get {
-                object obj = ResourceManager.GetObject("Apps-menu-editor-icon_31767", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap apps_system_software_update_15746 {
-            get {
-                object obj = ResourceManager.GetObject("apps_system_software_update_15746", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -223,16 +173,6 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap arrow_right_64x64 {
-            get {
-                object obj = ResourceManager.GetObject("arrow_right_64x64", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap arrow_up_16741_32x32 {
             get {
                 object obj = ResourceManager.GetObject("arrow_up_16741_32x32", resourceCulture);
@@ -273,26 +213,6 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap automaticdeliverytable_refreshment_32x32 {
-            get {
-                object obj = ResourceManager.GetObject("automaticdeliverytable_refreshment_32x32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap automaticdeliverytable_refreshment_48x48 {
-            get {
-                object obj = ResourceManager.GetObject("automaticdeliverytable_refreshment_48x48", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap avatardefault_92824 {
             get {
                 object obj = ResourceManager.GetObject("avatardefault_92824", resourceCulture);
@@ -323,9 +243,9 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bluewarningexclamationmark_azul_advertenci_12454__1_ {
+        internal static System.Drawing.Bitmap bolts_construction_rivet_screw_screws_128x128 {
             get {
-                object obj = ResourceManager.GetObject("bluewarningexclamationmark_azul_advertenci_12454 (1)", resourceCulture);
+                object obj = ResourceManager.GetObject("bolts-construction-rivet-screw-screws_128x128", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -333,9 +253,9 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bolts_construction_rivet_screw_screws_128x128 {
+        internal static System.Drawing.Bitmap bolts_screws_32x32 {
             get {
-                object obj = ResourceManager.GetObject("bolts-construction-rivet-screw-screws_128x128", resourceCulture);
+                object obj = ResourceManager.GetObject("bolts-screws_32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -403,16 +323,6 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap calculate_office_icon_32x32 {
-            get {
-                object obj = ResourceManager.GetObject("calculate_office_icon_32x32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap calculator_icon_icons_com_72046 {
             get {
                 object obj = ResourceManager.GetObject("calculator_icon-icons.com_72046", resourceCulture);
@@ -426,16 +336,6 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap cancel_close_cross_delete_32x32 {
             get {
                 object obj = ResourceManager.GetObject("cancel_close_cross_delete_32x32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap cancel_closeicon_123217 {
-            get {
-                object obj = ResourceManager.GetObject("cancel_closeicon_123217", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -513,16 +413,6 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap clock_go1 {
-            get {
-                object obj = ResourceManager.GetObject("clock_go1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap clock_play {
             get {
                 object obj = ResourceManager.GetObject("clock_play", resourceCulture);
@@ -546,16 +436,6 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap cloudrefresh_icon_icons_com_54403_256x256 {
             get {
                 object obj = ResourceManager.GetObject("cloudrefresh_icon_icons_com_54403_256x256", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap cloudrefresh_icon_icons_com_54403_32x32 {
-            get {
-                object obj = ResourceManager.GetObject("cloudrefresh_icon-icons.com_54403_32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -723,16 +603,6 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap document_report_128x128 {
-            get {
-                object obj = ResourceManager.GetObject("document_report_128x128", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap documents_32x32 {
             get {
                 object obj = ResourceManager.GetObject("documents_32x32", resourceCulture);
@@ -743,49 +613,9 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap download {
-            get {
-                object obj = ResourceManager.GetObject("download", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap download_32 {
-            get {
-                object obj = ResourceManager.GetObject("download_32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap download_database_21022 {
-            get {
-                object obj = ResourceManager.GetObject("download_database_21022", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap download_database_21022_128_128 {
             get {
                 object obj = ResourceManager.GetObject("download_database_21022_128_128", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap download1 {
-            get {
-                object obj = ResourceManager.GetObject("download1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -995,16 +825,6 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap file_complete256_25223 {
             get {
                 object obj = ResourceManager.GetObject("file-complete256_25223", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap file_sync_outline_icon_139576 {
-            get {
-                object obj = ResourceManager.GetObject("file_sync_outline_icon_139576", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1228,16 +1048,6 @@ namespace ProductieManager.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap hardworker4x_86997 {
-            get {
-                object obj = ResourceManager.GetObject("hardworker4x_86997", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Unsupported Hash Algorithm.
         /// </summary>
         internal static string HashAlgorithmNotSupportedCaption {
@@ -1328,16 +1138,6 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ic_format_clear_128_28359 {
-            get {
-                object obj = ResourceManager.GetObject("ic_format_clear_128_28359", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap ic_info_outline_128_28513 {
             get {
                 object obj = ResourceManager.GetObject("ic_info_outline_128_28513", resourceCulture);
@@ -1398,16 +1198,6 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap icons8_all_out_32 {
-            get {
-                object obj = ResourceManager.GetObject("icons8-all-out-32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap icons8_cancel_25px {
             get {
                 object obj = ResourceManager.GetObject("icons8_cancel_25px", resourceCulture);
@@ -1428,26 +1218,6 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap icons8_delete_32 {
-            get {
-                object obj = ResourceManager.GetObject("icons8-delete-32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap icons8_delete_321 {
-            get {
-                object obj = ResourceManager.GetObject("icons8-delete-321", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap icons8_expand_32 {
             get {
                 object obj = ResourceManager.GetObject("icons8-expand-32", resourceCulture);
@@ -1461,36 +1231,6 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap icons8_Menu_Vertical_32 {
             get {
                 object obj = ResourceManager.GetObject("icons8_Menu_Vertical_32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap icons8_minimize_window_32 {
-            get {
-                object obj = ResourceManager.GetObject("icons8-minimize-window-32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap icons8_minimize_window_321 {
-            get {
-                object obj = ResourceManager.GetObject("icons8-minimize-window-321", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap icons8_subtract_32 {
-            get {
-                object obj = ResourceManager.GetObject("icons8-subtract-32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1551,16 +1291,6 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap information_info_1565 {
             get {
                 object obj = ResourceManager.GetObject("information_info_1565", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap infosign_83743 {
-            get {
-                object obj = ResourceManager.GetObject("infosign_83743", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -2086,16 +1816,6 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap noteresponds_office_32x32 {
-            get {
-                object obj = ResourceManager.GetObject("noteresponds_office_32x32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap notes_office_page_papers_32x32 {
             get {
                 object obj = ResourceManager.GetObject("notes-office-page-papers_32x32", resourceCulture);
@@ -2306,16 +2026,6 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap photos_Outling_32x32 {
-            get {
-                object obj = ResourceManager.GetObject("photos-Outling_32x32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap play_button_icon_icons_com_60615 {
             get {
                 object obj = ResourceManager.GetObject("play-button_icon-icons.com_60615", resourceCulture);
@@ -2349,16 +2059,6 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap pngegg__1_ {
             get {
                 object obj = ResourceManager.GetObject("pngegg (1)", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap print_Doc_32x32 {
-            get {
-                object obj = ResourceManager.GetObject("print_Doc_32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -2416,39 +2116,9 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap repair_32_32 {
-            get {
-                object obj = ResourceManager.GetObject("repair_32_32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap rooster_128_128 {
             get {
                 object obj = ResourceManager.GetObject("rooster_128_128", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Rotate_Left_32x32 {
-            get {
-                object obj = ResourceManager.GetObject("Rotate_Left-32x32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Rotate_Right_32x32 {
-            get {
-                object obj = ResourceManager.GetObject("Rotate_Right-32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -2596,16 +2266,6 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap systemsoftwareupdate_94333__1_ {
-            get {
-                object obj = ResourceManager.GetObject("systemsoftwareupdate_94333__1_", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap systemtime_778 {
             get {
                 object obj = ResourceManager.GetObject("systemtime_778", resourceCulture);
@@ -2666,16 +2326,6 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap tasks_23349_48x48 {
-            get {
-                object obj = ResourceManager.GetObject("tasks_23349_48x48", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap text_edit_14943 {
             get {
                 object obj = ResourceManager.GetObject("text_edit_14943", resourceCulture);
@@ -2709,16 +2359,6 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap Tile_colors_icon_32x32 {
             get {
                 object obj = ResourceManager.GetObject("Tile_colors_icon_32x32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Tile_Resize_icon_32x32 {
-            get {
-                object obj = ResourceManager.GetObject("Tile_Resize_icon_32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -2784,16 +2424,6 @@ namespace ProductieManager.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap update {
-            get {
-                object obj = ResourceManager.GetObject("update", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Update Check Failed.
         /// </summary>
         internal static string UpdateCheckFailedCaption {
@@ -2826,16 +2456,6 @@ namespace ProductieManager.Properties {
         internal static string UpdateUnavailableMessage {
             get {
                 return ResourceManager.GetString("UpdateUnavailableMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap user_2078_64_64 {
-            get {
-                object obj = ResourceManager.GetObject("user_2078_64_64", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -2882,26 +2502,6 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap user_icon_icons_com_57997 {
-            get {
-                object obj = ResourceManager.GetObject("user_icon_icons_com_57997", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap user_rotation_102346_32x32 {
-            get {
-                object obj = ResourceManager.GetObject("user_rotation_102346_32x32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap user_rotation_96x96 {
             get {
                 object obj = ResourceManager.GetObject("user_rotation_96x96", resourceCulture);
@@ -2925,36 +2525,6 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap users_clients_group_16774 {
             get {
                 object obj = ResourceManager.GetObject("users_clients_group_16774", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap van_der_valk_solar_logo {
-            get {
-                object obj = ResourceManager.GetObject("van der valk solar logo", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap vdv_animatedlogo {
-            get {
-                object obj = ResourceManager.GetObject("vdv_animatedlogo", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap VdV_Logos {
-            get {
-                object obj = ResourceManager.GetObject("VdV_Logos", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -3012,26 +2582,6 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap web_database_21013_32x32 {
-            get {
-                object obj = ResourceManager.GetObject("web_database_21013_32x32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap werkplaatsindeling_32x32 {
-            get {
-                object obj = ResourceManager.GetObject("werkplaatsindeling_32x32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap werkplaatsindeling_96x96 {
             get {
                 object obj = ResourceManager.GetObject("werkplaatsindeling_96x96", resourceCulture);
@@ -3076,20 +2626,6 @@ namespace ProductieManager.Properties {
             get {
                 object obj = ResourceManager.GetObject("ZipExtractor", resourceCulture);
                 return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; standalone=&quot;yes&quot;?&gt;
-        ///&lt;configuration&gt;
-        ///  &lt;startup&gt;
-        ///    &lt;supportedRuntime version=&quot;v4.0&quot; sku=&quot;.NETFramework,Version=v4.5&quot; /&gt;
-        ///  &lt;/startup&gt;
-        ///&lt;/configuration&gt;.
-        /// </summary>
-        internal static string ZipExtractor_exe {
-            get {
-                return ResourceManager.GetString("ZipExtractor_exe", resourceCulture);
             }
         }
     }

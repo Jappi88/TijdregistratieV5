@@ -173,9 +173,18 @@ namespace Controls
                             $"<li>Doorlooptijd ({xpers}p): <b>{Math.Round(((xprod / pu) / xpers), 2)} uur</b></li>");
                     }
                 }
-                sb.AppendLine($"<li>Beginnen Op: <span color='purple'><u><b>{startop.ToString("f").FirstCharToUpper()} uur</b></u></span></li>");
-                sb.AppendLine(
-                    $"<li>Gereed Op: <span color='purple'><u><b>{gereedop.ToString("f").FirstCharToUpper()} uur</b></u></span></li>");
+                if (xprod > 0)
+                {
+                    sb.AppendLine($"<li>Beginnen Op: <span color='purple'><u><b>{startop.ToString("f").FirstCharToUpper()} uur</b></u></span></li>");
+                    sb.AppendLine(
+                        $"<li>Gereed Op: <span color='purple'><u><b>{gereedop.ToString("f").FirstCharToUpper()} uur</b></u></span></li>");
+                }
+                else
+                {
+                    sb.AppendLine(
+                        $"<li><span color='purple'><b>Aantal bereikt!</b></span></li>");
+                }
+
                 sb.AppendLine("</ul>");
                 xinfo.Text = GetHtml(sb.ToString());
             }
