@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Rpm.Productie;
 using Rpm.Various;
 
 namespace Rpm.Misc
@@ -498,8 +499,13 @@ namespace Rpm.Misc
                         }
 
                         break;
+                    case VerpakkingInstructie instructie:
+                        if (valueA is VerpakkingInstructie value5)
+                            xisfilter = value5.Equals(instructie);
+                        else if (valueA is string value6)
+                            xisfilter = ContainsFilter(instructie.VerpakkingType, value6, type);
+                        break;
                 }
-
                 return xisfilter;
             }
             catch (Exception e)

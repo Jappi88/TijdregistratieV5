@@ -435,6 +435,7 @@ namespace Forms
             try
             {
                 var xgroup = new GroupBox();
+                xgroup.Padding = new Padding(3, 0, 3, 3);
                 xgroup.Text = indeling ?? "Alle Bewerkingen";
                 xgroup.Font = new Font(this.Font.FontFamily, 10, FontStyle.Bold);
                 xgroup.Height = 140;
@@ -444,7 +445,7 @@ namespace Forms
                 xgroup.DoubleClick += Xpers_DoubleClick;
                 var xpers = new WerkplekIndeling();
                 xpers.FieldTextGetter = IndelingFieldTextGetter;
-                
+                xpers.ResetIndeling += Xpers_ResetIndeling;
 
                 xgroup.Width = xpers.Width;
                 xpers.DragDrop += Xpers_DragDrop;
@@ -474,6 +475,44 @@ namespace Forms
                 Console.WriteLine(e);
                 XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
                 return null;
+            }
+        }
+
+        private void Xpers_ResetIndeling(object sender, EventArgs e)
+        {
+            try
+            {
+                if (_isbussy) return;
+                if (sender is WerkplekIndeling indeling)
+                {
+                    var bws = Bewerkingen.Where(x => x.IsAllowed() && x.State == ProductieState.Gestopt && IsAllowed(x,indeling)).ToList();
+                    bws = bws.Where(x =>
+                            x.WerkPlekken != null &&
+                            x.WerkPlekken.Any(wp => wp.TotaalGemaakt == 0 && wp.TijdGewerkt == 0))
+                        .ToList();
+                    if (bws.Count > 0)
+                    {
+                        var x1 = bws.Count == 1 ? "productie" : "producties";
+                        var x2 = bws.Count == 1 ? "is" : "zijn";
+                        var res = XMessageBox.Show(this, $"Er {x2} {bws.Count} {x1} op {indeling.Werkplek} om te resetten.\n\n" +
+                                                         $"Wil je doorgaan met het resetten van de ingedeelde producties?",
+                            $"{indeling.Werkplek} Indeling Resetten", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (res == DialogResult.Yes)
+                        {
+                            ResetIndeling(bws);
+                        }
+                    }
+                    else
+                    {
+                        XMessageBox.Show(this, "Er zijn geen ingedeelde producties om te resetten", "Geen Producties",
+                            MessageBoxIcon.Information);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                XMessageBox.Show(this, ex.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 
@@ -604,7 +643,7 @@ namespace Forms
                 indeling.BackColor = Color.White;
                 indeling.IsSelected = false;
             }
-            xDeletePersoneel.Enabled = SelectedWerkplek != null;
+            xDeletePersoneel.Enabled = SelectedWerkplek != null && !SelectedWerkplek.IsDefault();
             
         }
 

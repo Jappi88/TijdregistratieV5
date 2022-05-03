@@ -68,6 +68,7 @@ namespace Controls
             {
                // ximage.Image = Resources.operation;
                xVerwijderPersoneel.Visible = false;
+               xresetindeling.Visible = false;
                xnietingedeeld.Visible = true;
                xnietingedeeld.Checked = ToonNietIngedeeld;
                 if (FieldTextGetter != null)
@@ -83,6 +84,7 @@ namespace Controls
                 //ximage.Image = Resources.user_customer_person_13976;
                 xknoppenpanel.Visible = SelectedBewerking != null && !IsDefault() && IsSelected;
                 xVerwijderPersoneel.Visible = true;
+                xresetindeling.Visible = true;
                 if (Parent is GroupBox group)
                 {
                     if (SelectedBewerking != null && IsSelected)
@@ -382,6 +384,12 @@ namespace Controls
             base.OnClick(e);
         }
 
+        public event EventHandler ResetIndeling;
+        protected virtual void OnResetIndeling()
+        {
+            ResetIndeling?.Invoke(this, EventArgs.Empty);
+        }
+
         private bool _isDragging;
         private readonly int _DDradius = 40;
         private int _mX;
@@ -463,6 +471,11 @@ namespace Controls
         protected virtual void OnViewStateChanged()
         {
             ViewStateChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void xresetindeling_Click(object sender, EventArgs e)
+        {
+            this.OnResetIndeling();
         }
     }
 }

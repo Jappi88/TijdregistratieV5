@@ -57,6 +57,9 @@ namespace Controls
             EnableFiltering = true;
             _WaitTimer = new Timer(100);
             _WaitTimer.Elapsed += _WaitTimer_Elapsed;
+            _SyncTimer = new Timer();
+            _SyncTimer.Enabled = false;
+            _SyncTimer.Elapsed += _SyncTimer_Elapsed;
         }
 
         public object SelectedItem
@@ -92,7 +95,7 @@ namespace Controls
             }
         }
 
-        public bool IsSyncing { get; private set; }
+        public bool IsSyncing => _SyncTimer.Enabled;
 
         public bool EnableFiltering
         {
@@ -119,6 +122,32 @@ namespace Controls
             if (Disposing || IsDisposed) return;
             SetButtonEnable();
             OnSelectedItemChanged();
+        }
+
+        #region Lijst Sync
+
+        #endregion Lijst Sync
+
+        private readonly Timer _SyncTimer;
+
+        private void _SyncTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            _SyncTimer.Stop();
+            XUpdateList(false);
+            UpdateSyncTimer();
+        }
+
+        private void UpdateSyncTimer()
+        {
+            if (_SyncTimer != null)
+            {
+                EnableSync = Manager.Opties?.AutoProductieLijstSync??false;
+                if (EnableSync && !IsSyncing)
+                    _SyncTimer.Start();
+                else if (IsSyncing && !EnableSync)
+                    _SyncTimer.Stop();
+                _SyncTimer.Interval = (Manager.Opties?.ProductieLijstSyncInterval ?? 60000);
+            }
         }
 
         #region Init Methods
@@ -381,6 +410,7 @@ namespace Controls
             //Manager.OnManagerLoaded -= _manager_OnManagerLoaded;
             Manager.FilterChanged -= Manager_FilterChanged;
             Manager.LayoutChanged -= Xcols_OnColumnsSettingsChanged;
+            _SyncTimer?.Stop();
         }
 
         /// <summary>
@@ -707,7 +737,13 @@ namespace Controls
 
         private object VerpakkingsInstructiesGetter(object sender)
         {
-            if (sender is IProductieBase productie) return productie.VerpakkingsInstructies?.VerpakkingType ?? "n.v.t.";
+            if (sender is IProductieBase productie)
+            {
+                var xinfo = $"{productie.VerpakkingsInstructies?.VerpakkingType} (Verpakker per {productie.VerpakkingsInstructies?.VerpakkenPer})";
+                if (productie.VerpakkingsInstructies != null)
+                    return xinfo;
+                return"N.V.T.";
+            }
 
             return "N.V.T.";
         }
@@ -961,6 +997,7 @@ namespace Controls
 
                     SetButtonEnable();
                     OnSelectedItemChanged();
+                    UpdateSyncTimer();
 
                     this.Invoke(new MethodInvoker(() =>
                     {
@@ -1100,20 +1137,22 @@ namespace Controls
 
         private bool _IsUpdating;
 
-        public Task UpdateList(bool onlywhilesyncing)
+        private void XUpdateList(bool onlywhilesyncing)
         {
-            return Task.Factory.StartNew(() =>
+           
+            if (InvokeRequired)
+                this.Invoke(new MethodInvoker(() => XUpdateList(onlywhilesyncing)));
+            else
             {
-                if (_IsUpdating) return;
-                _IsUpdating = true;
                 try
                 {
-                    BeginInvoke(new Action(() =>
-                    {
-                        var states = GetCurrentViewStates();
+                    if (_IsUpdating) return;
+                    _IsUpdating = true;
+                     var states = GetCurrentViewStates();
                         if (Producties is { Count: > 0 })
                             for (var i = 0; i < Producties.Count; i++)
                             {
+                                if (!EnableSync) break;
                                 var prod = Producties[i];
                                 var xprod = Manager.Database.GetProductie(prod.ProductieNr, true);
                                 if (onlywhilesyncing && !IsSyncing) break;
@@ -1147,6 +1186,7 @@ namespace Controls
                         if (Bewerkingen is { Count: > 0 })
                             for (var i = 0; i < Bewerkingen.Count; i++)
                             {
+                                if (!EnableSync) break;
                                 var bew = Bewerkingen[i];
                                 var xbew = Werk.FromPath(bew.Path)?.Bewerking;
                                 if (onlywhilesyncing && !IsSyncing) break;
@@ -1168,12 +1208,29 @@ namespace Controls
                                 }
                                 else
                                 {
-                                    _ = xbew.Parent.UpdateForm(true, false, null, "", false, false, false).Result;
+                                    _ = xbew.Parent.UpdateForm(true, false, null, "", false, false, false);
                                     Bewerkingen[i] = xbew;
                                     ProductieLijst.RefreshObject(xbew);
                                 }
                             }
-                    }));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+
+            _IsUpdating = false;
+        }
+
+        public Task UpdateList(bool onlywhilesyncing)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                
+                try
+                {
+                    XUpdateList(onlywhilesyncing);
                 }
                 catch (Exception ex)
                 {

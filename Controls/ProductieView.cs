@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Media;
-using System.Reflection;
-using System.Security;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using AutoUpdaterDotNET;
+﻿using AutoUpdaterDotNET;
 using Forms;
 using Forms.Aantal;
 using Forms.ArtikelRecords;
@@ -31,6 +19,17 @@ using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.SqlLite;
 using Rpm.Various;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Media;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using Various;
 
 namespace Controls
@@ -2245,7 +2244,7 @@ namespace Controls
             if (isverlofdag || xtime.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
             {
                 //het is weekend, dus we zullen moeten kijken of er wel gewerkt wordt.
-                string body = isverlofdag ? "Vandaag is een nationale feestdag" : "Vandaag is geen officiële werkdag";
+                string body = isverlofdag ? "Vandaag is een nationale feestdag" : $"{day.FirstCharToUpper()} is geen officiële werkdag";
                 var xbttntxt =
                     $"Het is {day} {xtime.TimeOfDay:hh\\:mm} uur. {body}. Click hier voor de speciale rooster";
                 xspeciaalroosterbutton.Text = xbttntxt;
@@ -2254,8 +2253,11 @@ namespace Controls
                 {
                     var splash = Application.OpenForms["SplashScreen"];
                     splash?.Close();
+
+                    var xday = isverlofdag ? "een nationale feestdag" : $"{day} en geen officiële werkdag";
+
                     var xmsg =
-                        $"Het is vandaag {day}, en geen officiële werkdag.\n" +
+                        $"Het is vandaag {xday}.\n" +
                         "Je kan een speciale rooster toevoegen als er vandaag toch wordt gewerkt.\n\n" +
                         "Wil je een rooster nu toevoegen?\nSpeciale roosters kan je achteraf ook aanpassen in de instellingen";
                     if (XMessageBox.Show(this, xmsg, "Speciaal Rooster", MessageBoxButtons.YesNo,

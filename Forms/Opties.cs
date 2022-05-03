@@ -586,6 +586,15 @@ namespace Forms
         private bool SetSettings()
         {
             if (Manager.Opties == null) return false;
+
+            if (_LoadedOpties != null && !string.Equals(Manager.Opties?.Username, _LoadedOpties.Username, StringComparison.CurrentCultureIgnoreCase))
+            {
+                var result = XMessageBox.Show(this,
+                    $"U staat op het punt de instellingen van '{_LoadedOpties.Username}' over te nemen.\n\n" +
+                    $"Weet u zeker dat u wilt doorgaan?", $"{_LoadedOpties.Username} Instellingen Overnemen",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                if (result == DialogResult.No) return false;
+            }
             var settings = CreateInstance(Manager.Opties.Username);
             Manager.SaveSettings(settings, true, true);
             _LoadedOpties = settings;

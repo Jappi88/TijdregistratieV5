@@ -37,11 +37,11 @@ namespace Forms
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.xautoindeling = new System.Windows.Forms.ToolStripButton();
             this.xDeletePersoneel = new System.Windows.Forms.ToolStripButton();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.productieListControl1 = new Controls.ProductieListControl();
-            this.xGeselecteerdeGebruikerLabel = new TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel();
-            this.xreset = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.xreset = new System.Windows.Forms.ToolStripButton();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.xGeselecteerdeGebruikerLabel = new TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel();
+            this.productieListControl1 = new Controls.ProductieListControl();
             this.panel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -65,6 +65,7 @@ namespace Forms
             // 
             this.xWerkplaatsIndelingPanel.AllowDrop = true;
             this.xWerkplaatsIndelingPanel.AutoScroll = true;
+            this.xWerkplaatsIndelingPanel.BackColor = System.Drawing.Color.White;
             this.xWerkplaatsIndelingPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xWerkplaatsIndelingPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.xWerkplaatsIndelingPanel.Location = new System.Drawing.Point(0, 39);
@@ -132,6 +133,22 @@ namespace Forms
             this.xDeletePersoneel.ToolTipText = "Verwijder geselecteerde werkplaatsen";
             this.xDeletePersoneel.Click += new System.EventHandler(this.xDeletePersoneel_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 39);
+            // 
+            // xreset
+            // 
+            this.xreset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xreset.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
+            this.xreset.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xreset.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xreset.Name = "xreset";
+            this.xreset.Size = new System.Drawing.Size(36, 36);
+            this.xreset.ToolTipText = "Reset alle ingedeelde producties";
+            this.xreset.Click += new System.EventHandler(this.xreset_Click);
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -154,6 +171,20 @@ namespace Forms
             this.splitContainer1.SplitterDistance = 490;
             this.splitContainer1.TabIndex = 1;
             // 
+            // xGeselecteerdeGebruikerLabel
+            // 
+            this.xGeselecteerdeGebruikerLabel.AutoSize = false;
+            this.xGeselecteerdeGebruikerLabel.BackColor = System.Drawing.Color.White;
+            this.xGeselecteerdeGebruikerLabel.BaseStylesheet = null;
+            this.xGeselecteerdeGebruikerLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.xGeselecteerdeGebruikerLabel.IsContextMenuEnabled = false;
+            this.xGeselecteerdeGebruikerLabel.IsSelectionEnabled = false;
+            this.xGeselecteerdeGebruikerLabel.Location = new System.Drawing.Point(0, 0);
+            this.xGeselecteerdeGebruikerLabel.Name = "xGeselecteerdeGebruikerLabel";
+            this.xGeselecteerdeGebruikerLabel.Size = new System.Drawing.Size(656, 40);
+            this.xGeselecteerdeGebruikerLabel.TabIndex = 2;
+            this.xGeselecteerdeGebruikerLabel.Text = "htmlLabel1";
+            // 
             // productieListControl1
             // 
             this.productieListControl1.AutoScroll = true;
@@ -161,7 +192,7 @@ namespace Forms
             this.productieListControl1.CanLoad = false;
             this.productieListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.productieListControl1.EnableEntryFiltering = true;
-            this.productieListControl1.EnableFiltering = true;
+            this.productieListControl1.EnableFiltering = false;
             this.productieListControl1.EnableSync = false;
             this.productieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.productieListControl1.IsBewerkingView = true;
@@ -175,36 +206,6 @@ namespace Forms
             this.productieListControl1.Size = new System.Drawing.Size(656, 591);
             this.productieListControl1.TabIndex = 0;
             this.productieListControl1.ValidHandler = null;
-            // 
-            // xGeselecteerdeGebruikerLabel
-            // 
-            this.xGeselecteerdeGebruikerLabel.AutoSize = false;
-            this.xGeselecteerdeGebruikerLabel.BackColor = System.Drawing.Color.Transparent;
-            this.xGeselecteerdeGebruikerLabel.BaseStylesheet = null;
-            this.xGeselecteerdeGebruikerLabel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.xGeselecteerdeGebruikerLabel.IsContextMenuEnabled = false;
-            this.xGeselecteerdeGebruikerLabel.IsSelectionEnabled = false;
-            this.xGeselecteerdeGebruikerLabel.Location = new System.Drawing.Point(0, 0);
-            this.xGeselecteerdeGebruikerLabel.Name = "xGeselecteerdeGebruikerLabel";
-            this.xGeselecteerdeGebruikerLabel.Size = new System.Drawing.Size(656, 40);
-            this.xGeselecteerdeGebruikerLabel.TabIndex = 2;
-            this.xGeselecteerdeGebruikerLabel.Text = "htmlLabel1";
-            // 
-            // xreset
-            // 
-            this.xreset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xreset.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
-            this.xreset.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xreset.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xreset.Name = "xreset";
-            this.xreset.Size = new System.Drawing.Size(36, 36);
-            this.xreset.ToolTipText = "Reset alle ingedeelde producties";
-            this.xreset.Click += new System.EventHandler(this.xreset_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 39);
             // 
             // WerkplaatsIndelingUI
             // 

@@ -8,7 +8,7 @@ namespace Rpm.NativeMethods
     {
         private static Icon folderIcon;
 
-        public static Icon FolderLarge => folderIcon ?? (folderIcon = GetStockIcon(SHSIID_FOLDER, SHGSI_LARGEICON));
+        public static Icon FolderLarge => folderIcon ??= GetStockIcon(SHSIID_FOLDER, SHGSI_LARGEICON);
 
         private static Icon GetStockIcon(uint type, uint size)
         {
