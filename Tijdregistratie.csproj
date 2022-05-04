@@ -464,6 +464,12 @@
     <Compile Include="Forms\ImageViewer\ImageViewerForm.Designer.cs">
       <DependentUpon>ImageViewerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\InkomendMailInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\InkomendMailInfoForm.Designer.cs">
+      <DependentUpon>InkomendMailInfoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Planning\PlanRowUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1774,6 +1780,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GereedMelden\GereedNotitieForm.resx">
       <DependentUpon>GereedNotitieForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\InkomendMailInfoForm.resx">
+      <DependentUpon>InkomendMailInfoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Klachten\KlachtControl.resx">
       <DependentUpon>KlachtControl.cs</DependentUpon>

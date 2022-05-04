@@ -95,8 +95,6 @@ namespace Controls
             }
         }
 
-        public bool IsSyncing => _SyncTimer.Enabled;
-
         public bool EnableFiltering
         {
             get => _enableFilter;
@@ -105,15 +103,6 @@ namespace Controls
                 _enableFilter = value;
                 xfiltercontainer.Visible = value;
             }
-        }
-
-        public bool EnableSync { get; set; }
-
-        private void ProductieLijst_BeforeSearching(object sender, BeforeSearchingEventArgs e)
-        {
-            var filter = TextMatchFilter.Contains(ProductieLijst, e.StringToFind);
-            //this.ProductieLijst.ModelFilter = filter;
-            ProductieLijst.DefaultRenderer = new HighlightTextRenderer(filter);
         }
 
         private void _WaitTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -125,16 +114,14 @@ namespace Controls
         }
 
         #region Lijst Sync
-
-        #endregion Lijst Sync
-
+        public bool IsSyncing => _SyncTimer.Enabled;
+        public bool EnableSync { get; set; }
         private readonly Timer _SyncTimer;
 
         private void _SyncTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            _SyncTimer.Stop();
-            XUpdateList(false);
-            UpdateSyncTimer();
+            if (_IsUpdating) return;
+            UpdateList(false);
         }
 
         private void UpdateSyncTimer()
@@ -149,6 +136,9 @@ namespace Controls
                 _SyncTimer.Interval = (Manager.Opties?.ProductieLijstSyncInterval ?? 60000);
             }
         }
+        #endregion Lijst Sync
+
+
 
         #region Init Methods
 
@@ -1139,88 +1129,56 @@ namespace Controls
 
         private void XUpdateList(bool onlywhilesyncing)
         {
-           
-            if (InvokeRequired)
-                this.Invoke(new MethodInvoker(() => XUpdateList(onlywhilesyncing)));
-            else
+
+
+            try
             {
-                try
-                {
-                    if (_IsUpdating) return;
-                    _IsUpdating = true;
-                     var states = GetCurrentViewStates();
-                        if (Producties is { Count: > 0 })
-                            for (var i = 0; i < Producties.Count; i++)
-                            {
-                                if (!EnableSync) break;
-                                var prod = Producties[i];
-                                var xprod = Manager.Database.GetProductie(prod.ProductieNr, true);
-                                if (onlywhilesyncing && !IsSyncing) break;
-                                if (IsDisposed || Disposing) break;
-                                var valid = xprod != null && IsAllowd(xprod);
-                                if (valid)
-                                {
-                                    if (ValidHandler != null)
-                                        valid = states.Any(xprod.IsValidState) &&
-                                                ValidHandler.Invoke(xprod, null);
-                                    else
-                                        valid = states.Any(x => xprod.IsValidState(x)) && IsAllowd(xprod) &&
-                                                xprod.IsAllowed(null);
-                                }
+                if (_IsUpdating) return;
+                _IsUpdating = true;
+                ViewState[] states = null;
+                if (InvokeRequired)
+                    this.Invoke(new MethodInvoker(() => states = GetCurrentViewStates()));
+                else
+                    states = GetCurrentViewStates();
+                if (states == null) return;
+                if (Producties is { Count: > 0 })
+                    for (var i = 0; i < Producties.Count; i++)
+                    {
+                        if (!EnableSync) break;
+                        if (onlywhilesyncing && !IsSyncing) break;
+                        if (IsDisposed || Disposing) break;
+                        var prod = Producties[i];
+                        var xprod = Manager.Database.GetProductie(prod.ProductieNr, true);
+                        var index = i;
+                        if (InvokeRequired)
+                            this.Invoke(new MethodInvoker(() => UpdateForm(xprod, states, ref index,false)));
+                        else UpdateForm(xprod, states, ref index,false);
+                        i = index;
+                    }
 
-                                if (!valid)
-                                {
-                                    Producties.RemoveAt(i--);
-                                    ProductieLijst.BeginUpdate();
-                                    ProductieLijst.RemoveObject(prod);
-                                    ProductieLijst.EndUpdate();
-                                }
-                                else
-                                {
-                                    _ = xprod.UpdateForm(true, false, null, "", false, false, false).Result;
-                                    Producties[i] = xprod;
-                                    ProductieLijst.RefreshObject(xprod);
-                                }
-                            }
-
-                        if (Bewerkingen is { Count: > 0 })
-                            for (var i = 0; i < Bewerkingen.Count; i++)
-                            {
-                                if (!EnableSync) break;
-                                var bew = Bewerkingen[i];
-                                var xbew = Werk.FromPath(bew.Path)?.Bewerking;
-                                if (onlywhilesyncing && !IsSyncing) break;
-                                if (IsDisposed || Disposing) break;
-                                var valid = xbew != null && IsAllowd(xbew);
-                                if (valid)
-                                {
-                                    if (ValidHandler != null)
-                                        valid &= states.Any(xbew.IsValidState) && ValidHandler.Invoke(xbew, null);
-                                    else valid &= states.Any(x => xbew.IsValidState(x)) && xbew.IsAllowed(null);
-                                }
-
-                                if (!valid)
-                                {
-                                    Bewerkingen.RemoveAt(i--);
-                                    ProductieLijst.BeginUpdate();
-                                    ProductieLijst.RemoveObject(bew);
-                                    ProductieLijst.EndUpdate();
-                                }
-                                else
-                                {
-                                    _ = xbew.Parent.UpdateForm(true, false, null, "", false, false, false);
-                                    Bewerkingen[i] = xbew;
-                                    ProductieLijst.RefreshObject(xbew);
-                                }
-                            }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
+                if (Bewerkingen is { Count: > 0 })
+                    for (var i = 0; i < Bewerkingen.Count; i++)
+                    {
+                        if (!EnableSync) break;
+                        if (onlywhilesyncing && !IsSyncing) break;
+                        if (IsDisposed || Disposing) break;
+                        var bew = Bewerkingen[i];
+                        var xbew = Werk.FromPath(bew.Path)?.Bewerking;
+                        var index = i;
+                        if (InvokeRequired)
+                            this.Invoke(new MethodInvoker(() => UpdateBewerking(xbew, states, ref index,false)));
+                        else UpdateBewerking(xbew, states, ref index,false);
+                        i = index;
+                    }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
 
             _IsUpdating = false;
+
+
         }
 
         public Task UpdateList(bool onlywhilesyncing)
@@ -1236,8 +1194,6 @@ namespace Controls
                 {
                     Console.WriteLine(ex.Message);
                 }
-
-                _IsUpdating = false;
             });
         }
 
@@ -1377,6 +1333,69 @@ namespace Controls
                     ProductieLijst.EndUpdate();
                 }
             }));
+        }
+
+        public void UpdateBewerking(Bewerking bew, ViewState[] states, ref int index, bool refresh)
+        {
+            var valid = bew != null && IsAllowd(bew);
+            if (valid)
+            {
+                if (ValidHandler != null)
+                    valid &= states.Any(bew.IsValidState) && ValidHandler.Invoke(bew, null);
+                else valid &= states.Any(bew.IsValidState) && bew.IsAllowed(null);
+            }
+            if (index == -1)
+                index = Bewerkingen.IndexOf(bew);
+            valid &= index > -1;
+            if (!valid)
+            {
+                if (index > -1)
+                    Bewerkingen.RemoveAt(index);
+                ProductieLijst.BeginUpdate();
+                ProductieLijst.RemoveObject(bew);
+                ProductieLijst.EndUpdate();
+            }
+            else
+            {
+              
+                if (index > -1)
+                {
+                    Bewerkingen[index] = bew;
+                    if (refresh)
+                        ProductieLijst.RefreshObject(bew);
+                }
+            }
+        }
+
+        public void UpdateForm(ProductieFormulier form, ViewState[] states, ref int index,bool refresh)
+        {
+            var valid = form != null && IsAllowd(form);
+            if (valid)
+            {
+                if (ValidHandler != null)
+                    valid &= states.Any(form.IsValidState) && ValidHandler.Invoke(form, null);
+                else valid &= states.Any(form.IsValidState) && form.IsAllowed(null);
+            }
+            if (index == -1)
+                index = Producties.IndexOf(form);
+            valid &= index > -1;
+            if (!valid)
+            {
+                if (index > -1)
+                    Producties.RemoveAt(index--);
+                ProductieLijst.BeginUpdate();
+                ProductieLijst.RemoveObject(form);
+                ProductieLijst.EndUpdate();
+            }
+            else
+            {
+                if (index > -1)
+                {
+                    Producties[index] = form;
+                    if (refresh)
+                        ProductieLijst.RefreshObject(form);
+                }
+            }
         }
 
         #endregion Listing Methods

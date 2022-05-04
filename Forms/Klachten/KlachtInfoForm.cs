@@ -4,8 +4,11 @@ using Rpm.Productie;
 using Rpm.Various;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using ProductieManager.Rpm.Misc;
+using Rpm.Misc;
 using Various;
 
 namespace Forms.Klachten
@@ -32,8 +35,16 @@ namespace Forms.Klachten
             {
                 try
                 {
-                    e.Callback(e.Src);
-                    e.Handled = true;
+                    if (e.Src.IsImageFile())
+                    {
+                        var image = Image.FromFile(e.Src);
+                        var maxsize = new Size(1200, 720);
+                        if (image.Width > maxsize.Width || image.Height > maxsize.Height)
+                            image = image.ResizeImage(maxsize);
+                        e.Callback(image);
+                        e.Handled = true;
+                    }
+                   
                 }
                 catch (Exception exception)
                 {

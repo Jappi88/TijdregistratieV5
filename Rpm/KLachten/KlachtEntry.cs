@@ -75,7 +75,7 @@ namespace Rpm.Klachten
                     ? $"{string.Join(", ", ProductieNrs.Select(x => $"<a href='{x}'><span style = 'color: {Color.DarkOrange.Name}'>{x}</span></a>"))}"
                     : "";
                 string imgs = Bijlages.Count > 0
-                    ? $"{string.Join("<br>", Bijlages.Select(x => $"<img padding='10;10;10;10' src='{x}'/>"))}"
+                    ? $"{string.Join("<br>", Bijlages.Select(x => $"<a href='{x}'><img padding='10;10;10;10' src='{x}'/></a>"))}"
                     : "";
                 var xreturn = $"<html>\r\n" +
              $"<head>\r\n" +
