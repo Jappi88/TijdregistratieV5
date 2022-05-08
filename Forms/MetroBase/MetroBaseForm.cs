@@ -16,6 +16,12 @@ namespace Forms.MetroBase
         public MetroBaseForm()
         {
             InitializeComponent();
+            SetStyle(
+    ControlStyles.UserPaint |
+    ControlStyles.AllPaintingInWmPaint |
+    ControlStyles.OptimizedDoubleBuffer |
+    ControlStyles.SupportsTransparentBackColor,
+    true);
         }
 
         private void InitializeComponent()

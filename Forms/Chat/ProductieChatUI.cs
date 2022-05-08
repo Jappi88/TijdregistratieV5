@@ -1,5 +1,4 @@
 ﻿using BrightIdeasSoftware;
-using Forms;
 using ProductieManager.Forms.Chat;
 using ProductieManager.Rpm.Misc;
 using ProductieManager.Rpm.Various;
@@ -11,12 +10,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
+using ProductieManager.Properties;
 using ContentAlignment = System.Drawing.ContentAlignment;
 using TextAlign = NPOI.XSSF.UserModel.TextAlign;
 
-namespace ProductieManager.Forms
+namespace Forms
 {
     public partial class ProductieChatUI : UserControl
     {
@@ -114,7 +115,7 @@ namespace ProductieManager.Forms
                 entry.Afzender.UserName, new Size(48, 48), ImageAlign.Left, new Size(85, 0), TextAlign.LEFT,
                 0, 0, Color.Transparent);
 
-            html += CreateHtmlString($"<b>{entry.Afzender.UserName} zegt:</b><br><br>{entry.Bericht}", entry.ID,
+            html += CreateHtmlString($"<b>{entry.Afzender.UserName} zegt:</b><br><br>{entry.Bericht?.WrapText(80)}", entry.ID,
                 Color.White,
                 Color.CornflowerBlue, 10,
                 null, new Size(32, 32), ImageAlign.Left, new Size(125, 0), TextAlign.LEFT, 10, 15, Color.Transparent);
@@ -135,7 +136,7 @@ namespace ProductieManager.Forms
             //html += CreateHtmlString($"{user} zegt:", Color.DarkGray, Color.Transparent, 5,
             //    null, new Size(48, 48), ImageAlign.Left, new Size(150, 0), TextAlign.LEFT, 0, 0, Color.Transparent);
             var xret = chat ?? new ChatBubble();
-            html += CreateHtmlString($"<b>{entry.Afzender.UserName} zegt:</b><br><br>{entry.Bericht}", entry.ID, Color.Black,
+            html += CreateHtmlString($"<b>{entry.Afzender.UserName} zegt:</b><br><br>{entry.Bericht?.WrapText(80)}", entry.ID, Color.Black,
                 Color.PowderBlue, 10,
                 null, new Size(32, 32), ImageAlign.Left, new Size(150, 0), TextAlign.LEFT, 10, 15, Color.Transparent);
 
@@ -155,7 +156,7 @@ namespace ProductieManager.Forms
             if (imagealign == ImageAlign.Right)
                 cmb = txt + img;
             else cmb = img + txt;
-            string field = $"<div id='{id}' style= 'padding: {padding}px; " +
+            string field = $"<p id='{id}' style= 'padding: {padding}px; " +
                            $"margin: {margin.Height}px {margin.Width}px; " +
                            $"text-align: {Enum.GetName(typeof(TextAlign), align)?.ToLower()}; " +
                            $"background-color: {backcolor.Name}; " +
@@ -164,7 +165,7 @@ namespace ProductieManager.Forms
                            $"corner-radius: {borderradius}px; " +
                            "'>" +
                            $"{cmb}" +
-                           $"</div>";
+                           $"</p>";
 
 
             return field;
@@ -262,7 +263,14 @@ namespace ProductieManager.Forms
 
         private void ProductieChat_MessageRecieved(ProductieChatEntry message)
         {
-            BeginInvoke(new MethodInvoker(LoadProfiles));
+            try
+            {
+                BeginInvoke(new MethodInvoker(LoadProfiles));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private void ProductieChat_GebruikerUpdate(UserChat user)
@@ -282,8 +290,8 @@ namespace ProductieManager.Forms
                 xprofilenaam.Text = ProductieChat.Chat.UserName;
                 xprofilestatus.Text = ProductieChat.Chat.IsOnline ? "Online" : "Offline";
                 xprofilestatusimage.Image = ProductieChat.Chat.IsOnline
-                    ? Properties.Resources.Online_32
-                    : Properties.Resources.offline_32x32;
+                    ? Resources.Online_32
+                    : Resources.offline_32x32;
         }
 
         private void LoadProfiles()
@@ -315,7 +323,7 @@ namespace ProductieManager.Forms
                 //load eerst de default gebruiker.
                 if (ProductieChat.Chat != null)
                 {
-                    var img = ProductieChat.Chat.GetProfielImage() ?? Properties.Resources.avatardefault_92824;
+                    var img = ProductieChat.Chat.GetProfielImage() ?? Resources.avatardefault_92824;
                     int unread = ProductieChat.Chat.UnreadMessages(ProductieChat.Chat.UserName);
                     if (unread > 0)
                     {
@@ -325,19 +333,19 @@ namespace ProductieManager.Forms
                     }
 
                     if (ProductieChat.Chat.IsOnline)
-                        img = img.CombineImage(Properties.Resources.Online_32, 3.5);
+                        img = img.CombineImage(Resources.Online_32, 3.5);
                     else
-                        img = img.CombineImage(Properties.Resources.offline_32x32, 3.5);
+                        img = img.CombineImage(Resources.offline_32x32, 3.5);
                     xuserimages.Images.Add(ProductieChat.Chat.UserName, img);
                 }
 
                 for (int i = 0; i < ProductieChat.Gebruikers.Count; i++)
                 {
                     var user = ProductieChat.Gebruikers[i];
-                    if (_selecteduser != null &&
+                    if (_Selected != null &&
                         string.Equals(user.UserName, _Selected, StringComparison.CurrentCultureIgnoreCase))
                         selected = user;
-                    var img = user.GetProfielImage() ?? Properties.Resources.avatardefault_92824;
+                    var img = user.GetProfielImage() ?? Resources.avatardefault_92824;
                     //LoadedUserImages.Images.Add(user.UserName, img);
                     int unread = ProductieChat.Chat.UnreadMessages(user.UserName);
                     if (unread > 0)
@@ -348,9 +356,9 @@ namespace ProductieManager.Forms
                     }
 
                     if (user.IsOnline)
-                        img = img.CombineImage(Properties.Resources.Online_32, 3.5);
+                        img = img.CombineImage(Resources.Online_32, 3.5);
                     else
-                        img = img.CombineImage(Properties.Resources.offline_32x32, 3.5);
+                        img = img.CombineImage(Resources.offline_32x32, 3.5);
                     xuserimages.Images.Add(user.UserName, img);
 
                     var old = toremove.FirstOrDefault(x => x.Equals(user));
@@ -382,19 +390,19 @@ namespace ProductieManager.Forms
 
         private UserChat _selecteduser;
 
-        private void LoadSelectedUser()
+        private async void LoadSelectedUser()
         {
             if (Manager.ProductieChat == null || Manager.LogedInGebruiker == null) return;
             var user = SelectedUser();
-            xchattextbox.Enabled = user != null;
+            xsendmessagepanel.Visible = user != null;
             xselecteduserimage.Image = user?.GetProfielImage();
             xselectedusername.Text = user?.UserName;
             xselecteduserstatus.Text = user == null ? "" : (user.IsOnline ? "Online" : "Offline");
             xselecteduserstatusimage.Image = user == null
                 ? null
                 : user.IsOnline
-                    ? Properties.Resources.Online_32
-                    : Properties.Resources.offline_32x32;
+                    ? Resources.Online_32
+                    : Resources.offline_32x32;
             if (string.Equals(user?.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase))
             {
                 var users = ProductieChat.Gebruikers.Where(x => !string.Equals(Manager.LogedInGebruiker.Username,
@@ -419,7 +427,7 @@ namespace ProductieManager.Forms
             }
 
             if (user != null)
-                LoadConversation(_selecteduser == null || !_selecteduser.Equals(user));
+                await LoadConversation(_selecteduser == null || !_selecteduser.Equals(user));
             else
             {
                 xchatpanel.SuspendLayout();
@@ -439,6 +447,7 @@ namespace ProductieManager.Forms
         {
             try
             {
+                xchatpanel.SuspendLayout();
                 if (selected != null && !selected.Equals(_selecteduser))
                 {
                     xchatpanel.Controls.Clear();
@@ -449,16 +458,14 @@ namespace ProductieManager.Forms
                         .ToList();
                     if (toremove.Count > 0)
                     {
-                        xchatpanel.SuspendLayout();
                         toremove.ForEach(x => xchatpanel.Controls.Remove(x));
-                        xchatpanel.ResumeLayout(true);
                     }
                 }
-
+                
                 var xmessages = xchatpanel.Controls.Cast<ChatBubble>().ToList();
                 bool updated = false;
                 bool added = false;
-                xchatpanel.SuspendLayout();
+                
                 for (int i = 0; i < entries.Count; i++)
                 {
                     var xent = entries[i];
@@ -480,9 +487,10 @@ namespace ProductieManager.Forms
                     }
                     else
                     {
-                      
+                       // 
                         xchatpanel.Controls.Add(xmsg);
                         xchatpanel.Controls.SetChildIndex(xmsg, i);
+                       // 
                         added = true;
                     }
                 }
@@ -507,32 +515,44 @@ namespace ProductieManager.Forms
             }
         }
 
-        private void LoadConversation(bool scrolltoend)
+        private Task LoadConversation(bool scrolltoend)
+        {
+            return Task.Run(() => xLoadConversation(scrolltoend));
+        }
+
+        private void xLoadConversation(bool scrolltoend)
         {
             //BeginInvoke(new MethodInvoker(() =>
             //{
                 try
                 {
-                    var selected = SelectedUser();
-                    bool seltext = xchattextbox.Focused;
-                    if (selected != null)
-                    {
-                        //load conversation
-                        var messages =
-                            ProductieChat.GetConversation(selected, !string.IsNullOrEmpty(selected.UserName));
-                        if (this.Disposing || this.IsDisposed) return;
-                        ProductieChat.RaiseNewMessageEvent = false;
-                        UpdateMessages(messages, scrolltoend, selected);
-                        _selecteduser = selected;
-                        ProductieChat.RaiseNewMessageEvent = true;
-                    }
+                    if (InvokeRequired)
+                        this.Invoke(new Action(() => xLoadConversation(scrolltoend)));
                     else
                     {
-                        xchatpanel.Controls.Clear();
-                        xchatpanel.Invalidate();
+
+                        var selected = SelectedUser();
+                        bool seltext = xchattextbox.Focused;
+                        if (selected != null)
+                        {
+                            //load conversation
+                            var messages =
+                                ProductieChat.GetConversation(selected, !string.IsNullOrEmpty(selected.UserName));
+                            if (this.Disposing || this.IsDisposed) return;
+                            ProductieChat.RaiseNewMessageEvent = false;
+                            UpdateMessages(messages, scrolltoend, selected);
+                            _selecteduser = selected;
+                            ProductieChat.RaiseNewMessageEvent = true;
+                        }
+                        else
+                        {
+                            xchatpanel.Controls.Clear();
+                            xchatpanel.Invalidate();
+                        }
+
+                        if (seltext)
+                            xchattextbox.Focus();
                     }
-                    if (seltext)
-                        xchattextbox.Focus();
                 }
                 catch (Exception e)
                 {

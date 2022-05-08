@@ -73,8 +73,17 @@ namespace Rpm.Productie
         public override int GetActueelAantalGemaakt(ref double tijd)
         {
             var xtijd = tijd;
-            var xret = WerkPlekken.Sum(x => x.GetActueelAantalGemaakt(ref xtijd));
+            int xret = 0;
+            if(WerkPlekken.Count > 0)
+            {
+            xret = WerkPlekken.Sum(x => x.GetActueelAantalGemaakt(ref xtijd));
             tijd = xtijd;
+            }
+            else
+            {
+                tijd = TijdAanGewerkt();
+                xret = AantalGemaakt;
+            }
             return xret;
         }
 
@@ -950,7 +959,7 @@ namespace Rpm.Productie
                     var xa = aantal == 1 ? "stuk" : "stuks";
 
                     var change =
-                        $"[{Path}] {paraaf} heeft is zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u) op {WerkplekkenName}.";
+                        $"[{Path}] {paraaf} heeft zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u) op {WerkplekkenName}.";
                     _ = UpdateBewerking(null, change, update, showmessage).Result;
                     if (sendmail)
                         RemoteProductie.RespondByEmail(this, change);

@@ -30,6 +30,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using ProductieManager.Rpm.Misc;
 using Application = System.Windows.Forms.Application;
 using Color = System.Drawing.Color;
 using Font = System.Drawing.Font;
@@ -1680,23 +1681,28 @@ namespace Rpm.Misc
 
         public static string WrapText(this string text, int width)
         {
-            var x = text;
-            if (text != null && text.Length > width)
+            var x = "";
+            if (text != null)
             {
-                var count = 0;
-                var value = text.Replace("\n", " ");
-                foreach (var v in value)
-                    if (count >= width && v == ' ')
-                    {
-                        x += "\n";
-                        count = 0;
-                    }
-                    else
-                    {
-                        x += v;
-                        count++;
-                    }
+                if (text.Length > width)
+                {
+                    var count = 0;
+                    var value = text.Replace("\n", " ");
+                    foreach (var v in value)
+                        if (count >= width && v == ' ')
+                        {
+                            x += "\n";
+                            count = 0;
+                        }
+                        else
+                        {
+                            x += v;
+                            count++;
+                        }
+                }
+                else x = text;
             }
+
 
             return x;
         }
@@ -2071,6 +2077,7 @@ namespace Rpm.Misc
             if (xprint.ShowDialog() == DialogResult.OK)
             {
                 // Print to Acrobat
+                
                 try
                 {
                     string flagNoSplashScreen = "/s";
@@ -2094,8 +2101,9 @@ namespace Rpm.Misc
                   
                     if (process != null)
                     {
-                        process.WaitForInputIdle();
+                        process.WaitForExit(5000);
                         process.CloseMainWindow();
+                        process.Kill();
                     }
                 }
                 catch (Exception e)

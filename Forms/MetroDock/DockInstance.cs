@@ -1,4 +1,4 @@
-﻿using MetroFramework.Forms;
+﻿using Forms.MetroBase;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -7,7 +7,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace ProductieManager.Forms.MetroDock
 {
-    public class DockInstance : MetroForm, IDockContent, IContextMenuStripHost
+    public class DockInstance : MetroBaseForm, IDockContent, IContextMenuStripHost
     {
         private readonly DockContentHandler m_dockHandler;
         private string m_tabText;

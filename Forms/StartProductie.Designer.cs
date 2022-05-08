@@ -44,13 +44,13 @@ namespace Forms
             this.productieForm1.Location = new System.Drawing.Point(10, 10);
             this.productieForm1.Name = "productieForm1";
             this.productieForm1.SelectedBewerking = null;
-            this.productieForm1.Size = new System.Drawing.Size(876, 548);
+            this.productieForm1.Size = new System.Drawing.Size(924, 565);
             this.productieForm1.TabIndex = 0;
             // 
             // StartProductie
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(896, 568);
+            this.ClientSize = new System.Drawing.Size(944, 585);
             this.CloseButton = false;
             this.CloseButtonVisible = false;
             this.ControlBox = false;
@@ -58,10 +58,10 @@ namespace Forms
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "StartProductie";
+            this.Style = MetroFramework.MetroColorStyle.Custom;
             this.Text = "StartProductie";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.StartProductie_FormClosing);
             this.Shown += new System.EventHandler(this.StartProductie_Shown);
-            this.Controls.SetChildIndex(this.productieForm1, 0);
             this.ResumeLayout(false);
 
         }

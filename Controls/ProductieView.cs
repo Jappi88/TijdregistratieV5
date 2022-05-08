@@ -1,6 +1,7 @@
 ﻿using AutoUpdaterDotNET;
 using Forms;
 using Forms.Aantal;
+using Forms.Activiteit;
 using Forms.ArtikelRecords;
 using Forms.Excel;
 using Forms.Sporen;
@@ -126,6 +127,7 @@ namespace Controls
         private static PersoneelsForm _PersoneelForm;
         private static ProductieOverzichtForm _ProductieOverzicht;
         private static KlachtenForm _Klachten;
+        private static ActiviteitForm _ActiviteitForm;
         private static PersoneelIndelingForm _PersoneelIndeling;
         private static WerkplaatsIndelingForm _WerkplaatsIndeling;
         private static MetroForm _berekenverbruik;
@@ -278,6 +280,29 @@ namespace Controls
             catch (Exception e)
             {
                 Console.WriteLine(e);
+            }
+        }
+
+        private void CheckProductieFilterTab()
+        {
+            try
+            {
+                var tabs = metroCustomTabControl1.TabPages.Cast<MetroTabPage>().Where(x=> x.Tag is TileInfoEntry entry && entry.LinkID != -1).ToList();
+                if(tabs.Count > 0)
+                {
+                    for(int i = 0; i < tabs.Count; i++)
+                    {
+                        var tab = tabs[i];
+                        if(tab.Tag is TileInfoEntry ent && Manager.Opties.Filters.Any(x => x.ID == ent.LinkID && !x.ListNames.Contains(ent.Name)))
+                        {
+                            metroCustomTabControl1.CloseTab(tab);
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -1190,9 +1215,19 @@ namespace Controls
         private void Manager_FilterChanged(object sender, EventArgs e)
         {
             if (tileMainView1.InvokeRequired)
-                tileMainView1.Invoke(new MethodInvoker(() => tileMainView1.UpdateFilterTiles()));
+            {
+
+                tileMainView1.Invoke(new MethodInvoker(() =>
+                {
+                    tileMainView1.UpdateFilterTiles();
+                    CheckProductieFilterTab();
+                }));
+            }
             else
+            {
                 tileMainView1.UpdateFilterTiles();
+                CheckProductieFilterTab();
+            }
         }
 
         private DialogResult Manager_RequestRespondDialog(object sender, string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon, string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null, Image customImage = null, MetroColorStyle style = MetroColorStyle.Default)
@@ -3170,6 +3205,25 @@ namespace Controls
             }
         }
 
+        public void ShowActiviteitWindow()
+        {
+            if (_ActiviteitForm == null)
+            {
+                _ActiviteitForm = new ActiviteitForm();
+                _ActiviteitForm.FormClosed += (_, _) =>
+                {
+                    _ActiviteitForm?.Dispose();
+                    _ActiviteitForm = null;
+                };
+            }
+
+            _ActiviteitForm.Show();
+            if (_ActiviteitForm.WindowState == FormWindowState.Minimized)
+                _ActiviteitForm.WindowState = FormWindowState.Normal;
+            _ActiviteitForm.BringToFront();
+            _ActiviteitForm.Focus();
+        }
+
         #endregion MenuButton Methods
 
         #region Menu Button Events
@@ -3447,6 +3501,11 @@ namespace Controls
         {
             var xform = new OptimaleLengteVerbruikForm();
             xform.ShowDialog();
+        }
+
+        private void xActiviteit_Click(object sender, EventArgs e)
+        {
+            ShowActiviteitWindow();
         }
         #endregion Menu Button Events
 

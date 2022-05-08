@@ -1034,7 +1034,7 @@ namespace Controls
                     if (isvalid && ValidHandler != null)
                         isvalid &= ValidHandler.Invoke(form, filter);
 
-                    var xproducties = ProductieLijst.Objects?.Cast<ProductieFormulier>().ToList();
+                    var xproducties = Producties??ProductieLijst.Objects?.Cast<ProductieFormulier>().ToList();
                     var xform = xproducties?.FirstOrDefault(x =>
                         string.Equals(x.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase));
 
@@ -1204,7 +1204,7 @@ namespace Controls
             var changed = false;
             try
             {
-                var xbewerkingen = bewerkingen ?? ProductieLijst.Objects?.Cast<Bewerking>().ToList();
+                var xbewerkingen = bewerkingen ?? Bewerkingen;//ProductieLijst.Objects?.Cast<Bewerking>().ToList();
                 states ??= GetCurrentViewStates();
                 // bool checkall = xbewerkingen != null && !xbewerkingen.Any(x=> string.Equals(x.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase));
                 if (form?.Bewerkingen != null && form.Bewerkingen.Length > 0)

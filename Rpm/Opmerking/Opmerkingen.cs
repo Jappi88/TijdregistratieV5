@@ -1,13 +1,12 @@
-﻿using System;
+﻿using ProductieManager.Rpm.Misc;
+using Rpm.Misc;
+using Rpm.Productie;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
-using ProductieManager.Rpm.Misc;
-using Rpm.Misc;
-using Rpm.Productie;
 
 namespace Rpm.Opmerking
 {

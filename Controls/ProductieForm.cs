@@ -1,5 +1,6 @@
 ﻿using Forms;
 using Forms.GereedMelden;
+using MetroFramework.Controls;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
@@ -12,7 +13,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using MetroFramework.Controls;
 using Various;
 
 namespace Controls
@@ -739,7 +739,7 @@ namespace Controls
             try
             {
                 var bw = CurrentBewerking();
-                if (bw != null && bw.Parent != null && bw.Parent.ContainsProductiePdf())
+                if (bw is { Parent: { } } && bw.Parent.ContainsProductiePdf())
                 {
                     var pdf = bw.Parent.GetProductieFormulierPDF();
                     if (!string.IsNullOrEmpty(pdf) && File.Exists(pdf))

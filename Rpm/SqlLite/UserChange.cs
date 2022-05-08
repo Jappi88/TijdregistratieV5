@@ -1,22 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using Polenter.Serialization;
 using Rpm.Mailing;
+using Rpm.Misc;
 using Rpm.Various;
 
 namespace Rpm.SqlLite
 {
     public class UserChange
     {
+         [ExcludeFromSerialization]
+        public int ID { get; set; }
+        public int Id => (TimeChanged.GetHashCode() ^ Change?.GetHashCode() ?? 0);
+        [ExcludeFromSerialization]
+        public string Reference { get; set; }
+
         public UserChange()
         {
             TimeChanged = DateTime.Now;
             DbIds = new Dictionary<DbType, DateTime>();
         }
 
-        public UserChange(string change, DbType dbName)
+        public UserChange(string change, DbType dbName) : this()
         {
-            TimeChanged = DateTime.Now;
-            DbIds = new Dictionary<DbType, DateTime>();
             Change = change;
             DbIds[dbName] = DateTime.Now;
         }
@@ -28,7 +34,9 @@ namespace Rpm.SqlLite
         public string PcId { get; set; }
 
         public string Change { get; set; }
+
         public DateTime TimeChanged { get; set; }
+
         public Dictionary<DbType, DateTime> DbIds { get; set; }
         public bool IsRemoved { get; set; }
         public DateTime ServerUpdated { get; set; }
@@ -79,6 +87,18 @@ namespace Rpm.SqlLite
             xreturn.Action = MessageAction.AlgemeneMelding;
             xreturn.Message = Change;
             return xreturn;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is UserChange change)
+                return Id == change.Id;
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id;
         }
     }
 }

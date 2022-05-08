@@ -1,6 +1,8 @@
-﻿using Polenter.Serialization;
+﻿using NPOI.SS.UserModel;
+using Polenter.Serialization;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
+using ProductieManager.Rpm.SqlLite;
 using Rpm.SqlLite;
 using Rpm.Various;
 using System;
@@ -8,15 +10,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.Remoting.Contexts;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NPOI.HSSF.Util;
-using NPOI.SS.UserModel;
-using ProductieManager.Rpm.SqlLite;
-using Rpm.Misc;
 
 namespace Rpm.Productie
 {

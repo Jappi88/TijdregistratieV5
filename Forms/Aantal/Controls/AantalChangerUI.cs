@@ -330,6 +330,7 @@ namespace ProductieManager.Forms.Aantal.Controls
             {
                 actueel = (double)wp.ActueelAantalGemaakt;
             }
+            else actueel = Productie.ActueelAantalGemaakt;
             double perDiff = actueel.GetPercentageDifference(xnewvalues);
             if (perDiff is < -50 or > 50)
             {

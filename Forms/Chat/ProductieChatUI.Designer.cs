@@ -1,4 +1,4 @@
-﻿namespace ProductieManager.Forms
+﻿namespace Forms
 {
     partial class ProductieChatUI
     {
@@ -50,10 +50,10 @@
             this.xselectedusername = new System.Windows.Forms.Label();
             this.xselecteduserimage = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.xchatpanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.xsendbutton = new System.Windows.Forms.Button();
             this.xchattextbox = new System.Windows.Forms.TextBox();
+            this.xchatpanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.xsendmessagepanel = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xuserlist)).BeginInit();
@@ -64,7 +64,7 @@
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xselecteduserstatusimage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xselecteduserimage)).BeginInit();
-            this.panel2.SuspendLayout();
+            this.xsendmessagepanel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -145,7 +145,7 @@
             // 
             // panel3
             // 
-            this.panel3.BackColor = System.Drawing.Color.AliceBlue;
+            this.panel3.BackColor = System.Drawing.Color.Transparent;
             this.panel3.Controls.Add(this.xprofilestatusimage);
             this.panel3.Controls.Add(this.xprofilestatus);
             this.panel3.Controls.Add(this.xprofilenaam);
@@ -230,13 +230,13 @@
             this.wijzigProfielFotoToolStripMenuItem.BackColor = System.Drawing.Color.AliceBlue;
             this.wijzigProfielFotoToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.profile_picture_32x32;
             this.wijzigProfielFotoToolStripMenuItem.Name = "wijzigProfielFotoToolStripMenuItem";
-            this.wijzigProfielFotoToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.wijzigProfielFotoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.wijzigProfielFotoToolStripMenuItem.Text = "Wijzig Profiel Foto";
             this.wijzigProfielFotoToolStripMenuItem.Click += new System.EventHandler(this.wijzigProfielFotoToolStripMenuItem_Click);
             // 
             // panel4
             // 
-            this.panel4.BackColor = System.Drawing.Color.AliceBlue;
+            this.panel4.BackColor = System.Drawing.Color.Transparent;
             this.panel4.Controls.Add(this.xselecteduserdate);
             this.panel4.Controls.Add(this.xselecteduserstatusimage);
             this.panel4.Controls.Add(this.xselecteduserstatus);
@@ -307,31 +307,6 @@
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip1.ToolTipTitle = "Productie Chat";
             // 
-            // xchatpanel
-            // 
-            this.xchatpanel.AutoScroll = true;
-            this.xchatpanel.BackColor = System.Drawing.Color.AliceBlue;
-            this.xchatpanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xchatpanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.xchatpanel.Location = new System.Drawing.Point(3, 3);
-            this.xchatpanel.Name = "xchatpanel";
-            this.xchatpanel.Size = new System.Drawing.Size(561, 330);
-            this.xchatpanel.TabIndex = 0;
-            this.xchatpanel.WrapContents = false;
-            this.xchatpanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.xchatpanel_DragDrop);
-            this.xchatpanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.xchatpanel_DragEnter);
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.xchattextbox);
-            this.panel2.Controls.Add(this.xsendbutton);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(3, 339);
-            this.panel2.MinimumSize = new System.Drawing.Size(0, 25);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(561, 57);
-            this.panel2.TabIndex = 5;
-            // 
             // xsendbutton
             // 
             this.xsendbutton.BackColor = System.Drawing.Color.Transparent;
@@ -351,6 +326,7 @@
             // 
             this.xchattextbox.AllowDrop = true;
             this.xchattextbox.BackColor = System.Drawing.Color.White;
+            this.xchattextbox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.xchattextbox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xchattextbox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xchattextbox.ForeColor = System.Drawing.Color.Gray;
@@ -368,12 +344,37 @@
             this.xchattextbox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xchattextbox_KeyDown);
             this.xchattextbox.Leave += new System.EventHandler(this.xchattextbox_Leave);
             // 
+            // xchatpanel
+            // 
+            this.xchatpanel.AutoScroll = true;
+            this.xchatpanel.BackColor = System.Drawing.Color.Transparent;
+            this.xchatpanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xchatpanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.xchatpanel.Location = new System.Drawing.Point(3, 3);
+            this.xchatpanel.Name = "xchatpanel";
+            this.xchatpanel.Size = new System.Drawing.Size(561, 330);
+            this.xchatpanel.TabIndex = 0;
+            this.xchatpanel.WrapContents = false;
+            this.xchatpanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.xchatpanel_DragDrop);
+            this.xchatpanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.xchatpanel_DragEnter);
+            // 
+            // xsendmessagepanel
+            // 
+            this.xsendmessagepanel.Controls.Add(this.xchattextbox);
+            this.xsendmessagepanel.Controls.Add(this.xsendbutton);
+            this.xsendmessagepanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xsendmessagepanel.Location = new System.Drawing.Point(3, 339);
+            this.xsendmessagepanel.MinimumSize = new System.Drawing.Size(0, 25);
+            this.xsendmessagepanel.Name = "xsendmessagepanel";
+            this.xsendmessagepanel.Size = new System.Drawing.Size(561, 57);
+            this.xsendmessagepanel.TabIndex = 5;
+            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel1.Controls.Add(this.xchatpanel, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panel2, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.xsendmessagepanel, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(250, 72);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -386,7 +387,7 @@
             // ProductieChatUI
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackColor = System.Drawing.Color.AliceBlue;
+            this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel1);
@@ -406,8 +407,8 @@
             this.panel4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xselecteduserstatusimage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xselecteduserimage)).EndInit();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
+            this.xsendmessagepanel.ResumeLayout(false);
+            this.xsendmessagepanel.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -436,7 +437,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem wijzigProfielFotoToolStripMenuItem;
         private System.Windows.Forms.FlowLayoutPanel xchatpanel;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel xsendmessagepanel;
         private System.Windows.Forms.TextBox xchattextbox;
         private System.Windows.Forms.Button xsendbutton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;

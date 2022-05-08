@@ -32,15 +32,15 @@ namespace Controls
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
             this.xcriteria = new MetroFramework.Controls.MetroTextBox();
-            this.xtotcheck = new System.Windows.Forms.CheckBox();
+            this.xtotcheck = new MetroFramework.Controls.MetroCheckBox();
             this.xtotdate = new System.Windows.Forms.DateTimePicker();
-            this.xvanafcheck = new System.Windows.Forms.CheckBox();
+            this.xvanafcheck = new MetroFramework.Controls.MetroCheckBox();
             this.xvanafdate = new System.Windows.Forms.DateTimePicker();
-            this.xbewerkingcheck = new System.Windows.Forms.CheckBox();
-            this.xwerkplekcheck = new System.Windows.Forms.CheckBox();
-            this.xcriteriacheckbox = new System.Windows.Forms.CheckBox();
-            this.xbewerkingen = new System.Windows.Forms.ComboBox();
-            this.xwerkplekken = new System.Windows.Forms.ComboBox();
+            this.xbewerkingcheck = new MetroFramework.Controls.MetroCheckBox();
+            this.xwerkplekcheck = new MetroFramework.Controls.MetroCheckBox();
+            this.xcriteriacheckbox = new MetroFramework.Controls.MetroCheckBox();
+            this.xbewerkingen = new MetroFramework.Controls.MetroComboBox();
+            this.xwerkplekken = new MetroFramework.Controls.MetroComboBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.xsluitenpanel = new System.Windows.Forms.Panel();
@@ -71,7 +71,7 @@ namespace Controls
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(943, 124);
+            this.panel1.Size = new System.Drawing.Size(1034, 124);
             this.panel1.TabIndex = 0;
             // 
             // xcriteria
@@ -82,7 +82,7 @@ namespace Controls
             // 
             // 
             this.xcriteria.CustomButton.Image = null;
-            this.xcriteria.CustomButton.Location = new System.Drawing.Point(495, 1);
+            this.xcriteria.CustomButton.Location = new System.Drawing.Point(538, 1);
             this.xcriteria.CustomButton.Name = "";
             this.xcriteria.CustomButton.Size = new System.Drawing.Size(21, 21);
             this.xcriteria.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -91,7 +91,7 @@ namespace Controls
             this.xcriteria.CustomButton.UseSelectable = true;
             this.xcriteria.CustomButton.Visible = false;
             this.xcriteria.Lines = new string[0];
-            this.xcriteria.Location = new System.Drawing.Point(423, 15);
+            this.xcriteria.Location = new System.Drawing.Point(380, 15);
             this.xcriteria.MaxLength = 32767;
             this.xcriteria.Name = "xcriteria";
             this.xcriteria.PasswordChar = '\0';
@@ -100,7 +100,8 @@ namespace Controls
             this.xcriteria.SelectionLength = 0;
             this.xcriteria.SelectionStart = 0;
             this.xcriteria.ShortcutsEnabled = true;
-            this.xcriteria.Size = new System.Drawing.Size(517, 23);
+            this.xcriteria.ShowClearButton = true;
+            this.xcriteria.Size = new System.Drawing.Size(651, 23);
             this.xcriteria.TabIndex = 0;
             this.xcriteria.UseSelectable = true;
             this.xcriteria.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
@@ -110,13 +111,12 @@ namespace Controls
             // xtotcheck
             // 
             this.xtotcheck.AutoSize = true;
-            this.xtotcheck.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xtotcheck.Location = new System.Drawing.Point(499, 82);
             this.xtotcheck.Name = "xtotcheck";
-            this.xtotcheck.Size = new System.Drawing.Size(47, 21);
+            this.xtotcheck.Size = new System.Drawing.Size(39, 15);
             this.xtotcheck.TabIndex = 13;
             this.xtotcheck.Text = "Tot";
-            this.xtotcheck.UseVisualStyleBackColor = true;
+            this.xtotcheck.UseSelectable = true;
             this.xtotcheck.CheckedChanged += new System.EventHandler(this.xtotcheck_CheckedChanged);
             // 
             // xtotdate
@@ -127,22 +127,21 @@ namespace Controls
             this.xtotdate.Enabled = false;
             this.xtotdate.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xtotdate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.xtotdate.Location = new System.Drawing.Point(596, 77);
+            this.xtotdate.Location = new System.Drawing.Point(583, 77);
             this.xtotdate.Name = "xtotdate";
-            this.xtotdate.Size = new System.Drawing.Size(344, 25);
+            this.xtotdate.Size = new System.Drawing.Size(448, 25);
             this.xtotdate.TabIndex = 12;
             this.xtotdate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xcriteria_KeyDown);
             // 
             // xvanafcheck
             // 
             this.xvanafcheck.AutoSize = true;
-            this.xvanafcheck.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xvanafcheck.Location = new System.Drawing.Point(130, 82);
             this.xvanafcheck.Name = "xvanafcheck";
-            this.xvanafcheck.Size = new System.Drawing.Size(62, 21);
+            this.xvanafcheck.Size = new System.Drawing.Size(52, 15);
             this.xvanafcheck.TabIndex = 11;
             this.xvanafcheck.Text = "Vanaf";
-            this.xvanafcheck.UseVisualStyleBackColor = true;
+            this.xvanafcheck.UseSelectable = true;
             this.xvanafcheck.CheckedChanged += new System.EventHandler(this.xvanafcheck_CheckedChanged);
             // 
             // xvanafdate
@@ -151,34 +150,32 @@ namespace Controls
             this.xvanafdate.Enabled = false;
             this.xvanafdate.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xvanafdate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.xvanafdate.Location = new System.Drawing.Point(225, 77);
+            this.xvanafdate.Location = new System.Drawing.Point(211, 77);
             this.xvanafdate.Name = "xvanafdate";
-            this.xvanafdate.Size = new System.Drawing.Size(268, 25);
+            this.xvanafdate.Size = new System.Drawing.Size(282, 25);
             this.xvanafdate.TabIndex = 10;
             this.xvanafdate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xcriteria_KeyDown);
             // 
             // xbewerkingcheck
             // 
             this.xbewerkingcheck.AutoSize = true;
-            this.xbewerkingcheck.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xbewerkingcheck.Location = new System.Drawing.Point(499, 48);
+            this.xbewerkingcheck.Location = new System.Drawing.Point(499, 51);
             this.xbewerkingcheck.Name = "xbewerkingcheck";
-            this.xbewerkingcheck.Size = new System.Drawing.Size(91, 21);
+            this.xbewerkingcheck.Size = new System.Drawing.Size(78, 15);
             this.xbewerkingcheck.TabIndex = 9;
             this.xbewerkingcheck.Text = "Bewerking";
-            this.xbewerkingcheck.UseVisualStyleBackColor = true;
+            this.xbewerkingcheck.UseSelectable = true;
             this.xbewerkingcheck.CheckedChanged += new System.EventHandler(this.xbewerkingcheck_CheckedChanged);
             // 
             // xwerkplekcheck
             // 
             this.xwerkplekcheck.AutoSize = true;
-            this.xwerkplekcheck.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xwerkplekcheck.Location = new System.Drawing.Point(130, 48);
+            this.xwerkplekcheck.Location = new System.Drawing.Point(130, 51);
             this.xwerkplekcheck.Name = "xwerkplekcheck";
-            this.xwerkplekcheck.Size = new System.Drawing.Size(89, 21);
+            this.xwerkplekcheck.Size = new System.Drawing.Size(75, 15);
             this.xwerkplekcheck.TabIndex = 8;
             this.xwerkplekcheck.Text = "Werk plek";
-            this.xwerkplekcheck.UseVisualStyleBackColor = true;
+            this.xwerkplekcheck.UseSelectable = true;
             this.xwerkplekcheck.CheckedChanged += new System.EventHandler(this.xwerkplekcheck_CheckedChanged);
             // 
             // xcriteriacheckbox
@@ -186,13 +183,12 @@ namespace Controls
             this.xcriteriacheckbox.AutoSize = true;
             this.xcriteriacheckbox.Checked = true;
             this.xcriteriacheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.xcriteriacheckbox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xcriteriacheckbox.Location = new System.Drawing.Point(130, 17);
             this.xcriteriacheckbox.Name = "xcriteriacheckbox";
-            this.xcriteriacheckbox.Size = new System.Drawing.Size(287, 21);
+            this.xcriteriacheckbox.Size = new System.Drawing.Size(244, 15);
             this.xcriteriacheckbox.TabIndex = 7;
             this.xcriteriacheckbox.Text = "Artikelnr, productienr of een omschrijving";
-            this.xcriteriacheckbox.UseVisualStyleBackColor = true;
+            this.xcriteriacheckbox.UseSelectable = true;
             this.xcriteriacheckbox.CheckedChanged += new System.EventHandler(this.xartikelnrcheck_CheckedChanged);
             // 
             // xbewerkingen
@@ -202,12 +198,13 @@ namespace Controls
             this.xbewerkingen.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.xbewerkingen.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.xbewerkingen.Enabled = false;
-            this.xbewerkingen.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xbewerkingen.FormattingEnabled = true;
-            this.xbewerkingen.Location = new System.Drawing.Point(596, 46);
+            this.xbewerkingen.ItemHeight = 23;
+            this.xbewerkingen.Location = new System.Drawing.Point(583, 46);
             this.xbewerkingen.Name = "xbewerkingen";
-            this.xbewerkingen.Size = new System.Drawing.Size(344, 25);
+            this.xbewerkingen.Size = new System.Drawing.Size(448, 29);
             this.xbewerkingen.TabIndex = 6;
+            this.xbewerkingen.UseSelectable = true;
             this.xbewerkingen.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xcriteria_KeyDown);
             // 
             // xwerkplekken
@@ -215,12 +212,13 @@ namespace Controls
             this.xwerkplekken.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.xwerkplekken.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.xwerkplekken.Enabled = false;
-            this.xwerkplekken.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xwerkplekken.FormattingEnabled = true;
-            this.xwerkplekken.Location = new System.Drawing.Point(225, 44);
+            this.xwerkplekken.ItemHeight = 23;
+            this.xwerkplekken.Location = new System.Drawing.Point(211, 44);
             this.xwerkplekken.Name = "xwerkplekken";
-            this.xwerkplekken.Size = new System.Drawing.Size(268, 25);
+            this.xwerkplekken.Size = new System.Drawing.Size(282, 29);
             this.xwerkplekken.TabIndex = 3;
+            this.xwerkplekken.UseSelectable = true;
             this.xwerkplekken.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xcriteria_KeyDown);
             // 
             // pictureBox1
@@ -246,9 +244,9 @@ namespace Controls
             this.xsluitenpanel.Controls.Add(this.xsluiten);
             this.xsluitenpanel.Controls.Add(this.xverwerkb);
             this.xsluitenpanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.xsluitenpanel.Location = new System.Drawing.Point(0, 449);
+            this.xsluitenpanel.Location = new System.Drawing.Point(0, 513);
             this.xsluitenpanel.Name = "xsluitenpanel";
-            this.xsluitenpanel.Size = new System.Drawing.Size(943, 39);
+            this.xsluitenpanel.Size = new System.Drawing.Size(1034, 39);
             this.xsluitenpanel.TabIndex = 22;
             // 
             // xsluiten
@@ -258,7 +256,7 @@ namespace Controls
             this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xsluiten.Location = new System.Drawing.Point(840, 3);
+            this.xsluiten.Location = new System.Drawing.Point(931, 3);
             this.xsluiten.Name = "xsluiten";
             this.xsluiten.Size = new System.Drawing.Size(100, 32);
             this.xsluiten.TabIndex = 2;
@@ -274,7 +272,7 @@ namespace Controls
             this.xverwerkb.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xverwerkb.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
             this.xverwerkb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xverwerkb.Location = new System.Drawing.Point(681, 3);
+            this.xverwerkb.Location = new System.Drawing.Point(772, 3);
             this.xverwerkb.Name = "xverwerkb";
             this.xverwerkb.Size = new System.Drawing.Size(153, 32);
             this.xverwerkb.TabIndex = 14;
@@ -292,7 +290,7 @@ namespace Controls
             this.xprogresslabel.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xprogresslabel.Location = new System.Drawing.Point(0, 124);
             this.xprogresslabel.Name = "xprogresslabel";
-            this.xprogresslabel.Size = new System.Drawing.Size(943, 322);
+            this.xprogresslabel.Size = new System.Drawing.Size(1034, 386);
             this.xprogresslabel.TabIndex = 23;
             this.xprogresslabel.Text = "Producties laden...";
             this.xprogresslabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -316,7 +314,7 @@ namespace Controls
             this.productieListControl1.RemoveCustomItemIfNotValid = false;
             this.productieListControl1.SelectedItem = null;
             this.productieListControl1.ShowWaitUI = true;
-            this.productieListControl1.Size = new System.Drawing.Size(943, 325);
+            this.productieListControl1.Size = new System.Drawing.Size(1034, 389);
             this.productieListControl1.TabIndex = 23;
             this.productieListControl1.ValidHandler = null;
             // 
@@ -332,7 +330,7 @@ namespace Controls
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(725, 425);
             this.Name = "ZoekProductiesUI";
-            this.Size = new System.Drawing.Size(943, 488);
+            this.Size = new System.Drawing.Size(1034, 552);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -346,15 +344,15 @@ namespace Controls
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button xverwerkb;
-        private System.Windows.Forms.CheckBox xtotcheck;
+        private MetroFramework.Controls.MetroCheckBox xtotcheck;
         private System.Windows.Forms.DateTimePicker xtotdate;
-        private System.Windows.Forms.CheckBox xvanafcheck;
+        private MetroFramework.Controls.MetroCheckBox xvanafcheck;
         private System.Windows.Forms.DateTimePicker xvanafdate;
-        private System.Windows.Forms.CheckBox xbewerkingcheck;
-        private System.Windows.Forms.CheckBox xwerkplekcheck;
-        private System.Windows.Forms.CheckBox xcriteriacheckbox;
-        private System.Windows.Forms.ComboBox xbewerkingen;
-        private System.Windows.Forms.ComboBox xwerkplekken;
+        private MetroFramework.Controls.MetroCheckBox xbewerkingcheck;
+        private MetroFramework.Controls.MetroCheckBox xwerkplekcheck;
+        private MetroFramework.Controls.MetroCheckBox xcriteriacheckbox;
+        private MetroFramework.Controls.MetroComboBox xbewerkingen;
+        private MetroFramework.Controls.MetroComboBox xwerkplekken;
         private System.Windows.Forms.Button xsluiten;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Panel xsluitenpanel;

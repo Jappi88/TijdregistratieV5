@@ -37,7 +37,8 @@ namespace Controls
         public bool IsSyncing { get; private set; }
         public bool EnableSync { get; set; }
         public void InitUI(Manager manager)
-        {
+        { 
+            LoadLayout();
             xwerkpleklist.CustomSorter = delegate (OLVColumn column, SortOrder order) {
                 // check which column is about to be sorted and set your custom comparer
                 xwerkpleklist.ListViewItemSorter = new Comparer(order, column);
@@ -46,7 +47,7 @@ namespace Controls
             imageList1.Images.Add(Resources.iconfinder_technology);
             imageList1.Images.Add(
                 Resources.iconfinder_technology.CombineImage(Resources.exclamation_warning_15590, 2));
-           LoadLayout();
+          
             foreach (var col in xwerkpleklist.Columns.Cast<OLVColumn>())
             {
                 col.Groupable = true;

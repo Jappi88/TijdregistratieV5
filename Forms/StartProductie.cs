@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows.Forms;
 using MetroFramework.Controls;
 using WeifenLuo.WinFormsUI.Docking;
+using MetroFramework;
 
 namespace Forms
 {
@@ -96,6 +97,8 @@ namespace Forms
                 else
                 {
                     Text = $"[{Formulier.ProductieNr}]";
+                    this.CustomStyleColor = IProductieBase.GetProductSoortColor(formulier.ProductSoort);
+                    
                     productieForm1.SetParent(Formulier);
                     if (selected != null)
                         productieForm1.SelectedBewerking = selected;
@@ -103,6 +106,7 @@ namespace Forms
                     if (plekken is {Count: > 0})
                         TabText = $"{string.Join(",",plekken.Select(x=> x.Naam))} [{Formulier.ProductieNr}, {Formulier.ArtikelNr}]";
                     else TabText = $"[{Formulier.ProductieNr}, {Formulier.ArtikelNr}]";
+                    this.Invalidate();
                 }
 
             }
