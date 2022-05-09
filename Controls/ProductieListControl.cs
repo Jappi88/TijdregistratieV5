@@ -1015,7 +1015,7 @@ namespace Controls
 
         public bool UpdateFormulier(ProductieFormulier form)
         {
-            if (IsDisposed || Disposing || form == null || _loadingproductielist)
+            if (IsDisposed || Disposing || form == null)
                 return false;
 
             try
@@ -1097,7 +1097,7 @@ namespace Controls
                     //{
                     //    changed = UpdateBewerking(form, null, states, filter);
                     //}));
-                    changed = UpdateBewerking(form, null, states, filter);
+                    changed = UpdateBewerkingen(form, null, states, filter);
                 }
 
                 if (changed)
@@ -1166,8 +1166,8 @@ namespace Controls
                         var xbew = Werk.FromPath(bew.Path)?.Bewerking;
                         var index = i;
                         if (InvokeRequired)
-                            this.Invoke(new MethodInvoker(() => UpdateBewerking(xbew, states, ref index,false)));
-                        else UpdateBewerking(xbew, states, ref index,false);
+                            this.Invoke(new MethodInvoker(() => UpdateBewerking(xbew, states, ref index,false,true)));
+                        else UpdateBewerking(xbew, states, ref index,false,true);
                         i = index;
                     }
             }
@@ -1197,7 +1197,7 @@ namespace Controls
             });
         }
 
-        public bool UpdateBewerking(ProductieFormulier form, List<Bewerking> bewerkingen, ViewState[] states,
+        public bool UpdateBewerkingen(ProductieFormulier form, List<Bewerking> bewerkingen, ViewState[] states,
             string filter)
         {
             if (!IsBewerkingView || form == null || Disposing || IsDisposed) return false;
@@ -1221,15 +1221,6 @@ namespace Controls
                         {
                             ProductieLijst.BeginUpdate();
                             ProductieLijst.AddObject(b);
-                            if (Bewerkingen != null)
-                            {
-                                var index = Bewerkingen.IndexOf(b);
-                                if (index > -1)
-                                    Bewerkingen[index] = b;
-                                else
-                                    Bewerkingen.Add(b);
-                            }
-
                             changed = true;
                             ProductieLijst.EndUpdate();
                         }
@@ -1237,7 +1228,6 @@ namespace Controls
                         {
                             ProductieLijst.BeginUpdate();
                             ProductieLijst.RemoveObject(xb);
-                            Bewerkingen?.Remove(xb);
                             changed = true;
                             ProductieLijst.EndUpdate();
                         }
@@ -1245,28 +1235,8 @@ namespace Controls
                         {
                             ProductieLijst.RefreshObject(b);
                         }
-
-                        if (Bewerkingen != null)
-                        {
-                            var index = Bewerkingen.IndexOf(b);
-                            if (index > -1)
-                            {
-                                if (isvalid)
-                                {
-                                    Bewerkingen[index] = b;
-                                }
-                                else if (RemoveCustomItemIfNotValid)
-                                {
-                                    Bewerkingen.RemoveAt(index);
-                                    changed = true;
-                                }
-                            }
-                            else if (isvalid)
-                            {
-                                Bewerkingen.Add(b);
-                                changed = true;
-                            }
-                        }
+                        var index = -1;
+                        UpdateBewerking(b, states,ref index, false, false);
                     }
 
                 var xremove = xbewerkingen?.Where(x =>
@@ -1335,7 +1305,7 @@ namespace Controls
             }));
         }
 
-        public void UpdateBewerking(Bewerking bew, ViewState[] states, ref int index, bool refresh)
+        public bool UpdateBewerking(Bewerking bew, ViewState[] states, ref int index,bool refresh, bool updatelijst)
         {
             var valid = bew != null && IsAllowd(bew);
             if (valid)
@@ -1347,24 +1317,45 @@ namespace Controls
             if (index == -1)
                 index = Bewerkingen.IndexOf(bew);
             valid &= index > -1;
+            var xret = false;
             if (!valid)
             {
                 if (index > -1)
                     Bewerkingen.RemoveAt(index);
-                ProductieLijst.BeginUpdate();
-                ProductieLijst.RemoveObject(bew);
-                ProductieLijst.EndUpdate();
+                if (index > -1 && RemoveCustomItemIfNotValid)
+                {
+                    Bewerkingen.RemoveAt(index);
+                    xret = true;
+                }
+                if (updatelijst)
+                {
+                    ProductieLijst.BeginUpdate();
+                    ProductieLijst.RemoveObject(bew);
+                    ProductieLijst.EndUpdate();
+                }
             }
             else
             {
-              
+
                 if (index > -1)
                 {
                     Bewerkingen[index] = bew;
                     if (refresh)
                         ProductieLijst.RefreshObject(bew);
                 }
+                else
+                {
+                    xret = true;
+                    Bewerkingen.Add(bew);
+                    if (updatelijst)
+                    {
+                        ProductieLijst.BeginUpdate();
+                        ProductieLijst.AddObject(bew);
+                        ProductieLijst.EndUpdate();
+                    }
+                }
             }
+            return xret;
         }
 
         public void UpdateForm(ProductieFormulier form, ViewState[] states, ref int index,bool refresh)
