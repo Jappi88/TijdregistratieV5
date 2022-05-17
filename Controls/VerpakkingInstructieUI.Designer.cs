@@ -114,6 +114,7 @@ namespace Controls
             this.xbulklocatie.MaxLength = 32767;
             this.xbulklocatie.Name = "xbulklocatie";
             this.xbulklocatie.PasswordChar = '\0';
+            this.xbulklocatie.PromptText = "Type in een bulk locatie...";
             this.xbulklocatie.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.xbulklocatie.SelectedText = "";
             this.xbulklocatie.SelectionLength = 0;
@@ -149,6 +150,7 @@ namespace Controls
             this.xstandaardlocatie.MaxLength = 32767;
             this.xstandaardlocatie.Name = "xstandaardlocatie";
             this.xstandaardlocatie.PasswordChar = '\0';
+            this.xstandaardlocatie.PromptText = "Type in een standaard locatie...";
             this.xstandaardlocatie.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.xstandaardlocatie.SelectedText = "";
             this.xstandaardlocatie.SelectionLength = 0;
@@ -336,6 +338,7 @@ namespace Controls
             this.xpalletsoort.MaxLength = 32767;
             this.xpalletsoort.Name = "xpalletsoort";
             this.xpalletsoort.PasswordChar = '\0';
+            this.xpalletsoort.PromptText = "Type in een pallet soort...";
             this.xpalletsoort.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.xpalletsoort.SelectedText = "";
             this.xpalletsoort.SelectionLength = 0;
@@ -371,6 +374,7 @@ namespace Controls
             this.xverpakkingsoort.MaxLength = 32767;
             this.xverpakkingsoort.Name = "xverpakkingsoort";
             this.xverpakkingsoort.PasswordChar = '\0';
+            this.xverpakkingsoort.PromptText = "Type in een verpakking soort...";
             this.xverpakkingsoort.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.xverpakkingsoort.SelectedText = "";
             this.xverpakkingsoort.SelectionLength = 0;
@@ -396,6 +400,7 @@ namespace Controls
             this.htmlPanel1.Name = "htmlPanel1";
             this.htmlPanel1.Size = new System.Drawing.Size(538, 303);
             this.htmlPanel1.TabIndex = 11;
+            this.htmlPanel1.Text = null;
             this.htmlPanel1.StylesheetLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlStylesheetLoadEventArgs>(this.htmlPanel1_StylesheetLoad);
             this.htmlPanel1.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.htmlPanel1_ImageLoad);
             // 
@@ -441,6 +446,7 @@ namespace Controls
             this.xwijzig.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolTip1.SetToolTip(this.xwijzig, "Wijzig gegevens");
             this.xwijzig.UseVisualStyleBackColor = true;
+            this.xwijzig.Visible = false;
             this.xwijzig.Click += new System.EventHandler(this.xwijzig_Click);
             // 
             // toolTip1

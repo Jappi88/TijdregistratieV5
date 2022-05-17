@@ -58,9 +58,9 @@
             this.button2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.Image = global::ProductieManager.Properties.Resources.diskette_save_saveas_1514;
             this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(27, 3);
+            this.button2.Location = new System.Drawing.Point(58, 3);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(112, 30);
+            this.button2.Size = new System.Drawing.Size(101, 30);
             this.button2.TabIndex = 1;
             this.button2.Text = "Opslaan";
             this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -74,11 +74,11 @@
             this.button1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(145, 3);
+            this.button1.Location = new System.Drawing.Point(165, 3);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(112, 30);
+            this.button1.Size = new System.Drawing.Size(92, 30);
             this.button1.TabIndex = 0;
-            this.button1.Text = "Annuleren";
+            this.button1.Text = "Sluiten";
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button1.UseVisualStyleBackColor = true;
             // 
@@ -141,7 +141,7 @@
             0,
             0});
             this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(120, 29);
+            this.numericUpDown2.Size = new System.Drawing.Size(124, 29);
             this.numericUpDown2.TabIndex = 4;
             this.numericUpDown2.Value = new decimal(new int[] {
             128,
@@ -164,8 +164,10 @@
             this.MaximumSize = new System.Drawing.Size(300, 180);
             this.MinimumSize = new System.Drawing.Size(300, 180);
             this.Name = "ChangeSizeForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Style = MetroFramework.MetroColorStyle.Purple;
             this.Text = "Formaat Wijzigen";
+            this.Title = "Formaat Wijzigen";
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();

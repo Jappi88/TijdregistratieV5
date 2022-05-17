@@ -137,9 +137,9 @@ namespace Forms
             this.xok.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xok.Image = global::ProductieManager.Properties.Resources.check_1582;
             this.xok.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xok.Location = new System.Drawing.Point(621, 3);
+            this.xok.Location = new System.Drawing.Point(663, 3);
             this.xok.Name = "xok";
-            this.xok.Size = new System.Drawing.Size(115, 34);
+            this.xok.Size = new System.Drawing.Size(94, 34);
             this.xok.TabIndex = 1;
             this.xok.Text = "OK";
             this.xok.UseVisualStyleBackColor = true;
@@ -152,11 +152,11 @@ namespace Forms
             this.xannuleren.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xannuleren.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xannuleren.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xannuleren.Location = new System.Drawing.Point(742, 3);
+            this.xannuleren.Location = new System.Drawing.Point(763, 3);
             this.xannuleren.Name = "xannuleren";
-            this.xannuleren.Size = new System.Drawing.Size(115, 34);
+            this.xannuleren.Size = new System.Drawing.Size(94, 34);
             this.xannuleren.TabIndex = 0;
-            this.xannuleren.Text = "Annuleren";
+            this.xannuleren.Text = "Sluiten";
             this.xannuleren.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.xannuleren.UseVisualStyleBackColor = true;
             this.xannuleren.Click += new System.EventHandler(this.xannuleren_Click);
@@ -210,10 +210,10 @@ namespace Forms
             this.Controls.Add(this.panel1);
             this.Name = "BewerkingSelectorForm";
             this.Padding = new System.Windows.Forms.Padding(10, 60, 10, 10);
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Selecteer Bewerkingen";
+            this.Title = "Selecteer Bewerkingen";
             this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);

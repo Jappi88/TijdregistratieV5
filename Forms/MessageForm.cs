@@ -278,9 +278,12 @@ namespace Forms
 
             if (form != null)
             {
-                Width = form.Width;
+                //Width = form.Width;
+                this.StartPosition = FormStartPosition.Manual;
+                this.Location = new Point((form.Location.X + form.Width / 2), (form.Location.Y + form.Height / 2));
                 BackColor = form.BackColor;
             }
+            
             TopMost = true;
             ShowInTaskbar = false;
             this.Invalidate();

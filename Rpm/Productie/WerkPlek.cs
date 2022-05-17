@@ -160,6 +160,39 @@ namespace Rpm.Productie
             return AantalHistory.AantalGemaakt(Tijden, ref tijd,Werk is {State: ProductieState.Gestart },xmultyply, -1,GetStoringen());
         }
 
+        public double GetGereedPercentage()
+        {
+            if (Aantal > 0)
+            {
+                var val = Math.Round(TotaalGemaakt / (double)Aantal * 100, 1);
+                return val;
+            }
+
+            if (TotaalGemaakt > 0)
+            {
+                var val = Math.Round((double)Aantal / TotaalGemaakt * 100, 1);
+                return val + 100;
+            }
+            return 0;
+        }
+
+        public double GetTijdGewerktPercentage()
+        {
+            double dp = Werk?.DoorloopTijd ?? 0;
+            if (dp > 0)
+            {
+                var val = Math.Round(TijdGewerkt / dp * 100, 1);
+                return val;
+            }
+            if (TijdGewerkt > 0)
+            {
+                var val = Math.Round(dp / TijdGewerkt * 100, 1);
+                return val + 100;
+            }
+
+            return 0;
+        }
+
         public int TotaalGemaakt
         {
             get
@@ -643,6 +676,21 @@ namespace Rpm.Productie
             }
             var xratio = xtijd.GetPercentageDifference(xvalue.Count * 1.5d);
             return xratio;
+        }
+
+        public decimal GetAfwijking()
+        {
+            try
+            {
+                var pu = Werk?.PerUur ?? 0;
+                var xpu = PerUur;
+                return (xpu - pu) == 0 ? 0 : Math.Round((decimal)(((xpu - pu) / (pu == 0 ? xpu : pu)) * 100), 2);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return 0;
+            }
         }
 
         public bool NeedsAantalUpdate(int interval)

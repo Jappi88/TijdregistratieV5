@@ -110,7 +110,7 @@ namespace Forms.MetroBase
         {
             if (IsDisposed || Disposing) return;
             if (InvokeRequired)
-                this.Invoke(new Action(InitInfo));
+                this.Invoke(new MethodInvoker(InitInfo));
             else InitInfo();
         }
 
@@ -127,7 +127,9 @@ namespace Forms.MetroBase
                     {
                         var y = (xparent.Location.Y + xparent.Height / 2) - this.Height / 2;
                         var x = (xparent.Location.X + xparent.Width / 2) - this.Width / 2;
-                        if (Screen.GetWorkingArea(xparent).Contains(new Point(x, y)))
+                        var loc = new Rectangle();
+                        this.Invoke(new MethodInvoker(() => loc = Screen.GetWorkingArea(xparent)));
+                        if (loc.Contains(new Point(x, y)))
                             this.Location = new Point(x, y);
                         else this.StartPosition = FormStartPosition.CenterScreen;
                     }
@@ -147,7 +149,7 @@ namespace Forms.MetroBase
             if (SaveLastSize)
                 this.SetLastInfo();
             Form xform = this.GetParentForm();
-            if (xform != null)
+            if (xform != null && !xform.IsDisposed)
             {
                 if (xform.InvokeRequired)
                 {

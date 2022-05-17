@@ -32,7 +32,7 @@ namespace Forms
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AlleKlusjes));
             this.xstatuslabel = new System.Windows.Forms.Label();
-            this.xklusjes = new BrightIdeasSoftware.ObjectListView();
+            this.xklusjes = new Controls.CustomObjectListview();
             this.olvColumn0 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -80,6 +80,7 @@ namespace Forms
             this.xklusjes.AllColumns.Add(this.olvColumn3);
             this.xklusjes.AllColumns.Add(this.olvColumn4);
             this.xklusjes.AllColumns.Add(this.olvColumn8);
+            this.xklusjes.AllowCellEdit = false;
             this.xklusjes.CellEditUseWholeCell = false;
             this.xklusjes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn0,
@@ -91,23 +92,44 @@ namespace Forms
             this.xklusjes.ContextMenuStrip = this.contextMenuStrip1;
             this.xklusjes.Cursor = System.Windows.Forms.Cursors.Default;
             this.xklusjes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xklusjes.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xklusjes.FullRowSelect = true;
+            this.xklusjes.HeaderWordWrap = true;
             this.xklusjes.HideSelection = false;
             this.xklusjes.LargeImageList = this.xklusimages;
             this.xklusjes.Location = new System.Drawing.Point(0, 68);
+            this.xklusjes.MenuLabelColumns = "kolommen";
+            this.xklusjes.MenuLabelGroupBy = "Groeperen op \'{0}\'";
+            this.xklusjes.MenuLabelLockGroupingOn = "Groepering vergrendelen op \'{0}\'";
+            this.xklusjes.MenuLabelSelectColumns = "Selecteer kolommen...";
+            this.xklusjes.MenuLabelSortAscending = "Sorteer oplopend op \'{0}\'";
+            this.xklusjes.MenuLabelSortDescending = "Aflopend sorteren op \'{0}\'";
+            this.xklusjes.MenuLabelTurnOffGroups = "Groepen uitschakelen";
+            this.xklusjes.MenuLabelUnlockGroupingOn = "Ontgrendel groeperen van \'{0}\'";
+            this.xklusjes.MenuLabelUnsort = "Uitsorteren";
             this.xklusjes.Name = "xklusjes";
+            this.xklusjes.OwnerDraw = false;
+            this.xklusjes.ShowCommandMenuOnRightClick = true;
+            this.xklusjes.ShowGroups = false;
+            this.xklusjes.ShowItemCountOnGroups = true;
+            this.xklusjes.ShowItemToolTips = true;
             this.xklusjes.Size = new System.Drawing.Size(821, 341);
             this.xklusjes.SmallImageList = this.xklusimages;
+            this.xklusjes.SpaceBetweenGroups = 10;
             this.xklusjes.TabIndex = 2;
+            this.xklusjes.TileSize = new System.Drawing.Size(300, 120);
             this.xklusjes.UseCompatibleStateImageBehavior = false;
             this.xklusjes.UseExplorerTheme = true;
             this.xklusjes.UseFilterIndicator = true;
             this.xklusjes.UseFiltering = true;
+            this.xklusjes.UseHotControls = false;
             this.xklusjes.UseHotItem = true;
+            this.xklusjes.UseOverlays = false;
             this.xklusjes.UseTranslucentHotItem = true;
             this.xklusjes.UseTranslucentSelection = true;
             this.xklusjes.View = System.Windows.Forms.View.Details;
             this.xklusjes.SelectedIndexChanged += new System.EventHandler(this.xklusjes_SelectedIndexChanged);
+            this.xklusjes.DoubleClick += new System.EventHandler(this.xwijzigklus_Click);
             // 
             // olvColumn0
             // 
@@ -333,8 +355,9 @@ namespace Forms
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "AlleKlusjes";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Alle Klusjes";
+            this.Title = "Alle Klusjes";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AlleKlusjes_FormClosing);
             this.Load += new System.EventHandler(this.AlleKlusjes_Load);
             this.Shown += new System.EventHandler(this.AlleKlusjes_Shown);
@@ -349,7 +372,7 @@ namespace Forms
 
         #endregion
         private System.Windows.Forms.Label xstatuslabel;
-        private BrightIdeasSoftware.ObjectListView xklusjes;
+        private Controls.CustomObjectListview xklusjes;
         private BrightIdeasSoftware.OLVColumn olvColumn0;
         private BrightIdeasSoftware.OLVColumn olvColumn1;
         private BrightIdeasSoftware.OLVColumn olvColumn2;

@@ -77,14 +77,12 @@ namespace Controls
 
         public void InitEvents()
         {
-            Manager.OnSettingsChanged += PManager_OnSettingsChanged;
             Manager.OnPersoneelChanged += Manager_OnPersoneelChanged;
             Manager.OnPersoneelDeleted += Manager_OnPersoneelDeleted;
         }
 
         public void DetachEvents()
         {
-            Manager.OnSettingsChanged -= PManager_OnSettingsChanged;
             Manager.OnPersoneelChanged -= Manager_OnPersoneelChanged;
             Manager.OnPersoneelDeleted -= Manager_OnPersoneelDeleted;
         }
@@ -154,6 +152,11 @@ namespace Controls
 
         private void UpdateStatus(int index = -1)
         {
+            if(InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(() => UpdateStatus(index)));
+                return;
+            }
             if (index == -1)
             {
                 var filter = Currentfilter();
@@ -205,10 +208,6 @@ namespace Controls
                 return;
             try
             {
-                this.Invoke(new MethodInvoker(() =>
-                {
-
-
                     var allowed = IsAllowed(pers);
                     var resort = false;
                     var per = xuserlist.Objects?.Cast<PersoneelModel>()
@@ -236,7 +235,6 @@ namespace Controls
                         xuserlist.Sort("Kracht");
                         UpdateStatus();
                     }
-                }));
 
 
             }
@@ -244,17 +242,6 @@ namespace Controls
             {
                 Console.WriteLine(e);
             }
-        }
-
-        private void PManager_OnSettingsChanged(object instance, UserSettings settings, bool init)
-        {
-            if (IsDisposed || Disposing) return;
-            var user = Manager.LogedInGebruiker;
-            Invoke(new Action(() =>
-            {
-                var _enable = user is {AccesLevel: >= AccesType.ProductieBasis};
-                xuserinfopanel.Visible = _enable;
-            }));
         }
 
         public object GroupGet(object sender)
@@ -343,7 +330,6 @@ namespace Controls
                     StringComparison.CurrentCultureIgnoreCase)).ToList();
             }
 
-            xuserinfopanel.Enabled = false;
             xuserlist.BeginUpdate();
             var selected = xuserlist.SelectedObject;
             var models = GetPersoneelModels(pers);
@@ -372,10 +358,6 @@ namespace Controls
 
         private void xuserlist_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (xuserlist.SelectedItems.Count == 1)
-                xuserinfopanel.Tag = xuserlist.SelectedObject;
-            else
-                xuserinfopanel.Tag = null;
             EnableSelected();
         }
 
@@ -384,10 +366,9 @@ namespace Controls
             var acces1 = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieBasis};
             var acces2 = Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieAdvance};
 
-            var enable1 = xuserinfopanel.Tag != null;
+            var enable1 = xuserlist.SelectedObjects.Count == 1;
             var enable2 = xuserlist.SelectedObjects.Count > 0;
 
-            xuserinfopanel.Visible = !_choose && enable1 && acces1;
 
             verwijderPersoneelToolStripMenuItem.Enabled = enable2 && acces2;
             openWerkplekToolStripMenuItem.Enabled = enable1 && acces1 && !_choose && xuserlist.SelectedObjects
@@ -395,44 +376,14 @@ namespace Controls
             zetOpNonActiefToolStripMenuItem.Enabled = openWerkplekToolStripMenuItem.Enabled;
             vaardighedenToolStripMenuItem.Enabled = enable1 && acces1;
             verlofToolStripMenuItem.Enabled = enable1 && acces2;
-            xkiesvrijetijd.Enabled = enable1 && acces2;
-            xuserinfopanel.Enabled = enable1 && acces1;
+
             wijzigAfdelingToolStripMenuItem.Enabled = acces1 && enable2;
             xklusjestoolstripitem.Enabled = acces1 && enable1;
-            xklusjesb.Enabled = acces1 && enable1;
-            werkRoosterToolStripMenuItem.Enabled = acces1 && enable1;
-            xvaardigeheden.Enabled = enable1 && acces1;
+            werkRoosterToolStripMenuItem.Enabled = acces1 && enable2;
             xdeletepersoneel.Enabled = enable2 && acces2;
-            xverwijderpers.Enabled = enable1 && acces2;
-            xwijzigpers.Enabled = acces1 && enable2;
-            xisuitzendcheck.Enabled = acces2 && enable2;
             xaddpersoneel.Enabled = acces2;
             vouwAlleGroupenToolStripMenuItem.Enabled = xuserlist.Groups?.Count > 0;
             ontvouwAlleGroupenToolStripMenuItem.Enabled = xuserlist.Groups?.Count > 0;
-            if (enable1)
-                InitSelected();
-        }
-
-        private void InitSelected()
-        {
-            if (xuserinfopanel.Tag is PersoneelModel)
-            {
-                var model = xuserinfopanel.Tag as PersoneelModel;
-                UpdateUserFields(model);
-            }
-        }
-
-        private void UpdateUserFields(PersoneelModel model)
-        {
-            var per = model?.PersoneelLid;
-            if (per != null)
-            {
-                xnaam.Text = per.PersoneelNaam;
-                xafdeling.Text = per.Afdeling;
-                xisuitzendcheck.Checked = per.IsUitzendKracht;
-                //xisvrijimage.Image = per.IsVrij(DateTime.Now) ? Resources.delete_1577 : Resources.check_1582;
-                //xuserimage.Image = imageList1.Images[DefaultImageIndex(per)];
-            }
         }
 
         private async void xaddpersoneel_Click(object sender, EventArgs e)
@@ -470,40 +421,19 @@ namespace Controls
                 }
         }
 
-        private async void xwijzigpers_Click(object sender, EventArgs e)
-        {
-            if (xuserinfopanel.Tag == null)
-                return;
-            try
-            {
-                if (string.IsNullOrEmpty(xnaam.Text) || xnaam.Text.Trim().Length < 3)
-                    throw new Exception("Ongeldige personeel naam!");
-                if (xuserinfopanel.Tag is PersoneelModel model) await WijzigSelectedUser(model);
-            }
-            catch (Exception ex)
-            {
-                XMessageBox.Show(this, ex.Message, "Fout", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private async Task<bool> WijzigSelectedUser(PersoneelModel pers)
+        private async Task<bool> WijzigSelectedUser(PersoneelModel pers, bool updatefromfields)
         {
             var per = pers?.PersoneelLid;
             if (per == null)
                 return false;
             var oldnaam = per.PersoneelNaam;
-            per.PersoneelNaam = xnaam.Text.Trim();
-            per.Afdeling = xafdeling.Text.Trim();
-            var resort = per.IsUitzendKracht != xisuitzendcheck.Checked && IsAllowed(per);
-            per.IsUitzendKracht = xisuitzendcheck.Checked;
             if (!await Personeel.UpdateKlusjes(this, per, oldnaam)) return false;
             string change = $"Wijzigingen voor {per.PersoneelNaam} succesvol!";
-            bool replace = !string.Equals(oldnaam, xnaam.Text, StringComparison.CurrentCultureIgnoreCase);
+            bool replace = !string.Equals(oldnaam, per.PersoneelNaam, StringComparison.CurrentCultureIgnoreCase);
             if ((replace && await Manager.Database.Replace(oldnaam, per, change)) ||
                 (!replace && await Manager.Database.UpSert(per, change)))
             {
                 ProcessUser(per);
-                if (resort) xuserlist.Sort("Kracht");
             }
 
             return true;
@@ -573,7 +503,6 @@ namespace Controls
                         xuserlist.RefreshObject(model);
                         xuserlist.SelectedObject = model;
                         xuserlist.SelectedItem?.EnsureVisible();
-                        InitSelected();
                     }
                 }
             }
@@ -624,15 +553,23 @@ namespace Controls
 
         private async void EditSelectedRooster()
         {
-            if (xuserlist.SelectedObject is PersoneelModel pers)
+            if (xuserlist.SelectedObjects.Count > 0)
                 try
                 {
-                    var rs = new RoosterForm(pers.PersoneelLid.WerkRooster ?? Manager.Opties.GetWerkRooster(),
-                        $"Rooster voor {pers.Naam}");
+                    var pers = xuserlist.SelectedObjects.Cast<PersoneelModel>().ToList();
+                    var rs = new RoosterForm(pers.First()?.PersoneelLid.WerkRooster ?? Manager.Opties.GetWerkRooster(),
+                        $"Rooster voor {string.Join(", ", pers.Select(x=> x.Naam))}");
                     if (rs.ShowDialog() == DialogResult.OK)
                     {
-                        pers.PersoneelLid.WerkRooster = rs.WerkRooster;
-                        await WijzigSelectedUser(pers);
+                        foreach (var p in pers)
+                        {
+                            p.PersoneelLid.WerkRooster = rs.WerkRooster.CreateCopy();
+                            //await Manager.Database.UpSert(p.PersoneelLid,
+                            //    $"{p.PersoneelLid.PersoneelNaam} Werkrooster aangepast.");
+                            //xuserlist.RefreshObject(p);
+                            if (!await WijzigSelectedUser(p, false))
+                                break;
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -645,6 +582,12 @@ namespace Controls
         {
             if (pers == null)
                 return false;
+            if(this.InvokeRequired)
+            {
+                var xal = false;
+                this.Invoke(new MethodInvoker(() => xal = IsAllowed(pers)));
+                return xal;
+            }
             var filter = Currentfilter();
             string fname = xsearchbox.Text.ToLower().Trim();
             if (!string.IsNullOrEmpty(fname) && !fname.Contains("zoeken"))
@@ -754,16 +697,16 @@ namespace Controls
                     $"Weet je zeker dat je {permodel.Naam} op non actief wilt zetten?",
                     "Non Actief Zetten", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
-                if (await permodel.PersoneelLid.ZetOpInactief())
-                {
-                    UpdateUserFields(permodel);
-                }
-                else
+                if (!await permodel.PersoneelLid.ZetOpInactief())
                 {
                     XMessageBox.Show(
                         this, $"Het is niet gelukt om {permodel.PersoneelLid.PersoneelNaam} op non actief te zetten!",
                         "Fout",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    xuserlist.RefreshObject(permodel);
                 }
             }
         }
@@ -776,7 +719,7 @@ namespace Controls
                 {
                     var vf = new VaardighedenForm(model.PersoneelLid);
                     vf.ShowDialog();
-                    UpdateUserFields(model);
+                    xuserlist.RefreshObject(model);
                 }
             }
         }
@@ -810,7 +753,7 @@ namespace Controls
                     {
                         await Manager.Database.UpSert(model.PersoneelLid.PersoneelNaam, model.PersoneelLid, change);
 
-                        UpdateUserFields(model);
+                        xuserlist.RefreshObject(model);
                     }
                 }
             }
@@ -840,7 +783,6 @@ namespace Controls
                 var ak = new AlleKlusjes(model.PersoneelLid);
                 ak.ShowDialog();
                 xuserlist.RefreshObject(model);
-                UpdateUserFields(model);
             }
         }
 
@@ -866,8 +808,6 @@ namespace Controls
                             $"{p.PersoneelLid.PersoneelNaam} afdeling aangepast naar {tf.SelectedText}.");
                         xuserlist.RefreshObject(p);
                     }
-
-                    InitSelected();
                 }
             }
         }

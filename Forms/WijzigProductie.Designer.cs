@@ -202,11 +202,11 @@ namespace Forms
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox4.ForeColor = System.Drawing.Color.Black;
-            this.groupBox4.Location = new System.Drawing.Point(0, 0);
+            this.groupBox4.Location = new System.Drawing.Point(5, 5);
             this.groupBox4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox4.Size = new System.Drawing.Size(822, 442);
+            this.groupBox4.Size = new System.Drawing.Size(812, 432);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Bewerkingen";
@@ -309,7 +309,7 @@ namespace Forms
             this.xbewerkinglijst.ShowGroups = false;
             this.xbewerkinglijst.ShowItemCountOnGroups = true;
             this.xbewerkinglijst.ShowItemToolTips = true;
-            this.xbewerkinglijst.Size = new System.Drawing.Size(810, 371);
+            this.xbewerkinglijst.Size = new System.Drawing.Size(800, 361);
             this.xbewerkinglijst.SmallImageList = this.imageList1;
             this.xbewerkinglijst.SpaceBetweenGroups = 10;
             this.xbewerkinglijst.TabIndex = 26;
@@ -551,7 +551,7 @@ namespace Forms
             this.metroTabControl1.Controls.Add(this.metroTabPage3);
             this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 1;
+            this.metroTabControl1.SelectedIndex = 0;
             this.metroTabControl1.Size = new System.Drawing.Size(830, 484);
             this.metroTabControl1.TabIndex = 26;
             this.metroTabControl1.UseSelectable = true;
@@ -564,7 +564,8 @@ namespace Forms
             this.metroTabPage1.HorizontalScrollbarSize = 10;
             this.metroTabPage1.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage1.Name = "metroTabPage1";
-            this.metroTabPage1.Size = new System.Drawing.Size(845, 382);
+            this.metroTabPage1.Padding = new System.Windows.Forms.Padding(5);
+            this.metroTabPage1.Size = new System.Drawing.Size(822, 442);
             this.metroTabPage1.TabIndex = 0;
             this.metroTabPage1.Text = "Productie Info";
             this.metroTabPage1.VerticalScrollbarBarColor = true;
@@ -573,18 +574,16 @@ namespace Forms
             // 
             // objectEditorUI1
             // 
-            this.objectEditorUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.objectEditorUI1.BackColor = System.Drawing.Color.White;
             this.objectEditorUI1.DisplayTypes = ((System.Collections.Generic.List<System.Type>)(resources.GetObject("objectEditorUI1.DisplayTypes")));
+            this.objectEditorUI1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.objectEditorUI1.ExcludeItems = ((System.Collections.Generic.List<string>)(resources.GetObject("objectEditorUI1.ExcludeItems")));
             this.objectEditorUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.objectEditorUI1.Instance = null;
-            this.objectEditorUI1.Location = new System.Drawing.Point(4, 4);
+            this.objectEditorUI1.Location = new System.Drawing.Point(5, 5);
             this.objectEditorUI1.Margin = new System.Windows.Forms.Padding(4);
             this.objectEditorUI1.Name = "objectEditorUI1";
-            this.objectEditorUI1.Size = new System.Drawing.Size(837, 374);
+            this.objectEditorUI1.Size = new System.Drawing.Size(812, 432);
             this.objectEditorUI1.TabIndex = 2;
             // 
             // metroTabPage2
@@ -595,6 +594,7 @@ namespace Forms
             this.metroTabPage2.HorizontalScrollbarSize = 10;
             this.metroTabPage2.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage2.Name = "metroTabPage2";
+            this.metroTabPage2.Padding = new System.Windows.Forms.Padding(5);
             this.metroTabPage2.Size = new System.Drawing.Size(822, 442);
             this.metroTabPage2.TabIndex = 1;
             this.metroTabPage2.Text = "Bewerkingen";
@@ -611,7 +611,8 @@ namespace Forms
             this.metroTabPage3.HorizontalScrollbarSize = 10;
             this.metroTabPage3.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage3.Name = "metroTabPage3";
-            this.metroTabPage3.Size = new System.Drawing.Size(845, 382);
+            this.metroTabPage3.Padding = new System.Windows.Forms.Padding(5);
+            this.metroTabPage3.Size = new System.Drawing.Size(822, 442);
             this.metroTabPage3.TabIndex = 2;
             this.metroTabPage3.Text = "Materialen";
             this.metroTabPage3.VerticalScrollbarBarColor = true;
@@ -621,15 +622,13 @@ namespace Forms
             // 
             // materiaalUI1
             // 
-            this.materiaalUI1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.materiaalUI1.BackColor = System.Drawing.Color.Transparent;
+            this.materiaalUI1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materiaalUI1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.materiaalUI1.Formulier = null;
-            this.materiaalUI1.Location = new System.Drawing.Point(3, 3);
+            this.materiaalUI1.Location = new System.Drawing.Point(5, 5);
             this.materiaalUI1.Name = "materiaalUI1";
-            this.materiaalUI1.Size = new System.Drawing.Size(980, 463);
+            this.materiaalUI1.Size = new System.Drawing.Size(812, 432);
             this.materiaalUI1.TabIndex = 0;
             // 
             // WijzigProductie

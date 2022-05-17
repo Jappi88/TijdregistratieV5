@@ -33,7 +33,6 @@ namespace Forms
                 {
                     if (arg.IsCanceled)
                     {
-                        this.Dispose();
                         return;
                     }
 

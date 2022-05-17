@@ -161,7 +161,7 @@ namespace Controls
             this.xresetindeling.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
             this.xresetindeling.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xresetindeling.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
-            this.xresetindeling.Location = new System.Drawing.Point(388, 2);
+            this.xresetindeling.Location = new System.Drawing.Point(429, 43);
             this.xresetindeling.Name = "xresetindeling";
             this.xresetindeling.Size = new System.Drawing.Size(35, 35);
             this.xresetindeling.TabIndex = 7;

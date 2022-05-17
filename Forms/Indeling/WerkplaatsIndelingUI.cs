@@ -1,16 +1,13 @@
 ﻿using Controls;
+using Rpm.Misc;
 using Rpm.Productie;
+using Rpm.Various;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Rpm.Misc;
-using Rpm.Various;
-using Various;
 
 namespace Forms
 {
@@ -84,62 +81,6 @@ namespace Forms
         {
             UpdateTitle();
         }
-
-        private bool _iswaiting;
-
-        /// <summary>
-        ///     Toon laad scherm
-        /// </summary>
-        //public void SetWaitUI()
-        //{
-        //    if (_iswaiting) return;
-        //    _iswaiting = true;
-        //    Task.Run(async () =>
-        //    {
-        //        try
-        //        {
-        //            if (Disposing || IsDisposed) return;
-        //            xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = true; }));
-        //            var cur = 0;
-        //            var xwv = "Indeling laden";
-        //            //var xcurvalue = xwv;
-        //            var tries = 0;
-        //            while (_iswaiting && tries < 200)
-        //            {
-        //                if (Disposing || IsDisposed) return;
-        //                if (cur > 5) cur = 0;
-        //                var curvalue = xwv.PadRight(xwv.Length + cur, '.');
-        //                //xcurvalue = curvalue;
-        //                xloadinglabel.BeginInvoke(new MethodInvoker(() =>
-        //                {
-        //                    xloadinglabel.Text = curvalue;
-        //                    xloadinglabel.Invalidate();
-        //                }));
-        //                Application.DoEvents();
-
-        //                await Task.Delay(500);
-        //                Application.DoEvents();
-        //                tries++;
-        //                cur++;
-        //            }
-        //            if (Disposing || IsDisposed) return;
-        //            xloadinglabel.Invoke(new MethodInvoker(() => { xloadinglabel.Visible = false; }));
-        //        }
-        //        catch (Exception e)
-        //        {
-        //        }
-
-
-        //    });
-        //}
-
-        ///// <summary>
-        /////     verberg het laad scherm
-        ///// </summary>
-        //public void StopWait()
-        //{
-        //    _iswaiting = false;
-        //}
 
         private List<WerkplekIndeling> GetIndelingen(bool incdefault)
         {
@@ -282,11 +223,11 @@ namespace Forms
                     var x3 = xstarted.Count == 1 ? "productie" : "producties";
                     var x1 = bws.Count == 1 ? "productie" : "producties";
                     xall =
-                        $"<li>Totaal <b>{bws.Count}</b> {x1} <b>({xbwtijdgewerkt}/{xbwtotaaltijd})</b> uur.</li>" +
+                        $"<li>Totaal <b>{bws.Count}</b> {x1} <b>({xbwtijdgewerkt}/{xbwtotaaltijd} uur)</b>.</li>" +
                         $"<li>Bezig met <b>{xstarted.Count}</b> {x3} " +
-                        $"waarvan <b>{Math.Round(xstarted.Sum(x => x.TijdAanGewerkt()), 2)}</b> uur gewerkt.</li>" +
-                        $"<li>Er is nog <b>{GetTijdOver()}</b> uur over tot einde van de week</li>" +
-                        $"<li>Met Alles kan je op <b>{Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(xbwtijdover), null, null):dd/MM/yyyy HH:mm}</b> klaar zijn</li>";
+                        $"waarvan <b>{Math.Round(xstarted.Sum(x => x.TijdAanGewerkt()), 2)} uur</b> gewerkt.</li>" +
+                        $"<li>Er is nog <b>{GetTijdOver()} uur</b> over tot einde van de week</li>" +
+                        $"<li>Met alles kan je op <b>{Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(xbwtijdover), null, null):dd/MM/yyyy HH:mm}</b> klaar zijn</li>";
                     //if (indeling.SelectedBewerking != null && SelectedPersoneel != null && SelectedPersoneel.Equals(indeling.Persoon))
                     //{
                     //    var bw = indeling.SelectedBewerking;
@@ -331,7 +272,7 @@ namespace Forms
                     }
                 }
                 
-                xfirst.UpdateLabelText();
+                xfirst.UpdateWerkplekInfo();
                 xWerkplaatsIndelingPanel.ResumeLayout(true);
                 SetSelected(null, true);
             }
@@ -345,9 +286,15 @@ namespace Forms
 
         private void UpdateTitle()
         {
-            //if (SelectedWerkplek == null || SelectedWerkplek.IsDefault())
-           // {
-                var bws = Bewerkingen.Where(x=> IsAllowed(x, SelectedWerkplek)).ToList();
+            try
+            {
+                List<Bewerking> bws = new List<Bewerking>();
+                for (int i = 0; i < Bewerkingen.Count; i++)
+                {
+                    var bw = Bewerkingen[i];
+                    if (IsAllowed(bw, SelectedWerkplek))
+                        bws.Add(bw);
+                }
 
                 var xselected = SelectedWerkplek == null || SelectedWerkplek.IsDefault()
                     ? "Alle"
@@ -364,7 +311,15 @@ namespace Forms
                 xindeling?.UpdateWerkplekInfo();
                 OnStatusTextChanged(xtext);
                 this.Invalidate();
-           // }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            //if (SelectedWerkplek == null || SelectedWerkplek.IsDefault())
+            // {
+
+            // }
         }
 
         private void ListProducties()
@@ -443,6 +398,8 @@ namespace Forms
                 xgroup.MouseLeave += WerkplekIndeling_MouseLeave;
                 xgroup.Click += Xpers_Click;
                 xgroup.DoubleClick += Xpers_DoubleClick;
+                xgroup.Width = splitContainer1.Panel1.Width - 24;
+               // xgroup.Anchor = AnchorStyles.Left | AnchorStyles.Right;
                 var xpers = new WerkplekIndeling();
                 xpers.FieldTextGetter = IndelingFieldTextGetter;
                 xpers.ResetIndeling += Xpers_ResetIndeling;
@@ -629,7 +586,7 @@ namespace Forms
                 if (indeling != null)
                 {
                     indeling.IsSelected = true;
-                    indeling.UpdateLabelText();
+                    indeling.UpdateWerkplekInfo();
                     if (indeling.Parent is GroupBox group)
                     {
                         group.Select();
@@ -864,11 +821,11 @@ namespace Forms
 
         private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
         {
-            try
-            {
+           // try
+            //{
                 if (changedform?.Bewerkingen == null) return;
-                this.BeginInvoke(new Action(() =>
-                {
+               // this.BeginInvoke(new Action(() =>
+                //{
                     try
                     {
                         if (changedform.Bewerkingen == null || changedform.Bewerkingen.Length == 0)
@@ -931,18 +888,23 @@ namespace Forms
                     {
                         Console.WriteLine(e);
                     }
-                }));
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+               // }));
+            //}
+           // catch (Exception e)
+           // {
+           //    Console.WriteLine(e);
+           // }
         }
 
         private void UpdateIndelingen()
         {
-            var xindelingen = GetIndelingen(true);
-            xindelingen.ForEach(x => x.UpdateWerkplekInfo());
+            if (InvokeRequired)
+                this.Invoke(new MethodInvoker(UpdateIndelingen));
+            else
+            {
+                var xindelingen = GetIndelingen(true);
+                xindelingen.ForEach(x => x.UpdateWerkplekInfo());
+            }
         }
 
         private void Manager_OnFormulierDeleted(object sender, string id)
@@ -954,9 +916,15 @@ namespace Forms
                 if (bws.Count > 0)
                 {
                     bool changed = false;
-                    foreach (var bw in bws)
+                    for (int i = 0; i < Bewerkingen.Count; i++)
                     {
-                        changed |= Bewerkingen.Remove(bw);
+                        var b = Bewerkingen[i];
+                        if (string.Equals(b.ProductieNr, id, StringComparison.CurrentCultureIgnoreCase))
+                            if (Bewerkingen.Remove(b))
+                            {
+                                i--;
+                                changed = true;
+                            }
                     }
 
                     if (changed)
@@ -1075,87 +1043,143 @@ namespace Forms
             if (_isbussy) return;
             var prog = new LoadingForm();
             var arg = prog.Arg;
+            arg.Message = "Indeling maken...";
+            arg.OnChanged(this);
             _ = Task.Run(() =>
             {
-                Invoke(new MethodInvoker(() =>
-                {
-                    prog.ShowDialog();
-                    prog.Dispose();
-                }));
+                if (prog == null || prog.IsDisposed) return;
+                prog.ShowDialog();
             });
-            await Task.Run(() =>
+            Application.DoEvents();
+
+            _isbussy = true;
+            try
             {
-                _isbussy = true;
+                for (int i = 0; i < bws.Count; i++)
+                {
+                    var bw = bws[i];
+                    arg.Current = i;
+                    arg.Max = bws.Count;
+                    arg.Message = $"Indelen: {bw.Path}({i}/{bws.Count})...";
+                    arg.Type = ProgressType.WriteBussy;
+                    arg.OnChanged(this);
+                    if (arg.IsCanceled) break;
+                    if (bw.State != ProductieState.Gestopt) continue;
+
+                    var xwps = Manager.BewerkingenLijst.GetWerkplekken(bw.Naam);
+                    var inds = wps.Where(x => xwps.Any(xw => string.Equals(xw.Replace(" ", ""),
+                        x.Werkplek.Replace(" ", ""), StringComparison.CurrentCultureIgnoreCase))).ToList();
+                    if (inds.Count == 0) continue;
+                    bw.WerkPlekken.RemoveAll(x =>
+                        x.TotaalGemaakt == 0 && x.TijdGewerkt == 0);
+                    WerkplekIndeling xind = null;
+                    double xlasttijd = 0;
+                    for (int j = 0; j < inds.Count; j++)
+                    {
+                        var ind = inds[j];
+                        var curbws = Bewerkingen.Where(x => IsAllowed(x, ind)).OrderBy(x => x.StartOp).ToList();
+                        if (curbws.Any(x =>
+                                string.Equals(x.ArtikelNr, bw.ArtikelNr,
+                                    StringComparison.CurrentCultureIgnoreCase) &&
+                                string.Equals(x.Naam, bw.Naam, StringComparison.CurrentCultureIgnoreCase)))
+                        {
+                            xind = ind;
+                            break;
+                        }
+
+                        var xbwtijdover = curbws.Sum(x => x.GetTijdOver());
+                        var gereed = Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(xbwtijdover),
+                            Manager.Opties.GetWerkRooster(), Manager.Opties.SpecialeRoosters);
+                        var startop = bw.StartOp;
+                        if (gereed <= startop)
+                        {
+                            xind = ind;
+                            xlasttijd = xbwtijdover;
+                            break;
+                        }
+                        if (xind == null)
+                        {
+                            xind = ind;
+                            xlasttijd = xbwtijdover;
+                            continue;
+                        }
+
+                        if (xlasttijd > xbwtijdover)
+                        {
+                            xlasttijd = xbwtijdover;
+                            xind = ind;
+                        }
+                    }
+
+                    if (xind == null) continue;
+                    var wp = bw.WerkPlekken.FirstOrDefault(xw => string.Equals(xw.Naam.Replace(" ", ""),
+                        xind.Werkplek.Replace(" ", ""), StringComparison.CurrentCultureIgnoreCase));
+                    if (wp != null)
+                        continue;
+                    wp = bw.GetWerkPlek(xind.Werkplek, true);
+                    if (wp == null)
+                        continue;
+                    _ = await bw.UpdateBewerking(null,
+                        $"[{bw.Path}] Ingedeeld op {wp.Naam}", true, false);
+                }
+                arg.Type = ProgressType.WriteCompleet;
+                arg.IsCanceled = true;
+                arg.OnChanged(this);
+                _isbussy = false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            if (prog != null && !prog.IsDisposed)
+            {
+                if (prog.InvokeRequired)
+                    prog.Invoke(new MethodInvoker(prog.Dispose));
+                else
+                    prog?.Dispose();
+            }
+        }
+
+        private async void ResetIndeling(List<Bewerking> bws)
+        {
+            try
+            {
+                if (_isbussy) return;
+                var prog = new LoadingForm();
+                var arg = prog.Arg;
+                arg.Message = "Indeling resetten...";
+                arg.OnChanged(this);
+                _ = Task.Run(() =>
+                  {
+                      if (prog == null || prog.IsDisposed) return;
+                      prog.ShowDialog();
+                      //    Invoke(new MethodInvoker(() =>
+                      //    {
+                      //        prog.ShowDialog();
+                      //        prog.Dispose();
+                      //    }));
+                  });
+                      _isbussy = true;
+                Application.DoEvents();
                 try
                 {
-                    for (int i = 0; i < bws.Count; i++)
+                    int cur = 0;
+                    foreach (var bw in bws)
                     {
-                        var bw = bws[i];
-                        arg.Current = i;
+                        arg.Current = cur;
                         arg.Max = bws.Count;
-                        arg.Message = $"Indelen: {bw.Path}({i}/{bws.Count})...";
+                        arg.Message = $"Indeling Reseten: {bw.Path}({cur}/{bws.Count})...";
                         arg.Type = ProgressType.WriteBussy;
                         arg.OnChanged(this);
                         if (arg.IsCanceled) break;
-                        if (bw.State != ProductieState.Gestopt) continue;
-
-                        var xwps = Manager.BewerkingenLijst.GetWerkplekken(bw.Naam);
-                        var inds = wps.Where(x => xwps.Any(xw => string.Equals(xw.Replace(" ", ""),
-                            x.Werkplek.Replace(" ", ""), StringComparison.CurrentCultureIgnoreCase))).ToList();
-                        if (inds.Count == 0) continue;
-                        bw.WerkPlekken.RemoveAll(x =>
-                            x.TotaalGemaakt == 0 && x.TijdGewerkt == 0);
-                        WerkplekIndeling xind = null;
-                        double xlasttijd = 0;
-                        for (int j = 0; j < inds.Count; j++)
+                        cur++;
+                        int removed = bw.WerkPlekken.RemoveAll(x => x.TotaalGemaakt == 0 && x.TijdGewerkt == 0);
+                        if (removed > 0)
                         {
-                            var ind = inds[j];
-                            var curbws = Bewerkingen.Where(x => IsAllowed(x, ind)).OrderBy(x=> x.StartOp).ToList();
-                            if (curbws.Any(x =>
-                                    string.Equals(x.ArtikelNr, bw.ArtikelNr,
-                                        StringComparison.CurrentCultureIgnoreCase) &&
-                                    string.Equals(x.Naam, bw.Naam, StringComparison.CurrentCultureIgnoreCase)))
-                            {
-                                xind = ind;
-                                break;
-                            }
-
-                            var xbwtijdover = curbws.Sum(x => x.GetTijdOver());
-                            var gereed = Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(xbwtijdover),
-                                Manager.Opties.GetWerkRooster(), Manager.Opties.SpecialeRoosters);
-                            var startop = bw.StartOp;
-                            if (gereed <= startop)
-                            {
-                                xind = ind;
-                                xlasttijd = xbwtijdover;
-                                break;
-                            }
-                            if (xind == null)
-                            {
-                                xind = ind;
-                                xlasttijd = xbwtijdover;
-                                continue;
-                            }
-
-                            if (xlasttijd > xbwtijdover)
-                            {
-                                xlasttijd = xbwtijdover;
-                                xind = ind;
-                            }
+                            _= await bw.UpdateBewerking(null,
+                                $"[{bw.Path}] Indeling gereset", true, false);
                         }
-
-                        if (xind == null) continue;
-                        var wp = bw.WerkPlekken.FirstOrDefault(xw => string.Equals(xw.Naam.Replace(" ", ""),
-                            xind.Werkplek.Replace(" ", ""), StringComparison.CurrentCultureIgnoreCase));
-                        if (wp != null)
-                            continue;
-                        wp = bw.GetWerkPlek(xind.Werkplek, true);
-                        if (wp == null)
-                            continue;
-                        _ = bw.UpdateBewerking(null,
-                            $"[{bw.Path}] Ingedeeld op {wp.Naam}",true,false).Result;
                     }
-                
                 }
                 catch (Exception e)
                 {
@@ -1166,57 +1190,13 @@ namespace Forms
                 arg.IsCanceled = true;
                 arg.OnChanged(this);
                 _isbussy = false;
-            });
-        }
-
-        private async void ResetIndeling(List<Bewerking> bws)
-        {
-            try
-            {
-                if (_isbussy) return;
-                var prog = new LoadingForm();
-                var arg = prog.Arg;
-                _ = Task.Run(() =>
-                  {
-                      Invoke(new MethodInvoker(() =>
-                      {
-                          prog.ShowDialog();
-                          prog.Dispose();
-                      }));
-                  });
-                await Task.Run(() =>
+                if (prog != null && !prog.IsDisposed)
                 {
-                    _isbussy = true;
-                    try
-                    {
-                        int cur = 0;
-                        foreach (var bw in bws)
-                        {
-                            arg.Current = cur;
-                            arg.Max = bws.Count;
-                            arg.Message = $"Indeling Reseten: {bw.Path}({cur}/{bws.Count})...";
-                            arg.Type = ProgressType.WriteBussy;
-                            arg.OnChanged(this);
-                            if (arg.IsCanceled) break;
-                            cur++;
-                            int removed = bw.WerkPlekken.RemoveAll(x => x.TotaalGemaakt == 0 && x.TijdGewerkt == 0);
-                            if (removed > 0)
-                            {
-                                _ = bw.UpdateBewerking(null,
-                                    $"[{bw.Path}] Indeling gereset",true,false).Result;
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
-
-                    arg.Type = ProgressType.WriteCompleet;
-                    arg.IsCanceled = true;
-                    arg.OnChanged(this);
-                    _isbussy = false;
-                });
+                    if (prog.InvokeRequired)
+                        prog.Invoke(new MethodInvoker(prog.Dispose));
+                    else
+                        prog?.Dispose();
+                }
             }
             catch (Exception ex)
             {
@@ -1257,6 +1237,16 @@ namespace Forms
             {
                 XMessageBox.Show(this, ex.Message, "Fout", MessageBoxIcon.Error);
             }
+        }
+
+        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            for(int i = 0; i < xWerkplaatsIndelingPanel.Controls.Count; i++)
+            {
+                var c = xWerkplaatsIndelingPanel.Controls[i];
+                c.Width = splitContainer1.Panel1.Width - 24;
+            }
+            Invalidate();
         }
     }
 }

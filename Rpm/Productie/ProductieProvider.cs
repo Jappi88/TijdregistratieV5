@@ -663,16 +663,19 @@ namespace ProductieManager.Rpm.Productie
         /// <param name="incform">true als de productie ook die aangegeven status moet zijn, false je alleen wilt verkrijgen op basis van een geldige bewerking</param>
         /// <param name="loaddb">true als je de producties als standaard wilt laden.</param>
         /// <returns></returns>
-        public async Task<List<ProductieFormulier>> GetProducties(LoadedType type, ViewState[] states, bool filter, IsValidHandler validhandler, bool checksecondary)
+        public Task<List<ProductieFormulier>> GetProducties(LoadedType type, ViewState[] states, bool filter, IsValidHandler validhandler, bool checksecondary)
         {
-            return await GetProducties(type, filter, validhandler, checksecondary);
+            return GetProducties(type, filter, validhandler, checksecondary);
         }
 
-        public async Task<List<Bewerking>> GetBewerkingen(LoadedType type, ViewState[] states, bool filter, IsValidHandler validhandler, bool checksecondary)
+        public Task<List<Bewerking>> GetBewerkingen(LoadedType type, ViewState[] states, bool filter, IsValidHandler validhandler, bool checksecondary)
         {
-            var prods = await GetProducties(type, false, validhandler, checksecondary);
-            var bws = GetBewerkingen(prods, type, states, filter);
-            return bws;
+            return Task.Run(() =>
+            {
+                var prods = GetProducties(type, false, validhandler, checksecondary).Result;
+                var bws = GetBewerkingen(prods, type, states, filter);
+                return bws;
+            });
         }
 
         private List<Bewerking> GetBewerkingen(List<ProductieFormulier>  producties, LoadedType type, ViewState[] states, bool filter)
@@ -685,35 +688,38 @@ namespace ProductieManager.Rpm.Productie
                 select bw).ToList();
         }
 
-        private async Task<List<ProductieFormulier>> GetProducties(LoadedType type, bool filter, IsValidHandler validhandler, bool checksecondary)
+        private Task<List<ProductieFormulier>> GetProducties(LoadedType type, bool filter, IsValidHandler validhandler, bool checksecondary)
         {
-            var prods = new List<ProductieFormulier>();
-            //Manager.DbBeginUpdate();
-            try
+            return Task.Run(() =>
             {
-                switch (type)
+                var prods = new List<ProductieFormulier>();
+                //Manager.DbBeginUpdate();
+                try
                 {
-                    case LoadedType.Alles:
-                    //prods = await Manager.Database.GetAllProducties(true, filter,null);
-                    // break;
-                    case LoadedType.Gereed:
-                        //  IsValidHandler validhandler = filter ? Functions.IsAllowed : null;
-                        prods = await Manager.Database.GetAllProducties(true, filter, validhandler, checksecondary);
-                        break;
-                    case LoadedType.Producties:
-                        prods = await Manager.Database.GetAllProducties(false, filter, validhandler, checksecondary);
-                        break;
-                    case LoadedType.None:
-                        prods = new List<ProductieFormulier>();
-                        break;
-                }
+                    switch (type)
+                    {
+                        case LoadedType.Alles:
+                        //prods = await Manager.Database.GetAllProducties(true, filter,null);
+                        // break;
+                        case LoadedType.Gereed:
+                            //  IsValidHandler validhandler = filter ? Functions.IsAllowed : null;
+                            prods = Manager.Database.GetAllProducties(true, filter, validhandler, checksecondary).Result;
+                            break;
+                        case LoadedType.Producties:
+                            prods = Manager.Database.GetAllProducties(false, filter, validhandler, checksecondary).Result;
+                            break;
+                        case LoadedType.None:
+                            prods = new List<ProductieFormulier>();
+                            break;
+                    }
 
-            }
-            catch
-            {
-            }
-            //Manager.DbEndUpdate();
-            return prods;
+                }
+                catch
+                {
+                }
+                //Manager.DbEndUpdate();
+                return prods;
+            });
         }
 
         #region Disposing

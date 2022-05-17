@@ -77,7 +77,7 @@ namespace Forms
             this.xcancelb.Name = "xcancelb";
             this.xcancelb.Size = new System.Drawing.Size(120, 38);
             this.xcancelb.TabIndex = 11;
-            this.xcancelb.Text = "&Annuleren";
+            this.xcancelb.Text = "&Sluiten";
             this.xcancelb.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.xcancelb.UseVisualStyleBackColor = true;
             this.xcancelb.Click += new System.EventHandler(this.xcancelb_Click);
@@ -302,9 +302,9 @@ namespace Forms
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(610, 520);
             this.Name = "AddExtraTijdForm";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Voeg Extra Tijd Toe";
+            this.Title = "Voeg Extra Tijd Toe";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xaantalkeer)).EndInit();
             this.xbereikfield.ResumeLayout(false);

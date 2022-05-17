@@ -72,8 +72,10 @@ namespace Controls
                 xdozenpercolli.SetValue(x.DozenOpColli);
                 xdozenperlaag.SetValue(x.PerLaagOpColli);
                 xaantelpercolli.SetValue(x.ProductenPerColli);
+                xwijzig.Visible = true;
                 xwijzig.Text = "Opslaan";
                 xwijzig.Image = Resources.diskette_save_saveas_1514;
+                xeditpanel.Visible = true;
                 xsluiten.Text = "Annuleren";
                 xsluiten.Visible = true;
             }
@@ -84,6 +86,7 @@ namespace Controls
                 htmlPanel1.Visible = true;
                 htmlPanel1.Text =
                     _VerpakkingInstructie?.CreateHtmlText(Title, Color.White, BodyColor, TextColor, true) ?? "";
+                xwijzig.Visible = AllowEditMode && VerpakkingInstructie != null;
                 xwijzig.Text = "Wijzig";
                 xwijzig.Image = Resources.edit__52382;
             }

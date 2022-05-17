@@ -46,6 +46,7 @@ namespace Forms
                 }
 
                 xVerpakkingen.SelectedItem?.EnsureVisible();
+                UpdateFields();
             }
             catch (Exception e)
             {
@@ -165,17 +166,29 @@ namespace Forms
 
         private void xVerpakkingen_SelectedIndexChanged(object sender, EventArgs e)
         {
-            xdelete.Enabled = xVerpakkingen.SelectedObjects.Count > 0;
-            verwijderenToolStripMenuItem.Enabled = xdelete.Enabled;
-            if (xVerpakkingen.SelectedObject is VerpakkingInstructie xverp)
+            UpdateFields();
+        }
+
+        private void UpdateFields()
+        {
+            try
             {
-                verpakkingInstructieUI1.AllowEditMode = true;
-                verpakkingInstructieUI1.InitFields(xverp, false, $"Aangepaste VerpakkingsInstructie voor '{xverp.ArtikelNr}'", Color.SaddleBrown,
-                    Color.White);
+                xdelete.Enabled = xVerpakkingen.SelectedObjects.Count > 0;
+                verwijderenToolStripMenuItem.Enabled = xdelete.Enabled;
+                if (xVerpakkingen.SelectedObject is VerpakkingInstructie xverp)
+                {
+                    verpakkingInstructieUI1.AllowEditMode = true;
+                    verpakkingInstructieUI1.InitFields(xverp, verpakkingInstructieUI1.IsEditmode, $"Aangepaste VerpakkingsInstructie voor '{xverp.ArtikelNr}'", Color.SaddleBrown,
+                        Color.White);
+                }
+                else
+                {
+                    verpakkingInstructieUI1.Clear();
+                }
             }
-            else
+            catch(Exception ex)
             {
-                verpakkingInstructieUI1.Clear();
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -194,8 +207,7 @@ namespace Forms
                             Manager.Verpakkingen.RemoveVerpakking(item);
                         }
                     }
-
-                    xdelete.Enabled = xVerpakkingen.SelectedObjects.Count > 0;
+                    UpdateFields();
                 }
             }
         }

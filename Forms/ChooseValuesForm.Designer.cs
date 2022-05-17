@@ -60,9 +60,9 @@
             this.xok.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.xok.Image = global::ProductieManager.Properties.Resources.check_1582;
             this.xok.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xok.Location = new System.Drawing.Point(260, 3);
+            this.xok.Location = new System.Drawing.Point(312, 3);
             this.xok.Name = "xok";
-            this.xok.Size = new System.Drawing.Size(120, 34);
+            this.xok.Size = new System.Drawing.Size(94, 34);
             this.xok.TabIndex = 1;
             this.xok.Text = "OK";
             this.xok.UseVisualStyleBackColor = true;
@@ -73,9 +73,9 @@
             this.xcancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.xcancel.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xcancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xcancel.Location = new System.Drawing.Point(386, 3);
+            this.xcancel.Location = new System.Drawing.Point(412, 3);
             this.xcancel.Name = "xcancel";
-            this.xcancel.Size = new System.Drawing.Size(120, 34);
+            this.xcancel.Size = new System.Drawing.Size(94, 34);
             this.xcancel.TabIndex = 0;
             this.xcancel.Text = "Sluiten";
             this.xcancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;

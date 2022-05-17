@@ -47,9 +47,9 @@ namespace Forms
                     "Niet Ingelogd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
+            Application.DoEvents();
             LoadProfile();
             LoadProfiles();
-            LoadSelectedUser();
             ProductieChat.GebruikerUpdate += ProductieChat_GebruikerUpdate;
             ProductieChat.MessageRecieved += ProductieChat_MessageRecieved;
             return true;
@@ -115,7 +115,7 @@ namespace Forms
                 entry.Afzender.UserName, new Size(48, 48), ImageAlign.Left, new Size(85, 0), TextAlign.LEFT,
                 0, 0, Color.Transparent);
 
-            html += CreateHtmlString($"<b>{entry.Afzender.UserName} zegt:</b><br><br>{entry.Bericht?.WrapText(80)}", entry.ID,
+            html += CreateHtmlString($"<b>{entry.Afzender.UserName} zegt:</b><br><br>{entry.Bericht}", entry.ID,
                 Color.White,
                 Color.CornflowerBlue, 10,
                 null, new Size(32, 32), ImageAlign.Left, new Size(125, 0), TextAlign.LEFT, 10, 15, Color.Transparent);
@@ -136,7 +136,7 @@ namespace Forms
             //html += CreateHtmlString($"{user} zegt:", Color.DarkGray, Color.Transparent, 5,
             //    null, new Size(48, 48), ImageAlign.Left, new Size(150, 0), TextAlign.LEFT, 0, 0, Color.Transparent);
             var xret = chat ?? new ChatBubble();
-            html += CreateHtmlString($"<b>{entry.Afzender.UserName} zegt:</b><br><br>{entry.Bericht?.WrapText(80)}", entry.ID, Color.Black,
+            html += CreateHtmlString($"<b>{entry.Afzender.UserName} zegt:</b><br><br>{entry.Bericht}", entry.ID, Color.Black,
                 Color.PowderBlue, 10,
                 null, new Size(32, 32), ImageAlign.Left, new Size(150, 0), TextAlign.LEFT, 10, 15, Color.Transparent);
 
@@ -194,7 +194,7 @@ namespace Forms
                     string xvalue = value.Substring(xstart, 7);
                     var prod = Manager.Database.GetProductie(xvalue, true);
                     if (prod == null || xreplaces.Contains(prod.ProductieNr)) continue;
-                    xreturn = xreturn.Replace(xvalue, $"<a color= white href='{prod.ProductieNr}'>[{prod.Omschrijving}]</a>");
+                    xreturn = xreturn.Replace(xvalue, $"\n<a color='purple' href='{prod.ProductieNr}'>[{prod.Omschrijving}]</a>");
                     xreplaces.Add(prod.ProductieNr);
                 }
                 catch (Exception e)
@@ -224,7 +224,7 @@ namespace Forms
                     string xvalue = value.Substring(xstart, 10);
                     var prod = Manager.Database.GetProductie(xvalue, true);
                     if (prod == null || xreplaces.Contains(prod.ProductieNr)) continue;
-                    xreturn = xreturn.Replace(xvalue, $"<a color= white href='{prod.ProductieNr}'>{prod.Omschrijving}</a>");
+                    xreturn = xreturn.Replace(xvalue, $"\n<a color='purple' href='{prod.ProductieNr}'>{prod.Omschrijving}</a>");
                     xreplaces.Add(prod.ProductieNr);
                 }
                 catch (Exception e)
@@ -265,7 +265,21 @@ namespace Forms
         {
             try
             {
-                BeginInvoke(new MethodInvoker(LoadProfiles));
+                if (string.IsNullOrEmpty(message?.Bericht)) return;
+                //if (message.Afzender.Equals(_selecteduser))
+                //{
+                    
+                    
+                //    Invoke(new MethodInvoker(() =>
+                //    {
+                //        var xmsg = CreateRecieveMessage(message);
+                //        xchatpanel.Controls.Add(xmsg);
+                //        xchatpanel.Controls.SetChildIndex(xmsg, xchatpanel.Controls.Count - 1);
+                //        xchatpanel.ScrollControlIntoView(xmsg);
+                //    }));
+                //}
+                //else
+                    BeginInvoke(new MethodInvoker(LoadProfiles));
             }
             catch (Exception e)
             {
@@ -342,6 +356,16 @@ namespace Forms
                 for (int i = 0; i < ProductieChat.Gebruikers.Count; i++)
                 {
                     var user = ProductieChat.Gebruikers[i];
+                    if (user.UserName.ToLower().Trim() != "iedereen")
+                    {
+                        var acc = Manager.Database.AccountExist(user.UserName).Result;
+                        if (!acc)
+                        {
+                            ProductieChat.Gebruikers[i].DeleteUser();
+                            ProductieChat.Gebruikers.RemoveAt(i--);
+                            continue;
+                        }
+                    }
                     if (_Selected != null &&
                         string.Equals(user.UserName, _Selected, StringComparison.CurrentCultureIgnoreCase))
                         selected = user;
@@ -394,47 +418,57 @@ namespace Forms
         {
             if (Manager.ProductieChat == null || Manager.LogedInGebruiker == null) return;
             var user = SelectedUser();
-            xsendmessagepanel.Visible = user != null;
-            xselecteduserimage.Image = user?.GetProfielImage();
-            xselectedusername.Text = user?.UserName;
-            xselecteduserstatus.Text = user == null ? "" : (user.IsOnline ? "Online" : "Offline");
-            xselecteduserstatusimage.Image = user == null
-                ? null
-                : user.IsOnline
-                    ? Resources.Online_32
-                    : Resources.offline_32x32;
-            if (string.Equals(user?.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase))
-            {
-                var users = ProductieChat.Gebruikers.Where(x => !string.Equals(Manager.LogedInGebruiker.Username,
-                    x.UserName, StringComparison.CurrentCultureIgnoreCase) && !string.Equals("iedereen",
-                    x.UserName, StringComparison.CurrentCultureIgnoreCase)).ToList();
-                var onlineusers = ProductieChat.Gebruikers.Where(x => x.IsOnline && !string.Equals(Manager.LogedInGebruiker.Username,
-                    x.UserName, StringComparison.CurrentCultureIgnoreCase) && !string.Equals("iedereen",
-                    x.UserName, StringComparison.CurrentCultureIgnoreCase)).ToList();
-                var x0 = users.Count == 1 ? $"gebruiker" : "gebruikers";
-                var x1 = onlineusers.Count == 1 ? $"gebruiker" : "gebruikers";
-
-                xselecteduserdate.Text = $"Stuur bericht naar {users.Count} {x0}, waarvan online: {onlineusers.Count} {x1}";
-            }
-            else
-            {
-                xselecteduserdate.Text = user == null
-                    ? null
-                    : (user.IsOnline ? "Online vanaf " : "Laatst online geweest op ") +
-                      (user.LastOnline.Date == DateTime.Now.Date
-                          ? user.LastOnline.ToShortTimeString()
-                          : user.LastOnline.ToString("f"));
-            }
-
-            if (user != null)
-                await LoadConversation(_selecteduser == null || !_selecteduser.Equals(user));
-            else
+            if (user == null)
             {
                 xchatpanel.SuspendLayout();
                 xchatpanel.Controls.Clear();
                 xchatpanel.ResumeLayout(false);
+                xsendmessagepanel.Visible = false;
             }
+            else
+            {
+                if (_selecteduser != null && _selecteduser.Equals(user))
+                {
+                    await LoadConversation(false);
+                }
+                else
+                {
+                    xsendmessagepanel.Visible = user != null;
+                    xselecteduserimage.Image = user?.GetProfielImage();
+                    xselectedusername.Text = user?.UserName;
+                    xselecteduserstatus.Text = user == null ? "" : (user.IsOnline ? "Online" : "Offline");
+                    xselecteduserstatusimage.Image = user == null
+                        ? null
+                        : user.IsOnline
+                            ? Resources.Online_32
+                            : Resources.offline_32x32;
+                    if (string.Equals(user?.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        var users = ProductieChat.Gebruikers.Where(x => !string.Equals(Manager.LogedInGebruiker.Username,
+                            x.UserName, StringComparison.CurrentCultureIgnoreCase) && !string.Equals("iedereen",
+                            x.UserName, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                        var onlineusers = ProductieChat.Gebruikers.Where(x => x.IsOnline && !string.Equals(Manager.LogedInGebruiker.Username,
+                            x.UserName, StringComparison.CurrentCultureIgnoreCase) && !string.Equals("iedereen",
+                            x.UserName, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                        var x0 = users.Count == 1 ? $"gebruiker" : "gebruikers";
+                        var x1 = onlineusers.Count == 1 ? $"gebruiker" : "gebruikers";
 
+                        xselecteduserdate.Text = $"Stuur bericht naar {users.Count} {x0}, waarvan online: {onlineusers.Count} {x1}";
+                    }
+                    else
+                    {
+                        xselecteduserdate.Text = user == null
+                            ? null
+                            : (user.IsOnline ? "Online vanaf " : "Laatst online geweest op ") +
+                              (user.LastOnline.Date == DateTime.Now.Date
+                                  ? user.LastOnline.ToShortTimeString()
+                                  : user.LastOnline.ToString("f"));
+                    }
+
+                    await LoadConversation(true);
+
+                }
+            }
             _selecteduser = user;
         }
 
@@ -507,6 +541,7 @@ namespace Forms
                     xchatpanel.ScrollControlIntoView(xlast);
                     xchatpanel.PerformLayout();
                     xchatpanel.ScrollControlIntoView(xlast);
+                   
                 }
             }
             catch (Exception e)
@@ -580,7 +615,7 @@ namespace Forms
             string ontvangers = string.IsNullOrEmpty(selected.UserName)
                 ? string.Join(";", ProductieChat.Gebruikers.Select(x => x.UserName))
                 : selected.UserName;
-            string xmessage = CheckProductieLinks(xchattextbox.Text.Trim());
+            string xmessage = CheckProductieLinks(xchattextbox.Text.Trim().WrapText(100, "\n"));
             var xent = ProductieChat.SendMessage(xmessage, ontvangers);
             if (xent != null)
             {
@@ -592,7 +627,6 @@ namespace Forms
             xchattextbox.Text = "";
             xchattextbox.Select();
             xchattextbox.Focus();
-            //LoadConversation(true);
         }
 
         private void xsendbutton_Click(object sender, EventArgs e)

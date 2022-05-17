@@ -1208,7 +1208,7 @@ namespace Controls
             this.toolStripMenuItem7.Image = global::ProductieManager.Properties.Resources.play_button_icon_icons_com_60615;
             this.toolStripMenuItem7.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(196, 38);
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(145, 38);
             this.toolStripMenuItem7.Tag = "1";
             this.toolStripMenuItem7.Text = "Gestart";
             // 
@@ -1217,7 +1217,7 @@ namespace Controls
             this.toolStripMenuItem8.Image = global::ProductieManager.Properties.Resources.stop_red256_24890;
             this.toolStripMenuItem8.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(196, 38);
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(145, 38);
             this.toolStripMenuItem8.Tag = "0";
             this.toolStripMenuItem8.Text = "Gestopt";
             // 
@@ -1226,7 +1226,7 @@ namespace Controls
             this.toolStripMenuItem9.Image = global::ProductieManager.Properties.Resources.Warning_36828;
             this.toolStripMenuItem9.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            this.toolStripMenuItem9.Size = new System.Drawing.Size(196, 38);
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(145, 38);
             this.toolStripMenuItem9.Tag = "4";
             this.toolStripMenuItem9.Text = "Te Laat";
             // 
@@ -1235,7 +1235,7 @@ namespace Controls
             this.toolStripMenuItem10.Image = global::ProductieManager.Properties.Resources.new_25355;
             this.toolStripMenuItem10.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMenuItem10.Name = "toolStripMenuItem10";
-            this.toolStripMenuItem10.Size = new System.Drawing.Size(196, 38);
+            this.toolStripMenuItem10.Size = new System.Drawing.Size(145, 38);
             this.toolStripMenuItem10.Tag = "5";
             this.toolStripMenuItem10.Text = "Nieuw";
             // 
@@ -1244,7 +1244,7 @@ namespace Controls
             this.toolStripMenuItem11.Image = global::ProductieManager.Properties.Resources.check_1582;
             this.toolStripMenuItem11.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMenuItem11.Name = "toolStripMenuItem11";
-            this.toolStripMenuItem11.Size = new System.Drawing.Size(196, 38);
+            this.toolStripMenuItem11.Size = new System.Drawing.Size(145, 38);
             this.toolStripMenuItem11.Tag = "2";
             this.toolStripMenuItem11.Text = "Gereed";
             // 
@@ -1253,7 +1253,7 @@ namespace Controls
             this.toolStripMenuItem12.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.toolStripMenuItem12.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMenuItem12.Name = "toolStripMenuItem12";
-            this.toolStripMenuItem12.Size = new System.Drawing.Size(196, 38);
+            this.toolStripMenuItem12.Size = new System.Drawing.Size(145, 38);
             this.toolStripMenuItem12.Tag = "3";
             this.toolStripMenuItem12.Text = "Verwijderd";
             // 

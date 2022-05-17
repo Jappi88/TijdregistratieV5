@@ -134,7 +134,7 @@
             this.xtoegangslevel.Location = new System.Drawing.Point(322, 84);
             this.xtoegangslevel.Name = "xtoegangslevel";
             this.xtoegangslevel.Size = new System.Drawing.Size(172, 29);
-            this.xtoegangslevel.Style = MetroFramework.MetroColorStyle.Purple;
+            this.xtoegangslevel.Style = MetroFramework.MetroColorStyle.Pink;
             this.xtoegangslevel.TabIndex = 7;
             this.xtoegangslevel.UseSelectable = true;
             this.xtoegangslevel.UseStyleColors = true;
@@ -161,7 +161,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(121, 36);
             this.button2.TabIndex = 9;
-            this.button2.Text = "Annuleer";
+            this.button2.Text = "Annuleren";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -184,11 +184,11 @@
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(510, 280);
             this.Name = "CreateAccount";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Style = MetroFramework.MetroColorStyle.Pink;
             this.Text = "Maak Account Aan";
+            this.Title = "Maak Account Aan";
             this.ResumeLayout(false);
             this.PerformLayout();
 

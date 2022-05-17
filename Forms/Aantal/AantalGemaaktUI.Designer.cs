@@ -34,6 +34,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.xwerkplekken = new MetroFramework.Controls.MetroComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.xPacketGroup = new System.Windows.Forms.GroupBox();
@@ -53,7 +54,6 @@
             this.xvaluepanel = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.xwerkplekken = new MetroFramework.Controls.MetroComboBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -70,9 +70,9 @@
             // 
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(20, 463);
+            this.panel1.Location = new System.Drawing.Point(20, 465);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(810, 37);
+            this.panel1.Size = new System.Drawing.Size(810, 35);
             this.panel1.TabIndex = 4;
             // 
             // panel2
@@ -81,7 +81,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel2.Location = new System.Drawing.Point(697, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(113, 37);
+            this.panel2.Size = new System.Drawing.Size(113, 35);
             this.panel2.TabIndex = 3;
             // 
             // button1
@@ -93,7 +93,7 @@
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button1.Location = new System.Drawing.Point(0, 0);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(113, 37);
+            this.button1.Size = new System.Drawing.Size(113, 35);
             this.button1.TabIndex = 0;
             this.button1.Text = "Sluiten";
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -109,6 +109,18 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(316, 37);
             this.panel5.TabIndex = 6;
+            // 
+            // xwerkplekken
+            // 
+            this.xwerkplekken.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xwerkplekken.FormattingEnabled = true;
+            this.xwerkplekken.ItemHeight = 23;
+            this.xwerkplekken.Location = new System.Drawing.Point(87, 4);
+            this.xwerkplekken.Name = "xwerkplekken";
+            this.xwerkplekken.Size = new System.Drawing.Size(226, 29);
+            this.xwerkplekken.TabIndex = 7;
+            this.xwerkplekken.UseSelectable = true;
+            this.xwerkplekken.SelectedIndexChanged += new System.EventHandler(this.xwerkplekken_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -284,7 +296,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(138, 60);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(692, 403);
+            this.panel4.Size = new System.Drawing.Size(692, 405);
             this.panel4.TabIndex = 5;
             // 
             // productieInfoUI1
@@ -297,8 +309,9 @@
             this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
             this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
             this.productieInfoUI1.Name = "productieInfoUI1";
+            this.productieInfoUI1.Padding = new System.Windows.Forms.Padding(5);
             this.productieInfoUI1.ShowAantal = false;
-            this.productieInfoUI1.Size = new System.Drawing.Size(692, 302);
+            this.productieInfoUI1.Size = new System.Drawing.Size(692, 304);
             this.productieInfoUI1.TabIndex = 2;
             // 
             // xvaluepanel
@@ -307,7 +320,7 @@
             this.xvaluepanel.Controls.Add(this.panel5);
             this.xvaluepanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.xvaluepanel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xvaluepanel.Location = new System.Drawing.Point(0, 302);
+            this.xvaluepanel.Location = new System.Drawing.Point(0, 304);
             this.xvaluepanel.Name = "xvaluepanel";
             this.xvaluepanel.Size = new System.Drawing.Size(692, 101);
             this.xvaluepanel.TabIndex = 1;
@@ -319,7 +332,7 @@
             this.pictureBox1.Image = global::ProductieManager.Properties.Resources.Count_tool_34564__1_;
             this.pictureBox1.Location = new System.Drawing.Point(20, 60);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(118, 403);
+            this.pictureBox1.Size = new System.Drawing.Size(118, 405);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
@@ -328,16 +341,6 @@
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip1.ToolTipTitle = "Aantal Gemaakt";
-            // 
-            // xwerkplekken
-            // 
-            this.xwerkplekken.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xwerkplekken.FormattingEnabled = true;
-            this.xwerkplekken.Location = new System.Drawing.Point(87, 4);
-            this.xwerkplekken.Name = "xwerkplekken";
-            this.xwerkplekken.Size = new System.Drawing.Size(226, 29);
-            this.xwerkplekken.TabIndex = 7;
-            this.xwerkplekken.SelectedIndexChanged += new System.EventHandler(this.xwerkplekken_SelectedIndexChanged);
             // 
             // AantalGemaaktUI
             // 
@@ -352,9 +355,9 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MinimumSize = new System.Drawing.Size(850, 475);
             this.Name = "AantalGemaaktUI";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Update Aantal Gemaakt";
+            this.Title = "Update Aantal Gemaakt";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AantalGemaaktUI_FormClosing);
             this.Shown += new System.EventHandler(this.AantalUI_Shown);
             this.panel1.ResumeLayout(false);

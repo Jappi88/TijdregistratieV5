@@ -59,7 +59,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(100, 30);
             this.button1.TabIndex = 1;
-            this.button1.Text = "Annuleren";
+            this.button1.Text = "Sluiten";
             this.button1.UseSelectable = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -130,9 +130,9 @@
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(600, 275);
             this.Name = "DatumChanger";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Wijzig Datum";
+            this.Title = "Wijzig Datum";
             this.Shown += new System.EventHandler(this.DatumChanger_Shown);
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);

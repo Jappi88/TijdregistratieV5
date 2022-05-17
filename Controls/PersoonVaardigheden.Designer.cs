@@ -33,7 +33,7 @@ namespace Controls
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PersoonVaardigheden));
             this.xomschrijving = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.xskillview = new BrightIdeasSoftware.ObjectListView();
+            this.xskillview = new CustomObjectListview();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -289,7 +289,7 @@ namespace Controls
         private System.Windows.Forms.Label xstatuslabel;
         private System.Windows.Forms.Panel xclosepanel;
         private System.Windows.Forms.Button xsluiten;
-        public BrightIdeasSoftware.ObjectListView xskillview;
+        public  CustomObjectListview xskillview;
         private System.Windows.Forms.ToolTip toolTip1;
     }
 }

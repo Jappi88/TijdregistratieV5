@@ -20,6 +20,8 @@ namespace Forms
         private void ChatForm_Shown(object sender, EventArgs e)
         {
             //this.InitLastInfo();
+            Invalidate();
+            Application.DoEvents();
             if (!productieChatUI1.InitUI())
                 this.Close();
         }

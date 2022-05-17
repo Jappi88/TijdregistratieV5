@@ -61,7 +61,7 @@ namespace Forms
             this.xisuitzendcheck.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xisuitzendcheck.Location = new System.Drawing.Point(144, 194);
             this.xisuitzendcheck.Name = "xisuitzendcheck";
-            this.xisuitzendcheck.Size = new System.Drawing.Size(124, 20);
+            this.xisuitzendcheck.Size = new System.Drawing.Size(125, 20);
             this.xisuitzendcheck.TabIndex = 4;
             this.xisuitzendcheck.Text = "Externe kracht";
             this.xisuitzendcheck.UseVisualStyleBackColor = true;
@@ -72,7 +72,7 @@ namespace Forms
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(134, 10);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(48, 16);
+            this.label1.Size = new System.Drawing.Size(49, 16);
             this.label1.TabIndex = 13;
             this.label1.Text = "Naam";
             // 
@@ -149,7 +149,7 @@ namespace Forms
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(134, 55);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(64, 16);
+            this.label2.Size = new System.Drawing.Size(65, 16);
             this.label2.TabIndex = 25;
             this.label2.Text = "Afdeling";
             // 
@@ -236,7 +236,7 @@ namespace Forms
             this.xannueer.Name = "xannueer";
             this.xannueer.Size = new System.Drawing.Size(100, 30);
             this.xannueer.TabIndex = 8;
-            this.xannueer.Text = "Annuleer";
+            this.xannueer.Text = "Sluiten";
             this.xannueer.UseVisualStyleBackColor = true;
             this.xannueer.Click += new System.EventHandler(this.xannueer_Click);
             // 
@@ -263,9 +263,9 @@ namespace Forms
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(455, 390);
             this.Name = "AddPersoneel";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Voeg Personeel Toe";
+            this.Title = "Voeg Personeel Toe";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.xbuttonpanel.ResumeLayout(false);

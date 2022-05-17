@@ -40,7 +40,7 @@ namespace Controls
             try
             {
                 Werkplek = werkplek;
-                UpdateLabelText();
+                UpdateWerkplekInfo();
             }
             catch (Exception e)
             {
@@ -48,61 +48,59 @@ namespace Controls
             }
         }
 
-        public void UpdateLabelText()
-        {
-            try
-            {
-                if (this.InvokeRequired)
-                    this.BeginInvoke(new MethodInvoker(UpdateWerkplekInfo));
-                else UpdateWerkplekInfo();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
         public void UpdateWerkplekInfo()
         {
-            if (IsDefault())
+            if (InvokeRequired)
             {
-               // ximage.Image = Resources.operation;
-               xVerwijderPersoneel.Visible = false;
-               xresetindeling.Visible = false;
-               xnietingedeeld.Visible = true;
-               xnietingedeeld.Checked = ToonNietIngedeeld;
-                if (FieldTextGetter != null)
-                    xpersoonInfo.Text = FieldTextGetter.Invoke(this);
-                else
-                    xpersoonInfo.Text = $"Beheer hier alle bewerkingen.<br>" +
-                                        $"Voeg werkplaatsen toe om producties daarvoor in te delen.<br>" +
-                                        $"Sleep een bewerking naar de gewenste werkplek om ze in te delen.<br>";
-                xknoppenpanel.Visible = false;
+                this.Invoke(new MethodInvoker(UpdateWerkplekInfo));
             }
             else
             {
-                //ximage.Image = Resources.user_customer_person_13976;
-                xknoppenpanel.Visible = SelectedBewerking != null && !IsDefault() && IsSelected;
-                xVerwijderPersoneel.Visible = true;
-                xresetindeling.Visible = true;
-                if (Parent is GroupBox group)
+                if (IsDefault())
                 {
-                    if (SelectedBewerking != null && IsSelected)
-                    {
-                        var bw = SelectedBewerking;
-                        group.Text = $"{Werkplek} {bw.Naam} van {bw.ArtikelNr} | {bw.ProductieNr}";
-                    }
-                    else group.Text = $"{Werkplek}";
+                    // ximage.Image = Resources.operation;
+                    xVerwijderPersoneel.Visible = false;
+                    xresetindeling.Visible = false;
+                    xnietingedeeld.Visible = true;
+                    xnietingedeeld.Checked = ToonNietIngedeeld;
+                    if (FieldTextGetter != null)
+                        xpersoonInfo.Text = FieldTextGetter.Invoke(this);
+                    else
+                        xpersoonInfo.Text = $"Beheer hier alle bewerkingen.<br>" +
+                                            $"Voeg werkplaatsen toe om producties daarvoor in te delen.<br>" +
+                                            $"Sleep een bewerking naar de gewenste werkplek om ze in te delen.<br>";
+                    xknoppenpanel.Visible = false;
                 }
-                if (SelectedBewerking != null)
+                else
                 {
-                    var wp = SelectedBewerking.GetWerkPlek(Werkplek, false);
-                    if (wp != null && wp.IsActief())
+                    //ximage.Image = Resources.user_customer_person_13976;
+                    xknoppenpanel.Visible = SelectedBewerking != null && !IsDefault() && IsSelected;
+                    xVerwijderPersoneel.Visible = true;
+                    xresetindeling.Visible = true;
+                    if (Parent is GroupBox group)
                     {
-                        if (SelectedBewerking.State == ProductieState.Gestart)
+                        if (SelectedBewerking != null && IsSelected)
                         {
-                            xStartKlus.Enabled = false;
-                            xStopKlus.Enabled = true;
+                            var bw = SelectedBewerking;
+                            group.Text = $"{Werkplek} {bw.Naam} van {bw.ArtikelNr} | {bw.ProductieNr}";
+                        }
+                        else group.Text = $"{Werkplek}";
+                    }
+                    if (SelectedBewerking != null)
+                    {
+                        var wp = SelectedBewerking.GetWerkPlek(Werkplek, false);
+                        if (wp != null && wp.IsActief())
+                        {
+                            if (SelectedBewerking.State == ProductieState.Gestart)
+                            {
+                                xStartKlus.Enabled = false;
+                                xStopKlus.Enabled = true;
+                            }
+                            else
+                            {
+                                xStartKlus.Enabled = true;
+                                xStopKlus.Enabled = false;
+                            }
                         }
                         else
                         {
@@ -112,18 +110,12 @@ namespace Controls
                     }
                     else
                     {
-                        xStartKlus.Enabled = true;
-                        xStopKlus.Enabled = false;
+                        xknoppenpanel.Visible = false;
                     }
+                    if (FieldTextGetter != null)
+                        xpersoonInfo.Text = FieldTextGetter.Invoke(this);
                 }
-                else
-                {
-                    xknoppenpanel.Visible = false;
-                }
-                if (FieldTextGetter != null)
-                    xpersoonInfo.Text = FieldTextGetter.Invoke(this);
             }
-
         }
 
         public void SetBewerking(Bewerking bew)

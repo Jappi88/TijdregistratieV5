@@ -44,6 +44,28 @@ namespace ProductieManager.Rpm.Productie
             return false;
         }
 
+        public static byte[] Resize2Maxbytes(byte[] byteImageIn, long maxsize)
+        {
+            byte[] currentByteImageArray = byteImageIn;
+            double scale = 1f;
+            using MemoryStream inputMemoryStream = new MemoryStream(byteImageIn);
+            Image fullsizeImage = Image.FromStream(inputMemoryStream);
+            while (currentByteImageArray.Length > maxsize)
+            {
+                Bitmap fullSizeBitmap = new Bitmap(fullsizeImage, new Size((int)(fullsizeImage.Width * scale), (int)(fullsizeImage.Height * scale)));
+                using MemoryStream resultStream = new MemoryStream();
+                fullSizeBitmap.Save(resultStream, fullsizeImage.RawFormat);
+
+                currentByteImageArray = resultStream.ToArray();
+                resultStream.Dispose();
+                resultStream.Close();
+
+                scale -= 0.01f;
+            }
+
+            return currentByteImageArray;
+        }
+
         public static bool UpdateBijlage(string id, byte[] data, string name)
         {
             try

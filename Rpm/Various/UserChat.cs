@@ -87,6 +87,24 @@ namespace ProductieManager.Rpm.Various
             return GetMessagesFromAfzender(null, false);
         }
 
+        public bool DeleteUser()
+        {
+            try
+            {
+                var paths = ProductieChat.GetWritePaths(false);
+                if (paths.Length == 0) return false;
+                var xfirst = paths[0];
+                var xfile = Path.Combine(xfirst, "Chat", $"{UserName}.rpm");
+                File.Delete(xfile);
+                return true;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
         public bool Save()
         {
             try

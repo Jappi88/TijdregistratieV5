@@ -322,8 +322,7 @@ namespace Forms
 
         private void xannuleer_Click(object sender, EventArgs e)
         {
-            Next(false);
-            DialogResult = DialogResult.OK;
+            DialogResult = DialogResult.Cancel;
         }
 
         private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)

@@ -370,11 +370,11 @@ namespace Forms
             this.xannuleren.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xannuleren.ForeColor = System.Drawing.Color.Black;
             this.xannuleren.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xannuleren.Location = new System.Drawing.Point(144, 6);
+            this.xannuleren.Location = new System.Drawing.Point(166, 6);
             this.xannuleren.Name = "xannuleren";
-            this.xannuleren.Size = new System.Drawing.Size(135, 38);
+            this.xannuleren.Size = new System.Drawing.Size(113, 38);
             this.xannuleren.TabIndex = 4;
-            this.xannuleren.Text = "Annuleren";
+            this.xannuleren.Text = "Sluiten";
             this.xannuleren.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.xannuleren.UseVisualStyleBackColor = true;
             this.xannuleren.Click += new System.EventHandler(this.xannuleren_Click);
@@ -385,9 +385,9 @@ namespace Forms
             this.xOpslaan.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xOpslaan.ForeColor = System.Drawing.Color.Black;
             this.xOpslaan.Image = global::ProductieManager.Properties.Resources.diskette_save_saveas_1514;
-            this.xOpslaan.Location = new System.Drawing.Point(3, 6);
+            this.xOpslaan.Location = new System.Drawing.Point(42, 6);
             this.xOpslaan.Name = "xOpslaan";
-            this.xOpslaan.Size = new System.Drawing.Size(135, 38);
+            this.xOpslaan.Size = new System.Drawing.Size(118, 38);
             this.xOpslaan.TabIndex = 5;
             this.xOpslaan.Text = "Opslaan";
             this.xOpslaan.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -407,8 +407,9 @@ namespace Forms
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MinimumSize = new System.Drawing.Size(685, 400);
             this.Name = "DbBewerkingChanger";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Bewerkingen En Werkplekken DB";
+            this.Title = "Bewerkingen En Werkplekken DB";
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xpleklist)).EndInit();
             this.panel4.ResumeLayout(false);

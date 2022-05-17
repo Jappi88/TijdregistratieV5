@@ -220,11 +220,11 @@ namespace Rpm.SqlLite
                             {
                                 try
                                 {
-                                    int xc = backups.Count - Manager.Opties.MaxBackupCount;
+                                    int xc = backups.Count - info.MaxBackupCount;
                                     for (int i = 0; i < xc; i++)
                                         File.Delete(backups[i]);
                                 }
-                                catch (Exception e)
+                                catch
                                 {
                                 }
                             }
@@ -236,7 +236,7 @@ namespace Rpm.SqlLite
                         {
                             File.Delete(path);
                         }
-                        catch (Exception e)
+                        catch
                         {
                         }
                     }

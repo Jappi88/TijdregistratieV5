@@ -77,6 +77,12 @@ namespace Rpm.Productie
             };
         }
 
+        public double TotaalPauze()
+        {
+            if (!GebruiktPauze) return 0;
+            return (DuurPauze1 + DuurPauze2 + DuurPauze3).TotalHours;
+        }
+
         public bool SameTijden(Rooster r)
         {
             if (r == null) return false;
@@ -90,6 +96,14 @@ namespace Rpm.Productie
             if (r.DuurPauze2 != DuurPauze2) return false;
             if (r.DuurPauze3 != DuurPauze3) return false;
             return true;
+        }
+
+        public string WerkRoosterInfo()
+        {
+            var pauze = Math.Round(TotaalPauze(), 2);
+            var xp = pauze > 0 ? $" met {pauze} uur pauze" : " zonder pauze";
+            var rstitle = $"Rooster van {StartWerkdag.ToString(@"hh\:mm")} tot {EindWerkdag.ToString(@"hh\:mm")} uur,{xp}";
+            return rstitle;
         }
     }
 }

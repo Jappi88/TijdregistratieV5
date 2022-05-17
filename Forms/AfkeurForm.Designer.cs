@@ -42,6 +42,7 @@ namespace Forms
             this.xok.Location = new System.Drawing.Point(422, 405);
             this.xok.Name = "xok";
             this.xok.Size = new System.Drawing.Size(100, 28);
+            this.xok.Style = MetroFramework.MetroColorStyle.Red;
             this.xok.TabIndex = 0;
             this.xok.Text = "&OK";
             this.xok.UseSelectable = true;
@@ -54,8 +55,9 @@ namespace Forms
             this.xannuleren.Location = new System.Drawing.Point(528, 405);
             this.xannuleren.Name = "xannuleren";
             this.xannuleren.Size = new System.Drawing.Size(100, 28);
+            this.xannuleren.Style = MetroFramework.MetroColorStyle.Red;
             this.xannuleren.TabIndex = 1;
-            this.xannuleren.Text = "&Annuleren";
+            this.xannuleren.Text = "&Sluiten";
             this.xannuleren.UseSelectable = true;
             this.xannuleren.Click += new System.EventHandler(this.xannuleren_Click);
             // 
@@ -82,10 +84,10 @@ namespace Forms
             this.MinimumSize = new System.Drawing.Size(650, 300);
             this.Name = "AfkeurForm";
             this.Padding = new System.Windows.Forms.Padding(10, 60, 10, 10);
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Style = MetroFramework.MetroColorStyle.Red;
             this.Text = "AfkeurForm";
+            this.Title = "AfkeurForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AfkeurForm_FormClosing);
             this.Shown += new System.EventHandler(this.AfkeurForm_Shown);
             this.ResumeLayout(false);

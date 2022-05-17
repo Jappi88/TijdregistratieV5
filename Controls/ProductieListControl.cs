@@ -1013,6 +1013,11 @@ namespace Controls
             }
         }
 
+        private string Criteria()
+        {
+            return _criteria;
+        }
+
         public bool UpdateFormulier(ProductieFormulier form)
         {
             if (IsDisposed || Disposing || form == null)
@@ -1020,21 +1025,34 @@ namespace Controls
 
             try
             {
-                var filter = xsearch.Text.ToLower() == "zoeken..."
+                var crit = Criteria();
+                var filter = crit?.ToLower() == "zoeken..."
                     ? null
-                    : xsearch.Text.Trim();
+                    : crit?.Trim();
 
                 var states = GetCurrentViewStates();
                 var changed = false;
                 var xreturn = false;
-                var xselected = ProductieLijst.SelectedObjects;
+                IList xselected = null;
+                if (InvokeRequired)
+                    this.Invoke(new MethodInvoker(() => xselected = ProductieLijst.SelectedObjects));
+                else
+                    xselected = ProductieLijst.SelectedObjects;
                 if (!IsBewerkingView)
                 {
                     var isvalid = IsAllowd(form) && form.IsAllowed(filter, states, true);
                     if (isvalid && ValidHandler != null)
                         isvalid &= ValidHandler.Invoke(form, filter);
 
-                    var xproducties = Producties??ProductieLijst.Objects?.Cast<ProductieFormulier>().ToList();
+                    var xproducties = Producties;
+                    if (xproducties == null)
+                    {
+                        if (InvokeRequired)
+                            this.Invoke(new MethodInvoker(() => xproducties = ProductieLijst.Objects?.Cast<ProductieFormulier>().ToList()));
+                        else
+                            ProductieLijst.Objects?.Cast<ProductieFormulier>().ToList();
+                    }
+                    
                     var xform = xproducties?.FirstOrDefault(x =>
                         string.Equals(x.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase));
 
@@ -1066,29 +1084,6 @@ namespace Controls
                     {
                         ProductieLijst.RefreshObject(form);
                     }
-
-                    if (Producties != null)
-                    {
-                        var index = Producties.IndexOf(form);
-                        if (index > -1)
-                        {
-                            if (isvalid)
-                            {
-                                Producties[index] = form;
-                            }
-                            else if (RemoveCustomItemIfNotValid)
-                            {
-                                Producties.RemoveAt(index);
-                                changed = true;
-                            }
-                        }
-                        else if (isvalid)
-                        {
-                            Producties.Add(form);
-                            changed = true;
-                        }
-                    }
-
                     xreturn = isvalid;
                 }
                 else
@@ -1102,12 +1097,7 @@ namespace Controls
 
                 if (changed)
                 {
-                    if (ProductieLijst.Items.Count > 0)
-                    {
-                        ProductieLijst.SelectedObjects = xselected;
-                        if (ProductieLijst.SelectedObject == null) ProductieLijst.SelectedIndex = 0;
-                    }
-
+                    SelectObjects(xselected);
                     OnItemCountChanged();
                 }
 
@@ -1119,11 +1109,28 @@ namespace Controls
                 Console.WriteLine(@"Disposed!");
                 return false;
             }
-            finally
-            {
-                ProductieLijst.EndUpdate();
-            }
         }
+
+        private void SelectObjects(IList list)
+        {
+            try
+            {
+                if (InvokeRequired)
+                    this.Invoke(new MethodInvoker(() => SelectObjects(list)));
+                else
+                {
+                    if (ProductieLijst.Items.Count > 0)
+                    {
+                        ProductieLijst.SelectedObjects = list;
+                        if (ProductieLijst.SelectedObject == null) ProductieLijst.SelectedIndex = 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+}
 
         private bool _IsUpdating;
 
@@ -1208,51 +1215,54 @@ namespace Controls
                 states ??= GetCurrentViewStates();
                 // bool checkall = xbewerkingen != null && !xbewerkingen.Any(x=> string.Equals(x.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase));
                 if (form?.Bewerkingen != null && form.Bewerkingen.Length > 0)
-                    foreach (var b in form.Bewerkingen)
+                    for(int i = 0; i < form?.Bewerkingen.Length; i++)
                     {
+                        var b = form.Bewerkingen[i];
+                        var index = -1;
+                        UpdateBewerking(b, states, ref index, false, false);
                         var isvalid = IsAllowd(b) && b.IsAllowed(filter ?? GetFilter()) &&
                                       states.Any(x => b.IsValidState(x));
                         if (isvalid && ValidHandler != null)
                             isvalid &= ValidHandler.Invoke(b, filter ?? GetFilter());
+                        if (InvokeRequired)
+                            this.Invoke(new MethodInvoker(() => index = ProductieLijst.IndexOf(b)));
+                        else
+                            index = ProductieLijst.IndexOf(b);
+                        if (index > -1)
+                        {
+                            if (isvalid)
+                                ProductieLijst.RefreshObject(b);
+                            else
+                            {
+                                changed = true;
+                                ProductieLijst.RemoveObject(b);
+                            }
+                        }
+                        else
+                        {
+                            if (isvalid)
+                            {
+                                changed = true;
+                                ProductieLijst.AddObject(b);
+                            }
+                        }
 
-                        var xb = xbewerkingen?.FirstOrDefault(x =>
-                            string.Equals(x.Path, b.Path, StringComparison.CurrentCultureIgnoreCase));
-                        if (xb == null && isvalid)
-                        {
-                            ProductieLijst.BeginUpdate();
-                            ProductieLijst.AddObject(b);
-                            changed = true;
-                            ProductieLijst.EndUpdate();
-                        }
-                        else if (xb != null && !isvalid)
-                        {
-                            ProductieLijst.BeginUpdate();
-                            ProductieLijst.RemoveObject(xb);
-                            changed = true;
-                            ProductieLijst.EndUpdate();
-                        }
-                        else if (isvalid)
-                        {
-                            ProductieLijst.RefreshObject(b);
-                        }
-                        var index = -1;
-                        UpdateBewerking(b, states,ref index, false, false);
                     }
 
-                var xremove = xbewerkingen?.Where(x =>
-                    string.Equals(x.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase) &&
-                    !form.Bewerkingen.Any(xb => xb.Equals(x))).ToList();
-                if (xremove is {Count: > 0})
-                {
-                    ProductieLijst.BeginUpdate();
-                    xremove.ForEach(xr =>
-                    {
-                        changed = true;
-                        Bewerkingen?.Remove(xr);
-                        ProductieLijst.RemoveObject(xr);
-                    });
-                    ProductieLijst.EndUpdate();
-                }
+                //var xremove = xbewerkingen?.Where(x =>
+                //    string.Equals(x.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase) &&
+                //    !form.Bewerkingen.Any(xb => xb.Equals(x))).ToList();
+                //if (xremove is {Count: > 0})
+                //{
+                //    ProductieLijst.BeginUpdate();
+                //    xremove.ForEach(xr =>
+                //    {
+                //        changed = true;
+                //        Bewerkingen?.Remove(xr);
+                //        ProductieLijst.RemoveObject(xr);
+                //    });
+                //    ProductieLijst.EndUpdate();
+                //}
             }
             catch (Exception e)
             {
@@ -1298,10 +1308,7 @@ namespace Controls
                 {
                     Console.WriteLine(e);
                 }
-                finally
-                {
-                    ProductieLijst.EndUpdate();
-                }
+                ProductieLijst.EndUpdate();
             }));
         }
 
@@ -1316,22 +1323,19 @@ namespace Controls
             }
             if (index == -1)
                 index = Bewerkingen.IndexOf(bew);
-            valid &= index > -1;
             var xret = false;
             if (!valid)
             {
-                if (index > -1)
-                    Bewerkingen.RemoveAt(index);
                 if (index > -1 && RemoveCustomItemIfNotValid)
                 {
                     Bewerkingen.RemoveAt(index);
                     xret = true;
-                }
-                if (updatelijst)
-                {
-                    ProductieLijst.BeginUpdate();
-                    ProductieLijst.RemoveObject(bew);
-                    ProductieLijst.EndUpdate();
+                    if (updatelijst)
+                    {
+                        ProductieLijst.BeginUpdate();
+                        ProductieLijst.RemoveObject(bew);
+                        ProductieLijst.EndUpdate();
+                    }
                 }
             }
             else
@@ -1340,6 +1344,7 @@ namespace Controls
                 if (index > -1)
                 {
                     Bewerkingen[index] = bew;
+                    xret = true;
                     if (refresh)
                         ProductieLijst.RefreshObject(bew);
                 }
@@ -1397,6 +1402,7 @@ namespace Controls
         {
             try
             {
+                if (this.IsDisposed || this.Disposing) return;
                 if (!_enableEntryFilter) return;
                 if (sender is ProductieListControl xc && string.Equals(xc.ListName, ListName))
                 {
@@ -1408,7 +1414,7 @@ namespace Controls
                         reload = true;
                     else
                         reload = !xfilters.All(x => x.IsTempFilter);
-                    BeginInvoke(new MethodInvoker(() => { xUpdateProductieList(reload, false,true); }));
+                    xUpdateProductieList(reload, false, true);
                 }
             }
             catch (Exception exception)
@@ -1457,9 +1463,7 @@ namespace Controls
                 return;
             try
             {
-                if (InvokeRequired)
-                    BeginInvoke(new MethodInvoker(() => UpdateFormulier(changedform)));
-                else UpdateFormulier(changedform);
+                  UpdateFormulier(changedform);
             }
             catch (Exception e)
             {
@@ -1515,11 +1519,16 @@ namespace Controls
                 return false;
             }
         }
-
+        string _lastSearch = "";
+        private string _criteria;
         private void xsearchbox_TextChanged(object sender, EventArgs e)
         {
+            _criteria = xsearch.Text.Trim();
             if (xsearch.Text.ToLower().Trim() != "zoeken..." && !ProductieLijst.IsLoading)
             {
+                if (string.Equals(_lastSearch, xsearch.Text.Trim(), StringComparison.CurrentCultureIgnoreCase))
+                    return;
+                _lastSearch = xsearch.Text.Trim();
                 OnSearchItems(xsearch.Text.Trim());
                 xUpdateProductieList(false, false,true);
             }

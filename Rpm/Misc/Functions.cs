@@ -668,6 +668,9 @@ namespace Rpm.Misc
                         if (Manager.Opties != null)
                         {
                             Manager.Opties.NationaleFeestdagen = roosterform.RoosterUI.NationaleFeestdagen().ToArray();
+                            var xadd = roosterform.RoosterUI.SpecialeRoosters.Where(x => !Manager.Opties.SpecialeRoosters.Any(t => t.Vanaf.Date == x.Vanaf.Date)).ToList();
+                            if (xadd.Count > 0)
+                                Manager.Opties.SpecialeRoosters.AddRange(xadd);
                         }
 
                         wp.Tijden.SpecialeRoosters = roosterform.RoosterUI.SpecialeRoosters;
@@ -688,7 +691,7 @@ namespace Rpm.Misc
                             //}
                         }
                         //wp.Tijden._rooster = roosterform.WerkRooster;
-                        wp.UpdateWerkRooster(roosterform.WerkRooster,true, true,true, true, true,true, true);
+                        wp.UpdateWerkRooster(roosterform.WerkRooster,true, true,true, true, true,true, false);
                         var xchange = wp.Tijden.WerkRooster != null && wp.Tijden.WerkRooster.IsCustom()
                             ? "eigen rooster"
                             : "standaard rooster";
@@ -1679,7 +1682,7 @@ namespace Rpm.Misc
 
         #region Conversions
 
-        public static string WrapText(this string text, int width)
+        public static string WrapText(this string text, int width, string newlinearg)
         {
             var x = "";
             if (text != null)
@@ -1691,7 +1694,7 @@ namespace Rpm.Misc
                     foreach (var v in value)
                         if (count >= width && v == ' ')
                         {
-                            x += "\n";
+                            x += newlinearg;
                             count = 0;
                         }
                         else

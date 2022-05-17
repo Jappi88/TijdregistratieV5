@@ -99,7 +99,7 @@ namespace Rpm.Productie
                     if (xrestaantal > 0)
                     {
                         decimal afval = xrestaantal * ProductLengte;
-                        afkeur = $"Er {x5} <b>{xrestaantal}</b> {x4} {x6} geproduceerd => <b>{Math.Round(afval, 4)}mm ({Math.Round(afval / UitgangsLengte, 4)} stuk)</b><br>";
+                        afkeur = $"Geproduceerd: <b>{xrestaantal} => {Math.Round(afval, 4)}mm ({Math.Round(afval / UitgangsLengte, 4)} stuk)</b><br>";
                     }
                 }
                 if (PakketAantal > 0)
@@ -114,17 +114,18 @@ namespace Rpm.Productie
                         var a4 = PakketAantal == 1 ? "lengte" : "lengtes";
                         if (xnodig < PakketAantal)
                         {
-                            xpakket = $"Dat is een restpakket van <b>{xrestpakket}</b> {a2}";
+                            xpakket = $"Restpakket van <b>{xrestpakket}</b> {a2}";
+
                         }
                         else
                         {
-                            xpakket = $"Dat {a0} <b>{xaantalpakketten}</b> {a1} van <b>{PakketAantal}</b> {a4}";
+                            xpakket = $"<b>{xaantalpakketten}</b> {a1} van <b>{PakketAantal}</b>";
                             if (xrestpakket > 0)
                                 xpakket += $" en een restpakket van <b>{xrestpakket}</b> {a2}";
                         }
 
                         if (xpakket.Length > 1)
-                            xpakket += ".<br>";
+                            xpakket = $"Aantal Pakketten: {xpakket}.<br>";
                     }
                 }
 
@@ -145,22 +146,23 @@ namespace Rpm.Productie
                 }
 
                 var xoverschotmaat = overschot > 0
-                    ? $"Dat is een overshot van <b>{overschot}</b> {x3}<b>({Math.Round((overschot * ProductLengte) / 1000, 4)} meter)</b>.<br>"
+                    ? $"Overschot: <b>{overschot}</b> {x3}<b>({Math.Round((overschot * ProductLengte) / 1000, 4)} meter)</b>.<br>"
                     : "";
                 var xoms = string.IsNullOrEmpty(ProductHtmlOmschrijving) ? string.IsNullOrEmpty(ProductOmschrijving) ? "" : $"<h4>{ProductOmschrijving}</h4>" : ProductHtmlOmschrijving;
                 xret = $"<p color='{Color.Navy.Name}'>" +
-                      //$"<ul>" +
+                      $"<ul>" +
                        xoms +
                        peruur +
-                       $"Een productLengte van <b>{Math.Round(ProductLengte, 3)}mm</b> is <b>{xstuks}(stuk)</b> van <b>{UitgangsLengte}mm</b>.<br><br>" +
-                       $"Met een productlengte van <b>{xvalue / 1000}m</b> heb je <b>{xnodig}</b> {l1} nodig.<br>" +
+                       $"ProductLengte:  <b>{Math.Round(ProductLengte, 3)}mm</b>  <b>({xstuks} stuk</b> van <b>{UitgangsLengte}mm)</b><br>" +
+                       $"Aantal Lengtes: <b>{xnodig} st. ({Math.Round((UitgangsLengte * xnodig) / 1000,3)}m)</b>.<br>" +
+                       $"Aantal Producten: <b>{aantal} / {xmaken} st. ({((ProductLengte * aantal) / 1000)}m)</b>.<br>" +
                        $"{xpakket}" +
-                       $"Met <b>{xnodig}</b> lengtes kan je <b>{xmaken}/ {aantal}</b> producten maken.<br>" +
                        $"{xoverschotmaat}" +
-                       $"Met <b>{xsporen}</b> {x1} is dat <b>{xaantalladen}</b> keer laden{(xrestsporen > 0 ? $" en een restlading van <b>{xrestsporen}</b> {x2}" : "")}.<br><br>" +
-                       $"Je haalt <b>{(int) xprodsperlengte}</b> producten uit <b>{xtotal / 1000} meter</b> met een reststuk van <b>{xrest}mm({Math.Round((xrest / xtotal) * 100,4)}%)</b>.<br>" +
+                       $"Aantal Ladingen: <b>{xsporen}</b> {x1} = <b>{xaantalladen}</b> keer laden{(xrestsporen > 0 ? $" en een restlading van <b>{xrestsporen}</b> {x2}" : "")}.<br><br>" +
+                       $"Aantal Producten Uit <b>{xtotal / 1000}m</b>: <b>{(int) xprodsperlengte} st</b>.<br>" +
+                       $"Reststuk: <b>{xrest}mm({Math.Round((xrest / xtotal) * 100, 4)}%)</b>.<br>" +
                        $"{afkeur}" +
-                      // $"</ul>" +
+                       $"</ul>" +
                        $"</p>";
             }
 

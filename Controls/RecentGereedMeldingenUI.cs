@@ -101,7 +101,7 @@ namespace Controls
         public void DetachEvents()
         {
             Manager.OnSettingsChanged -= Manager_OnSettingsChanged;
-            productieListControl1.InitEvents();
+            productieListControl1.DetachEvents();
         }
 
         private void Manager_FilterChanged(object sender, EventArgs e)
@@ -119,7 +119,9 @@ namespace Controls
         {
             try
             {
-                BeginInvoke(new MethodInvoker(() =>
+                if (InvokeRequired)
+                    this.BeginInvoke(new MethodInvoker(UpdateGereedProducties));
+                else
                 {
                     try
                     {
@@ -129,7 +131,7 @@ namespace Controls
                     catch (Exception e)
                     {
                     }
-                }));
+                }
             }
             catch (Exception e)
             {

@@ -143,7 +143,7 @@ namespace Forms
             this.xannuleren.Name = "xannuleren";
             this.xannuleren.Size = new System.Drawing.Size(100, 30);
             this.xannuleren.TabIndex = 0;
-            this.xannuleren.Text = "Annuleren";
+            this.xannuleren.Text = "Sluiten";
             this.xannuleren.UseVisualStyleBackColor = true;
             this.xannuleren.Click += new System.EventHandler(this.xannuleren_Click);
             // 
@@ -170,9 +170,9 @@ namespace Forms
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MinimumSize = new System.Drawing.Size(650, 200);
             this.Name = "DbPathChooser";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Kies Database Folder";
+            this.Title = "Kies Database Folder";
             this.groupBox1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();

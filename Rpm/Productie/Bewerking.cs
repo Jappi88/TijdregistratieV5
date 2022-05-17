@@ -487,12 +487,11 @@ namespace Rpm.Productie
             }
         }
 
-        public Task<bool> UpdateBewerking(List<ProductieFormulier> allforms = null, string change = null,
+        public bool xUpdateBewerking(List<ProductieFormulier> allforms = null, string change = null,
             bool save = true, bool shownotification = true, bool updaterooster = false)
         {
-            return Task.Factory.StartNew(() =>
+            try
             {
-                //change ??= $"[{Path}] Update.";
                 if (allforms != null)
                 {
                     var forms = ArtikelNr == null
@@ -537,7 +536,7 @@ namespace Rpm.Productie
                 AanbevolenPersonen = AantalPersonenNodig(ref dt, false);
                 StartOp = dt;
                 if (AantalActievePersonen == 0 && State == ProductieState.Gestart)
-                    _= StopProductie(true,true).Result;
+                    _ = StopProductie(true, true).Result;
                 if (save)
                     LastChanged = LastChanged.UpdateChange(change, DbType.Producties);
                 if (Parent != null)
@@ -548,10 +547,28 @@ namespace Rpm.Productie
 
                     if (save)
                         Parent.BewerkingChanged(this, this, change, shownotification);
+                    else
+                        BewerkingChanged(this, this, change, shownotification);
                 }
+                else BewerkingChanged(this, this, change, shownotification);
 
-                BewerkingChanged(this, this, change, shownotification);
                 return true;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+
+        public Task<bool> UpdateBewerking(List<ProductieFormulier> allforms = null, string change = null,
+            bool save = true, bool shownotification = true, bool updaterooster = false)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                //change ??= $"[{Path}] Update.";
+                var xret = xUpdateBewerking(allforms, change, save, shownotification, updaterooster);
+                return xret;
             });
         }
 

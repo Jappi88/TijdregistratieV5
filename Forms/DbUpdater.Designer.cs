@@ -517,6 +517,7 @@ namespace Forms
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "DbUpdater";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Update Database";
             this.Title = "Update Database";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DbUpdater_FormClosing);

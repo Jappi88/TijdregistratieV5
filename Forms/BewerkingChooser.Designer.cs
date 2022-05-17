@@ -59,9 +59,9 @@ namespace Forms
             // 
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(110, 160);
+            this.panel1.Location = new System.Drawing.Point(110, 164);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(330, 40);
+            this.panel1.Size = new System.Drawing.Size(330, 36);
             this.panel1.TabIndex = 6;
             // 
             // panel2
@@ -71,7 +71,7 @@ namespace Forms
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel2.Location = new System.Drawing.Point(78, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(252, 40);
+            this.panel2.Size = new System.Drawing.Size(252, 36);
             this.panel2.TabIndex = 3;
             // 
             // xanuleren
@@ -79,12 +79,12 @@ namespace Forms
             this.xanuleren.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xanuleren.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xanuleren.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.xanuleren.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.xanuleren.Location = new System.Drawing.Point(129, 2);
             this.xanuleren.Name = "xanuleren";
-            this.xanuleren.Size = new System.Drawing.Size(120, 36);
+            this.xanuleren.Size = new System.Drawing.Size(120, 34);
             this.xanuleren.TabIndex = 3;
-            this.xanuleren.Text = "&Annuleren";
-            this.xanuleren.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.xanuleren.Text = "&Sluiten";
             this.xanuleren.UseVisualStyleBackColor = true;
             this.xanuleren.Click += new System.EventHandler(this.xanuleren_Click);
             // 
@@ -93,12 +93,12 @@ namespace Forms
             this.xok.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xok.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xok.Image = global::ProductieManager.Properties.Resources.check_1582;
+            this.xok.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.xok.Location = new System.Drawing.Point(3, 2);
             this.xok.Name = "xok";
-            this.xok.Size = new System.Drawing.Size(120, 36);
+            this.xok.Size = new System.Drawing.Size(120, 34);
             this.xok.TabIndex = 2;
             this.xok.Text = "&OK";
-            this.xok.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.xok.UseVisualStyleBackColor = true;
             this.xok.Click += new System.EventHandler(this.xok_Click);
             // 
@@ -124,7 +124,9 @@ namespace Forms
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(460, 220);
             this.Name = "BewerkingChooser";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Kies Bewerking";
+            this.Title = "Kies Bewerking";
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ximage)).EndInit();

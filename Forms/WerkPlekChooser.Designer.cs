@@ -51,7 +51,7 @@ namespace Forms
             this.comboBox1.ItemHeight = 23;
             this.comboBox1.Location = new System.Drawing.Point(116, 95);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(464, 29);
+            this.comboBox1.Size = new System.Drawing.Size(476, 29);
             this.comboBox1.TabIndex = 1;
             this.comboBox1.UseSelectable = true;
             // 
@@ -61,7 +61,7 @@ namespace Forms
             this.pictureBox1.Image = global::ProductieManager.Properties.Resources.iconfinder_technology;
             this.pictureBox1.Location = new System.Drawing.Point(20, 60);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(90, 154);
+            this.pictureBox1.Size = new System.Drawing.Size(90, 164);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -82,9 +82,9 @@ namespace Forms
             // 
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(110, 172);
+            this.panel1.Location = new System.Drawing.Point(110, 182);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(470, 42);
+            this.panel1.Size = new System.Drawing.Size(482, 42);
             this.panel1.TabIndex = 3;
             // 
             // panel2
@@ -92,7 +92,7 @@ namespace Forms
             this.panel2.Controls.Add(this.button2);
             this.panel2.Controls.Add(this.button1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(255, 0);
+            this.panel2.Location = new System.Drawing.Point(267, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(215, 42);
             this.panel2.TabIndex = 3;
@@ -113,17 +113,18 @@ namespace Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(600, 234);
+            this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
+            this.ClientSize = new System.Drawing.Size(612, 244);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.pictureBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(600, 225);
             this.Name = "WerkPlekChooser";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.SystemShadow;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Kies Werkplek";
+            this.Title = "Kies Werkplek";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);

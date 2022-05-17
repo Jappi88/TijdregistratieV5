@@ -733,6 +733,8 @@ namespace Controls
             metroCustomTabControl1.ResumeLayout(false);
             if (select)
                 metroCustomTabControl1.SelectedTab = xtabpage;
+            Invalidate();
+            Application.DoEvents();
             if (!xprodlist.InitUI())
             {
                 metroCustomTabControl1.TabPages.Remove(xtabpage);
@@ -1110,7 +1112,7 @@ namespace Controls
             if(Disposing || IsDisposed) return;
             try
             {
-                BeginInvoke(new Action(()=> CheckForShared(changedform)));
+                 CheckForShared(changedform);
             }
             catch (Exception e)
             {
@@ -1185,7 +1187,10 @@ namespace Controls
                 var bw = form.Bewerkingen.FirstOrDefault(x => x.SharedUsers.Any(s =>
                     string.Equals(s, Manager.Opties.Username, StringComparison.CurrentCultureIgnoreCase)));
                 if (bw == null) return;
-                ShowProductie(this,bw, true, 10);
+                if (InvokeRequired)
+                    this.Invoke(new Action(() => ShowProductie(this, bw, true, 10)));
+                else
+                    ShowProductie(this, bw, true, 10);
                 form.UpdateForm(true, false, null, "", true, false, false);
                 Manager.RemoteMessage(form.LastChanged.CreateMessage(DbType.Producties));
 

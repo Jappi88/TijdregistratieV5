@@ -465,18 +465,28 @@ namespace Rpm.SqlLite
 
         public Task<bool> UpSert(ProductieFormulier form, string change, bool showmessage = true, bool onlylocal = false)
         {
-            return UpSert(form.ProductieNr, form, change, showmessage,onlylocal);
+            return Task.Run(() =>
+            {
+                if (IsDisposed || ProductieFormulieren == null)
+                    return false;
+                return UpSert(form.ProductieNr, form, change, showmessage, onlylocal).Result;
+            });
         }
 
         public Task<bool> UpSert(ProductieFormulier form, bool showmessage = true, bool onlylocal = false, string change = null)
         {
-            return UpSert(form.ProductieNr, form, change??$"[{form.ArtikelNr}|{form.ProductieNr}] ProductieFormulier Update",
-                showmessage,onlylocal);
+            return Task.Run(() =>
+            {
+                if (IsDisposed || ProductieFormulieren == null)
+                    return false;
+                return UpSert(form.ProductieNr, form, change ?? $"[{form.ArtikelNr}|{form.ProductieNr}] ProductieFormulier Update",
+                 showmessage, onlylocal).Result;
+            });
         }
 
         public Task<bool> UpSert(string id, ProductieFormulier form, string change, bool showmessage = true, bool onlylocal = false)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 if (IsDisposed || id == null || form == null || ProductieFormulieren == null || GereedFormulieren == null)
                     return false;
@@ -488,16 +498,18 @@ namespace Rpm.SqlLite
                     if (ProductieFormulieren != null && form.Bewerkingen.All(x => x.State == ProductieState.Gereed))
                     {
                         GereedFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
-                        if (await GereedFormulieren.Upsert(id, form,onlylocal,change))
+                        if (GereedFormulieren.Upsert(id, form,onlylocal,change).Result)
                         {
                             _=UpdateChange(form.LastChanged, DbType.GereedProducties,
                                 showmessage);
-                            if (await ProductieFormulieren.Exists(id))
+                            if (ProductieFormulieren.Exists(id).Result)
                             {
                                 ProductieFormulieren.RaiseEventWhenDeleted = !RaiseEventWhenDeleted;
-                                await ProductieFormulieren.Delete(id);
-                                if (RaiseEventWhenDeleted)
-                                    Manager.FormulierDeleted(this, id);
+                                if (ProductieFormulieren.Delete(id).Result)
+                                {
+                                    if (RaiseEventWhenDeleted)
+                                        Manager.FormulierDeleted(this, id);
+                                }
                                 ProductieFormulieren.RaiseEventWhenDeleted = true;
                             }
 
@@ -509,18 +521,20 @@ namespace Rpm.SqlLite
                     else if (ProductieFormulieren != null)
                     {
                         ProductieFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
-                        if (await ProductieFormulieren.Upsert(id, form,onlylocal,change))
+                        if (ProductieFormulieren.Upsert(id, form,onlylocal,change).Result)
                         {
                             _= UpdateChange(form.LastChanged, DbType.Producties,
                                 showmessage);
                            
 
-                            if (GereedFormulieren != null && await GereedFormulieren.Exists(id))
+                            if (GereedFormulieren != null && GereedFormulieren.Exists(id).Result)
                             {
                                 GereedFormulieren.RaiseEventWhenDeleted = !RaiseEventWhenDeleted;
-                                await GereedFormulieren.Delete(id);
-                                if (RaiseEventWhenDeleted)
-                                    Manager.FormulierDeleted(this, id);
+                                if (GereedFormulieren.Delete(id).Result)
+                                {
+                                    if (RaiseEventWhenDeleted)
+                                        Manager.FormulierDeleted(this, id);
+                                }
                                 GereedFormulieren.RaiseEventWhenDeleted = true;
                             }
 

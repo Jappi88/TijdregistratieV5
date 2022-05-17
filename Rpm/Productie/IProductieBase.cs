@@ -3,6 +3,7 @@ using Polenter.Serialization;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using ProductieManager.Rpm.SqlLite;
+using Rpm.Misc;
 using Rpm.SqlLite;
 using Rpm.Various;
 using System;
@@ -851,9 +852,41 @@ Color textcolor, bool useimage)
             var xgestartbody = State == ProductieState.Gestart
                 ? $"Gestart Op: <span style = 'color: {GetValidColor(gestartop < startop).Name}>{gestartop:f} ({GetPersonen(false).Length}p)</span>.<br>"
                 : "";
-            if (State == ProductieState.Gestart)
+            var wps = GetWerkPlekken().OrderBy(x=> !x.IsActief()).ToList();
+            var xwpsinfo = "";
+            if(wps.Count > 0)
             {
-
+                for(int i = 0; i < wps.Count; i++)
+                {
+                    var wp = wps[i];
+                    if (!wp.IsActief()) continue;
+                    var rs = wp.Tijden?.WerkRooster;
+                    var sp = wp.Tijden.SpecialeRoosters?.FirstOrDefault(x => x.Vanaf.Date == DateTime.Today);
+                    if (sp != null)
+                        rs = sp;
+                    if (rs == null) continue;
+                    var pauze = Math.Round(rs.TotaalPauze(),2);
+                    var xp = pauze > 0 ? $" met {pauze} uur pauze" : " zonder pauze";
+                    var rstitle = $"Rooster van {rs.StartWerkdag.ToString(@"hh\:mm")} tot {rs.EindWerkdag.ToString(@"hh\:mm")} uur,{xp}";
+                    if(sp == null)
+                    {
+                        if (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
+                            rstitle = "Weekend, vul in een speciale rooster om tijd te meten";
+                        else if(Manager.Opties?.NationaleFeestdagen != null && Manager.Opties.NationaleFeestdagen.Any(x=> x.Date == DateTime.Today))
+                        {
+                            rstitle = "Nationale Feestdag, vul in een speciale rooster om tijd te meten";
+                        }
+                    }
+                
+                    var wptitle = $"{wp.Naam} ({rstitle}).<br>";
+                        // wptitle += $"<ul><li>Werkt van {rs.StartWerkdag.ToString(@"hh\:mm")} tot {rs.EindWerkdag.ToString(@"hh\:mm")} uur{xp}.</li>";
+                        //wptitle += $"<ul><li>Tijd Gewerkt: <u>{wp.TijdGewerkt}</u> / {Math.Round(DoorloopTijd, 2)} uur <span style = 'color:{GetPositiveColorByPercentage((decimal)wp.GetTijdGewerktPercentage()).Name}'>({wp.GetTijdGewerktPercentage()}%)</span></li>";
+                        //wptitle += $"<li>Per Uur: <u>{wp.PerUur}</u> i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(wp.GetAfwijking()).Name}'>({wp.GetAfwijking()}%)</span></li>";
+                        //wptitle += $"<li>Gemaakt: <u>{wp.TotaalGemaakt}</u> / {Aantal} <span style = 'color: {GetPositiveColorByPercentage((decimal)wp.GetGereedPercentage()).Name}'>({wp.GetGereedPercentage()}%)</span></li></ul>";
+                    xwpsinfo += wptitle;
+                }
+                var color = GetProductSoortColor(ProductSoort);
+                xwpsinfo = $"<p color='purple'>{xwpsinfo}</p>";
             }
             if (!useimage) ximage = "";
             var xreturn = $"<html>\r\n" +
@@ -879,16 +912,16 @@ Color textcolor, bool useimage)
                           xstartbody +
                           xgestartbody +
                           $"Leverdatum: <span style = 'color: {GetValidColor(LeverDatum > DateTime.Now).Name}>{LeverDatum:f}</span>.<br>" +
-                           $"{(State != ProductieState.Gereed ? $"Verwachte Leverdatum: <span style = 'color:{GetValidColor(VerwachtLeverDatum < LeverDatum).Name}> {VerwachtLeverDatum:f}</span>." : $"Gereed Gemeld Op: <span style = 'color:{GetValidColor(true).Name}>{DatumGereed:f}</span>.")}\r\n" +
+                           $"{(State != ProductieState.Gereed ? $"Verwachte Leverdatum: <span style = 'color:{GetValidColor(VerwachtLeverDatum < LeverDatum).Name}> {VerwachtLeverDatum:f}</span>." : $"Gereed Gemeld Door <u>{Paraaf}</u> Op: <span style = 'color:{GetValidColor(true).Name}>{DatumGereed:f}</span>.")}\r\n" +
                           $"</h2><hr />\r\n<h2>" +
-                          $"Aantal Gemaakt: <u>{TotaalGemaakt}</u> / {Aantal} <span style = 'color: {GetPositiveColorByPercentage((decimal) Gereed).Name}'>({Gereed}%)</span><br>" +
+                           xwpsinfo +
+                          $"Per Uur: <u>{ActueelPerUur}</u> i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(GetAfwijking()).Name}'>({GetAfwijking()}%)</span><br>" +
+                          $"Tijd Gewerkt: <u>{TijdGewerkt}</u> / {Math.Round(DoorloopTijd, 2)} uur <span style = 'color:{GetPositiveColorByPercentage((decimal)TijdGewerktPercentage).Name}'>({TijdGewerktPercentage}%)</span><br>" +
+                          $"Totaal Gemaakt: <u>{TotaalGemaakt}</u> / {Aantal} <span style = 'color: {GetPositiveColorByPercentage((decimal) Gereed).Name}'>({Gereed}%)</span><br>" +
                           $"<ul><li><u>Actueel</u> Aantal Gemaakt: <b><u>{ActueelAantalGemaakt}</u></b> / {Aantal}</li>" +
                            GetBewerkingenGemaaktHtml() +
                           $"</ul>" +
-                          $"Tijd Gewerkt: <u>{TijdGewerkt}</u> / {Math.Round(DoorloopTijd, 2)} uur <span style = 'color:{GetPositiveColorByPercentage((decimal) TijdGewerktPercentage).Name}'>({TijdGewerktPercentage}%)</span><br>" +
                           $"{CombiesHtml()}" +
-                          $"Per Uur: <u>{ActueelPerUur}</u> i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(ProcentAfwijkingPerUur).Name}'>({ProcentAfwijkingPerUur}%)</span><br>" +
-                          $"Controle Ratio: <span style = 'color: {GetNegativeColorByPercentage((decimal)ratio).Name}'>{(ratio > 0 ? $"+{ratio}" : ratio)}%</span><br><br>" +
                           $"<span style = 'color: {Color.DarkRed.Name}'><u>{Opmerking}</u></span><br>" +
                           $"<span style = 'color: {Color.DarkRed.Name}'><u>{ControlePunten}</u></span><br>" +
                           $"</h2><hr />\r\n" +

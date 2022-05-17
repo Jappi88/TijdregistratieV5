@@ -52,7 +52,9 @@
             this.ClientSize = new System.Drawing.Size(1068, 597);
             this.Controls.Add(this.alleStoringenUI1);
             this.Name = "AlleStoringenForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Alle Storingen";
+            this.Title = "Alle Storingen";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AlleStoringenForm_FormClosing);
             this.ResumeLayout(false);
 

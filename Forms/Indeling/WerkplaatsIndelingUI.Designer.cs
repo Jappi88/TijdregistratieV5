@@ -40,8 +40,8 @@ namespace Forms
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.xreset = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.xGeselecteerdeGebruikerLabel = new TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel();
             this.productieListControl1 = new Controls.ProductieListControl();
+            this.xGeselecteerdeGebruikerLabel = new TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel();
             this.panel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -153,14 +153,13 @@ namespace Forms
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.panel1);
-            this.splitContainer1.Panel1MinSize = 480;
+            this.splitContainer1.Panel1MinSize = 490;
             // 
             // splitContainer1.Panel2
             // 
@@ -169,21 +168,9 @@ namespace Forms
             this.splitContainer1.Panel2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.splitContainer1.Size = new System.Drawing.Size(1150, 631);
             this.splitContainer1.SplitterDistance = 490;
+            this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 1;
-            // 
-            // xGeselecteerdeGebruikerLabel
-            // 
-            this.xGeselecteerdeGebruikerLabel.AutoSize = false;
-            this.xGeselecteerdeGebruikerLabel.BackColor = System.Drawing.Color.White;
-            this.xGeselecteerdeGebruikerLabel.BaseStylesheet = null;
-            this.xGeselecteerdeGebruikerLabel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.xGeselecteerdeGebruikerLabel.IsContextMenuEnabled = false;
-            this.xGeselecteerdeGebruikerLabel.IsSelectionEnabled = false;
-            this.xGeselecteerdeGebruikerLabel.Location = new System.Drawing.Point(0, 0);
-            this.xGeselecteerdeGebruikerLabel.Name = "xGeselecteerdeGebruikerLabel";
-            this.xGeselecteerdeGebruikerLabel.Size = new System.Drawing.Size(656, 40);
-            this.xGeselecteerdeGebruikerLabel.TabIndex = 2;
-            this.xGeselecteerdeGebruikerLabel.Text = "htmlLabel1";
+            this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
             // 
             // productieListControl1
             // 
@@ -203,9 +190,23 @@ namespace Forms
             this.productieListControl1.RemoveCustomItemIfNotValid = false;
             this.productieListControl1.SelectedItem = null;
             this.productieListControl1.ShowWaitUI = true;
-            this.productieListControl1.Size = new System.Drawing.Size(656, 591);
+            this.productieListControl1.Size = new System.Drawing.Size(655, 591);
             this.productieListControl1.TabIndex = 0;
             this.productieListControl1.ValidHandler = null;
+            // 
+            // xGeselecteerdeGebruikerLabel
+            // 
+            this.xGeselecteerdeGebruikerLabel.AutoSize = false;
+            this.xGeselecteerdeGebruikerLabel.BackColor = System.Drawing.Color.White;
+            this.xGeselecteerdeGebruikerLabel.BaseStylesheet = null;
+            this.xGeselecteerdeGebruikerLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.xGeselecteerdeGebruikerLabel.IsContextMenuEnabled = false;
+            this.xGeselecteerdeGebruikerLabel.IsSelectionEnabled = false;
+            this.xGeselecteerdeGebruikerLabel.Location = new System.Drawing.Point(0, 0);
+            this.xGeselecteerdeGebruikerLabel.Name = "xGeselecteerdeGebruikerLabel";
+            this.xGeselecteerdeGebruikerLabel.Size = new System.Drawing.Size(655, 40);
+            this.xGeselecteerdeGebruikerLabel.TabIndex = 2;
+            this.xGeselecteerdeGebruikerLabel.Text = "htmlLabel1";
             // 
             // WerkplaatsIndelingUI
             // 

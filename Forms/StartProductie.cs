@@ -97,7 +97,15 @@ namespace Forms
                 else
                 {
                     Text = $"[{Formulier.ProductieNr}]";
-                    this.CustomStyleColor = IProductieBase.GetProductSoortColor(formulier.ProductSoort);
+                    if (!string.IsNullOrEmpty(Formulier.ProductSoort))
+                    {
+                        this.Style = MetroColorStyle.Custom;
+                        this.CustomStyleColor = IProductieBase.GetProductSoortColor(formulier.ProductSoort);
+                    }
+                    else
+                    {
+                        this.Style = MetroColorStyle.Default;
+                    }
                     
                     productieForm1.SetParent(Formulier);
                     if (selected != null)

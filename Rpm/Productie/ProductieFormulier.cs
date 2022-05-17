@@ -1583,43 +1583,52 @@ namespace Rpm.Productie
             }
         }
 
-        public Task<bool> UpdateForm(bool updatebewerking, bool updategemiddeld,
+        public bool xUpdateForm(bool updatebewerking, bool updategemiddeld,
+           List<ProductieFormulier> formulieren = null, string change = "Update Formulier",
+           bool save = true, bool showmessage = true, bool raiseevent = true, bool onlylocal = false)
+        {
+            try
+            {
+                if (Manager.Database?.ProductieFormulieren == null) return false;
+                var forms = formulieren;
+                if (updategemiddeld)
+                {
+                    forms ??= Manager.Database.GetAllGereedProducties()?.Result;
+                    UpdateDoorloopTijd(forms, this, change, false, raiseevent, onlylocal);
+                    return true;
+                }
+
+                UpdateValues(forms, updatebewerking);
+
+
+                if (save)
+                {
+                    return Manager.Database?.UpSert(this, change, showmessage, onlylocal)?.Result ?? false;
+                }
+
+                if (raiseevent)
+                {
+                    Manager.FormulierChanged(this, this);
+                    FormulierChanged(this);
+                }
+
+                return true;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+
+            public Task<bool> UpdateForm(bool updatebewerking, bool updategemiddeld,
             List<ProductieFormulier> formulieren = null, string change = "Update Formulier",
             bool save = true, bool showmessage = true, bool raiseevent = true, bool onlylocal = false)
         {
             return Task.Run(() =>
             {
-                try
-                {
-                    if (Manager.Database?.ProductieFormulieren == null) return false;
-                    var forms = formulieren;
-                    if (updategemiddeld)
-                    {
-                        forms ??= Manager.Database.GetAllGereedProducties()?.Result;
-                        UpdateDoorloopTijd(forms, this, change, false, raiseevent, onlylocal);
-                        return true;
-                    }
-
-                    UpdateValues(forms, updatebewerking);
-
-
-                    if (save)
-                    {
-                        return Manager.Database?.UpSert(this, change, showmessage, onlylocal)?.Result??false;
-                    }
-
-                    if (raiseevent)
-                    {
-                        Manager.FormulierChanged(this, this);
-                        FormulierChanged(this);
-                    }
-
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
+                return xUpdateForm(updatebewerking, updategemiddeld, formulieren, change, save, showmessage, raiseevent, onlylocal);
             });
 
         }
@@ -2281,11 +2290,10 @@ namespace Rpm.Productie
         public async void BewerkingChanged(object sender, Bewerking bew, string change, bool shownotification)
         {
             var xchange = change ?? (bew.LastChanged?.Change ?? $"[{bew.Path}] Bewerking Gewijzigd");
-            await UpdateForm(false, false, null, change,true,shownotification);
             //Manager.Database.UpSert(this, xchange);
             OnBewerkingChanged?.Invoke(sender, bew, xchange,shownotification);
-            FormulierChanged(sender);
             Manager.BewerkingChanged(sender, bew, xchange,shownotification);
+           await UpdateForm(false, false, null, change, true, shownotification);
         }
 
         #endregion "Events"
