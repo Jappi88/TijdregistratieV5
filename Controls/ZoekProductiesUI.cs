@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Various;
 
 namespace Controls
 {
@@ -23,12 +24,8 @@ namespace Controls
         {
             productieListControl1.IsBewerkingView = true;
             productieListControl1.ValidHandler = IsAllowed;
-            if (Manager.BewerkingenLijst == null) return;
             InitEvents();
-            var bewerkingen = Manager.BewerkingenLijst.GetAllEntries().Select(x => (object)x.Naam).ToArray();
-            var afdelingen = Manager.BewerkingenLijst.GetAlleWerkplekken(false).Select(x => (object)x).ToArray();
-            xwerkplekken.Items.AddRange(afdelingen);
-            xbewerkingen.Items.AddRange(bewerkingen);
+
         }
 
         public void InitEvents()
@@ -61,103 +58,16 @@ namespace Controls
             }
         }
         
-        private void xartikelnrcheck_CheckedChanged(object sender, EventArgs e)
-        {
-            xcriteria.Enabled = xcriteriacheckbox.Checked;
-        }
-
-        private void xwerkplekcheck_CheckedChanged(object sender, EventArgs e)
-        {
-            xwerkplekken.Enabled = xwerkplekcheck.Checked;
-        }
-
-        private void xvanafcheck_CheckedChanged(object sender, EventArgs e)
-        {
-            xvanafdate.Enabled = xvanafcheck.Checked;
-        }
-
-        private void xbewerkingcheck_CheckedChanged(object sender, EventArgs e)
-        {
-            xbewerkingen.Enabled = xbewerkingcheck.Checked;
-        }
-
-        private void xtotcheck_CheckedChanged(object sender, EventArgs e)
-        {
-            xtotdate.Enabled = xtotcheck.Checked;
-        }
 
         private void xverwerkb_Click(object sender, EventArgs e)
         {
             if (_isbussy) return; 
-            Verwerk();
+            Verwerk(true);
         }
 
-        private bool DoCheck()
-        {
-            if (xwerkplekcheck.Checked && string.IsNullOrEmpty(xwerkplekken.Text.Trim()))
-                XMessageBox.Show(
-                    this, "Werkplekken is aangevinkt, maar het veld is leeg!\nvul in of kies werkplek en probeer het opniew.",
-                    "Werkplekken", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            else if (xbewerkingcheck.Checked && string.IsNullOrEmpty(xbewerkingen.Text.Trim()))
-                XMessageBox.Show(
-                    this, "Bewerking is aangevinkt, maar het veld is leeg!\nvul in of kies een bewerking en probeer het opniew.",
-                    "Bewerking", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            else if (xcriteriacheckbox.Checked && string.IsNullOrWhiteSpace(xcriteria.Text.Trim()))
-                XMessageBox.Show(
-                    this, "Artikelnr, productienr of een omschrijving is aangevinkt, maar het veld is leeg!\nvul in een criteria waar de productie aan moet voldoen.",
-                    "Criteria", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            else
-                return true;
 
-            return false;
-        }
 
         public RangeFilter ShowFilter;
-        public struct RangeFilter
-        {
-            public bool Enabled;
-            public bool VanafCheck;
-            public DateTime VanafTime;
-            public bool TotCheck;
-            public DateTime TotTime;
-            public string Criteria;
-            public string werkPlek;
-            public string Bewerking;
-        }
-
-        public void SetFilter(RangeFilter filter)
-        {
-            if (!filter.Enabled) return;
-            var x = filter;
-            xvanafcheck.Checked = x.VanafCheck;
-            xtotcheck.Checked = x.TotCheck;
-            if (x.VanafCheck)
-                xvanafdate.SetValue(x.VanafTime);
-            if (x.TotCheck)
-                xtotdate.SetValue(x.TotTime);
-            if (!string.IsNullOrEmpty(x.Criteria))
-            {
-                xcriteria.Text = x.Criteria;
-                xcriteriacheckbox.Checked = true;
-                xcriteria.Select();
-            }
-            else xcriteriacheckbox.Checked = false;
-            if (!string.IsNullOrEmpty(x.werkPlek))
-            {
-                xwerkplekken.SelectedItem = x.werkPlek;
-                xwerkplekcheck.Checked = true;
-                xwerkplekken.Select();
-            }
-            else xwerkplekcheck.Checked = false;
-            if (!string.IsNullOrEmpty(x.Bewerking))
-            {
-                xbewerkingen.SelectedItem = x.Bewerking;
-                xbewerkingcheck.Checked = true;
-                xbewerkingen.Select();
-            }
-            else xbewerkingcheck.Checked = false;
-
-        }
 
         private bool IsAllowed(object value, string filter)
         {
@@ -169,7 +79,13 @@ namespace Controls
                     return false;
 
                 var flag = true;
-
+                if(!string.IsNullOrEmpty(ShowFilter.State))
+                {
+                    if(Enum.TryParse<ViewState>(ShowFilter.State, out var state))
+                    {
+                        if (!bew.IsValidState(state)) return false;
+                    }
+                }
                 if (ShowFilter.VanafCheck)
                 {
                     switch (bew.State)
@@ -222,6 +138,26 @@ namespace Controls
                     ShowFilter.Bewerking, StringComparison.CurrentCultureIgnoreCase))
                     return false;
 
+                if (!string.IsNullOrEmpty(ShowFilter.MaterialenCriteria))
+                {
+                    var crits = ShowFilter.MaterialenCriteria.Trim().Split(';');
+                    if (bew.Parent?.Materialen != null)
+                    {
+                        if (bew.Parent?.Materialen.Count == 0) return false;
+                    }
+                    else return false;
+                    foreach(var crit in crits)
+                    {
+                        var c = crit.Trim();
+                        if(!string.IsNullOrEmpty(c))
+                        {
+                            if (bew.Parent.Materialen.Any(x=> string.Equals(x.ArtikelNr,c, StringComparison.CurrentCultureIgnoreCase) ||
+                                                              (!string.IsNullOrEmpty(x.Omschrijving) && x.Omschrijving.Trim().ToLower().Contains(c.ToLower()))))
+                                return true;
+                        }
+                    }
+                    return false;
+                }
                 return true;
             }
             catch (Exception e)
@@ -258,19 +194,17 @@ namespace Controls
 
         private bool _isbussy;
 
-        public void Verwerk()
+        public void Verwerk(bool showcrit)
         {
             if (_isbussy) return;
-            if (!DoCheck())
-                return;
-            ShowFilter.Enabled = true;
-            ShowFilter.VanafCheck = xvanafcheck.Checked;
-            ShowFilter.VanafTime = xvanafdate.Value;
-            ShowFilter.TotCheck = xtotcheck.Checked;
-            ShowFilter.TotTime = xtotdate.Value;
-            ShowFilter.Bewerking = xbewerkingcheck.Checked ? xbewerkingen.Text.Trim() : null;
-            ShowFilter.werkPlek = xwerkplekcheck.Checked ? xwerkplekken.Text.Trim() : null;
-            ShowFilter.Criteria = xcriteriacheckbox.Checked ? xcriteria.Text.Trim() : null;
+            if (showcrit || ShowFilter.IsDefault())
+            {
+                var f = new ZoekForm();
+                f.SetFilter(ShowFilter);
+                if (f.ShowDialog() != DialogResult.OK) return;
+                ShowFilter = f.GetFilter();
+            }
+            if (ShowFilter.IsDefault()) return;
             Task.Run(() =>
             {
                 try
@@ -344,6 +278,10 @@ namespace Controls
                     xtitle += $"werkplek '{ShowFilter.werkPlek}', ";
                 if (!string.IsNullOrEmpty(ShowFilter.Bewerking))
                     xtitle += $"bewerking '{ShowFilter.Bewerking}', ";
+                if (!string.IsNullOrEmpty(ShowFilter.State))
+                    xtitle += $" Productie Status '{ShowFilter.State}', ";
+                if (!string.IsNullOrEmpty(ShowFilter.MaterialenCriteria))
+                    xtitle += $"materialen '{ShowFilter.MaterialenCriteria}', ";
                 xtitle = xtitle.TrimEnd(new char[] { ',', ' ' });
                 if (ShowFilter.VanafCheck)
                     xtitle += $" vanaf {ShowFilter.VanafTime.ToString(CultureInfo.InvariantCulture)}";
@@ -360,17 +298,6 @@ namespace Controls
         private void xsluiten_Click(object sender, EventArgs e)
         {
            OnClosedClicked();
-        }
-
-        private void xcriteria_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.Handled = e.SuppressKeyPress = true;
-                if (_isbussy) return;
-                Verwerk();
-
-            }
         }
 
         public event EventHandler ClosedClicked;

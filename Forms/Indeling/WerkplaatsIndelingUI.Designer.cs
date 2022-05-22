@@ -210,9 +210,9 @@ namespace Forms
             // 
             // WerkplaatsIndelingUI
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.splitContainer1);
+            this.DoubleBuffered = true;
             this.Name = "WerkplaatsIndelingUI";
             this.Size = new System.Drawing.Size(1150, 631);
             this.panel1.ResumeLayout(false);

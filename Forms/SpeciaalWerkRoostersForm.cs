@@ -1,8 +1,11 @@
 ﻿using BrightIdeasSoftware;
 using Rpm.Misc;
 using Rpm.Productie;
+using Rpm.Various;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -36,6 +39,7 @@ namespace Forms
             xroosterlist.SetObjects((roosters?.CreateCopy()?? new List<Rooster>()));
             if (xroosterlist.Items.Count > 0)
             {
+                xroosterlist.Sort((OLVColumn)xroosterlist.Columns[0], SortOrder.Descending);
                 xroosterlist.SelectedIndex = 0;
                 xroosterlist.SelectedItem?.EnsureVisible();
             }
@@ -145,6 +149,29 @@ namespace Forms
                 xroosterlist.RemoveObjects(xroosterlist.SelectedObjects);
                 UpdateRoosterListLabel();
             }
+        }
+
+        private bool WriteDateItem(EventArgs e,
+              Graphics g, Rectangle r, Object rowObject)
+        {
+            using (LinearGradientBrush gradient =
+                new LinearGradientBrush(r, Color.Gold, Color.Fuchsia, 0.0))
+            {
+                g.FillRectangle(gradient, r);
+            }
+            StringFormat fmt = new StringFormat(StringFormatFlags.NoWrap);
+            fmt.LineAlignment = StringAlignment.Center;
+            fmt.Trimming = StringTrimming.EllipsisCharacter;
+            fmt.Alignment = StringAlignment.Near;
+            g.DrawString(((Rooster)rowObject).Vanaf.ToString("D"), xroosterlist.Font, Brushes.Black, r, fmt);
+            return false;
+        }
+
+        private void xroosterlist_BeforeSorting(object sender, BeforeSortingEventArgs e)
+        {
+            xroosterlist.ListViewItemSorter = Comparer<OLVListItem>.Create((x, y) =>
+                   Comparer.Compare(((Rooster)x.RowObject).Vanaf.Date, ((Rooster)y.RowObject).Vanaf.Date, e.SortOrder, e.ColumnToSort));
+            e.Handled = true;
         }
     }
 }

@@ -687,10 +687,15 @@ namespace Controls
             var dc = new DatumChanger();
             if (dc.ShowDialog(bew.LeverDatum, $"Wijzig leverdatum voor {bew.Naam}.") == DialogResult.OK)
             {
+                var date = dc.SelectedValue;
+                if(dc.AddTime)
+                {
+                    date = bew.LeverDatum.Add(dc.TimeToAdd);
+                }
                 var change = $"[{bew.Path}] Leverdatum gewijzigd!\n " +
                              $"Van: {bew.LeverDatum:dd MMMM yyyy HH:mm} uur\n " +
-                             $"Naar: {dc.SelectedValue:dd MMMM yyyy HH:mm} uur";
-                bew.LeverDatum = dc.SelectedValue;
+                             $"Naar: {date:dd MMMM yyyy HH:mm} uur";
+                bew.LeverDatum = date;
                 await bew.UpdateBewerking(null, change);
             }
         }

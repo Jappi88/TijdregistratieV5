@@ -1,4 +1,5 @@
 ﻿using Forms.MetroBase;
+using Rpm.Misc;
 using System;
 using System.Windows.Forms;
 
@@ -9,18 +10,36 @@ namespace Forms
         public DatumChanger()
         {
             InitializeComponent();
+            xfieldpanel.Height = 40;
+        }
+
+        private void InitSize()
+        {
+            try
+            {
+                var size = DisplayText.MeasureString(this.Font);
+                size.Height += 200;
+                this.MinimumSize = new System.Drawing.Size(this.Width, size.Height);
+                this.Height = size.Height;
+                xaddtimepanel.Visible = xextratijdcheckbox.Checked;
+                xdatepicker.Visible = xwijzigdatumcheckbox.Checked;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public DateTime SelectedValue
         {
-            get => dateTimePicker1.Value;
-            set => dateTimePicker1.Value = value;
+            get => xdatepicker.Value;
+            set => xdatepicker.Value = value;
         }
 
         public string DateFormat
         {
-            get => dateTimePicker1.CustomFormat;
-            set => dateTimePicker1.CustomFormat = value;
+            get => xdatepicker.CustomFormat;
+            set => xdatepicker.CustomFormat = value;
         }
 
         public string DisplayText
@@ -28,6 +47,10 @@ namespace Forms
             get => xmessage.Text;
             set => xmessage.Text = value;
         }
+
+        public bool AddTime => xextratijdcheckbox.Checked;
+
+        public TimeSpan TimeToAdd => new TimeSpan((int)xdagen.Value, (int)xuren.Value, (int)xmin.Value, 0, 0);
 
         public DialogResult ShowDialog(DateTime value, string title)
         {
@@ -48,8 +71,9 @@ namespace Forms
 
         private void DatumChanger_Shown(object sender, EventArgs e)
         {
-            dateTimePicker1.Select();
-            dateTimePicker1.Focus();
+            InitSize();
+            xdatepicker.Select();
+            xdatepicker.Focus();
         }
 
         private void dateTimePicker1_KeyDown(object sender, KeyEventArgs e)
@@ -59,6 +83,11 @@ namespace Forms
                 e.Handled = e.SuppressKeyPress = true;
                 DialogResult = DialogResult.OK;
             }
+        }
+
+        private void xwijzigdatumcheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            InitSize();
         }
     }
 }

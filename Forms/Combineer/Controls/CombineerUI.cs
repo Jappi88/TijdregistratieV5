@@ -97,7 +97,7 @@ namespace Controls
                     : $"Combineer producties met {Productie.Naam} van {Productie.Omschrijving}";
 
                 msg = $"<span color='darkred'><b>{title}</b><br>" +
-                      $"Alle gecombineerde producties zullen automatisch starten,stoppen en worden gereed gemeld.<br>" +
+                      $"Gecombineerde producties zullen automatisch starten,stoppen en onderbroken/hervat worden.<br>" +
                       $"<b>Huidige productie draait op {Productie.Activiteit}%</b></span>";
             }
 

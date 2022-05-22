@@ -402,7 +402,7 @@ namespace Rpm.Productie
                             //xleft += pauze;
                         var xpauze = PauzeGehad(nu.TimeOfDay, nu.Add(pauze).TimeOfDay, rooster);
                         nu = nu.Add(pauze);
-                        xleft += pauze;
+                        //xleft -= pauze;
                         pauze = xpauze;
                     }
                     
@@ -525,7 +525,17 @@ namespace Rpm.Productie
                             break;
                     }
                     break;
+                case DayOfWeek.Sunday:
 
+                    for (int i = 0; i < 1; i++)
+                    {
+                        isnewday = true;
+                        x = x.AddDays(1);
+                        specialrooster = specialeRoosters?.FirstOrDefault(t => t.Vanaf.Date == x.Date);
+                        if (specialrooster != null)
+                            break;
+                    }
+                    break;
                 default:
                     if (x.TimeOfDay >= einddag)
                     {

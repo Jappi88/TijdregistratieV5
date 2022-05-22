@@ -909,9 +909,9 @@ Color textcolor, bool useimage)
                           ximage +
                           $"<td><div>" +
                           $"<h2>" +
+                          $"<span style = 'color: purple'>Leverdatum: </span><span style = 'color: {GetValidColor(LeverDatum > DateTime.Now).Name}>{LeverDatum:f}</span>.<br>" +
                           xstartbody +
                           xgestartbody +
-                          $"Leverdatum: <span style = 'color: {GetValidColor(LeverDatum > DateTime.Now).Name}>{LeverDatum:f}</span>.<br>" +
                            $"{(State != ProductieState.Gereed ? $"Verwachte Leverdatum: <span style = 'color:{GetValidColor(VerwachtLeverDatum < LeverDatum).Name}> {VerwachtLeverDatum:f}</span>." : $"Gereed Gemeld Door <u>{Paraaf}</u> Op: <span style = 'color:{GetValidColor(true).Name}>{DatumGereed:f}</span>.")}\r\n" +
                           $"</h2><hr />\r\n<h2>" +
                            xwpsinfo +

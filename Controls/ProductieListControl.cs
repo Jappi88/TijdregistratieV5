@@ -214,22 +214,21 @@ namespace Controls
                     if (ProductieLijst.SelectedObject is IProductieBase xitem)
                         xvalue = $"{xitem.Omschrijving} ({xitem.ArtikelNr})";
                 }
-
                 var xitems =
-                    (ProductieLijst.SelectedObjects.Count > 1 ? ProductieLijst.SelectedObjects : ProductieLijst.Objects)
+                    (ProductieLijst.SelectedObjects.Count > 0 ? ProductieLijst.SelectedObjects : ProductieLijst.Objects)
                     ?.Cast<IProductieBase>().ToList() ?? new List<IProductieBase>();
-                var xtijdgewerkt = xitems.Sum(x => x.TijdGewerkt);
-                var xtijd = xitems.Sum(x => x.DoorloopTijd);
-                var xgemaakt = xitems.Sum(x => x.TotaalGemaakt);
-                var xtotaal = xitems.Sum(x => x.Aantal);
+                var xtijdgewerkt = xitems.Sum(x => x?.TijdGewerkt??0);
+                var xtijd = xitems.Sum(x => x?.DoorloopTijd??0);
+                var xgemaakt = xitems.Sum(x => x?.TotaalGemaakt??0);
+                var xtotaal = xitems.Sum(x => x?.Aantal??0);
                 var xpu = xtijd == 0 ? xgemaakt : xgemaakt == 0 ? 0 : (int)Math.Round(xgemaakt / xtijdgewerkt, 0);
                 var x1 = xitems.Count == 1 ? "Productie" : "Producties";
                 xstatuslabel.Text = xvalue.Replace("\n", " ");
                 xgemiddeldpu.Text = $"Gemiddeld: {xpu} p/u";
-                xgemaaktlabel.Text = $"Totaal Gemaakt: {(xgemaakt == 0 ? "0" : xgemaakt.ToString("#,##0"))}";
-                xtotaaltijdlabel.Text = $"Totaal Tijd: {xtijd:#,##0.##} uur";
-                xtotaalgewerktlabel.Text = $"Totaal Gewerkt: {xtijdgewerkt:#,##0.##} uur";
-                xtotaalAantallabel.Text =  $"Totaal Aantal: {(xtotaal == 0 ? "0" : xtotaal.ToString("#,##0"))}";
+                xgemaaktlabel.Text = $"Geproduceerd: {(xgemaakt == 0 ? "0" : xgemaakt.ToString("#,##0"))}";
+                xtotaaltijdlabel.Text = $"Doorlooptijd: {xtijd:#,##0.##} uur";
+                xtotaalgewerktlabel.Text = $"Gewerkt: {xtijdgewerkt:#,##0.##} uur";
+                xtotaalAantallabel.Text =  $"Aantal: {(xtotaal == 0 ? "0" : xtotaal.ToString("#,##0"))}";
                 xitemcount.Text = xitems.Count == 0 ? "0" : xitems.Count.ToString("#,##0") + $" {x1}";
             }
             catch (Exception e)
@@ -285,16 +284,16 @@ namespace Controls
 
                     var isprod = !IsBewerkingView;
                     var verwijderd1 = enable3 && isprod
-                        ? bws.All(x => x.State == ProductieState.Verwijderd)
-                        : bws.Any(x => x.State == ProductieState.Verwijderd);
-                    var verwijderd2 = enable3 && bws.Any(x => x.State != ProductieState.Verwijderd);
+                        ? bws.All(x => x != null && x.State == ProductieState.Verwijderd)
+                        : bws.Any(x => x != null && x.State == ProductieState.Verwijderd);
+                    var verwijderd2 = enable3 && bws.Any(x => x != null && x.State != ProductieState.Verwijderd);
                     var isgereed1 = enable3 && isprod
-                        ? bws.All(x => x.State == ProductieState.Gereed)
-                        : bws.Any(x => x.State == ProductieState.Gereed);
-                    var isgereed2 = enable3 && bws.Any(x => x.State != ProductieState.Gereed);
-                    var isgestart = enable3 && bws.Any(x => x.State == ProductieState.Gestart);
-                    var isgestopt = enable3 && bws.Any(x => x.State == ProductieState.Gestopt);
-                    var haspdf = bws.Count > 0 && bws[0].Parent != null && bws[0].Parent.ContainsProductiePdf();
+                        ? bws.All(x => x != null && x.State == ProductieState.Gereed)
+                        : bws.Any(x => x != null && x.State == ProductieState.Gereed);
+                    var isgereed2 = enable3 && bws.Any(x => x != null && x.State != ProductieState.Gereed);
+                    var isgestart = enable3 && bws.Any(x => x != null && x.State == ProductieState.Gestart);
+                    var isgestopt = enable3 && bws.Any(x => x != null && x.State == ProductieState.Gestopt);
+                    var haspdf = bws.Count > 0 && bws[0]?.Parent != null && bws[0].Parent.ContainsProductiePdf();
                     //var nietbemand = bws.Any(x => !x.IsBemand);
                     xbewerkingeninfob.Enabled = ProductieLijst.Items.Count > 0;
                     xwijzigproductieinfo.Enabled = enable3 && acces1;
@@ -714,7 +713,11 @@ namespace Controls
                 xListColumnsButton_Click(this, EventArgs.Empty);
                 return true;
             }
-
+            if(e.KeyCode == Keys.Escape)
+            {
+                ProductieLijst.SelectedObject = null;
+                return true;
+            }
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
@@ -1903,7 +1906,7 @@ namespace Controls
                 if (done.Any(x => string.Equals(x, bws[i].ArtikelNr, StringComparison.CurrentCultureIgnoreCase)))
                     continue;
                 var _calcform = new RangeCalculatorForm();
-                var rf = new ZoekProductiesUI.RangeFilter
+                var rf = new RangeFilter
                 {
                     Enabled = true,
                     Criteria = bws[i].ArtikelNr,
@@ -1924,7 +1927,7 @@ namespace Controls
             {
                 if (done.Any(x => string.Equals(x, bws[i].Naam, StringComparison.CurrentCultureIgnoreCase))) continue;
                 var _calcform = new RangeCalculatorForm();
-                var rf = new ZoekProductiesUI.RangeFilter
+                var rf = new RangeFilter
                 {
                     Enabled = true,
                     Bewerking = bws[i].Naam
@@ -2213,10 +2216,15 @@ namespace Controls
                         var xdic = new Dictionary<string, Task<bool>>();
                         foreach (var form in items)
                         {
-                            var change = $"[{form.ProductieNr}|{form.ArtikelNr}] Leverdatum gewijzigd!\n" +
+                            var date = dc.SelectedValue;
+                            if (dc.AddTime)
+                            {
+                                date = form.LeverDatum.Add(dc.TimeToAdd);
+                            }
+                            var change = $"[{form.Path} | {form.ArtikelNr}] Leverdatum gewijzigd!\n" +
                                          $"Van: {form.LeverDatum:dd MMMM yyyy HH:mm} uur\n" +
-                                         $"Naar: {dc.SelectedValue:dd MMMM yyyy HH:mm} uur";
-                            form.LeverDatum = dc.SelectedValue;
+                                         $"Naar: {date:dd MMMM yyyy HH:mm} uur";
+                            form.LeverDatum = date;
                             var action = new Task<bool>(() => form.UpdateForm(true, false, null, change).Result);
                             xdic.Add(change, action);
                         }
@@ -2250,7 +2258,7 @@ namespace Controls
                     var item = items.FirstOrDefault();
                     var datum = item?.LeverDatum ?? DateTime.Now;
                     var x1 = items.Count == 1 && item != null
-                        ? $"[{item.ProductieNr}|{item.ArtikelNr}] {item.Naam}\n\n{item.Omschrijving}"
+                        ? $"[{item.Path}|{item.ArtikelNr}]\n\n{item.Omschrijving}"
                         : $"{items.Count} producties";
                     var msg = $"Wijzig leverdatum voor {x1}.";
                     var dc = new DatumChanger();
@@ -2259,10 +2267,15 @@ namespace Controls
                         var xdic = new Dictionary<string, Task<bool>>();
                         foreach (var form in items)
                         {
-                            var change = $"[{form.ProductieNr}|{form.ArtikelNr}] {form.Naam} Leverdatum gewijzigd!\n" +
+                            var date = dc.SelectedValue;
+                            if (dc.AddTime)
+                            {
+                                date = form.LeverDatum.Add(dc.TimeToAdd);
+                            }
+                            var change = $"{form.Path} | {form.ArtikelNr} Leverdatum gewijzigd!\n" +
                                          $"Van: {form.LeverDatum:dd MMMM yyyy HH:mm} uur\n" +
-                                         $"Naar: {dc.SelectedValue:dd MMMM yyyy HH:mm} uur";
-                            form.LeverDatum = dc.SelectedValue;
+                                         $"Naar: {date:dd MMMM yyyy HH:mm} uur";
+                            form.LeverDatum = date;
                             var action = new Task<bool>(() => form.UpdateBewerking(null, change).Result);
                             xdic.Add(change, action);
                         }
@@ -3255,6 +3268,11 @@ namespace Controls
                     // Manager.ColumnsSettingsChanged(xset);
                 }
             }
+        }
+
+        private void xproductieLijstcontext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = ProductieLijst.Items.Count == 0;
         }
 
         #endregion ProductieLijst Events

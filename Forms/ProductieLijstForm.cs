@@ -77,7 +77,7 @@ namespace Forms
 
             Text = xname + @$"[{xitemcount}]";
             var x1 = xitemcount == 1 ? "bewerking" : "bewerkingen";
-            xstatuslabel.Text = @$"{xname} met totaal {xitemcount} {x1}";
+            xstatuslabel.Text = @$"{xname}: {xitemcount} {x1}";
             Invalidate();
         }
 

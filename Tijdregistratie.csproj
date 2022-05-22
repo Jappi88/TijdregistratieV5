@@ -63,7 +63,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -231,6 +231,7 @@
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
+    <Reference Include="System.Messaging" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
@@ -495,6 +496,12 @@
     </Compile>
     <Compile Include="Forms\Sporen\OptimaleVerbruikSettingForm.Designer.cs">
       <DependentUpon>OptimaleVerbruikSettingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ZoekForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ZoekForm.Designer.cs">
+      <DependentUpon>ZoekForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Rpm\ExcelHelper\CellMargeCheck.cs" />
     <Compile Include="Rpm\Mailing\EmailServer.cs" />
@@ -1529,6 +1536,7 @@
     <Compile Include="Various\DockStateInfo.cs" />
     <Compile Include="Various\DockWindowEntry.cs" />
     <Compile Include="Various\MenuButton.cs" />
+    <Compile Include="Various\RangeFilter.cs" />
     <Compile Include="Various\Tools.cs" />
     <EmbeddedResource Include="Controls\AfkeurEntryUI.resx">
       <DependentUpon>AfkeurEntryUI.cs</DependentUpon>
@@ -2038,6 +2046,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WijzigProductie.resx">
       <DependentUpon>WijzigProductie.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ZoekForm.resx">
+      <DependentUpon>ZoekForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Mainform.resx">
       <DependentUpon>Mainform.cs</DependentUpon>

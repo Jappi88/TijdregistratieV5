@@ -255,6 +255,7 @@ namespace Controls
             this.ontvouwAlleGroepenToolStripMenuItem});
             this.xproductieLijstcontext.Name = "contextMenuStrip1";
             this.xproductieLijstcontext.Size = new System.Drawing.Size(269, 608);
+            this.xproductieLijstcontext.Opening += new System.ComponentModel.CancelEventHandler(this.xproductieLijstcontext_Opening);
             // 
             // xopenProductieToolStripMenuItem
             // 
@@ -744,8 +745,8 @@ namespace Controls
             // xstatuslabel
             // 
             this.xstatuslabel.Name = "xstatuslabel";
-            this.xstatuslabel.Size = new System.Drawing.Size(77, 22);
-            this.xstatuslabel.Text = "selected item";
+            this.xstatuslabel.Size = new System.Drawing.Size(51, 22);
+            this.xstatuslabel.Text = "Selected";
             // 
             // panel3
             // 

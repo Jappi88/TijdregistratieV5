@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using Controls;
 using Forms.MetroBase;
 using Rpm.Misc;
+using Various;
 
 namespace Forms
 {
@@ -13,7 +14,7 @@ namespace Forms
             InitializeComponent();
         }
 
-        public ZoekProductiesUI.RangeFilter Filter
+        public RangeFilter Filter
         {
             get => zoekProductiesUI1.ShowFilter;
             set=> zoekProductiesUI1.ShowFilter = value;
@@ -32,11 +33,8 @@ namespace Forms
         private void RangeCalculatorForm_Shown(object sender, System.EventArgs e)
         {
             zoekProductiesUI1.InitUI();
-            if (!Filter.IsDefault())
-            {
-                zoekProductiesUI1.SetFilter(Filter);
-                zoekProductiesUI1.Verwerk();
-            }
+            zoekProductiesUI1.ShowFilter = Filter;
+            zoekProductiesUI1.Verwerk(false);
         }
 
         private void zoekProductiesUI1_StatusTextChanged(object sender, System.EventArgs e)

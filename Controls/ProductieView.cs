@@ -3264,35 +3264,23 @@ namespace Controls
             {
                 if (Manager.Database == null)
                     throw new Exception("Database is niet geladen!");
-                var tb = new TextFieldEditor();
-                tb.FieldImage = Resources.search_page_document_128x128;
-                tb.MultiLine = false;
-                tb.Title = "Zoek Productie";
-                tb.EnableSecondaryField = true;
-                tb.SecondaryDescription = "Vul in een Artikelnr, bewerking naam of een omschrijving";
-                if (tb.ShowDialog() == DialogResult.OK)
+                var zoek = new ZoekForm();
+                if (zoek.ShowDialog() != DialogResult.OK) return;
+                var f = zoek.GetFilter();
+                if (!string.IsNullOrEmpty(f.Criteria))
                 {
-                    if (tb.UseSecondary)
+                    var xsel = f.Criteria;
+                    var prod = Manager.Database.GetProductie(xsel, false);
+                    if (prod != null)
                     {
-                        var calcform = new RangeCalculatorForm();
-                        var rf = new ZoekProductiesUI.RangeFilter
-                        {
-                            Enabled = true,
-                            Criteria = tb.SecondaryText.Trim()
-                        };
-                        calcform.Filter = rf;
-                        calcform.Show();
-                    }
-                    else
-                    {
-                        var xsel = tb.SelectedText.Trim();
-                        var prod = Manager.Database.GetProductie(xsel, false);
-                        if (prod == null)
-                            throw new Exception($"Er is geen productie gevonden met '{xsel}'.");
                         var bw = prod.Bewerkingen?.FirstOrDefault(x => x.IsAllowed());
-                        Manager.FormulierActie(new object[] {prod, bw}, MainAktie.OpenProductie);
+                        Manager.FormulierActie(new object[] { prod, bw }, MainAktie.OpenProductie);
+                        return;
                     }
                 }
+                var calcform = new RangeCalculatorForm();
+                calcform.Filter = f;
+                calcform.Show();
             }
             catch (Exception ex)
             {
@@ -3603,7 +3591,12 @@ namespace Controls
 
                             if (taak.Bewerking != null)
                             {
-                                taak.Bewerking.LeverDatum = dt.SelectedValue;
+                                var date = dt.SelectedValue;
+                                if (dt.AddTime)
+                                {
+                                    date = taak.Bewerking.LeverDatum.Add(dt.TimeToAdd);
+                                }
+                                taak.Bewerking.LeverDatum = date;
                                 save = true;
                             }
                         }
@@ -3617,10 +3610,16 @@ namespace Controls
                             $"Wijzig leverdatum voor {taak.Formulier.Omschrijving}.") == DialogResult.OK)
                         {
                             taak.Formulier = Manager.Database.GetProductie(taak.Formulier.ProductieNr, false);
+                            if (taak.Formulier == null) return;
+                            var date = dt.SelectedValue;
+                            if (dt.AddTime)
+                            {
+                                date = taak.Formulier.LeverDatum.Add(dt.TimeToAdd);
+                            }
                             if (taak.Formulier.Bewerkingen.Length > 0)
                                 taak.Formulier.Bewerkingen[taak.Formulier.Bewerkingen.Length - 1].LeverDatum =
-                                    dt.SelectedValue;
-                            else taak.Formulier.LeverDatum = dt.SelectedValue;
+                                    date;
+                            else taak.Formulier.LeverDatum = date;
                             save = true;
                         }
 

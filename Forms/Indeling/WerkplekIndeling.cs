@@ -16,6 +16,7 @@ namespace Controls
     
     public partial class WerkplekIndeling : UserControl
     {
+        public bool IsCompact { get; private set; }
         public string Werkplek { get; set; }
         public bool IsDefault()
         {
@@ -39,7 +40,14 @@ namespace Controls
         {
             try
             {
-                Werkplek = werkplek;
+                var vals = werkplek?.Split(';');
+                if (vals != null)
+                {
+                    Werkplek = vals[0];
+                    if (vals.Length > 1)
+                        IsCompact = vals[1].Trim().ToLower() == "true";
+                }
+                else werkplek = null;
                 UpdateWerkplekInfo();
             }
             catch (Exception e)
@@ -62,6 +70,7 @@ namespace Controls
                     xVerwijderPersoneel.Visible = false;
                     xresetindeling.Visible = false;
                     xnietingedeeld.Visible = true;
+                    xcompact.Visible = false;
                     xnietingedeeld.Checked = ToonNietIngedeeld;
                     if (FieldTextGetter != null)
                         xpersoonInfo.Text = FieldTextGetter.Invoke(this);
@@ -70,19 +79,26 @@ namespace Controls
                                             $"Voeg werkplaatsen toe om producties daarvoor in te delen.<br>" +
                                             $"Sleep een bewerking naar de gewenste werkplek om ze in te delen.<br>";
                     xknoppenpanel.Visible = false;
+                    xpanel.Visible = false;
                 }
                 else
                 {
                     //ximage.Image = Resources.user_customer_person_13976;
+                  
                     xknoppenpanel.Visible = SelectedBewerking != null && !IsDefault() && IsSelected;
+                    xcompact.Visible = true;
                     xVerwijderPersoneel.Visible = true;
                     xresetindeling.Visible = true;
+                    xpanel.Visible = true;
+                    xcompact.Image = IsCompact ? Resources.icons8_expand_32 : Resources.icons8_collapse_32;
+                    xcompactinfo.Visible = IsCompact && (SelectedBewerking == null || !IsSelected);
+                    xpanel.Height = (SelectedBewerking == null || !IsSelected) ? 44 : 40;
                     if (Parent is GroupBox group)
                     {
                         if (SelectedBewerking != null && IsSelected)
                         {
                             var bw = SelectedBewerking;
-                            group.Text = $"{Werkplek} {bw.Naam} van {bw.ArtikelNr} | {bw.ProductieNr}";
+                            group.Text = $"{Werkplek} {bw.Naam}[{bw.ProductieNr}, {bw.ArtikelNr}]";
                         }
                         else group.Text = $"{Werkplek}";
                     }
@@ -113,8 +129,38 @@ namespace Controls
                         xknoppenpanel.Visible = false;
                     }
                     if (FieldTextGetter != null)
-                        xpersoonInfo.Text = FieldTextGetter.Invoke(this);
+                    {
+                        if(IsCompact)
+                        {
+                            xpersoonInfo.Text = "";
+                            xcompactinfo.Text = FieldTextGetter.Invoke(this);
+                        }
+                        else
+                        {
+                            xpersoonInfo.Text = FieldTextGetter.Invoke(this);
+                            xcompactinfo.Text = "";
+                        }
+                        
+                    }
                 }
+                UpdateHeight();
+            }
+        }
+
+        public void UpdateHeight()
+        {
+            try
+            {
+                Control c = this.Parent ?? this;
+                if (c != null)
+                {
+                    c.Height = IsCompact ? 60 : 140;
+                    this.Invalidate();
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 
@@ -338,6 +384,10 @@ namespace Controls
 
         private void xPersoonImage_DoubleClick(object sender, EventArgs e)
         {
+            if(!IsDefault())
+            {
+                TogleCompactMode();
+            }
             this.OnDoubleClick(EventArgs.Empty);
         }
 
@@ -468,6 +518,17 @@ namespace Controls
         private void xresetindeling_Click(object sender, EventArgs e)
         {
             this.OnResetIndeling();
+        }
+
+        private void xcompact_Click(object sender, EventArgs e)
+        {
+            TogleCompactMode();
+        }
+
+        public void TogleCompactMode()
+        {
+            IsCompact = !IsCompact;
+            UpdateWerkplekInfo();
         }
     }
 }

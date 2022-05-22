@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Controls;
+using Various;
 
 namespace Forms.Klachten
 {
@@ -196,7 +197,7 @@ namespace Forms.Klachten
                 if (tb.UseSecondary)
                 {
                     var calcform = new RangeCalculatorForm();
-                    var rf = new ZoekProductiesUI.RangeFilter
+                    var rf = new RangeFilter
                     {
                         Enabled = true,
                         Criteria = tb.SecondaryText.Trim(),

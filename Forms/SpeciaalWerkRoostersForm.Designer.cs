@@ -117,11 +117,13 @@ namespace Forms
             this.xroosterlist.UseTranslucentHotItem = true;
             this.xroosterlist.UseTranslucentSelection = true;
             this.xroosterlist.View = System.Windows.Forms.View.Details;
+            this.xroosterlist.BeforeSorting += new System.EventHandler<BrightIdeasSoftware.BeforeSortingEventArgs>(this.xroosterlist_BeforeSorting);
             this.xroosterlist.SelectedIndexChanged += new System.EventHandler(this.xroosterlist_SelectedIndexChanged);
             // 
             // olvColumn1
             // 
             this.olvColumn1.AspectName = "Vanaf";
+            this.olvColumn1.AspectToStringFormat = "";
             this.olvColumn1.FillsFreeSpace = true;
             this.olvColumn1.IsEditable = false;
             this.olvColumn1.Text = "Datum";
@@ -214,6 +216,8 @@ namespace Forms
             this.roosterUI1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.roosterUI1.Name = "roosterUI1";
             this.roosterUI1.Padding = new System.Windows.Forms.Padding(5);
+            this.roosterUI1.ShowNationaleFeestDagen = true;
+            this.roosterUI1.ShowSpecialeRoosterButton = true;
             this.roosterUI1.Size = new System.Drawing.Size(513, 391);
             this.roosterUI1.SpecialeRoosters = null;
             this.roosterUI1.TabIndex = 4;
