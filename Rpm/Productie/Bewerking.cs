@@ -1106,10 +1106,12 @@ namespace Rpm.Productie
             if (TotaalGemaakt >= Aantal || tijd is 0 or Double.NaN || double.IsInfinity(tijd))
                 return Werktijd.EerstVolgendeWerkdag(DateTime.Now, ref rooster, rooster,
                     Manager.Opties?.SpecialeRoosters);
-            var xdate = Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(tijd), rooster, null);
+            var xstart = DateTime.Now;
+
+            var xdate = Werktijd.DatumNaTijd(xstart, TimeSpan.FromHours(tijd), rooster, null);
             foreach (var wp in WerkPlekken)
             {
-                var x = Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(tijd),
+                var x = Werktijd.DatumNaTijd(xstart, TimeSpan.FromHours(tijd),
                     wp.Tijden.WerkRooster, wp.Tijden?.SpecialeRoosters);
                 if (x < xdate)
                     xdate = x;

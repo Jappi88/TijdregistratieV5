@@ -23,7 +23,7 @@ namespace ProductieManager.Rpm.Various
             ID = DateTime.Now.GetHashCode();
         }
 
-        public List<ProductieChatEntry> GetMessagesFromAfzender(string afzender, bool onlyunread = false)
+        public List<ProductieChatEntry> GetMessagesFromAfzender(string afzender,DateTime vanaf, bool onlyunread = false)
         {
             var xreturn = new List<ProductieChatEntry>();
             if (string.IsNullOrEmpty(UserName)) return xreturn;
@@ -47,6 +47,7 @@ namespace ProductieManager.Rpm.Various
                 {
                     var ent = file.DeSerialize<ProductieChatEntry>();
                     if (ent?.Afzender == null) continue;
+                    if (!vanaf.IsDefault() && ent.Tijd < vanaf) continue;
                     if (!string.IsNullOrEmpty(afzender) &&
                         !string.Equals(afzender, "iedereen", StringComparison.CurrentCultureIgnoreCase))
                     {
@@ -73,18 +74,18 @@ namespace ProductieManager.Rpm.Various
 
         public int UnreadMessages(string afzender)
         {
-            var msgs = GetMessagesFromAfzender(afzender, true);
+            var msgs = GetMessagesFromAfzender(afzender,default, true);
             return msgs.Count;
         }
 
         public List<ProductieChatEntry> GetAllUnreadMessages()
         {
-            return GetMessagesFromAfzender(null, true);
+            return GetMessagesFromAfzender(null, default, true);
         }
 
         public List<ProductieChatEntry> GetAllMessages()
         {
-            return GetMessagesFromAfzender(null, false);
+            return GetMessagesFromAfzender(null, default, false);
         }
 
         public bool DeleteUser()

@@ -92,7 +92,6 @@ namespace Controls
                     xpanel.Visible = true;
                     xcompact.Image = IsCompact ? Resources.icons8_expand_32 : Resources.icons8_collapse_32;
                     xcompactinfo.Visible = IsCompact && (SelectedBewerking == null || !IsSelected);
-                    xpanel.Height = (SelectedBewerking == null || !IsSelected) ? 44 : 40;
                     if (Parent is GroupBox group)
                     {
                         if (SelectedBewerking != null && IsSelected)
@@ -151,6 +150,7 @@ namespace Controls
         {
             try
             {
+                xpanel.Height = IsCompact && (SelectedBewerking == null || !IsSelected) ? 44 : 40;
                 Control c = this.Parent ?? this;
                 if (c != null)
                 {
@@ -160,7 +160,7 @@ namespace Controls
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
             }
         }
 

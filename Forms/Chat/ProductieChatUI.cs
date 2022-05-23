@@ -268,8 +268,8 @@ namespace Forms
                 if (string.IsNullOrEmpty(message?.Bericht)) return;
                 //if (message.Afzender.Equals(_selecteduser))
                 //{
-                    
-                    
+
+
                 //    Invoke(new MethodInvoker(() =>
                 //    {
                 //        var xmsg = CreateRecieveMessage(message);
@@ -279,6 +279,13 @@ namespace Forms
                 //    }));
                 //}
                 //else
+                if (message.Afzender.Equals(_selecteduser))
+                {
+                    var updated = false;
+                    var added = false;
+                    UpdateMessage(message, ref updated, ref added,true);
+                }
+                else
                     BeginInvoke(new MethodInvoker(LoadProfiles));
             }
             catch (Exception e)
@@ -477,6 +484,57 @@ namespace Forms
             return (UserChat) xuserlist.SelectedObject;
         }
 
+        private void UpdateMessage(ProductieChatEntry message, ref bool updated, ref bool added, bool scrolintoview, List<ChatBubble> chats = null)
+        {
+            if (this.InvokeRequired)
+            {
+                var xupdated = updated;
+                var xadded = added;
+                this.Invoke(new MethodInvoker(() => UpdateMessage(message, ref xupdated, ref xadded,scrolintoview, chats)));
+                updated = xupdated;
+                added = xadded;
+                return;
+            }
+            try
+            {
+                var messages = chats ?? xchatpanel.Controls.Cast<ChatBubble>().ToList();
+                var xent = message;
+                bool isme = string.Equals(xent.Afzender.UserName, ProductieChat.Chat.UserName,
+                    StringComparison.CurrentCultureIgnoreCase);
+
+                if (!isme && !xent.IsGelezen)
+                {
+                    xent.IsGelezen = true;
+                    updated = true;
+                    xent.UpdateMessage();
+                }
+
+                var xmsg = isme ? CreateSendMessage(xent) : CreateRecieveMessage(xent);
+                var xold = messages.FirstOrDefault(x => x.Message.Equals(xent));
+                if (xold != null)
+                {
+                    xold.SetMessage(xmsg);
+                }
+                else
+                {
+                    // 
+                    xchatpanel.Controls.Add(xmsg);
+                    //xchatpanel.Controls.SetChildIndex(xmsg, i);
+                    // 
+                    added = true;
+                    if (scrolintoview)
+                    {
+                        xchatpanel.Invalidate();
+                        xchatpanel.ScrollControlIntoView(xmsg);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         private void UpdateMessages(List<ProductieChatEntry> entries, bool scroltoend, UserChat selected = null)
         {
             try
@@ -503,30 +561,7 @@ namespace Forms
                 for (int i = 0; i < entries.Count; i++)
                 {
                     var xent = entries[i];
-                    bool isme = string.Equals(xent.Afzender.UserName, ProductieChat.Chat.UserName,
-                        StringComparison.CurrentCultureIgnoreCase);
-
-                    if (!isme && !xent.IsGelezen)
-                    {
-                        xent.IsGelezen = true;
-                        updated = true;
-                        xent.UpdateMessage();
-                    }
-
-                    var xmsg = isme ? CreateSendMessage(xent) : CreateRecieveMessage(xent);
-                    var xold = xmessages.FirstOrDefault(x => x.Message.Equals(xent));
-                    if (xold != null)
-                    {
-                        xold.SetMessage(xmsg);
-                    }
-                    else
-                    {
-                       // 
-                        xchatpanel.Controls.Add(xmsg);
-                        xchatpanel.Controls.SetChildIndex(xmsg, i);
-                       // 
-                        added = true;
-                    }
+                    UpdateMessage(xent, ref updated, ref added,false, xmessages);
                 }
                 xchatpanel.ResumeLayout(false);
                 if (updated)
@@ -572,7 +607,7 @@ namespace Forms
                         {
                             //load conversation
                             var messages =
-                                ProductieChat.GetConversation(selected, !string.IsNullOrEmpty(selected.UserName));
+                                ProductieChat.GetConversation(selected, !string.IsNullOrEmpty(selected.UserName), DateTime.Now.Subtract(TimeSpan.FromDays(30)));
                             if (this.Disposing || this.IsDisposed) return;
                             ProductieChat.RaiseNewMessageEvent = false;
                             UpdateMessages(messages, scrolltoend, selected);

@@ -36,6 +36,7 @@ namespace Forms
             if (Manager.Opties != null)
             {
                 Manager.Opties.WerkplaatsIndeling = GetIndelingen(false).Select(x => $"{x.Werkplek};{x.IsCompact}").ToList();
+                Manager.Opties.Save("Werkplaats indeling opgeslagen",false,false,false);
             }
         }
 
@@ -231,7 +232,9 @@ namespace Forms
                     }
                     else
                     {
-                        xall = $"<b>{bws.Count}</b> {x1} <b>({xbwtijdgewerkt}/{xbwtotaaltijd} uur)</b><br>Gereed op <b>{Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(xbwtijdover), null, null):dd/MM/yyyy HH:mm}</b>.";
+                        xall = $"<b>{bws.Count}</b> {x1} <b>({xbwtijdgewerkt}/{xbwtotaaltijd} uur)</b>";
+                        if (bws.Count > 0)
+                            xall += $"<br>Gereed op <b>{Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(xbwtijdover), null, null):dd/MM/yyyy HH:mm}</b>.";
                     }
                     //if (indeling.SelectedBewerking != null && SelectedPersoneel != null && SelectedPersoneel.Equals(indeling.Persoon))
                     //{

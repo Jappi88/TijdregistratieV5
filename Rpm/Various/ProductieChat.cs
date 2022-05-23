@@ -360,7 +360,7 @@ namespace ProductieManager.Rpm.Various
         }
 
 
-        public static List<ProductieChatEntry> GetConversation(UserChat user, bool privatemessages)
+        public static List<ProductieChatEntry> GetConversation(UserChat user, bool privatemessages, DateTime vanaf)
         {
             var xreturn = new List<ProductieChatEntry>();
             try
@@ -369,8 +369,8 @@ namespace ProductieManager.Rpm.Various
 
                 var usermessages = string.Equals(user.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase)
                     ? new List<ProductieChatEntry>()
-                    : user.GetMessagesFromAfzender(privatemessages ? Chat.UserName : null);
-                var mymessages = Chat.GetMessagesFromAfzender(privatemessages ? user.UserName : null);
+                    : user.GetMessagesFromAfzender(privatemessages ? Chat.UserName : null,vanaf);
+                var mymessages = Chat.GetMessagesFromAfzender(privatemessages ? user.UserName : null,vanaf);
                 if(mymessages.Count > 0)
                     usermessages.AddRange(mymessages);
                 xreturn = usermessages.OrderBy(x => x.Tijd).ToList();
