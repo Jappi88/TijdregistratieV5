@@ -435,7 +435,8 @@ namespace Controls
                         Size = new Size(Width, 350),
                         Paraaf = p.Paraaf
                     };
-                    x.ShowDialog(b);
+                    if (x.ShowDialog(b) == DialogResult.OK)
+                        CloseButtonPressed();
                 }
             }
         }
@@ -568,7 +569,10 @@ namespace Controls
                         ShowBerekenleverdatum();
                         break;
                     case "xrooster":
-                        CurrentBewerking()?.DoBewerkingEigenRooster(this);
+                        CurrentBewerking()?.DoBewerkingRooster(this);
+                        break;
+                    case "xspecialerooster":
+                        CurrentBewerking()?.DoBewerkingSpecialeRoosters(this);
                         break;
                     case "xonderbreking":
                         ShowSelectedBewStoringen();
@@ -601,7 +605,7 @@ namespace Controls
             MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (res != DialogResult.Cancel)
             {
-                xselected.RemoveBewerking(res == DialogResult.No, res == DialogResult.Yes);
+                xselected.RemoveBewerking(res == DialogResult.No, res == DialogResult.Yes,true);
             }
         }
 
@@ -719,7 +723,7 @@ namespace Controls
         {
             var bew = CurrentBewerking();
             if (bew?.Parent == null) return;
-            var xafk = new AfkeurForm(bew.Parent);
+            var xafk = new AfkeurForm(bew);
             xafk.ShowDialog();
         }
 
@@ -830,7 +834,7 @@ namespace Controls
             try
             {
                 if (this.IsDisposed || Manager.Opties == null || Manager.Database.IsDisposed || Manager.Database == null) return;
-                var xitems = Manager.Database.GetAllAccounts().Result
+                var xitems = Manager.Database.xGetAllAccounts()
                     .Select(x => x.Username.FirstCharToUpper())
                     .ToList();
                 if(xitems.Count == 0) return;
@@ -869,6 +873,11 @@ namespace Controls
             var bw = CurrentBewerking();
             if (bw == null) return;
             Clipboard.SetText(bw.Path ?? string.Empty);
+        }
+
+        private void onderbrekeningenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowSelectedBewStoringen();
         }
     }
 }

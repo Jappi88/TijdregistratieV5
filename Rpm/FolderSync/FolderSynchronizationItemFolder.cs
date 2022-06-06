@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace FolderSync
 {
@@ -39,13 +40,16 @@ namespace FolderSync
             _Option = option;
         }
 
-        public override void DoOperation()
+        public override Task DoOperation()
         {
-            if (_Option == FolderSynchronizationItemFolderOption.CreateFolder)
+            return Task.Factory.StartNew(() =>
             {
-                if (Directory.Exists(_SourceFileName) == false)
-                { Directory.CreateDirectory(_SourceFileName); }
-            }
+                if (_Option == FolderSynchronizationItemFolderOption.CreateFolder)
+                {
+                    if (Directory.Exists(_SourceFileName) == false)
+                    { Directory.CreateDirectory(_SourceFileName); }
+                }
+            });
         }
     }
 }

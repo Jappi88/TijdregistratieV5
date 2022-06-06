@@ -32,7 +32,6 @@ namespace Controls
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductieListControl));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.xProductieLijst1 = new Controls.CustomObjectListview();
             this.xproductieLijstcontext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.xopenProductieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
@@ -98,9 +97,11 @@ namespace Controls
             this.xfiltertoolstrip = new System.Windows.Forms.ToolStripMenuItem();
             this.xbeheerfilterstoolstripbutton = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
+            this.xToonVDatumsbutton = new System.Windows.Forms.Button();
             this.xsearch = new MetroFramework.Controls.MetroTextBox();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.xCheckAllTogle = new System.Windows.Forms.Button();
+            this.xToolBarPanel = new System.Windows.Forms.Panel();
+            this.xToolBar = new System.Windows.Forms.ToolStrip();
             this.xonderbreek = new System.Windows.Forms.ToolStripButton();
             this.xstartb = new System.Windows.Forms.ToolStripButton();
             this.xstopb = new System.Windows.Forms.ToolStripButton();
@@ -136,14 +137,16 @@ namespace Controls
             this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.xsearchtimer = new System.Windows.Forms.Timer(this.components);
+            this.xProductieLijst1 = new Controls.CustomObjectListview();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst1)).BeginInit();
             this.xproductieLijstcontext.SuspendLayout();
             this.xBottomToolMenu.SuspendLayout();
             this.panel3.SuspendLayout();
             this.xfiltersStrip.SuspendLayout();
-            this.panel7.SuspendLayout();
-            this.toolStrip2.SuspendLayout();
+            this.xToolBarPanel.SuspendLayout();
+            this.xToolBar.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -152,69 +155,12 @@ namespace Controls
             this.panel1.Controls.Add(this.xProductieLijst1);
             this.panel1.Controls.Add(this.xBottomToolMenu);
             this.panel1.Controls.Add(this.panel3);
-            this.panel1.Controls.Add(this.panel7);
+            this.panel1.Controls.Add(this.xToolBarPanel);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(985, 589);
             this.panel1.TabIndex = 0;
-            // 
-            // xProductieLijst1
-            // 
-            this.xProductieLijst1.AllowCellEdit = false;
-            this.xProductieLijst1.AllowColumnReorder = true;
-            this.xProductieLijst1.AlternateRowBackColor = System.Drawing.Color.AliceBlue;
-            this.xProductieLijst1.CellEditUseWholeCell = false;
-            this.xProductieLijst1.ContextMenuStrip = this.xproductieLijstcontext;
-            this.xProductieLijst1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.xProductieLijst1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xProductieLijst1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xProductieLijst1.FullRowSelect = true;
-            this.xProductieLijst1.GridLines = true;
-            this.xProductieLijst1.HeaderWordWrap = true;
-            this.xProductieLijst1.HideSelection = false;
-            this.xProductieLijst1.IsSimpleDragSource = true;
-            this.xProductieLijst1.Location = new System.Drawing.Point(0, 73);
-            this.xProductieLijst1.MenuLabelColumns = "kolommen";
-            this.xProductieLijst1.MenuLabelGroupBy = "Groep op \'{0}\'";
-            this.xProductieLijst1.MenuLabelLockGroupingOn = "Vergrendel groupering op \'{0}\'";
-            this.xProductieLijst1.MenuLabelSelectColumns = "Selecteer Columns...";
-            this.xProductieLijst1.MenuLabelSortAscending = "Sorteer oplopend op \'{0}\'";
-            this.xProductieLijst1.MenuLabelSortDescending = "Sorteer aflopend op \'{0}\'";
-            this.xProductieLijst1.MenuLabelTurnOffGroups = "Zet Groepen Uit";
-            this.xProductieLijst1.MenuLabelUnlockGroupingOn = "Vergrendel groepering op \'{0}\'";
-            this.xProductieLijst1.MenuLabelUnsort = "DeSorteer";
-            this.xProductieLijst1.Name = "xProductieLijst1";
-            this.xProductieLijst1.OwnerDraw = false;
-            this.xProductieLijst1.ShowCommandMenuOnRightClick = true;
-            this.xProductieLijst1.ShowGroups = false;
-            this.xProductieLijst1.ShowItemCountOnGroups = true;
-            this.xProductieLijst1.ShowItemToolTips = true;
-            this.xProductieLijst1.Size = new System.Drawing.Size(985, 491);
-            this.xProductieLijst1.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.xProductieLijst1.SpaceBetweenGroups = 5;
-            this.xProductieLijst1.TabIndex = 31;
-            this.xProductieLijst1.TileSize = new System.Drawing.Size(300, 120);
-            this.xProductieLijst1.TintSortColumn = true;
-            this.xProductieLijst1.UseCellFormatEvents = true;
-            this.xProductieLijst1.UseCompatibleStateImageBehavior = false;
-            this.xProductieLijst1.UseExplorerTheme = true;
-            this.xProductieLijst1.UseFilterIndicator = true;
-            this.xProductieLijst1.UseFiltering = true;
-            this.xProductieLijst1.UseHotControls = false;
-            this.xProductieLijst1.UseHotItem = true;
-            this.xProductieLijst1.UseOverlays = false;
-            this.xProductieLijst1.UseTranslucentHotItem = true;
-            this.xProductieLijst1.UseTranslucentSelection = true;
-            this.xProductieLijst1.View = System.Windows.Forms.View.Details;
-            this.xProductieLijst1.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.xProductieLijst1_CellClick);
-            this.xProductieLijst1.CellRightClick += new System.EventHandler<BrightIdeasSoftware.CellRightClickEventArgs>(this.xProductieLijst1_CellRightClick);
-            this.xProductieLijst1.CellToolTipShowing += new System.EventHandler<BrightIdeasSoftware.ToolTipShowingEventArgs>(this.xproductieLijst_CellToolTipShowing);
-            this.xProductieLijst1.FormatCell += new System.EventHandler<BrightIdeasSoftware.FormatCellEventArgs>(this.xProductieLijst_FormatCell);
-            this.xProductieLijst1.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.xproductieLijst_ItemDrag);
-            this.xProductieLijst1.SelectedIndexChanged += new System.EventHandler(this.xproductieLijst_SelectedIndexChanged);
-            this.xProductieLijst1.DragEnter += new System.Windows.Forms.DragEventHandler(this.xproductieLijst_DragEnter);
-            this.xProductieLijst1.DoubleClick += new System.EventHandler(this.xproductieLijst_DoubleClick);
             // 
             // xproductieLijstcontext
             // 
@@ -752,7 +698,9 @@ namespace Controls
             // 
             this.panel3.BackColor = System.Drawing.Color.Transparent;
             this.panel3.Controls.Add(this.xfiltersStrip);
+            this.panel3.Controls.Add(this.xToonVDatumsbutton);
             this.panel3.Controls.Add(this.xsearch);
+            this.panel3.Controls.Add(this.xCheckAllTogle);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 40);
             this.panel3.Name = "panel3";
@@ -767,11 +715,11 @@ namespace Controls
             this.xfiltersStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.xfiltertoolstrip});
             this.xfiltersStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.xfiltersStrip.Location = new System.Drawing.Point(380, 0);
+            this.xfiltersStrip.Location = new System.Drawing.Point(419, 0);
             this.xfiltersStrip.Name = "xfiltersStrip";
             this.xfiltersStrip.ShowItemToolTips = true;
-            this.xfiltersStrip.Size = new System.Drawing.Size(605, 33);
-            this.xfiltersStrip.TabIndex = 9;
+            this.xfiltersStrip.Size = new System.Drawing.Size(566, 33);
+            this.xfiltersStrip.TabIndex = 99;
             this.xfiltersStrip.Text = "menuStrip1";
             // 
             // xfiltertoolstrip
@@ -781,6 +729,7 @@ namespace Controls
             this.toolStripSeparator15});
             this.xfiltertoolstrip.Image = global::ProductieManager.Properties.Resources.filter_icon_icons_com_70971;
             this.xfiltertoolstrip.Name = "xfiltertoolstrip";
+            this.xfiltertoolstrip.ShowShortcutKeys = false;
             this.xfiltertoolstrip.Size = new System.Drawing.Size(98, 20);
             this.xfiltertoolstrip.Text = "Filter Regels";
             this.xfiltertoolstrip.ToolTipText = "Kies productie filter";
@@ -799,13 +748,29 @@ namespace Controls
             this.toolStripSeparator15.Name = "toolStripSeparator15";
             this.toolStripSeparator15.Size = new System.Drawing.Size(144, 6);
             // 
+            // xToonVDatumsbutton
+            // 
+            this.xToonVDatumsbutton.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xToonVDatumsbutton.Enabled = false;
+            this.xToonVDatumsbutton.FlatAppearance.BorderSize = 0;
+            this.xToonVDatumsbutton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender;
+            this.xToonVDatumsbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xToonVDatumsbutton.Image = global::ProductieManager.Properties.Resources.businessapplication_binarytree_32x32;
+            this.xToonVDatumsbutton.Location = new System.Drawing.Point(372, 0);
+            this.xToonVDatumsbutton.Name = "xToonVDatumsbutton";
+            this.xToonVDatumsbutton.Size = new System.Drawing.Size(47, 33);
+            this.xToonVDatumsbutton.TabIndex = 100;
+            this.toolTip1.SetToolTip(this.xToonVDatumsbutton, "Toon verwachte leverdatums op basis van de huidige volgorde");
+            this.xToonVDatumsbutton.UseVisualStyleBackColor = true;
+            this.xToonVDatumsbutton.Click += new System.EventHandler(this.xToonVDatumsbutton_Click);
+            // 
             // xsearch
             // 
             // 
             // 
             // 
             this.xsearch.CustomButton.Image = null;
-            this.xsearch.CustomButton.Location = new System.Drawing.Point(348, 1);
+            this.xsearch.CustomButton.Location = new System.Drawing.Point(293, 1);
             this.xsearch.CustomButton.Name = "";
             this.xsearch.CustomButton.Size = new System.Drawing.Size(31, 31);
             this.xsearch.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -817,7 +782,7 @@ namespace Controls
             this.xsearch.FontSize = MetroFramework.MetroTextBoxSize.Medium;
             this.xsearch.Lines = new string[] {
         "Zoeken..."};
-            this.xsearch.Location = new System.Drawing.Point(0, 0);
+            this.xsearch.Location = new System.Drawing.Point(47, 0);
             this.xsearch.MaxLength = 32767;
             this.xsearch.Name = "xsearch";
             this.xsearch.PasswordChar = '\0';
@@ -827,7 +792,7 @@ namespace Controls
             this.xsearch.SelectionStart = 0;
             this.xsearch.ShortcutsEnabled = true;
             this.xsearch.ShowClearButton = true;
-            this.xsearch.Size = new System.Drawing.Size(380, 33);
+            this.xsearch.Size = new System.Drawing.Size(325, 33);
             this.xsearch.TabIndex = 6;
             this.xsearch.Text = "Zoeken...";
             this.toolTip1.SetToolTip(this.xsearch, "Zoek productie bij naam,omschrijving,artikel of productie nummer");
@@ -837,22 +802,39 @@ namespace Controls
             this.xsearch.Enter += new System.EventHandler(this.xsearch_Enter);
             this.xsearch.Leave += new System.EventHandler(this.xsearch_Leave);
             // 
-            // panel7
+            // xCheckAllTogle
             // 
-            this.panel7.AutoScroll = true;
-            this.panel7.BackColor = System.Drawing.Color.Transparent;
-            this.panel7.Controls.Add(this.toolStrip2);
-            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel7.Location = new System.Drawing.Point(0, 0);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(985, 40);
-            this.panel7.TabIndex = 3;
+            this.xCheckAllTogle.Dock = System.Windows.Forms.DockStyle.Left;
+            this.xCheckAllTogle.FlatAppearance.BorderSize = 0;
+            this.xCheckAllTogle.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Lavender;
+            this.xCheckAllTogle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xCheckAllTogle.Image = global::ProductieManager.Properties.Resources.checked_done_32x32;
+            this.xCheckAllTogle.Location = new System.Drawing.Point(0, 0);
+            this.xCheckAllTogle.Name = "xCheckAllTogle";
+            this.xCheckAllTogle.Size = new System.Drawing.Size(47, 33);
+            this.xCheckAllTogle.TabIndex = 7;
+            this.toolTip1.SetToolTip(this.xCheckAllTogle, "(un)Vink alle geselecteerd items");
+            this.xCheckAllTogle.UseVisualStyleBackColor = true;
+            this.xCheckAllTogle.Visible = false;
+            this.xCheckAllTogle.Click += new System.EventHandler(this.xCheckAllTogle_Click);
             // 
-            // toolStrip2
+            // xToolBarPanel
             // 
-            this.toolStrip2.BackColor = System.Drawing.Color.White;
-            this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.xToolBarPanel.AutoScroll = true;
+            this.xToolBarPanel.BackColor = System.Drawing.Color.Transparent;
+            this.xToolBarPanel.Controls.Add(this.xToolBar);
+            this.xToolBarPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.xToolBarPanel.Location = new System.Drawing.Point(0, 0);
+            this.xToolBarPanel.Name = "xToolBarPanel";
+            this.xToolBarPanel.Size = new System.Drawing.Size(985, 40);
+            this.xToolBarPanel.TabIndex = 3;
+            // 
+            // xToolBar
+            // 
+            this.xToolBar.BackColor = System.Drawing.Color.White;
+            this.xToolBar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xToolBar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.xToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.xonderbreek,
             this.xstartb,
             this.xstopb,
@@ -878,11 +860,11 @@ namespace Controls
             this.xverwijderb,
             this.xzetterugb,
             this.xfiltercontainer});
-            this.toolStrip2.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(985, 39);
-            this.toolStrip2.TabIndex = 30;
-            this.toolStrip2.Text = "toolStrip2";
+            this.xToolBar.Location = new System.Drawing.Point(0, 0);
+            this.xToolBar.Name = "xToolBar";
+            this.xToolBar.Size = new System.Drawing.Size(985, 40);
+            this.xToolBar.TabIndex = 30;
+            this.xToolBar.Text = "toolStrip2";
             // 
             // xonderbreek
             // 
@@ -891,7 +873,7 @@ namespace Controls
             this.xonderbreek.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xonderbreek.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xonderbreek.Name = "xonderbreek";
-            this.xonderbreek.Size = new System.Drawing.Size(36, 36);
+            this.xonderbreek.Size = new System.Drawing.Size(36, 37);
             this.xonderbreek.ToolTipText = "Onderbreek of hervat een productie";
             this.xonderbreek.Click += new System.EventHandler(this.xonderbreek_Click);
             // 
@@ -902,7 +884,7 @@ namespace Controls
             this.xstartb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xstartb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xstartb.Name = "xstartb";
-            this.xstartb.Size = new System.Drawing.Size(36, 36);
+            this.xstartb.Size = new System.Drawing.Size(36, 37);
             this.xstartb.ToolTipText = "Start geselecteerde producties";
             this.xstartb.Click += new System.EventHandler(this.xstartb_Click);
             // 
@@ -913,7 +895,7 @@ namespace Controls
             this.xstopb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xstopb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xstopb.Name = "xstopb";
-            this.xstopb.Size = new System.Drawing.Size(36, 36);
+            this.xstopb.Size = new System.Drawing.Size(36, 37);
             this.xstopb.ToolTipText = "Stop geselecteerde producties";
             this.xstopb.Click += new System.EventHandler(this.xstopb_Click);
             // 
@@ -924,7 +906,7 @@ namespace Controls
             this.xopenproductieb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xopenproductieb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xopenproductieb.Name = "xopenproductieb";
-            this.xopenproductieb.Size = new System.Drawing.Size(36, 36);
+            this.xopenproductieb.Size = new System.Drawing.Size(36, 37);
             this.xopenproductieb.ToolTipText = "Open geselecteerde producties";
             this.xopenproductieb.Click += new System.EventHandler(this.xopenproductieb_Click);
             // 
@@ -935,7 +917,7 @@ namespace Controls
             this.xmeldgereedb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xmeldgereedb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xmeldgereedb.Name = "xmeldgereedb";
-            this.xmeldgereedb.Size = new System.Drawing.Size(36, 36);
+            this.xmeldgereedb.Size = new System.Drawing.Size(36, 37);
             this.xmeldgereedb.ToolTipText = "Meld geselecteerde productie gereed";
             this.xmeldgereedb.Click += new System.EventHandler(this.xmeldgereedb_Click);
             // 
@@ -946,7 +928,7 @@ namespace Controls
             this.xdeelgereedmeldingenb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xdeelgereedmeldingenb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xdeelgereedmeldingenb.Name = "xdeelgereedmeldingenb";
-            this.xdeelgereedmeldingenb.Size = new System.Drawing.Size(36, 36);
+            this.xdeelgereedmeldingenb.Size = new System.Drawing.Size(36, 37);
             this.xdeelgereedmeldingenb.ToolTipText = "Beheer productie deels gereedmeldingen";
             this.xdeelgereedmeldingenb.Click += new System.EventHandler(this.xdeelgereedmeldingenb_Click);
             // 
@@ -957,7 +939,7 @@ namespace Controls
             this.xwerkplekkenb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xwerkplekkenb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xwerkplekkenb.Name = "xwerkplekkenb";
-            this.xwerkplekkenb.Size = new System.Drawing.Size(36, 36);
+            this.xwerkplekkenb.Size = new System.Drawing.Size(36, 37);
             this.xwerkplekkenb.Text = "Beheer productie indeling";
             this.xwerkplekkenb.Click += new System.EventHandler(this.xwerkplekkenb_Click);
             // 
@@ -968,7 +950,7 @@ namespace Controls
             this.xwijzigformb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xwijzigformb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xwijzigformb.Name = "xwijzigformb";
-            this.xwijzigformb.Size = new System.Drawing.Size(36, 36);
+            this.xwijzigformb.Size = new System.Drawing.Size(36, 37);
             this.xwijzigformb.ToolTipText = "Wijzig productie gegevens";
             this.xwijzigformb.Click += new System.EventHandler(this.xwijzigformb_Click);
             // 
@@ -983,7 +965,7 @@ namespace Controls
             this.xwijzigproductieinfo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xwijzigproductieinfo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xwijzigproductieinfo.Name = "xwijzigproductieinfo";
-            this.xwijzigproductieinfo.Size = new System.Drawing.Size(48, 36);
+            this.xwijzigproductieinfo.Size = new System.Drawing.Size(48, 37);
             this.xwijzigproductieinfo.Text = "toolStripButton8";
             this.xwijzigproductieinfo.ToolTipText = "Wijzig gegevens";
             this.xwijzigproductieinfo.ButtonClick += new System.EventHandler(this.xwijzigproductieinfo_ButtonClick);
@@ -1025,7 +1007,7 @@ namespace Controls
             this.xwerktijdenb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xwerktijdenb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xwerktijdenb.Name = "xwerktijdenb";
-            this.xwerktijdenb.Size = new System.Drawing.Size(36, 36);
+            this.xwerktijdenb.Size = new System.Drawing.Size(36, 37);
             this.xwerktijdenb.ToolTipText = "Beheer productie werktijden";
             this.xwerktijdenb.Click += new System.EventHandler(this.xwerktijdenb_Click);
             // 
@@ -1036,7 +1018,7 @@ namespace Controls
             this.xonderbrekingb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xonderbrekingb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xonderbrekingb.Name = "xonderbrekingb";
-            this.xonderbrekingb.Size = new System.Drawing.Size(36, 36);
+            this.xonderbrekingb.Size = new System.Drawing.Size(36, 37);
             this.xonderbrekingb.ToolTipText = "Beheer productie onderbrekeningen";
             this.xonderbrekingb.Click += new System.EventHandler(this.xonderbrekingb_Click);
             // 
@@ -1047,7 +1029,7 @@ namespace Controls
             this.xaantalgemaaktb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xaantalgemaaktb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xaantalgemaaktb.Name = "xaantalgemaaktb";
-            this.xaantalgemaaktb.Size = new System.Drawing.Size(36, 36);
+            this.xaantalgemaaktb.Size = new System.Drawing.Size(36, 37);
             this.xaantalgemaaktb.ToolTipText = "Wijzig aantal gemaakt";
             this.xaantalgemaaktb.Click += new System.EventHandler(this.xaantalgemaaktb_Click);
             // 
@@ -1058,7 +1040,7 @@ namespace Controls
             this.xbijlage.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xbijlage.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xbijlage.Name = "xbijlage";
-            this.xbijlage.Size = new System.Drawing.Size(36, 36);
+            this.xbijlage.Size = new System.Drawing.Size(36, 37);
             this.xbijlage.ToolTipText = "Toon Product Bijlages";
             this.xbijlage.Click += new System.EventHandler(this.xbijlage_Click);
             // 
@@ -1069,7 +1051,7 @@ namespace Controls
             this.xverpakkingb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xverpakkingb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xverpakkingb.Name = "xverpakkingb";
-            this.xverpakkingb.Size = new System.Drawing.Size(36, 36);
+            this.xverpakkingb.Size = new System.Drawing.Size(36, 37);
             this.xverpakkingb.ToolTipText = "Beheer verpakking instructie";
             this.xverpakkingb.Click += new System.EventHandler(this.xverpakkingb_Click);
             // 
@@ -1080,7 +1062,7 @@ namespace Controls
             this.xmaterialenb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xmaterialenb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xmaterialenb.Name = "xmaterialenb";
-            this.xmaterialenb.Size = new System.Drawing.Size(36, 36);
+            this.xmaterialenb.Size = new System.Drawing.Size(36, 37);
             this.xmaterialenb.ToolTipText = "Beheer materialen";
             this.xmaterialenb.Click += new System.EventHandler(this.xmaterialenb_Click);
             // 
@@ -1091,7 +1073,7 @@ namespace Controls
             this.xaanbevolenpersb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xaanbevolenpersb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xaanbevolenpersb.Name = "xaanbevolenpersb";
-            this.xaanbevolenpersb.Size = new System.Drawing.Size(36, 36);
+            this.xaanbevolenpersb.Size = new System.Drawing.Size(36, 37);
             this.xaanbevolenpersb.ToolTipText = "Toon aanbevolen personeel";
             this.xaanbevolenpersb.Click += new System.EventHandler(this.xaanbevolenpersb_Click);
             // 
@@ -1102,7 +1084,7 @@ namespace Controls
             this.xtoonTekening.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xtoonTekening.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xtoonTekening.Name = "xtoonTekening";
-            this.xtoonTekening.Size = new System.Drawing.Size(36, 36);
+            this.xtoonTekening.Size = new System.Drawing.Size(36, 37);
             this.xtoonTekening.ToolTipText = "Toon Productie Tekening";
             this.xtoonTekening.Click += new System.EventHandler(this.xtoonTekening_Click);
             // 
@@ -1113,7 +1095,7 @@ namespace Controls
             this.xtoonpdfb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xtoonpdfb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xtoonpdfb.Name = "xtoonpdfb";
-            this.xtoonpdfb.Size = new System.Drawing.Size(36, 36);
+            this.xtoonpdfb.Size = new System.Drawing.Size(36, 37);
             this.xtoonpdfb.Text = "toolStripButton18";
             this.xtoonpdfb.ToolTipText = "Toon Productieformulier pdf";
             this.xtoonpdfb.Click += new System.EventHandler(this.xtoonpdfb_Click);
@@ -1125,7 +1107,7 @@ namespace Controls
             this.xexportexcel.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xexportexcel.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xexportexcel.Name = "xexportexcel";
-            this.xexportexcel.Size = new System.Drawing.Size(36, 36);
+            this.xexportexcel.Size = new System.Drawing.Size(36, 37);
             this.xexportexcel.ToolTipText = "Export geselecteerde producties als een excel";
             this.xexportexcel.Click += new System.EventHandler(this.xexportexcel_Click);
             // 
@@ -1136,7 +1118,7 @@ namespace Controls
             this.xproductieInfob.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xproductieInfob.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xproductieInfob.Name = "xproductieInfob";
-            this.xproductieInfob.Size = new System.Drawing.Size(36, 36);
+            this.xproductieInfob.Size = new System.Drawing.Size(36, 37);
             this.xproductieInfob.ToolTipText = "Bekijk productie info";
             this.xproductieInfob.Click += new System.EventHandler(this.xproductieInfob_Click);
             // 
@@ -1147,7 +1129,7 @@ namespace Controls
             this.xbewerkingeninfob.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xbewerkingeninfob.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xbewerkingeninfob.Name = "xbewerkingeninfob";
-            this.xbewerkingeninfob.Size = new System.Drawing.Size(36, 36);
+            this.xbewerkingeninfob.Size = new System.Drawing.Size(36, 37);
             this.xbewerkingeninfob.ToolTipText = "Toon statistieken van alle zichtbare producties";
             this.xbewerkingeninfob.Click += new System.EventHandler(this.xbewerkingeninfob_Click);
             // 
@@ -1158,7 +1140,7 @@ namespace Controls
             this.xafkeurb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xafkeurb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xafkeurb.Name = "xafkeurb";
-            this.xafkeurb.Size = new System.Drawing.Size(36, 36);
+            this.xafkeurb.Size = new System.Drawing.Size(36, 37);
             this.xafkeurb.ToolTipText = "Beheer materialen afkeur";
             this.xafkeurb.Click += new System.EventHandler(this.xafkeurb_Click);
             // 
@@ -1169,7 +1151,7 @@ namespace Controls
             this.xverwijderb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xverwijderb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xverwijderb.Name = "xverwijderb";
-            this.xverwijderb.Size = new System.Drawing.Size(36, 36);
+            this.xverwijderb.Size = new System.Drawing.Size(36, 37);
             this.xverwijderb.ToolTipText = "Verwijder geselecteerde producties";
             this.xverwijderb.Click += new System.EventHandler(this.xverwijderb_Click);
             // 
@@ -1180,7 +1162,7 @@ namespace Controls
             this.xzetterugb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xzetterugb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xzetterugb.Name = "xzetterugb";
-            this.xzetterugb.Size = new System.Drawing.Size(36, 36);
+            this.xzetterugb.Size = new System.Drawing.Size(36, 37);
             this.xzetterugb.ToolTipText = "Zet geselecteerde producties terug";
             this.xzetterugb.Click += new System.EventHandler(this.xzetterugb_Click);
             // 
@@ -1199,7 +1181,7 @@ namespace Controls
             this.xfiltercontainer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xfiltercontainer.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xfiltercontainer.Name = "xfiltercontainer";
-            this.xfiltercontainer.Size = new System.Drawing.Size(52, 36);
+            this.xfiltercontainer.Size = new System.Drawing.Size(52, 37);
             this.xfiltercontainer.ToolTipText = "Kies productie filter";
             this.xfiltercontainer.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.xfiltercontainer_ItemClicked);
             this.xfiltercontainer.Click += new System.EventHandler(this.xfiltercontainer_Click);
@@ -1262,6 +1244,68 @@ namespace Controls
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
+            // xsearchtimer
+            // 
+            this.xsearchtimer.Interval = 500;
+            this.xsearchtimer.Tick += new System.EventHandler(this.xsearchtimer_Tick);
+            // 
+            // xProductieLijst1
+            // 
+            this.xProductieLijst1.AllowCellEdit = false;
+            this.xProductieLijst1.AllowColumnReorder = true;
+            this.xProductieLijst1.AlternateRowBackColor = System.Drawing.Color.AliceBlue;
+            this.xProductieLijst1.CellEditUseWholeCell = false;
+            this.xProductieLijst1.ContextMenuStrip = this.xproductieLijstcontext;
+            this.xProductieLijst1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xProductieLijst1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xProductieLijst1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xProductieLijst1.FullRowSelect = true;
+            this.xProductieLijst1.GridLines = true;
+            this.xProductieLijst1.HeaderWordWrap = true;
+            this.xProductieLijst1.HideSelection = false;
+            this.xProductieLijst1.IsSimpleDragSource = true;
+            this.xProductieLijst1.Location = new System.Drawing.Point(0, 73);
+            this.xProductieLijst1.MenuLabelColumns = "kolommen";
+            this.xProductieLijst1.MenuLabelGroupBy = "Groep op \'{0}\'";
+            this.xProductieLijst1.MenuLabelLockGroupingOn = "Vergrendel groupering op \'{0}\'";
+            this.xProductieLijst1.MenuLabelSelectColumns = "Selecteer Columns...";
+            this.xProductieLijst1.MenuLabelSortAscending = "Sorteer oplopend op \'{0}\'";
+            this.xProductieLijst1.MenuLabelSortDescending = "Sorteer aflopend op \'{0}\'";
+            this.xProductieLijst1.MenuLabelTurnOffGroups = "Zet Groepen Uit";
+            this.xProductieLijst1.MenuLabelUnlockGroupingOn = "Vergrendel groepering op \'{0}\'";
+            this.xProductieLijst1.MenuLabelUnsort = "DeSorteer";
+            this.xProductieLijst1.Name = "xProductieLijst1";
+            this.xProductieLijst1.OwnerDraw = false;
+            this.xProductieLijst1.ShowCommandMenuOnRightClick = true;
+            this.xProductieLijst1.ShowGroups = false;
+            this.xProductieLijst1.ShowItemCountOnGroups = true;
+            this.xProductieLijst1.ShowItemToolTips = true;
+            this.xProductieLijst1.Size = new System.Drawing.Size(985, 491);
+            this.xProductieLijst1.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.xProductieLijst1.SpaceBetweenGroups = 5;
+            this.xProductieLijst1.TabIndex = 31;
+            this.xProductieLijst1.TileSize = new System.Drawing.Size(300, 120);
+            this.xProductieLijst1.TintSortColumn = true;
+            this.xProductieLijst1.UseCellFormatEvents = true;
+            this.xProductieLijst1.UseCompatibleStateImageBehavior = false;
+            this.xProductieLijst1.UseExplorerTheme = true;
+            this.xProductieLijst1.UseFilterIndicator = true;
+            this.xProductieLijst1.UseFiltering = true;
+            this.xProductieLijst1.UseHotControls = false;
+            this.xProductieLijst1.UseHotItem = true;
+            this.xProductieLijst1.UseOverlays = false;
+            this.xProductieLijst1.UseTranslucentHotItem = true;
+            this.xProductieLijst1.UseTranslucentSelection = true;
+            this.xProductieLijst1.View = System.Windows.Forms.View.Details;
+            this.xProductieLijst1.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.xProductieLijst1_CellClick);
+            this.xProductieLijst1.CellRightClick += new System.EventHandler<BrightIdeasSoftware.CellRightClickEventArgs>(this.xProductieLijst1_CellRightClick);
+            this.xProductieLijst1.CellToolTipShowing += new System.EventHandler<BrightIdeasSoftware.ToolTipShowingEventArgs>(this.xproductieLijst_CellToolTipShowing);
+            this.xProductieLijst1.FormatCell += new System.EventHandler<BrightIdeasSoftware.FormatCellEventArgs>(this.xProductieLijst_FormatCell);
+            this.xProductieLijst1.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.xproductieLijst_ItemDrag);
+            this.xProductieLijst1.SelectedIndexChanged += new System.EventHandler(this.xproductieLijst_SelectedIndexChanged);
+            this.xProductieLijst1.DragEnter += new System.Windows.Forms.DragEventHandler(this.xproductieLijst_DragEnter);
+            this.xProductieLijst1.DoubleClick += new System.EventHandler(this.xproductieLijst_DoubleClick);
+            // 
             // ProductieListControl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1275,7 +1319,6 @@ namespace Controls
             this.Size = new System.Drawing.Size(985, 589);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst1)).EndInit();
             this.xproductieLijstcontext.ResumeLayout(false);
             this.xBottomToolMenu.ResumeLayout(false);
             this.xBottomToolMenu.PerformLayout();
@@ -1283,17 +1326,18 @@ namespace Controls
             this.panel3.PerformLayout();
             this.xfiltersStrip.ResumeLayout(false);
             this.xfiltersStrip.PerformLayout();
-            this.panel7.ResumeLayout(false);
-            this.panel7.PerformLayout();
-            this.toolStrip2.ResumeLayout(false);
-            this.toolStrip2.PerformLayout();
+            this.xToolBarPanel.ResumeLayout(false);
+            this.xToolBarPanel.PerformLayout();
+            this.xToolBar.ResumeLayout(false);
+            this.xToolBar.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Panel xToolBarPanel;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.MenuStrip xfiltersStrip;
         private System.Windows.Forms.ToolStripMenuItem xfiltertoolstrip;
@@ -1336,7 +1380,7 @@ namespace Controls
         private System.Windows.Forms.ToolStripMenuItem zoekToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem opArtikelNrToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem opBewerkingToolStripMenuItem;
-        private System.Windows.Forms.ToolStrip toolStrip2;
+        private System.Windows.Forms.ToolStrip xToolBar;
         private System.Windows.Forms.ToolStripButton xstartb;
         private System.Windows.Forms.ToolStripButton xstopb;
         private System.Windows.Forms.ToolStripButton xopenproductieb;
@@ -1397,5 +1441,8 @@ namespace Controls
         private System.Windows.Forms.ToolStripLabel xtotaalgewerktlabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
+        private System.Windows.Forms.Button xCheckAllTogle;
+        private System.Windows.Forms.Timer xsearchtimer;
+        private System.Windows.Forms.Button xToonVDatumsbutton;
     }
 }

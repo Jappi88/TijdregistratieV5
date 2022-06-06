@@ -1,12 +1,14 @@
 ﻿using Rpm.Various;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class LoadingForm : Forms.MetroBase.MetroBaseForm
+    public partial class LoadingForm : MetroFramework.Forms.MetroForm
     {
         public ProgressArg Arg { get; set; } = new ProgressArg();
+        public bool CloseIfFinished { get; set; }
 
         public LoadingForm()
         {
@@ -31,6 +33,14 @@ namespace Forms
                     this.Invoke(new MethodInvoker(() => UpdateArg(arg)));
                 else
                 {
+                    if (CloseIfFinished && (arg.IsCanceled || arg.Type == ProgressType.ReadCompleet || arg.Type == ProgressType.WriteCompleet))
+                    {
+                        if (arg.IsCanceled)
+                            DialogResult = DialogResult.Cancel;
+                        else
+                            DialogResult = DialogResult.OK;
+                        return;
+                    }
                     if (arg.IsCanceled)
                     {
                         return;
@@ -65,7 +75,19 @@ namespace Forms
 
         private void xsluiten_Click(object sender, EventArgs e)
         {
+            Arg.IsCanceled = true;
             DialogResult = DialogResult.Cancel;
+        }
+
+        public Task ShowDialogAsync()
+        {
+            var task = Task.Run(() =>
+            {
+                if (this.IsDisposed) return;
+                this.ShowDialog();
+            });
+            Application.DoEvents();
+            return task;
         }
 
         private void LoadingForm_FormClosing(object sender, FormClosingEventArgs e)

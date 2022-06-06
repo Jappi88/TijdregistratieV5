@@ -279,10 +279,10 @@ namespace Controls
             e.Text = wp.Message;
         }
 
-        private async void xclearbutton_Click(object sender, EventArgs e)
+        private void xclearbutton_Click(object sender, EventArgs e)
         {
             foreach (var log in Logs)
-                await Manager.Database.Logger.Delete(log.Id.ToString());
+                Manager.Database.Logger.Delete(log.Id.ToString());
             Logs?.Clear();
             xlogview.SetObjects(new LogEntry[] { });
             UpdateHeaderLabel();

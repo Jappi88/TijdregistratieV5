@@ -50,7 +50,7 @@ namespace Forms
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(20, 60);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(130, 145);
+            this.panel1.Size = new System.Drawing.Size(80, 155);
             this.panel1.TabIndex = 0;
             // 
             // pictureBox1
@@ -59,8 +59,8 @@ namespace Forms
             this.pictureBox1.Image = global::ProductieManager.Properties.Resources.Count_tool_34564__1_;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(130, 145);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox1.Size = new System.Drawing.Size(80, 155);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -69,16 +69,16 @@ namespace Forms
             this.panel2.Controls.Add(this.metroButton2);
             this.panel2.Controls.Add(this.metroButton1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(150, 164);
+            this.panel2.Location = new System.Drawing.Point(100, 174);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(580, 41);
+            this.panel2.Size = new System.Drawing.Size(509, 41);
             this.panel2.TabIndex = 2;
             // 
             // metroButton2
             // 
             this.metroButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.metroButton2.FontSize = MetroFramework.MetroButtonSize.Medium;
-            this.metroButton2.Location = new System.Drawing.Point(465, 3);
+            this.metroButton2.Location = new System.Drawing.Point(394, 3);
             this.metroButton2.Name = "metroButton2";
             this.metroButton2.Size = new System.Drawing.Size(112, 34);
             this.metroButton2.TabIndex = 3;
@@ -90,7 +90,7 @@ namespace Forms
             // 
             this.metroButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.metroButton1.FontSize = MetroFramework.MetroButtonSize.Medium;
-            this.metroButton1.Location = new System.Drawing.Point(347, 3);
+            this.metroButton1.Location = new System.Drawing.Point(276, 3);
             this.metroButton1.Name = "metroButton1";
             this.metroButton1.Size = new System.Drawing.Size(112, 34);
             this.metroButton1.TabIndex = 2;
@@ -101,7 +101,7 @@ namespace Forms
             // xaantal
             // 
             this.xaantal.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xaantal.Location = new System.Drawing.Point(263, 111);
+            this.xaantal.Location = new System.Drawing.Point(179, 99);
             this.xaantal.Maximum = new decimal(new int[] {
             999999999,
             0,
@@ -117,7 +117,7 @@ namespace Forms
             // 
             this.xtotaal.BackColor = System.Drawing.Color.Transparent;
             this.xtotaal.FontWeight = MetroFramework.MetroLabelWeight.Bold;
-            this.xtotaal.Location = new System.Drawing.Point(469, 111);
+            this.xtotaal.Location = new System.Drawing.Point(385, 99);
             this.xtotaal.Name = "xtotaal";
             this.xtotaal.Size = new System.Drawing.Size(98, 29);
             this.xtotaal.TabIndex = 5;
@@ -128,7 +128,7 @@ namespace Forms
             // 
             this.xinfolabel.AutoSize = true;
             this.xinfolabel.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.xinfolabel.Location = new System.Drawing.Point(190, 72);
+            this.xinfolabel.Location = new System.Drawing.Point(106, 60);
             this.xinfolabel.Name = "xinfolabel";
             this.xinfolabel.Size = new System.Drawing.Size(377, 25);
             this.xinfolabel.TabIndex = 6;
@@ -139,7 +139,7 @@ namespace Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(750, 225);
+            this.ClientSize = new System.Drawing.Size(629, 235);
             this.Controls.Add(this.xinfolabel);
             this.Controls.Add(this.xtotaal);
             this.Controls.Add(this.xaantal);
@@ -147,13 +147,13 @@ namespace Forms
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(750, 225);
+            this.MinimumSize = new System.Drawing.Size(500, 225);
             this.Name = "AantalChanger";
             this.Resizable = false;
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Wijzig Aantal";
+            this.Title = "Wijzig Aantal";
             this.Shown += new System.EventHandler(this.AantalChanger_Shown);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

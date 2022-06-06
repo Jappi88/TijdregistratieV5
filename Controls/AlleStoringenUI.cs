@@ -130,11 +130,11 @@ namespace Controls
                     {
                         if (Manager.Database is {IsDisposed: false})
                         {
-                            var bws = Manager.ProductieProvider.GetBewerkingen(ProductieProvider.LoadedType.Alles,
+                            var bws = Manager.ProductieProvider.xGetBewerkingen(ProductieProvider.LoadedType.Alles,
                                 new ViewState[]
                                 {
                                     ViewState.Alles
-                                }, true, null, true).Result;
+                                }, true, null, true);
                           
                             foreach (var bw in bws)
                                 UpdateStoringen(bw, Bereik,null);

@@ -274,7 +274,7 @@ namespace FolderSync
         /// <summary>
         /// Start het monitoren van de folders
         /// </summary>
-        protected async void StartMonitor()
+        protected void StartMonitor()
         {
             while (true)
             {
@@ -338,13 +338,13 @@ namespace FolderSync
                 }
             }
 
-            await Task.Delay(1000);
+            Thread.Sleep(1000);
         }
 
         /// <summary>
         /// Starten het scannen naar gewijzigde bestanden
         /// </summary>
-        protected async void StartScanning()
+        protected void StartScanning()
         {
             while (true)
             {   
@@ -391,7 +391,7 @@ namespace FolderSync
                                             Directory.CreateDirectory(op.Destination);
                                         FolderSynchronizationScanner fss =
                                             new FolderSynchronizationScanner(op.Source, op.Destination, op.Option);
-                                        await fss.Sync();
+                                        fss.StartFolder("", -1);
                                         if (fss.SyncCollection.Operations.Count > 0)
                                         {
                                             lock (SyncQueue)
@@ -417,7 +417,7 @@ namespace FolderSync
 
                             }
 
-                            await Task.Delay(Interval);
+                            Thread.Sleep(Interval);
                         }
                     }
                 }
@@ -435,13 +435,13 @@ namespace FolderSync
                         }
                     }
 
-                await Task.Delay(Interval);
+                Thread.Sleep(Interval);
             }
         }
         /// <summary>
         /// Start de synchronisatie
         /// </summary>
-        protected async void StartSyncing()
+        protected void StartSyncing()
         {
             while(IsRunning)
             {
@@ -470,7 +470,7 @@ namespace FolderSync
                         {
                             try
                             {
-                                op.DoOperation();
+                                op.DoOperation().Wait(10000);
                                 Status = string.Empty;
                             }
                             catch (Exception ex)
@@ -484,7 +484,7 @@ namespace FolderSync
                 {
                     Console.WriteLine(e);
                 }
-                await Task.Delay(Interval);
+                Thread.Sleep(Interval);
             }
         }
         /// <summary>

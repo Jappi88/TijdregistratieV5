@@ -28,9 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.lblMsg = new System.Windows.Forms.Label();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.xmsgTitle = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -50,10 +48,6 @@
             this.lblMsg.Text = "Message Text";
             this.lblMsg.MouseEnter += new System.EventHandler(this.lblMsg_MouseEnter);
             this.lblMsg.MouseLeave += new System.EventHandler(this.lblMsg_MouseLeave);
-            // 
-            // timer1
-            // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // pictureBox1
             // 
@@ -121,7 +115,6 @@
 
         private System.Windows.Forms.Label lblMsg;
         private System.Windows.Forms.PictureBox pictureBox1;
-        internal System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label xmsgTitle;
         private System.Windows.Forms.PictureBox pictureBox2;
     }

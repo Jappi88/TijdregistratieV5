@@ -219,7 +219,7 @@ namespace Forms
                 string xall = null;
                 if (indeling?.Persoon == null)
                 {
-                    var bws = productieListControl1.GetBewerkingen(false,false);
+                    var bws = productieListControl1.xGetBewerkingen(false,false);
                     var x1 = bws.Count == 1 ? "productie" : "producties";
                     var pers = GetPersonen();
 
@@ -241,7 +241,7 @@ namespace Forms
                 else
                 {
                     var pers = indeling.Persoon;
-                    var bws = productieListControl1.GetBewerkingen(false,false).Where(x => IsAllowed(x, pers))
+                    var bws = productieListControl1.xGetBewerkingen(false,false).Where(x => IsAllowed(x, pers))
                         .ToList();
                     var xklusjes = pers.Klusjes.Where(x =>
                         x.Status != ProductieState.Gereed && x.Status != ProductieState.Verwijderd).ToList();
@@ -309,9 +309,9 @@ namespace Forms
             StopWait();
         }
 
-        private void UpdateTitle()
+        private async void UpdateTitle()
         {
-            var bws = productieListControl1.GetBewerkingen(false,true);
+            var bws = await productieListControl1.GetBewerkingen(false,true);
             
             string x2 = String.Empty;
             var xselected = SelectedPersoneel == null? "Alle" : $"{SelectedPersoneel.PersoneelNaam}";
@@ -320,7 +320,7 @@ namespace Forms
                  $"Totaal <b>{Math.Round(bws.Sum(x=> x.TijdGewerkt),2)} / {Math.Round(bws.Sum(x => x.DoorloopTijd),2)}</b> uur gewerkt " +
                  $"waarvan nog <b>{Math.Round(bws.Sum(x=> x.GetTijdOver()),2)}</b> uur over aan productie";
             xGeselecteerdeGebruikerLabel.Text = x2;
-            bws = productieListControl1.GetBewerkingen(false, false);
+            bws = await productieListControl1.GetBewerkingen(false, false);
             var x1 = bws.Count == 1 ? "Bewerking" : "Bewerkingen";
             var xtext = $@"Personeel Indeling: {bws.Count} {x1}";
             var xindeling = GetIndeling(null);
@@ -331,7 +331,7 @@ namespace Forms
 
         private void ListProducties()
         {
-            productieListControl1.UpdateProductieList(false,true);
+            productieListControl1.UpdateProductieList(false,false,true);
             UpdateTitle();
         }
 

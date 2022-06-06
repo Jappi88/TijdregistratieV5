@@ -20,7 +20,7 @@ namespace Forms
             DialogResult = DialogResult.Cancel;
         }
 
-        private async void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
             if (Manager.Database?.UserAccounts == null)
             {
@@ -33,7 +33,7 @@ namespace Forms
                 XMessageBox.Show(this, $"Vul in een geldige gebruikersnaam", "Ongeldige GebruikersNaam", MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
             }
-            else if (await Manager.Database.AccountExist(xgebruikersname.Text))
+            else if (Manager.Database.AccountExist(xgebruikersname.Text))
             {
                 XMessageBox.Show(this, $"{xgebruikersname.Text} bestaat al...\nKies andere gebruiksernaam a.u.b",
                     "Bestaat Al",

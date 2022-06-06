@@ -4,7 +4,6 @@ using ProductieManager.Rpm.Misc;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -88,6 +87,7 @@ namespace Forms
         }
 
         private bool _CustomImage = false;
+
         public DialogResult ShowDialog(IWin32Window owner, string message, string title, MessageBoxButtons buttons,
             MessageBoxIcon icon,
             string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null,
@@ -197,15 +197,13 @@ namespace Forms
                         break;
                 }
             }
-
-            Form form = null;
             try
             {
                 while (true)
                 {
                     if (owner is Form xform)
                     {
-                        form = xform;
+                        OwnerForm = xform;
                         break;
                     }
                     if (owner is Control xcontrol)
@@ -222,46 +220,42 @@ namespace Forms
                 Console.WriteLine(e);
             }
 
-            form ??= Application.OpenForms["Mainform"];
-            string iconName = Enum.GetName(typeof(MessageBoxIcon), icon);
-            switch (iconName)
+            OwnerForm ??= Application.OpenForms["Mainform"];
+            if (icon is MessageBoxIcon.Question)
             {
-                case "None":
-                    xmessageicon.Image = customImage ?? Resources.ios_8_Message_icon_64_64;
-                    //xMessagePanel.BackColor = _defaultColor;
-                    break;
-                case "Question":
-                    xmessageicon.Image = customImage ?? Resources.help_question_1566;
-                    this.Style = MetroColorStyle.Purple;
-                    //xMessagePanel.BackColor = _question;
-                    break;
-                case "Exclamation":
-                    xmessageicon.Image = customImage ?? Resources.exclamation_warning_15590__1_;
-                    this.Style = MetroColorStyle.Yellow;
-                   // xMessagePanel.BackColor = _warningColor;
-                    break;
-                case "Asterisk" :
-                case "Warning":
-                    xmessageicon.Image = customImage ?? Resources.notification_warning_114460;
-                    this.Style = MetroColorStyle.Orange;
-                    break;
-                case "Information":
-                    xmessageicon.Image = customImage ?? Resources.information_info_1565;
-                    this.Style = MetroColorStyle.Blue;
-                   // xMessagePanel.BackColor = _success;
-                    break;
-                case "Error":
-                    xmessageicon.Image = customImage ?? Resources.exit_close_error_15565;
-                    this.Style = MetroColorStyle.Red;
-                   // xMessagePanel.BackColor = _errorColor;
-                    break;
-                case "Hand":
-                case "Stop":
-                    xmessageicon.Image = customImage ?? Resources.Private_80_icon_icons_com_57286;
-                    this.Style = MetroColorStyle.Red;
-                    // xMessagePanel.BackColor = _errorColor;
-                    break;
+                xmessageicon.Image = customImage ?? Resources.help_question_1566;
+                this.Style = MetroColorStyle.Purple;
             }
+            else if (icon is MessageBoxIcon.Error)
+            {
+                xmessageicon.Image = customImage ?? Resources.exit_close_error_15565;
+                this.Style = MetroColorStyle.Red;
+            }
+            else if (icon is MessageBoxIcon.Warning)
+            {
+                xmessageicon.Image = customImage ?? Resources.notification_warning_114460;
+                this.Style = MetroColorStyle.Orange;
+            }
+            else if (icon is MessageBoxIcon.Information or MessageBoxIcon.Asterisk)
+            {
+                xmessageicon.Image = customImage ?? Resources.information_info_1565;
+                this.Style = MetroColorStyle.Blue;
+            }
+            else if (icon is MessageBoxIcon.Exclamation)
+            {
+                xmessageicon.Image = customImage ?? Resources.exclamation_warning_15590__1_;
+                this.Style = MetroColorStyle.Yellow;
+            }
+            else if (icon is MessageBoxIcon.Stop or MessageBoxIcon.Hand)
+            {
+                xmessageicon.Image = customImage ?? Resources.Private_80_icon_icons_com_57286;
+                this.Style = MetroColorStyle.Red;
+            }
+            else if (icon is MessageBoxIcon.None)
+            {
+                xmessageicon.Image = customImage ?? Resources.ios_8_Message_icon_64_64;
+            }
+
             if (customImage != null)
                 xmessageicon.SizeMode = PictureBoxSizeMode.StretchImage;
             if (style != MetroColorStyle.Default)
@@ -276,12 +270,12 @@ namespace Forms
                 Height += 50;
             }
 
-            if (form != null)
+            if (OwnerForm != null)
             {
                 //Width = form.Width;
                 this.StartPosition = FormStartPosition.Manual;
-                this.Location = new Point((form.Location.X + form.Width / 2), (form.Location.Y + form.Height / 2));
-                BackColor = form.BackColor;
+                this.Location = new Point((OwnerForm.Location.X + OwnerForm.Width / 2), (OwnerForm.Location.Y + OwnerForm.Height / 2));
+                BackColor = OwnerForm.BackColor;
             }
             
             TopMost = true;

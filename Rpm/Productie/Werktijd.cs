@@ -499,7 +499,7 @@ namespace Rpm.Productie
             switch (x.DayOfWeek)
             {
                 case DayOfWeek.Friday:
-                    if (x.TimeOfDay >= einddag)
+                    if (isnewday && rooster != null)
                     {
                         for (int i = 0; i < 3; i++)
                         {
@@ -512,10 +512,8 @@ namespace Rpm.Productie
                                 break;
                         }
                     }
-
                     break;
                 case DayOfWeek.Saturday:
-
                     for (int i = 0; i < 2; i++)
                     {
                         isnewday = true;
@@ -537,7 +535,7 @@ namespace Rpm.Productie
                     }
                     break;
                 default:
-                    if (x.TimeOfDay >= einddag)
+                    if (isnewday || x.TimeOfDay >= einddag)
                     {
                         isnewday = true;
                         x = x.AddDays(1);
@@ -545,7 +543,11 @@ namespace Rpm.Productie
                     }
                     break;
             }
-
+            rooster = specialrooster ?? rooster;
+            if(isnewday && rooster != null)
+            {
+                x = new DateTime(x.Year, x.Month, x.Day, rooster.StartWerkdag.Hours, rooster.StartWerkdag.Minutes, 0);
+            }
             return x;
         }
 
@@ -571,20 +573,18 @@ namespace Rpm.Productie
             bool isnewday = false;
             while (Manager.Opties.NationaleFeestdagen.FirstOrDefault(t => t.Date == x.Date).Date == x.Date)
             {
+                isnewday = true;
                 x = GetNextDate(x, rooster, ref specialrooster, ref isnewday, specialeRoosters);
-                if (specialrooster == null)
-                {
-                    x = x.AddDays(1);
-                }
-                else break;
+                if (specialrooster != null) break;
             }
-
+            isnewday = false;
             x = GetNextDate(x, rooster, ref specialrooster, ref isnewday, specialeRoosters);
 
             rooster = specialrooster ?? realrooster ?? Manager.Opties.GetWerkRooster();
 
             if (isnewday)
-                    time = rooster.StartWerkdag;
+                time = rooster.StartWerkdag;
+            else time = x.TimeOfDay;
 
             x = new DateTime(x.Year, x.Month, x.Day, time.Hours, time.Minutes, time.Seconds);
             var startdag = new TimeSpan(rooster.StartWerkdag.Hours, rooster.StartWerkdag.Minutes, 0);

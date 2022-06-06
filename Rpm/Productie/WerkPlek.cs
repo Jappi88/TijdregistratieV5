@@ -494,7 +494,7 @@ namespace Rpm.Productie
                         {
                             Personeel dbpers = null;
                             if (savepersoneelklusjes)
-                                dbpers = Manager.Database.GetPersoneel(pers.PersoneelNaam).Result;
+                                dbpers = Manager.Database.xGetPersoneel(pers.PersoneelNaam);
                             bool save = false;
                             foreach (var klus in klusjes)
                             {
@@ -586,7 +586,7 @@ namespace Rpm.Productie
                     klus.PerUur = peruur;
                     if (!same || tg > 0)
                     {
-                        var xdbpers = Manager.Database.GetPersoneel(per.PersoneelNaam).Result;
+                        var xdbpers = Manager.Database.xGetPersoneel(per.PersoneelNaam);
                         if (xdbpers == null) continue;
                         xdbpers.ReplaceKlus(klus);
                         per.VrijeDagen = xdbpers.VrijeDagen;

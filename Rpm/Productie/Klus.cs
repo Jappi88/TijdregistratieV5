@@ -84,7 +84,7 @@ namespace Rpm.Productie
         {
             Rooster rooster = null; 
             var ex = new Dictionary<DateTime, DateTime>();
-            var per = Manager.Database?.GetPersoneel(PersoneelNaam)?.Result;
+            var per = Manager.Database?.xGetPersoneel(PersoneelNaam);
             if (per != null)
                 rooster = per.WerkRooster;
             if (per?.VrijeDagen != null && per.VrijeDagen.Count > 0)
@@ -110,7 +110,7 @@ namespace Rpm.Productie
         {
             Rooster rooster = null;
             var ex = new Dictionary<DateTime, DateTime>();
-            var per = Manager.Database?.GetPersoneel(PersoneelNaam)?.Result;
+            var per = Manager.Database?.xGetPersoneel(PersoneelNaam);
             if (per != null)
                 rooster = per.WerkRooster;
             if (per?.VrijeDagen != null && per.VrijeDagen.Count > 0)

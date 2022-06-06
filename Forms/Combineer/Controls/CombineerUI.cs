@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Forms.Combineer;
+using Rpm.Misc;
 
 namespace Controls
 {
@@ -104,22 +105,28 @@ namespace Controls
             xomschrijving.Text = msg;
         }
 
+        private bool IsAllowedCombi(object item, string filter)
+        {
+            if(item is Bewerking bewerking)
+            {
+                if (bewerking.State is ProductieState.Gereed or ProductieState.Verwijderd)
+                    return false;
+                if(bewerking.Combies.Any(x => string.Equals(x.Path, Productie.Path, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    return false;
+                }
+                return bewerking.IsAllowed(filter);
+            }
+            return false;
+        }
+
         private void xaddproductie_Click(object sender, EventArgs e)
         {
             try
             {
                 if (Manager.Database == null || Manager.Database.IsDisposed || Productie == null) return;
-                var prods = Manager.Database.GetAllBewerkingen(false, true, true).Result;
-                prods.Remove(Productie);
-                prods.RemoveAll(x =>
-                    x.Combies.Any(c =>
-                        string.Equals(c.Path, Productie.Path, StringComparison.CurrentCultureIgnoreCase)));
-                if (prods.Count == 0)
-                {
-                    XMessageBox.Show(this, $"Geen producties om te combineren");
-                    return;
-                }
-                var xbwselector = new BewerkingSelectorForm(prods, false, false);
+                var xbwselector = new BewerkingSelectorForm();
+                xbwselector.IsValidHandler = IsAllowedCombi;
                 if (xbwselector.ShowDialog() == DialogResult.OK)
                 {
                     var selected = xbwselector.SelectedBewerkingen;
@@ -141,9 +148,9 @@ namespace Controls
                             });
                             var msg = $"[{item.ArtikelNr} | {item.ProductieNr}] toegevoegd als combinatie.\n" +
                                   $"Activiteit is gewijzigd!";
-                            if (item.UpdateBewerking(null, msg).Result)
+                            if (item.xUpdateBewerking(null, msg))
                                 added.Add(item);
-                            Task.Delay(500).Wait();
+                            System.Threading.Thread.Sleep(500);
                             Application.DoEvents();
                         }
                     }
@@ -155,7 +162,7 @@ namespace Controls
                         var msg = $"{added.Count} {x1} toegevoegd als combinatie.\n" +
                                   $"Huidige productie activiteit is gewijzigd van {Productie.Activiteit}% naar {left}%";
 
-                        if (Productie.UpdateBewerking(null, msg).Result)
+                        if (Productie.xUpdateBewerking(null, msg))
                         {
                             _= Productie.UpdateCombies();
                         }

@@ -8,23 +8,23 @@ namespace Rpm.SqlLite
 {
     public interface IDbCollection<T>
     {
-        public Task<int> Count();
-        public Task<T> FindOne(string id, bool usesecondary);
-        public Task<List<T>> FindAll(bool usesecondary);
-        public Task<List<T>> FindAll(IsValidHandler validhandler, bool checksecondary);
-        public Task<List<T>> FindAll(TijdEntry bereik, IsValidHandler validhandler, bool checksecondary);
-        public Task<List<string>> GetAllIDs(bool checksecondary);
-        public Task<List<string>> GetAllPaths(bool checksecondary);
-        public Task<List<T>> FindAll(string[] ids, bool usesecondary);
-        public Task<List<T>> FindAll(string criteria, bool fullmatch, bool usesecondary);
-        public Task<bool> Replace(string oldid, T newitem, bool onlylocal, string change);
-        public Task<bool> Delete(string id);
-        public Task<int> DeleteAll();
-        public Task<int> Delete(string[] ids);
-        public Task<bool> Update(string id, T item, bool onlylocal, string change);
-        public Task<bool> Upsert(string id, T item, bool onlylocal, string change);
-        public Task<T> FromPath<T>(string filepath);
-        public Task<bool> Exists(string id);
+        public int Count();
+        public T FindOne(string id, bool usesecondary);
+        public List<T> FindAll(bool usesecondary);
+        public List<T> FindAll(IsValidHandler validhandler, bool checksecondary);
+        public List<T> FindAll(TijdEntry bereik, IsValidHandler validhandler, bool checksecondary);
+        public List<string> GetAllIDs(bool checksecondary);
+        public List<string> GetAllPaths(bool checksecondary);
+        public List<T> FindAll(string[] ids, bool usesecondary);
+        public List<T> FindAll(string criteria, bool fullmatch, bool usesecondary);
+        public bool Replace(string oldid, T newitem, bool onlylocal, string change);
+        public bool Delete(string id);
+        public int DeleteAll();
+        public int Delete(string[] ids);
+        public bool Update(string id, T item, bool onlylocal, string change);
+        public bool Upsert(string id, T item, bool onlylocal, string change);
+        public T FromPath<T>(string filepath);
+        public bool Exists(string id);
 
         public bool RaiseEventWhenChanged { get; set; }
         public bool RaiseEventWhenDeleted { get; set; }

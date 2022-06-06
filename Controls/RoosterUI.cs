@@ -212,12 +212,12 @@ namespace Controls
                     var acces1 = Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieBasis };
                     if (acces1 && sproosters.Roosters.Count > 0)
                     {
-                        var bws = Manager.GetBewerkingen(new ViewState[] { ViewState.Gestart }, true, false).Result;
+                        var bws = Manager.xGetBewerkingen(new ViewState[] { ViewState.Gestart }, true, false);
                         bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
                             StringComparison.CurrentCultureIgnoreCase)).ToList();
                         if (bws.Count > 0)
                         {
-                            var bwselector = new BewerkingSelectorForm(bws, true, true);
+                            var bwselector = new WerkplekSelectorForm(bws, true);
                             bwselector.Title = "Selecteer Werkplaatsen waarvan de rooster aangepast moet worden";
                             if (bwselector.ShowDialog() == DialogResult.OK)
                                 _ = Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);

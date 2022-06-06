@@ -224,7 +224,10 @@ namespace Controls
             if (xold != null)
             {
                 if (select)
+                {
                     metroCustomTabControl1.SelectedTab = xold;
+                    xold.PerformLayout();
+                }
                 return true;
             }
 
@@ -737,8 +740,9 @@ namespace Controls
             Application.DoEvents();
             if (!xprodlist.InitUI())
             {
-                metroCustomTabControl1.TabPages.Remove(xtabpage);
-                UpdateTileViewed(entry, false);
+                //metroCustomTabControl1.TabPages.Remove(xtabpage);
+                //UpdateTileViewed(entry, false);
+               metroCustomTabControl1.CloseTab(xtabpage);
             }
             else UpdateTileViewed(entry, true);
         }
@@ -813,7 +817,12 @@ namespace Controls
                 }
 
                 if (updateview && page.Tag is TileInfoEntry info)
+                {
+                    _LastSelectedTab.RemoveAll(x => string.Equals(x, info.Name, StringComparison.CurrentCultureIgnoreCase));
                     UpdateTileViewed(info, false);
+                    string xlast = _LastSelectedTab.LastOrDefault();
+                    metroCustomTabControl1.SelectedTab = metroCustomTabControl1.TabPages.OfType<MetroTabPage>().FirstOrDefault(x => x.Tag is TileInfoEntry ent && string.Equals(ent.Name, xlast, StringComparison.CurrentCultureIgnoreCase));
+                }
                 xcontrol?.Dispose();
                 if (metroCustomTabControl1.SelectedTab == null)
                     metroCustomTabControl1.SelectedIndex = 0;
@@ -826,13 +835,15 @@ namespace Controls
             try
             {
                 if (entry == null) return;
-                entry.IsViewed = isviewed;
+                string lastviewed = (metroCustomTabControl1.SelectedTab?.Tag as TileInfoEntry)?.Name;
                 if (Manager.Opties?.TileLayout != null)
                 {
                     var xindex = Manager.Opties.TileLayout.IndexOf(entry);
                     if (xindex > -1)
                         Manager.Opties.TileLayout[xindex] = entry;
                 }
+                entry.IsViewed = isviewed;
+
             }
             catch (Exception e)
             {
@@ -862,8 +873,14 @@ namespace Controls
         private void metroCustomTabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Manager.Opties != null)
+            {
                 Manager.Opties.LastShownTabName = (metroCustomTabControl1.SelectedTab?.Tag as TileInfoEntry)?.Name;
+                if (!string.IsNullOrEmpty(Manager.Opties.LastShownTabName))
+                    _LastSelectedTab.Add(Manager.Opties.LastShownTabName);
+            }
         }
+
+        private List<string> _LastSelectedTab = new List<string>();
 
         public void ShowTileTabPage(TileInfoEntry entry, bool select)
         {
@@ -1125,6 +1142,8 @@ namespace Controls
             try
             {
                 if (bew == null) return;
+                if (Manager.Opties != null)
+                    playsound &= Manager.Opties.SpeelMeldingToonAf;
                 if (playsound)
                 {
                     Task.Factory.StartNew(() =>
@@ -1152,6 +1171,8 @@ namespace Controls
             try
             {
                 if (form == null) return;
+                if (Manager.Opties != null)
+                    playsound &= Manager.Opties.SpeelMeldingToonAf;
                 if (playsound)
                 {
                     Task.Factory.StartNew(() =>
@@ -1949,7 +1970,7 @@ namespace Controls
 
                     if (bws.Count > 0)
                     {
-                        var bwselector = new BewerkingSelectorForm(bws,true,true);
+                        var bwselector = new WerkplekSelectorForm(bws,true);
                         bwselector.Title = "Selecteer Werkplaatsen waarvan de rooster aangepast moet worden";
                         if (bwselector.ShowDialog() == DialogResult.OK)
                             await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, roosterform.WerkRooster);
@@ -2066,7 +2087,7 @@ namespace Controls
                                 BeginInvoke(new MethodInvoker(() =>
                                 {
                                     var form = AddProduction.Formulier;
-                                    var msg = Manager.AddProductie(form,false).Result;
+                                    var msg = Manager.xAddProductie(form,false);
                                     Manager.RemoteMessage(msg);
                                 }));
 
@@ -2368,12 +2389,12 @@ namespace Controls
                     Manager.Opties.SpecialeRoosters.Add(newrooster);
                     Manager.Opties.SpecialeRoosters = Manager.Opties.SpecialeRoosters.OrderBy(x => x.Vanaf).ToList();
 
-                    var bws = Manager.GetBewerkingen(new[] { ViewState.Gestart }, true, false).Result;
+                    var bws = Manager.xGetBewerkingen(new[] { ViewState.Gestart }, true, false);
                     bws = bws.Where(x => string.Equals(Manager.Opties.Username, x.GestartDoor,
                         StringComparison.CurrentCultureIgnoreCase)).ToList();
                     if (bws.Count > 0)
                     {
-                        var bwselector = new BewerkingSelectorForm(bws,true,true);
+                        var bwselector = new WerkplekSelectorForm(bws,true);
                         bwselector.Title = "Selecteer Werkplaatsen waarvan de rooster aangepast moet worden";
                         if (bwselector.ShowDialog() == DialogResult.OK)
                             Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
@@ -2411,7 +2432,7 @@ namespace Controls
                         StringComparison.CurrentCultureIgnoreCase)).ToList();
                     if (bws.Count > 0)
                     {
-                        var bwselector = new BewerkingSelectorForm(bws,true,true);
+                        var bwselector = new WerkplekSelectorForm(bws,true);
                         bwselector.Title = "Selecteer Werkplaatsen waarvan de rooster aangepast moet worden";
                         if (bwselector.ShowDialog() == DialogResult.OK)
                             await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
@@ -3375,7 +3396,7 @@ namespace Controls
                         var itemname = Path.GetFileNameWithoutExtension(item);
                         var xdir = Path.GetDirectoryName(item);
                         var xdirname = Path.GetFileName(xdir);
-                        var xdel = Manager.Database.RemoveFromCollection(xdirname, new[] {itemname}).Result;
+                        var xdel = Manager.Database.RemoveFromCollection(xdirname, new[] {itemname});
                         if(xdel > 0)
                             MultipleFileDb.CorruptedFilePaths.Remove(item);
                         deleted += xdel;
@@ -3411,7 +3432,7 @@ namespace Controls
             Task.Factory.StartNew(() =>
             {
                
-                var prods = Manager.Database.GetBewerkingenInArtnrSections(true, false,true).Result;
+                var prods = Manager.Database.xGetBewerkingenInArtnrSections(true, false,true);
                 progarg.Max = prods.Count;
                 progarg.OnChanged(this);
                 if (progarg.IsCanceled) return;

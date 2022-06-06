@@ -28,9 +28,9 @@ namespace Forms.ArtikelRecords
         {
             imageList1.Images.Add(Resources.time_management_tasks_32x32);
             imageList1.Images.Add(Resources.time_management_tasks_32x32.CombineImage(Resources.Note_msgIcon_32x32, 1.75));
-            ((OLVColumn)xArtikelList.Columns[7]).AspectGetter = AantalproductiesGetter;
+            ((OLVColumn)xArtikelList.Columns[9]).AspectGetter = AantalproductiesGetter;
             ((OLVColumn)xArtikelList.Columns[0]).ImageGetter = ImageGetter;
-            ((OLVColumn)xwerkpleklist.Columns[7]).AspectGetter = AantalproductiesGetter;
+            ((OLVColumn)xwerkpleklist.Columns[9]).AspectGetter = AantalproductiesGetter;
             ((OLVColumn)xwerkpleklist.Columns[0]).ImageGetter = ImageGetter;
             LoadArtikels(true);
             InitEvents();
@@ -636,7 +636,7 @@ namespace Forms.ArtikelRecords
                         string.Equals(x.ListName, sel.ArtikelNr, StringComparison.CurrentCultureIgnoreCase));
                     if (prodform == null)
                     {
-                        var xprods = Manager.Database.GetBewerkingen(sel.UpdatedProducties, true).Result;
+                        var xprods = Manager.Database.xGetBewerkingen(sel.UpdatedProducties, true);
                         if (xprods.Count == 0) continue;
                         if (sel.IsWerkplek)
                         {
@@ -644,7 +644,7 @@ namespace Forms.ArtikelRecords
                                 string.Equals(w.Naam, sel.ArtikelNr, StringComparison.CurrentCultureIgnoreCase))).ToList();
                         }
                         prodform = new ProductieLijstForm(xprods, sel.ArtikelNr);
-
+                        prodform.ValidHandler = IsValidHandler;
                         prodform.FormClosing += AddProduction_FormClosing;
                         _Productelijsten.Add(prodform);
                     }
@@ -676,6 +676,16 @@ namespace Forms.ArtikelRecords
             {
                 XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
+        }
+
+        public bool IsValidHandler(object value, string filter)
+        {
+            if (value is Bewerking bew)
+            {
+                return bew.State == ProductieState.Gereed;
+            }
+
+            return false;
         }
 
         private void _productielijstdock_FormClosed(object sender, FormClosedEventArgs e)

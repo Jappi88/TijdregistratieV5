@@ -64,7 +64,16 @@ namespace Rpm.Various
         public int Max;
         public ProgressType Type;
         public object Value;
-        public bool IsCanceled;
+        public bool IsCanceled
+        {
+            get => Token.IsCancellationRequested;
+            set
+            {
+                if (value)
+                    Token.Cancel();
+            }
+        }
+        public System.Threading.CancellationTokenSource Token = new System.Threading.CancellationTokenSource();
 
         public event ProgressChangedHandler Changed;
 

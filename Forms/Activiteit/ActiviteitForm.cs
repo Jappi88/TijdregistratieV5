@@ -85,7 +85,7 @@ namespace Forms.Activiteit
             var changes = new List<UserChange>();
             try
             {
-                var prods = Manager.Database.GetAllBewerkingen(false, true, true).Result;
+                var prods = Manager.Database.xGetAllBewerkingen(false, true, true);
                foreach (var bewerking in prods)
                {
 

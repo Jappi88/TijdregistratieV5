@@ -425,6 +425,12 @@
     <Compile Include="Forms\BerekenLeverdatumForm.Designer.cs">
       <DependentUpon>BerekenLeverdatumForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BewerkingSelectorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BewerkingSelectorForm.Designer.cs">
+      <DependentUpon>BewerkingSelectorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\BijlageForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -477,6 +483,13 @@
     <Compile Include="Forms\InkomendMailInfoForm.Designer.cs">
       <DependentUpon>InkomendMailInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ProductieOverzicht\ProductieDatumOvericht.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ProductieOverzicht\ProductieDatumOvericht.Designer.cs">
+      <DependentUpon>ProductieDatumOvericht.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ProductieOverzicht\ProductieOverzichtModel.cs" />
     <Compile Include="Forms\Sporen\AfrondForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -759,11 +772,11 @@
     <Compile Include="Forms\ArtikelRecords\ArtikelsUI.Designer.cs">
       <DependentUpon>ArtikelsUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BewerkingSelectorForm.cs">
+    <Compile Include="Forms\WerkplekSelectorForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BewerkingSelectorForm.Designer.cs">
-      <DependentUpon>BewerkingSelectorForm.cs</DependentUpon>
+    <Compile Include="Forms\WerkplekSelectorForm.Designer.cs">
+      <DependentUpon>WerkplekSelectorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Charting\ChartAantalSerie.cs" />
     <Compile Include="Forms\Chat\ProductieChatUI.cs">
@@ -1000,10 +1013,10 @@
     <Compile Include="Forms\ProductieLijsten.Designer.cs">
       <DependentUpon>ProductieLijsten.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ProductieOverzichtForm.cs">
+    <Compile Include="Forms\ProductieOverzicht\ProductieOverzichtForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ProductieOverzichtForm.Designer.cs">
+    <Compile Include="Forms\ProductieOverzicht\ProductieOverzichtForm.Designer.cs">
       <DependentUpon>ProductieOverzichtForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\RangeCalculatorForm.cs">
@@ -1617,6 +1630,9 @@
     <EmbeddedResource Include="Forms\BerekenLeverdatumForm.resx">
       <DependentUpon>BerekenLeverdatumForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BewerkingSelectorForm.resx">
+      <DependentUpon>BewerkingSelectorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\BijlageForm.resx">
       <DependentUpon>BijlageForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1752,8 +1768,11 @@
     <EmbeddedResource Include="Forms\ArtikelRecords\ArtikelsUI.resx">
       <DependentUpon>ArtikelsUI.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BewerkingSelectorForm.resx">
-      <DependentUpon>BewerkingSelectorForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ProductieOverzicht\ProductieDatumOvericht.resx">
+      <DependentUpon>ProductieDatumOvericht.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WerkplekSelectorForm.resx">
+      <DependentUpon>WerkplekSelectorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Chat\ProductieChatUI.resx">
       <DependentUpon>ProductieChatUI.cs</DependentUpon>
@@ -1879,7 +1898,7 @@
     <EmbeddedResource Include="Forms\ProductieLijsten.resx">
       <DependentUpon>ProductieLijsten.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ProductieOverzichtForm.resx">
+    <EmbeddedResource Include="Forms\ProductieOverzicht\ProductieOverzichtForm.resx">
       <DependentUpon>ProductieOverzichtForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\RangeCalculatorForm.resx">
@@ -2230,6 +2249,10 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\businessapplication_binarytree_32x32.png" />
+    <None Include="Resources\date_gereed_icon_32x32.png" />
+    <None Include="Resources\checked_accept_32x32.png" />
+    <None Include="Resources\checked_done_32x32.png" />
     <None Include="Resources\Activity_Monitor_32x32.png" />
     <None Include="Resources\3844441-eye-see-show-view-watch_110305.png" />
     <None Include="Resources\bolts-screws_32x32.png" />
@@ -2584,12 +2607,12 @@
   <ItemGroup>
     <PublishFile Include="ProductieManager.pdb">
       <Visible>False</Visible>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
@@ -2607,7 +2630,6 @@
       <Name>MetroFramework</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Code to merge the assemblies into one:setup.exe -->
 </Project>

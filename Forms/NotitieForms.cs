@@ -47,6 +47,13 @@ namespace Forms
             xnotitie.Text = Notitie.Notitie;
             SetTitle();
         }
+        public NotitieForms(NotitieEntry note, IProductieBase prod) : this()
+        {
+            Notitie = note ?? new NotitieEntry("", prod);
+            xnaam.Text = Notitie.Naam;
+            xnotitie.Text = Notitie.Notitie;
+            SetTitle();
+        }
 
         public NotitieForms(NotitieEntry note, WerkPlek plek) : this()
         {

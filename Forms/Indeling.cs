@@ -591,7 +591,7 @@ namespace Forms
         
         private void UpdatePersoneelNaamTextbox()
         {
-            var pers = Manager.Database.GetPersoneel(xnaampersoneel.Text.Trim()).Result;
+            var pers = Manager.Database.xGetPersoneel(xnaampersoneel.Text.Trim());
             if (pers != null)
             {
                 if (this.InvokeRequired)

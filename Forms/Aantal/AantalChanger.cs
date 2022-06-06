@@ -23,7 +23,9 @@ namespace Forms
         {
             Aantal = aantal;
             Text = msg;
-            xtotaal.Text = $"/ {aantal}";
+            if (aantal > 0)
+                xtotaal.Text = $"/ {aantal}";
+            else xtotaal.Text = "";
             return ShowDialog();
         }
 

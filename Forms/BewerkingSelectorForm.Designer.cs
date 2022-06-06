@@ -29,96 +29,12 @@ namespace Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.xbewerkinglijst = new System.Windows.Forms.ListView();
-            this.xnaamclmn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.xomschrijvingclmnb = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.xartikelclmn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.xprodnrcolmn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.selecteerAllesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deselecteerAllesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.xok = new System.Windows.Forms.Button();
             this.xannuleren = new System.Windows.Forms.Button();
-            this.xsearchbox = new MetroFramework.Controls.MetroTextBox();
-            this.contextMenuStrip1.SuspendLayout();
+            this.productieListControl1 = new Controls.ProductieListControl();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // xbewerkinglijst
-            // 
-            this.xbewerkinglijst.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.xbewerkinglijst.CheckBoxes = true;
-            this.xbewerkinglijst.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.xnaamclmn,
-            this.xomschrijvingclmnb,
-            this.xartikelclmn,
-            this.xprodnrcolmn});
-            this.xbewerkinglijst.ContextMenuStrip = this.contextMenuStrip1;
-            this.xbewerkinglijst.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xbewerkinglijst.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xbewerkinglijst.FullRowSelect = true;
-            this.xbewerkinglijst.HideSelection = false;
-            this.xbewerkinglijst.HoverSelection = true;
-            this.xbewerkinglijst.LargeImageList = this.imageList1;
-            this.xbewerkinglijst.Location = new System.Drawing.Point(10, 90);
-            this.xbewerkinglijst.Name = "xbewerkinglijst";
-            this.xbewerkinglijst.ShowItemToolTips = true;
-            this.xbewerkinglijst.Size = new System.Drawing.Size(860, 383);
-            this.xbewerkinglijst.SmallImageList = this.imageList1;
-            this.xbewerkinglijst.TabIndex = 0;
-            this.xbewerkinglijst.UseCompatibleStateImageBehavior = false;
-            this.xbewerkinglijst.View = System.Windows.Forms.View.Details;
-            // 
-            // xnaamclmn
-            // 
-            this.xnaamclmn.Text = "Naam";
-            this.xnaamclmn.Width = 138;
-            // 
-            // xomschrijvingclmnb
-            // 
-            this.xomschrijvingclmnb.Text = "Omschrijving";
-            this.xomschrijvingclmnb.Width = 369;
-            // 
-            // xartikelclmn
-            // 
-            this.xartikelclmn.Text = "ArtikelNr";
-            this.xartikelclmn.Width = 120;
-            // 
-            // xprodnrcolmn
-            // 
-            this.xprodnrcolmn.Text = "ProductieNr";
-            this.xprodnrcolmn.Width = 120;
-            // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.selecteerAllesToolStripMenuItem,
-            this.deselecteerAllesToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(163, 48);
-            // 
-            // selecteerAllesToolStripMenuItem
-            // 
-            this.selecteerAllesToolStripMenuItem.Name = "selecteerAllesToolStripMenuItem";
-            this.selecteerAllesToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.selecteerAllesToolStripMenuItem.Text = "&Selecteer Alles";
-            this.selecteerAllesToolStripMenuItem.Click += new System.EventHandler(this.selecteerAllesToolStripMenuItem_Click);
-            // 
-            // deselecteerAllesToolStripMenuItem
-            // 
-            this.deselecteerAllesToolStripMenuItem.Name = "deselecteerAllesToolStripMenuItem";
-            this.deselecteerAllesToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.deselecteerAllesToolStripMenuItem.Text = "&Deselecteer Alles";
-            this.deselecteerAllesToolStripMenuItem.Click += new System.EventHandler(this.deselecteerAllesToolStripMenuItem_Click);
-            // 
-            // imageList1
-            // 
-            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.imageList1.ImageSize = new System.Drawing.Size(48, 48);
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // panel1
             // 
@@ -161,52 +77,37 @@ namespace Forms
             this.xannuleren.UseVisualStyleBackColor = true;
             this.xannuleren.Click += new System.EventHandler(this.xannuleren_Click);
             // 
-            // xsearchbox
+            // productieListControl1
             // 
-            // 
-            // 
-            // 
-            this.xsearchbox.CustomButton.Image = null;
-            this.xsearchbox.CustomButton.Location = new System.Drawing.Point(832, 2);
-            this.xsearchbox.CustomButton.Name = "";
-            this.xsearchbox.CustomButton.Size = new System.Drawing.Size(25, 25);
-            this.xsearchbox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.xsearchbox.CustomButton.TabIndex = 1;
-            this.xsearchbox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.xsearchbox.CustomButton.UseSelectable = true;
-            this.xsearchbox.CustomButton.Visible = false;
-            this.xsearchbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.xsearchbox.FontSize = MetroFramework.MetroTextBoxSize.Medium;
-            this.xsearchbox.Lines = new string[] {
-        "Zoeken..."};
-            this.xsearchbox.Location = new System.Drawing.Point(10, 60);
-            this.xsearchbox.Margin = new System.Windows.Forms.Padding(4);
-            this.xsearchbox.MaxLength = 32767;
-            this.xsearchbox.Name = "xsearchbox";
-            this.xsearchbox.PasswordChar = '\0';
-            this.xsearchbox.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.xsearchbox.SelectedText = "";
-            this.xsearchbox.SelectionLength = 0;
-            this.xsearchbox.SelectionStart = 0;
-            this.xsearchbox.ShortcutsEnabled = true;
-            this.xsearchbox.ShowClearButton = true;
-            this.xsearchbox.Size = new System.Drawing.Size(860, 30);
-            this.xsearchbox.TabIndex = 10;
-            this.xsearchbox.Text = "Zoeken...";
-            this.xsearchbox.UseSelectable = true;
-            this.xsearchbox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-            this.xsearchbox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
-            this.xsearchbox.TextChanged += new System.EventHandler(this.xsearchArtikel_TextChanged);
-            this.xsearchbox.Enter += new System.EventHandler(this.xsearchArtikel_Enter);
-            this.xsearchbox.Leave += new System.EventHandler(this.xsearchArtikel_Leave);
+            this.productieListControl1.AutoScroll = true;
+            this.productieListControl1.BackColor = System.Drawing.Color.White;
+            this.productieListControl1.CanLoad = false;
+            this.productieListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieListControl1.EnableCheckBox = true;
+            this.productieListControl1.EnableContextMenu = false;
+            this.productieListControl1.EnableEntryFiltering = true;
+            this.productieListControl1.EnableFiltering = false;
+            this.productieListControl1.EnableSync = false;
+            this.productieListControl1.EnableToolBar = false;
+            this.productieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productieListControl1.IsBewerkingView = true;
+            this.productieListControl1.ListName = null;
+            this.productieListControl1.Location = new System.Drawing.Point(10, 60);
+            this.productieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.productieListControl1.Name = "productieListControl1";
+            this.productieListControl1.RemoveCustomItemIfNotValid = true;
+            this.productieListControl1.SelectedItem = null;
+            this.productieListControl1.ShowWaitUI = true;
+            this.productieListControl1.Size = new System.Drawing.Size(860, 413);
+            this.productieListControl1.TabIndex = 2;
+            this.productieListControl1.ValidHandler = null;
             // 
             // BewerkingSelectorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(880, 524);
-            this.Controls.Add(this.xbewerkinglijst);
-            this.Controls.Add(this.xsearchbox);
+            this.Controls.Add(this.productieListControl1);
             this.Controls.Add(this.panel1);
             this.Name = "BewerkingSelectorForm";
             this.Padding = new System.Windows.Forms.Padding(10, 60, 10, 10);
@@ -214,26 +115,15 @@ namespace Forms
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Selecteer Bewerkingen";
             this.Title = "Selecteer Bewerkingen";
-            this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.ListView xbewerkinglijst;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button xannuleren;
         private System.Windows.Forms.Button xok;
-        private System.Windows.Forms.ColumnHeader xnaamclmn;
-        private System.Windows.Forms.ColumnHeader xomschrijvingclmnb;
-        private System.Windows.Forms.ColumnHeader xartikelclmn;
-        private System.Windows.Forms.ColumnHeader xprodnrcolmn;
-        private System.Windows.Forms.ImageList imageList1;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem selecteerAllesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem deselecteerAllesToolStripMenuItem;
-        private MetroFramework.Controls.MetroTextBox xsearchbox;
+        private Controls.ProductieListControl productieListControl1;
     }
 }

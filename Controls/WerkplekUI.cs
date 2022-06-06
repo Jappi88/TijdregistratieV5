@@ -197,7 +197,7 @@ namespace Controls
             try
             {
                 
-                var ids = Manager.Database.ProductieFormulieren.GetAllIDs(false).Result;
+                var ids = Manager.Database.ProductieFormulieren.GetAllIDs(false);
                 var plekken = new List<WerkPlek>();
                 if (ids.Count > 0)
                 {
@@ -255,12 +255,12 @@ namespace Controls
                 try
                 {
                     var xwerkplekken = xwerkpleklist.Objects?.Cast<WerkPlek>().ToList();
-                    if (xwerkplekken != null && form.Bewerkingen is {Length: > 0})
+                    if (xwerkplekken != null && form.Bewerkingen is { Length: > 0 })
                     {
                         var formplekken = xwerkplekken
                             .Where(x => string.Equals(x.Werk.ProductieNr, form.ProductieNr)).ToList();
                         foreach (var bewerking in form.Bewerkingen)
-                            if (bewerking.WerkPlekken is {Count: > 0})
+                            if (bewerking.WerkPlekken is { Count: > 0 })
                             {
                                 var isvalid = bewerking.IsAllowed(null);
                                 foreach (var plek in bewerking.WerkPlekken)
@@ -304,7 +304,7 @@ namespace Controls
                         }
                     }
 
-                    if (changed)
+                    if (xwerkplekken.Count != xwerkpleklist.Items.Count)
                     {
                         PlekkenChanged();
                     }
@@ -579,9 +579,8 @@ namespace Controls
             if (xwerkpleklist.SelectedObject is WerkPlek { Werk: { } } wp)
             {
                 var bw = wp.Werk;
-                var form = bw.GetParent();
-                if (form == null) return;
-                var xafk = new AfkeurForm(form);
+                if (bw == null) return;
+                var xafk = new AfkeurForm(bw);
                 xafk.ShowDialog();
             }
         }

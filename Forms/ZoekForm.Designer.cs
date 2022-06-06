@@ -393,6 +393,7 @@ namespace Forms
             // ZoekForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.CancelButton = this.xsluiten;
             this.ClientSize = new System.Drawing.Size(690, 440);
             this.Controls.Add(this.xgeavanceerdpannel);
             this.Controls.Add(this.xgeavanceerd);

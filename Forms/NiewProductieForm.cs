@@ -27,17 +27,17 @@ namespace Forms
             xleverdatum.Value = DateTime.Now.Date.Add(Rooster.StandaartRooster().EindWerkdag);
         }
 
-        private async void xstarten_Click(object sender, EventArgs e)
+        private void xstarten_Click(object sender, EventArgs e)
         {
-            if (await Save()) DialogResult = DialogResult.Yes;
+            if (Save()) DialogResult = DialogResult.Yes;
         }
 
-        private async void xopslaan_Click(object sender, EventArgs e)
+        private void xopslaan_Click(object sender, EventArgs e)
         {
-            if (await Save()) DialogResult = DialogResult.OK;
+            if (Save()) DialogResult = DialogResult.OK;
         }
 
-        private async Task<bool> Save()
+        private bool Save()
         {
             bool xreturn = false;
             try
@@ -51,7 +51,7 @@ namespace Forms
                 var bewent = Manager.BewerkingenLijst.GetEntry(xbewerking.SelectedItem.ToString());
                 if (bewent == null)
                     throw new Exception($"Bewerking '{xbewerking.SelectedItem.ToString()}' bestaat niet!");
-                var prod = await ProductieFormulier.CreateNewProductie(xartikelnr.Text.Replace(" ", ""),
+                var prod = ProductieFormulier.CreateNewProductie(xartikelnr.Text.Replace(" ", ""),
                     xomschrijving.Text.Trim(),
                     (int) xaantal.Value, xleverdatum.Value, (int) xperuur.Value, bewent,
                     xprodnrchecked.Checked ? xprodnr.Text.Trim() : null);

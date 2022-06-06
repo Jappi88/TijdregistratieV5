@@ -43,6 +43,7 @@
             Various.MenuButton menuButton11 = new Various.MenuButton();
             Various.MenuButton menuButton12 = new Various.MenuButton();
             Various.MenuButton menuButton13 = new Various.MenuButton();
+            Various.MenuButton menuButton14 = new Various.MenuButton();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.aantalTeMakenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.leverdatumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,6 +82,8 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.xstatusimage = new System.Windows.Forms.PictureBox();
             this.mainMenu1 = new Controls.MainMenu();
+            this.onderbrekeningenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.xpanelcontainer.SuspendLayout();
@@ -98,17 +101,19 @@
             this.leverdatumToolStripMenuItem,
             this.materialenToolStripMenuItem,
             this.xprodafkeurtoolstrip,
+            this.onderbrekeningenToolStripMenuItem,
             this.notitieToolStripMenuItem,
+            this.toolStripSeparator1,
             this.kopiërenToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(189, 232);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(208, 298);
             // 
             // aantalTeMakenToolStripMenuItem
             // 
             this.aantalTeMakenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.hashtag_icon_152828_32_32;
             this.aantalTeMakenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.aantalTeMakenToolStripMenuItem.Name = "aantalTeMakenToolStripMenuItem";
-            this.aantalTeMakenToolStripMenuItem.Size = new System.Drawing.Size(188, 38);
+            this.aantalTeMakenToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
             this.aantalTeMakenToolStripMenuItem.Text = "Aantal Te Maken";
             this.aantalTeMakenToolStripMenuItem.Click += new System.EventHandler(this.aantalTeMakenToolStripMenuItem_Click);
             // 
@@ -117,7 +122,7 @@
             this.leverdatumToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.systemtime_778_32_32;
             this.leverdatumToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.leverdatumToolStripMenuItem.Name = "leverdatumToolStripMenuItem";
-            this.leverdatumToolStripMenuItem.Size = new System.Drawing.Size(188, 38);
+            this.leverdatumToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
             this.leverdatumToolStripMenuItem.Text = "Leverdatum";
             this.leverdatumToolStripMenuItem.Click += new System.EventHandler(this.leverdatumToolStripMenuItem_Click);
             // 
@@ -126,7 +131,7 @@
             this.materialenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.pngegg__1_;
             this.materialenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.materialenToolStripMenuItem.Name = "materialenToolStripMenuItem";
-            this.materialenToolStripMenuItem.Size = new System.Drawing.Size(188, 38);
+            this.materialenToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
             this.materialenToolStripMenuItem.Text = "Materialen";
             this.materialenToolStripMenuItem.ToolTipText = "Beheer materialen";
             this.materialenToolStripMenuItem.Click += new System.EventHandler(this.materialenToolStripMenuItem_Click);
@@ -136,7 +141,7 @@
             this.xprodafkeurtoolstrip.Image = global::ProductieManager.Properties.Resources.bin_icon_icons_com_32x32;
             this.xprodafkeurtoolstrip.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xprodafkeurtoolstrip.Name = "xprodafkeurtoolstrip";
-            this.xprodafkeurtoolstrip.Size = new System.Drawing.Size(188, 38);
+            this.xprodafkeurtoolstrip.Size = new System.Drawing.Size(207, 38);
             this.xprodafkeurtoolstrip.Text = "Afkeur";
             this.xprodafkeurtoolstrip.ToolTipText = "Vul in product afkeur";
             this.xprodafkeurtoolstrip.Click += new System.EventHandler(this.xprodafkeurtoolstrip_Click);
@@ -146,7 +151,7 @@
             this.notitieToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Note_34576_32x32;
             this.notitieToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.notitieToolStripMenuItem.Name = "notitieToolStripMenuItem";
-            this.notitieToolStripMenuItem.Size = new System.Drawing.Size(188, 38);
+            this.notitieToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
             this.notitieToolStripMenuItem.Text = "Notitie";
             this.notitieToolStripMenuItem.Click += new System.EventHandler(this.notitieToolStripMenuItem_Click);
             // 
@@ -165,7 +170,7 @@
             this.kopiërenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.copy_paste_document_file_1557;
             this.kopiërenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.kopiërenToolStripMenuItem.Name = "kopiërenToolStripMenuItem";
-            this.kopiërenToolStripMenuItem.Size = new System.Drawing.Size(188, 38);
+            this.kopiërenToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
             this.kopiërenToolStripMenuItem.Text = "Kopiëren";
             // 
             // productieNrToolStripMenuItem
@@ -254,6 +259,7 @@
             this.xbewerking.Location = new System.Drawing.Point(4, 23);
             this.xbewerking.Margin = new System.Windows.Forms.Padding(4);
             this.xbewerking.Name = "xbewerking";
+            this.xbewerking.PromptText = "Kies Bewerking...";
             this.xbewerking.Size = new System.Drawing.Size(174, 29);
             this.xbewerking.TabIndex = 0;
             this.toolTip1.SetToolTip(this.xbewerking, "Kies Bewerking");
@@ -323,7 +329,7 @@
             this.xstopb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.xstopb.BackColor = System.Drawing.Color.White;
             this.xstopb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xstopb.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xstopb.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xstopb.ForeColor = System.Drawing.Color.Black;
             this.xstopb.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xstopb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -344,7 +350,7 @@
             this.xindelingb.BackColor = System.Drawing.Color.White;
             this.xindelingb.ContextMenuStrip = this.contextMenuStrip1;
             this.xindelingb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xindelingb.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xindelingb.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xindelingb.ForeColor = System.Drawing.Color.Black;
             this.xindelingb.Image = global::ProductieManager.Properties.Resources.iconfinder_technologymachineelectronic32_32;
             this.xindelingb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -354,7 +360,6 @@
             this.xindelingb.Size = new System.Drawing.Size(174, 38);
             this.xindelingb.TabIndex = 3;
             this.xindelingb.Text = "Indeling";
-            this.xindelingb.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolTip1.SetToolTip(this.xindelingb, "Beheer de indeling");
             this.xindelingb.UseVisualStyleBackColor = false;
             this.xindelingb.Click += new System.EventHandler(this.xindelingb_Click);
@@ -366,7 +371,7 @@
             this.xstartb.BackColor = System.Drawing.Color.White;
             this.xstartb.ContextMenuStrip = this.contextMenuStrip1;
             this.xstartb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xstartb.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xstartb.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xstartb.ForeColor = System.Drawing.Color.Black;
             this.xstartb.Image = global::ProductieManager.Properties.Resources.play_button_icon_icons_com_60615;
             this.xstartb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -376,7 +381,6 @@
             this.xstartb.Size = new System.Drawing.Size(174, 38);
             this.xstartb.TabIndex = 2;
             this.xstartb.Text = "Start";
-            this.xstartb.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolTip1.SetToolTip(this.xstartb, "Start/Stop de bewerking");
             this.xstartb.UseVisualStyleBackColor = false;
             this.xstartb.Click += new System.EventHandler(this.xstartb_Click);
@@ -388,7 +392,7 @@
             this.xverpakking.BackColor = System.Drawing.Color.White;
             this.xverpakking.ContextMenuStrip = this.contextMenuStrip1;
             this.xverpakking.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xverpakking.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xverpakking.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xverpakking.ForeColor = System.Drawing.Color.Black;
             this.xverpakking.Image = global::ProductieManager.Properties.Resources.package_box_10801;
             this.xverpakking.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -398,7 +402,6 @@
             this.xverpakking.Size = new System.Drawing.Size(174, 38);
             this.xverpakking.TabIndex = 4;
             this.xverpakking.Text = "Verpakking";
-            this.xverpakking.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolTip1.SetToolTip(this.xverpakking, "Bekijk of wijzig de verpakkingsinstructies");
             this.xverpakking.UseVisualStyleBackColor = false;
             this.xverpakking.Click += new System.EventHandler(this.xverpakking_Click);
@@ -410,7 +413,7 @@
             this.xtoonwerktekening.BackColor = System.Drawing.Color.White;
             this.xtoonwerktekening.ContextMenuStrip = this.contextMenuStrip1;
             this.xtoonwerktekening.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xtoonwerktekening.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xtoonwerktekening.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xtoonwerktekening.ForeColor = System.Drawing.Color.Black;
             this.xtoonwerktekening.Image = global::ProductieManager.Properties.Resources.libreoffice_draw_icon_181050;
             this.xtoonwerktekening.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -420,7 +423,6 @@
             this.xtoonwerktekening.Size = new System.Drawing.Size(174, 38);
             this.xtoonwerktekening.TabIndex = 5;
             this.xtoonwerktekening.Text = "Tekening";
-            this.xtoonwerktekening.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolTip1.SetToolTip(this.xtoonwerktekening, "Toon werktekening");
             this.xtoonwerktekening.UseVisualStyleBackColor = false;
             this.xtoonwerktekening.Click += new System.EventHandler(this.xtoonwerktekening_Click);
@@ -432,7 +434,7 @@
             this.xOnderbreek.BackColor = System.Drawing.Color.White;
             this.xOnderbreek.ContextMenuStrip = this.contextMenuStrip1;
             this.xOnderbreek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xOnderbreek.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xOnderbreek.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xOnderbreek.ForeColor = System.Drawing.Color.Black;
             this.xOnderbreek.Image = global::ProductieManager.Properties.Resources.Stop_Hand__32x32;
             this.xOnderbreek.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -442,7 +444,6 @@
             this.xOnderbreek.Size = new System.Drawing.Size(174, 38);
             this.xOnderbreek.TabIndex = 6;
             this.xOnderbreek.Text = "Onderbreek";
-            this.xOnderbreek.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolTip1.SetToolTip(this.xOnderbreek, "Onderbreek/Hervat de productie");
             this.xOnderbreek.UseVisualStyleBackColor = false;
             this.xOnderbreek.Click += new System.EventHandler(this.xOnderbreek_Click);
@@ -454,7 +455,7 @@
             this.xdeelvoortgang.BackColor = System.Drawing.Color.White;
             this.xdeelvoortgang.ContextMenuStrip = this.contextMenuStrip1;
             this.xdeelvoortgang.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xdeelvoortgang.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xdeelvoortgang.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xdeelvoortgang.ForeColor = System.Drawing.Color.Black;
             this.xdeelvoortgang.Image = global::ProductieManager.Properties.Resources.share_icon_32x32;
             this.xdeelvoortgang.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -560,7 +561,7 @@
             // 
             // xnoteButton
             // 
-            this.xnoteButton.BackColor = System.Drawing.Color.Maroon;
+            this.xnoteButton.BackColor = System.Drawing.Color.DarkRed;
             this.xnoteButton.Dock = System.Windows.Forms.DockStyle.Top;
             this.xnoteButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xnoteButton.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -604,7 +605,7 @@
             this.mainMenu1.IsExpanded = false;
             this.mainMenu1.Location = new System.Drawing.Point(0, 0);
             this.mainMenu1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            menuButton1.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton1.AccesLevel = Rpm.Various.AccesType.ProductieAdvance;
             menuButton1.CombineImage = null;
             menuButton1.CombineScale = 1.5D;
             menuButton1.ContextMenu = this.contextMenuStrip1;
@@ -615,7 +616,7 @@
             menuButton1.Name = "xwijzigproductie";
             menuButton1.Text = "Wijzig Productie";
             menuButton1.Tooltip = "Wijzig productie";
-            menuButton2.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton2.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
             menuButton2.CombineImage = null;
             menuButton2.CombineScale = 1.5D;
             menuButton2.ContextMenu = null;
@@ -626,7 +627,7 @@
             menuButton2.Name = "xmeldgereed";
             menuButton2.Text = "Meld Gereed";
             menuButton2.Tooltip = "Meld bewerking gereed";
-            menuButton3.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton3.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
             menuButton3.CombineImage = null;
             menuButton3.CombineScale = 1.5D;
             menuButton3.ContextMenu = null;
@@ -637,7 +638,7 @@
             menuButton3.Name = "xdeelmeldingen";
             menuButton3.Text = "Deels Gereedmeldingen";
             menuButton3.Tooltip = "Deels gereedmeldingen";
-            menuButton4.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton4.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
             menuButton4.CombineImage = null;
             menuButton4.CombineScale = 1.5D;
             menuButton4.ContextMenu = null;
@@ -648,7 +649,7 @@
             menuButton4.Name = "xaantalgemaakt";
             menuButton4.Text = "Aantal Gemaakt";
             menuButton4.Tooltip = "Wijzig aantal gemaakt";
-            menuButton5.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton5.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
             menuButton5.CombineImage = null;
             menuButton5.CombineScale = 1.5D;
             menuButton5.ContextMenu = null;
@@ -659,7 +660,7 @@
             menuButton5.Name = "xaanbevolenpersonen";
             menuButton5.Text = "Aanbevolen Personen";
             menuButton5.Tooltip = "Toon aanbevolen personeel";
-            menuButton6.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton6.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
             menuButton6.CombineImage = null;
             menuButton6.CombineScale = 1.5D;
             menuButton6.ContextMenu = null;
@@ -670,7 +671,7 @@
             menuButton6.Name = "xberekenleverdatum";
             menuButton6.Text = "Bereken Leverdatum";
             menuButton6.Tooltip = "Bereken leverdatum";
-            menuButton7.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton7.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
             menuButton7.CombineImage = null;
             menuButton7.CombineScale = 1.5D;
             menuButton7.ContextMenu = null;
@@ -681,7 +682,7 @@
             menuButton7.Name = "xrooster";
             menuButton7.Text = "Werk Rooster";
             menuButton7.Tooltip = "Wijzig  werkrooster";
-            menuButton8.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton8.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
             menuButton8.CombineImage = null;
             menuButton8.CombineScale = 1.5D;
             menuButton8.ContextMenu = null;
@@ -689,10 +690,10 @@
             menuButton8.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton8.Image")));
             menuButton8.ImageSize = new System.Drawing.Size(32, 32);
             menuButton8.Index = 7;
-            menuButton8.Name = "xonderbreking";
-            menuButton8.Text = "Onderbrekeningen";
-            menuButton8.Tooltip = "Wijzig/voeg onderbrekeningen";
-            menuButton9.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton8.Name = "xspecialerooster";
+            menuButton8.Text = "Speciale Roosters";
+            menuButton8.Tooltip = "Speciale roosters";
+            menuButton9.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
             menuButton9.CombineImage = null;
             menuButton9.CombineScale = 1.5D;
             menuButton9.ContextMenu = null;
@@ -700,10 +701,10 @@
             menuButton9.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton9.Image")));
             menuButton9.ImageSize = new System.Drawing.Size(32, 32);
             menuButton9.Index = 8;
-            menuButton9.Name = "xwerktijden";
-            menuButton9.Text = "Gewerkte Tijden";
-            menuButton9.Tooltip = "Toon of wijzig gewerkte tijden";
-            menuButton10.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
+            menuButton9.Name = "xonderbreking";
+            menuButton9.Text = "Onderbrekeningen";
+            menuButton9.Tooltip = "Wijzig/voeg onderbrekeningen";
+            menuButton10.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
             menuButton10.CombineImage = null;
             menuButton10.CombineScale = 1.5D;
             menuButton10.ContextMenu = null;
@@ -711,9 +712,9 @@
             menuButton10.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton10.Image")));
             menuButton10.ImageSize = new System.Drawing.Size(32, 32);
             menuButton10.Index = 9;
-            menuButton10.Name = "xopenpdf";
-            menuButton10.Text = "Productie Pdf";
-            menuButton10.Tooltip = "Open productieformulier als pdf";
+            menuButton10.Name = "xwerktijden";
+            menuButton10.Text = "Gewerkte Tijden";
+            menuButton10.Tooltip = "Toon of wijzig gewerkte tijden";
             menuButton11.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
             menuButton11.CombineImage = null;
             menuButton11.CombineScale = 1.5D;
@@ -722,9 +723,9 @@
             menuButton11.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton11.Image")));
             menuButton11.ImageSize = new System.Drawing.Size(32, 32);
             menuButton11.Index = 10;
-            menuButton11.Name = "xprintform";
-            menuButton11.Text = "Printen";
-            menuButton11.Tooltip = "Productieformulier printen";
+            menuButton11.Name = "xopenpdf";
+            menuButton11.Text = "Productie Pdf";
+            menuButton11.Tooltip = "Open productieformulier als pdf";
             menuButton12.AccesLevel = Rpm.Various.AccesType.AlleenKijken;
             menuButton12.CombineImage = null;
             menuButton12.CombineScale = 1.5D;
@@ -733,9 +734,9 @@
             menuButton12.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton12.Image")));
             menuButton12.ImageSize = new System.Drawing.Size(32, 32);
             menuButton12.Index = 11;
-            menuButton12.Name = "xundo";
-            menuButton12.Text = "Terug Zetten";
-            menuButton12.Tooltip = "Zet een verwijderd of een gereed productie terug naar de normale status";
+            menuButton12.Name = "xprintform";
+            menuButton12.Text = "Printen";
+            menuButton12.Tooltip = "Productieformulier printen";
             menuButton13.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
             menuButton13.CombineImage = null;
             menuButton13.CombineScale = 1.5D;
@@ -744,9 +745,20 @@
             menuButton13.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton13.Image")));
             menuButton13.ImageSize = new System.Drawing.Size(32, 32);
             menuButton13.Index = 12;
-            menuButton13.Name = "xdelete";
-            menuButton13.Text = "Verwijderen";
-            menuButton13.Tooltip = "Productie Verwijderen";
+            menuButton13.Name = "xundo";
+            menuButton13.Text = "Terug Zetten";
+            menuButton13.Tooltip = "Zet een verwijderd of een gereed productie terug naar de normale status";
+            menuButton14.AccesLevel = Rpm.Various.AccesType.ProductieBasis;
+            menuButton14.CombineImage = null;
+            menuButton14.CombineScale = 1.5D;
+            menuButton14.ContextMenu = null;
+            menuButton14.Enabled = true;
+            menuButton14.Image = ((System.Drawing.Bitmap)(resources.GetObject("menuButton14.Image")));
+            menuButton14.ImageSize = new System.Drawing.Size(32, 32);
+            menuButton14.Index = 13;
+            menuButton14.Name = "xdelete";
+            menuButton14.Text = "Verwijderen";
+            menuButton14.Tooltip = "Productie Verwijderen";
             this.mainMenu1.MenuButtons = new Various.MenuButton[] {
         menuButton1,
         menuButton2,
@@ -760,11 +772,26 @@
         menuButton10,
         menuButton11,
         menuButton12,
-        menuButton13};
+        menuButton13,
+        menuButton14};
             this.mainMenu1.Name = "mainMenu1";
             this.mainMenu1.Size = new System.Drawing.Size(40, 595);
             this.mainMenu1.TabIndex = 4;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
+            // 
+            // onderbrekeningenToolStripMenuItem
+            // 
+            this.onderbrekeningenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.onderhoud32_32;
+            this.onderbrekeningenToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.onderbrekeningenToolStripMenuItem.Name = "onderbrekeningenToolStripMenuItem";
+            this.onderbrekeningenToolStripMenuItem.Size = new System.Drawing.Size(207, 38);
+            this.onderbrekeningenToolStripMenuItem.Text = "Onderbrekeningen";
+            this.onderbrekeningenToolStripMenuItem.Click += new System.EventHandler(this.onderbrekeningenToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(204, 6);
             // 
             // ProductieForm
             // 
@@ -827,5 +854,7 @@
         private System.Windows.Forms.Button xdeelvoortgang;
         private System.Windows.Forms.ToolStripMenuItem bewerkingNaamToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem werkLocatieToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem onderbrekeningenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }

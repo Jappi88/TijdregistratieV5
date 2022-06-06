@@ -217,7 +217,7 @@ namespace Controls
                     _isbussy = true;
                     EnableProgressLabel(true);
                     SetProgressLabelText("Producties Laden...");
-                    var ids = Manager.GetAllProductieIDs(true, true).Result;
+                    var ids = Manager.xGetAllProductieIDs(true, true);
                     int cur = 0;
                     int max = ids.Count;
                     var loaded = new List<Bewerking>();
@@ -271,7 +271,7 @@ namespace Controls
             var xtext = "Zoek producties";
             if (ShowFilter.Enabled)
             {
-                var xtitle = $"Resultaten voor ";
+                var xtitle = $"{productieListControl1.ProductieLijst.Items.Count} Resultaten voor ";
                 if (!string.IsNullOrEmpty(ShowFilter.Criteria))
                     xtitle += $"criteria '{ShowFilter.Criteria}', ";
                 if (!string.IsNullOrEmpty(ShowFilter.werkPlek))
@@ -279,7 +279,7 @@ namespace Controls
                 if (!string.IsNullOrEmpty(ShowFilter.Bewerking))
                     xtitle += $"bewerking '{ShowFilter.Bewerking}', ";
                 if (!string.IsNullOrEmpty(ShowFilter.State))
-                    xtitle += $" Productie Status '{ShowFilter.State}', ";
+                    xtitle += $"Productie Status '{ShowFilter.State}', ";
                 if (!string.IsNullOrEmpty(ShowFilter.MaterialenCriteria))
                     xtitle += $"materialen '{ShowFilter.MaterialenCriteria}', ";
                 xtitle = xtitle.TrimEnd(new char[] { ',', ' ' });
@@ -287,8 +287,8 @@ namespace Controls
                     xtitle += $" vanaf {ShowFilter.VanafTime.ToString(CultureInfo.InvariantCulture)}";
                 if (ShowFilter.TotCheck)
                     xtitle += $" t/m {ShowFilter.TotTime.ToString(CultureInfo.InvariantCulture)}";
-                if (xtitle == "Resultaten voor")
-                    xtitle = "Resultaten voor alle Producties";
+                if (xtitle.EndsWith("Resultaten voor"))
+                    xtitle += $" alle producties";
                 xtext = xtitle;
             }
 

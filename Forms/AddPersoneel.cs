@@ -37,7 +37,7 @@ namespace Forms
             return base.ShowDialog();
         }
 
-        private async void xok_Click(object sender, EventArgs e)
+        private void xok_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(xnaam.Text) || xnaam.Text.Trim().Length < 3)
             {
@@ -46,7 +46,7 @@ namespace Forms
             }
             else
             {
-                if(!IsEditMode && await Manager.Database.PersoneelExist(xnaam.Text.Trim()))
+                if(!IsEditMode && Manager.Database.PersoneelExist(xnaam.Text.Trim()))
                 {
                     XMessageBox.Show(this, $"'{xnaam.Text.Trim()}' is al toegevoegd.", "Bestaat al", MessageBoxButtons.OK,
                         MessageBoxIcon.Exclamation);

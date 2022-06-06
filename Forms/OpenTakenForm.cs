@@ -169,7 +169,7 @@ namespace Forms
         private void xrooster_Click(object sender, EventArgs e)
         {
             if (Productie is Bewerking bew)
-                bew.DoBewerkingEigenRooster(this);
+                bew.DoBewerkingRooster(this);
             
         }
     }

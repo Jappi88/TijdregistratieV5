@@ -178,9 +178,12 @@ namespace Forms
             this.productieListControl1.BackColor = System.Drawing.Color.White;
             this.productieListControl1.CanLoad = false;
             this.productieListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieListControl1.EnableCheckBox = false;
+            this.productieListControl1.EnableContextMenu = true;
             this.productieListControl1.EnableEntryFiltering = true;
-            this.productieListControl1.EnableFiltering = false;
+            this.productieListControl1.EnableFiltering = true;
             this.productieListControl1.EnableSync = false;
+            this.productieListControl1.EnableToolBar = true;
             this.productieListControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.productieListControl1.IsBewerkingView = true;
             this.productieListControl1.ListName = "PersoneelIndelingLijst";

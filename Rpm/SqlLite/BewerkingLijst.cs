@@ -151,14 +151,14 @@ namespace Rpm.SqlLite
 
         public Task<int> UpdateDatabase()
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
                 try
                 {
                     if (Manager.Database == null || Manager.Database.IsDisposed)
                         return -1;
                     if (Entries == null && !LoadDb()) return 0;
-                    var prods = Manager.Database.GetAllBewerkingen(true, false, true).Result;
+                    var prods = Manager.Database.xGetAllBewerkingen(true, false, true);
                     var done = 0;
                     foreach (var bw in prods)
                     {

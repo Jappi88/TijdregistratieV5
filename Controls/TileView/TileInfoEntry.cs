@@ -30,6 +30,7 @@ namespace Controls
         public ResizeMode ImageResize { get; set; } = ResizeMode.Auto;
         public bool IsDefault { get; set; }
         public bool IsViewed { get; set; }
+        public string LastViewedName { get; set; }
         public AccesType AccesLevel { get; set; } = AccesType.AlleenKijken;
         public int TileIndex { get; set; }
         [ExcludeFromSerialization]

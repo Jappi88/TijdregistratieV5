@@ -105,22 +105,22 @@ namespace Rpm.Misc
             return form.Bewerkingen.Length == 0 || form.Bewerkingen.Any(x => x.IsAllowed(filter));
         }
 
-        public static Dictionary<string, List<object>> ToSections(this List<Bewerking> bewerkingen, bool iswerkplek,
+        public static Dictionary<string, List<object>> ToNameSections(this List<Bewerking> bewerkingen, bool iswerkplek,
             TijdEntry periode)
         {
             var xreturn = new Dictionary<string, List<object>>();
             try
             {
-                foreach (var bew in bewerkingen)
+                for (int i = 0; i < bewerkingen.Count; i++)
                 {
-
+                    var bew = bewerkingen[i];
                     if (!bew.IsAllowed(null)) continue;
                     if (iswerkplek)
                     {
                         if (bew.WerkPlekken == null || bew.WerkPlekken.Count == 0) continue;
                         foreach (var wp in bew.WerkPlekken)
                         {
-                            if (wp.TijdAanGewerkt(periode.Start, periode.Stop,true) <= 0) continue;
+                            if (periode != null && wp.TijdAanGewerkt(periode.Start, periode.Stop,true) <= 0) continue;
                             if (!xreturn.ContainsKey(wp.Naam))
                                 xreturn.Add(wp.Naam, new List<object> {wp});
                             else xreturn[wp.Naam].Add(wp);
@@ -128,7 +128,7 @@ namespace Rpm.Misc
                     }
                     else
                     {
-                        if (bew.TijdAanGewerkt(periode.Start, periode.Stop) <= 0) continue;
+                        if (periode != null && bew.TijdAanGewerkt(periode.Start, periode.Stop) <= 0) continue;
                         if (!xreturn.ContainsKey(bew.Naam))
                             xreturn.Add(bew.Naam, new List<object> {bew});
                         else xreturn[bew.Naam].Add(bew);
@@ -143,14 +143,38 @@ namespace Rpm.Misc
             return xreturn;
         }
 
+        public static Dictionary<string, List<object>> ToArtikelNrSections(this List<Bewerking> bewerkingen,
+    TijdEntry periode)
+        {
+            var xreturn = new Dictionary<string, List<object>>();
+            try
+            {
+                for (int i = 0; i < bewerkingen.Count; i++)
+                {
+                    var bew = bewerkingen[i];
+                    if (!bew.IsAllowed(null)) continue;
+                    if (periode != null && bew.TijdAanGewerkt(periode.Start, periode.Stop) <= 0) continue;
+                    if (!xreturn.ContainsKey(bew.ArtikelNr))
+                        xreturn.Add(bew.ArtikelNr, new List<object> { bew });
+                    else xreturn[bew.ArtikelNr].Add(bew);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return xreturn;
+        }
+
         public static void ExcludeFromUpdate(this ProductieFormulier productie)
         {
-           // Manager.ProductieProvider?.AddToExclude(productie);
+           Manager.ProductieProvider?.AddToExclude(productie);
         }
 
         public static void RemoveExcludeFromUpdate(this ProductieFormulier productie)
         {
-            //Manager.ProductieProvider?.RemoveFromExclude(productie);
+            Manager.ProductieProvider?.RemoveFromExclude(productie);
         }
 
         public static Dictionary<string, Dictionary<string, double>> CreateChartData(
@@ -161,7 +185,7 @@ namespace Rpm.Misc
             try
             {
                 var weekrange = GetWeekRange(startweek, startjaar,null);
-                var data = bewerkingen.ToSections(iswerkplek, new TijdEntry(weekrange.StartDate, weekrange.EndDate, null));
+                var data = bewerkingen.ToNameSections(iswerkplek, new TijdEntry(weekrange.StartDate, weekrange.EndDate, null));
                 var weekranges = GetWeekRanges(weekrange.StartDate, weekrange.EndDate, includethisweek, shownow);
                 var rows =(weekranges.Count > 1
                     ? weekranges.Select(x => x.Name)
@@ -338,7 +362,7 @@ namespace Rpm.Misc
         {
             if (werk == null)
                 return false;
-            filter = filter?.Replace(" ", "");
+            filter = filter?.Replace(" ", "").Trim();
             if (!string.IsNullOrEmpty(filter))
             {
                 if (werk.Naam != null && werk.Naam.Replace(" ", "").ToLower().Contains(filter.ToLower()))
@@ -633,7 +657,113 @@ namespace Rpm.Misc
             return xreturn?.ToArray() ?? Array.Empty<string>();
         }
 
-        public static void DoBewerkingEigenRooster(this Bewerking bew, IWin32Window owner)
+        public static bool DoBewerkingSpecialeRoosters(this Bewerking bew, IWin32Window owner)
+        {
+            try
+            {
+                if (bew?.WerkPlekken == null) return false;
+                WerkPlek wp = null;
+                if (bew.WerkPlekken is { Count: > 1 })
+                {
+                    var wpchooser = new WerkPlekChooser(bew.WerkPlekken, null)
+                    {
+                        Title = "Kies een werkplek om de speciale roosters van te wijzigen"
+                    };
+                    if (wpchooser.ShowDialog() != DialogResult.OK) return false;
+                    wp = wpchooser.Selected;
+                }
+                else wp = bew.WerkPlekken?.FirstOrDefault();
+                if (wp == null)
+                {
+                    XMessageBox.Show(owner, $"{bew.Naam} heeft nog geen werkplek.\n\nMaak eerst een werkplek aan voordat je de speciale roosters kan aanpassen.", "Geen Werkplek", MessageBoxIcon.Exclamation);
+                    return false;
+                }
+                var sproosters = new SpeciaalWerkRoostersForm(wp.Tijden.SpecialeRoosters);
+                if (sproosters.ShowDialog() == DialogResult.OK)
+                {
+                    wp.Tijden.SpecialeRoosters = sproosters.Roosters;
+                    wp.Werk?.UpdateBewerking(null, $"[{wp.Path}] Speciale roosters aangepast");
+                    return true;
+                }
+                return false;
+            }
+            catch { return false; }
+        }
+
+        public static bool DoBewerkingRooster(this Bewerking bew , IWin32Window owner)
+        {
+            try
+            {
+                if (Manager.Opties == null || bew == null) return false;
+                var xtime = DateTime.Now;
+                //eerst kijken of het weekend is.
+                //var culture = new CultureInfo("nl-NL");
+                //var day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
+                bool isverlofdag = Manager.Opties.NationaleFeestdagen.Any(x => x.Date == DateTime.Today);
+                if (isverlofdag || xtime.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
+                {
+                        WerkPlek wp = null;
+                        if (bew.WerkPlekken is { Count: > 1 })
+                        {
+                            var wpchooser = new WerkPlekChooser(bew.WerkPlekken, null)
+                            {
+                                Title = "Kies een werkplek om een rooster van te wijzigen"
+                            };
+                            if (wpchooser.ShowDialog() != DialogResult.OK) return false;
+                            wp = wpchooser.Selected;
+                        }
+                        else wp = bew.WerkPlekken?.FirstOrDefault();
+                        if (wp == null)
+                        {
+                            XMessageBox.Show(owner, $"{bew.Naam} heeft nog geen werkplek.\n\nMaak eerst een werkplek aan voordat je de rooster kan aanpassen.", "Geen Werkplek", MessageBoxIcon.Exclamation);
+                            return false;
+                        }
+                    var rooster = wp.Tijden.SpecialeRoosters?.FirstOrDefault(x => x.Vanaf.Date == DateTime.Now.Date);
+                    // var xreturn = rooster != null;
+                    if (rooster == null)
+                    {
+                        rooster = Rooster.StandaartRooster();
+                        rooster.Vanaf = DateTime.Now;
+                        rooster.GebruiktPauze = false;
+                        rooster.StartWerkdag = new TimeSpan(7, 0, 0);
+                        rooster.EindWerkdag = new TimeSpan(12, 0, 0);
+                    }
+
+                    var roosterform = new RoosterForm(rooster, "Vul in de speciale werkdag tijden");
+                    roosterform.ViewPeriode = false;
+                    roosterform.EnablePeriode = false;
+                    roosterform.RoosterUI.ShowSpecialeRoosterButton = false;
+                    roosterform.SetRooster(rooster, Manager.Opties?.NationaleFeestdagen, wp.Tijden.SpecialeRoosters);
+                    if (roosterform.ShowDialog() == DialogResult.OK)
+                    {
+                        wp.Tijden.SpecialeRoosters = roosterform.RoosterUI.SpecialeRoosters;
+                        Manager.Opties.NationaleFeestdagen = roosterform.RoosterUI.NationaleFeestdagen().ToArray();
+                        var newrooster = roosterform.WerkRooster;
+                        var dt = DateTime.Now;
+                        var tijd = roosterform.WerkRooster.StartWerkdag;
+                        newrooster.Vanaf = new DateTime(dt.Year, dt.Month, dt.Day, tijd.Hours, tijd.Minutes, 0);
+                        wp.Tijden.SpecialeRoosters.RemoveAll(x => x.Vanaf.Date == newrooster.Vanaf.Date);
+                        wp.Tijden.SpecialeRoosters.Add(newrooster);
+                        wp.Tijden.SpecialeRoosters = wp.Tijden.SpecialeRoosters.OrderBy(x => x.Vanaf).ToList();
+                        wp.Werk?.UpdateBewerking(null,$"[{wp.Path}] Speciale roosters aangepast");
+                        return true;
+                    }
+                    return false;
+                }
+                else
+                {
+                    //var rooster = Manager.Opties.WerkRooster;
+                    //if (xtime.TimeOfDay < rooster.StartWerkdag || xtime.TimeOfDay > rooster.EindWerkdag)
+                    //{
+
+                    //}
+                   return bew.DoBewerkingEigenRooster(owner);
+                }
+            }
+            catch { return false;}
+        }
+
+        public static bool DoBewerkingEigenRooster(this Bewerking bew, IWin32Window owner)
         {
             try
             {
@@ -647,64 +777,64 @@ namespace Rpm.Misc
                         {
                             Title = "Kies een werkplek om een rooster van te wijzigen"
                         };
-                        if (wpchooser.ShowDialog() == DialogResult.Cancel) return;
+                        if (wpchooser.ShowDialog() != DialogResult.OK) return false;
                         wp = wpchooser.Selected;
                     }
                     else wp = bew.WerkPlekken?.FirstOrDefault();
                     if (wp == null)
                     {
                         XMessageBox.Show(owner, $"{b.Naam} heeft nog geen werkplek.\n\nMaak eerst een werkplek aan voordat je de rooster kan aanpassen.", "Geen Werkplek", MessageBoxIcon.Exclamation);
-                        return;
+                        return false;
                     }
-                    var roosterform = new RoosterForm(wp.Tijden.WerkRooster,
-                        "Kies een rooster voor al je werkzaamheden");
-                    roosterform.ViewPeriode = false;
-                    roosterform.SetRooster(wp.Tijden.WerkRooster, Manager.Opties?.NationaleFeestdagen,
-                        wp.Tijden.SpecialeRoosters);
-                    if (roosterform.ShowDialog() == DialogResult.OK)
-                    {
-                        bool flag = wp.Personen.Any(x =>
-                            x.WerkRooster == null || !x.WerkRooster.SameTijden(roosterform.WerkRooster));
-                        if (Manager.Opties != null)
-                        {
-                            Manager.Opties.NationaleFeestdagen = roosterform.RoosterUI.NationaleFeestdagen().ToArray();
-                            var xadd = roosterform.RoosterUI.SpecialeRoosters.Where(x => !Manager.Opties.SpecialeRoosters.Any(t => t.Vanaf.Date == x.Vanaf.Date)).ToList();
-                            if (xadd.Count > 0)
-                                Manager.Opties.SpecialeRoosters.AddRange(xadd);
-                        }
-
-                        wp.Tijden.SpecialeRoosters = roosterform.RoosterUI.SpecialeRoosters;
-                        if (flag && bew.IsBemand)
-                        {
-                            foreach (var per in wp.Personen)
-                                per.WerkRooster = roosterform.WerkRooster;
-                            //var result = XMessageBox.Show(
-                            //    owner, $"Er zijn personeel leden op {wp.Naam} die niet dezelfde rooster hebben als wat je hebt gekozen...\n" +
-                            //          $"De personeel bepaald natuurlijk hoe en wanneer er op {wp.Naam} wordt gewerkt.\n\n" +
-                            //          $"Wil je dit rooster door geven aan alle personeel leden op {wp.Naam}?",
-                            //    "Personeel Werkrooster Wijzigen", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-                            //if (result == DialogResult.Cancel) return;
-                            //if (result == DialogResult.Yes)
-                            //{
-                            //    foreach (var per in wp.Personen)
-                            //        per.WerkRooster = roosterform.WerkRooster;
-                            //}
-                        }
-                        //wp.Tijden._rooster = roosterform.WerkRooster;
-                        wp.UpdateWerkRooster(roosterform.WerkRooster,true, true,true, true, true,true, false);
-                        var xchange = wp.Tijden.WerkRooster != null && wp.Tijden.WerkRooster.IsCustom()
-                            ? "eigen rooster"
-                            : "standaard rooster";
-                        b.UpdateBewerking(null,
-                            $"[{wp.Path}]{Manager.Opties?.Username} heeft voor een {xchange} gekozen", true);
-                        
-                    }
+                    return DoWerkplekRooster(wp, true);
                 }
+                return false;
             }
             catch (Exception e)
             {
                 XMessageBox.Show(owner, e.Message, "Fout", MessageBoxIcon.Error);
+                return false;
             }
+        }
+
+        public static bool DoWerkplekRooster(this WerkPlek wp, bool save)
+        {
+          
+            var roosterform = new RoosterForm(wp.Tijden.WerkRooster,
+                "Kies een rooster voor al je werkzaamheden");
+            roosterform.ViewPeriode = false;
+            roosterform.SetRooster(wp.Tijden.WerkRooster, Manager.Opties?.NationaleFeestdagen,
+                wp.Tijden.SpecialeRoosters);
+            if (roosterform.ShowDialog() == DialogResult.OK)
+            {
+                bool flag = wp.Personen.Any(x =>
+                    x.WerkRooster == null || !x.WerkRooster.SameTijden(roosterform.WerkRooster));
+                if (Manager.Opties != null)
+                {
+                    Manager.Opties.NationaleFeestdagen = roosterform.RoosterUI.NationaleFeestdagen().ToArray();
+                    var xadd = roosterform.RoosterUI.SpecialeRoosters.Where(x => !Manager.Opties.SpecialeRoosters.Any(t => t.Vanaf.Date == x.Vanaf.Date)).ToList();
+                    if (xadd.Count > 0)
+                        Manager.Opties.SpecialeRoosters.AddRange(xadd);
+                }
+
+                wp.Tijden.SpecialeRoosters = roosterform.RoosterUI.SpecialeRoosters;
+                if (flag && wp.Werk.IsBemand)
+                {
+                    foreach (var per in wp.Personen)
+                        per.WerkRooster = roosterform.WerkRooster;
+                }
+                //wp.Tijden._rooster = roosterform.WerkRooster;
+                wp.UpdateWerkRooster(roosterform.WerkRooster, true, true, true, true, true, true, false);
+                var xchange = wp.Tijden.WerkRooster != null && wp.Tijden.WerkRooster.IsCustom()
+                    ? "eigen rooster"
+                    : "standaard rooster";
+                if (save)
+                    wp.Werk.UpdateBewerking(null,
+                        $"[{wp.Path}]{Manager.Opties?.Username} heeft voor een {xchange} gekozen", true);
+                return true;
+
+            }
+            return false;
         }
 
         public static void ShowWerktIjden(this Bewerking bew, IWin32Window owner)
@@ -811,7 +941,7 @@ namespace Rpm.Misc
                     }
 
 
-                    _ = bw.UpdateBewerking(null, $"[{wp.Path}]{change}").Result;
+                    _ = bw.xUpdateBewerking(null, $"[{wp.Path}]{change}");
                 }
             }
             catch (Exception e)

@@ -303,6 +303,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap businessapplication_binarytree_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("businessapplication_binarytree_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap businessapplication_database_Accept {
             get {
                 object obj = ResourceManager.GetObject("businessapplication_database_Accept", resourceCulture);
@@ -386,6 +396,26 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap check_1582 {
             get {
                 object obj = ResourceManager.GetObject("check_1582", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap checked_accept_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("checked_accept_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap checked_done_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("checked_done_32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -526,6 +556,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap database_load_96x96 {
             get {
                 object obj = ResourceManager.GetObject("database_load_96x96", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap date_gereed_icon_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("date_gereed_icon_32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

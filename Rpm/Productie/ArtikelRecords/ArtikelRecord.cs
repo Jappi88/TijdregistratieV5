@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Rpm.Productie.ArtikelRecords
 {
@@ -17,8 +18,11 @@ namespace Rpm.Productie.ArtikelRecords
         public List<ArtikelOpmerking> Opmerkingen { get; set; } = new List<ArtikelOpmerking>();
         public bool IsWerkplek { get; set; }
         public int PerUur => GetPerUur();
+        public List<Storing> Onderbrekeningen { get; set; } = new List<Storing>();
+        public double InstelTijd { get; private set; }
+        public double StoringTijd { get; private set; }
 
-       public int GetPerUur()
+        public int GetPerUur()
        {
            if (AantalGemaakt == 0) return 0;
            if (TijdGewerkt == 0) return (int)AantalGemaakt;
@@ -28,17 +32,33 @@ namespace Rpm.Productie.ArtikelRecords
            return peruur;
        }
 
-       public void ResetValues(bool opmerkingen)
-       {
-           UpdatedProducties?.Clear();
-           Vanaf = new DateTime();
-           VorigeAantalGemaakt = 0;
-           AantalGemaakt = 0;
-           VorigeTijdGewerkt = 0;
-           TijdGewerkt = 0;
-           if (opmerkingen)
-               Opmerkingen?.Clear();
-       }
+        public void UpdateStoringen()
+        {
+            try
+            {
+                StoringTijd = Math.Round(Onderbrekeningen?.Where(x => !string.IsNullOrEmpty(x.StoringType) && !x.StoringType.ToLower().Contains("ombouw")).Sum(x => x.TotaalTijd) ?? 0, 2);
+
+                var sts = Onderbrekeningen?.Where(x => !string.IsNullOrEmpty(x.StoringType) && !x.StoringType.ToLower().Contains("ombouw")).ToList() ?? new List<Storing>();
+                InstelTijd = Math.Round((sts.Sum(x => x.TotaalTijd) / sts.Count), 2);
+                if (double.IsNaN(InstelTijd) || double.IsInfinity(InstelTijd))
+                    InstelTijd = 0;
+            }
+            catch { }
+        }
+
+        public void ResetValues(bool opmerkingen)
+        {
+            UpdatedProducties?.Clear();
+            Vanaf = new DateTime();
+            VorigeAantalGemaakt = 0;
+            AantalGemaakt = 0;
+            VorigeTijdGewerkt = 0;
+            TijdGewerkt = 0;
+            Onderbrekeningen.Clear();
+            InstelTijd = 0;
+            if (opmerkingen)
+                Opmerkingen?.Clear();
+        }
 
        public string GetOpmerking(ArtikelOpmerking opmerking)
         {

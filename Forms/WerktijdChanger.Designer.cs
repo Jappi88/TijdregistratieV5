@@ -382,6 +382,7 @@ namespace Forms
             // xcancelb
             // 
             this.xcancelb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.xcancelb.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.xcancelb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xcancelb.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xcancelb.Image = global::ProductieManager.Properties.Resources.delete_1577;
@@ -415,6 +416,7 @@ namespace Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.xcancelb;
             this.ClientSize = new System.Drawing.Size(650, 425);
             this.Controls.Add(this.xroosterb);
             this.Controls.Add(this.xspeciaalroosterb);
@@ -427,9 +429,9 @@ namespace Forms
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MinimumSize = new System.Drawing.Size(650, 425);
             this.Name = "WerktijdChanger";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Pas Werktijd Aan";
+            this.Title = "Pas Werktijd Aan";
             ((System.ComponentModel.ISupportInitialize)(this.xwerktijden)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);

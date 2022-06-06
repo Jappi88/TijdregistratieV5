@@ -68,7 +68,7 @@ namespace Forms.Sporen
                         if (Manager.Database == null || Manager.Database.IsDisposed)
                             throw new Exception("Database is niet toegankelijk!");
                         HasReloaded = reload;
-                        var prods = Manager.Database.GetAllProducties(true, false, null, true).Result;
+                        var prods = Manager.Database.xGetAllProducties(true, false, null, true);
                         if (prods.Count == 0) return;
                         var entries = new List<OptimaleVerbruikEntry>();
                         Results ??= new List<OptimaleVerbruikEntry>();

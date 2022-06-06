@@ -67,7 +67,7 @@ namespace Rpm.MeldingCenter
                     string[] ids = ActionID.Split(';');
                     if (ids.Length > 0)
                     {
-                        var bws = Manager.Database.GetBewerkingen(ViewState.Gestart, true, null, null,false).Result;
+                        var bws = Manager.Database.xGetBewerkingen(ViewState.Gestart, true, null, null,false);
                         foreach (string id in ids)
                         {
                             var werk = Werk.FromPath(id.Trim());

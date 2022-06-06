@@ -365,7 +365,7 @@ namespace Forms
                     var user = ProductieChat.Gebruikers[i];
                     if (user.UserName.ToLower().Trim() != "iedereen")
                     {
-                        var acc = Manager.Database.AccountExist(user.UserName).Result;
+                        var acc = Manager.Database.AccountExist(user.UserName);
                         if (!acc)
                         {
                             ProductieChat.Gebruikers[i].DeleteUser();

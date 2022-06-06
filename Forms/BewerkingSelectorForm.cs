@@ -1,118 +1,67 @@
 ﻿using Forms.MetroBase;
-using ProductieManager.Properties;
-using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Forms
 {
     public partial class BewerkingSelectorForm : MetroBaseForm
     {
-        public bool ShowWerkPlekken { get; set; }
 
-        public BewerkingSelectorForm(ViewState[] bewerkingstates, bool filter, bool showwerkplekken, bool checkall)
+        public BewerkingSelectorForm()
         {
             InitializeComponent();
-            ShowWerkPlekken = showwerkplekken;
-            LoadBewerkingen(bewerkingstates, filter, showwerkplekken, checkall);
+            this.Shown += BewerkingSelectorForm_Shown;
+            this.FormClosing += BewerkingSelectorForm_FormClosing;
         }
 
-        public string Title
+        public IsValidHandler IsValidHandler { get => productieListControl1.ValidHandler; set => productieListControl1.ValidHandler = value; }
+
+        private void BewerkingSelectorForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            get => this.Text;
-            set
-            {
-                this.Text = value;
-                this.Invalidate();
-            }
+            productieListControl1.DetachEvents();
         }
 
-        public BewerkingSelectorForm(List<Bewerking> bws, bool showwerkplekken, bool checkall)
+        private void BewerkingSelectorForm_Shown(object sender, EventArgs e)
         {
-            InitializeComponent();
+            productieListControl1.InitEvents();
+            ListBewerkingen(Bewerkingen);
+        }
+
+        public BewerkingSelectorForm(ViewState[] bewerkingstates, bool filter) : this()
+        {
+            Bewerkingen = Manager.xGetBewerkingen(bewerkingstates, filter, true);
+        }
+
+        public BewerkingSelectorForm(List<Bewerking> bws):this()
+        {
             Bewerkingen = bws;
-            ListBewerkingen(bws, showwerkplekken, checkall);
         }
 
-        public List<WerkPlek> SelectedWerkplekken { get; private set; } = new List<WerkPlek>();
         public List<Bewerking> SelectedBewerkingen { get; private set; } = new List<Bewerking>();
         public List<Bewerking> Bewerkingen { get; private set; } = new List<Bewerking>();
 
-        private async void LoadBewerkingen(ViewState[] bewerkingstates, bool filter, bool showwerkplekken, bool checkall)
+        private void ListBewerkingen(List<Bewerking> bws)
         {
             try
             {
-                Bewerkingen = await Manager.GetBewerkingen(bewerkingstates, filter,true);
-                ListBewerkingen(Bewerkingen, showwerkplekken, checkall);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
-            }
-        }
-
-        private void ListBewerkingen(List<Bewerking> bws, bool showwerkplekken, bool allchecked)
-        {
-
-            try
-            {
-                xbewerkinglijst.BeginUpdate();
-                xbewerkinglijst.Items.Clear();
-                imageList1.Images.Clear();
-                imageList1.Images.Add(Resources.iconfinder_technology.CombineImage(Resources.play_button_icon_icons_com_60615,
-                    2));
-                imageList1.Images.Add(Resources.operation);
-                foreach (var bw in bws)
+                if (bws != null && bws.Count > 0)
                 {
-                    if (!bw.IsAllowed(xsearchbox.Text.ToLower().Replace("zoeken...", "").Trim())) continue;
-                    if (showwerkplekken)
-                    {
-                        foreach (var wp in bw.WerkPlekken)
-                        {
-                            if (!wp.Personen.Any(x => x.IngezetAanKlus(wp.Path))) continue;
-                            var lv = new ListViewItem(wp.Naam)
-                            {
-                                Tag = wp,
-                                ImageIndex = 0,
-                                Checked = allchecked
-                            };
-                            lv.SubItems.Add(bw.Omschrijving);
-                            lv.SubItems.Add(bw.ArtikelNr);
-                            lv.SubItems.Add(bw.ProductieNr);
-                            xbewerkinglijst.Items.Add(lv);
-                        }
-                    }
-                    else
-                    {
-                        var lv = new ListViewItem(bw.Naam)
-                        {
-                            Tag = bw,
-                            ImageIndex = 1,
-                            Checked = allchecked
-                        };
-                        lv.SubItems.Add(bw.Omschrijving);
-                        lv.SubItems.Add(bw.ArtikelNr);
-                        lv.SubItems.Add(bw.ProductieNr);
-                        xbewerkinglijst.Items.Add(lv);
-                    }
+                    productieListControl1.InitProductie(bws, true, true, false);
                 }
-
-                xbewerkinglijst.EndUpdate();
-                xbewerkinglijst.Invalidate();
+                else
+                {
+                    productieListControl1.InitProductie(true, true, true, true,true,true);
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 XMessageBox.Show(this, e.Message, "Fout", MessageBoxIcon.Error);
             }
-
-            
         }
 
         private void xok_Click(object sender, System.EventArgs e)
@@ -120,16 +69,7 @@ namespace Forms
 
             try
             {
-                SelectedWerkplekken.Clear();
-                SelectedBewerkingen.Clear();
-                foreach (var lv in xbewerkinglijst.Items)
-                {
-                    if (lv is ListViewItem {Checked: true, Tag: WerkPlek plek})
-                        SelectedWerkplekken.Add(plek);
-                    else if (lv is ListViewItem { Checked: true, Tag: Bewerking bew })
-                        SelectedBewerkingen.Add(bew);
-                }
-
+                SelectedBewerkingen = productieListControl1.CheckedBewerkingen;
                 DialogResult = DialogResult.OK;
             }
             catch (Exception ex)
@@ -142,41 +82,6 @@ namespace Forms
         private void xannuleren_Click(object sender, System.EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
-        }
-
-        private void selecteerAllesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            foreach (var item in xbewerkinglijst.Items)
-                if (item is ListViewItem lv)
-                    lv.Checked = true;
-        }
-
-        private void deselecteerAllesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            foreach(var item in xbewerkinglijst.Items)
-                if (item is ListViewItem lv)
-                    lv.Checked = false;
-        }
-
-        private void xsearchArtikel_Enter(object sender, EventArgs e)
-        {
-            if (string.Equals(xsearchbox.Text.Trim(), "zoeken...", StringComparison.CurrentCultureIgnoreCase))
-                xsearchbox.Text = "";
-        }
-
-        private string _Filter = String.Empty;
-        private void xsearchArtikel_TextChanged(object sender, System.EventArgs e)
-        {
-            string filter = xsearchbox.Text.Replace("Zoeken...", "").Trim().ToLower();
-            if (string.Equals(filter, _Filter, StringComparison.CurrentCultureIgnoreCase)) return;
-            ListBewerkingen(Bewerkingen, ShowWerkPlekken, ShowWerkPlekken);
-            _Filter = filter;
-        }
-
-        private void xsearchArtikel_Leave(object sender, EventArgs e)
-        {
-            if (xsearchbox.Text.Trim() == "")
-                xsearchbox.Text = @"Zoeken...";
         }
     }
 }

@@ -301,7 +301,7 @@ namespace Rpm.Productie
 
                     SystemId = DefaultSettings.SystemID;
                     if (autologin)
-                        autologin = AutoLogin(this).Result;
+                        autologin = xAutoLogin(this);
                     if (loadsettings && !autologin)
                         _=LoadSettings(this, raiseManagerLoadingEvents);
 
@@ -461,27 +461,32 @@ namespace Rpm.Productie
         /// <returns>Een taak die draait op de achtergrond</returns>
         public static Task<bool> Login(string username, object sender)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
-                try
-                {
-                    var x = await Database.GetAccount(username);
-                    if (x != null)
-                    {
-                        LogedInGebruiker = x;
-                        x.OsID = SystemId;
-                        await Database?.UpSert(x, $"{x.Username} Ingelogd!");
-                        LoginChanged(sender,true);
-                        return true;
-                    }
-
-                    return false;
-                }
-                catch (Exception ex)
-                {
-                    return false;
-                }
+                return xLogin(username, sender);
             });
+        }
+
+        public static bool xLogin(string username, object sender)
+        {
+            try
+            {
+                var x = Database.xGetAccount(username);
+                if (x != null)
+                {
+                    LogedInGebruiker = x;
+                    x.OsID = SystemId;
+                    Database?.xUpSert(x.Username, x, $"{x.Username} Ingelogd!");
+                    LoginChanged(sender, true);
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -521,15 +526,23 @@ namespace Rpm.Productie
         /// <param name="sender">De afzender van deze taak</param>
         /// <param name="raiseEvent">True als je een event wilt oproepen dat de instellingen zijn geladen</param>
         /// <returns>Een taak voor het laden van de instellingen</returns>
-        public static async Task<bool> LoadSettings(object sender, bool raiseEvent)
+        public static Task<bool> LoadSettings(object sender, bool raiseEvent)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                return xLoadSettings(sender, raiseEvent);
+            });
+        }
+
+        public static bool xLoadSettings(object sender, bool raiseEvent)
         {
             if (Database == null || Database.IsDisposed) return false;
             var os = SystemId;
             var id = LogedInGebruiker == null ? $"Default[{os}]" : LogedInGebruiker.Username;
-            var optiesid = Opties?.Username != null ? Opties.Username.ToLower().StartsWith("default")? $"Default[{Opties.SystemID}]" : Opties.Username : null;
+            var optiesid = Opties?.Username != null ? Opties.Username.ToLower().StartsWith("default") ? $"Default[{Opties.SystemID}]" : Opties.Username : null;
             string name = LogedInGebruiker == null ? "Default" : LogedInGebruiker.Username;
             if (Opties != null && !string.Equals(optiesid, id, StringComparison.CurrentCultureIgnoreCase))
-                SaveSettings(Opties, false, true,true);
+                SaveSettings(Opties, false, true, true);
 
             try
             {
@@ -537,17 +550,17 @@ namespace Rpm.Productie
                 //    return false;
                 try
                 {
-                    UserSettings xt = await Database.GetSetting(id);
+                    UserSettings xt = Database.GetSetting(id);
                     if (xt == null)
                     {
-                        xt = (await Database.GetAllSettings()).FirstOrDefault(x =>
+                        xt = (Database.xGetAllSettings()).FirstOrDefault(x =>
                             x.Username.ToLower().StartsWith(name.ToLower()));
                         if (xt != null)
                         {
-                            await Database.DeleteSettings($"{xt.Username}[{xt.SystemID}]", false);
+                            Database.xDeleteSettings($"{xt.Username}[{xt.SystemID}]", false);
                             xt.SystemID = os;
                             xt.Username = name;
-                            await xt.Save(null, false, false, false);
+                            xt.xSave(null, false, false, false);
                         }
                         else name += "_tmp";
                     }
@@ -561,15 +574,15 @@ namespace Rpm.Productie
 
                 if (Opties == null)
                 {
-                    var opties = new UserSettings {Username = name};
-                    await Database.UpSert(opties);
+                    var opties = new UserSettings { Username = name };
+                    Database.xUpSert(opties.Username, opties, "Nieuwe instellingen aangemaakt");
                     Opties = opties;
                 }
 
                 if (Opties != null)
                 {
                     if (Opties.ProductieWeergaveFilters == null || Opties.ProductieWeergaveFilters.Length == 0)
-                        Opties.ProductieWeergaveFilters = new[] {ViewState.Alles};
+                        Opties.ProductieWeergaveFilters = new[] { ViewState.Alles };
                     if (!Directory.Exists(DbPath))
                         Directory.CreateDirectory(DbPath);
                     if (raiseEvent)
@@ -627,7 +640,7 @@ namespace Rpm.Productie
                 if (changed)
                 {
                     Functions.SetAutoStartOnBoot(settings.StartNaOpstart);
-                    var res = settings.Save().Result;
+                    var res = settings.xSave();
                 }
 
                 if (replace)
@@ -713,10 +726,10 @@ namespace Rpm.Productie
                 {
                     var xprog = new ProgressArg();
                     xprog.Type = ProgressType.WriteBussy;
-                    
+
                     if (string.IsNullOrEmpty(directory) || !Directory.Exists(directory)) return 0;
                     xprog.Message = $"Bestanden verzamelen...";
-                    changedhandler?.Invoke(null,xprog);
+                    changedhandler?.Invoke(null, xprog);
                     var files = Directory.GetFiles(directory);
                     int count = 0;
                     foreach (var file in files)
@@ -725,12 +738,12 @@ namespace Rpm.Productie
                         xprog.Message = $"{Path.GetFileNameWithoutExtension(file)} Updaten ({count}/{files.Length})...";
                         changedhandler?.Invoke(null, xprog);
                         if (xprog.IsCanceled) break;
-                        var prods = ProductieFormulier.FromPdf(File.ReadAllBytes(file)).Result;
+                        var prods = ProductieFormulier.xFromPdf(File.ReadAllBytes(file));
                         if (prods == null || prods.Count == 0) continue;
-                       
+
                         foreach (var prod in prods)
                         {
-                           
+
                             changedhandler?.Invoke(null, xprog);
                             if (xprog.IsCanceled) break;
                             var xold = Database?.GetProductie(prod.ProductieNr, true);
@@ -738,14 +751,14 @@ namespace Rpm.Productie
                             {
                                 if (addifnotexists)
                                 {
-                                    if (AddProductie(prod, true).Result.Action == MessageAction.NieweProductie)
+                                    if (xAddProductie(prod, true).Action == MessageAction.NieweProductie)
                                         xreturn++;
                                 }
 
                                 continue;
                             }
 
-                            if (xold.UpdateFieldsFrom(prod).Result && Manager.Database.UpSert(xold,false).Result)
+                            if (xold.xUpdateFieldsFrom(prod) && Manager.Database.xUpSert(xold.ProductieNr, xold, null, false))
                             {
                                 xreturn++;
                             }
@@ -779,8 +792,14 @@ namespace Rpm.Productie
         /// <returns>Lijst van productieformulieren</returns>
         public static Task<List<ProductieFormulier>> GetProducties(ViewState[] states, bool filter, bool incform, IsValidHandler handler, bool checksecondary)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
+                return xGetProducties(states, filter, incform, handler, checksecondary);
+            });
+        }
+
+        public static List<ProductieFormulier> xGetProducties(ViewState[] states, bool filter, bool incform, IsValidHandler handler, bool checksecondary)
+        {
                 if (ProductieProvider == null) return new List<ProductieFormulier>();
                 var type = ProductieProvider.LoadedType.None;
                 if (states.Any(x => x == ViewState.Gereed))
@@ -792,9 +811,8 @@ namespace Rpm.Productie
                         : ProductieProvider.LoadedType.Producties;
                 }
 
-                var xitems = await ProductieProvider.GetProducties(type, states, filter,handler, checksecondary);
+                var xitems = ProductieProvider.xGetProducties(type, filter, handler, checksecondary);
                 return xitems;
-            });
         }
 
         /// <summary>
@@ -806,17 +824,18 @@ namespace Rpm.Productie
         /// <returns>Een taak die op de achtergrond de bewerkinglijst samen stelt</returns>
         public static Task<List<Bewerking>> GetBewerkingen(ViewState[] states, bool filter, bool checksecondary, IsValidHandler handler = null)
         {
-            return Task.Run(() =>
-            {
-                if (ProductieProvider == null) return new List<Bewerking>();
-                var type = ProductieProvider.LoadedType.Producties;
-                if (states.Any(x => x is ViewState.Gereed))
-                    type = ProductieProvider.LoadedType.Gereed;
-                if (states.Any(x => x is ViewState.Alles))
-                    type = ProductieProvider.LoadedType.Alles;
-                var xitems = ProductieProvider.GetBewerkingen(type, states, filter, handler, checksecondary).Result;
-                return xitems;
-            });
+            return Task.Factory.StartNew(() => xGetBewerkingen(states, filter, checksecondary, handler));
+        }
+
+        public static List<Bewerking> xGetBewerkingen(ViewState[] states, bool filter, bool checksecondary, IsValidHandler handler = null)
+        {
+            if (ProductieProvider == null) return new List<Bewerking>();
+            var type = ProductieProvider.LoadedType.Producties;
+            if (states.Any(x => x is ViewState.Gereed))
+                type = ProductieProvider.LoadedType.Gereed;
+            if (states.Any(x => x is ViewState.Alles))
+                type = ProductieProvider.LoadedType.Alles;
+            return ProductieProvider.xGetBewerkingen(type, states, filter, handler, checksecondary);
         }
 
         /// <summary>
@@ -827,37 +846,42 @@ namespace Rpm.Productie
         /// <returns>Een taak die de Id's verkrijgt op de achtergrond</returns>
         public static Task<List<string>> GetAllProductieIDs(bool incgereed, bool checksecondary)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
-                if (Database?.ProductieFormulieren == null || Database.IsDisposed)
-                    return new List<string>();
-                var xreturn = new List<string>();
+                return xGetAllProductieIDs(incgereed, checksecondary);
+            });
+        }
+
+        public static List<string> xGetAllProductieIDs(bool incgereed, bool checksecondary)
+        {
+            if (Database?.ProductieFormulieren == null || Database.IsDisposed)
+                return new List<string>();
+            var xreturn = new List<string>();
+            try
+            {
+                var xitems = Database.ProductieFormulieren.GetAllIDs(checksecondary);
+                if (xitems is { Count: > 0 })
+                    xreturn.AddRange(xitems);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            if (!incgereed) return xreturn;
+            {
                 try
                 {
-                    var xitems = await Database.ProductieFormulieren.GetAllIDs(checksecondary);
-                    if (xitems is {Count: > 0})
-                        xreturn.AddRange(xitems);
+                    var gereed = Database.GereedFormulieren.GetAllIDs(true);
+                    if (gereed is { Count: > 0 })
+                        xreturn.AddRange(gereed);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
-
-                if (!incgereed) return xreturn;
-                {
-                    try
-                    {
-                        var gereed = await Database.GereedFormulieren.GetAllIDs(true);
-                        if (gereed is {Count: > 0})
-                            xreturn.AddRange(gereed);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                }
-                return xreturn;
-            });
+            }
+            return xreturn;
         }
 
         /// <summary>
@@ -868,37 +892,42 @@ namespace Rpm.Productie
         /// <returns>Een taak die de locaties verkrijgt op de achtergrond</returns>
         public static Task<List<string>> GetAllProductiePaths(bool incgereed, bool checksecondary)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
-                if (Database?.ProductieFormulieren == null || Database.IsDisposed)
-                    return new List<string>();
-                var xreturn = new List<string>();
+                return xGetAllProductiePaths(incgereed, checksecondary);
+            });
+        }
+
+        public static List<string> xGetAllProductiePaths(bool incgereed, bool checksecondary)
+        {
+            if (Database?.ProductieFormulieren == null || Database.IsDisposed)
+                return new List<string>();
+            var xreturn = new List<string>();
+            try
+            {
+                var xitems = Database.ProductieFormulieren.GetAllPaths(checksecondary);
+                if (xitems is { Count: > 0 })
+                    xreturn.AddRange(xitems);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            if (!incgereed) return xreturn;
+            {
                 try
                 {
-                    var xitems = await Database.ProductieFormulieren.GetAllPaths(checksecondary);
-                    if (xitems is {Count: > 0})
-                        xreturn.AddRange(xitems);
+                    var gereed = Database.GereedFormulieren.GetAllPaths(checksecondary);
+                    if (gereed is { Count: > 0 })
+                        xreturn.AddRange(gereed);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
-
-                if (!incgereed) return xreturn;
-                {
-                    try
-                    {
-                        var gereed = await Database.GereedFormulieren.GetAllPaths(checksecondary);
-                        if (gereed is {Count: > 0})
-                            xreturn.AddRange(gereed);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                }
-                return xreturn;
-            });
+            }
+            return xreturn;
         }
 
         /// <summary>
@@ -922,7 +951,7 @@ namespace Rpm.Productie
         {
             return Task.Run(() =>
             {
-                var prods = GetProducties(new[] {ViewState.Gestart, ViewState.Gestopt}, true, false,null,true).Result;
+                var prods = xGetProducties(new[] {ViewState.Gestart, ViewState.Gestopt}, true, false,null,true);
                 return prods.Any(x => x.IsOnderbroken());
             });
         }
@@ -945,85 +974,90 @@ namespace Rpm.Productie
         /// <returns>Een taak die op de achtergrond een productie toevoegd</returns>
         public static Task<RemoteMessage> AddProductie(ProductieFormulier prod, bool updateifexist)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
-                try
+                return xAddProductie(prod, updateifexist);
+            });
+        }
+
+        public static RemoteMessage xAddProductie(ProductieFormulier prod, bool updateifexist)
+        {
+            try
+            {
+                ProductieFormulier xprod = null;
+                if (Database.Exist(prod))
                 {
-                    ProductieFormulier xprod = null;
-                    if (await Database.Exist(prod))
+                    xprod = Database.GetProductie(prod.ProductieNr, false);
+                    if (xprod == null)
+                        return new RemoteMessage("Er is iets fout gegaan bij toevoegen van een Productie",
+                            MessageAction.AlgemeneMelding, MsgType.Fout);
+                    if (updateifexist || (xprod.Bewerkingen == null || xprod.Bewerkingen.Length == 0))
                     {
-                        xprod = Database.GetProductie(prod.ProductieNr, false);
-                        if (xprod == null)
-                            return new RemoteMessage("Er is iets fout gegaan bij toevoegen van een Productie",
-                                MessageAction.AlgemeneMelding, MsgType.Fout);
-                        if (updateifexist || (xprod.Bewerkingen == null || xprod.Bewerkingen.Length == 0))
+                        if (xprod.xUpdateFieldsFrom(prod) && Database.xUpSert(xprod.ProductieNr, xprod,
+                            $"[{xprod.ArtikelNr}, {xprod.ProductieNr}] geupdate!", false))
                         {
-                            if (await xprod.UpdateFieldsFrom(prod) && await Database.UpSert(xprod,
-                                $"[{xprod.ArtikelNr}, {xprod.ProductieNr}] geupdate!",false))
-                            {
-                                return new RemoteMessage(
-                                    $"Productie [{prod.ProductieNr}, {prod.ArtikelNr}] geupdate!",
-                                    MessageAction.ProductieWijziging, MsgType.Info, null, prod,
-                                    prod.ProductieNr);
-                            }
-                            else
-                                return new RemoteMessage(
-                                    $"Productie [{prod.ProductieNr}, {xprod.ProductieNr}] bestaat al, en kan niet nogmaals worden toegevoegd!",
-                                    MessageAction.ProductieWijziging, MsgType.Waarschuwing, null, prod,
-                                    prod.ProductieNr);
+                            return new RemoteMessage(
+                                $"Productie [{prod.ProductieNr}, {prod.ArtikelNr}] geupdate!",
+                                MessageAction.ProductieWijziging, MsgType.Info, null, prod,
+                                prod.ProductieNr);
                         }
                         else
                             return new RemoteMessage(
-                                $"Productie [{prod.ProductieNr}] bestaat al, en kan niet nogmaals worden toegevoegd!",
-                                MessageAction.ProductieWijziging, MsgType.Waarschuwing, null, prod, prod.ProductieNr);
-
+                                $"Productie [{prod.ProductieNr}, {xprod.ProductieNr}] bestaat al, en kan niet nogmaals worden toegevoegd!",
+                                MessageAction.ProductieWijziging, MsgType.Waarschuwing, null, prod,
+                                prod.ProductieNr);
                     }
-                    var xa = prod.Aantal == 1 ? "stuk" : "stuks";
-                    // prod = await ProductieFormulier.UpdateDoorloopTijd(prod);
-                    try
+                    else
+                        return new RemoteMessage(
+                            $"Productie [{prod.ProductieNr}] bestaat al, en kan niet nogmaals worden toegevoegd!",
+                            MessageAction.ProductieWijziging, MsgType.Waarschuwing, null, prod, prod.ProductieNr);
+
+                }
+                var xa = prod.Aantal == 1 ? "stuk" : "stuks";
+                // prod = await ProductieFormulier.UpdateDoorloopTijd(prod);
+                try
+                {
+                    if (prod.VerpakkingsInstructies != null && Verpakkingen is { Disposed: false })
                     {
-                        if (prod.VerpakkingsInstructies != null && Verpakkingen is { Disposed: false })
+                        var xver = Verpakkingen.GetVerpakking(prod.ArtikelNr);
+                        if (xver != null)
                         {
-                            var xver = Verpakkingen.GetVerpakking(prod.ArtikelNr);
-                            if (xver != null)
+                            bool thesame = xver.CompareTo(prod.VerpakkingsInstructies);
+                            if (!thesame)
                             {
-                                bool thesame = xver.CompareTo(prod.VerpakkingsInstructies);
-                                if (!thesame)
-                                {
-                                    prod.VerpakkingsInstructies = xver;
-                                }
-                                else Verpakkingen.RemoveVerpakking(prod.ArtikelNr);
+                                prod.VerpakkingsInstructies = xver;
                             }
+                            else Verpakkingen.RemoveVerpakking(prod.ArtikelNr);
                         }
                     }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                    if (!await Database.UpSert(prod,
-                       $"[{prod.ArtikelNr}, {prod.ProductieNr}] Nieuwe productie toegevoegd({prod.Aantal} {xa}) met doorlooptijd van {prod.DoorloopTijd} uur."))
-                       return new RemoteMessage($"Het is niet gelukt om {prod.ProductieNr} toe te voegen!",
-                           MessageAction.None,
-                           MsgType.Fout, null, prod, prod.ProductieNr);
-                    xprod = Database.GetProductie(prod.ProductieNr, true);
-                   if (xprod != null)
-                   {
-                       prod = xprod;
-                       _ = ProductieFormulier.UpdateDoorloopTijd(null, prod, "", false, true, false);
-
-                       return new RemoteMessage($"{prod.ProductieNr} toegevoegd!", MessageAction.AlgemeneMelding,
-                           MsgType.Success, null, prod, prod.ProductieNr);
-                   }
-                   return new RemoteMessage($"Het is niet gelukt om {prod.ProductieNr} toe te voegen!",
-                       MessageAction.None,
-                       MsgType.Fout, null, prod, prod.ProductieNr);
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
-                    return new RemoteMessage(ex.Message, MessageAction.None,
-                        MsgType.Fout);
+                    Console.WriteLine(e);
                 }
-            });
+                if (!Database.xUpSert(prod.ProductieNr, prod,
+                   $"[{prod.ArtikelNr}, {prod.ProductieNr}] Nieuwe productie toegevoegd({prod.Aantal} {xa}) met doorlooptijd van {prod.DoorloopTijd} uur."))
+                    return new RemoteMessage($"Het is niet gelukt om {prod.ProductieNr} toe te voegen!",
+                        MessageAction.None,
+                        MsgType.Fout, null, prod, prod.ProductieNr);
+                xprod = Database.GetProductie(prod.ProductieNr, true);
+                if (xprod != null)
+                {
+                    prod = xprod;
+                    _ = ProductieFormulier.UpdateDoorloopTijd(null, prod, "", false, true, false);
+
+                    return new RemoteMessage($"{prod.ProductieNr} toegevoegd!", MessageAction.AlgemeneMelding,
+                        MsgType.Success, null, prod, prod.ProductieNr);
+                }
+                return new RemoteMessage($"Het is niet gelukt om {prod.ProductieNr} toe te voegen!",
+                    MessageAction.None,
+                    MsgType.Fout, null, prod, prod.ProductieNr);
+            }
+            catch (Exception ex)
+            {
+                return new RemoteMessage(ex.Message, MessageAction.None,
+                    MsgType.Fout);
+            }
         }
 
         /// <summary>
@@ -1135,6 +1169,105 @@ namespace Rpm.Productie
             });
         }
 
+        public static List<RemoteMessage> xAddProductie(string pdffile, bool updateifexist, bool delete)
+        {
+                var rms = new List<RemoteMessage>();
+                try
+                {
+                    if (!File.Exists(pdffile)) return rms;
+                    var prods = ProductieFormulier.xFromPdf(File.ReadAllBytes(pdffile));
+                    if (prods == null || prods.Count == 0)
+                        rms.Add(new RemoteMessage($"{Path.GetFileName(pdffile)} is geen geldige productieformulier!",
+                            MessageAction.None, MsgType.Fout));
+                    else
+                        foreach (var prod in prods)
+                        {
+                            RemoteMessage msg;
+                            if (prod.IsAllowed(null))
+                            {
+                                msg = xAddProductie(prod, updateifexist);
+                                try
+                                {
+                                    if (msg.Value is ProductieFormulier xprod)
+                                    {
+
+                                        var bew = xprod.Bewerkingen?.FirstOrDefault(x => x.IsAllowed());
+                                        if (Opties is { ToonProductieNaToevoegen: true } && bew != null)
+                                            FormulierActie(new object[] { xprod, bew }, MainAktie.OpenProductie);
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(e);
+                                }
+                            }
+                            else
+                                msg = new RemoteMessage(
+                                    $"[{prod.ProductieNr}, {prod.ArtikelNr}]Kan niet toevoegen omdat de bewerking is gefilterd!",
+                                    MessageAction.AlgemeneMelding, MsgType.Info);
+
+                            rms.Add(msg);
+                            try
+                            {
+                                string fpath = Path.Combine(ProductieFormPath, $"{prod.ProductieNr}.pdf");
+                                if (!string.Equals(fpath, pdffile, StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    for (int i = 0; i < 5; i++)
+                                    {
+                                        try
+                                        {
+                                            if (delete)
+                                            {
+
+                                                if (File.Exists(fpath))
+                                                    File.Delete(pdffile);
+                                                else
+                                                    File.Move(pdffile, fpath);
+                                            }
+                                            else
+                                                File.Copy(pdffile, fpath, true);
+
+                                            if (File.Exists(fpath)) break;
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            Console.WriteLine(e);
+                                        }
+                                    }
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.Message);
+                            }
+
+                            // pdffile.CleanupFilePath(ProductieFormPath, prod.ProductieNr, false,false);
+
+                            if (delete && Opties is
+                                {
+                                    VerwijderVerwerkteBestanden: true
+                                } && File.Exists(pdffile))
+                            {
+                                try
+                                {
+                                    File.Delete(pdffile);
+                                }
+                                catch
+                                {
+                                    // ignored
+                                }
+                            }
+                        }
+                }
+                catch (Exception ex)
+                {
+                    rms.Add(new RemoteMessage(ex.Message, MessageAction.None,
+                        MsgType.Fout));
+                }
+
+                return rms;
+        }
+
         /// <summary>
         /// Voeg meerdere bestanden toe
         /// </summary>
@@ -1145,7 +1278,7 @@ namespace Rpm.Productie
         /// <returns></returns>
         public static Task<int> AddProductie(string[] pdffiles, bool updateifexist, bool delete, bool showerror)
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
                 if (pdffiles?.Length == 0) return 0;
                 var xreturn = 0;
@@ -1153,7 +1286,7 @@ namespace Rpm.Productie
                     foreach (var file in pdffiles)
                         try
                         {
-                            var msgs = AddProductie(file, updateifexist, delete).Result;
+                            var msgs = xAddProductie(file, updateifexist, delete);
                             foreach (var msg in msgs)
                             {
                                 if (msg.MessageType == MsgType.Fout && !showerror)
@@ -1406,7 +1539,7 @@ namespace Rpm.Productie
         /// <returns>Een taak die de productie roosters update op de achtergrond</returns>
         public static Task<int> UpdateGestarteProductieRoosters(List<WerkPlek> werkplekken, Rooster rooster)
         {
-            return Task.Run( () =>
+            return Task.Factory.StartNew(() =>
             {
                 try
                 {
@@ -1420,8 +1553,8 @@ namespace Rpm.Productie
 
                             wp.UpdateWerkRooster(rooster.CreateCopy(), true, true, true, true, false, true, true);
                         
-                            if (bw.UpdateBewerking(null,
-                                    $"[{wp.Path}] Werkrooster aangepast").Result)
+                            if (bw.xUpdateBewerking(null,
+                                    $"[{wp.Path}] Werkrooster aangepast"))
                                 done++;
                         }
 
@@ -1556,23 +1689,28 @@ namespace Rpm.Productie
 
         private static Task<bool> AutoLogin(object sender)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
-                try
-                {
-                    if (LogedInGebruiker != null) return false;
-                    //var pcid = CpuID.ProcessorId();
-                    var xdef = Manager.DefaultSettings ??= UserSettings.GetDefaultSettings();
-                    if(!string.IsNullOrEmpty(xdef.AutoLoginUsername))
-                        return await Login(xdef.AutoLoginUsername, sender);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-
-                return false;
+                return xAutoLogin(sender);
             });
+        }
+
+        private static bool xAutoLogin(object sender)
+        {
+            try
+            {
+                if (LogedInGebruiker != null) return false;
+                //var pcid = CpuID.ProcessorId();
+                var xdef = Manager.DefaultSettings ??= UserSettings.GetDefaultSettings();
+                if (!string.IsNullOrEmpty(xdef.AutoLoginUsername))
+                    return xLogin(xdef.AutoLoginUsername, sender);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return false;
         }
 
         #region Timers & Auto Productie detection
@@ -1627,7 +1765,7 @@ namespace Rpm.Productie
 
                             // Task.Factory.StartNew(() =>
                             //{
-                            bws = Database.GetBewerkingen(ViewState.Gestart, true, null, null, false).Result;
+                            bws = Database.xGetBewerkingen(ViewState.Gestart, true, null, null, false);
 
                             var rooster = Opties.GetWerkRooster();
                             var einddag = DateTime.Now.Date.Add(rooster.EindWerkdag);
@@ -1981,6 +2119,7 @@ namespace Rpm.Productie
         /// <param name="id">De productienr die verwijderd is</param>
         public static void FormulierDeleted(object sender, string id)
         {
+            if (Manager.Database != null && Manager.Database.ProductieExist(id)) return;
             OnFormulierDeleted?.Invoke(sender, id);
         }
 

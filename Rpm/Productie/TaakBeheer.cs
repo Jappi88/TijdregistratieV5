@@ -187,12 +187,12 @@ namespace Rpm.Productie
 
         public static Task<List<Taak>> GetAlleTaken()
         {
-            return Task.Run( () =>
+            return Task.Run(() =>
             {
                 var xtaken = new List<Taak>();
                 try
                 {
-                    var bws = Manager.Database?.GetAllBewerkingen(false, true,false).Result;
+                    var bws = Manager.Database?.xGetAllBewerkingen(false, true,false);
                     if (bws == null || bws.Count == 0) return xtaken;
                     foreach (var bw in bws)
                     {

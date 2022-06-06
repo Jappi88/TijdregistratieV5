@@ -18,12 +18,7 @@ namespace Forms
 
         public IsValidHandler ValidHandler
         {
-            get => productieListControl1?.ValidHandler;
-            set
-            {
-                if (productieListControl1 != null)
-                    productieListControl1.ValidHandler = value;
-            }
+            get; set;
         }
 
         private readonly int _ListIndex;
@@ -48,7 +43,10 @@ namespace Forms
         {
             if (value is Bewerking bew)
             {
-                return _bewerkingen.IndexOf(bew) > -1;
+                var flag = _bewerkingen.IndexOf(bew) > -1;
+                if (ValidHandler != null)
+                    flag &= ValidHandler.Invoke(bew, filter);
+                return flag;
             }
 
             return false;

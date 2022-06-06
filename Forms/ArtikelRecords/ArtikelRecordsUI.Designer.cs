@@ -40,6 +40,7 @@ namespace Forms.ArtikelRecords
             this.verwijderenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
+            this.xexport = new System.Windows.Forms.Button();
             this.xalgemeen = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -54,7 +55,7 @@ namespace Forms.ArtikelRecords
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
             this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.xArtikelList = new CustomObjectListview();
+            this.xArtikelList = new Controls.CustomObjectListview();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -67,7 +68,7 @@ namespace Forms.ArtikelRecords
             this.xsearchbox = new MetroFramework.Controls.MetroTextBox();
             this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.xwerkpleklist = new CustomObjectListview();
+            this.xwerkpleklist = new Controls.CustomObjectListview();
             this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -78,7 +79,10 @@ namespace Forms.ArtikelRecords
             this.olvColumn16 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.panel5 = new System.Windows.Forms.Panel();
             this.xsearch2 = new MetroFramework.Controls.MetroTextBox();
-            this.xexport = new System.Windows.Forms.Button();
+            this.olvColumn17 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn18 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn19 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn20 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.contextMenuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.metroTabControl1.SuspendLayout();
@@ -169,6 +173,24 @@ namespace Forms.ArtikelRecords
             this.panel2.Padding = new System.Windows.Forms.Padding(5);
             this.panel2.Size = new System.Drawing.Size(854, 47);
             this.panel2.TabIndex = 5;
+            // 
+            // xexport
+            // 
+            this.xexport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xexport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xexport.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xexport.Image = global::ProductieManager.Properties.Resources.microsoft_excel_22733;
+            this.xexport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xexport.Location = new System.Drawing.Point(355, 5);
+            this.xexport.Margin = new System.Windows.Forms.Padding(4);
+            this.xexport.Name = "xexport";
+            this.xexport.Size = new System.Drawing.Size(143, 37);
+            this.xexport.TabIndex = 8;
+            this.xexport.Text = "Export Excel";
+            this.xexport.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTip1.SetToolTip(this.xexport, "Exporteer naar excel");
+            this.xexport.UseVisualStyleBackColor = true;
+            this.xexport.Click += new System.EventHandler(this.xexport_Click);
             // 
             // xalgemeen
             // 
@@ -377,9 +399,12 @@ namespace Forms.ArtikelRecords
             this.xArtikelList.AllColumns.Add(this.olvColumn4);
             this.xArtikelList.AllColumns.Add(this.olvColumn5);
             this.xArtikelList.AllColumns.Add(this.olvColumn8);
+            this.xArtikelList.AllColumns.Add(this.olvColumn17);
+            this.xArtikelList.AllColumns.Add(this.olvColumn18);
             this.xArtikelList.AllColumns.Add(this.olvColumn3);
             this.xArtikelList.AllColumns.Add(this.olvColumn6);
             this.xArtikelList.AllColumns.Add(this.olvColumn7);
+            this.xArtikelList.AllowCellEdit = false;
             this.xArtikelList.CellEditUseWholeCell = false;
             this.xArtikelList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn1,
@@ -387,31 +412,52 @@ namespace Forms.ArtikelRecords
             this.olvColumn4,
             this.olvColumn5,
             this.olvColumn8,
+            this.olvColumn17,
+            this.olvColumn18,
             this.olvColumn3,
             this.olvColumn6,
             this.olvColumn7});
             this.xArtikelList.ContextMenuStrip = this.contextMenuStrip1;
             this.xArtikelList.Cursor = System.Windows.Forms.Cursors.Default;
             this.xArtikelList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xArtikelList.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xArtikelList.FullRowSelect = true;
             this.xArtikelList.GridLines = true;
+            this.xArtikelList.HeaderWordWrap = true;
             this.xArtikelList.HideSelection = false;
             this.xArtikelList.LargeImageList = this.imageList1;
             this.xArtikelList.Location = new System.Drawing.Point(0, 38);
             this.xArtikelList.Margin = new System.Windows.Forms.Padding(4);
+            this.xArtikelList.MenuLabelColumns = "kolommen";
+            this.xArtikelList.MenuLabelGroupBy = "Groeperen op \'{0}\'";
+            this.xArtikelList.MenuLabelLockGroupingOn = "Groepering vergrendelen op \'{0}\'";
+            this.xArtikelList.MenuLabelSelectColumns = "Selecteer kolommen...";
+            this.xArtikelList.MenuLabelSortAscending = "Sorteer oplopend op \'{0}\'";
+            this.xArtikelList.MenuLabelSortDescending = "Aflopend sorteren op \'{0}\'";
+            this.xArtikelList.MenuLabelTurnOffGroups = "Groepen uitschakelen";
+            this.xArtikelList.MenuLabelUnlockGroupingOn = "Ontgrendel groeperen van \'{0}\'";
+            this.xArtikelList.MenuLabelUnsort = "Uitsorteren";
             this.xArtikelList.Name = "xArtikelList";
+            this.xArtikelList.OwnerDraw = false;
+            this.xArtikelList.ShowCommandMenuOnRightClick = true;
             this.xArtikelList.ShowGroups = false;
+            this.xArtikelList.ShowItemCountOnGroups = true;
             this.xArtikelList.ShowItemToolTips = true;
             this.xArtikelList.Size = new System.Drawing.Size(836, 393);
             this.xArtikelList.SmallImageList = this.imageList1;
+            this.xArtikelList.SpaceBetweenGroups = 10;
             this.xArtikelList.TabIndex = 0;
+            this.xArtikelList.TileSize = new System.Drawing.Size(300, 120);
             this.xArtikelList.TintSortColumn = true;
             this.xArtikelList.UseCompatibleStateImageBehavior = false;
             this.xArtikelList.UseExplorerTheme = true;
             this.xArtikelList.UseFilterIndicator = true;
             this.xArtikelList.UseFiltering = true;
+            this.xArtikelList.UseHotControls = false;
             this.xArtikelList.UseHotItem = true;
+            this.xArtikelList.UseOverlays = false;
             this.xArtikelList.UseTranslucentHotItem = true;
+            this.xArtikelList.UseTranslucentSelection = true;
             this.xArtikelList.View = System.Windows.Forms.View.Details;
             this.xArtikelList.SelectedIndexChanged += new System.EventHandler(this.xArtikelList_SelectedIndexChanged);
             this.xArtikelList.DoubleClick += new System.EventHandler(this.xopmerkingen_Click);
@@ -543,10 +589,10 @@ namespace Forms.ArtikelRecords
             this.metroTabPage2.HorizontalScrollbarBarColor = true;
             this.metroTabPage2.HorizontalScrollbarHighlightOnWheel = false;
             this.metroTabPage2.HorizontalScrollbarSize = 10;
-            this.metroTabPage2.Location = new System.Drawing.Point(4, 35);
+            this.metroTabPage2.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage2.Name = "metroTabPage2";
             this.metroTabPage2.Padding = new System.Windows.Forms.Padding(5);
-            this.metroTabPage2.Size = new System.Drawing.Size(846, 444);
+            this.metroTabPage2.Size = new System.Drawing.Size(846, 436);
             this.metroTabPage2.TabIndex = 1;
             this.metroTabPage2.Text = "Werkplaatsen";
             this.metroTabPage2.VerticalScrollbarBarColor = true;
@@ -561,7 +607,7 @@ namespace Forms.ArtikelRecords
             this.panel4.Location = new System.Drawing.Point(5, 5);
             this.panel4.Margin = new System.Windows.Forms.Padding(4);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(836, 434);
+            this.panel4.Size = new System.Drawing.Size(836, 426);
             this.panel4.TabIndex = 2;
             // 
             // xwerkpleklist
@@ -571,9 +617,12 @@ namespace Forms.ArtikelRecords
             this.xwerkpleklist.AllColumns.Add(this.olvColumn11);
             this.xwerkpleklist.AllColumns.Add(this.olvColumn12);
             this.xwerkpleklist.AllColumns.Add(this.olvColumn13);
+            this.xwerkpleklist.AllColumns.Add(this.olvColumn19);
+            this.xwerkpleklist.AllColumns.Add(this.olvColumn20);
             this.xwerkpleklist.AllColumns.Add(this.olvColumn14);
             this.xwerkpleklist.AllColumns.Add(this.olvColumn15);
             this.xwerkpleklist.AllColumns.Add(this.olvColumn16);
+            this.xwerkpleklist.AllowCellEdit = false;
             this.xwerkpleklist.CellEditUseWholeCell = false;
             this.xwerkpleklist.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn9,
@@ -581,31 +630,52 @@ namespace Forms.ArtikelRecords
             this.olvColumn11,
             this.olvColumn12,
             this.olvColumn13,
+            this.olvColumn19,
+            this.olvColumn20,
             this.olvColumn14,
             this.olvColumn15,
             this.olvColumn16});
             this.xwerkpleklist.ContextMenuStrip = this.contextMenuStrip1;
             this.xwerkpleklist.Cursor = System.Windows.Forms.Cursors.Default;
             this.xwerkpleklist.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xwerkpleklist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xwerkpleklist.FullRowSelect = true;
             this.xwerkpleklist.GridLines = true;
+            this.xwerkpleklist.HeaderWordWrap = true;
             this.xwerkpleklist.HideSelection = false;
             this.xwerkpleklist.LargeImageList = this.imageList1;
             this.xwerkpleklist.Location = new System.Drawing.Point(0, 38);
             this.xwerkpleklist.Margin = new System.Windows.Forms.Padding(4);
+            this.xwerkpleklist.MenuLabelColumns = "kolommen";
+            this.xwerkpleklist.MenuLabelGroupBy = "Groeperen op \'{0}\'";
+            this.xwerkpleklist.MenuLabelLockGroupingOn = "Groepering vergrendelen op \'{0}\'";
+            this.xwerkpleklist.MenuLabelSelectColumns = "Selecteer kolommen...";
+            this.xwerkpleklist.MenuLabelSortAscending = "Sorteer oplopend op \'{0}\'";
+            this.xwerkpleklist.MenuLabelSortDescending = "Aflopend sorteren op \'{0}\'";
+            this.xwerkpleklist.MenuLabelTurnOffGroups = "Groepen uitschakelen";
+            this.xwerkpleklist.MenuLabelUnlockGroupingOn = "Ontgrendel groeperen van \'{0}\'";
+            this.xwerkpleklist.MenuLabelUnsort = "Uitsorteren";
             this.xwerkpleklist.Name = "xwerkpleklist";
+            this.xwerkpleklist.OwnerDraw = false;
+            this.xwerkpleklist.ShowCommandMenuOnRightClick = true;
             this.xwerkpleklist.ShowGroups = false;
+            this.xwerkpleklist.ShowItemCountOnGroups = true;
             this.xwerkpleklist.ShowItemToolTips = true;
-            this.xwerkpleklist.Size = new System.Drawing.Size(836, 396);
+            this.xwerkpleklist.Size = new System.Drawing.Size(836, 388);
             this.xwerkpleklist.SmallImageList = this.imageList1;
+            this.xwerkpleklist.SpaceBetweenGroups = 10;
             this.xwerkpleklist.TabIndex = 0;
+            this.xwerkpleklist.TileSize = new System.Drawing.Size(300, 120);
             this.xwerkpleklist.TintSortColumn = true;
             this.xwerkpleklist.UseCompatibleStateImageBehavior = false;
             this.xwerkpleklist.UseExplorerTheme = true;
             this.xwerkpleklist.UseFilterIndicator = true;
             this.xwerkpleklist.UseFiltering = true;
+            this.xwerkpleklist.UseHotControls = false;
             this.xwerkpleklist.UseHotItem = true;
+            this.xwerkpleklist.UseOverlays = false;
             this.xwerkpleklist.UseTranslucentHotItem = true;
+            this.xwerkpleklist.UseTranslucentSelection = true;
             this.xwerkpleklist.View = System.Windows.Forms.View.Details;
             this.xwerkpleklist.SelectedIndexChanged += new System.EventHandler(this.xArtikelList_SelectedIndexChanged);
             this.xwerkpleklist.DoubleClick += new System.EventHandler(this.xopmerkingen_Click);
@@ -732,23 +802,37 @@ namespace Forms.ArtikelRecords
             this.xsearch2.Enter += new System.EventHandler(this.xsearch2_Enter);
             this.xsearch2.Leave += new System.EventHandler(this.xsearch2_Leave);
             // 
-            // xexport
+            // olvColumn17
             // 
-            this.xexport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xexport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xexport.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xexport.Image = global::ProductieManager.Properties.Resources.microsoft_excel_22733;
-            this.xexport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xexport.Location = new System.Drawing.Point(355, 5);
-            this.xexport.Margin = new System.Windows.Forms.Padding(4);
-            this.xexport.Name = "xexport";
-            this.xexport.Size = new System.Drawing.Size(143, 37);
-            this.xexport.TabIndex = 8;
-            this.xexport.Text = "Export Excel";
-            this.xexport.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolTip1.SetToolTip(this.xexport, "Exporteer naar excel");
-            this.xexport.UseVisualStyleBackColor = true;
-            this.xexport.Click += new System.EventHandler(this.xexport_Click);
+            this.olvColumn17.AspectName = "InstelTijd";
+            this.olvColumn17.AspectToStringFormat = "{0} uur";
+            this.olvColumn17.Text = "InstelTijd";
+            this.olvColumn17.ToolTipText = "Gemiddelde insteltijd";
+            this.olvColumn17.Width = 100;
+            // 
+            // olvColumn18
+            // 
+            this.olvColumn18.AspectName = "StoringTijd";
+            this.olvColumn18.AspectToStringFormat = "{0} uur";
+            this.olvColumn18.Text = "StoringTijd";
+            this.olvColumn18.ToolTipText = "Totale storingtijd";
+            this.olvColumn18.Width = 100;
+            // 
+            // olvColumn19
+            // 
+            this.olvColumn19.AspectName = "InstelTijd";
+            this.olvColumn19.AspectToStringFormat = "{0} uur";
+            this.olvColumn19.Text = "InstelTijd";
+            this.olvColumn19.ToolTipText = "Gemiddelde insteltijd";
+            this.olvColumn19.Width = 100;
+            // 
+            // olvColumn20
+            // 
+            this.olvColumn20.AspectName = "StoringTijd";
+            this.olvColumn20.AspectToStringFormat = "{0} uur";
+            this.olvColumn20.Text = "StoringTijd";
+            this.olvColumn20.ToolTipText = "Totale storingtijd";
+            this.olvColumn20.Width = 100;
             // 
             // ArtikelRecordsUI
             // 
@@ -826,5 +910,9 @@ namespace Forms.ArtikelRecords
         private System.Windows.Forms.ToolStripMenuItem toonProductiesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.Button xexport;
+        private BrightIdeasSoftware.OLVColumn olvColumn17;
+        private BrightIdeasSoftware.OLVColumn olvColumn18;
+        private BrightIdeasSoftware.OLVColumn olvColumn19;
+        private BrightIdeasSoftware.OLVColumn olvColumn20;
     }
 }

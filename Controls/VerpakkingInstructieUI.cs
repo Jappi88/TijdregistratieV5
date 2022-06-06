@@ -173,7 +173,7 @@ namespace Controls
                         if (Productie != null)
                         {
                             Productie.VerpakkingsInstructies = xverp;
-                            return Productie.Update($"VerpakkingsInstructies aangepast voor [{Productie.ArtikelNr}]{Productie.Omschrijving}", true, true).Result;
+                            return Productie.xUpdate($"VerpakkingsInstructies aangepast voor [{Productie.ArtikelNr}]{Productie.Omschrijving}", true, true);
                         }
 
                         

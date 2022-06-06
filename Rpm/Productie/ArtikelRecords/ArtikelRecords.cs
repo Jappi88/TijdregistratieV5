@@ -1,6 +1,7 @@
 ﻿using MetroFramework;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
+using Rpm.Controls;
 using Rpm.Misc;
 using Rpm.SqlLite;
 using Rpm.Various;
@@ -12,7 +13,6 @@ using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ProductieManager.Rpm.Productie;
 
 namespace Rpm.Productie.ArtikelRecords
 {
@@ -176,6 +176,14 @@ namespace Rpm.Productie.ArtikelRecords
                     file.AantalGemaakt += form.TotaalGemaakt;
                     file.VorigeTijdGewerkt = form.TijdGewerkt;
                     file.TijdGewerkt += form.TijdAanGewerkt();
+                    file.IsWerkplek = false;
+                    var sts = form.GetAlleStoringen(false);
+                    sts.ForEach(x =>
+                    {
+                        if (!file.Onderbrekeningen.Contains(x))
+                            file.Onderbrekeningen.Add(x);
+                    });
+                    file.UpdateStoringen();
                     if (file.LaatstGeupdate.IsDefault() || form.DatumGereed > file.LaatstGeupdate)
                         file.LaatstGeupdate = form.DatumGereed;
                     if (file.Vanaf.IsDefault() || form.TijdGestart < file.Vanaf)
@@ -191,7 +199,8 @@ namespace Rpm.Productie.ArtikelRecords
                         Omschrijving = form.Omschrijving,
                         TijdGewerkt = form.TijdAanGewerkt(),
                         LaatstGeupdate = form.DatumGereed,
-                        Vanaf = form.TijdGestart
+                        Vanaf = form.TijdGestart,
+                        IsWerkplek = false
                     };
                 }
                 file.UpdatedProducties.Add(form.ProductieNr);
@@ -203,6 +212,172 @@ namespace Rpm.Productie.ArtikelRecords
                     return Database?.Upsert(form.ArtikelNr, file, false)??false;
                 }
 
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        public bool UpdateWaardes(WerkPlek plek, ArtikelRecord record = null, bool save = true)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(plek?.Naam))
+                    return false;
+                if (plek.Werk is not { State: ProductieState.Gereed }) return false;
+                var file = record ?? Database.GetEntry<ArtikelRecord>(plek.Naam, false);
+                if (file != null)
+                {
+                    if (file.UpdatedProducties.Exists(x =>
+                            string.Equals(plek.ProductieNr, x, StringComparison.CurrentCultureIgnoreCase)))
+                        return false;
+                    file.ArtikelNr = plek.Naam;
+                    file.Omschrijving = $"{plek.Naam} Werkplek";
+                    file.VorigeAantalGemaakt = file.AantalGemaakt;
+                    file.AantalGemaakt += plek.TotaalGemaakt;
+                    file.VorigeTijdGewerkt = plek.TijdGewerkt;
+                    file.TijdGewerkt += plek.TijdAanGewerkt();
+                    file.IsWerkplek = true;
+                    var sts = plek.Storingen.Where(x => !string.IsNullOrEmpty(x.StoringType) && x.TotaalTijd > 0).ToList();
+                    sts.ForEach(x =>
+                    {
+                        if (!file.Onderbrekeningen.Contains(x))
+                            file.Onderbrekeningen.Add(x);
+                    });
+                    file.UpdateStoringen();
+                    var xstop = plek.GestoptOp();
+                    var xstart = plek.GestartOp();
+                    if (xstop > file.LaatstGeupdate)
+                        file.LaatstGeupdate = xstop;
+                    if (file.Vanaf.IsDefault() || xstart < file.Vanaf)
+                        file.Vanaf = xstart;
+                }
+                else
+                {
+                    file = new ArtikelRecord()
+                    {
+                        AantalGemaakt = plek.TotaalGemaakt,
+                        ArtikelNr = plek.Naam,
+                        Omschrijving = $"{plek.Naam} Werkplek",
+                        TijdGewerkt = plek.TijdAanGewerkt(),
+                        IsWerkplek = true,
+                        Vanaf = plek.GestartOp(),
+                        LaatstGeupdate = plek.GestoptOp()
+                    };
+                }
+                file.UpdatedProducties.Add(plek.ProductieNr);
+                if (save)
+                    Database.Upsert(plek.Naam, file, false);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        public bool RemoveWaardes(WerkPlek plek, ArtikelRecord record = null, bool save = true)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(plek?.Naam))
+                    return false;
+                var file = record ?? Database.GetEntry<ArtikelRecord>(plek.Naam, false);
+                if (file != null)
+                {
+                    if (!file.UpdatedProducties.Exists(x =>
+                            string.Equals(plek.ProductieNr, x, StringComparison.CurrentCultureIgnoreCase)))
+                        return false;
+                    file.ArtikelNr = plek.Naam;
+                    file.Omschrijving = $"{plek.Naam} Werkplek";
+                    file.VorigeAantalGemaakt = file.AantalGemaakt;
+                    file.AantalGemaakt -= plek.TotaalGemaakt;
+                    file.VorigeTijdGewerkt = plek.TijdGewerkt;
+                    file.TijdGewerkt -= plek.TijdAanGewerkt();
+                    file.IsWerkplek = true;
+                    var sts = plek.Storingen.Where(x => !string.IsNullOrEmpty(x.StoringType) && x.TotaalTijd > 0).ToList();
+                    sts.ForEach(x =>
+                    {
+                        if (file.Onderbrekeningen.Contains(x))
+                            file.Onderbrekeningen.Remove(x);
+                    });
+                    file.UpdateStoringen();
+                    var xstop = plek.GestoptOp();
+                    var xstart = plek.GestartOp();
+                    if (xstop > file.LaatstGeupdate)
+                        file.LaatstGeupdate = xstop;
+                    if (file.Vanaf.IsDefault() || xstart < file.Vanaf)
+                        file.Vanaf = xstart;
+                    file.UpdatedProducties.Remove(plek.ProductieNr);
+                    if (file.Opmerkingen != null && file.Opmerkingen.Count > 0)
+                    {
+                        foreach (var op in file.Opmerkingen)
+                        {
+                            op.AantalGetoond = (int)(file.AantalGemaakt / op.FilterWaarde);
+                        }
+                    }
+                    if (save)
+                        Database.Upsert(plek.Naam, file, false);
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        public bool RemoveWaardes(ProductieFormulier form, ArtikelRecord record = null, bool save = true)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(form?.ArtikelNr))
+                    return false;
+                var file = record ?? Database?.GetEntry<ArtikelRecord>(form.ArtikelNr, false);
+                if (file != null)
+                {
+                    if (!file.UpdatedProducties.Exists(x =>
+                            string.Equals(form.ProductieNr, x, StringComparison.CurrentCultureIgnoreCase)))
+                        return false;
+                    file.ArtikelNr = form.ArtikelNr;
+                    file.Omschrijving = form.Omschrijving;
+                    file.VorigeAantalGemaakt = file.AantalGemaakt;
+                    file.AantalGemaakt -= form.TotaalGemaakt;
+                    file.VorigeTijdGewerkt = form.TijdGewerkt;
+                    file.TijdGewerkt -= form.TijdAanGewerkt();
+                    file.IsWerkplek = false;
+                    var sts = form.GetAlleStoringen(false);
+                    sts.ForEach(x =>
+                    {
+                        if (file.Onderbrekeningen.Contains(x))
+                            file.Onderbrekeningen.Remove(x);
+                    });
+                    file.UpdateStoringen();
+                    if (file.LaatstGeupdate.IsDefault() || form.DatumGereed > file.LaatstGeupdate)
+                        file.LaatstGeupdate = form.DatumGereed;
+                    if (file.Vanaf.IsDefault() || form.TijdGestart < file.Vanaf)
+                        file.Vanaf = form.TijdGestart;
+                    file.UpdatedProducties.Remove(form.ProductieNr);
+                    if(file.Opmerkingen != null && file.Opmerkingen.Count > 0)
+                    {
+                        foreach(var op in file.Opmerkingen)
+                        {
+                            op.AantalGetoond = (int)(file.AantalGemaakt / op.FilterWaarde);
+                        }
+                    }
+                    if (save)
+                    {
+                        //if (!file.IsWerkplek)
+                        //    BijlageBeheer.UpdateBijlage(form.ArtikelNr, Encoding.UTF8.GetBytes(GetRecordInfo(file)),
+                        //        $"{form.ArtikelNr}_ProductieInfo.txt");
+                        return Database?.Upsert(form.ArtikelNr, file, false) ?? false;
+                    }
+                }
                 return true;
             }
             catch (Exception e)
@@ -237,58 +412,6 @@ namespace Rpm.Productie.ArtikelRecords
                 Console.WriteLine(e);
             }
             return sb.ToString();
-        }
-
-        public bool UpdateWaardes(WerkPlek plek, ArtikelRecord record = null, bool save = true)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(plek?.Naam))
-                    return false;
-                if (plek.Werk is not {State: ProductieState.Gereed}) return false;
-                var file = record??Database.GetEntry<ArtikelRecord>(plek.Naam, false);
-                if (file != null)
-                {
-                    if (file.UpdatedProducties.Exists(x =>
-                            string.Equals(plek.ProductieNr, x, StringComparison.CurrentCultureIgnoreCase)))
-                        return false;
-                    file.ArtikelNr = plek.Naam;
-                    file.Omschrijving = $"{plek.Naam} Werkplek";
-                    file.VorigeAantalGemaakt = file.AantalGemaakt;
-                    file.AantalGemaakt += plek.TotaalGemaakt;
-                    file.VorigeTijdGewerkt = plek.TijdGewerkt;
-                    file.TijdGewerkt += plek.TijdAanGewerkt();
-                    file.IsWerkplek = true;
-                    var xstop = plek.GestoptOp();
-                    var xstart = plek.GestartOp();
-                    if (xstop > file.LaatstGeupdate)
-                        file.LaatstGeupdate = xstop;
-                    if (file.Vanaf.IsDefault() || xstart < file.Vanaf)
-                        file.Vanaf = xstart;
-                }
-                else
-                {
-                    file = new ArtikelRecord()
-                    {
-                        AantalGemaakt = plek.TotaalGemaakt,
-                        ArtikelNr = plek.Naam,
-                        Omschrijving = $"{plek.Naam} Werkplek",
-                        TijdGewerkt = plek.TijdAanGewerkt(),
-                        IsWerkplek = true,
-                        Vanaf = plek.GestartOp(),
-                        LaatstGeupdate = plek.GestoptOp()
-                    };
-                }
-                file.UpdatedProducties.Add(plek.ProductieNr);
-                if (save)
-                    Database.Upsert(plek.Naam, file, false);
-                return true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return false;
-            }
         }
 
         private bool _checking;
@@ -335,16 +458,24 @@ namespace Rpm.Productie.ArtikelRecords
             if (xreturn.Count > 0)
             {
                 if (Manager.Opties is not { ToonArtikelRecordMeldingen: true }) return;
-                var xopen = Application.OpenForms.Cast<Form>().Where(x =>
-                    string.Equals(x.Text, "form_alert", StringComparison.CurrentCultureIgnoreCase)).ToList();
-                xopen.ForEach(x =>
+                var xopen = Application.OpenForms.OfType<Form_Alert>().ToList();
+                for (int i = 0; i < xopen.Count; i++)
                 {
-                    x.Invoke(new MethodInvoker(() =>
+                    var x = xopen[i];
+                    try
                     {
-                        x.Close();
-                        x.Dispose();
-                    }));
-                });
+                        x.Invoke(new MethodInvoker(() =>
+                        {
+                            try
+                            {
+                                x.Close();
+                                x.Dispose();
+                            }
+                            catch { }
+                        }));
+                    }
+                    catch { }
+                }
                 DoOpmerkingenRecords(xreturn);
             }
         }
@@ -387,12 +518,14 @@ namespace Rpm.Productie.ArtikelRecords
                     bttns.Add("Sluiten", DialogResult.No);
                     bttns.Add("Begrepen", DialogResult.Yes);
                     //Opmerking Tonen
-                    Task.Factory.StartNew(() =>
+                    if (Manager.Opties != null && Manager.Opties.SpeelMeldingToonAf)
                     {
-                        using var soundPlayer = new SoundPlayer(Resources.mixkit_happy_bells_notification_937);
-                        soundPlayer.Play();
-                    });
-                    
+                        Task.Factory.StartNew(() =>
+                        {
+                            using var soundPlayer = new SoundPlayer(Resources.mixkit_happy_bells_notification_937);
+                            soundPlayer.Play();
+                        });
+                    }
                     if (Manager.OnRequestRespondDialog(record.GetOpmerking(op), record.GetTitle(op),
                             MessageBoxButtons.OK, MessageBoxIcon.Information, null, bttns,
                             op.ImageData?.ImageFromBytes() ?? Resources.default_opmerking_16757_256x256,
@@ -406,7 +539,7 @@ namespace Rpm.Productie.ArtikelRecords
                         }
                         else
                             op.GelezenDoor.Add(Manager.Opties.Username, DateTime.Now);
-                        op.AantalGetoond++;
+                        op.AantalGetoond = (int)(record.AantalGemaakt / op.FilterWaarde);
                         if (op.IsAlgemeen)
                         {
                             var alg = GetAllAlgemeenRecordsOpmerkingen();
@@ -424,7 +557,7 @@ namespace Rpm.Productie.ArtikelRecords
                             if (xindex > -1)
                             {
                                 alg[xindex] = op;
-                                Database?.Upsert(record.ArtikelNr, record, false);
+                                Database?.Upsert(record.ArtikelNr, record, false,false);
                             }
 
                         }
@@ -510,6 +643,7 @@ namespace Rpm.Productie.ArtikelRecords
                                     var xnewtijd = (int)(record.TijdGewerkt / (double)op.FilterWaarde);
                                     if (xnewtijd > op.AantalGetoond)
                                     {
+                                        op.AantalGetoond = xnewtijd;
                                         op.GelezenDoor.Clear();
                                         break;
                                     }

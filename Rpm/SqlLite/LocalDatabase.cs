@@ -146,7 +146,7 @@ namespace Rpm.SqlLite
 
         public Task<ProductieFormulier> FindProductie(string criteria, bool Fullmatch)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 ProductieFormulier form = null;
                 try
@@ -154,7 +154,7 @@ namespace Rpm.SqlLite
                     if (IsDisposed || ProductieFormulieren == null)
                         return null;
 
-                    form = (await GetAllProducties(criteria, Fullmatch, false,true)).FirstOrDefault();
+                    form = (xGetAllProducties(criteria, Fullmatch, false,true)).FirstOrDefault();
                 }
                 catch (Exception e)
                 {
@@ -171,10 +171,10 @@ namespace Rpm.SqlLite
             {
                 ProductieFormulier prod = null;
                 if (ProductieFormulieren != null)
-                    prod = ProductieFormulieren.FindOne(productienr.Trim(), usesecondary).Result;
+                    prod = ProductieFormulieren.FindOne(productienr.Trim(), usesecondary);
                 if (prod == null && GereedFormulieren != null)
-                    prod = GereedFormulieren.FindOne(productienr.Trim(), usesecondary).Result;
-                prod?.UpdateForm(true, false, null, null, false, false, false);
+                    prod = GereedFormulieren.FindOne(productienr.Trim(), usesecondary);
+                prod?.UpdateValues(null, true, false);
                 return prod;
             }
             catch (Exception e)
@@ -187,7 +187,7 @@ namespace Rpm.SqlLite
 
         public Task<ProductieFormulier> GetProductieFromPath(string path)
         {
-            return Task.Run( () =>
+            return Task.Run(() =>
             {
                 try
                 {
@@ -206,21 +206,30 @@ namespace Rpm.SqlLite
         public Task<List<ProductieFormulier>> GetProducties(string criteria,bool fullmatch, ProductieState state,
             bool tijdgewerkt)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 bool isgereed = state == ProductieState.Gereed;
-                var xreturn = await GetAllProducties(criteria, fullmatch, isgereed, isgereed);
+                var xreturn = xGetAllProducties(criteria, fullmatch, isgereed, isgereed);
                 xreturn = xreturn.Where(x => x.State == state && (!tijdgewerkt || (x.TijdGewerkt > 0 && x.ActueelPerUur > 0))).ToList();
                 return xreturn;
             });
         }
 
+        public List<ProductieFormulier> xGetProducties(string criteria, bool fullmatch, ProductieState state,
+    bool tijdgewerkt)
+        {
+            bool isgereed = state == ProductieState.Gereed;
+            var xreturn = xGetAllProducties(criteria, fullmatch, isgereed, isgereed);
+            xreturn = xreturn.Where(x => x.State == state && (!tijdgewerkt || (x.TijdGewerkt > 0 && x.ActueelPerUur > 0))).ToList();
+            return xreturn;
+        }
+
         public Task<List<ProductieFormulier>> GetProducties(string criteria, bool fullmatch,
             bool tijdgewerkt)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
-                var xreturn = await GetAllProducties(criteria, fullmatch, false, true);
+                var xreturn = xGetAllProducties(criteria, fullmatch, false, true);
                 if (tijdgewerkt)
                     xreturn = xreturn.Where(x => x.TijdGewerkt > 0).ToList();
                 return xreturn;
@@ -229,7 +238,7 @@ namespace Rpm.SqlLite
 
         public Task<List<ProductieFormulier>> GetProducties(List<string> ids)
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
                 var xret = new List<ProductieFormulier>();
                 try
@@ -252,32 +261,36 @@ namespace Rpm.SqlLite
 
         public Task<List<Bewerking>> GetBewerkingen(List<string> ids, bool filter)
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
-                var xret = new List<Bewerking>();
-                try
-                {
-                    foreach (var id in ids)
-                    {
-                        var xprod = Manager.Database?.GetProductie(id, true);
-                        if (xprod?.Bewerkingen == null) continue;
-                        foreach (var bw in xprod.Bewerkingen)
-                        {
-                            if (filter && !bw.IsAllowed())
-                                continue;
-                            xret.Add(bw);
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-
-                return xret;
+                return xGetBewerkingen(ids, filter);
             });
         }
 
+        public List<Bewerking> xGetBewerkingen(List<string> ids, bool filter)
+        {
+            var xret = new List<Bewerking>();
+            try
+            {
+                foreach (var id in ids)
+                {
+                    var xprod = Manager.Database?.GetProductie(id, true);
+                    if (xprod?.Bewerkingen == null) continue;
+                    foreach (var bw in xprod.Bewerkingen)
+                    {
+                        if (filter && !bw.IsAllowed())
+                            continue;
+                        xret.Add(bw);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return xret;
+        }
 
         public Task<List<ProductieFormulier>> GetAllProducties(bool incgereed, bool filter, bool checksecondary)
         {
@@ -286,18 +299,18 @@ namespace Rpm.SqlLite
 
         public Task<List<ProductieFormulier>> GetAllProducties(bool incgereed, bool filter, IsValidHandler validhandler, bool checksecondary)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed)
                     return new List<ProductieFormulier>();
                 var prods = new List<ProductieFormulier>();
                 if (filter && validhandler == null)
                     validhandler = Functions.IsAllowed;
-                if (ProductieFormulieren != null) prods = await ProductieFormulieren.FindAll(validhandler, checksecondary);
+                if (ProductieFormulieren != null) prods = ProductieFormulieren.FindAll(validhandler, checksecondary);
 
                 if (incgereed && GereedFormulieren != null)
                 {
-                    var xprods = await GereedFormulieren.FindAll(validhandler, checksecondary);
+                    var xprods = GereedFormulieren.FindAll(validhandler, checksecondary);
                     if (xprods.Count > 0)
                         prods.AddRange(xprods);
                 }
@@ -306,261 +319,218 @@ namespace Rpm.SqlLite
             });
         }
 
+        public List<ProductieFormulier> xGetAllProducties(bool incgereed, bool filter, IsValidHandler validhandler, bool checksecondary)
+        {
+            if (IsDisposed)
+                return new List<ProductieFormulier>();
+            var prods = new List<ProductieFormulier>();
+            if (filter && validhandler == null)
+                validhandler = Functions.IsAllowed;
+            if (ProductieFormulieren != null) prods = ProductieFormulieren.FindAll(validhandler, checksecondary);
+
+            if (incgereed && GereedFormulieren != null)
+            {
+                var xprods = GereedFormulieren.FindAll(validhandler, checksecondary);
+                if (xprods.Count > 0)
+                    prods.AddRange(xprods);
+            }
+
+            return prods;//filter ? prods.Where(x => x.IsAllowed(null)).ToList() : prods;
+        }
+
         public Task<List<Bewerking>> GetAllBewerkingen(bool incgereed, bool filter, bool checksecondary)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
-                if (IsDisposed)
-                    return new List<Bewerking>();
-                var prods = new List<ProductieFormulier>();
-                if (ProductieFormulieren != null) prods = await ProductieFormulieren.FindAll(checksecondary);
-
-                if (incgereed && GereedFormulieren != null)
-                {
-                    var xprods = await GereedFormulieren.FindAll(checksecondary);
-                    if (xprods.Count > 0)
-                        prods.AddRange(xprods);
-                }
-
-                var bws = new List<Bewerking>();
-                foreach (var pr in prods)
-                {
-                    if (pr?.Bewerkingen == null || pr.Bewerkingen.Length == 0)
-                        continue;
-                    foreach (var bw in pr.Bewerkingen)
-                        if (bw != null)
-                        {
-                            if (filter && !bw.IsAllowed())
-                                continue;
-                            bws.Add(bw);
-                        }
-                }
-
-                return bws;
+               return xGetAllBewerkingen(incgereed, filter, checksecondary);
             });
+        }
+
+        public List<Bewerking> xGetAllBewerkingen(bool incgereed, bool filter, bool checksecondary)
+        {
+            if (IsDisposed)
+                return new List<Bewerking>();
+            var prods = new List<ProductieFormulier>();
+            if (ProductieFormulieren != null) prods = ProductieFormulieren.FindAll(checksecondary);
+
+            if (incgereed && GereedFormulieren != null)
+            {
+                var xprods = GereedFormulieren.FindAll(checksecondary);
+                if (xprods.Count > 0)
+                    prods.AddRange(xprods);
+            }
+
+            var bws = new List<Bewerking>();
+            foreach (var pr in prods)
+            {
+                if (pr?.Bewerkingen == null || pr.Bewerkingen.Length == 0)
+                    continue;
+                foreach (var bw in pr.Bewerkingen)
+                    if (bw != null)
+                    {
+                        if (filter && !bw.IsAllowed())
+                            continue;
+                        bws.Add(bw);
+                    }
+            }
+
+            return bws;
         }
 
         public Task<Dictionary<string, List<Bewerking>>> GetBewerkingenInArtnrSections(bool incgereed, bool filter, bool checksecondary)
         {
             return Task.Factory.StartNew(() =>
             {
-                var xreturn = new Dictionary<string, List<Bewerking>>();
-                try
-                {
-                    var bws = Manager.Database.GetAllBewerkingen(true, true, checksecondary).Result;
-                    foreach (var bw in bws)
-                    {
-                        if (xreturn.ContainsKey(bw.ArtikelNr.ToUpper()))
-                            xreturn[bw.ArtikelNr.ToUpper()].Add(bw);
-                        else
-                            xreturn.Add(bw.ArtikelNr.ToUpper(), new List<Bewerking>() { bw });
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-
-                return xreturn;
+                return xGetBewerkingenInArtnrSections(incgereed, filter, checksecondary);
             });
-           
+        }
+
+        public Dictionary<string, List<Bewerking>> xGetBewerkingenInArtnrSections(bool incgereed, bool filter, bool checksecondary)
+        {
+            var xreturn = new Dictionary<string, List<Bewerking>>();
+            try
+            {
+                var bws = Manager.Database.xGetAllBewerkingen(incgereed, filter, checksecondary);
+                foreach (var bw in bws)
+                {
+                    if (xreturn.ContainsKey(bw.ArtikelNr.ToUpper()))
+                        xreturn[bw.ArtikelNr.ToUpper()].Add(bw);
+                    else
+                        xreturn.Add(bw.ArtikelNr.ToUpper(), new List<Bewerking>() { bw });
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return xreturn;
         }
 
         public Task<List<ProductieFormulier>> GetAllProducties(bool incgereed, bool filter, TijdEntry bereik, IsValidHandler validhandler, bool checksecondary)
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
-                if (IsDisposed)
-                    return new List<ProductieFormulier>();
-                var prods = new List<ProductieFormulier>();
-                if (ProductieFormulieren != null)
-                {
-                    prods = ProductieFormulieren.FindAll(validhandler, checksecondary).Result;
-                    if (bereik != null)
-                        prods = prods.Where(x => x.HeeftGewerkt(bereik)).ToList();
-                }
-
-                if (incgereed && GereedFormulieren != null)
-                {
-                    var xprods = GereedFormulieren.FindAll(validhandler, checksecondary).Result;
-                    if (bereik != null)
-                        xprods = xprods.Where(x => x.HeeftGewerkt(bereik)).ToList();
-                    if (xprods.Count > 0)
-                        prods.AddRange(xprods);
-                }
-
-                return filter ? prods.Where(x => x.IsAllowed(null)).ToList() : prods;
+                return xGetAllProducties(incgereed, filter, bereik, validhandler, checksecondary);
             });
+        }
+
+        public List<ProductieFormulier> xGetAllProducties(bool incgereed, bool filter, TijdEntry bereik, IsValidHandler validhandler, bool checksecondary)
+        {
+            if (IsDisposed)
+                return new List<ProductieFormulier>();
+            var prods = new List<ProductieFormulier>();
+            if (ProductieFormulieren != null)
+            {
+                prods = ProductieFormulieren.FindAll(validhandler, checksecondary);
+                if (bereik != null)
+                    prods = prods.Where(x => x.HeeftGewerkt(bereik)).ToList();
+            }
+
+            if (incgereed && GereedFormulieren != null)
+            {
+                var xprods = GereedFormulieren.FindAll(validhandler, checksecondary);
+                if (bereik != null)
+                    xprods = xprods.Where(x => x.HeeftGewerkt(bereik)).ToList();
+                if (xprods.Count > 0)
+                    prods.AddRange(xprods);
+            }
+
+            return filter ? prods.Where(x => x.IsAllowed(null)).ToList() : prods;
         }
 
         public Task<List<Bewerking>> GetBewerkingen(ViewState state, bool filter, TijdEntry bereik,
             IsValidHandler validhandler, bool checksecondary)
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
-                if (IsDisposed)
-                    return new List<Bewerking>();
-                var prods = GetAllProducties(state is ViewState.Alles or ViewState.Gereed, filter,
-                    bereik, validhandler, checksecondary).Result;
-
-                var bws = new List<Bewerking>();
-                foreach (var pr in prods)
-                {
-                    if (pr?.Bewerkingen == null || pr.Bewerkingen.Length == 0)
-                        continue;
-                    foreach (var bw in pr.Bewerkingen)
-                        if (bw != null)
-                        {
-                            if (filter && !bw.IsAllowed(null, state))
-                                continue;
-                            if (validhandler != null && !validhandler.Invoke(bw, null)) continue;
-                            if (bereik != null && !bw.HeeftGewerkt(bereik)) continue;
-                            bws.Add(bw);
-                        }
-                }
-
-                return bws;
+                return xGetBewerkingen(state, filter, bereik, validhandler, checksecondary);
             });
+        }
+
+        public List<Bewerking> xGetBewerkingen(ViewState state, bool filter, TijdEntry bereik,
+    IsValidHandler validhandler, bool checksecondary)
+        {
+            if (IsDisposed)
+                return new List<Bewerking>();
+            var prods = xGetAllProducties(state is ViewState.Alles or ViewState.Gereed, filter,
+                bereik, validhandler, checksecondary);
+
+            var bws = new List<Bewerking>();
+            foreach (var pr in prods)
+            {
+                if (pr?.Bewerkingen == null || pr.Bewerkingen.Length == 0)
+                    continue;
+                foreach (var bw in pr.Bewerkingen)
+                    if (bw != null)
+                    {
+                        if (filter && !bw.IsAllowed(null, state))
+                            continue;
+                        if (validhandler != null && !validhandler.Invoke(bw, null)) continue;
+                        if (bereik != null && !bw.HeeftGewerkt(bereik)) continue;
+                        bws.Add(bw);
+                    }
+            }
+
+            return bws;
         }
 
         public Task<List<ProductieFormulier>> GetAllProducties(string criteria, bool fullmatch, bool alleengereed, bool incgereed)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
-                if (IsDisposed)
-                    return new List<ProductieFormulier>();
-                var prods = new List<ProductieFormulier>();
-                if (!alleengereed && ProductieFormulieren != null) prods = await ProductieFormulieren.FindAll(criteria, fullmatch,true);
-
-                if (incgereed && GereedFormulieren != null)
-                {
-                    var xprods = await GereedFormulieren.FindAll(criteria, fullmatch,true);
-                    if (xprods.Count > 0)
-                        prods.AddRange(xprods);
-                }
-
-                return prods;
+                return xGetAllProducties(criteria, fullmatch, alleengereed, incgereed);
             });
+        }
+
+
+        public List<ProductieFormulier> xGetAllProducties(string criteria, bool fullmatch, bool alleengereed, bool incgereed)
+        {
+            if (IsDisposed)
+                return new List<ProductieFormulier>();
+            var prods = new List<ProductieFormulier>();
+            if (!alleengereed && ProductieFormulieren != null)
+                prods = ProductieFormulieren.FindAll(criteria, fullmatch, true);
+
+            if (incgereed && GereedFormulieren != null)
+            {
+                var xprods = GereedFormulieren.FindAll(criteria, fullmatch, true);
+                if (xprods.Count > 0)
+                    prods.AddRange(xprods);
+            }
+
+            return prods;
         }
 
         public Task<List<ProductieFormulier>> GetAllGereedProducties(IsValidHandler validhandler)
         {
-            return Task.Run(() =>
-            {
-                if (IsDisposed || GereedFormulieren == null)
-                    return new List<ProductieFormulier>();
-                return GereedFormulieren.FindAll(validhandler, true).Result;
-            });
+            return Task.Factory.StartNew(()=> GereedFormulieren?.FindAll(validhandler, true));
         }
 
         public Task<List<ProductieFormulier>> GetAllGereedProducties()
         {
-            return Task.Run(() =>
-            {
-                if (IsDisposed || GereedFormulieren == null)
-                    return new List<ProductieFormulier>();
-                return GereedFormulieren.FindAll(true).Result;
-            });
+            return Task.Factory.StartNew(() => GereedFormulieren?.FindAll(true));
+        }
+
+        public List<ProductieFormulier> xGetAllGereedProducties()
+        {
+            return GereedFormulieren?.FindAll(true);
         }
 
         public Task<bool> UpSert(ProductieFormulier form, string change, bool showmessage = true, bool onlylocal = false)
         {
-            return Task.Run(() =>
-            {
-                if (IsDisposed || ProductieFormulieren == null)
-                    return false;
-                return UpSert(form.ProductieNr, form, change, showmessage, onlylocal).Result;
-            });
+            return UpSert(form.ProductieNr, form, change, showmessage, onlylocal);
         }
 
         public Task<bool> UpSert(ProductieFormulier form, bool showmessage = true, bool onlylocal = false, string change = null)
         {
-            return Task.Run(() =>
-            {
-                if (IsDisposed || ProductieFormulieren == null)
-                    return false;
-                return UpSert(form.ProductieNr, form, change ?? $"[{form.ArtikelNr}|{form.ProductieNr}] ProductieFormulier Update",
-                 showmessage, onlylocal).Result;
-            });
-        }
-
-        public Task<bool> UpSert(string id, ProductieFormulier form, string change, bool showmessage = true, bool onlylocal = false)
-        {
-            return Task.Run(() =>
-            {
-                if (IsDisposed || id == null || form == null || ProductieFormulieren == null || GereedFormulieren == null)
-                    return false;
-                bool xreturn = false;
-                try
-                {
-                    form.ExcludeFromUpdate();
-                    form.LastChanged = form.LastChanged.UpdateChange(change, DbType.Producties);
-                    if (ProductieFormulieren != null && form.Bewerkingen.All(x => x.State == ProductieState.Gereed))
-                    {
-                        GereedFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
-                        if (GereedFormulieren.Upsert(id, form,onlylocal,change).Result)
-                        {
-                            _=UpdateChange(form.LastChanged, DbType.GereedProducties,
-                                showmessage);
-                            if (ProductieFormulieren.Exists(id).Result)
-                            {
-                                ProductieFormulieren.RaiseEventWhenDeleted = !RaiseEventWhenDeleted;
-                                if (ProductieFormulieren.Delete(id).Result)
-                                {
-                                    if (RaiseEventWhenDeleted)
-                                        Manager.FormulierDeleted(this, id);
-                                }
-                                ProductieFormulieren.RaiseEventWhenDeleted = true;
-                            }
-
-                            xreturn = true;
-                        }
-
-                        GereedFormulieren.RaiseEventWhenChanged = true;
-                    }
-                    else if (ProductieFormulieren != null)
-                    {
-                        ProductieFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
-                        if (ProductieFormulieren.Upsert(id, form,onlylocal,change).Result)
-                        {
-                            _= UpdateChange(form.LastChanged, DbType.Producties,
-                                showmessage);
-                           
-
-                            if (GereedFormulieren != null && GereedFormulieren.Exists(id).Result)
-                            {
-                                GereedFormulieren.RaiseEventWhenDeleted = !RaiseEventWhenDeleted;
-                                if (GereedFormulieren.Delete(id).Result)
-                                {
-                                    if (RaiseEventWhenDeleted)
-                                        Manager.FormulierDeleted(this, id);
-                                }
-                                GereedFormulieren.RaiseEventWhenDeleted = true;
-                            }
-
-                            xreturn = true;
-                        }
-
-                        
-                        ProductieFormulieren.RaiseEventWhenChanged = true;
-                    }
-                    if (xreturn && RaiseEventWhenChanged)
-                        Manager.FormulierChanged(this, form);
-                    //Manager.FormulierChanged(this, form);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    xreturn = false;
-                }
-                form.RemoveExcludeFromUpdate();
-                return xreturn;
-            });
+            return UpSert(form.ProductieNr, form, change ?? $"[{form.ArtikelNr}|{form.ProductieNr}] ProductieFormulier Update",
+                  showmessage, onlylocal);
         }
 
         public Task<int> UpSert(ProductieFormulier[] forms, string change, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || ProductieFormulieren == null || forms == null)
                     return -1;
@@ -568,7 +538,7 @@ namespace Rpm.SqlLite
                 {
                     var done = 0;
                     foreach (var prod in forms)
-                        if (await UpSert(prod, change, showmessage))
+                        if (xUpSert(prod.ProductieNr, prod, change, showmessage))
                             done++;
                     return done;
                 }
@@ -579,80 +549,168 @@ namespace Rpm.SqlLite
             });
         }
 
+        public Task<bool> UpSert(string id, ProductieFormulier form, string change, bool showmessage = true, bool onlylocal = false)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                return xUpSert(id, form, change, showmessage, onlylocal);
+            });
+        }
+
+        public bool xUpSert(string id, ProductieFormulier form, string change, bool showmessage = true, bool onlylocal = false)
+        {
+            if (IsDisposed || id == null || form == null || ProductieFormulieren == null || GereedFormulieren == null)
+                return false;
+            bool xreturn = false;
+            try
+            {
+                form.ExcludeFromUpdate();
+                form.LastChanged = form.LastChanged.UpdateChange(change, DbType.Producties);
+                var del = false;
+                if (ProductieFormulieren != null && form.Bewerkingen.All(x => x.State == ProductieState.Gereed))
+                {
+                    if (ProductieFormulieren.Exists(id))
+                    {
+                        ProductieFormulieren.RaiseEventWhenDeleted = !RaiseEventWhenDeleted;
+                        if (ProductieFormulieren.Delete(id))
+                        {
+                            del = true;
+                        }
+                        ProductieFormulieren.RaiseEventWhenDeleted = true;
+                    }
+                    GereedFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
+                    if (GereedFormulieren.Upsert(id, form, onlylocal, change))
+                    {
+                        del = false;
+                        _ = UpdateChange(form.LastChanged, DbType.GereedProducties,
+                            showmessage);
+                        xreturn = true;
+                    }
+
+                    GereedFormulieren.RaiseEventWhenChanged = true;
+                }
+                else if (ProductieFormulieren != null)
+                {
+                    if (GereedFormulieren != null && GereedFormulieren.Exists(id))
+                    {
+                        GereedFormulieren.RaiseEventWhenDeleted = !RaiseEventWhenDeleted;
+                        if (GereedFormulieren.Delete(id))
+                        {
+                            del = true;
+                            //if (RaiseEventWhenDeleted)
+                            //    Manager.FormulierDeleted(this, id);
+                        }
+                        GereedFormulieren.RaiseEventWhenDeleted = true;
+                    }
+                    ProductieFormulieren.RaiseEventWhenChanged = !RaiseEventWhenChanged;
+                    if (ProductieFormulieren.Upsert(id, form, onlylocal, change))
+                    {
+                        del = false;
+                        _ = UpdateChange(form.LastChanged, DbType.Producties,
+                            showmessage);
+                        xreturn = true;
+                    }
+                    ProductieFormulieren.RaiseEventWhenChanged = true;
+                }
+                if (del && RaiseEventWhenDeleted)
+                    Manager.FormulierDeleted(this, id);
+                else if (!del && xreturn && RaiseEventWhenChanged)
+                    Manager.FormulierChanged(this, form);
+                //Manager.FormulierChanged(this, form);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                xreturn = false;
+            }
+            form.RemoveExcludeFromUpdate();
+            return xreturn;
+        }
+
         public Task<bool> DeleteProductie(string id, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
-                if (IsDisposed || ProductieFormulieren == null || id == null)
-                    return false;
-                try
-                {
-                    var change = $"[{id}] Productie Verwijderd";
-                    var form = await ProductieFormulieren.FindOne(id,false);
-                    if (form == null) return false;
-                    form.ExcludeFromUpdate();
-                    var changed = new UserChange().UpdateChange(change, DbType.Producties);
-                    changed.IsRemoved = true;
-                    await UpdateChange(changed, DbType.Producties, showmessage);
-                    bool deleted = true;
-                    if (!await ProductieFormulieren.Delete(id))
-                        deleted = await GereedFormulieren.Delete(form.ProductieNr);
-                    
-                    if (deleted && RaiseEventWhenDeleted)
-                        Manager.FormulierDeleted(this, id);
-                    form.RemoveExcludeFromUpdate();
-                    return deleted;
-                }
-                catch
-                {
-                    return false;
-                }
+                return xDeleteProductie(id, showmessage);
             });
+        }
+
+        public bool xDeleteProductie(string id, bool showmessage = true)
+        {
+            if (IsDisposed || ProductieFormulieren == null || id == null)
+                return false;
+            try
+            {
+                var change = $"[{id}] Productie Verwijderd";
+                var form = ProductieFormulieren.FindOne(id, false);
+                if (form == null) return false;
+                form.ExcludeFromUpdate();
+                var changed = new UserChange().UpdateChange(change, DbType.Producties);
+                changed.IsRemoved = true;
+                UpdateChange(changed, DbType.Producties, showmessage);
+                bool deleted = true;
+                if (!ProductieFormulieren.Delete(id))
+                    deleted = GereedFormulieren.Delete(form.ProductieNr);
+
+                if (deleted && RaiseEventWhenDeleted)
+                    Manager.FormulierDeleted(this, id);
+                form.RemoveExcludeFromUpdate();
+                return deleted;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public Task<bool> Delete(ProductieFormulier form, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
-                if (IsDisposed || ProductieFormulieren == null || form == null)
-                    return false;
-                bool xreturn = false;
-                try
-                {
-                    form.ExcludeFromUpdate();
-                    var change = $"[{form.ProductieNr}] Productie Verwijderd";
-                    if (await ProductieFormulieren.Delete(form.ProductieNr))
-                    {
-                        form.LastChanged = form.LastChanged.UpdateChange(change, DbType.Producties);
-                        form.LastChanged.IsRemoved = true;
-                        await UpdateChange(form.LastChanged, DbType.Producties, showmessage);
-                        if (RaiseEventWhenDeleted)
-                            Manager.FormulierDeleted(this, form.ProductieNr);
-                        xreturn = true;
-                    }
-
-                    if (await GereedFormulieren.Delete(form.ProductieNr))
-                    {
-                        form.LastChanged = form.LastChanged.UpdateChange(change, DbType.GereedProducties);
-                        form.LastChanged.IsRemoved = true;
-                        await UpdateChange(form.LastChanged, DbType.GereedProducties,
-                            showmessage);
-                        if (RaiseEventWhenDeleted)
-                            Manager.FormulierDeleted(this, form.ProductieNr);
-                        xreturn = true;
-                    }
-                }
-                catch
-                {
-                }
-                form.RemoveExcludeFromUpdate();
-                return xreturn;
+                return xDelete(form, showmessage);
             });
+        }
+
+        public bool xDelete(ProductieFormulier form, bool showmessage = true)
+        {
+            if (IsDisposed || ProductieFormulieren == null || form == null)
+                return false;
+            bool xreturn = false;
+            try
+            {
+                form.ExcludeFromUpdate();
+                var change = $"[{form.ProductieNr}] Productie Verwijderd";
+                if (ProductieFormulieren.Delete(form.ProductieNr))
+                {
+                    form.LastChanged = form.LastChanged.UpdateChange(change, DbType.Producties);
+                    form.LastChanged.IsRemoved = true;
+                    UpdateChange(form.LastChanged, DbType.Producties, showmessage);
+                    if (RaiseEventWhenDeleted)
+                        Manager.FormulierDeleted(this, form.ProductieNr);
+                    xreturn = true;
+                }
+
+                if (GereedFormulieren.Delete(form.ProductieNr))
+                {
+                    form.LastChanged = form.LastChanged.UpdateChange(change, DbType.GereedProducties);
+                    form.LastChanged.IsRemoved = true;
+                    UpdateChange(form.LastChanged, DbType.GereedProducties,
+                        showmessage);
+                    if (RaiseEventWhenDeleted)
+                        Manager.FormulierDeleted(this, form.ProductieNr);
+                    xreturn = true;
+                }
+            }
+            catch
+            {
+            }
+            form.RemoveExcludeFromUpdate();
+            return xreturn;
         }
 
         public Task<int> Delete(ProductieFormulier[] forms, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || ProductieFormulieren == null || forms == null)
                     return -1;
@@ -661,7 +719,7 @@ namespace Rpm.SqlLite
                     var xreturn = 0;
                     foreach (var prod in forms)
                     {
-                        if (await Delete(prod))
+                        if (xDelete(prod,showmessage))
                             xreturn++;
 
                     }
@@ -677,24 +735,19 @@ namespace Rpm.SqlLite
 
         public Task<bool> Replace(ProductieFormulier oldform, ProductieFormulier newform, bool showmessage = true)
         {
-            return Task.Run(async () =>
-            {
-                if (oldform == null)
-                    return false;
-                return await Replace(oldform.ProductieNr, newform, showmessage);
-            });
+            return Replace(oldform.ProductieNr, newform, showmessage);
         }
 
         public Task<bool> Replace(string id, ProductieFormulier newform, bool showmessage = true, bool onlylocal = false)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || ProductieFormulieren == null || id == null || newform == null)
                     return false;
                 try
                 {
-                    await DeleteProductie(id, showmessage);
-                    await UpSert(newform, showmessage,onlylocal);
+                    if (xDeleteProductie(id, showmessage))
+                        return xUpSert(newform.ProductieNr, newform,null, showmessage, onlylocal);
                     return false;
                 }
                 catch
@@ -704,40 +757,33 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<bool> Exist(ProductieFormulier form)
+        public bool Exist(ProductieFormulier form)
         {
-            return Task.Run(async () =>
+            if (IsDisposed || form == null)
+                return false;
+            try
             {
-                if (IsDisposed || form == null)
-                    return false;
-                try
-                {
-                    return await ProductieExist(form.ProductieNr);
-                }
-                catch
-                {
-                    return false;
-                }
-            });
+                return ProductieExist(form.ProductieNr);
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<bool> ProductieExist(string id)
+        public bool ProductieExist(string id)
         {
-            return Task.Run(() =>
+            if (IsDisposed || id == null)
+                return false;
+            try
             {
-                if (IsDisposed || id == null)
-                    return false;
-                try
-                {
-                    return (ProductieFormulieren != null &&
-                           ProductieFormulieren.Exists(id).Result ) || (GereedFormulieren != null && GereedFormulieren.Exists(id).Result);
-                }
-                catch
-                {
-                    return false;
-                }
-
-            });
+                return (ProductieFormulieren != null &&
+                       ProductieFormulieren.Exists(id)) || (GereedFormulieren != null && GereedFormulieren.Exists(id));
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         #endregion ProductieFormulieren
@@ -746,13 +792,13 @@ namespace Rpm.SqlLite
 
         public Task<UserAccount> GetAccount(string username)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || username == null)
                     return null;
                 try
                 {
-                    return UserAccounts?.FindOne(username, false).Result;
+                    return UserAccounts?.FindOne(username, false);
                 }
                 catch
                 {
@@ -761,19 +807,43 @@ namespace Rpm.SqlLite
             });
         }
 
+        public UserAccount xGetAccount(string username)
+        {
+            if (IsDisposed || username == null)
+                return null;
+            try
+            {
+                return UserAccounts?.FindOne(username, false);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public Task<List<UserAccount>> GetAllAccounts()
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
-                if (IsDisposed || UserAccounts == null)
-                    return new List<UserAccount>();
-                return UserAccounts.FindAll(false).Result;
+                return xGetAllAccounts();
             });
+        }
+
+        public List<UserAccount> xGetAllAccounts()
+        {
+            if (IsDisposed || UserAccounts == null)
+                return new List<UserAccount>();
+            return UserAccounts.FindAll(false);
         }
 
         public Task<bool> UpSert(UserAccount account, bool showmessage = true, bool onlylocal = false)
         {
             return UpSert(account.Username, account, "Gebruiker Account Update", showmessage,onlylocal);
+        }
+
+        public bool xUpSert(UserAccount account, bool showmessage = true, bool onlylocal = false)
+        {
+            return xUpSert(account.Username, account, "Gebruiker Account Update", showmessage, onlylocal);
         }
 
         public Task<bool> UpSert(UserAccount account, string change, bool showmessage = true, bool onlylocal = false)
@@ -783,17 +853,13 @@ namespace Rpm.SqlLite
 
         public Task<bool> UpSert(string id, UserAccount account, string change, bool showmessage = true, bool onlylocal = false)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || UserAccounts == null || id == null || account == null)
                     return false;
                 try
                 {
-                    account.LastChanged = account.LastChanged.UpdateChange(change, DbType.Accounts);
-                    _=UpdateChange(account.LastChanged, DbType.Accounts, showmessage);
-                    await UserAccounts.Upsert(id, account,onlylocal,change);
-                    Manager.AccountChanged(this, account);
-                    return true;
+                    return xUpSert(id, account, change, showmessage, onlylocal);
                 }
                 catch
                 {
@@ -802,9 +868,27 @@ namespace Rpm.SqlLite
             });
         }
 
+        public bool xUpSert(string id, UserAccount account, string change, bool showmessage = true, bool onlylocal = false)
+        {
+            if (IsDisposed || UserAccounts == null || id == null || account == null)
+                return false;
+            try
+            {
+                account.LastChanged = account.LastChanged.UpdateChange(change, DbType.Accounts);
+                _ = UpdateChange(account.LastChanged, DbType.Accounts, showmessage);
+                UserAccounts.Upsert(id, account, onlylocal, change);
+                Manager.AccountChanged(this, account);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public Task<int> UpSert(UserAccount[] accounts, string change, bool showmessage = true, bool onlylocal = false)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || UserAccounts == null || accounts == null)
                     return -1;
@@ -812,7 +896,7 @@ namespace Rpm.SqlLite
                 {
                     var count = 0;
                     foreach (var account in accounts)
-                        if (await UpSert(account.Username, account, change, showmessage,onlylocal))
+                        if (xUpSert(account.Username, account, change, showmessage,onlylocal))
                             count++;
                     return count;
                 }
@@ -825,17 +909,12 @@ namespace Rpm.SqlLite
 
         public Task<bool> Delete(UserAccount account, bool showmessage = true)
         {
-            return Task.Run(async () =>
-            {
-                if (account == null)
-                    return false;
-                return await DeleteAccount(account.Username, showmessage);
-            });
+            return DeleteAccount(account.Username, showmessage);
         }
 
         public Task<int> Delete(UserAccount[] accounts, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || UserAccounts == null || accounts == null)
                     return -1;
@@ -844,7 +923,7 @@ namespace Rpm.SqlLite
                     var xreturn = 0;
 
                     foreach (var v in accounts)
-                        if (await UserAccounts.Delete(v.Username))
+                        if (UserAccounts.Delete(v.Username))
                             xreturn++;
                     if (xreturn > 0)
                     {
@@ -855,7 +934,7 @@ namespace Rpm.SqlLite
                             PcId = OwnerId,
                             User = Manager.Opties == null ? "Default" : Manager.Opties.Username
                         };
-                        await UpdateChange(changed, DbType.Accounts, showmessage);
+                        UpdateChange(changed, DbType.Accounts, showmessage);
                     }
 
                     return xreturn;
@@ -869,56 +948,56 @@ namespace Rpm.SqlLite
 
         public Task<bool> DeleteAccount(string id, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
-                if (IsDisposed || UserAccounts == null || id == null)
-                    return false;
-                try
-                {
-                    var pers = await UserAccounts.FindOne(id, false);
-                    if (pers != null && await UserAccounts.Delete(id))
-                    {
-                        var changed = new UserChange
-                        {
-                            Change = $"[{id}] Account Verwijderd",
-                            IsRemoved = true,
-                            PcId = OwnerId,
-                            User = Manager.Opties == null ? "Default" : Manager.Opties.Username
-                        };
-                        await UpdateChange(changed, DbType.Accounts, showmessage);
-                        return true;
-                    }
-
-                    return false;
-                }
-                catch
-                {
-                    return false;
-                }
+                return xDeleteAccount(id, showmessage);
             });
+        }
+
+        public bool xDeleteAccount(string id, bool showmessage = true)
+        {
+            if (IsDisposed || UserAccounts == null || id == null)
+                return false;
+            try
+            {
+                var pers = UserAccounts.FindOne(id, false);
+                if (pers != null && UserAccounts.Delete(id))
+                {
+                    var changed = new UserChange
+                    {
+                        Change = $"[{id}] Account Verwijderd",
+                        IsRemoved = true,
+                        PcId = OwnerId,
+                        User = Manager.Opties == null ? "Default" : Manager.Opties.Username
+                    };
+                    UpdateChange(changed, DbType.Accounts, showmessage);
+                    return true;
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public Task<bool> Replace(UserAccount oldaccount, UserAccount newaccount, bool showmessage = true)
         {
-            return Task.Run(async () =>
-            {
-                if (oldaccount == null)
-                    return false;
-                return await Replace(oldaccount.Username, newaccount, showmessage);
-            });
+            return Replace(oldaccount.Username, newaccount, showmessage);
         }
 
         public Task<bool> Replace(string id, UserAccount newaccount, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || UserAccounts == null || id == null || newaccount == null)
                     return false;
                 try
                 {
-                    await DeleteAccount(id);
-                    await UpSert(newaccount);
-                    return true;
+                    if (xDeleteAccount(id))
+                        return xUpSert(newaccount);
+                    return false;
                 }
                 catch
                 {
@@ -927,45 +1006,39 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<bool> Exist(UserAccount account)
+        public bool Exist(UserAccount account)
         {
-            return Task.Run(async () =>
+            if (IsDisposed || UserAccounts == null || account == null)
+                return false;
+            try
             {
-                if (IsDisposed || UserAccounts == null || account == null)
-                    return false;
-                try
-                {
-                    return await UserAccounts.Exists(account.Username);
-                }
-                catch
-                {
-                    return false;
-                }
-            });
+                return UserAccounts.Exists(account.Username);
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<bool> AccountExist(string id)
+        public bool AccountExist(string id)
         {
-            return Task.Run(async () =>
+            if (IsDisposed || UserAccounts == null || id == null)
+                return false;
+            try
             {
-                if (IsDisposed || UserAccounts == null || id == null)
-                    return false;
-                try
-                {
-                    return await UserAccounts.Exists(id);
-                }
-                catch
-                {
-                    return false;
-                }
-            });
+                return UserAccounts.Exists(id);
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         #endregion UserAccounts
 
         #region Usersettings
 
-        public Task<UserSettings> GetSetting(string username)
+        public UserSettings GetSetting(string username)
         {
             if (IsDisposed || AllSettings == null || username == null)
                 return null;
@@ -981,12 +1054,19 @@ namespace Rpm.SqlLite
 
         public Task<List<UserSettings>> GetAllSettings()
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || AllSettings == null)
                     return new List<UserSettings>();
-                return AllSettings.FindAll(false).Result;
+                return AllSettings.FindAll(false);
             });
+        }
+
+        public List<UserSettings> xGetAllSettings()
+        {
+            if (IsDisposed || AllSettings == null)
+                return new List<UserSettings>();
+            return AllSettings.FindAll(false);
         }
 
         public Task<bool> UpSert(UserSettings setting, bool showmessage = true)
@@ -1001,30 +1081,9 @@ namespace Rpm.SqlLite
             return UpSert(id, user, change, showmessage);
         }
 
-        public Task<bool> UpSert(string id, UserSettings account, string change, bool showmessage = true, bool onlylocal = false)
-        {
-            return Task.Run(async () =>
-            {
-                if (IsDisposed || AllSettings == null || id == null || account == null)
-                    return false;
-                try
-                {
-                    account.LastChanged = account.LastChanged.UpdateChange(change, DbType.Opties);
-                    await UpdateChange(account.LastChanged, DbType.Opties, showmessage);
-                    if (AllSettings != null)
-                        await AllSettings.Upsert(id, account,onlylocal,change);
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
-            });
-        }
-
         public Task<int> UpSert(UserSettings[] accounts, string change, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || AllSettings == null || accounts == null)
                     return -1;
@@ -1034,7 +1093,7 @@ namespace Rpm.SqlLite
                     {
                         var count = 0;
                         foreach (var account in accounts)
-                            if (await UpSert(account, change, showmessage))
+                            if (xUpSert(account.Username, account, change, showmessage))
                                 count++;
 
                         return count;
@@ -1049,20 +1108,41 @@ namespace Rpm.SqlLite
             });
         }
 
+        public Task<bool> UpSert(string id, UserSettings account, string change, bool showmessage = true, bool onlylocal = false)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                return xUpSert(id, account, change, showmessage, onlylocal);
+            });
+        }
+
+        public bool xUpSert(string id, UserSettings account, string change, bool showmessage = true, bool onlylocal = false)
+        {
+            if (IsDisposed || AllSettings == null || id == null || account == null)
+                return false;
+            try
+            {
+                account.LastChanged = account.LastChanged.UpdateChange(change, DbType.Opties);
+                UpdateChange(account.LastChanged, DbType.Opties, showmessage);
+                if (AllSettings != null)
+                    AllSettings.Upsert(id, account, onlylocal, change);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public Task<bool> Delete(UserSettings account, bool showmessage = true)
         {
-            return Task.Run(async () =>
-            {
-                if (account == null)
-                    return false;
-                string id = account.Username != null ? account.Username.ToLower().StartsWith("default") ? $"Default[{account.SystemID}]" : account.Username : null;
-                return await DeleteSettings(id, showmessage);
-            });
+            string id = account.Username != null ? account.Username.ToLower().StartsWith("default") ? $"Default[{account.SystemID}]" : account.Username : null;
+            return DeleteSettings(id, showmessage);
         }
 
         public Task<int> Delete(UserSettings[] settings, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || AllSettings == null || settings == null)
                     return -1;
@@ -1071,7 +1151,7 @@ namespace Rpm.SqlLite
                     var xreturn = 0;
 
                     foreach (var v in settings)
-                        if (await Delete(v,showmessage))
+                        if (xDeleteSettings(v.Username, showmessage))
                             xreturn++;
                     return xreturn;
                 }
@@ -1084,54 +1164,54 @@ namespace Rpm.SqlLite
 
         public Task<bool> DeleteSettings(string id, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
-                if (IsDisposed || AllSettings == null || id == null)
-                    return false;
-                try
-                {
-                    var xset = AllSettings.FindOne(id, false);
-                    if (xset != null && await AllSettings.Delete(id))
-                    {
-                        var lastchange = new UserChange().UpdateChange($"[{id}] Optie Verwijderd", DbType.Opties);
-                        lastchange.IsRemoved = true;
-                        await UpdateChange(lastchange, DbType.Opties, showmessage);
-                        return true;
-                    }
-
-                    return false;
-                }
-                catch
-                {
-                    return false;
-                }
+               return xDeleteSettings(id, showmessage);
             });
+        }
+
+        public bool xDeleteSettings(string id, bool showmessage = true)
+        {
+            if (IsDisposed || AllSettings == null || id == null)
+                return false;
+            try
+            {
+                var xset = AllSettings.FindOne(id, false);
+                if (xset != null && AllSettings.Delete(id))
+                {
+                    var lastchange = new UserChange().UpdateChange($"[{id}] Optie Verwijderd", DbType.Opties);
+                    lastchange.IsRemoved = true;
+                    UpdateChange(lastchange, DbType.Opties, showmessage);
+                    return true;
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public Task<bool> Replace(UserSettings oldsettings, UserSettings newsettings, bool showmessage = true)
         {
-            return Task.Run(async () =>
-            {
-                if (oldsettings == null)
-                    return false;
-                string id = oldsettings.Username != null
-                    ? oldsettings.Username.ToLower().StartsWith("default") ? $"Default[{oldsettings.SystemID}]" :
-                    oldsettings.Username
-                    : null;
-                return await Replace(id, newsettings, showmessage);
-            });
+            string id = oldsettings.Username != null
+                  ? oldsettings.Username.ToLower().StartsWith("default") ? $"Default[{oldsettings.SystemID}]" :
+                  oldsettings.Username
+                  : null;
+            return Replace(id, newsettings, showmessage);
         }
 
         public Task<bool> Replace(string id, UserSettings newsettings, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || AllSettings == null || id == null || newsettings == null)
                     return false;
                 try
                 {
-                    if (await DeleteSettings(id, showmessage))
-                        return await UpSert(newsettings, showmessage);
+                    if (xDeleteSettings(id, showmessage))
+                        return xUpSert(newsettings.Username,newsettings,null, showmessage);
                     return false;
                 }
                 catch (Exception)
@@ -1141,42 +1221,36 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<bool> Exist(UserSettings settings)
+        public bool Exist(UserSettings settings)
         {
-            return Task.Run(async () =>
+            if (IsDisposed || AllSettings == null || settings == null)
+                return false;
+            try
             {
-                if (IsDisposed || AllSettings == null || settings == null)
-                    return false;
-                try
-                {
-                    string id = settings.Username != null
-                        ? settings.Username.ToLower().StartsWith("default") ? $"Default[{settings.SystemID}]" :
-                        settings.Username
-                        : null;
-                    return await AllSettings.Exists(id);
-                }
-                catch
-                {
-                    return false;
-                }
-            });
+                string id = settings.Username != null
+                    ? settings.Username.ToLower().StartsWith("default") ? $"Default[{settings.SystemID}]" :
+                    settings.Username
+                    : null;
+                return AllSettings.Exists(id);
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<bool> SettingsExist(string id)
+        public bool SettingsExist(string id)
         {
-            return Task.Run(async () =>
+            if (IsDisposed || AllSettings == null || id == null)
+                return false;
+            try
             {
-                if (IsDisposed || AllSettings == null || id == null)
-                    return false;
-                try
-                {
-                    return await AllSettings.Exists(id);
-                }
-                catch
-                {
-                    return false;
-                }
-            });
+                return AllSettings.Exists(id);
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         #endregion Usersettings
@@ -1185,13 +1259,13 @@ namespace Rpm.SqlLite
 
         public Task<Personeel> GetPersoneel(string username)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || PersoneelLijst == null || username == null)
                     return null;
                 try
                 {
-                    return await PersoneelLijst.FindOne(username, false);
+                    return PersoneelLijst.FindOne(username, false);
                 }
                 catch
                 {
@@ -1200,9 +1274,23 @@ namespace Rpm.SqlLite
             });
         }
 
+        public Personeel xGetPersoneel(string username)
+        {
+            if (IsDisposed || PersoneelLijst == null || username == null)
+                return null;
+            try
+            {
+                return PersoneelLijst.FindOne(username, false);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public Task<List<Personeel>> GetPersoneel(string[] usernames)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || PersoneelLijst == null || usernames == null)
                     return new List<Personeel>();
@@ -1213,7 +1301,7 @@ namespace Rpm.SqlLite
                     {
                         if (personen.Any(x => string.Equals(x.PersoneelNaam, name, StringComparison.CurrentCultureIgnoreCase)))
                             continue;
-                        var pers = await PersoneelLijst.FindOne(name, false);
+                        var pers = PersoneelLijst.FindOne(name, false);
                         if (pers != null)
                             personen.Add(pers);
                     }
@@ -1229,25 +1317,30 @@ namespace Rpm.SqlLite
 
         public Task<List<Personeel>> GetAllPersoneel()
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
-                if (IsDisposed || PersoneelLijst == null)
-                    return new List<Personeel>();
-                return PersoneelLijst.FindAll(true).Result;
+                return xGetAllPersoneel();
             });
+        }
+
+        public List<Personeel> xGetAllPersoneel()
+        {
+            if (IsDisposed || PersoneelLijst == null)
+                return new List<Personeel>();
+            return PersoneelLijst.FindAll(true);
         }
 
         public Task<bool> MaakPersoneelVrijVanWerk(string personeel, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (personeel != null && !IsDisposed && PersoneelLijst != null)
                 {
-                    var xpers = await PersoneelLijst.FindOne(personeel, false);
+                    var xpers = PersoneelLijst.FindOne(personeel, false);
                     if (xpers != null)
                     {
                         xpers.WerktAan = null;
-                        return await UpSert(xpers, "Vrij gemaakt van werk", showmessage);
+                        return xUpSert(xpers.PersoneelNaam, xpers, "Vrij gemaakt van werk", showmessage);
                     }
                 }
 
@@ -1257,17 +1350,17 @@ namespace Rpm.SqlLite
 
         public Task<int> MaakPersoneelVrijVanWerk(Personeel[] personen, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 var done = 0;
                 if (personen is {Length: > 0} && !IsDisposed && PersoneelLijst != null)
                     foreach (var personeel in personen)
                     {
-                        var xpers = await PersoneelLijst.FindOne(personeel.PersoneelNaam, false);
+                        var xpers = PersoneelLijst.FindOne(personeel.PersoneelNaam, false);
                         if (xpers != null)
                         {
                             xpers.WerktAan = null;
-                            if (await UpSert(xpers, "Vrij gemaakt van werk", showmessage))
+                            if (xUpSert(xpers.PersoneelNaam, xpers, "Vrij gemaakt van werk", showmessage))
                                 done++;
                         }
                     }
@@ -1278,17 +1371,17 @@ namespace Rpm.SqlLite
 
         public Task<int> MaakAllePersoneelVrijVanWerk(bool showmessage = true)
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
                 var done = 0;
                 if (!IsDisposed && PersoneelLijst != null)
                 {
-                    var personen = PersoneelLijst.FindAll(false).Result;
+                    var personen = PersoneelLijst.FindAll(false);
                     foreach (var personeel in personen)
                         if (personeel.WerktAan != null)
                         {
                             personeel.WerktAan = null;
-                            if (UpSert(personeel, "Vrij gemaakt van werk", showmessage).Result)
+                            if (xUpSert(personeel.PersoneelNaam, personeel, "Vrij gemaakt van werk", showmessage))
                                 done++;
                         }
                 }
@@ -1309,32 +1402,37 @@ namespace Rpm.SqlLite
 
         public Task<bool> UpSert(string id, Personeel persoon, string change, bool showmessage = true, bool onlylocal = false)
         {
-            return Task.Run( () =>
+            return Task.Factory.StartNew(() =>
             {
-                if (IsDisposed || PersoneelLijst == null || id == null || persoon == null)
-                    return false;
-                try
-                {
-                    persoon.LastChanged = persoon.LastChanged.UpdateChange(change, DbType.Medewerkers);
-                    UpdateChange(persoon.LastChanged, DbType.Medewerkers,
-                        showmessage);
-                    PersoneelLijst.RaiseEventWhenChanged = !RaiseEventWhenChanged;
-                    _= PersoneelLijst.Upsert(id, persoon,onlylocal,change).Result;
-                    if (RaiseEventWhenChanged)
-                        Manager.PersoneelChanged(this, persoon);
-                    PersoneelLijst.RaiseEventWhenChanged = true;
-                    return true;
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
+                return xUpSert(id, persoon, change, showmessage, onlylocal);
             });
+        }
+
+        public bool xUpSert(string id, Personeel persoon, string change, bool showmessage = true, bool onlylocal = false)
+        {
+            if (IsDisposed || PersoneelLijst == null || id == null || persoon == null)
+                return false;
+            try
+            {
+                persoon.LastChanged = persoon.LastChanged.UpdateChange(change, DbType.Medewerkers);
+                UpdateChange(persoon.LastChanged, DbType.Medewerkers,
+                    showmessage);
+                PersoneelLijst.RaiseEventWhenChanged = !RaiseEventWhenChanged;
+                _ = PersoneelLijst.Upsert(id, persoon, onlylocal, change);
+                if (RaiseEventWhenChanged)
+                    Manager.PersoneelChanged(this, persoon);
+                PersoneelLijst.RaiseEventWhenChanged = true;
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public Task<int> UpSert(Personeel[] personen, string change, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || PersoneelLijst == null || personen == null)
                     return -1;
@@ -1342,7 +1440,7 @@ namespace Rpm.SqlLite
                 {
                     var count = 0;
                     foreach (var account in personen)
-                        if (await UpSert(account, change, showmessage))
+                        if (xUpSert(account.PersoneelNaam, account, change, showmessage))
                             count++;
                     return count;
                 }
@@ -1355,17 +1453,12 @@ namespace Rpm.SqlLite
 
         public Task<bool> Delete(Personeel persoon, bool showmessage = true)
         {
-            return Task.Run(async () =>
-            {
-                if (persoon == null)
-                    return false;
-                return await DeletePersoneel(persoon.PersoneelNaam, showmessage);
-            });
+            return DeletePersoneel(persoon.PersoneelNaam, showmessage);
         }
 
         public Task<int> Delete(Personeel[] personeel, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || PersoneelLijst == null || personeel == null)
                     return -1;
@@ -1374,7 +1467,7 @@ namespace Rpm.SqlLite
                     var xreturn = 0;
 
                     foreach (var v in personeel)
-                        if (await Delete(v, showmessage))
+                        if (xDeletePersoneel(v.PersoneelNaam, showmessage))
                             xreturn++;
                     return xreturn;
                 }
@@ -1387,38 +1480,43 @@ namespace Rpm.SqlLite
 
         public Task<bool> DeletePersoneel(string id, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
-                if (IsDisposed || PersoneelLijst == null || id == null)
-                    return false;
-                bool xreturn = false;
-                try
-                {
-                   
-                    var per = await PersoneelLijst.FindOne(id, false);
-                    PersoneelLijst.RaiseEventWhenDeleted = !RaiseEventWhenDeleted;
-                    if (per != null && await PersoneelLijst.Delete(id))
-                    {
-                        var lastchange = new UserChange
-                        {
-                            Change = $"[{id}] Personeel Verwijderd",
-                            IsRemoved = true,
-                            PcId = OwnerId,
-                            User = Manager.Opties == null ? "Default" : Manager.Opties.Username
-                        };
-                        await UpdateChange(lastchange,DbType.Medewerkers, showmessage);
-                        if (RaiseEventWhenDeleted)
-                            Manager.PersoneelDeleted(this, id);
-                        xreturn = true;
-                    }
-                }
-                catch
-                {
-                    xreturn = false;
-                }
-                PersoneelLijst.RaiseEventWhenDeleted = true;
-                return xreturn;
+                return xDeletePersoneel(id, showmessage);
             });
+        }
+
+        public bool xDeletePersoneel(string id, bool showmessage = true)
+        {
+            if (IsDisposed || PersoneelLijst == null || id == null)
+                return false;
+            bool xreturn = false;
+            try
+            {
+
+                var per = PersoneelLijst.FindOne(id, false);
+                PersoneelLijst.RaiseEventWhenDeleted = !RaiseEventWhenDeleted;
+                if (per != null && PersoneelLijst.Delete(id))
+                {
+                    var lastchange = new UserChange
+                    {
+                        Change = $"[{id}] Personeel Verwijderd",
+                        IsRemoved = true,
+                        PcId = OwnerId,
+                        User = Manager.Opties == null ? "Default" : Manager.Opties.Username
+                    };
+                    UpdateChange(lastchange, DbType.Medewerkers, showmessage);
+                    if (RaiseEventWhenDeleted)
+                        Manager.PersoneelDeleted(this, id);
+                    xreturn = true;
+                }
+            }
+            catch
+            {
+                xreturn = false;
+            }
+            PersoneelLijst.RaiseEventWhenDeleted = true;
+            return xreturn;
         }
 
         public Task<bool> Replace(Personeel oldpersoon, Personeel newpersoon, string change = null, bool showmessage = true)
@@ -1433,14 +1531,14 @@ namespace Rpm.SqlLite
 
         public Task<bool> Replace(string id, Personeel newpersoon, string change = null,bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (IsDisposed || PersoneelLijst == null || id == null || newpersoon == null)
                     return false;
                 try
                 {
-                    await DeletePersoneel(id, showmessage);
-                    await UpSert(newpersoon, change?? $"{id} is verplaatst met {newpersoon.PersoneelNaam}", showmessage);
+                    if(xDeletePersoneel(id, showmessage))
+                       xUpSert(newpersoon.PersoneelNaam, newpersoon, change?? $"{id} is verplaatst met {newpersoon.PersoneelNaam}", showmessage);
                     return true;
                 }
                 catch
@@ -1450,38 +1548,32 @@ namespace Rpm.SqlLite
             });
         }
 
-        public Task<bool> Exist(Personeel persoon)
+        public bool Exist(Personeel persoon)
         {
-            return Task.Run(async () =>
+            if (IsDisposed || PersoneelLijst == null || persoon == null)
+                return false;
+            try
             {
-                if (IsDisposed || PersoneelLijst == null || persoon == null)
-                    return false;
-                try
-                {
-                    return await PersoneelLijst.Exists(persoon.PersoneelNaam);
-                }
-                catch
-                {
-                    return false;
-                }
-            });
+                return PersoneelLijst.Exists(persoon.PersoneelNaam);
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<bool> PersoneelExist(string id)
+        public bool PersoneelExist(string id)
         {
-            return Task.Run(async () =>
+            if (IsDisposed || PersoneelLijst == null || id == null)
+                return false;
+            try
             {
-                if (IsDisposed || PersoneelLijst == null || id == null)
-                    return false;
-                try
-                {
-                    return await PersoneelLijst.Exists(id);
-                }
-                catch
-                {
-                    return false;
-                }
-            });
+                return PersoneelLijst.Exists(id);
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         #endregion Personeel
@@ -1527,13 +1619,14 @@ namespace Rpm.SqlLite
         public Task UpdateChange(UserChange change, DbType dbname,
             bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 try
                 {
                     if (NotificationEnabled && showmessage && !string.IsNullOrEmpty(change?.Change))
                         Manager.RemoteMessage(change.CreateMessage(dbname));
-                    if (LoggerEnabled && showmessage && !string.IsNullOrEmpty(change?.Change)) await AddLog(change.Change, MsgType.Info);
+                    if (LoggerEnabled && showmessage && !string.IsNullOrEmpty(change?.Change)) 
+                        AddLog(change.Change, MsgType.Info);
                     // PManager.RemoteMessage(new Mailing.RemoteMessage(change.Change, MessageAction.None, MsgType.Info));
                 }
                 catch
@@ -1544,34 +1637,31 @@ namespace Rpm.SqlLite
         }
 
 
-        public Task<bool> AddLog(string message, MsgType type)
+        public bool AddLog(string message, MsgType type)
         {
-            return Task.Run(async () =>
-            {
-                if (Logger != null && !IsDisposed)
-                    try
-                    {
-                        var ent = new LogEntry(message.Replace("\n", " "), type);
-                        return await Logger.Upsert(ent.Id.ToString(), ent, false,null);
-                    }
-                    catch (Exception)
-                    {
-                        return false;
-                    }
+            if (Logger != null && !IsDisposed)
+                try
+                {
+                    var ent = new LogEntry(message.Replace("\n", " "), type);
+                    return Logger.Upsert(ent.Id.ToString(), ent, false, null);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
 
-                return false;
-            });
+            return false;
         }
 
         public Task<List<LogEntry>> GetLogs(DateTime from, DateTime to, IsValidHandler validhandler = null)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 var logs = new List<LogEntry>();
                 if (Logger != null && !IsDisposed)
                     try
                     {
-                        var found = await Logger.FindAll(new TijdEntry(from, to),validhandler,true);
+                        var found = Logger.FindAll(new TijdEntry(from, to),validhandler,true);
                         if (found.Any())
                             logs.AddRange(found);
                         logs.Sort((x, y) => DateTime.Compare(x.Added, y.Added));
@@ -1589,7 +1679,7 @@ namespace Rpm.SqlLite
 
         #region Database
 
-        public Task<int> RemoveFromCollection(string collection,string[] items)
+        public int RemoveFromCollection(string collection,string[] items)
         {
             switch (collection.ToLower())
             {
@@ -1609,50 +1699,129 @@ namespace Rpm.SqlLite
                     return DbVersions.Delete(items);
             }
 
-            return Task<int>.Factory.StartNew(() => 0);
+            return 0;
+        }
+
+        public static string GetDbName(DbType type)
+        {
+            switch (type)
+            {
+                case DbType.Producties:
+                    return "SqlDatabase";
+                case DbType.Opmerkingen:
+                    return "Opmerkingen";
+                case DbType.Medewerkers:
+                    return "PersoneelDb";
+                case DbType.GereedProducties:
+                    return "GereedDb";
+                case DbType.Opties:
+                    return "SettingDb";
+                case DbType.Accounts:
+                    return "AccountsDb";
+                case DbType.Logs:
+                    return "LogDb";
+                case DbType.Versions:
+                    return "VersionDb";
+                case DbType.Messages:
+                    return "Chat";
+                case DbType.Klachten:
+                    return "Klachten";
+                case DbType.Verpakkingen:
+                    return "Verpakking";
+                case DbType.ArtikelRecords:
+                    return "ArtikelRecords";
+                case DbType.SpoorOverzicht:
+                    return "Sporen";
+                case DbType.LijstLayouts:
+                    return "LijstLayouts";
+                case DbType.MeldingCenter:
+                    return "Meldingen";
+                case DbType.Bijlages:
+                    return "Bijlages";
+                case DbType.ProductieFormulieren:
+                    return "Productie Formulieren";
+                case DbType.Alles:
+                    return "RPM_Data";
+            }
+            return "";
+        }
+
+        public static DbType GetDbType(string dbname)
+        {
+            if (string.IsNullOrEmpty(dbname)) return DbType.Geen;
+           switch(dbname.ToLower())
+            {
+                case "sqldatabase":
+                    return DbType.Producties;
+                case "opmerkingen":
+                    return DbType.Opmerkingen;
+                case "personeeldb":
+                    return DbType.Medewerkers;
+                case "gereeddb":
+                    return DbType.GereedProducties;
+                case "settingdb":
+                    return DbType.Opties;
+                case "accountsdb":
+                    return DbType.Accounts;
+                case "logdb":
+                    return DbType.Logs;
+                case "versiondb":
+                    return DbType.Versions;
+                case "chat":
+                    return DbType.Messages;
+                case "klachten":
+                    return DbType.Klachten;
+                case "verpakking":
+                    return DbType.Verpakkingen;
+                case "artikelrecords":
+                    return DbType.ArtikelRecords;
+                case "sporen":
+                    return DbType.SpoorOverzicht;
+                case "lijstlayouts":
+                    return DbType.LijstLayouts;
+                case "meldingen":
+                    return DbType.MeldingCenter;
+                case "bijlages":
+                    return DbType.Bijlages;
+                case "productie formulieren":
+                    return DbType.ProductieFormulieren;
+                case "rpm_data":
+                    return DbType.Alles;
+            }
+
+            return DbType.Geen;
         }
 
         public void LoadMultiFiles()
         {
-            var dbfilename = "SqlDatabase";
-            // var changeddb = "ChangeDb";
-            var personeeldb = "PersoneelDb";
-            var Gereeddb = "GereedDb";
-            var Settingdb = "SettingDb";
-            var Accountdb = "AccountsDb";
-            var Logdb = "LogDb";
-            var versiondb = "VersionDb";
             //var bewerkingentriesdb = "BewerkingLijst";
             ProductieFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, DbType.Producties, RootPath,
-                dbfilename, "ProductieFormulieren", true);
+                GetDbName(DbType.Producties), true);
             ProductieFormulieren.InstanceChanged += ProductieFormulieren_InstanceChanged;
             ProductieFormulieren.InstanceDeleted += ProductieFormulieren_InstanceDeleted;
 
             PersoneelLijst =
-                new DatabaseInstance<Personeel>(DbInstanceType.MultipleFiles, DbType.Medewerkers, RootPath, personeeldb, "Personeel", true);
+                new DatabaseInstance<Personeel>(DbInstanceType.MultipleFiles, DbType.Medewerkers, RootPath, GetDbName(DbType.Medewerkers), true);
             PersoneelLijst.InstanceChanged += PersoneelLijst_InstanceChanged;
             PersoneelLijst.InstanceDeleted += PersoneelLijst_InstanceDeleted;
 
-            UserAccounts = new DatabaseInstance<UserAccount>(DbInstanceType.MultipleFiles, DbType.Accounts, RootPath, Accountdb,
-                "UserAccounts", true);
+            UserAccounts = new DatabaseInstance<UserAccount>(DbInstanceType.MultipleFiles, DbType.Accounts, RootPath, GetDbName(DbType.Accounts), true);
             UserAccounts.InstanceChanged += UserAccounts_InstanceChanged;
             UserAccounts.InstanceDeleted += UserAccounts_InstanceDeleted;
 
-            AllSettings = new DatabaseInstance<UserSettings>(DbInstanceType.MultipleFiles, DbType.Opties, RootPath, Settingdb,
-                "AllSettings", true);
+            AllSettings = new DatabaseInstance<UserSettings>(DbInstanceType.MultipleFiles, DbType.Opties, RootPath, GetDbName(DbType.Opties), true);
             AllSettings.InstanceChanged += AllSettings_InstanceChanged;
             AllSettings.InstanceDeleted += AllSettings_InstanceDeleted;
 
-            Logger = new DatabaseInstance<LogEntry>(DbInstanceType.MultipleFiles, DbType.Logs, RootPath, Logdb, "Logs", false);
+            Logger = new DatabaseInstance<LogEntry>(DbInstanceType.MultipleFiles, DbType.Logs, RootPath, GetDbName(DbType.Logs), false);
             // ChangeLog = new DatabaseInstance<UserChange>(DbInstanceType.MultipleFiles, RootPath, changeddb,
             // "ChangeLog");
             GereedFormulieren = new DatabaseInstance<ProductieFormulier>(DbInstanceType.MultipleFiles, DbType.GereedProducties, RootPath,
-                Gereeddb, "GereedFormulieren", true);
+                GetDbName(DbType.GereedProducties), true);
             GereedFormulieren.InstanceChanged += ProductieFormulieren_InstanceChanged;
             GereedFormulieren.InstanceDeleted += ProductieFormulieren_InstanceDeleted;
 
-            DbVersions = new DatabaseInstance<DbVersion>(DbInstanceType.MultipleFiles, DbType.Versions, RootPath, versiondb,
-                "DbVersions", false);
+            DbVersions = new DatabaseInstance<DbVersion>(DbInstanceType.MultipleFiles, DbType.Versions, RootPath, GetDbName(DbType.Versions), false);
             //BewerkingEntries = new DatabaseInstance<BewerkingEntry>(DbInstanceType.MultipleFiles, RootPath,
             //    bewerkingentriesdb, "BewerkingEntries");
         }
@@ -1671,7 +1840,7 @@ namespace Rpm.SqlLite
                 {
                     if (AllSettings == null || !RaiseEventWhenChanged) return;
                     var id = Path.GetFileNameWithoutExtension(y.FullPath);
-                    var xset = AllSettings.FindOne(id, false).Result;
+                    var xset = AllSettings.FindOne(id, false);
                     if(xset != null && Manager.Opties != null && string.Equals(Manager.Opties.Username, xset.Username, StringComparison.CurrentCultureIgnoreCase))
                     {
                         var xdiffers = new List<string>();
@@ -1691,12 +1860,43 @@ namespace Rpm.SqlLite
 
         private void UserAccounts_InstanceDeleted(object sender, FileSystemEventArgs y)
         {
-            
+            try
+            {
+                if (Manager.LogedInGebruiker == null) return;
+                var id = Path.GetFileNameWithoutExtension(y.FullPath);
+                if (string.Equals(Manager.LogedInGebruiker.Username, id, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    Manager.LogOut(this,true);
+                }
+            }
+            catch (Exception x)
+            {
+                Console.WriteLine(x);
+            }
         }
 
         private void UserAccounts_InstanceChanged(object sender, FileSystemEventArgs y)
         {
-            
+            try
+            {
+                if (Manager.LogedInGebruiker == null) return;
+                var id = Path.GetFileNameWithoutExtension(y.FullPath);
+                var acc = UserAccounts.FindOne(id, false);
+                if (string.Equals(Manager.LogedInGebruiker.Username, id, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    if (acc == null)
+                        Manager.LogOut(this, true);
+                    else
+                    {
+                        Manager.LogedInGebruiker = acc;
+                        Manager.LoginChanged(acc, true);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Console.WriteLine(x);
+            }
         }
 
         private void PersoneelLijst_InstanceDeleted(object sender, FileSystemEventArgs y)
@@ -1723,7 +1923,7 @@ namespace Rpm.SqlLite
             try
             {
                 if (!RaiseEventWhenChanged || PersoneelLijst == null) return;
-                var pers = PersoneelLijst.FromPath<Personeel>(y.FullPath).Result;
+                var pers = PersoneelLijst.FromPath<Personeel>(y.FullPath);
                 if (pers != null)
                     Manager.PersoneelChanged(this, pers);
             }
@@ -1742,6 +1942,7 @@ namespace Rpm.SqlLite
                 {
                     if (!RaiseEventWhenDeleted || File.Exists(y.FullPath)) return;
                     var id = Path.GetFileNameWithoutExtension(y.FullPath);
+                if(Manager.Database != null && !Manager.Database.ProductieExist(id))
                     Manager.FormulierDeleted(this, id);
                 }
                 catch (Exception e)
@@ -1761,11 +1962,11 @@ namespace Rpm.SqlLite
                     ProductieFormulier prod = null;
                     Task.Factory.StartNew(() =>
                     {
-                        prod = MultipleFileDb.FromPath<ProductieFormulier>(e.FullPath, false).Result;
-                    }).Wait(60000);
+                        prod = MultipleFileDb.xFromPath<ProductieFormulier>(e.FullPath, false);
 
-                    if (prod != null && prod.IsAllowed(null))
-                        Manager.FormulierChanged(this, prod);
+                        if (prod != null && prod.IsAllowed(null))
+                            Manager.FormulierChanged(this, prod);
+                    });
                 }
                 catch (Exception x)
                 {
@@ -1775,289 +1976,74 @@ namespace Rpm.SqlLite
         }
         #endregion
 
-        //private static readonly object _locker1 = new object();
-        //private static readonly object _locker2 = new object();
-        //private static readonly object _locker3 = new object();
-
-        //private void LoadSyncDirectories()
-        //{
-        //    try
-        //    {
-        //        if (_fileWatchers == null)
-        //            _fileWatchers = new List<FileSystemWatcher>();
-        //        var dbfilename = RootPath + "\\SqlDatabase";
-        //        var personeeldb = RootPath + "\\PersoneelDb";
-        //        var Gereeddb = RootPath + "\\GereedDb";
-
-        //        foreach (var fs in _fileWatchers)
-        //        {
-        //            fs.Dispose();
-        //            _fileWatchers.Remove(fs);
-        //        }
-
-        //        //load productieformulieren watcher.
-        //        if (Directory.Exists(dbfilename))
-        //        {
-        //            var sw = new FileSystemWatcher(dbfilename) { EnableRaisingEvents = true };
-        //            sw.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
-        //            sw.Changed += (x, y) =>
-        //            {
-        //                lock (_locker1)
-        //                {
-        //                    try
-        //                    {
-        //                        if (ProductieFormulieren == null) return;
-        //                        var id = Path.GetFileNameWithoutExtension(y.FullPath);
-        //                        var prod = ProductieFormulieren.FindOne(id).Result;
-        //                        if (prod != null && prod.IsAllowed(null))
-        //                            Manager.FormulierChanged(this, prod);
-        //                    }
-        //                    catch (Exception e)
-        //                    {
-        //                        Console.WriteLine(e);
-        //                    }
-        //                }
-        //            };
-        //            sw.Deleted += (x, y) =>
-        //            {
-        //                lock (_locker1)
-        //                {
-        //                    try
-        //                    {
-        //                        if (File.Exists(y.FullPath)) return;
-        //                        var id = Path.GetFileNameWithoutExtension(y.FullPath);
-        //                        Manager.FormulierDeleted(this, id);
-        //                    }
-        //                    catch (Exception e)
-        //                    {
-        //                        Console.WriteLine(e);
-        //                    }
-        //                }
-        //            };
-        //            //sw.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.CreationTime;
-        //            _fileWatchers.Add(sw);
-        //        }
-        //        //load personeel watcher.
-        //        if (Directory.Exists(personeeldb))
-        //        {
-        //            var sw = new FileSystemWatcher(personeeldb) { EnableRaisingEvents = true };
-        //            sw.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
-        //            sw.Changed += (x, y) =>
-        //            {
-        //                lock (_locker2)
-        //                {
-        //                    try
-        //                    {
-        //                        if (PersoneelLijst == null) return;
-        //                        var id = Path.GetFileNameWithoutExtension(y.FullPath);
-        //                        var pers = PersoneelLijst.FindOne(id).Result;
-        //                        if (pers != null)
-        //                            Manager.PersoneelChanged(this, pers);
-        //                    }
-        //                    catch (Exception e)
-        //                    {
-        //                        Console.WriteLine(e);
-        //                    }
-        //                }
-        //            };
-
-        //            sw.Deleted += (x, y) =>
-        //            {
-        //                lock (_locker2)
-        //                {
-        //                    try
-        //                    {
-        //                        if (File.Exists(y.FullPath)) return;
-        //                        var id = Path.GetFileNameWithoutExtension(y.FullPath);
-        //                        Manager.PersoneelDeleted(this, id);
-        //                    }
-        //                    catch (Exception e)
-        //                    {
-        //                        Console.WriteLine(e);
-        //                    }
-        //                }
-        //            };
-        //            //sw.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.CreationTime;
-        //            _fileWatchers.Add(sw);
-        //        }
-        //        //load gereed formulieren watcher.
-        //        if (Directory.Exists(Gereeddb))
-        //        {
-        //            var sw = new FileSystemWatcher(Gereeddb) { EnableRaisingEvents = true };
-        //            sw.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
-        //            sw.Changed += (x, y) =>
-        //            {
-        //                lock (_locker3)
-        //                {
-        //                    try
-        //                    {
-        //                        if (GereedFormulieren == null) return;
-        //                        var id = Path.GetFileNameWithoutExtension(y.FullPath);
-        //                        var pers = GereedFormulieren.FindOne(id).Result;
-        //                        if (pers != null && pers.IsAllowed(null))
-        //                            Manager.FormulierChanged(this, pers);
-        //                    }
-        //                    catch (Exception e)
-        //                    {
-        //                        Console.WriteLine(e);
-        //                    }
-        //                }
-        //            };
-        //            sw.Deleted += (x, y) =>
-        //            {
-        //                lock (_locker3)
-        //                {
-        //                    try
-        //                    {
-        //                        if (File.Exists(y.FullPath)) return;
-        //                        var id = Path.GetFileNameWithoutExtension(y.FullPath);
-        //                        Manager.FormulierDeleted(this, id);
-        //                    }
-        //                    catch (Exception e)
-        //                    {
-        //                        Console.WriteLine(e);
-        //                    }
-        //                }
-        //            };
-
-        //            //sw.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.CreationTime;
-        //            _fileWatchers.Add(sw);
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e);
-        //    }
-        //}
-
-        //private void InitDbs(bool createnew)
-        //{
-        //    if (File.Exists(SqlDatabaseFileName) || createnew)
-        //        ProductiesDb = new LiteDatabase(new ConnectionString(SqlDatabaseFileName)
-        //        { Connection = ConnectionType.Shared });
-        //    if (File.Exists(ChangedDbFileName) || createnew)
-        //        ChangedDb = new LiteDatabase(new ConnectionString(ChangedDbFileName)
-        //        { Connection = ConnectionType.Shared });
-
-        //    if (File.Exists(PersoneelDbFileName) || createnew)
-        //        PersoneelDb = new LiteDatabase(new ConnectionString(PersoneelDbFileName)
-        //            {Connection = ConnectionType.Shared});
-
-        //    if (File.Exists(GereedDbFileName) || createnew)
-        //        GereedDb = new LiteDatabase(new ConnectionString(GereedDbFileName)
-        //            {Connection = ConnectionType.Shared });
-
-        //    if (File.Exists(SettingDbFileName) || createnew)
-        //        SettingsDb = new LiteDatabase(new ConnectionString(SettingDbFileName)
-        //            {Connection = ConnectionType.Shared });
-
-        //    if (File.Exists(AccountDbFileName) || createnew)
-        //        AccountsDb = new LiteDatabase(new ConnectionString(AccountDbFileName)
-        //            {Connection = ConnectionType.Shared });
-
-        //    if (File.Exists(LogDbFileName) || createnew)
-        //        LogDb = new LiteDatabase(new ConnectionString(LogDbFileName)
-        //            {Connection = ConnectionType.Shared });
-
-        //    //if (File.Exists(DbVersionFileName) || createnew)
-        //        VersionsDb = new LiteDatabase(new ConnectionString(DbVersionFileName)
-        //        { Connection = ConnectionType.Shared });
-
-        //    PersoneelLijst = PersoneelDb?.GetCollection<Personeel>("Personeel");
-        //    // PersoneelLijst.EnsureIndex("personeelnaam");
-
-        //    ProductieFormulieren = ProductiesDb?.GetCollection<ProductieFormulier>("ProductieFormulieren");
-        //    //ProductieFormulieren.EnsureIndex("productienr");
-        //    //ProductieFormulieren.DeleteAll();
-
-        //    UserAccounts = AccountsDb?.GetCollection<UserAccount>("UserAccounts");
-        //    // UserAccounts.EnsureIndex("Username");
-
-        //    Logger = LogDb?.GetCollection<LogEntry>("Logs");
-
-        //    AllSettings = SettingsDb?.GetCollection<UserSettings>("AllSettings");
-
-        //    //AllSettings.EnsureIndex("Username");
-        //    //AllSettings.DeleteAll();
-        //    ChangeLog = ChangedDb?.GetCollection<UserChange>("ChangeLog");
-        //    //ChangeLog.EnsureIndex("pcid");
-
-        //    GereedFormulieren = GereedDb?.GetCollection<ProductieFormulier>("GereedFormulieren");
-
-        //    DbVersions = VersionsDb?.GetCollection<DbVersion>("DbVersions");
-        //}
-
-        public Task<int> Count(DbType type)
+        public int Count(DbType type)
         {
-            return Task.Run(async () =>
-            {
-                if (IsDisposed)
-                    return 0;
-                switch (type)
-                {
-                    case DbType.Producties:
-                        if (ProductieFormulieren == null)
-                            return 0;
-                        return await ProductieFormulieren.Count();
-                    case DbType.Medewerkers:
-                        if (PersoneelLijst == null)
-                            return 0;
-                        return await PersoneelLijst.Count();
-                    case DbType.GereedProducties:
-                        if (GereedFormulieren == null)
-                            return 0;
-                        return await GereedFormulieren.Count();
-                    case DbType.Opties:
-                        if (AllSettings == null)
-                            return 0;
-                        return await AllSettings.Count();
-                    case DbType.Accounts:
-                        if (UserAccounts == null)
-                            return 0;
-                        return await UserAccounts.Count();
-                    case DbType.Logs:
-                        if (Logger == null)
-                            return 0;
-                        return await Logger.Count();
-                    case DbType.Versions:
-                        if (DbVersions == null)
-                            return 0;
-                        return await DbVersions.Count();
-                    case DbType.Messages:
-                        return 0;
-                    case DbType.Alles:
-                        var count = 0;
-                        var types = (DbType[])Enum.GetValues(typeof(DbType));
-                        foreach (var t in types)
-                        {
-                            if (t == DbType.Alles || t == DbType.Geen)
-                                continue;
-                            count += await Count(t);
-                        }
-
-                        return count;
-                    case DbType.Opmerkingen:
-                        break;
-                    case DbType.Klachten:
-                        break;
-                    case DbType.Verpakkingen:
-                        break;
-                    case DbType.ArtikelRecords:
-                        break;
-                    case DbType.SpoorOverzicht:
-                        break;
-                    case DbType.LijstLayouts:
-                        break;
-                    case DbType.MeldingCenter:
-                        break;
-                    case DbType.Bijlages:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                }
-
+            if (IsDisposed)
                 return 0;
-            });
+            switch (type)
+            {
+                case DbType.Producties:
+                    if (ProductieFormulieren == null)
+                        return 0;
+                    return ProductieFormulieren.Count();
+                case DbType.Medewerkers:
+                    if (PersoneelLijst == null)
+                        return 0;
+                    return PersoneelLijst.Count();
+                case DbType.GereedProducties:
+                    if (GereedFormulieren == null)
+                        return 0;
+                    return GereedFormulieren.Count();
+                case DbType.Opties:
+                    if (AllSettings == null)
+                        return 0;
+                    return AllSettings.Count();
+                case DbType.Accounts:
+                    if (UserAccounts == null)
+                        return 0;
+                    return UserAccounts.Count();
+                case DbType.Logs:
+                    if (Logger == null)
+                        return 0;
+                    return Logger.Count();
+                case DbType.Versions:
+                    if (DbVersions == null)
+                        return 0;
+                    return DbVersions.Count();
+                case DbType.Messages:
+                    return 0;
+                case DbType.Alles:
+                    var count = 0;
+                    var types = (DbType[])Enum.GetValues(typeof(DbType));
+                    foreach (var t in types)
+                    {
+                        if (t == DbType.Alles || t == DbType.Geen)
+                            continue;
+                        count += Count(t);
+                    }
+
+                    return count;
+                case DbType.Opmerkingen:
+                    break;
+                case DbType.Klachten:
+                    break;
+                case DbType.Verpakkingen:
+                    break;
+                case DbType.ArtikelRecords:
+                    break;
+                case DbType.SpoorOverzicht:
+                    break;
+                case DbType.LijstLayouts:
+                    break;
+                case DbType.MeldingCenter:
+                    break;
+                case DbType.Bijlages:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+
+            return 0;
         }
 
         //public async void CheckVersions(DbType type)
@@ -2144,246 +2130,252 @@ namespace Rpm.SqlLite
         public Task<int> UpdateDbFromDb(DatabaseUpdateEntry dbentry, CancellationTokenSource token,
             ProgressChangedHandler changed = null)
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
-                var updated = 0;
-                var oldnotif = NotificationEnabled;
-                var oldlogger = LoggerEnabled;
-                try
-                {
-                    var dbpath = dbentry.UpdatePath;
-                    var types = dbentry.UpdateDatabases;
-                    if (string.IsNullOrEmpty(dbpath) || !Directory.Exists(dbpath)) return 0;
-
-                    DoProgress(changed, "Database gegevens laden...", 0, 0);
-                    token.Token.ThrowIfCancellationRequested();
-                    var database = new LocalDatabase(PManager, Manager.SystemId, dbpath);
-                    database.NotificationEnabled = false;
-                    database.LoggerEnabled = false;
-
-                    NotificationEnabled = false;
-                    LoggerEnabled = false;
-                    RaiseEventWhenChanged = false;
-                    RaiseEventWhenDeleted = false;
-                    database.LoadMultiFiles();
-                    //foreach (var dbtype in Enum.GetValues(typeof(DbType)))
-                    //    database.CheckVersions((DbType) dbtype);
-
-                    token.Token.ThrowIfCancellationRequested();
-                    //update settings
-                    var count = 0;
-                    var max = 0;
-                    if (types.Any(x => x == DbType.Opties))
-                    {
-                        DoProgress(changed, "Instellingen laden...", count, max);
-                        try
-                        {
-                            var xs = database.AllSettings.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue),null,false).Result;
-                            if (xs is {Count: > 0})
-                            {
-                                max = xs.Count;
-                                count = 0;
-                                foreach (var s in xs)
-                                {
-                                    token.Token.ThrowIfCancellationRequested();
-                                    var myitem = GetSetting($"{s.Username}[{s.SystemID}]").Result;
-                                    if (myitem == null || myitem.LastChanged != null &&
-                                        (myitem.LastChanged == null && s.LastChanged != null ||
-                                         s.LastChanged != null && myitem.LastChanged.TimeChanged <
-                                         s.LastChanged.TimeChanged))
-                                    {
-                                         UpSert(s,
-                                            $"{s.Username} Instellingen geupdate vanuit {dbentry.Naam} database.");
-                                        updated++;
-                                    }
-
-                                    count++;
-                                    DoProgress(changed, "Instellingen updaten...", count, max);
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            DoProgress(changed, e.Message, 0, 0);
-                        }
-                    }
-
-                    if (types.Any(x => x == DbType.Accounts))
-                    {
-                        //update Accounts
-                        DoProgress(changed, "Accounts laden...", count, max);
-                        token.Token.ThrowIfCancellationRequested();
-                        try
-                        {
-                            var xs1 = database.UserAccounts.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue),null, false).Result;
-                            if (xs1 is {Count: > 0})
-                            {
-                                //count = 0;
-                                max += xs1.Count;
-                                foreach (var s in xs1)
-                                {
-                                    token.Token.ThrowIfCancellationRequested();
-                                    var myitem = GetAccount(s.Username).Result;
-                                    if (myitem == null || myitem.LastChanged != null &&
-                                        (myitem.LastChanged == null && s.LastChanged != null ||
-                                         s.LastChanged != null && myitem.LastChanged.TimeChanged <
-                                         s.LastChanged.TimeChanged))
-                                    {
-                                        UpSert(s,
-                                            $"{s.Username} Account geupdate vanuit {dbentry.Naam} database.");
-                                        updated++;
-                                    }
-
-                                    count++;
-                                    DoProgress(changed, "Accounts updaten...", count, max);
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            DoProgress(changed, e.Message, 0, 0);
-                        }
-                    }
-
-                    if (types.Any(x => x == DbType.Medewerkers))
-                    {
-                        //update users
-                        DoProgress(changed, "Personeel laden...", count, max);
-                        token.Token.ThrowIfCancellationRequested();
-                        try
-                        {
-                            var xs2 = database.PersoneelLijst.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue),null,false).Result;
-                            if (xs2 is {Count: > 0})
-                            {
-                                // count = 0;
-                                max += xs2.Count;
-                                foreach (var s in xs2)
-                                {
-                                    token.Token.ThrowIfCancellationRequested();
-                                    var myitem = GetPersoneel(s.PersoneelNaam).Result;
-                                    if (myitem != null)
-                                    {
-                                        updated += myitem.UpdateFrom(s, true);
-                                    }
-                                    else
-                                    {
-                                        UpSert(s,
-                                            $"{s.PersoneelNaam} Instellingen geupdate vanuit {dbentry.Naam} database.");
-                                        updated++;
-                                    }
-
-                                    //if (myitem == null || myitem.LastChanged != null &&
-                                    //    (myitem.LastChanged == null && s.LastChanged != null ||
-                                    //     s.LastChanged != null && myitem.LastChanged.TimeChanged <
-                                    //     s.LastChanged.TimeChanged))
-                                    //{
-                                    //    UpSert(s);
-                                    //    count++;
-                                    //}
-                                    count++;
-                                    DoProgress(changed, "Personeel updaten...", count, max);
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            DoProgress(changed, e.Message, 0, 0);
-                        }
-                    }
-
-                    if (types.Any(x => x == DbType.Producties))
-                    {
-                        //update producties
-                        DoProgress(changed, "Producties laden...", count, max);
-                        token.Token.ThrowIfCancellationRequested();
-                        try
-                        {
-                           
-                            var xs3 = database.ProductieFormulieren?.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue), null, false).Result;
-                            if (xs3 is {Count: > 0})
-                            {
-                                max += xs3.Count;
-                                foreach (var s in xs3)
-                                {
-                                    token.Token.ThrowIfCancellationRequested();
-                                    var myitem = Manager.Database.GetProductie(s.ProductieNr, true);
-                                    if (myitem != null)
-                                    {
-                                        if (myitem.UpdateFrom(s,
-                                            $"[{myitem.ProductieNr}, {myitem.ArtikelNr}] geupdate vanuit {dbentry.Naam} database.").Result
-                                        ) updated++;
-                                    }
-                                    //else if(s.IsAllowed(null))
-                                    //{
-                                    //        await UpSert(s,
-                                    //            $"[{s.ProductieNr}, {s.ArtikelNr}] toegevoegd vanuit {dbentry.Naam} database.");
-                                    //        updated++;
-                                    //}
-
-                                    count++;
-                                    DoProgress(changed, "Producties updaten...", count, max);
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            DoProgress(changed, e.Message, 0, 0);
-                        }
-
-                        //update producties
-                        DoProgress(changed, "Gereed Producties laden...", count, max);
-                        token.Token.ThrowIfCancellationRequested();
-                        try
-                        {
-                            var xs3 = database.GereedFormulieren?.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue), null, false).Result;
-                            if (xs3 is {Count: > 0})
-                            {
-                                max += xs3.Count;
-                                foreach (var s in xs3)
-                                {
-                                    token.Token.ThrowIfCancellationRequested();
-                                    var myitem = Manager.Database.GetProductie(s.ProductieNr, true);
-                                    if (myitem != null)
-                                    {
-                                        if (myitem.UpdateFrom(s,
-                                            $"[{myitem.ProductieNr}, {myitem.ArtikelNr}] geupdate vanuit {dbentry.Naam} database.").Result
-                                        ) updated++;
-                                    }
-                                    //else if(s.IsAllowed(null))
-                                    //{
-                                    //    await UpSert(s,
-                                    //        $"[{s.ProductieNr}, {s.ArtikelNr}] toegevoegd vanuit {dbentry.Naam} database.");
-                                    //    updated++;
-                                    //}
-
-                                    count++;
-                                    DoProgress(changed, "Gereed producties updaten...", count, max);
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            DoProgress(changed, e.Message, 0, 0);
-                        }
-                    }
-                    
-
-                    if (updated > 0)
-                        DoProgress(changed, $"{updated} Entries zijn succesvol geupdate!", 100, 100);
-                    else
-                        DoProgress(changed, "Geen updates gevonden...", 0, 0);
-                }
-                catch
-                {
-                    // ignored
-                }
-
-                RaiseEventWhenChanged = true;
-                RaiseEventWhenDeleted = true;
-                NotificationEnabled = oldnotif;
-                LoggerEnabled = oldlogger;
-                return updated;
+                return xUpdateDbFromDb(dbentry, token, changed);
             }, token.Token);
+        }
+
+        public int xUpdateDbFromDb(DatabaseUpdateEntry dbentry, CancellationTokenSource token,
+    ProgressChangedHandler changed = null)
+        {
+            var updated = 0;
+            var oldnotif = NotificationEnabled;
+            var oldlogger = LoggerEnabled;
+            try
+            {
+                var dbpath = dbentry.UpdatePath;
+                var types = dbentry.UpdateDatabases;
+                if (string.IsNullOrEmpty(dbpath) || !Directory.Exists(dbpath)) return 0;
+
+                DoProgress(changed, "Database gegevens laden...", 0, 0);
+                token.Token.ThrowIfCancellationRequested();
+                var database = new LocalDatabase(PManager, Manager.SystemId, dbpath);
+                database.NotificationEnabled = false;
+                database.LoggerEnabled = false;
+
+                NotificationEnabled = false;
+                LoggerEnabled = false;
+                RaiseEventWhenChanged = false;
+                RaiseEventWhenDeleted = false;
+                database.LoadMultiFiles();
+                //foreach (var dbtype in Enum.GetValues(typeof(DbType)))
+                //    database.CheckVersions((DbType) dbtype);
+
+                token.Token.ThrowIfCancellationRequested();
+                //update settings
+                var count = 0;
+                var max = 0;
+                if (types.Any(x => x == DbType.Opties))
+                {
+                    DoProgress(changed, "Instellingen laden...", count, max);
+                    try
+                    {
+                        var xs = database.AllSettings.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue), null, false);
+                        if (xs is { Count: > 0 })
+                        {
+                            max = xs.Count;
+                            count = 0;
+                            foreach (var s in xs)
+                            {
+                                token.Token.ThrowIfCancellationRequested();
+                                var myitem = GetSetting($"{s.Username}[{s.SystemID}]");
+                                if (myitem == null || myitem.LastChanged != null &&
+                                    (myitem.LastChanged == null && s.LastChanged != null ||
+                                     s.LastChanged != null && myitem.LastChanged.TimeChanged <
+                                     s.LastChanged.TimeChanged))
+                                {
+                                    UpSert(s,
+                                       $"{s.Username} Instellingen geupdate vanuit {dbentry.Naam} database.");
+                                    updated++;
+                                }
+
+                                count++;
+                                DoProgress(changed, "Instellingen updaten...", count, max);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        DoProgress(changed, e.Message, 0, 0);
+                    }
+                }
+
+                if (types.Any(x => x == DbType.Accounts))
+                {
+                    //update Accounts
+                    DoProgress(changed, "Accounts laden...", count, max);
+                    token.Token.ThrowIfCancellationRequested();
+                    try
+                    {
+                        var xs1 = database.UserAccounts.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue), null, false);
+                        if (xs1 is { Count: > 0 })
+                        {
+                            //count = 0;
+                            max += xs1.Count;
+                            foreach (var s in xs1)
+                            {
+                                token.Token.ThrowIfCancellationRequested();
+                                var myitem = xGetAccount(s.Username);
+                                if (myitem == null || myitem.LastChanged != null &&
+                                    (myitem.LastChanged == null && s.LastChanged != null ||
+                                     s.LastChanged != null && myitem.LastChanged.TimeChanged <
+                                     s.LastChanged.TimeChanged))
+                                {
+                                    UpSert(s,
+                                        $"{s.Username} Account geupdate vanuit {dbentry.Naam} database.");
+                                    updated++;
+                                }
+
+                                count++;
+                                DoProgress(changed, "Accounts updaten...", count, max);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        DoProgress(changed, e.Message, 0, 0);
+                    }
+                }
+
+                if (types.Any(x => x == DbType.Medewerkers))
+                {
+                    //update users
+                    DoProgress(changed, "Personeel laden...", count, max);
+                    token.Token.ThrowIfCancellationRequested();
+                    try
+                    {
+                        var xs2 = database.PersoneelLijst.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue), null, false);
+                        if (xs2 is { Count: > 0 })
+                        {
+                            // count = 0;
+                            max += xs2.Count;
+                            foreach (var s in xs2)
+                            {
+                                token.Token.ThrowIfCancellationRequested();
+                                var myitem = xGetPersoneel(s.PersoneelNaam);
+                                if (myitem != null)
+                                {
+                                    updated += myitem.UpdateFrom(s, true);
+                                }
+                                else
+                                {
+                                    xUpSert(s.PersoneelNaam, s,
+                                        $"{s.PersoneelNaam} Instellingen geupdate vanuit {dbentry.Naam} database.");
+                                    updated++;
+                                }
+
+                                //if (myitem == null || myitem.LastChanged != null &&
+                                //    (myitem.LastChanged == null && s.LastChanged != null ||
+                                //     s.LastChanged != null && myitem.LastChanged.TimeChanged <
+                                //     s.LastChanged.TimeChanged))
+                                //{
+                                //    UpSert(s);
+                                //    count++;
+                                //}
+                                count++;
+                                DoProgress(changed, "Personeel updaten...", count, max);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        DoProgress(changed, e.Message, 0, 0);
+                    }
+                }
+
+                if (types.Any(x => x == DbType.Producties))
+                {
+                    //update producties
+                    DoProgress(changed, "Producties laden...", count, max);
+                    token.Token.ThrowIfCancellationRequested();
+                    try
+                    {
+
+                        var xs3 = database.ProductieFormulieren?.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue), null, false);
+                        if (xs3 is { Count: > 0 })
+                        {
+                            max += xs3.Count;
+                            foreach (var s in xs3)
+                            {
+                                token.Token.ThrowIfCancellationRequested();
+                                var myitem = Manager.Database.GetProductie(s.ProductieNr, true);
+                                if (myitem != null)
+                                {
+                                    if (myitem.xUpdateFrom(s,
+                                        $"[{myitem.ProductieNr}, {myitem.ArtikelNr}] geupdate vanuit {dbentry.Naam} database.")
+                                    ) updated++;
+                                }
+                                //else if(s.IsAllowed(null))
+                                //{
+                                //        await UpSert(s,
+                                //            $"[{s.ProductieNr}, {s.ArtikelNr}] toegevoegd vanuit {dbentry.Naam} database.");
+                                //        updated++;
+                                //}
+
+                                count++;
+                                DoProgress(changed, "Producties updaten...", count, max);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        DoProgress(changed, e.Message, 0, 0);
+                    }
+
+                    //update producties
+                    DoProgress(changed, "Gereed Producties laden...", count, max);
+                    token.Token.ThrowIfCancellationRequested();
+                    try
+                    {
+                        var xs3 = database.GereedFormulieren?.FindAll(new TijdEntry(dbentry.LastUpdated, DateTime.MaxValue), null, false);
+                        if (xs3 is { Count: > 0 })
+                        {
+                            max += xs3.Count;
+                            foreach (var s in xs3)
+                            {
+                                token.Token.ThrowIfCancellationRequested();
+                                var myitem = Manager.Database.GetProductie(s.ProductieNr, true);
+                                if (myitem != null)
+                                {
+                                    if (myitem.xUpdateFrom(s,
+                                        $"[{myitem.ProductieNr}, {myitem.ArtikelNr}] geupdate vanuit {dbentry.Naam} database.")
+                                    ) updated++;
+                                }
+                                //else if(s.IsAllowed(null))
+                                //{
+                                //    await UpSert(s,
+                                //        $"[{s.ProductieNr}, {s.ArtikelNr}] toegevoegd vanuit {dbentry.Naam} database.");
+                                //    updated++;
+                                //}
+
+                                count++;
+                                DoProgress(changed, "Gereed producties updaten...", count, max);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        DoProgress(changed, e.Message, 0, 0);
+                    }
+                }
+
+
+                if (updated > 0)
+                    DoProgress(changed, $"{updated} Entries zijn succesvol geupdate!", 100, 100);
+                else
+                    DoProgress(changed, "Geen updates gevonden...", 0, 0);
+            }
+            catch
+            {
+                // ignored
+            }
+
+            RaiseEventWhenChanged = true;
+            RaiseEventWhenDeleted = true;
+            NotificationEnabled = oldnotif;
+            LoggerEnabled = oldlogger;
+            return updated;
         }
 
         private void DoProgress(ProgressChangedHandler changed, string msg, double current, double max)

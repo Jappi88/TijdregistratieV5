@@ -301,7 +301,7 @@ namespace Controls
             if (Manager.Database?.PersoneelLijst == null) return;
             xafdelingfilter.Items.Clear();
             xafdelingfilter.Items.Add("Iedereen");
-            var pers = Manager.Database.PersoneelLijst.FindAll(true).Result;
+            var pers = Manager.Database.PersoneelLijst.FindAll(true);
             if (pers?.Count > 0)
             {
                 List<string> xafdelingen = new List<string>();
@@ -320,7 +320,7 @@ namespace Controls
 
         private void LoadPersoneel(List<Personeel> xpers)
         {
-            var pers = xpers ?? Manager.Database.GetAllPersoneel().Result;
+            var pers = xpers ?? Manager.Database.xGetAllPersoneel();
             if (xafdelingfilter.SelectedItem != null &&
                 !string.IsNullOrEmpty(xafdelingfilter.SelectedItem.ToString().Trim()) &&
                 xafdelingfilter.SelectedItem.ToString().ToLower() != "iedereen")
@@ -646,7 +646,7 @@ namespace Controls
                         filter.BackColor = Color.LightSkyBlue;
                 }
 
-                var pers = Manager.Database.GetAllPersoneel().Result;
+                var pers = Manager.Database.xGetAllPersoneel();
                 LoadPersoneel(pers.Where(IsAllowed).ToList());
                 return true;
             }

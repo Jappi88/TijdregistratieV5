@@ -23,7 +23,7 @@ namespace ProductieManager.Rpm.Productie
                         {
                             Message = "Producties laden...", Pogress = 0, Type = ProgressType.ReadBussy, Value = xreturn
                         });
-                    var prods = Manager.Database.GetAllProducties(true, true, bereik,null,true).Result;
+                    var prods = Manager.Database.xGetAllProducties(true, true, bereik,null,true);
                     for (int i = 0; i < prods.Count; i++)
                     {
                         int percent = ((i / prods.Count) * 100);

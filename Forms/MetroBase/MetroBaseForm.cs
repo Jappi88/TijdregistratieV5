@@ -12,6 +12,7 @@ namespace Forms.MetroBase
 {
     public class MetroBaseForm : MetroForm
     {
+        public Form OwnerForm { get; set; }
 
         public MetroBaseForm()
         {
@@ -30,14 +31,30 @@ namespace Forms.MetroBase
             // 
             // MetroBaseForm
             // 
+            this.ClientSize = new System.Drawing.Size(300, 300);
             this.MinimumSize = new System.Drawing.Size(100, 75);
             this.Name = "MetroBaseForm";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MetroBaseForm_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MetroBaseForm_FormClosed);
             this.Load += new System.EventHandler(this.MetroBaseForm_Load);
             this.ResumeLayout(false);
 
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            var e = new KeyEventArgs(keyData);
+            if (e.KeyCode == Keys.Escape)
+            {
+                try
+                {
+                    this.Close();
+                    return true;
+                }
+                catch { }
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         public virtual string Title
@@ -148,26 +165,35 @@ namespace Forms.MetroBase
         {
             if (SaveLastSize)
                 this.SetLastInfo();
-            Form xform = this.GetParentForm();
-            if (xform != null && !xform.IsDisposed)
+        }
+
+        private void MetroBaseForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            try
             {
-                if (xform.InvokeRequired)
+                Form xform = OwnerForm ?? this.GetParentForm();
+                if (xform != null && !xform.IsDisposed)
                 {
-                    xform.Invoke(new MethodInvoker(() =>
+                    if (xform.InvokeRequired)
+                    {
+                        xform.Invoke(new MethodInvoker(() =>
+                        {
+                            xform.BringToFront();
+                            xform.Focus();
+                            xform.Select();
+                        }));
+
+                    }
+                    else
                     {
                         xform.BringToFront();
                         xform.Focus();
                         xform.Select();
-                    }));
-
-                }
-                else
-                {
-                    xform.BringToFront();
-                    xform.Focus();
-                    xform.Select();
+                        xform.Activate();
+                    }
                 }
             }
+            catch { }
         }
     }
 }

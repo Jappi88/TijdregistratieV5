@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Runtime.Serialization;
 
 namespace Rpm.Productie
@@ -47,19 +48,42 @@ namespace Rpm.Productie
         public double AantalAfkeur { get; set; }
         public bool IsKlaarGezet { get; set; }
 
-        public string AfKeurProcent()
+        public string AfKeurProcent(decimal afkeur)
         {
             try
             {
-                var aantal = (decimal)(AantalPerStuk * Parent?.TotaalGemaakt ?? Aantal);
-                var afkeur = (decimal) AantalAfkeur;
-                decimal value = afkeur == 0 || aantal == 0? 0 : (afkeur / aantal);
+                decimal value = AfKeurProcentValue(afkeur);
                 return value.ToString("0.00%");
             }
             catch (Exception e)
             {
                 return "0.00%";
             }
+        }
+
+        public decimal AfKeurProcentValue(decimal afkeur)
+        {
+            try
+            {
+                var aantal = (decimal)(AantalPerStuk * Parent?.TotaalGemaakt ?? Aantal);
+                decimal value = afkeur == 0 || aantal == 0 ? 0 : (afkeur / aantal);
+                return value;
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
+        }
+
+        public Color GetAfkeurProcentColor(decimal afkeur)
+        {
+            var ret = Color.Green;
+            var value = AfKeurProcentValue(afkeur);
+            if (value is > 0 and < (decimal)0.01)
+                ret = Color.Orange;
+            else if (value >= (decimal)0.01)
+                ret = Color.Red;
+            return ret;
         }
     }
 }

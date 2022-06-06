@@ -163,7 +163,7 @@ namespace Rpm.Mailing
 
                             if(SaveMessageData(x,filename))
                             {
-                                var msg = Manager.AddProductie(filename, true, true).Result;
+                                var msg = Manager.xAddProductie(filename, true, true);
                                 if(msg.Count > 0)
                                 {
                                     foreach(var m in msg)
@@ -454,7 +454,7 @@ namespace Rpm.Mailing
             {
                 
                 if (Manager.Opties == null || string.IsNullOrEmpty(Manager.Opties.BoundUsername)) return null;
-                var acc = Manager.Database?.GetAccount(Manager.Opties.BoundUsername).Result;
+                var acc = Manager.Database?.xGetAccount(Manager.Opties.BoundUsername);
                 var host = acc?.MailingHost;
                 if (host == null) return null;
                 email = host.EmailAdres;
@@ -476,7 +476,7 @@ namespace Rpm.Mailing
             {
 
                 if (Manager.Opties == null || string.IsNullOrEmpty(Manager.Opties.BoundUsername)) return null;
-                var acc = Manager.Database?.GetAccount(Manager.Opties.BoundUsername).Result;
+                var acc = Manager.Database?.xGetAccount(Manager.Opties.BoundUsername);
                 var host = acc?.MailingHost;
                 if (host == null) return null;
                 email = host.EmailAdres;

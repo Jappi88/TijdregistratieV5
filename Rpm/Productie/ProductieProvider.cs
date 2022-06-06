@@ -25,7 +25,7 @@ namespace ProductieManager.Rpm.Productie
         }
 
         public bool IsProductiesSyncing { get; private set; }
-        public List<IProductieBase> ExcludeProducties { get; set; } = new List<IProductieBase>();
+        public List<string> ExcludeProducties { get; set; } = new List<string>();
         public static FolderSynchronization FolderSynchronization { get; private set; } = new FolderSynchronization();
        // public static Synchronisation MicSync { get; private set; } = new Synchronisation();
        public string AppRootPath { get; private set; }
@@ -45,7 +45,7 @@ namespace ProductieManager.Rpm.Productie
                        continue;
                    }
                    if (Manager.Opties is {GebruikLocalSync: true} || Manager.Opties.GebruikTaken)
-                       UpdateProducties();
+                        UpdateProducties();
                    // await Task.Delay(Manager.Opties.SyncInterval);
                    Thread.Sleep(Manager.Opties.SyncInterval);
                }
@@ -58,24 +58,21 @@ namespace ProductieManager.Rpm.Productie
         {
             if (string.IsNullOrEmpty(productie?.ProductieNr)) return;
             if (ExcludeProducties == null)
-                ExcludeProducties = new List<IProductieBase>();
+                ExcludeProducties = new List<string>();
             if (!IsExcluded(productie))
-                ExcludeProducties.Add(productie);
+                ExcludeProducties.Add(productie.ProductieNr);
         }
 
         public void RemoveFromExclude(IProductieBase productie)
         {
             if (string.IsNullOrEmpty(productie?.ProductieNr)) return;
-            ExcludeProducties?.RemoveAll(x =>
-                string.Equals(productie.ProductieNr, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase) &&
-                string.Equals(productie.Naam, x.Naam, StringComparison.CurrentCultureIgnoreCase));
+            ExcludeProducties?.Remove(productie.ProductieNr);
         }
 
         public bool IsExcluded(IProductieBase productie)
         {
-            if (productie == null || string.IsNullOrEmpty(productie.ProductieNr)) return true;
-            return ExcludeProducties != null && ExcludeProducties.Any(x => string.Equals(productie.ProductieNr, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase) &&
-                string.Equals(productie.Naam, x.Naam, StringComparison.CurrentCultureIgnoreCase));
+            if (string.IsNullOrEmpty(productie?.ProductieNr)) return true;
+            return ExcludeProducties != null && ExcludeProducties.IndexOf(productie.ProductieNr) > -1;
         }
 
         private bool _isupdating;
@@ -450,8 +447,8 @@ namespace ProductieManager.Rpm.Productie
             }
 
             //sync personeel.
-            var remotepers = await Manager.Database.PersoneelLijst.GetAllPaths(false);
-            var localpers = await Manager.Database.PersoneelLijst.GetAllPaths(true);
+            var remotepers = Manager.Database.PersoneelLijst.GetAllPaths(false);
+            var localpers = Manager.Database.PersoneelLijst.GetAllPaths(true);
             foreach (var path in remotepers)
             {
                 if (!path.ToLower().StartsWith(remotepath.ToLower())) continue;
@@ -618,13 +615,13 @@ namespace ProductieManager.Rpm.Productie
                 if (Manager.LogedInGebruiker != null &&
                     (Manager.Opties.GebruikLocalSync || Manager.Opties.GebruikTaken))
                 {
-                    var forms = Manager.GetAllProductieIDs(false, false).Result;
+                    var forms = Manager.xGetAllProductieIDs(false, false);
                     for (int i = 0; i < forms.Count; i++)
                     {
                         if (Manager.LogedInGebruiker == null || !IsProductiesSyncing ||
                             (!Manager.Opties.GebruikLocalSync && !Manager.Opties.GebruikTaken)) break;
                         var prod = Manager.Database.GetProductie(forms[i], false);
-                        if (prod == null || !prod.IsAllowed(null) || IsExcluded(prod))
+                        if (prod == null || IsExcluded(prod) || !prod.IsAllowed(null))
                             continue;
                         if (prod.State is ProductieState.Verwijderd or ProductieState.Gereed)
                             continue;
@@ -654,30 +651,6 @@ namespace ProductieManager.Rpm.Productie
             IsProductiesSyncing = false;
         }
 
-        /// <summary>
-        /// Verkrijg alle producties
-        /// </summary>
-        /// <param name="type">De type producties die je wilt verkrijgen</param>
-        /// <param name="states">Verkrijg producties op basis van een bepaalde status types</param>
-        /// <param name="filter">true als je wilt dat de producties worden gefiltered volgens een geldige bewerking</param>
-        /// <param name="incform">true als de productie ook die aangegeven status moet zijn, false je alleen wilt verkrijgen op basis van een geldige bewerking</param>
-        /// <param name="loaddb">true als je de producties als standaard wilt laden.</param>
-        /// <returns></returns>
-        public Task<List<ProductieFormulier>> GetProducties(LoadedType type, ViewState[] states, bool filter, IsValidHandler validhandler, bool checksecondary)
-        {
-            return GetProducties(type, filter, validhandler, checksecondary);
-        }
-
-        public Task<List<Bewerking>> GetBewerkingen(LoadedType type, ViewState[] states, bool filter, IsValidHandler validhandler, bool checksecondary)
-        {
-            return Task.Run(() =>
-            {
-                var prods = GetProducties(type, false, validhandler, checksecondary).Result;
-                var bws = GetBewerkingen(prods, type, states, filter);
-                return bws;
-            });
-        }
-
         private List<Bewerking> GetBewerkingen(List<ProductieFormulier>  producties, LoadedType type, ViewState[] states, bool filter)
         {
             return (from prod in producties
@@ -688,38 +661,63 @@ namespace ProductieManager.Rpm.Productie
                 select bw).ToList();
         }
 
-        private Task<List<ProductieFormulier>> GetProducties(LoadedType type, bool filter, IsValidHandler validhandler, bool checksecondary)
+        public Task<List<ProductieFormulier>> GetProducties(LoadedType type, bool filter, IsValidHandler validhandler, bool checksecondary)
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() => xGetProducties(type, filter, validhandler, checksecondary));
+        }
+
+        public List<ProductieFormulier> xGetProducties(LoadedType type, bool filter, IsValidHandler validhandler, bool checksecondary)
+        {
+            try
+            {
+                switch (type)
+                {
+                    case LoadedType.Alles:
+                    case LoadedType.Gereed:
+                        //  IsValidHandler validhandler = filter ? Functions.IsAllowed : null;
+                        return Manager.Database.xGetAllProducties(true, filter, validhandler, checksecondary);
+                    case LoadedType.Producties:
+                        return Manager.Database.xGetAllProducties(false, filter, validhandler, checksecondary);
+                }
+            }
+            catch
+            {
+            }
+            return new List<ProductieFormulier>();
+        }
+
+        public Task<List<Bewerking>> GetBewerkingen(LoadedType type, ViewState[] states, bool filter, IsValidHandler validhandler, bool checksecondary)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                return xGetBewerkingen(type, states, filter, validhandler, checksecondary);
+            });
+        }
+
+        public List<Bewerking> xGetBewerkingen(LoadedType type, ViewState[] states, bool filter, IsValidHandler validhandler, bool checksecondary)
+        {
+            var bws = new List<Bewerking>();
+            try
             {
                 var prods = new List<ProductieFormulier>();
-                //Manager.DbBeginUpdate();
-                try
+                switch (type)
                 {
-                    switch (type)
-                    {
-                        case LoadedType.Alles:
-                        //prods = await Manager.Database.GetAllProducties(true, filter,null);
-                        // break;
-                        case LoadedType.Gereed:
-                            //  IsValidHandler validhandler = filter ? Functions.IsAllowed : null;
-                            prods = Manager.Database.GetAllProducties(true, filter, validhandler, checksecondary).Result;
-                            break;
-                        case LoadedType.Producties:
-                            prods = Manager.Database.GetAllProducties(false, filter, validhandler, checksecondary).Result;
-                            break;
-                        case LoadedType.None:
-                            prods = new List<ProductieFormulier>();
-                            break;
-                    }
-
+                    case LoadedType.Alles:
+                    case LoadedType.Gereed:
+                        //  IsValidHandler validhandler = filter ? Functions.IsAllowed : null;
+                        prods = Manager.Database.xGetAllProducties(true, filter, validhandler, checksecondary);
+                        break;
+                    case LoadedType.Producties:
+                        prods = Manager.Database.xGetAllProducties(false, filter, validhandler, checksecondary);
+                        break;
                 }
-                catch
-                {
-                }
-                //Manager.DbEndUpdate();
-                return prods;
-            });
+                bws = GetBewerkingen(prods, type, states, filter);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return bws;
         }
 
         #region Disposing

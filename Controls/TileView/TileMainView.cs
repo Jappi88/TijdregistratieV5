@@ -124,30 +124,30 @@ namespace Controls.TileView
                 switch (entry.Name.ToLower())
                 {
                     case "producties":
-                        bws = Manager.ProductieProvider.GetBewerkingen(ProductieProvider.LoadedType.Producties,
+                        bws = Manager.ProductieProvider.xGetBewerkingen(ProductieProvider.LoadedType.Producties,
                             new ViewState[]
                             {
                                 ViewState.Gestart, ViewState.Gestopt
-                            }, true, null, true).Result;
+                            }, true, null, true);
                         entry.TileCount = bws.Count;
                         break;
                     case "werkplaatsen":
-                            var xxbws = Manager.ProductieProvider.GetBewerkingen(
+                            var xxbws = Manager.ProductieProvider.xGetBewerkingen(
                                 ProductieProvider.LoadedType.Producties,
                                 new ViewState[]
                                 {
                                     ViewState.Gestart
-                                }, true, null, true).Result;
+                                }, true, null, true);
                             var wps = xxbws.SelectMany(x => x.WerkPlekken.Where(w => w.IsActief())).ToList();
                             entry.TileCount = wps.Count;
                            
                             break;
                     case "gereedmeldingen":
-                        bws = Manager.ProductieProvider.GetBewerkingen(ProductieProvider.LoadedType.Alles,
+                        bws = Manager.ProductieProvider.xGetBewerkingen(ProductieProvider.LoadedType.Alles,
                             new ViewState[]
                             {
                                 ViewState.Gereed
-                            }, true, null, true).Result;
+                            }, true, null, true);
                         if (Manager.Opties != null)
                         {
                             if (Manager.Opties.UseLastGereedStart || Manager.Opties.UseLastGereedStop)
@@ -171,11 +171,11 @@ namespace Controls.TileView
                         entry.TileCount = bws.Count;
                         break;
                     case "onderbrekingen":
-                        bws = Manager.ProductieProvider.GetBewerkingen(ProductieProvider.LoadedType.Alles,
+                        bws = Manager.ProductieProvider.xGetBewerkingen(ProductieProvider.LoadedType.Alles,
                             new ViewState[]
                             {
                                ViewState.Alles
-                            }, true, null, true).Result;
+                            }, true, null, true);
                         var storingen = bws.SelectMany(x => x.GetStoringen(false)).ToList();
                         entry.TileCount = storingen.Count;
                        
@@ -186,11 +186,11 @@ namespace Controls.TileView
                         entry.TileCount = Manager.SporenBeheer?.Database?.Count()??0;
                         break;
                     case "xchangeaantal":
-                        bws = Manager.ProductieProvider.GetBewerkingen(ProductieProvider.LoadedType.Producties,
+                        bws = Manager.ProductieProvider.xGetBewerkingen(ProductieProvider.LoadedType.Producties,
                             new ViewState[]
                             {
                                 ViewState.Gestart
-                            }, true, null, true).Result;
+                            }, true, null, true);
                         bws = bws
                             .Where(x => x.State == ProductieState.Gestart && string.Equals(x.GestartDoor, Manager.Opties.Username,
                                 StringComparison.CurrentCultureIgnoreCase)).ToList();
@@ -211,14 +211,14 @@ namespace Controls.TileView
                     case "xzoekproducties":
                         break;
                     case "xpersoneel":
-                        entry.TileCount = Manager.Database?.PersoneelLijst?.Count().Result??0;
+                        entry.TileCount = Manager.Database?.PersoneelLijst?.Count()??0;
                         break;
                     case "xalleartikelen":
-                        bws = Manager.ProductieProvider.GetBewerkingen(ProductieProvider.LoadedType.Alles,
+                        bws = Manager.ProductieProvider.xGetBewerkingen(ProductieProvider.LoadedType.Alles,
                             new ViewState[]
                             {
                                 ViewState.Alles
-                            }, true, null, true).Result;
+                            }, true, null, true);
                         var xlist = new List<string>();
                         for (int i = 0; i < bws.Count; i++)
                         {
@@ -239,11 +239,11 @@ namespace Controls.TileView
                     case "xweekoverzicht":
                         break;
                     case "xallenotities":
-                        bws = Manager.ProductieProvider.GetBewerkingen(ProductieProvider.LoadedType.Alles,
+                        bws = Manager.ProductieProvider.xGetBewerkingen(ProductieProvider.LoadedType.Alles,
                             new ViewState[]
                             {
                                 ViewState.Alles
-                            }, true, null, true).Result;
+                            }, true, null, true);
                         var xnots = bws.SelectMany(x => x.GetAlleNotities()).ToList();
                         entry.TileCount = xnots.Count;
                         break;
@@ -273,13 +273,13 @@ namespace Controls.TileView
                                             StringComparison.CurrentCultureIgnoreCase));
                                     if (xf != null)
                                     {
-                                        bws = Manager.ProductieProvider.GetBewerkingen(
+                                        bws = Manager.ProductieProvider.xGetBewerkingen(
                                             ProductieProvider.LoadedType.Producties,
                                             new ViewState[]
                                             {
                                                 ViewState.Gestart,
                                                 ViewState.Gestopt,
-                                            }, true, null, true).Result;
+                                            }, true, null, true);
                                         bws = bws.Where(x => xf.IsAllowed(x, null)).ToList();
                                         entry.TileCount = bws.Count;
                                     }

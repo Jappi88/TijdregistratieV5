@@ -226,16 +226,16 @@ namespace Controls
                                 xperss.Klusjes.Clear();
                                 xperss.Klusjes.Add(xklus);
                                 bew.AddPersoneel(xperss, xklus.WerkPlek);
-                                var xdb = Manager.Database.GetPersoneel(xperss.PersoneelNaam).Result;
+                                var xdb = Manager.Database.xGetPersoneel(xperss.PersoneelNaam);
                                 if (xdb != null)
                                 {
                                     xdb.ReplaceKlus(xklus);
-                                    Manager.Database.UpSert(xdb, $"{xdb.PersoneelNaam} op {bew.Path} gezet").Wait(2000);;
+                                    Manager.Database.xUpSert(xdb.PersoneelNaam, xdb, $"{xdb.PersoneelNaam} op {bew.Path} gezet");
                                 }
                             }
 
-                            bew.UpdateBewerking(null,
-                                $"{Persoon} Toegevoegd op [{bew.Naam}] van {bew.Omschrijving}").Wait(2000);;
+                            bew.xUpdateBewerking(null,
+                                $"{Persoon} Toegevoegd op [{bew.Naam}] van {bew.Omschrijving}");
                         }
                     }
                 }
@@ -276,14 +276,14 @@ namespace Controls
             if (SelectedBewerking == null || Persoon == null) return;
             if (Persoon.IngezetAanKlus(SelectedBewerking, false, out var klusjes))
             {
-                var xdb = Manager.Database.GetPersoneel(Persoon.PersoneelNaam).Result;
+                var xdb = Manager.Database.xGetPersoneel(Persoon.PersoneelNaam);
                 if (SelectedBewerking == null) return;
                 if (xdb != null)
                 {
                     foreach (var klus in klusjes)
                         xdb.Klusjes.Remove(klus);
-                    Manager.Database.UpSert(xdb,
-                        $"Klusjes van {Persoon.PersoneelNaam} [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}] verwijderd!").Wait(2000);;
+                    Manager.Database.xUpSert(xdb.PersoneelNaam, xdb,
+                        $"Klusjes van {Persoon.PersoneelNaam} [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}] verwijderd!");
                 }
 
                 foreach (var wp in SelectedBewerking.WerkPlekken)
@@ -291,8 +291,8 @@ namespace Controls
                     wp.RemovePersoon(Persoon.PersoneelNaam);
                 }
 
-                SelectedBewerking.UpdateBewerking(null,
-                    $"{Persoon.PersoneelNaam} verwijderd uit [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!").Wait(2000);
+                SelectedBewerking.xUpdateBewerking(null,
+                    $"{Persoon.PersoneelNaam} verwijderd uit [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!");
                 
             }
         }
@@ -300,20 +300,6 @@ namespace Controls
         private void xStopKlus_Click(object sender, EventArgs e)
         {
             if (SelectedBewerking == null || Persoon == null) return;
-            //var xdb = Manager.Database.GetPersoneel(Persoon.PersoneelNaam).Result;
-            //if (xdb != null)
-            //{
-            //    if (xdb.IngezetAanKlus(SelectedBewerking, false, out var klusjes))
-            //    {
-            //        foreach (var klus in klusjes)
-            //        {
-            //            klus.Stop();
-            //        }
-
-            //        Manager.Database.UpSert(xdb,
-            //            $"Klusjes van {Persoon.PersoneelNaam} [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}] gestopt!").Wait(2000);;
-            //    }
-            //}
 
             string change =
                 $"{Persoon.PersoneelNaam} gestopt met {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!";

@@ -1626,9 +1626,35 @@ namespace ProductieManager.Rpm.ExcelHelper
                                                 index++;
                                                 format = format.Substring(index, format.Length - index);
                                             }
-
-                                            format = $"#,##0\"{format}\"";
                                         }
+                                        string f = "";
+                                        if (val is decimal dec)
+                                            if (dec > 0)
+                                            {
+                                                if ((dec % 1) == 0)
+                                                    f = "#,##0";
+                                                else
+                                                    f = "#,##0.##";
+                                            }
+                                            else f = "0";
+                                        else if (val is double d)
+                                        {
+                                            if (d > 0)
+                                            {
+                                                if ((d % 1) == 0)
+                                                    f = "#,##0";
+                                                else
+                                                    f = "#,##0.##";
+                                            }
+                                            else f = "0";
+                                        }
+                                        else if (val is int v)
+                                        {
+                                            if (v > 0)
+                                                f = "#,###";
+                                            else f = "0";
+                                        }
+                                        format = $"{f}\"{format}\"";
                                         bool changed = false;
                                         if (checkmarges != null && checkmarges.Count > 0)
                                         {
@@ -1966,7 +1992,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                     arg.Message = $"Producties Verzamelen...";
                     if (handler != null && !handler.Invoke(arg)) return false;
                     var producties = Manager.Database
-                        .GetBewerkingen(ViewState.Alles, true, null, null,false).Result;
+                        .xGetBewerkingen(ViewState.Alles, true, null, null,false);
                     if (filters != null && filters.Count > 0)
                         producties = producties.Where(x => filters.Any(f => f.IsAllowed(x,"ExcelWeekOverzicht"))).ToList();
                     arg.Message = $"Geen producties gevonden!";

@@ -84,7 +84,7 @@ namespace FolderSync
         /// </summary>
         /// <param name="folder">De folder die gescannen moet worden</param>
         /// <param name="level">De diepte van de folder die gescanned moet worden</param>
-        protected void StartFolder(string folder, int level)
+        public void StartFolder(string folder, int level)
         {
             string sourcePath = Path.Combine(Source, folder);
             string destinationPath = Path.Combine(Destination, folder);

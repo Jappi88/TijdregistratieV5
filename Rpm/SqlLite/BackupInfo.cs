@@ -249,6 +249,31 @@ namespace Rpm.SqlLite
             });
         }
 
+        public static Task<bool> CreateBackup(BackupInfo info, string filename)
+        {
+
+            return Task.Run(() =>
+            {
+                if (info == null) return false;
+                info.CancellationToken ??= new CancellationTokenSource();
+                if (info.IsCreating) return false;
+                try
+                {
+                    info.IsCreating = true;
+                    string path = filename;
+                    bool valid = xZipFileDirectory(Manager.DbPath, path, info.GetExcludeNames(), info.CancellationToken);
+                    //zip.Close();
+                    info.IsCreating = false;
+                    return valid;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return false;
+                }
+            });
+        }
+
         public bool Save()
         {
             return this.Serialize(Manager.BackupPath + "\\BackupInfo.rpm");
@@ -274,6 +299,15 @@ namespace Rpm.SqlLite
                 using ZipOutputStream s = new ZipOutputStream(ZipFile);
                 return await ZipSetp(strDirectory, s, "", exclude, cancellation);
             });
+
+        }
+
+        public static bool xZipFileDirectory(string strDirectory, string zipedFile, List<string> exclude,
+    CancellationTokenSource cancellation = null)
+        {
+            using FileStream ZipFile = File.Create(zipedFile);
+            using ZipOutputStream s = new ZipOutputStream(ZipFile);
+            return xZipSetp(strDirectory, s, "", exclude, cancellation);
 
         }
 
@@ -358,6 +392,128 @@ namespace Rpm.SqlLite
                 }
             });
 
+        }
+
+        private static bool xZipSetp(string strDirectory, ZipOutputStream s, string parentPath, List<string> exclude,
+    CancellationTokenSource cancellation = null)
+        {
+            try
+            {
+                cancellation?.Token.ThrowIfCancellationRequested();
+                if (strDirectory[strDirectory.Length - 1] != Path.DirectorySeparatorChar)
+                {
+                    strDirectory += Path.DirectorySeparatorChar;
+                }
+
+                Crc32 crc = new Crc32();
+
+                string[] filenames = Directory.GetFileSystemEntries(strDirectory);
+                if (exclude != null && exclude.Any())
+                {
+                    filenames = filenames.Where(x => !exclude.Any(f =>
+                            string.Equals(Path.GetFileName(x), f, StringComparison.CurrentCultureIgnoreCase)))
+                        .ToArray();
+                }
+                foreach (string file in filenames) // traverse all files and directories
+                {
+                    cancellation?.Token.ThrowIfCancellationRequested();
+                    if (Directory.Exists(file)
+                    ) // is treated as a directory first. If this directory exists, recursively copy the files below the directory.
+                    {
+                        string pPath = parentPath;
+                        pPath += file.Substring(file.LastIndexOf("\\", StringComparison.Ordinal) + 1);
+                        pPath += "\\";
+                        if (!xZipSetp(file, s, pPath, exclude, cancellation)) return false;
+                    }
+                    else // Otherwise compress the file directly
+                    {
+                        try
+                        {
+
+
+                            // Open the compressed file
+                            using FileStream fs = File.OpenRead(file);
+                            byte[] buffer = new byte[fs.Length];
+                            var read = fs.Read(buffer, 0, buffer.Length);
+
+                            string fileName = parentPath +
+                                              file.Substring(file.LastIndexOf("\\", StringComparison.Ordinal) + 1);
+                            ZipEntry entry = new ZipEntry(fileName) { DateTime = DateTime.Now, Size = fs.Length };
+
+
+                            fs.Close();
+
+                            crc.Reset();
+                            crc.Update(buffer);
+
+                            entry.Crc = crc.Value;
+                            s.PutNextEntry(entry);
+
+                            s.Write(buffer, 0, buffer.Length);
+                        }
+                        catch (Exception e)
+                        {
+                        }
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        public static bool IsValidBackup(string zipedFile, string password)
+        {
+            try
+            {
+                using ZipInputStream s = new ZipInputStream(File.OpenRead(zipedFile)) { Password = password };
+                var xret = false;
+                try
+                {
+                    ZipEntry theEntry;
+                    while ((theEntry = s.GetNextEntry()) != null)
+                    {
+                        var names = theEntry.Name?.Split('/');
+                        if(names == null || names.Length == 0 || names.Length > 1)
+                        {
+                            continue;
+                        }
+                        var name = names.First()?.Trim();
+                        var ext = Path.GetExtension(name).ToLower();
+                        if (string.IsNullOrEmpty(name) || (theEntry.IsFile && (ext != ".rpm" && ext != ".db")))
+                        {
+                            xret = false;
+                            break;
+                        }
+                        else if (theEntry.IsDirectory)
+                        {
+                            var type = LocalDatabase.GetDbType(name);
+                            if (type == DbType.Geen)
+                            {
+                                xret = false; break;
+                            }
+                        }
+                        xret = true;
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
+                finally
+                {
+                    s.Close();
+                }
+                return xret;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>

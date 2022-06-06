@@ -48,7 +48,7 @@ namespace Forms
             Start();
         }
 
-        private async void Start()
+        private void Start()
         {
             if (IsBussy)
             {
@@ -69,15 +69,13 @@ namespace Forms
                     //count += await Manager.Database.Count(DbType.Producties);
                     //if (count > 0)
                     //{
-                    IsBussy = true;
-                    OnStarted();
-                    await StartMethod(UpdateMethod);
-                    OnFinished();
+                    Cancelation = new CancellationTokenSource();
+                    StartMethod(UpdateMethod);
+
                     //}
                     //else if (!CloseWhenFinished)
                     //    XMessageBox.Show(this, $"Er is zijn geen producties beschikbaar", "Productie Updates");
-                    if (CloseWhenFinished)
-                        Close();
+                
                 }
             }
         }
@@ -97,11 +95,12 @@ namespace Forms
 
         private Task UpdateForms()
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 try
                 {
                     if (IsDisposed) return;
+                    OnStarted();
                     var count = 0;
                     var oldlog = Manager.Database.LoggerEnabled;
                     var oldnot = Manager.Database.NotificationEnabled;
@@ -110,27 +109,33 @@ namespace Forms
 
                     if (UpdateEntry != null)
                     {
-                        await UpdateFromDatabaseEntry(UpdateEntry);
+                        xUpdateFromDatabaseEntry(UpdateEntry);
                     }
                     else
                     {
                         Manager.Database.RaiseEventWhenChanged = false;
                         Manager.Database.RaiseEventWhenDeleted = false;
+                        Cancelation?.Token.ThrowIfCancellationRequested();
                         DoProgress("Updating Medewerkers...", count, 100);
-                        await UpdateUserActivity(false);
+                        xUpdateUserActivity(false);
                         if (!IsBussy || IsDisposed || Disposing)
                             return;
+                        Cancelation?.Token.ThrowIfCancellationRequested();
                         DoProgress("Producties laden...", count, 100);
-                        var files = await Manager.GetAllProductiePaths(true, true);
-                        var forms = await Manager.Database.GetAllProducties(true, false, true);
+                        var files = Manager.xGetAllProductiePaths(true, true);
+                        Cancelation?.Token.ThrowIfCancellationRequested();
+                        var forms = Manager.Database.xGetAllProducties(true, false,null, true);
+                        Cancelation?.Token.ThrowIfCancellationRequested();
                         var artikels = new List<ArtikelRecord>();
                         foreach (var file in files)
                         {
                             if (!IsBussy || IsDisposed || Disposing)
                                 break;
-                            var form = await MultipleFileDb.FromPath<ProductieFormulier>(file, true);
+                            var form = MultipleFileDb.xFromPath<ProductieFormulier>(file, true);
+                            Cancelation?.Token.ThrowIfCancellationRequested();
                             if (form == null) continue;
-                            await form.UpdateForm(true, true, forms, "", true, false, true, true);
+                            form.xUpdateForm(true, true, forms, "", true, false, false, true);
+                            Cancelation?.Token.ThrowIfCancellationRequested();
                             if (form.State == ProductieState.Gereed)
                             {
                                 var xartikel = artikels.FirstOrDefault(x => string.Equals(form.ArtikelNr, x.ArtikelNr,
@@ -147,10 +152,11 @@ namespace Forms
                                 {
                                     Manager.ArtikelRecords?.UpdateWaardes(form, xartikel, false);
                                 }
-
+                                Cancelation?.Token.ThrowIfCancellationRequested();
                                 foreach (var bw in form.Bewerkingen)
                                     foreach (var plek in bw.WerkPlekken)
                                     {
+                                        Cancelation?.Token.ThrowIfCancellationRequested();
                                         xartikel = artikels.FirstOrDefault(x => string.Equals(plek.Naam, x.ArtikelNr,
                                             StringComparison.CurrentCultureIgnoreCase));
                                         if (xartikel == null)
@@ -171,12 +177,12 @@ namespace Forms
                             count++;
                             DoProgress($"Updating productie '{form.ProductieNr}'", count, files.Count);
                         }
-
+                        Cancelation?.Token.ThrowIfCancellationRequested();
                         if (Manager.ArtikelRecords != null)
                         {
                             var xprogarg = new ProgressArg();
                             xprogarg.Changed += Xprogarg_Changed;
-                            await Manager.ArtikelRecords.SaveRecords(artikels, xprogarg);
+                            Manager.ArtikelRecords.SaveRecords(artikels, xprogarg).Wait();
                         }
 
                         if (IsBussy)
@@ -195,9 +201,11 @@ namespace Forms
                     Manager.Database.LoggerEnabled = oldlog;
                     Manager.Database.NotificationEnabled = oldnot;
                 }
-                catch
+                catch(Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                 }
+                OnFinished();
             });
         }
 
@@ -208,132 +216,138 @@ namespace Forms
 
         public Task UpdateUserActivity(bool gestart)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
-                try
+                xUpdateUserActivity(gestart);
+  
+            });
+        }
+
+        public void xUpdateUserActivity(bool gestart)
+        {
+            try
+            {
+                var users = Manager.Database.xGetAllPersoneel();
+                var done = 0;
+                for (var i = 0; i < users.Count; i++)
                 {
-                    var users = await Manager.Database.GetAllPersoneel();
-                    var done = 0;
-                    for (var i = 0; i < users.Count; i++)
+                    if (!IsBussy || IsDisposed || Disposing)
+                        break;
+                    Cancelation?.Token.ThrowIfCancellationRequested();
+                    var user = users[i];
+                    DoProgress($"Updating {user.PersoneelNaam}...", i, users.Count);
+                    var userchanged = false;
+                    if (user.PersoneelNaam.EndsWith(" "))
                     {
-                        if (!IsBussy || IsDisposed || Disposing)
-                            break;
-                        var user = users[i];
-                        DoProgress($"Updating {user.PersoneelNaam}...", i, users.Count);
-                        var userchanged = false;
-                        if (user.PersoneelNaam.EndsWith(" "))
+                        user.PersoneelNaam = user.PersoneelNaam.Trim();
+                        userchanged = true;
+                    }
+
+                    var toremove = new List<Klus>();
+
+                    var klusjes = gestart
+                        ? user.Klusjes.Where(x => x.Status == ProductieState.Gestart).ToList()
+                        : user.Klusjes
+                            .ToList(); //.Where(x=> x.IsActief).ToList(); //.Where(x => x.Status == ProductieState.Gestart).ToArray();
+
+                    if (klusjes.Count > 0)
+                        foreach (var klus in klusjes)
                         {
-                            user.PersoneelNaam = user.PersoneelNaam.Trim();
-                            userchanged = true;
-                        }
-
-                        var toremove = new List<Klus>();
-
-                        var klusjes = gestart
-                            ? user.Klusjes.Where(x => x.Status == ProductieState.Gestart).ToList()
-                            : user.Klusjes
-                                .ToList(); //.Where(x=> x.IsActief).ToList(); //.Where(x => x.Status == ProductieState.Gestart).ToArray();
-
-                        if (klusjes.Count > 0)
-                            foreach (var klus in klusjes)
+                            Cancelation?.Token.ThrowIfCancellationRequested();
+                            var pair = klus.GetWerk();
+                            var prod = pair?.Formulier;
+                            var bew = pair?.Bewerking;
+                            if (prod == null || bew == null)
                             {
-                                var pair = klus.GetWerk();
-                                var prod = pair?.Formulier;
-                                var bew = pair?.Bewerking;
-                                if (prod == null || bew == null)
-                                {
-                                    user.Klusjes.Remove(klus);
-                                    userchanged = true;
-                                    continue;
-                                }
-
-                                var saved = false;
-                                var plek =
-                                    bew.WerkPlekken.FirstOrDefault(x =>
-                                        string.Equals(x.Naam, klus.WerkPlek,
-                                            StringComparison.CurrentCultureIgnoreCase));
-                                if (plek == null)
-                                {
-                                    toremove.Add(klus);
-                                    continue;
-                                }
-
-                                var xolduser = plek.Personen.FirstOrDefault(x =>
-                                    string.Equals(x.PersoneelNaam, user.PersoneelNaam,
-                                        StringComparison.CurrentCultureIgnoreCase));
-                                var msg = "";
-                                if (bew.State != klus.Status)
-                                {
-                                    switch (bew.State)
-                                    {
-                                        case ProductieState.Gestopt:
-                                            klus.Stop();
-                                            saved = true;
-                                            break;
-                                        case ProductieState.Gestart:
-                                            if (klus.IsActief)
-                                            {
-                                                klus.Start();
-                                                saved = true;
-                                            }
-
-                                            break;
-                                        case ProductieState.Gereed:
-                                            klus.MeldGereed();
-                                            saved = true;
-                                            break;
-                                        case ProductieState.Verwijderd:
-                                            klus.Stop();
-                                            klus.Status = ProductieState.Verwijderd;
-                                            saved = true;
-                                            break;
-                                    }
-
-                                    msg =
-                                        $"{klus.Path} van {user.PersoneelNaam}  is verandert naar {Enum.GetName(typeof(ProductieState), klus.Status)}.";
-                                }
-
-                                if (klus.Tijden.IsActief && klus.Status != ProductieState.Gestart)
-                                {
-                                    klus.Stop();
-                                    saved = true;
-                                }
-
-                                if (saved)
-                                {
-                                    userchanged = true;
-                                    if (xolduser != null && xolduser.ReplaceKlus(klus))
-                                        await bew.UpdateBewerking(null, $"{klus.Naam} klus geupdate");
-                                }
+                                user.Klusjes.Remove(klus);
+                                userchanged = true;
+                                continue;
                             }
 
-                        if (userchanged || toremove.Count > 0)
-                        {
-                            foreach (var k in toremove)
-                                user.Klusjes.Remove(k);
-                            await Manager.Database.UpSert(user, $"{user.PersoneelNaam} update");
-                        }
+                            var saved = false;
+                            var plek =
+                                bew.WerkPlekken.FirstOrDefault(x =>
+                                    string.Equals(x.Naam, klus.WerkPlek,
+                                        StringComparison.CurrentCultureIgnoreCase));
+                            if (plek == null)
+                            {
+                                toremove.Add(klus);
+                                continue;
+                            }
+                            Cancelation?.Token.ThrowIfCancellationRequested();
+                            var xolduser = plek.Personen.FirstOrDefault(x =>
+                                string.Equals(x.PersoneelNaam, user.PersoneelNaam,
+                                    StringComparison.CurrentCultureIgnoreCase));
+                            var msg = "";
+                            if (bew.State != klus.Status)
+                            {
+                                switch (bew.State)
+                                {
+                                    case ProductieState.Gestopt:
+                                        klus.Stop();
+                                        saved = true;
+                                        break;
+                                    case ProductieState.Gestart:
+                                        if (klus.IsActief)
+                                        {
+                                            klus.Start();
+                                            saved = true;
+                                        }
 
-                        done++;
+                                        break;
+                                    case ProductieState.Gereed:
+                                        klus.MeldGereed();
+                                        saved = true;
+                                        break;
+                                    case ProductieState.Verwijderd:
+                                        klus.Stop();
+                                        klus.Status = ProductieState.Verwijderd;
+                                        saved = true;
+                                        break;
+                                }
+
+                                msg =
+                                    $"{klus.Path} van {user.PersoneelNaam}  is verandert naar {Enum.GetName(typeof(ProductieState), klus.Status)}.";
+                            }
+                            Cancelation?.Token.ThrowIfCancellationRequested();
+                            if (klus.Tijden.IsActief && klus.Status != ProductieState.Gestart)
+                            {
+                                klus.Stop();
+                                saved = true;
+                            }
+
+                            if (saved)
+                            {
+                                userchanged = true;
+                                if (xolduser != null && xolduser.ReplaceKlus(klus))
+                                    bew.UpdateBewerking(null, $"{klus.Naam} klus geupdate");
+                            }
+                        }
+                    Cancelation?.Token.ThrowIfCancellationRequested();
+                    if (userchanged || toremove.Count > 0)
+                    {
+                        foreach (var k in toremove)
+                            user.Klusjes.Remove(k);
+                        Manager.Database.xUpSert(user.PersoneelNaam, user, $"{user.PersoneelNaam} update");
                     }
+
+                    done++;
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public Task<int> UpdateFromDatabaseEntry(DatabaseUpdateEntry entry)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 var count = 0;
                 try
                 {
-                    count = await Manager.Database.UpdateDbFromDb(entry, Cancelation, ProgressChanged);
-                    DoProgress("Update Geslaagd!", 100);
-                    IsFinished = true;
+                    count = xUpdateFromDatabaseEntry(entry);
                 }
                 catch (Exception e)
                 {
@@ -342,6 +356,23 @@ namespace Forms
 
                 return count;
             });
+        }
+
+        public int xUpdateFromDatabaseEntry(DatabaseUpdateEntry entry)
+        {
+            var count = 0;
+            try
+            {
+                count = Manager.Database.xUpdateDbFromDb(entry, Cancelation, ProgressChanged);
+                DoProgress("Update Geslaagd!", 100);
+                IsFinished = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return count;
         }
 
         public void ProgressChanged(object sender, ProgressArg arg)

@@ -99,6 +99,7 @@ namespace Forms
             // 
             // button2
             // 
+            this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.Location = new System.Drawing.Point(109, 3);
@@ -114,6 +115,7 @@ namespace Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
+            this.CancelButton = this.button2;
             this.ClientSize = new System.Drawing.Size(612, 244);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.panel1);

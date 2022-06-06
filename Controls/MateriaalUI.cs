@@ -54,7 +54,7 @@ namespace Controls
                         xstatus.Text = $"{mat.Aantal} {mat.Eenheid} van {mat.Omschrijving}";
                         label9.Text = $"Afkeur ({mat.Eenheid})";
                         xverbruiktlabel.Text = $"Verbuikt({mat.Eenheid})";
-                        xafkeurpercent.Text = mat.AfKeurProcent();
+                        xafkeurpercent.Text = mat.AfKeurProcent((decimal)mat.AantalAfkeur);
                     }
                     else
                     {
@@ -95,7 +95,7 @@ namespace Controls
                 xaantal.SetValue((decimal) mat.Aantal);
                 xafkeurvalue.Value = (decimal) mat.AantalAfkeur;
                 xeenheid.SelectedIndex = mat.Eenheid.ToLower() == "m" ? 0 : 1;
-                xafkeurpercent.Text = mat.AfKeurProcent();
+                xafkeurpercent.Text = mat.AfKeurProcent((decimal)mat.AantalAfkeur);
                 xverbruiktlabel.Text = $"Verbruik({mat.Eenheid})";
                 xaantalperstuk.SetValue((decimal) mat.AantalPerStuk);
                 xklaarzetimage.Image = mat.IsKlaarGezet ? Resources.check_1582 : null;

@@ -205,9 +205,12 @@ namespace Controls
                         return;
                     }
                     if (_Values.ContainsKey(bw.ArtikelNr.ToLower()))
-                        _Values[bw.ArtikelNr.ToLower()].Add(bw);
+                    {
+                        if (_Values[bw.ArtikelNr.ToLower()].IndexOf(bw) == -1)
+                            _Values[bw.ArtikelNr.ToLower()].Add(bw);
+                    }
                     else
-                        _Values.Add(bw.ArtikelNr.ToLower(), new List<Bewerking>() {bw});
+                        _Values.Add(bw.ArtikelNr.ToLower(), new List<Bewerking>() { bw });
                 }
 
                 ListArtikels();

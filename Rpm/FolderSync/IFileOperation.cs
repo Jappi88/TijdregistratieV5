@@ -1,7 +1,9 @@
-﻿namespace FolderSync
+﻿using System.Threading.Tasks;
+
+namespace FolderSync
 {
     public interface IFileOperation
     {
-        void DoOperation();
+        Task DoOperation();
     }
 }

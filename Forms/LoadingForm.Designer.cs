@@ -30,9 +30,9 @@
         {
             this.xprogressbar = new CircularProgressBar.CircularProgressBar();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.xstatustext = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.xsluiten = new System.Windows.Forms.Button();
-            this.xstatustext = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -81,31 +81,6 @@
             this.panel1.Size = new System.Drawing.Size(718, 203);
             this.panel1.TabIndex = 1;
             // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.xsluiten);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 159);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(718, 44);
-            this.panel2.TabIndex = 2;
-            // 
-            // xsluiten
-            // 
-            this.xsluiten.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xsluiten.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xsluiten.Location = new System.Drawing.Point(590, 3);
-            this.xsluiten.Name = "xsluiten";
-            this.xsluiten.Size = new System.Drawing.Size(125, 37);
-            this.xsluiten.TabIndex = 0;
-            this.xsluiten.Text = "Annuleren";
-            this.xsluiten.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.xsluiten.UseVisualStyleBackColor = true;
-            this.xsluiten.Click += new System.EventHandler(this.xsluiten_Click);
-            // 
             // xstatustext
             // 
             this.xstatustext.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -119,10 +94,37 @@
             this.xstatustext.Text = "Status...";
             this.xstatustext.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.xsluiten);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 159);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(718, 44);
+            this.panel2.TabIndex = 2;
+            // 
+            // xsluiten
+            // 
+            this.xsluiten.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xsluiten.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.xsluiten.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xsluiten.Location = new System.Drawing.Point(590, 3);
+            this.xsluiten.Name = "xsluiten";
+            this.xsluiten.Size = new System.Drawing.Size(125, 37);
+            this.xsluiten.TabIndex = 0;
+            this.xsluiten.Text = "Annuleren";
+            this.xsluiten.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.xsluiten.UseVisualStyleBackColor = true;
+            this.xsluiten.Click += new System.EventHandler(this.xsluiten_Click);
+            // 
             // LoadingForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
+            this.CancelButton = this.xsluiten;
             this.ClientSize = new System.Drawing.Size(758, 253);
             this.Controls.Add(this.panel1);
             this.DisplayHeader = false;
@@ -130,6 +132,7 @@
             this.Name = "LoadingForm";
             this.Padding = new System.Windows.Forms.Padding(20, 30, 20, 20);
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
+            this.ShowIcon = false;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoadingForm_FormClosing);
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);

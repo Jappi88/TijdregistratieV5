@@ -82,6 +82,7 @@ namespace Forms
             // 
             // xsluiten
             // 
+            this.xsluiten.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.xsluiten.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xsluiten.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.ForeColor = System.Drawing.Color.Black;
@@ -635,6 +636,7 @@ namespace Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.CancelButton = this.xsluiten;
             this.ClientSize = new System.Drawing.Size(870, 615);
             this.Controls.Add(this.metroTabControl1);
             this.Controls.Add(this.panel2);

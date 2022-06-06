@@ -438,53 +438,56 @@ namespace Rpm.SqlLite
             }
         }
 
-        public bool WriteInstanceToFile(object data, string filepath)
+        public bool WriteInstanceToFile(object data, string filepath, bool raiseevent)
         {
             //lock (_locker)
             //{
-                try
+            try
+            {
+                if (!CanRead) return false;
+                if (string.IsNullOrEmpty(filepath)) return false;
+                //string tmp = Manager.TempPath + "\\" + System.IO.Path.GetRandomFileName();
+                byte[] bytes;
+                using var fs = new MemoryStream();
                 {
-                    if (!CanRead) return false;
-                    if (string.IsNullOrEmpty(filepath)) return false;
-                    //string tmp = Manager.TempPath + "\\" + System.IO.Path.GetRandomFileName();
-                    byte[] bytes;
-                    using var fs = new MemoryStream();
-                    {
-                        RpmPacket packet = CreatePacketFromObject(data);
-                        var ser = new SharpSerializer(true);
-                        if (packet != null)
-                            ser.Serialize(packet, fs);
+                    RpmPacket packet = CreatePacketFromObject(data);
+                    var ser = new SharpSerializer(true);
+                    if (packet != null)
+                        ser.Serialize(packet, fs);
 
-                        ser.Serialize(data, fs);
-                        bytes = fs.ToArray();
-                        fs.Close();
-                    }
-                    for (int i = 0; i < 10; i++)
-                    {
-                        try
-                        {
-                            var dir = System.IO.Path.GetDirectoryName(filepath);
-                            if (!Directory.Exists(dir)) break;
-                            using var xs = new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.ReadWrite,
-                                FileShare.None);
-                            xs.Write(bytes, 0, bytes.Length);
-                            xs.Close();
-                            return true;
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e);
-                        }
-                    }
-                    //OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Changed,
-                    //    System.IO.Path.GetDirectoryName(filepath) ?? string.Empty, System.IO.Path.GetFileName(filepath)));
-                    return false;
+                    ser.Serialize(data, fs);
+                    bytes = fs.ToArray();
+                    fs.Close();
                 }
-                catch (Exception e)
+                for (int i = 0; i < 10; i++)
                 {
-                    Console.WriteLine(e);
-                    return false;
+                    try
+                    {
+                        var dir = System.IO.Path.GetDirectoryName(filepath);
+                        if (!Directory.Exists(dir)) break;
+                        //_pathwatcher?.UpdateFile(filepath, false,true, DateTime.Now.AddDays(1));
+                        using var xs = new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.ReadWrite,
+                            FileShare.None);
+                        xs.Write(bytes, 0, bytes.Length);
+                        xs.Flush();
+                        xs.Close();
+                        //Task.Factory.StartNew(() => _pathwatcher?.UpdateFile(filepath, raiseevent, true, DateTime.Now));
+                        return true;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
                 }
+                //OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Changed,
+                //    System.IO.Path.GetDirectoryName(filepath) ?? string.Empty, System.IO.Path.GetFileName(filepath)));
+                return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
             //}
         }
 
@@ -572,7 +575,7 @@ namespace Rpm.SqlLite
             }
         }
 
-        public bool Upsert<T>(string id, T item, bool onlylocal)
+        public bool Upsert<T>(string id, T item, bool onlylocal, bool raiseevent = true)
         {
             try
             {
@@ -581,7 +584,7 @@ namespace Rpm.SqlLite
                 if (paths.Length == 0) return false;
                 var xfirst = paths[0];
                 var path1 = $"{xfirst}\\{id.Trim()}.rpm";
-                if (WriteInstanceToFile(item, path1))
+                if (WriteInstanceToFile(item, path1, raiseevent))
                 {
                     for (int i = 1; i < paths.Length; i++)
                     {
@@ -626,6 +629,18 @@ namespace Rpm.SqlLite
                     return default;
                 }
             });
+        }
+
+        public static T xFromPath<T>(string path, bool monitorcorrupted)
+        {
+            try
+            {
+                return GetInstanceFromFile<T>(path, monitorcorrupted);
+            }
+            catch
+            {
+                return default;
+            }
         }
 
         public bool Delete(string id)

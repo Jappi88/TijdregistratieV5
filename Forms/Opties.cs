@@ -1,5 +1,4 @@
 ﻿using BrightIdeasSoftware;
-using ProductieManager.Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Mailing;
@@ -15,12 +14,12 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using Various;
 
 namespace Forms
 {
-    public partial class Opties : Forms.MetroBase.MetroBaseForm
+    public partial class Opties : MetroBase.MetroBaseForm
     {
         //public readonly StickyWindow _stickyWindow;
         private List<string> _afdelingen = new();
@@ -45,7 +44,7 @@ namespace Forms
             imageList1.Images.Add(Resources.industry_setting_114090.CombineImage(Resources.check_1582, 2));
             xoptielist.Groups.Clear();
             xfiltertype.SelectedIndex = 0;
-            if (Manager.Opties == null && !Manager.LoadSettings(this,true).Result)
+            if (Manager.Opties == null && !Manager.xLoadSettings(this,true))
                 return;
             Manager.DefaultSettings ??= UserSettings.GetDefaultSettings();
         }
@@ -146,6 +145,7 @@ namespace Forms
             xmeldingChat.Checked = x.ToonNieweChatBerichtMelding;
             xmeldingRecords.Checked = x.ToonArtikelRecordMeldingen;
             xmeldingBijlage.Checked = x.ToonNieweBijlageMelding;
+            xmeldingtoon.Checked = x.SpeelMeldingToonAf;
             xtilesrefresh.SetValue(x.TileCountRefreshRate);
 
             //weergave producties
@@ -222,9 +222,13 @@ namespace Forms
             {
                 LoadBackupInfo();
                 xbackupgroup.Visible = true;
+                xrestorebackup.Visible = true;
             }
-            else 
+            else
+            {
                 xbackupgroup.Visible = false;
+                xrestorebackup.Visible = false;
+            }
             xtoonlognotificatie.Checked = x.ToonLogNotificatie;
             xtoonproductieNaToevoegen.Checked = x.ToonProductieNaToevoegen;
             xoffdbsyncinterval.SetValue(Manager.DefaultSettings.OfflineDbSyncInterval);
@@ -333,15 +337,21 @@ namespace Forms
             xweergavelijst.EndUpdate();
         }
 
+        public BackupInfo GetBackupInfo()
+        {
+            var info = BackupInfo.Load();
+            info.BackupInterval = TimeSpan.FromHours((double)xcreatebackupinterval.Value).TotalMilliseconds;
+            info.MaxBackupCount = (int)xmaxbackups.Value;
+            info.ExcludeNames = xdatabaseview.Items.OfType<OLVListItem>().Where(x => x.CheckState != CheckState.Checked)
+                .Select(x => x.RowObject as string).ToList();
+            return info;
+        }
+
         private void SaveBackupInfo()
         {
             try
             {
-                var info = BackupInfo.Load();
-                info.BackupInterval = TimeSpan.FromHours((double)xcreatebackupinterval.Value).TotalMilliseconds;
-                info.MaxBackupCount = (int)xmaxbackups.Value;
-                info.ExcludeNames = xdatabaseview.Items.OfType<OLVListItem>().Where(x => x.CheckState != CheckState.Checked)
-                    .Select(x => x.RowObject as string).ToList();
+                var info = GetBackupInfo();
                 info.Save();
                 if (Manager.BackupInfo != null)
                 {
@@ -466,12 +476,14 @@ namespace Forms
             //backup info
             xs.CreateBackup = xcreatebackup.Checked;
 
+            //meldingen
             xs.ToonLogNotificatie = xtoonlognotificatie.Checked;
 
             xs.ToonNieweOpmerkingMelding = xmeldingOpmerking.Checked;
             xs.ToonNieweChatBerichtMelding = xmeldingChat.Checked;
             xs.ToonArtikelRecordMeldingen = xmeldingRecords.Checked;
             xs.ToonNieweBijlageMelding = xmeldingBijlage.Checked;
+            xs.SpeelMeldingToonAf = xmeldingtoon.Checked;
 
             Manager.DefaultSettings.OfflineDbSyncInterval = (int) xoffdbsyncinterval.Value;
             Manager.DefaultSettings.OfflineDabaseTypes.Clear();
@@ -1675,6 +1687,71 @@ namespace Forms
             if (xdatabaseview.SelectedItem != null)
             {
                 xdatabaseview.SelectedItem.Checked = !xdatabaseview.SelectedItem.Checked;
+            }
+        }
+
+        private bool isrestoring;
+        private async void xrestorebackup_Click(object sender, EventArgs e)
+        {
+            if (isrestoring) return;
+            var result = XMessageBox.Show(this, "Weet u zeker dat u de backup wilt terugzetten?!\n\n" +
+                "Alle gegevens uit de backup zullen terug gezet worden", "Backup Terugzetten", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+            if (result != DialogResult.Yes) return;
+            var ofd = new OpenFileDialog();
+            ofd.Filter = "Zip|*.zip";
+            ofd.Title = "Kies een backup zip(.zip) bestand";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                isrestoring = true;
+                var prog = new LoadingForm();
+                var arg = prog.Arg;
+                prog.CloseIfFinished = true;
+                arg.Message = "Backup terugzetten...";
+                arg.OnChanged(this);
+                _ = prog.ShowDialogAsync();
+                if (BackupInfo.IsValidBackup(ofd.FileName, null))
+                {
+                    await Manager.BackupInfo.UnZip(ofd.FileName, Manager.DbPath, null, true, arg.Token);
+                    arg.Type = ProgressType.WriteCompleet;
+                    arg.OnChanged(this);
+                    XMessageBox.Show(this, "Backup succesvol terug gezet!", "Backup Terug Gezet");
+                }
+                else
+                {
+                    arg.Type = ProgressType.WriteCompleet;
+                    arg.OnChanged(this);
+                    XMessageBox.Show(this, $"'{Path.GetFileName(ofd.FileName)}' is geen geldige backup", "Ongeldige Backup", MessageBoxIcon.Warning);
+                }
+                isrestoring = false;
+            }
+
+        }
+
+        private async void xbackupmaken_Click(object sender, EventArgs e)
+        {
+            if (isrestoring) return;
+            var ofd = new SaveFileDialog();
+            ofd.Filter = "Zip|*.zip";
+            ofd.Title = "Maak een backup zip(.zip) bestand";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                isrestoring = true;
+                var prog = new LoadingForm();
+                var arg = prog.Arg;
+                prog.CloseIfFinished = true;
+                arg.Message = "Backup Maken...";
+                arg.OnChanged(this);
+                _= prog.ShowDialogAsync();
+                var info = GetBackupInfo();
+                info.CancellationToken = arg.Token;
+                if (await BackupInfo.CreateBackup(info, ofd.FileName))
+                {
+                    arg.Type = ProgressType.WriteCompleet;
+                    arg.OnChanged(this);
+                    if (!arg.Token.IsCancellationRequested)
+                        XMessageBox.Show(this, "Backup succesvol aangemaakt!", "Backup Aangemaakt");
+                }
+                isrestoring = false;
             }
         }
 

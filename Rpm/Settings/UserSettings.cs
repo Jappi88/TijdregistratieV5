@@ -55,6 +55,7 @@ namespace Rpm.Settings
         public bool ToonNieweChatBerichtMelding { get; set; } = true;
         public bool ToonArtikelRecordMeldingen { get; set; } = true;
         public bool ToonNieweBijlageMelding { get; set; } = true;
+        public bool SpeelMeldingToonAf { get; set; } = true;
         #endregion Meldingen
 
         #region "Methods"
@@ -487,19 +488,24 @@ namespace Rpm.Settings
 
         public Task<bool> Save(string change = null,bool init = false, bool triggersaved = false, bool showmessage = true)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
-                if (Manager.Database?.AllSettings == null) return false;
-                change ??= $"[{Username}] Instellingen Opgeslagen";
-                if (await Manager.Database.UpSert(this, change,showmessage))
-                {
-                    if (triggersaved)
-                        Manager.SettingsChanged(this,init);
-                    return true;
-                }
-
-                return false;
+                return xSave(change, init, triggersaved, showmessage);
             });
+        }
+
+        public bool xSave(string change = null, bool init = false, bool triggersaved = false, bool showmessage = true)
+        {
+            if (Manager.Database?.AllSettings == null) return false;
+            change ??= $"[{Username}] Instellingen Opgeslagen";
+            if (Manager.Database.xUpSert(this.Username, this, change, showmessage))
+            {
+                if (triggersaved)
+                    Manager.SettingsChanged(this, init);
+                return true;
+            }
+
+            return false;
         }
 
         public static UserSettings GetDefaultSettings()

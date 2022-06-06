@@ -23,51 +23,93 @@ namespace Rpm.Controls
         public Form_Alert()
         {
             InitializeComponent();
+            _Timer = new System.Timers.Timer();
+            _Timer.Elapsed += timer1_Tick;
+            _Timer.Interval = 10;
+            _Timer.Enabled = false;
         }
 
         protected override bool ShowWithoutActivation => true;
+        private System.Timers.Timer _Timer;
+
+        private void TimerTick()
+        {
+            try
+            {
+                if (this.Disposing || this.IsDisposed)
+                {
+                    _Timer.Stop();
+                    return;
+                }
+                switch (action)
+                {
+                    case enmAction.wait:
+                        _Timer.Interval = 5000;
+                        action = enmAction.close;
+                        break;
+
+                    case enmAction.start:
+                        _Timer.Interval = 10;
+                        Opacity += 0.1;
+                        if (x < Location.X)
+                        {
+                            Left--;
+                        }
+                        else
+                        {
+                            if (Opacity == 1.0) action = enmAction.wait;
+                        }
+                        break;
+
+                    case enmAction.close:
+                        _Timer.Interval = 10;
+                        Opacity -= 0.1;
+
+                        Left -= 3;
+                        if (Opacity == 0.0)
+                        {
+                            // this.Invoke(new Action(Close));
+                            if (this.Disposing || this.IsDisposed)
+                            {
+                                _Timer.Stop();
+                                return;
+                            }
+                            this.Close();
+                            //if (typeof(Form_Alert) == this.GetType())
+                            //    this.Invoke(new Action(Close));
+                        }
+                        break;
+                }
+                _Timer.Start();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                _Timer.Stop();
+            }
+        }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            switch (action)
+            _Timer.Stop();
+            if (this.Disposing || this.IsDisposed)
             {
-                case enmAction.wait:
-                    timer1.Interval = 5000;
-                    action = enmAction.close;
-                    break;
-
-                case enmAction.start:
-                    timer1.Interval = 10;
-                    Opacity += 0.1;
-                    if (x < Location.X)
-                    {
-                        Left--;
-                    }
-                    else
-                    {
-                        if (Opacity == 1.0) action = enmAction.wait;
-                    }
-
-                    break;
-
-                case enmAction.close:
-                    timer1.Interval = 10;
-                    Opacity -= 0.1;
-
-                    Left -= 3;
-                    if (Opacity == 0.0)
-                    {
-                       // this.Invoke(new Action(Close));
-                       if (typeof(Form_Alert) == this.GetType())
-                           this.Invoke(new Action(Close));
-                    }
-                    break;
+                return;
             }
+            try
+            {
+                this.Invoke(new Action(TimerTick));
+            }
+            catch(Exception ex)
+            {
+                _Timer.Stop();
+            }
+            
         }
 
         private void close_Click(object sender, EventArgs e)
         {
-            timer1.Interval = 100;
+            _Timer.Interval = 10;
             action = enmAction.close;
         }
 
@@ -141,12 +183,27 @@ namespace Rpm.Controls
 
         private void FocusParent()
         {
-            var xform = this.GetParentForm();
-            if (xform != null)
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(FocusParent));
+            else
             {
-                xform.BringToFront();
-                xform.Focus();
-                xform.Select();
+                var xform = this.GetParentForm();
+                if (xform != null)
+                {
+                    FocusForm(xform);
+                }
+            }
+        }
+
+        private void FocusForm(Form form)
+        {
+            if (form == null) return;
+            if (form.InvokeRequired)
+                form.Invoke(new MethodInvoker(() => FocusForm(form)));
+            else
+            {
+                form.BringToFront();
+                form.Focus();
             }
         }
 
@@ -159,8 +216,8 @@ namespace Rpm.Controls
         {
             base.Show();
             action = enmAction.start;
-            timer1.Interval = 100;
-            timer1.Start();
+            _Timer.Interval = 10;
+            _Timer.Start();
             Invalidate();
             FocusParent();
         }

@@ -69,7 +69,7 @@
             this.panel5.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.panel5.Location = new System.Drawing.Point(68, 0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(514, 37);
+            this.panel5.Size = new System.Drawing.Size(514, 48);
             this.panel5.TabIndex = 10;
             // 
             // xnextb
@@ -78,7 +78,7 @@
             this.xnextb.FlatAppearance.BorderSize = 0;
             this.xnextb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xnextb.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
-            this.xnextb.Location = new System.Drawing.Point(343, 1);
+            this.xnextb.Location = new System.Drawing.Point(343, 12);
             this.xnextb.Name = "xnextb";
             this.xnextb.Size = new System.Drawing.Size(32, 32);
             this.xnextb.TabIndex = 15;
@@ -90,11 +90,12 @@
             this.xwerkplekken.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.xwerkplekken.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xwerkplekken.FontSize = MetroFramework.MetroComboBoxSize.Small;
             this.xwerkplekken.FormattingEnabled = true;
-            this.xwerkplekken.ItemHeight = 23;
-            this.xwerkplekken.Location = new System.Drawing.Point(3, 3);
+            this.xwerkplekken.ItemHeight = 19;
+            this.xwerkplekken.Location = new System.Drawing.Point(3, 18);
             this.xwerkplekken.Name = "xwerkplekken";
-            this.xwerkplekken.Size = new System.Drawing.Size(235, 29);
+            this.xwerkplekken.Size = new System.Drawing.Size(235, 25);
             this.xwerkplekken.TabIndex = 15;
             this.xwerkplekken.UseSelectable = true;
             this.xwerkplekken.SelectedIndexChanged += new System.EventHandler(this.xwerkplekken_SelectedIndexChanged);
@@ -102,28 +103,29 @@
             // xaantalgemaakt
             // 
             this.xaantalgemaakt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xaantalgemaakt.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xaantalgemaakt.Location = new System.Drawing.Point(244, 3);
+            this.xaantalgemaakt.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xaantalgemaakt.Location = new System.Drawing.Point(244, 18);
             this.xaantalgemaakt.Maximum = new decimal(new int[] {
             999999999,
             0,
             0,
             0});
             this.xaantalgemaakt.Name = "xaantalgemaakt";
-            this.xaantalgemaakt.Size = new System.Drawing.Size(93, 29);
+            this.xaantalgemaakt.Size = new System.Drawing.Size(93, 25);
             this.xaantalgemaakt.TabIndex = 0;
+            this.xaantalgemaakt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.xaantalgemaakt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xaantalgemaakt_KeyDown);
             // 
             // xaantalLabel
             // 
-            this.xaantalLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.xaantalLabel.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xaantalLabel.Location = new System.Drawing.Point(387, 0);
+            this.xaantalLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xaantalLabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xaantalLabel.Location = new System.Drawing.Point(381, 16);
             this.xaantalLabel.Name = "xaantalLabel";
-            this.xaantalLabel.Size = new System.Drawing.Size(127, 37);
+            this.xaantalLabel.Size = new System.Drawing.Size(127, 25);
             this.xaantalLabel.TabIndex = 7;
             this.xaantalLabel.Text = "0/ 0";
-            this.xaantalLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.xaantalLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // xPacketGroup
             // 
@@ -133,7 +135,7 @@
             this.xPacketGroup.Controls.Add(this.xpacketvalue);
             this.xPacketGroup.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.xPacketGroup.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xPacketGroup.ForeColor = System.Drawing.Color.DarkRed;
+            this.xPacketGroup.ForeColor = System.Drawing.Color.Purple;
             this.xPacketGroup.Location = new System.Drawing.Point(68, 45);
             this.xPacketGroup.Name = "xPacketGroup";
             this.xPacketGroup.Size = new System.Drawing.Size(514, 55);
@@ -156,10 +158,10 @@
             // xpacketlabel
             // 
             this.xpacketlabel.AutoSize = true;
-            this.xpacketlabel.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xpacketlabel.Location = new System.Drawing.Point(196, 21);
+            this.xpacketlabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xpacketlabel.Location = new System.Drawing.Point(190, 25);
             this.xpacketlabel.Name = "xpacketlabel";
-            this.xpacketlabel.Size = new System.Drawing.Size(56, 21);
+            this.xpacketlabel.Size = new System.Drawing.Size(48, 17);
             this.xpacketlabel.TabIndex = 13;
             this.xpacketlabel.Text = "Aantal";
             // 
@@ -176,23 +178,24 @@
             // 
             // xpacketvalue
             // 
-            this.xpacketvalue.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xpacketvalue.Location = new System.Drawing.Point(10, 19);
+            this.xpacketvalue.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xpacketvalue.Location = new System.Drawing.Point(10, 21);
             this.xpacketvalue.Maximum = new decimal(new int[] {
             999999999,
             0,
             0,
             0});
             this.xpacketvalue.Name = "xpacketvalue";
-            this.xpacketvalue.Size = new System.Drawing.Size(94, 29);
+            this.xpacketvalue.Size = new System.Drawing.Size(94, 25);
             this.xpacketvalue.TabIndex = 1;
+            this.xpacketvalue.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.xpacketvalue.ValueChanged += new System.EventHandler(this.Xpacketvalue_ValueChanged);
             // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pictureBox1.Image = global::ProductieManager.Properties.Resources.Count_tool_34564__1_;
+            this.pictureBox1.Image = global::ProductieManager.Properties.Resources.iconfinder_technology;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(68, 100);

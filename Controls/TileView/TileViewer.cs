@@ -255,7 +255,7 @@ namespace Controls
 
                 Manager.Opties.TileLayout = xtiles;
                 if (save)
-                    return Manager.Opties.Save(null, false, false, false).Result;
+                    return Manager.Opties.xSave(null, false, false, false);
                 return true;
             }
             catch (Exception e)

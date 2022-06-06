@@ -921,6 +921,7 @@ namespace Controls
             // 
             // metroCustomTabControl1
             // 
+            this.metroCustomTabControl1.AllowDrop = true;
             this.metroCustomTabControl1.Controls.Add(this.metroTabPage5);
             this.metroCustomTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroCustomTabControl1.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;

@@ -76,8 +76,8 @@ namespace Forms.Aantal
             {
                 var group = new GroupBox();
                 group.ForeColor = Color.DarkRed;
-                group.Text = $"{bw.ArtikelNr}, {bw.ProductieNr} | {bw.Naam} Van {bw.Omschrijving}";
-                group.Font = new Font(this.Font.FontFamily, 12, FontStyle.Bold);
+                group.Text = $"[{bw.ProductieNr}] {bw.Naam} Van {bw.Omschrijving}";
+                group.Font = new Font(this.Font.FontFamily, 10, FontStyle.Bold);
                 group.Dock = DockStyle.Top;
 
                 var xaantal = new AantalChangerUI();

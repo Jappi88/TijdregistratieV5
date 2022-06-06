@@ -380,22 +380,40 @@ namespace Rpm.Productie
                 return Task.FromResult<bool>(false);
             }
         }
-      
-        public static Color GetNegativeColorByPercentage(decimal percentage)
+
+        public virtual bool xUpdate(string change, bool save, bool raiseevent, bool showmessage = true)
         {
-            if (percentage <= -25)
+            try
+            {
+                if (this is Bewerking bew)
+                    return bew.xUpdateBewerking(null, change, save,showmessage);
+                if (this is ProductieFormulier form)
+                    return form.xUpdateForm(true, false, null, change, save, showmessage, raiseevent);
+                return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        public static Color GetNegativeColorByPercentage(decimal percentage, decimal max = 100)
+        {
+            var perc = ((percentage / max) * 100);
+            if (perc <= -25)
                 return Color.Red;
-            if (percentage <= -15)
+            if (perc <= -15)
                 return Color.DarkOrange;
-            if (percentage <= -5)
+            if (perc <= -5)
                 return Color.Orange;
-            if (percentage <= 5)
+            if (perc <= 5)
                 return Color.Green;
-            if (percentage <= 15)
+            if (perc <= 15)
                 return Color.DarkGreen;
-            if (percentage <= 50)
+            if (perc <= 50)
                 return Color.HotPink;
-            if (percentage > 50)
+            if (perc > 50)
                 return Color.RoyalBlue;
             return Color.Black;
         }
@@ -600,7 +618,6 @@ namespace Rpm.Productie
               $"<tr style = 'vertical-align: top;' >\r\n" +
               ximage +
               $"<td>" +
-              $"<div>\r\n" +
               $"{message}"+
               $"<hr />" +
               $"</td>" +
@@ -671,7 +688,7 @@ namespace Rpm.Productie
                    $"<div>Verbuik Per Eenheid: <b>{Math.Round(x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
                    $"<div>Verbuikt: <b>{Math.Round(TotaalGemaakt * x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
                    $"<div>Totaal Nodig: <b>{Math.Round(Aantal * x.AantalPerStuk, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)}</b></div>" +
-                   $"<div>Aantal Afkeur: <b>{Math.Round(x.AantalAfkeur, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)} ({x.AfKeurProcent()})</b></div>" +
+                   $"<div>Aantal Afkeur: <b>{Math.Round(x.AantalAfkeur, 4)} {(x.Eenheid.ToLower() == "m" ? "meter" : x.Eenheid)} ({x.AfKeurProcent((decimal)x.AantalAfkeur)})</b></div>" +
                    $"</li>"))) +
               $"</ul>\r\n" +
               $"<hr />" +
@@ -825,8 +842,54 @@ Color textcolor, bool useimage)
             return $"" + 
                 string.Join("\n", bws.Select(x => $"<li><span style = 'color:purple'>{x.Naam}=> <b>{x.TotaalGemaakt}/{x.Aantal}</b>" +
                 $" <span style = 'color: {GetPositiveColorByPercentage((decimal)x.Gereed).Name}'>({x.Gereed}%)</span>" +
-                $"</span></li>"))
+                $"{x.GetShortBewerkingAfkeurHtml(Color.Purple)}</span></li>"))
                 + "<br>";
+        }
+
+        private string GetBewerkingAfkeurHtml()
+        {
+            var afkeur = new List<Materiaal>();
+            if (this is Bewerking bewerking)
+                afkeur = bewerking.Afkeur;
+            else afkeur = GetMaterialen().Where(x => x.AantalAfkeur > 0).ToList();
+            if (afkeur.Count == 0) return "";
+            var xafk = string.Join(", ", afkeur.Select(x => $"{x.ArtikelNr}: <b>{x.AantalAfkeur}{(x.Eenheid.ToLower().Contains("stuk")?"st." : x.Eenheid)}</b>" +
+              $" <span style = 'color: {x.GetAfkeurProcentColor((decimal)x.AantalAfkeur).Name}'>({x.AfKeurProcent((decimal)x.AantalAfkeur)})</span>"));
+            return $"{Naam}=> {xafk}";
+        }
+
+        private string GetShortBewerkingAfkeurHtml(Color color)
+        {
+            var afkeur = new List<Materiaal>();
+            if (this is Bewerking bewerking)
+                afkeur = bewerking.Afkeur;
+            else afkeur = GetMaterialen().Where(x => x.AantalAfkeur > 0).ToList();
+            if (afkeur.Count == 0) return "";
+            var xdict = new Dictionary<string, Materiaal>();
+            foreach(var m in afkeur)
+            {
+                var eh = m.Eenheid.ToLower().Contains("stuk") ? "st." : m.Eenheid;
+                if (xdict.ContainsKey(eh))
+                {
+                    xdict[eh].AantalAfkeur += m.AantalAfkeur;
+                }
+                else xdict.Add(eh, new Materiaal() { Eenheid = eh, Aantal = m.Aantal, AantalAfkeur = m.AantalAfkeur, AantalPerStuk = m.AantalPerStuk });
+            }
+            return $", <span style='color:{color.Name}'>Afkeur: <b>{string.Join(", ", xdict.Select(x=> $"{x.Value.AantalAfkeur} {x.Key}<span style='color:{x.Value.GetAfkeurProcentColor((decimal)x.Value.AantalAfkeur).Name}'>({x.Value.AfKeurProcent((decimal)x.Value.AantalAfkeur)})</span>"))}</b></span>";
+        }
+
+        private string GetBewerkingenAfkeurHtml()
+        {
+            var bws = GetBewerkingen().Where(x => !x.Equals(this) && x.Afkeur.Count > 0).ToArray();
+            var xafk = GetBewerkingAfkeurHtml();
+            var xret = string.IsNullOrEmpty(xafk) && bws.Length == 0? "" : $"<span style = 'color:darkred'>Afkeur:</span> {xafk}";
+            if (bws.Length > 0)
+                xret +=
+                $"<ul>" +
+                string.Join("\n", bws.Select(x => $"<li><span style = 'color:purple'>{x.GetBewerkingAfkeurHtml()}</span></li>"))
+                + "<br>" +
+                "</ul>";
+            return xret;
         }
 
         public string GetHeaderHtmlBody(string title, Bitmap image, Size imagesize, Color backcolor,
@@ -847,7 +910,7 @@ Color textcolor, bool useimage)
             var startop = StartOp;
             var gestartop = TijdGestart;
             var xstartbody = TotaalGemaakt < Aantal && State != ProductieState.Gereed
-                ? $"Starten Op: <span style = 'color: {GetValidColor(startop > DateTime.Now).Name}>{startop:f} ({AanbevolenPersonen}p)</span>.<br>"
+                ? $"Starten Op: <span style = 'color: {GetValidColor(startop < LeverDatum && startop > DateTime.Now).Name}>{startop:f} ({AanbevolenPersonen}p)</span>.<br>"
                 : "";
             var xgestartbody = State == ProductieState.Gestart
                 ? $"Gestart Op: <span style = 'color: {GetValidColor(gestartop < startop).Name}>{gestartop:f} ({GetPersonen(false).Length}p)</span>.<br>"
@@ -917,7 +980,7 @@ Color textcolor, bool useimage)
                            xwpsinfo +
                           $"Per Uur: <u>{ActueelPerUur}</u> i.p.v. {PerUur} P/u <span style = 'color: {GetNegativeColorByPercentage(GetAfwijking()).Name}'>({GetAfwijking()}%)</span><br>" +
                           $"Tijd Gewerkt: <u>{TijdGewerkt}</u> / {Math.Round(DoorloopTijd, 2)} uur <span style = 'color:{GetPositiveColorByPercentage((decimal)TijdGewerktPercentage).Name}'>({TijdGewerktPercentage}%)</span><br>" +
-                          $"Totaal Gemaakt: <u>{TotaalGemaakt}</u> / {Aantal} <span style = 'color: {GetPositiveColorByPercentage((decimal) Gereed).Name}'>({Gereed}%)</span><br>" +
+                          $"Totaal Gemaakt: <u>{TotaalGemaakt}</u> / {Aantal} <span style = 'color: {GetPositiveColorByPercentage((decimal)Gereed).Name}'>({Gereed}%)</span>{GetShortBewerkingAfkeurHtml(Color.DarkRed)}<br>" +
                           $"<ul><li><u>Actueel</u> Aantal Gemaakt: <b><u>{ActueelAantalGemaakt}</u></b> / {Aantal}</li>" +
                            GetBewerkingenGemaaktHtml() +
                           $"</ul>" +
@@ -944,73 +1007,77 @@ Color textcolor, bool useimage)
 
         public Bitmap GetImageFromResources(ref string name)
         {
-            var img = this is ProductieFormulier ? Resources.page_document_16748_128_128 : Resources.operation;
-            bool onderbroken = this.GetStoringen(true).Length > 0;
-            if (this is Bewerking bew)
+            try
             {
-                name += "bew";
-                if (bew.Combies.Count > 0)
+                var img = this is ProductieFormulier ? Resources.page_document_16748_128_128 : Resources.operation;
+                bool onderbroken = this.GetStoringen(true).Length > 0;
+                if (this is Bewerking bew)
                 {
-                    name += "_combi";
-                    img = img.CombineImage(Resources.UnMerge_arrows_32x32, ContentAlignment.BottomLeft, 2);
+                    name += "bew";
+                    if (bew.Combies.Count > 0)
+                    {
+                        name += "_combi";
+                        img = img.CombineImage(Resources.UnMerge_arrows_32x32, ContentAlignment.BottomLeft, 2);
+                    }
+                    if (!string.IsNullOrEmpty(bew.Note?.Notitie))
+                    {
+                        name += "_note";
+                        img = img.CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, 2);
+                    }
                 }
-                if (!string.IsNullOrEmpty(bew.Note?.Notitie))
+                else if (this is ProductieFormulier prod)
                 {
-                    name += "_note";
-                    img = img.CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, 2);
-                }
-            }
-            else if (this is ProductieFormulier prod)
-            {
-                name += "prod";
-                if (prod.Bewerkingen?.Any(x => x.Combies.Count > 0) ?? false)
-                {
-                    name += "_combi";
-                    img = img.CombineImage(Resources.UnMerge_arrows_32x32, ContentAlignment.BottomLeft, 2);
+                    name += "prod";
+                    if (prod.Bewerkingen?.Any(x => x.Combies.Count > 0) ?? false)
+                    {
+                        name += "_combi";
+                        img = img.CombineImage(Resources.UnMerge_arrows_32x32, ContentAlignment.BottomLeft, 2);
+                    }
+
+                    if (!string.IsNullOrEmpty(prod.Note?.Notitie))
+                    {
+                        name += "_note";
+                        img = img.CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, 2);
+                    }
                 }
 
-                if (!string.IsNullOrEmpty(prod.Note?.Notitie))
+                if (onderbroken)
                 {
-                    name += "_note";
-                    img = img.CombineImage(Resources.Note_msgIcon_32x32, ContentAlignment.TopLeft, 2);
+                    name += "_onderbroken";
+                    img = img.CombineImage(Resources.Stop_Hand__32x32, ContentAlignment.BottomRight, 2);
                 }
-            }
-
-            if (onderbroken)
-            {
-                name += "_onderbroken";
-                img = img.CombineImage(Resources.Stop_Hand__32x32, ContentAlignment.BottomRight, 2);
-            }
-            else
-            {
-                name += "_" + Enum.GetName(typeof(ProductieState), State)?.ToLower();
-                switch (State)
+                else
                 {
-                    case ProductieState.Gestopt:
-                        if (IsNieuw)
-                        {
-                            name += "_nieuw";
-                            img = img.CombineImage(Resources.new_25355, 2);
-                        }
-                        else if (TeLaat)
-                        {
-                            name += "_telaat";
-                            img = img.CombineImage(Resources.Warning_36828, 2);
-                        }
+                    name += "_" + Enum.GetName(typeof(ProductieState), State)?.ToLower();
+                    switch (State)
+                    {
+                        case ProductieState.Gestopt:
+                            if (IsNieuw)
+                            {
+                                name += "_nieuw";
+                                img = img.CombineImage(Resources.new_25355, 2);
+                            }
+                            else if (TeLaat)
+                            {
+                                name += "_telaat";
+                                img = img.CombineImage(Resources.Warning_36828, 2);
+                            }
 
-                        break;
-                    case ProductieState.Gestart:
-                        img = img.CombineImage(Resources.play_button_icon_icons_com_60615, 2);
-                        break;
-                    case ProductieState.Gereed:
-                        img = img.CombineImage(Resources.check_1582, 2);
-                        break;
-                    case ProductieState.Verwijderd:
-                        img = img.CombineImage(Resources.delete_1577, 2);
-                        break;
+                            break;
+                        case ProductieState.Gestart:
+                            img = img.CombineImage(Resources.play_button_icon_icons_com_60615, 2);
+                            break;
+                        case ProductieState.Gereed:
+                            img = img.CombineImage(Resources.check_1582, 2);
+                            break;
+                        case ProductieState.Verwijderd:
+                            img = img.CombineImage(Resources.delete_1577, 2);
+                            break;
+                    }
                 }
+                return img;
             }
-            return img;
+            catch { return null; }
         }
 
         public int GetImageIndexFromList(ImageList list)

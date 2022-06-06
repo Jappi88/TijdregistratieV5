@@ -1,6 +1,7 @@
 ﻿using Forms;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
+using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Various;
 using System;
@@ -88,6 +89,7 @@ namespace Controls
                     xknoppenpanel.Visible = SelectedBewerking != null && !IsDefault() && IsSelected;
                     xcompact.Visible = true;
                     xVerwijderPersoneel.Visible = true;
+                    xVerwijderKlus.Enabled = SelectedBewerking != null && SelectedBewerking.State != ProductieState.Gereed;
                     xresetindeling.Visible = true;
                     xpanel.Visible = true;
                     xcompact.Image = IsCompact ? Resources.icons8_expand_32 : Resources.icons8_collapse_32;
@@ -104,24 +106,8 @@ namespace Controls
                     if (SelectedBewerking != null)
                     {
                         var wp = SelectedBewerking.GetWerkPlek(Werkplek, false);
-                        if (wp != null && wp.IsActief())
-                        {
-                            if (SelectedBewerking.State == ProductieState.Gestart)
-                            {
-                                xStartKlus.Enabled = false;
-                                xStopKlus.Enabled = true;
-                            }
-                            else
-                            {
-                                xStartKlus.Enabled = true;
-                                xStopKlus.Enabled = false;
-                            }
-                        }
-                        else
-                        {
-                            xStartKlus.Enabled = true;
-                            xStopKlus.Enabled = false;
-                        }
+                        xStartKlus.Enabled = SelectedBewerking.State == ProductieState.Gestopt && wp != null;
+                        xStopKlus.Enabled = SelectedBewerking.State == ProductieState.Gestart && wp != null;
                     }
                     else
                     {
@@ -188,6 +174,7 @@ namespace Controls
                 {
                     if (x is Bewerking bew)
                     {
+                        if (bew.State is ProductieState.Gereed or ProductieState.Verwijderd) continue;
                         if (!IsDefault())
                         {
                             var wps = Manager.BewerkingenLijst?.GetWerkplekken(bew.Naam);
@@ -221,18 +208,19 @@ namespace Controls
                     {
                         if (x is Bewerking bew)
                         {
-                            
+                            if (bew.State is ProductieState.Gereed or ProductieState.Verwijderd) continue;
                             if (!IsDefault())
                             {
                                 var wps = Manager.BewerkingenLijst?.GetWerkplekken(bew.Naam);
                                 if (wps == null || !wps.Any(w =>
                                         string.Equals(w, Werkplek, StringComparison.CurrentCultureIgnoreCase)))
                                     continue;
-                                bew.WerkPlekken.RemoveAll(b =>
+                                var xbw = bew.CreateCopy();
+                                xbw.WerkPlekken.RemoveAll(b =>
                                     b.TijdGewerkt == 0 && b.TotaalGemaakt == 0);
-                                var wp = bew.GetWerkPlek(Werkplek, true);
-                                _ = bew.UpdateBewerking(null,
-                                    $"[{bew.Path}] Ingedeeld op {wp.Naam}").Result;
+                                var wp = xbw.GetWerkPlek(Werkplek, true);
+                                _ = xbw.xUpdateBewerking(null,
+                                    $"[{bew.Path}] Ingedeeld op {wp.Naam}");
                             }
                         }
                     }
@@ -311,7 +299,7 @@ namespace Controls
             {
                 if (xp.IngezetAanKlus(SelectedBewerking, false, out var klusjes))
                 {
-                    var xdp = Manager.Database.GetPersoneel(xp.PersoneelNaam).Result;
+                    var xdp = Manager.Database.xGetPersoneel(xp.PersoneelNaam);
                     foreach (var klus in klusjes)
                     {
                         klus.Stop();
@@ -321,7 +309,7 @@ namespace Controls
                     }
 
                     if (xdp != null)
-                        Manager.Database.UpSert(xdp, change);
+                        Manager.Database.xUpSert(xdp.PersoneelNaam, xdp, change);
                 }
             }
 
@@ -329,7 +317,7 @@ namespace Controls
             {
                 xStartKlus.Enabled = true;
                 xStopKlus.Enabled = false;
-                _ = SelectedBewerking.UpdateBewerking(null,
+                _ = SelectedBewerking.xUpdateBewerking(null,
                     $"{Werkplek} UPDATE: {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!");
 
             }
@@ -347,7 +335,7 @@ namespace Controls
                     foreach (var per in wp.Personen)
                     {
                         SelectedBewerking.ZetPersoneelActief(per.PersoneelNaam, wp.Naam, true);
-                        var xdb = Manager.Database.GetPersoneel(per.PersoneelNaam).Result;
+                        var xdb = Manager.Database.xGetPersoneel(per.PersoneelNaam);
                         if (xdb != null)
                         {
                             if (per.IngezetAanKlus(wp.Path, true, out var klusjes))
@@ -355,7 +343,7 @@ namespace Controls
                                 klusjes.ForEach(x => xdb.ReplaceKlus(x));
                                 string change =
                                     $"{xdb.PersoneelNaam} gestart met {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!";
-                                Manager.Database?.UpSert(xdb, change);
+                                Manager.Database?.xUpSert(xdb.PersoneelNaam, xdb, change);
                             }
                         }
                     }

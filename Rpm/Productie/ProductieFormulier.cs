@@ -299,106 +299,116 @@ namespace Rpm.Productie
 
         public Task<bool> UpdateFieldsFrom(ProductieFormulier form, string change = null)
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
-                if (form == null ||
-                    !string.Equals(form.ProductieNr, ProductieNr, StringComparison.CurrentCultureIgnoreCase))
-                    return false;
-
-                try
-                {
-                    Omschrijving = form.Omschrijving;
-                    ArtikelNr = form.ArtikelNr;
-                    Eenheid = form.Eenheid;
-                    if (form.Materialen.Count > 0)
-                    {
-                        foreach (var mat in form.Materialen)
-                        {
-                            var mymat = Materialen.FirstOrDefault(x =>
-                                string.Equals(x.ArtikelNr, mat.ArtikelNr, StringComparison.CurrentCultureIgnoreCase));
-                            if (mymat != null)
-                                mat.AantalAfkeur = mymat.AantalAfkeur;
-                        }
-                    }
-
-                    Materialen = form.Materialen.CreateCopy();
-                    VerpakkingsInstructies = form.VerpakkingsInstructies;
-
-                    if (form.Bewerkingen is { Length: > 0 })
-                    {
-                        foreach (var bew in form.Bewerkingen)
-                        {
-                            var mybew = Bewerkingen?.FirstOrDefault(x => x.Equals(bew));
-                            if (mybew != null)
-                            {
-                                mybew.Naam = bew.Naam;
-                                mybew.Opmerking = bew.Opmerking;
-                                mybew.Eenheid = bew.Eenheid;
-                            }
-                            else
-                            {
-                                var xbws = new List<Bewerking>();
-                                if (Bewerkingen is {Length: > 0})
-                                    xbws.AddRange(Bewerkingen);
-                                xbws.Add(bew);
-                                Bewerkingen = xbws.ToArray();
-                            }
-                        }
-                    }
-
-                    return true;
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
+                return xUpdateFieldsFrom(form, change);
             });
+        }
+
+        public bool xUpdateFieldsFrom(ProductieFormulier form, string change = null)
+        {
+            if (form == null ||
+                !string.Equals(form.ProductieNr, ProductieNr, StringComparison.CurrentCultureIgnoreCase))
+                return false;
+
+            try
+            {
+                Omschrijving = form.Omschrijving;
+                ArtikelNr = form.ArtikelNr;
+                Eenheid = form.Eenheid;
+                if (form.Materialen.Count > 0)
+                {
+                    foreach (var mat in form.Materialen)
+                    {
+                        var mymat = Materialen.FirstOrDefault(x =>
+                            string.Equals(x.ArtikelNr, mat.ArtikelNr, StringComparison.CurrentCultureIgnoreCase));
+                        if (mymat != null)
+                            mat.AantalAfkeur = mymat.AantalAfkeur;
+                    }
+                }
+
+                Materialen = form.Materialen.CreateCopy();
+                VerpakkingsInstructies = form.VerpakkingsInstructies;
+
+                if (form.Bewerkingen is { Length: > 0 })
+                {
+                    foreach (var bew in form.Bewerkingen)
+                    {
+                        var mybew = Bewerkingen?.FirstOrDefault(x => x.Equals(bew));
+                        if (mybew != null)
+                        {
+                            mybew.Naam = bew.Naam;
+                            mybew.Opmerking = bew.Opmerking;
+                            mybew.Eenheid = bew.Eenheid;
+                        }
+                        else
+                        {
+                            var xbws = new List<Bewerking>();
+                            if (Bewerkingen is { Length: > 0 })
+                                xbws.AddRange(Bewerkingen);
+                            xbws.Add(bew);
+                            Bewerkingen = xbws.ToArray();
+                        }
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public Task<bool> UpdateFrom(ProductieFormulier form, string change = null)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
-                if (form == null ||
-                    !string.Equals(form.ProductieNr, ProductieNr, StringComparison.CurrentCultureIgnoreCase))
-                    return false;
+                return xUpdateFrom(form, change);
+            });
+        }
 
-                try
+        public bool xUpdateFrom(ProductieFormulier form, string change = null)
+        {
+            if (form == null ||
+                !string.Equals(form.ProductieNr, ProductieNr, StringComparison.CurrentCultureIgnoreCase))
+                return false;
+
+            try
+            {
+                var xreturn = false;
+                if (form.Bewerkingen is { Length: > 0 })
                 {
-                    var xreturn = false;
-                    if (form.Bewerkingen is {Length: > 0})
+                    var bws = Bewerkingen.ToList();
+                    foreach (var bew in form.Bewerkingen)
                     {
-                        var bws = Bewerkingen.ToList();
-                        foreach (var bew in form.Bewerkingen)
+                        var mybew = Bewerkingen.FirstOrDefault(x => x.Equals(bew));
+                        if (bew.LastChanged != null &&
+                            (mybew == null ||
+                             bew.LastChanged != null && mybew.LastChanged == null ||
+                             mybew.LastChanged.TimeChanged < bew.LastChanged.TimeChanged))
                         {
-                            var mybew = Bewerkingen.FirstOrDefault(x => x.Equals(bew));
-                            if (bew.LastChanged != null &&
-                                (mybew == null ||
-                                 bew.LastChanged != null && mybew.LastChanged == null ||
-                                 mybew.LastChanged.TimeChanged < bew.LastChanged.TimeChanged))
-                            {
-                                if (mybew != null)
-                                    bws.Remove(mybew);
-                                // bew.IsBemand = mybew.GetBemand();
-                                bws.Add(bew);
-                                xreturn = true;
-                            }
-                        }
-
-                        if (xreturn)
-                        {
-                            Bewerkingen = bws.ToArray();
-                            await UpdateForm(true, false, null, change ?? $"[{ProductieNr}] Updated.");
+                            if (mybew != null)
+                                bws.Remove(mybew);
+                            // bew.IsBemand = mybew.GetBemand();
+                            bws.Add(bew);
+                            xreturn = true;
                         }
                     }
 
-                    return xreturn;
+                    if (xreturn)
+                    {
+                        Bewerkingen = bws.ToArray();
+                        UpdateForm(true, false, null, change ?? $"[{ProductieNr}] Updated.");
+                    }
                 }
-                catch (Exception)
-                {
-                    return false;
-                }
-            });
+
+                return xreturn;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public async void UpdateBemand(bool save)
@@ -594,304 +604,309 @@ namespace Rpm.Productie
 
         private static Task<ProductieFormulier> FromPdfSections(List<RectAndText> sections)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
-                try
-                {
-                    if (Manager.Opties == null) return null;
-                    int startindex = sections.FindIndex(x =>
-                        string.Equals(x.Text, "leverdatum", StringComparison.CurrentCultureIgnoreCase));
-                    if (startindex < 0) return null;
-                    var xreturn = new ProductieFormulier();
-                    var xendtime = Manager.Opties.WerkRooster.EindWerkdag;
-                    int count = 0;
-                    if (startindex + 2 > sections.Count - 1)
-                        return null;
-                    //leverdatum
-                    if (DateTime.TryParse(sections[startindex + 1].Text, out var xleverdatum))
-                        xreturn.LeverDatum = xleverdatum.Add(xendtime);
-                    else
-                        xreturn.LeverDatum = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
-                            xendtime.Hours, xendtime.Minutes, 0);
-                    //productienr
-                    xreturn.ProductieNr = sections[startindex + 2].Text;
-                    //artikelnr
-                    startindex += 4;
-                    if (startindex > sections.Count - 1) return xreturn;
-                    xreturn.ArtikelNr = sections[startindex].Text;
-                    //aantal
-                    if (decimal.TryParse(sections[startindex + 1].Text, out decimal xaantal))
-                        xreturn.Aantal = (int) xaantal;
-                    startindex += 2;
-                    //omschrijving
-                    //startindex = 18;
-                    var endindex = sections.FindIndex(startindex, x => x.Text.ToLower().StartsWith("geproduceerd:"));
-                    if (endindex > -1)
-                    {
-                        var xs = sections[endindex].Text.TrimEnd().Split(' ');
-                        if (xs.Length > 0)
-                            xreturn.Eenheid = xs[xs.Length - 1];
-                    }
-                    if(endindex == startindex)
-                    {
-                        startindex++;
-                        endindex = sections.FindIndex(startindex, x => x.Text.ToLower().StartsWith("benodigde uren:"));
-                        endindex-=1;
-                    }
-                    if (endindex < 0) return xreturn;
-                    
-                    string xomschrijving = string.Join("\n",
-                        sections.GetRange(startindex, endindex - startindex).Select(x => x.Text));
-                    xreturn.Omschrijving = xomschrijving;
-
-                    startindex = sections.FindIndex(0, x => x.Text.ToLower().StartsWith("productie:"));
-                    if (startindex > -1)
-                    {
-                        switch (char.ToLower(sections[startindex].Text.Last()))
-                        {
-                            case 'h':
-                                xreturn.ProductSoort = "Horti";
-                                break;
-                            case 's':
-                                xreturn.ProductSoort = "Solar";
-                                break;
-                            case 't':
-                                xreturn.ProductSoort = "Techno";
-                                break;
-                        }
-                    }
-
-                    startindex = endindex + 1;
-                    //doorlooptijd
-                    if (startindex > sections.Count - 1) return xreturn;
-                    
-                    if (double.TryParse(sections[startindex].Text, out double xdoorlooptijd))
-                    {
-                        xreturn.DoorloopTijd = xdoorlooptijd;
-                    }
-                    else
-                    {
-                        startindex--;
-                        if (double.TryParse(sections[startindex].Text, out double xxdoorlooptijd))
-                            xreturn.DoorloopTijd = xxdoorlooptijd;
-                    }
-                    //startindex = sections.FindIndex(startindex, x => x.Text.ToLower().StartsWith("afkeur"));
-                    //if (startindex < 0)
-                    //    return xreturn;
-                    //startindex++;
-                    if (startindex > sections.Count - 1) return xreturn;
-
-
-                    //var materialen = new List<Materiaal>();
-                    //Materiaal mat = null;
-                    //while ((mat = GetMateriaalFromSections(sections, ref startindex)) != null)
-                    //{
-                    //    mat.Parent = xreturn;
-                    //    materialen.Add(mat);
-                    //}
-                    sections = sections.OrderBy(x => x.Rect.Bottom).Reverse().ToList();
-
-                    xreturn.Materialen = GetMaterialenFromSections(sections, ref startindex);
-                    startindex++;
-                    if (startindex > sections.Count - 1)
-                        return xreturn;
-                    int xend1 = sections.FindIndex(startindex, x => x.Text.ToLower().StartsWith("controlepunten"));
-                   
-                    int xend = sections.FindIndex(startindex, x => x.Text.ToLower().Contains("verpakkingsinstructie"));
-                    if (xend < 0)
-                        xend = sections.Count;
-                    if (xend1 > -1 && xend > xend1)
-                    {
-                        string xcontrolpunten = String.Empty;
-                        var xsec = sections.GetRange(xend1, xend - xend1);
-                        foreach (var sec in xsec)
-                        {
-                            if (sec.Text.ToLower().StartsWith("paraaf") ||
-                                sec.Text.Contains("......")) continue;
-                            xcontrolpunten += sec.Text.Trim() + "\n";
-                        }
-
-                        xreturn.ControlePunten = xcontrolpunten.TrimEnd('\n');
-                        xend = xend1;
-                    }
-                    var xsections = sections.GetRange(startindex, xend - startindex);//.OrderBy(x => x.Rect.Left).ThenBy(x => x.Rect.Bottom).ToList();
-                    Dictionary<string, BewerkingEntry> bws = GetBewerkingenFromSections(xsections);
-  
-                    startindex = xend;
-                    if (bws.Count > 0)
-                    {
-                        var xbws = new List<Bewerking>();
-                        foreach (var xs in bws)
-                        {
-                            var s = xs.Value;
-                            var xdt = s.DoorloopTijd > -1
-                                ? s.DoorloopTijd
-                                : Math.Round(xreturn.DoorloopTijd / bws.Count, 2);
-                            var bw = new Bewerking()
-                            {
-                                DoorloopTijd = xdt,
-                                IsBemand = s.IsBemand,
-                                LeverDatum = xs.Value.Leverdatum.IsDefault()?xreturn.LeverDatum : xs.Value.Leverdatum,
-                                DatumToegevoegd = DateTime.Now,
-                                Parent = xreturn,
-                                Aantal = xreturn.Aantal,
-                                Naam = s.Naam,
-                                Omschrijving = xreturn.Omschrijving,
-                                Opmerking = s.Opmerking,
-                                ProductieNr = xreturn.ProductieNr,
-                                ArtikelNr = xreturn.ArtikelNr,
-                                State = ProductieState.Gestopt
-                            };
-                            //bw.OnBewerkingChanged += BewerkingChanged;
-                            await bw.UpdateBewerking(null, $"[{bw.Path}] Nieuw Aangemaakt",
-                                false);
-                            xbws.Add(bw);
-                        }
-
-                        xreturn.Bewerkingen = xbws.ToArray();
-                    }
-                    else
-                        return null;
-                    xreturn.Bewerkingen ??= new Bewerking[] { };
-                    startindex = sections.FindIndex(startindex,
-                        x => x.Text.ToLower().StartsWith("verpakkingsinstructie"));
-                    if (startindex < 0) return xreturn;
-                    startindex++;
-                    if (startindex > sections.Count - 1)
-                        return xreturn;
-                    xsections = sections.GetRange(startindex, sections.Count - startindex);//.OrderBy(x => x.Rect.Top).Reverse().ToList();
-                    if (xsections.Count == 0) return xreturn;
-                    xsections.Sort();
-                    var xstart = 0;
-                    var xordered = new List<RectAndText>();
-                    while (xsections.Count > 0 && xstart < xsections.Count)
-                    {
-                        var item = xsections[xstart];
-                        var items = xsections.Where(x =>
-                            Enumerable.Range((int) item.Rect.Bottom, 2).Contains((int) x.Rect.Bottom)).ToList();
-                        if (items.Count > 0)
-                        {
-                            xordered.AddRange(items.OrderBy(o => o.Rect.Left));
-                            xsections.RemoveAll(x =>
-                                items.Any(s => s.Rect.Left == x.Rect.Left && s.Rect.Bottom == x.Rect.Bottom));
-                        }
-                        else xstart++;
-                    }
-
-                    xsections = xordered;
-                    //xsections.Reverse();
-                    var xinstructie = new VerpakkingInstructie
-                    {
-                        ArtikelNr = xreturn.ArtikelNr?.Trim(),
-                        ProductOmschrijving = xreturn.Omschrijving?.Trim()
-                    };
-                    xstart = xsections.FindIndex(0,
-                        x => Enumerable.Range((int)x.Rect.Left,2).Contains(25) && Enumerable.Range((int)x.Rect.Bottom, 2).Contains(74));
-                    if (xstart > -1)
-                        xinstructie.VerpakkingType = xsections[xstart].Text.Trim();
-                    //verpakkingtype;
-                    xstart = xsections.FindIndex(0,
-                        x => x.Text.ToLower().Trim().StartsWith("bulk locatie"));
-                    if (xstart > -1)
-                    {
-                        xstart++;
-                        endindex = xsections.FindIndex(xstart,
-                            x => x.Text.ToLower().Trim().StartsWith("standaard locatie"));
-                        if (endindex < 0)
-                            endindex = xstart;
-                        count = endindex - xstart;
-                        if (count > 0)
-                        {
-                            xinstructie.BulkLocatie =
-                                string.Join(", ", xsections.GetRange(xstart, count).Select(x => x.Text));
-                        }
-                        //xinstructie.VerpakkingType =
-                        //    string.Join(", ", xsections.GetRange(xstart, count).Select(x => x.Text));
-                        xstart = endindex + 1;
-
-                        //if (xstart < xsections.Count)
-                        //{
-                        //    //bulk locatie
-                        //    endindex = xsections.FindIndex(xstart,
-                        //        x => x.Text.ToLower().Trim().StartsWith("#"));
-                        //    if (endindex < 0)
-                        //        endindex = xstart;
-                        //    count = endindex - xstart;
-                        //    if (count > 0)
-                        //        xinstructie.BulkLocatie =
-                        //            string.Join(", ", xsections.GetRange(xstart, count).Select(x => x.Text));
-                        //    xstart = endindex + 1;
-                        //}
-                    }
-
-                    //standaard locatie
-                    xstart = xsections.FindIndex(0,
-                        x => x.Text.ToLower().Trim().StartsWith("standaard locatie"));
-                    if (xstart > -1)
-                    {
-                        var xent = xsections[xstart];
-                        var xrange = Enumerable.Range((int) xent.Rect.Bottom - 3, 6);
-                        var xitems = xsections.Where(x => x.Rect.Bottom != xent.Rect.Bottom &&
-                            xrange.Contains((int) x.Rect.Bottom)).OrderBy(x=> x.Rect.Left).ToList();
-                        count = xitems.Count;
-                        if (count > 0)
-                        {
-                            var slocatie = string.Join(" ", xitems.Select(x => x.Text));
-                            xinstructie.StandaardLocatie = slocatie;
-                            xstart = endindex;
-                        }
-                    }
-
-                    xstart = xsections.FindIndex(0,
-                        x => x.Text.ToLower().Trim().StartsWith("palletsoort"));
-                    if (xstart > -1 && xstart < xsections.Count)
-                    {
-                        var xkey = xsections[xstart].Text;
-                        if (xkey.Trim().ToLower().StartsWith("palletsoort") && xkey.Contains(":"))
-                        {
-                            xinstructie.PalletSoort = xkey.Split(':')[1].Trim();
-                            xstart++;
-                        }
-                    }
-
-                    int xindex = 1;
-                        while (true)
-                        {
-                            endindex = xsections.Count - xindex;
-                            if (endindex < 0) break;
-                            if (decimal.TryParse(xsections[endindex].Text, out var xvalue))
-                            {
-                                var rect = xsections[endindex].Rect;
-                                if (rect.Left > 500)
-                                {
-                                    if (rect.Bottom > 70)
-                                        xinstructie.PerLaagOpColli = (int) xvalue;
-                                    else if (rect.Bottom > 50)
-                                        xinstructie.LagenOpColli = (int) xvalue;
-                                    else xinstructie.DozenOpColli = (int) xvalue;
-                                }
-                                else
-                                {
-                                    if (rect.Bottom > 70)
-                                        xinstructie.VerpakkenPer = (int) xvalue;
-                                    else if (rect.Bottom > 50)
-                                        xinstructie.ProductenPerColli = (int) xvalue;
-                                }
-                            }
-
-
-                            xindex++;
-                        }
-
-                        xreturn.VerpakkingsInstructies = xinstructie;
-                    return xreturn;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
+                return xFromPdfSections(sections);
             });
+        }
+
+        private static ProductieFormulier xFromPdfSections(List<RectAndText> sections)
+        {
+            try
+            {
+                if (Manager.Opties == null) return null;
+                int startindex = sections.FindIndex(x =>
+                    string.Equals(x.Text, "leverdatum", StringComparison.CurrentCultureIgnoreCase));
+                if (startindex < 0) return null;
+                var xreturn = new ProductieFormulier();
+                var xendtime = Manager.Opties.WerkRooster.EindWerkdag;
+                int count = 0;
+                if (startindex + 2 > sections.Count - 1)
+                    return null;
+                //leverdatum
+                if (DateTime.TryParse(sections[startindex + 1].Text, out var xleverdatum))
+                    xreturn.LeverDatum = xleverdatum.Add(xendtime);
+                else
+                    xreturn.LeverDatum = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
+                        xendtime.Hours, xendtime.Minutes, 0);
+                //productienr
+                xreturn.ProductieNr = sections[startindex + 2].Text;
+                //artikelnr
+                startindex += 4;
+                if (startindex > sections.Count - 1) return xreturn;
+                xreturn.ArtikelNr = sections[startindex].Text;
+                //aantal
+                if (decimal.TryParse(sections[startindex + 1].Text, out decimal xaantal))
+                    xreturn.Aantal = (int)xaantal;
+                startindex += 2;
+                //omschrijving
+                //startindex = 18;
+                var endindex = sections.FindIndex(startindex, x => x.Text.ToLower().StartsWith("geproduceerd:"));
+                if (endindex > -1)
+                {
+                    var xs = sections[endindex].Text.TrimEnd().Split(' ');
+                    if (xs.Length > 0)
+                        xreturn.Eenheid = xs[xs.Length - 1];
+                }
+                if (endindex == startindex)
+                {
+                    startindex++;
+                    endindex = sections.FindIndex(startindex, x => x.Text.ToLower().StartsWith("benodigde uren:"));
+                    endindex -= 1;
+                }
+                if (endindex < 0) return xreturn;
+
+                string xomschrijving = string.Join("\n",
+                    sections.GetRange(startindex, endindex - startindex).Select(x => x.Text));
+                xreturn.Omschrijving = xomschrijving;
+
+                startindex = sections.FindIndex(0, x => x.Text.ToLower().StartsWith("productie:"));
+                if (startindex > -1)
+                {
+                    switch (char.ToLower(sections[startindex].Text.Last()))
+                    {
+                        case 'h':
+                            xreturn.ProductSoort = "Horti";
+                            break;
+                        case 's':
+                            xreturn.ProductSoort = "Solar";
+                            break;
+                        case 't':
+                            xreturn.ProductSoort = "Techno";
+                            break;
+                    }
+                }
+
+                startindex = endindex + 1;
+                //doorlooptijd
+                if (startindex > sections.Count - 1) return xreturn;
+
+                if (double.TryParse(sections[startindex].Text, out double xdoorlooptijd))
+                {
+                    xreturn.DoorloopTijd = xdoorlooptijd;
+                }
+                else
+                {
+                    startindex--;
+                    if (double.TryParse(sections[startindex].Text, out double xxdoorlooptijd))
+                        xreturn.DoorloopTijd = xxdoorlooptijd;
+                }
+                //startindex = sections.FindIndex(startindex, x => x.Text.ToLower().StartsWith("afkeur"));
+                //if (startindex < 0)
+                //    return xreturn;
+                //startindex++;
+                if (startindex > sections.Count - 1) return xreturn;
+
+
+                //var materialen = new List<Materiaal>();
+                //Materiaal mat = null;
+                //while ((mat = GetMateriaalFromSections(sections, ref startindex)) != null)
+                //{
+                //    mat.Parent = xreturn;
+                //    materialen.Add(mat);
+                //}
+                sections = sections.OrderBy(x => x.Rect.Bottom).Reverse().ToList();
+
+                xreturn.Materialen = GetMaterialenFromSections(sections, ref startindex);
+                startindex++;
+                if (startindex > sections.Count - 1)
+                    return xreturn;
+                int xend1 = sections.FindIndex(startindex, x => x.Text.ToLower().StartsWith("controlepunten"));
+
+                int xend = sections.FindIndex(startindex, x => x.Text.ToLower().Contains("verpakkingsinstructie"));
+                if (xend < 0)
+                    xend = sections.Count;
+                if (xend1 > -1 && xend > xend1)
+                {
+                    string xcontrolpunten = String.Empty;
+                    var xsec = sections.GetRange(xend1, xend - xend1);
+                    foreach (var sec in xsec)
+                    {
+                        if (sec.Text.ToLower().StartsWith("paraaf") ||
+                            sec.Text.Contains("......")) continue;
+                        xcontrolpunten += sec.Text.Trim() + "\n";
+                    }
+
+                    xreturn.ControlePunten = xcontrolpunten.TrimEnd('\n');
+                    xend = xend1;
+                }
+                var xsections = sections.GetRange(startindex, xend - startindex);//.OrderBy(x => x.Rect.Left).ThenBy(x => x.Rect.Bottom).ToList();
+                Dictionary<string, BewerkingEntry> bws = GetBewerkingenFromSections(xsections);
+
+                startindex = xend;
+                if (bws.Count > 0)
+                {
+                    var xbws = new List<Bewerking>();
+                    foreach (var xs in bws)
+                    {
+                        var s = xs.Value;
+                        var xdt = s.DoorloopTijd > -1
+                            ? s.DoorloopTijd
+                            : Math.Round(xreturn.DoorloopTijd / bws.Count, 2);
+                        var bw = new Bewerking()
+                        {
+                            DoorloopTijd = xdt,
+                            IsBemand = s.IsBemand,
+                            LeverDatum = xs.Value.Leverdatum.IsDefault() ? xreturn.LeverDatum : xs.Value.Leverdatum,
+                            DatumToegevoegd = DateTime.Now,
+                            Parent = xreturn,
+                            Aantal = xreturn.Aantal,
+                            Naam = s.Naam,
+                            Omschrijving = xreturn.Omschrijving,
+                            Opmerking = s.Opmerking,
+                            ProductieNr = xreturn.ProductieNr,
+                            ArtikelNr = xreturn.ArtikelNr,
+                            State = ProductieState.Gestopt
+                        };
+                        //bw.OnBewerkingChanged += BewerkingChanged;
+                        bw.xUpdateBewerking(null, $"[{bw.Path}] Nieuw Aangemaakt",
+                            false);
+                        xbws.Add(bw);
+                    }
+
+                    xreturn.Bewerkingen = xbws.ToArray();
+                }
+                else
+                    return null;
+                xreturn.Bewerkingen ??= new Bewerking[] { };
+                startindex = sections.FindIndex(startindex,
+                    x => x.Text.ToLower().StartsWith("verpakkingsinstructie"));
+                if (startindex < 0) return xreturn;
+                startindex++;
+                if (startindex > sections.Count - 1)
+                    return xreturn;
+                xsections = sections.GetRange(startindex, sections.Count - startindex);//.OrderBy(x => x.Rect.Top).Reverse().ToList();
+                if (xsections.Count == 0) return xreturn;
+                xsections.Sort();
+                var xstart = 0;
+                var xordered = new List<RectAndText>();
+                while (xsections.Count > 0 && xstart < xsections.Count)
+                {
+                    var item = xsections[xstart];
+                    var items = xsections.Where(x =>
+                        Enumerable.Range((int)item.Rect.Bottom, 2).Contains((int)x.Rect.Bottom)).ToList();
+                    if (items.Count > 0)
+                    {
+                        xordered.AddRange(items.OrderBy(o => o.Rect.Left));
+                        xsections.RemoveAll(x =>
+                            items.Any(s => s.Rect.Left == x.Rect.Left && s.Rect.Bottom == x.Rect.Bottom));
+                    }
+                    else xstart++;
+                }
+
+                xsections = xordered;
+                //xsections.Reverse();
+                var xinstructie = new VerpakkingInstructie
+                {
+                    ArtikelNr = xreturn.ArtikelNr?.Trim(),
+                    ProductOmschrijving = xreturn.Omschrijving?.Trim()
+                };
+                xstart = xsections.FindIndex(0,
+                    x => Enumerable.Range((int)x.Rect.Left, 2).Contains(25) && Enumerable.Range((int)x.Rect.Bottom, 2).Contains(74));
+                if (xstart > -1)
+                    xinstructie.VerpakkingType = xsections[xstart].Text.Trim();
+                //verpakkingtype;
+                xstart = xsections.FindIndex(0,
+                    x => x.Text.ToLower().Trim().StartsWith("bulk locatie"));
+                if (xstart > -1)
+                {
+                    xstart++;
+                    endindex = xsections.FindIndex(xstart,
+                        x => x.Text.ToLower().Trim().StartsWith("standaard locatie"));
+                    if (endindex < 0)
+                        endindex = xstart;
+                    count = endindex - xstart;
+                    if (count > 0)
+                    {
+                        xinstructie.BulkLocatie =
+                            string.Join(", ", xsections.GetRange(xstart, count).Select(x => x.Text));
+                    }
+                    //xinstructie.VerpakkingType =
+                    //    string.Join(", ", xsections.GetRange(xstart, count).Select(x => x.Text));
+                    xstart = endindex + 1;
+
+                    //if (xstart < xsections.Count)
+                    //{
+                    //    //bulk locatie
+                    //    endindex = xsections.FindIndex(xstart,
+                    //        x => x.Text.ToLower().Trim().StartsWith("#"));
+                    //    if (endindex < 0)
+                    //        endindex = xstart;
+                    //    count = endindex - xstart;
+                    //    if (count > 0)
+                    //        xinstructie.BulkLocatie =
+                    //            string.Join(", ", xsections.GetRange(xstart, count).Select(x => x.Text));
+                    //    xstart = endindex + 1;
+                    //}
+                }
+
+                //standaard locatie
+                xstart = xsections.FindIndex(0,
+                    x => x.Text.ToLower().Trim().StartsWith("standaard locatie"));
+                if (xstart > -1)
+                {
+                    var xent = xsections[xstart];
+                    var xrange = Enumerable.Range((int)xent.Rect.Bottom - 3, 6);
+                    var xitems = xsections.Where(x => x.Rect.Bottom != xent.Rect.Bottom &&
+                        xrange.Contains((int)x.Rect.Bottom)).OrderBy(x => x.Rect.Left).ToList();
+                    count = xitems.Count;
+                    if (count > 0)
+                    {
+                        var slocatie = string.Join(" ", xitems.Select(x => x.Text));
+                        xinstructie.StandaardLocatie = slocatie;
+                        xstart = endindex;
+                    }
+                }
+
+                xstart = xsections.FindIndex(0,
+                    x => x.Text.ToLower().Trim().StartsWith("palletsoort"));
+                if (xstart > -1 && xstart < xsections.Count)
+                {
+                    var xkey = xsections[xstart].Text;
+                    if (xkey.Trim().ToLower().StartsWith("palletsoort") && xkey.Contains(":"))
+                    {
+                        xinstructie.PalletSoort = xkey.Split(':')[1].Trim();
+                        xstart++;
+                    }
+                }
+
+                int xindex = 1;
+                while (true)
+                {
+                    endindex = xsections.Count - xindex;
+                    if (endindex < 0) break;
+                    if (decimal.TryParse(xsections[endindex].Text, out var xvalue))
+                    {
+                        var rect = xsections[endindex].Rect;
+                        if (rect.Left > 500)
+                        {
+                            if (rect.Bottom > 70)
+                                xinstructie.PerLaagOpColli = (int)xvalue;
+                            else if (rect.Bottom > 50)
+                                xinstructie.LagenOpColli = (int)xvalue;
+                            else xinstructie.DozenOpColli = (int)xvalue;
+                        }
+                        else
+                        {
+                            if (rect.Bottom > 70)
+                                xinstructie.VerpakkenPer = (int)xvalue;
+                            else if (rect.Bottom > 50)
+                                xinstructie.ProductenPerColli = (int)xvalue;
+                        }
+                    }
+
+
+                    xindex++;
+                }
+
+                xreturn.VerpakkingsInstructies = xinstructie;
+                return xreturn;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         private static List<Materiaal> GetMaterialenFromSections(List<RectAndText> sections, ref int startindex)
@@ -996,8 +1011,14 @@ namespace Rpm.Productie
 
         public static Task<List<ProductieFormulier>> FromPdf(byte[] data)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
+                return xFromPdf(data);
+            });
+        }
+
+        public static List<ProductieFormulier> xFromPdf(byte[] data)
+        {
                 try
                 {
                     var pfs = new List<ProductieFormulier>();
@@ -1005,14 +1026,14 @@ namespace Rpm.Productie
                     using var reader = new PdfReader(data);
                     var txt = "";
                     var xlocextraction = new MyLocationTextExtractionStrategy();
-                  
+
                     for (var i = 1; i <= reader.NumberOfPages; i++)
                     {
                         ProductieFormulier pf = null;
                         var xxlocextraction = new MyLocationTextExtractionStrategy();
-                        var pdftext = PdfTextExtractor.GetTextFromPage(reader, i,xxlocextraction);
+                        var pdftext = PdfTextExtractor.GetTextFromPage(reader, i, xxlocextraction);
                         var xbase = 1000 * (reader.NumberOfPages - i);
-                        if(reader.NumberOfPages > 1)
+                        if (reader.NumberOfPages > 1)
                         {
                             if (xbase > 0)
                                 xxlocextraction.myPoints.ForEach(x => x.Rect.Bottom += xbase);
@@ -1031,7 +1052,7 @@ namespace Rpm.Productie
                                 {
                                     xstart++;
                                     var xcount = xxlocextraction.myPoints.Count - xstart;
-                                    if(i < reader.NumberOfPages)
+                                    if (i < reader.NumberOfPages)
                                     {
                                         var xindex = xxlocextraction.myPoints.FindIndex(x => x.Text.ToLower().Trim().Contains("verpakkingsinstructie"));
                                         if (xindex > -1)
@@ -1064,10 +1085,10 @@ namespace Rpm.Productie
                                 var type = PdfReader.GetPdfObject(tg.Get(PdfName.SUBTYPE)) as PdfName;
                                 if (!PdfName.IMAGE.Equals(type)) continue;
 
-                                var XrefIndex = ((PRIndirectReference) obj).Number;
+                                var XrefIndex = ((PRIndirectReference)obj).Number;
                                 var pdfStream = reader.GetPdfObject(XrefIndex) as PRStream;
                                 var xdata = PdfReader.GetStreamBytesRaw(pdfStream);
-                                pf = await FromImage(xdata);
+                                pf = xFromImage(xdata);
                             }
 
                             if (pf != null &&
@@ -1096,14 +1117,14 @@ namespace Rpm.Productie
                     //{
                     //    Console.WriteLine(string.Format("Found text {0} at {1}x{2}", p.Text, p.Rect.Left, p.Rect.Bottom));
                     //}
-                    var xpdf = await FromPdfSections(xlocextraction.myPoints);
+                    var xpdf = xFromPdfSections(xlocextraction.myPoints);
                     if (xpdf != null)
                     {
                         pfs.Add(xpdf);
                     }
                     else if (!string.IsNullOrEmpty(txt) && txt.Length > 200)
                     {
-                        var pf = await FromText(txt);
+                        var pf = xFromText(txt);
                         if (pf != null && pfs.FirstOrDefault(t =>
                                 string.Equals(t.ProductieNr, pf.ProductieNr,
                                     StringComparison.CurrentCultureIgnoreCase)) ==
@@ -1118,25 +1139,30 @@ namespace Rpm.Productie
                 {
                     return null;
                 }
-            });
         }
 
         public static Task<ProductieFormulier> FromImage(byte[] data)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
+                return xFromImage(data);
+            });
+        }
+
+        public static ProductieFormulier xFromImage(byte[] data)
+        {
                 try
                 {
                     ProductieFormulier pr = null;
                     using (var ms = new MemoryStream(data))
                     {
-                        var productie = (Bitmap) Image.FromStream(ms);
+                        var productie = (Bitmap)Image.FromStream(ms);
                         {
                             if (productie.Width > productie.Height)
                                 productie.RotateFlip(RotateFlipType.Rotate270FlipNone);
 
                             var txt = productie.GetTextFromImage();
-                            pr = await FromText(txt);
+                            pr = xFromText(txt);
                         }
                     }
 
@@ -1146,13 +1172,18 @@ namespace Rpm.Productie
                 {
                     throw ex;
                 }
-            });
         }
 
         public static Task<ProductieFormulier> FromText(string text)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
+                return xFromText(text);
+            });
+        }
+
+        public static ProductieFormulier xFromText(string text)
+        {
                 try
                 {
                     if (text == null || text.Length <= KeyValues.Sum(t => t.Length))
@@ -1359,10 +1390,10 @@ namespace Rpm.Productie
                                                             xvalue = tmp.Substring(0, tmp.Length - xmat.Eenheid.Length)
                                                                 .TrimEnd(' ');
                                                             xmat.Omschrijving = xvalue;
-
-                                                            mats.Add(xmat);
+                                                            if (!string.IsNullOrEmpty(xmat.ArtikelNr?.Trim()))
+                                                                mats.Add(xmat);
                                                         }
-                                                        catch(Exception ex)
+                                                        catch (Exception ex)
                                                         {
                                                             Console.WriteLine(ex);
                                                         }
@@ -1392,7 +1423,7 @@ namespace Rpm.Productie
                                                 var bws = new List<BewerkingEntry>();
                                                 foreach (var t1 in values)
                                                 {
-                                                    if (t1.Replace(" ","").All(x=> x == 'I'))
+                                                    if (t1.Replace(" ", "").All(x => x == 'I'))
                                                         break;
                                                     var splitbws = t1.Split(' ');
                                                     var xcrit = "";
@@ -1435,7 +1466,7 @@ namespace Rpm.Productie
                                                         State = ProductieState.Gestopt
                                                     };
                                                     //bw.OnBewerkingChanged += BewerkingChanged;
-                                                    await bw.UpdateBewerking(null, $"[{bw.Path}] Nieuw Aangemaakt",
+                                                    bw.xUpdateBewerking(null, $"[{bw.Path}] Nieuw Aangemaakt",
                                                         false);
                                                     xbws.Add(bw);
                                                 }
@@ -1460,12 +1491,11 @@ namespace Rpm.Productie
                 {
                     return null;
                 }
-            });
         }
 
         public static Task<ProductieFormulier> UpdateDoorloopTijd(List<ProductieFormulier> forms, ProductieFormulier form,string change, bool showmessage, bool raiseevent, bool onlylocal)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 if (form != null)
                 {
@@ -1474,7 +1504,7 @@ namespace Rpm.Productie
                         if (forms != null)
                             forms = form.ArtikelNr != null ? forms.Where(x => x.ArtikelNr != null &&
                             string.Equals(x.ArtikelNr, form.ArtikelNr, StringComparison.CurrentCultureIgnoreCase)).ToList() : new List<ProductieFormulier>();
-                        else forms = await Manager.Database.GetProducties(form.ArtikelNr, true, ProductieState.Gereed, true);
+                        else forms = Manager.Database.xGetProducties(form.ArtikelNr, true, ProductieState.Gereed, true);
                         form = Manager.Database.GetProductie(form.ProductieNr, false);
                         if (form == null) return null;
                         form.GemiddeldPerUur = form.ActueelPerUur;
@@ -1491,11 +1521,8 @@ namespace Rpm.Productie
                         if (gemiddeldperuur > 0) form.GemiddeldActueelPerUur = (int)gemiddeldperuur;
                         if (gemiddeldperuur > 0 && form.Aantal > 0)
                             form.GemiddeldDoorlooptijd = Math.Round((form.TotaalGemaakt > form.Aantal?form.TotaalGemaakt : form.Aantal) / gemiddeldperuur, 2);
-                        if (form.Bewerkingen is {Length: > 0})
-                            foreach (var b in form.Bewerkingen)
-                                await b.UpdateBewerking(forms, null, false);
-                        await form.UpdateForm(false, false, null, 
-                            change,true, showmessage, raiseevent,onlylocal);
+                        form.UpdateForm(true, false, null,
+                            change, true, showmessage, raiseevent, onlylocal);
                     }
                     catch (Exception ex)
                     {
@@ -1540,12 +1567,14 @@ namespace Rpm.Productie
                 return false;
             }
         }
-
-        public bool UpdateValues(List<ProductieFormulier> forms, bool updatebewerkingen)
+        
+        public bool UpdateValues(List<ProductieFormulier> forms, bool updatebewerkingen, bool raiseevent)
         {
+
             try
             {
-                if(Manager.Database?.ProductieFormulieren == null) return false;
+                if (Manager.Database?.ProductieFormulieren == null) return false;
+
                 if (State != ProductieState.Verwijderd)
                     VerwachtLeverDatum = VerwachtDatumGereed();
                 else if (State == ProductieState.Gereed)
@@ -1555,7 +1584,7 @@ namespace Rpm.Productie
                         foreach (var b in Bewerkingen)
                         {
                             if (!b.IsAllowed(null)) continue;
-                            _=b.UpdateBewerking(forms, $"[{b.Path}] Bewerking Update", false).Result;
+                            _ = b.xUpdateBewerking(forms, $"[{b.Path}] Bewerking Update", false, false, false, raiseevent);
                         }
 
                 var peruur = ActueelProductenPerUur();
@@ -1583,27 +1612,32 @@ namespace Rpm.Productie
             }
         }
 
+        private bool _Updating;
         public bool xUpdateForm(bool updatebewerking, bool updategemiddeld,
            List<ProductieFormulier> formulieren = null, string change = "Update Formulier",
            bool save = true, bool showmessage = true, bool raiseevent = true, bool onlylocal = false)
         {
             try
             {
-                if (Manager.Database?.ProductieFormulieren == null) return false;
+                if (Manager.Database?.ProductieFormulieren == null) throw new Exception("Database is niet beschikbaar");
+                if (_Updating && !save) return true;
+                _Updating = true;
                 var forms = formulieren;
                 if (updategemiddeld)
                 {
-                    forms ??= Manager.Database.GetAllGereedProducties()?.Result;
+                    forms ??= Manager.Database.xGetAllGereedProducties();
                     UpdateDoorloopTijd(forms, this, change, false, raiseevent, onlylocal);
                     return true;
                 }
 
-                UpdateValues(forms, updatebewerking);
+                UpdateValues(forms, updatebewerking, !save && !raiseevent);
 
 
                 if (save)
                 {
-                    return Manager.Database?.UpSert(this, change, showmessage, onlylocal)?.Result ?? false;
+                    var ret = Manager.Database?.xUpSert(this.ProductieNr, this, change, showmessage, onlylocal) ?? false;
+                    _Updating = false;
+                    return ret;
                 }
 
                 if (raiseevent)
@@ -1611,12 +1645,13 @@ namespace Rpm.Productie
                     Manager.FormulierChanged(this, this);
                     FormulierChanged(this);
                 }
-
+                _Updating = false;
                 return true;
             }
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                _Updating = false;
                 return false;
             }
         }
@@ -1706,8 +1741,8 @@ namespace Rpm.Productie
             return xreturn;
         }
 
-        public static async Task<ProductieFormulier> CreateNewProductie(string artikelnr, string omschrijving, int aantal,
-            DateTime leverdatum, int peruur,BewerkingEntry bewerking, string productienr = null)
+        public static ProductieFormulier CreateNewProductie(string artikelnr, string omschrijving, int aantal,
+            DateTime leverdatum, int peruur, BewerkingEntry bewerking, string productienr = null)
         {
             if (string.IsNullOrEmpty(artikelnr) || bewerking == null || string.IsNullOrEmpty(bewerking.Naam))
                 return null;
@@ -1716,7 +1751,7 @@ namespace Rpm.Productie
             var prodnr = string.IsNullOrEmpty(productienr)
                 ? $"PM0{DateTime.Now.Ticks.ToString().Substring(5, 7)}"
                 : productienr;
-            if (await Manager.Database.ProductieExist(prodnr))
+            if (Manager.Database.ProductieExist(prodnr))
                 throw new Exception($"Productie '{prodnr}' bestaat al en kan niet nogmaals worden toegevoegd!");
             ProductieFormulier prod = new ProductieFormulier
             {
@@ -1726,15 +1761,18 @@ namespace Rpm.Productie
                 Aantal = aantal,
                 LeverDatum = leverdatum,
                 Omschrijving = omschrijving,
-                DoorloopTijd = peruur >= aantal? 1 : aantal / peruur
+                DoorloopTijd = peruur >= aantal ? 1 : aantal / peruur
             };
             Bewerking bew = new Bewerking
             {
-                Parent = prod, Naam = bewerking.Naam, DoorloopTijd = prod.DoorloopTijd, LeverDatum = prod.LeverDatum,
+                Parent = prod,
+                Naam = bewerking.Naam,
+                DoorloopTijd = prod.DoorloopTijd,
+                LeverDatum = prod.LeverDatum,
                 DatumToegevoegd = DateTime.Now,
                 IsBemand = bewerking.IsBemand
             };
-            prod.Bewerkingen = new Bewerking[] {bew};
+            prod.Bewerkingen = new Bewerking[] { bew };
             return prod;
         }
 
@@ -1816,6 +1854,12 @@ namespace Rpm.Productie
         {
             return Task.Factory.StartNew(() =>
             {
+                return xMeldGereed(aantal, paraaf, notitie, sendmail, showmessage, arg);
+            });
+        }
+
+        public bool xMeldGereed(int aantal, string paraaf, string notitie, bool sendmail, bool showmessage, ProgressArg arg = null)
+        {
                 try
                 {
                     arg ??= new ProgressArg();
@@ -1831,7 +1875,7 @@ namespace Rpm.Productie
                     AantalGemaakt = aantal;
                     LaatstAantalUpdate = DateTime.Now;
                     Paraaf = paraaf;
-                    GereedNote = new NotitieEntry(notitie, this) {Naam = paraaf, Type = NotitieType.ProductieGereed};
+                    GereedNote = new NotitieEntry(notitie, this) { Naam = paraaf, Type = NotitieType.ProductieGereed };
                     if (arg.Max == 0)
                         arg.Max = 100;
                     arg.Value = this;
@@ -1843,7 +1887,7 @@ namespace Rpm.Productie
                     {
                         if (!b.IsAllowed(null)) continue;
                         if (b.State != ProductieState.Verwijderd && b.State != ProductieState.Gereed)
-                            if (b.MeldBewerkingGereed(paraaf, aantal, notitie, false, false, false, arg).Result)
+                            if (b.xMeldBewerkingGereed(paraaf, aantal, notitie, false, false, false, arg))
                                 tijd += b.TijdGewerkt;
                         arg.OnChanged(this);
                         if (arg.IsCanceled)
@@ -1856,12 +1900,12 @@ namespace Rpm.Productie
                     var xa = TotaalGemaakt == 1 ? "stuk" : "stuks";
                     var change =
                         $"[{ProductieNr.ToUpper()}, {ArtikelNr}] {paraaf} heeft zojuist {TotaalGemaakt} {xa} gereed gemeld in {TijdGewerkt} uur({ActueelPerUur} P/u).";
-                    arg.Current++;
+                    arg.Current = 90;
                     arg.OnChanged(this);
                     if (arg.IsCanceled)
                         return false;
-                    _ = UpdateForm(false, false, null, change, true, showmessage).Result;
-                    arg.Current++;
+                    _ = xUpdateForm(false, false, null, change, true, showmessage);
+                    arg.Current += 5;
                     arg.OnChanged(this);
                     if (arg.IsCanceled)
                         return false;
@@ -1881,11 +1925,11 @@ namespace Rpm.Productie
                             return false;
                     }
 
-                   
+
                     _ = UpdateDoorloopTijd(null, this, null, false, true, false);
                     if (sendmail)
                         RemoteProductie.RespondByEmail(this, change);
-                    arg.Current++;
+                    arg.Current = 100;
                     arg.Max = 100;
                     arg.Type = ProgressType.WriteCompleet;
                     arg.Value = this;
@@ -1899,7 +1943,6 @@ namespace Rpm.Productie
                     Console.WriteLine(ex.Message);
                     return false;
                 }
-            });
         }
 
         public double TijdAanGewerkt()
