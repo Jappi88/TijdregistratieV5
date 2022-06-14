@@ -318,8 +318,8 @@ namespace Rpm.Productie
                     DbUpdater.UpdateStartupDbs();
                     //while (Mainform.IsLoading)
                     //    Application.DoEvents();
-                    MailServer = new EmailServer();
-                    MailServer.Start();
+                    //MailServer = new EmailServer();
+                    //MailServer.Start();
                     IsLoaded = true;
                     if (raiseManagerLoadingEvents)
                         ManagerLoaded();
@@ -1280,28 +1280,33 @@ namespace Rpm.Productie
         {
             return Task.Factory.StartNew(() =>
             {
-                if (pdffiles?.Length == 0) return 0;
-                var xreturn = 0;
-                if (pdffiles != null)
-                    foreach (var file in pdffiles)
-                        try
-                        {
-                            var msgs = xAddProductie(file, updateifexist, delete);
-                            foreach (var msg in msgs)
-                            {
-                                if (msg.MessageType == MsgType.Fout && !showerror)
-                                    continue;
-                                if (msg.MessageType == MsgType.Success) xreturn++;
-                                RemoteMessage(msg);
-                            }
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
-
-                return xreturn;
+                return xAddProductie(pdffiles, updateifexist, delete, showerror);
             });
+        }
+
+        public static int xAddProductie(string[] pdffiles, bool updateifexist, bool delete, bool showerror)
+        {
+            if (pdffiles?.Length == 0) return 0;
+            var xreturn = 0;
+            if (pdffiles != null)
+                foreach (var file in pdffiles)
+                    try
+                    {
+                        var msgs = xAddProductie(file, updateifexist, delete);
+                        foreach (var msg in msgs)
+                        {
+                            if (msg.MessageType == MsgType.Fout && !showerror)
+                                continue;
+                            if (msg.MessageType == MsgType.Success) xreturn++;
+                            RemoteMessage(msg);
+                        }
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+
+            return xreturn;
         }
 
         /// <summary>
@@ -1734,13 +1739,13 @@ namespace Rpm.Productie
                 _filesaddertimer.Start();
             }
         }
-        
+
         private void _filesaddertimer_Tick(object sender, EventArgs e)
         {
             _filesaddertimer?.Stop();
             if (_filestoadd?.Count > 0)
             {
-                AddProductie(_filestoadd.ToArray(),true, true, false).Wait();
+                xAddProductie(_filestoadd.ToArray(), true, true, false);
                 _filestoadd.Clear();
             }
             _isbusy = false;
@@ -1779,8 +1784,6 @@ namespace Rpm.Productie
                                                      x.GestartDoor, Manager.Opties.Username,
                                                      StringComparison.CurrentCultureIgnoreCase) &&
                                                  x.WerkPlekken.Any(w => w.NeedsAantalUpdate(mins))).ToList();
-                            //_isChecking = false;
-                            //}).Wait(60000);
                             if (bws.Count > 0)
                             {
                                 FormulierActie(new object[] {bws, mins}, MainAktie.OpenAantalGemaaktProducties);
@@ -1800,7 +1803,7 @@ namespace Rpm.Productie
             });
         }
 
-        private void _syncTimer_Tick(object sender, EventArgs e)
+        private async void _syncTimer_Tick(object sender, EventArgs e)
         {
             _syncTimer.Stop();
             try
@@ -1823,7 +1826,7 @@ namespace Rpm.Productie
                     if (ProductieProvider.FolderSynchronization is { Syncing: false })
                         ProductieProvider?.InitOfflineDb();
 
-                    CheckForAantalChange().Wait();
+                    await CheckForAantalChange();
                 }
             }
             catch (Exception s)

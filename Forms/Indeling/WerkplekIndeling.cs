@@ -3,6 +3,7 @@ using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
+using Rpm.Settings;
 using Rpm.Various;
 using System;
 using System.Collections;
@@ -17,19 +18,36 @@ namespace Controls
     
     public partial class WerkplekIndeling : UserControl
     {
-        public bool IsCompact { get; private set; }
-        public string Werkplek { get; set; }
+        public bool IsCompact
+        {
+            get => Settings?.IsCompact ?? false;
+            private set
+            {
+                Settings ??= new WerkplaatsSettings();
+                Settings.IsCompact = value;
+            }
+        }
+
+        public string Werkplek
+        {
+            get => Settings?.Name; private set
+            {
+                Settings ??= new WerkplaatsSettings();
+                Settings.Name = value;
+            }
+        }
+
         public bool IsDefault()
         {
             return string.IsNullOrEmpty(Werkplek) ||
                    string.Equals(Werkplek, "default", StringComparison.CurrentCultureIgnoreCase);
         }
-
+        public WerkplaatsSettings Settings { get; set; } = new WerkplaatsSettings();
         public string Criteria { get; set; }
         public bool ToonNietIngedeeld = true;
         public Bewerking SelectedBewerking { get; set; }
         public bool IsSelected { get; set; }
-
+        public DateTime GereedOp { get; set; }
         public WerkplekTextGetterHandler FieldTextGetter { get; set; }
 
         public WerkplekIndeling()
@@ -37,18 +55,11 @@ namespace Controls
             InitializeComponent();
         }
 
-        public void InitWerkplek(string werkplek)
+        public void InitWerkplek(WerkplaatsSettings werkplek)
         {
             try
             {
-                var vals = werkplek?.Split(';');
-                if (vals != null)
-                {
-                    Werkplek = vals[0];
-                    if (vals.Length > 1)
-                        IsCompact = vals[1].Trim().ToLower() == "true";
-                }
-                else werkplek = null;
+                Settings = werkplek;
                 UpdateWerkplekInfo();
             }
             catch (Exception e)
@@ -85,7 +96,6 @@ namespace Controls
                 else
                 {
                     //ximage.Image = Resources.user_customer_person_13976;
-                  
                     xknoppenpanel.Visible = SelectedBewerking != null && !IsDefault() && IsSelected;
                     xcompact.Visible = true;
                     xVerwijderPersoneel.Visible = true;
@@ -177,6 +187,8 @@ namespace Controls
                         if (bew.State is ProductieState.Gereed or ProductieState.Verwijderd) continue;
                         if (!IsDefault())
                         {
+                            if (Settings?.Voorwaardes != null && !Settings.Voorwaardes.IsAllowed(bew, null))
+                                continue;
                             var wps = Manager.BewerkingenLijst?.GetWerkplekken(bew.Naam);
                             if (wps == null || !wps.Any(w =>
                                     string.Equals(w, Werkplek, StringComparison.CurrentCultureIgnoreCase)))
@@ -211,16 +223,23 @@ namespace Controls
                             if (bew.State is ProductieState.Gereed or ProductieState.Verwijderd) continue;
                             if (!IsDefault())
                             {
+                                if (Settings?.Voorwaardes != null && !Settings.Voorwaardes.IsAllowed(bew, null))
+                                    continue;
                                 var wps = Manager.BewerkingenLijst?.GetWerkplekken(bew.Naam);
                                 if (wps == null || !wps.Any(w =>
                                         string.Equals(w, Werkplek, StringComparison.CurrentCultureIgnoreCase)))
                                     continue;
-                                var xbw = bew.CreateCopy();
-                                xbw.WerkPlekken.RemoveAll(b =>
+                                var werk = Werk.FromPath(bew.Path);
+                                if (!werk.IsValid) continue;
+                                var per = werk.Formulier;
+                                bew = per.Bewerkingen.FirstOrDefault(x => x.Equals(bew));
+                                bew.WerkPlekken.RemoveAll(b =>
                                     b.TijdGewerkt == 0 && b.TotaalGemaakt == 0);
-                                var wp = xbw.GetWerkPlek(Werkplek, true);
-                                _ = xbw.xUpdateBewerking(null,
-                                    $"[{bew.Path}] Ingedeeld op {wp.Naam}");
+                                var wp = bew.GetWerkPlek(Werkplek, true);
+                                wp.Tijden.WerkRooster = Settings?.WerkRooster;
+                                wp.Tijden.SpecialeRoosters = Settings?.SpecialeRoosters;
+                                _ = per.UpdateForm(true,false,null,
+                                    $"[{wp.Naam}] Ingedeeld op {bew.Path}");
                             }
                         }
                     }
@@ -517,6 +536,23 @@ namespace Controls
         {
             IsCompact = !IsCompact;
             UpdateWerkplekInfo();
+        }
+
+        private void xsettings_Click(object sender, EventArgs e)
+        {
+            var set = new WerkplaatsSettingsForm(Settings);
+            if (set.ShowDialog() != DialogResult.OK) return;
+            Settings = set.Settings;
+            if (Manager.Opties != null)
+                Manager.Opties.NationaleFeestdagen = set.roosterUI1.NationaleFeestdagen().ToArray();
+            UpdateWerkplekInfo();
+            OnSettingsChanged();
+        }
+
+        public event EventHandler SettingsChanged;
+        protected void OnSettingsChanged()
+        {
+            SettingsChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

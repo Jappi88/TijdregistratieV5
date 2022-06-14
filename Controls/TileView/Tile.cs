@@ -17,6 +17,7 @@ namespace Controls
     public partial class Tile : MetroTile
     {
         private readonly Button flatbutton;
+        private readonly ContextMenuStrip xContextMenu;
         public List<string> InfoFields { get; set; }
 
         public bool AllowTileEdit
@@ -38,6 +39,36 @@ namespace Controls
         }
 
         public bool AllowSelection { get; set; }
+
+        public ToolStripItem[] MenuItems { get => GetMenuItems(); set => SetMenuItems(value); }
+
+        public ToolStripItem[] GetMenuItems()
+        {
+           var xret = new List<ToolStripItem>();
+            if(xContextMenu?.Items != null)
+            {
+                for(int i = 0; i < xContextMenu?.Items.Count; i++)
+                {
+                    var item = xContextMenu.Items[i];
+                    if (item is ToolStripMenuItem menuItem)
+                        xret.Add(menuItem);
+                }
+            }
+            return xret.ToArray();
+        }
+
+        public void SetMenuItems(ToolStripItem[] items)
+        {
+            xContextMenu?.Items?.Clear();
+            if (items != null && xContextMenu?.Items != null)
+            {
+                for (int i = 0; i < items.Length; i++)
+                {
+                    var item = items[i];
+                    xContextMenu.Items.Add(item);
+                }
+            }
+        }
 
         public Tile()
         {
@@ -62,13 +93,16 @@ namespace Controls
             flatbutton.ImageAlign = ContentAlignment.MiddleCenter;
             flatbutton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             flatbutton.Location = new Point(this.Width - 16, this.Height - 32);
-            var xcontext = new ContextMenuStrip();
-            xcontext.Opening += Xcontext_Opening;
-            xcontext.Items.Add(new ToolStripMenuItem("Tile Wijzigen", Resources.Tile_colors_icon_32x32, TileChangeClicked));
-            xcontext.Items.Add(new ToolStripSeparator());
-            xcontext.Items.Add(new ToolStripMenuItem("Tile Verwijderen", Resources.delete_1577, TileRemoveClicked));
-            flatbutton.ContextMenuStrip = xcontext;
-            this.ContextMenuStrip = xcontext;
+            xContextMenu = new ContextMenuStrip();
+            xContextMenu.Opening += Xcontext_Opening;
+            flatbutton.ContextMenuStrip = xContextMenu;
+            this.ContextMenuStrip = xContextMenu;
+            this.MenuItems = new ToolStripItem[] {
+            new ToolStripMenuItem("Tile Wijzigen", Resources.Tile_colors_icon_32x32, TileChangeClicked),
+            new ToolStripSeparator(),
+            new ToolStripMenuItem("Tile Verwijderen", Resources.delete_1577, TileRemoveClicked)
+            };
+           
             flatbutton.Click += Flatbutton_Click;
             SelectedBox = new PictureBox();
             SelectedBox.Visible = false;

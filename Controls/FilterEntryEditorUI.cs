@@ -16,7 +16,7 @@ namespace Controls
         public Filter SelectedFilter { get; set; }
         public List<FilterEntry> Criterias { get; private set; } = new();
 
-        private bool _UseOperand;
+        private bool x_UseOperand;
 
         public FilterEntryEditorUI()
         {
@@ -29,9 +29,9 @@ namespace Controls
         {
             try
             {
-                _UseOperand = useOperand;
+                //_UseOperand = useOperand;
                 InitVariablen(type);
-                InitCriterias(entries);
+                InitCriterias(entries?.CreateCopy());
             }
             catch (Exception e)
             {
@@ -94,14 +94,10 @@ namespace Controls
         {
             try
             {
-                Criterias = criterias;
-                if (criterias == null)
-                {
-                    xcriterialijst.SetObjects(new FilterEntry[] { });
-                    return;
-                }
-
-                xcriterialijst.SetObjects(criterias);
+                Criterias = criterias??new List<FilterEntry>();
+                var sel = xcriterialijst.SelectedObjects;
+                xcriterialijst.SetObjects(Criterias);
+                xcriterialijst.SelectedObjects = sel;
                 UpdateHtmlCriteria();
             }
             catch (Exception e)
@@ -119,7 +115,7 @@ namespace Controls
         {
             if (xvariablelijst.SelectedItems.Count == 0) return;
             var xvar = xvariablelijst.SelectedItems[0].Text;
-            var xnewcrit = new NewFilterEntry(typeof(Bewerking), xvar, xcriterialijst.Items.Count > 0 || _UseOperand)
+            var xnewcrit = new NewFilterEntry(typeof(Bewerking), xvar, xcriterialijst.Items.Count > 0)
                 {Title = $"Nieuwe regel voor {xvar}"};
 
             if (xnewcrit.ShowDialog() == DialogResult.OK)
@@ -150,11 +146,7 @@ namespace Controls
                 if (xnewcrit.ShowDialog() == DialogResult.OK)
                 {
                     Criterias[index] = xnewcrit.SelectedFilter;
-                    //xfilter.Filters.Remove(xvar);
-                    //xvar = xnewcrit.SelectedFilter;
-                    //xvar.OldOperandType = xvar.OperandType;
-                    //xfilter.Filters.Insert(index, xnewcrit.SelectedFilter);
-                    xcriterialijst.RefreshObject(xnewcrit.SelectedFilter);
+                    InitCriterias(Criterias);
                     UpdateCriterias();
                     OnCriteriasChanged();
                 }
@@ -169,21 +161,20 @@ namespace Controls
             var index = xcriterialijst.SelectedIndex - 1;
             Criterias.Remove(xfilter);
             Criterias.Insert(index, xfilter);
-            xcriterialijst.RemoveObject(xfilter);
-            xcriterialijst.InsertObjects(index, new[] {xfilter});
-            xcriterialijst.SelectedObject = xfilter;
-            xcriterialijst.SelectedItem?.EnsureVisible();
+            InitCriterias(Criterias);
             UpdateCriterias();
             OnCriteriasChanged();
         }
 
         private void UpdateCriterias()
         {
-            if (!_UseOperand)
+
+            if (xcriterialijst.Items.Count > 0)
             {
                 var first = true;
                 var xfilters = xcriterialijst.Objects.Cast<FilterEntry>().ToList();
                 var filters = new List<FilterEntry>();
+                var sel = xcriterialijst.SelectedObjects;
                 foreach (var entry in xfilters)
                 {
                     if (first)
@@ -203,6 +194,7 @@ namespace Controls
                 }
 
                 InitCriterias(filters);
+                xcriterialijst.SelectedObjects = sel;
             }
             else
             {

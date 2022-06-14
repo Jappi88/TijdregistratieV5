@@ -32,27 +32,21 @@
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("IAbed@Valksystemen.nl");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Opties));
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.xgroupweergave = new System.Windows.Forms.GroupBox();
-            this.xweergavelijst = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.xFilterList = new Controls.CustomObjectListview();
+            this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.xFilterListMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.filterDelenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.naamWijzigenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.filterWijzigenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.filterVerwijderenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.xFilterImageList = new System.Windows.Forms.ImageList(this.components);
             this.panel4 = new System.Windows.Forms.Panel();
-            this.xweergave = new System.Windows.Forms.ComboBox();
-            this.xaddweergaveb = new System.Windows.Forms.Button();
-            this.xremoveweergaveb = new System.Windows.Forms.Button();
-            this.xtoonalles = new System.Windows.Forms.RadioButton();
-            this.xtoonallesvanbeide = new System.Windows.Forms.RadioButton();
-            this.xtoonvolgensbewerking = new System.Windows.Forms.RadioButton();
-            this.xtoonvolgensafdeling = new System.Windows.Forms.RadioButton();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.xcriterialist = new System.Windows.Forms.ListView();
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.panel12 = new System.Windows.Forms.Panel();
-            this.xfiltertype = new System.Windows.Forms.ComboBox();
-            this.xcriteriatextbox = new System.Windows.Forms.TextBox();
-            this.xaddcrit = new System.Windows.Forms.Button();
-            this.xdeletecrit = new System.Windows.Forms.Button();
+            this.xsearchentry = new MetroFramework.Controls.MetroTextBox();
+            this.xnewEntry = new System.Windows.Forms.Button();
             this.panel8 = new System.Windows.Forms.Panel();
             this.xtakengroup = new System.Windows.Forms.GroupBox();
             this.xtoonnieuwetaak = new System.Windows.Forms.CheckBox();
@@ -241,11 +235,9 @@
             this.xdatabasetabpage = new System.Windows.Forms.TabPage();
             this.metroPanel4 = new MetroFramework.Controls.MetroPanel();
             this.groupBox5.SuspendLayout();
-            this.groupBox7.SuspendLayout();
-            this.xgroupweergave.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.xFilterList)).BeginInit();
+            this.xFilterListMenu.SuspendLayout();
             this.panel4.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.panel12.SuspendLayout();
             this.panel8.SuspendLayout();
             this.xtakengroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xminvoorstart)).BeginInit();
@@ -315,298 +307,212 @@
             // groupBox5
             // 
             this.groupBox5.BackColor = System.Drawing.Color.Transparent;
-            this.groupBox5.Controls.Add(this.groupBox7);
-            this.groupBox5.Controls.Add(this.groupBox4);
+            this.groupBox5.Controls.Add(this.xFilterList);
+            this.groupBox5.Controls.Add(this.panel4);
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox5.ForeColor = System.Drawing.Color.Black;
             this.groupBox5.Location = new System.Drawing.Point(0, 0);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(733, 517);
+            this.groupBox5.Size = new System.Drawing.Size(733, 514);
             this.groupBox5.TabIndex = 3;
             this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Weergave";
+            this.groupBox5.Text = "Kies Actieve Filters";
             // 
-            // groupBox7
+            // xFilterList
             // 
-            this.groupBox7.Controls.Add(this.xgroupweergave);
-            this.groupBox7.Controls.Add(this.xtoonalles);
-            this.groupBox7.Controls.Add(this.xtoonallesvanbeide);
-            this.groupBox7.Controls.Add(this.xtoonvolgensbewerking);
-            this.groupBox7.Controls.Add(this.xtoonvolgensafdeling);
-            this.groupBox7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox7.ForeColor = System.Drawing.Color.Black;
-            this.groupBox7.Location = new System.Drawing.Point(3, 25);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(727, 280);
-            this.groupBox7.TabIndex = 19;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Filter Producties";
+            this.xFilterList.AllColumns.Add(this.olvColumn5);
+            this.xFilterList.AllColumns.Add(this.olvColumn6);
+            this.xFilterList.AllColumns.Add(this.olvColumn7);
+            this.xFilterList.AllowCellEdit = false;
+            this.xFilterList.CellEditUseWholeCell = false;
+            this.xFilterList.CheckBoxes = true;
+            this.xFilterList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn5,
+            this.olvColumn6,
+            this.olvColumn7});
+            this.xFilterList.ContextMenuStrip = this.xFilterListMenu;
+            this.xFilterList.Cursor = System.Windows.Forms.Cursors.Default;
+            this.xFilterList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xFilterList.EmptyListMsg = "Geen Filters Beschikbaar";
+            this.xFilterList.EmptyListMsgFont = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xFilterList.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xFilterList.FullRowSelect = true;
+            this.xFilterList.GridLines = true;
+            this.xFilterList.HeaderWordWrap = true;
+            this.xFilterList.HideSelection = false;
+            this.xFilterList.LargeImageList = this.xFilterImageList;
+            this.xFilterList.Location = new System.Drawing.Point(3, 65);
+            this.xFilterList.MenuLabelColumns = "kolommen";
+            this.xFilterList.MenuLabelGroupBy = "Groeperen op \'{0}\'";
+            this.xFilterList.MenuLabelLockGroupingOn = "Groepering vergrendelen op \'{0}\'";
+            this.xFilterList.MenuLabelSelectColumns = "Selecteer kolommen...";
+            this.xFilterList.MenuLabelSortAscending = "Sorteer oplopend op \'{0}\'";
+            this.xFilterList.MenuLabelSortDescending = "Aflopend sorteren op \'{0}\'";
+            this.xFilterList.MenuLabelTurnOffGroups = "Groepen uitschakelen";
+            this.xFilterList.MenuLabelUnlockGroupingOn = "Ontgrendel groeperen van \'{0}\'";
+            this.xFilterList.MenuLabelUnsort = "Uitsorteren";
+            this.xFilterList.Name = "xFilterList";
+            this.xFilterList.OwnerDraw = false;
+            this.xFilterList.ShowCommandMenuOnRightClick = true;
+            this.xFilterList.ShowGroups = false;
+            this.xFilterList.ShowItemCountOnGroups = true;
+            this.xFilterList.ShowItemToolTips = true;
+            this.xFilterList.Size = new System.Drawing.Size(727, 446);
+            this.xFilterList.SmallImageList = this.xFilterImageList;
+            this.xFilterList.SpaceBetweenGroups = 10;
+            this.xFilterList.TabIndex = 26;
+            this.xFilterList.TileSize = new System.Drawing.Size(300, 120);
+            this.xFilterList.TintSortColumn = true;
+            this.xFilterList.UseCompatibleStateImageBehavior = false;
+            this.xFilterList.UseExplorerTheme = true;
+            this.xFilterList.UseFiltering = true;
+            this.xFilterList.UseHotControls = false;
+            this.xFilterList.UseHotItem = true;
+            this.xFilterList.UseOverlays = false;
+            this.xFilterList.UseTranslucentHotItem = true;
+            this.xFilterList.UseTranslucentSelection = true;
+            this.xFilterList.View = System.Windows.Forms.View.Details;
+            this.xFilterList.DoubleClick += new System.EventHandler(this.xFilterList_DoubleClick);
             // 
-            // xgroupweergave
+            // olvColumn5
             // 
-            this.xgroupweergave.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xgroupweergave.Controls.Add(this.xweergavelijst);
-            this.xgroupweergave.Controls.Add(this.panel4);
-            this.xgroupweergave.ForeColor = System.Drawing.Color.Black;
-            this.xgroupweergave.Location = new System.Drawing.Point(163, 0);
-            this.xgroupweergave.Margin = new System.Windows.Forms.Padding(5);
-            this.xgroupweergave.Name = "xgroupweergave";
-            this.xgroupweergave.Size = new System.Drawing.Size(566, 280);
-            this.xgroupweergave.TabIndex = 17;
-            this.xgroupweergave.TabStop = false;
-            this.xgroupweergave.Text = "Toon Alles";
-            this.xgroupweergave.Visible = false;
+            this.olvColumn5.AspectName = "Name";
+            this.olvColumn5.Text = "Naam";
+            this.olvColumn5.Width = 145;
             // 
-            // xweergavelijst
+            // olvColumn6
             // 
-            this.xweergavelijst.BackColor = System.Drawing.Color.White;
-            this.xweergavelijst.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1});
-            this.xweergavelijst.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xweergavelijst.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xweergavelijst.ForeColor = System.Drawing.Color.Black;
-            this.xweergavelijst.FullRowSelect = true;
-            this.xweergavelijst.HideSelection = false;
-            this.xweergavelijst.Location = new System.Drawing.Point(3, 60);
-            this.xweergavelijst.Name = "xweergavelijst";
-            this.xweergavelijst.Size = new System.Drawing.Size(560, 217);
-            this.xweergavelijst.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.xweergavelijst, "Productie toon indeling lijst");
-            this.xweergavelijst.UseCompatibleStateImageBehavior = false;
-            this.xweergavelijst.View = System.Windows.Forms.View.Details;
-            this.xweergavelijst.SelectedIndexChanged += new System.EventHandler(this.xweergavelijst_SelectedIndexChanged);
+            this.olvColumn6.AspectName = "DateCreated";
+            this.olvColumn6.Text = "Aangemaakt Op";
+            this.olvColumn6.Width = 141;
             // 
-            // columnHeader1
+            // olvColumn7
             // 
-            this.columnHeader1.Text = "Afdeling/Bewerking";
-            this.columnHeader1.Width = 289;
+            this.olvColumn7.AspectName = "CriteriaText";
+            this.olvColumn7.Text = "Criteria";
+            this.olvColumn7.Width = 600;
+            // 
+            // xFilterListMenu
+            // 
+            this.xFilterListMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.filterDelenToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.naamWijzigenToolStripMenuItem,
+            this.filterWijzigenToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.filterVerwijderenToolStripMenuItem});
+            this.xFilterListMenu.Name = "xFilterListMenu";
+            this.xFilterListMenu.Size = new System.Drawing.Size(189, 104);
+            this.xFilterListMenu.Opening += new System.ComponentModel.CancelEventHandler(this.xFilterListMenu_Opening);
+            // 
+            // filterDelenToolStripMenuItem
+            // 
+            this.filterDelenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.share_icon_32x32;
+            this.filterDelenToolStripMenuItem.Name = "filterDelenToolStripMenuItem";
+            this.filterDelenToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.filterDelenToolStripMenuItem.Text = "Filter Delen";
+            this.filterDelenToolStripMenuItem.Click += new System.EventHandler(this.filterDelenToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(185, 6);
+            // 
+            // naamWijzigenToolStripMenuItem
+            // 
+            this.naamWijzigenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.Letters512_44202_32x32;
+            this.naamWijzigenToolStripMenuItem.Name = "naamWijzigenToolStripMenuItem";
+            this.naamWijzigenToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.naamWijzigenToolStripMenuItem.Text = "Naam Wijzigen";
+            this.naamWijzigenToolStripMenuItem.Click += new System.EventHandler(this.naamWijzigenToolStripMenuItem_Click);
+            // 
+            // filterWijzigenToolStripMenuItem
+            // 
+            this.filterWijzigenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.document_edit_icon_icons_com_52428;
+            this.filterWijzigenToolStripMenuItem.Name = "filterWijzigenToolStripMenuItem";
+            this.filterWijzigenToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.filterWijzigenToolStripMenuItem.Text = "Filter Wijzigen";
+            this.filterWijzigenToolStripMenuItem.Click += new System.EventHandler(this.filterWijzigenToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(185, 6);
+            // 
+            // filterVerwijderenToolStripMenuItem
+            // 
+            this.filterVerwijderenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.delete_1577;
+            this.filterVerwijderenToolStripMenuItem.Name = "filterVerwijderenToolStripMenuItem";
+            this.filterVerwijderenToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.filterVerwijderenToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.filterVerwijderenToolStripMenuItem.Text = "Filter Verwijderen";
+            this.filterVerwijderenToolStripMenuItem.Click += new System.EventHandler(this.filterVerwijderenToolStripMenuItem_Click);
+            // 
+            // xFilterImageList
+            // 
+            this.xFilterImageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.xFilterImageList.ImageSize = new System.Drawing.Size(32, 32);
+            this.xFilterImageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // panel4
             // 
-            this.panel4.Controls.Add(this.xweergave);
-            this.panel4.Controls.Add(this.xaddweergaveb);
-            this.panel4.Controls.Add(this.xremoveweergaveb);
+            this.panel4.Controls.Add(this.xsearchentry);
+            this.panel4.Controls.Add(this.xnewEntry);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(3, 25);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(560, 35);
+            this.panel4.Size = new System.Drawing.Size(727, 40);
             this.panel4.TabIndex = 0;
             // 
-            // xweergave
+            // xsearchentry
             // 
-            this.xweergave.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.xsearchentry.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.xweergave.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.xweergave.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.xweergave.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xweergave.FormattingEnabled = true;
-            this.xweergave.Location = new System.Drawing.Point(2, 3);
-            this.xweergave.Name = "xweergave";
-            this.xweergave.Size = new System.Drawing.Size(470, 29);
-            this.xweergave.TabIndex = 2;
-            this.toolTip1.SetToolTip(this.xweergave, "Kies indeling of bewerking");
             // 
-            // xaddweergaveb
             // 
-            this.xaddweergaveb.Dock = System.Windows.Forms.DockStyle.Right;
-            this.xaddweergaveb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xaddweergaveb.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xaddweergaveb.Image = global::ProductieManager.Properties.Resources.add_1588;
-            this.xaddweergaveb.Location = new System.Drawing.Point(478, 0);
-            this.xaddweergaveb.Name = "xaddweergaveb";
-            this.xaddweergaveb.Size = new System.Drawing.Size(41, 35);
-            this.xaddweergaveb.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.xaddweergaveb, "Voeg toe");
-            this.xaddweergaveb.UseVisualStyleBackColor = true;
-            this.xaddweergaveb.Click += new System.EventHandler(this.xaddweergaveb_Click);
             // 
-            // xremoveweergaveb
+            this.xsearchentry.CustomButton.Image = null;
+            this.xsearchentry.CustomButton.Location = new System.Drawing.Point(651, 1);
+            this.xsearchentry.CustomButton.Name = "";
+            this.xsearchentry.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.xsearchentry.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.xsearchentry.CustomButton.TabIndex = 1;
+            this.xsearchentry.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.xsearchentry.CustomButton.UseSelectable = true;
+            this.xsearchentry.CustomButton.Visible = false;
+            this.xsearchentry.Lines = new string[0];
+            this.xsearchentry.Location = new System.Drawing.Point(3, 9);
+            this.xsearchentry.MaxLength = 32767;
+            this.xsearchentry.Name = "xsearchentry";
+            this.xsearchentry.PasswordChar = '\0';
+            this.xsearchentry.PromptText = "Zoeken...";
+            this.xsearchentry.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.xsearchentry.SelectedText = "";
+            this.xsearchentry.SelectionLength = 0;
+            this.xsearchentry.SelectionStart = 0;
+            this.xsearchentry.ShortcutsEnabled = true;
+            this.xsearchentry.ShowClearButton = true;
+            this.xsearchentry.Size = new System.Drawing.Size(673, 23);
+            this.xsearchentry.TabIndex = 0;
+            this.xsearchentry.UseSelectable = true;
+            this.xsearchentry.WaterMark = "Zoeken...";
+            this.xsearchentry.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.xsearchentry.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.xsearchentry.TextChanged += new System.EventHandler(this.xsearchentry_TextChanged);
             // 
-            this.xremoveweergaveb.Dock = System.Windows.Forms.DockStyle.Right;
-            this.xremoveweergaveb.Enabled = false;
-            this.xremoveweergaveb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xremoveweergaveb.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xremoveweergaveb.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xremoveweergaveb.Location = new System.Drawing.Point(519, 0);
-            this.xremoveweergaveb.Name = "xremoveweergaveb";
-            this.xremoveweergaveb.Size = new System.Drawing.Size(41, 35);
-            this.xremoveweergaveb.TabIndex = 0;
-            this.toolTip1.SetToolTip(this.xremoveweergaveb, "verwijder selectie");
-            this.xremoveweergaveb.UseVisualStyleBackColor = true;
-            this.xremoveweergaveb.Click += new System.EventHandler(this.xremoveweergaveb_Click);
+            // xnewEntry
             // 
-            // xtoonalles
-            // 
-            this.xtoonalles.AutoSize = true;
-            this.xtoonalles.Checked = true;
-            this.xtoonalles.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xtoonalles.Location = new System.Drawing.Point(6, 109);
-            this.xtoonalles.Name = "xtoonalles";
-            this.xtoonalles.Size = new System.Drawing.Size(88, 21);
-            this.xtoonalles.TabIndex = 3;
-            this.xtoonalles.TabStop = true;
-            this.xtoonalles.Text = "Geen Filter";
-            this.toolTip1.SetToolTip(this.xtoonalles, "Kies dit als je gewoon alle producties wilt tonen zonder filter");
-            this.xtoonalles.UseVisualStyleBackColor = true;
-            this.xtoonalles.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
-            // 
-            // xtoonallesvanbeide
-            // 
-            this.xtoonallesvanbeide.AutoSize = true;
-            this.xtoonallesvanbeide.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xtoonallesvanbeide.Location = new System.Drawing.Point(6, 82);
-            this.xtoonallesvanbeide.Name = "xtoonallesvanbeide";
-            this.xtoonallesvanbeide.Size = new System.Drawing.Size(115, 21);
-            this.xtoonallesvanbeide.TabIndex = 2;
-            this.xtoonallesvanbeide.Text = "Filter Van Beide";
-            this.toolTip1.SetToolTip(this.xtoonallesvanbeide, "Kies dit als je producties wilt tonen zoals je de afdelingen en bewerkingen hebt " +
-        "ingedeeld.");
-            this.xtoonallesvanbeide.UseVisualStyleBackColor = true;
-            this.xtoonallesvanbeide.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
-            // 
-            // xtoonvolgensbewerking
-            // 
-            this.xtoonvolgensbewerking.AutoSize = true;
-            this.xtoonvolgensbewerking.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xtoonvolgensbewerking.Location = new System.Drawing.Point(6, 55);
-            this.xtoonvolgensbewerking.Name = "xtoonvolgensbewerking";
-            this.xtoonvolgensbewerking.Size = new System.Drawing.Size(149, 21);
-            this.xtoonvolgensbewerking.TabIndex = 1;
-            this.xtoonvolgensbewerking.Text = "Volgens Bewerkingen";
-            this.toolTip1.SetToolTip(this.xtoonvolgensbewerking, "Kies dit als je producties wilt tonen zoals je de bewerkingen hebt ingedeeld.");
-            this.xtoonvolgensbewerking.UseVisualStyleBackColor = true;
-            this.xtoonvolgensbewerking.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
-            // 
-            // xtoonvolgensafdeling
-            // 
-            this.xtoonvolgensafdeling.AutoSize = true;
-            this.xtoonvolgensafdeling.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xtoonvolgensafdeling.Location = new System.Drawing.Point(6, 28);
-            this.xtoonvolgensafdeling.Name = "xtoonvolgensafdeling";
-            this.xtoonvolgensafdeling.Size = new System.Drawing.Size(138, 21);
-            this.xtoonvolgensafdeling.TabIndex = 0;
-            this.xtoonvolgensafdeling.Text = "Volgens Afdelingen";
-            this.toolTip1.SetToolTip(this.xtoonvolgensafdeling, "Kies dit als je producties wilt tonen zoals je de afdelingen hebt ingedeeld.");
-            this.xtoonvolgensafdeling.UseVisualStyleBackColor = true;
-            this.xtoonvolgensafdeling.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.xcriterialist);
-            this.groupBox4.Controls.Add(this.panel12);
-            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox4.ForeColor = System.Drawing.Color.Black;
-            this.groupBox4.Location = new System.Drawing.Point(3, 305);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(5);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(727, 209);
-            this.groupBox4.TabIndex = 17;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Productie Filter Criteria\'s";
-            // 
-            // xcriterialist
-            // 
-            this.xcriterialist.BackColor = System.Drawing.Color.White;
-            this.xcriterialist.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader5,
-            this.columnHeader6});
-            this.xcriterialist.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xcriterialist.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xcriterialist.ForeColor = System.Drawing.Color.Black;
-            this.xcriterialist.FullRowSelect = true;
-            this.xcriterialist.HideSelection = false;
-            this.xcriterialist.LabelEdit = true;
-            this.xcriterialist.Location = new System.Drawing.Point(3, 60);
-            this.xcriterialist.Name = "xcriterialist";
-            this.xcriterialist.ShowItemToolTips = true;
-            this.xcriterialist.Size = new System.Drawing.Size(721, 146);
-            this.xcriterialist.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.xcriterialist, "Toegelaten productie criteria lijst");
-            this.xcriterialist.UseCompatibleStateImageBehavior = false;
-            this.xcriterialist.View = System.Windows.Forms.View.Details;
-            this.xcriterialist.SelectedIndexChanged += new System.EventHandler(this.xcriterialist_SelectedIndexChanged);
-            // 
-            // columnHeader5
-            // 
-            this.columnHeader5.Text = "Filter Criteria";
-            this.columnHeader5.Width = 315;
-            // 
-            // columnHeader6
-            // 
-            this.columnHeader6.Text = "Filter Actie";
-            this.columnHeader6.Width = 193;
-            // 
-            // panel12
-            // 
-            this.panel12.Controls.Add(this.xfiltertype);
-            this.panel12.Controls.Add(this.xcriteriatextbox);
-            this.panel12.Controls.Add(this.xaddcrit);
-            this.panel12.Controls.Add(this.xdeletecrit);
-            this.panel12.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel12.Location = new System.Drawing.Point(3, 25);
-            this.panel12.Name = "panel12";
-            this.panel12.Size = new System.Drawing.Size(721, 35);
-            this.panel12.TabIndex = 0;
-            // 
-            // xfiltertype
-            // 
-            this.xfiltertype.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xfiltertype.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.xfiltertype.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.xfiltertype.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xfiltertype.FormattingEnabled = true;
-            this.xfiltertype.Items.AddRange(new object[] {
-            "Toelaten",
-            "Blokkeren"});
-            this.xfiltertype.Location = new System.Drawing.Point(479, 3);
-            this.xfiltertype.Name = "xfiltertype";
-            this.xfiltertype.Size = new System.Drawing.Size(154, 29);
-            this.xfiltertype.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.xfiltertype, "Kies productie filter actie");
-            this.xfiltertype.SelectedIndexChanged += new System.EventHandler(this.xfiltertype_SelectedIndexChanged);
-            // 
-            // xcriteriatextbox
-            // 
-            this.xcriteriatextbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xcriteriatextbox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xcriteriatextbox.Location = new System.Drawing.Point(3, 3);
-            this.xcriteriatextbox.Name = "xcriteriatextbox";
-            this.xcriteriatextbox.Size = new System.Drawing.Size(470, 29);
-            this.xcriteriatextbox.TabIndex = 2;
-            this.toolTip1.SetToolTip(this.xcriteriatextbox, "Vul in een criteria waar producties aan moeten voldoen.");
-            // 
-            // xaddcrit
-            // 
-            this.xaddcrit.Dock = System.Windows.Forms.DockStyle.Right;
-            this.xaddcrit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xaddcrit.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xaddcrit.Image = global::ProductieManager.Properties.Resources.add_1588;
-            this.xaddcrit.Location = new System.Drawing.Point(639, 0);
-            this.xaddcrit.Name = "xaddcrit";
-            this.xaddcrit.Size = new System.Drawing.Size(41, 35);
-            this.xaddcrit.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.xaddcrit, "Voeg toe");
-            this.xaddcrit.UseVisualStyleBackColor = true;
-            this.xaddcrit.Click += new System.EventHandler(this.xaddcrit_Click);
-            // 
-            // xdeletecrit
-            // 
-            this.xdeletecrit.Dock = System.Windows.Forms.DockStyle.Right;
-            this.xdeletecrit.Enabled = false;
-            this.xdeletecrit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xdeletecrit.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xdeletecrit.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xdeletecrit.Location = new System.Drawing.Point(680, 0);
-            this.xdeletecrit.Name = "xdeletecrit";
-            this.xdeletecrit.Size = new System.Drawing.Size(41, 35);
-            this.xdeletecrit.TabIndex = 0;
-            this.toolTip1.SetToolTip(this.xdeletecrit, "verwijder selectie");
-            this.xdeletecrit.UseVisualStyleBackColor = true;
-            this.xdeletecrit.Click += new System.EventHandler(this.xdeletecrit_Click);
+            this.xnewEntry.Dock = System.Windows.Forms.DockStyle.Right;
+            this.xnewEntry.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xnewEntry.Image = global::ProductieManager.Properties.Resources.filter_32x32;
+            this.xnewEntry.Location = new System.Drawing.Point(682, 0);
+            this.xnewEntry.Name = "xnewEntry";
+            this.xnewEntry.Size = new System.Drawing.Size(45, 40);
+            this.xnewEntry.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.xnewEntry, "Nieuwe filter aanmaken...");
+            this.xnewEntry.UseVisualStyleBackColor = true;
+            this.xnewEntry.Click += new System.EventHandler(this.xnewEntry_Click);
             // 
             // panel8
             // 
@@ -2592,10 +2498,10 @@
             // xproductiefilter
             // 
             this.xproductiefilter.Controls.Add(this.metroPanel2);
-            this.xproductiefilter.Location = new System.Drawing.Point(4, 35);
+            this.xproductiefilter.Location = new System.Drawing.Point(4, 38);
             this.xproductiefilter.Name = "xproductiefilter";
             this.xproductiefilter.Padding = new System.Windows.Forms.Padding(5);
-            this.xproductiefilter.Size = new System.Drawing.Size(743, 527);
+            this.xproductiefilter.Size = new System.Drawing.Size(743, 524);
             this.xproductiefilter.TabIndex = 1;
             this.xproductiefilter.Text = "Filters";
             this.xproductiefilter.ToolTipText = "Productie weergave instellingen";
@@ -2609,7 +2515,7 @@
             this.metroPanel2.HorizontalScrollbarSize = 10;
             this.metroPanel2.Location = new System.Drawing.Point(5, 5);
             this.metroPanel2.Name = "metroPanel2";
-            this.metroPanel2.Size = new System.Drawing.Size(733, 517);
+            this.metroPanel2.Size = new System.Drawing.Size(733, 514);
             this.metroPanel2.TabIndex = 3;
             this.metroPanel2.VerticalScrollbarBarColor = true;
             this.metroPanel2.VerticalScrollbarHighlightOnWheel = false;
@@ -2952,7 +2858,7 @@
             this.label34.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label34.Location = new System.Drawing.Point(267, 5);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(199, 515);
+            this.label34.Size = new System.Drawing.Size(0, 599);
             this.label34.TabIndex = 49;
             this.label34.Text = resources.GetString("label34.Text");
             // 
@@ -3303,13 +3209,9 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Opties_FormClosing);
             this.Shown += new System.EventHandler(this.Opties_Shown);
             this.groupBox5.ResumeLayout(false);
-            this.groupBox7.ResumeLayout(false);
-            this.groupBox7.PerformLayout();
-            this.xgroupweergave.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.xFilterList)).EndInit();
+            this.xFilterListMenu.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.panel12.ResumeLayout(false);
-            this.panel12.PerformLayout();
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
             this.xtakengroup.ResumeLayout(false);
@@ -3408,22 +3310,10 @@
         private System.Windows.Forms.NumericUpDown xminvoorklaarzet;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.GroupBox groupBox7;
-        private System.Windows.Forms.RadioButton xtoonallesvanbeide;
-        private System.Windows.Forms.RadioButton xtoonvolgensbewerking;
-        private System.Windows.Forms.RadioButton xtoonvolgensafdeling;
-        private System.Windows.Forms.GroupBox xgroupweergave;
-        private System.Windows.Forms.ListView xweergavelijst;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.ComboBox xweergave;
-        private System.Windows.Forms.Button xaddweergaveb;
-        private System.Windows.Forms.Button xremoveweergaveb;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.Button xcreateaccount;
         private System.Windows.Forms.Button xlogin;
         private System.Windows.Forms.Button xgebruikersb;
-        private System.Windows.Forms.RadioButton xtoonalles;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.GroupBox groupBox10;
@@ -3507,16 +3397,7 @@
         private System.Windows.Forms.CheckBox xdocurrentweekoverzicht;
         private MetroFramework.Controls.MetroTabPage xemailtabpage;
         private System.Windows.Forms.Panel panel11;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.ListView xcriterialist;
-        private System.Windows.Forms.ColumnHeader columnHeader5;
-        private System.Windows.Forms.Panel panel12;
-        private System.Windows.Forms.TextBox xcriteriatextbox;
-        private System.Windows.Forms.Button xaddcrit;
-        private System.Windows.Forms.Button xdeletecrit;
         private System.Windows.Forms.CheckBox xautologin;
-        private System.Windows.Forms.ColumnHeader columnHeader6;
-        private System.Windows.Forms.ComboBox xfiltertype;
         private System.Windows.Forms.Button xkiesdbbutton;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox xdblocatie;
@@ -3607,5 +3488,20 @@
         private System.Windows.Forms.Button xrestorebackup;
         private System.Windows.Forms.CheckBox xmeldingtoon;
         private System.Windows.Forms.Button xbackupmaken;
+        private System.Windows.Forms.Panel panel4;
+        private MetroFramework.Controls.MetroTextBox xsearchentry;
+        private System.Windows.Forms.Button xnewEntry;
+        private Controls.CustomObjectListview xFilterList;
+        private BrightIdeasSoftware.OLVColumn olvColumn5;
+        private BrightIdeasSoftware.OLVColumn olvColumn6;
+        private BrightIdeasSoftware.OLVColumn olvColumn7;
+        private System.Windows.Forms.ImageList xFilterImageList;
+        private System.Windows.Forms.ContextMenuStrip xFilterListMenu;
+        private System.Windows.Forms.ToolStripMenuItem filterWijzigenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem filterVerwijderenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem naamWijzigenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem filterDelenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }

@@ -121,8 +121,7 @@ namespace Forms
 
         private void StartProductie_FormClosing(object sender, FormClosingEventArgs e)
         {
-            productieListControl1.SaveColumns(true);
-            productieListControl1.DetachEvents();
+            productieListControl1.CloseUI();
             Manager.FilterChanged -= Manager_FilterChanged;
         }
 

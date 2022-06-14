@@ -74,7 +74,7 @@ namespace Forms
             if (cr.ShowDialog() == DialogResult.OK)
             {
                 var ac = cr.Account;
-                Manager.CreateAccount(ac).Wait();
+                Manager.Database.xUpSert(ac);
             }
         }
     }

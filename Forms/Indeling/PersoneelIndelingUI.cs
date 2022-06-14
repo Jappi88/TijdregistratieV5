@@ -29,8 +29,6 @@ namespace Forms
         public void CloseUI()
         {
             DetachEvents();
-            productieListControl1.DetachEvents();
-            productieListControl1.SaveColumns(true);
             if (Manager.Opties != null)
             {
                 Manager.Opties.PersoneelIndeling = GetPersonen().Select(x => x.PersoneelNaam).ToList();
@@ -52,7 +50,7 @@ namespace Forms
         {
             productieListControl1.ItemCountChanged -= ProductieListControl1_ItemCountChanged;
             productieListControl1.SelectedItemChanged -= ProductieListControl1_SelectedItemChanged;
-            productieListControl1.DetachEvents();
+            productieListControl1.CloseUI();
             Manager.OnPersoneelChanged -= Manager_OnPersoneelChanged;
             Manager.OnPersoneelDeleted -= Manager_OnPersoneelDeleted;
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;

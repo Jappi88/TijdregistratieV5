@@ -3,8 +3,7 @@ using Rpm.Misc;
 using System;
 using System.Net;
 using System.Net.Mail;
-using MailKit.Net.Imap;
-using MailKit.Security;
+using System.Threading.Tasks;
 
 namespace Rpm.Mailing
 {
@@ -125,23 +124,46 @@ namespace Rpm.Mailing
             }
         }
 
-        public ImapClient CreateImapClient()
-        {
-            try
-            {
-                var host = GetImapHost();
-                if (string.IsNullOrEmpty(host)) return null;
-                var client = new ImapClient();
-                client.Connect(host, 993, SecureSocketOptions.SslOnConnect);
-                client.Authenticate(EmailAdres, Password);
-                return client;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return null;
-            }
-        }
+       // public async Task<ImapClient> CreateImapClient()
+        //{
+        //    var client = new ImapClient();
+        //    try
+        //    {
+        //        var host = GetImapHost();
+        //        if (string.IsNullOrEmpty(host)) return null;
+        //        //var clientSecrets = new ClientSecrets
+        //        //{
+        //        //    ClientId = "709410244077-bog56s165bgck4p3tprkh17jcr99tiup.apps.googleusercontent.com",
+        //        //    ClientSecret = "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"
+        //        //};
+        //        //var codeFlow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
+        //        //{
+        //        //    DataStore = new FileDataStore("CredentialCacheFolder", false),
+        //        //    Scopes = new[] { "https://mail.google.com/" },
+        //        //    ClientSecrets = clientSecrets
+        //        //});
+        //        //var codeReceiver = new LocalServerCodeReceiver();
+        //        //var authCode = new AuthorizationCodeInstalledApp(codeFlow, codeReceiver);
+
+        //        //var credential = await authCode.AuthorizeAsync(EmailAdres, CancellationToken.None);
+
+        //        //if (credential.Token.IsExpired(SystemClock.Default))
+        //        //    await credential.RefreshTokenAsync(CancellationToken.None);
+
+        //        //var oauth2 = new SaslMechanismOAuth2(credential.UserId, credential.Token.AccessToken);
+        //        client.ServerCertificateValidationCallback = (sender, certificate, certChainType, errors) => true;
+        //        client.Connect(host, 993, SecureSocketOptions.Auto);
+        //        //client.Authenticate(oauth2);
+        //        client.Authenticate(EmailAdres, Password);
+        //        return client;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e);
+        //        client.Disconnect(true);
+        //        return null;
+        //    }
+        //}
 
         public bool TextConnection()
         {

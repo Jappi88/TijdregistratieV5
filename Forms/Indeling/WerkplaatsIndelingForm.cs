@@ -1,6 +1,5 @@
-﻿using System.Windows.Forms;
-using System.Windows.Media.Animation;
-using Forms.MetroBase;
+﻿using Forms.MetroBase;
+using System.Windows.Forms;
 
 namespace Forms
 {

@@ -97,46 +97,11 @@ namespace Controls
             try
             {
                 if (Manager.Opties == null) return WerkPlekken;
-                if (Manager.Opties.ToonAlles)
+                var plekken = Manager.BewerkingenLijst.GetAlleWerkplekken();
+                foreach (var plek in plekken)
                 {
-                    var plekken = Manager.BewerkingenLijst.GetAlleWerkplekken(true);
-                    foreach (var plek in plekken)
-                    {
-                        if (!WerkPlekken.ContainsKey(plek))
-                            WerkPlekken.Add(plek, true);
-                    }
-
-                    return WerkPlekken;
-                }
-                if (Manager.Opties.ToonAllesVanBeide || Manager.Opties.ToonVolgensAfdelingen)
-                {
-                    if (Manager.Opties.Afdelingen is {Length: > 0})
-                    {
-                        foreach (var s in Manager.Opties.Afdelingen)
-                        {
-                            var xpleks = Manager.BewerkingenLijst.GetWerkplekken(s);
-                            foreach(var plek in xpleks)
-                                if (!WerkPlekken.ContainsKey(plek))
-                                    WerkPlekken.Add(plek, true);
-                        }
-                    }
-                }
-
-                if (Manager.Opties.ToonAllesVanBeide || Manager.Opties.ToonVolgensBewerkingen)
-                {
-                    if (Manager.Opties.Bewerkingen is {Length: > 0})
-                    {
-                        foreach (var s in Manager.Opties.Bewerkingen)
-                        {
-                            var ent = Manager.BewerkingenLijst.GetEntry(s);
-                            if (ent == null || ent.WerkPlekken == null || ent.WerkPlekken.Count == 0) continue;
-                            foreach (var plek in ent.WerkPlekken)
-                            {
-                                if (!WerkPlekken.ContainsKey(plek))
-                                    WerkPlekken.Add(plek, true);
-                            }
-                        }
-                    }
+                    if (!WerkPlekken.ContainsKey(plek))
+                        WerkPlekken.Add(plek, true);
                 }
 
             }

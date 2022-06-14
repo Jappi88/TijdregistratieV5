@@ -41,7 +41,9 @@ namespace Rpm.Settings
         public DatabaseUpdateEntry MainDB { get; set; }
         public DatabaseUpdateEntry TempMainDB { get; set; }
         public List<string> PersoneelIndeling { get; set; }
-        public List<string> WerkplaatsIndeling { get; set; }
+        [ExcludeFromSerialization]
+        public List<string> WerkplaatsIndeling { get=> new List<string>(); set => SetWerkplaatsIndelingen(value); }
+        public List<WerkplaatsSettings> WerkplaatsIndelingen { get; set; }
         public int TileCountRefreshRate { get; set; } = 30000;
         public int TileViewBackgroundColorRGB { get; set; } = Color.White.ToArgb();
         public List<TileInfoEntry> TileLayout { get; set; }
@@ -59,6 +61,23 @@ namespace Rpm.Settings
         #endregion Meldingen
 
         #region "Methods"
+
+        private void SetWerkplaatsIndelingen(List<string> wps)
+        {
+            if (wps == null || wps.Count == 0) return;
+            WerkplaatsIndelingen ??= new List<WerkplaatsSettings>();
+            WerkplaatsIndelingen.Clear();
+            for (int i = 0; i < wps.Count; i++)
+            {
+                var v = wps[i].Split(';');
+                var wp = new WerkplaatsSettings();
+                wp.Name = v[0];
+                if (v.Length > 1)
+                    if (bool.TryParse(v[1], out var compact))
+                        wp.IsCompact = compact;
+                WerkplaatsIndelingen.Add(wp);
+            }
+        }
 
         public List<TileInfoEntry> GetAllDefaultEntries(bool incextra)
         {
@@ -391,7 +410,7 @@ namespace Rpm.Settings
             NationaleFeestdagen = new DateTime[] { };
             SpecialeRoosters = new List<Rooster>();
             PersoneelIndeling = new List<string>();
-            WerkplaatsIndeling = new List<string>();
+            WerkplaatsIndelingen = new List<WerkplaatsSettings>();
             TileLayout = GetAllDefaultEntries(false);
             //create default Tiles
             //voor de producties
@@ -412,18 +431,8 @@ namespace Rpm.Settings
             GebruikTaken = true;
             TaakSyncInterval = 10000;
             //weergave producties
-            ToonVolgensAfdelingen = false;
-            ToonVolgensBewerkingen = false;
-            ToonAlles = true;
-            Afdelingen = new string[] { };
             Filters = new List<Filter>();
-            Bewerkingen = new string[] { };
-            DeelInPerAfdeling = false;
-            DeelInPerBewerking = false;
-            DeelAllesIn = true;
-            AantalPerPagina = 10;
-            ToegelatenProductieCrit = new List<string>();
-
+            ActieveFilters = new List<Filter>();
             //database
             UpdateDatabaseVersion = "1.0.0.0";
             CreateWeekOverzichten = false;
@@ -612,28 +621,43 @@ namespace Rpm.Settings
         #endregion "Taken"
 
         #region "Weergave Producties"
-        public double NieuwTijd { get; set; }
+        [ExcludeFromSerialization]
         public bool ToonVolgensAfdelingen { get; set; }
+        [ExcludeFromSerialization]
         public bool ToonVolgensBewerkingen { get; set; }
+        [ExcludeFromSerialization]
         public bool ToonAllesVanBeide { get; set; }
+        [ExcludeFromSerialization]
         public bool ToonAlles { get; set; }
+        [ExcludeFromSerialization]
         public string[] Afdelingen { get; set; }
         private string[] _bewerkingen;
-
+        [ExcludeFromSerialization]
         public string[] Bewerkingen
         {
             get => _bewerkingen;
             set => _bewerkingen = value;
         }
-        public List<Filter> Filters { get; set; }
+
+        [ExcludeFromSerialization]
         public bool DeelInPerAfdeling { get; set; }
+        [ExcludeFromSerialization]
         public bool DeelInPerBewerking { get; set; }
+        [ExcludeFromSerialization]
         public bool DeelAllesIn { get; set; }
+        [ExcludeFromSerialization]
         public int AantalPerPagina { get; set; }
+        [ExcludeFromSerialization]
         public List<string> ToegelatenProductieCrit { get; set; }
-        public bool ToonPersoneelIndelingNaOpstart { get; set; }
+        #endregion
+
+        public double NieuwTijd { get; set; }
+
+        public List<Filter> Filters { get; set; }
+        public List<Filter> ActieveFilters { get; set; }
+
         public bool ToonWerkplaatsIndelingNaOpstart { get; set; }
-        #endregion "Weergave Producties"
+        public bool ToonPersoneelIndelingNaOpstart { get; set; }
 
         #region "Gebruiker"
 

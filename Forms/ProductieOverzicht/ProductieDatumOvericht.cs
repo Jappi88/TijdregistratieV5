@@ -72,13 +72,14 @@ namespace Forms
            var model = new ProductieOverzichtModel(b);
             model.Omschrijving = b.Naam;
             model.StartOp = startdate;
+            bool ombouw = !string.Equals(lastartnr, b.ArtikelNr, StringComparison.CurrentCultureIgnoreCase);
             switch (b.State)
             {
                 case ProductieState.Gestart:
                     model.StartOp = b.GestartOp();
                     model.GereedOp = b.VerwachtDatumGereed();
                     model.AantalPersonen = b.AantalActievePersonen;
-                    model.InstelTijd = Manager.ArtikelRecords?.GetRecord(b.ArtikelNr)?.InstelTijd ?? 0;
+                    model.InstelTijd = b.InstelTijd;
                     if (b.TotaalGemaakt < b.Aantal)
                     {
                         startdate = model.GereedOp;
@@ -87,9 +88,9 @@ namespace Forms
                     break;
                 case ProductieState.Gestopt:
                     model.StartOp = b.GetStartOp(startdate, out var pers);
-                    model.GereedOp = b.VerwachtDatumGereed(startdate, pers);
+                    model.GereedOp = b.VerwachtDatumGereed(startdate, pers, ombouw);
                     model.AantalPersonen = pers;
-                    model.InstelTijd = Manager.ArtikelRecords?.GetRecord(b.ArtikelNr)?.InstelTijd ?? 0;
+                    model.InstelTijd = b.InstelTijd;
                     if (b.TotaalGemaakt < b.Aantal)
                     {
                         startdate = model.GereedOp;
@@ -100,17 +101,8 @@ namespace Forms
                     model.StartOp = b.GestartOp();
                     model.GereedOp = b.DatumGereed;
                     model.AantalPersonen = b.AantalActievePersonen;
-                    model.InstelTijd = Manager.ArtikelRecords?.GetRecord(b.ArtikelNr)?.InstelTijd ?? 0;
+                    model.InstelTijd = b.InstelTijd;
                     break;
-            }
-               
-            if (!string.IsNullOrEmpty(lastartnr) && model.InstelTijd > 0 && b.State != ProductieState.Gereed && model.StartOp < model.GereedOp)
-            {
-                if (!string.Equals(model.ArtikelNr, lastartnr, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    gereeddate = Werktijd.DatumNaTijd(gereeddate, TimeSpan.FromHours(model.InstelTijd), Manager.Opties?.GetWerkRooster(), Manager.Opties?.SpecialeRoosters);
-                    model.GereedOp = gereeddate;
-                }
             }
             return model;
         }

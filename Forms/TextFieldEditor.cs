@@ -17,16 +17,6 @@ namespace Forms
             set => xtextfield.Text = value;
         }
 
-        public string Title
-        {
-            get => this.Text;
-            set
-            {
-                this.Text = value;
-                this.Invalidate();
-            }
-        }
-
         public int MinimalTextLength { get; set; } = 2;
 
         public string SecondaryDescription
@@ -61,6 +51,7 @@ namespace Forms
                 if (UseSecondary && !value)
                     UseSecondary = false;
                 xsecondaryPanel.Visible = value;
+                SetSize();
             }
         }
 
@@ -78,8 +69,10 @@ namespace Forms
 
         private void xok_Click(object sender, EventArgs e)
         {
+            var x1 = MinimalTextLength == 1 ? "character" : "characters";
             if ((!xextrafieldcheck.Checked && xtextfield.Text.Trim().Length < MinimalTextLength) || (xextrafieldcheck.Checked && xsecondarytextbox.Text.Trim().Length < MinimalTextLength))
-                XMessageBox.Show(this, $"Ongeldige waarde", "Ongeldig", MessageBoxIcon.Warning);
+                XMessageBox.Show(this, $"Ongeldige waarde\n\n" +
+                    $"De waarde moet minimaal {MinimalTextLength} {x1} bevatten", "Ongeldig", MessageBoxIcon.Warning);
             else
                 DialogResult = DialogResult.OK;
         }
@@ -116,7 +109,8 @@ namespace Forms
 
         private void SetSize()
         {
-            var xheight = xextrafieldcheck.Checked ? 85 : 22;
+            var xheight = xextrafieldcheck.Visible ? 22 : 0;
+           xheight += xextrafieldcheck.Checked ? 85 : 0;
             xsecondaryPanel.Height = xheight;
             if (xextrafieldcheck.Checked)
                 xsecondarytextbox.Select();

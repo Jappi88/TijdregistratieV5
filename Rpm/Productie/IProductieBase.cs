@@ -110,16 +110,18 @@ namespace Rpm.Productie
         public virtual DateTime DatumToegevoegd { get; set; } = DateTime.Now;
 
         //  datum van het toevoegen van de productie formulier
-        [Display(Name = "DatumVerwijderd", Description = "Datum waarvan de productie eventueel verwijderd is")]
+        [Display(Name = "DatumVerwijderd", Description = "Datum waarvan de productie verwijderd is")]
         public virtual DateTime DatumVerwijderd { get; set; }
 
-        [Display(Name = "DatumGereed", Description = "Datum waarvan de productie eventueel gereed is")]
+        [Display(Name = "DatumGereed", Description = "Datum waarvan de productie gereed is gemeld")]
         public virtual DateTime DatumGereed { get; set; }
 
-        [Display(Name = "VerwachtLeverDatum", Description = "Datum waarvan wordt verwacht dat de productie klaar is")]
+        [Display(Name = "VerwachtLeverDatum", Description = "Datum waarvan wordt verwacht dat de productie klaar is als je nu begint")]
         public virtual DateTime VerwachtLeverDatum { get; set; }
+        [Display(Name = "BerekentLeverDatum", Description = "Datum die berekent is waarop de productie klaar  zal zijn")]
+        public virtual DateTime BerekentLeverDatum { get; set; }
 
-        [Display(Name = "TijdGestart", Description = "Datum en tijd waarvan de productie eventueel is gestart")]
+        [Display(Name = "TijdGestart", Description = "Datum en tijd waar op de productie gestart is")]
         public virtual DateTime TijdGestart { get; set; }
 
         [Display(Name = "StartOp", Description = "Datum en tijd waarop wordt aangeraden om de productie te starten")]
@@ -140,6 +142,8 @@ namespace Rpm.Productie
 
         [Display(Name = "TijdGewerkt", Description = "Tijd gewerkt aan deze productie")]
         public virtual double TijdGewerkt { get; set; }
+        [Display(Name = "InstelTijd", Description = "Insteltijd van de productie")]
+        public virtual double InstelTijd { get; set; }
 
         [Display(Name = "TijdNodig",
             Description = "TijdNodig is berekent op basis van de aantal nog te maken en de actuele aantal per uur")]
@@ -362,6 +366,28 @@ namespace Rpm.Productie
             if (this is ProductieFormulier prod)
                 return prod.GetAlleStoringen(onlyactive).ToArray();
             return new Storing[] { };
+        }
+        public virtual DateTime GetVerwachtLeverDatum()
+        {
+            if (this is Bewerking bew) return bew.VerwachtDatumGereed();
+            if (this is ProductieFormulier prod) return prod.VerwachtDatumGereed();
+            return default;
+        }
+
+        public virtual DateTime GetVerwachtLeverDatum(DateTime start, int aantalPers, bool ombouwtijd)
+        {
+            if (this is Bewerking bew) return bew.VerwachtDatumGereed(start, aantalPers, ombouwtijd);
+            if (this is ProductieFormulier prod) return prod.VerwachtDatumGereed(start, aantalPers,ombouwtijd);
+            return default;
+        }
+
+        public virtual double GetTijdOver()
+        {
+            if (this is Bewerking bewerking)
+                return bewerking.GetTijdOver();
+            if (this is ProductieFormulier prod)
+                return prod.GetTijdOver().TotalHours;
+            return 0;
         }
 
         public virtual Task<bool> Update(string change, bool save, bool raiseevent)

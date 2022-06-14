@@ -232,6 +232,20 @@ namespace Rpm.Productie
             }
         }
 
+        private double _insteltijd;
+        public override double InstelTijd
+        {
+            get
+            {
+                if(Bewerkingen is {Length:0 }) return _insteltijd;
+                return Bewerkingen.Sum(x => x.InstelTijd);
+            }
+            set
+            {
+                _insteltijd = value;
+            }
+        }
+
         private string _note;
         private string _gereednote;
         [ExcludeFromSerialization]
@@ -1511,7 +1525,17 @@ namespace Rpm.Productie
                         if (form.ActueelPerUur > 0 && form.Aantal > 0)
                             form.GemiddeldDoorlooptijd = Math.Round(form.Aantal / form.ActueelPerUur, 2);
                         
-
+                        if(form.Bewerkingen != null &&  form.Bewerkingen.Length > 0)
+                        {
+                            for(int i = 0; i < form.Bewerkingen.Length; i++)
+                            {
+                                var b = form.Bewerkingen[i];
+                                var sts = forms.Where(x => x?.Bewerkingen != null && x.Bewerkingen.Length > 0).Select(w => w?.Bewerkingen.FirstOrDefault(s => string.Equals(b?.Naam, s?.Naam, StringComparison.CurrentCultureIgnoreCase))).SelectMany(x => x?.GetAlleStoringen(false)??new Storing[0]).Where(x => x?.StoringType != null && x.StoringType.ToLower().Contains("ombouw") && x.IsVerholpen).ToList();
+                                var tijd = sts.Sum(x => x.GetTotaleTijd());
+                                if(tijd > 0 && sts.Any())
+                                    b.InstelTijd = Math.Round(tijd / sts.Count,2);
+                            }
+                        }
                         form.Geproduceerd = forms.Count;
                         var gemiddeldtotaal = forms.Count > 0 ? forms.Sum(x => x.TotaalGemaakt) / forms.Count : 0;
                         form.GemiddeldAantalGemaakt = gemiddeldtotaal;
@@ -2050,54 +2074,31 @@ namespace Rpm.Productie
         public DateTime VerwachtDatumGereed()
         {
             if (State == ProductieState.Gereed) return DatumGereed;
-            int aantal;
-            if (TotaalGemaakt > Aantal)
-                aantal = 0;
-            else aantal = Aantal - TotaalGemaakt;
-            var rooster = Manager.Opties.GetWerkRooster();
-            if (aantal <= 0)
-                return Werktijd.EerstVolgendeWerkdag(DateTime.Now, ref rooster,rooster,null);
-            var peruur = ActueelProductenPerUur();
-            if (peruur == 0)
-                peruur = PerUur;
-            var tijd = peruur > 0 ? aantal / peruur : DoorloopTijd;
-
-            if (tijd < 0 || double.IsInfinity(tijd))
-                return Werktijd.EerstVolgendeWerkdag(DateTime.Now, ref rooster,rooster, null);
-
-            if (Bewerkingen != null)
-                foreach (var b in Bewerkingen)
-                    tijd /= b.GetPersoneel().AantalPersTijdMultiplier();
-
-            if (tijd < 0 || double.IsInfinity(tijd))
-                return Werktijd.EerstVolgendeWerkdag(DateTime.Now, ref rooster,rooster, null);
-
-            return Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(tijd), null, null);
+            if (Bewerkingen is { Length: 0 }) return DateTime.Now;
+            var date = new DateTime();
+            for (var i = 0; i < Bewerkingen.Length; i++)
+            {
+                var b = Bewerkingen[i];
+                var xdate = b.VerwachtDatumGereed();
+                if (date.IsDefault() || xdate > date)
+                    date = xdate;
+            }
+            return date;
         }
 
-        public DateTime VerwachtDatumGereed(DateTime start, double tijd, int aantal, int gedaan,
-            Bewerking[] bewerkingen)
+        public DateTime VerwachtDatumGereed(DateTime start, int aantalpers, bool ombouwtijd)
         {
-            var rooster = Manager.Opties.GetWerkRooster();
-            if (gedaan >= aantal)
-                return Werktijd.EerstVolgendeWerkdag(DateTime.Now, ref rooster,rooster, null);
-
-            var peruur = aantal / tijd;
-
-            if (double.IsInfinity(peruur) || peruur == 0)
-                return Werktijd.EerstVolgendeWerkdag(DateTime.Now, ref rooster, rooster, null);
-
-            var xaantal = aantal - gedaan;
-
-            var xtijd = xaantal / peruur;
-
-            if (xaantal == 0)
-                return Werktijd.EerstVolgendeWerkdag(DateTime.Now, ref rooster, rooster, null);
-
-            if (bewerkingen != null)
-                foreach (var b in bewerkingen)
-                    xtijd /= b.GetPersoneel().AantalPersTijdMultiplier();
-            return Werktijd.DatumNaTijd(DateTime.Now, TimeSpan.FromHours(xtijd), null, null);
+            if (State == ProductieState.Gereed) return DatumGereed;
+            if (Bewerkingen is { Length: 0 }) return start;
+            var date = new DateTime();
+            for (var i = 0; i < Bewerkingen.Length; i++)
+            {
+                var b = Bewerkingen[i];
+                var xdate = b.VerwachtDatumGereed(start, aantalpers, ombouwtijd);
+                if (date.IsDefault() || xdate > date)
+                    date = xdate;
+            }
+            return date;
         }
 
         public Personeel[] AantalPersonenShifts()

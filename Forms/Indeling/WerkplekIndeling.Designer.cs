@@ -36,6 +36,7 @@ namespace Controls
             this.xpanel = new System.Windows.Forms.Panel();
             this.xcompactinfo = new TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.xsettings = new System.Windows.Forms.Button();
             this.xresetindeling = new System.Windows.Forms.Button();
             this.xcompact = new System.Windows.Forms.Button();
             this.xknoppenpanel = new System.Windows.Forms.Panel();
@@ -58,9 +59,9 @@ namespace Controls
             this.xVerwijderPersoneel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
             this.xVerwijderPersoneel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xVerwijderPersoneel.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xVerwijderPersoneel.Location = new System.Drawing.Point(82, 6);
+            this.xVerwijderPersoneel.Location = new System.Drawing.Point(122, 5);
             this.xVerwijderPersoneel.Name = "xVerwijderPersoneel";
-            this.xVerwijderPersoneel.Size = new System.Drawing.Size(35, 35);
+            this.xVerwijderPersoneel.Size = new System.Drawing.Size(34, 34);
             this.xVerwijderPersoneel.TabIndex = 3;
             this.toolTip1.SetToolTip(this.xVerwijderPersoneel, "Verwijder Werkplaats");
             this.xVerwijderPersoneel.UseVisualStyleBackColor = false;
@@ -95,7 +96,7 @@ namespace Controls
             this.xcompactinfo.IsSelectionEnabled = false;
             this.xcompactinfo.Location = new System.Drawing.Point(306, 0);
             this.xcompactinfo.Name = "xcompactinfo";
-            this.xcompactinfo.Size = new System.Drawing.Size(40, 44);
+            this.xcompactinfo.Size = new System.Drawing.Size(1, 44);
             this.xcompactinfo.TabIndex = 7;
             this.xcompactinfo.Text = null;
             this.xcompactinfo.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xpersoonInfo_ImageLoad);
@@ -111,14 +112,32 @@ namespace Controls
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.xsettings);
             this.panel1.Controls.Add(this.xVerwijderPersoneel);
             this.panel1.Controls.Add(this.xresetindeling);
             this.panel1.Controls.Add(this.xcompact);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel1.Location = new System.Drawing.Point(346, 0);
+            this.panel1.Location = new System.Drawing.Point(307, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(121, 44);
+            this.panel1.Size = new System.Drawing.Size(160, 44);
             this.panel1.TabIndex = 7;
+            // 
+            // xsettings
+            // 
+            this.xsettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xsettings.BackColor = System.Drawing.Color.Transparent;
+            this.xsettings.FlatAppearance.BorderSize = 0;
+            this.xsettings.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
+            this.xsettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xsettings.Image = global::ProductieManager.Properties.Resources.ccsm_103993;
+            this.xsettings.Location = new System.Drawing.Point(45, 5);
+            this.xsettings.Name = "xsettings";
+            this.xsettings.Size = new System.Drawing.Size(34, 34);
+            this.xsettings.TabIndex = 9;
+            this.xsettings.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTip1.SetToolTip(this.xsettings, "Werkplaats instellingen");
+            this.xsettings.UseVisualStyleBackColor = false;
+            this.xsettings.Click += new System.EventHandler(this.xsettings_Click);
             // 
             // xresetindeling
             // 
@@ -128,9 +147,9 @@ namespace Controls
             this.xresetindeling.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
             this.xresetindeling.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xresetindeling.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
-            this.xresetindeling.Location = new System.Drawing.Point(44, 6);
+            this.xresetindeling.Location = new System.Drawing.Point(84, 5);
             this.xresetindeling.Name = "xresetindeling";
-            this.xresetindeling.Size = new System.Drawing.Size(35, 35);
+            this.xresetindeling.Size = new System.Drawing.Size(34, 34);
             this.xresetindeling.TabIndex = 7;
             this.xresetindeling.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolTip1.SetToolTip(this.xresetindeling, "Reset Indeling");
@@ -145,9 +164,9 @@ namespace Controls
             this.xcompact.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
             this.xcompact.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xcompact.Image = global::ProductieManager.Properties.Resources.icons8_collapse_32;
-            this.xcompact.Location = new System.Drawing.Point(5, 6);
+            this.xcompact.Location = new System.Drawing.Point(5, 5);
             this.xcompact.Name = "xcompact";
-            this.xcompact.Size = new System.Drawing.Size(35, 35);
+            this.xcompact.Size = new System.Drawing.Size(34, 34);
             this.xcompact.TabIndex = 8;
             this.xcompact.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolTip1.SetToolTip(this.xcompact, "Compact mode");
@@ -172,7 +191,7 @@ namespace Controls
             this.xVerwijderKlus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xVerwijderKlus.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xVerwijderKlus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xVerwijderKlus.Location = new System.Drawing.Point(12, 4);
+            this.xVerwijderKlus.Location = new System.Drawing.Point(12, 5);
             this.xVerwijderKlus.Name = "xVerwijderKlus";
             this.xVerwijderKlus.Size = new System.Drawing.Size(136, 35);
             this.xVerwijderKlus.TabIndex = 2;
@@ -189,7 +208,7 @@ namespace Controls
             this.xStartKlus.BackColor = System.Drawing.Color.White;
             this.xStartKlus.Image = global::ProductieManager.Properties.Resources.play_button_icon_icons_com_60615;
             this.xStartKlus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xStartKlus.Location = new System.Drawing.Point(228, 4);
+            this.xStartKlus.Location = new System.Drawing.Point(228, 5);
             this.xStartKlus.Name = "xStartKlus";
             this.xStartKlus.Size = new System.Drawing.Size(73, 35);
             this.xStartKlus.TabIndex = 0;
@@ -206,7 +225,7 @@ namespace Controls
             this.xStopKlus.BackColor = System.Drawing.Color.White;
             this.xStopKlus.Image = global::ProductieManager.Properties.Resources.stop_red256_24890;
             this.xStopKlus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xStopKlus.Location = new System.Drawing.Point(150, 4);
+            this.xStopKlus.Location = new System.Drawing.Point(150, 5);
             this.xStopKlus.Name = "xStopKlus";
             this.xStopKlus.Size = new System.Drawing.Size(75, 35);
             this.xStopKlus.TabIndex = 1;
@@ -298,5 +317,6 @@ namespace Controls
         private System.Windows.Forms.Panel xknoppenpanel;
         private HtmlLabel xcompactinfo;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button xsettings;
     }
 }

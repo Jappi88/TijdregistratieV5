@@ -525,8 +525,7 @@ namespace ProductieManager
                 {
                     Console.WriteLine(exception);
                 }
-                
-                productieView1.SaveLayouts();
+                productieView1.CloseUI();
                 Manager.DefaultSettings?.SaveAsDefault();
                 Manager.OnSettingsChanged -= ProductieView1_OnSettingsChanged;
                 Manager.OnManagerLoaded -= _manager_OnManagerLoaded;
@@ -536,7 +535,7 @@ namespace ProductieManager
                 if (Manager.LogedInGebruiker != null)
                     Manager.LogOut(this,false);
                 else Manager.SaveSettings(Manager.Opties, false, false, true);
-                productieView1.CloseUI();
+                
                 //  _updatechecker?.Stop();
                 // _updatechecker = null;
                 //Manager.Database?.Dispose();

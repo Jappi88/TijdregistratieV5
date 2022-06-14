@@ -443,7 +443,6 @@ namespace Rpm.Productie.ArtikelRecords
                             foreach (var r in rs)
                                 xreturn.Add(r.Key, r.Value);
                     }
-                    // Task.Delay(7000).Wait();
 
                 }
                 catch (Exception e)

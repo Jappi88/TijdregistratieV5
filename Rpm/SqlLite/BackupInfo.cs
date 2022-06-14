@@ -192,18 +192,18 @@ namespace Rpm.SqlLite
         public static Task CreateBackup(BackupInfo info)
         {
           
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 if(info == null) return;
                 info.CancellationToken ??= new CancellationTokenSource();
                 if (info.IsCreating) return;
                 try
                 {
-                    info.Creating = DateTime.Now;
                     info.IsCreating = true;
+                    info.Creating = DateTime.Now;
                     info.Save();
                     string path = Manager.BackupPath + $"\\RPM_Backup_{DateTime.Now: ddMMHHmmss}.zip";
-                    bool valid = await ZipFileDirectory(Manager.DbPath, path, info.GetExcludeNames(), info.CancellationToken);
+                    bool valid = xZipFileDirectory(Manager.DbPath, path, info.GetExcludeNames(), info.CancellationToken);
                     //zip.Close();
                     info.IsCreating = false;
                     if (valid && !info.CancellationToken.IsCancellationRequested)
@@ -256,14 +256,11 @@ namespace Rpm.SqlLite
             {
                 if (info == null) return false;
                 info.CancellationToken ??= new CancellationTokenSource();
-                if (info.IsCreating) return false;
                 try
                 {
-                    info.IsCreating = true;
                     string path = filename;
                     bool valid = xZipFileDirectory(Manager.DbPath, path, info.GetExcludeNames(), info.CancellationToken);
                     //zip.Close();
-                    info.IsCreating = false;
                     return valid;
                 }
                 catch (Exception e)
@@ -540,6 +537,8 @@ namespace Rpm.SqlLite
                     try
                     {
                         ZipEntry theEntry;
+                        var time = DateTime.Now;
+                        List<string> dirs = new List<string>();
                         while ((theEntry = s.GetNextEntry()) != null)
                         {
                             cancellation?.Token.ThrowIfCancellationRequested();
@@ -551,16 +550,19 @@ namespace Rpm.SqlLite
                                 directoryName = Path.GetDirectoryName(pathToZip) + "\\";
 
                             string fileName = Path.GetFileName(pathToZip);
-
-                            Directory.CreateDirectory(strDirectory + directoryName);
+                            string path = strDirectory + directoryName;
+                            string filepath = path + fileName;
+                            Directory.CreateDirectory(path);
 
                             if (fileName != "")
                             {
-                                if ((File.Exists(strDirectory + directoryName + fileName) && overWrite) ||
-                                    (!File.Exists(strDirectory + directoryName + fileName)))
+                                if ((File.Exists(filepath) && overWrite) ||
+                                    (!File.Exists(filepath)))
                                 {
+                                    if (dirs.IndexOf(path) == -1)
+                                        dirs.Add(path);
                                     using FileStream streamWriter =
-                                        File.Create(strDirectory + directoryName + fileName);
+                                        File.Create(filepath);
                                     bool valid = false;
                                     try
                                     {
@@ -589,13 +591,21 @@ namespace Rpm.SqlLite
                                     if (!valid)
                                         try
                                         {
-                                            File.Delete(strDirectory + directoryName + fileName);
+                                            File.Delete(filepath);
                                         }
                                         catch (Exception e)
                                         {
                                         }
 
                                 }
+                            }
+                        }
+                        if (overWrite && dirs.Count > 0)
+                        {
+                            foreach (var dir in dirs)
+                            {
+                                var files = new DirectoryInfo(dir).GetFiles("*.*", SearchOption.TopDirectoryOnly).Where(x => x.LastWriteTime < time).ToList();
+                                files.ForEach(x => x.Delete());
                             }
                         }
                     }

@@ -171,13 +171,13 @@ namespace Controls.TileView
                         entry.TileCount = bws.Count;
                         break;
                     case "onderbrekingen":
-                        bws = Manager.ProductieProvider.xGetBewerkingen(ProductieProvider.LoadedType.Alles,
+                        bws = Manager.ProductieProvider?.xGetBewerkingen(ProductieProvider.LoadedType.Alles,
                             new ViewState[]
                             {
                                ViewState.Alles
                             }, true, null, true);
-                        var storingen = bws.SelectMany(x => x.GetStoringen(false)).ToList();
-                        entry.TileCount = storingen.Count;
+                        var storingen = bws?.SelectMany(x => x.GetStoringen(false)).ToList();
+                        entry.TileCount = storingen?.Count??0;
                        
                         break;
                     case "xverbruik":
@@ -186,23 +186,23 @@ namespace Controls.TileView
                         entry.TileCount = Manager.SporenBeheer?.Database?.Count()??0;
                         break;
                     case "xchangeaantal":
-                        bws = Manager.ProductieProvider.xGetBewerkingen(ProductieProvider.LoadedType.Producties,
+                        bws = Manager.ProductieProvider?.xGetBewerkingen(ProductieProvider.LoadedType.Producties,
                             new ViewState[]
                             {
                                 ViewState.Gestart
                             }, true, null, true);
                         bws = bws
-                            .Where(x => x.State == ProductieState.Gestart && string.Equals(x.GestartDoor, Manager.Opties.Username,
+                            ?.Where(x => x.State == ProductieState.Gestart && string.Equals(x.GestartDoor, Manager.Opties.Username,
                                 StringComparison.CurrentCultureIgnoreCase)).ToList();
-                        entry.TileCount = bws.Count;
+                        entry.TileCount = bws?.Count??0;
                         break;
                     case "xsearchtekening":
                         break;
                     case "xpersoneelindeling":
-                        entry.TileCount = Manager.Opties.PersoneelIndeling.Count;
+                        entry.TileCount = Manager.Opties?.PersoneelIndeling?.Count??0;
                         break;
                     case "xwerkplaatsindeling":
-                        entry.TileCount = Manager.Opties.WerkplaatsIndeling.Count;
+                        entry.TileCount = Manager.Opties?.WerkplaatsIndelingen?.Count??0;
                         break;
                     case "xcreateexcel":
                         break;

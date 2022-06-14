@@ -72,15 +72,15 @@ namespace ProductieManager.Rpm.Various
             return xreturn;
         }
 
-        public int UnreadMessages(string afzender)
+        public int UnreadMessages(string afzender, DateTime vanaf)
         {
-            var msgs = GetMessagesFromAfzender(afzender,default, true);
+            var msgs = GetMessagesFromAfzender(afzender,vanaf, true);
             return msgs.Count;
         }
 
         public List<ProductieChatEntry> GetAllUnreadMessages()
         {
-            return GetMessagesFromAfzender(null, default, true);
+            return GetMessagesFromAfzender(null, DateTime.Now.Subtract(TimeSpan.FromDays(30)), true);
         }
 
         public List<ProductieChatEntry> GetAllMessages()

@@ -1172,10 +1172,10 @@ namespace Rpm.Productie
 
         public DateTime VerwachtDatumGereed()
         {
-            return VerwachtDatumGereed(DateTime.Now, AantalActievePersonen);
+            return VerwachtDatumGereed(DateTime.Now, AantalActievePersonen,false);
         }
 
-        public DateTime VerwachtDatumGereed(DateTime startop, int aantalpers)
+        public DateTime VerwachtDatumGereed(DateTime startop, int aantalpers, bool ombouwtijd)
         {
             var xdate = DateTime.Now;
             try
@@ -1191,13 +1191,25 @@ namespace Rpm.Productie
 
 
                 xdate = Werktijd.DatumNaTijd(xstart, TimeSpan.FromHours(tijd), rooster, null);
+                bool omgebouwd = false;
+                var rs = new List<Rooster>();
                 foreach (var wp in WerkPlekken)
                 {
                     var x = Werktijd.DatumNaTijd(xstart, TimeSpan.FromHours(tijd),
                         wp.Tijden.WerkRooster, wp.Tijden?.SpecialeRoosters);
+                    if(wp.Tijden?.SpecialeRoosters != null)
+                    {
+                        var add = wp.Tijden.SpecialeRoosters.Where(x => !rs.Any(r => r.Vanaf.Date == x.Vanaf.Date)).ToList();
+                        if (add.Count > 0)
+                            rs.AddRange(add);
+                    }
                     if (x < xdate)
                         xdate = x;
+                    if (wp.IsActief() && wp.Storingen != null && wp.Storingen.Any(x => x.IsVerholpen && x.StoringType != null && x.StoringType.ToLower().Contains("ombouw")))
+                        omgebouwd = true;
                 }
+                if (ombouwtijd && !omgebouwd && InstelTijd > 0)
+                    xdate = Werktijd.DatumNaTijd(xdate,TimeSpan.FromHours(InstelTijd),null,rs);
             }
             catch(Exception e)
             {

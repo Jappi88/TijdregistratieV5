@@ -754,13 +754,11 @@ namespace Controls
                 var xcontrol = page.Controls.Cast<Control>().FirstOrDefault(x=> x is not MetroScrollBar);
                 if (xcontrol is ProductieListControl xprod)
                 {
-                    xprod.DetachEvents();
-                    xprod.SaveColumns(true);
+                    xprod.CloseUI();
                 }
                 else if (xcontrol is RecentGereedMeldingenUI gereed)
                 {
                     gereed.DetachEvents();
-                    gereed.productieListControl1.SaveColumns(true);
                 }
                 else if (xcontrol is WerkPlekkenUI werkplekken)
                 {
@@ -1309,7 +1307,7 @@ namespace Controls
             try
             {
                 DetachEvents();
-
+                //SaveLayouts();
                 CloseAllTabs();
             }
             catch (Exception e)
@@ -1320,6 +1318,7 @@ namespace Controls
 
         public void CloseAllTabs()
         {
+            var sel = (metroCustomTabControl1.SelectedTab?.Tag as TileInfoEntry)?.Name;
             for (int i = 0; i < metroCustomTabControl1.TabCount; i++)
             {
                 var xtab = metroCustomTabControl1.TabPages[i];
@@ -1330,6 +1329,8 @@ namespace Controls
                     i--;
                 }
             }
+            if (Manager.Opties != null)
+                Manager.Opties.LastShownTabName = sel;
         }
 
         public void SaveLayouts()

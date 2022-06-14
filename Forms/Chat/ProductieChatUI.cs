@@ -11,7 +11,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using ProductieManager.Properties;
 using ContentAlignment = System.Drawing.ContentAlignment;
@@ -105,6 +104,14 @@ namespace Forms
             }
 
             return "n.v.t.";
+        }
+
+        public enum ImageAlign
+        {
+            Left,
+            Top,
+            Right,
+            Bottom
         }
 
         private ChatBubble CreateSendMessage(ProductieChatEntry entry, ChatBubble chat = null)
@@ -345,7 +352,7 @@ namespace Forms
                 if (ProductieChat.Chat != null)
                 {
                     var img = ProductieChat.Chat.GetProfielImage() ?? Resources.avatardefault_92824;
-                    int unread = ProductieChat.Chat.UnreadMessages(ProductieChat.Chat.UserName);
+                    int unread = ProductieChat.Chat.UnreadMessages(ProductieChat.Chat.UserName, DateTime.Now.Subtract(TimeSpan.FromDays(30)));
                     if (unread > 0)
                     {
                         var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White, unread.ToString(),
@@ -378,7 +385,7 @@ namespace Forms
                         selected = user;
                     var img = user.GetProfielImage() ?? Resources.avatardefault_92824;
                     //LoadedUserImages.Images.Add(user.UserName, img);
-                    int unread = ProductieChat.Chat.UnreadMessages(user.UserName);
+                    int unread = ProductieChat.Chat.UnreadMessages(user.UserName, DateTime.Now.Subtract(TimeSpan.FromDays(30)));
                     if (unread > 0)
                     {
                         var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White, unread.ToString(),

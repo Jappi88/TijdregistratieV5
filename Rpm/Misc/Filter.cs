@@ -21,10 +21,12 @@ namespace Rpm.Misc
         public List<FilterEntry> Filters { get; set; } = new List<FilterEntry>();
 
         public int ID { get; set; }
-
+        public DateTime DateCreated { get; set; }
+        public string CriteriaText => ToString();
         public Filter()
         {
             ID = Functions.GenerateRandomID();
+            DateCreated = DateTime.Now;
         }
 
         public bool IsAllowed(object value, string listname)
@@ -92,7 +94,7 @@ namespace Rpm.Misc
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return string.Empty;
+                return "";
             }
         }
 

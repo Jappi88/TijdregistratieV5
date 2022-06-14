@@ -376,7 +376,7 @@ namespace Rpm.Productie
             var nu = vanaf;
             try
             {
-                var realrooster = rooster == null || !rooster.IsValid() ? Manager.Opties.GetWerkRooster() : rooster;
+                var realrooster = rooster == null || !rooster.IsValid() ? Manager.Opties?.GetWerkRooster()??Rooster.StandaartRooster() : rooster;
                 while (tijd.TotalSeconds > 0)
                 {
                     nu = EerstVolgendeWerkdag(nu, ref rooster, realrooster, specialeRoosters);

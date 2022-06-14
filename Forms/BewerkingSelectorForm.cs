@@ -16,13 +16,14 @@ namespace Forms
             InitializeComponent();
             this.Shown += BewerkingSelectorForm_Shown;
             this.FormClosing += BewerkingSelectorForm_FormClosing;
+            productieListControl1.ValidHandler = IsAllowed;
         }
 
         public IsValidHandler IsValidHandler { get => productieListControl1.ValidHandler; set => productieListControl1.ValidHandler = value; }
 
         private void BewerkingSelectorForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            productieListControl1.DetachEvents();
+            productieListControl1.CloseUI();
         }
 
         private void BewerkingSelectorForm_Shown(object sender, EventArgs e)
@@ -39,6 +40,15 @@ namespace Forms
         public BewerkingSelectorForm(List<Bewerking> bws):this()
         {
             Bewerkingen = bws;
+        }
+
+        public bool IsAllowed(object item, string filter)
+        {
+            if(item is Bewerking bewerking)
+            {
+                return Bewerkingen.IndexOf(bewerking) > -1;
+            }
+            return false;
         }
 
         public List<Bewerking> SelectedBewerkingen { get; private set; } = new List<Bewerking>();
@@ -66,7 +76,6 @@ namespace Forms
 
         private void xok_Click(object sender, System.EventArgs e)
         {
-
             try
             {
                 SelectedBewerkingen = productieListControl1.CheckedBewerkingen;

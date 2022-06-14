@@ -331,8 +331,11 @@ namespace Forms.GereedMelden
 
         private void xaantal_ValueChanged(object sender, EventArgs e)
         {
+            var xold = _prod.AantalGemaakt;
             _prod.AantalGemaakt = (int)xaantal.Value;
-            _prod.Update(null, false, false).Wait(1000);
+            string change = $"[{_prod.Path}, {_prod.ArtikelNr}] {_prod.Omschrijving}\n\n" +
+                $"Aantal gemaakt aangepast van {xold} naar {xaantal.Value}";
+            _prod.xUpdate(change, false, false, false);
             SetString();
         }
 

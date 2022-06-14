@@ -33,6 +33,8 @@ namespace Forms
             // _stickyWindow = new StickyWindow(this);
             metroTabControl1.SelectedIndex = 0;
             imageList2.Images.Add(Resources.database_21835_96x96);
+            xFilterImageList.Images.Add(Resources.filter_32x32);
+            ((OLVColumn)xFilterList.Columns[0]).ImageGetter = (_) => 0;
             ((OLVColumn) xoptielist.Columns[0]).GroupKeyGetter = GroupName;
             ((OLVColumn) xoptielist.Columns[0]).ImageGetter = ImageGetter;
 
@@ -43,7 +45,6 @@ namespace Forms
             imageList1.Images.Add(Resources.industry_setting_114090);
             imageList1.Images.Add(Resources.industry_setting_114090.CombineImage(Resources.check_1582, 2));
             xoptielist.Groups.Clear();
-            xfiltertype.SelectedIndex = 0;
             if (Manager.Opties == null && !Manager.xLoadSettings(this,true))
                 return;
             Manager.DefaultSettings ??= UserSettings.GetDefaultSettings();
@@ -108,7 +109,7 @@ namespace Forms
             if (opties == null) return;
             if (setasdefault)
             {
-                _LoadedOpties = opties;
+                _LoadedOpties = opties.CreateCopy();
                 Text = $"{Application.ProductName} Opties [{opties.Username}]";
                 SetLoginState();
                 Manager.DefaultSettings ??= UserSettings.GetDefaultSettings();
@@ -150,28 +151,12 @@ namespace Forms
 
             //weergave producties
             xniewaantaluur.SetValue((decimal)x.NieuwTijd);
-            xtoonvolgensafdeling.Checked = x.ToonVolgensAfdelingen;
-            xtoonvolgensbewerking.Checked = x.ToonVolgensBewerkingen;
-            xtoonallesvanbeide.Checked = x.ToonAllesVanBeide;
-            xtoonalles.Checked = x.ToonAlles;
 
             xpersoneelindeling.Checked = x.ToonPersoneelIndelingNaOpstart;
             xwerkplaatsindeling.Checked = x.ToonWerkplaatsIndelingNaOpstart;
 
-            _afdelingen = x.Afdelingen.ToList();
-            _bewerkingen = x.Bewerkingen.ToList();
-
-            //Productie Filter
-            xcriterialist.Items.Clear();
-            foreach (var value in x.ToegelatenProductieCrit)
-            {
-                var items = value.Split(':');
-                var item = xcriterialist.Items.Add(items[0]);
-                if (items.Length > 1)
-                    item.SubItems.Add(items[1]);
-            }
-
-            WeergaveLijstUpdate();
+            WeergaveLijstUpdate(true);
+            xFilterList.CheckedObjects = _LoadedOpties.ActieveFilters;
 
             //Admin Settings
             UpdateOptieList();
@@ -218,9 +203,9 @@ namespace Forms
             xexcelinterval.SetValue((decimal) x.WeekOverzichtUpdateInterval / 60000);
            //load backupInfo
             xcreatebackup.Checked = x.CreateBackup;
+            LoadBackupInfo();
             if (Manager.LogedInGebruiker is { AccesLevel: > AccesType.ProductieAdvance })
             {
-                LoadBackupInfo();
                 xbackupgroup.Visible = true;
                 xrestorebackup.Visible = true;
             }
@@ -279,63 +264,85 @@ namespace Forms
             else xoptielist.Items.Clear();
         }
 
-        private int GetWeergaveIndex(string value)
+        string _lastcrit = null;
+        private void WeergaveLijstUpdate(bool update)
         {
-            foreach (var item in Manager.BewerkingenLijst.GetAllEntries())
+            try
             {
-                if (string.Equals(item.Naam, value, StringComparison.CurrentCultureIgnoreCase))
-                    return 1;
-                if (item.WerkPlekken.Any(t => string.Equals(t, value, StringComparison.CurrentCultureIgnoreCase)))
-                    return 0;
-            }
+                if (InvokeRequired)
+                {
+                    this.Invoke(new MethodInvoker(() => WeergaveLijstUpdate(update)));
+                    return;
+                }
+                var filter = xsearchentry.Text.Trim().ToLower();
 
-            return -1;
+                var items = _LoadedOpties.Filters;
+
+                if (!string.IsNullOrEmpty(_lastcrit) && string.Equals(filter, _lastcrit, StringComparison.CurrentCultureIgnoreCase) && !update)
+                    return;
+                _lastcrit = filter;
+                if (!string.IsNullOrEmpty(filter))
+                {
+                    items = items.Where(x => (x.Name != null && x.Name.ToLower().Contains(filter)) ||
+                                             x.CriteriaText.ToLower().Contains(filter)).ToList();
+                }
+                var sel = xFilterList.SelectedObjects;
+                xFilterList.BeginUpdate();
+                xFilterList.SetObjects(items);
+                xFilterList.EndUpdate();
+                xFilterList.SelectedObjects = sel;
+                xFilterList.SelectedItem?.EnsureVisible();
+            }
+            catch (Exception ex)
+            {
+                XMessageBox.Show(this, ex.Message, "Fout", MessageBoxIcon.Error);
+            }
         }
 
-        private void WeergaveLijstUpdate()
-        {
-            xweergavelijst.BeginUpdate();
-            xweergavelijst.Items.Clear();
-            xweergave.Items.Clear();
-            var flag1 = xtoonallesvanbeide.Checked;
-            var flag2 = xtoonvolgensafdeling.Checked;
-            var flag3 = xtoonvolgensbewerking.Checked;
-            // bool flag4 = xtoonalles.Checked || xdeelallesin.Checked;
-            var bewerkingen = Manager.BewerkingenLijst.GetAllEntries().Select(x => (object) x.Naam).ToArray();
-            var afdelingen = Manager.BewerkingenLijst.GetAlleWerkplekken(false).Select(x => (object) x).ToArray();
-            if (flag1)
-            {
-                xgroupweergave.Visible = true;
+        //private void WeergaveLijstUpdate()
+        //{
+        //    xweergavelijst.BeginUpdate();
+        //    xweergavelijst.Items.Clear();
+        //    xweergave.Items.Clear();
+        //    var flag1 = xtoonallesvanbeide.Checked;
+        //    var flag2 = xtoonvolgensafdeling.Checked;
+        //    var flag3 = xtoonvolgensbewerking.Checked;
+        //    // bool flag4 = xtoonalles.Checked || xdeelallesin.Checked;
+        //    var bewerkingen = Manager.BewerkingenLijst.GetAllEntries().Select(x => (object) x.Naam).ToArray();
+        //    var afdelingen = Manager.BewerkingenLijst.GetAlleWerkplekken(false).Select(x => (object) x).ToArray();
+        //    if (flag1)
+        //    {
+        //        xgroupweergave.Visible = true;
 
 
-                xweergave.Items.AddRange(bewerkingen);
-                xweergave.Items.AddRange(afdelingen);
-                foreach (var afd in _afdelingen)
-                    xweergavelijst.Items.Add(new ListViewItem(afd) {Tag = 0});
-                foreach (var afd in _bewerkingen)
-                    xweergavelijst.Items.Add(new ListViewItem(afd) {Tag = 1});
-            }
-            else if (flag2)
-            {
-                xgroupweergave.Visible = true;
-                xweergave.Items.AddRange(afdelingen);
-                foreach (var afd in _afdelingen)
-                    xweergavelijst.Items.Add(new ListViewItem(afd) {Tag = 0});
-            }
-            else if (flag3)
-            {
-                xgroupweergave.Visible = true;
-                xweergave.Items.AddRange(bewerkingen);
-                foreach (var afd in _bewerkingen)
-                    xweergavelijst.Items.Add(new ListViewItem(afd) {Tag = 1});
-            }
-            else
-            {
-                xgroupweergave.Visible = false;
-            }
+        //        xweergave.Items.AddRange(bewerkingen);
+        //        xweergave.Items.AddRange(afdelingen);
+        //        foreach (var afd in _afdelingen)
+        //            xweergavelijst.Items.Add(new ListViewItem(afd) {Tag = 0});
+        //        foreach (var afd in _bewerkingen)
+        //            xweergavelijst.Items.Add(new ListViewItem(afd) {Tag = 1});
+        //    }
+        //    else if (flag2)
+        //    {
+        //        xgroupweergave.Visible = true;
+        //        xweergave.Items.AddRange(afdelingen);
+        //        foreach (var afd in _afdelingen)
+        //            xweergavelijst.Items.Add(new ListViewItem(afd) {Tag = 0});
+        //    }
+        //    else if (flag3)
+        //    {
+        //        xgroupweergave.Visible = true;
+        //        xweergave.Items.AddRange(bewerkingen);
+        //        foreach (var afd in _bewerkingen)
+        //            xweergavelijst.Items.Add(new ListViewItem(afd) {Tag = 1});
+        //    }
+        //    else
+        //    {
+        //        xgroupweergave.Visible = false;
+        //    }
 
-            xweergavelijst.EndUpdate();
-        }
+        //    xweergavelijst.EndUpdate();
+        //}
 
         public BackupInfo GetBackupInfo()
         {
@@ -420,26 +427,8 @@ namespace Forms
 
             //weergave
             xs.NieuwTijd = (double)xniewaantaluur.Value;
-            xs.ToonAlles = xtoonalles.Checked;
-            xs.ToonAllesVanBeide = xtoonallesvanbeide.Checked;
-            xs.ToonVolgensAfdelingen = xtoonvolgensafdeling.Checked;
-            xs.ToonVolgensBewerkingen = xtoonvolgensbewerking.Checked;
-
-            //productie filters
-            var xprodfilters = xcriterialist.Items.Cast<ListViewItem>();
-            xs.ToegelatenProductieCrit.Clear();
-            foreach (var prodfilter in xprodfilters)
-            {
-                var xfilter = prodfilter.Text;
-                if (prodfilter.SubItems.Count > 1)
-                    xfilter += ":" + prodfilter.SubItems[1].Text;
-                xs.ToegelatenProductieCrit.Add(xfilter);
-            }
-
-            xs.Afdelingen = _afdelingen.ToArray();
-            xs.Bewerkingen = _bewerkingen.ToArray();
-
-
+            xs.ActieveFilters = xFilterList.CheckedObjects.OfType<Filter>().ToList();
+            xs.Filters = xFilterList.Objects.OfType<Filter>().ToList();
             //Admin Settings
             //save settings
             if (Manager.LogedInGebruiker?.Username != null)
@@ -540,22 +529,17 @@ namespace Forms
                 xs.LastPreviewVersion = _LoadedOpties.LastPreviewVersion;
                 xs.BoundUsername = _LoadedOpties.BoundUsername;
                 xs.OntvangAdres = _LoadedOpties.OntvangAdres;
-                xs.Filters = _LoadedOpties.Filters;
+               
                 xs.MainDB = _LoadedOpties.MainDB;
                 xs.TempMainDB = _LoadedOpties.TempMainDB;
                 xs.UpdateDatabaseVersion = _LoadedOpties.UpdateDatabaseVersion;
 
                 xs.PersoneelIndeling = _LoadedOpties.PersoneelIndeling;
-                xs.WerkplaatsIndeling = _LoadedOpties.WerkplaatsIndeling;
+                xs.WerkplaatsIndelingen = _LoadedOpties.WerkplaatsIndelingen;
                 xs.TileLayout = _LoadedOpties.TileLayout;
                 xs.TileFlowDirection = _LoadedOpties.TileFlowDirection;
                 xs.TileViewBackgroundColorRGB = _LoadedOpties.TileViewBackgroundColorRGB;
                 xs.LastShownTabName = _LoadedOpties.LastShownTabName;
-
-                xs.DeelAllesIn = _LoadedOpties.DeelAllesIn;
-                xs.DeelInPerAfdeling = _LoadedOpties.DeelInPerAfdeling;
-                xs.DeelInPerBewerking = _LoadedOpties.DeelInPerBewerking;
-                xs.AantalPerPagina = _LoadedOpties.AantalPerPagina;
 
                 xs.EmailClients = _LoadedOpties.EmailClients;
                 xs.TijdelijkeRooster = _LoadedOpties.TijdelijkeRooster;
@@ -738,83 +722,6 @@ namespace Forms
             if (cr.ShowDialog() == DialogResult.OK) UpdateOptieList();
         }
 
-        private void radioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            if (sender is RadioButton rb)
-            {
-                // per toon afdelingen
-                var list = true;
-                if (rb.Text.ToLower().Contains("afdeling"))
-                {
-                    xgroupweergave.Text = "Productie Afdelingen";
-                    xweergavelijst.Columns[0].Text = "Afdeling";
-                }
-                else if (rb.Text.ToLower().Contains("bewerking"))
-                {
-                    xgroupweergave.Text = "Productie Bewerkingen";
-                    xweergavelijst.Columns[0].Text = "Bewerking";
-                }
-                else if (rb.Text.ToLower().Contains("beide"))
-                {
-                    xgroupweergave.Text = "Alles Van Beide";
-                    xweergavelijst.Columns[0].Text = "Afdeling/Bewerking";
-                }
-                else
-                {
-                    xgroupweergave.Visible = false;
-                    list = false;
-                }
-
-                if (rb.Checked && list)
-                    WeergaveLijstUpdate();
-            }
-        }
-
-        private void xaddweergaveb_Click(object sender, EventArgs e)
-        {
-            if (xweergave.SelectedIndex > -1)
-            {
-                var value = (string) xweergave.SelectedItem;
-                if (!string.IsNullOrEmpty(value))
-                {
-                    if (_afdelingen.Contains(value) || _bewerkingen.Contains(value))
-                    {
-                        XMessageBox.Show(this, $"{value} is al toegevoegd", "Bestaat Al", MessageBoxButtons.OK,
-                            MessageBoxIcon.Exclamation);
-                    }
-                    else
-                    {
-                        var index = GetWeergaveIndex(value);
-                        if (index == 0)
-                            _afdelingen.Add(value);
-                        else if (index == 1)
-                            _bewerkingen.Add(value);
-
-                        if (index > -1)
-                            xweergavelijst.Items.Add(new ListViewItem(value) {Tag = index});
-                    }
-                }
-            }
-        }
-
-        private void xremoveweergaveb_Click(object sender, EventArgs e)
-        {
-            if (xweergavelijst.SelectedItems.Count > 0)
-                if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde items wilt verwijderen?", "Verwijderen",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                    foreach (ListViewItem lv in xweergavelijst.SelectedItems)
-                    {
-                        var delete = false;
-                        var index = (int) lv.Tag;
-                        if (index == 0)
-                            delete = _afdelingen.Remove(lv.Text);
-                        else if (index == 1)
-                            delete = _bewerkingen.Remove(lv.Text);
-                        if (delete)
-                            lv.Remove();
-                    }
-        }
-
         private void Opties_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (IsChanged())
@@ -837,11 +744,6 @@ namespace Forms
             
             Manager.OnSettingsChanged -= _manager_OnSettingsChanged;
             //Manager.OnLoginChanged -= _manager_OnLoginChanged;
-        }
-
-        private void xweergavelijst_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            xremoveweergaveb.Enabled = xweergavelijst.SelectedItems.Count > 0;
         }
 
         private void Opties_Shown(object sender, EventArgs e)
@@ -935,7 +837,8 @@ namespace Forms
                     case 1: // laad instellingen
                         if (XMessageBox.Show(this, $"Weetje zeker dat je '{moddel.Settings.Username}' wilt Laden?", "Laden",
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) ==
-                            DialogResult.Yes) LoadSettings(moddel.Settings, true);
+                            DialogResult.Yes) 
+                            LoadSettings(Manager.Database.GetSetting(moddel.Name), true);
                         break;
 
                     case 2: // vervang instellingen
@@ -1459,51 +1362,6 @@ namespace Forms
             if (fb.ShowDialog() == DialogResult.OK) xweekoverzichtpath.Text = fb.SelectedPath;
         }
 
-        private void xdeletecrit_Click(object sender, EventArgs e)
-        {
-            if (xcriterialist.SelectedItems.Count > 0)
-                if (XMessageBox.Show(this, $"Weetje zeker dat je alle geselecteerde items wilt verwijderen?", "Verwijderen",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                    foreach (ListViewItem lv in xcriterialist.SelectedItems)
-                    {
-                            lv.Remove();
-                    }
-        }
-
-        private void xaddcrit_Click(object sender, EventArgs e)
-        {
-            var value = xcriteriatextbox.Text.Trim();
-            if (value.Length < 3)
-            {
-                XMessageBox.Show(this, $"Ingevulde criteria is ongeldig!", "Ongeldig", MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (xcriterialist.Items.Cast<ListViewItem>().Any(x => string.Equals(value, x.Text, StringComparison.CurrentCultureIgnoreCase)))
-            {
-                XMessageBox.Show(this, $"'{value}' is al toegevoegd!", "Bestaat Al", MessageBoxIcon.Warning);
-                return;
-            }
-
-            xcriterialist.Items.Add(value).SubItems.Add(xfiltertype.SelectedItem.ToString());
-        }
-
-        private void xcriterialist_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (xcriterialist.SelectedItems.Count > 0)
-            {
-                xdeletecrit.Enabled = true;
-                xfiltertype.SelectedItem = xcriterialist.SelectedItems[0].SubItems["Filter Actie"]?.Text;
-            }
-            else
-            {
-                xdeletecrit.Enabled = false;
-                xfiltertype.SelectedIndex = 0;
-            }
-
-            if (xfiltertype.SelectedItem == null)
-                xfiltertype.SelectedIndex = 0;
-        }
 
         private bool _locatieGewijzigd;
         private void xkiesdbbutton_Click(object sender, EventArgs e)
@@ -1752,6 +1610,161 @@ namespace Forms
                         XMessageBox.Show(this, "Backup succesvol aangemaakt!", "Backup Aangemaakt");
                 }
                 isrestoring = false;
+            }
+        }
+
+        private void xsearchentry_TextChanged(object sender, EventArgs e)
+        {
+            xsearchentry.ShowClearButton = true;
+            xsearchentry.Invalidate();
+            WeergaveLijstUpdate(false);
+        }
+
+        private void xnewEntry_Click(object sender, EventArgs e)
+        {
+            if (_LoadedOpties == null) return;
+            string name = null;
+            while (true)
+            {
+                var txt = new TextFieldEditor();
+                txt.MultiLine = false;
+                txt.MinimalTextLength = 4;
+                txt.EnableSecondaryField = false;
+                txt.Title = "Kies een Filternaam om aan te maken...";
+                if (txt.ShowDialog() != DialogResult.OK) return;
+                name = txt.SelectedText.Trim();
+                bool flag = _LoadedOpties.Filters.Any(x => string.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase));
+                if (flag)
+                {
+                    var res = XMessageBox.Show(this, $"Filternaam '{name}' bestaat al!\n\n" +
+                        $"Kies een andere Filternaam a.u.b.", "Filternaam Bestaat Al", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                    if (res != DialogResult.OK) return;
+                    continue;
+                }
+                break;
+            }
+            if (string.IsNullOrEmpty(name)) return;
+            var xcrits = new EditCriteriaForm(typeof(IProductieBase),null);
+            xcrits.Title = $"Filter '{name}' aanmaken...";
+            if (xcrits.ShowDialog() != DialogResult.OK || xcrits.SelectedFilter.Count == 0) return;
+            var f = new Filter { IsTempFilter = false, Name = name };
+            f.Filters.AddRange(xcrits.SelectedFilter);
+            _LoadedOpties.Filters.Add(f);
+            xFilterList.AddObject(f);
+            xFilterList.SelectedObject = f;
+            xFilterList.SelectedItem?.EnsureVisible();
+            WeergaveLijstUpdate(true);
+        }
+
+        private void xFilterList_DoubleClick(object sender, EventArgs e)
+        {
+            if(xFilterList.SelectedItem is OLVListItem item)
+            {
+                item.Checked = !item.Checked;
+            }
+        }
+
+        private void xFilterListMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            naamWijzigenToolStripMenuItem.Enabled = xFilterList.SelectedObject != null;
+            filterWijzigenToolStripMenuItem.Enabled = xFilterList.SelectedObject != null;
+            filterVerwijderenToolStripMenuItem.Enabled = xFilterList.SelectedObjects.Count > 0;
+            filterDelenToolStripMenuItem.Enabled = xFilterList.SelectedObjects.Count > 0 && Manager.LogedInGebruiker is {AccesLevel: > AccesType.ProductieAdvance };
+        }
+
+        private void filterWijzigenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(xFilterList.SelectedObject is Filter filter)
+            {
+                var xf = new EditCriteriaForm(typeof(IProductieBase), filter.Filters);
+                if (xf.ShowDialog() != DialogResult.OK) return;
+                filter.Filters = xf.SelectedFilter;
+                xFilterList.RefreshObject(filter);
+            }
+        }
+
+        private void filterVerwijderenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var items = xFilterList.SelectedObjects.OfType<Filter>().ToList();
+            if (_LoadedOpties?.Filters != null && items.Count > 0)
+            {
+                var x1 = items.Count == 1 ? $"{items[0].Name}'" : $"{items.Count} filters";
+                var res = XMessageBox.Show(this, $"Weet u zeker dat u {x1} wilt verwijderen?", "Filters Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (res != DialogResult.Yes) return;
+                xFilterList.RemoveObjects(items);
+                items.ForEach(x => _LoadedOpties.Filters.Remove(x));
+            }
+        }
+
+        private void naamWijzigenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (xFilterList.SelectedObject is Filter filter)
+            {
+                string name = null;
+                while (true)
+                {
+                    var txt = new TextFieldEditor();
+                    txt.MultiLine = false;
+                    txt.MinimalTextLength = 4;
+                    txt.EnableSecondaryField = false;
+                    txt.Title = "Wijzig Filternaam...";
+                    txt.SelectedText = filter.Name;
+                    if (txt.ShowDialog() != DialogResult.OK) return;
+                    name = txt.SelectedText.Trim();
+                    bool flag = _LoadedOpties.Filters.Any(x => string.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase));
+                    if (flag)
+                    {
+                        return;
+                    }
+                    break;
+                }
+                if (string.IsNullOrEmpty(name)) return;
+                filter.Name = name;
+                WeergaveLijstUpdate(true);
+            }
+        }
+
+        private void filterDelenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.IsDisposed || Manager.Opties == null || Manager.Database.IsDisposed || Manager.Database == null) return;
+                var selected = xFilterList.SelectedObjects.OfType<Filter>().ToList();
+                if (selected.Count == 0) return;
+                var settings = Manager.Database.xGetAllSettings().Where(x => x.Username != null && !x.Username.ToLower().Contains("default") && !string.Equals(x.Username, _LoadedOpties?.Username, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                var xitems = settings
+                    .Select(x => x.Username.FirstCharToUpper())
+                    .ToList();
+                if (xitems.Count == 0) return;
+                var x1 = selected.Count == 1 ? "filter" : "filters";
+                var xchoose = new ChooseValuesForm();
+                xchoose.Title = $"Kies gebruikers om de geselecteerde {selected.Count} {x1} mee te delen";
+                xchoose.SetChooseItems(xitems);
+                if (xchoose.ShowDialog() == DialogResult.OK)
+                {
+                    var xsel = xchoose.SelectedValues;
+                    foreach(var sel in xsel)
+                    {
+                        var opt = settings.FirstOrDefault(x => string.Equals(x.Username, sel, StringComparison.CurrentCultureIgnoreCase));
+                        if(opt != null)
+                        {
+                            opt.Filters ??= new List<Filter>();
+                            opt.ActieveFilters ??= new List<Filter>();
+                            foreach (var f in selected)
+                            {
+                                opt.Filters.RemoveAll(x=> string.Equals(f.Name, x.Name, StringComparison.CurrentCultureIgnoreCase));
+                                opt.Filters.Add(f);
+                                if (opt.ActieveFilters.RemoveAll(x => string.Equals(f.Name, x.Name, StringComparison.CurrentCultureIgnoreCase)) > 0)
+                                    opt.ActieveFilters.Add(f);
+                            }
+                            opt.xSave($"Filter(s) van {Manager.Opties.Username} gedeeld met {sel}");
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
             }
         }
 

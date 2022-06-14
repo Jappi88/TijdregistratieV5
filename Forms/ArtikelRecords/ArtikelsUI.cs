@@ -44,7 +44,7 @@ namespace Controls
 
         public void DetachEvents()
         {
-            productieListControl1.DetachEvents();
+            productieListControl1.CloseUI();
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
             Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
         }

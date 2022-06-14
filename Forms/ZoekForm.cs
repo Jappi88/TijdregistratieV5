@@ -18,7 +18,7 @@ namespace Forms
             xcriteria.ShowClearButton = true;
             if (Manager.BewerkingenLijst == null) return;
             var bewerkingen = Manager.BewerkingenLijst.GetAllEntries().Select(x => (object)x.Naam).ToArray();
-            var afdelingen = Manager.BewerkingenLijst.GetAlleWerkplekken(false).Select(x => (object)x).ToArray();
+            var afdelingen = Manager.BewerkingenLijst.GetAlleWerkplekken().Select(x => (object)x).ToArray();
             var stats = Enum.GetNames(typeof(ViewState)).ToArray();
             xwerkplekken.Items.AddRange(afdelingen);
             xbewerkingen.Items.AddRange(bewerkingen);

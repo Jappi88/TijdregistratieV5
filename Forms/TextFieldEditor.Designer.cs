@@ -55,7 +55,7 @@ namespace Forms
             this.xtextfield.Location = new System.Drawing.Point(5, 15);
             this.xtextfield.Name = "xtextfield";
             this.xtextfield.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.xtextfield.Size = new System.Drawing.Size(441, 29);
+            this.xtextfield.Size = new System.Drawing.Size(462, 29);
             this.xtextfield.TabIndex = 0;
             this.xtextfield.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xtextfield_KeyDown);
             // 
@@ -63,9 +63,9 @@ namespace Forms
             // 
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(154, 144);
+            this.panel1.Location = new System.Drawing.Point(91, 144);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(451, 46);
+            this.panel1.Size = new System.Drawing.Size(472, 36);
             this.panel1.TabIndex = 9;
             // 
             // panel2
@@ -73,9 +73,10 @@ namespace Forms
             this.panel2.Controls.Add(this.xanuleren);
             this.panel2.Controls.Add(this.xok);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(199, 0);
+            this.panel2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.panel2.Location = new System.Drawing.Point(254, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(252, 46);
+            this.panel2.Size = new System.Drawing.Size(218, 36);
             this.panel2.TabIndex = 3;
             // 
             // xanuleren
@@ -83,12 +84,13 @@ namespace Forms
             this.xanuleren.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xanuleren.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xanuleren.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xanuleren.Location = new System.Drawing.Point(129, 1);
+            this.xanuleren.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xanuleren.Location = new System.Drawing.Point(107, 1);
             this.xanuleren.Name = "xanuleren";
-            this.xanuleren.Size = new System.Drawing.Size(120, 38);
+            this.xanuleren.Size = new System.Drawing.Size(108, 34);
             this.xanuleren.TabIndex = 3;
             this.xanuleren.Text = "&Annuleren";
-            this.xanuleren.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.xanuleren.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.xanuleren.UseVisualStyleBackColor = true;
             this.xanuleren.Click += new System.EventHandler(this.xanuleren_Click);
             // 
@@ -97,12 +99,12 @@ namespace Forms
             this.xok.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xok.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xok.Image = global::ProductieManager.Properties.Resources.check_1582;
-            this.xok.Location = new System.Drawing.Point(3, 1);
+            this.xok.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xok.Location = new System.Drawing.Point(3, 0);
             this.xok.Name = "xok";
-            this.xok.Size = new System.Drawing.Size(120, 38);
+            this.xok.Size = new System.Drawing.Size(98, 34);
             this.xok.TabIndex = 2;
             this.xok.Text = "&OK";
-            this.xok.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.xok.UseVisualStyleBackColor = true;
             this.xok.Click += new System.EventHandler(this.xok_Click);
             // 
@@ -111,10 +113,11 @@ namespace Forms
             this.panel3.Controls.Add(this.xsecondaryPanel);
             this.panel3.Controls.Add(this.xtextfield);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(154, 60);
+            this.panel3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.panel3.Location = new System.Drawing.Point(91, 60);
             this.panel3.Name = "panel3";
             this.panel3.Padding = new System.Windows.Forms.Padding(5, 15, 5, 15);
-            this.panel3.Size = new System.Drawing.Size(451, 84);
+            this.panel3.Size = new System.Drawing.Size(472, 84);
             this.panel3.TabIndex = 10;
             // 
             // xsecondaryPanel
@@ -125,7 +128,7 @@ namespace Forms
             this.xsecondaryPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.xsecondaryPanel.Location = new System.Drawing.Point(5, 47);
             this.xsecondaryPanel.Name = "xsecondaryPanel";
-            this.xsecondaryPanel.Size = new System.Drawing.Size(441, 22);
+            this.xsecondaryPanel.Size = new System.Drawing.Size(462, 22);
             this.xsecondaryPanel.TabIndex = 2;
             this.xsecondaryPanel.Visible = false;
             // 
@@ -136,7 +139,7 @@ namespace Forms
             this.xsecondarytextbox.Location = new System.Drawing.Point(0, 54);
             this.xsecondarytextbox.Name = "xsecondarytextbox";
             this.xsecondarytextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.xsecondarytextbox.Size = new System.Drawing.Size(441, 29);
+            this.xsecondarytextbox.Size = new System.Drawing.Size(462, 29);
             this.xsecondarytextbox.TabIndex = 4;
             this.xsecondarytextbox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.xtextfield_KeyDown);
             // 
@@ -145,7 +148,7 @@ namespace Forms
             this.xdescriptiontext.Dock = System.Windows.Forms.DockStyle.Top;
             this.xdescriptiontext.Location = new System.Drawing.Point(0, 25);
             this.xdescriptiontext.Name = "xdescriptiontext";
-            this.xdescriptiontext.Size = new System.Drawing.Size(441, 29);
+            this.xdescriptiontext.Size = new System.Drawing.Size(462, 29);
             this.xdescriptiontext.TabIndex = 3;
             this.xdescriptiontext.Text = "description";
             // 
@@ -156,7 +159,7 @@ namespace Forms
             this.xextrafieldcheck.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xextrafieldcheck.Location = new System.Drawing.Point(0, 0);
             this.xextrafieldcheck.Name = "xextrafieldcheck";
-            this.xextrafieldcheck.Size = new System.Drawing.Size(441, 25);
+            this.xextrafieldcheck.Size = new System.Drawing.Size(462, 25);
             this.xextrafieldcheck.TabIndex = 1;
             this.xextrafieldcheck.Text = "Geavanceerd";
             this.xextrafieldcheck.UseVisualStyleBackColor = true;
@@ -169,8 +172,8 @@ namespace Forms
             this.ximage.Image = global::ProductieManager.Properties.Resources.text_edit_14943;
             this.ximage.Location = new System.Drawing.Point(20, 60);
             this.ximage.Name = "ximage";
-            this.ximage.Size = new System.Drawing.Size(134, 130);
-            this.ximage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.ximage.Size = new System.Drawing.Size(71, 120);
+            this.ximage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.ximage.TabIndex = 8;
             this.ximage.TabStop = false;
             // 
@@ -178,14 +181,14 @@ namespace Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(625, 210);
+            this.ClientSize = new System.Drawing.Size(583, 200);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.ximage);
             this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.MinimumSize = new System.Drawing.Size(625, 210);
+            this.MinimumSize = new System.Drawing.Size(425, 150);
             this.Name = "TextFieldEditor";
             this.SaveLastSize = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

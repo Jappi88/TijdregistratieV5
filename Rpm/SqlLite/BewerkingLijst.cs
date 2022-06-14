@@ -255,7 +255,7 @@ namespace Rpm.SqlLite
             }
         }
 
-        public List<string> GetAlleWerkplekken(bool filter)
+        public List<string> GetAlleWerkplekken()
         {
             try
             {
@@ -266,10 +266,7 @@ namespace Rpm.SqlLite
                 foreach (var wp in entries.SelectMany(entry => entry.WerkPlekken.Where(wp =>
                              values.All(x => !string.Equals(x, wp, StringComparison.CurrentCultureIgnoreCase)))))
                 {
-                    if (filter && IsAllowedWerkplek(wp))
-                        values.Add(wp);
-                    else if (!filter)
-                        values.Add(wp);
+                    values.Add(wp);
                 }
 
                 return values.OrderBy(x=> x).ToList();
@@ -277,41 +274,6 @@ namespace Rpm.SqlLite
             catch
             {
                 return new List<string>();
-            }
-        }
-
-        public bool IsAllowedWerkplek(string werkplek)
-        {
-            try
-            {
-                if (Manager.Opties == null) return false;
-                if (Manager.Opties.ToonAlles) return true;
-                if (Manager.Opties.ToonVolgensAfdelingen || Manager.Opties.ToonAllesVanBeide)
-                {
-                    if (Manager.Opties.Afdelingen != null && Manager.Opties.Afdelingen.Any(x =>
-                            string.Equals(x, werkplek, StringComparison.CurrentCultureIgnoreCase)))
-                        return true;
-                }
-                if (Manager.Opties.ToonVolgensBewerkingen || Manager.Opties.ToonAllesVanBeide)
-                {
-                    if (Manager.Opties.Bewerkingen != null)
-                    {
-                        foreach (var bw in Manager.Opties.Bewerkingen)
-                        {
-                            var wps = GetWerkplekken(bw);
-                            if (wps != null && wps.Any(x =>
-                                    string.Equals(x, werkplek, StringComparison.CurrentCultureIgnoreCase)))
-                                return true;
-                        }
-                    }
-                }
-
-                return false;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return false;
             }
         }
 

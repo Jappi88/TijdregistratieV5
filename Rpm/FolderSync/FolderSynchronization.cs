@@ -441,7 +441,7 @@ namespace FolderSync
         /// <summary>
         /// Start de synchronisatie
         /// </summary>
-        protected void StartSyncing()
+        protected async void StartSyncing()
         {
             while(IsRunning)
             {
@@ -470,7 +470,7 @@ namespace FolderSync
                         {
                             try
                             {
-                                op.DoOperation().Wait(10000);
+                                await op.DoOperation();
                                 Status = string.Empty;
                             }
                             catch (Exception ex)

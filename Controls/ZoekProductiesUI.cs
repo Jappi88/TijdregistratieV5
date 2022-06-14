@@ -37,7 +37,7 @@ namespace Controls
         public void DetachEvents()
         {
             productieListControl1.ItemCountChanged -= ProductieListControl1_ItemCountChanged;
-            productieListControl1.DetachEvents();
+            productieListControl1.CloseUI();
         }
 
         public void CloseUI()

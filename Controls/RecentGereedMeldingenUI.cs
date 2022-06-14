@@ -102,7 +102,7 @@ namespace Controls
         public void DetachEvents()
         {
             Manager.OnSettingsChanged -= Manager_OnSettingsChanged;
-            productieListControl1.DetachEvents();
+            productieListControl1.CloseUI();
         }
 
         private void Manager_FilterChanged(object sender, EventArgs e)

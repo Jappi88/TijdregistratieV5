@@ -30,7 +30,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using ProductieManager.Rpm.Misc;
 using Application = System.Windows.Forms.Application;
 using Color = System.Drawing.Color;
 using Font = System.Drawing.Font;
@@ -54,6 +53,53 @@ namespace Rpm.Misc
         #endregion
 
         #region Productie Formulieren
+
+        public static DateTime BerekenLeverDatums(this List<IProductieBase> producties, bool updatevalue, bool save, bool showmessage, ProgressArg arg = null)
+        {
+            if (producties is { Count: 0 }) return DateTime.Now;
+            var prods = new List<IProductieBase>();
+            var lastdate = new DateTime();
+            try
+            {
+                prods = producties.OrderBy(x=> x.State != ProductieState.Gestart).ThenBy(x => x.LeverDatum).ThenBy(x => x.ArtikelNr).ThenBy(x => x.WerkplekkenName).ToList();
+                arg ??= new ProgressArg();
+                arg.Type = ProgressType.WriteBussy;
+                arg.Message = "Leverdatums berekenen...";
+                arg.Max = prods.Count;
+                arg.OnChanged(prods);
+                bool ombouw = false;
+                for (int i = 0; i < prods.Count; i++)
+                {
+                    var p = prods[i];
+                    var old = p.BerekentLeverDatum;
+                    ombouw = false;
+                    if (i > 0)
+                    {
+                        var xlast = prods[i - 1].ArtikelNr.ToUpper().Replace("ZW","");
+                        ombouw = !string.Equals(xlast, p.ArtikelNr.ToUpper().Replace("ZW", ""), StringComparison.CurrentCultureIgnoreCase);
+                    }
+                    var newdate = lastdate.IsDefault() ? p.GetVerwachtLeverDatum() : p.GetVerwachtLeverDatum(lastdate, p.GetPersonen(true).Length, ombouw);
+                    if (updatevalue)
+                        p.BerekentLeverDatum = newdate;
+                    if (old != newdate && updatevalue && save)
+                    {
+                        p.xUpdate($"[{p.Path}, {p.ArtikelNr}] {p.Omschrijving}\n\n" +
+                            $"Berekent datum geupdate naar {newdate.ToString("f")}", true, true, showmessage);
+                    }
+                    lastdate = newdate;
+                    arg.Current++;
+                    arg.OnChanged(prods);
+                    if (arg.IsCanceled) break;
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            arg.Type = ProgressType.WriteCompleet;
+            arg.OnChanged(prods);
+            return lastdate;
+        }
 
         public static bool IsAllowed(this ProductieFormulier form, string filter, ViewState[] states, bool incform)
         {
@@ -154,9 +200,10 @@ namespace Rpm.Misc
                     var bew = bewerkingen[i];
                     if (!bew.IsAllowed(null)) continue;
                     if (periode != null && bew.TijdAanGewerkt(periode.Start, periode.Stop) <= 0) continue;
-                    if (!xreturn.ContainsKey(bew.ArtikelNr))
-                        xreturn.Add(bew.ArtikelNr, new List<object> { bew });
-                    else xreturn[bew.ArtikelNr].Add(bew);
+                    var art = bew.ArtikelNr?.ToUpper().Replace("ZW", "");
+                    if (!xreturn.ContainsKey(art))
+                        xreturn.Add(art, new List<object> { bew });
+                    else xreturn[art].Add(bew);
                 }
             }
             catch (Exception ex)
@@ -383,6 +430,11 @@ namespace Rpm.Misc
 
         #region Bewerkingen
 
+        public static bool IsAllowed(this IProductieBase bew)
+        {
+            return IsAllowed(bew, null);
+        }
+
         public static bool IsAllowed(this Bewerking bew)
         {
             return IsAllowed(bew, null);
@@ -398,52 +450,12 @@ namespace Rpm.Misc
         {
             if (Manager.Opties == null || bew == null || string.IsNullOrEmpty(bew.ProductieNr))
                 return false;
-            var xreturn = false;
             if (!string.IsNullOrEmpty(filter) && !bew.ContainsFilter(filter)) return false;
-            foreach (var value in Manager.Opties.ToegelatenProductieCrit)
+            if(Manager.Opties.ActieveFilters != null && Manager.Opties.ActieveFilters.Count > 0)
             {
-                var xvalues = value.Split(':');
-                var xcrits = xvalues[0].Split(';');
-                var valid = true;
-                foreach (var c in xcrits)
-                    valid &= bew.ContainsFilter(c);
-                bool allow = false;
-                if (xvalues.Length > 1)
-                    allow = xvalues[1].ToLower() == "toelaten";
-                if (valid)
-                    return allow;
+                return Manager.Opties.ActieveFilters.Any(x => x.IsAllowed(bew, null));
             }
-            //if (valid) return xreturn;
-            if (Manager.Opties.ToonAlles)
-                return true;
-
-            if (Manager.Opties.ToonVolgensBewerkingen &&
-                (Manager.Opties.Bewerkingen == null || Manager.Opties.Bewerkingen.Length == 0))
-                return false;
-            if (Manager.Opties.ToonVolgensAfdelingen &&
-                (Manager.Opties.Afdelingen == null || Manager.Opties.Afdelingen.Length == 0))
-                return false;
-            if (Manager.Opties.ToonAllesVanBeide &&
-                (Manager.Opties.Afdelingen == null || Manager.Opties.Afdelingen.Length == 0) &&
-                (Manager.Opties.Bewerkingen == null || Manager.Opties.Bewerkingen.Length == 0))
-                return false;
-
-            if (Manager.Opties.ToonAllesVanBeide || Manager.Opties.ToonVolgensBewerkingen)
-                xreturn |= Manager.Opties.Bewerkingen.Any(x => bew.Naam.ToLower().Split('[')[0] == x.ToLower());
-
-            if (!xreturn && (Manager.Opties.ToonAllesVanBeide || Manager.Opties.ToonVolgensAfdelingen))
-            {
-                var xs = Manager.BewerkingenLijst.GetEntry(bew.Naam.Split('[')[0]);
-                if (xs != null && xs.WerkPlekken.Count > 0 && Manager.Opties.Afdelingen != null)
-                {
-                    var any = Manager.Opties.Afdelingen.Any(x =>
-                        xs.WerkPlekken.Any(s => string.Equals(s, x, StringComparison.CurrentCultureIgnoreCase)));
-
-                    xreturn |= any;
-                }
-            }
-
-            return xreturn;
+            return true;
         }
 
         //public static bool IsAllowed(this Bewerking bewerking, ViewState[] states)
@@ -1759,7 +1771,7 @@ namespace Rpm.Misc
             {
                 if (string.IsNullOrEmpty(filepath) || !File.Exists(filepath))
                     return false;
-                bool isvalid = System.Web.MimeMapping.GetMimeMapping(filepath)
+                bool isvalid = MimeKit.MimeTypes.GetMimeType(filepath)
                     .StartsWith("image", StringComparison.CurrentCultureIgnoreCase); //IsRecognisedImageFile(filepath);
                 //using FileStream fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 //var data = new byte[8];
@@ -2176,8 +2188,9 @@ namespace Rpm.Misc
             return false;
         }
 
-        public static void PrintPDFWithAcrobat(string filepath)
+        public static async void PrintPDFWithAcrobat(string filepath)
         {
+
             var printApplicationRegistryPaths = new[]
             {
                 @"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Acrobat.exe",
@@ -2207,44 +2220,65 @@ namespace Rpm.Misc
             xprint.ShowHelp = false;
             xprint.AllowSomePages = false;
             xprint.AllowCurrentPage = false;
+            xprint.AllowPrintToFile = false;
             if (xprint.ShowDialog() == DialogResult.OK)
             {
                 // Print to Acrobat
-                
-                try
+
+
+                //var pr = new LoadingForm();
+                //pr.Arg.Message = "ProductieFormulier(en) Printen...";
+                //pr.Arg.Max = xprint.PrinterSettings.Copies;
+                //pr.CloseIfFinished = true;
+                //_= pr.ShowDialogAsync();
+                await Task.Factory.StartNew(() =>
                 {
-                    string flagNoSplashScreen = "/s";
-                    string flagOpenMinimized = "/h";
-
-                    var flagPrintFileToPrinter =  $"/t \"{filepath}\" \"{xprint.PrinterSettings.PrinterName}\"";
-
-                    var args = $"{flagNoSplashScreen} {flagOpenMinimized} {flagPrintFileToPrinter}";
-
-                    var startInfo = new ProcessStartInfo
+                    try
                     {
-                        FileName = xpath,
-                        Arguments = args,
-                        CreateNoWindow = true,
-                        ErrorDialog = false,
-                        UseShellExecute = false,
-                        WindowStyle = ProcessWindowStyle.Hidden
-                    };
 
-                    var process = Process.Start(startInfo);
-                  
-                    if (process != null)
-                    {
-                        process.WaitForExit(5000);
-                        process.CloseMainWindow();
-                        process.Kill();
+                        for (int i = 0; i < xprint.PrinterSettings.Copies; i++)
+                        {
+                            //pr.Arg.Current = i;
+                            //pr.Arg.OnChanged(filepath);
+                            //if (pr.Arg.IsCanceled) break;
+                            string flagNoSplashScreen = "/s";
+                            string flagOpenMinimized = "/h";
+
+                            var flagPrintFileToPrinter = $"/t \"{filepath}\" \"{xprint.PrinterSettings.PrinterName}\"";
+
+                            var args = $"{flagNoSplashScreen} {flagOpenMinimized} {flagPrintFileToPrinter}";
+
+                            var startInfo = new ProcessStartInfo
+                            {
+                                FileName = xpath,
+                                Arguments = args,
+                                CreateNoWindow = true,
+                                ErrorDialog = false,
+                                UseShellExecute = false,
+                                WindowStyle = ProcessWindowStyle.Hidden
+                            };
+                            var process = Process.Start(startInfo);
+                            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                            process.WaitForExit(3500);
+                            if (!process.HasExited)
+                                process.Kill();
+                        }
+
                     }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                });
+                //pr.Arg.Type = ProgressType.WriteCompleet;
+                // pr.Arg.OnChanged(filepath);
 
+            }
+        }
+
+        private static void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            Console.WriteLine(e.Data);
         }
 
         public static string GetDefaultBrowserPath()

@@ -1,7 +1,4 @@
-﻿using MailKit;
-using MailKit.Net.Imap;
-using MailKit.Search;
-using MimeKit;
+﻿using MimeKit;
 using ProductieManager.Rpm.Mailing;
 using ProductieManager.Rpm.Productie;
 using Rpm.Misc;
@@ -370,24 +367,24 @@ namespace Rpm.Mailing
                 try
                 {
                     // Gmail IMAP4 server is "imap.gmail.com"
-                    var oServer = CreateImapClient(out var email);
-                    if (oServer != null)
-                    {
-                        var inbox = oServer.Inbox;
-                        inbox.Open(FolderAccess.ReadWrite);
-                        var ids = inbox.Search(SearchQuery.All);
-                        for (var i = 0; i < ids.Count; i++)
-                        {
-                            var id = ids[i];
-                            var info = inbox.GetMessage(id);
-                            if (ProcessInkomingMail(info))
-                            {
-                                inbox.AddFlags(new UniqueId[] {id}, MessageFlags.Deleted, false);
-                                inbox.Expunge();
-                            }
-                        }
-                        oServer.Disconnect(true);
-                    }
+                    //    var oServer = CreateImapClient(out var email);
+                    //    if (oServer != null)
+                    //    {
+                    //        var inbox = oServer.Inbox;
+                    //        inbox.Open(FolderAccess.ReadWrite);
+                    //        var ids = inbox.Search(SearchQuery.All);
+                    //        for (var i = 0; i < ids.Count; i++)
+                    //        {
+                    //            var id = ids[i];
+                    //            var info = inbox.GetMessage(id);
+                    //            if (ProcessInkomingMail(info))
+                    //            {
+                    //                inbox.AddFlags(new UniqueId[] {id}, MessageFlags.Deleted, false);
+                    //                inbox.Expunge();
+                    //            }
+                    //        }
+                    //        oServer.Disconnect(true);
+                    //    }
                 }
                 catch (Exception ep)
                 {
@@ -469,27 +466,27 @@ namespace Rpm.Mailing
             }
         }
 
-        public static ImapClient CreateImapClient(out string email)
-        {
-            email = string.Empty;
-            try
-            {
+        //public static ImapClient CreateImapClient(out string email)
+        //{
+        //    email = string.Empty;
+        //    try
+        //    {
 
-                if (Manager.Opties == null || string.IsNullOrEmpty(Manager.Opties.BoundUsername)) return null;
-                var acc = Manager.Database?.xGetAccount(Manager.Opties.BoundUsername);
-                var host = acc?.MailingHost;
-                if (host == null) return null;
-                email = host.EmailAdres;
-                var smtp = host.CreateImapClient();
-               // smtp.SendCompleted += Smtp_SendCompleted;
-                return smtp;
+        //        if (Manager.Opties == null || string.IsNullOrEmpty(Manager.Opties.BoundUsername)) return null;
+        //        var acc = Manager.Database?.xGetAccount(Manager.Opties.BoundUsername);
+        //        var host = acc?.MailingHost;
+        //        if (host == null) return null;
+        //        email = host.EmailAdres;
+        //        var smtp = host.CreateImapClient().Result;
+        //       // smtp.SendCompleted += Smtp_SendCompleted;
+        //        return smtp;
 
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return null;
+        //    }
+        //}
 
         private static void Smtp_SendCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
