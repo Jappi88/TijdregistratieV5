@@ -268,7 +268,6 @@ namespace Controls
                     }
                 };
                 xprodlist.Name = entry.Name;
-                xprodlist.RemoveCustomItemIfNotValid = false;
                 xtabpage.Controls.Add(xprodlist);
                 metroCustomTabControl1.SuspendLayout();
                 metroCustomTabControl1.TabPages.Add(xtabpage);
@@ -356,7 +355,6 @@ namespace Controls
                     }
                 };
                 xprodlist.Name = entry.Name;
-                xprodlist.RemoveCustomItemIfNotValid = false;
                 xtabpage.Controls.Add(xprodlist);
                 metroCustomTabControl1.SuspendLayout();
                 metroCustomTabControl1.TabPages.Add(xtabpage);
@@ -1544,7 +1542,6 @@ namespace Controls
                         if (metroCustomTabControl1.SelectedTab == null)
                             metroCustomTabControl1.SelectedIndex = 0;
                         metroCustomTabControl1.Invalidate();
-                        tileMainView1.TileCountRefreshInterval = Manager.Opties?.TileCountRefreshRate??30000;
                         var xrooster = mainMenu1.GetButton("xroostermenubutton");
                         if (xrooster != null)
                             xrooster.Image = Manager.Opties?.TijdelijkeRooster == null
@@ -1712,7 +1709,7 @@ namespace Controls
                         break;
                     case MainAktie.StopBewerking:
                         if (values.FirstOrDefault() is Bewerking bew3)
-                            _ = bew3.StopProductie(true, true);
+                            _ = bew3.StopProductie(true, true,true);
                         break;
                     case MainAktie.OpenBijlage:
                         if (values.FirstOrDefault() is string id)

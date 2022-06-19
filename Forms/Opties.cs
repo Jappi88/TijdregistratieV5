@@ -24,7 +24,7 @@ namespace Forms
         //public readonly StickyWindow _stickyWindow;
         private List<string> _afdelingen = new();
         private List<string> _bewerkingen = new();
-        public ListViewGroup[] _groups = {new("Standaart Instellingen"), new("Gebruikers")};
+        public ListViewGroup[] _groups = { new("Standaart Instellingen"), new("Gebruikers") };
         public UserSettings _LoadedOpties = Manager.Opties;
 
         public Opties()
@@ -35,24 +35,24 @@ namespace Forms
             imageList2.Images.Add(Resources.database_21835_96x96);
             xFilterImageList.Images.Add(Resources.filter_32x32);
             ((OLVColumn)xFilterList.Columns[0]).ImageGetter = (_) => 0;
-            ((OLVColumn) xoptielist.Columns[0]).GroupKeyGetter = GroupName;
-            ((OLVColumn) xoptielist.Columns[0]).ImageGetter = ImageGetter;
+            ((OLVColumn)xoptielist.Columns[0]).GroupKeyGetter = GroupName;
+            ((OLVColumn)xoptielist.Columns[0]).ImageGetter = ImageGetter;
 
-            ((OLVColumn) xdatabaseview.Columns[0]).ImageGetter = (_) => 0;
-            ((OLVColumn) xdatabaseview.Columns[0]).AspectGetter = DbNamegetter;
+            ((OLVColumn)xdatabaseview.Columns[0]).ImageGetter = (_) => 0;
+            ((OLVColumn)xdatabaseview.Columns[0]).AspectGetter = DbNamegetter;
             xdatabaseview.CheckStateGetter = IsSelectedDatabase;
 
             imageList1.Images.Add(Resources.industry_setting_114090);
             imageList1.Images.Add(Resources.industry_setting_114090.CombineImage(Resources.check_1582, 2));
             xoptielist.Groups.Clear();
-            if (Manager.Opties == null && !Manager.xLoadSettings(this,true))
+            if (Manager.Opties == null && !Manager.xLoadSettings(this, true))
                 return;
             Manager.DefaultSettings ??= UserSettings.GetDefaultSettings();
         }
 
         private object DbNamegetter(object item)
         {
-            if(item is string xval)
+            if (item is string xval)
                 return xval;
             return null;
         }
@@ -61,16 +61,16 @@ namespace Forms
         {
             try
             {
-                if (_backupinfo?.ExcludeNames == null || _backupinfo.ExcludeNames.Count == 0)  return CheckState.Checked;
+                if (_backupinfo?.ExcludeNames == null || _backupinfo.ExcludeNames.Count == 0) return CheckState.Checked;
                 if (value is string xstr)
                 {
                     return !_backupinfo.ExcludeNames.Any(x =>
-                        string.Equals(x, xstr, StringComparison.CurrentCultureIgnoreCase))? CheckState.Checked : CheckState.Unchecked;
+                        string.Equals(x, xstr, StringComparison.CurrentCultureIgnoreCase)) ? CheckState.Checked : CheckState.Unchecked;
                 }
 
                 return CheckState.Checked;
             }
-            catch 
+            catch
             {
                 return CheckState.Indeterminate;
             }
@@ -79,13 +79,13 @@ namespace Forms
 
         private string GroupName(object item)
         {
-            if (item is SettingModel) return ((SettingModel) item).GroupName;
+            if (item is SettingModel) return ((SettingModel)item).GroupName;
             return "N/A";
         }
 
         private object ImageGetter(object item)
         {
-            if (item is SettingModel) return ((SettingModel) item).IsLoaded ? 1 : 0;
+            if (item is SettingModel) return ((SettingModel)item).IsLoaded ? 1 : 0;
             return 0;
         }
 
@@ -122,10 +122,10 @@ namespace Forms
             }
 
             var x = opties;
-            
+
 
             //rooster
-             roosterUI1.SetRooster(x.WerkRooster.CreateCopy(), x.NationaleFeestdagen, x.SpecialeRoosters);
+            roosterUI1.SetRooster(x.WerkRooster.CreateCopy(), x.NationaleFeestdagen, x.SpecialeRoosters);
             //meldingen
             xtoonnieuwetaak.Checked = x.ToonLijstNaNieuweTaak;
             xmeldstart.Checked = x.TaakVoorStart;
@@ -137,10 +137,10 @@ namespace Forms
             xtaakperswijzigcheck.Checked = x.TaakVoorPersoneel;
             xonderbrekeningen.Checked = x.TaakVoorOnderbreking;
             xtaakcontrolecheck.Checked = x.TaakVoorControle;
-            xminvoorstart.Value = x.MinVoorStart;
-            xminvoorklaarzet.Value = x.MinVoorKlaarZet;
-            xminvoorcontrole.Value = x.MinVoorControle;
-            xsyncinterval.Value = x.SyncInterval;
+            xminvoorstart.SetValue(x.MinVoorStart);
+            xminvoorklaarzet.SetValue(x.MinVoorKlaarZet);
+            xminvoorcontrole.SetValue(x.MinVoorControle);
+            xsyncinterval.SetValue(x.SyncInterval);
 
             xmeldingOpmerking.Checked = x.ToonNieweOpmerkingMelding;
             xmeldingChat.Checked = x.ToonNieweChatBerichtMelding;
@@ -200,8 +200,8 @@ namespace Forms
 
             xmaakvanafweek.SetValue(x.VanafWeek);
             xmaakvanafjaar.SetValue(x.VanafJaar);
-            xexcelinterval.SetValue((decimal) x.WeekOverzichtUpdateInterval / 60000);
-           //load backupInfo
+            xexcelinterval.SetValue((decimal)x.WeekOverzichtUpdateInterval / 60000);
+            //load backupInfo
             xcreatebackup.Checked = x.CreateBackup;
             LoadBackupInfo();
             if (Manager.LogedInGebruiker is { AccesLevel: > AccesType.ProductieAdvance })
@@ -251,12 +251,12 @@ namespace Forms
 
         private async void UpdateOptieList()
         {
-            if (Manager.LogedInGebruiker is {AccesLevel: >= AccesType.ProductieAdvance})
+            if (Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieAdvance })
                 try
                 {
                     var sets = await Manager.Database.GetAllSettings();
                     xoptielist.SetObjects(sets.Select(x => new SettingModel(x)
-                        {IsLoaded = string.Equals(_LoadedOpties.Username, x.Username, StringComparison.CurrentCultureIgnoreCase)}).ToArray());
+                    { IsLoaded = string.Equals(_LoadedOpties.Username, x.Username, StringComparison.CurrentCultureIgnoreCase) }).ToArray());
                 }
                 catch
                 {
@@ -380,10 +380,10 @@ namespace Forms
             try
             {
                 var info = BackupInfo.Load();
-                xcreatebackupinterval.SetValue((decimal) TimeSpan.FromMilliseconds(info.BackupInterval).TotalHours);
+                xcreatebackupinterval.SetValue((decimal)TimeSpan.FromMilliseconds(info.BackupInterval).TotalHours);
                 xmaxbackups.SetValue(info.MaxBackupCount);
                 _backupinfo = info;
-                xdatabaseview.SetObjects(Enum.GetNames(typeof(DbType)).Where(x=> x.ToLower() != "alles" && x.ToLower() != "geen"));
+                xdatabaseview.SetObjects(Enum.GetNames(typeof(DbType)).Where(x => x.ToLower() != "alles" && x.ToLower() != "geen"));
             }
             catch (Exception e)
             {
@@ -393,6 +393,12 @@ namespace Forms
 
         public UserSettings CreateInstance(string username)
         {
+            if(InvokeRequired)
+            {
+                var ret = new UserSettings();
+                this.Invoke(new MethodInvoker(()=> ret = CreateInstance(username)));
+                return ret;
+            }    
             var xs = new UserSettings();
             if (username != null)
                 xs.Username = username;
@@ -415,10 +421,10 @@ namespace Forms
             xs.TaakPersoneelVrij = xpersoneelvrij.Checked;
             xs.TaakAlsGereed = xtaakproductiegereedcheck.Checked;
             xs.TaakVoorControle = xtaakcontrolecheck.Checked;
-            xs.MinVoorStart = (int) xminvoorstart.Value;
-            xs.MinVoorKlaarZet = (int) xminvoorklaarzet.Value;
-            xs.MinVoorControle = (int) xminvoorcontrole.Value;
-            xs.TaakSyncInterval = (int) xsyncinterval.Value;
+            xs.MinVoorStart = (int)xminvoorstart.Value;
+            xs.MinVoorKlaarZet = (int)xminvoorklaarzet.Value;
+            xs.MinVoorControle = (int)xminvoorcontrole.Value;
+            xs.TaakSyncInterval = (int)xsyncinterval.Value;
             xs.SyncInterval = (int)xsyncinterval.Value;
 
             xs.TileCountRefreshRate = (int)xtilesrefresh.Value;
@@ -436,7 +442,7 @@ namespace Forms
                 Manager.DefaultSettings.AutoLoginUsername = xautologin.Checked ? Manager.LogedInGebruiker.Username : null;
             }
             xs.GebruikLocalSync = xenablesync.Checked;
-            xs.SyncInterval = (int) xsyncinterval.Value;
+            xs.SyncInterval = (int)xsyncinterval.Value;
             xs.AutoGereedSync = xenablegreedsync.Checked;
             xs.GereedSyncInterval = (int)(xgereedsyncinterval.Value * 60000);
             xs.ProductieLijstSyncInterval = (int)(xproductielijstsyncinterval.Value * 60000);
@@ -459,8 +465,8 @@ namespace Forms
             xs.WeekOverzichtPath = xweekoverzichtpath.Text.Trim();
             xs.CreateWeekOverzichten = xmaakoverichtenaan.Checked;
             xs.DoCurrentWeekOverzicht = xdocurrentweekoverzicht.Checked;
-            xs.VanafWeek = (int) xmaakvanafweek.Value;
-            xs.VanafJaar = (int) xmaakvanafjaar.Value;
+            xs.VanafWeek = (int)xmaakvanafweek.Value;
+            xs.VanafJaar = (int)xmaakvanafjaar.Value;
             xs.WeekOverzichtUpdateInterval = (int)xexcelinterval.Value * 60000;
             //backup info
             xs.CreateBackup = xcreatebackup.Checked;
@@ -474,7 +480,7 @@ namespace Forms
             xs.ToonNieweBijlageMelding = xmeldingBijlage.Checked;
             xs.SpeelMeldingToonAf = xmeldingtoon.Checked;
 
-            Manager.DefaultSettings.OfflineDbSyncInterval = (int) xoffdbsyncinterval.Value;
+            Manager.DefaultSettings.OfflineDbSyncInterval = (int)xoffdbsyncinterval.Value;
             Manager.DefaultSettings.OfflineDabaseTypes.Clear();
             if (xoffprodcheckbox.Checked)
             {
@@ -529,7 +535,7 @@ namespace Forms
                 xs.LastPreviewVersion = _LoadedOpties.LastPreviewVersion;
                 xs.BoundUsername = _LoadedOpties.BoundUsername;
                 xs.OntvangAdres = _LoadedOpties.OntvangAdres;
-               
+
                 xs.MainDB = _LoadedOpties.MainDB;
                 xs.TempMainDB = _LoadedOpties.TempMainDB;
                 xs.UpdateDatabaseVersion = _LoadedOpties.UpdateDatabaseVersion;
@@ -575,8 +581,8 @@ namespace Forms
                 return false;
             //bool xchanged = !string.Equals(xdblocatie.Text.Trim(), DefaultSettings.MainDB?.RootPath,
             //    StringComparison.CurrentCultureIgnoreCase);
-            return  !CreateInstance(Manager.Opties.Username)
-                .xPublicInstancePropertiesEqual(Manager.Opties, new[] {typeof(UserChange)});
+            return !CreateInstance(Manager.Opties.Username)
+                .xPublicInstancePropertiesEqual(Manager.Opties, new[] { typeof(UserChange) });
         }
 
         private bool SetSettings()
@@ -592,14 +598,17 @@ namespace Forms
                 if (result == DialogResult.No) return false;
             }
             var settings = CreateInstance(Manager.Opties.Username);
-            Manager.SaveSettings(settings, true, true);
             _LoadedOpties = settings;
             return true;
         }
 
+        private bool _saving;
         private void button2_Click(object sender, EventArgs e)
         {
+            if (_saving) return;
+            _saving = true;
             SaveAndClose();
+            _saving = false;
         }
 
         private bool SaveAndClose()
@@ -666,7 +675,12 @@ namespace Forms
             }
 
             Manager.DefaultSettings.SaveAsDefault();
-            Close();
+            if (IsChanged())
+            {
+                Manager.Opties = _LoadedOpties;
+                _LoadedOpties.Save("Instellingen Opgeslagen!", true, true);
+            }
+            this.Invoke(new Action(Close));
             return true;
             //else
             //    XMessageBox.Show(this, $"Er zijn geen  wijzigingen...\n\n", "Geen Wijzigingen", MessageBoxButtons.OK,
@@ -740,6 +754,7 @@ namespace Forms
                     e.Cancel = true;
                     return;
                 }
+               
             }
             
             Manager.OnSettingsChanged -= _manager_OnSettingsChanged;

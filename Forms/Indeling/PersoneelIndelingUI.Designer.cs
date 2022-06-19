@@ -144,7 +144,6 @@ namespace Forms
             this.productieListControl1.Location = new System.Drawing.Point(0, 20);
             this.productieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.productieListControl1.Name = "productieListControl1";
-            this.productieListControl1.RemoveCustomItemIfNotValid = false;
             this.productieListControl1.SelectedItem = null;
             this.productieListControl1.Size = new System.Drawing.Size(340, 443);
             this.productieListControl1.TabIndex = 0;

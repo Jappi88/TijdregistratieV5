@@ -15,7 +15,7 @@ namespace ProductieManager
         /// </summary>
         [STAThread]
         private static void Main(string[] args)
-        {
+      {
             //AppDomain.CurrentDomain.AssemblyResolve += OnResolveAssembly;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             Application.EnableVisualStyles();

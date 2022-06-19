@@ -47,6 +47,7 @@ namespace Rpm.Settings
         public int TileCountRefreshRate { get; set; } = 30000;
         public int TileViewBackgroundColorRGB { get; set; } = Color.White.ToArgb();
         public List<TileInfoEntry> TileLayout { get; set; }
+        public List<GroupInfoEntry> GroupEntries { get; set; } = new List<GroupInfoEntry>();
         public FlowDirection TileFlowDirection { get; set; } = FlowDirection.TopDown;
         public string LastShownTabName { get; set; }
         public bool PreviewShown { get; set; }
@@ -79,20 +80,25 @@ namespace Rpm.Settings
             }
         }
 
-        public List<TileInfoEntry> GetAllDefaultEntries(bool incextra)
+        public List<TileInfoEntry> GetAllDefaultEntries(bool incextra, Size defaultsize, Size imagesize)
         {
             var xtiles = new List<TileInfoEntry>();
             try
             {
+                if(defaultsize.IsDefault())
+                    defaultsize = new Size(196, 74);
+                if (imagesize.IsDefault())
+                    imagesize = new Size(64, 64);
                 xtiles.Add(new TileInfoEntry()
                 {
                     Text = "Producties",
                     ForeColor = Color.Purple,
                     GroupName = "Producties",
                     Name = "Producties",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.FromArgb(215,174,255),
                     TileImage = ProductieManager.Properties.Resources.operation,
+                    ImageSize = imagesize,
                     TileIndex = 0,
                     IsDefault = true
                 });
@@ -102,9 +108,10 @@ namespace Rpm.Settings
                     ForeColor = Color.Navy,
                     GroupName = "Werkplaatsen",
                     Name = "Werkplaatsen",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.FromArgb(164, 209, 255),
                     TileImage = ProductieManager.Properties.Resources.iconfinder_technology,
+                    ImageSize = imagesize,
                     TileIndex = 1,
                     IsDefault = true
                 });
@@ -114,9 +121,10 @@ namespace Rpm.Settings
                     ForeColor = Color.White,
                     GroupName = "Gereedmeldingen",
                     Name = "Gereedmeldingen",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.Green,
                     TileImage = new Bitmap(ProductieManager.Properties.Resources.operation.CombineImage(ProductieManager.Properties.Resources.check_1582, 1.75)),
+                    ImageSize = imagesize,
                     TileIndex = 2,
                     IsDefault = true
                 });
@@ -126,9 +134,10 @@ namespace Rpm.Settings
                     ForeColor = Color.White,
                     GroupName = "Onderbrekingen",
                     Name = "Onderbrekingen",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.SteelBlue,
                     TileImage = ProductieManager.Properties.Resources.onderhoud128_128,
+                    ImageSize = imagesize,
                     TileIndex = 3,
                     IsDefault = true
                 });
@@ -138,9 +147,10 @@ namespace Rpm.Settings
                     ForeColor = Color.White,
                     GroupName = "Verbruik",
                     Name = "xverbruik",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.RosyBrown,
                     TileImage = ProductieManager.Properties.Resources.geometry_measure_96x96,
+                    ImageSize = imagesize,
                     TileIndex = 4,
                     IsDefault = true
                 });
@@ -151,9 +161,10 @@ namespace Rpm.Settings
                     ForeColor = Color.Brown,
                     GroupName = "Verbruik",
                     Name = "xverbruikbeheren",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.FromArgb(223,191,191),
                     TileImage = ProductieManager.Properties.Resources.geometry_measure_96x96,
+                    ImageSize = imagesize,
                     TileIndex = 5,
                     IsDefault = true
                 });
@@ -163,9 +174,10 @@ namespace Rpm.Settings
                     ForeColor = Color.White,
                     GroupName = "AantalGemaakt",
                     Name = "xchangeaantal",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.FromArgb(245,122,135),
                     TileImage = ProductieManager.Properties.Resources.Count_tool_34564__1_,
+                    ImageSize = imagesize,
                     TileIndex = 6,
                     IsDefault = true,
                     AccesLevel = AccesType.ProductieBasis
@@ -176,9 +188,10 @@ namespace Rpm.Settings
                     ForeColor = Color.White,
                     GroupName = "Werktekening",
                     Name = "xsearchtekening",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.DarkGoldenrod,
                     TileImage = new Bitmap(ProductieManager.Properties.Resources.libreoffice_draw_icon_128x128.CombineImage(ProductieManager.Properties.Resources.search_locate_find_6278,1.75)),
+                    ImageSize = imagesize,
                     TileIndex = 7,
                     IsDefault = true
                 });
@@ -189,9 +202,10 @@ namespace Rpm.Settings
                     ForeColor = Color.White,
                     GroupName = "Indeling",
                     Name = "xpersoneelindeling",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.MediumSlateBlue,
                     TileImage = ProductieManager.Properties.Resources.user_rotation_96x96,
+                    ImageSize = imagesize,
                     TileIndex = 8,
                     IsDefault = true,
                     AccesLevel = AccesType.ProductieBasis
@@ -203,9 +217,10 @@ namespace Rpm.Settings
                     ForeColor = IProductieBase.GetProductSoortColor("horti"),
                     GroupName = "Indeling",
                     Name = "xwerkplaatsindeling",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.AliceBlue,
                     TileImage = ProductieManager.Properties.Resources.werkplaatsindeling_96x96,
+                    ImageSize = imagesize,
                     TileIndex = 9,
                     IsDefault = true,
                     AccesLevel = AccesType.ProductieBasis
@@ -217,12 +232,13 @@ namespace Rpm.Settings
                     ForeColor = Color.DarkGreen,
                     GroupName = "Excel",
                     Name = "xcreateexcel",
-                    Size = new Size(256, 96),
-                    TileColor = Color.FromArgb(215,255,215),
+                    Size = defaultsize,
+                    TileColor = Color.FromArgb(215, 255, 215),
                     TileImage = ProductieManager.Properties.Resources.microsoft_excel_22733_128x128,
+                    ImageSize = imagesize,
                     TileIndex = 10,
                     IsDefault = true,
-                });
+                }); ;
 
                 xtiles.Add(new TileInfoEntry()
                 {
@@ -230,9 +246,10 @@ namespace Rpm.Settings
                     ForeColor = Color.White,
                     GroupName = "Statistieken",
                     Name = "xstats",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.CornflowerBlue,
                     TileImage = ProductieManager.Properties.Resources.stats_15267_128x128,
+                    ImageSize = imagesize,
                     TileIndex = 11,
                     IsDefault = true,
                 });
@@ -243,9 +260,10 @@ namespace Rpm.Settings
                     ForeColor = Color.White,
                     GroupName = "Zoeken",
                     Name = "xzoekproducties",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.SlateBlue,
                     TileImage = ProductieManager.Properties.Resources.FocusEye_img_128_128,
+                    ImageSize = imagesize,
                     TileIndex = 12,
                     IsDefault = true,
                 });
@@ -256,9 +274,10 @@ namespace Rpm.Settings
                     ForeColor = Color.Navy,
                     GroupName = "Personeel",
                     Name = "xpersoneel",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.FromArgb(125, 175, 255),
                     TileImage = ProductieManager.Properties.Resources.users_clients_group_16774,
+                    ImageSize = imagesize,
                     TileIndex = 13,
                     IsDefault = true,
                 });
@@ -269,9 +288,10 @@ namespace Rpm.Settings
                     ForeColor = Color.White,
                     GroupName = "Artikelen",
                     Name = "xalleartikelen",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.FromArgb(95, 95, 95),
                     TileImage = ProductieManager.Properties.Resources.product_document_file_96x96,
+                    ImageSize = imagesize,
                     TileIndex = 14,
                     IsDefault = true,
                 });
@@ -282,9 +302,10 @@ namespace Rpm.Settings
                     ForeColor = Color.FromArgb(253, 185, 253),
                     GroupName = "Artikelen",
                     Name = "xartikelrecords",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.FromArgb(152, 5, 152),
                     TileImage = ProductieManager.Properties.Resources.time_management_tasks_96x96,
+                    ImageSize = imagesize,
                     TileIndex = 15,
                     IsDefault = true,
                 });
@@ -295,9 +316,10 @@ namespace Rpm.Settings
                     ForeColor = Color.White,
                     GroupName = "Producties",
                     Name = "xproductievolgorde",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.Navy,
                     TileImage = ProductieManager.Properties.Resources.taskboardflat_106022,
+                    ImageSize = imagesize,
                     TileIndex = 16,
                     IsDefault = true,
                 });
@@ -308,10 +330,11 @@ namespace Rpm.Settings
                     ForeColor = Color.White,
                     GroupName = "Klachten",
                     Name = "xklachten",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = IProductieBase.GetProductSoortColor("red"),
                     TextFontStyle = FontStyle.Bold,
                     TileImage = ProductieManager.Properties.Resources.Leave_80_icon_icons_com_57305_128x128,
+                    ImageSize = imagesize,
                     TileIndex = 17,
                     IsDefault = true,
                 });
@@ -322,9 +345,10 @@ namespace Rpm.Settings
                     ForeColor = Color.White,
                     GroupName = "Excel",
                     Name = "xweekoverzicht",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = IProductieBase.GetProductSoortColor("Horti"),
                     TileImage = ProductieManager.Properties.Resources.microsoft_excel_22733_128x128,
+                    ImageSize = imagesize,
                     TileIndex = 18,
                     IsDefault = true,
                 });
@@ -334,9 +358,10 @@ namespace Rpm.Settings
                     ForeColor = Color.White,
                     GroupName = "Noties",
                     Name = "xallenotities",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.DarkRed,
                     TileImage = ProductieManager.Properties.Resources.memo_pad_notes_reminder_task_icon_128x128,
+                    ImageSize = imagesize,
                     TileIndex = 19,
                     IsDefault = true,
                 });
@@ -346,9 +371,10 @@ namespace Rpm.Settings
                     ForeColor = Color.White,
                     GroupName = "Beheer",
                     Name = "xbeheerfilters",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.LightSkyBlue,
                     TileImage = ProductieManager.Properties.Resources.filter_96x96,
+                    ImageSize = imagesize,
                     TileIndex = 19,
                     IsDefault = true,
                 });
@@ -358,9 +384,10 @@ namespace Rpm.Settings
                     ForeColor = Color.Navy,
                     GroupName = "Chat",
                     Name = "xchat",
-                    Size = new Size(256, 96),
+                    Size = defaultsize,
                     TileColor = Color.LightSteelBlue,
                     TileImage = ProductieManager.Properties.Resources.chat_26_icon_96x96,
+                    ImageSize = imagesize,
                     TileIndex = 19,
                     IsDefault = true,
                 });
@@ -381,8 +408,9 @@ namespace Rpm.Settings
                                 GroupName = "Filter",
                                 Name = f.Name,
                                 LinkID = f.ID,
-                                Size = new Size(256, 96),
+                                Size = defaultsize,
                                 TileImage = new Bitmap(ProductieManager.Properties.Resources.operation.CombineImage(ProductieManager.Properties.Resources.filter_32x32, 2.5)),
+                                ImageSize = imagesize,
                                 TileIndex = xtiles.Count,
                                 IsDefault = true,
                             });
@@ -411,7 +439,7 @@ namespace Rpm.Settings
             SpecialeRoosters = new List<Rooster>();
             PersoneelIndeling = new List<string>();
             WerkplaatsIndelingen = new List<WerkplaatsSettings>();
-            TileLayout = GetAllDefaultEntries(false);
+            TileLayout = GetAllDefaultEntries(false, default, default);
             //create default Tiles
             //voor de producties
   

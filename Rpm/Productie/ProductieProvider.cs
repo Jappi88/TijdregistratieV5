@@ -24,6 +24,11 @@ namespace ProductieManager.Rpm.Productie
             None,
         }
 
+        public ProductieProvider()
+        {
+
+        }
+
         public bool IsProductiesSyncing { get; private set; }
         public List<string> ExcludeProducties { get; set; } = new List<string>();
         public static FolderSynchronization FolderSynchronization { get; private set; } = new FolderSynchronization();
@@ -87,6 +92,91 @@ namespace ProductieManager.Rpm.Productie
                 SyncProducties();
             }
             else DisableOfflineDb();
+        }
+
+        public void InitEvents()
+        {
+            //Manager.OnFormulierChanged += Manager_OnFormulierChanged;
+            //Manager.OnFormulierDeleted += Manager_OnFormulierDeleted;
+            //Manager.OnSettingsChanged += Manager_OnSettingsChanged;
+        }
+
+        public void CloseEvents()
+        {
+            //Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
+            //Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
+            //Manager.OnSettingsChanged -= Manager_OnSettingsChanged;
+        }
+
+        private void Manager_OnSettingsChanged(object instance, global::Rpm.Settings.UserSettings settings, bool reinit)
+        {
+            try
+            {
+                var prods = Manager.Database.xGetAllProducties(false, true, null, true);
+                LoadedBewerkingen = (from prod in prods
+                                     where prod?.Bewerkingen != null && prod.Bewerkingen.Length != 0
+                                     from bw in prod.Bewerkingen
+                                     where bw.IsAllowed()
+                                     select bw).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+           
+        }
+
+
+
+        private void Manager_OnFormulierDeleted(object sender, string id)
+        {
+            try
+            {
+                lock (LoadedBewerkingen)
+                {
+                    LoadedBewerkingen.RemoveAll(x => string.Equals(id, x.ProductieNr, StringComparison.CurrentCultureIgnoreCase));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
+        {
+            try
+            {
+                bool valid = changedform?.Bewerkingen != null && changedform.Bewerkingen.Length > 0;
+                if (valid)
+                {
+                    for (int b = 0; b < changedform.Bewerkingen.Length; b++)
+                    {
+                        var bw = changedform.Bewerkingen[b];
+                        bw.xUpdateBewerking(null, null, false, false, false, false);
+                        bool allow = bw.IsAllowed() && bw.State is ProductieState.Gestopt or ProductieState.Gestart;
+                        lock (LoadedBewerkingen)
+                        {
+                            if (allow)
+                            {
+
+                                var ind = LoadedBewerkingen.IndexOf(bw);
+                                if (ind >= 0)
+                                    LoadedBewerkingen[ind] = bw;
+                                else LoadedBewerkingen.Add(bw);
+                            }
+                            else
+                            {
+                                LoadedBewerkingen.Remove(bw);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         public void DisableOfflineDb()
@@ -604,6 +694,8 @@ namespace ProductieManager.Rpm.Productie
             }
         }
 
+        public List<Bewerking> LoadedBewerkingen { get; set; } = new();
+
         public void UpdateProducties()
         {
             if (_isupdating) return;
@@ -621,19 +713,12 @@ namespace ProductieManager.Rpm.Productie
                         if (Manager.LogedInGebruiker == null || !IsProductiesSyncing ||
                             (!Manager.Opties.GebruikLocalSync && !Manager.Opties.GebruikTaken)) break;
                         var prod = Manager.Database.GetProductie(forms[i], false);
-                        if (prod == null || IsExcluded(prod) || !prod.IsAllowed(null))
-                            continue;
-                        if (prod.State is ProductieState.Verwijderd or ProductieState.Gereed)
-                            continue;
-                        // bool invoke = true;
-
-                        //opslaan als de productie voor het laatst is gestart door de huidige gebruiker.
-                        //bool save = prod.Bewerkingen != null && prod.Bewerkingen.Any(x =>
-                        //    string.Equals(x.GestartDoor, Manager.Opties.Username,
-                        //        StringComparison.CurrentCultureIgnoreCase));
-                        prod.FormulierChanged(this);
-                        Manager.FormulierChanged(this, prod);
-                        //await prod.UpdateForm(true, false, null, "",false, false, true);
+                        bool valid = prod?.Bewerkingen != null && prod.Bewerkingen.Length > 0 && prod.IsAllowed();
+                        if (valid && !IsExcluded(prod))
+                        {
+                            prod.FormulierChanged(this);
+                            Manager.FormulierChanged(this, prod);
+                        }
                     }
                 }
             }
@@ -710,6 +795,7 @@ namespace ProductieManager.Rpm.Productie
                     case LoadedType.Producties:
                         prods = Manager.Database.xGetAllProducties(false, filter, validhandler, checksecondary);
                         break;
+                        //return LoadedBewerkingen;
                 }
                 bws = GetBewerkingen(prods, type, states, filter);
             }
@@ -729,6 +815,7 @@ namespace ProductieManager.Rpm.Productie
 
         public void Dispose()
         {
+            CloseEvents();
             StopSync();
             FolderSynchronization?.Stop();
             Dispose(true);

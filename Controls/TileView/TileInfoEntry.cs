@@ -23,13 +23,15 @@ namespace Controls
         public string Name { get; set; }
         public string Text { get; set; }
         public string GroupName { get; set; }
+        public string Group { get; set; }
         public int ID { get; set; }
         public int LinkID { get; set; } = -1;
-        public Size Size { get; set; } = new Size(256, 128);
-        public Size ImageSize { get; set; } = new Size(64, 64);
+        public Size Size { get; set; } = new Size(128, 64);
+        public Size ImageSize { get; set; } = new Size(32, 32);
         public ResizeMode ImageResize { get; set; } = ResizeMode.Auto;
         public bool IsDefault { get; set; }
         public bool IsViewed { get; set; }
+        public int ViewIndex { get; set; }
         public string LastViewedName { get; set; }
         public AccesType AccesLevel { get; set; } = AccesType.AlleenKijken;
         public int TileIndex { get; set; }
@@ -52,7 +54,7 @@ namespace Controls
 
         public int ForeColorARgb { get; set; } = Color.Black.ToArgb();
         public string TextFontFamily { get; set; } = "Segoe UI";
-        public int TextFontSize { get; set; } = 14;
+        public int TextFontSize { get; set; } = 12;
         public FontStyle TextFontStyle { get; set; } = FontStyle.Regular;
 
         public string CountFontFamily { get; set; } = "Segoe UI";

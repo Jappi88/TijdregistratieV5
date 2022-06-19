@@ -210,10 +210,7 @@ namespace ProductieManager.Rpm.Misc
                 Filter = filter;
                 if (Records == null)
                 {
-                    lock (this)
-                    {
-                        Records = new Dictionary<string, DateTime>();
-                    }
+                    Records = new Dictionary<string, DateTime>();
                 }
 
                 lock (Records)

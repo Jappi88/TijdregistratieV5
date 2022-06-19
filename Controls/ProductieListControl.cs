@@ -76,10 +76,10 @@ namespace Controls
         public CustomObjectListview ProductieLijst => xProductieLijst1;
 
         public string ListName { get; set; }
-        public bool RemoveCustomItemIfNotValid { get; set; }
+       // public bool RemoveCustomItemIfNotValid { get; set; }
         public bool CustomList { get; private set; }
-        public List<ProductieFormulier> Producties { get; private set; } = new();
-        public List<Bewerking> Bewerkingen { get; private set; } = new();
+        public List<ProductieFormulier> Producties { get; set; } = new();
+        public List<Bewerking> Bewerkingen { get; set; } = new();
         public List<Bewerking> CheckedBewerkingen { get => ProductieLijst.CheckedObjects.OfType<Bewerking>().ToList(); }
         public IsValidHandler ValidHandler { get; set; }
         public bool IsBewerkingView { get; set; }
@@ -907,6 +907,7 @@ namespace Controls
                 if (ProductieLijst.Columns.Count == 0) return;
                 objects ??= new List<T>();
                 var changed = ProductieLijst.Items.Count != objects.Count;
+                _loadingproductielist = true;
                 ProductieLijst.BeginUpdate();
                 try
                 {
@@ -920,9 +921,9 @@ namespace Controls
                     Console.WriteLine(ex.Message);
                 }
                 ProductieLijst.EndUpdate();
-
-                if (changed)
-                    OnItemCountChanged();
+                _loadingproductielist = false;
+                //if (changed)
+                OnItemCountChanged();
                 //}
             }
         }
@@ -1015,7 +1016,7 @@ namespace Controls
                                     .Where(x => x.Collapsed)
                                     .ToArray();
                             }));
-                            _loadingproductielist = reload;
+                            _loadingproductielist = true;
                             if (!IsBewerkingView)
                             {
                                 if (CanLoad)
@@ -1033,7 +1034,7 @@ namespace Controls
                                     UpdateListObjects(bws);
                               
                             }
-                            _loadingproductielist = false;
+                           
                             //this.Invoke(new MethodInvoker(() =>
                             //{
                             //    var xgroups = ProductieLijst.Groups.Cast<ListViewGroup>().ToList();
@@ -1302,29 +1303,31 @@ namespace Controls
                                       states.Any(x => b.IsValidState(x));
                         if (isvalid && ValidHandler != null)
                             isvalid &= ValidHandler.Invoke(b, filter ?? GetFilter());
-
-                        if (InvokeRequired)
-                            this.Invoke(new MethodInvoker(() => index = ProductieLijst.IndexOf(b)));
-                        else
-                            index = ProductieLijst.IndexOf(b);
-                        if (index > -1)
-                        {
-                            if (isvalid)
-                                ProductieLijst.RefreshObject(b);
+                       // lock (_locker)
+                        //{
+                            if (InvokeRequired)
+                                this.Invoke(new MethodInvoker(() => index = ProductieLijst.IndexOf(b)));
+                            else
+                                index = ProductieLijst.IndexOf(b);
+                            if (index > -1)
+                            {
+                                if (isvalid)
+                                    ProductieLijst.RefreshObject(b);
+                                else
+                                {
+                                    changed = true;
+                                    ProductieLijst.RemoveObject(b);
+                                }
+                            }
                             else
                             {
-                                changed = true;
-                                ProductieLijst.RemoveObject(b);
+                                if (isvalid)
+                                {
+                                    changed = true;
+                                    ProductieLijst.AddObject(b);
+                                }
                             }
-                        }
-                        else
-                        {
-                            if (isvalid)
-                            {
-                                changed = true;
-                                ProductieLijst.AddObject(b);
-                            }
-                        }
+                       // }
                     }
                 }
                 //var xremove = xbewerkingen?.Where(x =>
@@ -1404,15 +1407,17 @@ namespace Controls
                 else valid &= states.Any(bew.IsValidState) && bew.IsAllowed(null);
             }
             var xret = false;
+            //lock (Bewerkingen)
+            //{
             if (index == -1)
                 index = Bewerkingen.IndexOf(bew);
 
             if (!valid)
             {
-                if (index > -1 && RemoveCustomItemIfNotValid)
+                if (index > -1)
                 {
 
-                    Bewerkingen.RemoveAt(index);
+                    Bewerkingen.Remove(bew);
                     xret = true;
                     if (updatelijst)
                     {
@@ -1444,6 +1449,7 @@ namespace Controls
                     }
                 }
             }
+            //}
             return xret;
         }
 
@@ -1498,7 +1504,8 @@ namespace Controls
                     //    reload = true;
                     //else
                     //    reload = !xfilters.All(x => x.IsTempFilter);
-                    UpdateProductieList(false, false, false);
+                    var states = GetCurrentViewStates();
+                    UpdateProductieList(!states.Any(x=> x is ViewState.Alles or ViewState.Gereed), false, false);
                 }
             }
             catch (Exception exception)
@@ -2350,7 +2357,10 @@ namespace Controls
                                 var date = dc.SelectedValue;
                                 if (dc.AddTime)
                                 {
-                                    date = pr.LeverDatum.Add(dc.TimeToAdd);
+                                    if (dc.TimeToAdd.TotalHours < 0)
+                                        date = Werktijd.EerstVorigeWerkdag(pr.LeverDatum.Add(dc.TimeToAdd));
+                                    else
+                                        date = Werktijd.EerstVolgendeWerkdag(pr.LeverDatum.Add(dc.TimeToAdd));
                                 }
                                 var change = $"{pr.Path} | {pr.ArtikelNr} Leverdatum gewijzigd!\n" +
                                              $"Van: {pr.LeverDatum:dd MMMM yyyy HH:mm} uur\n" +
@@ -2578,8 +2588,12 @@ namespace Controls
 
         private void TekeningClosed(object sender, EventArgs e)
         {
-            Parent?.BringToFront();
-            Parent?.Focus();
+            try
+            {
+                Parent?.BringToFront();
+                Parent?.Focus();
+            }
+            catch { }
         }
 
         public List<Bewerking> GetSelectedBewerkingen()
@@ -3046,6 +3060,7 @@ namespace Controls
                 //_selectedSubitem = new KeyValuePair<string, object>();
                 //InitContextFilterToolStripItems(xfiltertoolstripitem);
                 Manager.Opties.Filters.Add(xf);
+                InitFilterStrips();
                 Manager.OnFilterChanged(this);
             }
         }

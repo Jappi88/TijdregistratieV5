@@ -160,7 +160,7 @@ namespace Forms.GereedMelden
                             }
 
                             if (result == DialogResult.No)
-                               await xbw.StopProductie(true, true);
+                               await xbw.StopProductie(true,true, true);
                             else
                             {
                                 var gereedmelder = new GereedMelder();
@@ -293,8 +293,8 @@ namespace Forms.GereedMelden
                         string.Equals(x.Naam, bew.Naam, StringComparison.CurrentCultureIgnoreCase));
                     if (xbw != null)
                     {
-                        lock (_prod)
-                        {
+                        //lock (_prod)
+                        //{
                             _prod = xbw.CreateCopy();
                             _prod.GereedNote = new NotitieEntry(Notitie, _prod);
                             if (_prod.AantalGemaakt != (int) xaantal.Value)
@@ -302,14 +302,14 @@ namespace Forms.GereedMelden
                                 _prod.AantalGemaakt = (int) xaantal.Value;
                                 _ = _prod.Update(null, false, false);
                             }
-                        }
+                        //}
                     }
                     
                 }
                 else
                 {
-                    lock (_prod)
-                    {
+                   // lock (_prod)
+                   // {
                         _prod = changedform.CreateCopy();
                         _prod.GereedNote = new NotitieEntry(Notitie, _prod);
                         if (_prod.AantalGemaakt != (int) xaantal.Value)
@@ -317,7 +317,7 @@ namespace Forms.GereedMelden
                             _prod.AantalGemaakt = (int) xaantal.Value;
                             _ = _prod.xUpdate(null, false, false);
                         }
-                    }
+                    //}
                 }
 
                

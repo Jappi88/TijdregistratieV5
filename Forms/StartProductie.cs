@@ -180,7 +180,7 @@ namespace Forms
         {
             try
             {
-                this.BeginInvoke(new MethodInvoker(() =>
+                this.Invoke(new MethodInvoker(() =>
                 {
                     if (Disposing || IsDisposed || Formulier?.ProductieNr == null) return;
                     if (!string.Equals(id, Formulier.ProductieNr, StringComparison.CurrentCultureIgnoreCase)) return;

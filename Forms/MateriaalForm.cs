@@ -28,9 +28,6 @@ namespace Forms
 
         private void xok_Click(object sender, EventArgs e)
         {
-            Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
-            Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
-
             if (materiaalUI1.SaveMaterials())
                 DialogResult = DialogResult.OK;
             else
@@ -52,7 +49,7 @@ namespace Forms
         {
             var prodnr = Formulier?.ProductieNr;
             if (this.IsDisposed || Formulier == null || id == null || !string.Equals(id, prodnr)) return;
-            this.BeginInvoke(new MethodInvoker(this.Close));
+            this.Invoke(new MethodInvoker(this.Close));
         }
 
         private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
@@ -61,6 +58,12 @@ namespace Forms
             if (changedform == null || !string.Equals(changedform.ProductieNr, prodnr)) return;
             Formulier = changedform;
             materiaalUI1.Formulier = Formulier;
+        }
+
+        private void MateriaalForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
+            Manager.OnFormulierDeleted -= Manager_OnFormulierDeleted;
         }
     }
 }

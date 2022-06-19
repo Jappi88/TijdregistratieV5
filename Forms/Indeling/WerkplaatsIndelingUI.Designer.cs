@@ -30,7 +30,6 @@ namespace Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
             this.xWerkplaatsIndelingPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -43,7 +42,6 @@ namespace Forms
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.productieListControl1 = new Controls.ProductieListControl();
             this.xGeselecteerdeGebruikerLabel = new TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel();
-            this.xupdatetimer = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -192,7 +190,6 @@ namespace Forms
             this.productieListControl1.Location = new System.Drawing.Point(0, 40);
             this.productieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.productieListControl1.Name = "productieListControl1";
-            this.productieListControl1.RemoveCustomItemIfNotValid = false;
             this.productieListControl1.SelectedItem = null;
             this.productieListControl1.ShowWaitUI = true;
             this.productieListControl1.Size = new System.Drawing.Size(655, 591);
@@ -212,11 +209,6 @@ namespace Forms
             this.xGeselecteerdeGebruikerLabel.Size = new System.Drawing.Size(655, 40);
             this.xGeselecteerdeGebruikerLabel.TabIndex = 2;
             this.xGeselecteerdeGebruikerLabel.Text = "htmlLabel1";
-            // 
-            // xupdatetimer
-            // 
-            this.xupdatetimer.Interval = 500;
-            this.xupdatetimer.Tick += new System.EventHandler(this.xupdatetimer_Tick);
             // 
             // WerkplaatsIndelingUI
             // 
@@ -251,6 +243,5 @@ namespace Forms
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton xreset;
-        private System.Windows.Forms.Timer xupdatetimer;
     }
 }

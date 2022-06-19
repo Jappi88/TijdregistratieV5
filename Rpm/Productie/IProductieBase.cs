@@ -1120,5 +1120,13 @@ Color textcolor, bool useimage)
 
             return -1;
         }
+
+        public bool TheSameAs(IProductieBase productie)
+        {
+            if (productie == null) return true;
+            if (!this.Equals(productie)) return true;
+            var ret = Functions.xPublicInstancePropertiesEqual(productie, this);
+            return ret;
+        }
     }
 }

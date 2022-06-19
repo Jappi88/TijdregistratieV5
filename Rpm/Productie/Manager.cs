@@ -271,6 +271,7 @@ namespace Rpm.Productie
                     Database.LoadMultiFiles();
                     ProductieChat = new ProductieChat();
                     ProductieProvider = new ProductieProvider();
+                    ProductieProvider.InitEvents();
                     // LocalConnection = new LocalService();
                     //Server = new SqlDatabase();
                     Klachten = new KlachtBeheer(DbPath);
@@ -1371,23 +1372,27 @@ namespace Rpm.Productie
                     {
                         if (prod.State == ProductieState.Verwijderd && realremove)
                             remove.Add(prod);
-                        if (prod.Bewerkingen != null)
-                            foreach (var b in prod.Bewerkingen)
-                            {
-                                if (b.State == ProductieState.Gestart) await b.StopProductie(true,true);
-                                b.State = ProductieState.Verwijderd;
-                                b.DatumVerwijderd = DateTime.Now;
-                            }
-
-                        if (prod.State != ProductieState.Gestart && prod.State != ProductieState.Verwijderd)
+                        else
                         {
-                            prod.State = ProductieState.Verwijderd;
-                            prod.DatumVerwijderd = DateTime.Now;
-                            string change = $"Productie [{prod.ProductieNr.ToUpper()}] is zojuist verwijderd";
-                            if (await Database.UpSert(prod,change))
+                            if (prod.Bewerkingen != null)
+                                foreach (var b in prod.Bewerkingen)
+                                {
+                                    if (b.State == ProductieState.Gestart)
+                                        await b.StopProductie(true, false, true);
+                                    b.State = ProductieState.Verwijderd;
+                                    b.DatumVerwijderd = DateTime.Now;
+                                }
+
+                            if (prod.State != ProductieState.Gestart && prod.State != ProductieState.Verwijderd)
                             {
-                                removed++;
-                                RemoteProductie.RespondByEmail(prod,change);
+                                prod.State = ProductieState.Verwijderd;
+                                prod.DatumVerwijderd = DateTime.Now;
+                                string change = $"Productie [{prod.ProductieNr.ToUpper()}] is zojuist verwijderd";
+                                if (await Database.UpSert(prod, change))
+                                {
+                                    removed++;
+                                    RemoteProductie.RespondByEmail(prod, change);
+                                }
                             }
                         }
                     }
@@ -1448,7 +1453,7 @@ namespace Rpm.Productie
                                 foreach (var b in current.Bewerkingen)
                                 {
                                     if (b.State == ProductieState.Gestart)
-                                        await b.StopProductie(true,true);
+                                        await b.StopProductie(true,false,true);
                                     b.State = ProductieState.Verwijderd;
                                     b.DatumVerwijderd = DateTime.Now;
                                     var personeel = b.Personen;

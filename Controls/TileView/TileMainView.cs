@@ -4,6 +4,7 @@ using ProductieManager.Rpm.Productie;
 using ProductieManager.Rpm.Various;
 using Rpm.Misc;
 using Rpm.Productie;
+using Rpm.Settings;
 using Rpm.Various;
 using System;
 using System.Collections.Generic;
@@ -22,67 +23,83 @@ namespace Controls.TileView
 
         public void LoadTileViewer()
         {
-            if (Manager.Opties != null)
+            groupedTileView1.LoadTileViewer();
+            groupedTileView1.TileClicked += OnTileClicked;
+            groupedTileView1.TilesLoaded += OnTilesLoaded;
+           // Manager.Opties.GroupEntries?.Clear();
+           // var groups = xGroupContainer.Controls.OfType<GroupedTileView>();
+           // var oldgroups = Manager.Opties.GroupEntries;
+           // var newgroups = new List<GroupInfoEntry>();
+           // for(int i = 0; i < Manager.Opties.TileLayout.Count; i++)
+           // {
+           //     var tile = Manager.Opties.TileLayout[i];
+           //     tile.Group = string.Empty;
+           //     var xold = oldgroups.FirstOrDefault(x => string.Equals(x.Name, tile.Group, StringComparison.CurrentCultureIgnoreCase));
+           //     if(!newgroups.Any(x=> string.Equals(x.Name, tile.Group, StringComparison.CurrentCultureIgnoreCase)))
+           //     {
+           //         if(xold != null)
+           //         {
+           //             oldgroups.Remove(xold);
+           //             newgroups.Add(xold);
+           //         }
+           //         else
+           //         {
+           //             var newgroup = new GroupInfoEntry() { Name = tile.Group };
+           //             newgroups.Add(newgroup);
+           //         }
+           //     }
+           // }
+           // if (oldgroups.Count > 0)
+           //     newgroups.AddRange(oldgroups);
+           // var removes = groups.Where(x => !newgroups.Any(g => string.Equals(x.GroupName, g.Name, StringComparison.CurrentCultureIgnoreCase)));
+           // foreach (var remove in removes)
+           //     xGroupContainer.Controls.Remove(remove);
+           // groups = xGroupContainer.Controls.OfType<GroupedTileView>();
+           
+           // foreach (var group in newgroups)
+           // {
+           //     var xold = groups.FirstOrDefault(x => string.Equals(x.GroupName, group.Name, StringComparison.CurrentCultureIgnoreCase));
+           //     if(xold == null)
+           //     {
+           //         xold = new GroupedTileView();
+           //         xold.Viewer.GroupName = group.Name;
+           //         xold.Viewer.TilesLoaded += tileViewer1_TilesLoaded;
+           //         xold.Viewer.TileClicked += tileViewer1_TileClicked;
+           //         xold.Dock = DockStyle.Fill;
+           //         xGroupContainer.Controls.Add(xold);
+           //     }
+           //     xold.LoadTileViewer();
+           // }
+           // //xGroupContainer.BackColor = Color.FromArgb(Manager.Opties.TileViewBackgroundColorRGB);
+           //// xGroupContainer.FlowDirection = Manager.Opties.TileFlowDirection;
+           // xGroupContainer.Invalidate();
+           // xGroupContainer.PerformLayout();
+        }
+
+        private void InitDefaultGroup()
+        {
+            try
             {
-                InitToolStripMenu();
-                UpdateFilterTiles();
-                tileViewer1.BackColor = Color.FromArgb(Manager.Opties.TileViewBackgroundColorRGB);
-                tileViewer1.LoadTiles(Manager.Opties.TileLayout);
+
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
             }
         }
 
         public void UpdateFilterTiles()
         {
-            var xtiles = Manager.Opties.TileLayout.Where(x =>
-                string.Equals(x.GroupName, "filter", StringComparison.CurrentCultureIgnoreCase)).ToList();
-            var xremove = xtiles.Where(x => Manager.Opties.Filters.All(f => f.ID != x.LinkID)).ToList();
-            if (xremove.Count > 0)
-                xremove.ForEach(f => Manager.Opties.TileLayout.Remove(f));
-            xtiles = Manager.Opties.TileLayout.Where(x =>
-                string.Equals(x.GroupName, "filter", StringComparison.CurrentCultureIgnoreCase)).ToList();
-            xtiles.ForEach(f =>
-            {
-                var xent = Manager.Opties.Filters.FirstOrDefault(x => x.ID == f.LinkID);
-                if (xent != null)
-                {
-                    f.Name = xent.Name;
-                }
-
-            });
+            var groups = xGroupContainer.Controls.OfType<GroupedTileView>();
+            foreach (var group in groups)
+                group.UpdateFilterTiles();
         }
 
-        public int TileCountRefreshInterval
+        public void SaveLayout(bool save)
         {
-            get => tileViewer1.TileInfoRefresInterval;
-            set=> tileViewer1.TileInfoRefresInterval = value;
-        }
-
-        public TileViewer Viewer => tileViewer1;
-
-        private void InitToolStripMenu()
-        {
-            tileViewer1.FlowDirection = Manager.Opties.TileFlowDirection;
-            int xindex = (int)tileViewer1.FlowDirection;
-            var xitems = toolStripMenuItem1.DropDownItems.Cast<ToolStripItem>();
-            int i = 0;
-            foreach (var xitem in xitems)
-            {
-                if (xitem is ToolStripMenuItem item)
-                {
-                    item.Checked = i.ToString() == xindex.ToString();
-                }
-                i++;
-            }
-        }
-
-        public bool SaveLayout(bool save)
-        {
-            return tileViewer1.SaveTiles(save);
-        }
-
-        private void tileViewer1_TileClicked(object sender, EventArgs e)
-        {
-            OnTileClicked(sender);
+            var groups = xGroupContainer.Controls.OfType<GroupedTileView>();
+            foreach (var group in groups)
+                group.SaveTileLayout(save);
         }
 
         private TileInfoEntry tileViewer1_TileRequestInfo(Tile tile)
@@ -99,7 +116,13 @@ namespace Controls.TileView
         {
             try
             {
-                return tileViewer1.GetTile(name);
+                var groups = xGroupContainer.Controls.OfType<GroupedTileView>();
+                foreach (var group in groups)
+                {
+                    var tile = group.Viewer.GetTile(name);
+                    if (tile != null) return tile;
+                }
+                return null;
             }
             catch (Exception e)
             {
@@ -298,100 +321,17 @@ namespace Controls.TileView
             return entry;
         }
 
-        private void tileViewer1_TilesLoaded(object sender, EventArgs e)
-        {
-            tileViewer1.StartTimer();
-            OnTilesLoaded();
-        }
-
         public event EventHandler TileClicked;
         public event EventHandler TilesLoaded;
-        public bool EnableTimer
+
+        protected virtual void OnTileClicked(object sender, EventArgs arg)
         {
-            get => tileViewer1.EnableTimer;
-            set => tileViewer1.EnableTimer = value;
+            TileClicked?.Invoke(sender, arg);
         }
 
-        protected virtual void OnTileClicked(object sender)
+       protected virtual void OnTilesLoaded(object sender, EventArgs arg)
         {
-            TileClicked?.Invoke(sender, EventArgs.Empty);
-        }
-
-        private void xBeheerweergavetoolstrip_ButtonClick(object sender, EventArgs e)
-        {
-            xBeheerweergavetoolstrip.ShowDropDown();
-        }
-
-        private void reserLayoutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var result = XMessageBox.Show(this, "Weetje zeker dat je de TileLayout wilt resetten?!\n\n" +
-                                                "Alle gewijzigde tiles zullen ongedaan worden, toch doorgaan?",
-                "TileLayout Resetten", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-            if (result == DialogResult.No) return;
-            if (Manager.Opties != null)
-            {
-                Manager.Opties.TileFlowDirection = FlowDirection.LeftToRight;
-                Manager.Opties.TileLayout = Manager.Opties.GetAllDefaultEntries(false);
-                Manager.Opties.Save("Tiles gereset!");
-                LoadTileViewer();
-            }
-        }
-
-        private void toolStripMenuItem1_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            var xindex = toolStripMenuItem1.DropDownItems.IndexOf(e.ClickedItem);
-            if (xindex > -1 && Manager.Opties != null)
-            {
-                Manager.Opties.TileFlowDirection = (FlowDirection) xindex;
-                Manager.Opties.Save(null, false, false, false);
-                LoadTileViewer();
-            }
-        }
-
-        private void xBeheerLijstenToolstripItem_Click(object sender, EventArgs e)
-        {
-            var xform = new BeheerTilesForm();
-            if (xform.ShowDialog() == DialogResult.OK)
-            {
-                LoadTileViewer();
-            }
-        }
-
-        protected virtual void OnTilesLoaded()
-        {
-            TilesLoaded?.Invoke(Viewer, EventArgs.Empty);
-        }
-
-        private void ShowTileLayoutEditor()
-        {
-            try
-            {
-                if (Manager.Opties?.TileLayout == null) return;
-                var xeditor = new TileEditorForm(Manager.Opties.TileLayout.CreateCopy(), Manager.Opties.TileFlowDirection, null);
-                xeditor.Size = new Size(1200, 750);
-                if (xeditor.ShowDialog() == DialogResult.OK)
-                {
-                    Manager.Opties.TileLayout = xeditor.SelectedEntries;
-                    Manager.Opties.TileFlowDirection = xeditor.Direction;
-                    Manager.Opties.Save(null, false, false, false);
-                    LoadTileViewer();
-                }
-
-            }
-            catch (Exception exception)
-            {
-                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
-            }
-        }
-
-        private void beheerTileLayoutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ShowTileLayoutEditor();
-        }
-
-        private void beheerTileLayoutToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            ShowTileLayoutEditor();
+            TilesLoaded?.Invoke(sender, arg);
         }
 
         public void SetBackgroundImage(string path)
@@ -409,51 +349,6 @@ namespace Controls.TileView
             {
                 XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
             }
-        }
-
-        public void SetBackgroundImage()
-        {
-            try
-            {
-                if (Manager.Opties == null) return;
-                var ofd = new OpenFileDialog();
-                ofd.Filter = "JPG|*.jpg|JPEG|*.jpeg|PNG|*.png|Alles|*.*";
-                ofd.Multiselect = false;
-                ofd.Title = "Kies een achtergrond Afbeelding";
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    var xfile = ofd.FileName;
-                    SetBackgroundImage(xfile);
-                }
-            }
-            catch (Exception exception)
-            {
-                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
-            }
-        }
-
-        public void ClearBackgroundImage()
-        {
-            try
-            {
-                if (Manager.Opties == null) return;
-                Manager.Opties.BackgroundImagePath = null;
-                //pictureBox1.Image = null;
-            }
-            catch (Exception exception)
-            {
-                XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
-            }
-        }
-
-        private void kiesAchtergrondAfbeeldingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SetBackgroundImage();
-        }
-
-        private void verwijderAchtergrondAfbeeldingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ClearBackgroundImage();
         }
 
         private void ChooseBackgroundColor()
@@ -478,42 +373,45 @@ namespace Controls.TileView
             }
         }
 
+        private void beheerTileLayoutToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xBeheerLijstenToolstripItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripMenuItem1_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void reserLayoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void kiesAchtergrondKleurToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChooseBackgroundColor();
         }
 
-        private void naamToolStripMenuItem_Click(object sender, EventArgs e)
+        private void wijzigGroepGrootteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Manager.Opties?.TileLayout != null)
+            var tf = new TextFieldEditor();
+            tf.MultiLine = false;
+            tf.UseSecondary = false;
+            tf.Title = "Vul in een groep naam";
+            if (tf.ShowDialog() != DialogResult.OK) return;
+            var name = tf.SelectedText.Trim();
+            var old = Manager.Opties.GroupEntries.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase));
+            if (old != null)
+                XMessageBox.Show(this, $"'{name}' bestaat al");
+            else
             {
-                Manager.Opties.TileLayout = Manager.Opties.TileLayout.OrderBy(x => x.Text).ToList();
-                var index = 0;
-                Manager.Opties.TileLayout.ForEach(x => x.TileIndex = index++);
-                Manager.Opties.Save(null, false, false, false);
-                LoadTileViewer();
-            }
-        }
-
-        private void typeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (Manager.Opties?.TileLayout != null)
-            {
-                Manager.Opties.TileLayout = Manager.Opties.TileLayout.OrderBy(x => x.GroupName).ToList();
-                var index = 0;
-                Manager.Opties.TileLayout.ForEach(x => x.TileIndex = index++);
-                Manager.Opties.Save(null, false, false, false);
-                LoadTileViewer();
-            }
-        }
-
-        private void kleurToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (Manager.Opties?.TileLayout != null)
-            {
-                Manager.Opties.TileLayout = Manager.Opties.TileLayout.OrderBy(x => x.TileColor.GetHue()).ToList();
-                var index = 0;
-                Manager.Opties.TileLayout.ForEach(x => x.TileIndex = index++);
+                Manager.Opties.GroupEntries.Add(new GroupInfoEntry() { Name = name });
                 Manager.Opties.Save(null, false, false, false);
                 LoadTileViewer();
             }

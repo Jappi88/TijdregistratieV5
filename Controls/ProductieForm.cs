@@ -141,6 +141,7 @@ namespace Controls
             BeginInvoke(new MethodInvoker(UpdateFields));
         }
 
+        private static object _locker = new object();
         public void UpdateFields()
         {
             if (Formulier == null || Disposing || IsDisposed)
@@ -156,8 +157,8 @@ namespace Controls
 
                 if (Formulier.Bewerkingen != null)
                     names.AddRange(from s in Formulier.Bewerkingen
-                        where s.IsAllowed() && s.State != ProductieState.Verwijderd
-                        select (object) s.Naam);
+                                   where s.IsAllowed() && s.State != ProductieState.Verwijderd
+                                   select (object)s.Naam);
 
                 var olditems = xbewerking.Items.Cast<string>().ToArray();
                 var thesame = olditems.Length == names.Count && olditems.All(x =>
@@ -245,7 +246,7 @@ namespace Controls
                             ? Resources.schedule_32_32.CombineImage(Resources.exclamation_warning_15590, 1.75)
                             : Resources.schedule_32_32;
                     var xstoring = mainMenu1.GetButton("xonderbreking");
-                    
+
                     if (xstoring != null)
                     {
                         var img = b.GetAlleStoringen(true).Length == 0
@@ -272,7 +273,7 @@ namespace Controls
                                 xstartb.Image = Resources.play_button_icon_icons_com_60615;
                             }
 
-                            
+
                             xstatuslabel.ForeColor = Color.DarkRed;
                             xstatusimage.Image = Resources.stop_red256_24890;
                             break;
@@ -334,9 +335,9 @@ namespace Controls
                         xOnderbreek.Image = Resources.Stop_Hand__32x32;
                     }
 
-                    int xpercent = (int) b.GereedPercentage();
+                    int xpercent = (int)b.GereedPercentage();
                     xprogressbar.ProgressColor = Functions.GetProgressColor(xpercent);
-                    xprogressbar.Value = (xpercent > xprogressbar.Maximum? xprogressbar.Maximum : xpercent);
+                    xprogressbar.Value = (xpercent > xprogressbar.Maximum ? xprogressbar.Maximum : xpercent);
                     xprogressbar.Text = $"{b.TotaalGemaakt}/{b.Aantal}\n{xpercent}%";
                     var tg = b.TijdAanGewerkt();
                     xprogressbar.Invalidate();
@@ -349,7 +350,7 @@ namespace Controls
                     Text =
                         $"{Formulier.ArtikelNr} [{Formulier.ProductieNr}][{Enum.GetName(typeof(ProductieState), b.State)?.ToUpper()}]";
                     if (pers == 0 && b.State == ProductieState.Gestart)
-                        _=b.StopProductie(true,true);
+                        _ = b.StopProductie(true, true, true);
                     CreateTextField(b);
                 }
             }
@@ -383,7 +384,7 @@ namespace Controls
                         //    await b.StartProductie(true, true);
                         //}
                         ProductieListControl.StartBewerkingen(this,new[] {b});
-                    else if (b.State == ProductieState.Gestart) await b.StopProductie(true,true);
+                    else if (b.State == ProductieState.Gestart) await b.StopProductie(true,true,true);
                 }
             }
             catch (Exception ex)
@@ -684,7 +685,7 @@ namespace Controls
             ShowMaterialenForm();
         }
 
-        public async void ShowLeverDatumForm()
+        public void ShowLeverDatumForm()
         {
             var bew = CurrentBewerking();
             if (bew?.Parent == null) return;
@@ -694,17 +695,20 @@ namespace Controls
                 var date = dc.SelectedValue;
                 if(dc.AddTime)
                 {
-                    date = bew.LeverDatum.Add(dc.TimeToAdd);
+                    if (dc.TimeToAdd.TotalHours < 0)
+                        date = Werktijd.EerstVorigeWerkdag(bew.LeverDatum.Add(dc.TimeToAdd));
+                    else
+                        date = Werktijd.EerstVolgendeWerkdag(bew.LeverDatum.Add(dc.TimeToAdd));
                 }
                 var change = $"[{bew.Path}] Leverdatum gewijzigd!\n " +
                              $"Van: {bew.LeverDatum:dd MMMM yyyy HH:mm} uur\n " +
                              $"Naar: {date:dd MMMM yyyy HH:mm} uur";
                 bew.LeverDatum = date;
-                await bew.UpdateBewerking(null, change);
+                bew.xUpdateBewerking(null, change);
             }
         }
 
-        public async void ShowNotitieForm()
+        public void ShowNotitieForm()
         {
             var bew = CurrentBewerking();
             if (bew?.Parent == null) return;
@@ -715,7 +719,7 @@ namespace Controls
             if (xtxtform.ShowDialog() == DialogResult.OK)
             {
                 bew.Note = xtxtform.Notitie;
-                await bew.UpdateBewerking(null, $"[{bew.Path}] Notitie Gewijzigd");
+                bew.xUpdateBewerking(null, $"[{bew.Path}] Notitie Gewijzigd");
             }
         }
 

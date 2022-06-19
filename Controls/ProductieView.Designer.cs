@@ -959,13 +959,11 @@ namespace Controls
             // 
             this.tileMainView1.BackColor = System.Drawing.Color.White;
             this.tileMainView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tileMainView1.EnableTimer = false;
             this.tileMainView1.Location = new System.Drawing.Point(5, 5);
             this.tileMainView1.Margin = new System.Windows.Forms.Padding(4);
             this.tileMainView1.Name = "tileMainView1";
             this.tileMainView1.Size = new System.Drawing.Size(1793, 556);
             this.tileMainView1.TabIndex = 2;
-            this.tileMainView1.TileCountRefreshInterval = 10000;
             this.tileMainView1.TileClicked += new System.EventHandler(this.tileMainView1_TileClicked);
             this.tileMainView1.TilesLoaded += new System.EventHandler(this.tileMainView1_TilesLoaded);
             // 

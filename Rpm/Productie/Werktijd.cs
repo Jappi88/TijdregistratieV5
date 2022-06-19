@@ -550,8 +550,14 @@ namespace Rpm.Productie
             }
             return x;
         }
+        public static DateTime EerstVolgendeWerkdag(this DateTime vanaf)
+        {
+            if (Manager.Opties == null) return DateTime.Now;
+            var r = Manager.Opties.GetWerkRooster();
+            return EerstVolgendeWerkdag(vanaf, ref r, r, Manager.Opties.SpecialeRoosters);
+        }
 
-        public static DateTime EerstVolgendeWerkdag(DateTime vanaf, ref Rooster rooster, Rooster realrooster, List<Rooster> specialeRoosters)
+        public static DateTime EerstVolgendeWerkdag(this DateTime vanaf, ref Rooster rooster, Rooster realrooster, List<Rooster> specialeRoosters)
         {
             var x = vanaf;
             rooster = rooster == null || !rooster.IsValid() ? Manager.Opties.GetWerkRooster() : rooster;
@@ -604,7 +610,14 @@ namespace Rpm.Productie
             return new DateTime(x.Year, x.Month, x.Day, time.Hours, time.Minutes, 0);
         }
 
-        public static DateTime EerstVorigeWerkdag(DateTime vanaf, ref Rooster rooster, Rooster realrooster, List<Rooster> specialeRoosters)
+        public static DateTime EerstVorigeWerkdag(this DateTime vanaf)
+        {
+            if (Manager.Opties == null) return DateTime.Now;
+            var r = Manager.Opties.GetWerkRooster();
+            return EerstVorigeWerkdag(vanaf, ref r, r, Manager.Opties.SpecialeRoosters);
+        }
+
+        public static DateTime EerstVorigeWerkdag(this DateTime vanaf, ref Rooster rooster, Rooster realrooster, List<Rooster> specialeRoosters)
         {
             var x = vanaf;
             rooster = rooster == null || !rooster.IsValid() ? Manager.Opties.GetWerkRooster() : rooster;

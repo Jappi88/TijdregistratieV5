@@ -50,7 +50,6 @@ namespace Forms
             this.productieListControl1.Location = new System.Drawing.Point(10, 60);
             this.productieListControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.productieListControl1.Name = "productieListControl1";
-            this.productieListControl1.RemoveCustomItemIfNotValid = true;
             this.productieListControl1.SelectedItem = null;
             this.productieListControl1.ShowWaitUI = true;
             this.productieListControl1.Size = new System.Drawing.Size(860, 454);

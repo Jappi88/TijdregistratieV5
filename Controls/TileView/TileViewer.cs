@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using iTextSharp.text.pdf.parser.clipper;
-using MetroFramework;
-using ProductieManager.Rpm.Misc;
 
 namespace Controls
 {
@@ -17,6 +14,20 @@ namespace Controls
         public int TileInfoRefresInterval { get; set; } = 10000;
         public bool EnableTileSelection { get; set; }
         public bool MultipleSelections { get; set; }
+        public string GroupName { get; set; }
+
+        bool _compact;
+        public bool IsCompactMode
+        {
+            get => _compact;
+            set
+            {
+                bool flag = _compact != value;
+                _compact = value;
+                if (flag)
+                    UpdateTiles();
+            }
+        }
 
         public bool EnableTimer
         {
@@ -30,16 +41,17 @@ namespace Controls
             _timer = new System.Timers.Timer();
             _timer.Interval = TileInfoRefresInterval;
             _timer.Elapsed += _timer_Elapsed;
+            _timer.Enabled = false;
         }
 
         public void StartTimer()
         {
-            _timer?.Start();
+            //_timer?.Start();
         }
 
         public void StopTimer()
         {
-            _timer?.Stop();
+           // _timer?.Stop();
         }
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -86,11 +98,41 @@ namespace Controls
             StartTimer();
         }
 
-        private void UpdateTiles(List<TileInfoEntry> tiles, TileInfoEntry selected = null)
+        public void UpdateSize()
+        {
+            return;
+            var items = Controls.Cast<Control>().ToList();
+            int x = items.Sum(x=> x.Width + 5);
+            int y = items.Sum(x => x.Height + 5);
+            var sqrt = Math.Sqrt((items.Count + (items.Count%2)));
+            if (this.Parent?.Parent != null)
+            {
+                this.Parent.Parent.Width = (int)Math.Ceiling(x / sqrt);
+                this.Parent.Parent.Height = (int)Math.Ceiling(y / sqrt + 1);
+                this.Parent.Parent.PerformLayout();
+                this.Parent.Parent?.Parent?.PerformLayout();
+            }
+            else
+            {
+                this.Width = (int)(x / sqrt);
+                this.Height = (int)(y / sqrt);
+            }
+            Invalidate();
+        }
+
+        public void UpdateTiles(TileInfoEntry selected = null, string groupname = null)
+        {
+            if (Manager.Opties?.TileLayout != null)
+                UpdateTiles(Manager.Opties.TileLayout, selected, groupname);
+        }
+
+        public void UpdateTiles(List<TileInfoEntry> tiles, TileInfoEntry selected = null, string groupname = null)
         {
             try
             {
-                var xTiles = tiles;
+                groupname ??= GroupName;
+                var xTiles = tiles?.Where(x=> string.Equals(x.Group??"", groupname??"", StringComparison.CurrentCultureIgnoreCase)).ToList();
+                xTiles ??= new List<TileInfoEntry>();
                 var _Tiles = GetAllTiles();
                 var xtoremove = _Tiles.Where(x => x.Tag is TileInfoEntry ent && !xTiles.Any(t => t.Equals(ent)))
                     .ToList();
@@ -120,7 +162,7 @@ namespace Controls
                     if (x.Tag is TileInfoEntry ent)
                         Controls.SetChildIndex(x, ent.TileIndex);
                 });
-
+                UpdateSize();
             }
             catch (Exception e)
             {
@@ -135,6 +177,7 @@ namespace Controls
                 tile ??= GetTile(entry);
                 var xtile = tile ?? new Tile();
                 xtile.AllowSelection = EnableTileSelection;
+                entry.Group = GroupName;
                 if (tile == null)
                 {
                     xtile.Click += Xtile_Click;
@@ -251,9 +294,10 @@ namespace Controls
                 foreach (var tile in xtiles)
                 {
                     tile.TileIndex = index++;
+                    tile.Group = GroupName;
                 }
-
-                Manager.Opties.TileLayout = xtiles;
+                Manager.Opties.TileLayout.RemoveAll(x => string.Equals(x.Group, GroupName, StringComparison.CurrentCultureIgnoreCase));
+                Manager.Opties.TileLayout.AddRange(xtiles);
                 if (save)
                     return Manager.Opties.xSave(null, false, false, false);
                 return true;
@@ -307,6 +351,7 @@ namespace Controls
         {
             var data = (Tile) e.Data.GetData(typeof(Tile));
             if (data == null) return;
+            var par = data.Parent;
             var _destination = (FlowLayoutPanel) sender;
             // Just add the control to the new panel.
             // No need to remove from the other panel, this changes the Control.Parent property.
@@ -328,7 +373,11 @@ namespace Controls
                     }
                 }
             }
-            _destination.Controls.SetChildIndex(data, index);
+            else
+            {
+                _destination.Controls.Add(data);
+            }
+            //_destination.Controls.SetChildIndex(data, index);
             if (data.Tag is TileInfoEntry ent)
             {
                 ent.TileIndex = index;
@@ -338,6 +387,12 @@ namespace Controls
                     Manager.Opties.TileLayout[xindex] = ent;
                 }
             }
+            if (par is TileViewer tv && !_destination.Equals(par))
+            {
+                tv.UpdateSize();
+                UpdateSize();
+            }
+
             SaveTiles(false);
             _destination.Invalidate();
         }

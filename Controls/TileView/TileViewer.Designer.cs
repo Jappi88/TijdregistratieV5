@@ -35,6 +35,7 @@ namespace Controls
             // TileViewer
             // 
             this.AllowDrop = true;
+            this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.White;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Size = new System.Drawing.Size(1061, 628);

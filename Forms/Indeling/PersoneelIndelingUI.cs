@@ -329,7 +329,7 @@ namespace Forms
 
         private void ListProducties()
         {
-            productieListControl1.UpdateProductieList(false,false,true);
+            productieListControl1.UpdateProductieList(true,false,true);
             UpdateTitle();
         }
 

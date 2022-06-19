@@ -12,22 +12,30 @@ namespace Controls
 {
     public partial class BeheerTilesForm : MetroBaseForm
     {
-        public BeheerTilesForm()
+        string _groupname;
+        public BeheerTilesForm(string groupname)
         {
             InitializeComponent();
+            _groupname = groupname;
             ((OLVColumn) xmainlist.Columns[0]).ImageGetter = (x) => 0;
             ((OLVColumn)xlist.Columns[0]).ImageGetter = (x) => 1;
-            xmainlist.SetObjects(Manager.Opties.GetAllDefaultEntries(true));
-            xlist.SetObjects(Manager.Opties.TileLayout?.OrderBy(x=> x.TileIndex).ToList()??new List<TileInfoEntry>());
+            xmainlist.SetObjects(Manager.Opties.GetAllDefaultEntries(true, default, default));
+            xlist.SetObjects(Manager.Opties.TileLayout?.Where(x=> string.Equals(x.Group, groupname, StringComparison.CurrentCultureIgnoreCase)).OrderBy(x=> x.TileIndex).ToList()??new List<TileInfoEntry>());
         }
 
         private void xopslaan_Click(object sender, System.EventArgs e)
         {
             if (Manager.Opties != null)
             {
-                Manager.Opties.TileLayout = xlist.Objects.Cast<TileInfoEntry>().ToList();
-                for (int i = 0; i < Manager.Opties.TileLayout.Count; i++)
-                    Manager.Opties.TileLayout[i].TileIndex = i;
+                
+                var items = xlist.Objects.Cast<TileInfoEntry>().ToList();
+                for (int i = 0; i < items.Count; i++)
+                {
+                    items[i].TileIndex = i;
+                    items[i].Group = _groupname;
+                }
+                Manager.Opties.TileLayout.RemoveAll(x => string.Equals(x.Group, _groupname, StringComparison.CurrentCultureIgnoreCase));
+                Manager.Opties.TileLayout.AddRange(items);
                 Manager.Opties.Save(null, false, false, false);
             }
 
@@ -75,7 +83,7 @@ namespace Controls
                     xlist.AddObject(entry);
                     xtile = entry;
                 }
-
+                entry.Group = _groupname;
                 xlist.SelectedObject = xtile;
                 xlist.SelectedItem?.EnsureVisible();
             }

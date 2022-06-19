@@ -498,60 +498,66 @@ namespace Rpm.SqlLite
             //lock (_locker)
             //{
             T xreturn = default;
-            for (int i = 0; i < 5; i++)
+            try
             {
-                bool xbreak = false;
-                try
+                for (int i = 0; i < 5; i++)
                 {
-                    if (!File.Exists(filepath)) return default;
-                    using var fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    var packet = ReadPacket(fs);
-                    var ser = new SharpSerializer(true);
-                    T xent = default;
-                    if (bereik != null && packet != null &&
-                        !(packet.Changed >= bereik.Start && packet.Changed <= bereik.Stop))
-                        return xent;
-                    if (packet == null || string.IsNullOrEmpty(criteria) ||
-                        packet.ContainsCriteria(criteria, fullmatch))
+                    bool xbreak = false;
+                    try
                     {
-                        xbreak = true;
-                        xreturn = (T) ser.Deserialize(fs);
-                        if (monitorcorrupted)
+                        if (!File.Exists(filepath)) return default;
+                        using var fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        var packet = ReadPacket(fs);
+                        var ser = new SharpSerializer(true);
+                        T xent = default;
+                        if (bereik != null && packet != null &&
+                            !(packet.Changed >= bereik.Start && packet.Changed <= bereik.Stop))
+                            return xent;
+                        if (packet == null || string.IsNullOrEmpty(criteria) ||
+                            packet.ContainsCriteria(criteria, fullmatch))
                         {
-                            lock (CorruptedFilePaths)
+                            xbreak = true;
+                            xreturn = (T)ser.Deserialize(fs);
+                            if (monitorcorrupted)
                             {
+                                //lock (CorruptedFilePaths)
+                                //{
                                 int index = 0;
                                 if ((index = CorruptedFilePaths.IndexOf(filepath.ToLower())) > -1)
                                 {
                                     CorruptedFilePaths.RemoveAt(index);
                                     OnCorruptedFilesChanged();
                                 }
+                                //}
                             }
                         }
-                    }
 
-                    fs.Close();
-                    return xreturn;
-                }
-                catch
-                {
-                    xreturn = default;
-                    if (xbreak && monitorcorrupted)
+                        fs.Close();
+                        return xreturn;
+                    }
+                    catch
                     {
-                        lock (CorruptedFilePaths)
+                        xreturn = default;
+                        if (xbreak && monitorcorrupted)
                         {
+                            //lock (CorruptedFilePaths)
+                            //{
                             if (CorruptedFilePaths.IndexOf(filepath.ToLower()) < 0)
                             {
                                 CorruptedFilePaths.Add(filepath.ToLower());
                                 OnCorruptedFilesChanged();
                             }
-                        }
+                            //}
 
-                        break;
+                            break;
+                        }
                     }
                 }
             }
-
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
             return xreturn;
             //}
         }

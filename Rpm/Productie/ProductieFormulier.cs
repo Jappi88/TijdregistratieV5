@@ -327,9 +327,12 @@ namespace Rpm.Productie
 
             try
             {
+                DoorloopTijd = form.DoorloopTijd;
+                Aantal = form.Aantal;
                 Omschrijving = form.Omschrijving;
                 ArtikelNr = form.ArtikelNr;
                 Eenheid = form.Eenheid;
+               
                 if (form.Materialen.Count > 0)
                 {
                     foreach (var mat in form.Materialen)
@@ -354,6 +357,7 @@ namespace Rpm.Productie
                             mybew.Naam = bew.Naam;
                             mybew.Opmerking = bew.Opmerking;
                             mybew.Eenheid = bew.Eenheid;
+                            mybew.DoorloopTijd = bew.DoorloopTijd;
                         }
                         else
                         {
@@ -365,7 +369,7 @@ namespace Rpm.Productie
                         }
                     }
                 }
-
+                LeverDatum = form.LeverDatum;
                 return true;
             }
             catch (Exception)

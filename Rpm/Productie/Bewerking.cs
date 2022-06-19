@@ -553,7 +553,7 @@ namespace Rpm.Productie
                 AanbevolenPersonen = AantalPersonenNodig(ref dt, false);
                 StartOp = dt;
                 if (AantalActievePersonen == 0 && State == ProductieState.Gestart)
-                    _ = xStopProductie(true, true);
+                    _ = xStopProductie(true,true, true);
                 if (save)
                     LastChanged = LastChanged.UpdateChange(change, DbType.Producties);
                 if (Parent != null)
@@ -705,7 +705,7 @@ namespace Rpm.Productie
             }
             catch (Exception ex)
             {
-                _ = xStopProductie(false, true);
+                _ = xStopProductie(false,true, true);
                 return false;
             }
             finally {
@@ -751,12 +751,12 @@ namespace Rpm.Productie
             return null;
         }
 
-        public Task<bool> StopProductie(bool email, bool updatecombis)
+        public Task<bool> StopProductie(bool email,bool save, bool updatecombis)
         {
-            return Task.Factory.StartNew(() => xStopProductie(email, updatecombis));
+            return Task.Factory.StartNew(() => xStopProductie(email,save, updatecombis));
         }
 
-        public bool xStopProductie(bool email, bool updatecombis, bool showmessage = true)
+        public bool xStopProductie(bool email,bool save, bool updatecombis, bool showmessage = true)
         {
             Manager.ProductieProvider.AddToExclude(this);
             try
@@ -788,7 +788,7 @@ namespace Rpm.Productie
                         _ = Manager.Database.UpSert(x, $"[{x.PersoneelNaam}] uit werk [{Path}] gehaald", false);
                     }
                 }
-                if (xUpdateBewerking(null, $"[{Path}] Bewerking Gestopt",true,showmessage) && updatecombis)
+                if (xUpdateBewerking(null, $"[{Path}] Bewerking Gestopt",save,showmessage, false,save) && updatecombis)
                     _ = xUpdateCombies();
                 if (email)
                     RemoteProductie.RespondByEmail(this,
@@ -863,7 +863,7 @@ namespace Rpm.Productie
             }
 
             if (State == ProductieState.Gestart)
-                xStopProductie(false, true);
+                xStopProductie(false,true, true);
             foreach (var per in personen)
             {
                 if (per.IngezetAanKlus(this, false, out var klusjes))
@@ -1010,8 +1010,8 @@ namespace Rpm.Productie
                 if (arg.Max == 0)
                     arg.Max = 100;
                 arg.Value = this;
-                _ = xStopProductie(false, true);
                 Manager.ProductieProvider.AddToExclude(this);
+                _ = xStopProductie(false,false,false, true);
                 AantalGemaakt = aantal;
                 DatumGereed = DateTime.Now;
                 GereedNote = new NotitieEntry(notitie, this) { Type = NotitieType.BewerkingGereed, Naam = paraaf };
@@ -1830,7 +1830,7 @@ namespace Rpm.Productie
                             switch (State)
                             {
                                 case ProductieState.Gestopt:
-                                    _ = bew.StopProductie(true, true);
+                                    _ = bew.StopProductie(true,true, true);
                                     break;
                                 case ProductieState.Gestart:
                                     if (!bew.WerkPlekken.Any(x => x.IsActief()))

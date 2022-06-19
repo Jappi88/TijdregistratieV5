@@ -214,12 +214,12 @@ namespace Rpm.Misc
             return xreturn;
         }
 
-        public static void ExcludeFromUpdate(this ProductieFormulier productie)
+        public static void ExcludeFromUpdate(this IProductieBase productie)
         {
            Manager.ProductieProvider?.AddToExclude(productie);
         }
 
-        public static void RemoveExcludeFromUpdate(this ProductieFormulier productie)
+        public static void RemoveExcludeFromUpdate(this IProductieBase productie)
         {
             Manager.ProductieProvider?.RemoveFromExclude(productie);
         }
@@ -2188,6 +2188,7 @@ namespace Rpm.Misc
             return false;
         }
 
+        private static bool _isprinting;
         public static async void PrintPDFWithAcrobat(string filepath)
         {
 
@@ -2235,7 +2236,9 @@ namespace Rpm.Misc
                 {
                     try
                     {
-
+                        while (_isprinting)
+                            System.Threading.Thread.Sleep(100);
+                        _isprinting = true;
                         for (int i = 0; i < xprint.PrinterSettings.Copies; i++)
                         {
                             //pr.Arg.Current = i;
@@ -2269,6 +2272,7 @@ namespace Rpm.Misc
                     {
                         Console.WriteLine(e);
                     }
+                    _isprinting = false;
                 });
                 //pr.Arg.Type = ProgressType.WriteCompleet;
                 // pr.Arg.OnChanged(filepath);

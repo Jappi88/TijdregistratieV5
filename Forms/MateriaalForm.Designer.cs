@@ -109,9 +109,10 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(800, 625);
             this.Name = "MateriaalForm";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MateriaalForm";
+            this.Title = "MateriaalForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MateriaalForm_FormClosing);
             this.Shown += new System.EventHandler(this.MateriaalForm_Shown);
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);

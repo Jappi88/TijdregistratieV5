@@ -51,7 +51,7 @@ namespace Controls
             InitializeComponent();
             productieListControl1.ValidHandler = IsAllowed;
             productieListControl1.ItemCountChanged += ProductieListControl1_ItemCountChanged;
-            productieListControl1.RemoveCustomItemIfNotValid = true;
+            //productieListControl1.RemoveCustomItemIfNotValid = true;
         }
 
         private void ProductieListControl1_ItemCountChanged(object sender, EventArgs e)
