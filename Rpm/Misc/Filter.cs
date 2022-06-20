@@ -29,12 +29,13 @@ namespace Rpm.Misc
             DateCreated = DateTime.Now;
         }
 
-        public bool IsAllowed(object value, string listname)
+        public bool IsAllowed(object value, string listname, bool tempfilter)
         {
             try
             {
                 if (!string.IsNullOrEmpty(listname) && !ListNames.Any(x => string.Equals(x, listname))) return true;
                 if (value == null) return false;
+                if (!tempfilter && this.IsTempFilter) return true;
                 if (Filters == null || Filters.Count == 0) return true;
                 bool xdone = false;
                 bool xreturn = false;

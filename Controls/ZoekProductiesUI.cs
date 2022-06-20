@@ -69,7 +69,7 @@ namespace Controls
 
         public RangeFilter ShowFilter;
 
-        private bool IsAllowed(object value, string filter)
+        private bool IsAllowed(object value, string filter, bool tempfilter = false)
         {
             try
             {

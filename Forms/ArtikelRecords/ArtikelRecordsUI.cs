@@ -678,7 +678,7 @@ namespace Forms.ArtikelRecords
             }
         }
 
-        public bool IsValidHandler(object value, string filter)
+        public bool IsValidHandler(object value, string filter, bool tempfilter = false)
         {
             if (value is Bewerking bew)
             {

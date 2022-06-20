@@ -262,7 +262,7 @@ namespace Controls
             xartikelsList_SelectedIndexChanged(this, EventArgs.Empty);
         }
 
-        private bool IsValidHandler(object value, string filter)
+        private bool IsValidHandler(object value, string filter, bool tempfilter = false)
         {
             if (Disposing || IsDisposed) return false;
             try
@@ -280,7 +280,7 @@ namespace Controls
             }
         }
 
-        public bool xIsValidHandler(object value, string filter)
+        public bool xIsValidHandler(object value, string filter, bool tempfilter = false)
         {
             if (xartikelsList.SelectedItems.Count > 0)
             {

@@ -866,7 +866,7 @@ namespace Controls
             return xsearch.Text.ToLower() == "zoeken..." ? "" : xsearch.Text;
         }
 
-        private bool IsAllowd(Bewerking bewerking)
+        private bool IsAllowd(Bewerking bewerking, bool tempfilter)
         {
             var filters = Manager.Opties.Filters;
             if (filters is { Count: > 0 })
@@ -875,7 +875,7 @@ namespace Controls
                 foreach (var filter in filters)
                     if (filter.ListNames.Any(x =>
                             string.Equals(ListName, x, StringComparison.CurrentCultureIgnoreCase)))
-                        xreturn &= filter.IsAllowed(bewerking, ListName);
+                        xreturn &= filter.IsAllowed(bewerking, ListName, tempfilter);
 
                 return xreturn;
             }
@@ -883,13 +883,13 @@ namespace Controls
             return true;
         }
 
-        private bool IsAllowd(ProductieFormulier productie)
+        private bool IsAllowd(ProductieFormulier productie, bool tempfilter)
         {
             var filters = Manager.Opties.Filters;
             if (filters is { Count: > 0 })
             {
                 if (productie?.Bewerkingen == null) return false;
-                return productie.Bewerkingen.Any(IsAllowd);
+                return productie.Bewerkingen.Any(x=> IsAllowd(x, tempfilter));
             }
 
             return true;
@@ -960,10 +960,10 @@ namespace Controls
                     bws.AddRange(Bewerkingen = Manager.xGetBewerkingen(states, true, check));
                 }
                 if (customfilter && ValidHandler != null)
-                    bws = bws.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
+                    bws = bws.Where(x => IsAllowd(x, true) && ValidHandler.Invoke(x, GetFilter()))
                         .ToList();
                 else
-                    bws = bws.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter())).ToList();
+                    bws = bws.Where(x => IsAllowd(x, true) && x.IsAllowed(GetFilter())).ToList();
                 return bws;
             }
             catch (Exception ex)
@@ -982,10 +982,10 @@ namespace Controls
                     .ToList()
                 : Producties = Manager.xGetProducties(states, true, true, null, check);
             if (customfilter && ValidHandler != null)
-                xprods = xprods.Where(x => IsAllowd(x) && ValidHandler.Invoke(x, GetFilter()))
+                xprods = xprods.Where(x => IsAllowd(x, true) && ValidHandler.Invoke(x, GetFilter()))
                     .ToList();
             else
-                xprods = xprods.Where(x => IsAllowd(x) && x.IsAllowed(GetFilter(), states, true))
+                xprods = xprods.Where(x => IsAllowd(x, true) && x.IsAllowed(GetFilter(), states, true))
                     .ToList();
             return xprods;
         }
@@ -1119,7 +1119,7 @@ namespace Controls
                 }
                 if (!IsBewerkingView)
                 {
-                    var isvalid = IsAllowd(form) && form.IsAllowed(filter, states, true);
+                    var isvalid = IsAllowd(form, true) && form.IsAllowed(filter, states, true);
                     if (isvalid && ValidHandler != null)
                         isvalid &= ValidHandler.Invoke(form, filter);
 
@@ -1299,7 +1299,7 @@ namespace Controls
                         var b = form.Bewerkingen[i];
                         var index = -1;
                         UpdateBewerking(b, states, ref index, false, false);
-                        var isvalid = IsAllowd(b) && b.IsAllowed(filter ?? GetFilter()) &&
+                        var isvalid = IsAllowd(b, true) && b.IsAllowed(filter ?? GetFilter()) &&
                                       states.Any(x => b.IsValidState(x));
                         if (isvalid && ValidHandler != null)
                             isvalid &= ValidHandler.Invoke(b, filter ?? GetFilter());
@@ -1399,12 +1399,12 @@ namespace Controls
         public bool UpdateBewerking(Bewerking bew, ViewState[] states, ref int index, bool refresh, bool updatelijst)
         {
 
-            var valid = bew != null && IsAllowd(bew);
+            var valid = bew != null && IsAllowd(bew, false);
             if (valid)
             {
                 if (ValidHandler != null)
                     valid &= states.Any(bew.IsValidState) && ValidHandler.Invoke(bew, null);
-                else valid &= states.Any(bew.IsValidState) && bew.IsAllowed(null);
+                else valid &= states.Any(bew.IsValidState) && bew.IsAllowed(null, false);
             }
             var xret = false;
             //lock (Bewerkingen)
@@ -1455,7 +1455,7 @@ namespace Controls
 
         public void UpdateForm(ProductieFormulier form, ViewState[] states, ref int index, bool refresh)
         {
-            var valid = form != null && IsAllowd(form);
+            var valid = form != null && IsAllowd(form, true);
             if (valid)
             {
                 if (ValidHandler != null)
@@ -1505,7 +1505,7 @@ namespace Controls
                     //else
                     //    reload = !xfilters.All(x => x.IsTempFilter);
                     var states = GetCurrentViewStates();
-                    UpdateProductieList(!states.Any(x=> x is ViewState.Alles or ViewState.Gereed), false, false);
+                    UpdateProductieList(false, false, false);
                 }
             }
             catch (Exception exception)
@@ -2802,7 +2802,7 @@ namespace Controls
                         if (prod.Bewerkingen is { Length: < 1 }) continue;
                         foreach (var bw in prod.Bewerkingen)
                         {
-                            var flag = bw.IsAllowed() && IsAllowd(bw);
+                            var flag = bw.IsAllowed() && IsAllowd(bw, true);
                             if (ValidHandler != null)
                                 flag &= ValidHandler.Invoke(bw, null);
                             if (flag)

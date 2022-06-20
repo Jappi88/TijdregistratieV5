@@ -288,7 +288,7 @@ namespace Controls
             UpdateStatus();
         }
 
-        private bool IsAllowed(object value, string filter)
+        private bool IsAllowed(object value, string filter, bool tempfilter = false)
         {
             if (IsDisposed || Disposing)
                 return false;
@@ -297,7 +297,7 @@ namespace Controls
             {
                 if (form.Bewerkingen == null || form.Bewerkingen.Length == 0)
                     return false;
-                return form.Bewerkingen.Any(x => IsAllowed(x, filter));
+                return form.Bewerkingen.Any(x => IsAllowed(x, filter, tempfilter));
             }
 
             if (value is Bewerking bew)

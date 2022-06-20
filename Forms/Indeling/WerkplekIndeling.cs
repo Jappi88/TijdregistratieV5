@@ -76,20 +76,30 @@ namespace Controls
             }
             else
             {
+                xcompact.Image = IsCompact ? Resources.icons8_expand_32 : Resources.icons8_collapse_32;
+                xcompactinfo.Visible = IsCompact && (SelectedBewerking == null || !IsSelected);
                 if (IsDefault())
                 {
                     // ximage.Image = Resources.operation;
                     xVerwijderPersoneel.Visible = false;
                     xresetindeling.Visible = false;
                     xnietingedeeld.Visible = true;
-                    xcompact.Visible = false;
+                    xcompact.Visible = true;
                     xnietingedeeld.Checked = ToonNietIngedeeld;
                     if (FieldTextGetter != null)
-                        xpersoonInfo.Text = FieldTextGetter.Invoke(this);
-                    else
-                        xpersoonInfo.Text = $"Beheer hier alle bewerkingen.<br>" +
-                                            $"Voeg werkplaatsen toe om producties daarvoor in te delen.<br>" +
-                                            $"Sleep een bewerking naar de gewenste werkplek om ze in te delen.<br>";
+                    {
+                        if (IsCompact)
+                        {
+                            xpersoonInfo.Text = "";
+                            xcompactinfo.Text = FieldTextGetter?.Invoke(this);
+                        }
+                        else
+                        {
+                            xpersoonInfo.Text = FieldTextGetter?.Invoke(this);
+                            xcompactinfo.Text = "";
+                        }
+
+                    }
                     xknoppenpanel.Visible = false;
                     xpanel.Visible = false;
                 }
@@ -102,8 +112,8 @@ namespace Controls
                     xVerwijderKlus.Enabled = SelectedBewerking != null && SelectedBewerking.State != ProductieState.Gereed;
                     xresetindeling.Visible = true;
                     xpanel.Visible = true;
-                    xcompact.Image = IsCompact ? Resources.icons8_expand_32 : Resources.icons8_collapse_32;
-                    xcompactinfo.Visible = IsCompact && (SelectedBewerking == null || !IsSelected);
+                 
+                    
                     if (Parent is GroupBox group)
                     {
                         if (SelectedBewerking != null && IsSelected)
@@ -123,20 +133,20 @@ namespace Controls
                     {
                         xknoppenpanel.Visible = false;
                     }
-                    if (FieldTextGetter != null)
+                }
+                if (FieldTextGetter != null)
+                {
+                    if (IsCompact)
                     {
-                        if(IsCompact)
-                        {
-                            xpersoonInfo.Text = "";
-                            xcompactinfo.Text = FieldTextGetter.Invoke(this);
-                        }
-                        else
-                        {
-                            xpersoonInfo.Text = FieldTextGetter.Invoke(this);
-                            xcompactinfo.Text = "";
-                        }
-                        
+                        xpersoonInfo.Text = "";
+                        xcompactinfo.Text = FieldTextGetter.Invoke(this);
                     }
+                    else
+                    {
+                        xpersoonInfo.Text = FieldTextGetter.Invoke(this);
+                        xcompactinfo.Text = "";
+                    }
+
                 }
                 UpdateHeight();
             }
@@ -150,7 +160,8 @@ namespace Controls
                 Control c = this.Parent ?? this;
                 if (c != null)
                 {
-                    c.Height = IsCompact ? 60 : 140;
+
+                    c.Height = IsCompact ? 60 : IsDefault()? 122 : 140;
                     this.Invalidate();
                 }
             }
@@ -187,7 +198,7 @@ namespace Controls
                         if (bew.State is ProductieState.Gereed or ProductieState.Verwijderd) continue;
                         if (!IsDefault())
                         {
-                            if (Settings?.Voorwaardes != null && !Settings.Voorwaardes.IsAllowed(bew, null))
+                            if (Settings?.Voorwaardes != null && !Settings.Voorwaardes.IsAllowed(bew, null, false))
                                 continue;
                             var wps = Manager.BewerkingenLijst?.GetWerkplekken(bew.Naam);
                             if (wps == null || !wps.Any(w =>
@@ -223,7 +234,7 @@ namespace Controls
                             if (bew.State is ProductieState.Gereed or ProductieState.Verwijderd) continue;
                             if (!IsDefault())
                             {
-                                if (Settings?.Voorwaardes != null && !Settings.Voorwaardes.IsAllowed(bew, null))
+                                if (Settings?.Voorwaardes != null && !Settings.Voorwaardes.IsAllowed(bew, null, false))
                                     continue;
                                 var wps = Manager.BewerkingenLijst?.GetWerkplekken(bew.Naam);
                                 if (wps == null || !wps.Any(w =>

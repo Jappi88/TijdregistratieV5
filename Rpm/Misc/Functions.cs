@@ -83,7 +83,7 @@ namespace Rpm.Misc
                         p.BerekentLeverDatum = newdate;
                     if (old != newdate && updatevalue && save)
                     {
-                        p.xUpdate($"[{p.Path}, {p.ArtikelNr}] {p.Omschrijving}\n\n" +
+                        p.Update($"[{p.Path}, {p.ArtikelNr}] {p.Omschrijving}\n\n" +
                             $"Berekent datum geupdate naar {newdate.ToString("f")}", true, true, showmessage);
                     }
                     lastdate = newdate;
@@ -115,16 +115,16 @@ namespace Rpm.Misc
             return xreturn;
         }
 
-        public static bool IsAllowed(object value, string filter)
+        public static bool IsAllowed(object value, string filter, bool tempfilter = true)
         {
             if (value is ProductieFormulier prod)
-                return prod.IsAllowed(filter);
+                return prod.IsAllowed(filter, tempfilter);
             if (value is Bewerking bew)
-                return bew.IsAllowed(filter);
+                return bew.IsAllowed(filter, tempfilter);
             return false;
         }
 
-        public static bool IsAllowed(this ProductieFormulier form, string filter)
+        public static bool IsAllowed(this ProductieFormulier form, string filter, bool tempfilter = true)
         {
             if (form == null || string.IsNullOrEmpty(form.ProductieNr))
                 return false;
@@ -148,7 +148,7 @@ namespace Rpm.Misc
 
             //if (Manager.Opties == null || Manager.Opties.ToonAlles)
             //    return true;
-            return form.Bewerkingen.Length == 0 || form.Bewerkingen.Any(x => x.IsAllowed(filter));
+            return form.Bewerkingen.Length == 0 || form.Bewerkingen.Any(x => x.IsAllowed(filter, tempfilter));
         }
 
         public static Dictionary<string, List<object>> ToNameSections(this List<Bewerking> bewerkingen, bool iswerkplek,
@@ -430,30 +430,30 @@ namespace Rpm.Misc
 
         #region Bewerkingen
 
-        public static bool IsAllowed(this IProductieBase bew)
+        public static bool IsAllowed(this IProductieBase bew, bool tempfilter = true)
         {
-            return IsAllowed(bew, null);
+            return IsAllowed(bew, null, tempfilter);
         }
 
-        public static bool IsAllowed(this Bewerking bew)
+        public static bool IsAllowed(this Bewerking bew, bool tempfilter = true)
         {
-            return IsAllowed(bew, null);
+            return IsAllowed(bew, null, tempfilter);
         }
 
-        public static bool IsAllowed(this Bewerking bew, string filter, ViewState state)
+        public static bool IsAllowed(this Bewerking bew, string filter, ViewState state, bool tempfilter = true)
         {
             if (bew == null) return false;
-            return IsAllowed(bew, filter) && bew.IsValidState(state);
+            return IsAllowed(bew, filter, tempfilter) && bew.IsValidState(state);
         }
 
-        public static bool IsAllowed(this Bewerking bew, string filter)
+        public static bool IsAllowed(this Bewerking bew, string filter, bool tempfilter = true)
         {
             if (Manager.Opties == null || bew == null || string.IsNullOrEmpty(bew.ProductieNr))
                 return false;
             if (!string.IsNullOrEmpty(filter) && !bew.ContainsFilter(filter)) return false;
             if(Manager.Opties.ActieveFilters != null && Manager.Opties.ActieveFilters.Count > 0)
             {
-                return Manager.Opties.ActieveFilters.Any(x => x.IsAllowed(bew, null));
+                return Manager.Opties.ActieveFilters.Any(x => x.IsAllowed(bew, null, tempfilter));
             }
             return true;
         }

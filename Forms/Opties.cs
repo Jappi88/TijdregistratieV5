@@ -529,6 +529,8 @@ namespace Forms
             //default settings die we hier niet veranderen.
             if (_LoadedOpties != null)
             {
+                xs.GroupEntries = _LoadedOpties.GroupEntries;
+
                 xs.BackgroundImagePath = _LoadedOpties.BackgroundImagePath;
                 xs.PreviewShown = _LoadedOpties.PreviewShown;
                 xs.WelcomeShown = _LoadedOpties.WelcomeShown;

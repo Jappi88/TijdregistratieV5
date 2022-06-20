@@ -42,7 +42,7 @@ namespace Forms
             Bewerkingen = bws;
         }
 
-        public bool IsAllowed(object item, string filter)
+        public bool IsAllowed(object item, string filter, bool tempfilter = false)
         {
             if(item is Bewerking bewerking)
             {

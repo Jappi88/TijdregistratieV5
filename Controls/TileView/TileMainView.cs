@@ -303,7 +303,7 @@ namespace Controls.TileView
                                                 ViewState.Gestart,
                                                 ViewState.Gestopt,
                                             }, true, null, true);
-                                        bws = bws.Where(x => xf.IsAllowed(x, null)).ToList();
+                                        bws = bws.Where(x => xf.IsAllowed(x, null, false)).ToList();
                                         entry.TileCount = bws.Count;
                                     }
                                     else entry.TileCount = 0;

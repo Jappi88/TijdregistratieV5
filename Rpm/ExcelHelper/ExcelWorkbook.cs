@@ -1994,7 +1994,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                     var producties = Manager.Database
                         .xGetBewerkingen(ViewState.Alles, true, null, null,false);
                     if (filters != null && filters.Count > 0)
-                        producties = producties.Where(x => filters.Any(f => f.IsAllowed(x,"ExcelWeekOverzicht"))).ToList();
+                        producties = producties.Where(x => filters.Any(f => f.IsAllowed(x,"ExcelWeekOverzicht", false))).ToList();
                     arg.Message = $"Geen producties gevonden!";
                     if (handler != null && !handler.Invoke(arg)) return false;
                     if (producties.Count == 0) return false;

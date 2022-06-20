@@ -39,13 +39,13 @@ namespace Forms
             UpdateListName();
         }
 
-        public bool IsValidHandler(object value, string filter)
+        public bool IsValidHandler(object value, string filter, bool tempfilter = false)
         {
             if (value is Bewerking bew)
             {
                 var flag = _bewerkingen.IndexOf(bew) > -1;
                 if (ValidHandler != null)
-                    flag &= ValidHandler.Invoke(bew, filter);
+                    flag &= ValidHandler.Invoke(bew, filter, tempfilter);
                 return flag;
             }
 

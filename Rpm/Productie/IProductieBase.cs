@@ -390,14 +390,14 @@ namespace Rpm.Productie
             return 0;
         }
 
-        public virtual Task<bool> Update(string change, bool save, bool raiseevent)
+        public virtual Task<bool> Update(string change, bool save, bool raiseevent, bool showmessage = true)
         {
             try
             {
                 if (this is Bewerking bew)
-                    return bew.UpdateBewerking(null, change, save);
+                    return bew.UpdateBewerking(null, change, save, showmessage);
                 if (this is ProductieFormulier form)
-                    return form.UpdateForm(true, false, null, change, save,save,raiseevent);
+                    return form.UpdateForm(true, false, null, change, save,showmessage,raiseevent);
                 return Task.FromResult<bool>(false);
             }
             catch (Exception e)

@@ -38,11 +38,11 @@ namespace Controls
             this.panel1 = new System.Windows.Forms.Panel();
             this.xsettings = new System.Windows.Forms.Button();
             this.xresetindeling = new System.Windows.Forms.Button();
-            this.xcompact = new System.Windows.Forms.Button();
             this.xknoppenpanel = new System.Windows.Forms.Panel();
             this.xVerwijderKlus = new System.Windows.Forms.Button();
             this.xStartKlus = new System.Windows.Forms.Button();
             this.xStopKlus = new System.Windows.Forms.Button();
+            this.xcompact = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.xnietingedeeld = new MetroFramework.Controls.MetroCheckBox();
             this.xpersoonInfo = new TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel();
@@ -59,7 +59,7 @@ namespace Controls
             this.xVerwijderPersoneel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
             this.xVerwijderPersoneel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xVerwijderPersoneel.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xVerwijderPersoneel.Location = new System.Drawing.Point(122, 5);
+            this.xVerwijderPersoneel.Location = new System.Drawing.Point(117, 5);
             this.xVerwijderPersoneel.Name = "xVerwijderPersoneel";
             this.xVerwijderPersoneel.Size = new System.Drawing.Size(34, 34);
             this.xVerwijderPersoneel.TabIndex = 3;
@@ -96,7 +96,7 @@ namespace Controls
             this.xcompactinfo.IsSelectionEnabled = false;
             this.xcompactinfo.Location = new System.Drawing.Point(306, 0);
             this.xcompactinfo.Name = "xcompactinfo";
-            this.xcompactinfo.Size = new System.Drawing.Size(1, 44);
+            this.xcompactinfo.Size = new System.Drawing.Size(6, 44);
             this.xcompactinfo.TabIndex = 7;
             this.xcompactinfo.Text = null;
             this.xcompactinfo.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xpersoonInfo_ImageLoad);
@@ -112,14 +112,14 @@ namespace Controls
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.xcompact);
             this.panel1.Controls.Add(this.xsettings);
             this.panel1.Controls.Add(this.xVerwijderPersoneel);
             this.panel1.Controls.Add(this.xresetindeling);
-            this.panel1.Controls.Add(this.xcompact);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel1.Location = new System.Drawing.Point(307, 0);
+            this.panel1.Location = new System.Drawing.Point(312, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(160, 44);
+            this.panel1.Size = new System.Drawing.Size(155, 44);
             this.panel1.TabIndex = 7;
             // 
             // xsettings
@@ -130,7 +130,7 @@ namespace Controls
             this.xsettings.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
             this.xsettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xsettings.Image = global::ProductieManager.Properties.Resources.ccsm_103993;
-            this.xsettings.Location = new System.Drawing.Point(45, 5);
+            this.xsettings.Location = new System.Drawing.Point(40, 5);
             this.xsettings.Name = "xsettings";
             this.xsettings.Size = new System.Drawing.Size(34, 34);
             this.xsettings.TabIndex = 9;
@@ -147,7 +147,7 @@ namespace Controls
             this.xresetindeling.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
             this.xresetindeling.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xresetindeling.Image = global::ProductieManager.Properties.Resources.refresh_arrow_1546;
-            this.xresetindeling.Location = new System.Drawing.Point(84, 5);
+            this.xresetindeling.Location = new System.Drawing.Point(79, 5);
             this.xresetindeling.Name = "xresetindeling";
             this.xresetindeling.Size = new System.Drawing.Size(34, 34);
             this.xresetindeling.TabIndex = 7;
@@ -155,23 +155,6 @@ namespace Controls
             this.toolTip1.SetToolTip(this.xresetindeling, "Reset Indeling");
             this.xresetindeling.UseVisualStyleBackColor = false;
             this.xresetindeling.Click += new System.EventHandler(this.xresetindeling_Click);
-            // 
-            // xcompact
-            // 
-            this.xcompact.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.xcompact.BackColor = System.Drawing.Color.Transparent;
-            this.xcompact.FlatAppearance.BorderSize = 0;
-            this.xcompact.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
-            this.xcompact.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xcompact.Image = global::ProductieManager.Properties.Resources.icons8_collapse_32;
-            this.xcompact.Location = new System.Drawing.Point(5, 5);
-            this.xcompact.Name = "xcompact";
-            this.xcompact.Size = new System.Drawing.Size(34, 34);
-            this.xcompact.TabIndex = 8;
-            this.xcompact.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolTip1.SetToolTip(this.xcompact, "Compact mode");
-            this.xcompact.UseVisualStyleBackColor = false;
-            this.xcompact.Click += new System.EventHandler(this.xcompact_Click);
             // 
             // xknoppenpanel
             // 
@@ -236,6 +219,23 @@ namespace Controls
             this.xStopKlus.Click += new System.EventHandler(this.xStopKlus_Click);
             this.xStopKlus.MouseEnter += new System.EventHandler(this.xPersoonImage_MouseEnter);
             this.xStopKlus.MouseLeave += new System.EventHandler(this.xPersoonImage_MouseLeave);
+            // 
+            // xcompact
+            // 
+            this.xcompact.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xcompact.BackColor = System.Drawing.Color.Transparent;
+            this.xcompact.FlatAppearance.BorderSize = 0;
+            this.xcompact.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
+            this.xcompact.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xcompact.Image = global::ProductieManager.Properties.Resources.icons8_collapse_32;
+            this.xcompact.Location = new System.Drawing.Point(6, 6);
+            this.xcompact.Name = "xcompact";
+            this.xcompact.Size = new System.Drawing.Size(34, 34);
+            this.xcompact.TabIndex = 8;
+            this.xcompact.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTip1.SetToolTip(this.xcompact, "Compact mode");
+            this.xcompact.UseVisualStyleBackColor = false;
+            this.xcompact.Click += new System.EventHandler(this.xcompact_Click);
             // 
             // xnietingedeeld
             // 

@@ -105,7 +105,7 @@ namespace Controls
             xomschrijving.Text = msg;
         }
 
-        private bool IsAllowedCombi(object item, string filter)
+        private bool IsAllowedCombi(object item, string filter, bool tempfilter = false )
         {
             if(item is Bewerking bewerking)
             {
@@ -115,7 +115,7 @@ namespace Controls
                 {
                     return false;
                 }
-                return bewerking.IsAllowed(filter);
+                return bewerking.IsAllowed(filter, tempfilter);
             }
             return false;
         }
