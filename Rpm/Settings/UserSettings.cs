@@ -88,7 +88,7 @@ namespace Rpm.Settings
                 if(defaultsize.IsDefault())
                     defaultsize = new Size(196, 74);
                 if (imagesize.IsDefault())
-                    imagesize = new Size(64, 64);
+                    imagesize = new Size(48, 48);
                 xtiles.Add(new TileInfoEntry()
                 {
                     Text = "Producties",

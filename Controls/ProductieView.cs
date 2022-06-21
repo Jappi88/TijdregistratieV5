@@ -277,7 +277,6 @@ namespace Controls
                 xprodlist.InitProductie(true, true, true, true, true, true);
                 xprodlist.InitEvents();
                 UpdateTileViewed(entry, true);
-
             }
             catch (Exception e)
             {
@@ -983,23 +982,41 @@ namespace Controls
             {
                 if (sender is TileViewer viewer)
                 {
-
-                    var xtiles = viewer.GetAllTiles().Where(x => x.Tag is TileInfoEntry {IsViewed: true}).ToList();
-                    foreach (var xt in xtiles)
+                    //var l = new LoadingForm();
+                    //l.CloseIfFinished = true;
+                    //l.ShowCloseButton = false;
+                    //var arg = l.Arg;
+                    //arg.Message = "Een moment a.u.b...";
+                    //arg.OnChanged(this);
+                    //l.ShowDialogAsync(this.ParentForm);
+                    metroCustomTabControl1.SuspendLayout();
+                    try
                     {
-                        if (xt.Tag is TileInfoEntry entry)
+
+                        var xtiles = viewer.GetAllTiles().Where(x => x.Tag is TileInfoEntry { IsViewed: true }).ToList();
+
+                        foreach (var xt in xtiles)
                         {
-                            ShowTileTabPage(entry, false);
-                            Application.DoEvents();
+                            if (xt.Tag is TileInfoEntry entry)
+                            {
+                                ShowTileTabPage(entry, false);
+                                //Application.DoEvents();
+                            }
                         }
                     }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine(exception);
+                    }
+                    //arg.Type = ProgressType.ReadCompleet;
+                    //arg.OnChanged(this);
                 }
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
-                throw;
             }
+            finally { metroCustomTabControl1.ResumeLayout(false); }
         }
 
         #endregion Tab Buttons
@@ -1534,7 +1551,8 @@ namespace Controls
                         Text = @$"ProductieManager [{name}]";
                         ShowUnreadMessage = Manager.Opties?.ToonNieweChatBerichtMelding ?? false;
                         tileMainView1.SetBackgroundImage(Manager.Opties?.BackgroundImagePath);
-                        tileMainView1.LoadTileViewer();
+                        if (init)
+                            tileMainView1.LoadTileViewer();
                         if (!string.IsNullOrEmpty(Manager.Opties?.LastShownTabName))
                             metroCustomTabControl1.SelectedTab = metroCustomTabControl1.TabPages?.Cast<MetroTabPage>()
                                 .FirstOrDefault(x => x.Tag is TileInfoEntry entry && string.Equals(entry.Name,

@@ -9,10 +9,10 @@ namespace Forms
     {
         public List<FilterEntry> SelectedFilter { get; private set; }
 
-        public EditCriteriaForm(Type type, List<FilterEntry> filters)
+        public EditCriteriaForm(Type type, List<FilterEntry> filters, bool useoperand)
         {
             InitializeComponent();
-            filterEntryEditorUI1.LoadFilterEntries(type, filters,true);
+            filterEntryEditorUI1.LoadFilterEntries(type, filters, useoperand);
             SelectedFilter = new List<FilterEntry>();
         }
 

@@ -1583,7 +1583,7 @@ namespace Forms
                 prog.CloseIfFinished = true;
                 arg.Message = "Backup terugzetten...";
                 arg.OnChanged(this);
-                _ = prog.ShowDialogAsync();
+                _ = prog.ShowDialogAsync(this);
                 if (BackupInfo.IsValidBackup(ofd.FileName, null))
                 {
                     await Manager.BackupInfo.UnZip(ofd.FileName, Manager.DbPath, null, true, arg.Token);
@@ -1616,7 +1616,7 @@ namespace Forms
                 prog.CloseIfFinished = true;
                 arg.Message = "Backup Maken...";
                 arg.OnChanged(this);
-                _= prog.ShowDialogAsync();
+                _= prog.ShowDialogAsync(this);
                 var info = GetBackupInfo();
                 info.CancellationToken = arg.Token;
                 if (await BackupInfo.CreateBackup(info, ofd.FileName))
@@ -1661,7 +1661,7 @@ namespace Forms
                 break;
             }
             if (string.IsNullOrEmpty(name)) return;
-            var xcrits = new EditCriteriaForm(typeof(IProductieBase),null);
+            var xcrits = new EditCriteriaForm(typeof(IProductieBase),null,true);
             xcrits.Title = $"Filter '{name}' aanmaken...";
             if (xcrits.ShowDialog() != DialogResult.OK || xcrits.SelectedFilter.Count == 0) return;
             var f = new Filter { IsTempFilter = false, Name = name };
@@ -1693,7 +1693,7 @@ namespace Forms
         {
             if(xFilterList.SelectedObject is Filter filter)
             {
-                var xf = new EditCriteriaForm(typeof(IProductieBase), filter.Filters);
+                var xf = new EditCriteriaForm(typeof(IProductieBase), filter.Filters, true);
                 if (xf.ShowDialog() != DialogResult.OK) return;
                 filter.Filters = xf.SelectedFilter;
                 xFilterList.RefreshObject(filter);

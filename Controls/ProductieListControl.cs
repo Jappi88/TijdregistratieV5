@@ -315,10 +315,12 @@ namespace Controls
                     var isgestart = enable3 && bws.Any(x => x != null && x.State == ProductieState.Gestart);
                     var isgestopt = enable3 && bws.Any(x => x != null && x.State == ProductieState.Gestopt);
                     var haspdf = bws.Count > 0 && bws[0]?.Parent != null && bws[0].Parent.ContainsProductiePdf();
+                    bool canprint = Functions.CanPrint();
                     //var nietbemand = bws.Any(x => !x.IsBemand);
                     xbewerkingeninfob.Enabled = ProductieLijst.Items.Count > 0;
                     xwijzigproductieinfo.Enabled = enable3 && acces1;
                     xtoonpdfb.Enabled = haspdf;
+                    xPrinten.Enabled = canprint && bws.Any(x => x.Parent?.ContainsProductiePdf() ?? false);
                     xverpakkingb.Enabled = enable1;
                     xopenproductieb.Enabled = enable3 && acces1 && verwijderd2;
                     xstartb.Enabled = acces1 && isgestopt;
@@ -366,6 +368,7 @@ namespace Controls
                     werkTekeningToolStripMenuItem.Enabled = enable1;
                     bijlagesToolStripMenuItem.Enabled = enable1 && acces1;
                     filterOpslaanToolStripMenuItem.Visible = Manager.Opties?.Filters != null && Manager.Opties.Filters.Any(x => x.IsTempFilter);
+                    printenToolStripMenuItem.Visible = xPrinten.Enabled;
                     //resetToolStripMenuItem.Visible = Manager.Opties?.Filters?.Any(x =>
                     //    x.IsTempFilter && x.ListNames.Any(s =>
                     //        string.Equals(s, ListName, StringComparison.CurrentCultureIgnoreCase))) ?? false;
@@ -1859,7 +1862,7 @@ namespace Controls
                 arg.Max = bws.Count;
                 arg.Type = ProgressType.WriteBussy;
                 arg.OnChanged(null);
-                _ = dialog.ShowDialogAsync();
+                _ = dialog.ShowDialogAsync(this?.ParentForm);
                 await Task.Factory.StartNew(new Action(() =>
                 {
                     var msg = bws.Count < 10;
@@ -2233,7 +2236,7 @@ namespace Controls
                 arg.Max = bws.Count;
                 arg.Type = ProgressType.WriteBussy;
                 arg.OnChanged(this);
-                _ = dialog.ShowDialogAsync();
+                _ = dialog.ShowDialogAsync(this?.ParentForm);
                 var skip = res == DialogResult.No;
                 await Task.Factory.StartNew(new Action(() =>
                     {
@@ -2282,7 +2285,7 @@ namespace Controls
                 arg.Max = bws.Count;
                 arg.Type = ProgressType.WriteBussy;
                 arg.OnChanged(this);
-                _ = dialog.ShowDialogAsync();
+                _ = dialog.ShowDialogAsync(this.ParentForm);
                 await Task.Factory.StartNew(new Action(() =>
                 {
                     var msg = bws.Count < 10;
@@ -2338,7 +2341,7 @@ namespace Controls
                     arg.Max = items.Count;
                     arg.Type = ProgressType.WriteBussy;
                     arg.OnChanged(null);
-                    _ = dialog.ShowDialogAsync();
+                    _ = dialog.ShowDialogAsync(this.ParentForm);
                     await Task.Factory.StartNew(new Action(() =>
                     {
                         var msg = items.Count < 10;
@@ -2405,7 +2408,7 @@ namespace Controls
                     arg.Max = items.Count;
                     arg.Type = ProgressType.WriteBussy;
                     arg.OnChanged(null);
-                    _ = dialog.ShowDialogAsync();
+                    _ = dialog.ShowDialogAsync(this.ParentForm);
                     await Task.Factory.StartNew(new Action(() =>
                     {
                         var msg = items.Count < 10;
@@ -2466,7 +2469,7 @@ namespace Controls
                     arg.Max = items.Count;
                     arg.Type = ProgressType.WriteBussy;
                     arg.OnChanged(null);
-                    _ = dialog.ShowDialogAsync();
+                    _ = dialog.ShowDialogAsync(this.ParentForm);
                     await Task.Factory.StartNew(new Action(() =>
                     {
                         var msg = items.Count < 10;
@@ -2635,6 +2638,48 @@ namespace Controls
                 xCheckAllTogle.Image = Resources.checked_accept_32x32;
             else xCheckAllTogle.Image = Resources.checked_done_32x32;
             xCheckAllTogle.Tag = sel;
+        }
+
+        public async void PrintSelectedFormulieren()
+        {
+            try
+            {
+                var prods = ProductieLijst.SelectedObjects.OfType<IProductieBase>().Distinct(new ProductieDistinctComparer()).ToList();
+                if (prods.Count == 0) return;
+                var xprint = new PrintDialog();
+                xprint.ShowHelp = false;
+                xprint.AllowSomePages = false;
+                xprint.AllowCurrentPage = false;
+                xprint.AllowPrintToFile = false;
+
+                xprint.UseEXDialog = true;
+                if (xprint.ShowDialog(this) != DialogResult.OK) return;
+                var loading = new LoadingForm();
+                loading.CloseIfFinished = true;
+                var arg = loading.Arg;
+                arg.Type = ProgressType.WriteBussy;
+                arg.Message = "Producties Printen...";
+                arg.Max = prods.Count;
+                arg.OnChanged(this);
+                loading.Show();
+                loading.BringToFront();
+                for(int i= 0; i < prods.Count; i++)
+                {
+                    if (arg.IsCanceled) break;
+                    arg.Current = i + 1;
+                    arg.Message = $"'{prods[i].ProductieNr}.pdf' Printen...";
+                    arg.OnChanged(this);
+                    await Functions.PrintPDFWithAcrobat(this, prods[i], xprint.PrinterSettings);
+                }
+                arg.Current = arg.Max;
+                arg.Message = $"Printen Gereed!";
+                arg.Type = ProgressType.WriteCompleet;
+                arg.OnChanged(this);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         #endregion MenuButton Methods
@@ -2883,6 +2928,47 @@ namespace Controls
         private void xBeheerweergavetoolstrip_Click(object sender, EventArgs e)
         {
             xBeheerweergavetoolstrip.ShowDropDown();
+        }
+
+        private void filterAanmakenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var x = Manager.Opties;
+            if (x.Filters == null) return;
+            x.Filters ??= new List<Filter>();
+            string name = null;
+            while (true)
+            {
+                var txt = new TextFieldEditor();
+                txt.MultiLine = false;
+                txt.MinimalTextLength = 4;
+                txt.EnableSecondaryField = false;
+                txt.Title = "Kies een Filternaam om aan te maken...";
+                if (txt.ShowDialog() != DialogResult.OK) return;
+                name = txt.SelectedText.Trim();
+                bool flag = x.Filters.Any(x => string.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase));
+                if (flag)
+                {
+                    var res = XMessageBox.Show(this, $"Filternaam '{name}' bestaat al!\n\n" +
+                        $"Kies een andere Filternaam a.u.b.", "Filternaam Bestaat Al", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                    if (res != DialogResult.OK) return;
+                    continue;
+                }
+                break;
+            }
+            if (string.IsNullOrEmpty(name)) return;
+            var xcrits = new EditCriteriaForm(typeof(IProductieBase), null, false);
+            xcrits.Title = $"Filter '{name}' aanmaken...";
+            if (xcrits.ShowDialog() != DialogResult.OK || xcrits.SelectedFilter.Count == 0) return;
+            var f = new Filter { IsTempFilter = false, Name = name };
+            f.Filters.AddRange(xcrits.SelectedFilter);
+            f.ListNames.Add(ListName);
+            x.Filters.Add(f);
+            Manager.OnFilterChanged(this);
+        }
+
+        private void xPrinten_Click(object sender, EventArgs e)
+        {
+            PrintSelectedFormulieren();
         }
 
         #endregion MenuButton Events
@@ -3557,7 +3643,7 @@ namespace Controls
             if (res != DialogResult.Yes) return;
             var loading = new LoadingForm();
             loading.CloseIfFinished = true;
-            loading.ShowDialogAsync();
+            loading.ShowDialogAsync(this.ParentForm);
             var d = prods.BerekenLeverDatums(true, true, false, loading.Arg);
             if (!d.IsDefault())
             {
@@ -3586,42 +3672,6 @@ namespace Controls
         protected virtual void OnItemsCancel()
         {
             ItemsCancel?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void filterAanmakenToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var x = Manager.Opties;
-            if (x.Filters == null) return;
-            x.Filters ??= new List<Filter>();
-            string name = null;
-            while (true)
-            {
-                var txt = new TextFieldEditor();
-                txt.MultiLine = false;
-                txt.MinimalTextLength = 4;
-                txt.EnableSecondaryField = false;
-                txt.Title = "Kies een Filternaam om aan te maken...";
-                if (txt.ShowDialog() != DialogResult.OK) return;
-                name = txt.SelectedText.Trim();
-                bool flag = x.Filters.Any(x => string.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase));
-                if (flag)
-                {
-                    var res = XMessageBox.Show(this, $"Filternaam '{name}' bestaat al!\n\n" +
-                        $"Kies een andere Filternaam a.u.b.", "Filternaam Bestaat Al", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-                    if (res != DialogResult.OK) return;
-                    continue;
-                }
-                break;
-            }
-            if (string.IsNullOrEmpty(name)) return;
-            var xcrits = new EditCriteriaForm(typeof(IProductieBase), null);
-            xcrits.Title = $"Filter '{name}' aanmaken...";
-            if (xcrits.ShowDialog() != DialogResult.OK || xcrits.SelectedFilter.Count == 0) return;
-            var f = new Filter { IsTempFilter = false, Name = name };
-            f.Filters.AddRange(xcrits.SelectedFilter);
-            f.ListNames.Add(ListName);
-            x.Filters.Add(f);
-            Manager.OnFilterChanged(this);
         }
     }
 }

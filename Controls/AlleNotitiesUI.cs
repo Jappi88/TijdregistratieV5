@@ -79,33 +79,43 @@ namespace Controls
         private async void LoadNotities()
         {
             if (_isbusy || Manager.Database?.ProductieFormulieren == null) return;
-            _isbusy = true;
-            string filter = xsearchbox.Text.Trim().ToLower();
-            bool xs = !string.IsNullOrEmpty(filter) && !filter.Contains("zoeken...");
-            if (Notities == null)
+            try
             {
-                Notities = new List<NotitieEntry>();
-                var prods = await Manager.Database.GetAllProducties(true, true, true);
-                foreach (var prod in prods)
+                _isbusy = true;
+                string filter = xsearchbox.Text.Trim().ToLower();
+                bool xs = !string.IsNullOrEmpty(filter) && !filter.Contains("zoeken...");
+                if (Notities == null)
                 {
-                    var xnotes = prod.GetNotities();
-                    if(xnotes.Count > 0)
-                        Notities.AddRange(xnotes);
+                    Notities = new List<NotitieEntry>();
+                    var prods = await Manager.Database.GetAllProducties(true, true, true);
+                    foreach (var prod in prods)
+                    {
+                        var xnotes = prod.GetNotities();
+                        if (xnotes.Count > 0)
+                            Notities.AddRange(xnotes);
+                    }
+                    if (Manager.Opties?.Notities != null)
+                        Notities.AddRange(Manager.Opties.Notities);
                 }
-                if(Manager.Opties?.Notities != null)
-                    Notities.AddRange(Manager.Opties.Notities);
+
+
+                if (!this.IsDisposed && !this.Disposing)
+                {
+                    var selected = xnotitielist.SelectedObject;
+
+                    var xview = !xs
+                        ? Notities
+                        : Notities.Where(x => IsAllowed(x, filter));
+                    xnotitielist.SetObjects(xview);
+
+                    xnotitielist.SelectedObject = selected;
+                    xnotitielist.SelectedItem?.EnsureVisible();
+                }
             }
-
-            var selected = xnotitielist.SelectedObject;
-
-            var xview = !xs
-                ? Notities
-                : Notities.Where(x => IsAllowed(x,filter));
-
-            xnotitielist.SetObjects(xview);
-
-            xnotitielist.SelectedObject = selected;
-            xnotitielist.SelectedItem?.EnsureVisible();
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             _isbusy = false;
         }
 

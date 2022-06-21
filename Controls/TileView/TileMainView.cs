@@ -19,61 +19,66 @@ namespace Controls.TileView
         public TileMainView()
         {
             InitializeComponent();
+            groupedTileView1.TileClicked += OnTileClicked;
+            groupedTileView1.TilesLoaded += OnTilesLoaded;
+            groupedTileView1.RequestInfo += tileViewer1_TileRequestInfo;
         }
 
         public void LoadTileViewer()
         {
             groupedTileView1.LoadTileViewer();
-            groupedTileView1.TileClicked += OnTileClicked;
-            groupedTileView1.TilesLoaded += OnTilesLoaded;
-           // Manager.Opties.GroupEntries?.Clear();
-           // var groups = xGroupContainer.Controls.OfType<GroupedTileView>();
-           // var oldgroups = Manager.Opties.GroupEntries;
-           // var newgroups = new List<GroupInfoEntry>();
-           // for(int i = 0; i < Manager.Opties.TileLayout.Count; i++)
-           // {
-           //     var tile = Manager.Opties.TileLayout[i];
-           //     tile.Group = string.Empty;
-           //     var xold = oldgroups.FirstOrDefault(x => string.Equals(x.Name, tile.Group, StringComparison.CurrentCultureIgnoreCase));
-           //     if(!newgroups.Any(x=> string.Equals(x.Name, tile.Group, StringComparison.CurrentCultureIgnoreCase)))
-           //     {
-           //         if(xold != null)
-           //         {
-           //             oldgroups.Remove(xold);
-           //             newgroups.Add(xold);
-           //         }
-           //         else
-           //         {
-           //             var newgroup = new GroupInfoEntry() { Name = tile.Group };
-           //             newgroups.Add(newgroup);
-           //         }
-           //     }
-           // }
-           // if (oldgroups.Count > 0)
-           //     newgroups.AddRange(oldgroups);
-           // var removes = groups.Where(x => !newgroups.Any(g => string.Equals(x.GroupName, g.Name, StringComparison.CurrentCultureIgnoreCase)));
-           // foreach (var remove in removes)
-           //     xGroupContainer.Controls.Remove(remove);
-           // groups = xGroupContainer.Controls.OfType<GroupedTileView>();
-           
-           // foreach (var group in newgroups)
-           // {
-           //     var xold = groups.FirstOrDefault(x => string.Equals(x.GroupName, group.Name, StringComparison.CurrentCultureIgnoreCase));
-           //     if(xold == null)
-           //     {
-           //         xold = new GroupedTileView();
-           //         xold.Viewer.GroupName = group.Name;
-           //         xold.Viewer.TilesLoaded += tileViewer1_TilesLoaded;
-           //         xold.Viewer.TileClicked += tileViewer1_TileClicked;
-           //         xold.Dock = DockStyle.Fill;
-           //         xGroupContainer.Controls.Add(xold);
-           //     }
-           //     xold.LoadTileViewer();
-           // }
-           // //xGroupContainer.BackColor = Color.FromArgb(Manager.Opties.TileViewBackgroundColorRGB);
-           //// xGroupContainer.FlowDirection = Manager.Opties.TileFlowDirection;
-           // xGroupContainer.Invalidate();
-           // xGroupContainer.PerformLayout();
+            if (Manager.Opties.TileCountRefreshRate > 0)
+                groupedTileView1.Viewer.StartTimer(true);
+            else
+                groupedTileView1.Viewer.StopTimer();
+            // Manager.Opties.GroupEntries?.Clear();
+            // var groups = xGroupContainer.Controls.OfType<GroupedTileView>();
+            // var oldgroups = Manager.Opties.GroupEntries;
+            // var newgroups = new List<GroupInfoEntry>();
+            // for(int i = 0; i < Manager.Opties.TileLayout.Count; i++)
+            // {
+            //     var tile = Manager.Opties.TileLayout[i];
+            //     tile.Group = string.Empty;
+            //     var xold = oldgroups.FirstOrDefault(x => string.Equals(x.Name, tile.Group, StringComparison.CurrentCultureIgnoreCase));
+            //     if(!newgroups.Any(x=> string.Equals(x.Name, tile.Group, StringComparison.CurrentCultureIgnoreCase)))
+            //     {
+            //         if(xold != null)
+            //         {
+            //             oldgroups.Remove(xold);
+            //             newgroups.Add(xold);
+            //         }
+            //         else
+            //         {
+            //             var newgroup = new GroupInfoEntry() { Name = tile.Group };
+            //             newgroups.Add(newgroup);
+            //         }
+            //     }
+            // }
+            // if (oldgroups.Count > 0)
+            //     newgroups.AddRange(oldgroups);
+            // var removes = groups.Where(x => !newgroups.Any(g => string.Equals(x.GroupName, g.Name, StringComparison.CurrentCultureIgnoreCase)));
+            // foreach (var remove in removes)
+            //     xGroupContainer.Controls.Remove(remove);
+            // groups = xGroupContainer.Controls.OfType<GroupedTileView>();
+
+            // foreach (var group in newgroups)
+            // {
+            //     var xold = groups.FirstOrDefault(x => string.Equals(x.GroupName, group.Name, StringComparison.CurrentCultureIgnoreCase));
+            //     if(xold == null)
+            //     {
+            //         xold = new GroupedTileView();
+            //         xold.Viewer.GroupName = group.Name;
+            //         xold.Viewer.TilesLoaded += tileViewer1_TilesLoaded;
+            //         xold.Viewer.TileClicked += tileViewer1_TileClicked;
+            //         xold.Dock = DockStyle.Fill;
+            //         xGroupContainer.Controls.Add(xold);
+            //     }
+            //     xold.LoadTileViewer();
+            // }
+            // //xGroupContainer.BackColor = Color.FromArgb(Manager.Opties.TileViewBackgroundColorRGB);
+            //// xGroupContainer.FlowDirection = Manager.Opties.TileFlowDirection;
+            // xGroupContainer.Invalidate();
+            // xGroupContainer.PerformLayout();
         }
 
         private void InitDefaultGroup()
@@ -267,8 +272,8 @@ namespace Controls.TileView
                             {
                                 ViewState.Alles
                             }, true, null, true);
-                        var xnots = bws.SelectMany(x => x.GetAlleNotities()).ToList();
-                        entry.TileCount = xnots.Count;
+                        var xnots = bws.SelectMany(x => x.GetAlleNotities()).Count();
+                        entry.TileCount = xnots;
                         break;
                     case "xbeheerfilters":
                         entry.TileCount = Manager.Opties?.Filters?.Count ?? 0;

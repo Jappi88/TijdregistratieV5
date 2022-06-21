@@ -144,6 +144,8 @@ namespace Rpm.Productie
         public virtual double TijdGewerkt { get; set; }
         [Display(Name = "InstelTijd", Description = "Insteltijd van de productie")]
         public virtual double InstelTijd { get; set; }
+        [Display(Name = "AantalGeprint", Description = "Aantal keer dat de productieformulier is geprint")]
+        public virtual int AantalGeprint { get; set; }
 
         [Display(Name = "TijdNodig",
             Description = "TijdNodig is berekent op basis van de aantal nog te maken en de actuele aantal per uur")]

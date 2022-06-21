@@ -2276,6 +2276,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\print_Doc_32x32.png" />
     <None Include="Resources\calculate_office_icon_32x321.png" />
     <None Include="Resources\businessapplication_binarytree_32x32.png" />
     <None Include="Resources\date_gereed_icon_32x32.png" />
@@ -2295,7 +2296,6 @@
     <None Include="Resources\files_folder_icon_64x64.ico" />
     <None Include="Resources\files_folder_icon_32x32.png" />
     <None Include="Resources\cut_icon-icons.com_52391.png" />
-    <None Include="Resources\print_Doc_32x32.png" />
     <None Include="Resources\windows_folder_20788.png" />
     <None Include="Resources\Rotate_Left-32x323.png" />
     <None Include="Resources\Rotate_Right-32x322.png" />

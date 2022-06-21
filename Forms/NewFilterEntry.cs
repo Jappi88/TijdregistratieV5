@@ -376,7 +376,7 @@ namespace ProductieManager.Forms
         private void xvoorwaardenb_Click(object sender, EventArgs e)
         {
             if (SelectedFilter == null) return;
-            var fs = new EditCriteriaForm(PropertyType,SelectedFilter.ChildEntries);
+            var fs = new EditCriteriaForm(PropertyType,SelectedFilter.ChildEntries, true);
             if (fs.ShowDialog() == DialogResult.OK)
             {
                 SelectedFilter.ChildEntries = fs.SelectedFilter;

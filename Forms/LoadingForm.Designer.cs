@@ -48,7 +48,7 @@
             this.xprogressbar.InnerColor = System.Drawing.Color.Transparent;
             this.xprogressbar.InnerMargin = 2;
             this.xprogressbar.InnerWidth = -1;
-            this.xprogressbar.Location = new System.Drawing.Point(590, 3);
+            this.xprogressbar.Location = new System.Drawing.Point(482, 3);
             this.xprogressbar.MarqueeAnimationSpeed = 1500;
             this.xprogressbar.Name = "xprogressbar";
             this.xprogressbar.OuterColor = System.Drawing.Color.White;
@@ -78,7 +78,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(20, 30);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(718, 203);
+            this.panel1.Size = new System.Drawing.Size(610, 170);
             this.panel1.TabIndex = 1;
             // 
             // xstatustext
@@ -89,7 +89,7 @@
             this.xstatustext.Font = new System.Drawing.Font("Microsoft YaHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xstatustext.Location = new System.Drawing.Point(3, 3);
             this.xstatustext.Name = "xstatustext";
-            this.xstatustext.Size = new System.Drawing.Size(581, 153);
+            this.xstatustext.Size = new System.Drawing.Size(473, 120);
             this.xstatustext.TabIndex = 3;
             this.xstatustext.Text = "Status...";
             this.xstatustext.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -98,9 +98,9 @@
             // 
             this.panel2.Controls.Add(this.xsluiten);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 159);
+            this.panel2.Location = new System.Drawing.Point(0, 126);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(718, 44);
+            this.panel2.Size = new System.Drawing.Size(610, 44);
             this.panel2.TabIndex = 2;
             // 
             // xsluiten
@@ -111,7 +111,7 @@
             this.xsluiten.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsluiten.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xsluiten.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xsluiten.Location = new System.Drawing.Point(590, 3);
+            this.xsluiten.Location = new System.Drawing.Point(482, 3);
             this.xsluiten.Name = "xsluiten";
             this.xsluiten.Size = new System.Drawing.Size(125, 37);
             this.xsluiten.TabIndex = 0;
@@ -125,14 +125,15 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
             this.CancelButton = this.xsluiten;
-            this.ClientSize = new System.Drawing.Size(758, 253);
+            this.ClientSize = new System.Drawing.Size(650, 220);
             this.Controls.Add(this.panel1);
             this.DisplayHeader = false;
             this.MinimumSize = new System.Drawing.Size(650, 220);
             this.Name = "LoadingForm";
             this.Padding = new System.Windows.Forms.Padding(20, 30, 20, 20);
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
+            this.SaveLastSize = false;
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoadingForm_FormClosing);
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);

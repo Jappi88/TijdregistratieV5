@@ -16,7 +16,7 @@ namespace Controls
         public Filter SelectedFilter { get; set; }
         public List<FilterEntry> Criterias { get; private set; } = new();
 
-        private bool x_UseOperand;
+        private bool _UseOperand;
 
         public FilterEntryEditorUI()
         {
@@ -29,7 +29,7 @@ namespace Controls
         {
             try
             {
-                //_UseOperand = useOperand;
+                _UseOperand = useOperand;
                 InitVariablen(type);
                 InitCriterias(entries?.CreateCopy());
             }
@@ -115,7 +115,7 @@ namespace Controls
         {
             if (xvariablelijst.SelectedItems.Count == 0) return;
             var xvar = xvariablelijst.SelectedItems[0].Text;
-            var xnewcrit = new NewFilterEntry(typeof(Bewerking), xvar, xcriterialijst.Items.Count > 0)
+            var xnewcrit = new NewFilterEntry(typeof(Bewerking), xvar, xcriterialijst.Items.Count > 0 || _UseOperand)
                 {Title = $"Nieuwe regel voor {xvar}"};
 
             if (xnewcrit.ShowDialog() == DialogResult.OK)
@@ -179,7 +179,10 @@ namespace Controls
                 {
                     if (first)
                     {
-                        entry.OperandType = Operand.ALS;
+                        if (_UseOperand)
+                            entry.OperandType = entry.OldOperandType;
+                        else
+                            entry.OperandType = Operand.ALS;
                         first = false;
                     }
                     else if (entry.OperandType == Operand.ALS)

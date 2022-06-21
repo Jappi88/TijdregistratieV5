@@ -5,11 +5,11 @@ using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class LoadingForm : MetroFramework.Forms.MetroForm
+    public partial class LoadingForm : MetroBase.MetroBaseForm
     {
         public ProgressArg Arg { get; set; } = new ProgressArg();
         public bool CloseIfFinished { get; set; }
-
+        public bool ShowCloseButton { get => xsluiten.Visible; set=> xsluiten.Visible = value; }
         public LoadingForm()
         {
             InitializeComponent();
@@ -39,6 +39,7 @@ namespace Forms
                             DialogResult = DialogResult.Cancel;
                         else
                             DialogResult = DialogResult.OK;
+                        this.Close();
                         return;
                     }
                     if (arg.IsCanceled)
@@ -76,10 +77,10 @@ namespace Forms
         private void xsluiten_Click(object sender, EventArgs e)
         {
             Arg.IsCanceled = true;
-            DialogResult = DialogResult.Cancel;
+            this.Close();
         }
 
-        public Task ShowDialogAsync()
+        public Task ShowDialogAsync(IWin32Window owner)
         {
             var task = Task.Run(() =>
             {
@@ -92,7 +93,7 @@ namespace Forms
 
         private void LoadingForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (Arg != null)
+            if (Arg != null && !Arg.IsCanceled)
             {
                 Arg.IsCanceled = true;
                 Arg.OnChanged(this);

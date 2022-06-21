@@ -2189,9 +2189,11 @@ namespace Rpm.Misc
         }
 
         private static bool _isprinting;
-        public static async void PrintPDFWithAcrobat(string filepath)
+        public static Task PrintPDFWithAcrobat(IWin32Window owner, IProductieBase productie, System.Drawing.Printing.PrinterSettings settings = null)
         {
-
+            if (productie?.ProductieNr == null) return Task.CompletedTask;
+            var pdf = Path.Combine(Manager.ProductieFormPath, $"{productie.ProductieNr}.pdf");
+            if (!File.Exists(pdf)) return Task.CompletedTask;
             var printApplicationRegistryPaths = new[]
             {
                 @"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Acrobat.exe",
@@ -2216,68 +2218,66 @@ namespace Rpm.Misc
                     }
                 }
             }
-            if (string.IsNullOrEmpty(xpath)) return;
-            var xprint = new PrintDialog();
-            xprint.ShowHelp = false;
-            xprint.AllowSomePages = false;
-            xprint.AllowCurrentPage = false;
-            xprint.AllowPrintToFile = false;
-            if (xprint.ShowDialog() == DialogResult.OK)
+            if (string.IsNullOrEmpty(xpath)) return Task.CompletedTask;
+            if (settings == null)
             {
+                var xprint = new PrintDialog();
+                xprint.ShowHelp = false;
+                xprint.AllowSomePages = false;
+                xprint.AllowCurrentPage = false;
+                xprint.AllowPrintToFile = false;
+                xprint.UseEXDialog = true;
+                if (xprint.ShowDialog(owner) != DialogResult.OK) return Task.CompletedTask; 
                 // Print to Acrobat
-
-
-                //var pr = new LoadingForm();
-                //pr.Arg.Message = "ProductieFormulier(en) Printen...";
-                //pr.Arg.Max = xprint.PrinterSettings.Copies;
-                //pr.CloseIfFinished = true;
-                //_= pr.ShowDialogAsync();
-                await Task.Factory.StartNew(() =>
-                {
-                    try
-                    {
-                        while (_isprinting)
-                            System.Threading.Thread.Sleep(100);
-                        _isprinting = true;
-                        for (int i = 0; i < xprint.PrinterSettings.Copies; i++)
-                        {
-                            //pr.Arg.Current = i;
-                            //pr.Arg.OnChanged(filepath);
-                            //if (pr.Arg.IsCanceled) break;
-                            string flagNoSplashScreen = "/s";
-                            string flagOpenMinimized = "/h";
-
-                            var flagPrintFileToPrinter = $"/t \"{filepath}\" \"{xprint.PrinterSettings.PrinterName}\"";
-
-                            var args = $"{flagNoSplashScreen} {flagOpenMinimized} {flagPrintFileToPrinter}";
-
-                            var startInfo = new ProcessStartInfo
-                            {
-                                FileName = xpath,
-                                Arguments = args,
-                                CreateNoWindow = true,
-                                ErrorDialog = false,
-                                UseShellExecute = false,
-                                WindowStyle = ProcessWindowStyle.Hidden
-                            };
-                            var process = Process.Start(startInfo);
-                            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                            process.WaitForExit(3500);
-                            if (!process.HasExited)
-                                process.Kill();
-                        }
-
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                    _isprinting = false;
-                });
-                //pr.Arg.Type = ProgressType.WriteCompleet;
-                // pr.Arg.OnChanged(filepath);
-
+                settings = xprint.PrinterSettings;
             }
+            if (settings == null) return Task.CompletedTask;
+            return Task.Factory.StartNew(() =>
+            {
+               
+                //wachten op iedere print todat gereed, anders kunnen andere pagina's invloed hebben op het print proces.
+
+                try
+                {
+                    while (_isprinting)
+                        System.Threading.Thread.Sleep(100);
+                    _isprinting = true;
+                    for (int i = 0; i < settings.Copies; i++)
+                    {
+                        //pr.Arg.Current = i;
+                        //pr.Arg.OnChanged(filepath);
+                        //if (pr.Arg.IsCanceled) break;
+                        string flagNoSplashScreen = "/s";
+                        string flagOpenMinimized = "/h";
+
+                        var flagPrintFileToPrinter = $"/t \"{pdf}\" \"{settings.PrinterName}\"";
+
+                        var args = $"{flagNoSplashScreen} {flagOpenMinimized} {flagPrintFileToPrinter}";
+
+                        var startInfo = new ProcessStartInfo
+                        {
+                            FileName = xpath,
+                            Arguments = args,
+                            CreateNoWindow = true,
+                            ErrorDialog = false,
+                            UseShellExecute = false,
+                            WindowStyle = ProcessWindowStyle.Hidden
+                        };
+                        var process = Process.Start(startInfo);
+                        process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                        process.WaitForExit(2500);
+                        if (!process.HasExited)
+                            process.Kill();
+                        productie.AantalGeprint++;
+                    }
+                    productie.Update($"'{productie.ProductieNr}.pdf' {settings.Copies} keer geprint", true, true, false);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                _isprinting = false;
+            });
         }
 
         private static void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)

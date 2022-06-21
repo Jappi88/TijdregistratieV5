@@ -280,5 +280,13 @@ namespace Controls.TileView
 
         public event EventHandler TileClicked;
         public event EventHandler TilesLoaded;
+        public event TileChangeEventhandler RequestInfo;
+
+        private TileInfoEntry tileViewer1_TileRequestInfo(Tile tile)
+        {
+            return RequestInfo?.Invoke(tile);
+        }
+
+
     }
 }

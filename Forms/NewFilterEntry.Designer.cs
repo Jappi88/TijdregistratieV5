@@ -493,8 +493,9 @@ namespace ProductieManager.Forms
             this.Controls.Add(this.panel2);
             this.MinimumSize = new System.Drawing.Size(575, 400);
             this.Name = "NewFilterEntry";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Nieuwe Filter Regel(s)";
+            this.Title = "Nieuwe Filter Regel(s)";
             this.metroPanel1.ResumeLayout(false);
             this.xvaluepanel.ResumeLayout(false);
             this.xvaluepanel.PerformLayout();

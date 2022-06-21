@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Navigation;
-using BrightIdeasSoftware;
-using NPOI.HSSF.Util;
+﻿using BrightIdeasSoftware;
 using Rpm.Misc;
 using Rpm.Productie;
+using System;
+using System.Collections;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace Rpm.Various
 {

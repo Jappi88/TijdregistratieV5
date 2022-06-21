@@ -58,7 +58,7 @@ namespace Controls
         public FontStyle TextFontStyle { get; set; } = FontStyle.Regular;
 
         public string CountFontFamily { get; set; } = "Segoe UI";
-        public int CountFontSize { get; set; } = 20;
+        public int CountFontSize { get; set; } = 14;
         public FontStyle CountFontStyle { get; set; } = FontStyle.Bold;
         [ExcludeFromSerialization]
         public Image TileImage

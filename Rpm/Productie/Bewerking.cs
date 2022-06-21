@@ -12,6 +12,18 @@ using System.Threading.Tasks;
 
 namespace Rpm.Productie
 {
+    public class ProductieDistinctComparer : IEqualityComparer<IProductieBase>
+    {
+        public bool Equals(IProductieBase x, IProductieBase y)
+        {
+            return x?.ProductieNr == y?.ProductieNr;
+        }
+
+        public int GetHashCode(IProductieBase obj)
+        {
+            return obj?.ProductieNr?.GetHashCode() ?? -1;
+        }
+    }
     public class BewerkingDistinctComparer : IEqualityComparer<Bewerking>
     {
         public bool Equals(Bewerking x, Bewerking y)
@@ -25,7 +37,7 @@ namespace Rpm.Productie
         }
     }
 
-    
+
     public sealed class Bewerking : IProductieBase
     {
         private DateTime _gestartop;
@@ -216,6 +228,16 @@ namespace Rpm.Productie
         {
             get => TijdAanGewerkt();
             set => _TijdGewerkt = value;
+        }
+
+        public override int AantalGeprint
+        {
+            get => Parent?.AantalGeprint ?? 0; 
+            set
+            {
+                if(Parent != null)
+                    Parent.AantalGeprint = value;
+            }
         }
 
         public override string ArtikelNr

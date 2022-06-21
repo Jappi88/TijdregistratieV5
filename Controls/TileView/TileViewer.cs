@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Controls
@@ -44,58 +45,81 @@ namespace Controls
             _timer.Enabled = false;
         }
 
-        public void StartTimer()
+        public void StartTimer(bool update)
         {
-            //_timer?.Start();
+            if (_syncing) return;
+            if (update)
+                UpdateTilesCount();
+            else _timer.Start();
         }
 
         public void StopTimer()
         {
-           // _timer?.Stop();
+            _timer?.Stop();
         }
 
+        private bool _syncing;
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             StopTimer();
-            try
+            if (_syncing) return;
+            _syncing = true;
+            UpdateTilesCount();
+        }
+
+        public Task UpdateTilesCount()
+        {
+            return Task.Factory.StartNew(() =>
             {
-                var _Tiles = GetAllTiles();
-                for (int i = 0; i < _Tiles.Count; i++)
+                try
                 {
-                    var xtileinfo = _Tiles[i];
-                    if (xtileinfo.Tag is TileInfoEntry entry)
+                    _syncing = true;
+                    if (Manager.Opties != null)
                     {
-                        Tile xtile = null;
-                        if (this.InvokeRequired)
-                            this.Invoke(new MethodInvoker(() => xtile = GetTile(entry)));
-                        else
-                            xtile = GetTile(entry);
-                        if (xtile != null)
+                        TileInfoRefresInterval = Manager.Opties.TileCountRefreshRate;
+                        _timer.Interval = TileInfoRefresInterval;
+                    }
+                    var _Tiles = GetAllTiles();
+                    for (int i = 0; i < _Tiles.Count; i++)
+                    {
+                        var xtileinfo = _Tiles[i];
+                        if (xtileinfo.Tag is TileInfoEntry entry)
                         {
-                            var xupdate = OnTileRequestInfo(xtile);
-                            if (xupdate != null)
+                            Tile xtile = null;
+                            if (this.InvokeRequired)
+                                this.Invoke(new MethodInvoker(() => xtile = GetTile(entry)));
+                            else
+                                xtile = GetTile(entry);
+                            if (xtile != null)
                             {
-                                if (this.InvokeRequired)
+                                var xupdate = OnTileRequestInfo(xtile);
+                                if (xupdate != null)
                                 {
-                                    this.Invoke(new MethodInvoker(() => UpdateTile(xupdate, xtile)));
-                                    this.Invoke(new MethodInvoker(Invalidate));
-                                }
-                                else
-                                {
-                                    UpdateTile(xupdate, xtile);
-                                    Invalidate();
+                                    if (this.InvokeRequired)
+                                    {
+                                        this.Invoke(new MethodInvoker(() => UpdateTile(xupdate, xtile)));
+                                    }
+                                    else
+                                    {
+                                        UpdateTile(xupdate, xtile);
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
+                    if (this.InvokeRequired)
+                        this.Invoke(new MethodInvoker(Invalidate));
+                    else
+                        Invalidate();
 
-            StartTimer();
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                }
+                _syncing = false;
+                StartTimer(false);
+            });
         }
 
         public void UpdateSize()
@@ -248,6 +272,11 @@ namespace Controls
             var xret = new List<Tile>();
             try
             {
+                if (InvokeRequired)
+                {
+                    this.Invoke(new MethodInvoker(() => xret = GetAllTiles()));
+                    return xret;
+                }
                 var xcontrols = Controls.Cast<Control>().ToList();
                 for (int i = 0; i < xcontrols.Count; i++)
                 {
@@ -269,6 +298,11 @@ namespace Controls
             var xret = new List<TileInfoEntry>();
             try
             {
+                if (InvokeRequired)
+                {
+                    this.Invoke(new MethodInvoker(() => xret = GetAllTileEntries()));
+                    return xret;
+                }
                 var xcontrols = Controls.Cast<Control>().ToList();
                 for (int i = 0; i < xcontrols.Count; i++)
                 {

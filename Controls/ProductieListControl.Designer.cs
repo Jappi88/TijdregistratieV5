@@ -73,8 +73,9 @@ namespace Controls
             this.xfiltertoolstripitem = new System.Windows.Forms.ToolStripMenuItem();
             this.filterAanmakenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filterOpslaanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.vouwAllGroepenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ontvouwAlleGroepenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -126,6 +127,7 @@ namespace Controls
             this.xmaterialenb = new System.Windows.Forms.ToolStripButton();
             this.xaanbevolenpersb = new System.Windows.Forms.ToolStripButton();
             this.xtoonTekening = new System.Windows.Forms.ToolStripButton();
+            this.xPrinten = new System.Windows.Forms.ToolStripButton();
             this.xtoonpdfb = new System.Windows.Forms.ToolStripButton();
             this.xexportexcel = new System.Windows.Forms.ToolStripButton();
             this.xproductieInfob = new System.Windows.Forms.ToolStripButton();
@@ -145,7 +147,7 @@ namespace Controls
             this.xresultpanel = new System.Windows.Forms.Panel();
             this.xok = new System.Windows.Forms.Button();
             this.xannuleren = new System.Windows.Forms.Button();
-            this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
+            this.printenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst1)).BeginInit();
             this.xproductieLijstcontext.SuspendLayout();
@@ -167,7 +169,7 @@ namespace Controls
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(985, 551);
+            this.panel1.Size = new System.Drawing.Size(1118, 551);
             this.panel1.TabIndex = 0;
             // 
             // xProductieLijst1
@@ -201,7 +203,7 @@ namespace Controls
             this.xProductieLijst1.ShowGroups = false;
             this.xProductieLijst1.ShowItemCountOnGroups = true;
             this.xProductieLijst1.ShowItemToolTips = true;
-            this.xProductieLijst1.Size = new System.Drawing.Size(985, 453);
+            this.xProductieLijst1.Size = new System.Drawing.Size(1118, 453);
             this.xProductieLijst1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.xProductieLijst1.SpaceBetweenGroups = 5;
             this.xProductieLijst1.TabIndex = 31;
@@ -235,6 +237,7 @@ namespace Controls
             this.xtoolstripstart,
             this.xtoolstripstop,
             this.toolStripSeparator7,
+            this.printenToolStripMenuItem,
             this.productieToolStripMenuItem,
             this.xwijzigToolStripMenuItem1,
             this.xtoolstripaanbevolenpersonen,
@@ -265,7 +268,7 @@ namespace Controls
             this.vouwAllGroepenToolStripMenuItem,
             this.ontvouwAlleGroepenToolStripMenuItem});
             this.xproductieLijstcontext.Name = "contextMenuStrip1";
-            this.xproductieLijstcontext.Size = new System.Drawing.Size(269, 608);
+            this.xproductieLijstcontext.Size = new System.Drawing.Size(269, 630);
             this.xproductieLijstcontext.Opening += new System.ComponentModel.CancelEventHandler(this.xproductieLijstcontext_Opening);
             // 
             // xopenProductieToolStripMenuItem
@@ -619,6 +622,11 @@ namespace Controls
             this.filterOpslaanToolStripMenuItem.Visible = false;
             this.filterOpslaanToolStripMenuItem.Click += new System.EventHandler(this.filterOpslaanToolStripMenuItem_Click);
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(196, 6);
+            // 
             // resetToolStripMenuItem
             // 
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
@@ -627,10 +635,10 @@ namespace Controls
             this.resetToolStripMenuItem.Text = "Reset";
             this.resetToolStripMenuItem.Click += new System.EventHandler(this.verwijderFiltersToolStripMenuItem_Click);
             // 
-            // toolStripSeparator4
+            // toolStripSeparator17
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(196, 6);
+            this.toolStripSeparator17.Name = "toolStripSeparator17";
+            this.toolStripSeparator17.Size = new System.Drawing.Size(196, 6);
             // 
             // toolStripSeparator3
             // 
@@ -675,7 +683,7 @@ namespace Controls
             this.xstatuslabel});
             this.xBottomToolMenu.Location = new System.Drawing.Point(0, 526);
             this.xBottomToolMenu.Name = "xBottomToolMenu";
-            this.xBottomToolMenu.Size = new System.Drawing.Size(985, 25);
+            this.xBottomToolMenu.Size = new System.Drawing.Size(1118, 25);
             this.xBottomToolMenu.TabIndex = 33;
             this.xBottomToolMenu.Text = "toolStrip1";
             // 
@@ -790,7 +798,7 @@ namespace Controls
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 40);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(985, 33);
+            this.panel3.Size = new System.Drawing.Size(1118, 33);
             this.panel3.TabIndex = 27;
             // 
             // xfiltersStrip
@@ -804,7 +812,7 @@ namespace Controls
             this.xfiltersStrip.Location = new System.Drawing.Point(431, 0);
             this.xfiltersStrip.Name = "xfiltersStrip";
             this.xfiltersStrip.ShowItemToolTips = true;
-            this.xfiltersStrip.Size = new System.Drawing.Size(554, 33);
+            this.xfiltersStrip.Size = new System.Drawing.Size(687, 33);
             this.xfiltersStrip.TabIndex = 99;
             this.xfiltersStrip.Text = "menuStrip1";
             // 
@@ -928,7 +936,7 @@ namespace Controls
             this.xToolBarPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.xToolBarPanel.Location = new System.Drawing.Point(0, 0);
             this.xToolBarPanel.Name = "xToolBarPanel";
-            this.xToolBarPanel.Size = new System.Drawing.Size(985, 40);
+            this.xToolBarPanel.Size = new System.Drawing.Size(1118, 40);
             this.xToolBarPanel.TabIndex = 3;
             // 
             // xToolBar
@@ -954,6 +962,7 @@ namespace Controls
             this.xmaterialenb,
             this.xaanbevolenpersb,
             this.xtoonTekening,
+            this.xPrinten,
             this.xtoonpdfb,
             this.xexportexcel,
             this.xproductieInfob,
@@ -964,7 +973,7 @@ namespace Controls
             this.xfiltercontainer});
             this.xToolBar.Location = new System.Drawing.Point(0, 0);
             this.xToolBar.Name = "xToolBar";
-            this.xToolBar.Size = new System.Drawing.Size(985, 40);
+            this.xToolBar.Size = new System.Drawing.Size(1118, 40);
             this.xToolBar.TabIndex = 30;
             this.xToolBar.Text = "toolStrip2";
             // 
@@ -1190,6 +1199,17 @@ namespace Controls
             this.xtoonTekening.ToolTipText = "Toon Productie Tekening";
             this.xtoonTekening.Click += new System.EventHandler(this.xtoonTekening_Click);
             // 
+            // xPrinten
+            // 
+            this.xPrinten.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xPrinten.Image = global::ProductieManager.Properties.Resources.print_Doc_32x32;
+            this.xPrinten.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xPrinten.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xPrinten.Name = "xPrinten";
+            this.xPrinten.Size = new System.Drawing.Size(36, 37);
+            this.xPrinten.ToolTipText = "Productieformulier printen";
+            this.xPrinten.Click += new System.EventHandler(this.xPrinten_Click);
+            // 
             // xtoonpdfb
             // 
             this.xtoonpdfb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -1358,7 +1378,7 @@ namespace Controls
             this.xresultpanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.xresultpanel.Location = new System.Drawing.Point(0, 551);
             this.xresultpanel.Name = "xresultpanel";
-            this.xresultpanel.Size = new System.Drawing.Size(985, 38);
+            this.xresultpanel.Size = new System.Drawing.Size(1118, 38);
             this.xresultpanel.TabIndex = 2;
             this.xresultpanel.Visible = false;
             // 
@@ -1369,7 +1389,7 @@ namespace Controls
             this.xok.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xok.Image = global::ProductieManager.Properties.Resources.check_1582;
             this.xok.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xok.Location = new System.Drawing.Point(770, 3);
+            this.xok.Location = new System.Drawing.Point(903, 3);
             this.xok.Name = "xok";
             this.xok.Size = new System.Drawing.Size(94, 34);
             this.xok.TabIndex = 1;
@@ -1384,7 +1404,7 @@ namespace Controls
             this.xannuleren.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xannuleren.Image = global::ProductieManager.Properties.Resources.delete_1577;
             this.xannuleren.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xannuleren.Location = new System.Drawing.Point(870, 3);
+            this.xannuleren.Location = new System.Drawing.Point(1003, 3);
             this.xannuleren.Name = "xannuleren";
             this.xannuleren.Size = new System.Drawing.Size(112, 34);
             this.xannuleren.TabIndex = 0;
@@ -1393,10 +1413,15 @@ namespace Controls
             this.xannuleren.UseVisualStyleBackColor = true;
             this.xannuleren.Click += new System.EventHandler(this.xannuleren_Click);
             // 
-            // toolStripSeparator17
+            // printenToolStripMenuItem
             // 
-            this.toolStripSeparator17.Name = "toolStripSeparator17";
-            this.toolStripSeparator17.Size = new System.Drawing.Size(196, 6);
+            this.printenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.print_Doc_32x32;
+            this.printenToolStripMenuItem.Name = "printenToolStripMenuItem";
+            this.printenToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F7;
+            this.printenToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.printenToolStripMenuItem.Text = "Printen";
+            this.printenToolStripMenuItem.ToolTipText = "Productieformulier printen";
+            this.printenToolStripMenuItem.Click += new System.EventHandler(this.xPrinten_Click);
             // 
             // ProductieListControl
             // 
@@ -1409,7 +1434,7 @@ namespace Controls
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "ProductieListControl";
-            this.Size = new System.Drawing.Size(985, 589);
+            this.Size = new System.Drawing.Size(1118, 589);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst1)).EndInit();
@@ -1545,5 +1570,7 @@ namespace Controls
         private System.Windows.Forms.ToolStripMenuItem filterOpslaanToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem filterAanmakenToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
+        private System.Windows.Forms.ToolStripButton xPrinten;
+        private System.Windows.Forms.ToolStripMenuItem printenToolStripMenuItem;
     }
 }

@@ -1291,7 +1291,7 @@ namespace Forms
             arg.Message = "Indeling maken...";
             prog.CloseIfFinished = true;
             arg.OnChanged(this);
-            _= prog.ShowDialogAsync();
+            _= prog.ShowDialogAsync(this.ParentForm);
             try
             {
                 var sections = bws.ToArtikelNrSections(null);
@@ -1355,7 +1355,7 @@ namespace Forms
                 arg.Message = "Indeling resetten...";
                 arg.OnChanged(this);
                 prog.CloseIfFinished = true;
-                _=prog.ShowDialogAsync();
+                _=prog.ShowDialogAsync(this.ParentForm);
                 _isbussy = true;
                 Application.DoEvents();
                 try

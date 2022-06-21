@@ -248,7 +248,7 @@ namespace Controls
             xtile.Name = entry.Name.Trim().Replace(" ", "_");
             xtile.Text = entry.Text;
             xtile.Tag = entry;
-            xtile.TileCount = 0; // entry.EnableTileCount ? entry.TileCount : 0;
+            xtile.TileCount = entry.EnableTileCount ? entry.TileCount : 0;
             xtile.TileCountFont = new Font(entry.CountFontFamily, entry.CountFontSize, entry.CountFontStyle);
             xtile.TileTextFontWeight = MetroTileTextWeight.Regular;
             xtile.TileTextFontSize = MetroTileTextSize.Tall;

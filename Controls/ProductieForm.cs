@@ -754,11 +754,7 @@ namespace Controls
                 var bw = CurrentBewerking();
                 if (bw is { Parent: { } } && bw.Parent.ContainsProductiePdf())
                 {
-                    var pdf = bw.Parent.GetProductieFormulierPDF();
-                    if (!string.IsNullOrEmpty(pdf) && File.Exists(pdf))
-                    {
-                        Functions.PrintPDFWithAcrobat(pdf);
-                    }
+                    Functions.PrintPDFWithAcrobat(this.Parent, bw);
                 }
             }
             catch (Exception e)
