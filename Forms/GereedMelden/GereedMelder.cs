@@ -94,7 +94,7 @@ namespace Forms.GereedMelden
 
 
                 var afwijking = _prod.GetAfwijking();
-                if (afwijking is < -10 or > 10)
+                if (afwijking is < -15 or > 15)
                 {
                     var xt = new GereedAfwijkingForm();
                     if (xt.ShowDialog(_prod, xparaaf.Text.Trim()) == DialogResult.Cancel) return;

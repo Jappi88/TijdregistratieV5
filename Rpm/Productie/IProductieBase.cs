@@ -937,7 +937,7 @@ Color textcolor, bool useimage)
             var ratio = Math.Round(ControleRatio,2);
             var startop = StartOp;
             var gestartop = TijdGestart;
-            var xstartbody = TotaalGemaakt < Aantal && State != ProductieState.Gereed
+            var xstartbody = TotaalGemaakt < Aantal && State == ProductieState.Gestopt
                 ? $"Starten Op: <span style = 'color: {GetValidColor(startop < LeverDatum && startop > DateTime.Now).Name}>{startop:f} ({AanbevolenPersonen}p)</span>.<br>"
                 : "";
             var xgestartbody = State == ProductieState.Gestart

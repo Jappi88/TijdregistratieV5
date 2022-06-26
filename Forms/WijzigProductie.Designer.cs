@@ -69,7 +69,7 @@ namespace Forms
             this.objectEditorUI1 = new Controls.ObjectEditorUI();
             this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
             this.metroTabPage3 = new MetroFramework.Controls.MetroTabPage();
-            this.materiaalUI1 = new Controls.MateriaalUI();
+            this.materiaalUI1 = new Forms.MateriaalUI();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xbewerkinglijst)).BeginInit();
             this.panel2.SuspendLayout();

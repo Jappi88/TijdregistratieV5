@@ -254,22 +254,45 @@ namespace Forms
 
         private void Producties_Load(object sender, EventArgs e)
         {
-            this.InitLastInfo();
-            if (this.Parent == null)
+            InitInfo();
+            //
+            //if (this.Parent == null)
+            //{
+            //    var xparent = this.GetParentForm();
+            //    if (xparent != null)
+            //    {
+            //        var y = (xparent.Location.Y + xparent.Height / 2) - this.Height / 2;
+            //        var x = (xparent.Location.X + xparent.Width / 2) - this.Width / 2;
+            //        if (Screen.GetWorkingArea(xparent).Contains(new Point(x, y)))
+            //            this.Location = new Point(x, y);
+            //        else this.StartPosition = FormStartPosition.CenterScreen;
+            //    }
+            //    else
+            //        this.StartPosition = FormStartPosition.CenterScreen;
+            //}
+            //else this.StartPosition = FormStartPosition.CenterParent;
+        }
+
+        private void InitInfo()
+        {
+            try
             {
-                var xparent = this.GetParentForm();
-                if (xparent != null)
+                this.InitLastInfo(false);
+                var par = this.GetParentForm();
+                if (par != null)
                 {
-                    var y = (xparent.Location.Y + xparent.Height / 2) - this.Height / 2;
-                    var x = (xparent.Location.X + xparent.Width / 2) - this.Width / 2;
-                    if (Screen.GetWorkingArea(xparent).Contains(new Point(x, y)))
-                        this.Location = new Point(x, y);
-                    else this.StartPosition = FormStartPosition.CenterScreen;
+                    par = par?.Parent?.FindForm() ?? par;
+                    var loc = par.Location;
+                    var x = (loc.X + (par.Width / 2)) - ((this.Width / 2));
+                    var y = (loc.Y + (par.Height / 2)) - ((this.Height / 2));
+                    this.Location = new Point(x, y);
+                    this.Invalidate();
                 }
-                else
-                    this.StartPosition = FormStartPosition.CenterScreen;
             }
-            else this.StartPosition = FormStartPosition.CenterParent;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private void Producties_FormClosing(object sender, FormClosingEventArgs e)

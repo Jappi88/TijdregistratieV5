@@ -131,76 +131,90 @@ namespace Rpm.Misc
 
         private static void MoveControl(Control control, MouseEventArgs e)
         {
+            try
+            {
+                control.SuspendLayout();
+                if (_resizing)
+                {
+                    if (MouseIsInLeftEdge)
+                    {
+                        if (MouseIsInTopEdge)
+                        {
+                            control.Width -= (e.X - _cursorStartPoint.X);
+                            control.Left += (e.X - _cursorStartPoint.X);
+                            control.Height -= (e.Y - _cursorStartPoint.Y);
+                            control.Top += (e.Y - _cursorStartPoint.Y);
+                        }
+                        else if (MouseIsInBottomEdge)
+                        {
+                            control.Width -= (e.X - _cursorStartPoint.X);
+                            control.Left += (e.X - _cursorStartPoint.X);
+                            control.Height = (e.Y - _cursorStartPoint.Y) + _currentControlStartSize.Height;
+                        }
+                        else
+                        {
+                            control.Width -= (e.X - _cursorStartPoint.X);
+                            control.Left += (e.X - _cursorStartPoint.X);
+                        }
+                    }
+                    else if (MouseIsInRightEdge)
+                    {
+                        if (MouseIsInTopEdge)
+                        {
+                            control.Width = (e.X - _cursorStartPoint.X) + _currentControlStartSize.Width;
+                            control.Height -= (e.Y - _cursorStartPoint.Y);
+                            control.Top += (e.Y - _cursorStartPoint.Y);
+
+                        }
+                        else if (MouseIsInBottomEdge)
+                        {
+                            control.Width = (e.X - _cursorStartPoint.X) + _currentControlStartSize.Width;
+                            control.Height = (e.Y - _cursorStartPoint.Y) + _currentControlStartSize.Height;
+                        }
+                        else
+                        {
+                            control.Width = (e.X - _cursorStartPoint.X) + _currentControlStartSize.Width;
+                        }
+                    }
+                    else if (MouseIsInTopEdge)
+                    {
+                        control.Height -= (e.Y - _cursorStartPoint.Y);
+                        control.Top += (e.Y - _cursorStartPoint.Y);
+                    }
+                    else if (MouseIsInBottomEdge)
+                    {
+                        control.Height = (e.Y - _cursorStartPoint.Y) + _currentControlStartSize.Height;
+                    }
+                    else
+                    {
+                        StopDragOrResizing(control);
+                    }
+                }
+                else if (_moving)
+                {
+                    _moveIsInterNal = !_moveIsInterNal;
+                    if (!_moveIsInterNal)
+                    {
+                        int x = (e.X - _cursorStartPoint.X) + control.Left;
+                        int y = (e.Y - _cursorStartPoint.Y) + control.Top;
+                        control.Location = new Point(x, y);
+                    }
+                }
+                
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                control.ResumeLayout(false);
+            }
             if (!_resizing && ! _moving)
             {
                 UpdateMouseEdgeProperties(control, new Point(e.X, e.Y));
             }
-            if (_resizing)
-            {
-                if (MouseIsInLeftEdge)
-                {
-                    if (MouseIsInTopEdge)
-                    {
-                        control.Width -= (e.X - _cursorStartPoint.X);
-                        control.Left += (e.X - _cursorStartPoint.X); 
-                        control.Height -= (e.Y - _cursorStartPoint.Y);
-                        control.Top += (e.Y - _cursorStartPoint.Y);
-                    }
-                    else if (MouseIsInBottomEdge)
-                    {
-                        control.Width -= (e.X - _cursorStartPoint.X);
-                        control.Left += (e.X - _cursorStartPoint.X);
-                        control.Height = (e.Y - _cursorStartPoint.Y) + _currentControlStartSize.Height;                    
-                    }
-                    else
-                    {
-                        control.Width -= (e.X - _cursorStartPoint.X);
-                        control.Left += (e.X - _cursorStartPoint.X) ;
-                    }
-                }
-                else if (MouseIsInRightEdge)
-                {
-                    if (MouseIsInTopEdge)
-                    {
-                        control.Width = (e.X - _cursorStartPoint.X) + _currentControlStartSize.Width;
-                        control.Height -= (e.Y - _cursorStartPoint.Y);
-                        control.Top += (e.Y - _cursorStartPoint.Y);
 
-                    }
-                    else if (MouseIsInBottomEdge)
-                    {
-                        control.Width = (e.X - _cursorStartPoint.X) + _currentControlStartSize.Width;
-                        control.Height = (e.Y - _cursorStartPoint.Y) + _currentControlStartSize.Height;                    
-                    }
-                    else
-                    {
-                        control.Width = (e.X - _cursorStartPoint.X)+_currentControlStartSize.Width;
-                    }
-                }
-                else if (MouseIsInTopEdge)
-                {
-                    control.Height -= (e.Y - _cursorStartPoint.Y);
-                    control.Top += (e.Y - _cursorStartPoint.Y);
-                }
-                else if (MouseIsInBottomEdge)
-                {
-                    control.Height = (e.Y - _cursorStartPoint.Y) + _currentControlStartSize.Height;                    
-                }
-                else
-                {
-                     StopDragOrResizing(control);
-                }
-            }
-            else if (_moving)
-            {
-                _moveIsInterNal = !_moveIsInterNal;
-                if (!_moveIsInterNal)
-                {
-                    int x = (e.X - _cursorStartPoint.X) + control.Left;
-                    int y = (e.Y - _cursorStartPoint.Y) + control.Top;
-                    control.Location = new Point(x, y);
-                }
-            }
             UpdateMouseCursor(control);
         }
 
@@ -210,6 +224,7 @@ namespace Rpm.Misc
             _moving = false;
             control.Capture = false;
             UpdateMouseCursor(control);
+            control.PerformLayout();
         }
 
         #region Save And Load

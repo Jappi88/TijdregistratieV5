@@ -7,15 +7,36 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using Forms;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Controls
 {
     public partial class AlleNotitiesUI : UserControl
     {
         private List<NotitieEntry> Notities = null;
+        private Label xloadinglabel;
         public AlleNotitiesUI()
         {
             InitializeComponent();
+            InitLoadingLabel();
+            this.Controls.Add(xloadinglabel);
+            xloadinglabel.BringToFront();
+        }
+
+        private void InitLoadingLabel()
+        {
+            xloadinglabel = new Label();
+            this.xloadinglabel.BackColor = System.Drawing.Color.Transparent;
+            this.xloadinglabel.Font = new System.Drawing.Font("Segoe UI", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xloadinglabel.Location = new System.Drawing.Point(0, 0);
+            this.xloadinglabel.Size = new System.Drawing.Size(100, 23);
+            this.xloadinglabel.TabIndex = 0;
+            this.xloadinglabel.Text = "Loading...";
+            this.xloadinglabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.xloadinglabel.Visible = false;
+            this.xloadinglabel.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
+            this.xloadinglabel.Size = this.Size;
         }
 
         public void InitUI()
@@ -75,13 +96,85 @@ namespace Controls
             }
         }
 
+        public void StartWaitUI(string value)
+        {
+            if (_isbusy) return;
+            _isbusy = true;
+            Task.Run(() =>
+            {
+                try
+                {
+                    if (Disposing || IsDisposed) return;
+                    this.Invoke(new MethodInvoker(() =>
+                    {
+                        xloadinglabel.Visible = true;
+                    }));
+
+                    var cur = 0;
+                    var xwv = value;
+                    //var xcurvalue = xwv;
+                    var tries = 0;
+                    try
+                    {
+                        while (_isbusy && tries < 200)
+                        {
+                            if (cur > 5) cur = 0;
+                            if (Disposing || IsDisposed) return;
+                            var curvalue = xwv.PadRight(xwv.Length + cur, '.');
+                            //xcurvalue = curvalue;
+                            this.Invoke(new MethodInvoker(() =>
+                            {
+                                xloadinglabel.Text = curvalue;
+                                xloadinglabel.Invalidate();
+                            }));
+                            //Application.DoEvents();
+
+                            Thread.Sleep(350);
+                            //Application.DoEvents();
+                            tries++;
+                            cur++;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+
+                    if (Disposing || IsDisposed) return;
+                    this.Invoke(new MethodInvoker(() =>
+                    {
+                        xloadinglabel.Visible = false;
+                    }));
+                }
+                catch (Exception e)
+                {
+                }
+
+                StopWait();
+            });
+        }
+
+        /// <summary>
+        ///     verberg het laad scherm
+        /// </summary>
+        public void StopWait()
+        {
+            if (InvokeRequired)
+                this.Invoke(new MethodInvoker(StopWait));
+            else
+            {
+                _isbusy = false;
+                xloadinglabel.Visible = false;
+            }
+        }
+
         private bool _isbusy = false;
         private async void LoadNotities()
         {
             if (_isbusy || Manager.Database?.ProductieFormulieren == null) return;
             try
             {
-                _isbusy = true;
+                StartWaitUI("Notities laden");
                 string filter = xsearchbox.Text.Trim().ToLower();
                 bool xs = !string.IsNullOrEmpty(filter) && !filter.Contains("zoeken...");
                 if (Notities == null)

@@ -5,16 +5,19 @@ using System.Windows.Forms;
 using BrightIdeasSoftware;
 using Forms;
 using ProductieManager.Properties;
+using ProductieManager.Rpm.Misc;
 using Rpm.Misc;
 using Rpm.Productie;
 
-namespace Controls
+namespace Forms
 {
     public partial class MateriaalUI : UserControl
     {
         public MateriaalUI()
         {
             InitializeComponent();
+            imageList1.Images.Add(Resources.bolts_screws_32x32);
+            imageList1.Images.Add(Resources.bolts_screws_32x32.CombineImage(Resources.check_1582,1.5));
             ((OLVColumn) xmateriaallijst.Columns[0]).ImageGetter = GetImage;
         }
 
@@ -30,7 +33,7 @@ namespace Controls
         public void InitMaterialen(ProductieFormulier form)
         {
             Formulier = form;
-            xmateriaallijst.SetObjects(form.Materialen.CreateCopy());
+            xmateriaallijst.SetObjects(form.Materialen);
             if (xmateriaallijst.Items.Count > 0)
             {
                 xmateriaallijst.SelectedObject = xmateriaallijst.Objects.Cast<Materiaal>().ToArray()[0];
@@ -52,17 +55,11 @@ namespace Controls
                     if (mat != null)
                     {
                         xstatus.Text = $"{mat.Aantal} {mat.Eenheid} van {mat.Omschrijving}";
-                        label9.Text = $"Afkeur ({mat.Eenheid})";
-                        xverbruiktlabel.Text = $"Verbuikt({mat.Eenheid})";
-                        xafkeurpercent.Text = mat.AfKeurProcent((decimal)mat.AantalAfkeur);
                     }
                     else
                     {
                         xtmp = xmateriaallijst.Items.Count == 1 ? "Materiaal" : "Materialen";
                         xstatus.Text = $"{xmateriaallijst.Items.Count} {xtmp}";
-                        label9.Text = "Afkeur";
-                        xverbruiktlabel.Text = "Verbruikt";
-                        xafkeurpercent.Text = "0.00%";
                     }
                 }
                 else
@@ -89,35 +86,13 @@ namespace Controls
 
             if (mat?.ArtikelNr != null)
             {
-                xomschrijving.Text = mat.Omschrijving;
-                xartikelnr.Text = mat.ArtikelNr;
-                xlocatie.Text = mat.Locatie;
-                xaantal.SetValue((decimal) mat.Aantal);
-                xafkeurvalue.Value = (decimal) mat.AantalAfkeur;
-                xeenheid.SelectedIndex = mat.Eenheid.ToLower() == "m" ? 0 : 1;
-                xafkeurpercent.Text = mat.AfKeurProcent((decimal)mat.AantalAfkeur);
-                xverbruiktlabel.Text = $"Verbruik({mat.Eenheid})";
-                xaantalperstuk.SetValue((decimal) mat.AantalPerStuk);
                 xklaarzetimage.Image = mat.IsKlaarGezet ? Resources.check_1582 : null;
                 xklaarzetlabel.Text = $"Klaar Gezet: {mat.Omschrijving}";
-                xlocatielabel.Text = $"Op Locatie: {mat.Locatie}";
-                xaantalklaarzetlabel.Text = $"Aantal: {mat.Aantal} {mat.Eenheid}";
             }
             else
             {
-                xomschrijving.Text = "";
-                xartikelnr.Text = "";
-                xlocatie.Text = "";
-                xeenheid.SelectedIndex = -1;
-                xverbruiktlabel.Text = "Verbruik";
-                xaantalperstuk.Value = 0;
-                xafkeurvalue.Value = 0;
-                xaantal.Value = 0;
-                xafkeurpercent.Text = "0.00%";
                 xklaarzetimage.Image = null;
                 xklaarzetlabel.Text = "";
-                xlocatielabel.Text = "";
-                xaantalklaarzetlabel.Text = "";
             }
 
             xverwijderb.Enabled = xmateriaallijst.SelectedObjects.Count > 0;
@@ -125,25 +100,41 @@ namespace Controls
             UpdateStatus();
         }
 
-        private bool UpdateMateriaal(Materiaal mat)
-        {
-            if (mat == null)
-                return false;
-            mat.Omschrijving = xomschrijving.Text;
-            mat.ArtikelNr = xartikelnr.Text;
-            mat.Locatie = xlocatie.Text;
-            mat.Eenheid = xeenheid.SelectedIndex == 1 ? "Stuks" : "m";
-            mat.AantalPerStuk = (double) xaantalperstuk.Value;
-            mat.AantalAfkeur = (double) xafkeurvalue.Value;
-            mat.IsKlaarGezet = xklaarzetimage.Image != null;
-            return true;
-        }
-
         private Materiaal CreateMaterial()
         {
-            var mat = new Materiaal(Formulier);
-            UpdateMateriaal(mat);
-            return mat;
+            var xnew = new NewMateriaalForm(Formulier);
+            Materiaal sel = null;
+            var mats = xmateriaallijst.Objects.OfType<Materiaal>().ToList();
+            while (true)
+            {
+                if (xnew.ShowDialog() == DialogResult.OK)
+                {
+                    sel = xnew.SelectedMateriaal;
+                }
+                else
+                {
+                    sel = null;
+                    break;
+                }
+                if (sel != null && mats.Any(x => string.Equals(x.ArtikelNr, sel.ArtikelNr, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    XMessageBox.Show(this, $"ArtikelNr '{sel.ArtikelNr}' bestaat al...\n\n" +
+                        $"Kies een andere ArtikelNr a.u.b.", "ArtikelNr Bestaat Al!", MessageBoxIcon.Warning);
+                    continue;
+                }
+                break;
+            }
+            xnew.Dispose();
+            return sel;
+        }
+
+        private void WijzigMaterial(Materiaal mat)
+        {
+            var xnew = new NewMateriaalForm(mat);
+            if (xnew.ShowDialog() == DialogResult.OK)
+            {
+                xmateriaallijst.RefreshObject(xnew.SelectedMateriaal);
+            }
         }
 
         public bool SaveMaterials()
@@ -167,7 +158,6 @@ namespace Controls
             if (xmateriaallijst.SelectedObjects.Count > 0)
             {
                 var count = xmateriaallijst.SelectedObjects.Count;
-                xmateriaalpanel.Tag = xmateriaallijst.SelectedObjects.Cast<Materiaal>().ToArray();
                 if (count == 1)
                 {
                     var mat = xmateriaallijst.SelectedObjects[0] as Materiaal;
@@ -178,11 +168,6 @@ namespace Controls
                     value = $"Klaar Zetten: {count} Materialen";
                 }
             }
-            else
-            {
-                xmateriaalpanel.Tag = null;
-            }
-
             UpdateStatus();
             xklaarzetlabel.Text = value;
             UpdateInfoFields(xmateriaallijst.SelectedObject);
@@ -204,8 +189,9 @@ namespace Controls
                 xklaarzetimage.Image = Resources.check_1582;
             else xklaarzetimage.Image = null;
             var xchecked = xklaarzetimage.Image != null;
-            if (xmateriaalpanel.Tag is Materiaal[] {Length: > 0} mats)
+            if (xmateriaallijst.SelectedObjects.Count > 0)
             {
+                var mats = xmateriaallijst.SelectedObjects.OfType<Materiaal>().ToList();
                 foreach (var mat in mats)
                     mat.IsKlaarGezet = xchecked;
                 xmateriaallijst.RefreshObjects(mats);
@@ -214,40 +200,33 @@ namespace Controls
 
         private void xwijzigmatb_Click(object sender, EventArgs e)
         {
-            if (xmateriaalpanel.Tag is Materiaal[] {Length: > 0} mats)
+            if (xmateriaallijst.SelectedObject is Materiaal mat)
             {
-                UpdateMateriaal(mats[0]);
-                xmateriaallijst.RefreshObject(mats[0]);
-                UpdateInfoFields(mats[0]);
+                WijzigMaterial(mat);
+                xmateriaallijst.RefreshObject(mat);
+                UpdateInfoFields(mat);
                 UpdateStatus();
             }
         }
 
         private void xniewmatb_Click(object sender, EventArgs e)
         {
-            if (xomschrijving.Text.Trim().Length < 4)
-                XMessageBox.Show(this, $"Ongeldige Omschrijving!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else if (xartikelnr.Text.Trim().Length < 4)
-                XMessageBox.Show(this, $"Ongeldige Artikel Nr!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else if (string.IsNullOrEmpty(xlocatie.Text.Trim()))
-                XMessageBox.Show(this, $"Ongeldige Locatie!", "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else if (xeenheid.SelectedIndex < 0)
-                XMessageBox.Show(this, $"Ongeldige Eenheid! Kies een eenheid voor de aantallen.", "Ongeldig",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else if (xmateriaallijst.Objects.Cast<Materiaal>()
-                .Any(x => x.ArtikelNr.ToLower() == xartikelnr.Text.ToLower()))
-                XMessageBox.Show(this, $"Ongeldige ArtikelNr! ArtikelNr bestaal al, gebruik een andere artikel nr a.u.b. ",
-                    "Ongeldig", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else
-                xmateriaallijst.AddObject(CreateMaterial());
+            var mat = CreateMaterial();
+            if (mat != null)
+            {
+                xmateriaallijst.AddObject(mat);
+                xmateriaallijst.SelectedObject = mat;
+                xmateriaallijst.SelectedItem?.EnsureVisible();
+            }
         }
 
         private void xverwijderb_Click(object sender, EventArgs e)
         {
-            if (xmateriaalpanel.Tag is Materiaal[] {Length: > 0} mats)
+            if (xmateriaallijst.SelectedObjects.Count > 0)
             {
+                var mats = xmateriaallijst.SelectedObjects.OfType<Materiaal>().ToList();
                 string txt;
-                if (mats.Length == 1)
+                if (mats.Count == 1)
                 {
                     var mat = mats[0];
                     txt = mat != null
@@ -271,47 +250,6 @@ namespace Controls
             if (mat == null) return;
             e.Title = mat.ArtikelNr;
             e.Text = mat.Omschrijving;
-        }
-
-        private void xaantalperstuk_ValueChanged(object sender, EventArgs e)
-        {
-            if (xmateriaallijst.SelectedObject is not Materiaal mat) return;
-            mat.AantalPerStuk = (double) xaantalperstuk.Value;
-            xmateriaallijst.RefreshObject(mat);
-            xaantalperstuk.ValueChanged -= xaantalperstuk_ValueChanged;
-            UpdateInfoFields(mat);
-            xaantalperstuk.ValueChanged += xaantalperstuk_ValueChanged;
-        }
-
-        private void xafkeurvalue_ValueChanged(object sender, EventArgs e)
-        {
-            if (xmateriaallijst.SelectedObject is not Materiaal mat) return;
-            mat.AantalAfkeur = (double) xafkeurvalue.Value;
-            xmateriaallijst.RefreshObject(mat);
-            UpdateInfoFields(mat);
-            xafkeurvalue.ValueChanged -= xafkeurvalue_ValueChanged;
-            UpdateInfoFields(mat);
-            xafkeurvalue.ValueChanged += xafkeurvalue_ValueChanged;
-        }
-
-        private void xeenheid_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (xmateriaallijst.SelectedObject is not Materiaal mat || xeenheid.SelectedIndex < 0) return;
-            mat.Eenheid = xeenheid.SelectedIndex == 0 ? "m" : "Stuks";
-            xmateriaallijst.RefreshObject(mat);
-            xeenheid.SelectedIndexChanged -= xeenheid_SelectedIndexChanged;
-            UpdateInfoFields(mat);
-            xeenheid.SelectedIndexChanged += xeenheid_SelectedIndexChanged;
-        }
-
-        private void xaantal_ValueChanged(object sender, EventArgs e)
-        {
-            if (xmateriaallijst.SelectedObject is not Materiaal mat) return;
-            mat.Aantal = (double) xaantal.Value;
-            xmateriaallijst.RefreshObject(mat);
-            xaantal.ValueChanged -= xaantal_ValueChanged;
-            UpdateInfoFields(mat);
-            xaantal.ValueChanged += xaantal_ValueChanged;
         }
     }
 }

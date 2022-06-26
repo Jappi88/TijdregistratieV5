@@ -33,7 +33,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.xsluiten = new System.Windows.Forms.Button();
             this.xOpslaan = new System.Windows.Forms.Button();
-            this.materiaalUI1 = new Controls.MateriaalUI();
+            this.materiaalUI1 = new Forms.MateriaalUI();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -43,9 +43,9 @@
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(20, 561);
+            this.panel1.Location = new System.Drawing.Point(20, 551);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(946, 44);
+            this.panel1.Size = new System.Drawing.Size(994, 44);
             this.panel1.TabIndex = 0;
             // 
             // panel2
@@ -53,7 +53,7 @@
             this.panel2.Controls.Add(this.xsluiten);
             this.panel2.Controls.Add(this.xOpslaan);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(695, 0);
+            this.panel2.Location = new System.Drawing.Point(743, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(251, 44);
             this.panel2.TabIndex = 1;
@@ -96,18 +96,19 @@
             this.materiaalUI1.Formulier = null;
             this.materiaalUI1.Location = new System.Drawing.Point(20, 60);
             this.materiaalUI1.Name = "materiaalUI1";
-            this.materiaalUI1.Size = new System.Drawing.Size(946, 501);
+            this.materiaalUI1.Padding = new System.Windows.Forms.Padding(5);
+            this.materiaalUI1.Size = new System.Drawing.Size(994, 491);
             this.materiaalUI1.TabIndex = 1;
             // 
             // MateriaalForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(986, 625);
+            this.ClientSize = new System.Drawing.Size(1034, 615);
             this.Controls.Add(this.materiaalUI1);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(800, 625);
+            this.MinimumSize = new System.Drawing.Size(0, 0);
             this.Name = "MateriaalForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MateriaalForm";
@@ -124,8 +125,8 @@
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
-        private Controls.MateriaalUI materiaalUI1;
         private System.Windows.Forms.Button xsluiten;
         private System.Windows.Forms.Button xOpslaan;
+        private MateriaalUI materiaalUI1;
     }
 }

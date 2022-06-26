@@ -264,8 +264,9 @@ namespace Forms
 
         private void ProductieInfoForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            productieInfoUI1.CloseUI();
             DetachEvents();
+            productieInfoUI1.CloseUI();
+           
         }
     }
 }

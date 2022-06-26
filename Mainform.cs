@@ -103,7 +103,7 @@ namespace ProductieManager
             _splash = null;
             StartPosition = FormStartPosition.CenterParent;
             Application.DoEvents();
-            this.InitLastInfo();
+            this.InitLastInfo(true);
             this.Show();
             Select();
             BringToFront();

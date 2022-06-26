@@ -86,9 +86,17 @@ namespace Forms
                 return;
             try
             {
-                Formulier = formulier;
+                if (Formulier.State != ProductieState.Gereed && formulier.State == ProductieState.Gereed)
+                {
+                    DetachEvents();
+                    Close();
+                }
+
                 var bws = Formulier.Bewerkingen.Where(x =>
-                    x.IsAllowed() && x.State != ProductieState.Verwijderd).ToList();
+                  x.IsAllowed() && x.State != ProductieState.Verwijderd).ToList();
+
+                Formulier = formulier;
+              
                 if (bws.Count == 0)
                 {
                     DetachEvents();
@@ -96,6 +104,7 @@ namespace Forms
                 }
                 else
                 {
+                    
                     Text = $"[{Formulier.ProductieNr}]";
                     if (!string.IsNullOrEmpty(Formulier.ProductSoort))
                     {

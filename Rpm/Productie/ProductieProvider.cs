@@ -716,8 +716,12 @@ namespace ProductieManager.Rpm.Productie
                         bool valid = prod?.Bewerkingen != null && prod.Bewerkingen.Length > 0 && prod.IsAllowed();
                         if (valid && !IsExcluded(prod))
                         {
-                            prod.FormulierChanged(this);
-                            Manager.FormulierChanged(this, prod);
+                            try
+                            {
+                                prod.FormulierChanged(this);
+                                Manager.FormulierChanged(this, prod);
+                            }
+                            catch { }
                         }
                     }
                 }

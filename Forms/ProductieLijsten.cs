@@ -1,11 +1,8 @@
-﻿using Rpm.Productie;
+﻿using Rpm.Misc;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Windows.Forms;
-using Rpm.Misc;
 using Various;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -142,23 +139,46 @@ namespace Forms
 
         private void ProductieLijsten_Load(object sender, EventArgs e)
         {
-            this.InitLastInfo();
-            if (this.Parent == null)
+            InitInfo();
+            //this.InitLastInfo(false);
+            //if (this.Parent == null)
+            //{
+            //    var xparent = this.GetParentForm();
+            //    if (xparent != null)
+            //    {
+            //        var area = Screen.GetWorkingArea(xparent);
+            //        var y = (area.Location.Y + area.Height / 2) - this.Height / 2;
+            //        var x = (area.Location.X + area.Width / 2) - this.Width / 2;
+            //        if (area.Contains(new Point(x, y)))
+            //            this.Location = new Point(x, y);
+            //        else this.StartPosition = FormStartPosition.CenterScreen;
+            //    }
+            //    else
+            //        this.StartPosition = FormStartPosition.CenterScreen;
+            //}
+            //else this.StartPosition = FormStartPosition.CenterParent;
+        }
+
+        private void InitInfo()
+        {
+            try
             {
-                var xparent = this.GetParentForm();
-                if (xparent != null)
+                this.InitLastInfo(false);
+                var par =  this.GetParentForm();
+                if (par != null)
                 {
-                    var area = Screen.GetWorkingArea(xparent);
-                    var y = (area.Location.Y + area.Height / 2) - this.Height / 2;
-                    var x = (area.Location.X + area.Width / 2) - this.Width / 2;
-                    if (area.Contains(new Point(x, y)))
-                        this.Location = new Point(x, y);
-                    else this.StartPosition = FormStartPosition.CenterScreen;
+                    par = par?.Parent?.FindForm() ?? par;
+                    var loc = par.Location;
+                    var x = (loc.X + (par.Width / 2)) - ((this.Width / 2));
+                    var y = (loc.Y + (par.Height / 2)) - ((this.Height / 2));
+                    this.Location = new Point(x, y);
+                    this.Invalidate();
                 }
-                else
-                    this.StartPosition = FormStartPosition.CenterScreen;
             }
-            else this.StartPosition = FormStartPosition.CenterParent;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private void ProductieLijsten_FormClosing(object sender, FormClosingEventArgs e)

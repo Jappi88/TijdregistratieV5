@@ -440,13 +440,13 @@ namespace Rpm.Productie
                         xdef.AutoLoginUsername = autologin ? x.Username : null;
                         xdef.SaveAsDefault();
                         LogedInGebruiker = x;
-                        LoginChanged(sender,true);
+                        LoginChanged(sender,true,true);
                         return true;
                     }
 
                     LogedInGebruiker = null;
 
-                    LoginChanged(sender,false);
+                    LoginChanged(sender,false,false);
                     return false;
                 }
 
@@ -478,7 +478,7 @@ namespace Rpm.Productie
                     LogedInGebruiker = x;
                     x.OsID = SystemId;
                     Database?.xUpSert(x.Username, x, $"{x.Username} Ingelogd!");
-                    LoginChanged(sender, true);
+                    LoginChanged(sender,true, true);
                     return true;
                 }
 
@@ -499,7 +499,7 @@ namespace Rpm.Productie
             if (LogedInGebruiker != null)
             {
                 LogedInGebruiker = null;
-                LoginChanged(sender, raiseevent);
+                LoginChanged(sender,true, raiseevent);
             }
         }
 
@@ -542,8 +542,11 @@ namespace Rpm.Productie
             var id = LogedInGebruiker == null ? $"Default[{os}]" : LogedInGebruiker.Username;
             var optiesid = Opties?.Username != null ? Opties.Username.ToLower().StartsWith("default") ? $"Default[{Opties.SystemID}]" : Opties.Username : null;
             string name = LogedInGebruiker == null ? "Default" : LogedInGebruiker.Username;
-            if (Opties != null && !string.Equals(optiesid, id, StringComparison.CurrentCultureIgnoreCase))
-                SaveSettings(Opties, false, true, true);
+            var oldset = Opties;
+            //if (Opties != null && !string.Equals(optiesid, id, StringComparison.CurrentCultureIgnoreCase))
+            //{
+            //    SaveSettings(Opties, false, true, true);
+            //}
 
             try
             {
@@ -586,7 +589,8 @@ namespace Rpm.Productie
                         Opties.ProductieWeergaveFilters = new[] { ViewState.Alles };
                     if (!Directory.Exists(DbPath))
                         Directory.CreateDirectory(DbPath);
-                    if (raiseEvent)
+                    bool flag = oldset == null || (!string.Equals(Opties.Username, oldset.Username, StringComparison.CurrentCultureIgnoreCase) || !Opties.xPublicInstancePropertiesEqual(oldset));
+                    if (raiseEvent && flag)
                         SettingsChanged(sender, true);
                     return true;
                 }
@@ -1172,101 +1176,99 @@ namespace Rpm.Productie
 
         public static List<RemoteMessage> xAddProductie(string pdffile, bool updateifexist, bool delete)
         {
-                var rms = new List<RemoteMessage>();
-                try
-                {
-                    if (!File.Exists(pdffile)) return rms;
-                    var prods = ProductieFormulier.xFromPdf(File.ReadAllBytes(pdffile));
-                    if (prods == null || prods.Count == 0)
-                        rms.Add(new RemoteMessage($"{Path.GetFileName(pdffile)} is geen geldige productieformulier!",
-                            MessageAction.None, MsgType.Fout));
-                    else
-                        foreach (var prod in prods)
+            var rms = new List<RemoteMessage>();
+            try
+            {
+                if (!File.Exists(pdffile)) return rms;
+                var prods = ProductieFormulier.xFromPdf(File.ReadAllBytes(pdffile));
+                if (prods == null || prods.Count == 0)
+                    rms.Add(new RemoteMessage($"{Path.GetFileName(pdffile)} is geen geldige productieformulier!",
+                        MessageAction.None, MsgType.Fout));
+                else
+                    foreach (var prod in prods)
+                    {
+                        RemoteMessage msg;
+                        if (prod.IsAllowed(null))
                         {
-                            RemoteMessage msg;
-                            if (prod.IsAllowed(null))
+                            msg = xAddProductie(prod, updateifexist);
+                            try
                             {
-                                msg = xAddProductie(prod, updateifexist);
+                                if (msg.Value is ProductieFormulier xprod)
+                                {
+
+                                    var bew = xprod.Bewerkingen?.FirstOrDefault(x => x.IsAllowed());
+                                    if (Opties is { ToonProductieNaToevoegen: true } && bew != null)
+                                        FormulierActie(new object[] { xprod, bew }, MainAktie.OpenProductie);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                            }
+                        }
+                        else
+                            msg = new RemoteMessage(
+                                $"[{prod.ProductieNr}, {prod.ArtikelNr}]Kan niet toevoegen omdat de bewerking is gefilterd!",
+                                MessageAction.AlgemeneMelding, MsgType.Info);
+
+                        rms.Add(msg);
+                        try
+                        {
+                            string fpath = Path.Combine(ProductieFormPath, $"{prod.ProductieNr}.pdf");
+
+                            for (int i = 0; i < 5; i++)
+                            {
                                 try
                                 {
-                                    if (msg.Value is ProductieFormulier xprod)
+                                    if (delete)
                                     {
 
-                                        var bew = xprod.Bewerkingen?.FirstOrDefault(x => x.IsAllowed());
-                                        if (Opties is { ToonProductieNaToevoegen: true } && bew != null)
-                                            FormulierActie(new object[] { xprod, bew }, MainAktie.OpenProductie);
+                                        if (File.Exists(fpath))
+                                            File.Delete(pdffile);
+                                        else
+                                            File.Move(pdffile, fpath);
                                     }
+                                    else
+                                        File.Copy(pdffile, fpath, true);
+
+                                    if (File.Exists(fpath)) break;
                                 }
                                 catch (Exception e)
                                 {
                                     Console.WriteLine(e);
                                 }
                             }
-                            else
-                                msg = new RemoteMessage(
-                                    $"[{prod.ProductieNr}, {prod.ArtikelNr}]Kan niet toevoegen omdat de bewerking is gefilterd!",
-                                    MessageAction.AlgemeneMelding, MsgType.Info);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                        }
 
-                            rms.Add(msg);
+                        // pdffile.CleanupFilePath(ProductieFormPath, prod.ProductieNr, false,false);
+
+                        if (delete && Opties is
+                            {
+                                VerwijderVerwerkteBestanden: true
+                            } && File.Exists(pdffile))
+                        {
                             try
                             {
-                                string fpath = Path.Combine(ProductieFormPath, $"{prod.ProductieNr}.pdf");
-                                if (!string.Equals(fpath, pdffile, StringComparison.CurrentCultureIgnoreCase))
-                                {
-                                    for (int i = 0; i < 5; i++)
-                                    {
-                                        try
-                                        {
-                                            if (delete)
-                                            {
-
-                                                if (File.Exists(fpath))
-                                                    File.Delete(pdffile);
-                                                else
-                                                    File.Move(pdffile, fpath);
-                                            }
-                                            else
-                                                File.Copy(pdffile, fpath, true);
-
-                                            if (File.Exists(fpath)) break;
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            Console.WriteLine(e);
-                                        }
-                                    }
-                                }
+                                File.Delete(pdffile);
                             }
-                            catch (Exception e)
+                            catch
                             {
-                                Console.WriteLine(e.Message);
-                            }
-
-                            // pdffile.CleanupFilePath(ProductieFormPath, prod.ProductieNr, false,false);
-
-                            if (delete && Opties is
-                                {
-                                    VerwijderVerwerkteBestanden: true
-                                } && File.Exists(pdffile))
-                            {
-                                try
-                                {
-                                    File.Delete(pdffile);
-                                }
-                                catch
-                                {
-                                    // ignored
-                                }
+                                // ignored
                             }
                         }
-                }
-                catch (Exception ex)
-                {
-                    rms.Add(new RemoteMessage(ex.Message, MessageAction.None,
-                        MsgType.Fout));
-                }
+                    }
+            }
+            catch (Exception ex)
+            {
+                rms.Add(new RemoteMessage(ex.Message, MessageAction.None,
+                    MsgType.Fout));
+            }
 
-                return rms;
+            return rms;
         }
 
         /// <summary>
@@ -2072,9 +2074,12 @@ namespace Rpm.Productie
         /// Roep op dat de logged in gebruiker is gewijzigd
         /// </summary>
         /// <param name="sender">de afzender die dit oproept</param>
-        public static void LoginChanged(object sender, bool raiseevent)
+        public static void LoginChanged(object sender,bool loadsettings, bool raiseevent)
         {
-            _=LoadSettings(sender,raiseevent);
+            if (loadsettings)
+            {
+                _ = LoadSettings(sender, raiseevent);
+            }
             if (LogedInGebruiker == null)
                 ProductieChat?.LogOut();
             else

@@ -38,9 +38,7 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.reserLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xGroupContainer = new System.Windows.Forms.Panel();
-            this.groupedTileView1 = new Controls.TileView.GroupedTileView();
             this.toolStrip1.SuspendLayout();
-            this.xGroupContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripSeparator3
@@ -119,25 +117,12 @@
             // 
             // xGroupContainer
             // 
-            this.xGroupContainer.Controls.Add(this.groupedTileView1);
+            this.xGroupContainer.AutoScroll = true;
             this.xGroupContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xGroupContainer.Location = new System.Drawing.Point(0, 0);
             this.xGroupContainer.Name = "xGroupContainer";
             this.xGroupContainer.Size = new System.Drawing.Size(816, 586);
             this.xGroupContainer.TabIndex = 3;
-            // 
-            // groupedTileView1
-            // 
-            this.groupedTileView1.BackColor = System.Drawing.Color.White;
-            this.groupedTileView1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.groupedTileView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupedTileView1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupedTileView1.GroupName = null;
-            this.groupedTileView1.Location = new System.Drawing.Point(0, 0);
-            this.groupedTileView1.MinimumSize = new System.Drawing.Size(250, 250);
-            this.groupedTileView1.Name = "groupedTileView1";
-            this.groupedTileView1.Size = new System.Drawing.Size(816, 586);
-            this.groupedTileView1.TabIndex = 0;
             // 
             // TileMainView
             // 
@@ -152,7 +137,6 @@
             this.Size = new System.Drawing.Size(816, 586);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            this.xGroupContainer.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -169,6 +153,5 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem reserLayoutToolStripMenuItem;
         private System.Windows.Forms.Panel xGroupContainer;
-        private GroupedTileView groupedTileView1;
     }
 }

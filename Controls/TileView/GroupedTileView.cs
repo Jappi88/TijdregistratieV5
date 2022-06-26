@@ -11,7 +11,7 @@ namespace Controls.TileView
 {
     public partial class GroupedTileView : UserControl
     {
-        public GroupInfoEntry GroupEntry { get; private set; } = new GroupInfoEntry();
+        public GroupInfoEntry GroupEntry { get; set; } = new GroupInfoEntry();
         public GroupedTileView()
         {
             InitializeComponent();
@@ -167,6 +167,7 @@ namespace Controls.TileView
                 {
                     xMainGroup.Text = gr.Name;
                     tileViewer1.BackColor = Color.FromArgb(gr.TileViewBackgroundColorRGB);
+                    tileViewer1.FlowDirection = gr.TileFlowDirection;
                     InitToolStripMenu();
                     UpdateFilterTiles();
                 }
@@ -196,13 +197,14 @@ namespace Controls.TileView
                 var gr = Manager.Opties.GroupEntries.FirstOrDefault(x => string.Equals(x.Name, GroupName, StringComparison.CurrentCultureIgnoreCase));
                 if (gr == null && addnew)
                 {
-                    gr = new GroupInfoEntry();
+
+                    gr = GroupEntry?? new GroupInfoEntry();
                     gr.Name = GroupName;
                     Manager.Opties.GroupEntries.Add(gr);
                 }
                 if (gr == null) return null;
-                gr.Location = this.Location;
-                gr.Size = this.Size;
+                //gr.Location = this.Location;
+                //gr.Size = this.Size;
                 GroupEntry = gr;
             }
             return GroupEntry;
@@ -287,6 +289,9 @@ namespace Controls.TileView
             return RequestInfo?.Invoke(tile);
         }
 
-
+        private void GroupedTileView_Load(object sender, EventArgs e)
+        {
+            //ControlMoverOrResizer.Init(this,this.Parent);
+        }
     }
 }

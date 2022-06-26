@@ -491,7 +491,19 @@ namespace Rpm.SqlLite
             //}
         }
 
-        public static T GetInstanceFromFile<T>(string filepath, bool monitorcorrupted = true,string criteria = null, bool fullmatch = false,
+        private static List<string> _blockedfiles = new List<string>();
+        public static void BlockFile(string file)
+        {
+            if (_blockedfiles.IndexOf(file) < 0)
+                _blockedfiles.Add(file);
+        }
+
+        public static bool IsBlocked(string file)
+        {
+            return _blockedfiles.IndexOf(file) > -1;
+        }
+
+        public static T GetInstanceFromFile<T>(string filepath, bool monitorcorrupted = true, string criteria = null, bool fullmatch = false,
             TijdEntry bereik = null)
         {
 
@@ -500,6 +512,7 @@ namespace Rpm.SqlLite
             T xreturn = default;
             try
             {
+                bool cor = false;
                 for (int i = 0; i < 5; i++)
                 {
                     bool xbreak = false;
@@ -518,6 +531,7 @@ namespace Rpm.SqlLite
                         {
                             xbreak = true;
                             xreturn = (T)ser.Deserialize(fs);
+                            cor = false;
                             if (monitorcorrupted)
                             {
                                 //lock (CorruptedFilePaths)
@@ -537,24 +551,25 @@ namespace Rpm.SqlLite
                     }
                     catch
                     {
+                        cor = true;
                         xreturn = default;
-                        if (xbreak && monitorcorrupted)
-                        {
-                            //lock (CorruptedFilePaths)
-                            //{
-                            if (CorruptedFilePaths.IndexOf(filepath.ToLower()) < 0)
-                            {
-                                CorruptedFilePaths.Add(filepath.ToLower());
-                                OnCorruptedFilesChanged();
-                            }
-                            //}
-
+                        if (xbreak)
                             break;
-                        }
+                    }
+                }
+                if (cor && monitorcorrupted)
+                {
+
+                    //lock (CorruptedFilePaths)
+                    //{
+                    if (CorruptedFilePaths.IndexOf(filepath.ToLower()) < 0)
+                    {
+                        CorruptedFilePaths.Add(filepath.ToLower());
+                        OnCorruptedFilesChanged();
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }

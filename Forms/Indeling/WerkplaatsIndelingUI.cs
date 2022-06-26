@@ -1025,14 +1025,14 @@ namespace Forms
                     this.Invoke(new MethodInvoker(UpdateIndelingen));
                 else
                 {
-
+                    _updating = true;
                     var xindelingen = GetIndelingen(true);
                     for (int i = 0; i < xindelingen.Count; i++)
                     {
                         var x = xindelingen[i];
                         UpdateIndeling(x);
                     }
-
+                    _updating = false;
                 }
             }
             catch (Exception ex)
@@ -1451,11 +1451,14 @@ namespace Forms
 
         private void xupdatetimer_Tick(object sender, EventArgs e)
         {
-            if (_updating) return;
-            _updatetimer.Stop();
-            _updating = true;
-            UpdateIndelingen();
-            _updating =  false;
+            try
+            {
+                if (_updating) return;
+                _updatetimer?.Stop();
+                UpdateIndelingen();
+            }
+            catch { }
+
         }
     }
 }

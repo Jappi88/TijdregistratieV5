@@ -2234,9 +2234,7 @@ namespace Rpm.Misc
             if (settings == null) return Task.CompletedTask;
             return Task.Factory.StartNew(() =>
             {
-               
-                //wachten op iedere print todat gereed, anders kunnen andere pagina's invloed hebben op het print proces.
-
+              
                 try
                 {
                     while (_isprinting)
@@ -2260,17 +2258,19 @@ namespace Rpm.Misc
                             Arguments = args,
                             CreateNoWindow = true,
                             ErrorDialog = false,
-                            UseShellExecute = false,
-                            WindowStyle = ProcessWindowStyle.Hidden
+                            UseShellExecute = true,
+                            WindowStyle = ProcessWindowStyle.Minimized
                         };
                         var process = Process.Start(startInfo);
-                        process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                        process.WaitForExit(2500);
+                        process.WaitForExit(3500);
                         if (!process.HasExited)
                             process.Kill();
                         productie.AantalGeprint++;
                     }
-                    productie.Update($"'{productie.ProductieNr}.pdf' {settings.Copies} keer geprint", true, true, false);
+                    var prod = Werk.FromPath(productie.Path);
+                    if (prod == null || !prod.IsValid) return;
+                    prod.Formulier.AantalGeprint = productie.AantalGeprint;
+                    prod.Formulier.Update($"'{productie.ProductieNr}.pdf' {settings.Copies} keer geprint", true, true, false);
                 }
                 catch (Exception e)
                 {
@@ -2585,12 +2585,12 @@ namespace Rpm.Misc
             Form xform = null;
             try
             {
-
-                if (form.ParentForm != null)
+                var p = form.FindForm();
+                if (p?.ParentForm != null)
                     xform = form.ParentForm;
                 else
                 {
-                    var xforms = Application.OpenForms.Cast<Form>().Where(x=> x is not StartProductie && x is not Form_Alert).ToList();
+                    var xforms = Application.OpenForms.Cast<Form>().Where(x=> x is not ProductieLijstForm && x is not StartProductie && x is not Form_Alert).ToList();
                     var xcur = xforms.IndexOf(form) - 1;
                     if (xcur > -1)
                         xform = xforms[xcur];

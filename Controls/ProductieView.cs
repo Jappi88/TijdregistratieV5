@@ -1241,8 +1241,6 @@ namespace Controls
             if (Disposing || IsDisposed) return;
             try
             {
-                if (Manager.Opties != null)
-                    Invoke(new Action(SaveLayouts));
                 BeginInvoke(new Action(CloseAllTabs));
             }
             catch (Exception e)
@@ -1333,6 +1331,7 @@ namespace Controls
 
         public void CloseAllTabs()
         {
+            SaveLayouts();
             var sel = (metroCustomTabControl1.SelectedTab?.Tag as TileInfoEntry)?.Name;
             for (int i = 0; i < metroCustomTabControl1.TabCount; i++)
             {
@@ -1352,7 +1351,8 @@ namespace Controls
         {
             try
             {
-                tileMainView1.SaveLayout(false);
+                if (Manager.Opties == null) return;
+                tileMainView1.SaveLayout(true);
                 Manager.Opties.LastShownTabName = (metroCustomTabControl1.SelectedTab?.Tag as TileInfoEntry)?.Name;
                 foreach (var xtab in metroCustomTabControl1.TabPages)
                 {
@@ -1662,7 +1662,12 @@ namespace Controls
                             var index = (int)(values.FirstOrDefault(x => x is int) ?? 0);
                             var playsound = (bool)(values.FirstOrDefault(x => x is bool) ?? false);
                             if (form != null)
-                                ShowProductie(this, form, bew, playsound, index);
+                            {
+                                var par = values.OfType<Control>().ToList().FirstOrDefault();
+                                if (par?.Parent != null)
+                                    par = par.Parent;
+                                ShowProductie(par??this, form, bew, playsound, index);
+                            }
                         }
 
                         break;
@@ -2738,27 +2743,26 @@ namespace Controls
                         Name = pform.ProductieNr.Trim().Replace(" ", ""),
                         TabText = $"[{pform.ProductieNr}, {pform.ArtikelNr}]"
                     };
-                    if (owner is Control control)
-                        productie.Location = new Point(control.Location.X + productie.Width / 2,
-                            control.Location.Y + productie.Height / 2);
                     productie.FormClosing += AddProduction_FormClosing;
                     productie.SelectedBewerking = bewerking;
-                    _formuis.Add(productie);
+
 
                     if (_producties == null || _producties.IsDisposed)
                     {
                         _producties = new Producties
                         {
                             Tag = productie,
-                            StartPosition = FormStartPosition.CenterScreen
+                            StartPosition = FormStartPosition.CenterScreen,
                         };
+                        //_producties.OwnerForm = ((Control)owner)?.FindForm();
                         _producties.FormClosed += (_, _) => _producties = null;
                     }
 
                     if (showform)
                         productie.Show(_producties.DockPanel);
                 }
-
+               // productie.OwnerForm = ((Control)_producties)?.FindForm();
+                _formuis.Add(productie);
                 if (!_producties.Visible && showform)
                     _producties.Show();
                 if (_producties.WindowState == FormWindowState.Minimized)
@@ -2781,7 +2785,7 @@ namespace Controls
             try
             {
                 var prodform = new ProductieLijstForm(_Productelijsten.Count);
-
+               // prodform.OwnerForm = ((Control)owner)?.FindForm();
                 prodform.FormClosing += AddProduction_FormClosing;
                 _Productelijsten.Add(prodform);
                 if (_productielijstdock == null || _productielijstdock.IsDisposed)
@@ -2938,7 +2942,7 @@ namespace Controls
             _PersoneelForm.Focus();
         }
 
-        public static void ShowWerkplaatsIndelingWindow()
+        public void ShowWerkplaatsIndelingWindow()
         {
             if (_WerkplaatsIndeling == null)
             {

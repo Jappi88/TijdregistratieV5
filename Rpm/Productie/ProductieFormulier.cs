@@ -103,7 +103,16 @@ namespace Rpm.Productie
         //    set => base.Omschrijving = value;
         //}
 
-        public List<Materiaal> Materialen { get; set; } = new List<Materiaal>();
+        private List<Materiaal> _materialen = new List<Materiaal>();
+        public List<Materiaal> Materialen
+        {
+            get => _materialen;
+            set
+            {
+                _materialen = value;
+                _materialen.ForEach(x => x.Parent = this);
+            }
+        }
 
         [ExcludeFromSerialization]
         public int ViewImageIndex { get; set; }

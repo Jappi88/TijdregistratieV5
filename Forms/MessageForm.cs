@@ -100,6 +100,9 @@ namespace Forms
             var textheight = TextRenderer.MeasureText(xmessage.Text, xmessage.Font, maxSize).Height;
             Height = textheight + 200;
             MinimumSize = new Size(this.Width, this.Height);
+            owner = ((Control)owner)?.FindForm()?? owner;
+            if (owner is Form f && f.Parent != null)
+                owner = f.ParentForm;
             if (custombuttons is {Count: > 0})
             {
                 var done = 0;
@@ -273,8 +276,8 @@ namespace Forms
             if (OwnerForm != null)
             {
                 //Width = form.Width;
-                this.StartPosition = FormStartPosition.Manual;
-                this.Location = new Point((OwnerForm.Location.X + OwnerForm.Width / 2), (OwnerForm.Location.Y + OwnerForm.Height / 2));
+               // this.StartPosition = FormStartPosition.Manual;
+                //this.Location = new Point((OwnerForm.Location.X + OwnerForm.Width / 2), (OwnerForm.Location.Y + OwnerForm.Height / 2));
                 BackColor = OwnerForm.BackColor;
             }
             

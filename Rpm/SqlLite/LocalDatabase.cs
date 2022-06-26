@@ -1889,7 +1889,7 @@ namespace Rpm.SqlLite
                     else
                     {
                         Manager.LogedInGebruiker = acc;
-                        Manager.LoginChanged(acc, true);
+                        Manager.LoginChanged(acc,false, true);
                     }
                 }
             }

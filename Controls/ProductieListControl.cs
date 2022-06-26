@@ -1661,7 +1661,7 @@ namespace Controls
 
         public void ShowProductieForm(ProductieFormulier pform, bool showform, Bewerking bewerking = null)
         {
-            Manager.FormulierActie(new object[] { pform, bewerking }, MainAktie.OpenProductie);
+            Manager.FormulierActie(new object[] { pform, bewerking, (Control)this?.FindForm()}, MainAktie.OpenProductie);
         }
 
         private void StartSelectedProducties()

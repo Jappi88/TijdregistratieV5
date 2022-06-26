@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Polenter.Serialization;
+using System;
 using System.Drawing;
 using System.Runtime.Serialization;
 
@@ -18,6 +19,8 @@ namespace Rpm.Productie
             Parent = form;
         }
         public int ID { get; set; }
+
+        [ExcludeFromSerialization]
         public ProductieFormulier Parent { get; set; }
 
         public string Path => (Parent == null ? "" : Parent.ProductieNr) + $"\\Materialen\\{ArtikelNr}";
@@ -33,7 +36,7 @@ namespace Rpm.Productie
         {
             get
             {
-                if (Parent == null) return _aantal;
+                if (Parent == null) return 0;
                 var xret = Math.Round(Parent.TotaalGemaakt * AantalPerStuk,4);
                 return xret == 0 && Parent.TotaalGemaakt > 0 ? 1 : xret;
             }
@@ -41,6 +44,22 @@ namespace Rpm.Productie
             {
                 if (Parent is {TotaalGemaakt: > 0})
                     AantalPerStuk = Math.Round(value / Parent.TotaalGemaakt,4);
+                _aantal = value;
+            }
+        }
+
+        public double AantalNodig
+        {
+            get
+            {
+                if (Parent == null) return 0;
+                var xret = Math.Round(Parent.Aantal * AantalPerStuk, 4);
+                return xret == 0 && Parent.Aantal > 0 ? 1 : xret;
+            }
+            set
+            {
+                if (Parent is { Aantal: > 0 })
+                    AantalPerStuk = Math.Round(value / Parent.Aantal, 4);
                 _aantal = value;
             }
         }

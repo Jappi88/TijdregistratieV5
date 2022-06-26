@@ -160,7 +160,7 @@ namespace Forms
                             string.Equals(Manager.LogedInGebruiker.Username, account.Username, StringComparison.CurrentCultureIgnoreCase))
                         {
                             Manager.LogedInGebruiker.AccesLevel = current;
-                            Manager.LoginChanged(this,false);
+                            Manager.LoginChanged(this,false,false);
                         }
                     }
             }

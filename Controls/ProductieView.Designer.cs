@@ -277,7 +277,7 @@ namespace Controls
             // xmateriaalverbruikb
             // 
             this.xmateriaalverbruikb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xmateriaalverbruikb.Image = global::ProductieManager.Properties.Resources.graph_9_icon_icons_com_58019_32x32;
+            this.xmateriaalverbruikb.Image = global::ProductieManager.Properties.Resources.bolts_screws_32x32;
             this.xmateriaalverbruikb.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.xmateriaalverbruikb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.xmateriaalverbruikb.Name = "xmateriaalverbruikb";
@@ -957,6 +957,7 @@ namespace Controls
             // 
             // tileMainView1
             // 
+            this.tileMainView1.AutoScroll = true;
             this.tileMainView1.BackColor = System.Drawing.Color.White;
             this.tileMainView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tileMainView1.Location = new System.Drawing.Point(5, 5);

@@ -297,6 +297,12 @@
     <Compile Include="Controls\CustomObjectListview.Designer.cs">
       <DependentUpon>CustomObjectListview.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Materiaal\NewMateriaalForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Materiaal\NewMateriaalForm.Designer.cs">
+      <DependentUpon>NewMateriaalForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MetroCustomTabControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -592,10 +598,10 @@
     <Compile Include="Controls\MainMenu.Designer.cs">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MateriaalUI.cs">
+    <Compile Include="Forms\Materiaal\MateriaalUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\MateriaalUI.Designer.cs">
+    <Compile Include="Forms\Materiaal\MateriaalUI.Designer.cs">
       <DependentUpon>MateriaalUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ObjectEditorUI.cs">
@@ -905,10 +911,10 @@
     <Compile Include="Forms\LoadingForm.Designer.cs">
       <DependentUpon>LoadingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MateriaalVerbruikForm.cs">
+    <Compile Include="Forms\Materiaal\MateriaalVerbruikForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MateriaalVerbruikForm.Designer.cs">
+    <Compile Include="Forms\Materiaal\MateriaalVerbruikForm.Designer.cs">
       <DependentUpon>MateriaalVerbruikForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MethodsForm.cs">
@@ -1133,10 +1139,10 @@
     <Compile Include="Forms\LogIn.Designer.cs">
       <DependentUpon>LogIn.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MateriaalForm.cs">
+    <Compile Include="Forms\Materiaal\MateriaalForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MateriaalForm.Designer.cs">
+    <Compile Include="Forms\Materiaal\MateriaalForm.Designer.cs">
       <DependentUpon>MateriaalForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MessageForm.cs">
@@ -1586,6 +1592,9 @@
     <EmbeddedResource Include="Controls\CustomObjectListview.resx">
       <DependentUpon>CustomObjectListview.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Materiaal\NewMateriaalForm.resx">
+      <DependentUpon>NewMateriaalForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ProductieVerbruikUI.resx">
       <DependentUpon>ProductieVerbruikUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -1690,7 +1699,7 @@
     <EmbeddedResource Include="Controls\MainMenu.resx">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\MateriaalUI.resx">
+    <EmbeddedResource Include="Forms\Materiaal\MateriaalUI.resx">
       <DependentUpon>MateriaalUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ObjectEditorUI.resx">
@@ -1859,7 +1868,7 @@
     <EmbeddedResource Include="Forms\LoadingForm.resx">
       <DependentUpon>LoadingForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MateriaalVerbruikForm.resx">
+    <EmbeddedResource Include="Forms\Materiaal\MateriaalVerbruikForm.resx">
       <DependentUpon>MateriaalVerbruikForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MethodsForm.resx">
@@ -1976,7 +1985,7 @@
     <EmbeddedResource Include="Forms\LogIn.resx">
       <DependentUpon>LogIn.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MateriaalForm.resx">
+    <EmbeddedResource Include="Forms\Materiaal\MateriaalForm.resx">
       <DependentUpon>MateriaalForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MessageForm.resx">

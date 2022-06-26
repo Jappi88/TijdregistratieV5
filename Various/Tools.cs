@@ -75,26 +75,42 @@ namespace Various
             }
         }
 
-        public static void InitLastInfo(this Form form)
+        public static void InitLastInfo(this Form form, bool location)
         {
             try
             {
                 if (Manager.DefaultSettings == null || form == null) return;
                 if (form.WindowState == FormWindowState.Minimized)
                     form.WindowState = FormWindowState.Normal;
+                
+                else form.StartPosition = FormStartPosition.CenterScreen;
                 if (Manager.DefaultSettings.LastFormInfo.ContainsKey(form.Name))
                 {
                     var xvalue = Manager.DefaultSettings.LastFormInfo[form.Name];
                     if (xvalue == null) return;
                     if (xvalue.WindowState == FormWindowState.Minimized)
                         xvalue.WindowState = FormWindowState.Normal;
-                    form.WindowState = xvalue.WindowState;
                     if (xvalue.WindowState == FormWindowState.Normal)
                     {
                         //form.Location = xvalue.Location;
                         if (xvalue.Size.Width > 50 && xvalue.Size.Height > 50)
-                            form.Size = xvalue.Size;
+                            form.Size = xvalue.Size;                      
                     }
+                    if (location)
+                    {
+                        
+                        var y = (xvalue.Location.Y);
+                        var x = (xvalue.Location.X);
+                        var loc = new Rectangle();
+                        form.Invoke(new MethodInvoker(() => loc = Screen.GetBounds(new Point(x, y))));
+                        if (!loc.Contains(new Point(x, y + form.Height)))
+                        {
+                            y = (loc.Y);
+                            x = (loc.X);
+                        }
+                        form.Location = new Point(x, y);
+                    }
+                    form.WindowState = xvalue.WindowState;
                     form.Invalidate();
                 }
             }

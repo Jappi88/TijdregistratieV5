@@ -14,6 +14,8 @@ namespace Forms.MetroBase
     {
         public Form OwnerForm { get; set; }
 
+        public bool InitLastLocation { get; set; }
+
         public MetroBaseForm()
         {
             InitializeComponent();
@@ -37,7 +39,7 @@ namespace Forms.MetroBase
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MetroBaseForm_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MetroBaseForm_FormClosed);
-            this.Load += new System.EventHandler(this.MetroBaseForm_Load);
+            this.Shown += new System.EventHandler(this.MetroBaseForm_Load);
             this.ResumeLayout(false);
 
         }
@@ -136,24 +138,20 @@ namespace Forms.MetroBase
             try
             {
                 if (SaveLastSize)
-                    this.InitLastInfo();
-                if (this.Parent == null)
+                    this.InitLastInfo(InitLastLocation);
+                if(!InitLastLocation)
                 {
-                    var xparent = this.GetParentForm();
-                    if (xparent != null)
+                    var par =  OwnerForm??this.GetParentForm();
+                    if (par != null)
                     {
-                        var y = (xparent.Location.Y + xparent.Height / 2) - this.Height / 2;
-                        var x = (xparent.Location.X + xparent.Width / 2) - this.Width / 2;
-                        var loc = new Rectangle();
-                        this.Invoke(new MethodInvoker(() => loc = Screen.GetWorkingArea(xparent)));
-                        if (loc.Contains(new Point(x, y)))
-                            this.Location = new Point(x, y);
-                        else this.StartPosition = FormStartPosition.CenterScreen;
+                        par = par?.FindForm() ?? par;
+                        var loc = par.Location;
+                        var x = (loc.X + (par.Width / 2)) - ((this.Width / 2));
+                        var y = (loc.Y + (par.Height / 2)) - ((this.Height / 2));
+                        this.Location = new Point(x, y);
+                        this.Invalidate();
                     }
-                    else
-                        this.StartPosition = FormStartPosition.CenterScreen;
                 }
-                else this.StartPosition = FormStartPosition.CenterParent;
             }
             catch (Exception e)
             {

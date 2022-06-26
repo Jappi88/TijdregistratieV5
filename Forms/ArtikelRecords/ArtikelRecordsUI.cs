@@ -644,6 +644,7 @@ namespace Forms.ArtikelRecords
                                 string.Equals(w.Naam, sel.ArtikelNr, StringComparison.CurrentCultureIgnoreCase))).ToList();
                         }
                         prodform = new ProductieLijstForm(xprods, sel.ArtikelNr);
+                        prodform.OwnerForm = this.FindForm();
                         prodform.ValidHandler = IsValidHandler;
                         prodform.FormClosing += AddProduction_FormClosing;
                         _Productelijsten.Add(prodform);
@@ -655,7 +656,7 @@ namespace Forms.ArtikelRecords
                         {
                             Tag = prodform,
                             StartPosition = FormStartPosition.CenterScreen
-                        };
+                    };
                         _productielijstdock.FormClosed += _productielijstdock_FormClosed;
                     }
 
