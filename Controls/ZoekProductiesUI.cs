@@ -201,7 +201,7 @@ namespace Controls
             {
                 var f = new ZoekForm();
                 f.SetFilter(ShowFilter);
-                if (f.ShowDialog() != DialogResult.OK) return;
+                if (f.ShowDialog(this) != DialogResult.OK) return;
                 ShowFilter = f.GetFilter();
             }
             if (ShowFilter.IsDefault()) return;

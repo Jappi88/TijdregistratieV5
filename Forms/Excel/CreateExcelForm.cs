@@ -97,7 +97,7 @@ namespace Forms
                 var xf = new ExcelOptiesForm();
                 xf.LoadOpties("ExcelColumns",true);
                 xf.IsSelectDialog = true;
-                if (xf.ShowDialog() == DialogResult.OK)
+                if (xf.ShowDialog(this) == DialogResult.OK)
                 {
                     if (Manager.Opties != null)
                     {
@@ -199,7 +199,7 @@ namespace Forms
         {
             var xf = new ExcelOptiesForm();
             xf.LoadOpties( "ExcelColumns",true);
-            if (xf.ShowDialog() == DialogResult.OK)
+            if (xf.ShowDialog(this) == DialogResult.OK)
             {
                 Manager.UpdateExcelColumns(xf.Settings,true,true,true);
                 SetFieldInfo();

@@ -79,7 +79,7 @@ namespace Forms
             {
                 wps.Add("Alle Werkplekken");
                 WerkPlekChooser wpChooser = new WerkPlekChooser(wps.ToArray(),null);
-                if (wpChooser.ShowDialog() == DialogResult.Cancel) return;
+                if (wpChooser.ShowDialog(this) == DialogResult.Cancel) return;
                 wp = wpChooser.SelectedName?.ToLower() == "alle werkplekken" ? null : wpChooser.SelectedName;
             }
             else wp = wps.FirstOrDefault();
@@ -88,7 +88,7 @@ namespace Forms
             gereedform.Text = $"Nieuwe deels gereedmelding voor {Bewerking.Path}";
             if (wp != null)
                 gereedform.Text += $"\\{wp}";
-            if (gereedform.ShowDialog() == DialogResult.OK)
+            if (gereedform.ShowDialog(this) == DialogResult.OK)
             {
                 var xgereed = gereedform.GereedMelding;
                 xgereed.WerkPlek = wp;
@@ -149,7 +149,7 @@ namespace Forms
                 gereedform.Text = $"Wijzig deels gereedmelding voor {Bewerking.Path}";
                 if (melding.WerkPlek != null)
                     gereedform.Text += $"\\{melding.WerkPlek}";
-                if (gereedform.ShowDialog() == DialogResult.OK)
+                if (gereedform.ShowDialog(this) == DialogResult.OK)
                 {
                     xgereedlijst.RefreshObject(gereedform.GereedMelding);
                     UpdateStatus();

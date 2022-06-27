@@ -192,7 +192,7 @@ namespace Forms.Klachten
             tb.EnableSecondaryField = true;
             tb.SecondaryCheckBoxText = "Producties Zoeken";
             tb.SecondaryDescription = "Vul in een Artikelnr, bewerking naam of een stukje omschrijving";
-            if (tb.ShowDialog() == DialogResult.OK)
+            if (tb.ShowDialog(this) == DialogResult.OK)
             {
                 if (tb.UseSecondary)
                 {
@@ -203,7 +203,7 @@ namespace Forms.Klachten
                         Criteria = tb.SecondaryText.Trim(),
                     };
                     calcform.Filter = rf;
-                    calcform.Show();
+                    calcform.Show(this);
                 }
                 else
                 {

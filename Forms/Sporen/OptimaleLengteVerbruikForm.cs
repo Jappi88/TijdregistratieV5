@@ -212,7 +212,7 @@ namespace Forms.Sporen
             {
                 var xform = new OptimaleVerbruikSettingForm();
                 xform.SelectedInfo = _Info;
-                if (xform.ShowDialog() == DialogResult.OK)
+                if (xform.ShowDialog(this) == DialogResult.OK)
                 {
                     _Info = xform.SelectedInfo;
                     LoadOptimaleVerbruik(_Info, true);
@@ -449,7 +449,7 @@ namespace Forms.Sporen
             if (entries.Count > 0)
             {
                 var form = new AfrondForm();
-                if (form.ShowDialog() == DialogResult.OK)
+                if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     foreach (var item in entries)
                     {

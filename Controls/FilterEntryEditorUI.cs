@@ -118,7 +118,7 @@ namespace Controls
             var xnewcrit = new NewFilterEntry(typeof(Bewerking), xvar, xcriterialijst.Items.Count > 0 || _UseOperand)
                 {Title = $"Nieuwe regel voor {xvar}"};
 
-            if (xnewcrit.ShowDialog() == DialogResult.OK)
+            if (xnewcrit.ShowDialog(this) == DialogResult.OK)
             {
                 Criterias.Add(xnewcrit.SelectedFilter);
                 xcriterialijst.AddObject(xnewcrit.SelectedFilter);
@@ -143,7 +143,7 @@ namespace Controls
             if (index > -1)
             {
                 var xnewcrit = new NewFilterEntry(typeof(Bewerking),xfilter) {Title = $"Wijzig regel voor {xfilter.PropertyName}"};
-                if (xnewcrit.ShowDialog() == DialogResult.OK)
+                if (xnewcrit.ShowDialog(this) == DialogResult.OK)
                 {
                     Criterias[index] = xnewcrit.SelectedFilter;
                     InitCriterias(Criterias);

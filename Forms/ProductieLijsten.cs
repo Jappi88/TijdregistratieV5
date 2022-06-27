@@ -10,11 +10,14 @@ namespace Forms
 {
     public partial class ProductieLijsten : Form
     {
+        private readonly IWin32Window _owner;
 
-        public ProductieLijsten()
+        public ProductieLijsten(IWin32Window owner)
         {
+            _owner = owner;
             InitializeComponent();
             InitDock();
+           
         }
 
         public void InitDock()
@@ -163,8 +166,7 @@ namespace Forms
         {
             try
             {
-                this.InitLastInfo(false);
-                var par =  this.GetParentForm();
+                var par = ((Control)_owner) ?? this.GetParentForm();
                 if (par != null)
                 {
                     par = par?.Parent?.FindForm() ?? par;
@@ -174,6 +176,7 @@ namespace Forms
                     this.Location = new Point(x, y);
                     this.Invalidate();
                 }
+                this.InitLastInfo(false);
             }
             catch (Exception e)
             {
@@ -184,6 +187,7 @@ namespace Forms
         private void ProductieLijsten_FormClosing(object sender, FormClosingEventArgs e)
         {
             this.SetLastInfo();
+            ((Control)_owner)?.BringToFront();
         }
     }
 }

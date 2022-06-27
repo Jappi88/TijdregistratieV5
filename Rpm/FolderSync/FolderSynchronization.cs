@@ -338,7 +338,7 @@ namespace FolderSync
                 }
             }
 
-            Thread.Sleep(1000);
+            Thread.Sleep(Interval);
         }
 
         /// <summary>

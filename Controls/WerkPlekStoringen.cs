@@ -328,7 +328,7 @@ namespace Controls
                 if (bws.Length > 1)
                 {
                     var bc = new BewerkingChooser(bws);
-                    if (bc.ShowDialog() != DialogResult.OK || bc.SelectedItem == null)
+                    if (bc.ShowDialog(this) != DialogResult.OK || bc.SelectedItem == null)
                         return;
 
                     plek = Plek.Value.FirstOrDefault(x =>
@@ -349,7 +349,7 @@ namespace Controls
                     else
                     {
                         var wpc = new WerkPlekChooser(wps, null);
-                        if (wpc.ShowDialog() != DialogResult.OK)
+                        if (wpc.ShowDialog(this) != DialogResult.OK)
                             return;
                         plek = wpc.Selected;
                     }
@@ -358,7 +358,7 @@ namespace Controls
                 if (plek == null)
                     return;
                 var sf = new NewStoringForm(plek);
-                if (sf.ShowDialog() == DialogResult.OK)
+                if (sf.ShowDialog(this) == DialogResult.OK)
                 {
                     plek.Storingen.Add(sf.Onderbreking);
                     ListItems();
@@ -393,7 +393,7 @@ namespace Controls
                     {
                         var isverholpen = st.IsVerholpen;
                         var sf = new NewStoringForm(plek, st);
-                        if (sf.ShowDialog() == DialogResult.OK)
+                        if (sf.ShowDialog(this) == DialogResult.OK)
                         {
                             xskillview.RefreshObject(sf.Onderbreking);
                             var xindex = plek.Storingen.IndexOf(sf.Onderbreking);

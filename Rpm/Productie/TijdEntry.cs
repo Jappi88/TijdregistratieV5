@@ -109,6 +109,12 @@ namespace Rpm.Productie
             return result || result2;
         }
 
+        public bool ContainsDate(DateTime time)
+        {
+            var result = time >= Start && time <= Stop;
+            return result;
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is TijdEntry entry)

@@ -56,7 +56,7 @@ namespace Forms
         {
             SelectedValue = value;
             DisplayText = title;
-            return ShowDialog();
+            return ShowDialog(this);
         }
 
         private void button2_Click(object sender, EventArgs e)

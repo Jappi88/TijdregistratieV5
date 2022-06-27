@@ -71,7 +71,7 @@ namespace Forms
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             var cr = new CreateAccount();
-            if (cr.ShowDialog() == DialogResult.OK)
+            if (cr.ShowDialog(this) == DialogResult.OK)
             {
                 var ac = cr.Account;
                 Manager.Database.xUpSert(ac);

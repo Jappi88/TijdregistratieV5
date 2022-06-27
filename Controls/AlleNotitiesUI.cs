@@ -226,7 +226,7 @@ namespace Controls
             if (xnotitielist.SelectedObject is NotitieEntry ent)
             {
                 var xedit = new NotitieForms(ent);
-                if (xedit.ShowDialog() == DialogResult.OK)
+                if (xedit.ShowDialog(this) == DialogResult.OK)
                 {
                     ent.UpdateEntry(xedit.Notitie, true);
                 }
@@ -352,7 +352,7 @@ namespace Controls
         {
             var xnote = new NotitieEntry("", NotitieType.Algemeen);
             var xnewnote = new NotitieForms(xnote);
-            if (xnewnote.ShowDialog() == DialogResult.OK)
+            if (xnewnote.ShowDialog(this) == DialogResult.OK)
             {
                 xnote.UpdateEntry(xnewnote.Notitie,true);
             }
@@ -363,7 +363,7 @@ namespace Controls
             if (xnotitielist.SelectedObject is NotitieEntry ent)
             {
                 var xedit = new NotitieForms(ent);
-                if (xedit.ShowDialog() == DialogResult.OK)
+                if (xedit.ShowDialog(this) == DialogResult.OK)
                 {
                     ent.UpdateEntry(xedit.Notitie, true);
                 }

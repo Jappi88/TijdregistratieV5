@@ -37,7 +37,7 @@ namespace Forms
             xaantalgemaaktlabel.Text = bew.AantalGemaakt.ToString();
             Text = $"[{bew.ArtikelNr}][{bew.ProductieNr}] {bew.Omschrijving}";
             LoadBewerkingText(Bewerking);
-            return ShowDialog();
+            return ShowDialog(this);
         }
 
         public DialogResult ShowDialog(ProductieFormulier form)
@@ -50,7 +50,7 @@ namespace Forms
             xaantal.Text = form.AantalTeMaken.ToString();
             Text = $"[{form.ArtikelNr}][{form.ProductieNr}] {form.Omschrijving}";
             LoadProductieText(Formulier);
-            return ShowDialog();
+            return ShowDialog(this);
         }
 
 

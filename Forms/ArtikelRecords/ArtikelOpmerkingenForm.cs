@@ -255,7 +255,7 @@ namespace Forms.ArtikelRecords
                 newopmerking.Title = $"Algemene Melding Aanmaken";
             }
             newopmerking.EnableWerkplekCheckbox = Record == null;
-            if (newopmerking.ShowDialog() == DialogResult.OK)
+            if (newopmerking.ShowDialog(this) == DialogResult.OK)
             {
                 var xop = newopmerking.SelectedOpmerking;
                 xop.IsAlgemeen = Record == null;
@@ -274,7 +274,7 @@ namespace Forms.ArtikelRecords
                 if (!op.IsFromMe) return;
                 var newopmerking = new ArtikelOpmerkingForm(op);
                 newopmerking.EnableWerkplekCheckbox = Record == null;
-                if (newopmerking.ShowDialog() == DialogResult.OK)
+                if (newopmerking.ShowDialog(this) == DialogResult.OK)
                 {
                     var xop = newopmerking.SelectedOpmerking;
                     xop.IsAlgemeen = Record == null;

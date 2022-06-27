@@ -190,7 +190,7 @@ namespace ProductieManager
                 if (xrslt == DialogResult.Yes)
                 {
                     DbPathChooser ps = new DbPathChooser();
-                    if (ps.ShowDialog() == DialogResult.OK)
+                    if (ps.ShowDialog(this) == DialogResult.OK)
                     {
                         Manager.DefaultSettings.MainDB.RootPath = ps.SelectedPath;
                         Exit(true);

@@ -91,7 +91,7 @@ namespace Forms
                     this.Hide();
                     if (xscreen.ShowDialog() == DialogResult.OK)
                         bijlage = xscreen.SelectedImagePath;
-                    this.Show();
+                    this.Show(this);
                     break;
             }
 
@@ -116,7 +116,7 @@ namespace Forms
         private void xnieuweontvanger_Click(object sender, EventArgs e)
         {
             var ontvangers = new EmailClientsForm();
-            if (ontvangers.ShowDialog() == DialogResult.OK)
+            if (ontvangers.ShowDialog(this) == DialogResult.OK)
             {
                 InitOntvangers();
             }

@@ -99,7 +99,7 @@ namespace Controls.TileView
                 var xtiles = Manager.Opties.TileLayout.Where(x => string.Equals(x.Group, GroupName, StringComparison.CurrentCultureIgnoreCase)).ToList();
                 var xeditor = new TileEditorForm(xtiles.CreateCopy(), GroupEntry.TileFlowDirection, null);
                 xeditor.Size = new Size(1200, 750);
-                if (xeditor.ShowDialog() == DialogResult.OK)
+                if (xeditor.ShowDialog(this) == DialogResult.OK)
                 {
                     GroupEntry.TileFlowDirection = xeditor.Direction;
                     Manager.Opties.TileLayout.RemoveAll(x => string.Equals(x.Group, GroupName, StringComparison.CurrentCultureIgnoreCase));
@@ -138,7 +138,7 @@ namespace Controls.TileView
         private void xBeheerLijstenToolstripItem_Click(object sender, System.EventArgs e)
         {
             var xform = new BeheerTilesForm(GroupName);
-            if (xform.ShowDialog() == DialogResult.OK)
+            if (xform.ShowDialog(this) == DialogResult.OK)
             {
                 LoadTileViewer();
             }

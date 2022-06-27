@@ -193,7 +193,7 @@ namespace Controls
                             if (!wp.Personen.Any(x => x.IngezetAanKlus(bew, true, out var klusjes)))
                             {
                                 var xpers = new PersoneelsForm(bew, true);
-                                if (xpers.ShowDialog() == DialogResult.OK)
+                                if (xpers.ShowDialog(this) == DialogResult.OK)
                                 {
                                     var selected = xpers.SelectedPersoneel;
                                     if (selected.Length > 0)

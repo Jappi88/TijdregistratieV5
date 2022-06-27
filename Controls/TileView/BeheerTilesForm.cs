@@ -103,7 +103,7 @@ namespace Controls
             if (xlist.SelectedObject is TileInfoEntry entry)
             {
                 var xform = new TileEditorForm(entry);
-                if (xform.ShowDialog() == DialogResult.OK)
+                if (xform.ShowDialog(this) == DialogResult.OK)
                 {
                     xlist.RefreshObject(xform.SelectedEntry);
                     xlist.SelectedObject = xform.SelectedEntry;

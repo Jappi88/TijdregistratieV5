@@ -81,10 +81,13 @@ namespace Rpm.Misc
                     var newdate = lastdate.IsDefault() ? p.GetVerwachtLeverDatum() : p.GetVerwachtLeverDatum(lastdate, p.GetPersonen(true).Length, ombouw);
                     if (updatevalue)
                         p.BerekentLeverDatum = newdate;
-                    if (old != newdate && updatevalue && save)
+                    var flag = old.IsDefault() || !new TijdEntry(old.Subtract(TimeSpan.FromMinutes(5)), old.AddMinutes(5)).ContainsDate(newdate);
+                    if (flag && updatevalue)
                     {
-                        p.Update($"[{p.Path}, {p.ArtikelNr}] {p.Omschrijving}\n\n" +
-                            $"Berekent datum geupdate naar {newdate.ToString("f")}", true, true, showmessage);
+                        var log = $"[{p.Path}, {p.ArtikelNr}] {p.Omschrijving}\n\n" +
+                            $"Berekent datum geupdate naar {newdate.ToString("f")}";
+                        log = null;
+                        p.Update(log, save, true, showmessage);
                     }
                     lastdate = newdate;
                     arg.Current++;
@@ -681,7 +684,7 @@ namespace Rpm.Misc
                     {
                         Title = "Kies een werkplek om de speciale roosters van te wijzigen"
                     };
-                    if (wpchooser.ShowDialog() != DialogResult.OK) return false;
+                    if (wpchooser.ShowDialog(owner) != DialogResult.OK) return false;
                     wp = wpchooser.Selected;
                 }
                 else wp = bew.WerkPlekken?.FirstOrDefault();
@@ -691,7 +694,7 @@ namespace Rpm.Misc
                     return false;
                 }
                 var sproosters = new SpeciaalWerkRoostersForm(wp.Tijden.SpecialeRoosters);
-                if (sproosters.ShowDialog() == DialogResult.OK)
+                if (sproosters.ShowDialog(owner) == DialogResult.OK)
                 {
                     wp.Tijden.SpecialeRoosters = sproosters.Roosters;
                     wp.Werk?.UpdateBewerking(null, $"[{wp.Path}] Speciale roosters aangepast");
@@ -721,7 +724,7 @@ namespace Rpm.Misc
                             {
                                 Title = "Kies een werkplek om een rooster van te wijzigen"
                             };
-                            if (wpchooser.ShowDialog() != DialogResult.OK) return false;
+                            if (wpchooser.ShowDialog(owner) != DialogResult.OK) return false;
                             wp = wpchooser.Selected;
                         }
                         else wp = bew.WerkPlekken?.FirstOrDefault();
@@ -746,7 +749,7 @@ namespace Rpm.Misc
                     roosterform.EnablePeriode = false;
                     roosterform.RoosterUI.ShowSpecialeRoosterButton = false;
                     roosterform.SetRooster(rooster, Manager.Opties?.NationaleFeestdagen, wp.Tijden.SpecialeRoosters);
-                    if (roosterform.ShowDialog() == DialogResult.OK)
+                    if (roosterform.ShowDialog(owner) == DialogResult.OK)
                     {
                         wp.Tijden.SpecialeRoosters = roosterform.RoosterUI.SpecialeRoosters;
                         Manager.Opties.NationaleFeestdagen = roosterform.RoosterUI.NationaleFeestdagen().ToArray();
@@ -789,7 +792,7 @@ namespace Rpm.Misc
                         {
                             Title = "Kies een werkplek om een rooster van te wijzigen"
                         };
-                        if (wpchooser.ShowDialog() != DialogResult.OK) return false;
+                        if (wpchooser.ShowDialog(owner) != DialogResult.OK) return false;
                         wp = wpchooser.Selected;
                     }
                     else wp = bew.WerkPlekken?.FirstOrDefault();
@@ -798,7 +801,7 @@ namespace Rpm.Misc
                         XMessageBox.Show(owner, $"{b.Naam} heeft nog geen werkplek.\n\nMaak eerst een werkplek aan voordat je de rooster kan aanpassen.", "Geen Werkplek", MessageBoxIcon.Exclamation);
                         return false;
                     }
-                    return DoWerkplekRooster(wp, true);
+                    return DoWerkplekRooster(wp, true, owner);
                 }
                 return false;
             }
@@ -809,7 +812,7 @@ namespace Rpm.Misc
             }
         }
 
-        public static bool DoWerkplekRooster(this WerkPlek wp, bool save)
+        public static bool DoWerkplekRooster(this WerkPlek wp, bool save, IWin32Window owner)
         {
           
             var roosterform = new RoosterForm(wp.Tijden.WerkRooster,
@@ -817,7 +820,7 @@ namespace Rpm.Misc
             roosterform.ViewPeriode = false;
             roosterform.SetRooster(wp.Tijden.WerkRooster, Manager.Opties?.NationaleFeestdagen,
                 wp.Tijden.SpecialeRoosters);
-            if (roosterform.ShowDialog() == DialogResult.OK)
+            if (roosterform.ShowDialog(owner) == DialogResult.OK)
             {
                 bool flag = wp.Personen.Any(x =>
                     x.WerkRooster == null || !x.WerkRooster.SameTijden(roosterform.WerkRooster));
@@ -863,7 +866,7 @@ namespace Rpm.Misc
             {
                 var wpchooser = new WerkPlekChooser(b.WerkPlekken,null);
                 wpchooser.Title = $"Kies voor '{b.Naam}' een werkplek";
-                if (wpchooser.ShowDialog() == DialogResult.Cancel) return;
+                if (wpchooser.ShowDialog(owner) == DialogResult.Cancel) return;
                 wp = wpchooser.Selected;
             }
 
@@ -875,7 +878,7 @@ namespace Rpm.Misc
             }
 
             var wc = new WerktijdChanger(wp) {SaveChanges = true};
-            if (wc.ShowDialog() == DialogResult.OK)
+            if (wc.ShowDialog(owner) == DialogResult.OK)
                 b.UpdateBewerking(null, $"[{b.Path}] Werktijd Aangepast");
         }
 
@@ -895,7 +898,7 @@ namespace Rpm.Misc
                 {
                     var wpchooser = new WerkPlekChooser(wps, null);
                     wpchooser.Title = $"Kies een werkplek om te onderbreken of te hervatten";
-                    if (wpchooser.ShowDialog() == DialogResult.Cancel) return;
+                    if (wpchooser.ShowDialog(owner) == DialogResult.Cancel) return;
                     wp = wpchooser.Selected;
                 }
 
@@ -911,12 +914,12 @@ namespace Rpm.Misc
                 {
                     var allst = new AlleStoringenForm();
                     allst.InitStoringen(bw.Root, wp);
-                    allst.ShowDialog();
+                    allst.ShowDialog(owner);
                     return;
                 }
                 var xst = xsts.FirstOrDefault();
                 var xnew = new NewStoringForm(wp, xst, xst != null);
-                if (xnew.ShowDialog() == DialogResult.OK)
+                if (xnew.ShowDialog(owner) == DialogResult.OK)
                 {
                     if (xst != null)
                     {

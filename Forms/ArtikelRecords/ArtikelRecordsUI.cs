@@ -385,7 +385,7 @@ namespace Forms.ArtikelRecords
                 {
                     var xnew = new NewArtikelRecord();
                     xnew.IsWerkplek = metroTabControl1.SelectedIndex == 1;
-                    if (xnew.ShowDialog() == DialogResult.OK)
+                    if (xnew.ShowDialog(this) == DialogResult.OK)
                     {
                         if (Manager.ArtikelRecords?.Database == null) return;
                         var xs = xnew.SelectedRecord;
@@ -519,7 +519,7 @@ namespace Forms.ArtikelRecords
                 {
                     var xop = new ArtikelOpmerkingenForm(record);
                     xop.Text = $"{record.ArtikelNr} Meldingen";
-                    xop.ShowDialog();
+                    xop.ShowDialog(this);
                 }
             }
             else
@@ -528,7 +528,7 @@ namespace Forms.ArtikelRecords
                 {
                     var xop = new ArtikelOpmerkingenForm(record);
                     xop.Text = $"{record.ArtikelNr} Meldingen";
-                    xop.ShowDialog();
+                    xop.ShowDialog(this);
                 }
             }
         }
@@ -539,7 +539,7 @@ namespace Forms.ArtikelRecords
             {
                 var xop = new ArtikelOpmerkingenForm();
                 xop.LoadAlgemeenOpmerkingen();
-                xop.ShowDialog();
+                xop.ShowDialog(this);
             }
         }
 
@@ -575,7 +575,7 @@ namespace Forms.ArtikelRecords
                         var xform = new NewArtikelRecord(record);
                         xform.AllowArtikelEdit = false;
                         xform.AllowWerkplekEdit = false;
-                        if (xform.ShowDialog() == DialogResult.OK)
+                        if (xform.ShowDialog(this) == DialogResult.OK)
                         {
                             xArtikelList.RefreshObject(record);
                             Manager.ArtikelRecords.Database.Upsert(record.ArtikelNr, record, false);
@@ -586,7 +586,7 @@ namespace Forms.ArtikelRecords
                         var xform = new NewArtikelRecord(xrecord);
                         xform.AllowArtikelEdit = false;
                         xform.AllowWerkplekEdit = false;
-                        if (xform.ShowDialog() == DialogResult.OK)
+                        if (xform.ShowDialog(this) == DialogResult.OK)
                         {
                             xwerkpleklist.RefreshObject(xrecord);
                             Manager.ArtikelRecords.Database.Upsert(xrecord.ArtikelNr, xrecord, false);
@@ -652,7 +652,7 @@ namespace Forms.ArtikelRecords
 
                     if (_productielijstdock == null || _productielijstdock.IsDisposed)
                     {
-                        _productielijstdock = new ProductieLijsten()
+                        _productielijstdock = new ProductieLijsten(this)
                         {
                             Tag = prodform,
                             StartPosition = FormStartPosition.CenterScreen

@@ -127,7 +127,7 @@ namespace Controls
                 if (Manager.Database == null || Manager.Database.IsDisposed || Productie == null) return;
                 var xbwselector = new BewerkingSelectorForm();
                 xbwselector.IsValidHandler = IsAllowedCombi;
-                if (xbwselector.ShowDialog() == DialogResult.OK)
+                if (xbwselector.ShowDialog(this) == DialogResult.OK)
                 {
                     var selected = xbwselector.SelectedBewerkingen;
                     if (selected.Count == 0) return;
@@ -135,7 +135,7 @@ namespace Controls
                     foreach (var item in selected)
                     {
                         var xnew = new NewCombineerForm(Productie, item);
-                        if (xnew.ShowDialog() == DialogResult.OK)
+                        if (xnew.ShowDialog(this) == DialogResult.OK)
                         {
                             Productie.Combies.Add(xnew.SelectedEntry);
                             

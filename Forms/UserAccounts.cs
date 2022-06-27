@@ -21,7 +21,7 @@ namespace Forms
         private void xadduser_Click(object sender, EventArgs e)
         {
             var cr = new CreateAccount();
-            if (cr.ShowDialog() == DialogResult.OK)
+            if (cr.ShowDialog(this) == DialogResult.OK)
             {
                 var ac = cr.Account;
                 Manager.CreateAccount(ac).Wait();
@@ -130,7 +130,7 @@ namespace Forms
                 if (acc != null)
                 {
                     var changer = new PasswordChanger();
-                    if (changer.ShowDialog(acc) == DialogResult.OK)
+                    if (changer.ShowDialog(this, acc) == DialogResult.OK)
                         try
                         {
                             await Manager.Database.UpSert(acc);

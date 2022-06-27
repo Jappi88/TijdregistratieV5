@@ -217,7 +217,7 @@ namespace Controls
             {
                 var xindex = Manager.Opties?.TileLayout?.IndexOf(entry)??-1;
                 var form = new TileEditorForm(entry.CreateCopy());
-                if (form.ShowDialog() == DialogResult.OK)
+                if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     this.UpdateTile(form.SelectedEntry);
                     if (Manager.Opties?.TileLayout != null && xindex > -1)

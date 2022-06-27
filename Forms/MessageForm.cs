@@ -285,7 +285,7 @@ namespace Forms
             ShowInTaskbar = false;
             this.Invalidate();
             BringToFront();
-            return ShowDialog();
+            return base.ShowDialog(owner);
         }
 
         private void xmessageicon_DoubleClick(object sender, EventArgs e)

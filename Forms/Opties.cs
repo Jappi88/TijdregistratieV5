@@ -697,7 +697,7 @@ namespace Forms
         private void xcreateaccount_Click(object sender, EventArgs e)
         {
             var cr = new CreateAccount();
-            if (cr.ShowDialog() == DialogResult.OK)
+            if (cr.ShowDialog(this) == DialogResult.OK)
             {
                 var ac = cr.Account;
                 Manager.CreateAccount(ac).Wait();
@@ -724,7 +724,7 @@ namespace Forms
             if (Manager.LogedInGebruiker == null)
             {
                 var cr = new LogIn();
-                cr.ShowDialog();
+                cr.ShowDialog(this);
             }
             else
             {
@@ -735,7 +735,7 @@ namespace Forms
         private void xgebruikersb_Click(object sender, EventArgs e)
         {
             var cr = new UserAccounts();
-            if (cr.ShowDialog() == DialogResult.OK) UpdateOptieList();
+            if (cr.ShowDialog(this) == DialogResult.OK) UpdateOptieList();
         }
 
         private void Opties_FormClosing(object sender, FormClosingEventArgs e)
@@ -890,7 +890,7 @@ namespace Forms
             if (Manager.Database is {IsDisposed: false})
             {
                 var prod = new UpdateProducties(){StartWhenShown = true, CloseWhenFinished = true};
-                prod.ShowDialog();
+                prod.ShowDialog(this);
             }
         }
 
@@ -906,7 +906,7 @@ namespace Forms
                 {
                     var lf = new LijstWeergaveForm();
                     lf.ViewedData = item.VerzondenWeekOverzichten.Select(x => x.ToString()).ToArray();
-                    if (lf.ShowDialog() == DialogResult.OK)
+                    if (lf.ShowDialog(this) == DialogResult.OK)
                         try
                         {
                             item.VerzondenWeekOverzichten =
@@ -1454,7 +1454,7 @@ namespace Forms
             var login = new LogIn();
             login.DisableLogin = true;
             login.ShowAutoLoginCheckbox = false;
-            if (login.ShowDialog() == DialogResult.OK)
+            if (login.ShowDialog(this) == DialogResult.OK)
             {
                 var acc = await Manager.Database.GetAccount(login.Username);
                 if (acc == null)
@@ -1472,7 +1472,7 @@ namespace Forms
                             throw new Exception($"'{acc.Username}' is geen beheerder!\n\n" +
                                                 $"De emailhost kan alleen door een beheerder worden gewijzigd.");
                         var mailhost = new EmailHostForm(acc.MailingHost);
-                        if (mailhost.ShowDialog() == DialogResult.OK)
+                        if (mailhost.ShowDialog(this) == DialogResult.OK)
                         {
                             _LoadedOpties.BoundUsername = acc.Username;
                             UpdateEmailHostControls();
@@ -1496,7 +1496,7 @@ namespace Forms
             var login = new LogIn();
             login.DisableLogin = true;
             login.ShowAutoLoginCheckbox = false;
-            if (login.ShowDialog() == DialogResult.OK)
+            if (login.ShowDialog(this) == DialogResult.OK)
             {
                 var acc = await Manager.Database.GetAccount(login.Username);
                 if (acc == null)
@@ -1648,7 +1648,7 @@ namespace Forms
                 txt.MinimalTextLength = 4;
                 txt.EnableSecondaryField = false;
                 txt.Title = "Kies een Filternaam om aan te maken...";
-                if (txt.ShowDialog() != DialogResult.OK) return;
+                if (txt.ShowDialog(this) != DialogResult.OK) return;
                 name = txt.SelectedText.Trim();
                 bool flag = _LoadedOpties.Filters.Any(x => string.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase));
                 if (flag)
@@ -1663,7 +1663,7 @@ namespace Forms
             if (string.IsNullOrEmpty(name)) return;
             var xcrits = new EditCriteriaForm(typeof(IProductieBase),null,true);
             xcrits.Title = $"Filter '{name}' aanmaken...";
-            if (xcrits.ShowDialog() != DialogResult.OK || xcrits.SelectedFilter.Count == 0) return;
+            if (xcrits.ShowDialog(this) != DialogResult.OK || xcrits.SelectedFilter.Count == 0) return;
             var f = new Filter { IsTempFilter = false, Name = name };
             f.Filters.AddRange(xcrits.SelectedFilter);
             _LoadedOpties.Filters.Add(f);
@@ -1694,7 +1694,7 @@ namespace Forms
             if(xFilterList.SelectedObject is Filter filter)
             {
                 var xf = new EditCriteriaForm(typeof(IProductieBase), filter.Filters, true);
-                if (xf.ShowDialog() != DialogResult.OK) return;
+                if (xf.ShowDialog(this) != DialogResult.OK) return;
                 filter.Filters = xf.SelectedFilter;
                 xFilterList.RefreshObject(filter);
             }
@@ -1726,7 +1726,7 @@ namespace Forms
                     txt.EnableSecondaryField = false;
                     txt.Title = "Wijzig Filternaam...";
                     txt.SelectedText = filter.Name;
-                    if (txt.ShowDialog() != DialogResult.OK) return;
+                    if (txt.ShowDialog(this) != DialogResult.OK) return;
                     name = txt.SelectedText.Trim();
                     bool flag = _LoadedOpties.Filters.Any(x => string.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase));
                     if (flag)
@@ -1757,7 +1757,7 @@ namespace Forms
                 var xchoose = new ChooseValuesForm();
                 xchoose.Title = $"Kies gebruikers om de geselecteerde {selected.Count} {x1} mee te delen";
                 xchoose.SetChooseItems(xitems);
-                if (xchoose.ShowDialog() == DialogResult.OK)
+                if (xchoose.ShowDialog(this) == DialogResult.OK)
                 {
                     var xsel = xchoose.SelectedValues;
                     foreach(var sel in xsel)

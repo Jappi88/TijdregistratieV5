@@ -174,7 +174,7 @@ namespace Forms
                 case Bewerking b:
                 {
                     var x = new Indeling(Formulier, b) {StartPosition = FormStartPosition.CenterParent};
-                    if (x.ShowDialog() == DialogResult.OK)
+                    if (x.ShowDialog(this) == DialogResult.OK)
                     {
                         xbewerkinglijst.RefreshObject(b);
                     }
@@ -263,7 +263,7 @@ namespace Forms
             if (xbewerkinglijst.SelectedObject is Bewerking b)
             {
                 var st = new StoringForm(b.Path, b.WerkPlekken);
-                st.ShowDialog();
+                st.ShowDialog(this);
             }
         }
 
@@ -275,7 +275,7 @@ namespace Forms
                 xform.Title = $"Wijzig {bew.Path}";
                 xform.ExcludeItems.AddRange(new[] {"productienr","artikelnr","verwachtleverdatum"});
                 xform.Init(bew);
-                if (xform.ShowDialog() == DialogResult.OK)
+                if (xform.ShowDialog(this) == DialogResult.OK)
                 {
                     xbewerkinglijst.RefreshObject(xform.Instance);
                 }

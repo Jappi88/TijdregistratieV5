@@ -559,7 +559,7 @@ namespace Controls
                     var pers = xuserlist.SelectedObjects.Cast<PersoneelModel>().ToList();
                     var rs = new RoosterForm(pers.First()?.PersoneelLid.WerkRooster ?? Manager.Opties.GetWerkRooster(),
                         $"Rooster voor {string.Join(", ", pers.Select(x=> x.Naam))}");
-                    if (rs.ShowDialog() == DialogResult.OK)
+                    if (rs.ShowDialog(this) == DialogResult.OK)
                     {
                         foreach (var p in pers)
                         {
@@ -718,7 +718,7 @@ namespace Controls
                 if (xuserlist.SelectedObject is PersoneelModel model)
                 {
                     var vf = new VaardighedenForm(model.PersoneelLid);
-                    vf.ShowDialog();
+                    vf.ShowDialog(this);
                     xuserlist.RefreshObject(model);
                 }
             }
@@ -739,7 +739,7 @@ namespace Controls
             if (xuserlist.SelectedObject is PersoneelModel model)
             {
                 var vf = new VrijeTijdForm(model.PersoneelLid);
-                if (vf.ShowDialog() == DialogResult.OK)
+                if (vf.ShowDialog(this) == DialogResult.OK)
                 {
                     var change = $"{model.Naam} Vrije Tijd  Aangepast\n" +
                                  $"Van: {Math.Round(model.PersoneelLid.TijdVrij().TotalHours, 2)} uur\n";
@@ -781,7 +781,7 @@ namespace Controls
             if (xuserlist.SelectedObject is PersoneelModel model)
             {
                 var ak = new AlleKlusjes(model.PersoneelLid);
-                ak.ShowDialog();
+                ak.ShowDialog(this);
                 xuserlist.RefreshObject(model);
             }
         }
@@ -799,7 +799,7 @@ namespace Controls
                     if (string.IsNullOrEmpty(field))
                         field = p.PersoneelLid.Afdeling;
                 tf.SelectedText = field;
-                if (tf.ShowDialog() == DialogResult.OK)
+                if (tf.ShowDialog(this) == DialogResult.OK)
                 {
                     foreach (var p in pers)
                     {

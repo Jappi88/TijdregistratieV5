@@ -141,7 +141,9 @@ namespace Forms.MetroBase
                     this.InitLastInfo(InitLastLocation);
                 if(!InitLastLocation)
                 {
-                    var par =  OwnerForm??this.GetParentForm();
+                    var par = OwnerForm ?? this.FindForm()?.ParentForm;
+                    if (par == null)
+                        this.GetParentForm();
                     if (par != null)
                     {
                         par = par?.FindForm() ?? par;
@@ -157,6 +159,37 @@ namespace Forms.MetroBase
             {
                 Console.WriteLine(e);
             }
+        }
+
+        public new DialogResult ShowDialog()
+        {
+            OwnerForm = ((Control)this)?.FindForm();
+            if (OwnerForm?.ParentForm != null)
+                OwnerForm = OwnerForm.ParentForm;
+            return base.ShowDialog();
+        }
+
+        public new void Show()
+        {
+            OwnerForm = ((Control)this)?.FindForm();
+            if (OwnerForm?.ParentForm != null)
+                OwnerForm = OwnerForm.ParentForm;
+            base.Show();
+        }
+
+        public new DialogResult ShowDialog(IWin32Window win32Window)
+        {
+            OwnerForm = ((Control)win32Window)?.FindForm();
+            if (OwnerForm?.ParentForm != null)
+                OwnerForm = OwnerForm.ParentForm;
+            return base.ShowDialog();
+        }
+        public new void Show(IWin32Window win32Window)
+        {
+            OwnerForm = ((Control)win32Window)?.FindForm();
+            if (OwnerForm?.ParentForm != null)
+                OwnerForm = OwnerForm.ParentForm;
+            base.Show();
         }
 
         private void MetroBaseForm_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)

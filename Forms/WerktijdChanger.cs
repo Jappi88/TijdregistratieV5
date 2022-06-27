@@ -399,7 +399,7 @@ namespace Forms
                     //remove.ExtraTijd.Start = xstartdate.Value;
                     //remove.ExtraTijd.Stop = xstopdate.Value;
                     var exform = new AddExtraTijdForm(remove);
-                    if (exform.ShowDialog() == DialogResult.OK)
+                    if (exform.ShowDialog(this) == DialogResult.OK)
                     {
                         xwerktijden.RemoveObject(remove);
                         xwerktijden.AddObject(exform.ExtraTijd);
@@ -426,7 +426,7 @@ namespace Forms
         private void xaddextratime_Click(object sender, EventArgs e)
         {
             var xt = new AddExtraTijdForm();
-            if (xt.ShowDialog() == DialogResult.OK)
+            if (xt.ShowDialog(this) == DialogResult.OK)
             {
                 var ts = xt.ExtraTijd;
                 AddWerkTijd(ts);
@@ -445,7 +445,7 @@ namespace Forms
                 var rs = new RoosterForm(currentrooster ?? Manager.Opties.GetWerkRooster(),
                     $"Rooster voor {path}");
                 rs.ViewPeriode = false;
-                if (rs.ShowDialog() != DialogResult.OK) return;
+                if (rs.ShowDialog(this) != DialogResult.OK) return;
 
                 entry.WerkRooster = rs.WerkRooster;
 
@@ -464,7 +464,7 @@ namespace Forms
             var rs = new RoosterForm(rooster, $"Rooster voor {path}");
             rs.ViewPeriode = false;
             rs.SetRooster(rooster,Manager.Opties?.NationaleFeestdagen, SpecialeRoosters);
-            if (rs.ShowDialog() != DialogResult.OK) return;
+            if (rs.ShowDialog(this) != DialogResult.OK) return;
             rooster = rs.WerkRooster;
             CurrentRooster = rooster;
             SpecialeRoosters = rs.RoosterUI.SpecialeRoosters;
@@ -527,7 +527,7 @@ namespace Forms
         private void xspeciaalroosterb_Click(object sender, EventArgs e)
         {
             var sproosters = new SpeciaalWerkRoostersForm(SpecialeRoosters);
-            if (sproosters.ShowDialog() == DialogResult.OK)
+            if (sproosters.ShowDialog(this) == DialogResult.OK)
             {
                 SpecialeRoosters = sproosters.Roosters;
                 UpdateUurGewerkt(GetRooster(null));

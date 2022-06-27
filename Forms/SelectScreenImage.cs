@@ -98,7 +98,7 @@ namespace Forms
             this.Hide();
             ScreenImageForm save = new ScreenImageForm(this.Location.X, this.Location.Y, this.Width, this.Height, this.Size);
 
-            var result = save.ShowDialog();
+            var result = save.ShowDialog(this);
             SelectedImagePath = save.SavedImagePath;
             this.DialogResult = result;
         }

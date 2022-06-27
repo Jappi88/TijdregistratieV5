@@ -577,7 +577,7 @@ namespace Forms
             try
             {
                 var xpers = new PersoneelsForm(null,true);
-                if (xpers.ShowDialog() == DialogResult.OK)
+                if (xpers.ShowDialog(this) == DialogResult.OK)
                 {
                     var chosen = xpers.SelectedPersoneel;
                     if (chosen.Length > 0)

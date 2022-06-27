@@ -84,7 +84,7 @@ namespace Forms
             var dt = new DatumChanger();
             dt.DateFormat = "dddd dd MMMM yyyy";
             dt.DisplayText = "Kies datum voor de speciale rooster.\n\nSpeciale roosters zijn afwijkende roosters op specifieke dagen.";
-            if (dt.ShowDialog() == DialogResult.OK)
+            if (dt.ShowDialog(this) == DialogResult.OK)
             {
                 var roosters = xroosterlist.Objects.Cast<Rooster>().ToList();
                 if (roosters.Any(x => x.Vanaf.Date == dt.SelectedValue.Date))
@@ -119,7 +119,7 @@ namespace Forms
                 dt.DateFormat = "dddd dd MMMM yyyy";
                 dt.DisplayText = $"Wijzig rooster datum van {rooster.Vanaf:D}";
                 dt.SelectedValue = rooster.Vanaf;
-                if (dt.ShowDialog() == DialogResult.OK)
+                if (dt.ShowDialog(this) == DialogResult.OK)
                 {
                     if (dt.SelectedValue.DayOfWeek != DayOfWeek.Saturday && dt.SelectedValue.DayOfWeek != DayOfWeek.Sunday)
                     {

@@ -457,10 +457,15 @@ namespace Rpm.SqlLite
                         return false;
                     case DbInstanceType.MultipleFiles:
                         if (MultiFiles == null) throw new NullReferenceException();
-                        if (!string.IsNullOrEmpty(change) && item is IDbLogging ent)
+                        if (item is IDbLogging ent)
                         {
                             ent.Logs ??= new List<LogEntry>();
-                            ent.Logs.Add(new LogEntry(change, MsgType.Info));
+                            if(ent.Logs.Count > 100)
+                                ent.Logs.Clear();
+                            if (!string.IsNullOrEmpty(change))
+                            {
+                                ent.Logs.Add(new LogEntry(change, MsgType.Info));
+                            }
                         }
 
                         return MultiFiles.Upsert(id, item, onlylocal);

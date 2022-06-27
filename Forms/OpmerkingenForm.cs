@@ -287,7 +287,7 @@ namespace Forms
         private void xaddtoolstripbutton_Click(object sender, EventArgs e)
         {
             var xnewop = new NewKlachtForm(true);
-            if (xnewop.ShowDialog() == DialogResult.OK)
+            if (xnewop.ShowDialog(this) == DialogResult.OK)
             {
                 var op = xnewop.Opmerking;
                 var xcur = xOpmerkingenTree.Nodes[0].Nodes.Find(op.Title, false);
@@ -395,7 +395,7 @@ namespace Forms
             if (xselectedopmerkingpanel.Tag is OpmerkingEntry xent)
             {
                 var xnewop = new NewKlachtForm(true, xent);
-                if (xnewop.ShowDialog() == DialogResult.OK)
+                if (xnewop.ShowDialog(this) == DialogResult.OK)
                 {
                     var op = xnewop.Opmerking;
                     var xcur = xOpmerkingenTree.Nodes[0].Nodes.Find(op.Title, false);

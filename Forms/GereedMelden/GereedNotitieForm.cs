@@ -22,7 +22,7 @@ namespace Forms.GereedMelden
                 xredentextbox.Text = _Productie.GereedNote.Notitie;
             this.Invalidate();
             CreateMessage(productie);
-            return base.ShowDialog();
+            return base.ShowDialog(this);
         }
 
         public string Reden { get; private set; }

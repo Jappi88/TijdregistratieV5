@@ -58,7 +58,7 @@ namespace ProductieManager.Forms.Klachten
         private void xexpand_Click(object sender, EventArgs e)
         {
             if (Klacht != null)
-                new KlachtInfoForm(Klacht).ShowDialog();
+                new KlachtInfoForm(Klacht).ShowDialog(this);
         }
 
         private void KlachtControl_Click(object sender, EventArgs e)
@@ -69,7 +69,7 @@ namespace ProductieManager.Forms.Klachten
         private void KlachtControl_DoubleClick(object sender, EventArgs e)
         {
             if (Klacht != null)
-                new KlachtInfoForm(Klacht).ShowDialog();
+                new KlachtInfoForm(Klacht).ShowDialog(this);
         }
 
         public event EventHandler KlacktClicked;
@@ -109,7 +109,7 @@ namespace ProductieManager.Forms.Klachten
         {
             if (Klacht == null) return;
             var xklacht = new NewKlachtForm(false, Klacht);
-            if (xklacht.ShowDialog() == DialogResult.OK)
+            if (xklacht.ShowDialog(this) == DialogResult.OK)
             {
                 xklacht.Klacht.GelezenDoor.Clear();
                 Manager.Klachten.SaveKlacht(xklacht.Klacht, true);

@@ -85,7 +85,7 @@ namespace Forms
             var task = Task.Run(() =>
             {
                 if (this.IsDisposed) return;
-                this.ShowDialog();
+                this.ShowDialog(owner);
             });
             Application.DoEvents();
             return task;

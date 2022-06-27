@@ -203,7 +203,7 @@ namespace Controls
                 var form = new ChangeSizeForm(InfoEntry.Size);
                 form.ChangeMinimumSize(new Size(128, 96));
                 form.InitInfo();
-                if (form.ShowDialog() == DialogResult.OK)
+                if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     InfoEntry.Size = form.SelectedSize;
                     UpdateTile();

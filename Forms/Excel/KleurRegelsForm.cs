@@ -155,7 +155,7 @@ namespace Forms.Excel
             var xnewcrit = new NewFilterEntry(typeof(IProductieBase), xvar, false)
                 { Title = $"Nieuwe KleurRegel voor {xvar}" };
 
-            if (xnewcrit.ShowDialog() == DialogResult.OK)
+            if (xnewcrit.ShowDialog(this) == DialogResult.OK)
             {
                 var xregel = new ExcelRegelEntry()
                 {
@@ -182,7 +182,7 @@ namespace Forms.Excel
                 var xnewcrit = new NewFilterEntry(typeof(IProductieBase), regel.Filter)
                     {Title = $"Wijzig KleurRegel voor {regel.Filter.Criteria}"};
 
-                if (xnewcrit.ShowDialog() == DialogResult.OK)
+                if (xnewcrit.ShowDialog(this) == DialogResult.OK)
                 {
                     regel.Filter = xnewcrit.SelectedFilter;
                     xRegelView.RefreshObject(regel);
@@ -222,7 +222,7 @@ namespace Forms.Excel
                 colordialog.Title = Title;
                 colordialog.SetKleuren(ExcelColumnEntry.GetExcelCollors());
                 colordialog.SelectedColor = xcolorPanel.BackColor;
-                if (colordialog.ShowDialog() == DialogResult.OK)
+                if (colordialog.ShowDialog(this) == DialogResult.OK)
                 {
                     var xindex = ExcelColumnEntry.GetColorIndex(colordialog.SelectedColor);
                     if (xindex == -1) return;

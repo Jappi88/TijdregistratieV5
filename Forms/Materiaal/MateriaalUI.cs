@@ -107,7 +107,7 @@ namespace Forms
             var mats = xmateriaallijst.Objects.OfType<Materiaal>().ToList();
             while (true)
             {
-                if (xnew.ShowDialog() == DialogResult.OK)
+                if (xnew.ShowDialog(this) == DialogResult.OK)
                 {
                     sel = xnew.SelectedMateriaal;
                 }
@@ -131,7 +131,7 @@ namespace Forms
         private void WijzigMaterial(Materiaal mat)
         {
             var xnew = new NewMateriaalForm(mat);
-            if (xnew.ShowDialog() == DialogResult.OK)
+            if (xnew.ShowDialog(this) == DialogResult.OK)
             {
                 xmateriaallijst.RefreshObject(xnew.SelectedMateriaal);
             }

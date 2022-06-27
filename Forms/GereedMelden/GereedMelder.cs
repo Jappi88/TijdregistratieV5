@@ -46,7 +46,7 @@ namespace Forms.GereedMelden
         public string Naam { get; set; }
         public string Notitie { get; set; } = string.Empty;
 
-        public DialogResult ShowDialog(ProductieFormulier form)
+        public DialogResult ShowDialog(IWin32Window owner, ProductieFormulier form)
         {
             _prod = form.CreateCopy();
             xparaaf.Text = form.Paraaf;
@@ -58,10 +58,10 @@ namespace Forms.GereedMelden
             this.Invalidate();
             productieInfoUI1.SetInfo(_prod, this.Text, Color.White,
                 Color.White, Color.DarkGreen);
-            return ShowDialog();
+            return base.ShowDialog(owner);
         }
 
-        public DialogResult ShowDialog(Bewerking bewerking)
+        public DialogResult ShowDialog(IWin32Window owner, Bewerking bewerking)
         {
             _prod = bewerking.CreateCopy();
             xparaaf.Text = bewerking.Paraaf;
@@ -73,7 +73,7 @@ namespace Forms.GereedMelden
             this.Invalidate();
             productieInfoUI1.SetInfo(_prod, this.Text, Color.White,
                 Color.White, Color.DarkGreen);
-            return ShowDialog();
+            return base.ShowDialog(owner);
         }
 
         private LoadingForm _loading;
@@ -97,7 +97,7 @@ namespace Forms.GereedMelden
                 if (afwijking is < -15 or > 15)
                 {
                     var xt = new GereedAfwijkingForm();
-                    if (xt.ShowDialog(_prod, xparaaf.Text.Trim()) == DialogResult.Cancel) return;
+                    if (xt.ShowDialog(this, _prod, xparaaf.Text.Trim()) == DialogResult.Cancel) return;
                     if (string.IsNullOrEmpty(Notitie))
                         Notitie = xt.Reden;
                     else Notitie += $"\n\nDe reden voor een te hoge 'PerUur' afwijking van '{afwijking}%':\n\n" + xt.Reden?.Trim().Split(':').LastOrDefault()?.Trim();
@@ -114,7 +114,7 @@ namespace Forms.GereedMelden
 
                 _= Task.Factory.StartNew(() =>
                 {
-                    _loading.ShowDialog();
+                    _loading.ShowDialog(this);
                 });
                 Application.DoEvents();
                 if (_prod is ProductieFormulier form)
@@ -165,7 +165,7 @@ namespace Forms.GereedMelden
                             {
                                 var gereedmelder = new GereedMelder();
                                 gereedmelder.ParentCombi = bew.Path;
-                                gereedmelder.ShowDialog(xbw);
+                                gereedmelder.ShowDialog(this,xbw);
                             }
                         }
                     }
@@ -207,7 +207,7 @@ namespace Forms.GereedMelden
             if ( (storingen.Length > 0 || _prod.TijdGewerkt <= 0 || _prod.GetPersonen(true).Length == 0))
             {
                 var xopenform = new OpenTakenForm(_prod);
-                if (xopenform.ShowDialog() != DialogResult.OK)
+                if (xopenform.ShowDialog(this) != DialogResult.OK)
                     return false;
             }
 
@@ -259,7 +259,7 @@ namespace Forms.GereedMelden
                 MultiLine = true,
                 SelectedText = _prod.GereedNote?.Notitie
             };
-            if (xtxtform.ShowDialog() == DialogResult.OK)
+            if (xtxtform.ShowDialog(this) == DialogResult.OK)
             {
                 Notitie = xtxtform.SelectedText;
                 _prod.GereedNote = new NotitieEntry(Notitie, _prod);
@@ -344,7 +344,7 @@ namespace Forms.GereedMelden
             if (_prod is Bewerking bew)
             {
                 var xform = new DeelsGereedMeldingenForm(bew);
-                if (xform.ShowDialog() == DialogResult.OK)
+                if (xform.ShowDialog(this) == DialogResult.OK)
                 {
                     bew = xform.Bewerking;
                     _prod = xform.Bewerking;
@@ -403,7 +403,7 @@ namespace Forms.GereedMelden
                 {
                     wps.Add("Alle Werkplekken");
                     WerkPlekChooser wpChooser = new WerkPlekChooser(wps.ToArray(),null);
-                    if (wpChooser.ShowDialog() == DialogResult.Cancel) return;
+                    if (wpChooser.ShowDialog(this) == DialogResult.Cancel) return;
                     wp = wpChooser.SelectedName?.ToLower() == "alle werkplekken" ? null : wpChooser.SelectedName;
                 }
                 else wp = wps.FirstOrDefault();
@@ -418,7 +418,7 @@ namespace Forms.GereedMelden
         {
             if (_prod == null) return;
             var xafk = new AfkeurForm(_prod);
-            xafk.ShowDialog();
+            xafk.ShowDialog(this);
         }
     }
 }

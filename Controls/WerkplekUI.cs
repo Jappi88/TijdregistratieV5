@@ -507,7 +507,7 @@ namespace Controls
                 if (xwerkpleklist.SelectedObjects[0] is WerkPlek wp)
                 {
                     var ind = new Indeling(wp);
-                    ind.ShowDialog();
+                    ind.ShowDialog(this);
                 }
             }
         }
@@ -519,7 +519,7 @@ namespace Controls
                 if (xwerkpleklist.SelectedObjects[0] is WerkPlek wp)
                 {
                     var sf = new StoringForm(wp);
-                    sf.ShowDialog();
+                    sf.ShowDialog(this);
                 }
             }
         }
@@ -544,7 +544,7 @@ namespace Controls
                 {
                     if (wp.Werk == null) return;
                     var wc = new WerktijdChanger(wp) {SaveChanges = true};
-                    if (wc.ShowDialog() == DialogResult.OK)
+                    if (wc.ShowDialog(this) == DialogResult.OK)
                         wp.Werk.UpdateBewerking(null, $"[{wp.Path}] Werktijd Aangepast");
                 }
         }
@@ -565,7 +565,7 @@ namespace Controls
                 {
                     Title = $"Notitie voor [{form.ProductieNr}, {form.ArtikelNr}] {form.Naam} {wp.Naam}"
                 };
-                if (xtxtform.ShowDialog() == DialogResult.OK)
+                if (xtxtform.ShowDialog(this) == DialogResult.OK)
                 {
                     wp.Note = xtxtform.Notitie;
                     form.UpdateBewerking(null, $"[{form.ProductieNr}, {form.ArtikelNr}] {form.Naam} {wp.Naam} Notitie Gewijzigd");
@@ -581,7 +581,7 @@ namespace Controls
                 var bw = wp.Werk;
                 if (bw == null) return;
                 var xafk = new AfkeurForm(bw);
-                xafk.ShowDialog();
+                xafk.ShowDialog(this);
             }
         }
 
@@ -600,7 +600,7 @@ namespace Controls
             if (xwerkpleklist.SelectedObject is WerkPlek plek)
             {
                 var xaantal = new AantalHistoryForm(plek);
-                xaantal.ShowDialog();
+                xaantal.ShowDialog(this);
             }
         }
 
@@ -621,7 +621,7 @@ namespace Controls
                 xstform.SetOnderbreking(wps.FirstOrDefault(), xst, false);
                 xstform.AutoUpdateTitle = false;
                 xstform.Title = $"Onderbreek {string.Join(", ", wps.Select(x => x.Naam))}";
-                if (xstform.ShowDialog() == DialogResult.OK)
+                if (xstform.ShowDialog(this) == DialogResult.OK)
                 {
                     xst = xstform.Onderbreking;
                     foreach (var wp in wps)
@@ -657,7 +657,7 @@ namespace Controls
                 xstform.Title = $"Hervat {string.Join(", ", wps.Select(x => x.Naam))}";
                 xstform.SetOnderbreking(xwp, xst, true);
 
-                if (xstform.ShowDialog() == DialogResult.OK)
+                if (xstform.ShowDialog(this) == DialogResult.OK)
                 {
                     foreach (var wp in wps)
                     {
@@ -682,7 +682,7 @@ namespace Controls
             {
                 var bl = new BijlageForm(plek.Werk);
                 bl.Title = $"Bijlages Voor: {plek.ArtikelNr}";
-                bl.ShowDialog();
+                bl.ShowDialog(this);
             }
         }
     }

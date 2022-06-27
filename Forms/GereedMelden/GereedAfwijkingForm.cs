@@ -16,13 +16,13 @@ namespace Forms.GereedMelden
             InitializeComponent();
         }
 
-        public DialogResult ShowDialog(IProductieBase productie, string paraaf)
+        public DialogResult ShowDialog(IWin32Window owner, IProductieBase productie, string paraaf)
         {
             _Productie = productie;
             this.Text = $"Productie Afwijking: {productie.ProductieNr} | {productie.ArtikelNr}";
             this.Invalidate();
             CreateMessage(productie, paraaf);
-            return base.ShowDialog();
+            return base.ShowDialog(owner);
         }
 
         public string Reden { get; private set; }
@@ -156,7 +156,7 @@ namespace Forms.GereedMelden
                 txt.Style = MetroColorStyle.Red;
                 txt.Title = "Vul in een geldige reden voor de afwijking";
                 txt.SelectedText = xvalue;
-                if (txt.ShowDialog() == DialogResult.OK && txt.SelectedText.Trim().Length > 1)
+                if (txt.ShowDialog(this) == DialogResult.OK && txt.SelectedText.Trim().Length > 1)
                 {
                     e.Item.Text = $"Andere reden, namelijk: {txt.SelectedText}";
                     e.Item.Tag = e.Item.Text;

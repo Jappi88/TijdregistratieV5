@@ -377,7 +377,7 @@ namespace ProductieManager.Forms
         {
             if (SelectedFilter == null) return;
             var fs = new EditCriteriaForm(PropertyType,SelectedFilter.ChildEntries, true);
-            if (fs.ShowDialog() == DialogResult.OK)
+            if (fs.ShowDialog(this) == DialogResult.OK)
             {
                 SelectedFilter.ChildEntries = fs.SelectedFilter;
                 UpdateHtmlText();

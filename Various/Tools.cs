@@ -149,7 +149,7 @@ namespace Various
             }
         }
 
-        public static void ShowSelectedTekening(string artnr, EventHandler browserclosed)
+        public static void ShowSelectedTekening(IWin32Window owner, string artnr, EventHandler browserclosed)
         {
             if(!string.IsNullOrEmpty(artnr))
             {
@@ -162,7 +162,7 @@ namespace Various
                 wb.OpenIfFound = true;
                 wb.Navigate();
                 // wb.Navigate("C:\\Users\\Gebruiker\\Dropbox\\ProductieManager\\Autodesk Vault.html");
-                wb.ShowDialog();
+                wb.ShowDialog(owner);
                 browserclosed?.Invoke(wb, EventArgs.Empty);
             }
         }

@@ -85,7 +85,7 @@ namespace ProductieManager.Forms
             var xitem = (Filter)xfilterlijst.SelectedObjects[0];
             if (xitem == null) return;
             var tf = new TextFieldEditor {Title = "Wijzig filter naam", MultiLine = false, SelectedText = xitem.Name};
-            if (tf.ShowDialog() == DialogResult.OK)
+            if (tf.ShowDialog(this) == DialogResult.OK)
             {
                 if (CheckForFilter(tf.SelectedText.Trim()))
                 {

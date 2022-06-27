@@ -367,7 +367,7 @@ namespace Forms
                     foreach (var per in pers) per.Klusjes?.Clear();
                     var xwp = GetCurrentWerkPlek();
                     var klusui = new NieuwKlusForm(Formulier, pers, false, false, GetCurrentBewerking(), xwp?.Naam);
-                    if (klusui.ShowDialog() == DialogResult.OK)
+                    if (klusui.ShowDialog(this) == DialogResult.OK)
                     {
                         foreach (var pr in klusui.Persoon)
                         {
@@ -414,7 +414,7 @@ namespace Forms
             }
 
             var klusui = new NieuwKlusForm(Formulier, shift, false, false, bew, wp?.Naam);
-            if (klusui.ShowDialog() == DialogResult.OK)
+            if (klusui.ShowDialog(this) == DialogResult.OK)
             {
                 foreach (var pr in klusui.Persoon)
                 {
@@ -578,7 +578,7 @@ namespace Forms
         private Personeel[] KiesPersoneel()
         {
             var pers = new PersoneelsForm(Bewerking,true);
-            if (pers.ShowDialog() == DialogResult.OK)
+            if (pers.ShowDialog(this) == DialogResult.OK)
                 if (pers.SelectedPersoneel is {Length: > 0})
                 {
                     foreach (var per in pers.SelectedPersoneel)
@@ -855,7 +855,7 @@ namespace Forms
         private string ChooseWerkplek(string name)
         {
             var wp = new WerkPlekChooser(Manager.GetWerkplekken(Bewerking.Naam),name);
-            if (wp.ShowDialog() == DialogResult.OK) return wp.SelectedName;
+            if (wp.ShowDialog(this) == DialogResult.OK) return wp.SelectedName;
 
             return null;
         }
@@ -917,7 +917,7 @@ namespace Forms
             if (per != null && bew != null)
             {
                 var xklus = new NieuwKlusForm(Formulier, per,false,true, bew, per.Werkplek);
-                if (xklus.ShowDialog() == DialogResult.OK)
+                if (xklus.ShowDialog(this) == DialogResult.OK)
                 {
                     WerkPlek wp = bew.WerkPlekken.FirstOrDefault(x => 
                     string.Equals(x.Naam, xklus.SelectedKlus.WerkPlek, StringComparison.CurrentCultureIgnoreCase));
@@ -940,7 +940,7 @@ namespace Forms
             {
                 var klus = GetCurrentKlus(per, true);
                 var wc = new WerktijdChanger(klus);
-                if (wc.ShowDialog() == DialogResult.OK)
+                if (wc.ShowDialog(this) == DialogResult.OK)
                 {
                     per.ReplaceKlus(wc.Klusje);
                     if (per.WerkRooster == null || !per.WerkRooster.IsCustom())
@@ -969,7 +969,7 @@ namespace Forms
                 var rs = new RoosterForm(xr,
                     $"Rooster voor {usersfield}");
                 rs.ViewPeriode = false;
-                if (rs.ShowDialog() == DialogResult.Cancel) return;
+                if (rs.ShowDialog(this) == DialogResult.Cancel) return;
                 foreach (var pers in personen)
                 {
                     var klus = GetCurrentKlus(pers, false);
@@ -1065,7 +1065,7 @@ namespace Forms
             if (xwerkplekken.SelectedObject is WerkPlek wp)
             {
                 var wc = new WerktijdChanger(wp);
-                if (wc.ShowDialog() == DialogResult.OK)
+                if (wc.ShowDialog(this) == DialogResult.OK)
                 {
                     xwerkplekken.RefreshObject(wp);
                     xwerkplekken.SelectedObject = wp;
@@ -1100,7 +1100,7 @@ namespace Forms
                 var rs = new RoosterForm(xr,
                     $"Rooster voor {usersfield}");
                 rs.ViewPeriode = false;
-                if (rs.ShowDialog() == DialogResult.Cancel) return;
+                if (rs.ShowDialog(this) == DialogResult.Cancel) return;
                 for (int i = 0; i < plekken.Length; i++)
                 {
                     var plek = plekken[i];
@@ -1145,7 +1145,7 @@ namespace Forms
             if (xwerkplekken.SelectedObject is WerkPlek wp)
             {
                 var wpnode = new NotitieForms(wp.Note, wp);
-                if (wpnode.ShowDialog() == DialogResult.OK)
+                if (wpnode.ShowDialog(this) == DialogResult.OK)
                     wp.Note = wpnode.Notitie;
             }
         }

@@ -302,7 +302,7 @@ namespace Forms
         {
             if (Manager.Klachten == null) return;
             var xklacht = new NewKlachtForm(false);
-            if (xklacht.ShowDialog() == DialogResult.OK)
+            if (xklacht.ShowDialog(this) == DialogResult.OK)
             {
                 xklacht.Klacht.Afzender = Manager.Opties?.Username;
                 Manager.Klachten.SaveKlacht(xklacht.Klacht,true);
@@ -315,7 +315,7 @@ namespace Forms
             var xs = SelectedKlacht;
             if (xs?.Klacht == null) return;
             var xklacht = new NewKlachtForm(false, xs.Klacht);
-            if (xklacht.ShowDialog() == DialogResult.OK)
+            if (xklacht.ShowDialog(this) == DialogResult.OK)
             {
                 xklacht.Klacht.GelezenDoor.Clear();
                 Manager.Klachten.SaveKlacht(xklacht.Klacht,true);
@@ -361,7 +361,7 @@ namespace Forms
         {
             var xs = SelectedKlacht;
             if (xs?.Klacht == null) return;
-            new KlachtInfoForm(xs.Klacht).ShowDialog();
+            new KlachtInfoForm(xs.Klacht).ShowDialog(this);
         }
     }
 }

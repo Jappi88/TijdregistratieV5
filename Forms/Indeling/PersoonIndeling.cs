@@ -208,7 +208,7 @@ namespace Controls
                                 if (wps == null || wps.Count == 0)
                                     throw new Exception($"Geen werkplaatsen beschikbaar voor {bew.Naam}!");
                                 var wpchooser = new WerkPlekChooser(wps.ToArray(), null);
-                                if (wpchooser.ShowDialog() == DialogResult.OK)
+                                if (wpchooser.ShowDialog(this) == DialogResult.OK)
                                 {
                                     var xwp = wpchooser.SelectedName;
                                     if (!bew.AddPersoneel(Persoon, xwp))
@@ -341,7 +341,7 @@ namespace Controls
             var wpchooser = new WerkPlekChooser(Manager.GetWerkplekken(bewerking.Naam.Split('[')[0]), null);
             wpchooser.Title =
                 $"Kies een werkplek voor {Persoon.PersoneelNaam} op {bewerking.Naam} van {bewerking.ArtikelNr}|{bewerking.ProductieNr}";
-            if (wpchooser.ShowDialog() == DialogResult.OK)
+            if (wpchooser.ShowDialog(this) == DialogResult.OK)
             {
                 var xklus = new Klus(Persoon, bewerking, wpchooser.SelectedName);
                 xklus.IsActief = true;

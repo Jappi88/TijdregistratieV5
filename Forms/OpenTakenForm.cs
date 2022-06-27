@@ -132,13 +132,13 @@ namespace Forms
             {
                 var x = new Indeling(bew.Root, bew);
                 x.StartPosition = FormStartPosition.CenterParent;
-                x.ShowDialog();
+                x.ShowDialog(this);
             }
             else if (Productie is ProductieFormulier form)
             {
                 var x = new Indeling(form, null);
                 x.StartPosition = FormStartPosition.CenterParent;
-                x.ShowDialog();
+                x.ShowDialog(this);
             }
         }
 
@@ -163,7 +163,7 @@ namespace Forms
             if (form == null) return;
             var allst = new AlleStoringenForm();
             allst.InitStoringen(form);
-            allst.ShowDialog();
+            allst.ShowDialog(this);
         }
 
         private void xrooster_Click(object sender, EventArgs e)

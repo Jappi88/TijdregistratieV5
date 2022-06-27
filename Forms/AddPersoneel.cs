@@ -34,7 +34,7 @@ namespace Forms
         public new DialogResult ShowDialog()
         {
             PersoneelLid ??= new Personeel();
-            return base.ShowDialog();
+            return base.ShowDialog(this);
         }
 
         private void xok_Click(object sender, EventArgs e)
@@ -80,7 +80,7 @@ namespace Forms
             {
                 UpdateUser();
                 var vf = new VrijeTijdForm(PersoneelLid);
-                if (vf.ShowDialog() == DialogResult.OK) PersoneelLid.VrijeDagen = vf.VrijeTijd;
+                if (vf.ShowDialog(this) == DialogResult.OK) PersoneelLid.VrijeDagen = vf.VrijeTijd;
             }
         }
 
@@ -98,7 +98,7 @@ namespace Forms
                     PersoneelLid.PersoneelNaam = xnaam.Text.Trim();
                     var rs = new RoosterForm(PersoneelLid.WerkRooster ?? Manager.Opties.GetWerkRooster(),
                         $"Rooster voor {PersoneelLid.PersoneelNaam}");
-                    if (rs.ShowDialog() == DialogResult.OK) 
+                    if (rs.ShowDialog(this) == DialogResult.OK) 
                         PersoneelLid.WerkRooster = rs.WerkRooster;
                     var xr = PersoneelLid.WerkRooster != null && PersoneelLid.WerkRooster.IsCustom()? " [Aangepast]" : "";
                     xrooster.Text = $"Werk Rooster{xr}";
@@ -120,7 +120,7 @@ namespace Forms
             if (PersoneelLid != null)
             {
                 var ak = new AlleKlusjes(PersoneelLid);
-                ak.ShowDialog();
+                ak.ShowDialog(this);
             }
         }
 
@@ -129,7 +129,7 @@ namespace Forms
             if (PersoneelLid != null)
             {
                 var vf = new VaardighedenForm(PersoneelLid);
-                vf.ShowDialog();
+                vf.ShowDialog(this);
             }
         }
     }

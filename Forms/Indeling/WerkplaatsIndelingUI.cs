@@ -786,7 +786,7 @@ namespace Forms
                 var xwps = Manager.BewerkingenLijst.GetAlleWerkplekken().ToArray();
                 var wpchooser = new WerkPlekChooser(xwps, null);
                 wpchooser.Title = $"Voeg een nieuwe Werkplek toe";
-                if (wpchooser.ShowDialog() == DialogResult.OK)
+                if (wpchooser.ShowDialog(this) == DialogResult.OK)
                 {
                     var chosen = wpchooser.SelectedName;
                     if (chosen.Length > 0)

@@ -207,7 +207,7 @@ namespace Forms.Aantal.Controls
         {
             if (Plek?.Werk == null) return;
             var xnew = new NewAantalRecordForm();
-            if (xnew.ShowDialog() == DialogResult.OK)
+            if (xnew.ShowDialog(this) == DialogResult.OK)
             {
                 Plek.AantalHistory.Aantallen.Insert(0, xnew.SelectedRecord);
                 xHistoryList.InsertObjects(0, new List<AantalRecord>() {xnew.SelectedRecord});
@@ -222,7 +222,7 @@ namespace Forms.Aantal.Controls
             if (selected != null && Plek?.Werk != null)
             {
                 var xnew = new NewAantalRecordForm(selected);
-                if (xnew.ShowDialog() == DialogResult.OK)
+                if (xnew.ShowDialog(this) == DialogResult.OK)
                 {
                     var index = Plek.AantalHistory.Aantallen.IndexOf(selected);
                     if (index > -1)

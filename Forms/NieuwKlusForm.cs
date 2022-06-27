@@ -401,7 +401,7 @@ namespace Forms
         private void xgewerktetijden_Click(object sender, EventArgs e)
         {
             var changer = new WerktijdChanger(SelectedKlus);
-            if (changer.ShowDialog() == DialogResult.OK)
+            if (changer.ShowDialog(this) == DialogResult.OK)
             {
                 changer.Klusje.CopyTo(ref SelectedKlus);
                 var tent = SelectedKlus.GetAvailibleTijdEntry();
@@ -414,7 +414,7 @@ namespace Forms
         private void xrooster_Click(object sender, EventArgs e)
         {
             var rs = new RoosterForm(SelectedKlus.Tijden.WerkRooster, $"Werkrooster: {SelectedKlus.Path}");
-            if (rs.ShowDialog() == DialogResult.OK)
+            if (rs.ShowDialog(this) == DialogResult.OK)
             {
                 SelectedKlus.Tijden.UpdateUrenRooster(false, rs.WerkRooster);
                 UpdateTijdGewerkt();

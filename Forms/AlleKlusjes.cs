@@ -275,7 +275,7 @@ namespace Forms
                 try
                 {
                     var xedit = new NieuwKlusForm(Persoon, klus,true);
-                    if (xedit.ShowDialog() == DialogResult.OK)
+                    if (xedit.ShowDialog(this) == DialogResult.OK)
                         //xedit.Formulier?.UpdateForm(true, false, $"{klus.Naam} aangepast", true);
                         xklusjes.RefreshObject(klus);
                 }

@@ -465,13 +465,11 @@ namespace Rpm.SqlLite
                     {
                         var dir = System.IO.Path.GetDirectoryName(filepath);
                         if (!Directory.Exists(dir)) break;
-                        //_pathwatcher?.UpdateFile(filepath, false,true, DateTime.Now.AddDays(1));
-                        using var xs = new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.ReadWrite,
-                            FileShare.None);
-                        xs.Write(bytes, 0, bytes.Length);
-                        xs.Flush();
-                        xs.Close();
-                        //Task.Factory.StartNew(() => _pathwatcher?.UpdateFile(filepath, raiseevent, true, DateTime.Now));
+                        using var xfs = new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+                        xfs.SetLength(bytes.Length);
+                        xfs.Position = 0;
+                        xfs.Write(bytes, 0, bytes.Length);
+                        xfs.Close();
                         return true;
                     }
                     catch (Exception e)

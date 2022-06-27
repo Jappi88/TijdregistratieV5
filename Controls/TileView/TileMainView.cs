@@ -425,7 +425,7 @@ namespace Controls.TileView
             tf.MultiLine = false;
             tf.UseSecondary = false;
             tf.Title = "Vul in een groep naam";
-            if (tf.ShowDialog() != DialogResult.OK) return;
+            if (tf.ShowDialog(this) != DialogResult.OK) return;
             var name = tf.SelectedText.Trim();
             var old = Manager.Opties.GroupEntries.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase));
             if (old != null)

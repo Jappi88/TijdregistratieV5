@@ -180,7 +180,7 @@ namespace Controls
             {
                 var period = parentcombi.Periode.CreateCopy();
                 var xdt = new CombineerPeriodeForm(period.CreateCopy());
-                if (xdt.ShowDialog() == DialogResult.OK)
+                if (xdt.ShowDialog(this) == DialogResult.OK)
                 {
                     var xindex = ParentProductie.Combies.IndexOf(parentcombi);
                     if (xindex > -1)

@@ -26,7 +26,7 @@ namespace Forms
             if (aantal > 0)
                 xtotaal.Text = $"/ {aantal}";
             else xtotaal.Text = "";
-            return ShowDialog();
+            return ShowDialog(this);
         }
 
         public DialogResult ShowDialog(WerkPlek wp)
@@ -37,7 +37,7 @@ namespace Forms
             Text = $"Wijzig Aantal: [{wp.Path}] | {wp.Naam}";
             xinfolabel.Text = $"Vul het aantal in dat gemaakt is op {wp.Naam}.";
             xtotaal.Text = $"/ {wp.Werk.Aantal}";
-            return ShowDialog();
+            return ShowDialog(this);
         }
 
         private void button2_Click(object sender, EventArgs e)

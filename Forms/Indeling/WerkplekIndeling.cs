@@ -552,7 +552,7 @@ namespace Controls
         private void xsettings_Click(object sender, EventArgs e)
         {
             var set = new WerkplaatsSettingsForm(Settings);
-            if (set.ShowDialog() != DialogResult.OK) return;
+            if (set.ShowDialog(this) != DialogResult.OK) return;
             Settings = set.Settings;
             if (Manager.Opties != null)
                 Manager.Opties.NationaleFeestdagen = set.roosterUI1.NationaleFeestdagen().ToArray();

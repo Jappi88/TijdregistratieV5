@@ -1771,7 +1771,7 @@ namespace Controls
         public static bool AddPersoneel(IWin32Window owner, ref Bewerking werk, string werkplek)
         {
             var pers = new PersoneelsForm(werk, true);
-            if (pers.ShowDialog() == DialogResult.OK)
+            if (pers.ShowDialog(owner) == DialogResult.OK)
             {
                 if (pers.SelectedPersoneel is { Length: > 0 })
                 {
@@ -1792,7 +1792,7 @@ namespace Controls
                     {
                         var klusui = new NieuwKlusForm(parent, pers.SelectedPersoneel, true,
                             false, werk, werkplek);
-                        if (klusui.ShowDialog() != DialogResult.OK) return false;
+                        if (klusui.ShowDialog(owner) != DialogResult.OK) return false;
                         var pair = klusui.SelectedKlus.GetWerk(parent);
                         var prod = pair.Formulier;
                         werk = pair.Bewerking;
@@ -1812,7 +1812,7 @@ namespace Controls
                         {
                             var klusui = new NieuwKlusForm(parent, per, true, false, werk);
 
-                            if (klusui.ShowDialog() != DialogResult.OK) break;
+                            if (klusui.ShowDialog(owner) != DialogResult.OK) break;
                             //klusui.Persoon.CopyTo(ref per);
                             var pair = klusui.SelectedKlus.GetWerk(parent);
                             var prod = pair.Formulier;
@@ -1938,7 +1938,7 @@ namespace Controls
                         StartPosition = FormStartPosition.CenterParent,
                         Paraaf = p.Paraaf
                     };
-                    return x.ShowDialog(p) != DialogResult.Cancel;
+                    return x.ShowDialog(owner, p) != DialogResult.Cancel;
                 }
             }
 
@@ -1962,7 +1962,7 @@ namespace Controls
                     x.Naam = $"Bewerking '{b.Naam}'";
                     x.StartPosition = FormStartPosition.CenterParent;
                     x.Paraaf = b.Paraaf;
-                    x.ShowDialog(b);
+                    x.ShowDialog(owner, b);
                     //if (x.ShowDialog(b) == DialogResult.OK)
                     //{
                     //    return await b.MeldBewerkingGereed(x.Paraaf, x.Aantal, x.Notitie, true,true);
@@ -1973,18 +1973,18 @@ namespace Controls
             return false;
         }
 
-        public static async void ShowBewDeelsGereedMeldingen(Bewerking bew)
+        public static async void ShowBewDeelsGereedMeldingen(IWin32Window owner, Bewerking bew)
         {
             if (bew == null) return;
             var xform = new DeelsGereedMeldingenForm(bew);
-            if (xform.ShowDialog() == DialogResult.OK)
+            if (xform.ShowDialog(owner) == DialogResult.OK)
             {
                 bew = xform.Bewerking;
                 await bew.UpdateBewerking(null, $"[{bew.Path}] Deels gereedmeldingen aangepast");
             }
         }
 
-        public static async void ShowProdDeelsGereedMeldingen(ProductieFormulier form)
+        public static async void ShowProdDeelsGereedMeldingen(IWin32Window owner, ProductieFormulier form)
         {
             if (form?.Bewerkingen == null || form.Bewerkingen.Length == 0) return;
             Bewerking bw = null;
@@ -1994,7 +1994,7 @@ namespace Controls
                 {
                     Text = "Kies bewerking voor de deels gereedmeldingen"
                 };
-                if (bwc.ShowDialog() == DialogResult.OK)
+                if (bwc.ShowDialog(owner) == DialogResult.OK)
                     bw = form.Bewerkingen.FirstOrDefault(x =>
                         string.Equals(x.Naam, bwc.SelectedItem, StringComparison.CurrentCultureIgnoreCase));
             }
@@ -2005,7 +2005,7 @@ namespace Controls
 
             if (bw == null) return;
             var deelgereed = new DeelsGereedMeldingenForm(bw);
-            if (deelgereed.ShowDialog() != DialogResult.OK) return;
+            if (deelgereed.ShowDialog(owner) != DialogResult.OK) return;
 
             bw = deelgereed.Bewerking;
             await bw.UpdateBewerking(null, $"[{bw.Path}] Deels gereedmeldingen aangepast");
@@ -2028,7 +2028,7 @@ namespace Controls
                     Bewerking = bws[i].Naam
                 };
                 _calcform.Filter = rf;
-                _calcform.Show();
+                _calcform.Show(this);
                 done.Add(bws[i].ArtikelNr);
             }
         }
@@ -2048,7 +2048,7 @@ namespace Controls
                     Bewerking = bws[i].Naam
                 };
                 _calcform.Filter = rf;
-                _calcform.Show();
+                _calcform.Show(this);
                 done.Add(bws[i].Naam);
             }
         }
@@ -2056,8 +2056,8 @@ namespace Controls
         private void ShowSelectedProdDeelGereedMeldingen()
         {
             if (ProductieLijst.SelectedObject is ProductieFormulier form)
-                ShowProdDeelsGereedMeldingen(form);
-            else if (ProductieLijst.SelectedObject is Bewerking bew) ShowBewDeelsGereedMeldingen(bew);
+                ShowProdDeelsGereedMeldingen(this, form);
+            else if (ProductieLijst.SelectedObject is Bewerking bew) ShowBewDeelsGereedMeldingen(this,bew);
         }
 
         private void ShowSelectedWerkplekken()
@@ -2065,7 +2065,7 @@ namespace Controls
             if (ProductieLijst.SelectedObject is ProductieFormulier prod)
             {
                 var ind = new Indeling(prod);
-                ind.ShowDialog();
+                ind.ShowDialog(this);
             }
             else if (ProductieLijst.SelectedObject is Bewerking bew)
             {
@@ -2073,7 +2073,7 @@ namespace Controls
                 if (parent == null)
                     return;
                 var ind = new Indeling(parent, bew);
-                ind.ShowDialog();
+                ind.ShowDialog(this);
             }
         }
 
@@ -2086,7 +2086,7 @@ namespace Controls
             if (form == null)
                 return;
             var x = new WijzigProductie(form);
-            x.ShowDialog();
+            x.ShowDialog(this);
         }
 
         private void ShowSelectedProductieWerktijd()
@@ -2118,7 +2118,7 @@ namespace Controls
             if (form == null) return;
             var allst = new AlleStoringenForm();
             allst.InitStoringen(form);
-            allst.ShowDialog();
+            allst.ShowDialog(this);
         }
 
         private void ShowSelectedProductieAantalGemaakt()
@@ -2178,7 +2178,7 @@ namespace Controls
 
             if (form == null) return;
             var matform = new MateriaalForm();
-            if (matform.ShowDialog(form) == DialogResult.OK)
+            if (matform.ShowDialog(this, form) == DialogResult.OK)
                 await form.UpdateForm(false, false, null, $"[{form.ProductieNr}] Materialen Gewijzigd");
         }
 
@@ -2187,7 +2187,7 @@ namespace Controls
             if (ProductieLijst.SelectedObject is IProductieBase prod)
             {
                 var xafk = new AfkeurForm(prod);
-                xafk.ShowDialog();
+                xafk.ShowDialog(this);
             }
         }
 
@@ -2196,9 +2196,9 @@ namespace Controls
             try
             {
                 if (ProductieLijst.SelectedObject is Bewerking bew)
-                    new AanbevolenPersonenForm(bew).ShowDialog();
+                    new AanbevolenPersonenForm(bew).ShowDialog(this);
                 else if (ProductieLijst.SelectedObject is ProductieFormulier form)
-                    new AanbevolenPersonenForm(form).ShowDialog();
+                    new AanbevolenPersonenForm(form).ShowDialog(this);
             }
             catch (Exception exception)
             {
@@ -2314,9 +2314,9 @@ namespace Controls
         private void ShowSelectedProductieInfo()
         {
             if (ProductieLijst.SelectedObject is ProductieFormulier prod)
-                new ProductieInfoForm(prod).ShowDialog();
+                new ProductieInfoForm(prod).ShowDialog(this);
             else if (ProductieLijst.SelectedObject is Bewerking bew)
-                new ProductieInfoForm(bew).ShowDialog();
+                new ProductieInfoForm(bew).ShowDialog(this);
         }
 
         private async void ShowSelectedLeverdatum()
@@ -2460,7 +2460,7 @@ namespace Controls
                 {
                     Title = msg
                 };
-                if (dc.ShowDialog() == DialogResult.OK)
+                if (dc.ShowDialog(this) == DialogResult.OK)
                 {
                     var dialog = new LoadingForm();
                     dialog.CloseIfFinished = true;
@@ -2568,13 +2568,13 @@ namespace Controls
                 {
                     var bws = ProductieLijst.SelectedObjects.Cast<Bewerking>().ToList();
                     var exc = new CreateExcelForm(bws);
-                    exc.ShowDialog();
+                    exc.ShowDialog(this);
                 }
                 else
                 {
                     var bws = ProductieLijst.SelectedObjects.Cast<ProductieFormulier>().ToList();
                     var exc = new CreateExcelForm(bws);
-                    exc.ShowDialog();
+                    exc.ShowDialog(this);
                 }
             }
             catch (Exception e)
@@ -2586,7 +2586,7 @@ namespace Controls
         private void ShowSelectedTekening()
         {
             if (ProductieLijst.SelectedObject is IProductieBase prod)
-                Tools.ShowSelectedTekening(prod.ArtikelNr, TekeningClosed);
+                Tools.ShowSelectedTekening(this, prod.ArtikelNr, TekeningClosed);
         }
 
         private void TekeningClosed(object sender, EventArgs e)
@@ -2661,7 +2661,7 @@ namespace Controls
                 arg.Message = "Producties Printen...";
                 arg.Max = prods.Count;
                 arg.OnChanged(this);
-                loading.Show();
+                loading.Show(this);
                 loading.BringToFront();
                 for(int i= 0; i < prods.Count; i++)
                 {
@@ -2833,7 +2833,7 @@ namespace Controls
             if (IsBewerkingView)
             {
                 var bws = ProductieLijst.Objects?.Cast<Bewerking>().ToList();
-                if (bws is { Count: > 0 }) new ProductieInfoForm(bws).ShowDialog();
+                if (bws is { Count: > 0 }) new ProductieInfoForm(bws).ShowDialog(this);
             }
             else
             {
@@ -2855,7 +2855,7 @@ namespace Controls
                         }
                     }
 
-                    new ProductieInfoForm(bws).ShowDialog();
+                    new ProductieInfoForm(bws).ShowDialog(this);
                 }
             }
         }
@@ -2866,14 +2866,14 @@ namespace Controls
             {
                 var bl = new BijlageForm(productie);
                 bl.Title = $"Bijlages Voor: {productie.ArtikelNr}";
-                bl.ShowDialog();
+                bl.ShowDialog(this);
             }
         }
 
         private void xverpakkingb_Click(object sender, EventArgs e)
         {
             if (ProductieLijst.SelectedObject is IProductieBase productie)
-                new VerpakkingInstructieForm(productie).ShowDialog();
+                new VerpakkingInstructieForm(productie).ShowDialog(this);
         }
 
         private void xwijzigproductieinfo_ButtonClick(object sender, EventArgs e)
@@ -2943,7 +2943,7 @@ namespace Controls
                 txt.MinimalTextLength = 4;
                 txt.EnableSecondaryField = false;
                 txt.Title = "Kies een Filternaam om aan te maken...";
-                if (txt.ShowDialog() != DialogResult.OK) return;
+                if (txt.ShowDialog(this) != DialogResult.OK) return;
                 name = txt.SelectedText.Trim();
                 bool flag = x.Filters.Any(x => string.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase));
                 if (flag)
@@ -2958,7 +2958,7 @@ namespace Controls
             if (string.IsNullOrEmpty(name)) return;
             var xcrits = new EditCriteriaForm(typeof(IProductieBase), null, false);
             xcrits.Title = $"Filter '{name}' aanmaken...";
-            if (xcrits.ShowDialog() != DialogResult.OK || xcrits.SelectedFilter.Count == 0) return;
+            if (xcrits.ShowDialog(this) != DialogResult.OK || xcrits.SelectedFilter.Count == 0) return;
             var f = new Filter { IsTempFilter = false, Name = name };
             f.Filters.AddRange(xcrits.SelectedFilter);
             f.ListNames.Add(ListName);
@@ -3098,7 +3098,7 @@ namespace Controls
                     txt.EnableSecondaryField = false;
                     txt.Title = $"Als {value.Key} {Enum.GetName(typeof(FilterType), type)}...";
                     txt.SelectedText = value.Value.ToString();
-                    if (txt.ShowDialog() != DialogResult.OK) return;
+                    if (txt.ShowDialog(this) != DialogResult.OK) return;
                     xval = txt.SelectedText.Trim();
                 }
                 else if(type is FilterType.FilterOpslaan)
@@ -3113,7 +3113,7 @@ namespace Controls
                         txt.MinimalTextLength = 4;
                         txt.EnableSecondaryField = false;
                         txt.Title = "Kies een Filternaam om op te slaan...";
-                        if (txt.ShowDialog() != DialogResult.OK) return;
+                        if (txt.ShowDialog(this) != DialogResult.OK) return;
                         name = txt.SelectedText.Trim();
                         bool flag = Manager.Opties.Filters.Any(x => string.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase));
                         if(flag)
@@ -3217,7 +3217,7 @@ namespace Controls
             if (e.ClickedItem.Tag == null)
             {
                 var xf = new FilterEditor();
-                if (xf.ShowDialog() == DialogResult.OK)
+                if (xf.ShowDialog(this) == DialogResult.OK)
                     Manager.OnFilterChanged(this);
                 //InitFilterStrips();
                 //UpdateProductieList();
@@ -3445,7 +3445,7 @@ namespace Controls
             xf.EnableCalculation = false;
             SaveColumns(false);
             xf.LoadOpties(ListName, false);
-            if (xf.ShowDialog() == DialogResult.OK)
+            if (xf.ShowDialog(this) == DialogResult.OK)
             {
                 Manager.UpdateExcelColumns(xf.Settings, true, true, false, new List<string> { ListName });
                 InitColumns();
@@ -3619,7 +3619,7 @@ namespace Controls
             if (ProductieLijst.Items.Count == 0) return;
             var items = ProductieLijst.Objects.OfType<Bewerking>().ToList();
             var form = new ProductieDatumOvericht(items);
-            form.ShowDialog();
+            form.ShowDialog(this);
         }
 
         private void xberekendatums_Click(object sender, EventArgs e)

@@ -13,14 +13,14 @@ namespace Forms
 
         public ProductieFormulier Formulier { get; set; }
 
-        public DialogResult ShowDialog(ProductieFormulier form)
+        public DialogResult ShowDialog(IWin32Window owner, ProductieFormulier form)
         {
             if (form != null)
             {
                 Formulier = form;
                 Text = $"Materialen Voor: [{form.ProductieNr}]|[{form.ArtikelNr}] {form.Omschrijving}";
                 materiaalUI1.InitMaterialen(form);
-                return base.ShowDialog();
+                return base.ShowDialog(owner);
             }
 
             return DialogResult.Cancel;

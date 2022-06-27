@@ -533,7 +533,7 @@ namespace Forms.FileBrowser
                 var imageform = new ImageViewerForm(image);
                 imageform.StartPosition = FormStartPosition.CenterScreen;
                 imageform.Location = new (MousePosition.X, MousePosition.Y);
-                imageform.ShowDialog();
+                imageform.ShowDialog(this);
             }
             catch (Exception e)
             {

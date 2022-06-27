@@ -21,7 +21,7 @@ namespace Forms
         private void xadduser_Click(object sender, EventArgs e)
         {
             var newuser = new NewEmailClientForm();
-            if (newuser.ShowDialog() == DialogResult.OK)
+            if (newuser.ShowDialog(this) == DialogResult.OK)
             {
                 var client = newuser.SelectedEmailClient;
                 xontvangers.AddObject(client);
@@ -55,7 +55,7 @@ namespace Forms
             if (xontvangers.SelectedObject is EmailClient client)
             {
                 var clientform = new NewEmailClientForm(client);
-                if (clientform.ShowDialog() == DialogResult.OK)
+                if (clientform.ShowDialog(this) == DialogResult.OK)
                 {
                     xontvangers.RemoveObject(client);
                     xontvangers.AddObject(clientform.SelectedEmailClient);

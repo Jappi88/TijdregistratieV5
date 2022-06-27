@@ -37,10 +37,10 @@ namespace Forms
             return 0;
         }
 
-        public new DialogResult ShowDialog()
+        public new DialogResult ShowDialog(IWin32Window owner)
         {
             Init();
-            return base.ShowDialog();
+            return base.ShowDialog(owner);
         }
 
         private void Init()

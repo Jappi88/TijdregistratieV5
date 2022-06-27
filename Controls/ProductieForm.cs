@@ -416,7 +416,7 @@ namespace Controls
                 return;
             var x = new Indeling(Formulier, b);
             x.StartPosition = FormStartPosition.CenterParent;
-            x.ShowDialog();
+            x.ShowDialog(this);
         }
 
         private void MeldGereed()
@@ -436,7 +436,7 @@ namespace Controls
                         Size = new Size(Width, 350),
                         Paraaf = p.Paraaf
                     };
-                    if (x.ShowDialog(b) == DialogResult.OK)
+                    if (x.ShowDialog(this, b) == DialogResult.OK)
                         CloseButtonPressed();
                 }
             }
@@ -470,7 +470,7 @@ namespace Controls
                 {
                     var form = new BerekenLeverdatumForm();
                     form.SetBewerking(b);
-                    form.ShowDialog();
+                    form.ShowDialog(this);
                 }
                 catch (Exception e)
                 {
@@ -488,7 +488,7 @@ namespace Controls
             if (b != null)
                 try
                 {
-                    new AanbevolenPersonenForm(b).ShowDialog();
+                    new AanbevolenPersonenForm(b).ShowDialog(this);
                 }
                 catch (Exception e)
                 {
@@ -503,7 +503,7 @@ namespace Controls
             {
                 var allst = new AlleStoringenForm();
                 allst.InitStoringen(b.Root, selected);
-                allst.ShowDialog();
+                allst.ShowDialog(this);
             }
         }
 
@@ -512,7 +512,7 @@ namespace Controls
             var b = CurrentBewerking();
             if (b == null) return;
             var wc = new DeelsGereedMeldingenForm(b);
-            if (wc.ShowDialog() == DialogResult.OK)
+            if (wc.ShowDialog(this) == DialogResult.OK)
             {
                 b = wc.Bewerking;
                 await b.UpdateBewerking(null, $"[{b.Path}] Deels Gereedmeldingen Aangepast");
@@ -621,7 +621,7 @@ namespace Controls
         {
             var bew = CurrentBewerking();
             if (string.IsNullOrEmpty(bew?.ArtikelNr)) return;
-            Tools.ShowSelectedTekening(bew.ArtikelNr, TekeningClosed);
+            Tools.ShowSelectedTekening(this, bew.ArtikelNr, TekeningClosed);
         }
 
         private void TekeningClosed(object sender, EventArgs e)
@@ -716,7 +716,7 @@ namespace Controls
             {
                 Title = $"Notitie voor [{bew.ProductieNr}, {bew.ArtikelNr}] {bew.Naam}"
             };
-            if (xtxtform.ShowDialog() == DialogResult.OK)
+            if (xtxtform.ShowDialog(this) == DialogResult.OK)
             {
                 bew.Note = xtxtform.Notitie;
                 bew.xUpdateBewerking(null, $"[{bew.Path}] Notitie Gewijzigd");
@@ -728,7 +728,7 @@ namespace Controls
             var bew = CurrentBewerking();
             if (bew?.Parent == null) return;
             var xafk = new AfkeurForm(bew);
-            xafk.ShowDialog();
+            xafk.ShowDialog(this);
         }
 
         public void ShowMaterialenForm()
@@ -736,7 +736,7 @@ namespace Controls
             var bew = CurrentBewerking();
             if (bew?.Parent == null) return;
             var x = new MateriaalForm();
-            x.ShowDialog(bew.Parent);
+            x.ShowDialog(this, bew.Parent);
         }
 
         public void ShowVerpakkingForm()
@@ -744,7 +744,7 @@ namespace Controls
             var bew = CurrentBewerking();
             if (bew?.Parent == null) return;
             var x = new VerpakkingInstructieForm(bew);
-            x.ShowDialog();
+            x.ShowDialog(this);
         }
 
         public void PrintFormulier()
@@ -777,7 +777,7 @@ namespace Controls
         {
             var bw = CurrentBewerking();
             if (bw == null) return;
-            new AantalMonitorForm(bw).ShowDialog();
+            new AantalMonitorForm(bw).ShowDialog(this);
         }
 
         private void productieNrToolStripMenuItem_Click(object sender, EventArgs e)
@@ -844,7 +844,7 @@ namespace Controls
                 xchoose.Title = "Kies gebruikers om de voortgang mee te delen";
                 xchoose.SetChooseItems(xitems);
                 xchoose.SelectedValues = bw.SharedUsers;
-                if (xchoose.ShowDialog() == DialogResult.OK)
+                if (xchoose.ShowDialog(this) == DialogResult.OK)
                 {
                     var xsel = xchoose.SelectedValues;
                     string xvalue = string.Join(", ", xsel);

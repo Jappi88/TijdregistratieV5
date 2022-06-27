@@ -86,7 +86,7 @@ namespace Controls
                         xf.Height = 850;
                     xf.Width = DailyMessage.CreatedDailies.Count > 1 ? 1100 : 850;
                     xf.HtmlText = string.Join("\r\n", DailyMessage.CreatedDailies);
-                    xf.ShowDialog();
+                    xf.ShowDialog(this);
                 }
             }
             catch (Exception e)
@@ -851,7 +851,7 @@ namespace Controls
             try
             {
                 var xf = new FilterEditor();
-                if (xf.ShowDialog() == DialogResult.OK)
+                if (xf.ShowDialog(this) == DialogResult.OK)
                     Manager.OnFilterChanged(this);
             }
             catch (Exception e)
@@ -894,7 +894,7 @@ namespace Controls
                         InitGereedmeldingenTab(entry, select);
                         break;
                     case "onderbrekingen":
-                        ShowOnderbrekeningenWidow();
+                        ShowOnderbrekeningenWidow(this);
                         //InitAlleStoringenUITab(entry, select);
                         break;
                     case "xverbruik":
@@ -1068,7 +1068,7 @@ namespace Controls
                     {
                         //CheckForSyncDatabase();
                         //CheckForUpdateDatabase();
-                        CheckForPreview(false, true);
+                        CheckForPreview(this, false, true);
                         if (Manager.LogedInGebruiker != null)
                         {
                             CheckForSpecialRooster(true);
@@ -1083,7 +1083,7 @@ namespace Controls
                             UpdateUnreadMessages(null);
                             UpdateUnreadOpmerkingen();
                             if (Manager.Opties is { ToonPersoneelIndelingNaOpstart: true })
-                                ShowPersoneelIndelingWindow();
+                                ShowPersoneelIndelingWindow(this);
                             if (Manager.Opties is { ToonWerkplaatsIndelingNaOpstart: true })
                                 ShowWerkplaatsIndelingWindow();
                         }
@@ -1091,7 +1091,7 @@ namespace Controls
                         {
                             var xlogin = new LogIn();
                             xlogin.StartPosition = FormStartPosition.CenterParent;
-                            xlogin.ShowDialog();
+                            xlogin.ShowDialog(this);
                         }
                         //UpdateAllLists();
                     }
@@ -1530,7 +1530,7 @@ namespace Controls
         private DialogResult _manager_OnShutdown(Manager instance, ref TimeSpan verlengtijd)
         {
             var af = new AfsluitPromp();
-            var res = af.ShowDialog();
+            var res = af.ShowDialog(this);
             if (res == DialogResult.OK) verlengtijd = af.VerlengTijd;
             return res;
         }
@@ -1676,7 +1676,7 @@ namespace Controls
                         {
                             var form =
                                 (ProductieFormulier)values.FirstOrDefault(x => x is ProductieFormulier);
-                            ShowWerkplekken(form);
+                            ShowWerkplekken(this, form);
                         }
 
                         break;
@@ -1685,42 +1685,42 @@ namespace Controls
                         {
                             var form =
                                 (ProductieFormulier)values.FirstOrDefault(x => x is ProductieFormulier);
-                            ShowProductieSettings(form);
+                            ShowProductieSettings(this, form);
                         }
 
                         break;
                     case MainAktie.OpenInstellingen:
-                        ShowOptieWidow();
+                        ShowOptieWidow(this);
                         break;
                     case MainAktie.OpenRangeSearcher:
-                        ShowCalculatieWindow();
+                        ShowCalculatieWindow(this);
                         break;
                     case MainAktie.OpenPersoneel:
-                        ShowPersoneelWindow();
+                        ShowPersoneelWindow(this);
                         break;
                     case MainAktie.OpenStoringen:
                         if (flag)
                         {
                             var bew = (Bewerking)values.FirstOrDefault(x => x is Bewerking);
                             if (bew != null)
-                                ShowBewStoringen(bew);
+                                ShowBewStoringen(this, bew);
                         }
 
                         break;
                     case MainAktie.OpenAlleStoringen:
-                        ShowOnderbrekeningenWidow();
+                        ShowOnderbrekeningenWidow(this);
                         break;
                     case MainAktie.OpenVaardigheden:
                         if (flag)
                         {
                             var per = (Personeel)values.FirstOrDefault(x => x is Personeel);
                             if (per != null)
-                                ShowPersoonVaardigheden(per);
+                                ShowPersoonVaardigheden(this, per);
                         }
 
                         break;
                     case MainAktie.OpenAlleVaardigheden:
-                        ShowAlleVaardighedenWidow();
+                        ShowAlleVaardighedenWidow(this);
                         break;
                     case MainAktie.OpenAantalGemaaktProducties:
                         if (values.FirstOrDefault() is List<Bewerking> bws && values.LastOrDefault() is int mins)
@@ -1764,7 +1764,7 @@ namespace Controls
         private void DoCreateExcel()
         {
             var f = new CreateExcelForm();
-            f.ShowDialog();
+            f.ShowDialog(this);
         }
 
         private async void DoQuickProductie()
@@ -1776,7 +1776,7 @@ namespace Controls
                 return;
             }
             var xnewform = new NiewProductieForm();
-            var result = xnewform.ShowDialog();
+            var result = xnewform.ShowDialog(this);
             if (result == DialogResult.Cancel) return;
 
             var created = xnewform.CreatedFormulier;
@@ -1851,7 +1851,7 @@ namespace Controls
             if (plekken.Count > 0)
             {
                 var selector = new WerkPlekChooser(plekken, null);
-                if (selector.ShowDialog() == DialogResult.OK)
+                if (selector.ShowDialog(this) == DialogResult.OK)
                 {
                     var plek = selector.Selected;
                     if (plek == null) return;
@@ -1893,7 +1893,7 @@ namespace Controls
 
                     if (storingform != null)
                     {
-                        if (storingform.ShowDialog() == DialogResult.OK)
+                        if (storingform.ShowDialog(this) == DialogResult.OK)
                         {
                             plek.UpdateStoring(storingform.Onderbreking);
                             if (plek.Werk != null)
@@ -1922,7 +1922,7 @@ namespace Controls
                     else if (res == DialogResult.Ignore)
                     {
                         var sts = new StoringForm(plek);
-                        sts.ShowDialog();
+                        sts.ShowDialog(this);
                     }
                 }
             }
@@ -1976,7 +1976,7 @@ namespace Controls
                 roosterform.ViewPeriode = false;
                 roosterform.SetRooster(Manager.Opties.TijdelijkeRooster,Manager.Opties.NationaleFeestdagen, Manager.Opties.SpecialeRoosters);
                 roosterform.RoosterUI.AutoUpdateBewerkingen = true;
-                if (roosterform.ShowDialog() == DialogResult.Cancel)
+                if (roosterform.ShowDialog(this) == DialogResult.Cancel)
                     return;
                 Manager.Opties.TijdelijkeRooster = roosterform.WerkRooster;
                 Manager.Opties.SpecialeRoosters = roosterform.RoosterUI.SpecialeRoosters;
@@ -1993,7 +1993,7 @@ namespace Controls
                     {
                         var bwselector = new WerkplekSelectorForm(bws,true);
                         bwselector.Title = "Selecteer Werkplaatsen waarvan de rooster aangepast moet worden";
-                        if (bwselector.ShowDialog() == DialogResult.OK)
+                        if (bwselector.ShowDialog(this) == DialogResult.OK)
                             await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, roosterform.WerkRooster);
                     }
 
@@ -2068,7 +2068,7 @@ namespace Controls
                 xupdater.ShowStop = true;
                 xupdater.StartWhenShown = true;
                 xupdater.UpdateMethod = ()=> Manager.UpdateFormulierenFromDirectory(ofd.SelectedPath, false,xupdater.ProgressChanged);
-                xupdater.ShowDialog();
+                xupdater.ShowDialog(this);
             }
         }
 
@@ -2077,7 +2077,7 @@ namespace Controls
             try
             {
                 var xdbloader = new DbSelectorForm();
-                xdbloader.ShowDialog();
+                xdbloader.ShowDialog(this);
             }
             catch (Exception e)
             {
@@ -2104,7 +2104,7 @@ namespace Controls
                                 return;
                             }
                             var AddProduction = new WijzigProductie();
-                            if (AddProduction.ShowDialog() == DialogResult.OK)
+                            if (AddProduction.ShowDialog(this) == DialogResult.OK)
                                 BeginInvoke(new MethodInvoker(() =>
                                 {
                                     var form = AddProduction.Formulier;
@@ -2144,16 +2144,16 @@ namespace Controls
                             DoAantalGemaakt(this);
                             break;
                         case "xpersoneelindeling":
-                            ShowPersoneelIndelingWindow();
+                            ShowPersoneelIndelingWindow(this);
                             break;
                         case "xwerkplaatsindeling":
                             ShowWerkplaatsIndelingWindow();
                             break;
                         case "xverbruik":
-                            ShowBerekenVerbruikWindow();
+                            ShowBerekenVerbruikWindow(this);
                             break;
                         case "xberekenleverdatum":
-                            ShowBerekenLeverdatum();
+                            ShowBerekenLeverdatum(this);
                             break;
                         case "xcreateexcel":
                             //maak een nieuwe excel aan
@@ -2161,7 +2161,7 @@ namespace Controls
                             break;
                         case "xupdatedb":
                             var updater = new DbUpdater();
-                            updater.ShowDialog();
+                            updater.ShowDialog(this);
                             break;
                         case "xlaaddb":
                             DoLoadDbInstance();
@@ -2171,7 +2171,7 @@ namespace Controls
                             break;
                         case "xstats":
                             var chartform = new ViewChartForm();
-                            chartform.ShowDialog();
+                            chartform.ShowDialog(this);
                             break;
                         case "xstoringmenubutton": //storing verwerken
                             DoOnderbreking();
@@ -2206,7 +2206,7 @@ namespace Controls
 
         private void xsettingsb_Click(object sender, EventArgs e)
         {
-            ShowOptieWidow();
+            ShowOptieWidow(this);
         }
 
         private void xloginb_Click(object sender, EventArgs e)
@@ -2219,57 +2219,57 @@ namespace Controls
             {
                 var xlogin = new LogIn();
                 xlogin.StartPosition = FormStartPosition.CenterParent;
-                xlogin.ShowDialog();
+                xlogin.ShowDialog(this);
             }
         }
 
         private void xupdateallform_Click(object sender, EventArgs e)
         {
             var prod = new UpdateProducties();
-            prod.ShowDialog();
+            prod.ShowDialog(this);
         }
 
         private void xmateriaalverbruikb_Click(object sender, EventArgs e)
         {
             var xmats = new MateriaalVerbruikForm();
-            xmats.ShowDialog();
+            xmats.ShowDialog(this);
         }
 
         private void xsendemail_Click(object sender, EventArgs e)
         {
             var emailform = new SendEmailForm();
-            emailform.ShowDialog();
+            emailform.ShowDialog(this);
         }
 
         private void xallenotities_Click(object sender, EventArgs e)
         {
             var noteform = new AlleNotitiesForm();
-            noteform.ShowDialog();
+            noteform.ShowDialog(this);
         }
 
         private void xchatformbutton_Click(object sender, EventArgs e)
         {
-            ShowChatWindow();
+            ShowChatWindow(this);
         }
 
         private void xpersoneelb_Click(object sender, EventArgs e)
         {
-            ShowPersoneelWindow();
+            ShowPersoneelWindow(this);
         }
 
         private void xallstoringenb_Click(object sender, EventArgs e)
         {
-            ShowOnderbrekeningenWidow();
+            ShowOnderbrekeningenWidow(this);
         }
 
         private void xallevaardighedenb_Click(object sender, EventArgs e)
         {
-            ShowAlleVaardighedenWidow();
+            ShowAlleVaardighedenWidow(this);
         }
 
         private void xprodinfob_Click(object sender, EventArgs e)
         {
-            ShowCalculatieWindow();
+            ShowCalculatieWindow(this);
         }
 
         private void xspeciaalroosterbutton_Click(object sender, EventArgs e)
@@ -2279,7 +2279,7 @@ namespace Controls
 
         private void xdbbewerkingen_Click(object sender, EventArgs e)
         {
-            ShowBewerkingDb();
+            ShowBewerkingDb(this);
         }
 
         private void WerkPlekkenUI1_OnRequestOpenWerk(object sender, EventArgs e)
@@ -2290,7 +2290,7 @@ namespace Controls
 
         private void xaboutb_Click(object sender, EventArgs e)
         {
-            new AboutBox1().ShowDialog();
+            new AboutBox1().ShowDialog(this);
         }
 
         //private readonly Timer _prodsearch = new() {Interval = 250};
@@ -2398,7 +2398,7 @@ namespace Controls
                 roosterform.EnablePeriode = false;
                 roosterform.RoosterUI.ShowSpecialeRoosterButton = false;
                 roosterform.SetRooster(rooster,Manager.Opties?.NationaleFeestdagen, Manager.Opties?.SpecialeRoosters);
-                if (roosterform.ShowDialog() == DialogResult.OK)
+                if (roosterform.ShowDialog(this) == DialogResult.OK)
                 {
                     Manager.Opties.SpecialeRoosters = roosterform.RoosterUI.SpecialeRoosters;
                     Manager.Opties.NationaleFeestdagen = roosterform.RoosterUI.NationaleFeestdagen().ToArray();
@@ -2417,7 +2417,7 @@ namespace Controls
                     {
                         var bwselector = new WerkplekSelectorForm(bws,true);
                         bwselector.Title = "Selecteer Werkplaatsen waarvan de rooster aangepast moet worden";
-                        if (bwselector.ShowDialog() == DialogResult.OK)
+                        if (bwselector.ShowDialog(this) == DialogResult.OK)
                             Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
                     }
 
@@ -2438,7 +2438,7 @@ namespace Controls
         private async void BeheerSpecialeRoosters()
         {
             var sproosters = new SpeciaalWerkRoostersForm(Manager.Opties.SpecialeRoosters);
-            if (sproosters.ShowDialog() == DialogResult.OK)
+            if (sproosters.ShowDialog(this) == DialogResult.OK)
             {
                
                 var acces1 = Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieBasis };
@@ -2455,7 +2455,7 @@ namespace Controls
                     {
                         var bwselector = new WerkplekSelectorForm(bws,true);
                         bwselector.Title = "Selecteer Werkplaatsen waarvan de rooster aangepast moet worden";
-                        if (bwselector.ShowDialog() == DialogResult.OK)
+                        if (bwselector.ShowDialog(this) == DialogResult.OK)
                             await Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
                     }
                 }
@@ -2582,7 +2582,7 @@ namespace Controls
                         _chatform.WindowState = FormWindowState.Normal;
                     //if (user != null)
                     //    _chatform.SelectedUser(user);
-                    _chatform.Show();
+                    _chatform.Show(this);
                     _chatform.BringToFront();
                     _chatform.Focus();
                 }
@@ -2591,7 +2591,7 @@ namespace Controls
                     if (_unreadMessages is {IsDisposed: false})
                     {
                         if (!_unreadMessages.Visible)
-                            _unreadMessages.Show();
+                            _unreadMessages.Show(this);
                         _unreadMessages.BringToFront();
                         _unreadMessages.Select();
                         _unreadMessages.Focus();
@@ -2637,7 +2637,7 @@ namespace Controls
                                 InitChatTab(entry, true, iedereen ? "Iedereen" : names[0]);
                             }
                             else
-                                ShowChatWindow(iedereen ? "Iedereen" : names[0]);
+                                ShowChatWindow(this, iedereen ? "Iedereen" : names[0]);
 
                             _unread = 0;
                         }
@@ -2682,7 +2682,7 @@ namespace Controls
                         _opmerkingform.WindowState = FormWindowState.Normal;
                     //if (user != null)
                     //    _chatform.SelectedUser(user);
-                    _opmerkingform.Show();
+                    _opmerkingform.Show(this);
                     _opmerkingform.BringToFront();
                     _opmerkingform.Focus();
                 }
@@ -2700,7 +2700,7 @@ namespace Controls
                         bttns);
                     xmsgBox.Dispose();
                     if (result == DialogResult.Yes)
-                        ShowOpmerkingWindow();
+                        ShowOpmerkingWindow(this);
                 }
             }
             catch (Exception e)
@@ -2749,7 +2749,7 @@ namespace Controls
 
                     if (_producties == null || _producties.IsDisposed)
                     {
-                        _producties = new Producties
+                        _producties = new Producties(owner)
                         {
                             Tag = productie,
                             StartPosition = FormStartPosition.CenterScreen,
@@ -2790,7 +2790,7 @@ namespace Controls
                 _Productelijsten.Add(prodform);
                 if (_productielijstdock == null || _productielijstdock.IsDisposed)
                 {
-                    _productielijstdock = new ProductieLijsten
+                    _productielijstdock = new ProductieLijsten(owner)
                     {
                         Tag = prodform,
                         StartPosition = FormStartPosition.CenterScreen
@@ -2824,7 +2824,7 @@ namespace Controls
                 _Productelijsten.Remove(form);
         }
 
-        public static void ShowProductieLogWindow()
+        public static void ShowProductieLogWindow(IWin32Window owner)
         {
             if (_logform == null)
             {
@@ -2836,22 +2836,22 @@ namespace Controls
                 };
             }
 
-            _logform.Show();
+            _logform.Show(owner);
             if (_logform.WindowState == FormWindowState.Minimized)
                 _logform.WindowState = FormWindowState.Normal;
             _logform.BringToFront();
             _logform.Focus();
         }
 
-        public static void ShowCalculatieWindow()
+        public static void ShowCalculatieWindow(IWin32Window owner)
         {
             var _calcform = new RangeCalculatorForm();
-            _calcform.Show();
+            _calcform.Show(owner);
             _calcform.BringToFront();
             _calcform.Focus();
         }
 
-        public static void ShowChatWindow(string username = null)
+        public static void ShowChatWindow(IWin32Window owner, string username = null)
         {
             if (_chatform == null)
             {
@@ -2863,14 +2863,14 @@ namespace Controls
                 };
             }
 
-            _chatform.Show(username);
+            _chatform.Show(owner, username);
             if (_chatform.WindowState == FormWindowState.Minimized)
                 _chatform.WindowState = FormWindowState.Normal;
             _chatform.BringToFront();
             _chatform.Focus();
         }
 
-        public static void ShowOpmerkingWindow()
+        public static void ShowOpmerkingWindow(IWin32Window owner)
         {
             if (_opmerkingform == null)
             {
@@ -2883,14 +2883,14 @@ namespace Controls
                 };
             }
 
-            _opmerkingform.Show();
+            _opmerkingform.Show(owner);
             if (_opmerkingform.WindowState == FormWindowState.Minimized)
                 _opmerkingform.WindowState = FormWindowState.Normal;
             _opmerkingform.BringToFront();
             _opmerkingform.Focus();
         }
 
-        public static void ShowArtikelenWindow(string artnr = null)
+        public static void ShowArtikelenWindow(IWin32Window owner, string artnr = null)
         {
             if (_ArtikelsForm == null)
             {
@@ -2902,7 +2902,7 @@ namespace Controls
                 };
             }
 
-            _ArtikelsForm.Show();
+            _ArtikelsForm.Show(owner);
             if (_ArtikelsForm.WindowState == FormWindowState.Minimized)
                 _ArtikelsForm.WindowState = FormWindowState.Normal;
             _ArtikelsForm.BringToFront();
@@ -2911,19 +2911,19 @@ namespace Controls
                 _ArtikelsForm.SelectedArtikelNr = artnr;
         }
 
-        public static void ShowOnderbrekeningenWidow()
+        public static void ShowOnderbrekeningenWidow(IWin32Window owner)
         {
             var x = new AlleStoringenForm();
             x.InitStoringen();
-            x.ShowDialog();
+            x.ShowDialog(owner);
         }
 
-        public static void ShowAlleVaardighedenWidow()
+        public static void ShowAlleVaardighedenWidow(IWin32Window owner)
         {
-            new AlleVaardigheden().ShowDialog();
+            new AlleVaardigheden().ShowDialog(owner);
         }
 
-        public static void ShowPersoneelWindow()
+        public static void ShowPersoneelWindow(IWin32Window owner)
         {
             if (_PersoneelForm == null)
             {
@@ -2935,7 +2935,7 @@ namespace Controls
                 };
             }
 
-            _PersoneelForm.Show();
+            _PersoneelForm.Show(owner);
             if (_PersoneelForm.WindowState == FormWindowState.Minimized)
                 _PersoneelForm.WindowState = FormWindowState.Normal;
             _PersoneelForm.BringToFront();
@@ -2954,14 +2954,14 @@ namespace Controls
                 };
             }
 
-            _WerkplaatsIndeling.Show();
+            _WerkplaatsIndeling.Show(this);
             if (_WerkplaatsIndeling.WindowState == FormWindowState.Minimized)
                 _WerkplaatsIndeling.WindowState = FormWindowState.Normal;
             _WerkplaatsIndeling.BringToFront();
             _WerkplaatsIndeling.Focus();
         }
 
-        public static void ShowPersoneelIndelingWindow()
+        public static void ShowPersoneelIndelingWindow(IWin32Window owner)
         {
             if (_PersoneelIndeling == null)
             {
@@ -2973,14 +2973,14 @@ namespace Controls
                 };
             }
 
-            _PersoneelIndeling.Show();
+            _PersoneelIndeling.Show(owner);
             if (_PersoneelIndeling.WindowState == FormWindowState.Minimized)
                 _PersoneelIndeling.WindowState = FormWindowState.Normal;
             _PersoneelIndeling.BringToFront();
             _PersoneelIndeling.Focus();
         }
 
-        public static void ShowBerekenVerbruikWindow()
+        public static void ShowBerekenVerbruikWindow(IWin32Window owner)
         {
             if (_berekenverbruik == null)
             {
@@ -3012,41 +3012,41 @@ namespace Controls
                 };
             }
 
-            _berekenverbruik.Show();
+            _berekenverbruik.Show(owner);
             if (_berekenverbruik.WindowState == FormWindowState.Minimized)
                 _berekenverbruik.WindowState = FormWindowState.Normal;
             _berekenverbruik.BringToFront();
             _berekenverbruik.Focus();
         }
 
-        public static void ShowBerekenLeverdatum()
+        public static void ShowBerekenLeverdatum(IWin32Window owner)
         {
             var xb = new BerekenLeverdatumForm();
-            xb.ShowDialog();
+            xb.ShowDialog(owner);
         }
         
-        public static void ShowPersoonVaardigheden(Personeel persoon)
+        public static void ShowPersoonVaardigheden(IWin32Window owner, Personeel persoon)
         {
             if (persoon == null)
                 return;
-            new VaardighedenForm(persoon).ShowDialog();
+            new VaardighedenForm(persoon).ShowDialog(owner);
         }
 
-        public static void ShowBewStoringen(Bewerking bew)
+        public static void ShowBewStoringen(IWin32Window owner, Bewerking bew)
         {
             var form = bew?.GetParent();
             if (form == null) return;
             var allst = new AlleStoringenForm();
             allst.InitStoringen(form);
-            allst.ShowDialog();
+            allst.ShowDialog(owner);
         }
 
-        public static void ShowWerkplekken(ProductieFormulier form)
+        public static void ShowWerkplekken(IWin32Window owner, ProductieFormulier form)
         {
             if (form == null)
                 return;
             var ind = new Indeling(form);
-            ind.ShowDialog();
+            ind.ShowDialog(owner);
         }
 
         public void ShowBijlageWindow(string id)
@@ -3079,7 +3079,7 @@ namespace Controls
             else
             {
                 bl.Title = $"Bijlages Voor: {id}";
-                bl.ShowDialog();
+                bl.ShowDialog(this);
             }
             bl.Dispose();
         }
@@ -3094,9 +3094,9 @@ namespace Controls
                     ContentAlignment.BottomRight, 2.5);
                 tb.MultiLine = false;
                 tb.Title = "Zoek WerkTekening";
-                if (tb.ShowDialog() == DialogResult.OK)
+                if (tb.ShowDialog(this) == DialogResult.OK)
                 {
-                    Tools.ShowSelectedTekening(tb.SelectedText, TekeningClosed);
+                    Tools.ShowSelectedTekening(this, tb.SelectedText, TekeningClosed);
                 }
             }
             catch (Exception e)
@@ -3120,7 +3120,7 @@ namespace Controls
                     _gemaaktform?.Dispose();
                     _gemaaktform = null;
                 };
-                _gemaaktform.ShowDialog();
+                _gemaaktform.ShowDialog(owner);
 
             }
             catch (Exception e)
@@ -3135,18 +3135,18 @@ namespace Controls
             Parent?.Focus();
         }
 
-        public static void ShowProductieSettings(ProductieFormulier form)
+        public static void ShowProductieSettings(IWin32Window owner, ProductieFormulier form)
         {
             if (form == null)
                 return;
             var x = new WijzigProductie(form);
-            x.ShowDialog();
+            x.ShowDialog(owner);
         }
 
-        public static void ShowOptieWidow()
+        public static void ShowOptieWidow(IWin32Window owner)
         {
             var opties = new Opties();
-            opties.ShowDialog();
+            opties.ShowDialog(owner);
             //if (_opties != null)
             //{
             //    if (!_opties.Visible)
@@ -3165,13 +3165,13 @@ namespace Controls
             //_opties.Select();
         }
 
-        public static void ShowBewerkingDb()
+        public static void ShowBewerkingDb(IWin32Window owner)
         {
             var db = new DbBewerkingChanger();
-            db.ShowDialog();
+            db.ShowDialog(owner);
         }
 
-        public static void ShowProductieOverzicht()
+        public static void ShowProductieOverzicht(IWin32Window owner)
         {
             if (_ProductieOverzicht == null)
             {
@@ -3183,7 +3183,7 @@ namespace Controls
                 };
             }
 
-            _ProductieOverzicht.Show();
+            _ProductieOverzicht.Show(owner);
             if (_ProductieOverzicht.WindowState == FormWindowState.Minimized)
                 _ProductieOverzicht.WindowState = FormWindowState.Normal;
             _ProductieOverzicht.BringToFront();
@@ -3202,7 +3202,7 @@ namespace Controls
                 };
             }
 
-            _Klachten.Show();
+            _Klachten.Show(this);
             if (_Klachten.WindowState == FormWindowState.Minimized)
                 _Klachten.WindowState = FormWindowState.Normal;
             _Klachten.BringToFront();
@@ -3212,10 +3212,10 @@ namespace Controls
         public void ShowCreateWeekOverzicht()
         {
             var xf = new CreateWeekExcelForm();
-            xf.ShowDialog();
+            xf.ShowDialog(this);
         }
 
-        public static void CheckForPreview(bool showall, bool onlyifnew)
+        public static void CheckForPreview(IWin32Window owner, bool showall, bool onlyifnew)
         {
             try
             {
@@ -3242,7 +3242,7 @@ namespace Controls
                         xshowform.Title = $"Alle Aanpassingen In Versie: {xprevs.LastOrDefault().Key?? xvers.ToString()}";
                     }
 
-                    xshowform.ShowDialog();
+                    xshowform.ShowDialog(owner);
                 }
             }
             catch (Exception e)
@@ -3263,7 +3263,7 @@ namespace Controls
                 };
             }
 
-            _ActiviteitForm.Show();
+            _ActiviteitForm.Show(this);
             if (_ActiviteitForm.WindowState == FormWindowState.Minimized)
                 _ActiviteitForm.WindowState = FormWindowState.Normal;
             _ActiviteitForm.BringToFront();
@@ -3275,7 +3275,7 @@ namespace Controls
         #region Menu Button Events
         private void xproductieoverzichtb_Click(object sender, EventArgs e)
         {
-            ShowProductieOverzicht();
+            ShowProductieOverzicht(this);
         }
 
         private void xBijlagesButton_Click(object sender, EventArgs e)
@@ -3291,7 +3291,7 @@ namespace Controls
                 bl.Browser.RootOnlyFilledDirectories = true;
                 bl.Browser.AllowEditRoot  = false;
                 bl.Browser.FileView.View = View.Details;
-                bl.ShowDialog();
+                bl.ShowDialog(this);
             }
             catch (Exception exception)
             {
@@ -3306,7 +3306,7 @@ namespace Controls
                 if (Manager.Database == null)
                     throw new Exception("Database is niet geladen!");
                 var zoek = new ZoekForm();
-                if (zoek.ShowDialog() != DialogResult.OK) return;
+                if (zoek.ShowDialog(this) != DialogResult.OK) return;
                 var f = zoek.GetFilter();
                 if (!string.IsNullOrEmpty(f.Criteria))
                 {
@@ -3321,7 +3321,7 @@ namespace Controls
                 }
                 var calcform = new RangeCalculatorForm();
                 calcform.Filter = f;
-                calcform.Show();
+                calcform.Show(this);
             }
             catch (Exception ex)
             {
@@ -3356,7 +3356,7 @@ namespace Controls
 
         private void xtoonartikels_Click(object sender, EventArgs e)
         {
-            ShowArtikelenWindow();
+            ShowArtikelenWindow(this);
             //new ArtikelsForm().ShowDialog();
             //if (Manager.Opties != null)
             //    xbewerkingListControl.ProductieLijst.RestoreState(Manager.Opties.ViewDataBewerkingenState);
@@ -3364,14 +3364,14 @@ namespace Controls
 
         private void xopmerkingentoolstripbutton_Click(object sender, EventArgs e)
         {
-            ShowOpmerkingWindow();
+            ShowOpmerkingWindow(this);
         }
 
         private void xShowPreview_Click(object sender, EventArgs e)
         {
             try
             {
-                CheckForPreview(true, false);
+                CheckForPreview(this, true, false);
             }
             catch (Exception exception)
             {
@@ -3386,7 +3386,7 @@ namespace Controls
             xhelp.Title = "ProductieManager HelpDesk";
             if (xhelp.IsValid)
             {
-                xhelp.ShowDialog();
+                xhelp.ShowDialog(this);
             }
             else
             {
@@ -3428,7 +3428,7 @@ namespace Controls
                     }
                 }
             };
-            xweergave.ShowDialog();
+            xweergave.ShowDialog(this);
             MultipleFileDb.CorruptedFilesChanged -= xweergave.OnItemsChanged;
             xweergave.Dispose();
         }
@@ -3467,8 +3467,8 @@ namespace Controls
                 //}));
             });
            
-            wb.Show();
-            xloading.ShowDialog();
+            wb.Show(this);
+            xloading.ShowDialog(this);
             wb.Close();
             BringToFront();
             Focus();
@@ -3507,7 +3507,7 @@ namespace Controls
         private void xverpakkingen_Click(object sender, EventArgs e)
         {
             var vr = new VerpakkingenForm();
-            vr.ShowDialog();
+            vr.ShowDialog(this);
         }
 
         private void xMaakWeekOverzichtToolstrip_Click(object sender, EventArgs e)
@@ -3518,7 +3518,7 @@ namespace Controls
         private void xArtikelRecordsToolstripButton_Click(object sender, EventArgs e)
         {
             var artikels = new ArtikelRecordsForm();
-            artikels.ShowDialog();
+            artikels.ShowDialog(this);
         }
 
         private void xShowDaily_Click(object sender, EventArgs e)
@@ -3528,13 +3528,13 @@ namespace Controls
 
         private void xSporenButton_Click(object sender, EventArgs e)
         {
-            new ArtikelenVerbruikForm().ShowDialog();
+            new ArtikelenVerbruikForm().ShowDialog(this);
         }
 
         private void OptimaleVerbruik_Click(object sender, EventArgs e)
         {
             var xform = new OptimaleLengteVerbruikForm();
-            xform.ShowDialog();
+            xform.ShowDialog(this);
         }
 
         private void xActiviteit_Click(object sender, EventArgs e)
@@ -3596,7 +3596,7 @@ namespace Controls
                     {
                         var p = taak.Formulier;
                         var matform = new MateriaalForm();
-                        if (matform.ShowDialog(p) == DialogResult.OK)
+                        if (matform.ShowDialog(this, p) == DialogResult.OK)
                         {
                             taak.Formulier = matform.Formulier;
                             save = true;
@@ -3613,7 +3613,7 @@ namespace Controls
                     {
                         var ind = new Indeling(taak.Formulier, taak.Bewerking);
                         ind.StartPosition = FormStartPosition.CenterParent;
-                        ind.ShowDialog();
+                        ind.ShowDialog(this);
                     }
 
                     break;
@@ -3674,7 +3674,7 @@ namespace Controls
                     {
                         var ind = new Indeling(taak.Formulier, taak.Bewerking);
                         ind.StartPosition = FormStartPosition.CenterParent;
-                        ind.ShowDialog();
+                        ind.ShowDialog(this);
                         // if (ind.ShowDialog() == DialogResult.OK)
                         //taak.Update();
                     }
@@ -3684,7 +3684,7 @@ namespace Controls
                     if (taak.Plek != null)
                     {
                         var st = new StoringForm(taak.Plek);
-                        st.ShowDialog();
+                        st.ShowDialog(this);
                     }
 
                     break;

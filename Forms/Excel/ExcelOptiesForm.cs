@@ -94,7 +94,7 @@ namespace Forms
                     colordialog.Title = $"Kies achtergrond kleur voor '{colentry.Naam}'";
                     colordialog.SetKleuren(ExcelColumnEntry.GetExcelCollors());
                     colordialog.SelectedColor = xColumnKleurB.BackColor;
-                    if (colordialog.ShowDialog() == DialogResult.OK)
+                    if (colordialog.ShowDialog(this) == DialogResult.OK)
                     {
                         var xindex = ExcelColumnEntry.GetColorIndex(colordialog.SelectedColor);
                         if (xindex == -1) return;
@@ -134,7 +134,7 @@ namespace Forms
                     colordialog.Title = $"Kies textkleur voor '{colentry.Naam}'";
                     colordialog.SetKleuren(ExcelColumnEntry.GetExcelCollors());
                     colordialog.SelectedColor = xTextKleurB.ForeColor;
-                    if (colordialog.ShowDialog() == DialogResult.OK)
+                    if (colordialog.ShowDialog(this) == DialogResult.OK)
                     {
                         var xindex = ExcelColumnEntry.GetColorIndex(colordialog.SelectedColor);
                         if (xindex == -1) return;
@@ -271,7 +271,7 @@ namespace Forms
         {
             var xtb = new TextFieldEditor();
             xtb.Title = "Vul in een optie naam";
-            if (xtb.ShowDialog() == DialogResult.OK)
+            if (xtb.ShowDialog(this) == DialogResult.OK)
             {
                 var txt = xtb.SelectedText;
                 if (Settings.Any(x => string.Equals(x.Name, txt, StringComparison.CurrentCultureIgnoreCase)))
@@ -568,7 +568,7 @@ namespace Forms
                 var xtb = new TextFieldEditor();
                 xtb.Title = $"Wijzig naam voor '{setting.Name}'";
                 xtb.SelectedText = setting.Name;
-                if (xtb.ShowDialog() == DialogResult.OK)
+                if (xtb.ShowDialog(this) == DialogResult.OK)
                 {
                     var txt = xtb.SelectedText;
                     if (string.Equals(setting.Name, txt, StringComparison.CurrentCultureIgnoreCase)) return;
@@ -595,7 +595,7 @@ namespace Forms
                 var regelform = new KleurRegelsForm();
                 regelform.Title = $"Kies een kleur regel voor '{entry.Naam}'";
                 regelform.InitColorRules(entry.KleurRegels, entry.Naam, setting.IsExcelSettings);
-                if (regelform.ShowDialog() == DialogResult.OK)
+                if (regelform.ShowDialog(this) == DialogResult.OK)
                 {
                     entry.KleurRegels = regelform.KleurRegels;
                     xZichtbareColumnsView.RefreshObject(entry);

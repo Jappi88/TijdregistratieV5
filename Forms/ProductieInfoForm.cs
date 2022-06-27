@@ -253,13 +253,13 @@ namespace Forms
         private void xstatsb_Click(object sender, EventArgs e)
         {
             if (_Bewerkingen == null || _Bewerkingen.Count == 0) return;
-            new ViewChartForm(_Bewerkingen).ShowDialog();
+            new ViewChartForm(_Bewerkingen).ShowDialog(this);
         }
 
         private void xexport_Click(object sender, EventArgs e)
         {
             if (_Bewerkingen == null || _Bewerkingen.Count == 0) return;
-            new CreateExcelForm(_Bewerkingen).ShowDialog();
+            new CreateExcelForm(_Bewerkingen).ShowDialog(this);
         }
 
         private void ProductieInfoForm_FormClosing(object sender, FormClosingEventArgs e)

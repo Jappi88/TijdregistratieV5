@@ -204,7 +204,7 @@ namespace Controls
         private void xspeciaalroosterb_Click(object sender, EventArgs e)
         {
             var sproosters = new SpeciaalWerkRoostersForm(SpecialeRoosters);
-            if (sproosters.ShowDialog() == DialogResult.OK)
+            if (sproosters.ShowDialog(this) == DialogResult.OK)
             {
                 SpecialeRoosters = sproosters.Roosters;
                 if (AutoUpdateBewerkingen)
@@ -219,7 +219,7 @@ namespace Controls
                         {
                             var bwselector = new WerkplekSelectorForm(bws, true);
                             bwselector.Title = "Selecteer Werkplaatsen waarvan de rooster aangepast moet worden";
-                            if (bwselector.ShowDialog() == DialogResult.OK)
+                            if (bwselector.ShowDialog(this) == DialogResult.OK)
                                 _ = Manager.UpdateGestarteProductieRoosters(bwselector.SelectedWerkplekken, null);
                         }
                     }

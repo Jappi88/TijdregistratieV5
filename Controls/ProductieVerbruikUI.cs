@@ -339,7 +339,7 @@ namespace Controls
                     xtxtform.MultiLine = false;
                     xtxtform.UseSecondary = false;
                     xtxtform.Title = "Vul in je Naam";
-                    if (xtxtform.ShowDialog() == DialogResult.Cancel) return;
+                    if (xtxtform.ShowDialog(this) == DialogResult.Cancel) return;
                     _spoor.AangepastDoor = xtxtform.SelectedText.Trim().FirstCharToUpper();
                     _spoor.AangepastOp = DateTime.Now;
                     Manager.SporenBeheer.SaveSpoor(_spoor,
@@ -452,11 +452,11 @@ namespace Controls
                 xtxtform.SelectedText = reststuk.ToString(CultureInfo.InvariantCulture);
                 xtxtform.UseSecondary = false;
                 xtxtform.Title = "Wat is de minimale reststuk?(mm)";
-                if (xtxtform.ShowDialog() == DialogResult.Cancel) return;
+                if (xtxtform.ShowDialog(this) == DialogResult.Cancel) return;
                 decimal.TryParse(xtxtform.SelectedText.Trim(), out reststuk);
                 xtxtform.Title = "Wat is de maximale UitgangsLengte?(mm)";
                 xtxtform.SelectedText = maxlengte.ToString(CultureInfo.InvariantCulture);
-                if (xtxtform.ShowDialog() == DialogResult.Cancel) return;
+                if (xtxtform.ShowDialog(this) == DialogResult.Cancel) return;
                 decimal.TryParse(xtxtform.SelectedText.Trim(), out maxlengte);
                 xtxtform.Dispose();
 
@@ -607,7 +607,7 @@ namespace Controls
         {
             var info = OpdrukkerInfo.Load();
             var xform = new SpoorDatabaseForm(info);
-            if (xform.ShowDialog() == DialogResult.OK)
+            if (xform.ShowDialog(this) == DialogResult.OK)
             {
                 info.SaveInfo();
             }
@@ -621,7 +621,7 @@ namespace Controls
         private void ShowWerkTekening()
         {
             if (string.IsNullOrEmpty(_spoor?.ArtikelNr??_form?.ArtikelNr)) return;
-            Tools.ShowSelectedTekening(_spoor?.ArtikelNr??_form.ArtikelNr, TekeningClosed);
+            Tools.ShowSelectedTekening(this, _spoor?.ArtikelNr??_form.ArtikelNr, TekeningClosed);
         }
 
         private void TekeningClosed(object sender, EventArgs e)

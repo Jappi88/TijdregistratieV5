@@ -235,7 +235,7 @@ namespace Controls
         {
             
             var xnew = new NewSpoorForm();
-            if (xnew.ShowDialog() == DialogResult.OK)
+            if (xnew.ShowDialog(this) == DialogResult.OK)
             {
                 if (Manager.SporenBeheer == null || Manager.SporenBeheer.Disposed)
                     return;

@@ -17,13 +17,13 @@ namespace Forms
 
         public UserAccount Account { get; set; }
 
-        public DialogResult ShowDialog(UserAccount account)
+        public DialogResult ShowDialog(IWin32Window owner, UserAccount account)
         {
             if (account == null)
                 return DialogResult.Cancel;
             Account = account;
             Text = $"Wijzig Wachtwoord: {account.Username}";
-            return base.ShowDialog();
+            return base.ShowDialog(owner);
         }
 
         private void pictureBox_Click(object sender, EventArgs e)

@@ -11,10 +11,10 @@ namespace Forms
             InitializeComponent();
         }
 
-        public void Show(string username = null)
+        public void Show(IWin32Window owner, string username = null)
         {
             productieChatUI1._Selected = username;
-            base.Show();
+            base.Show(owner);
         }
 
         private void ChatForm_Shown(object sender, EventArgs e)

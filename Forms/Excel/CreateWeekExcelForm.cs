@@ -106,7 +106,7 @@ namespace Forms.Excel
             if (e.ClickedItem.Tag == null)
             {
                 var xf = new FilterEditor();
-                if (xf.ShowDialog() == DialogResult.OK)
+                if (xf.ShowDialog(this) == DialogResult.OK)
                 {
                     InitFilterStrips();
                 }

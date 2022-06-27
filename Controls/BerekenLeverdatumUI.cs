@@ -99,7 +99,7 @@ namespace Controls
             var rsform = new RoosterForm(rooster, "Beheer Werk Rooster");
             rsform.ViewPeriode = false;
             rsform.SetRooster(rooster,Manager.Opties?.NationaleFeestdagen,Manager.Opties?.SpecialeRoosters);
-            if (rsform.ShowDialog() == DialogResult.OK)
+            if (rsform.ShowDialog(this) == DialogResult.OK)
             {
                 if (Manager.Opties == null) return;
                 Manager.Opties.NationaleFeestdagen = rsform.RoosterUI.NationaleFeestdagen().ToArray();
@@ -118,7 +118,7 @@ namespace Controls
         private void ShowWerkTekening()
         {
             if (string.IsNullOrEmpty(xartikelnrTextbox.Text.Trim())) return;
-            Tools.ShowSelectedTekening(xartikelnrTextbox.Text.Trim(), TekeningClosed);
+            Tools.ShowSelectedTekening(this, xartikelnrTextbox.Text.Trim(), TekeningClosed);
         }
 
         private void TekeningClosed(object sender, EventArgs e)
