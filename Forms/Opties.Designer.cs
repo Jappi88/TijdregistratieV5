@@ -2218,7 +2218,7 @@
             0,
             0});
             this.xoffdbsyncinterval.Minimum = new decimal(new int[] {
-            1000,
+            3000,
             0,
             0,
             0});

@@ -1833,83 +1833,85 @@ namespace Rpm.Productie
 
         public bool xUpdateCombies()
         {
-                try
+            try
+            {
+                if (Combies.Count == 0) return false;
+                for (int i = 0; i < Combies.Count; i++)
                 {
-                    if (Combies.Count == 0) return false;
-                    for (int i = 0; i < Combies.Count; i++)
+                    var combi = Combies[i];
+                    if (!combi.IsRunning) continue;
+                    var bew = combi.GetProductie();
+                    if (bew == null)
                     {
-                        var combi = Combies[i];
-                        if (!combi.IsRunning) continue;
-                        var bew = combi.GetProductie();
-                        if (bew == null)
+                        continue;
+                    }
+
+                    if (bew.State != State && bew.State != ProductieState.Gereed &&
+                        bew.State != ProductieState.Verwijderd)
+                    {
+                        switch (State)
                         {
-                            continue;
-                        }
-
-                        if (bew.State != State && bew.State != ProductieState.Gereed &&
-                            bew.State != ProductieState.Verwijderd)
-                        {
-                            switch (State)
-                            {
-                                case ProductieState.Gestopt:
-                                    _ = bew.StopProductie(true,true, true);
-                                    break;
-                                case ProductieState.Gestart:
-                                    if (!bew.WerkPlekken.Any(x => x.IsActief()))
-                                    {
-                                        var pers = GetPersoneel();
-                                        foreach (var per in pers)
-                                        {
-                                            per.WerktAan = bew.Path;
-                                            var klus = per.Klusjes.FirstOrDefault();
-                                            if (klus != null)
-                                            {
-                                                klus.ProductieNr = bew.ProductieNr;
-                                                klus.Naam = bew.Naam;
-                                                klus.Tijden.Uren.Clear();
-                                            }
-
-                                            bew.AddPersoneel(per, per.Werkplek);
-                                        }
-                                    }
-
-                                    if (bew.xStartProductie(true, true, false))
-                                        _ = bew.xUpdateCombies();
-                                    break;
-                            }
-
-                            //sync storingen
-                            for (int w = 0; w < WerkPlekken.Count; w++)
-                            {
-                                var wp = WerkPlekken[w];
-                                var xw = bew.WerkPlekken.FirstOrDefault(x => x.Equals(wp));
-                                if (xw != null)
+                            case ProductieState.Gestopt:
+                                _ = bew.StopProductie(true, true, true);
+                                break;
+                            case ProductieState.Gestart:
+                                if (!bew.WerkPlekken.Any(x => x.IsActief()))
                                 {
-                                    xw.Storingen ??= new List<Storing>();
-                                    foreach (var xst in wp.Storingen)
+                                    var pers = GetPersoneel();
+                                    foreach (var xper in pers)
                                     {
-                                        var xxst = xst.CreateCopy();
-                                        xxst.Path = xw.Path;
-                                        var xindex = xw.Storingen.IndexOf(xxst);
-                                        if (xindex > -1)
-                                            xw.Storingen[xindex] = xxst;
-                                        else xw.Storingen.Add(xxst);
-                                        _ = xw.Werk.UpdateBewerking(null, $"[{xw.Path}]\n" +
-                                                                            $"Onderbreking update");
+                                        var per = xper.CreateCopy();
+                                        per.WerktAan = bew.Path;
+                                        var klus = per.Klusjes.FirstOrDefault();
+                                        if (klus != null)
+                                        {
+                                            klus.ProductieNr = bew.ProductieNr;
+                                            klus.Naam = bew.Naam;
+                                            klus.Tijden.Uren.Clear();
+                                        }
+
+                                        bew.AddPersoneel(per, per.Werkplek);
+
                                     }
                                 }
 
+                                if (bew.xStartProductie(true, true, false))
+                                    _ = bew.xUpdateCombies();
+                                break;
+                        }
+
+                        //sync storingen
+                        for (int w = 0; w < WerkPlekken.Count; w++)
+                        {
+                            var wp = WerkPlekken[w];
+                            var xw = bew.WerkPlekken.FirstOrDefault(x => x.Equals(wp));
+                            if (xw != null)
+                            {
+                                xw.Storingen ??= new List<Storing>();
+                                foreach (var xst in wp.Storingen)
+                                {
+                                    var xxst = xst.CreateCopy();
+                                    xxst.Path = xw.Path;
+                                    var xindex = xw.Storingen.IndexOf(xxst);
+                                    if (xindex > -1)
+                                        xw.Storingen[xindex] = xxst;
+                                    else xw.Storingen.Add(xxst);
+                                    _ = xw.Werk.UpdateBewerking(null, $"[{xw.Path}]\n" +
+                                                                        $"Onderbreking update");
+                                }
                             }
+
                         }
                     }
+                }
 
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    return false;
-                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
         }
 
         public override bool Equals(object obj)

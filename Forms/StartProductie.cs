@@ -86,20 +86,32 @@ namespace Forms
                 return;
             try
             {
-                if (Formulier.State != ProductieState.Gereed && formulier.State == ProductieState.Gereed)
+                var isgereed = Formulier?.Bewerkingen?.Where(x => x.IsAllowed(false))?.All(x => x.State == ProductieState.Gereed)??false;
+                var isnewgereed = formulier?.Bewerkingen?.Where(x => x.IsAllowed(false))?.All(x => x.State == ProductieState.Gereed)??false;
+                if (!isgereed && isnewgereed)
                 {
-                    DetachEvents();
                     Close();
                 }
-
+                var xsel = productieForm1.CurrentBewerking();
+                Formulier = formulier;
                 var bws = Formulier.Bewerkingen.Where(x =>
                   x.IsAllowed() && x.State != ProductieState.Verwijderd).ToList();
-
-                Formulier = formulier;
-              
+                if (xsel != null)
+                {
+                    if (selected != null && selected.Equals(xsel))
+                    {
+                        if (xsel.State != ProductieState.Gereed && selected.State == ProductieState.Gereed)
+                            selected = bws.FirstOrDefault(x => x.State != ProductieState.Gereed);
+                    }
+                    if (selected == null || !selected.Equals(xsel))
+                    {
+                        var xnewbw = formulier?.Bewerkingen.FirstOrDefault(x => x.Equals(xsel));
+                        if(xnewbw.State == ProductieState.Gereed && xsel.State != ProductieState.Gereed)
+                            selected = bws.FirstOrDefault(x => x.State != ProductieState.Gereed);
+                    }
+                }
                 if (bws.Count == 0)
                 {
-                    DetachEvents();
                     Close();
                 }
                 else
@@ -170,7 +182,6 @@ namespace Forms
             var user = Manager.LogedInGebruiker;
             if (user is not {AccesLevel: > AccesType.AlleenKijken})
             {
-                DetachEvents();
                 if (this.InvokeRequired)
                     this.Invoke(new MethodInvoker(Close));
                 else
@@ -193,7 +204,6 @@ namespace Forms
                 {
                     if (Disposing || IsDisposed || Formulier?.ProductieNr == null) return;
                     if (!string.Equals(id, Formulier.ProductieNr, StringComparison.CurrentCultureIgnoreCase)) return;
-                    DetachEvents();
                     this.Close();
                 }));
             }

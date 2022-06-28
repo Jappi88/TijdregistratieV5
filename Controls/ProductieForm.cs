@@ -436,8 +436,7 @@ namespace Controls
                         Size = new Size(Width, 350),
                         Paraaf = p.Paraaf
                     };
-                    if (x.ShowDialog(this, b) == DialogResult.OK)
-                        CloseButtonPressed();
+                    x.ShowDialog(this, b);
                 }
             }
         }

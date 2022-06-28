@@ -107,11 +107,16 @@ namespace Controls
 
         private bool IsAllowedCombi(object item, string filter, bool tempfilter = false )
         {
+            if (Productie == null) return false;
             if(item is Bewerking bewerking)
             {
                 if (bewerking.State is ProductieState.Gereed or ProductieState.Verwijderd)
                     return false;
-                if(bewerking.Combies.Any(x => string.Equals(x.Path, Productie.Path, StringComparison.CurrentCultureIgnoreCase)))
+                var wps = Manager.BewerkingenLijst.GetWerkplekken(bewerking.Naam);
+                var xwps = Manager.BewerkingenLijst.GetWerkplekken(Productie.Naam);
+                if (!wps.Any(x => xwps.Any(w => string.Equals(x, w, StringComparison.CurrentCultureIgnoreCase))))
+                    return false;
+                if (bewerking.Combies.Any(x => string.Equals(x.Path, Productie.Path, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     return false;
                 }
@@ -125,7 +130,8 @@ namespace Controls
             try
             {
                 if (Manager.Database == null || Manager.Database.IsDisposed || Productie == null) return;
-                var xbwselector = new BewerkingSelectorForm();
+                var bws = Manager.Database.xGetAllBewerkingen(false, true, true);
+                var xbwselector = new BewerkingSelectorForm(bws);
                 xbwselector.IsValidHandler = IsAllowedCombi;
                 if (xbwselector.ShowDialog(this) == DialogResult.OK)
                 {

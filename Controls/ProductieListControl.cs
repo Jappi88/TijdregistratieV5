@@ -1092,6 +1092,7 @@ namespace Controls
             return _criteria;
         }
 
+        private string _Updating = null;
         public bool UpdateFormulier(ProductieFormulier form)
         {
             if (IsDisposed || Disposing || form == null || _loadingproductielist)
@@ -1099,6 +1100,15 @@ namespace Controls
 
             try
             {
+                var tries = 0;
+                while(string.Equals(_Updating, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    if (tries > 5) break;
+                    System.Threading.Thread.Sleep(100);
+                    Application.DoEvents();
+                    tries++;
+                }
+                _Updating = form.ProductieNr;
                 var crit = Criteria();
                 var filter = crit?.ToLower() == "zoeken..."
                     ? null
@@ -1182,10 +1192,12 @@ namespace Controls
                     SelectObjects(xselected);
                     OnItemCountChanged();
                 }
+                _Updating = null;
                 return xreturn;
             }
             catch (ObjectDisposedException)
             {
+                _Updating = null;
                 Console.WriteLine(@"Disposed!");
                 return false;
             }

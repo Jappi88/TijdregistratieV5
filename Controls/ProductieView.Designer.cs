@@ -156,7 +156,7 @@ namespace Controls
             this.xspeciaalroosterbutton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.xspeciaalroosterbutton.Location = new System.Drawing.Point(3, 2);
             this.xspeciaalroosterbutton.Name = "xspeciaalroosterbutton";
-            this.xspeciaalroosterbutton.Size = new System.Drawing.Size(1883, 40);
+            this.xspeciaalroosterbutton.Size = new System.Drawing.Size(1261, 40);
             this.xspeciaalroosterbutton.TabIndex = 0;
             this.xspeciaalroosterbutton.Text = "Rooster is momenteel inactief en zal geen tijd worden gemeten";
             this.xspeciaalroosterbutton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -173,7 +173,7 @@ namespace Controls
             this.panel6.Location = new System.Drawing.Point(0, 0);
             this.panel6.Name = "panel6";
             this.panel6.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
-            this.panel6.Size = new System.Drawing.Size(1889, 43);
+            this.panel6.Size = new System.Drawing.Size(1267, 43);
             this.panel6.TabIndex = 25;
             // 
             // xToolButtons
@@ -215,7 +215,7 @@ namespace Controls
             this.xActiviteit});
             this.xToolButtons.Location = new System.Drawing.Point(5, 0);
             this.xToolButtons.Name = "xToolButtons";
-            this.xToolButtons.Size = new System.Drawing.Size(1748, 39);
+            this.xToolButtons.Size = new System.Drawing.Size(1126, 39);
             this.xToolButtons.TabIndex = 46;
             this.xToolButtons.Text = "toolStrip2";
             // 
@@ -585,7 +585,7 @@ namespace Controls
             // 
             this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Right;
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(1753, 0);
+            this.pictureBox2.Location = new System.Drawing.Point(1131, 0);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(68, 43);
@@ -598,7 +598,7 @@ namespace Controls
             // 
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(1821, 0);
+            this.pictureBox1.Location = new System.Drawing.Point(1199, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(68, 43);
@@ -640,7 +640,7 @@ namespace Controls
             this.xspeciaalroosterlabel.Dock = System.Windows.Forms.DockStyle.Top;
             this.xspeciaalroosterlabel.Location = new System.Drawing.Point(0, 43);
             this.xspeciaalroosterlabel.Name = "xspeciaalroosterlabel";
-            this.xspeciaalroosterlabel.Size = new System.Drawing.Size(1889, 45);
+            this.xspeciaalroosterlabel.Size = new System.Drawing.Size(1267, 45);
             this.xspeciaalroosterlabel.TabIndex = 29;
             this.xspeciaalroosterlabel.Visible = false;
             // 
@@ -932,7 +932,7 @@ namespace Controls
             this.metroCustomTabControl1.Name = "metroCustomTabControl1";
             this.metroCustomTabControl1.SelectedIndex = 0;
             this.metroCustomTabControl1.ShowCloseButton = true;
-            this.metroCustomTabControl1.Size = new System.Drawing.Size(1811, 608);
+            this.metroCustomTabControl1.Size = new System.Drawing.Size(1189, 494);
             this.metroCustomTabControl1.TabIndex = 30;
             this.metroCustomTabControl1.UseSelectable = true;
             this.metroCustomTabControl1.TabClosed += new System.EventHandler(this.metroCustomTabControl1_TabClosed);
@@ -948,7 +948,7 @@ namespace Controls
             this.metroTabPage5.Location = new System.Drawing.Point(4, 38);
             this.metroTabPage5.Name = "metroTabPage5";
             this.metroTabPage5.Padding = new System.Windows.Forms.Padding(5);
-            this.metroTabPage5.Size = new System.Drawing.Size(1803, 566);
+            this.metroTabPage5.Size = new System.Drawing.Size(1181, 452);
             this.metroTabPage5.TabIndex = 0;
             this.metroTabPage5.Text = "     Start Pagina";
             this.metroTabPage5.VerticalScrollbarBarColor = true;
@@ -963,7 +963,7 @@ namespace Controls
             this.tileMainView1.Location = new System.Drawing.Point(5, 5);
             this.tileMainView1.Margin = new System.Windows.Forms.Padding(4);
             this.tileMainView1.Name = "tileMainView1";
-            this.tileMainView1.Size = new System.Drawing.Size(1793, 556);
+            this.tileMainView1.Size = new System.Drawing.Size(1171, 442);
             this.tileMainView1.TabIndex = 2;
             this.tileMainView1.TileClicked += new System.EventHandler(this.tileMainView1_TileClicked);
             this.tileMainView1.TilesLoaded += new System.EventHandler(this.tileMainView1_TilesLoaded);
@@ -973,11 +973,11 @@ namespace Controls
             this.takenManager1.BackColor = System.Drawing.Color.White;
             this.takenManager1.Dock = System.Windows.Forms.DockStyle.Right;
             this.takenManager1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.takenManager1.Location = new System.Drawing.Point(1851, 88);
+            this.takenManager1.Location = new System.Drawing.Point(1229, 88);
             this.takenManager1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.takenManager1.Name = "takenManager1";
             this.takenManager1.SelectedItem = null;
-            this.takenManager1.Size = new System.Drawing.Size(38, 608);
+            this.takenManager1.Size = new System.Drawing.Size(38, 494);
             this.takenManager1.TabIndex = 26;
             this.takenManager1.Visible = false;
             this.takenManager1.OnTaakUitvoeren += new Rpm.Various.TaakHandler(this.takenManager1_OnTaakUitvoeren);
@@ -1207,7 +1207,7 @@ namespace Controls
         menuButton17,
         menuButton18};
             this.mainMenu1.Name = "mainMenu1";
-            this.mainMenu1.Size = new System.Drawing.Size(40, 608);
+            this.mainMenu1.Size = new System.Drawing.Size(40, 494);
             this.mainMenu1.TabIndex = 27;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
             // 
@@ -1223,7 +1223,7 @@ namespace Controls
             this.Controls.Add(this.panel6);
             this.DoubleBuffered = true;
             this.Name = "ProductieView";
-            this.Size = new System.Drawing.Size(1889, 696);
+            this.Size = new System.Drawing.Size(1267, 582);
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
             this.xToolButtons.ResumeLayout(false);

@@ -72,8 +72,8 @@ namespace FolderSync
             /// <summary>
             /// De interval waarvan de synchronisatie moet plaatsvinden in miliseconden 
             /// </summary>
-        public int Interval => Manager.DefaultSettings == null || Manager.DefaultSettings.OfflineDbSyncInterval < 500
-            ? 1000
+        public int Interval => Manager.DefaultSettings == null || Manager.DefaultSettings.OfflineDbSyncInterval < 3000
+            ? Manager.DefaultSettings.OfflineDbSyncInterval = 3000
             : Manager.DefaultSettings.OfflineDbSyncInterval;
 
         /// <summary>

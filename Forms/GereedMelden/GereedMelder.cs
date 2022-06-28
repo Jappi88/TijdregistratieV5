@@ -76,10 +76,10 @@ namespace Forms.GereedMelden
             return base.ShowDialog(owner);
         }
 
-        private LoadingForm _loading;
-        private async void MeldGereed()
+        //private LoadingForm _loading;
+        private void MeldGereed()
         {
-            if (_loading is { IsDisposed: false }) return;
+            //if (_loading is { IsDisposed: false }) return;
             if (DoCheck() && XMessageBox.Show(this, Melding,
                     "Gereed Melden",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -104,25 +104,26 @@ namespace Forms.GereedMelden
                 }
 
                 Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
-                _loading = new LoadingForm();
-                _loading.CloseIfFinished = true;
-                _loading.FormClosed += (x, y) =>
-                {
-                    _loading?.Dispose();
-                    _loading = null;
-                };
+                //_loading = new LoadingForm();
+                //_loading.CloseIfFinished = true;
+                //_loading.FormClosed += (x, y) =>
+                //{
+                //    _loading?.Dispose();
+                //    _loading = null;
+                //};
 
-                _= Task.Factory.StartNew(() =>
-                {
-                    _loading.ShowDialog(this);
-                });
-                Application.DoEvents();
+                //_= Task.Factory.StartNew(() =>
+                //{
+                //    _loading.ShowDialog(this);
+                //});
+                //Application.DoEvents();
                 if (_prod is ProductieFormulier form)
                 {
 
-                    if (await form.MeldGereed((int)xaantal.Value, xparaaf.Text.Trim(), Notitie, true, true, _loading.Arg))
-                        DialogResult = DialogResult.OK;
-
+                    //if (await form.MeldGereed((int)xaantal.Value, xparaaf.Text.Trim(), Notitie, true, true, _loading.Arg))
+                    //    DialogResult = DialogResult.OK;
+                    form.MeldGereed((int)xaantal.Value, xparaaf.Text.Trim(), Notitie, true, true);
+                    DialogResult = DialogResult.OK;
                 }
                 else if (_prod is Bewerking bew)
                 {
@@ -154,31 +155,35 @@ namespace Forms.GereedMelden
                                 xcombi.IsRunning = false;
                                 if (result != DialogResult.No)
                                 {
-                                    await xbw.UpdateBewerking(null,
+                                    xbw.xUpdateBewerking(null,
                                         $"[{bew.Path}] Combinatie is op inactief gezet in '{xbw.Path}'");
                                 }
                             }
 
                             if (result == DialogResult.No)
-                               await xbw.StopProductie(true,true, true);
+                                xbw.xStopProductie(true, true, true);
                             else
                             {
                                 var gereedmelder = new GereedMelder();
                                 gereedmelder.ParentCombi = bew.Path;
-                                gereedmelder.ShowDialog(this,xbw);
+                                gereedmelder.ShowDialog(this, xbw);
                             }
                         }
                     }
 
-                    if (await bew.MeldBewerkingGereed(xparaaf.Text.Trim(), (int)xaantal.Value, Notitie, true, true, true,
-                            _loading.Arg))
-                    {
-                        ProductieManager.Properties.Settings.Default.Paraaf = xparaaf.Text.Trim();
-                        ProductieManager.Properties.Settings.Default.Save();
-                        DialogResult = DialogResult.OK;
-                    }
-                    else 
-                        DialogResult = DialogResult.Cancel;
+                    //if (await bew.MeldBewerkingGereed(xparaaf.Text.Trim(), (int)xaantal.Value, Notitie, true, true, true,
+                    //        _loading.Arg))
+                    //{
+                    //    ProductieManager.Properties.Settings.Default.Paraaf = xparaaf.Text.Trim();
+                    //    ProductieManager.Properties.Settings.Default.Save();
+                    //    DialogResult = DialogResult.OK;
+                    //}
+                    //else 
+                    //    DialogResult = DialogResult.Cancel;
+                    _= bew.MeldBewerkingGereed(xparaaf.Text.Trim(), (int)xaantal.Value, Notitie, true, true, true);
+                    ProductieManager.Properties.Settings.Default.Paraaf = xparaaf.Text.Trim();
+                    ProductieManager.Properties.Settings.Default.Save();
+                    DialogResult = DialogResult.OK;
                 }
                 else DialogResult = DialogResult.Cancel;
 

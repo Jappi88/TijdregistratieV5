@@ -933,7 +933,7 @@ Color textcolor, bool useimage)
             var xrgb = $"rgb({xcolor.R}, {xcolor.G}, {xcolor.B})'";
             string prodsoort = string.IsNullOrEmpty(ProductSoort)
                 ? ""
-                : $"<span color='{xrgb}'><b>[{ProductSoort}]</b></span>";
+                : $"<span color='{xrgb}'>[{ProductSoort}]</span><span color='purple'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>";
             var ratio = Math.Round(ControleRatio,2);
             var startop = StartOp;
             var gestartop = TijdGestart;
@@ -988,10 +988,10 @@ Color textcolor, bool useimage)
                           $"</head>\r\n" +
                           $"<body style='background - color: {backcolor.Name}; background-gradient: {backgroundgradient.Name}; background-gradient-angle: 250; margin: 0px 0px; padding: 0px 0px 0px 0px'>\r\n" +
                           $"<h1 align='center' style='color: {textcolor.Name}'>\r\n" +
-                          $"      {prodsoort} {title}\r\n" +
+                          $"       {(this is Bewerking ? $"<span style = 'color: purple'>{Naam}</span>" + "<br>" : "")}\r\n" +
+                          $"       {prodsoort}\r\n " +
                           $"        <br/>\r\n" +
-                          $"       {(this is Bewerking ? Naam + "<br>" : "")}\r\n" +
-                          $"        <span style=\'font-size: x-small;\'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>\r\n " +
+                          $"        <span style=\'font-size: x-small;\'>{title}</span>\r\n " +
                           $"</h1>\r\n" +
                           $"<blockquote class='whitehole'>\r\n" +
                           $"       <p style = 'margin-top: 0px' 'margin-bottom: 0px'>\r\n" +

@@ -1543,7 +1543,7 @@ namespace Forms.FileBrowser
                 _clipboard = new DataObject();
                 _clipboard.SetFileDropList(xcol);
                 _clipboard.SetData("Preferred DropEffect", effect);
-                Clipboard.SetDataObject(_clipboard);
+                Clipboard.SetDataObject(_clipboard,effect == DragDropEffects.Copy);
             }
             catch (Exception e)
             {
