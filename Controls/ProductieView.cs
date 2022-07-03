@@ -9,9 +9,9 @@ using MetroFramework;
 using MetroFramework.Controls;
 using MetroFramework.Forms;
 using ProductieManager.Forms;
+using ProductieManager.Forms.Chat;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
-using ProductieManager.Rpm.Various;
 using Rpm.Controls;
 using Rpm.DailyUpdate;
 using Rpm.Mailing;
@@ -51,6 +51,43 @@ namespace Controls
                 }
             };
             DailyMessage.DailyCreated += DailyMessage_DailyCreated;
+            _newmessage = new NewMessageUI();
+            _newmessage.Click += _newmessage_Click;
+            _newmessage.Close += _newmessage_Close;
+            _newmessage.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        }
+
+        private void _newmessage_Close(object sender, EventArgs e)
+        {
+            if (_newmessage != null)
+                xViewPanel.Controls.Remove(_newmessage);
+        }
+
+        private void _newmessage_Click(object sender, EventArgs e)
+        {
+            if (_newmessage != null)
+            {
+                var names = new List<string>();
+                var unread = _newmessage.Messages;
+                foreach (var msg in unread.Where(msg => msg.Afzender != null && !names.Any(x =>
+                    string.Equals(x, msg.Afzender.UserName, StringComparison.CurrentCultureIgnoreCase))))
+                    names.Add(msg.Afzender.UserName);
+                bool iedereen = names.Count == 0 || unread.Any(x =>
+                            string.Equals(x.Ontvanger, "iedereen", StringComparison.CurrentCultureIgnoreCase));
+                xViewPanel.SuspendLayout();
+                xViewPanel.Controls.Remove(_newmessage);
+                xViewPanel.ResumeLayout();
+                var xtile = tileMainView1.GetTile("xchat");
+                if ((_chatform == null || _chatform.IsDisposed))
+                {
+                    if (xtile is { Tag: TileInfoEntry entry })
+                    {
+                        InitChatTab(entry, true, iedereen ? "Iedereen" : names[0]);
+                        return;
+                    }
+                }
+                ShowChatWindow(this, iedereen ? "Iedereen" : names[0]);
+            }
         }
 
         private void DailyMessage_DailyCreated(object sender, EventArgs e)
@@ -106,6 +143,7 @@ namespace Controls
 
         private readonly Timer _specialRoosterWatcher;
         public static Manager _manager;
+        private NewMessageUI _newmessage;
 
         public int ProductieRefreshInterval { get; set; } = 10000; // 10 sec
 
@@ -217,21 +255,26 @@ namespace Controls
             UpdateTileViewed(entry, true);
         }
 
-        private bool CheckTab(TileInfoEntry entry, bool select)
+        private bool CheckTab(TileInfoEntry entry, bool select, out MetroTabPage page)
         {
-            var xold = metroCustomTabControl1.TabPages.Cast<MetroTabPage>()
+            page = metroCustomTabControl1.TabPages.Cast<MetroTabPage>()
                 .FirstOrDefault(x => x.Tag is TileInfoEntry xent && entry.Equals(xent));
-            if (xold != null)
+            if (page != null)
             {
                 if (select)
                 {
-                    metroCustomTabControl1.SelectedTab = xold;
-                    xold.PerformLayout();
+                    metroCustomTabControl1.SelectedTab = page;
+                    page.PerformLayout();
                 }
                 return true;
             }
 
             return false;
+        }
+
+        private bool CheckTab(TileInfoEntry entry, bool select)
+        {
+            return CheckTab(entry, select, out _);
         }
 
         private void InitProductiesTab(TileInfoEntry entry, bool select)
@@ -713,8 +756,20 @@ namespace Controls
 
         private void InitChatTab(TileInfoEntry entry, bool select, string username = null)
         {
-            if (CheckTab(entry, select))
+            if (CheckTab(entry, select, out var page))
+            {
+                if (page != null && !string.IsNullOrEmpty(username))
+                {
+                    var xpage = page.Controls.OfType<ProductieChatUI>().FirstOrDefault();
+                    if (xpage != null)
+                    {
+                        xpage.SetSelected(username);
+                        metroCustomTabControl1.SelectedTab = page;
+
+                    }
+                }
                 return;
+            }
             var xtabpage = new MetroTabPage();
             xtabpage.Padding = new Padding(5);
             xtabpage.Text = entry.Text + "    ";
@@ -739,9 +794,13 @@ namespace Controls
             {
                 //metroCustomTabControl1.TabPages.Remove(xtabpage);
                 //UpdateTileViewed(entry, false);
-               metroCustomTabControl1.CloseTab(xtabpage);
+                metroCustomTabControl1.CloseTab(xtabpage);
             }
-            else UpdateTileViewed(entry, true);
+            else
+            {
+                UpdateTileViewed(entry, true);
+                xprodlist.SetSelected(username);
+            }
         }
 
         private void CloseTabPage(object sender, bool updateview)
@@ -1052,6 +1111,25 @@ namespace Controls
             }
         }
 
+        public void InitChatEvents()
+        {
+            if (Manager.ProductieChat != null)
+            {
+                Manager.ProductieChat.MessageChanged -= ProductieChat_Updated;
+                Manager.ProductieChat.MessageDeleted -= ProductieChat_Updated;
+                Manager.ProductieChat.PublicMessageChanged -= ProductieChat_Updated;
+                Manager.ProductieChat.PublicMessageDeleted -= ProductieChat_Updated;
+                Manager.ProductieChat.GebruikerChanged -= ProductieChat_Updated;
+                Manager.ProductieChat.GebruikerDeleted -= ProductieChat_Updated;
+                Manager.ProductieChat.MessageChanged += ProductieChat_Updated;
+                Manager.ProductieChat.MessageDeleted += ProductieChat_Updated;
+                Manager.ProductieChat.PublicMessageChanged += ProductieChat_Updated;
+                Manager.ProductieChat.PublicMessageDeleted += ProductieChat_Updated;
+                Manager.ProductieChat.GebruikerChanged += ProductieChat_Updated;
+                Manager.ProductieChat.GebruikerDeleted += ProductieChat_Updated;
+            }
+        }
+
         public void LoadManager(string path, bool disposeOld, bool autologin = true)
         {
             InitManager(path, autologin, disposeOld);
@@ -1080,7 +1158,7 @@ namespace Controls
                             Manager.ArtikelRecords?.CheckForOpmerkingen(true);
                             InitDBCorupptedMonitor();
                             DailyMessage.CreateDaily();
-                            UpdateUnreadMessages(null);
+                            UpdateUnreadMessages();
                             UpdateUnreadOpmerkingen();
                             if (Manager.Opties is { ToonPersoneelIndelingNaOpstart: true })
                                 ShowPersoneelIndelingWindow(this);
@@ -1121,8 +1199,7 @@ namespace Controls
             Manager.OnManagerLoading += Manager_OnManagerLoading;
             Manager.OnManagerLoaded += _manager_OnManagerLoaded;
             Manager.OpmerkingenChanged += Opmerkingen_OnOpmerkingenChanged;
-            ProductieChat.MessageRecieved += ProductieChat_MessageRecieved;
-            ProductieChat.GebruikerUpdate += ProductieChat_GebruikerUpdate;
+
             MultipleFileDb.CorruptedFilesChanged += MultipleFileDb_CorruptedFilesChanged;
             Manager.FilterChanged += Manager_FilterChanged;
 
@@ -1297,8 +1374,15 @@ namespace Controls
             Manager.OnLoginChanged -= _manager_OnLoginChanged;
             Manager.OpmerkingenChanged -= Opmerkingen_OnOpmerkingenChanged;
             Manager.RequestRespondDialog -= Manager_RequestRespondDialog;
-            ProductieChat.MessageRecieved -= ProductieChat_MessageRecieved;
-            ProductieChat.GebruikerUpdate -= ProductieChat_GebruikerUpdate;
+            if (Manager.ProductieChat != null)
+            {
+                Manager.ProductieChat.MessageChanged -= ProductieChat_Updated;
+                Manager.ProductieChat.MessageDeleted -= ProductieChat_Updated;
+                Manager.ProductieChat.PublicMessageChanged -= ProductieChat_Updated;
+                Manager.ProductieChat.PublicMessageDeleted -= ProductieChat_Updated;
+                Manager.ProductieChat.GebruikerChanged -= ProductieChat_Updated;
+                Manager.ProductieChat.GebruikerDeleted -= ProductieChat_Updated;
+            }
             MultipleFileDb.CorruptedFilesChanged -= MultipleFileDb_CorruptedFilesChanged;
             Manager.FilterChanged -= Manager_FilterChanged;
             //Manager.OnDbBeginUpdate -= Manager_OnDbBeginUpdate;
@@ -1517,14 +1601,9 @@ namespace Controls
           UpdateUnreadOpmerkingen();
         }
 
-        private void ProductieChat_GebruikerUpdate(UserChat user)
+        private void ProductieChat_Updated(object item, FileSystemEventArgs e)
         {
-            UpdateUnreadMessages(user);
-        }
-
-        private void ProductieChat_MessageRecieved(ProductieChatEntry message)
-        {
-            UpdateUnreadMessages(message?.Afzender);
+            UpdateUnreadMessages();
         }
 
         private DialogResult _manager_OnShutdown(Manager instance, ref TimeSpan verlengtijd)
@@ -1603,6 +1682,18 @@ namespace Controls
                     xloginb.Image = user != null ? Resources.Logout_37127__1_ : Resources.Login_37128__1_;
                     xcorruptedfilesbutton.Visible = user is {AccesLevel: AccesType.Manager};
                     xMissingTekening.Visible = user is { AccesLevel: AccesType.Manager };
+                    bool flag = user == null || Manager.ProductieChat?.Chat == null || !string.Equals(Manager.ProductieChat?.Chat?.UserName, user?.Username, StringComparison.CurrentCultureIgnoreCase);
+                    if (flag)
+                    {
+                        var p = metroCustomTabControl1.TabPages.OfType<MetroTabPage>().FirstOrDefault(x => x.Tag is TileInfoEntry ent && ent.Name.ToLower().StartsWith("xchat"));
+                        if (p != null)
+                            metroCustomTabControl1.CloseTab(p);
+                        if (_chatform != null && !_chatform.IsDisposed)
+                        {
+                            _chatform.Close();
+                            _chatform = null;
+                        }
+                    }
                     OnLoginChanged?.Invoke(user, instance);
                 }));
             }
@@ -1615,8 +1706,8 @@ namespace Controls
         private void _manager_OnManagerLoaded()
         {
             if (IsDisposed || Disposing) return;
+            InitChatEvents();
             BeginInvoke(new Action(() => { _specialRoosterWatcher?.Start();}));
-
         }
 
         private void InitDBCorupptedMonitor()
@@ -1724,7 +1815,10 @@ namespace Controls
                         break;
                     case MainAktie.OpenAantalGemaaktProducties:
                         if (values.FirstOrDefault() is List<Bewerking> bws && values.LastOrDefault() is int mins)
-                            DoAantalGemaakt(this, bws, mins);
+                        {
+                            var form = Application.OpenForms.OfType<Control>().FirstOrDefault(x => x.Focused);
+                            DoAantalGemaakt(form??this, bws, mins);
+                        }
                         break;
                     case MainAktie.StartBewerking:
                         if (values.FirstOrDefault() is Bewerking bew2)
@@ -2533,22 +2627,21 @@ namespace Controls
         //    ShowProductieLogWindow();
         //}
 
-        private XMessageBox _unreadMessages;
+     
 
-        public void UpdateUnreadMessages(UserChat user)
+        public void UpdateUnreadMessages()
         {
             if (InvokeRequired)
                 Invoke(new Action(xUpdateUnreadMessages));
             else xUpdateUnreadMessages();
         }
 
-        private int _unread;
         private void xUpdateUnreadMessages()
         {
             try
             {
-                if (ProductieChat.Chat == null) return;
-                var unread = ProductieChat.Chat.GetAllUnreadMessages();
+                if (Manager.ProductieChat?.Chat == null) return;
+                var unread = Manager.ProductieChat.GetAllUnreadMessages();
                 var xtile = tileMainView1.GetTile("xchat");
                 if (unread.Count > 0)
                 {
@@ -2559,7 +2652,7 @@ namespace Controls
 
                     if (xtile is {Tag: TileInfoEntry entry})
                     {
-                        entry.TileCount = ProductieChat.Gebruikers.Count(x=> x.IsOnline && x.UserName.ToLower() != "iedereen");
+                        entry.TileCount = Manager.ProductieChat.Gebruikers.Count(x=> x.IsOnline && x.UserName.ToLower() != "iedereen");
                         entry.SecondaryImage = ximg;
                         xtile.UpdateTile(entry);
                     }
@@ -2568,78 +2661,65 @@ namespace Controls
                 {
                     if (xtile is {Tag: TileInfoEntry entry})
                     {
-                        entry.TileCount = ProductieChat.Gebruikers.Count(x => x.IsOnline && x.UserName.ToLower() != "iedereen");
+                        entry.TileCount = Manager.ProductieChat.Gebruikers.Count(x => x.IsOnline && x.UserName.ToLower() != "iedereen");
                         entry.SecondaryImage = null;
                         xtile.UpdateTile(entry);
                     }
                     xchatformbutton.Image = Resources.conversation_chat_32x321;
                 }
-
                 if (Manager.Opties is not { ToonNieweChatBerichtMelding: true }) return;
-                if (_chatform != null)
+                if (unread.Count > 0)
                 {
-                    if (_chatform.WindowState == FormWindowState.Minimized)
-                        _chatform.WindowState = FormWindowState.Normal;
-                    //if (user != null)
-                    //    _chatform.SelectedUser(user);
-                    _chatform.Show(this);
-                    _chatform.BringToFront();
-                    _chatform.Focus();
-                }
-                else if (unread.Count > 0)
-                {
-                    if (_unreadMessages is {IsDisposed: false})
+                    if(_newmessage != null)
                     {
-                        if (!_unreadMessages.Visible)
-                            _unreadMessages.Show(this);
-                        _unreadMessages.BringToFront();
-                        _unreadMessages.Select();
-                        _unreadMessages.Focus();
-                        return;
-                    }
-
-                    if (metroCustomTabControl1.SelectedTab is {Tag: TileInfoEntry xtab} && xtab.Name.ToLower().StartsWith("xchat"))
-                    {
-                        metroCustomTabControl1.Select();
-                        metroCustomTabControl1.Focus();
-                        return;
-                    }
-                    _unreadMessages?.Dispose();
-                    var names = new List<string>();
-                    foreach (var msg in unread.Where(msg => msg.Afzender != null && !names.Any(x =>
-                        string.Equals(x, msg.Afzender.UserName, StringComparison.CurrentCultureIgnoreCase))))
-                        names.Add(msg.Afzender.UserName);
-                    bool iedereen = unread.Any(x =>
-                        string.Equals(x.Ontvanger, "iedereen", StringComparison.CurrentCultureIgnoreCase));
-                    if (unread.Count <= _unread) return;
-                    _unread = unread.Count;
-                    if (names.Count == 0) return;
-                    {
-                        Application.OpenForms["SplashScreen"]?.Close();
-                        var xv = names.Count == 1 ? "bericht" : "berichten";
-                        var bttns = new Dictionary<string, DialogResult>();
-                        bttns.Add("OK", DialogResult.OK);
-                        bttns.Add("Toon Bericht", DialogResult.Yes);
-                        _unreadMessages = new XMessageBox();
-                        _unreadMessages.TopMost = true;
-                        var result = _unreadMessages.ShowDialog(
-                            this, $"Je hebt {unread.Count} ongelezen {xv} van {string.Join(", ", names)}",
-                            $"{unread.Count} ongelezen berichten", MessageBoxButtons.OK, MessageBoxIcon.None, null,
-                            bttns);
-                        _unreadMessages?.Dispose();
-                        _unreadMessages = null;
-                        if (result == DialogResult.Yes)
+                        _newmessage.InitMessages(unread.ToArray());
+                        if(xViewPanel.Controls.IndexOf(_newmessage) == -1)
                         {
-                            xtile = tileMainView1.GetTile("xchat");
-                            if (xtile is { Tag: TileInfoEntry entry})
+                            _newmessage.Location = new Point(xViewPanel.Width - _newmessage.Width, xViewPanel.Height - _newmessage.Height);
+                            xViewPanel.Controls.Add(_newmessage);
+                            xViewPanel.Invalidate();
+                        }
+                        _newmessage.BringToFront();
+                        var f = xViewPanel.FindForm();
+                        if (f != null)
+                        {
+                            if (f.WindowState == FormWindowState.Minimized)
+                                f.WindowState = FormWindowState.Normal;
+                            f.BringToFront();
+                            f.Focus();
+                            f.Select();
+                            if (_chatform != null && !_chatform.IsDisposed)
                             {
-                                InitChatTab(entry, true, iedereen ? "Iedereen" : names[0]);
+                                if (_chatform.WindowState == FormWindowState.Minimized)
+                                    _chatform.WindowState = FormWindowState.Normal;
+                                _chatform.BringToFront();
+                                _chatform.Focus();
+                                _chatform.Select();
                             }
                             else
-                                ShowChatWindow(this, iedereen ? "Iedereen" : names[0]);
-
-                            _unread = 0;
+                            {
+                                var tb = metroCustomTabControl1.TabPages.OfType<MetroTabPage>().ToList().FirstOrDefault(x=> x.Tag is TileInfoEntry ent && ent.Name.ToLower().StartsWith("xchat"));
+                                if(tb != null)
+                                {
+                                    metroCustomTabControl1.SelectedTab = tb;
+                                    var xch = tb.Controls.OfType<ProductieChatUI>().FirstOrDefault();
+                                    if(xch != null)
+                                    {
+                                        xch.SetSelected(unread?.FirstOrDefault()?.Afzender?.UserName);
+                                    }
+                                }
+                                metroCustomTabControl1.Select();
+                                metroCustomTabControl1.Focus();
+                            }
                         }
+                    }
+                }
+                else
+                {
+                    if (_newmessage != null && xViewPanel.Controls.IndexOf(_newmessage) > -1)
+                    {
+                        xViewPanel.Controls.Remove(_newmessage);
+                        xViewPanel.Invalidate();
                     }
                 }
             }
@@ -2783,7 +2863,8 @@ namespace Controls
         {
             try
             {
-                var prodform = new ProductieLijstForm(_Productelijsten.Count);
+                var prods = Manager.Database.xGetAllBewerkingen(false, true, false);
+                var prodform = new ProductieLijstForm(_Productelijsten.Count, prods);
                // prodform.OwnerForm = ((Control)owner)?.FindForm();
                 prodform.FormClosing += AddProduction_FormClosing;
                 _Productelijsten.Add(prodform);

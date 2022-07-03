@@ -40,7 +40,7 @@ namespace Forms
 
         public bool InitUI()
         {
-            if (!ProductieChat.LoggedIn || ProductieChat.Chat == null)
+            if (Manager.ProductieChat?.Chat == null || !Manager.ProductieChat.LoggedIn)
             {
                 XMessageBox.Show(this, $"Je bent niet ingelogd!\n\n Log in om te kunnen chatten met productie.",
                     "Niet Ingelogd", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -49,15 +49,23 @@ namespace Forms
             Application.DoEvents();
             LoadProfile();
             LoadProfiles();
-            ProductieChat.GebruikerUpdate += ProductieChat_GebruikerUpdate;
-            ProductieChat.MessageRecieved += ProductieChat_MessageRecieved;
+            Manager.ProductieChat.GebruikerChanged += ProductieChat_GebruikerUpdate;
+            Manager.ProductieChat.GebruikerDeleted += ProductieChat_GebruikerUpdate;
+            Manager.ProductieChat.MessageChanged += ProductieChat_MessageUpdated;
+            Manager.ProductieChat.MessageDeleted += ProductieChat_MessageUpdated;
+            Manager.ProductieChat.PublicMessageChanged += ProductieChat_MessageUpdated;
+            Manager.ProductieChat.PublicMessageDeleted += ProductieChat_MessageUpdated;
             return true;
         }
 
         public void CloseUI()
         {
-            ProductieChat.GebruikerUpdate -= ProductieChat_GebruikerUpdate;
-            ProductieChat.MessageRecieved -= ProductieChat_MessageRecieved;
+            Manager.ProductieChat.GebruikerChanged -= ProductieChat_GebruikerUpdate;
+            Manager.ProductieChat.GebruikerDeleted -= ProductieChat_GebruikerUpdate;
+            Manager.ProductieChat.MessageChanged -= ProductieChat_MessageUpdated;
+            Manager.ProductieChat.MessageDeleted -= ProductieChat_MessageUpdated;
+            Manager.ProductieChat.PublicMessageChanged -= ProductieChat_MessageUpdated;
+            Manager.ProductieChat.PublicMessageDeleted -= ProductieChat_MessageUpdated;
         }
 
         private object ProfileNameGet(object user)
@@ -92,7 +100,7 @@ namespace Forms
             {
                 if (string.Equals(chat.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    var count = ProductieChat.Gebruikers.Count - 1;
+                    var count = Manager.ProductieChat.Gebruikers.Count - 1;
                     string x1 = count == 1 ? "Gebruiker" : "Gebruikers";
                     return $"Totaal {count} {x1}";
                 }
@@ -116,7 +124,7 @@ namespace Forms
 
         private ChatBubble CreateSendMessage(ProductieChatEntry entry, ChatBubble chat = null)
         {
-            if (ProductieChat.Chat == null) return null;
+            if (Manager.ProductieChat.Chat == null) return null;
             var xret = chat ?? new ChatBubble();
             string html = CreateHtmlString($"", entry.ID, Color.DarkGray, Color.Transparent, 0,
                 entry.Afzender.UserName, new Size(48, 48), ImageAlign.Left, new Size(85, 0), TextAlign.LEFT,
@@ -130,7 +138,7 @@ namespace Forms
             html += CreateHtmlString(entry.Tijd.ToString("F"), entry.ID, Color.LightSlateGray, Color.Transparent, 5,
                 entry.IsGelezen ? "gelezen" : "verzonden",
                 new Size(24, 24), ImageAlign.Left, new Size(150, 0), TextAlign.LEFT, 10, 10, Color.Transparent);
-            xret.SetMessage(entry, html, xuserimages.Images[entry.Afzender.UserName]);
+            xret.SetMessage(entry, html, GetProfileImage(entry.Afzender));
             return xret;
         }
 
@@ -150,8 +158,28 @@ namespace Forms
             html += CreateHtmlString(entry.Tijd.ToString("F"), entry.ID, Color.LightSlateGray, Color.Transparent, 5,
                 entry.IsGelezen ? "gelezen" : "verzonden",
                 new Size(24, 24), ImageAlign.Left, new Size(175, 0), TextAlign.LEFT, 10, 10, Color.Transparent);
-            xret.SetMessage(entry, html, xuserimages.Images[entry.Afzender.UserName]);
+            xret.SetMessage(entry, html, GetProfileImage(entry.Afzender));
             return xret;
+        }
+
+        public Image GetProfileImage(UserChat user)
+        {
+            try
+            {
+                var img = Manager.ProductieChat?.GetProfielImage(user);
+                var gbindex = Manager.ProductieChat.Gebruikers.IndexOf(user);
+                if (gbindex >= 0)
+                {
+                    user = Manager.ProductieChat.Gebruikers[gbindex];
+                }
+                if (user.IsOnline)
+                    img = img.CombineImage(Resources.Online_32, 3.5);
+                else
+                    img = img.CombineImage(Resources.offline_32x32, 3.5);
+                img.Tag = user.IsOnline;
+                return img;
+            }
+            catch { return null; }
         }
 
         public string CreateHtmlString(string value, string id, Color textcolor, Color backcolor, int padding, string imagename,Size imagesize, ImageAlign imagealign, Size margin, TextAlign align, int borderwidth, int borderradius,
@@ -268,40 +296,43 @@ namespace Forms
 
         internal string _Selected = null;
 
-        private void ProductieChat_MessageRecieved(ProductieChatEntry message)
+        private void ProductieChat_MessageUpdated(object item, FileSystemEventArgs e)
         {
             try
             {
-                if (string.IsNullOrEmpty(message?.Bericht)) return;
-                //if (message.Afzender.Equals(_selecteduser))
-                //{
-
-
-                //    Invoke(new MethodInvoker(() =>
-                //    {
-                //        var xmsg = CreateRecieveMessage(message);
-                //        xchatpanel.Controls.Add(xmsg);
-                //        xchatpanel.Controls.SetChildIndex(xmsg, xchatpanel.Controls.Count - 1);
-                //        xchatpanel.ScrollControlIntoView(xmsg);
-                //    }));
-                //}
-                //else
-                if (message.Afzender.Equals(_selecteduser))
+                if (item is ProductieChatEntry message)
                 {
-                    var updated = false;
-                    var added = false;
-                    UpdateMessage(message, ref updated, ref added,true);
+                    if (string.IsNullOrEmpty(message?.Bericht)) return;
+                    //if (message.Afzender.Equals(_selecteduser))
+                    //{
+
+
+                    //    Invoke(new MethodInvoker(() =>
+                    //    {
+                    //        var xmsg = CreateRecieveMessage(message);
+                    //        xchatpanel.Controls.Add(xmsg);
+                    //        xchatpanel.Controls.SetChildIndex(xmsg, xchatpanel.Controls.Count - 1);
+                    //        xchatpanel.ScrollControlIntoView(xmsg);
+                    //    }));
+                    //}
+                    //else
+                    if (message.Ontvangers != null && message.Ontvangers.Any(x=> string.Equals(x, _selecteduser?.UserName, StringComparison.CurrentCultureIgnoreCase)))
+                    {
+                        var updated = false;
+                        var added = false;
+                        UpdateMessage(message, ref updated, ref added, true);
+                    }
+                    else
+                        BeginInvoke(new MethodInvoker(LoadProfiles));
                 }
-                else
-                    BeginInvoke(new MethodInvoker(LoadProfiles));
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e);
+                Console.WriteLine(ex);
             }
         }
 
-        private void ProductieChat_GebruikerUpdate(UserChat user)
+        private void ProductieChat_GebruikerUpdate(object item, FileSystemEventArgs e)
         {
             if (Disposing || IsDisposed) return;
             BeginInvoke(new MethodInvoker(() =>
@@ -313,46 +344,24 @@ namespace Forms
 
         private void LoadProfile()
         {
-            if (ProductieChat.Chat == null) return;
-                xprofileimage.Image = ProductieChat.Chat.GetProfielImage();
-                xprofilenaam.Text = ProductieChat.Chat.UserName;
-                xprofilestatus.Text = ProductieChat.Chat.IsOnline ? "Online" : "Offline";
-                xprofilestatusimage.Image = ProductieChat.Chat.IsOnline
+            if (Manager.ProductieChat.Chat == null) return;
+                xprofileimage.Image = Manager.ProductieChat.GetProfielImage();
+                xprofilenaam.Text = Manager.ProductieChat.Chat.UserName;
+                xprofilestatus.Text = Manager.ProductieChat.Chat.IsOnline ? "Online" : "Offline";
+                xprofilestatusimage.Image = Manager.ProductieChat.Chat.IsOnline
                     ? Resources.Online_32
                     : Resources.offline_32x32;
         }
 
-        private void LoadProfiles()
+        private void ReloadImages()
         {
             try
             {
-                if (ProductieChat.Chat == null)
-                {
-                    xuserlist.SetObjects(new UserChat[] { });
-                    return;
-                }
-
-                xuserlist.BeginUpdate();
-                var selected = SelectedUser();
-                var toremove = xuserlist.Objects?.Cast<UserChat>().ToList() ?? new List<UserChat>();
                 xuserimages.Images.Clear();
-               // xuserimages.Images.Add("Iedereen", Properties.Resources.users_clients_group_16774);
-                //LoadedUserImages.Images.Clear();
-               // LoadedUserImages.Images.Add(ProductieChat.Chat.UserName, ProductieChat.Chat.GetProfielImage());
-                //LoadedUserImages.Images.Add("Iedereen", Properties.Resources.users_clients_group_16774);
-
-                if (!ProductieChat.Gebruikers.Any(x => string.Equals(x.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase)))
+                if (Manager.ProductieChat.Chat != null)
                 {
-                    var iedereen = new UserChat()
-                        { UserName = "Iedereen", IsOnline = true, ProfielImage = ProductieChat.GroupChatImagePath };
-                    ProductieChat.Gebruikers.Add(iedereen);
-                    ProductieChat.Gebruikers = ProductieChat.Gebruikers.OrderBy(x => x.UserName).ToList();
-                }
-                //load eerst de default gebruiker.
-                if (ProductieChat.Chat != null)
-                {
-                    var img = ProductieChat.Chat.GetProfielImage() ?? Resources.avatardefault_92824;
-                    int unread = ProductieChat.Chat.UnreadMessages(ProductieChat.Chat.UserName, DateTime.Now.Subtract(TimeSpan.FromDays(30)));
+                    var img = Manager.ProductieChat.GetProfielImage() ?? Resources.avatardefault_92824;
+                    int unread = Manager.ProductieChat.UnreadMessages(Manager.ProductieChat.Chat.UserName, DateTime.Now.Subtract(TimeSpan.FromDays(30)));
                     if (unread > 0)
                     {
                         var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White, unread.ToString(),
@@ -360,32 +369,29 @@ namespace Forms
                         img = img.CombineImage(ximg, ContentAlignment.BottomLeft, 2.5);
                     }
 
-                    if (ProductieChat.Chat.IsOnline)
+                    if (Manager.ProductieChat.Chat.IsOnline)
                         img = img.CombineImage(Resources.Online_32, 3.5);
                     else
                         img = img.CombineImage(Resources.offline_32x32, 3.5);
-                    xuserimages.Images.Add(ProductieChat.Chat.UserName, img);
+                    xuserimages.Images.Add(Manager.ProductieChat.Chat.UserName, img);
                 }
 
-                for (int i = 0; i < ProductieChat.Gebruikers.Count; i++)
+                for (int i = 0; i < Manager.ProductieChat.Gebruikers.Count; i++)
                 {
-                    var user = ProductieChat.Gebruikers[i];
+                    var user = Manager.ProductieChat.Gebruikers[i];
                     if (user.UserName.ToLower().Trim() != "iedereen")
                     {
                         var acc = Manager.Database.AccountExist(user.UserName);
                         if (!acc)
                         {
-                            ProductieChat.Gebruikers[i].DeleteUser();
-                            ProductieChat.Gebruikers.RemoveAt(i--);
+                            Manager.ProductieChat.DeleteUser(user);
+                            Manager.ProductieChat.Gebruikers.RemoveAt(i--);
                             continue;
                         }
                     }
-                    if (_Selected != null &&
-                        string.Equals(user.UserName, _Selected, StringComparison.CurrentCultureIgnoreCase))
-                        selected = user;
-                    var img = user.GetProfielImage() ?? Resources.avatardefault_92824;
+                    var img = Manager.ProductieChat.GetProfielImage(user) ?? Resources.avatardefault_92824;
                     //LoadedUserImages.Images.Add(user.UserName, img);
-                    int unread = ProductieChat.Chat.UnreadMessages(user.UserName, DateTime.Now.Subtract(TimeSpan.FromDays(30)));
+                    int unread = Manager.ProductieChat.UnreadMessages(user.UserName, DateTime.Now.Subtract(TimeSpan.FromDays(30)));
                     if (unread > 0)
                     {
                         var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White, unread.ToString(),
@@ -398,11 +404,79 @@ namespace Forms
                     else
                         img = img.CombineImage(Resources.offline_32x32, 3.5);
                     xuserimages.Images.Add(user.UserName, img);
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        public void SetSelected(string user)
+        {
+            _Selected = user;
+            var xuser = Manager.ProductieChat?.Gebruikers?.FirstOrDefault(x => string.Equals(x.UserName, _Selected, StringComparison.CurrentCultureIgnoreCase));
+            if(xuser != null)
+            {
+                xuserlist.SelectedObject = xuser;
+                xuserlist.SelectedItem?.EnsureVisible();
+                if(xsendmessagepanel.Visible)
+                {
+                    xchattextbox.Focus();
+                    xchattextbox.Select();
+                }
+            }
+        }
+
+        private void LoadProfiles()
+        {
+            try
+            {
+                if (Manager.ProductieChat.Chat == null)
+                {
+                    xuserlist.SetObjects(new UserChat[] { });
+                    return;
+                }
+                var selected = SelectedUser();
+                var toremove = xuserlist.Objects?.Cast<UserChat>().ToList() ?? new List<UserChat>();
+
+                // xuserimages.Images.Add("Iedereen", Properties.Resources.users_clients_group_16774);
+                //LoadedUserImages.Images.Clear();
+                // LoadedUserImages.Images.Add(Manager.ProductieChat.Chat.UserName, Manager.ProductieChat.Chat.GetProfielImage());
+                //LoadedUserImages.Images.Add("Iedereen", Properties.Resources.users_clients_group_16774);
+                
+                if (!Manager.ProductieChat.Gebruikers.Any(x => string.Equals(x.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    var iedereen = new UserChat()
+                        { UserName = "Iedereen", IsOnline = true, ProfielImage = Manager.ProductieChat.GroupChatImagePath };
+                    Manager.ProductieChat.Gebruikers.Add(iedereen);
+                    Manager.ProductieChat.Gebruikers = Manager.ProductieChat.Gebruikers.OrderBy(x => x.UserName).ToList();
+                }
+                ReloadImages();
+                //load eerst de default gebruiker.
+                for (int i = 0; i < Manager.ProductieChat.Gebruikers.Count; i++)
+                {
+                    var user = Manager.ProductieChat.Gebruikers[i];
+                    if (user.UserName.ToLower().Trim() != "iedereen")
+                    {
+                        var acc = Manager.Database.AccountExist(user.UserName);
+                        if (!acc)
+                        {
+                            Manager.ProductieChat.DeleteUser(user);
+                            Manager.ProductieChat.Gebruikers.RemoveAt(i--);
+                            continue;
+                        }
+                    }
+                    if (_Selected != null &&
+                        string.Equals(user.UserName, _Selected, StringComparison.CurrentCultureIgnoreCase))
+                        selected = user;
 
                     var old = toremove.FirstOrDefault(x => x.Equals(user));
                     if (old == null)
                     {
+                        xuserlist.BeginUpdate();
                         xuserlist.AddObject(user);
+                        xuserlist.EndUpdate();
                     }
                     else
                     {
@@ -413,9 +487,10 @@ namespace Forms
 
                 if (toremove.Count > 0)
                 {
+                    xuserlist.BeginUpdate();
                     xuserlist.RemoveObjects(toremove);
+                    xuserlist.EndUpdate();
                 }
-                xuserlist.EndUpdate();
                 xuserlist.SelectedObject = selected;
                 xuserlist.SelectedItem?.EnsureVisible();
                 LoadSelectedUser();
@@ -430,7 +505,7 @@ namespace Forms
 
         private async void LoadSelectedUser()
         {
-            if (Manager.ProductieChat == null || Manager.LogedInGebruiker == null) return;
+            if (Manager.ProductieChat?.Chat == null || Manager.LogedInGebruiker == null) return;
             var user = SelectedUser();
             if (user == null)
             {
@@ -448,7 +523,7 @@ namespace Forms
                 else
                 {
                     xsendmessagepanel.Visible = user != null;
-                    xselecteduserimage.Image = user?.GetProfielImage();
+                    xselecteduserimage.Image = Manager.ProductieChat?.GetProfielImage(user);
                     xselectedusername.Text = user?.UserName;
                     xselecteduserstatus.Text = user == null ? "" : (user.IsOnline ? "Online" : "Offline");
                     xselecteduserstatusimage.Image = user == null
@@ -458,10 +533,10 @@ namespace Forms
                             : Resources.offline_32x32;
                     if (string.Equals(user?.UserName, "iedereen", StringComparison.CurrentCultureIgnoreCase))
                     {
-                        var users = ProductieChat.Gebruikers.Where(x => !string.Equals(Manager.LogedInGebruiker.Username,
+                        var users = Manager.ProductieChat.Gebruikers.Where(x => !string.Equals(Manager.LogedInGebruiker.Username,
                             x.UserName, StringComparison.CurrentCultureIgnoreCase) && !string.Equals("iedereen",
                             x.UserName, StringComparison.CurrentCultureIgnoreCase)).ToList();
-                        var onlineusers = ProductieChat.Gebruikers.Where(x => x.IsOnline && !string.Equals(Manager.LogedInGebruiker.Username,
+                        var onlineusers = Manager.ProductieChat.Gebruikers.Where(x => x.IsOnline && !string.Equals(Manager.LogedInGebruiker.Username,
                             x.UserName, StringComparison.CurrentCultureIgnoreCase) && !string.Equals("iedereen",
                             x.UserName, StringComparison.CurrentCultureIgnoreCase)).ToList();
                         var x0 = users.Count == 1 ? $"gebruiker" : "gebruikers";
@@ -506,26 +581,27 @@ namespace Forms
             {
                 var messages = chats ?? xchatpanel.Controls.Cast<ChatBubble>().ToList();
                 var xent = message;
-                bool isme = string.Equals(xent.Afzender.UserName, ProductieChat.Chat.UserName,
+                bool isme = string.Equals(xent.Afzender.UserName, Manager.ProductieChat.Chat.UserName,
                     StringComparison.CurrentCultureIgnoreCase);
-
+               
                 if (!isme && !xent.IsGelezen)
                 {
                     xent.IsGelezen = true;
+                    Manager.ProductieChat?.UpdateMessage(xent);
                     updated = true;
-                    xent.UpdateMessage();
                 }
-
                 var xmsg = isme ? CreateSendMessage(xent) : CreateRecieveMessage(xent);
                 var xold = messages.FirstOrDefault(x => x.Message.Equals(xent));
                 if (xold != null)
                 {
-                    xold.SetMessage(xmsg);
+                    xold.SetMessage(xmsg, updated);
                 }
                 else
                 {
+                    xchatpanel.SuspendLayout();
                     // 
                     xchatpanel.Controls.Add(xmsg);
+                    xchatpanel.ResumeLayout(false);
                     //xchatpanel.Controls.SetChildIndex(xmsg, i);
                     // 
                     added = true;
@@ -546,7 +622,7 @@ namespace Forms
         {
             try
             {
-                xchatpanel.SuspendLayout();
+               
                 if (selected != null && !selected.Equals(_selecteduser))
                 {
                     xchatpanel.Controls.Clear();
@@ -557,7 +633,9 @@ namespace Forms
                         .ToList();
                     if (toremove.Count > 0)
                     {
+                        xchatpanel.SuspendLayout();
                         toremove.ForEach(x => xchatpanel.Controls.Remove(x));
+                        xchatpanel.ResumeLayout(false);
                     }
                 }
                 
@@ -570,10 +648,10 @@ namespace Forms
                     var xent = entries[i];
                     UpdateMessage(xent, ref updated, ref added,false, xmessages);
                 }
-                xchatpanel.ResumeLayout(false);
+              
                 if (updated)
                 {
-                    selected?.Save();
+                    Manager.ProductieChat?.SaveGebruiker(selected);
                 }
 
                 if ((added || scroltoend) && xchatpanel.Controls.Count > 0)
@@ -614,12 +692,10 @@ namespace Forms
                         {
                             //load conversation
                             var messages =
-                                ProductieChat.GetConversation(selected, !string.IsNullOrEmpty(selected.UserName), DateTime.Now.Subtract(TimeSpan.FromDays(30)));
+                                Manager.ProductieChat.GetConversation(selected, !string.IsNullOrEmpty(selected.UserName), DateTime.Now.Subtract(TimeSpan.FromDays(30)));
                             if (this.Disposing || this.IsDisposed) return;
-                            ProductieChat.RaiseNewMessageEvent = false;
                             UpdateMessages(messages, scrolltoend, selected);
                             _selecteduser = selected;
-                            ProductieChat.RaiseNewMessageEvent = true;
                         }
                         else
                         {
@@ -645,7 +721,7 @@ namespace Forms
 
         private void SendMessage()
         {
-            if (ProductieChat.Chat == null || !ProductieChat.LoggedIn ||
+            if (Manager.ProductieChat.Chat == null || !Manager.ProductieChat.LoggedIn ||
                 string.IsNullOrEmpty(xchattextbox.Text.Trim()) ||
                 xchattextbox.Text.Trim().ToLower() == "typ bericht...")
             {
@@ -655,10 +731,10 @@ namespace Forms
             var selected = SelectedUser();
             if (selected == null) return;
             string ontvangers = string.IsNullOrEmpty(selected.UserName)
-                ? string.Join(";", ProductieChat.Gebruikers.Select(x => x.UserName))
+                ? string.Join(";", Manager.ProductieChat.Gebruikers.Select(x => x.UserName))
                 : selected.UserName;
             string xmessage = CheckProductieLinks(xchattextbox.Text.Trim().WrapText(100, "\n"));
-            var xent = ProductieChat.SendMessage(xmessage, ontvangers);
+            var xent = Manager.ProductieChat.SendMessage(xmessage, ontvangers);
             if (xent != null)
             {
                 var xmsg = CreateSendMessage(xent);
@@ -678,7 +754,7 @@ namespace Forms
 
         private void wijzigProfielFotoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ProductieChat.Chat == null || !ProductieChat.LoggedIn) return;
+            if (Manager.ProductieChat.Chat == null || !Manager.ProductieChat.LoggedIn) return;
             var ofd = new OpenFileDialog();
             ofd.Title = "Kies een profiel foto";
             ofd.Filter = "Alles|*.*|PNG|*.png|JPG|*.jpg";
@@ -694,7 +770,7 @@ namespace Forms
                 try
                 {
                     //Image.FromStream(new MemoryStream(File.ReadAllBytes(ofd.FileName)));
-                    if (!ProductieChat.ChangeProfielImage(ofd.FileName))
+                    if (!Manager.ProductieChat.ChangeProfielImage(ofd.FileName))
                     {
                         XMessageBox.Show(this, $"Het is niet gelukt om je profiel foto te wijzigen, probeer het later nog eens.",
                             "Ongeldige Afbeelding", MessageBoxIcon.Exclamation);

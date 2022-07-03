@@ -34,7 +34,7 @@ namespace Rpm.SqlLite
 
         public static event EventHandler CorruptedFilesChanged;
 
-        public MultipleFileDb(string path, bool watchdb, string version, DbType type)
+        public MultipleFileDb(string path, bool watchdb, string version, DbType type, string filter = "*.rpm")
         {
             //_FileChangedNotifyTimer = new Timer(1000);//500 ms vertraging
             //_FileChangedNotifyTimer.Elapsed += _FileChangedNotifyTimer_Elapsed;
@@ -44,7 +44,7 @@ namespace Rpm.SqlLite
             InitVersion(version, type);
             if (watchdb)
             {
-                _pathwatcher = new CustomFileWatcher(Path, "*.rpm");
+                _pathwatcher = new CustomFileWatcher(Path, filter);
                 _pathwatcher.FileChanged += _pathwatcher_Changed;
                 _pathwatcher.FileDeleted += _pathwatcher_Deleted;
             }
@@ -359,7 +359,7 @@ namespace Rpm.SqlLite
             //}
         }
 
-        public RpmPacket CreatePacketFromObject(object value)
+        public static RpmPacket CreatePacketFromObject(object value)
         {
             try
             {
@@ -438,13 +438,12 @@ namespace Rpm.SqlLite
             }
         }
 
-        public bool WriteInstanceToFile(object data, string filepath, bool raiseevent)
+        public static bool WriteInstanceToFile(object data, string filepath, bool raiseevent)
         {
             //lock (_locker)
             //{
             try
             {
-                if (!CanRead) return false;
                 if (string.IsNullOrEmpty(filepath)) return false;
                 //string tmp = Manager.TempPath + "\\" + System.IO.Path.GetRandomFileName();
                 byte[] bytes;

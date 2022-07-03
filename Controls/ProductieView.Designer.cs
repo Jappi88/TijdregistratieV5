@@ -120,6 +120,7 @@ namespace Controls
             this.tileMainView1 = new Controls.TileView.TileMainView();
             this.takenManager1 = new Controls.TakenManager();
             this.mainMenu1 = new Controls.MainMenu();
+            this.xViewPanel = new System.Windows.Forms.Panel();
             this.panel6.SuspendLayout();
             this.xToolButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -127,6 +128,7 @@ namespace Controls
             this.xspeciaalroosterlabel.SuspendLayout();
             this.metroCustomTabControl1.SuspendLayout();
             this.metroTabPage5.SuspendLayout();
+            this.xViewPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -928,7 +930,7 @@ namespace Controls
             this.metroCustomTabControl1.FirstPageImage = ((System.Drawing.Image)(resources.GetObject("metroCustomTabControl1.FirstPageImage")));
             this.metroCustomTabControl1.FontWeight = MetroFramework.MetroTabControlWeight.Regular;
             this.metroCustomTabControl1.HotTrack = true;
-            this.metroCustomTabControl1.Location = new System.Drawing.Point(40, 88);
+            this.metroCustomTabControl1.Location = new System.Drawing.Point(0, 0);
             this.metroCustomTabControl1.Name = "metroCustomTabControl1";
             this.metroCustomTabControl1.SelectedIndex = 0;
             this.metroCustomTabControl1.ShowCloseButton = true;
@@ -1211,12 +1213,21 @@ namespace Controls
             this.mainMenu1.TabIndex = 27;
             this.mainMenu1.OnMenuClick += new System.EventHandler(this.mainMenu1_OnMenuClick);
             // 
+            // xViewPanel
+            // 
+            this.xViewPanel.Controls.Add(this.metroCustomTabControl1);
+            this.xViewPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xViewPanel.Location = new System.Drawing.Point(40, 88);
+            this.xViewPanel.Name = "xViewPanel";
+            this.xViewPanel.Size = new System.Drawing.Size(1189, 494);
+            this.xViewPanel.TabIndex = 31;
+            // 
             // ProductieView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.metroCustomTabControl1);
+            this.Controls.Add(this.xViewPanel);
             this.Controls.Add(this.takenManager1);
             this.Controls.Add(this.mainMenu1);
             this.Controls.Add(this.xspeciaalroosterlabel);
@@ -1233,6 +1244,7 @@ namespace Controls
             this.xspeciaalroosterlabel.ResumeLayout(false);
             this.metroCustomTabControl1.ResumeLayout(false);
             this.metroTabPage5.ResumeLayout(false);
+            this.xViewPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1306,5 +1318,6 @@ namespace Controls
         private ToolStripButton xBijlagesButton;
         private ToolStripButton xOptimalVerbruik;
         private ToolStripButton xActiviteit;
+        private Panel xViewPanel;
     }
 }

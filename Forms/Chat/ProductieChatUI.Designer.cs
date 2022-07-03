@@ -230,7 +230,7 @@
             this.wijzigProfielFotoToolStripMenuItem.BackColor = System.Drawing.Color.AliceBlue;
             this.wijzigProfielFotoToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.profile_picture_32x32;
             this.wijzigProfielFotoToolStripMenuItem.Name = "wijzigProfielFotoToolStripMenuItem";
-            this.wijzigProfielFotoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.wijzigProfielFotoToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.wijzigProfielFotoToolStripMenuItem.Text = "Wijzig Profiel Foto";
             this.wijzigProfielFotoToolStripMenuItem.Click += new System.EventHandler(this.wijzigProfielFotoToolStripMenuItem_Click);
             // 
@@ -314,9 +314,9 @@
             this.xsendbutton.FlatAppearance.BorderSize = 0;
             this.xsendbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xsendbutton.Image = global::ProductieManager.Properties.Resources.ic_send_128_28719;
-            this.xsendbutton.Location = new System.Drawing.Point(529, 0);
+            this.xsendbutton.Location = new System.Drawing.Point(527, 0);
             this.xsendbutton.Name = "xsendbutton";
-            this.xsendbutton.Size = new System.Drawing.Size(32, 57);
+            this.xsendbutton.Size = new System.Drawing.Size(34, 57);
             this.xsendbutton.TabIndex = 5;
             this.toolTip1.SetToolTip(this.xsendbutton, "Verzend bericht...");
             this.xsendbutton.UseVisualStyleBackColor = false;
@@ -334,7 +334,7 @@
             this.xchattextbox.MinimumSize = new System.Drawing.Size(4, 30);
             this.xchattextbox.Multiline = true;
             this.xchattextbox.Name = "xchattextbox";
-            this.xchattextbox.Size = new System.Drawing.Size(529, 57);
+            this.xchattextbox.Size = new System.Drawing.Size(527, 57);
             this.xchattextbox.TabIndex = 4;
             this.xchattextbox.Text = "Typ bericht...";
             this.toolTip1.SetToolTip(this.xchattextbox, "Type in een bericht...");

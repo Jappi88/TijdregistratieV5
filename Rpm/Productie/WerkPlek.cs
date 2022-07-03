@@ -133,6 +133,44 @@ namespace Rpm.Productie
             } 
         }
 
+        public DateTime VerwachtDatumGereed()
+        {
+            return VerwachtDatumGereed(DateTime.Now, Personen.Count(x => x.Actief), false, out _);
+        }
+
+        public DateTime VerwachtDatumGereed(DateTime start, int aantalpers, bool ombouwtijd, out bool omgebouwd)
+        {
+            omgebouwd = false;
+            var xdate = new DateTime();
+            try
+            {
+                var bw = Werk;
+                if (bw == null) return default;
+                if (bw.State == ProductieState.Gereed) return bw.DatumGereed;
+                if (aantalpers == 0)
+                    aantalpers = Personen.Count(x=> x.Actief);
+                if (aantalpers == 0)
+                    aantalpers = 1;
+                var tijd = bw.GetTijdOver(aantalpers);
+                var rooster = Tijden.WerkRooster;
+            
+                if (bw.TotaalGemaakt >= Aantal || tijd is 0 or Double.NaN || double.IsInfinity(tijd))
+                    return Werktijd.EerstVolgendeWerkdag(DateTime.Now, ref rooster, rooster,
+                        Tijden.SpecialeRoosters);
+                var x = Werktijd.DatumNaTijd(start, TimeSpan.FromHours(tijd),
+                       Tijden.WerkRooster, Tijden?.SpecialeRoosters);
+                if (ombouwtijd && IsActief() && Storingen != null && Storingen.Any(x => x.IsVerholpen && x.StoringType != null && x.StoringType.ToLower().Contains("ombouw")))
+                {
+                    x = Werktijd.DatumNaTijd(x, TimeSpan.FromHours(bw.InstelTijd), rooster, Tijden.SpecialeRoosters);
+                    omgebouwd = true;
+                }
+                if (xdate.IsDefault() || x < xdate)
+                    xdate = x;
+            }
+            catch { }
+            return xdate;
+        }
+
         public int GetAantalGemaakt(DateTime start, DateTime stop,ref double tijd ,bool predict)
         {
            

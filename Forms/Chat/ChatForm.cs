@@ -13,7 +13,7 @@ namespace Forms
 
         public void Show(IWin32Window owner, string username = null)
         {
-            productieChatUI1._Selected = username;
+            productieChatUI1.SetSelected(username);
             base.Show(owner);
         }
 

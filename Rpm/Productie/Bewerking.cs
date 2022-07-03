@@ -1199,39 +1199,29 @@ namespace Rpm.Productie
 
         public DateTime VerwachtDatumGereed(DateTime startop, int aantalpers, bool ombouwtijd)
         {
-            var xdate = DateTime.Now;
+            var xdate = new DateTime();
             try
             {
                 if (State == ProductieState.Gereed) return DatumGereed;
-                var tijd = GetTijdOver(aantalpers);
-                //tijd /= GetPersoneel().AantalPersTijdMultiplier();
-                var xstart = startop;
-                var rooster = Manager.Opties?.GetWerkRooster();
-                if (TotaalGemaakt >= Aantal || tijd is 0 or Double.NaN || double.IsInfinity(tijd))
-                    return Werktijd.EerstVolgendeWerkdag(DateTime.Now, ref rooster, rooster,
-                        Manager.Opties?.SpecialeRoosters);
-
-
-                xdate = Werktijd.DatumNaTijd(xstart, TimeSpan.FromHours(tijd), rooster, null);
-                bool omgebouwd = false;
-                var rs = new List<Rooster>();
-                foreach (var wp in WerkPlekken)
+              
+                if(WerkPlekken.Count == 0)
                 {
-                    var x = Werktijd.DatumNaTijd(xstart, TimeSpan.FromHours(tijd),
-                        wp.Tijden.WerkRooster, wp.Tijden?.SpecialeRoosters);
-                    if(wp.Tijden?.SpecialeRoosters != null)
-                    {
-                        var add = wp.Tijden.SpecialeRoosters.Where(x => !rs.Any(r => r.Vanaf.Date == x.Vanaf.Date)).ToList();
-                        if (add.Count > 0)
-                            rs.AddRange(add);
-                    }
-                    if (x < xdate)
-                        xdate = x;
-                    if (wp.IsActief() && wp.Storingen != null && wp.Storingen.Any(x => x.IsVerholpen && x.StoringType != null && x.StoringType.ToLower().Contains("ombouw")))
-                        omgebouwd = true;
+                    if (TotaalGemaakt >= Aantal) return Werktijd.EerstVolgendeWerkdag(DateTime.Now);
+                    var tijd = GetTijdOver(aantalpers);
+                    if (ombouwtijd && tijd > 0)
+                        tijd += InstelTijd;
+                    return Werktijd.DatumNaTijd(startop, TimeSpan.FromHours(tijd), null, null);
                 }
-                if (ombouwtijd && !omgebouwd && InstelTijd > 0)
-                    xdate = Werktijd.DatumNaTijd(xdate,TimeSpan.FromHours(InstelTijd),null,rs);
+                for(int i = 0; i < WerkPlekken.Count;i++)
+                {
+                    var wp = WerkPlekken[i];
+                    var date = wp.VerwachtDatumGereed(startop, aantalpers, ombouwtijd, out bool omgebouwd);
+                    if (omgebouwd)
+                        ombouwtijd = false;
+                    if (xdate.IsDefault() || date < xdate)
+                        xdate = date;
+
+                }
             }
             catch(Exception e)
             {

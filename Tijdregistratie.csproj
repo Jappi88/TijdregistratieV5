@@ -63,7 +63,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -224,6 +224,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Drawing.Common, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Drawing.Common.6.0.0\lib\net461\System.Drawing.Common.dll</HintPath>
     </Reference>
@@ -296,6 +297,12 @@
     </Compile>
     <Compile Include="Controls\CustomObjectListview.Designer.cs">
       <DependentUpon>CustomObjectListview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Chat\NewMessageUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Chat\NewMessageUI.Designer.cs">
+      <DependentUpon>NewMessageUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Materiaal\NewMateriaalForm.cs">
       <SubType>Form</SubType>
@@ -1592,6 +1599,9 @@
     <EmbeddedResource Include="Controls\CustomObjectListview.resx">
       <DependentUpon>CustomObjectListview.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Chat\NewMessageUI.resx">
+      <DependentUpon>NewMessageUI.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Materiaal\NewMateriaalForm.resx">
       <DependentUpon>NewMateriaalForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -2285,6 +2295,13 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\uparrow.png" />
+    <None Include="Resources\ThumbTop.png" />
+    <None Include="Resources\ThumbSpanTop.png" />
+    <None Include="Resources\ThumbSpanBottom.png" />
+    <None Include="Resources\ThumbMiddle.png" />
+    <None Include="Resources\ThumbBottom.png" />
+    <None Include="Resources\downarrow.png" />
     <None Include="Resources\print_Doc_32x32.png" />
     <None Include="Resources\calculate_office_icon_32x321.png" />
     <None Include="Resources\businessapplication_binarytree_32x32.png" />

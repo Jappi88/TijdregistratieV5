@@ -30,6 +30,7 @@ namespace Forms
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WerkplaatsIndelingUI));
             this.panel1 = new System.Windows.Forms.Panel();
             this.xWerkplaatsIndelingPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -58,7 +59,7 @@ namespace Forms
             this.panel1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(490, 631);
+            this.panel1.Size = new System.Drawing.Size(475, 631);
             this.panel1.TabIndex = 0;
             // 
             // xWerkplaatsIndelingPanel
@@ -70,7 +71,7 @@ namespace Forms
             this.xWerkplaatsIndelingPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.xWerkplaatsIndelingPanel.Location = new System.Drawing.Point(0, 39);
             this.xWerkplaatsIndelingPanel.Name = "xWerkplaatsIndelingPanel";
-            this.xWerkplaatsIndelingPanel.Size = new System.Drawing.Size(490, 592);
+            this.xWerkplaatsIndelingPanel.Size = new System.Drawing.Size(475, 592);
             this.xWerkplaatsIndelingPanel.TabIndex = 2;
             this.xWerkplaatsIndelingPanel.WrapContents = false;
             this.xWerkplaatsIndelingPanel.Click += new System.EventHandler(this.xWerkplaatsIndelingPanel_Click);
@@ -89,7 +90,7 @@ namespace Forms
             this.xreset});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(490, 39);
+            this.toolStrip1.Size = new System.Drawing.Size(475, 39);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -159,7 +160,7 @@ namespace Forms
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.panel1);
-            this.splitContainer1.Panel1MinSize = 490;
+            this.splitContainer1.Panel1MinSize = 190;
             // 
             // splitContainer1.Panel2
             // 
@@ -192,7 +193,7 @@ namespace Forms
             this.productieListControl1.Name = "productieListControl1";
             this.productieListControl1.SelectedItem = null;
             this.productieListControl1.ShowWaitUI = true;
-            this.productieListControl1.Size = new System.Drawing.Size(655, 591);
+            this.productieListControl1.Size = new System.Drawing.Size(670, 591);
             this.productieListControl1.TabIndex = 0;
             this.productieListControl1.ValidHandler = null;
             // 
@@ -206,7 +207,7 @@ namespace Forms
             this.xGeselecteerdeGebruikerLabel.IsSelectionEnabled = false;
             this.xGeselecteerdeGebruikerLabel.Location = new System.Drawing.Point(0, 0);
             this.xGeselecteerdeGebruikerLabel.Name = "xGeselecteerdeGebruikerLabel";
-            this.xGeselecteerdeGebruikerLabel.Size = new System.Drawing.Size(655, 40);
+            this.xGeselecteerdeGebruikerLabel.Size = new System.Drawing.Size(670, 40);
             this.xGeselecteerdeGebruikerLabel.TabIndex = 2;
             this.xGeselecteerdeGebruikerLabel.Text = "htmlLabel1";
             // 

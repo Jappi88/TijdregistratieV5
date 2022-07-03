@@ -54,7 +54,7 @@ namespace Rpm.Misc
 
         #region Productie Formulieren
 
-        public static DateTime BerekenLeverDatums(this List<IProductieBase> producties, bool updatevalue, bool save, bool showmessage, ProgressArg arg = null)
+        public static DateTime BerekenLeverDatums(this List<IProductieBase> producties, bool updatevalue, bool save, bool raiseevent, ProgressArg arg = null)
         {
             if (producties is { Count: 0 }) return DateTime.Now;
             var prods = new List<IProductieBase>();
@@ -73,21 +73,34 @@ namespace Rpm.Misc
                     var p = prods[i];
                     var old = p.BerekentLeverDatum;
                     ombouw = false;
+                    bool xup = false;
                     if (i > 0)
                     {
                         var xlast = prods[i - 1].ArtikelNr.ToUpper().Replace("ZW","");
                         ombouw = !string.Equals(xlast, p.ArtikelNr.ToUpper().Replace("ZW", ""), StringComparison.CurrentCultureIgnoreCase);
+                        xup = true;
                     }
                     var newdate = lastdate.IsDefault() ? p.GetVerwachtLeverDatum() : p.GetVerwachtLeverDatum(lastdate, p.GetPersonen(true).Length, ombouw);
-                    if (updatevalue)
+                    if (updatevalue && newdate != p.BerekentLeverDatum)
+                    {
                         p.BerekentLeverDatum = newdate;
+                    }
                     var flag = old.IsDefault() || !new TijdEntry(old.Subtract(TimeSpan.FromMinutes(5)), old.AddMinutes(5)).ContainsDate(newdate);
+                   
                     if (flag && updatevalue)
                     {
                         var log = $"[{p.Path}, {p.ArtikelNr}] {p.Omschrijving}\n\n" +
                             $"Berekent datum geupdate naar {newdate.ToString("f")}";
                         log = null;
-                        p.Update(log, save, true, showmessage);
+                        var werk = Werk.FromPath(p.Path);
+                        if(raiseevent && werk.Bewerking != null)
+                        {
+                            werk.Bewerking.BerekentLeverDatum = newdate;
+                            werk.Formulier.Update("", save, true, false);
+                            xup = false;
+                           // Manager.Database.xUpSert(werk.Formulier, "", false);
+                        }
+                        //p.Update(log, save, true, showmessage);
                     }
                     lastdate = newdate;
                     arg.Current++;

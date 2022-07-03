@@ -106,7 +106,7 @@ namespace Forms
                     if (selected == null || !selected.Equals(xsel))
                     {
                         var xnewbw = formulier?.Bewerkingen.FirstOrDefault(x => x.Equals(xsel));
-                        if(xnewbw.State == ProductieState.Gereed && xsel.State != ProductieState.Gereed)
+                        if(xnewbw != null && xnewbw.State == ProductieState.Gereed && xsel.State != ProductieState.Gereed)
                             selected = bws.FirstOrDefault(x => x.State != ProductieState.Gereed);
                     }
                 }

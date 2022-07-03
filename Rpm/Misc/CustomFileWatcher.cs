@@ -84,8 +84,9 @@ namespace ProductieManager.Rpm.Misc
                             OnFileChanged(new FileSystemEventArgs(WatcherChangeTypes.Changed, fi.DirectoryName, fi.Name));
                     }
                 }
-                else
+                else if(fi.Exists)
                 {
+
                     lock (Records)
                     {
                         Records.Add(file, time);
@@ -120,6 +121,7 @@ namespace ProductieManager.Rpm.Misc
                 for (int i = 0; i < xdeletes.Count; i++)
                 {
                     var xrec = xdeletes[i];
+                    if (File.Exists(xrec)) continue;
                     lock (Records)
                     {
                         Records.Remove(xrec);

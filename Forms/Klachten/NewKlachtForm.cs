@@ -109,9 +109,9 @@ namespace Forms.Klachten
         {
             ClearOntvangers();
 
-            if (ProductieChat.Gebruikers != null)
+            if (Manager.ProductieChat?.Gebruikers != null)
             {
-                var xclients = ProductieChat.Gebruikers.OrderBy(x => x.UserName).Select(x=> x.UserName);
+                var xclients = Manager.ProductieChat.Gebruikers.OrderBy(x => x.UserName).Select(x=> x.UserName);
                 foreach (var client in xclients)
                 {
                     var item = new ToolStripMenuItem(client, Resources.user_customer_person_32x32);

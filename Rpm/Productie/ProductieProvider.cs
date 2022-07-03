@@ -332,10 +332,6 @@ namespace ProductieManager.Rpm.Productie
                                         SecondaryManageType.Read
                                     });
                                 break;
-                            case DbType.Messages:
-                                localproductiepath = path2 + $"\\Chat";
-                                remoteproductiepath = path1 + $"\\Chat";
-                                break;
                             case DbType.Opmerkingen:
                                 localproductiepath = path2 + $"\\Opmerkingen";
                                 remoteproductiepath = path1 + $"\\Opmerkingen";

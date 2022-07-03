@@ -43,16 +43,25 @@ namespace ProductieManager.Forms.Chat
             }
         }
 
-        public void SetMessage(ChatBubble message)
+        public void SetMessage(ChatBubble message, bool update)
         {
             try
             {
                 if (message == null) return;
+                bool flag = Message == null || update;
                 Message = message.Message;
+                if(ProfileImage.Tag is bool online)
+                {
+                    if (message.ProfileImage.Tag is bool xonline)
+                        flag |= xonline != online;
+                }
                 ProfileImage = message.ProfileImage;
-                this.Text = message.Text;
-                this.Size = Message.Bericht.MeasureString(this.Font, new Size(350, 500));
-                this.Invalidate();
+                if (flag || !string.Equals(this.Text, message.Text, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    this.Text = message.Text;
+                    this.Size = Message.Bericht.MeasureString(this.Font, new Size(350, 500));
+                    this.Invalidate();
+                }
             }
             catch (Exception e)
             {

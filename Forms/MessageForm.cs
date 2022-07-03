@@ -93,6 +93,15 @@ namespace Forms
             string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null,
             Image customImage = null, MetroColorStyle style = MetroColorStyle.Default)
         {
+            InitFields(owner, message, title, buttons, icon, chooseitems, custombuttons, customImage, style);
+            return base.ShowDialog(owner);
+        }
+
+        public void InitFields(IWin32Window owner, string message, string title, MessageBoxButtons buttons,
+            MessageBoxIcon icon,
+            string[] chooseitems = null, Dictionary<string, DialogResult> custombuttons = null,
+            Image customImage = null, MetroColorStyle style = MetroColorStyle.Default)
+        {
             _CustomImage = customImage != null;
             Text = title;
             xmessage.Text = message;
@@ -100,10 +109,10 @@ namespace Forms
             var textheight = TextRenderer.MeasureText(xmessage.Text, xmessage.Font, maxSize).Height;
             Height = textheight + 200;
             MinimumSize = new Size(this.Width, this.Height);
-            owner = ((Control)owner)?.FindForm()?? owner;
+            owner = ((Control)owner)?.FindForm() ?? owner;
             if (owner is Form f && f.Parent != null)
                 owner = f.ParentForm;
-            if (custombuttons is {Count: > 0})
+            if (custombuttons is { Count: > 0 })
             {
                 var done = 0;
                 foreach (var cust in custombuttons)
@@ -264,10 +273,10 @@ namespace Forms
             if (style != MetroColorStyle.Default)
                 this.Style = style;
             xchooser.Items.Clear();
-            xchooserpanel.Visible = chooseitems is {Length: > 0};
-            if (chooseitems is {Length: > 0})
+            xchooserpanel.Visible = chooseitems is { Length: > 0 };
+            if (chooseitems is { Length: > 0 })
             {
-                xchooser.Items.AddRange(chooseitems.Select(x => (object) x).ToArray());
+                xchooser.Items.AddRange(chooseitems.Select(x => (object)x).ToArray());
                 if (xchooser.Items.Count > 0)
                     xchooser.SelectedIndex = 0;
                 Height += 50;
@@ -276,16 +285,15 @@ namespace Forms
             if (OwnerForm != null)
             {
                 //Width = form.Width;
-               // this.StartPosition = FormStartPosition.Manual;
+                // this.StartPosition = FormStartPosition.Manual;
                 //this.Location = new Point((OwnerForm.Location.X + OwnerForm.Width / 2), (OwnerForm.Location.Y + OwnerForm.Height / 2));
                 BackColor = OwnerForm.BackColor;
             }
-            
+
             TopMost = true;
             ShowInTaskbar = false;
             this.Invalidate();
             BringToFront();
-            return base.ShowDialog(owner);
         }
 
         private void xmessageicon_DoubleClick(object sender, EventArgs e)
@@ -304,6 +312,13 @@ namespace Forms
                     Console.WriteLine(ex.Message);
                 }
             }
+        }
+
+        public event EventHandler DialogButtonPressed;
+
+        protected virtual void OnDialogButtonPressed(object sender,EventArgs e)
+        {
+            DialogButtonPressed?.Invoke(sender, e);
         }
     }
 }

@@ -522,6 +522,11 @@ namespace Rpm.SqlLite
             return UpSert(form.ProductieNr, form, change, showmessage, onlylocal);
         }
 
+        public bool xUpSert(ProductieFormulier form, string change, bool showmessage = true, bool onlylocal = false)
+        {
+            return xUpSert(form.ProductieNr, form, change, showmessage, onlylocal);
+        }
+
         public Task<bool> UpSert(ProductieFormulier form, bool showmessage = true, bool onlylocal = false, string change = null)
         {
             return UpSert(form.ProductieNr, form, change ?? $"[{form.ArtikelNr}|{form.ProductieNr}] ProductieFormulier Update",

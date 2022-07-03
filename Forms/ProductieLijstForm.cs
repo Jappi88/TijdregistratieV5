@@ -39,6 +39,14 @@ namespace Forms
             UpdateListName();
         }
 
+        public ProductieLijstForm(int index, List<Bewerking> bewerkingen) : this()
+        {
+            _ListIndex = index;
+            productieListControl1.ListName = $"[{_ListIndex}]ProductieLijst";
+            _bewerkingen = bewerkingen;
+            UpdateListName();
+        }
+
         public bool IsValidHandler(object value, string filter, bool tempfilter = false)
         {
             if (value is Bewerking bew)

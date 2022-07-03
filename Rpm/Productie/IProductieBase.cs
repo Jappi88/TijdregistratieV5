@@ -931,9 +931,7 @@ Color textcolor, bool useimage)
                   $"</td>";
             var xcolor = GetProductSoortColor(ProductSoort);
             var xrgb = $"rgb({xcolor.R}, {xcolor.G}, {xcolor.B})'";
-            string prodsoort = string.IsNullOrEmpty(ProductSoort)
-                ? ""
-                : $"<span color='{xrgb}'>[{ProductSoort}]</span><span color='purple'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>";
+            string prodsoort = (string.IsNullOrEmpty(ProductSoort) ? "" : $"<span color='{xrgb}'>[{ProductSoort}] </span>") + $"<span color='purple'>ArtikelNr: {ArtikelNr}, ProductieNr: {ProductieNr}</span>";
             var ratio = Math.Round(ControleRatio,2);
             var startop = StartOp;
             var gestartop = TijdGestart;
@@ -950,7 +948,7 @@ Color textcolor, bool useimage)
                 for(int i = 0; i < wps.Count; i++)
                 {
                     var wp = wps[i];
-                    if (!wp.IsActief()) continue;
+                    //if (!wp.IsActief()) continue;
                     var rs = wp.Tijden?.WerkRooster;
                     var sp = wp.Tijden.SpecialeRoosters?.FirstOrDefault(x => x.Vanaf.Date == DateTime.Today);
                     if (sp != null)
@@ -968,7 +966,7 @@ Color textcolor, bool useimage)
                             rstitle = "Nationale Feestdag, vul in een speciale rooster om tijd te meten";
                         }
                     }
-                
+                    var x1 = wp.IsActief() ? "Actief" : "InActief";
                     var wptitle = $"{wp.Naam} ({rstitle}).<br>";
                         // wptitle += $"<ul><li>Werkt van {rs.StartWerkdag.ToString(@"hh\:mm")} tot {rs.EindWerkdag.ToString(@"hh\:mm")} uur{xp}.</li>";
                         //wptitle += $"<ul><li>Tijd Gewerkt: <u>{wp.TijdGewerkt}</u> / {Math.Round(DoorloopTijd, 2)} uur <span style = 'color:{GetPositiveColorByPercentage((decimal)wp.GetTijdGewerktPercentage()).Name}'>({wp.GetTijdGewerktPercentage()}%)</span></li>";
@@ -976,9 +974,9 @@ Color textcolor, bool useimage)
                         //wptitle += $"<li>Gemaakt: <u>{wp.TotaalGemaakt}</u> / {Aantal} <span style = 'color: {GetPositiveColorByPercentage((decimal)wp.GetGereedPercentage()).Name}'>({wp.GetGereedPercentage()}%)</span></li></ul>";
                     xwpsinfo += wptitle;
                 }
-                var color = GetProductSoortColor(ProductSoort);
                 xwpsinfo = $"<p color='purple'>{xwpsinfo}</p>";
             }
+           
             if (!useimage) ximage = "";
             var xreturn = $"<html>\r\n" +
                           $"<head>\r\n" +

@@ -997,10 +997,10 @@ namespace Controls
         {
             try
             {
-                if (InvokeRequired)
-                    Invoke(new MethodInvoker(() => { UpdateProductieList(reload, showwaitui, firstselect); }));
-                else
-                {
+                //if (InvokeRequired)
+                //    Invoke(new MethodInvoker(() => { UpdateProductieList(reload, showwaitui, firstselect); }));
+                //else
+                //{
                     if (Manager.Opties == null || !CanLoad || _loadingproductielist) return;
                     try
                     {
@@ -1077,7 +1077,7 @@ namespace Controls
                         _loadingproductielist = false;
                         StopWait();
                     }
-                }
+               // }
             }
             catch (Exception e)
             {
@@ -1306,7 +1306,12 @@ namespace Controls
                 var xbewerkingen = bewerkingen ?? Bewerkingen;//ProductieLijst.Objects?.Cast<Bewerking>().ToList();
                 states ??= GetCurrentViewStates();
                 // bool checkall = xbewerkingen != null && !xbewerkingen.Any(x=> string.Equals(x.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase));
-
+                var xbws = xbewerkingen.GetRange(0, xbewerkingen.Count).Where(x => string.Equals(x.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                foreach(var xb in xbws)
+                {
+                    if (!form.Bewerkingen.Any(x => string.Equals(x.Naam, xb.Naam, StringComparison.CurrentCultureIgnoreCase)))
+                        Bewerkingen.Remove(xb);
+                }
                 if (form?.Bewerkingen != null && form.Bewerkingen.Length > 0)
                 {
                     for (int i = 0; i < form?.Bewerkingen.Length; i++)
@@ -1466,6 +1471,23 @@ namespace Controls
             }
             //}
             return xret;
+        }
+
+        public bool UpdateBewerking(Bewerking bew)
+        {
+            try
+            {
+                var index = Bewerkingen.IndexOf(bew);
+                if (index > -1)
+                {
+                    Bewerkingen[index] = bew;
+                    if (ProductieLijst.IndexOf(bew) > -1)
+                        ProductieLijst.RefreshObject(bew);
+                    return true;
+                }
+                return false;
+            }
+            catch { return false; }
         }
 
         public void UpdateForm(ProductieFormulier form, ViewState[] states, ref int index, bool refresh)
@@ -3656,7 +3678,7 @@ namespace Controls
             var loading = new LoadingForm();
             loading.CloseIfFinished = true;
             loading.ShowDialogAsync(this.ParentForm);
-            var d = prods.BerekenLeverDatums(true, true, false, loading.Arg);
+            var d = prods.BerekenLeverDatums(true, true, true, loading.Arg);
             if (!d.IsDefault())
             {
                 x1 = loading.Arg.Current == 1 ? " productie" : " producties";

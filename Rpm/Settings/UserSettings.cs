@@ -45,6 +45,7 @@ namespace Rpm.Settings
         public List<string> WerkplaatsIndeling { get=> new List<string>(); set => SetWerkplaatsIndelingen(value); }
         public List<WerkplaatsSettings> WerkplaatsIndelingen { get; set; }
         public int TileCountRefreshRate { get; set; } = 30000;
+        public bool AllowTileCount { get; set; } = true;
         public int TileViewBackgroundColorRGB { get; set; } = Color.White.ToArgb();
         public List<TileInfoEntry> TileLayout { get; set; }
         public List<GroupInfoEntry> GroupEntries { get; set; } = new List<GroupInfoEntry>();

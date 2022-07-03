@@ -42,7 +42,7 @@ namespace Controls
             _timer = new System.Timers.Timer();
             _timer.Interval = TileInfoRefresInterval;
             _timer.Elapsed += _timer_Elapsed;
-            _timer.Enabled = false;
+            _timer.Enabled = true;
         }
 
         public void StartTimer(bool update)
@@ -50,7 +50,11 @@ namespace Controls
             if (_syncing) return;
             if (update)
                 UpdateTilesCount();
-            else _timer.Start();
+            else
+            {
+                _timer.Stop();
+                _timer.Start();
+            }
         }
 
         public void StopTimer()
@@ -92,7 +96,7 @@ namespace Controls
                                 xtile = GetTile(entry);
                             if (xtile != null)
                             {
-                                var xupdate = OnTileRequestInfo(xtile);
+                                var xupdate = Manager.Opties is { AllowTileCount: true } ? OnTileRequestInfo(xtile) : null;
                                 if (xupdate != null)
                                 {
                                     if (this.InvokeRequired)
@@ -118,7 +122,8 @@ namespace Controls
                     Console.WriteLine(exception);
                 }
                 _syncing = false;
-                StartTimer(false);
+                if (Manager.Opties is { AllowTileCount: true })
+                    StartTimer(false);
             });
         }
 
@@ -187,6 +192,11 @@ namespace Controls
                         Controls.SetChildIndex(x, ent.TileIndex);
                 });
                 UpdateSize();
+                if (Manager.Opties is { AllowTileCount: true })
+                {
+                    StartTimer(false);
+                }
+                else StopTimer();
             }
             catch (Exception e)
             {

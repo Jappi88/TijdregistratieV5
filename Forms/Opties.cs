@@ -148,7 +148,7 @@ namespace Forms
             xmeldingBijlage.Checked = x.ToonNieweBijlageMelding;
             xmeldingtoon.Checked = x.SpeelMeldingToonAf;
             xtilesrefresh.SetValue(x.TileCountRefreshRate);
-
+            xtileTelling.Checked = x.AllowTileCount;
             //weergave producties
             xniewaantaluur.SetValue((decimal)x.NieuwTijd);
 
@@ -428,6 +428,7 @@ namespace Forms
             xs.SyncInterval = (int)xsyncinterval.Value;
 
             xs.TileCountRefreshRate = (int)xtilesrefresh.Value;
+            xs.AllowTileCount = xtileTelling.Checked;
 
             xs.ShowDaylyMessage = xtoondayli.Checked;
 

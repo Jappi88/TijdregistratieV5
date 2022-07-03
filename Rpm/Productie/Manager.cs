@@ -269,7 +269,7 @@ namespace Rpm.Productie
                         NotificationEnabled = false
                     }; 
                     Database.LoadMultiFiles();
-                    ProductieChat = new ProductieChat();
+                    ProductieChat = new ProductieChat(Path.Combine(DbPath, "Chat"));
                     ProductieProvider = new ProductieProvider();
                     ProductieProvider.InitEvents();
                     // LocalConnection = new LocalService();
@@ -1002,8 +1002,8 @@ namespace Rpm.Productie
                             $"[{xprod.ArtikelNr}, {xprod.ProductieNr}] geupdate!", false))
                         {
                             return new RemoteMessage(
-                                $"Productie [{prod.ProductieNr}, {prod.ArtikelNr}] geupdate!",
-                                MessageAction.ProductieWijziging, MsgType.Info, null, prod,
+                                $"Productie [{prod.ProductieNr}, {prod.ArtikelNr}] Bestaat al, maar is wel geupdate!",
+                                MessageAction.ProductieWijziging, MsgType.Waarschuwing, null, prod,
                                 prod.ProductieNr);
                         }
                         else
@@ -1220,16 +1220,11 @@ namespace Rpm.Productie
                             {
                                 try
                                 {
-                                    if (delete)
+                                    File.Copy(pdffile, fpath, true);
+                                    if (delete && File.Exists(pdffile))
                                     {
-
-                                        if (File.Exists(fpath))
-                                            File.Delete(pdffile);
-                                        else
-                                            File.Move(pdffile, fpath);
+                                        File.Delete(pdffile);
                                     }
-                                    else
-                                        File.Copy(pdffile, fpath, true);
 
                                     if (File.Exists(fpath)) break;
                                 }

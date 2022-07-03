@@ -295,8 +295,8 @@ namespace Controls.TileView
                         entry.TileCount = Manager.Opties?.Filters?.Count ?? 0;
                         break;
                     case "xchat":
-                        entry.TileCount = ProductieChat.Gebruikers?.Count(x=> x.IsOnline && x.UserName.ToLower() != "iedereen")??0;
-                        var xunread = ProductieChat.Chat?.GetAllUnreadMessages().Count ?? 0;
+                        entry.TileCount = Manager.ProductieChat?.Gebruikers?.Count(x=> x.IsOnline && x.UserName.ToLower() != "iedereen")??0;
+                        var xunread = Manager.ProductieChat?.GetAllUnreadMessages().Count ?? 0;
                         if (xunread > 0)
                         {
                             var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White,
