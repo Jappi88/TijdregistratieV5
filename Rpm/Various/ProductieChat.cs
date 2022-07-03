@@ -73,7 +73,7 @@ namespace ProductieManager.Rpm.Various
                 try
                 {
                     if (File.Exists(user))
-                        Chat = File.ReadAllBytes(user).DeSerialize<UserChat>() ?? new UserChat();
+                        Chat = MultipleFileDb.xFromPath<UserChat>(user, false) ?? new UserChat();
                     else Chat = new UserChat();
                 }
                 catch (Exception e)

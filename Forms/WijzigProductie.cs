@@ -13,15 +13,15 @@ namespace Forms
     public partial class WijzigProductie : Forms.MetroBase.MetroBaseForm
     {
         private readonly bool editmode;
-        
+
         internal string[] prods = { };
 
         public WijzigProductie()
         {
             InitializeComponent();
             Formulier = new ProductieFormulier();
-            objectEditorUI1.ExcludeItems.AddRange(new[] {"state","naam" });
-            ((OLVColumn) xbewerkinglijst.Columns[0]).ImageGetter = sender => 0;
+            objectEditorUI1.ExcludeItems.AddRange(new[] { "state", "naam" });
+            ((OLVColumn)xbewerkinglijst.Columns[0]).ImageGetter = sender => 0;
             metroTabControl1.SelectedIndex = 0;
         }
 
@@ -32,8 +32,8 @@ namespace Forms
             InitializeComponent();
             Formulier = form;
             editmode = true;
-            objectEditorUI1.ExcludeItems.AddRange(new[] { "productienr", "artikelnr","state","naam" });
-            ((OLVColumn) xbewerkinglijst.Columns[0]).ImageGetter = sender => 0;
+            objectEditorUI1.ExcludeItems.AddRange(new[] { "productienr", "artikelnr", "state", "naam" });
+            ((OLVColumn)xbewerkinglijst.Columns[0]).ImageGetter = sender => 0;
             metroTabControl1.SelectedIndex = 0;
         }
 
@@ -49,23 +49,22 @@ namespace Forms
             {
                 {
                     Formulier = changedform.CreateCopy();
-                   // dynamicObjectEditor1.Instance = Formulier;
+                    // dynamicObjectEditor1.Instance = Formulier;
                 }
             }
         }
 
 
-        private async void AddBewerkingen(ProductieFormulier form)
+        private void AddBewerkingen(ProductieFormulier form)
         {
             var p = form;
             if (p.Bewerkingen?.Length > 0)
             {
-                xbewerkingen.Text = p.Bewerkingen[0].Naam;
                 foreach (var b in p.Bewerkingen)
-                    await b.UpdateBewerking(null, "", false);
+                    b.xUpdateBewerking(null, "", false, false, false, false);
                 xbewerkinglijst.SetObjects(p.Bewerkingen);
                 if (p.Bewerkingen.Length <= 0) return;
-                xbewerkinglijst.SelectedObject = xbewerkingen.Tag ?? p.Bewerkingen[0];
+                xbewerkinglijst.SelectedObject = p.Bewerkingen.First();
                 xbewerkinglijst.SelectedItem?.EnsureVisible();
             }
         }
@@ -88,7 +87,7 @@ namespace Forms
 
         public bool SetFormInfo()
         {
-            Formulier = ((ProductieFormulier)objectEditorUI1.Instance)?? new ProductieFormulier();
+            Formulier = ((ProductieFormulier)objectEditorUI1.Instance) ?? new ProductieFormulier();
             materiaalUI1.SaveMaterials();
             return true;
         }
@@ -104,19 +103,6 @@ namespace Forms
             this.Invalidate();
         }
 
-        private void SetBewFields(Bewerking b)
-        {
-            if (b != null)
-            {
-                xbewerkingen.Tag = b;
-                xbewerkingen.SelectedItem = b.Naam?.Split('[')[0];
-            }
-            else
-            {
-                xbewerkingen.Tag = null;
-            }
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
@@ -128,8 +114,6 @@ namespace Forms
             Text = $"Productie : [{p.ProductieNr}]-[{p.ArtikelNr}]";
             this.Invalidate();
             //SetTextboxAutofill();
-            var bewerkingen = Manager.BewerkingenLijst.GetAllEntries().Select(x => (object) x.Naam).ToArray();
-            xbewerkingen.Items.AddRange(bewerkingen);
             SetFormFields(p);
         }
 
@@ -172,15 +156,15 @@ namespace Forms
                 case null:
                     return;
                 case Bewerking b:
-                {
-                    var x = new Indeling(Formulier, b) {StartPosition = FormStartPosition.CenterParent};
-                    if (x.ShowDialog(this) == DialogResult.OK)
                     {
-                        xbewerkinglijst.RefreshObject(b);
-                    }
+                        var x = new Indeling(Formulier, b) { StartPosition = FormStartPosition.CenterParent };
+                        if (x.ShowDialog(this) == DialogResult.OK)
+                        {
+                            xbewerkinglijst.RefreshObject(b);
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
         }
 
@@ -196,21 +180,29 @@ namespace Forms
         {
             string naam = null;
             var count = 0;
-            if (xbewerkingen.SelectedItem == null || xbewerkingen.Text.Trim().Length < 5 ||
-                xbewerkingen.Text.Trim() == "")
+            var bewerkingen = Manager.BewerkingenLijst.GetAllEntries().Select(x => x.Naam).ToArray();
+            var xbwform = new BewerkingChooser(bewerkingen);
+            xbwform.Title = "Voeg een nieuwe bewerking toe";
+            if (xbwform.ShowDialog() != DialogResult.OK) return;
+            naam = xbwform.SelectedItem;
+            if (naam == null || naam.Trim().Length < 5 ||
+                naam.Trim() == "")
             {
-                XMessageBox.Show(this, $"Vul eerst een geldige bewerking in voordat je verder gaat", "Ongeldige Bewerking",
+                XMessageBox.Show(this, $"Kies een een geldige bewerking a.u.b.", "Ongeldige Bewerking",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
             if (xbewerkinglijst.Objects != null && (count += xbewerkinglijst.Objects.Cast<Bewerking>()
-                    .Sum(x => x.Naam.ToLower().Split('[')[0] == xbewerkingen.Text.ToLower() ? 1 : 0)) >
-                0) naam = xbewerkingen.SelectedItem + $"[{count}]";
-            var bw = await new Bewerking((double) Formulier.DoorloopTijd).CreateNewInstance(Formulier);
-            bw.Naam = naam ?? xbewerkingen.SelectedItem.ToString();
+                    .Sum(x => x.Naam.ToLower().Split('[')[0] == naam.ToLower() ? 1 : 0)) >
+                0) naam = naam + $"[{count}]";
+            var bw = await new Bewerking((double)Formulier.DoorloopTijd).CreateNewInstance(Formulier);
+            bw.Naam = naam;
             bw.DatumToegevoegd = DateTime.Now;
             xbewerkinglijst.AddObject(bw);
+            xbewerkinglijst.SelectedObject = bw;
+            xbewerkinglijst.SelectedItem?.EnsureVisible();
+            UpdateButtons();
         }
 
         private void AddProduction_FormClosed(object sender, FormClosedEventArgs e)
@@ -239,21 +231,18 @@ namespace Forms
 
         private void xbewerkinglijst_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (xbewerkinglijst.SelectedObject != null)
-            {
-                var b = xbewerkinglijst.SelectedObject as Bewerking;
-                SetBewFields(b);
-            }
-            else
-            {
-                xbewerkingen.Tag = null;
-            }
-            
+            UpdateButtons();
+        }
+
+        private void UpdateButtons()
+        {
             xverwijderbewerking.Enabled = xbewerkinglijst.SelectedObjects.Count > 0;
             xwerkplekken.Enabled = xbewerkinglijst.SelectedObject != null;
             xbeheeronderbrekeningen.Enabled = xbewerkinglijst.SelectedObject != null;
             xsetbewerkingnaam.Enabled = xbewerkinglijst.SelectedObject != null;
             xedit.Enabled = xbewerkinglijst.SelectedObject != null;
+            xupbutton.Enabled = xbewerkinglijst.SelectedIndex > 0;
+            xdownbutton.Enabled = xbewerkinglijst.SelectedIndex > -1 && xbewerkinglijst.SelectedIndex < xbewerkinglijst.Items.Count - 1;
         }
 
         private void xbeheeronderbrekeningen_Click(object sender, EventArgs e)
@@ -273,7 +262,7 @@ namespace Forms
             {
                 var xform = new ObjectEditForm();
                 xform.Title = $"Wijzig {bew.Path}";
-                xform.ExcludeItems.AddRange(new[] {"productienr","artikelnr","verwachtleverdatum"});
+                xform.ExcludeItems.AddRange(new[] { "productienr", "artikelnr", "verwachtleverdatum" });
                 xform.Init(bew);
                 if (xform.ShowDialog(this) == DialogResult.OK)
                 {
@@ -284,43 +273,81 @@ namespace Forms
 
         private void xbewerkinglijst_DoubleClick(object sender, EventArgs e)
         {
-            xedit_Click(sender,e);
+            xedit_Click(sender, e);
         }
 
         private void xsetbewerkingnaam_Click(object sender, EventArgs e)
         {
+
             switch (xbewerkinglijst.SelectedObject)
             {
                 case null:
                     return;
                 case Bewerking b:
+                    {
+                        var bewerkingen = Manager.BewerkingenLijst.GetAllEntries().Select(x => x.Naam).ToArray();
+                        var xbwform = new BewerkingChooser(bewerkingen);
+                        xbwform.Title = $"Wijzig '{b.Naam}'";
+                        if (xbwform.ShowDialog() != DialogResult.OK) return;
+                        var naam = xbwform.SelectedItem;
+                        var xselected = naam?.Trim();
+                        if (string.IsNullOrEmpty(xselected))
+                            return;
+                        if (string.Equals(b.Naam, xselected, StringComparison.CurrentCultureIgnoreCase))
+                            return;
+                        if (xbewerkinglijst.Objects.OfType<Bewerking>().Any(x =>
+                                string.Equals(x.Naam, xselected, StringComparison.CurrentCultureIgnoreCase)))
+                        {
+                            XMessageBox.Show(this, $"Bewerking '{xselected}' bestaat al!", "Bestaat Al!",
+                                MessageBoxIcon.Exclamation);
+                            return;
+                        }
+
+                        if (XMessageBox.Show(this, $"Wil je de bewerkingnaam '{b.Naam}' wijzigen naar '{xselected}'?",
+                                "Bewerking Naam Wijzigen", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
+                            DialogResult.Yes)
+                        {
+                            var xindex = xbewerkinglijst.IndexOf(b);
+                            xbewerkinglijst.RemoveObject(b);
+                            b.Naam = xselected;
+                            xbewerkinglijst.InsertObjects(xindex, new Bewerking[] { b });
+                            xbewerkinglijst.SelectedObject = b;
+                            xbewerkinglijst.SelectedItem?.EnsureVisible();
+                        }
+
+                        break;
+                    }
+            }
+        }
+
+        private void xupbutton_Click(object sender, EventArgs e)
+        {
+            if (xbewerkinglijst.SelectedObject is Bewerking b)
+            {
+                var xindex = xbewerkinglijst.IndexOf(b);
+                if (xindex > 0)
                 {
-                    var xselected = xbewerkingen.Text.Trim();
-                    if (string.IsNullOrEmpty(xselected))
-                        return;
-                    if (string.Equals(b.Naam, xselected, StringComparison.CurrentCultureIgnoreCase))
-                        return;
-                    if (xbewerkinglijst.Objects.OfType<Bewerking>().Any(x =>
-                            string.Equals(x.Naam, xselected, StringComparison.CurrentCultureIgnoreCase)))
-                    {
-                        XMessageBox.Show(this, $"Bewerking '{xselected}' bestaat al!", "Bestaat Al!",
-                            MessageBoxIcon.Exclamation);
-                        return;
-                    }
+                    xindex--;
+                    xbewerkinglijst.RemoveObject(b);
+                    xbewerkinglijst.InsertObjects(xindex, new Bewerking[] { b });
+                    xbewerkinglijst.SelectedObject = b;
+                    xbewerkinglijst.SelectedItem?.EnsureVisible();
+                }
+            }
+        }
 
-                    if (XMessageBox.Show(this, $"Wil je de bewerkingnaam '{b.Naam}' wijzigen naar '{xselected}'?",
-                            "Bewerking Naam Wijzigen", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
-                        DialogResult.Yes)
-                    {
-                        var xindex = xbewerkinglijst.IndexOf(b);
-                        xbewerkinglijst.RemoveObject(b);
-                        b.Naam = xselected;
-                        xbewerkinglijst.InsertObjects(xindex, new Bewerking[] { b });
-                        xbewerkinglijst.SelectedObject = b;
-                        xbewerkinglijst.SelectedItem?.EnsureVisible();
-                    }
-
-                    break;
+        private void xdownbutton_Click(object sender, EventArgs e)
+        {
+            if (xbewerkinglijst.SelectedObject is Bewerking b)
+            {
+                var xindex = xbewerkinglijst.IndexOf(b);
+                if (xindex < xbewerkinglijst.Items.Count -1)
+                {
+                    xindex++;
+                    xbewerkinglijst.RemoveObject(b);
+                    xbewerkinglijst.InsertObjects(xindex, new Bewerking[] { b });
+                    xbewerkinglijst.SelectedObject = b;
+                    xbewerkinglijst.SelectedItem?.EnsureVisible();
                 }
             }
         }

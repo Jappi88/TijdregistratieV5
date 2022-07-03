@@ -34,12 +34,14 @@ namespace Forms
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WijzigProductie));
             this.xsluiten = new System.Windows.Forms.Button();
             this.xOpslaan = new System.Windows.Forms.Button();
-            this.xbewerkingen = new System.Windows.Forms.ComboBox();
             this.xvoegbewtoe = new System.Windows.Forms.Button();
             this.xwerkplekken = new System.Windows.Forms.Button();
             this.xbeheeronderbrekeningen = new System.Windows.Forms.Button();
             this.xverwijderbewerking = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.xdownbutton = new System.Windows.Forms.Button();
+            this.xupbutton = new System.Windows.Forms.Button();
             this.xsetbewerkingnaam = new System.Windows.Forms.Button();
             this.xedit = new System.Windows.Forms.Button();
             this.xbewerkinglijst = new BrightIdeasSoftware.ObjectListView();
@@ -71,6 +73,7 @@ namespace Forms
             this.metroTabPage3 = new MetroFramework.Controls.MetroTabPage();
             this.materiaalUI1 = new Forms.MateriaalUI();
             this.groupBox4.SuspendLayout();
+            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xbewerkinglijst)).BeginInit();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -111,24 +114,12 @@ namespace Forms
             this.xOpslaan.UseVisualStyleBackColor = true;
             this.xOpslaan.Click += new System.EventHandler(this.button2_Click);
             // 
-            // xbewerkingen
-            // 
-            this.xbewerkingen.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.xbewerkingen.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.xbewerkingen.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xbewerkingen.FormattingEnabled = true;
-            this.xbewerkingen.Location = new System.Drawing.Point(6, 27);
-            this.xbewerkingen.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.xbewerkingen.Name = "xbewerkingen";
-            this.xbewerkingen.Size = new System.Drawing.Size(293, 28);
-            this.xbewerkingen.TabIndex = 25;
-            // 
             // xvoegbewtoe
             // 
             this.xvoegbewtoe.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xvoegbewtoe.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xvoegbewtoe.Image = global::ProductieManager.Properties.Resources.add_1588;
-            this.xvoegbewtoe.Location = new System.Drawing.Point(305, 21);
+            this.xvoegbewtoe.Location = new System.Drawing.Point(50, 21);
             this.xvoegbewtoe.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xvoegbewtoe.Name = "xvoegbewtoe";
             this.xvoegbewtoe.Size = new System.Drawing.Size(44, 40);
@@ -145,7 +136,7 @@ namespace Forms
             this.xwerkplekken.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xwerkplekken.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xwerkplekken.Image = global::ProductieManager.Properties.Resources.iconfinder_technologymachineelectronic32_32;
-            this.xwerkplekken.Location = new System.Drawing.Point(405, 21);
+            this.xwerkplekken.Location = new System.Drawing.Point(150, 21);
             this.xwerkplekken.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xwerkplekken.Name = "xwerkplekken";
             this.xwerkplekken.Size = new System.Drawing.Size(40, 40);
@@ -162,7 +153,7 @@ namespace Forms
             this.xbeheeronderbrekeningen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xbeheeronderbrekeningen.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xbeheeronderbrekeningen.Image = global::ProductieManager.Properties.Resources.onderhoud32_32;
-            this.xbeheeronderbrekeningen.Location = new System.Drawing.Point(451, 21);
+            this.xbeheeronderbrekeningen.Location = new System.Drawing.Point(196, 21);
             this.xbeheeronderbrekeningen.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xbeheeronderbrekeningen.Name = "xbeheeronderbrekeningen";
             this.xbeheeronderbrekeningen.Size = new System.Drawing.Size(40, 40);
@@ -179,7 +170,7 @@ namespace Forms
             this.xverwijderbewerking.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xverwijderbewerking.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xverwijderbewerking.Image = global::ProductieManager.Properties.Resources.delete_1577;
-            this.xverwijderbewerking.Location = new System.Drawing.Point(547, 21);
+            this.xverwijderbewerking.Location = new System.Drawing.Point(292, 21);
             this.xverwijderbewerking.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xverwijderbewerking.Name = "xverwijderbewerking";
             this.xverwijderbewerking.Size = new System.Drawing.Size(40, 40);
@@ -192,13 +183,13 @@ namespace Forms
             // groupBox4
             // 
             this.groupBox4.BackColor = System.Drawing.Color.Transparent;
+            this.groupBox4.Controls.Add(this.panel1);
             this.groupBox4.Controls.Add(this.xsetbewerkingnaam);
             this.groupBox4.Controls.Add(this.xedit);
             this.groupBox4.Controls.Add(this.xbewerkinglijst);
             this.groupBox4.Controls.Add(this.xverwijderbewerking);
             this.groupBox4.Controls.Add(this.xwerkplekken);
             this.groupBox4.Controls.Add(this.xbeheeronderbrekeningen);
-            this.groupBox4.Controls.Add(this.xbewerkingen);
             this.groupBox4.Controls.Add(this.xvoegbewtoe);
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -212,13 +203,58 @@ namespace Forms
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Bewerkingen";
             // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.panel1.Controls.Add(this.xdownbutton);
+            this.panel1.Controls.Add(this.xupbutton);
+            this.panel1.Location = new System.Drawing.Point(6, 24);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(38, 403);
+            this.panel1.TabIndex = 46;
+            // 
+            // xdownbutton
+            // 
+            this.xdownbutton.Enabled = false;
+            this.xdownbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xdownbutton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xdownbutton.Image = global::ProductieManager.Properties.Resources.arrow_down_16740_32x32;
+            this.xdownbutton.Location = new System.Drawing.Point(3, 135);
+            this.xdownbutton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.xdownbutton.Name = "xdownbutton";
+            this.xdownbutton.Size = new System.Drawing.Size(32, 32);
+            this.xdownbutton.TabIndex = 29;
+            this.xdownbutton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xdownbutton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xdownbutton, "Plaats bewerking omlaag");
+            this.xdownbutton.UseVisualStyleBackColor = true;
+            this.xdownbutton.Click += new System.EventHandler(this.xdownbutton_Click);
+            // 
+            // xupbutton
+            // 
+            this.xupbutton.Enabled = false;
+            this.xupbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xupbutton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xupbutton.Image = global::ProductieManager.Properties.Resources.arrow_up_16741_32x32;
+            this.xupbutton.Location = new System.Drawing.Point(3, 99);
+            this.xupbutton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.xupbutton.Name = "xupbutton";
+            this.xupbutton.Size = new System.Drawing.Size(32, 32);
+            this.xupbutton.TabIndex = 28;
+            this.xupbutton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xupbutton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTip1.SetToolTip(this.xupbutton, "Plaats bewerking omhoog");
+            this.xupbutton.UseVisualStyleBackColor = true;
+            this.xupbutton.Click += new System.EventHandler(this.xupbutton_Click);
+            // 
             // xsetbewerkingnaam
             // 
             this.xsetbewerkingnaam.Enabled = false;
             this.xsetbewerkingnaam.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xsetbewerkingnaam.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xsetbewerkingnaam.Image = global::ProductieManager.Properties.Resources.edit__52382;
-            this.xsetbewerkingnaam.Location = new System.Drawing.Point(355, 21);
+            this.xsetbewerkingnaam.Location = new System.Drawing.Point(100, 21);
             this.xsetbewerkingnaam.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xsetbewerkingnaam.Name = "xsetbewerkingnaam";
             this.xsetbewerkingnaam.Size = new System.Drawing.Size(44, 40);
@@ -235,7 +271,7 @@ namespace Forms
             this.xedit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xedit.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xedit.Image = global::ProductieManager.Properties.Resources.document_edit_icon_icons_com_52428;
-            this.xedit.Location = new System.Drawing.Point(497, 21);
+            this.xedit.Location = new System.Drawing.Point(242, 21);
             this.xedit.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.xedit.Name = "xedit";
             this.xedit.Size = new System.Drawing.Size(44, 40);
@@ -294,7 +330,7 @@ namespace Forms
             this.xbewerkinglijst.HeaderWordWrap = true;
             this.xbewerkinglijst.HideSelection = false;
             this.xbewerkinglijst.LargeImageList = this.imageList1;
-            this.xbewerkinglijst.Location = new System.Drawing.Point(6, 66);
+            this.xbewerkinglijst.Location = new System.Drawing.Point(50, 66);
             this.xbewerkinglijst.MenuLabelColumns = "kolommen";
             this.xbewerkinglijst.MenuLabelGroupBy = "Groeperen op \'{0}\'";
             this.xbewerkinglijst.MenuLabelLockGroupingOn = "Groepering vergrendelen op \'{0}\'";
@@ -310,7 +346,7 @@ namespace Forms
             this.xbewerkinglijst.ShowGroups = false;
             this.xbewerkinglijst.ShowItemCountOnGroups = true;
             this.xbewerkinglijst.ShowItemToolTips = true;
-            this.xbewerkinglijst.Size = new System.Drawing.Size(800, 361);
+            this.xbewerkinglijst.Size = new System.Drawing.Size(756, 361);
             this.xbewerkinglijst.SmallImageList = this.imageList1;
             this.xbewerkinglijst.SpaceBetweenGroups = 10;
             this.xbewerkinglijst.TabIndex = 26;
@@ -552,7 +588,7 @@ namespace Forms
             this.metroTabControl1.Controls.Add(this.metroTabPage3);
             this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 0;
+            this.metroTabControl1.SelectedIndex = 1;
             this.metroTabControl1.Size = new System.Drawing.Size(830, 484);
             this.metroTabControl1.TabIndex = 26;
             this.metroTabControl1.UseSelectable = true;
@@ -629,6 +665,7 @@ namespace Forms
             this.materiaalUI1.Formulier = null;
             this.materiaalUI1.Location = new System.Drawing.Point(5, 5);
             this.materiaalUI1.Name = "materiaalUI1";
+            this.materiaalUI1.Padding = new System.Windows.Forms.Padding(5);
             this.materiaalUI1.Size = new System.Drawing.Size(812, 432);
             this.materiaalUI1.TabIndex = 0;
             // 
@@ -645,12 +682,12 @@ namespace Forms
             this.MinimumSize = new System.Drawing.Size(705, 480);
             this.Name = "WijzigProductie";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Productie Formulier";
             this.Title = "Productie Formulier";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.AddProduction_FormClosed);
             this.Shown += new System.EventHandler(this.WijzigProductie_Shown);
             this.groupBox4.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.xbewerkinglijst)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
@@ -665,7 +702,6 @@ namespace Forms
         #endregion
         private System.Windows.Forms.Button xsluiten;
         private System.Windows.Forms.Button xOpslaan;
-        private System.Windows.Forms.ComboBox xbewerkingen;
         private System.Windows.Forms.Button xwerkplekken;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button xvoegbewtoe;
@@ -701,5 +737,8 @@ namespace Forms
         private ObjectEditorUI objectEditorUI1;
         private System.Windows.Forms.Button xedit;
         private System.Windows.Forms.Button xsetbewerkingnaam;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button xdownbutton;
+        private System.Windows.Forms.Button xupbutton;
     }
 }

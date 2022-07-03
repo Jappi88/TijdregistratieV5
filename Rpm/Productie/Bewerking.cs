@@ -613,29 +613,32 @@ namespace Rpm.Productie
             });
         }
 
-        public async Task<Bewerking> CreateNewInstance(ProductieFormulier parent)
+        public  Task<Bewerking> CreateNewInstance(ProductieFormulier parent)
         {
-            var b = new Bewerking
+            return Task.Factory.StartNew(() =>
             {
-                State = State,
-                Naam = Naam,
-                DoorloopTijd = DoorloopTijd,
-                TijdGewerkt = TijdGewerkt,
-                TotaalTijdGewerkt = TotaalTijdGewerkt,
-                TijdGestart = TijdGestart,
-                TijdGestopt = TijdGestopt,
-                VerwachtLeverDatum = VerwachtLeverDatum,
-                LeverDatum = parent.LeverDatum,
-                DatumToegevoegd = parent.DatumToegevoegd,
-                Omschrijving = parent.Omschrijving,
-                Paraaf = Paraaf,
-                Aantal = parent.Aantal,
-                Parent = parent,
-                DatumVerwijderd = DatumVerwijderd
-            };
-            b.SetPersoneel(GetPersoneel().Select(Personeel.CreateNew).ToArray());
-            await b.UpdateBewerking(null, $"[{Path}] Bewerkingen aangemaakt", false);
-            return b;
+                var b = new Bewerking
+                {
+                    State = State,
+                    Naam = Naam,
+                    DoorloopTijd = DoorloopTijd,
+                    TijdGewerkt = TijdGewerkt,
+                    TotaalTijdGewerkt = TotaalTijdGewerkt,
+                    TijdGestart = TijdGestart,
+                    TijdGestopt = TijdGestopt,
+                    VerwachtLeverDatum = VerwachtLeverDatum,
+                    LeverDatum = parent.LeverDatum,
+                    DatumToegevoegd = parent.DatumToegevoegd,
+                    Omschrijving = parent.Omschrijving,
+                    Paraaf = Paraaf,
+                    Aantal = parent.Aantal,
+                    Parent = parent,
+                    DatumVerwijderd = DatumVerwijderd
+                };
+                b.SetPersoneel(GetPersoneel().Select(Personeel.CreateNew).ToArray());
+                b.xUpdateBewerking(null, $"[{Path}] Bewerkingen aangemaakt", false, false, false, false);
+                return b;
+            });
         }
 
         public Task<bool> StartProductie(bool email, bool savepersoneel, bool updatecombies)
