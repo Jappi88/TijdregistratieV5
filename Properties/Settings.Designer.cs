@@ -46,29 +46,5 @@ namespace ProductieManager.Properties {
                 this["StoringMelder"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Viewer")]
-        public string VaultUserName {
-            get {
-                return ((string)(this["VaultUserName"]));
-            }
-            set {
-                this["VaultUserName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string VaultPassword {
-            get {
-                return ((string)(this["VaultPassword"]));
-            }
-            set {
-                this["VaultPassword"] = value;
-            }
-        }
     }
 }

@@ -2392,7 +2392,7 @@ namespace Rpm.SqlLite
             {
                 Message = msg,
                 Type = ProgressType.ReadBussy,
-                Pogress = (int) value
+                Progress = (int) value
             };
             changed?.Invoke(this, progress);
         }

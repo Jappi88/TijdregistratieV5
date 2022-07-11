@@ -2066,6 +2066,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap page_document_empty_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("page_document_empty_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap PauseHot_26935 {
             get {
                 object obj = ResourceManager.GetObject("PauseHot_26935", resourceCulture);
@@ -2685,6 +2695,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap word_icon_130070_32x32 {
             get {
                 object obj = ResourceManager.GetObject("word_icon_130070_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap zip_36268_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("zip_36268_32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

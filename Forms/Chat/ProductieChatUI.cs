@@ -166,17 +166,25 @@ namespace Forms
         {
             try
             {
-                var img = Manager.ProductieChat?.GetProfielImage(user);
+                Bitmap img = null;
                 var gbindex = Manager.ProductieChat.Gebruikers.IndexOf(user);
                 if (gbindex >= 0)
                 {
                     user = Manager.ProductieChat.Gebruikers[gbindex];
                 }
-                if (user.IsOnline)
-                    img = img.CombineImage(Resources.Online_32, 3.5);
+                if (user == null) return null;
+                if (string.Equals(Manager.ProductieChat.Chat?.UserName, user.UserName, StringComparison.CurrentCultureIgnoreCase))
+                     img = Manager.ProductieChat.Chat.Avatar ?? Manager.ProductieChat?.GetProfielImage();
                 else
-                    img = img.CombineImage(Resources.offline_32x32, 3.5);
-                img.Tag = user.IsOnline;
+                    img = user.Avatar ?? Manager.ProductieChat?.GetProfielImage(user);
+                if (img != null)
+                {
+                    if (user.IsOnline)
+                        img = img.CombineImage(Resources.Online_32, 3.5);
+                    else
+                        img = img.CombineImage(Resources.offline_32x32, 3.5);
+                    img.Tag = user.IsOnline;
+                }
                 return img;
             }
             catch { return null; }
@@ -320,7 +328,12 @@ namespace Forms
                     {
                         var updated = false;
                         var added = false;
-                        UpdateMessage(message, ref updated, ref added, true);
+                        var msg = UpdateMessage(message, ref updated, ref added, true);
+                        if(added)
+                        {
+                            AddMessage(msg, true, false);
+                        }
+
                     }
                     else
                         BeginInvoke(new MethodInvoker(LoadProfiles));
@@ -389,7 +402,7 @@ namespace Forms
                             continue;
                         }
                     }
-                    var img = Manager.ProductieChat.GetProfielImage(user) ?? Resources.avatardefault_92824;
+                    var img = user.Avatar??Manager.ProductieChat.GetProfielImage(user) ?? Resources.avatardefault_92824;
                     //LoadedUserImages.Images.Add(user.UserName, img);
                     int unread = Manager.ProductieChat.UnreadMessages(user.UserName, DateTime.Now.Subtract(TimeSpan.FromDays(30)));
                     if (unread > 0)
@@ -449,6 +462,7 @@ namespace Forms
                 {
                     var iedereen = new UserChat()
                         { UserName = "Iedereen", IsOnline = true, ProfielImage = Manager.ProductieChat.GroupChatImagePath };
+                    iedereen.Avatar = Manager.ProductieChat.GetProfielImage(iedereen);
                     Manager.ProductieChat.Gebruikers.Add(iedereen);
                     Manager.ProductieChat.Gebruikers = Manager.ProductieChat.Gebruikers.OrderBy(x => x.UserName).ToList();
                 }
@@ -512,7 +526,8 @@ namespace Forms
                 xchatpanel.SuspendLayout();
                 xchatpanel.Controls.Clear();
                 xchatpanel.ResumeLayout(false);
-                xsendmessagepanel.Visible = false;
+                xChatBox.Visible = false;
+                xSelectedUserInfoPanel.Visible = false;
             }
             else
             {
@@ -522,8 +537,10 @@ namespace Forms
                 }
                 else
                 {
-                    xsendmessagepanel.Visible = user != null;
-                    xselecteduserimage.Image = Manager.ProductieChat?.GetProfielImage(user);
+                    xSelectedUserInfoPanel.Visible = user != null;
+                    xChatBox.Visible = user != null;
+                    xChatBox.BringToFront();
+                    xselecteduserimage.Image = user.Avatar ?? Manager.ProductieChat?.GetProfielImage(user);
                     xselectedusername.Text = user?.UserName;
                     xselecteduserstatus.Text = user == null ? "" : (user.IsOnline ? "Online" : "Offline");
                     xselecteduserstatusimage.Image = user == null
@@ -566,16 +583,67 @@ namespace Forms
             return (UserChat) xuserlist.SelectedObject;
         }
 
-        private void UpdateMessage(ProductieChatEntry message, ref bool updated, ref bool added, bool scrolintoview, List<ChatBubble> chats = null)
+        private void AddMessage(ChatBubble bubble, bool scrolintoview, bool suspendlayout)
+        {
+            try
+            {
+                if (InvokeRequired)
+                    Invoke(new MethodInvoker(() => AddMessage(bubble,scrolintoview, suspendlayout)));
+                else
+                {
+                    if (xchatpanel.Controls.IndexOf(bubble) == -1)
+                    {
+                        if (suspendlayout)
+                            xchatpanel.SuspendLayout();
+                        xchatpanel.Controls.Add(bubble);
+                        if (suspendlayout)
+                            xchatpanel.ResumeLayout(false);
+                    }
+                    if (scrolintoview)
+                    {
+                        xchatpanel.Invalidate();
+                        xchatpanel.ScrollControlIntoView(bubble);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        private void AddMessages(ChatBubble[] bubbles, bool scrolintoview, bool suspendlayout)
+        {
+            try
+            {
+                if (suspendlayout)
+                    xchatpanel.SuspendLayout();
+                xchatpanel.Controls.AddRange(bubbles);
+                if (suspendlayout)
+                    xchatpanel.ResumeLayout(false);
+                if (scrolintoview)
+                {
+                    xchatpanel.Invalidate();
+                    xchatpanel.ScrollControlIntoView(bubbles.Last());
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        private ChatBubble UpdateMessage(ProductieChatEntry message, ref bool updated, ref bool added, bool scrolintoview, List<ChatBubble> chats = null)
         {
             if (this.InvokeRequired)
             {
                 var xupdated = updated;
                 var xadded = added;
-                this.Invoke(new MethodInvoker(() => UpdateMessage(message, ref xupdated, ref xadded,scrolintoview, chats)));
+                ChatBubble ret = null;
+                this.Invoke(new MethodInvoker(() => ret = UpdateMessage(message, ref xupdated, ref xadded,scrolintoview, chats)));
                 updated = xupdated;
                 added = xadded;
-                return;
+                return ret;
             }
             try
             {
@@ -598,23 +666,14 @@ namespace Forms
                 }
                 else
                 {
-                    xchatpanel.SuspendLayout();
-                    // 
-                    xchatpanel.Controls.Add(xmsg);
-                    xchatpanel.ResumeLayout(false);
-                    //xchatpanel.Controls.SetChildIndex(xmsg, i);
-                    // 
                     added = true;
-                    if (scrolintoview)
-                    {
-                        xchatpanel.Invalidate();
-                        xchatpanel.ScrollControlIntoView(xmsg);
-                    }
                 }
+                return xmsg;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                return null;
             }
         }
 
@@ -622,7 +681,7 @@ namespace Forms
         {
             try
             {
-               
+
                 if (selected != null && !selected.Equals(_selecteduser))
                 {
                     xchatpanel.Controls.Clear();
@@ -638,17 +697,26 @@ namespace Forms
                         xchatpanel.ResumeLayout(false);
                     }
                 }
-                
+
                 var xmessages = xchatpanel.Controls.Cast<ChatBubble>().ToList();
                 bool updated = false;
                 bool added = false;
-                
+                List<ChatBubble> bubbles = new List<ChatBubble>();
                 for (int i = 0; i < entries.Count; i++)
                 {
                     var xent = entries[i];
-                    UpdateMessage(xent, ref updated, ref added,false, xmessages);
+                    var xadded = false;
+                    var msg = UpdateMessage(xent, ref updated, ref xadded, false, xmessages);
+                    added |= xadded;
+                    if (xadded && msg != null)
+                    {
+                        bubbles.Add(msg);
+                    }
                 }
-              
+                if(bubbles.Count > 0)
+                {
+                    AddMessages(bubbles.ToArray(), scroltoend, false);
+                }
                 if (updated)
                 {
                     Manager.ProductieChat?.SaveGebruiker(selected);
@@ -656,12 +724,12 @@ namespace Forms
 
                 if ((added || scroltoend) && xchatpanel.Controls.Count > 0)
                 {
-                    var xlast = xchatpanel.Controls[xchatpanel.Controls.Count -1];
+                    var xlast = xchatpanel.Controls[xchatpanel.Controls.Count - 1];
                     xchatpanel.PerformLayout();
                     xchatpanel.ScrollControlIntoView(xlast);
                     xchatpanel.PerformLayout();
                     xchatpanel.ScrollControlIntoView(xlast);
-                   
+
                 }
             }
             catch (Exception e)

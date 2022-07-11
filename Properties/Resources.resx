@@ -913,4 +913,10 @@
   <data name="print_Doc_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\print_Doc_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="page_document_empty_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\page_document_empty_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="zip_36268_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\zip_36268_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

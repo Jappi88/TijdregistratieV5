@@ -76,7 +76,7 @@ namespace ProductieManager
         private void LoadManager()
         {
             AutoUpdater.AppCastURL = "https://www.dropbox.com/s/3bnp0so9o1mj8at/UpdateInfo.xml?dl=1";
-            AutoUpdater.AppTitle = "Productie Manager";
+            AutoUpdater.AppTitle = "ProductieManager";
             AutoUpdater.ShowSkipButton = false;
             AutoUpdater.ApplicationExitEvent += AutoUpdater_ApplicationExitEvent;
             this.WindowState = FormWindowState.Minimized;

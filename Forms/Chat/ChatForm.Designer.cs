@@ -40,24 +40,23 @@
             this.productieChatUI1.Location = new System.Drawing.Point(20, 30);
             this.productieChatUI1.Margin = new System.Windows.Forms.Padding(4);
             this.productieChatUI1.Name = "productieChatUI1";
-            this.productieChatUI1.Size = new System.Drawing.Size(906, 536);
+            this.productieChatUI1.Size = new System.Drawing.Size(804, 501);
             this.productieChatUI1.TabIndex = 0;
             // 
             // ChatForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(946, 586);
+            this.ClientSize = new System.Drawing.Size(844, 551);
             this.Controls.Add(this.productieChatUI1);
             this.DisplayHeader = false;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ChatForm";
             this.Padding = new System.Windows.Forms.Padding(20, 30, 20, 20);
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Style = MetroFramework.MetroColorStyle.Purple;
             this.Text = "Productie Chat";
             this.Title = "Productie Chat";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ChatForm_FormClosing);
-            this.Shown += new System.EventHandler(this.ChatForm_Shown);
             this.ResumeLayout(false);
 
         }

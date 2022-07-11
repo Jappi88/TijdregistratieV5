@@ -17,13 +17,9 @@ namespace Forms
             base.Show(owner);
         }
 
-        private void ChatForm_Shown(object sender, EventArgs e)
+        public bool InitUI()
         {
-            //this.InitLastInfo();
-            Invalidate();
-            Application.DoEvents();
-            if (!productieChatUI1.InitUI())
-                this.Close();
+            return productieChatUI1.InitUI();
         }
 
         private void ChatForm_FormClosing(object sender, FormClosingEventArgs e)

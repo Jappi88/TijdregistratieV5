@@ -43,6 +43,7 @@ namespace Rpm.Productie
         public static readonly string HelpDropUrl =
             "https://www.dropbox.com/s/5xc90j20d5odya6/Help.txt?dl=1";
         // public static LocalService LocalConnection { get; private set; }
+        public static bool AllowEvents { get; set; } = true;
         public static ArtikelRecords.ArtikelRecords ArtikelRecords { get; set; }
         public static VerpakkingBeheer Verpakkingen { get; private set; }
         public static SporenBeheer SporenBeheer { get; private set; }
@@ -739,7 +740,7 @@ namespace Rpm.Productie
                     int count = 0;
                     foreach (var file in files)
                     {
-                        xprog.Pogress = (int)(((double)count / files.Length) * 100);
+                        xprog.Progress = (int)(((double)count / files.Length) * 100);
                         xprog.Message = $"{Path.GetFileNameWithoutExtension(file)} Updaten ({count}/{files.Length})...";
                         changedhandler?.Invoke(null, xprog);
                         if (xprog.IsCanceled) break;
@@ -775,7 +776,7 @@ namespace Rpm.Productie
                     var x1 = xreturn == 1 ? "bestand" : "bestanden";
                     xprog.Type = ProgressType.WriteCompleet;
                     xprog.Message = $"{xreturn} {x1} geüpdatet";
-                    xprog.Pogress = 100;
+                    xprog.Progress = 100;
                     changedhandler?.Invoke(null, xprog);
                 }
                 catch (Exception e)
@@ -1871,6 +1872,7 @@ namespace Rpm.Productie
         public static event EventHandler OpmerkingenChanged;
         private static void OnOpmerkingenChanged()
         {
+            if (!AllowEvents) return;
             OpmerkingenChanged?.Invoke(Opmerkingen, EventArgs.Empty);
         }
         /// <summary>
@@ -2000,6 +2002,7 @@ namespace Rpm.Productie
         /// <param name="sender">De gene die het oproept</param>
         public static void ProductiesChanged(object sender)
         {
+            if (!AllowEvents) return;
             OnProductiesLoaded?.Invoke(sender);
         }
         /// <summary>
@@ -2019,6 +2022,7 @@ namespace Rpm.Productie
         /// </summary>
         public static void DbBeginUpdate()
         {
+            if (!AllowEvents) return;
             OnDbBeginUpdate?.Invoke();
         }
 
@@ -2027,6 +2031,7 @@ namespace Rpm.Productie
         /// </summary>
         public static void DbEndUpdate()
         {
+            if (!AllowEvents) return;
             OnDbEndUpdate?.Invoke();
         }
 
@@ -2036,6 +2041,7 @@ namespace Rpm.Productie
         /// <param name="cancel"></param>
         public static void ManagerLoading(ref bool cancel)
         {
+            if (!AllowEvents) return;
             OnManagerLoading?.Invoke( ref cancel);
         }
 
@@ -2044,6 +2050,7 @@ namespace Rpm.Productie
         /// </summary>
         public static void ManagerLoaded()
         {
+            if (!AllowEvents) return;
             OnManagerLoaded?.Invoke();
         }
 
@@ -2056,6 +2063,7 @@ namespace Rpm.Productie
         /// <param name="cancel">True voor als je het opslaan van de instellingen wilt annuleren</param>
         public static void SettingsChanging(object sender, ref UserSettings settings, ref bool cancel)
         {
+            if (!AllowEvents) return;
             OnSettingsChanging?.Invoke(sender, ref settings, ref cancel);
         }
 
@@ -2079,6 +2087,7 @@ namespace Rpm.Productie
                 ProductieChat?.LogOut();
             else
                 ProductieChat?.Login();
+            if (!AllowEvents) return;
             OnLoginChanged?.Invoke(LogedInGebruiker, sender);
         }
 
@@ -2089,6 +2098,7 @@ namespace Rpm.Productie
         /// <param name="init"></param>
         public static void SettingsChanged(object sender, bool init)
         {
+            if (!AllowEvents) return;
             OnSettingsChanged?.Invoke(sender, Opties, init);
         }
 
@@ -2099,6 +2109,7 @@ namespace Rpm.Productie
         /// <param name="type">De soort aktie die ondernomen moet worden</param>
         public static void FormulierActie(object[] values, MainAktie type)
         {
+            if (!AllowEvents) return;
             FormulierActieHandler handler;
 
             lock (_actieLocker)
@@ -2116,6 +2127,7 @@ namespace Rpm.Productie
         /// <param name="formulier">De productie die gewijzig is</param>
         public static void FormulierChanged(object sender, ProductieFormulier formulier)
         {
+            if (!AllowEvents) return;
             if (formulier != null)
                 OnFormulierChanged?.Invoke(sender, formulier);
         }
@@ -2127,6 +2139,7 @@ namespace Rpm.Productie
         /// <param name="id">De productienr die verwijderd is</param>
         public static void FormulierDeleted(object sender, string id)
         {
+            if (!AllowEvents) return;
             if (Manager.Database != null && Manager.Database.ProductieExist(id)) return;
             OnFormulierDeleted?.Invoke(sender, id);
         }
@@ -2139,6 +2152,7 @@ namespace Rpm.Productie
         /// <param name="change">De verandering van de bewerking</param>
         public static void BewerkingChanged(object sender, Bewerking bew, string change, bool shownotification)
         {
+            if (!AllowEvents) return;
             if (bew != null)
                 OnBewerkingChanged?.Invoke(sender, bew, change,shownotification);
         }
@@ -2151,6 +2165,7 @@ namespace Rpm.Productie
         /// <param name="shownotification">Toon notificatie voor als de bewerking is verwijderd</param>
         public static void BewerkingDeleted(object sender, Bewerking bew, bool shownotification)
         {
+            if (!AllowEvents) return;
             if (bew != null)
                 OnBewerkingDeleted?.Invoke(sender, bew, $"{bew.Path} Verwijderd!",shownotification);
         }
@@ -2162,6 +2177,7 @@ namespace Rpm.Productie
         /// <param name="pers">De personeel die gewijzigd is</param>
         public static void PersoneelChanged(object sender, Personeel pers)
         {
+            if (!AllowEvents) return;
             if (pers != null) OnPersoneelChanged?.Invoke(sender, pers);
         }
 
@@ -2172,6 +2188,7 @@ namespace Rpm.Productie
         /// <param name="id">De personeelnaam van diegene die verwijderd is</param>
         public static void PersoneelDeleted(object sender, string id)
         {
+            if (!AllowEvents) return;
             OnPersoneelDeleted?.Invoke(sender, id);
         }
 
@@ -2182,6 +2199,7 @@ namespace Rpm.Productie
         /// <param name="account">De account die is gewijzigd</param>
         public static void AccountChanged(object sender, UserAccount account)
         {
+            if (!AllowEvents) return;
             OnAccountChanged?.Invoke(sender, account);
         }
 
@@ -2195,6 +2213,7 @@ namespace Rpm.Productie
             if (setting != null && Opties != null && string.Equals(setting.Username, Opties.Username, StringComparison.CurrentCultureIgnoreCase))
             {
                 Opties = setting;
+                if (!AllowEvents) return;
                 OnSettingsChanged?.Invoke(sender, setting,true);
             }
         }
@@ -2205,6 +2224,7 @@ namespace Rpm.Productie
         /// <param name="sender">De afzender die dit oproept</param>
         public static void OnFilterChanged(object sender)
         {
+            if (!AllowEvents) return;
             FilterChanged?.Invoke(sender,EventArgs.Empty);
         }
 
@@ -2230,48 +2250,56 @@ namespace Rpm.Productie
         public static event EventHandler KlachtChanged;
         private static void OnKlachtChanged(object sender, EventArgs e)
         {
+            if (!AllowEvents) return;
             KlachtChanged?.Invoke(sender, e);
         }
 
         public static event EventHandler KlachtDeleted;
         private static void OnKlachtDeleted(object sender, EventArgs e)
         {
+            if (!AllowEvents) return;
             KlachtDeleted?.Invoke(sender, e);
         }
 
         public static event EventHandler LayoutChanged;
         private static void OnLayoutChanged(object sender, EventArgs e)
         {
+            if (!AllowEvents) return;
             LayoutChanged?.Invoke(sender, e);
         }
 
         public static event EventHandler LayoutDeleted;
         private static void OnLayoutDeleted(object sender, EventArgs e)
         {
+            if (!AllowEvents) return;
             LayoutDeleted?.Invoke(sender, e);
         }
 
         public static event EventHandler VerpakkingChanged;
         private static void OnVerpakkingChanged(object sender, EventArgs e)
         {
+            if (!AllowEvents) return;
             VerpakkingChanged?.Invoke(sender, e);
         }
 
         public static event EventHandler VerpakkingDeleted;
         private static void OnVerpakkingDeleted(object sender, EventArgs e)
         {
+            if (!AllowEvents) return;
             VerpakkingDeleted?.Invoke(sender, e);
         }
 
         public static event EventHandler SpoorChanged;
         private static void OnSpoorChanged(object sender, EventArgs e)
         {
+            if (!AllowEvents) return;
             SpoorChanged?.Invoke(sender, e);
         }
 
         public static event EventHandler SpoorDeleted;
         private static void OnSpoorDeleted(object sender, EventArgs e)
         {
+            if (!AllowEvents) return;
             SpoorDeleted?.Invoke(sender, e);
         }
 

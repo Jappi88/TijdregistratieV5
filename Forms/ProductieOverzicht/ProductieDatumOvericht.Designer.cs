@@ -95,19 +95,21 @@ namespace Forms
             this.vouwAllesToolStripMenuItem,
             this.ontvouwAllesToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(152, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 70);
             // 
             // vouwAllesToolStripMenuItem
             // 
+            this.vouwAllesToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.icons8_collapse_32;
             this.vouwAllesToolStripMenuItem.Name = "vouwAllesToolStripMenuItem";
-            this.vouwAllesToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.vouwAllesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.vouwAllesToolStripMenuItem.Text = "Vouw Alles";
             this.vouwAllesToolStripMenuItem.Click += new System.EventHandler(this.vouwAllesToolStripMenuItem_Click);
             // 
             // ontvouwAllesToolStripMenuItem
             // 
+            this.ontvouwAllesToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.icons8_expand_32;
             this.ontvouwAllesToolStripMenuItem.Name = "ontvouwAllesToolStripMenuItem";
-            this.ontvouwAllesToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.ontvouwAllesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.ontvouwAllesToolStripMenuItem.Text = "Ontvouw Alles";
             this.ontvouwAllesToolStripMenuItem.Click += new System.EventHandler(this.ontvouwAllesToolStripMenuItem_Click);
             // 
@@ -130,7 +132,6 @@ namespace Forms
             this.Controls.Add(this.xsearchbox);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "ProductieDatumOvericht";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Productie Overzicht";
             this.Title = "Productie Overzicht";
             this.contextMenuStrip1.ResumeLayout(false);

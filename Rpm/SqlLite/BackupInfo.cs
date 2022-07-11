@@ -3,6 +3,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using Polenter.Serialization;
 using Rpm.Misc;
 using Rpm.Productie;
+using Rpm.Various;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -521,27 +522,59 @@ namespace Rpm.SqlLite
         /// <param name="password">The password for the zip file. </param>
         /// <param name="overWrite">Overwrite existing files. </param>
         /// <param name="cancellation">A token for possible cancellation</param>
-        public Task UnZip(string zipedFile, string strDirectory, string password, bool overWrite, CancellationTokenSource cancellation = null)
+        public Task UnZip(string zipedFile, string strDirectory, string password, bool overWrite, List<string> extract = null, ProgressArg arg = null)
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
+                arg ??= new ProgressArg();
+                arg.Type = ProgressType.WriteBussy;
+                var cancellation = arg.Token;
+                string name = Path.GetFileName(zipedFile);
+                if (extract != null && extract.Count == 0)
+                    extract = null;
+                var x1 = extract == null || extract.Count == 0 ? $"{ name}" : (extract.Count == 1 ? $"'{extract[0]}'" : $"{extract.Count} bestanden");
+                var extracted = new List<string>();
                 try
                 {
+                    arg.Message = $"'{x1}' herstellen...";
+                    arg.Type = ProgressType.WriteBussy;
+                    arg.Current = extracted.Count;
+                    arg.OnChanged(this);
                     if (strDirectory == "")
                         strDirectory = Directory.GetCurrentDirectory();
                     if (!strDirectory.EndsWith("\\"))
                         strDirectory = strDirectory + "\\";
+                    
+                    
+                    var max = extract?.Count?? 0;
+                    if(max == 0)
+                    {
+                        var zip = new ZipFile(zipedFile);
+                        max = (int)zip.Count;
+                        zip.Close();
+                    }
 
-                    using ZipInputStream s = new ZipInputStream(File.OpenRead(zipedFile)) {Password = password};
-
+                   
+                    using ZipInputStream s = new ZipInputStream(File.OpenRead(zipedFile)) { Password = password };
                     try
                     {
                         ZipEntry theEntry;
                         var time = DateTime.Now;
                         List<string> dirs = new List<string>();
+                       
+                        
+                        arg.Max = max;
                         while ((theEntry = s.GetNextEntry()) != null)
                         {
+                            if (extract != null && extract.Count == 0)
+                                break;
+                            if (extract != null && !extract.Any(x => string.Equals(x, theEntry.Name, StringComparison.CurrentCultureIgnoreCase)))
+                                continue;
+                           
                             cancellation?.Token.ThrowIfCancellationRequested();
+                            arg.Current = extracted.Count;
+                            arg.Message = $"'{theEntry.Name}' herstellen...";
+                            arg.OnChanged(this);
                             string directoryName = "";
                             string pathToZip = "";
                             pathToZip = theEntry.Name;
@@ -577,7 +610,7 @@ namespace Rpm.SqlLite
                                                 break;
                                             cancellation?.Token.ThrowIfCancellationRequested();
                                         }
-
+                                        extracted.Add(theEntry.Name);
                                         valid = true;
                                     }
                                     catch (Exception e)
@@ -599,8 +632,11 @@ namespace Rpm.SqlLite
 
                                 }
                             }
+
+                            if (extract != null)
+                                extract.Remove(theEntry.Name);
                         }
-                        if (overWrite && dirs.Count > 0)
+                        if (extract == null && overWrite && dirs.Count > 0)
                         {
                             foreach (var dir in dirs)
                             {
@@ -608,19 +644,29 @@ namespace Rpm.SqlLite
                                 files.ForEach(x => x.Delete());
                             }
                         }
+                       
                     }
                     catch (Exception e)
                     {
-
+                        Console.WriteLine(e);
                     }
                     finally
                     {
                         s.Close();
                     }
+                   
                 }
                 catch (Exception e)
                 {
+                    Console.WriteLine(e);
                 }
+                arg.Type = ProgressType.WriteCompleet;
+                arg.Current = extracted.Count;
+                x1 = extracted.Count == 1 ? $"'{extracted[0]}'" : $"{extracted.Count} bestanden";
+                if (extracted.Count > 0)
+                    x1 += " succesvol";
+                arg.Message = $"{x1} hersteld!";
+                arg.OnChanged(this);
             });
 
         }

@@ -378,7 +378,7 @@ namespace Forms
         public void ProgressChanged(object sender, ProgressArg arg)
         {
             arg.IsCanceled = !IsBussy;
-            DoProgress(arg.Message, arg.Pogress);
+            DoProgress(arg.Message, arg.Progress);
         }
 
         private void OnFinished()

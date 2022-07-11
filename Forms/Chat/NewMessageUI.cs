@@ -1,4 +1,7 @@
 ﻿using ProductieManager.Rpm.Various;
+using Rpm.Misc;
+using Rpm.Productie;
+using Rpm.Various;
 using System;
 using System.Drawing;
 using System.Linq;
@@ -63,6 +66,23 @@ namespace ProductieManager.Forms.Chat
         private void xMain_MouseLeave(object sender, EventArgs e)
         {
             xMainPanel.BackColor = Color.LightSteelBlue;
+        }
+
+        private void xmessage_LinkClicked(object sender, TheArtOfDev.HtmlRenderer.Core.Entities.HtmlLinkClickedEventArgs e)
+        {
+            if (Manager.Database == null || Manager.Database.IsDisposed) return;
+            try
+            {
+                var prod = Manager.Database.GetProductie(e.Link, false);
+                if (prod == null) return;
+                var bew = prod.Bewerkingen?.FirstOrDefault(x => x.IsAllowed());
+                Manager.FormulierActie(new object[] { prod, bew }, MainAktie.OpenProductie);
+                e.Handled = true;
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
         }
     }
 }

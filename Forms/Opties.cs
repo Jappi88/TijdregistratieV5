@@ -1,4 +1,5 @@
 ﻿using BrightIdeasSoftware;
+using MetroFramework.Controls;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Mailing;
@@ -14,7 +15,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Forms
@@ -91,7 +91,7 @@ namespace Forms
 
         private void _manager_OnLoginChanged(UserAccount user, object instance)
         {
-            SetLoginState();
+            EnableAccessControls();
         }
 
         private void _manager_OnSettingsChanged(object instance, UserSettings settings, bool init)
@@ -100,7 +100,6 @@ namespace Forms
             this.BeginInvoke(new MethodInvoker(() =>
             {
                 LoadSettings(settings, true);
-                SetLoginState();
             }));
         }
 
@@ -126,6 +125,10 @@ namespace Forms
 
             //rooster
             roosterUI1.SetRooster(x.WerkRooster.CreateCopy(), x.NationaleFeestdagen, x.SpecialeRoosters);
+
+            xVaultUsername.Text = x.VaultUsername;
+            xVaultPassword.Text = x.VaultPassword;
+
             //meldingen
             xtoonnieuwetaak.Checked = x.ToonLijstNaNieuweTaak;
             xmeldstart.Checked = x.TaakVoorStart;
@@ -159,7 +162,6 @@ namespace Forms
             xFilterList.CheckedObjects = _LoadedOpties.ActieveFilters;
 
             //Admin Settings
-            UpdateOptieList();
             UpdateEmailHostControls();
             xenablesync.Checked = x.GebruikLocalSync;
             xsyncinterval.Value = x.SyncInterval < 5000 ? 10000 : x.SyncInterval;
@@ -204,16 +206,7 @@ namespace Forms
             //load backupInfo
             xcreatebackup.Checked = x.CreateBackup;
             LoadBackupInfo();
-            if (Manager.LogedInGebruiker is { AccesLevel: > AccesType.ProductieAdvance })
-            {
-                xbackupgroup.Visible = true;
-                xrestorebackup.Visible = true;
-            }
-            else
-            {
-                xbackupgroup.Visible = false;
-                xrestorebackup.Visible = false;
-            }
+            EnableAccessControls();
             xtoonlognotificatie.Checked = x.ToonLogNotificatie;
             xtoonproductieNaToevoegen.Checked = x.ToonProductieNaToevoegen;
             xoffdbsyncinterval.SetValue(Manager.DefaultSettings.OfflineDbSyncInterval);
@@ -229,6 +222,8 @@ namespace Forms
             xartikelrecords.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.ArtikelRecords) > -1;
             xSpoorOverzichtCheckbox.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.SpoorOverzicht) > -1;
             xlijstlayout.Checked = Manager.DefaultSettings.OfflineDabaseTypes.IndexOf(DbType.LijstLayouts) > -1;
+
+            
         }
 
         private void UpdateEmailHostControls()
@@ -249,19 +244,24 @@ namespace Forms
             }
         }
 
-        private async void UpdateOptieList()
+        private void UpdateOptieList()
         {
-            if (Manager.LogedInGebruiker is { AccesLevel: >= AccesType.ProductieAdvance })
+            if (Manager.LogedInGebruiker is { AccesLevel: > AccesType.ProductieAdvance })
                 try
                 {
-                    var sets = await Manager.Database.GetAllSettings();
+                    var sets = Manager.Database.xGetAllSettings();
                     xoptielist.SetObjects(sets.Select(x => new SettingModel(x)
                     { IsLoaded = string.Equals(_LoadedOpties.Username, x.Username, StringComparison.CurrentCultureIgnoreCase) }).ToArray());
+                    xallsettingsgroup.Visible = true;
                 }
                 catch
                 {
                 }
-            else xoptielist.Items.Clear();
+            else
+            {
+                xoptielist.Items.Clear();
+                xallsettingsgroup.Visible = false;
+            }
         }
 
         string _lastcrit = null;
@@ -404,6 +404,9 @@ namespace Forms
                 xs.Username = username;
             else if (_LoadedOpties != null)
                 xs.Username = _LoadedOpties.Username;
+
+            xs.VaultUsername = xVaultUsername.Text.Trim();
+            xs.VaultPassword = xVaultPassword.Text.Trim();
 
             //werktijden
             xs.WerkRooster = roosterUI1.WerkRooster;
@@ -702,7 +705,7 @@ namespace Forms
             {
                 var ac = cr.Account;
                 Manager.CreateAccount(ac).Wait();
-                UpdateOptieList();
+                EnableAccessControls();
             }
         }
 
@@ -717,6 +720,27 @@ namespace Forms
             {
                 xlogin.Image = Resources.Login_37128__1_;
                 toolTip1.SetToolTip(xlogin, "Log In");
+            }
+
+        }
+
+        public void EnableAccessControls()
+        {
+            if (InvokeRequired)
+                this.Invoke(new MethodInvoker(EnableAccessControls));
+            else
+            {
+                UpdateOptieList();
+                if (Manager.LogedInGebruiker is { AccesLevel: > AccesType.ProductieAdvance })
+                {
+                    xbackupgroup.Visible = true;
+                    xrestorebackup.Visible = true;
+                }
+                else
+                {
+                    xbackupgroup.Visible = false;
+                    xrestorebackup.Visible = false;
+                }
             }
         }
 
@@ -736,7 +760,10 @@ namespace Forms
         private void xgebruikersb_Click(object sender, EventArgs e)
         {
             var cr = new UserAccounts();
-            if (cr.ShowDialog(this) == DialogResult.OK) UpdateOptieList();
+            if (cr.ShowDialog(this) == DialogResult.OK)
+            {
+                EnableAccessControls();
+            }
         }
 
         private void Opties_FormClosing(object sender, FormClosingEventArgs e)
@@ -761,15 +788,14 @@ namespace Forms
             }
             
             Manager.OnSettingsChanged -= _manager_OnSettingsChanged;
-            //Manager.OnLoginChanged -= _manager_OnLoginChanged;
+            Manager.OnLoginChanged -= _manager_OnLoginChanged;
         }
 
         private void Opties_Shown(object sender, EventArgs e)
         {
             LoadSettings(Manager.Opties,true);
-            SetLoginState();
             Manager.OnSettingsChanged += _manager_OnSettingsChanged;
-            //Manager.OnLoginChanged += _manager_OnLoginChanged;
+            Manager.OnLoginChanged += _manager_OnLoginChanged;
         }
 
         private void xkiesfolder_Click(object sender, EventArgs e)
@@ -1566,43 +1592,14 @@ namespace Forms
             }
         }
 
-        private bool isrestoring;
-        private async void xrestorebackup_Click(object sender, EventArgs e)
+        private void xrestorebackup_Click(object sender, EventArgs e)
         {
-            if (isrestoring) return;
-            var result = XMessageBox.Show(this, "Weet u zeker dat u de backup wilt terugzetten?!\n\n" +
-                "Alle gegevens uit de backup zullen terug gezet worden", "Backup Terugzetten", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-            if (result != DialogResult.Yes) return;
-            var ofd = new OpenFileDialog();
-            ofd.Filter = "Zip|*.zip";
-            ofd.Title = "Kies een backup zip(.zip) bestand";
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                isrestoring = true;
-                var prog = new LoadingForm();
-                var arg = prog.Arg;
-                prog.CloseIfFinished = true;
-                arg.Message = "Backup terugzetten...";
-                arg.OnChanged(this);
-                _ = prog.ShowDialogAsync(this);
-                if (BackupInfo.IsValidBackup(ofd.FileName, null))
-                {
-                    await Manager.BackupInfo.UnZip(ofd.FileName, Manager.DbPath, null, true, arg.Token);
-                    arg.Type = ProgressType.WriteCompleet;
-                    arg.OnChanged(this);
-                    XMessageBox.Show(this, "Backup succesvol terug gezet!", "Backup Terug Gezet");
-                }
-                else
-                {
-                    arg.Type = ProgressType.WriteCompleet;
-                    arg.OnChanged(this);
-                    XMessageBox.Show(this, $"'{Path.GetFileName(ofd.FileName)}' is geen geldige backup", "Ongeldige Backup", MessageBoxIcon.Warning);
-                }
-                isrestoring = false;
-            }
 
+            var xform = new BackupRestoreForm();
+            xform.ShowDialog();
         }
 
+        private bool isrestoring;
         private async void xbackupmaken_Click(object sender, EventArgs e)
         {
             if (isrestoring) return;
@@ -1783,6 +1780,29 @@ namespace Forms
             catch (Exception exception)
             {
                 XMessageBox.Show(this, exception.Message, "Fout", MessageBoxIcon.Error);
+            }
+        }
+
+        private void xviewpassbutton_Click(object sender, EventArgs e)
+        {
+            if(xVaultPassword.PasswordChar == '*')
+            {
+                xVaultPassword.PasswordChar = '\0';
+                xviewpassbutton.Image = Resources._3844441_eye_see_show_view_watch_110305;
+            }
+            else
+            {
+                xVaultPassword.PasswordChar = '*';
+                xviewpassbutton.Image = Resources._3844443_disable_eye_inactive_see_show_view_watch_110296;
+            }
+        }
+
+        private void xVaultPassword_TextChanged(object sender, EventArgs e)
+        {
+            if(sender is MetroTextBox tb)
+            {
+                tb.ShowClearButton = true;
+                tb.Invalidate();
             }
         }
 

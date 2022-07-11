@@ -300,7 +300,7 @@ namespace Forms
         private void Producties_FormClosing(object sender, FormClosingEventArgs e)
         {
             this.SetLastInfo();
-            ((Control)_owner)?.BringToFront();
+           // ((Control)_owner)?.BringToFront();
         }
     }
 }

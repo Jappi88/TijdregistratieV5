@@ -366,25 +366,25 @@ namespace Rpm.Mailing
                 _IsProcessing = true;
                 try
                 {
-                    // Gmail IMAP4 server is "imap.gmail.com"
+                    //Gmail IMAP4 server is "imap.gmail.com"
                     //    var oServer = CreateImapClient(out var email);
-                    //    if (oServer != null)
+                    //if (oServer != null)
+                    //{
+                    //    var inbox = oServer.Inbox;
+                    //    inbox.Open(FolderAccess.ReadWrite);
+                    //    var ids = inbox.Search(SearchQuery.All);
+                    //    for (var i = 0; i < ids.Count; i++)
                     //    {
-                    //        var inbox = oServer.Inbox;
-                    //        inbox.Open(FolderAccess.ReadWrite);
-                    //        var ids = inbox.Search(SearchQuery.All);
-                    //        for (var i = 0; i < ids.Count; i++)
+                    //        var id = ids[i];
+                    //        var info = inbox.GetMessage(id);
+                    //        if (ProcessInkomingMail(info))
                     //        {
-                    //            var id = ids[i];
-                    //            var info = inbox.GetMessage(id);
-                    //            if (ProcessInkomingMail(info))
-                    //            {
-                    //                inbox.AddFlags(new UniqueId[] {id}, MessageFlags.Deleted, false);
-                    //                inbox.Expunge();
-                    //            }
+                    //            inbox.AddFlags(new UniqueId[] { id }, MessageFlags.Deleted, false);
+                    //            inbox.Expunge();
                     //        }
-                    //        oServer.Disconnect(true);
                     //    }
+                    //    oServer.Disconnect(true);
+                    //}
                 }
                 catch (Exception ep)
                 {

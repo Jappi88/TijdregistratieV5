@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Timers;
 
 namespace ProductieManager.Rpm.Misc
@@ -56,8 +57,8 @@ namespace ProductieManager.Rpm.Misc
             try
             {
                 _Timer?.Stop();
-                CheckChanges(Path);
-                _Timer?.Start();
+                Task.Factory.StartNew(() => CheckChanges(Path,true));
+               // _Timer?.Start();
             }
             catch (Exception exception)
             {
@@ -184,12 +185,14 @@ namespace ProductieManager.Rpm.Misc
             }
         }
 
-        private void CheckChanges(string path)
+        private void CheckChanges(string path, bool starttimer)
         {
             if (_disposed) return;
             CheckFiles(path);
             if (CheckForFolderChanges)
                 CheckFolders(path);
+            if (starttimer)
+                _Timer?.Start();
         }
 
         public void InitWatcher(string path, string filter, bool checkforlders)

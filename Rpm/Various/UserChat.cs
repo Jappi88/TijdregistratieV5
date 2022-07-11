@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Polenter.Serialization;
+using System;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using ProductieManager.Properties;
-using ProductieManager.Rpm.Misc;
-using Rpm.Misc;
-using Rpm.Productie;
 
 namespace ProductieManager.Rpm.Various
 {
@@ -17,7 +11,8 @@ namespace ProductieManager.Rpm.Various
         public bool IsOnline { get; set; }
         public string UserName { get; set; }
         public string ProfielImage { get; set; }
-
+        [ExcludeFromSerialization]
+        public Bitmap Avatar { get; set; }
         public UserChat()
         {
             ID = DateTime.Now.GetHashCode();

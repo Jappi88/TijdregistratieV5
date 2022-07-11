@@ -728,6 +728,7 @@ namespace Controls
             xprodlist.InitUI();
             UpdateTileViewed(entry, true);
         }
+
         private void InitChartsTab(TileInfoEntry entry, bool select)
         {
             if (CheckTab(entry, select))
@@ -782,22 +783,25 @@ namespace Controls
             xprodlist.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             xprodlist.Name = entry.Name;
 
-            xtabpage.Controls.Add(xprodlist);
-            metroCustomTabControl1.SuspendLayout();
-            metroCustomTabControl1.TabPages.Add(xtabpage);
-            metroCustomTabControl1.ResumeLayout(false);
-            if (select)
-                metroCustomTabControl1.SelectedTab = xtabpage;
-            Invalidate();
-            Application.DoEvents();
+
+
             if (!xprodlist.InitUI())
             {
+                xprodlist.Dispose();
                 //metroCustomTabControl1.TabPages.Remove(xtabpage);
                 //UpdateTileViewed(entry, false);
-                metroCustomTabControl1.CloseTab(xtabpage);
+                // metroCustomTabControl1.CloseTab(xtabpage);
             }
             else
             {
+                xtabpage.Controls.Add(xprodlist);
+                metroCustomTabControl1.SuspendLayout();
+                metroCustomTabControl1.TabPages.Add(xtabpage);
+                metroCustomTabControl1.ResumeLayout(false);
+                if (select)
+                    metroCustomTabControl1.SelectedTab = xtabpage;
+                Invalidate();
+                Application.DoEvents();
                 UpdateTileViewed(entry, true);
                 xprodlist.SetSelected(username);
             }
@@ -2627,9 +2631,7 @@ namespace Controls
         //    ShowProductieLogWindow();
         //}
 
-     
-
-        public void UpdateUnreadMessages()
+       public void UpdateUnreadMessages()
         {
             if (InvokeRequired)
                 Invoke(new Action(xUpdateUnreadMessages));
@@ -2703,7 +2705,7 @@ namespace Controls
                                 {
                                     metroCustomTabControl1.SelectedTab = tb;
                                     var xch = tb.Controls.OfType<ProductieChatUI>().FirstOrDefault();
-                                    if(xch != null)
+                                    if (xch != null)
                                     {
                                         xch.SetSelected(unread?.FirstOrDefault()?.Afzender?.UserName);
                                     }
@@ -2941,6 +2943,12 @@ namespace Controls
                     _chatform?.Dispose();
                     _chatform = null;
                 };
+                if(!_chatform.InitUI())
+                {
+                    _chatform.Dispose();
+                    _chatform = null;
+                    return;
+                }
             }
 
             _chatform.Show(owner, username);

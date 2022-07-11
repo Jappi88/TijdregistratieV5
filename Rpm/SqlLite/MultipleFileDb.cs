@@ -766,7 +766,7 @@ namespace Rpm.SqlLite
             int perc = max > min ? ((min / max) * 100) : 100;
             ProgressArg arg = new ProgressArg()
             {
-                Message = message, Pogress = perc, Value = value, Type = type
+                Message = message, Progress = perc, Value = value, Type = type
             };
         }
 

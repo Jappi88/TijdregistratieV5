@@ -30,12 +30,13 @@ namespace Controls
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ZoekProductiesUI));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.xsluitenpanel = new System.Windows.Forms.Panel();
             this.xsluiten = new System.Windows.Forms.Button();
             this.xverwerkb = new System.Windows.Forms.Button();
-            this.xprogresslabel = new System.Windows.Forms.Label();
             this.productieListControl1 = new Controls.ProductieListControl();
+            this.xprogresslabel = new System.Windows.Forms.Label();
             this.xsluitenpanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -88,21 +89,6 @@ namespace Controls
             this.xverwerkb.UseVisualStyleBackColor = true;
             this.xverwerkb.Click += new System.EventHandler(this.xverwerkb_Click);
             // 
-            // xprogresslabel
-            // 
-            this.xprogresslabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.xprogresslabel.BackColor = System.Drawing.Color.White;
-            this.xprogresslabel.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xprogresslabel.Location = new System.Drawing.Point(0, 0);
-            this.xprogresslabel.Name = "xprogresslabel";
-            this.xprogresslabel.Size = new System.Drawing.Size(1034, 510);
-            this.xprogresslabel.TabIndex = 23;
-            this.xprogresslabel.Text = "Producties laden...";
-            this.xprogresslabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.xprogresslabel.Visible = false;
-            // 
             // productieListControl1
             // 
             this.productieListControl1.AutoScroll = true;
@@ -127,10 +113,24 @@ namespace Controls
             this.productieListControl1.TabIndex = 23;
             this.productieListControl1.ValidHandler = null;
             // 
+            // xprogresslabel
+            // 
+            this.xprogresslabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.xprogresslabel.BackColor = System.Drawing.Color.White;
+            this.xprogresslabel.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xprogresslabel.Location = new System.Drawing.Point(102, 92);
+            this.xprogresslabel.Name = "xprogresslabel";
+            this.xprogresslabel.Size = new System.Drawing.Size(538, 316);
+            this.xprogresslabel.TabIndex = 23;
+            this.xprogresslabel.Text = "Producties laden...";
+            this.xprogresslabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.xprogresslabel.Visible = false;
+            // 
             // ZoekProductiesUI
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.Controls.Add(this.xprogresslabel);
             this.Controls.Add(this.productieListControl1);
             this.Controls.Add(this.xsluitenpanel);
             this.DoubleBuffered = true;
@@ -149,7 +149,7 @@ namespace Controls
         private System.Windows.Forms.Button xsluiten;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Panel xsluitenpanel;
-        private System.Windows.Forms.Label xprogresslabel;
         private Controls.ProductieListControl productieListControl1;
+        private System.Windows.Forms.Label xprogresslabel;
     }
 }

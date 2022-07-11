@@ -30,6 +30,8 @@ namespace Rpm.Settings
         public UserChange LastChanged { get; set; }
         public string Username { get; set; }
         public string BoundUsername { get; set; }
+        public string VaultUsername { get; set; } = "Viewer";
+        public string VaultPassword { get; set; } = "Katsoja73!";
 
         [ExcludeFromSerialization]
         public string OSID { get; set; }

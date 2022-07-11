@@ -150,8 +150,10 @@ namespace Controls
             }
         }
 
-        public void StartWaitUI(string value)
+        private string _loadingvalue;
+        public void StartWaitUI(string value, double timeout = -1)
         {
+            _loadingvalue = value;
             if (_isLoading) return;
             _isLoading = true;
             Task.Run(() =>
@@ -165,16 +167,17 @@ namespace Controls
                     }));
 
                     var cur = 0;
-                    var xwv = value;
                     //var xcurvalue = xwv;
-                    var tries = 0;
+                    double tries = 0;
                     try
                     {
-                        while (_isLoading && tries < 200)
+                        if (timeout == -1)
+                            timeout = 60000;
+                        while (_isLoading && tries < timeout)
                         {
                             if (cur > 5) cur = 0;
                             if (Disposing || IsDisposed) return;
-                            var curvalue = xwv.PadRight(xwv.Length + cur, '.');
+                            var curvalue = _loadingvalue.PadRight(_loadingvalue.Length + cur, '.');
                             //xcurvalue = curvalue;
                             this.Invoke(new MethodInvoker(() =>
                             {
@@ -183,9 +186,9 @@ namespace Controls
                             }));
                             //Application.DoEvents();
 
-                            Thread.Sleep(350);
+                            Thread.Sleep(250);
                             //Application.DoEvents();
-                            tries++;
+                            tries+=250;
                             cur++;
                         }
                     }

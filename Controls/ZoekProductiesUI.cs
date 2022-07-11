@@ -167,30 +167,30 @@ namespace Controls
 
         }
 
-        private void SetProgressLabelText(string text)
-        {
-            if (xprogresslabel.InvokeRequired)
-                xprogresslabel.Invoke(new MethodInvoker(() =>
-                {
-                    xprogresslabel.Text = text;
-                    xprogresslabel.Invalidate();
-                }));
-            else
-            {
-                xprogresslabel.Text = text;
-                xprogresslabel.Invalidate();
-            }
+        //private void SetProgressLabelText(string text)
+        //{
+        //    if (xffprogresslabel.InvokeRequired)
+        //        xffprogresslabel.Invoke(new MethodInvoker(() =>
+        //        {
+        //            xffprogresslabel.Text = text;
+        //            xffprogresslabel.Invalidate();
+        //        }));
+        //    else
+        //    {
+        //        xffprogresslabel.Text = text;
+        //        xffprogresslabel.Invalidate();
+        //    }
 
-            //Application.DoEvents();
-        }
+        //    //Application.DoEvents();
+        //}
 
-        private void EnableProgressLabel(bool enable)
-        {
-            if (xprogresslabel.InvokeRequired)
-                xprogresslabel.Invoke(new MethodInvoker(() => xprogresslabel.Visible = enable));
-            else
-                xprogresslabel.Visible = enable;
-        }
+        //private void EnableProgressLabel(bool enable)
+        //{
+        //    if (xffprogresslabel.InvokeRequired)
+        //        xffprogresslabel.Invoke(new MethodInvoker(() => xffprogresslabel.Visible = enable));
+        //    else
+        //        xffprogresslabel.Visible = enable;
+        //}
 
         private bool _isbussy;
 
@@ -212,45 +212,57 @@ namespace Controls
                     if (IsDisposed || Disposing)
                     {
                         _isbussy = false;
+                        productieListControl1.StopWait();
                         return;
                     }
                     _isbussy = true;
-                    EnableProgressLabel(true);
-                    SetProgressLabelText("Producties Laden...");
-                    var ids = Manager.xGetAllProductieIDs(true, true);
-                    int cur = 0;
-                    int max = ids.Count;
-                    var loaded = new List<Bewerking>();
-                    foreach (var id in ids)
-                    {
-                        if (IsDisposed || !Visible) break;
-                        if (string.IsNullOrEmpty(id)) continue;
-                        var x = Manager.Database.GetProductie(id, true);
-                        if (x == null) continue;
-                        if (x.Bewerkingen is {Length: > 0})
-                        {
-                            var bws = x.Bewerkingen.Where(b => IsAllowed(b, null)).ToArray();
-                            if (bws.Length > 0)
-                            {
-                                loaded.AddRange(bws);
-                            }
-                        }
+                    productieListControl1.SetWaitUI("Producties zoeken");
+                    var bws = Manager.Database.xGetAllBewerkingen(true, true, true).Where(x=> IsAllowed(x, null)).ToList();//.xGetAllProductieIDs(true, true);
+                    //int cur = 0;
+                    //int max = bws.Count;
+                    //var loaded = new List<Bewerking>();
+                    //for(int i = 0; i < max; i++)
+                    //{
+                    //    var bw = bws[i];
+                    //    if (IsAllowed(bw, null))
+                    //        loaded.Add(bw);
+                    //    cur++;
+                    //    double perc = (double)cur / max;
+                    //    SetProgressLabelText($"Producties laden ({perc:0.0%})...");
+                    //}
+                    //foreach (var id in ids)
+                    //{
+                    //    if (IsDisposed || !Visible) break;
+                    //    if (string.IsNullOrEmpty(id)) continue;
+                    //    var x = Manager.Database.GetProductie(id, true);
+                    //    if (x == null) continue;
+                    //    if (x.Bewerkingen is {Length: > 0})
+                    //    {
+                    //        var bws = x.Bewerkingen.Where(b => IsAllowed(b, null)).ToArray();
+                    //        if (bws.Length > 0)
+                    //        {
+                    //            loaded.AddRange(bws);
+                    //        }
+                    //    }
 
-                        cur++;
-                        double perc = (double) cur / max;
-                        SetProgressLabelText($"Producties laden ({perc:0.0%})...");
-                    }
+                    //    cur++;
+                    //    double perc = (double) cur / max;
+                    //    SetProgressLabelText($"Producties laden ({perc:0.0%})...");
+                    //}
 
                     if (IsDisposed || Disposing)
                     {
                         _isbussy = false;
+                        productieListControl1.StopWait();
                         return;
                     }
-                    productieListControl1.InitProductie(loaded, true, true, false);
+                    productieListControl1.InitProductie(bws, true, true, false);
+                    productieListControl1.StopWait();
                 }
                 catch (Exception e)
                 {
                     _isbussy = false;
+                    productieListControl1.StopWait();
                     if (IsDisposed || Disposing) return;
                     this.Invoke(new MethodInvoker(() =>
                     {
@@ -261,7 +273,7 @@ namespace Controls
 
                 _isbussy = false;
                 if (IsDisposed || Disposing) return;
-                EnableProgressLabel(false);
+                //EnableProgressLabel(false);
                 this.Invoke(new MethodInvoker(UpdateStatusLabel));
             });
         }

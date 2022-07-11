@@ -845,7 +845,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                 foreach (var xrow in xcols.Columns)
                 {
                     arg.Message = $"Columns Aanmaken {cellindex}/{xcols.Columns.Count}...";
-                    arg.Pogress = cellindex == 0 ? 0 : (int)((double)(cellindex / xcols.Columns.Count) * 100);
+                    arg.Progress = cellindex == 0 ? 0 : (int)((double)(cellindex / xcols.Columns.Count) * 100);
                     CreateCell(row, cellindex++, xrow.ColumnText, cellStyleBorder);
                     if (handler != null && !handler.Invoke(arg)) return sheet;
                 }
@@ -868,7 +868,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                 foreach (var bw in producties)
                 {
                     arg.Message = $"Rij Aanmaken voor '{bw.ProductieNr}'({xcurindex}/{producties.Count})...";
-                    arg.Pogress = xcurindex == 0 ? 0 : (int)((double)(xcurindex / producties.Count) * 100);
+                    arg.Progress = xcurindex == 0 ? 0 : (int)((double)(xcurindex / producties.Count) * 100);
                     if (handler != null && !handler.Invoke(arg)) break;
                     if (!string.Equals(lastid, bw.ArtikelNr, StringComparison.CurrentCultureIgnoreCase))
                     {
@@ -975,7 +975,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                 {
                     if (xcol.Type == CalculationType.None) continue;
                     arg.Message = $"Berekening Column Aanmaken voor '{xcol.ColumnText}'({xcurindex}/{xcols.Columns.Count})...";
-                    arg.Pogress = xcurindex == 0 ? 0 : (int)((double)(xcurindex / xcols.Columns.Count) * 100);
+                    arg.Progress = xcurindex == 0 ? 0 : (int)((double)(xcurindex / xcols.Columns.Count) * 100);
                     handler?.Invoke(arg);
                     //if (handler != null && !handler.Invoke()) return sheet;
                     cellindex = GetProductieColumnIndex(xcols.Columns, xcol.Naam);
@@ -1000,7 +1000,7 @@ namespace ProductieManager.Rpm.ExcelHelper
 
                 {
                     arg.Message = $"Breedte aanpassen voor Column '{xcols.Columns[i].ColumnText}'({i}/{xcols.Columns.Count})...";
-                    arg.Pogress = xcurindex == 0 ? 0 : (int)((double)(i / xcols.Columns.Count) * 100);
+                    arg.Progress = xcurindex == 0 ? 0 : (int)((double)(i / xcols.Columns.Count) * 100);
                     //if (handler != null && !handler.Invoke()) return sheet;
                     handler?.Invoke(arg);
                     if (xcols.Columns[i].AutoSize)
@@ -1499,7 +1499,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                     for (var i = 0; i < bewerkingen.Count; i++)
                     {
                         arg.Message = $"Bewerkingen Verzamelen ({i}/{bewerkingen.Count})...";
-                        arg.Pogress = i == 0 ? 0 : (int)(((double) (i / bewerkingen.Count)) * 100);
+                        arg.Progress = i == 0 ? 0 : (int)(((double) (i / bewerkingen.Count)) * 100);
                         if (handler != null && !handler.Invoke(arg)) return null;
                         var bw = bewerkingen[i];
                         //if (producties[i].Bewerkingen?.Length == 0) continue;
@@ -1594,7 +1594,7 @@ namespace ProductieManager.Rpm.ExcelHelper
                             {
 
                                 arg.Message = $"Columns Aanmaken {cellindex}/{columns.Count}...";
-                                arg.Pogress = cellindex == 0 ? 0 : (int)((double)(cellindex / columns.Count) * 100);
+                                arg.Progress = cellindex == 0 ? 0 : (int)((double)(cellindex / columns.Count) * 100);
                                 CreateCell(row, cellindex++, xcol.Text, cellStyleBorder);
                                 if (handler != null && !handler.Invoke(arg)) break;
                             }

@@ -22,7 +22,7 @@ namespace AutoUpdaterDotNET
             InitializeComponent();
         }
 
-        private async void LoadFields()
+        private void LoadFields()
         {
             buttonSkip.Visible = AutoUpdater.ShowSkipButton;
             buttonRemindLater.Visible = AutoUpdater.ShowRemindLaterButton;
@@ -35,7 +35,7 @@ namespace AutoUpdaterDotNET
                 : $"Er is geen nieuwe update beschikbaar voor {AutoUpdater.AppTitle}.";
             this.Text = labelUpdate.Text;
             xdescription.Text = isnew ? $"{AutoUpdater.AppTitle} {_args.CurrentVersion} is nu beschikbaar." +
-                 $" Jij hebt versie {_args.InstalledVersion} geinstalleerd. Wil je nu downloaden?" :
+                 $" Geinstalleerde versie: {_args.InstalledVersion}.\nWil je nu updaten?" :
                  $"Huidige versie van {AutoUpdater.AppTitle} is {_args.CurrentVersion}.";
             buttonUpdate.Text = isnew ? "Update" : "Download";
 

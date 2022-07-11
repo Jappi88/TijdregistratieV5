@@ -21,7 +21,7 @@ namespace ProductieManager.Rpm.Productie
                     progressChanged?.Invoke(null,
                         new ProgressArg()
                         {
-                            Message = "Producties laden...", Pogress = 0, Type = ProgressType.ReadBussy, Value = xreturn
+                            Message = "Producties laden...", Progress = 0, Type = ProgressType.ReadBussy, Value = xreturn
                         });
                     var prods = Manager.Database.xGetAllProducties(true, true, bereik,null,true);
                     for (int i = 0; i < prods.Count; i++)
@@ -31,7 +31,7 @@ namespace ProductieManager.Rpm.Productie
                             new ProgressArg()
                             {
                                 Message = "Materialen laden...",
-                                Pogress = percent,
+                                Progress = percent,
                                 Type = ProgressType.ReadBussy,
                                 Value = xreturn
                             });
@@ -65,7 +65,7 @@ namespace ProductieManager.Rpm.Productie
                         new ProgressArg()
                         {
                             Message = "Materialen succesvol geladen!",
-                            Pogress = 100,
+                            Progress = 100,
                             Type = ProgressType.ReadCompleet,
                             Value = xreturn
                         });

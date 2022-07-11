@@ -1,11 +1,11 @@
 ﻿using MetroFramework;
 using MetroFramework.Forms;
 using MetroFramework.Interfaces;
+using Rpm.Misc;
 using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Rpm.Misc;
 using Various;
 
 namespace Forms.MetroBase
@@ -33,7 +33,6 @@ namespace Forms.MetroBase
             // 
             // MetroBaseForm
             // 
-            this.ClientSize = new System.Drawing.Size(300, 300);
             this.MinimumSize = new System.Drawing.Size(100, 75);
             this.Name = "MetroBaseForm";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
@@ -41,7 +40,6 @@ namespace Forms.MetroBase
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MetroBaseForm_FormClosed);
             this.Shown += new System.EventHandler(this.MetroBaseForm_Load);
             this.ResumeLayout(false);
-
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -139,11 +137,12 @@ namespace Forms.MetroBase
             {
                 if (SaveLastSize)
                     this.InitLastInfo(InitLastLocation);
-                if(!InitLastLocation)
+                var par = OwnerForm ?? this.FindForm()?.ParentForm;
+                if (par != null && !InitLastLocation)
                 {
-                    var par = OwnerForm ?? this.FindForm()?.ParentForm;
-                    if (par == null)
-                        this.GetParentForm();
+                   
+                    if (par == null || !par.Visible)
+                        par = this.GetParentForm();
                     if (par != null)
                     {
                         par = par?.FindForm() ?? par;
@@ -209,7 +208,7 @@ namespace Forms.MetroBase
                     {
                         xform.Invoke(new MethodInvoker(() =>
                         {
-                            xform.BringToFront();
+                            //xform.BringToFront();
                             xform.Focus();
                             xform.Select();
                         }));
@@ -217,10 +216,9 @@ namespace Forms.MetroBase
                     }
                     else
                     {
-                        xform.BringToFront();
+                        //xform.BringToFront();
                         xform.Focus();
                         xform.Select();
-                        xform.Activate();
                     }
                 }
             }

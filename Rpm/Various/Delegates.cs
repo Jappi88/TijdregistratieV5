@@ -59,7 +59,7 @@ namespace Rpm.Various
     public class ProgressArg
     {
         public string Message;
-        public int Pogress;
+        public int Progress;
         public int Current;
         public int Max;
         public ProgressType Type;
@@ -79,6 +79,8 @@ namespace Rpm.Various
 
         public void OnChanged(object sender)
         {
+            if (Current > 0 && Max > 0)
+                Progress = (int)(((double)Current / (double)Max) * 100);
             Changed?.Invoke(sender, this);
         }
     }

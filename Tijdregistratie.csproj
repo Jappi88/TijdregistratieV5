@@ -127,8 +127,8 @@
     <Reference Include="CircularProgressBar">
       <HintPath>..\..\..\Desktop\ProductieManager\CircularProgressBar.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.11.42.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>packages\HtmlAgilityPack.1.11.42\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="HtmlAgilityPack, Version=1.11.43.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>packages\HtmlAgilityPack.1.11.43\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="HtmlRenderer, Version=1.5.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -168,8 +168,8 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="MimeKit, Version=3.2.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
-      <HintPath>packages\MimeKit.3.2.0\lib\net47\MimeKit.dll</HintPath>
+    <Reference Include="MimeKit, Version=3.3.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
+      <HintPath>packages\MimeKit.3.3.0\lib\net47\MimeKit.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -297,6 +297,12 @@
     </Compile>
     <Compile Include="Controls\CustomObjectListview.Designer.cs">
       <DependentUpon>CustomObjectListview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BackupRestoreForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BackupRestoreForm.Designer.cs">
+      <DependentUpon>BackupRestoreForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Chat\NewMessageUI.cs">
       <SubType>UserControl</SubType>
@@ -1599,6 +1605,9 @@
     <EmbeddedResource Include="Controls\CustomObjectListview.resx">
       <DependentUpon>CustomObjectListview.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BackupRestoreForm.resx">
+      <DependentUpon>BackupRestoreForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Chat\NewMessageUI.resx">
       <DependentUpon>NewMessageUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -2295,6 +2304,8 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\zip_36268_32x32.png" />
+    <None Include="Resources\page_document_empty_32x32.png" />
     <None Include="Resources\uparrow.png" />
     <None Include="Resources\ThumbTop.png" />
     <None Include="Resources\ThumbSpanTop.png" />

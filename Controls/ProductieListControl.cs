@@ -1306,11 +1306,12 @@ namespace Controls
                 var xbewerkingen = bewerkingen ?? Bewerkingen;//ProductieLijst.Objects?.Cast<Bewerking>().ToList();
                 states ??= GetCurrentViewStates();
                 // bool checkall = xbewerkingen != null && !xbewerkingen.Any(x=> string.Equals(x.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase));
-                var xbws = xbewerkingen.GetRange(0, xbewerkingen.Count).Where(x => string.Equals(x.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase)).ToList();
-                foreach(var xb in xbws)
+                var xbws = xbewerkingen.GetRange(0, xbewerkingen.Count).Where(x => string.Equals(x?.ProductieNr, form.ProductieNr, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                foreach (var xb in xbws)
                 {
-                    if (!form.Bewerkingen.Any(x => string.Equals(x.Naam, xb.Naam, StringComparison.CurrentCultureIgnoreCase)))
+                    if (!form.Bewerkingen.Any(x => string.Equals(x?.Naam, xb?.Naam, StringComparison.CurrentCultureIgnoreCase)))
                         Bewerkingen.Remove(xb);
+                    if (IsDisposed || Disposing) return false;
                 }
                 if (form?.Bewerkingen != null && form.Bewerkingen.Length > 0)
                 {
@@ -1318,36 +1319,40 @@ namespace Controls
                     {
                         var b = form.Bewerkingen[i];
                         var index = -1;
+                        if (IsDisposed || Disposing) break;
                         UpdateBewerking(b, states, ref index, false, false);
                         var isvalid = IsAllowd(b, true) && b.IsAllowed(filter ?? GetFilter()) &&
                                       states.Any(x => b.IsValidState(x));
                         if (isvalid && ValidHandler != null)
                             isvalid &= ValidHandler.Invoke(b, filter ?? GetFilter());
-                       // lock (_locker)
+                        // lock (_locker)
                         //{
-                            if (InvokeRequired)
-                                this.Invoke(new MethodInvoker(() => index = ProductieLijst.IndexOf(b)));
-                            else
-                                index = ProductieLijst.IndexOf(b);
-                            if (index > -1)
-                            {
-                                if (isvalid)
-                                    ProductieLijst.RefreshObject(b);
-                                else
-                                {
-                                    changed = true;
-                                    ProductieLijst.RemoveObject(b);
-                                }
-                            }
+                        if (IsDisposed || Disposing) break;
+                        if (InvokeRequired)
+                            this.Invoke(new MethodInvoker(() => index = ProductieLijst.IndexOf(b)));
+                        else
+                            index = ProductieLijst.IndexOf(b);
+                        if (index > -1)
+                        {
+                            if (IsDisposed || Disposing) break;
+                            if (isvalid)
+                                ProductieLijst.RefreshObject(b);
                             else
                             {
-                                if (isvalid)
-                                {
-                                    changed = true;
-                                    ProductieLijst.AddObject(b);
-                                }
+                                changed = true;
+                                ProductieLijst.RemoveObject(b);
                             }
-                       // }
+                        }
+                        else
+                        {
+                            if (isvalid)
+                            {
+                                changed = true;
+                                if (IsDisposed || Disposing) break;
+                                ProductieLijst.AddObject(b);
+                            }
+                        }
+                        // }
                     }
                 }
                 //var xremove = xbewerkingen?.Where(x =>

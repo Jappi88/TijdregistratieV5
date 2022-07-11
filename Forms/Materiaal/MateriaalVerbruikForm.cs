@@ -119,7 +119,7 @@ namespace Forms
         {
             this.Invoke(new MethodInvoker(() =>
             {
-                xloadinglabel.Text = arg.Message + $"{arg.Pogress}%";
+                xloadinglabel.Text = arg.Message + $"{arg.Progress}%";
                 this.Invalidate();
             }));
             Application.DoEvents();

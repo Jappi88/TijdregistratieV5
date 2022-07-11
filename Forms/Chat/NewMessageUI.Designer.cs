@@ -46,7 +46,7 @@ namespace ProductieManager.Forms.Chat
             this.xMainImage.Image = global::ProductieManager.Properties.Resources.chat_26_icon_96x96;
             this.xMainImage.Location = new System.Drawing.Point(0, 0);
             this.xMainImage.Name = "xMainImage";
-            this.xMainImage.Size = new System.Drawing.Size(70, 91);
+            this.xMainImage.Size = new System.Drawing.Size(70, 112);
             this.xMainImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.xMainImage.TabIndex = 0;
             this.xMainImage.TabStop = false;
@@ -75,21 +75,22 @@ namespace ProductieManager.Forms.Chat
             this.xMessagePanel.Location = new System.Drawing.Point(70, 0);
             this.xMessagePanel.Name = "xMessagePanel";
             this.xMessagePanel.Padding = new System.Windows.Forms.Padding(5);
-            this.xMessagePanel.Size = new System.Drawing.Size(322, 91);
+            this.xMessagePanel.Size = new System.Drawing.Size(345, 112);
             this.xMessagePanel.TabIndex = 2;
             // 
             // xmessage
             // 
             this.xmessage.AutoScroll = true;
-            this.xmessage.AutoScrollMinSize = new System.Drawing.Size(312, 20);
+            this.xmessage.AutoScrollMinSize = new System.Drawing.Size(335, 20);
             this.xmessage.BackColor = System.Drawing.Color.Transparent;
             this.xmessage.BaseStylesheet = null;
             this.xmessage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xmessage.Location = new System.Drawing.Point(5, 5);
             this.xmessage.Name = "xmessage";
-            this.xmessage.Size = new System.Drawing.Size(312, 81);
+            this.xmessage.Size = new System.Drawing.Size(335, 102);
             this.xmessage.TabIndex = 5;
             this.xmessage.Text = "Bericht:";
+            this.xmessage.LinkClicked += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlLinkClickedEventArgs>(this.xmessage_LinkClicked);
             this.xmessage.Click += new System.EventHandler(this.xMain_Click);
             this.xmessage.MouseEnter += new System.EventHandler(this.xMain_MouseEnter);
             this.xmessage.MouseLeave += new System.EventHandler(this.xMain_MouseLeave);
@@ -102,7 +103,7 @@ namespace ProductieManager.Forms.Chat
             this.xtitle.ForeColor = System.Drawing.Color.SteelBlue;
             this.xtitle.Location = new System.Drawing.Point(5, 5);
             this.xtitle.Name = "xtitle";
-            this.xtitle.Size = new System.Drawing.Size(392, 28);
+            this.xtitle.Size = new System.Drawing.Size(415, 28);
             this.xtitle.TabIndex = 3;
             this.xtitle.Text = "Title";
             this.xtitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -115,7 +116,7 @@ namespace ProductieManager.Forms.Chat
             this.xMainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xMainPanel.Location = new System.Drawing.Point(5, 33);
             this.xMainPanel.Name = "xMainPanel";
-            this.xMainPanel.Size = new System.Drawing.Size(392, 91);
+            this.xMainPanel.Size = new System.Drawing.Size(415, 112);
             this.xMainPanel.TabIndex = 4;
             // 
             // NewMessageUI
@@ -129,7 +130,7 @@ namespace ProductieManager.Forms.Chat
             this.DoubleBuffered = true;
             this.Name = "NewMessageUI";
             this.Padding = new System.Windows.Forms.Padding(5);
-            this.Size = new System.Drawing.Size(402, 129);
+            this.Size = new System.Drawing.Size(425, 150);
             ((System.ComponentModel.ISupportInitialize)(this.xMainImage)).EndInit();
             this.xMessagePanel.ResumeLayout(false);
             this.xMainPanel.ResumeLayout(false);

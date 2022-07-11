@@ -219,7 +219,7 @@ namespace Forms
             try
             {
                 string xall = null;
-                List<IProductieBase> bws = Bewerkingen.Cast<IProductieBase>().ToList().GetRange(0,Bewerkingen.Count).Where(x => (x.State is ProductieState.Gestopt or ProductieState.Gestart) && IsAllowed(x, indeling, false)).OrderBy(x => x.ProductieNr).ToList();
+                List<IProductieBase> bws = Bewerkingen.Cast<IProductieBase>().ToList().GetRange(0,Bewerkingen.Count).Where(x => x != null && (x.State is ProductieState.Gestopt or ProductieState.Gestart) && IsAllowed(x, indeling, false)).OrderBy(x => x.ProductieNr).ToList();
                 // }
                 var size = indeling.IsCompact ? new Size(32, 32) : new Size(64, 64);
                 if (indeling == null || indeling.IsDefault())
@@ -563,7 +563,7 @@ namespace Forms
                             wp.Tijden.SpecialeRoosters.AddRange(xadd);
                         bw.xUpdateBewerking(null, $"[{wp.Path}] Rooster geupdate", true, false);
                     }
-                    UpdateIndeling(indeling, false);
+                    UpdateIndeling(indeling, true);
                     //if (bws.Count > 0)
                     //{
                     //    var result = XMessageBox.Show(this, "Wilt u producties kiezen om de roosters te updaten?", "Roosters Updaten", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -1054,7 +1054,7 @@ namespace Forms
                 for (int i = 0; i < xindelingen.Count; i++)
                 {
                     var x = xindelingen[i];
-                    UpdateIndeling(x, x.IsSelected);
+                    UpdateIndeling(x, true);
                 }
                 _updating = false;
                 // }
@@ -1070,13 +1070,13 @@ namespace Forms
             try
             {
 
-                var bws = Bewerkingen.GetRange(0,Bewerkingen.Count).Where(bw => (bw.State is ProductieState.Gestopt or ProductieState.Gestart) && IsAllowed(bw, indeling, false)).ToList();
+                var bws = Bewerkingen.GetRange(0,Bewerkingen.Count).Where(bw => bw != null && (bw.State is ProductieState.Gestopt or ProductieState.Gestart) && IsAllowed(bw, indeling, false)).ToList();
                 if (updategereed)
                 {
 
                     if (!indeling.IsDefault())
                     {
-                        indeling.GereedOp = bws.OfType<IProductieBase>().ToList().BerekenLeverDatums(true, true, true);
+                        indeling.GereedOp = bws.OfType<IProductieBase>().ToList().BerekenLeverDatums(true, true, indeling.IsSelected);
                     }
 
                 }

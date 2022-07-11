@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using Forms.MetroBase;
 using Various;
 using HtmlDocument = HtmlAgilityPack.HtmlDocument;
+using Rpm.Productie;
 
 namespace ProductieManager.Forms
 {
@@ -71,21 +72,23 @@ namespace ProductieManager.Forms
                     {
                         password = xdoc.GetAttribute("value");
                     }
-
-                    bool save = false;
-                    if (!string.IsNullOrEmpty(username))
+                    if (Manager.Opties != null)
                     {
-                        Properties.Settings.Default.VaultUserName = username;
-                        save = true;
-                    }
-                    if (!string.IsNullOrEmpty(password))
-                    {
-                        Properties.Settings.Default.VaultPassword = password;
-                        save = true;
-                    }
+                        bool save = false;
+                        if (!string.IsNullOrEmpty(username))
+                        {
+                            Manager.Opties.VaultUsername = username;
+                            save = true;
+                        }
+                        if (!string.IsNullOrEmpty(password))
+                        {
+                            Manager.Opties.VaultPassword = password;
+                            save = true;
+                        }
 
-                    if (save)
-                        Properties.Settings.Default.Save();
+                        if (save)
+                            Properties.Settings.Default.Save();
+                    }
                 }
             }
             catch (Exception exception)
@@ -241,7 +244,7 @@ namespace ProductieManager.Forms
                 //Eerst even checken of je moet inloggen...
 
                 var el = xelements.FindFirst("form");
-                if (el != null)
+                if (el != null && Manager.Opties != null)
                 {
                     el = el.SelectSingleNode("//input[@id='UserName']");
                     if (el != null)
@@ -249,11 +252,11 @@ namespace ProductieManager.Forms
                         var xdoc = Browser.Document?.GetElementById(el.Id);
                         if (xdoc != null)
                         {
-                            xdoc.SetAttribute("value",  Properties.Settings.Default.VaultUserName);
+                            xdoc.SetAttribute("value", Manager.Opties.VaultUsername);
                             xdoc = Browser.Document?.GetElementById("Password");
                             if (xdoc != null)
                             {
-                                xdoc.SetAttribute("value", Properties.Settings.Default.VaultPassword);
+                                xdoc.SetAttribute("value", Manager.Opties.VaultPassword);
                             }
 
                             return;

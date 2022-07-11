@@ -90,6 +90,7 @@ namespace ProductieManager.Rpm.Various
                     Chat.ProfielImage = $"{ProfielPath}\\ProfielFoto.png";
                     Resources.avatardefault_92824.Save(Chat.ProfielImage, ImageFormat.Png);
                 }
+                Chat.Avatar = GetProfielImage(Chat);
                 SaveGebruiker();
                 UpdateGebruikers();
                 ProfilesIO?.Close();
@@ -252,6 +253,7 @@ namespace ProductieManager.Rpm.Various
                 File.Copy(img, Chat.ProfielImage, true);
                 FileInfo fi = new FileInfo(Chat.ProfielImage);
                 fi.LastWriteTime = DateTime.Now;
+                Chat.Avatar = GetProfielImage(Chat);
                 return SaveGebruiker(Chat);
             }
             catch (Exception e)
@@ -329,12 +331,14 @@ namespace ProductieManager.Rpm.Various
                 var xpath = ChatPath;
                 if (Chat == null || !Directory.Exists(xpath)) return false;
                 string[] files = Directory.GetFiles(xpath, "*.rpm", SearchOption.TopDirectoryOnly);
+                Chat.Avatar = GetProfielImage();
                 foreach (var file in files)
                 {
                     var ent = MultipleFileDb.xFromPath<UserChat>(file, false);
                     if (Chat == null) break;
                     if (ent == null || string.Equals(Chat.UserName, ent.UserName,
                         StringComparison.CurrentCultureIgnoreCase) && !Gebruikers.Any(x=> string.Equals(x.UserName, ent.UserName, StringComparison.CurrentCultureIgnoreCase))) continue;
+                    ent.Avatar = GetProfielImage(ent);
                     Gebruikers.Add(ent);
                 }
 
@@ -360,7 +364,7 @@ namespace ProductieManager.Rpm.Various
             string path = Path.Combine(ChatPath, xname, "Berichten");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            List<string> files = Directory.GetFiles(path, "*.rpm", SearchOption.TopDirectoryOnly).ToList();
+            List<string> files = Directory.GetFiles(path, "*.rpm", SearchOption.TopDirectoryOnly).Where(x => File.GetLastWriteTime(x) >= vanaf).ToList();
             if (string.IsNullOrEmpty(afzender))
             {
                 var xpath = Path.Combine(ChatPath, "iedereen", "Berichten");
@@ -374,7 +378,12 @@ namespace ProductieManager.Rpm.Various
                 {
                     var ent = MultipleFileDb.xFromPath<ProductieChatEntry>(file, false);
                     if (ent?.Afzender == null) continue;
-                    if (!vanaf.IsDefault() && ent.Tijd < vanaf) continue;
+                    if (!vanaf.IsDefault())
+                    {
+                        File.SetLastWriteTime(file, ent.Tijd);
+                        if (ent.Tijd < vanaf)
+                            continue;
+                    }
                     if (!string.IsNullOrEmpty(afzender) &&
                         !string.Equals(afzender, "iedereen", StringComparison.CurrentCultureIgnoreCase))
                     {

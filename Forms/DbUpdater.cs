@@ -90,7 +90,7 @@ namespace Forms
         {
             xstatus.Invoke(new Action(() => xstatus.Text = arg.Message));
             xstatus.Invoke(new Action(xstatus.Invalidate));
-            progressBar1.Invoke(new Action(() => progressBar1.Value = arg.Pogress));
+            progressBar1.Invoke(new Action(() => progressBar1.Value = arg.Progress));
             progressBar1.Invoke(new Action(progressBar1.Invalidate));
         }
 
