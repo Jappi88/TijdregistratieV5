@@ -78,9 +78,8 @@ namespace Controls
         public string ListName { get; set; }
        // public bool RemoveCustomItemIfNotValid { get; set; }
         public bool CustomList { get; private set; }
-        public List<ProductieFormulier> Producties { get; set; } = new();
-        public List<Bewerking> Bewerkingen { get; set; } = new();
-        public List<Bewerking> CheckedBewerkingen { get => ProductieLijst.CheckedObjects.OfType<Bewerking>().ToList(); }
+        private List<ProductieFormulier> Producties { get; set; } = new();
+        private List<Bewerking> Bewerkingen { get; set; } = new();
         public IsValidHandler ValidHandler { get; set; }
         public bool IsBewerkingView { get; set; }
         public bool CanLoad { get; set; }

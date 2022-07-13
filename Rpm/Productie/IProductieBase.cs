@@ -16,6 +16,7 @@ using System.Windows.Forms;
 
 namespace Rpm.Productie
 {
+    [Serializable]
     public class IProductieBase : IDbLogging
     {
         [Display(Name = "Root", Description = "BASIS formulier waarvan de informatie wordt gehaald")]

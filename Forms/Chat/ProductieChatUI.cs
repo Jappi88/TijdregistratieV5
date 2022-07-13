@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using ProductieManager.Properties;
 using ContentAlignment = System.Drawing.ContentAlignment;
 using TextAlign = NPOI.XSSF.UserModel.TextAlign;
+using MetroFramework.Controls;
 
 namespace Forms
 {
@@ -640,7 +641,7 @@ namespace Forms
                 var xupdated = updated;
                 var xadded = added;
                 ChatBubble ret = null;
-                this.Invoke(new MethodInvoker(() => ret = UpdateMessage(message, ref xupdated, ref xadded,scrolintoview, chats)));
+                this.Invoke(new MethodInvoker(() => ret = UpdateMessage(message, ref xupdated, ref xadded, scrolintoview, chats)));
                 updated = xupdated;
                 added = xadded;
                 return ret;
@@ -651,9 +652,10 @@ namespace Forms
                 var xent = message;
                 bool isme = string.Equals(xent.Afzender.UserName, Manager.ProductieChat.Chat.UserName,
                     StringComparison.CurrentCultureIgnoreCase);
-               
+
                 if (!isme && !xent.IsGelezen)
                 {
+
                     xent.IsGelezen = true;
                     Manager.ProductieChat?.UpdateMessage(xent);
                     updated = true;

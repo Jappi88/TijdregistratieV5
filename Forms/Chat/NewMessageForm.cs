@@ -7,13 +7,13 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace ProductieManager.Forms.Chat
+namespace Forms.Chat
 {
-    public partial class NewMessageUI : UserControl
+    public partial class NewMessageForm : Form
     {
         public ProductieChatEntry[] Messages { get; private set; }
 
-        public NewMessageUI()
+        public NewMessageForm()
         {
             InitializeComponent();
         }
@@ -24,10 +24,13 @@ namespace ProductieManager.Forms.Chat
         public void InitMessages(ProductieChatEntry[] messages)
         {
             if (messages == null || messages.Length == 0)
-                OnClose();
+            {
+                if (this.Visible)
+                    this.Close();
+            }
             else
             {
-                Messages = messages.OrderBy(x=> x.Tijd).ToArray();
+                Messages = messages.OrderBy(x => x.Tijd).ToArray();
                 var msg = string.Join("<br>", Messages.Select(x => $"<div><b>{x.Afzender.UserName} Zegt:</b></div>" +
                                                                   $"<div>{x.Bericht}</div>"));
                 xmessage.Text = $"<span color='White'>{msg}</span>";
@@ -43,19 +46,13 @@ namespace ProductieManager.Forms.Chat
 
         private void xclose_Click(object sender, System.EventArgs e)
         {
-            OnClose();
+            this.Close();
         }
 
-        public event EventHandler Close;
-
-        protected virtual void OnClose()
-        {
-            Close?.Invoke(this, EventArgs.Empty);
-        }
 
         private void xMain_Click(object sender, EventArgs e)
         {
-            base.InvokeOnClick(this, e);
+            OnMessageClicked(sender);
         }
 
         private void xMain_MouseEnter(object sender, EventArgs e)
@@ -83,6 +80,12 @@ namespace ProductieManager.Forms.Chat
             {
                 Console.WriteLine(exception);
             }
+        }
+
+        public event EventHandler MessageClicked;
+        protected virtual void OnMessageClicked(object sender)
+        {
+            this.MessageClicked?.Invoke(sender, EventArgs.Empty);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Rpm.Productie
         }
     }
 
-
+    [Serializable]
     public sealed class Bewerking : IProductieBase
     {
         private DateTime _gestartop;
@@ -1342,19 +1342,19 @@ namespace Rpm.Productie
 
         public int ActueelProductenPerUur()
         {
-            var tijd = TijdAanGewerkt();
+            var tijd = TijdAanGewerkt(true);
             var peruur = 0;
             if (tijd > 0 && TotaalGemaakt > 0)
                 peruur = (int) (TotaalGemaakt / tijd);
             return peruur;
         }
 
-        public double TijdAanGewerkt()
+        public double TijdAanGewerkt(bool totaantalupdate = false)
         {
             //if (!string.IsNullOrEmpty(GestartDoor) && !string.Equals(GestartDoor, Manager.Opties.Username,
             //    StringComparison.CurrentCultureIgnoreCase))
             //    return TijdGewerkt;
-            double tijd = CalculateMachineTijd();
+            double tijd = CalculateMachineTijd(totaantalupdate);
             if (tijd <= 0) return 0;
             return tijd;
         }
@@ -1366,10 +1366,10 @@ namespace Rpm.Productie
             return tijd;
         }
 
-        public double CalculateMachineTijd()
+        public double CalculateMachineTijd(bool totaantalupdate)
         {
             //var storingen = WerkPlekken.ToArray().CreateStoringDictionary();
-            var xtijd = WerkPlekken.Sum(x=> x.TijdAanGewerkt(true));
+            var xtijd = WerkPlekken.Sum(x=> x.TijdAanGewerkt(true,true, totaantalupdate? x.LaatstAantalUpdate : default));
             return Math.Round(xtijd,2);
         }
 

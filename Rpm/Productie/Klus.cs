@@ -74,10 +74,10 @@ namespace Rpm.Productie
 
         public bool IsNieuw => DateTime.Now.AddHours(4) >= AangemaaktOp;
 
-        public TimeSpan TijdGewerkt(Dictionary<DateTime, DateTime> exclude, Rooster rooster)
+        public TimeSpan TijdGewerkt(Dictionary<DateTime, DateTime> exclude, Rooster rooster, DateTime enddate = default)
         {
             var ex = exclude ?? new Dictionary<DateTime, DateTime>();
-            return TimeSpan.FromHours(Tijden.TijdGewerkt(rooster,ex));
+            return TimeSpan.FromHours(Tijden.TijdGewerkt(rooster,ex, enddate));
         }
 
         public double TijdGewerkt()

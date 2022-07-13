@@ -18,15 +18,7 @@ namespace Controls
     
     public partial class WerkplekIndeling : UserControl
     {
-        public bool IsCompact
-        {
-            get => Settings?.IsCompact ?? false;
-            private set
-            {
-                Settings ??= new WerkplaatsSettings();
-                Settings.IsCompact = value;
-            }
-        }
+        public bool IsCompact { get; set; }
 
         public string Werkplek
         {
@@ -36,6 +28,10 @@ namespace Controls
                 Settings.Name = value;
             }
         }
+
+        public bool ToonSelectedKnoppen { get; set; }
+
+        public bool ToonCompactMode { get; set; }
 
         public bool IsDefault()
         {
@@ -59,7 +55,9 @@ namespace Controls
         {
             try
             {
-                Settings = werkplek;
+                if (werkplek != null)
+                    Settings = werkplek;
+                IsCompact = Settings.IsCompact;
                 UpdateWerkplekInfo();
             }
             catch (Exception e)
@@ -84,7 +82,7 @@ namespace Controls
                     xVerwijderPersoneel.Visible = false;
                     xresetindeling.Visible = false;
                     xnietingedeeld.Visible = true;
-                    xcompact.Visible = true;
+                    xcompact.Visible = ToonCompactMode;
                     xnietingedeeld.Checked = ToonNietIngedeeld;
                     if (FieldTextGetter != null)
                     {
@@ -106,8 +104,8 @@ namespace Controls
                 else
                 {
                     //ximage.Image = Resources.user_customer_person_13976;
-                    xknoppenpanel.Visible = SelectedBewerking != null && !IsDefault() && IsSelected;
-                    xcompact.Visible = true;
+                    xknoppenpanel.Visible = SelectedBewerking != null && !IsDefault() && IsSelected && ToonSelectedKnoppen;
+                    xcompact.Visible = ToonCompactMode;
                     xVerwijderPersoneel.Visible = true;
                     xVerwijderKlus.Enabled = SelectedBewerking != null && SelectedBewerking.State != ProductieState.Gereed;
                     xresetindeling.Visible = true;
@@ -148,6 +146,12 @@ namespace Controls
                     }
 
                 }
+                if (this.Parent != null)
+                    toolTip1.SetToolTip(this.Parent, Parent?.Text);
+                toolTip1.SetToolTip(xpersoonInfo, Parent?.Text);
+                toolTip1.SetToolTip(xcompactinfo, Parent?.Text);
+                toolTip1.SetToolTip(xmiscPanel, Parent?.Text);
+                toolTip1.SetToolTip(xknoppenpanel, Parent?.Text);
                 UpdateHeight();
             }
         }
@@ -161,7 +165,7 @@ namespace Controls
                 if (c != null)
                 {
 
-                    c.Height = IsCompact ? 60 : IsDefault()? 122 : 140;
+                    c.Height = IsCompact ? 60 : IsDefault()? 120 : 140;
                     this.Invalidate();
                 }
             }
@@ -339,7 +343,7 @@ namespace Controls
                     }
 
                     if (xdp != null)
-                        Manager.Database.xUpSert(xdp.PersoneelNaam, xdp, change);
+                        Manager.Database.xUpSert(xdp.PersoneelNaam, xdp, change, false);
                 }
             }
 
@@ -348,7 +352,7 @@ namespace Controls
                 xStartKlus.Enabled = true;
                 xStopKlus.Enabled = false;
                 _ = SelectedBewerking.xUpdateBewerking(null,
-                    $"{Werkplek} UPDATE: {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!");
+                    $"{Werkplek} UPDATE: {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!",true,false);
 
             }
         }
@@ -373,7 +377,7 @@ namespace Controls
                                 klusjes.ForEach(x => xdb.ReplaceKlus(x));
                                 string change =
                                     $"{xdb.PersoneelNaam} gestart met {SelectedBewerking.Naam} van [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!";
-                                Manager.Database?.xUpSert(xdb.PersoneelNaam, xdb, change);
+                                Manager.Database?.xUpSert(xdb.PersoneelNaam, xdb, change,false);
                             }
                         }
                     }
@@ -545,7 +549,13 @@ namespace Controls
 
         public void TogleCompactMode()
         {
-            IsCompact = !IsCompact;
+            SetCompactMode(!IsCompact);
+            Settings.IsCompact = IsCompact;
+        }
+
+        public void SetCompactMode(bool iscompact)
+        {
+            IsCompact = iscompact;
             UpdateWerkplekInfo();
         }
 

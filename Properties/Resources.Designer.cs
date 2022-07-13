@@ -2076,6 +2076,16 @@ namespace ProductieManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap page_remove_12862 {
+            get {
+                object obj = ResourceManager.GetObject("page_remove_12862", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap PauseHot_26935 {
             get {
                 object obj = ResourceManager.GetObject("PauseHot_26935", resourceCulture);

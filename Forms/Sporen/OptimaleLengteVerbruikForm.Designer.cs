@@ -185,6 +185,7 @@ namespace Forms.Sporen
             // 
             // xMaterialenLijst
             // 
+            this.xMaterialenLijst.AllowCellEdit = false;
             this.xMaterialenLijst.AlternateRowBackColor = System.Drawing.Color.AliceBlue;
             this.xMaterialenLijst.CellEditUseWholeCell = false;
             this.xMaterialenLijst.ContextMenuStrip = this.contextMenuStrip1;
@@ -277,7 +278,6 @@ namespace Forms.Sporen
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.panel1);
             this.Name = "OptimaleLengteVerbruikForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Style = MetroFramework.MetroColorStyle.Orange;
             this.Text = "Optimale Lengte Verbruik";
             this.Title = "Optimale Lengte Verbruik";

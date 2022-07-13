@@ -304,11 +304,11 @@
     <Compile Include="Forms\BackupRestoreForm.Designer.cs">
       <DependentUpon>BackupRestoreForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Chat\NewMessageUI.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="Forms\Chat\NewMessageForm.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Chat\NewMessageUI.Designer.cs">
-      <DependentUpon>NewMessageUI.cs</DependentUpon>
+    <Compile Include="Forms\Chat\NewMessageForm.Designer.cs">
+      <DependentUpon>NewMessageForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Materiaal\NewMateriaalForm.cs">
       <SubType>Form</SubType>
@@ -1608,8 +1608,8 @@
     <EmbeddedResource Include="Forms\BackupRestoreForm.resx">
       <DependentUpon>BackupRestoreForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Chat\NewMessageUI.resx">
-      <DependentUpon>NewMessageUI.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Chat\NewMessageForm.resx">
+      <DependentUpon>NewMessageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Materiaal\NewMateriaalForm.resx">
       <DependentUpon>NewMateriaalForm.cs</DependentUpon>
@@ -1940,6 +1940,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Indeling\WerkplaatsIndelingUI.resx">
       <DependentUpon>WerkplaatsIndelingUI.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PersoneelsForm.resx">
       <DependentUpon>PersoneelsForm.cs</DependentUpon>
@@ -2304,6 +2305,7 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\page_remove_12862.png" />
     <None Include="Resources\zip_36268_32x32.png" />
     <None Include="Resources\page_document_empty_32x32.png" />
     <None Include="Resources\uparrow.png" />

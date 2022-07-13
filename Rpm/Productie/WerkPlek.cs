@@ -607,13 +607,13 @@ namespace Rpm.Productie
             var xtotaal = TotaalGemaakt;
             if (Personen?.Count > 0 && Werk is {State: ProductieState.Gestart} && xtotaal > 0)
             {
-                var tijd = TijdAanGewerkt();
+                var tijd = TijdAanGewerkt(true,true,LaatstAantalUpdate);
                 for (int i = 0; i < Personen.Count; i++)
                 {
                     var per = Personen[i];
                     var klus = per.Klusjes.GetKlus(Path);
                     if (klus == null || klus.Status != ProductieState.Gestart) continue;
-                    var tg = per.TijdAanGewerkt(GetStoringen(), this, per.WerkRooster ?? Tijden?.WerkRooster)
+                    var tg = per.TijdAanGewerkt(GetStoringen(), this, per.WerkRooster ?? Tijden?.WerkRooster, LaatstAantalUpdate)
                         .TotalHours;
                     if (tg <= 0) continue;
                     //pak het percentage van hoveel tijd gewerkt is.
@@ -640,17 +640,17 @@ namespace Rpm.Productie
             }
         }
 
-        public double TijdAanGewerkt(bool includestoringen = true, bool calculatecombis = true)
+        public double TijdAanGewerkt(bool includestoringen = true, bool calculatecombis = true, DateTime enddate = default)
         {
             double tijd = 0;
             Dictionary<DateTime, DateTime> xstoringen = new Dictionary<DateTime, DateTime>();
             if (includestoringen)
                 xstoringen = GetStoringen();
             if (Werk is {IsBemand: false})
-                tijd = Tijden.TijdGewerkt(null, xstoringen);
+                tijd = Tijden.TijdGewerkt(null, xstoringen,enddate);
             else
                 tijd = Personen.Sum(x =>
-                    x.TijdAanGewerkt(xstoringen, this, x.WerkRooster ?? Tijden?.WerkRooster).TotalHours);
+                    x.TijdAanGewerkt(xstoringen, this, x.WerkRooster ?? Tijden?.WerkRooster, enddate).TotalHours);
             if (Werk != null && Werk.Combies.Count > 0 && calculatecombis)
             {
                 for (int i = 0; i < Werk.Combies.Count; i++)

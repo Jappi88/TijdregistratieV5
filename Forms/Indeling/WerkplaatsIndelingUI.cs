@@ -1,5 +1,5 @@
 ﻿using Controls;
-using ProductieManager.Rpm.Productie;
+using ProductieManager.Properties;
 using Rpm.Misc;
 using Rpm.Productie;
 using Rpm.Settings;
@@ -8,14 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Forms
 {
     public partial class WerkplaatsIndelingUI : UserControl
     {
-        private readonly System.Timers.Timer _updatetimer;
+        private System.Timers.Timer _updatetimer;
         internal WerkplekIndeling SelectedWerkplek { get; private set; }
 
         private List<Bewerking> _bewerkingen = new List<Bewerking>();
@@ -41,10 +40,6 @@ namespace Forms
         public WerkplaatsIndelingUI()
         {
             InitializeComponent();
-            _updatetimer = new System.Timers.Timer();
-            _updatetimer.Elapsed += xupdatetimer_Tick;
-            _updatetimer.Interval = 500;
-            _updatetimer.Enabled = false;
         }
 
         public void InitUI()
@@ -56,6 +51,9 @@ namespace Forms
 
         public void CloseUI()
         {
+            _updatetimer?.Stop();
+            _updatetimer?.Dispose();
+            _updatetimer = null;
             DetachEvents();
             if (Manager.Opties != null)
             {
@@ -350,6 +348,13 @@ namespace Forms
                 // SetWaitUI();
                 if (Manager.Database == null || Manager.Database.IsDisposed)
                     throw new Exception("Database is niet beschikbaar!");
+                if(_updatetimer == null)
+                {
+                    _updatetimer = new System.Timers.Timer();
+                    _updatetimer.Elapsed += xupdatetimer_Tick;
+                    _updatetimer.Interval = 500;
+                    _updatetimer.Enabled = false;
+                }
                 //lock (Bewerkingen)
                 //{
                 Bewerkingen = Manager.Database.xGetAllBewerkingen(false, true, false);
@@ -397,10 +402,10 @@ namespace Forms
                             bws.Add(bw);
                     }
                     var xselected = SelectedWerkplek == null || SelectedWerkplek.IsDefault()
-                        ? "Alle"
+                        ? "Totaal"
                         : $"{SelectedWerkplek.Werkplek}";
-                    var x3 = bws.Count == 1 ? "Bewerking" : "Bewerkingen";
-                    var x2 = $"<b>{xselected} {bws.Count}</b> {x3}<br>" +
+                    var x3 = bws.Count == 1 ? "Productie" : "Producties";
+                    var x2 = $"<span color='navy'><b>{xselected}: {bws.Count} {x3}</b></span><br>" +
                              $"Totaal <b>{Math.Round(bws.Sum(x => x.TijdGewerkt), 2)} / {Math.Round(bws.Sum(x => x.DoorloopTijd), 2)}</b> uur gewerkt " +
                              $"waarvan nog <b>{Math.Round(bws.Sum(x => x.GetTijdOver()), 2)}</b> uur over aan productie";
                     xGeselecteerdeGebruikerLabel.Text = x2;
@@ -432,11 +437,11 @@ namespace Forms
                 if (resetview)
                     productieListControl1.SetCurrentViewStates(new ViewState[0], false);
                 productieListControl1.ShowWaitUI = false;
-                var bws = Bewerkingen.GetRange(0,Bewerkingen.Count).Where(x => IsAllowed(x, SelectedWerkplek, false)).ToList();
+                var bws = Bewerkingen.GetRange(0, Bewerkingen.Count).Where(x => IsAllowed(x, SelectedWerkplek, false)).ToList();
                 productieListControl1.InitProductie(bws, false, true, true, false, false);
-                //productieListControl1.InitProductie(true,
-                //    true, true, false, true, true);
-                UpdateTitle(productieListControl1.Bewerkingen);
+                productieListControl1.InitProductie(true,
+                    true, true, false, true, true);
+                UpdateTitle(bws);
                 productieListControl1.DoSearch(SelectedWerkplek.Criteria);
                 productieListControl1.SelectedItem = sel;
                 productieListControl1.ShowWaitUI = true;
@@ -480,6 +485,7 @@ namespace Forms
                     if (bew is Bewerking bw && bw.WerkPlekken.Any(x => xindelingen.Any(w =>
                              string.Equals(w.Werkplek.Replace(" ", ""), x.Naam.Replace(" ", ""), StringComparison.CurrentCultureIgnoreCase))))
                         return false;
+                    if (bew.State != ProductieState.Gestopt) return false;
                 }
 
                 return true;
@@ -502,11 +508,17 @@ namespace Forms
                 xgroup.MouseLeave += WerkplekIndeling_MouseLeave;
                 xgroup.Click += Xpers_Click;
                 xgroup.DoubleClick += Xpers_DoubleClick;
-                xgroup.Width = splitContainer1.Panel1.Width - 24;
+                if (xIndelingPanel.Width > 50)
+                    xgroup.Width = xIndelingPanel.Width - 50;
                 if (indeling == null)
                     xgroup.Height -= 20;
                // xgroup.Anchor = AnchorStyles.Left | AnchorStyles.Right;
                 var xpers = new WerkplekIndeling();
+                bool expanded = xIndelingPanel.Width > 26;
+                if (!expanded)
+                    indeling.IsCompact = true;
+                xpers.ToonCompactMode = expanded;
+                xpers.ToonSelectedKnoppen = expanded;
                 xpers.FieldTextGetter = IndelingFieldTextGetter;
                 xpers.ResetIndeling += Xpers_ResetIndeling;
                 //xgroup.Width = xpers.Width;
@@ -524,6 +536,7 @@ namespace Forms
                 //xgroup.Dock = DockStyle.Top;
                 xgroup.Controls.Add(xpers);
                 xWerkplaatsIndelingPanel.Controls.Add(xgroup);
+                toolTip1.SetToolTip(xgroup, xgroup.Text);
                 xpers.InitWerkplek(indeling);
                 if (!xpers.IsDefault())
                 {
@@ -646,6 +659,10 @@ namespace Forms
             {
                 if (sender is WerkplekIndeling indeling && !indeling.IsDefault())
                 {
+                    var result = XMessageBox.Show(this, $"Weet je zeker dat je '{indeling.Werkplek}' wilt verwijderen?\n\n" +
+                        $"Het verwijderen van '{indeling.Werkplek}' heeft geen effect op de producties.\n" +
+                        $"Dit is enkel voor visualisatie en kan altijd weer worden toegevoegd.", $"{indeling.Werkplek} Verwijderen", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (result != DialogResult.Yes) return;
                     DeleteWerkplaats(indeling.Werkplek);
                 }
             }
@@ -738,11 +755,11 @@ namespace Forms
                 {
                     indeling.IsSelected = true;
                     indeling.UpdateWerkplekInfo();
-                    if (indeling.Parent is GroupBox group)
-                    {
-                        group.Select();
-                        group.Focus();
-                    }
+                    //if (indeling.Parent is GroupBox group)
+                    //{
+                    //    //group.Select();
+                    //    group.Focus();
+                    //}
                 }
                 ListProducties(true);
             }
@@ -752,7 +769,6 @@ namespace Forms
                 indeling.IsSelected = false;
             }
             xDeletePersoneel.Enabled = SelectedWerkplek != null && !SelectedWerkplek.IsDefault();
-            
         }
 
         private void WerkplekIndeling_MouseEnter(object sender, EventArgs e)
@@ -1024,8 +1040,8 @@ namespace Forms
                 }
                 if (changed)
                 {
-                    _updatetimer.Stop();
-                    _updatetimer.Start();
+                    _updatetimer?.Stop();
+                    _updatetimer?.Start();
                 }
             }
             catch (Exception e)
@@ -1452,15 +1468,6 @@ namespace Forms
             }
         }
 
-        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-            for(int i = 0; i < xWerkplaatsIndelingPanel.Controls.Count; i++)
-            {
-                var c = xWerkplaatsIndelingPanel.Controls[i];
-                c.Width = splitContainer1.Panel1.Width - 24;
-            }
-            Invalidate();
-        }
 
         private void xupdatetimer_Tick(object sender, EventArgs e)
         {
@@ -1472,6 +1479,92 @@ namespace Forms
             }
             catch { }
 
+        }
+
+        private void xCollapseButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var inds = GetIndelingen(true);
+                bool expanden = xIndelingPanel.Width > 26;
+                expanden = !expanden;
+                xIndelingPanel.Width = expanden ? 510 : 26;
+                xIndelingPanel.Invalidate();
+                foreach (var ind in inds)
+                {
+                    var g = ind.Parent as GroupBox;
+                    if (g != null)
+                    {
+                        ind.ToonSelectedKnoppen = expanden;
+                        ind.ToonCompactMode = expanden;
+                        ind.SetCompactMode(expanden?ind.Settings.IsCompact : true);
+                        g.Invalidate();
+                    }
+                }
+                xCollapseButton.Image = expanden ? Resources.Navigate_left_36746 : Resources.Navigate_right_36745;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        private void xPreviousIndeling_Click(object sender, EventArgs e)
+        {
+            var sel = SelectedWerkplek;
+            int index = 0;
+            if(sel?.Parent != null)
+            {
+                index = xWerkplaatsIndelingPanel.Controls.IndexOf(sel.Parent);
+                if(index == -1)
+                {
+                    index = 0;
+                }
+                else
+                {
+                    if (index > 0)
+                        index--;
+                    else index = xWerkplaatsIndelingPanel.Controls.Count - 1;
+                }
+                if (index > -1 && index < xWerkplaatsIndelingPanel.Controls.Count)
+                {
+                    var xgroup = xWerkplaatsIndelingPanel.Controls[index];
+                    var ind = xgroup.Controls.OfType<WerkplekIndeling>().First();
+                    if (ind != null)
+                    {
+                        SetSelected(ind,true);
+                    }
+                }
+            }
+        }
+
+        private void xNextIndeling_Click(object sender, EventArgs e)
+        {
+            var sel = SelectedWerkplek;
+            int index = 0;
+            if (sel?.Parent != null)
+            {
+                index = xWerkplaatsIndelingPanel.Controls.IndexOf(sel.Parent);
+                if (index == -1)
+                {
+                    index = 0;
+                }
+                else
+                {
+                    if (index < xWerkplaatsIndelingPanel.Controls.Count - 1)
+                        index++;
+                    else index = 0;
+                }
+                if (index > -1 && index < xWerkplaatsIndelingPanel.Controls.Count)
+                {
+                    var xgroup = xWerkplaatsIndelingPanel.Controls[index];
+                    var ind = xgroup.Controls.OfType<WerkplekIndeling>().First();
+                    if (ind != null)
+                    {
+                        SetSelected(ind, true);
+                    }
+                }
+            }
         }
     }
 }

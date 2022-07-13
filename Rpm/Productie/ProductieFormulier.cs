@@ -12,12 +12,11 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace Rpm.Productie
 {
-    [DataContract]
+    [Serializable]
     public class ProductieFormulier : IProductieBase
     {
         #region "Constructor"
@@ -63,7 +62,7 @@ namespace Rpm.Productie
         private double _TijdGewerkt;
         public override double TijdGewerkt
         {
-            get => TijdAanGewerkt();
+            get => TijdAanGewerkt(false);
             set => _TijdGewerkt = value;
         }
 
@@ -1632,7 +1631,7 @@ namespace Rpm.Productie
                 var st = DateTime.Now;
                 AanbevolenPersonen = AantalPersonenNodig(ref st);
                 StartOp = st;
-                TijdGewerkt = TijdAanGewerkt();
+                TijdGewerkt = TijdAanGewerkt(false);
                 Gereed = GereedPercentage();
                 TijdGewerktPercentage = GetTijdGewerktPercentage();
                 if (GemiddeldPerUur <= 0)
@@ -1981,14 +1980,14 @@ namespace Rpm.Productie
                 }
         }
 
-        public double TijdAanGewerkt()
+        public double TijdAanGewerkt(bool totaantalupdate)
         {
             var gestopt = State == ProductieState.Gestart ? DateTime.Now : TijdGestopt;
             var tijd = TotaalTijdGewerkt;
             if (Bewerkingen == null || Bewerkingen.Length == 0)
                 tijd += Werktijd.TijdGewerkt(TijdGestart, gestopt, null,null).TotalHours;
             else
-                tijd = Bewerkingen.Sum(x => x.TijdAanGewerkt());
+                tijd = Bewerkingen.Sum(x => x.TijdAanGewerkt(totaantalupdate));
             if (tijd <= 0) return 0;
             return Math.Round(((tijd / 100) * Activiteit), 2);
         }
@@ -2008,7 +2007,7 @@ namespace Rpm.Productie
             {
                 double value = 0;
                 if (forms == null || forms.Count == 0)
-                    value = TijdAanGewerkt();
+                    value = TijdAanGewerkt(false);
                 else
                     value = forms.Sum(t => t.TijdGewerkt);
 
@@ -2035,11 +2034,11 @@ namespace Rpm.Productie
         {
             if (Bewerkingen?.Length > 0)
             {
-                var bws = Bewerkingen.Where(x => x.TijdAanGewerkt() > 0).ToArray();
-                var actueel = bws.Sum(t => t.TijdAanGewerkt());
+                var bws = Bewerkingen.Where(x => x.TijdAanGewerkt(true) > 0).ToArray();
+                var actueel = bws.Sum(t => t.TijdAanGewerkt(true));
                 if (actueel > 0)
                 {
-                    var xaantal = AantalGemaakt > 0 ? AantalGemaakt : Aantal;
+                    var xaantal = TotaalGemaakt > 0 ? TotaalGemaakt : Aantal;
 
                     actueel /= bws.Length;
                     actueel = xaantal / actueel;
@@ -2048,7 +2047,7 @@ namespace Rpm.Productie
                 return Math.Round(actueel, 0);
             }
 
-            return ProductenPerUur(AantalGemaakt, TijdAanGewerkt());
+            return ProductenPerUur(AantalGemaakt, TijdAanGewerkt(true));
         }
 
         public double ProductenPerUur(int aantal, double tijd)

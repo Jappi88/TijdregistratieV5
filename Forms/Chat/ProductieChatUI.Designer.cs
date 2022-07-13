@@ -95,12 +95,12 @@
             this.xuserlist.FullRowSelect = true;
             this.xuserlist.HideSelection = false;
             this.xuserlist.LargeImageList = this.xuserimages;
-            this.xuserlist.Location = new System.Drawing.Point(0, 72);
+            this.xuserlist.Location = new System.Drawing.Point(0, 81);
             this.xuserlist.MultiSelect = false;
             this.xuserlist.Name = "xuserlist";
             this.xuserlist.ShowGroups = false;
             this.xuserlist.ShowItemToolTips = true;
-            this.xuserlist.Size = new System.Drawing.Size(250, 399);
+            this.xuserlist.Size = new System.Drawing.Size(250, 390);
             this.xuserlist.SmallImageList = this.xuserimages;
             this.xuserlist.TabIndex = 9;
             this.xuserlist.TileSize = new System.Drawing.Size(240, 68);
@@ -156,7 +156,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(250, 72);
+            this.panel3.Size = new System.Drawing.Size(250, 81);
             this.panel3.TabIndex = 8;
             this.toolTip1.SetToolTip(this.panel3, "Mijn Profiel");
             // 
@@ -164,7 +164,7 @@
             // 
             this.xprofilestatusimage.BackColor = System.Drawing.Color.Transparent;
             this.xprofilestatusimage.Image = global::ProductieManager.Properties.Resources.offline_32x32;
-            this.xprofilestatusimage.Location = new System.Drawing.Point(71, 28);
+            this.xprofilestatusimage.Location = new System.Drawing.Point(76, 28);
             this.xprofilestatusimage.Name = "xprofilestatusimage";
             this.xprofilestatusimage.Size = new System.Drawing.Size(16, 16);
             this.xprofilestatusimage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -177,7 +177,7 @@
             this.xprofilestatus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xprofilestatus.ForeColor = System.Drawing.Color.DimGray;
             this.xprofilestatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xprofilestatus.Location = new System.Drawing.Point(93, 28);
+            this.xprofilestatus.Location = new System.Drawing.Point(98, 28);
             this.xprofilestatus.Name = "xprofilestatus";
             this.xprofilestatus.Size = new System.Drawing.Size(46, 17);
             this.xprofilestatus.TabIndex = 12;
@@ -187,7 +187,7 @@
             // 
             this.xprofilenaam.AutoSize = true;
             this.xprofilenaam.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xprofilenaam.Location = new System.Drawing.Point(68, 9);
+            this.xprofilenaam.Location = new System.Drawing.Point(73, 9);
             this.xprofilenaam.Name = "xprofilenaam";
             this.xprofilenaam.Size = new System.Drawing.Size(68, 17);
             this.xprofilenaam.TabIndex = 11;
@@ -198,7 +198,7 @@
             this.xprofileimage.BackColor = System.Drawing.Color.Transparent;
             this.xprofileimage.Location = new System.Drawing.Point(3, 3);
             this.xprofileimage.Name = "xprofileimage";
-            this.xprofileimage.Size = new System.Drawing.Size(64, 64);
+            this.xprofileimage.Size = new System.Drawing.Size(67, 71);
             this.xprofileimage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.xprofileimage.TabIndex = 7;
             this.xprofileimage.TabStop = false;
@@ -213,7 +213,7 @@
             this.menuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.menuStrip1.Location = new System.Drawing.Point(197, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(53, 72);
+            this.menuStrip1.Size = new System.Drawing.Size(53, 81);
             this.menuStrip1.TabIndex = 14;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -225,7 +225,7 @@
             this.toolStripMenuItem1.Image = global::ProductieManager.Properties.Resources.icons8_Menu_Vertical_32;
             this.toolStripMenuItem1.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(44, 68);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(44, 77);
             // 
             // wijzigProfielFotoToolStripMenuItem
             // 

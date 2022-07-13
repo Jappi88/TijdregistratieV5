@@ -469,7 +469,7 @@ namespace Rpm.Productie
             return Add(entry);
         }
 
-        public double TijdGewerkt(Rooster rooster, Dictionary<DateTime, DateTime> exclude)
+        public double TijdGewerkt(Rooster rooster, Dictionary<DateTime, DateTime> exclude, DateTime enddate = default)
         {
             if (Manager.Opties == null || Uren == null || Uren.Count == 0)
                 return 0;
@@ -492,7 +492,19 @@ namespace Rpm.Productie
                 extratijd += xt.ExtraUren(new TijdEntry(start, stop, rooster), rooster);
             }
 
-            foreach (var t in tijden) tijd += t.TijdGewerkt(rooster, exclude, SpecialeRoosters);
+            foreach (var t in tijden)
+            {
+
+                if (t.InUse && !enddate.IsDefault() && t.Stop > enddate)
+                {
+                    t.InUse = false;
+                    t.Stop = enddate;
+                    tijd += t.TijdGewerkt(rooster, exclude, SpecialeRoosters);
+                    t.InUse = true;
+                }
+                else
+                    tijd += t.TijdGewerkt(rooster, exclude, SpecialeRoosters);
+            }
 
             return tijd + extratijd;
         }

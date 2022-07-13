@@ -9,7 +9,7 @@ using MetroFramework;
 using MetroFramework.Controls;
 using MetroFramework.Forms;
 using ProductieManager.Forms;
-using ProductieManager.Forms.Chat;
+using Forms.Chat;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
 using Rpm.Controls;
@@ -51,10 +51,19 @@ namespace Controls
                 }
             };
             DailyMessage.DailyCreated += DailyMessage_DailyCreated;
-            _newmessage = new NewMessageUI();
-            _newmessage.Click += _newmessage_Click;
-            _newmessage.Close += _newmessage_Close;
-            _newmessage.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        }
+
+        private void InitMessageForm()
+        {
+            if(_newmessage == null)
+            {
+                _newmessage = new NewMessageForm();
+                _newmessage.MessageClicked += _newmessage_Click;
+                _newmessage.FormClosed += (x, y) => { _newmessage?.Dispose(); _newmessage = null; };
+                var xbound = Screen.FromControl(this).Bounds;
+                var xloc = new Point(xbound.Width - _newmessage.Width, xbound.Height - _newmessage.Height);
+                _newmessage.Location = xloc;
+            }
         }
 
         private void _newmessage_Close(object sender, EventArgs e)
@@ -74,9 +83,7 @@ namespace Controls
                     names.Add(msg.Afzender.UserName);
                 bool iedereen = names.Count == 0 || unread.Any(x =>
                             string.Equals(x.Ontvanger, "iedereen", StringComparison.CurrentCultureIgnoreCase));
-                xViewPanel.SuspendLayout();
-                xViewPanel.Controls.Remove(_newmessage);
-                xViewPanel.ResumeLayout();
+                _newmessage.Close();
                 var xtile = tileMainView1.GetTile("xchat");
                 if ((_chatform == null || _chatform.IsDisposed))
                 {
@@ -143,7 +150,7 @@ namespace Controls
 
         private readonly Timer _specialRoosterWatcher;
         public static Manager _manager;
-        private NewMessageUI _newmessage;
+        private NewMessageForm _newmessage;
 
         public int ProductieRefreshInterval { get; set; } = 10000; // 10 sec
 
@@ -2672,14 +2679,13 @@ namespace Controls
                 if (Manager.Opties is not { ToonNieweChatBerichtMelding: true }) return;
                 if (unread.Count > 0)
                 {
+                    InitMessageForm();
                     if(_newmessage != null)
                     {
                         _newmessage.InitMessages(unread.ToArray());
-                        if(xViewPanel.Controls.IndexOf(_newmessage) == -1)
+                        if(!_newmessage.Visible)
                         {
-                            _newmessage.Location = new Point(xViewPanel.Width - _newmessage.Width, xViewPanel.Height - _newmessage.Height);
-                            xViewPanel.Controls.Add(_newmessage);
-                            xViewPanel.Invalidate();
+                            _newmessage.Show();
                         }
                         _newmessage.BringToFront();
                         var f = xViewPanel.FindForm();
@@ -2700,8 +2706,8 @@ namespace Controls
                             }
                             else
                             {
-                                var tb = metroCustomTabControl1.TabPages.OfType<MetroTabPage>().ToList().FirstOrDefault(x=> x.Tag is TileInfoEntry ent && ent.Name.ToLower().StartsWith("xchat"));
-                                if(tb != null)
+                                var tb = metroCustomTabControl1.TabPages.OfType<MetroTabPage>().ToList().FirstOrDefault(x => x.Tag is TileInfoEntry ent && ent.Name.ToLower().StartsWith("xchat"));
+                                if (tb != null)
                                 {
                                     metroCustomTabControl1.SelectedTab = tb;
                                     var xch = tb.Controls.OfType<ProductieChatUI>().FirstOrDefault();
@@ -2718,10 +2724,9 @@ namespace Controls
                 }
                 else
                 {
-                    if (_newmessage != null && xViewPanel.Controls.IndexOf(_newmessage) > -1)
+                    if (_newmessage != null && _newmessage.Visible)
                     {
-                        xViewPanel.Controls.Remove(_newmessage);
-                        xViewPanel.Invalidate();
+                        _newmessage.Close();
                     }
                 }
             }

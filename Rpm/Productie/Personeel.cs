@@ -77,7 +77,7 @@ namespace Rpm.Productie
         }
 
         //de tijd dat die persoon heeft gewerkt
-        public TimeSpan TijdAanGewerkt(Dictionary<DateTime, DateTime> exclude, Klus klus, Rooster rooster)
+        public TimeSpan TijdAanGewerkt(Dictionary<DateTime, DateTime> exclude, Klus klus, Rooster rooster, DateTime enddate)
         {
             if (klus == null) return new TimeSpan();
             rooster ??= WerkRooster ?? klus.Tijden?.WerkRooster ?? Manager.Opties.GetWerkRooster();
@@ -95,7 +95,7 @@ namespace Rpm.Productie
             }
 
 
-            return klus.TijdGewerkt(storingen, rooster);
+            return klus.TijdGewerkt(storingen, rooster, enddate);
         }
 
         public TimeSpan TijdAanGewerkt(Dictionary<DateTime, DateTime> exclude, Klus klus, DateTime vanaf, DateTime tot,
@@ -118,13 +118,13 @@ namespace Rpm.Productie
             return klus.TijdGewerkt(storingen, vanaf, tot, rooster);
         }
 
-        public TimeSpan TijdAanGewerkt(Dictionary<DateTime, DateTime> exclude, string klus, Rooster rooster)
+        public TimeSpan TijdAanGewerkt(Dictionary<DateTime, DateTime> exclude, string klus, Rooster rooster, DateTime enddate)
         {
             if (Klusjes == null) return new TimeSpan();
             var xklus = Klusjes.FirstOrDefault(x => x.Equals(klus));
             if (xklus == null) return new TimeSpan();
             return TijdAanGewerkt(exclude, xklus,
-                rooster ?? WerkRooster ?? xklus.Tijden?.WerkRooster ?? Manager.Opties.GetWerkRooster());
+                rooster ?? WerkRooster ?? xklus.Tijden?.WerkRooster ?? Manager.Opties.GetWerkRooster(), enddate);
         }
 
         public TimeSpan TijdAanGewerkt(Dictionary<DateTime, DateTime> exclude, string klus, DateTime vanaf,
@@ -137,12 +137,12 @@ namespace Rpm.Productie
                 rooster ?? WerkRooster ?? xklus.Tijden?.WerkRooster ?? Manager.Opties.GetWerkRooster());
         }
 
-        public TimeSpan TijdAanGewerkt(Dictionary<DateTime, DateTime> exclude, WerkPlek werkplek, Rooster rooster)
+        public TimeSpan TijdAanGewerkt(Dictionary<DateTime, DateTime> exclude, WerkPlek werkplek, Rooster rooster, DateTime enddate)
         {
             if (werkplek == null)
                 return new TimeSpan();
             return TijdAanGewerkt(exclude, werkplek.Path,
-                rooster ?? WerkRooster ?? werkplek?.Tijden?.WerkRooster ?? Manager.Opties.GetWerkRooster());
+                rooster ?? WerkRooster ?? werkplek?.Tijden?.WerkRooster ?? Manager.Opties.GetWerkRooster(), enddate);
         }
 
         public TimeSpan TijdAanGewerkt(Dictionary<DateTime, DateTime> exclude, WerkPlek werkplek, DateTime vanaf,
@@ -154,13 +154,13 @@ namespace Rpm.Productie
                 rooster ?? WerkRooster ?? werkplek?.Tijden?.WerkRooster ?? Manager.Opties.GetWerkRooster());
         }
 
-        public TimeSpan GetTotaalTijdGewerkt(Dictionary<DateTime, DateTime> exclude, bool gestart)
+        public TimeSpan GetTotaalTijdGewerkt(Dictionary<DateTime, DateTime> exclude, bool gestart, DateTime enddate = default)
         {
             var xklusjes = gestart ? Klusjes?.Where(x => x.Status == ProductieState.Gestart).ToList() : Klusjes;
             return xklusjes == null
                 ? new TimeSpan()
                 : TimeSpan.FromHours(xklusjes.Sum(x =>
-                    TijdAanGewerkt(exclude, x, x.Tijden?.WerkRooster ?? WerkRooster ?? Manager.Opties.GetWerkRooster())
+                    TijdAanGewerkt(exclude, x, x.Tijden?.WerkRooster ?? WerkRooster ?? Manager.Opties.GetWerkRooster(),enddate)
                         .TotalHours));
         }
 

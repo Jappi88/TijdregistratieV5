@@ -7,6 +7,7 @@ using Rpm.SqlLite;
 
 namespace ProductieManager.Rpm.SqlLite
 {
+    [Serializable]
     public class IDbLogging
     {
         public List<LogEntry> Logs { get; set; } = new List<LogEntry>();

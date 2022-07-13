@@ -175,7 +175,7 @@ namespace Rpm.Productie.ArtikelRecords
                     file.VorigeAantalGemaakt = file.AantalGemaakt;
                     file.AantalGemaakt += form.TotaalGemaakt;
                     file.VorigeTijdGewerkt = form.TijdGewerkt;
-                    file.TijdGewerkt += form.TijdAanGewerkt();
+                    file.TijdGewerkt += form.TijdAanGewerkt(false);
                     file.IsWerkplek = false;
                     var sts = form.GetAlleStoringen(false);
                     sts.ForEach(x =>
@@ -197,7 +197,7 @@ namespace Rpm.Productie.ArtikelRecords
                         AantalGemaakt = form.TotaalGemaakt,
                         ArtikelNr = form.ArtikelNr,
                         Omschrijving = form.Omschrijving,
-                        TijdGewerkt = form.TijdAanGewerkt(),
+                        TijdGewerkt = form.TijdAanGewerkt(false),
                         LaatstGeupdate = form.DatumGereed,
                         Vanaf = form.TijdGestart,
                         IsWerkplek = false
@@ -349,7 +349,7 @@ namespace Rpm.Productie.ArtikelRecords
                     file.VorigeAantalGemaakt = file.AantalGemaakt;
                     file.AantalGemaakt -= form.TotaalGemaakt;
                     file.VorigeTijdGewerkt = form.TijdGewerkt;
-                    file.TijdGewerkt -= form.TijdAanGewerkt();
+                    file.TijdGewerkt -= form.TijdAanGewerkt(false);
                     file.IsWerkplek = false;
                     var sts = form.GetAlleStoringen(false);
                     sts.ForEach(x =>

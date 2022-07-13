@@ -4,6 +4,7 @@ using Rpm.Productie;
 using Rpm.Various;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -79,7 +80,7 @@ namespace Forms
         {
             try
             {
-                SelectedBewerkingen = productieListControl1.CheckedBewerkingen;
+                SelectedBewerkingen = productieListControl1.ProductieLijst.CheckedObjects.OfType<Bewerking>().ToList();
                 DialogResult = DialogResult.OK;
             }
             catch (Exception ex)
